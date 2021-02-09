@@ -1,0 +1,2 @@
+move:<subject> go<es> to <object>
+moveProx:<subject> go<es> towards <object>

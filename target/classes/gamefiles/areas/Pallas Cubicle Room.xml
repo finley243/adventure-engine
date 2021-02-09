@@ -1,0 +1,28 @@
+<room id="pallasCubicles">
+    <name proper="false">cubicle room</name>
+    <description>Testing description.</description>
+    <area id="pallasCubiclesWindows">
+        <name proper="false" prox="true">window</name>
+        <links>
+            <link>pallasCubiclesPillar</link>
+            <link>pallasCubiclesCopier</link>
+        </links>
+        <objects></objects>
+    </area>
+    <area id="pallasCubiclesPillar">
+        <name proper="false" prox="true">center pillar</name>
+        <links>
+            <link>pallasCubiclesWindows</link>
+            <link>pallasCubiclesCopier</link>
+        </links>
+        <objects></objects>
+    </area>
+    <area id="pallasCubiclesCopier">
+        <name proper="false" prox="true">copy machine</name>
+        <links>
+            <link>pallasCubiclesPillar</link>
+            <link>pallasCubiclesWindows</link>
+        </links>
+        <objects></objects>
+    </area>
+</room>
