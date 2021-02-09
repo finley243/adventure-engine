@@ -1,3 +1,6 @@
+# Maven target directory (unused)
+target/
+
 # Compiled class file
 *.class
 
