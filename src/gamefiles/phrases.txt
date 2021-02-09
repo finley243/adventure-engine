@@ -1,2 +1,3 @@
 move:<subject> go<es> to <object>
 moveProx:<subject> go<es> towards <object>
+moveExit:<subject> go<es> through <object> to <object2>

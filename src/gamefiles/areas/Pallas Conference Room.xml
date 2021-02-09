@@ -1,5 +1,5 @@
 <room id="pallasConference">
-    <name proper="false">cubicle room</name>
+    <name proper="false">conference room</name>
     <description>Testing description.</description>
     <area id="pallasConferenceWindows">
         <name proper="false" prox="true">window</name>
@@ -9,7 +9,7 @@
         <objects></objects>
     </area>
     <area id="pallasConferenceEntrance">
-        <name proper="false" prox="true">door</name>
+        <name proper="false" prox="false">entryway</name>
         <links>
             <link>pallasConferenceWindows</link>
         </links>

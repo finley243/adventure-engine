@@ -20,15 +20,18 @@ public class ActionMoveExit implements IAction {
 	
 	@Override
 	public void choose(Actor subject) {
-		Area area = exit.getArea();
+		Area area = exit.getLinkedArea();
 		subject.move(area);
-		Context context = new Context(subject, area, area, Benefitting.SUBJECT, false, false);
+		Context context = new Context(subject, exit, area.getRoom(), Benefitting.SUBJECT, false, false);
 		TextEvent text;
+		text = new TextEvent(context, "moveExit");
+		/*
 		if(area.isProximateName()) {
 			text = new TextEvent(context, "moveProx");
 		} else {
 			text = new TextEvent(context, "move");
 		}
+		*/
 		Game.EVENT_BUS.post(text);
 		Game.EVENT_BUS.post(new TextPrintEvent());
 	}

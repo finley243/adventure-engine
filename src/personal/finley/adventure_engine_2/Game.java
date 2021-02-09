@@ -18,6 +18,9 @@ import personal.finley.adventure_engine_2.load.WorldLoader;
 import personal.finley.adventure_engine_2.textgen.LangUtils;
 import personal.finley.adventure_engine_2.textgen.Phrases;
 import personal.finley.adventure_engine_2.textgen.TextPrinter;
+import personal.finley.adventure_engine_2.world.environment.Area;
+import personal.finley.adventure_engine_2.world.object.ObjectBase;
+import personal.finley.adventure_engine_2.world.object.ObjectExit;
 
 public class Game {
 	
@@ -45,9 +48,20 @@ public class Game {
 		IController npcController = new ControllerRandom();
 		
 		Actor alpha = new Actor(PLAYER_ACTOR, "Alpha", true, Pronoun.YOU, PLAYER_START_AREA, null, null, false, playerController);
-		Actor beta = new Actor("character2", "Beta", true, Pronoun.HE, PLAYER_START_AREA, null, null, false, npcController);
-		Actor gamma = new Actor("character3", "Gamma", true, Pronoun.SHE, PLAYER_START_AREA, null, null, false, npcController);
-		Actor delta = new Actor("character4", "Delta", true, Pronoun.IT, PLAYER_START_AREA, null, null, false, npcController);
+		//Actor beta = new Actor("character2", "Beta", true, Pronoun.HE, PLAYER_START_AREA, null, null, false, npcController);
+		//Actor gamma = new Actor("character3", "Gamma", true, Pronoun.SHE, PLAYER_START_AREA, null, null, false, npcController);
+		//Actor delta = new Actor("character4", "Delta", true, Pronoun.IT, PLAYER_START_AREA, null, null, false, npcController);
+		
+		Area cubicles = Data.getArea("pallasCubiclesCopier");
+		Area conference = Data.getArea("pallasConferenceEntrance");
+		
+		ObjectBase door1 = new ObjectExit("door1", "door", "door2");
+		ObjectBase door2 = new ObjectExit("door2", "door", "door1");
+		
+		cubicles.addObject(door1);
+		door1.setAreaID(cubicles.getID());
+		conference.addObject(door2);
+		door2.setAreaID(conference.getID());
 		
 		startGameLoop();
 	}
@@ -56,7 +70,8 @@ public class Game {
 		continueGameLoop = true;
 		while(continueGameLoop) {
 			String locationName = Data.getPlayer().getArea().getName();
-			System.out.println("Player Location: " + LangUtils.titleCase(locationName));
+			String roomName = Data.getPlayer().getArea().getRoom().getName();
+			System.out.println("Player Location: " + LangUtils.titleCase(locationName) + " (" + LangUtils.titleCase(roomName) + ")");
 			for(Actor actor : Data.getActors()) {
 				actor.takeTurn();
 			}
