@@ -33,7 +33,7 @@ public class ActionMove implements IAction {
 	
 	@Override
 	public String getChoiceName() {
-		return "Go to " + (area.isProperName() ? "" : "the ") + area.getName();
+		return "Go toward " + area.getFormattedName();
 	}
 	
 	@Override

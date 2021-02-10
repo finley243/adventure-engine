@@ -12,7 +12,7 @@ import com.google.common.eventbus.EventBus;
 import personal.finley.adventure_engine_2.EnumTypes.Pronoun;
 import personal.finley.adventure_engine_2.actor.Actor;
 import personal.finley.adventure_engine_2.actor.ControllerPlayer;
-import personal.finley.adventure_engine_2.actor.ControllerRandom;
+import personal.finley.adventure_engine_2.actor.ControllerUtility;
 import personal.finley.adventure_engine_2.actor.IController;
 import personal.finley.adventure_engine_2.load.WorldLoader;
 import personal.finley.adventure_engine_2.textgen.LangUtils;
@@ -45,23 +45,23 @@ public class Game {
 		WorldLoader.loadRooms(new File(GAMEFILES + AREA_DIRECTORY));
 		
 		IController playerController = new ControllerPlayer();
-		IController npcController = new ControllerRandom();
+		IController npcController = new ControllerUtility();
 		
 		Actor alpha = new Actor(PLAYER_ACTOR, "Alpha", true, Pronoun.YOU, PLAYER_START_AREA, null, null, false, playerController);
 		//Actor beta = new Actor("character2", "Beta", true, Pronoun.HE, PLAYER_START_AREA, null, null, false, npcController);
 		//Actor gamma = new Actor("character3", "Gamma", true, Pronoun.SHE, PLAYER_START_AREA, null, null, false, npcController);
 		//Actor delta = new Actor("character4", "Delta", true, Pronoun.IT, PLAYER_START_AREA, null, null, false, npcController);
 		
-		Area cubicles = Data.getArea("pallasCubiclesCopier");
-		Area conference = Data.getArea("pallasConferenceEntrance");
+		//Area cubicles = Data.getArea("pallasCubiclesCopier");
+		//Area conference = Data.getArea("pallasConferenceEntrance");
 		
-		ObjectBase door1 = new ObjectExit("door1", "door", "door2");
-		ObjectBase door2 = new ObjectExit("door2", "door", "door1");
+		//ObjectBase door1 = new ObjectExit("door1", "metal door", "door2");
+		//ObjectBase door2 = new ObjectExit("door2", "metal door", "door1");
 		
-		cubicles.addObject(door1);
-		door1.setAreaID(cubicles.getID());
-		conference.addObject(door2);
-		door2.setAreaID(conference.getID());
+		//cubicles.addObject(door1);
+		//door1.setAreaID(cubicles.getID());
+		//conference.addObject(door2);
+		//door2.setAreaID(conference.getID());
 		
 		startGameLoop();
 	}
@@ -71,10 +71,19 @@ public class Game {
 		while(continueGameLoop) {
 			String locationName = Data.getPlayer().getArea().getName();
 			String roomName = Data.getPlayer().getArea().getRoom().getName();
-			System.out.println("Player Location: " + LangUtils.titleCase(locationName) + " (" + LangUtils.titleCase(roomName) + ")");
+			System.out.println("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")");
+			if(!Data.getPlayer().getArea().getRoom().hasVisited()) {
+				System.out.println();
+				System.out.println(Data.getPlayer().getArea().getRoom().getDescription());
+				Data.getPlayer().getArea().getRoom().setVisited();
+			}
+			System.out.println();
 			for(Actor actor : Data.getActors()) {
 				actor.takeTurn();
 			}
+			System.out.println();
+			System.out.println("---------------------------------------------------");
+			System.out.println();
 		}
 	}
 	

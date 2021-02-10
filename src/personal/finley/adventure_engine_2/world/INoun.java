@@ -6,6 +6,8 @@ public interface INoun {
 	
 	public String getName();
 	
+	public String getFormattedName();
+	
 	public boolean isProperName();
 	
 	public Pronoun getPronoun();

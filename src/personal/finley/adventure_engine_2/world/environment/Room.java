@@ -50,6 +50,11 @@ public class Room implements INoun {
 	public String getName() {
 		return name;
 	}
+	
+	@Override
+	public String getFormattedName() {
+		return (isProperName() ? "" : "the ") + getName();
+	}
 
 	@Override
 	public boolean isProperName() {

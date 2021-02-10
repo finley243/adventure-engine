@@ -9,8 +9,8 @@ import personal.finley.adventure_engine_2.world.object.ObjectBase;
 
 public class Item extends ObjectBase {
 	
-	public Item(String ID, String name) {
-		super(ID, name);
+	public Item(String ID, String currentAreaID, String name) {
+		super(ID, currentAreaID, name);
 		//Data.addItem(ID, this);
 	}
 

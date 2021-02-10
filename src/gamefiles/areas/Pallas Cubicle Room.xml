@@ -23,6 +23,11 @@
             <link>pallasCubiclesPillar</link>
             <link>pallasCubiclesWindows</link>
         </links>
-        <objects></objects>
+        <objects>
+            <object id="pallasCubiclesConferenceDoor" type="exit">
+                <name proper="false">metal door</name>
+                <link>pallasConferenceDoor</link>
+            </object>
+        </objects>
     </area>
 </room>

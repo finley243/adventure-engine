@@ -12,8 +12,8 @@ public class ObjectInteractGeneric extends ObjectBase {
 	private String verb;
 	private String useText;
 	
-	public ObjectInteractGeneric(String ID, String name, String verb, String useText) {
-		super(ID, name);
+	public ObjectInteractGeneric(String ID, String currentAreaID, String name, String verb, String useText) {
+		super(ID, currentAreaID, name);
 		this.verb = verb;
 		this.useText = useText;
 	}

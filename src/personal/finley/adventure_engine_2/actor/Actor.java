@@ -60,6 +60,11 @@ public class Actor implements INoun, IActionable {
 	}
 	
 	@Override
+	public String getFormattedName() {
+		return (isProperName() ? "" : "the ") + getName();
+	}
+	
+	@Override
 	public boolean isProperName() {
 		return isProperName;
 	}

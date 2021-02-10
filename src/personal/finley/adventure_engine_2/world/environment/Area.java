@@ -30,14 +30,14 @@ public class Area implements INoun {
 	// All actors in this area
 	private Set<Actor> actors;
 	
-	public Area(String ID, String name, boolean isProperName, boolean isProximateName, String room, Set<String> linkedAreas) {
+	public Area(String ID, String name, boolean isProperName, boolean isProximateName, String room, Set<String> linkedAreas, Set<ObjectBase> objects) {
 		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
 		this.isProximateName = isProximateName;
 		this.roomID = room;
 		this.linkedAreas = linkedAreas;
-		this.objects = new HashSet<ObjectBase>();
+		this.objects = objects;
 		this.actors = new HashSet<Actor>();
 	}
 	
@@ -48,6 +48,11 @@ public class Area implements INoun {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public String getFormattedName() {
+		return (isProperName() ? "" : "the ") + getName();
 	}
 	
 	public Set<ObjectBase> getObjects(){

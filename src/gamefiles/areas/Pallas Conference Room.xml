@@ -13,6 +13,11 @@
         <links>
             <link>pallasConferenceWindows</link>
         </links>
-        <objects></objects>
+        <objects>
+            <object id="pallasConferenceDoor" type="exit">
+                <name>metal door</name>
+                <link>pallasCubiclesConferenceDoor</link>
+            </object>
+        </objects>
     </area>
 </room>

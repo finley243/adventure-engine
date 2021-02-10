@@ -6,8 +6,8 @@ public class ItemApparel extends Item {
 
 	private ApparelType apparelType;
 	
-	public ItemApparel(String ID, String name, ApparelType type) {
-		super(ID, name);
+	public ItemApparel(String ID, String currentAreaID, String name, ApparelType type) {
+		super(ID, currentAreaID, name);
 		this.apparelType = type;
 	}
 

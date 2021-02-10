@@ -6,8 +6,8 @@ public class ItemConsumable extends Item {
 
 	private ConsumableType consumableType;
 	
-	public ItemConsumable(String ID, String name, ConsumableType type) {
-		super(ID, name);
+	public ItemConsumable(String ID, String currentAreaID, String name, ConsumableType type) {
+		super(ID, currentAreaID, name);
 		this.consumableType = type;
 	}
 	

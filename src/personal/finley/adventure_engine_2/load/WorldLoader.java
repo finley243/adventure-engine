@@ -18,6 +18,8 @@ import org.xml.sax.SAXException;
 import personal.finley.adventure_engine_2.Data;
 import personal.finley.adventure_engine_2.world.environment.Area;
 import personal.finley.adventure_engine_2.world.environment.Room;
+import personal.finley.adventure_engine_2.world.object.ObjectBase;
+import personal.finley.adventure_engine_2.world.object.ObjectExit;
 
 public class WorldLoader {
 
@@ -30,7 +32,7 @@ public class WorldLoader {
 		}
 	}
 	
-	public static void loadRoom(File file) throws ParserConfigurationException, SAXException, IOException {
+	private static void loadRoom(File file) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(file);
@@ -66,19 +68,35 @@ public class WorldLoader {
 				
 				Element objectsElement = (Element) area.getElementsByTagName("objects").item(0);
 				NodeList objects = objectsElement.getElementsByTagName("object");
-				Set<String> objectIDSet = new HashSet<String>();
+				Set<ObjectBase> objectSet = new HashSet<ObjectBase>();
 				for(int j = 0; j < objects.getLength(); j++) {
 					if(objects.item(j).getNodeType() == Node.ELEMENT_NODE) {
-						String objectText = objects.item(j).getTextContent();
-						objectIDSet.add(objectText);
+						Element objectElement = (Element) objects.item(j);
+						ObjectBase object = loadObject(objectElement, areaID);
+						objectSet.add(object);
+						Data.addObject(object.getID(), object);
 					}
 				}
 				
-				Area tempArea = new Area(areaID, name, isProperName, isProximateName, roomID, linkSet);
+				Area tempArea = new Area(areaID, name, isProperName, isProximateName, roomID, linkSet, objectSet);
 				Data.addArea(areaID, tempArea);
 				tempRoom.addArea(tempArea);
 			}
 		}
+	}
+	
+	private static ObjectBase loadObject(Element object, String areaID) {
+		String objectID = object.getAttribute("id");
+		String objectType = object.getAttribute("type");
+		String objectName = object.getElementsByTagName("name").item(0).getTextContent();
+		switch(objectType) {
+			case "exit":
+				String exitLink = object.getElementsByTagName("link").item(0).getTextContent();
+				System.out.println("ObjectID: " + objectID);
+				System.out.println("ExitLink: " + exitLink);
+				return new ObjectExit(objectID, areaID, objectName, exitLink);
+		}
+		return null;
 	}
 	
 }

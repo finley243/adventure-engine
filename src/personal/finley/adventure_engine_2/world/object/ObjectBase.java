@@ -17,15 +17,21 @@ public class ObjectBase implements INoun, IActionable {
 	private String name;
 	private String currentAreaID;
 	
-	public ObjectBase(String ID, String name) {
+	public ObjectBase(String ID, String currentAreaID, String name) {
 		this.ID = ID;
 		this.name = name;
-		Data.addObject(ID, this);
+		this.currentAreaID = currentAreaID;
+		//Data.addObject(ID, this);
 	}
 	
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public String getFormattedName() {
+		return (isProperName() ? "" : "the ") + getName();
 	}
 	
 	@Override
@@ -41,10 +47,6 @@ public class ObjectBase implements INoun, IActionable {
 	@Override
 	public Area getArea() {
 		return Data.getArea(currentAreaID);
-	}
-	
-	public void setAreaID(String areaID) {
-		this.currentAreaID = areaID;
 	}
 
 	@Override

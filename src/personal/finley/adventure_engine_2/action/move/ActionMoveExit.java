@@ -38,8 +38,7 @@ public class ActionMoveExit implements IAction {
 
 	@Override
 	public String getChoiceName() {
-		//return "Go to " + (area.isProperName() ? "" : "the ") + area.getName();
-		return "Go through " + (exit.isProperName() ? "" : "the ") + exit.getName();
+		return "Go through " + exit.getFormattedName();
 	}
 
 	@Override
