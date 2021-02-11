@@ -1,6 +1,5 @@
 package personal.finley.adventure_engine_2.world.environment;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import personal.finley.adventure_engine_2.EnumTypes.Pronoun;
@@ -8,6 +7,8 @@ import personal.finley.adventure_engine_2.world.INoun;
 
 public class Room implements INoun {
 
+	private String ID;
+	
 	private boolean isExterior;
 	private boolean isSoundDampened;
 	
@@ -18,16 +19,17 @@ public class Room implements INoun {
 	
 	private Set<Area> areas;
 	
-	public Room(String name, boolean isProperName, String description) {
+	public Room(String ID, String name, boolean isProperName, String description, Set<Area> areas) {
+		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
 		this.description = description;
-		this.areas = new HashSet<Area>();
+		this.areas = areas;
 		this.hasVisited = false;
 	}
 	
-	public void addArea(Area area) {
-		areas.add(area);
+	public String getID() {
+		return ID;
 	}
 	
 	public Set<Area> getAreas(){

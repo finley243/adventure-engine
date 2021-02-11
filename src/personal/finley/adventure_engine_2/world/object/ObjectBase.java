@@ -11,17 +11,16 @@ import personal.finley.adventure_engine_2.world.IActionable;
 import personal.finley.adventure_engine_2.world.INoun;
 import personal.finley.adventure_engine_2.world.environment.Area;
 
-public class ObjectBase implements INoun, IActionable {
+public abstract class ObjectBase implements INoun, IActionable {
 
 	private String ID;
 	private String name;
-	private String currentAreaID;
+	private String areaID;
 	
-	public ObjectBase(String ID, String currentAreaID, String name) {
+	public ObjectBase(String ID, String areaID, String name) {
 		this.ID = ID;
 		this.name = name;
-		this.currentAreaID = currentAreaID;
-		//Data.addObject(ID, this);
+		this.areaID = areaID;
 	}
 	
 	@Override
@@ -46,7 +45,7 @@ public class ObjectBase implements INoun, IActionable {
 	
 	@Override
 	public Area getArea() {
-		return Data.getArea(currentAreaID);
+		return Data.getArea(areaID);
 	}
 
 	@Override

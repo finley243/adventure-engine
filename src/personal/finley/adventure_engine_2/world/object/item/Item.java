@@ -11,7 +11,6 @@ public class Item extends ObjectBase {
 	
 	public Item(String ID, String currentAreaID, String name) {
 		super(ID, currentAreaID, name);
-		//Data.addItem(ID, this);
 	}
 
 	@Override

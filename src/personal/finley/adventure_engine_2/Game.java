@@ -18,16 +18,15 @@ import personal.finley.adventure_engine_2.load.WorldLoader;
 import personal.finley.adventure_engine_2.textgen.LangUtils;
 import personal.finley.adventure_engine_2.textgen.Phrases;
 import personal.finley.adventure_engine_2.textgen.TextPrinter;
-import personal.finley.adventure_engine_2.world.environment.Area;
-import personal.finley.adventure_engine_2.world.object.ObjectBase;
-import personal.finley.adventure_engine_2.world.object.ObjectExit;
 
 public class Game {
 	
 	public static final EventBus EVENT_BUS = new EventBus();
 	
 	public static final String GAMEFILES = "src/gamefiles";
-	public static final String AREA_DIRECTORY = "/areas";
+	public static final String WORLD_DIRECTORY = "/world";
+	public static final String ACTOR_DIRECTORY = "/actors";
+	public static final String ITEM_DIRECTORY = "/items";
 	
 	public static final String PLAYER_ACTOR = "player";
 	public static final String PLAYER_START_AREA = "pallasCubiclesWindows";
@@ -42,7 +41,7 @@ public class Game {
 		
 		Phrases.load();
 		
-		WorldLoader.loadRooms(new File(GAMEFILES + AREA_DIRECTORY));
+		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		
 		IController playerController = new ControllerPlayer();
 		IController npcController = new ControllerUtility();

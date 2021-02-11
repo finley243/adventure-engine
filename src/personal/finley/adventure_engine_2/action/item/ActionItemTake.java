@@ -16,8 +16,8 @@ public class ActionItemTake implements IAction {
 	
 	@Override
 	public void choose(Actor subject) {
-		subject.getArea().removeObject(item);
-		subject.inventory().addItem(item);
+		//subject.getArea().removeObject(item);
+		//subject.inventory().addItem(item);
 	}
 	
 	@Override

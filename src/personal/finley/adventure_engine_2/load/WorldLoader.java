@@ -23,80 +23,93 @@ import personal.finley.adventure_engine_2.world.object.ObjectExit;
 
 public class WorldLoader {
 
-	public static void loadRooms(File dir) throws ParserConfigurationException, SAXException, IOException {
+	public static void loadWorld(File dir) throws ParserConfigurationException, SAXException, IOException {
 		if(dir.isDirectory()) {
 			File[] files = dir.listFiles();
 			for(File file : files) {
-				loadRoom(file);
+				//loadRoom(file);
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document document = builder.parse(file);
+				Element roomElement = document.getDocumentElement();
+				Room room = loadRoom(roomElement);
+				Data.addRoom(room.getID(), room);
 			}
 		}
 	}
 	
-	private static void loadRoom(File file) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document document = builder.parse(file);
-		
-		Element room = document.getDocumentElement();
+	private static Room loadRoom(Element room) throws ParserConfigurationException, SAXException, IOException {
 		String roomID = room.getAttribute("id");
 		Element roomNameElement = (Element) room.getElementsByTagName("name").item(0);
 		String roomName = roomNameElement.getTextContent();
-		boolean roomIsProperName = roomNameElement.getAttribute("proper").equalsIgnoreCase("true");
-		String roomDescription = room.getElementsByTagName("description").item(0).getTextContent();
-		Room tempRoom = new Room(roomName, roomIsProperName, roomDescription);
-		Data.addRoom(roomID, tempRoom);
+		boolean roomNameIsProper = boolAttribute(roomNameElement, "proper");
+		String roomDescription = singleTag(room, "description");
 		
 		NodeList areas = room.getElementsByTagName("area");
+		Set<Area> areaSet = new HashSet<Area>();
 		for(int i = 0; i < areas.getLength(); i++) {
 			if(areas.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				Element area = (Element) areas.item(i);
-				String areaID = area.getAttribute("id");
-				Element nameElement = (Element) area.getElementsByTagName("name").item(0);
-				String name = nameElement.getTextContent();
-				boolean isProperName = nameElement.getAttribute("proper").equalsIgnoreCase("true");
-				boolean isProximateName = nameElement.getAttribute("prox").equalsIgnoreCase("true");
-				
-				Element linksElement = (Element) area.getElementsByTagName("links").item(0);
-				NodeList links = linksElement.getElementsByTagName("link");
-				Set<String> linkSet = new HashSet<String>();
-				for(int j = 0; j < links.getLength(); j++) {
-					if(links.item(j).getNodeType() == Node.ELEMENT_NODE) {
-						String linkText = links.item(j).getTextContent();
-						linkSet.add(linkText);
-					}
-				}
-				
-				Element objectsElement = (Element) area.getElementsByTagName("objects").item(0);
-				NodeList objects = objectsElement.getElementsByTagName("object");
-				Set<ObjectBase> objectSet = new HashSet<ObjectBase>();
-				for(int j = 0; j < objects.getLength(); j++) {
-					if(objects.item(j).getNodeType() == Node.ELEMENT_NODE) {
-						Element objectElement = (Element) objects.item(j);
-						ObjectBase object = loadObject(objectElement, areaID);
-						objectSet.add(object);
-						Data.addObject(object.getID(), object);
-					}
-				}
-				
-				Area tempArea = new Area(areaID, name, isProperName, isProximateName, roomID, linkSet, objectSet);
-				Data.addArea(areaID, tempArea);
-				tempRoom.addArea(tempArea);
+				Element areaElement = (Element) areas.item(i);
+				Area area = loadArea(areaElement, roomID);
+				areaSet.add(area);
+				Data.addArea(area.getID(), area);
 			}
 		}
+		return new Room(roomID, roomName, roomNameIsProper, roomDescription, areaSet);
+	}
+	
+	private static Area loadArea(Element area, String roomID) {
+		String areaID = area.getAttribute("id");
+		Element nameElement = (Element) area.getElementsByTagName("name").item(0);
+		String name = nameElement.getTextContent();
+		boolean isProperName = boolAttribute(nameElement, "proper");
+		boolean isProximateName = boolAttribute(nameElement, "prox");
+		
+		Element linksElement = (Element) area.getElementsByTagName("links").item(0);
+		NodeList links = linksElement.getElementsByTagName("link");
+		Set<String> linkSet = new HashSet<String>();
+		for(int j = 0; j < links.getLength(); j++) {
+			if(links.item(j).getNodeType() == Node.ELEMENT_NODE) {
+				String linkText = links.item(j).getTextContent();
+				linkSet.add(linkText);
+			}
+		}
+		
+		Element objectsElement = (Element) area.getElementsByTagName("objects").item(0);
+		NodeList objects = objectsElement.getElementsByTagName("object");
+		Set<ObjectBase> objectSet = new HashSet<ObjectBase>();
+		for(int j = 0; j < objects.getLength(); j++) {
+			if(objects.item(j).getNodeType() == Node.ELEMENT_NODE) {
+				Element objectElement = (Element) objects.item(j);
+				ObjectBase object = loadObject(objectElement, areaID);
+				objectSet.add(object);
+				Data.addObject(object.getID(), object);
+			}
+		}
+		
+		return new Area(areaID, name, isProperName, isProximateName, roomID, linkSet, objectSet);
 	}
 	
 	private static ObjectBase loadObject(Element object, String areaID) {
 		String objectID = object.getAttribute("id");
 		String objectType = object.getAttribute("type");
-		String objectName = object.getElementsByTagName("name").item(0).getTextContent();
+		String objectName = singleTag(object, "name");
 		switch(objectType) {
 			case "exit":
-				String exitLink = object.getElementsByTagName("link").item(0).getTextContent();
-				System.out.println("ObjectID: " + objectID);
-				System.out.println("ExitLink: " + exitLink);
+				String exitLink = singleTag(object, "link");
 				return new ObjectExit(objectID, areaID, objectName, exitLink);
 		}
 		return null;
+	}
+	
+	// ------------------------------------------------------------------------------
+	
+	private static boolean boolAttribute(Element element, String name) {
+		return element.getAttribute(name).equalsIgnoreCase("true");
+	}
+	
+	private static String singleTag(Element element, String name) {
+		return element.getElementsByTagName(name).item(0).getTextContent();
 	}
 	
 }
