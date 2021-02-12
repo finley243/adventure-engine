@@ -6,7 +6,7 @@ import java.util.List;
 import personal.finley.adventure_engine_2.Data;
 import personal.finley.adventure_engine_2.action.IAction;
 import personal.finley.adventure_engine_2.actor.Actor;
-import personal.finley.adventure_engine_2.textgen.TextPrinter.Pronoun;
+import personal.finley.adventure_engine_2.textgen.Context.Pronoun;
 import personal.finley.adventure_engine_2.world.INoun;
 import personal.finley.adventure_engine_2.world.IPhysical;
 import personal.finley.adventure_engine_2.world.environment.Area;

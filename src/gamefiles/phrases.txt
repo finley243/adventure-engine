@@ -2,3 +2,4 @@ move:<subject> go<es> to <object>
 moveProx:<subject> go<es> toward <object>
 moveExit:<subject> go<es> through <object> to <object2>
 unlockExit:<subject> unlock<s> <object>
+wait:<subject> {glance<s> around|<is> lost in thought}

@@ -1,6 +1,6 @@
 package personal.finley.adventure_engine_2.world.template;
 
-public class TemplateConsumable {
+public class StatsConsumable {
 
 	public enum ConsumableType{
 		FOOD, DRINK, OTHER
@@ -9,7 +9,7 @@ public class TemplateConsumable {
 	private String name;
 	private ConsumableType type;
 	
-	public TemplateConsumable() {
+	public StatsConsumable() {
 		
 	}
 	

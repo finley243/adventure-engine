@@ -1,6 +1,6 @@
 package personal.finley.adventure_engine_2.world;
 
-import personal.finley.adventure_engine_2.textgen.TextPrinter.Pronoun;
+import personal.finley.adventure_engine_2.textgen.Context.Pronoun;
 
 public interface INoun {
 	

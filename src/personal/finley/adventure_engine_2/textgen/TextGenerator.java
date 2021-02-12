@@ -10,35 +10,10 @@ import personal.finley.adventure_engine_2.Data;
 import personal.finley.adventure_engine_2.Game;
 import personal.finley.adventure_engine_2.event.TextEvent;
 import personal.finley.adventure_engine_2.event.TextPrintEvent;
+import personal.finley.adventure_engine_2.textgen.Context.Pronoun;
 import personal.finley.adventure_engine_2.world.INoun;
 
-public class TextPrinter {
-	
-	public enum Pronoun{
-		HE("he", "him", "his", "himself", true),
-		SHE("she", "her", "her", "herself", true),
-		THEY("they", "them", "their", "themselves", false),
-		IT("it", "it", "its", "itself", true),
-		I("I", "me", "my", "myself", false),
-		WE("we", "us", "our", "ourselves", false),
-		YOU("you", "you", "your", "yourself", false),
-		YOUALL("you", "you", "your", "yourselves", false);
-		
-		public final String subject, object, possessive, reflexive;
-		public final boolean thirdPersonVerb;
-		
-		Pronoun(String subject, String object, String possessive, String reflexive, boolean thirdPersonVerb){
-			this.subject = subject;
-			this.object = object;
-			this.possessive = possessive;
-			this.reflexive = reflexive;
-			this.thirdPersonVerb = thirdPersonVerb;
-		}
-	}
-	
-	public enum Benefitting{
-		SUBJECT, OBJECT
-	}
+public class TextGenerator {
 	
 	public static final char RANDOM_OPEN = '{';
 	public static final char RANDOM_CLOSE = '}';
@@ -66,7 +41,7 @@ public class TextPrinter {
 	
 	private List<TextEvent> printQueue;
 	
-	public TextPrinter() {
+	public TextGenerator() {
 		printQueue = new ArrayList<TextEvent>();
 	}
 	
@@ -76,7 +51,7 @@ public class TextPrinter {
 	}
 	
 	/*
-	 * Format for tags: <subject> hits <object> with <object2>
+	 * Format for tags: <subject> hit<s> <object> with <object2>
 	 * Format for OR expressions: {this thing|other thing} or {<tag> thing|other thing}
 	 */
 	
@@ -90,35 +65,7 @@ public class TextPrinter {
 			Context context = clause.getContext();
 			line = chooseRandoms(line);
 			
-			boolean useSubjectPronoun = false;
-			boolean useObjectPronoun = false;
-			boolean useObject2Pronoun = false;
-			if(lastContext != null && lastContext.getSubject().equals(context.getSubject())) {
-				if(context.getSubject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
-					useSubjectPronoun = true;
-				}
-			}
-			if(lastContext != null && lastContext.getObject().equals(context.getObject())) {
-				if(context.getObject().getPronoun() != context.getSubject().getPronoun()) {
-					useObjectPronoun = true;
-				}
-			}
-			if(lastContext != null && lastContext.getObject2().equals(context.getObject2())) {
-				if(context.getObject2().getPronoun() != context.getSubject().getPronoun()
-				&& context.getObject2().getPronoun() != context.getObject().getPronoun()) {
-					useObject2Pronoun = true;
-				}
-			}
-			if(context.getSubject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
-				useSubjectPronoun = true;
-			}
-			if(context.getObject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
-				useObjectPronoun = true;
-			}
-			if(context.getObject2().equals(Data.getActor(Game.PLAYER_ACTOR))) {
-				useObject2Pronoun = true;
-			}
-			line = populateFromContext(line, context, useSubjectPronoun, useObjectPronoun, useObject2Pronoun);
+			line = determineContext(line, context, lastContext);
 			
 			if(context.isCompleteSentence) {
 				if(isOpenSentence) {
@@ -147,6 +94,38 @@ public class TextPrinter {
 		block += ".";
 		System.out.println(block);
 		printQueue.clear();
+	}
+	
+	private String determineContext(String line, Context context, Context lastContext) {
+		boolean useSubjectPronoun = false;
+		boolean useObjectPronoun = false;
+		boolean useObject2Pronoun = false;
+		if(lastContext != null && lastContext.getSubject().equals(context.getSubject())) {
+			if(context.getSubject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+				useSubjectPronoun = true;
+			}
+		}
+		if(lastContext != null && lastContext.getObject().equals(context.getObject())) {
+			if(context.getObject().getPronoun() != context.getSubject().getPronoun()) {
+				useObjectPronoun = true;
+			}
+		}
+		if(lastContext != null && lastContext.getObject2().equals(context.getObject2())) {
+			if(context.getObject2().getPronoun() != context.getSubject().getPronoun()
+			&& context.getObject2().getPronoun() != context.getObject().getPronoun()) {
+				useObject2Pronoun = true;
+			}
+		}
+		if(context.getSubject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+			useSubjectPronoun = true;
+		}
+		if(context.getObject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+			useObjectPronoun = true;
+		}
+		if(context.getObject2().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+			useObject2Pronoun = true;
+		}
+		return populateFromContext(line, context, useSubjectPronoun, useObjectPronoun, useObject2Pronoun);
 	}
 	
 	private String chooseRandoms(String line) {

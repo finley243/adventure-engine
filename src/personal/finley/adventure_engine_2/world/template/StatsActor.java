@@ -1,14 +1,14 @@
 package personal.finley.adventure_engine_2.world.template;
 
-import personal.finley.adventure_engine_2.textgen.TextPrinter.Pronoun;
+import personal.finley.adventure_engine_2.textgen.Context.Pronoun;
 
-public class TemplateActor {
+public class StatsActor {
 
 	private String name;
 	private boolean isProperName;
 	private Pronoun pronoun;
 	
-	public TemplateActor(String name, boolean isProperName, Pronoun pronoun) {
+	public StatsActor(String name, boolean isProperName, Pronoun pronoun) {
 		this.name = name;
 		this.isProperName = isProperName;
 		this.pronoun = pronoun;

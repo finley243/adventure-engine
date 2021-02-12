@@ -1,14 +1,14 @@
 package personal.finley.adventure_engine_2.world.item;
 
-import personal.finley.adventure_engine_2.world.template.TemplateConsumable;
+import personal.finley.adventure_engine_2.world.template.StatsConsumable;
 
 public class ItemConsumable extends Item {
 
-	private TemplateConsumable template;
+	private StatsConsumable stats;
 	
-	public ItemConsumable(String ID, String areaID, TemplateConsumable template) {
-		super(ID, areaID, template.getName());
-		this.template = template;
+	public ItemConsumable(String ID, String areaID, StatsConsumable stats) {
+		super(ID, areaID, stats.getName());
+		this.stats = stats;
 	}
 	
 	@Override
@@ -17,7 +17,7 @@ public class ItemConsumable extends Item {
 			return false;
 		} else {
 			ItemConsumable other = (ItemConsumable) o;
-			return this.template == other.template;
+			return this.stats == other.stats;
 		}
 	}
 	

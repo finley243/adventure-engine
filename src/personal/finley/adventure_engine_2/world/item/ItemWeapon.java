@@ -1,14 +1,14 @@
 package personal.finley.adventure_engine_2.world.item;
 
-import personal.finley.adventure_engine_2.world.template.TemplateWeapon;
+import personal.finley.adventure_engine_2.world.template.StatsWeapon;
 
 public class ItemWeapon extends Item {
 	
-	private TemplateWeapon template;
+	private StatsWeapon stats;
 	
-	public ItemWeapon(String ID, String areaID, TemplateWeapon template) {
-		super(ID, areaID, template.getName());
-		this.template = template;
+	public ItemWeapon(String ID, String areaID, StatsWeapon stats) {
+		super(ID, areaID, stats.getName());
+		this.stats = stats;
 	}
 	
 	@Override
@@ -17,7 +17,7 @@ public class ItemWeapon extends Item {
 			return false;
 		} else {
 			ItemWeapon other = (ItemWeapon) o;
-			return this.template == other.template;
+			return this.stats == other.stats;
 		}
 	}
 

@@ -11,12 +11,12 @@ import com.google.common.eventbus.EventBus;
 
 import personal.finley.adventure_engine_2.actor.Actor;
 import personal.finley.adventure_engine_2.load.WorldLoader;
+import personal.finley.adventure_engine_2.textgen.Context.Pronoun;
 import personal.finley.adventure_engine_2.textgen.LangUtils;
 import personal.finley.adventure_engine_2.textgen.Phrases;
-import personal.finley.adventure_engine_2.textgen.TextPrinter;
-import personal.finley.adventure_engine_2.textgen.TextPrinter.Pronoun;
+import personal.finley.adventure_engine_2.textgen.TextGenerator;
 import personal.finley.adventure_engine_2.world.template.ActorFactory;
-import personal.finley.adventure_engine_2.world.template.TemplateActor;
+import personal.finley.adventure_engine_2.world.template.StatsActor;
 
 public class Game {
 	
@@ -30,19 +30,19 @@ public class Game {
 	public static final String PLAYER_ACTOR = "player";
 	public static final String PLAYER_START_AREA = "pallasCubiclesWindows";
 	
-	private TextPrinter printer;
+	private TextGenerator printer;
 	
 	private boolean continueGameLoop;
 	
 	public Game() throws ParserConfigurationException, SAXException, IOException {
-		printer = new TextPrinter();
+		printer = new TextGenerator();
 		EVENT_BUS.register(printer);
 		
 		Phrases.load();
 		
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		
-		TemplateActor alphaTemplate = new TemplateActor("Alpha", true, Pronoun.YOU);
+		StatsActor alphaTemplate = new StatsActor("Alpha", true, Pronoun.YOU);
 		Actor alpha = ActorFactory.create(PLAYER_ACTOR, PLAYER_START_AREA, alphaTemplate, true);
 		Data.addActor(alpha.getID(), alpha);
 		//Actor alpha = new Actor(PLAYER_ACTOR, "Alpha", true, Pronoun.YOU, PLAYER_START_AREA, null, null, false, playerController);

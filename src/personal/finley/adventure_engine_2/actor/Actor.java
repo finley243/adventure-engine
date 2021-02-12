@@ -10,21 +10,23 @@ import java.util.Set;
 import personal.finley.adventure_engine_2.Data;
 import personal.finley.adventure_engine_2.Game;
 import personal.finley.adventure_engine_2.action.ActionMove;
+import personal.finley.adventure_engine_2.action.ActionWait;
 import personal.finley.adventure_engine_2.action.IAction;
-import personal.finley.adventure_engine_2.textgen.TextPrinter.Pronoun;
+import personal.finley.adventure_engine_2.textgen.Context.Pronoun;
+import personal.finley.adventure_engine_2.world.IAttackTarget;
 import personal.finley.adventure_engine_2.world.INoun;
 import personal.finley.adventure_engine_2.world.IPhysical;
 import personal.finley.adventure_engine_2.world.environment.Area;
 import personal.finley.adventure_engine_2.world.object.ObjectBase;
-import personal.finley.adventure_engine_2.world.template.TemplateActor;
+import personal.finley.adventure_engine_2.world.template.StatsActor;
 
-public class Actor implements INoun, IPhysical {
+public class Actor implements INoun, IPhysical, IAttackTarget {
 	
 	public enum Skill{
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
 	}
 	
-	private TemplateActor template;
+	private StatsActor stats;
 	
 	private String ID;
 	
@@ -39,10 +41,10 @@ public class Actor implements INoun, IPhysical {
 	
 	IController controller;
 	
-	public Actor(String ID, String areaID, TemplateActor template, String defaultTopic, String initTopic, boolean isDead, IController controller) {
+	public Actor(String ID, String areaID, StatsActor stats, String defaultTopic, String initTopic, boolean isDead, IController controller) {
 		this.ID = ID;
 		this.move(Data.getArea(areaID));
-		this.template = template;
+		this.stats = stats;
 		this.defaultTopic = defaultTopic;
 		this.topicQueue = new LinkedList<String>();
 		if(initTopic != null) {
@@ -53,7 +55,7 @@ public class Actor implements INoun, IPhysical {
 		this.controller = controller;
 	}
 	
-	public Actor(String ID, String areaID, TemplateActor template) {
+	public Actor(String ID, String areaID, StatsActor template) {
 		
 	}
 	
@@ -63,7 +65,7 @@ public class Actor implements INoun, IPhysical {
 	
 	@Override
 	public String getName() {
-		return template.getName();
+		return stats.getName();
 	}
 	
 	@Override
@@ -73,12 +75,12 @@ public class Actor implements INoun, IPhysical {
 	
 	@Override
 	public boolean isProperName() {
-		return template.isProperName();
+		return stats.isProperName();
 	}
 	
 	@Override
 	public Pronoun getPronoun() {
-		return template.getPronoun();
+		return stats.getPronoun();
 	}
 	
 	@Override
@@ -149,13 +151,15 @@ public class Actor implements INoun, IPhysical {
 		for(ObjectBase object : getArea().getObjects()) {
 			actions.addAll(object.localActions(this));
 		}
-		
+		actions.add(new ActionWait());
 		return actions;
 	}
 	
 	public void takeTurn() {
 		// Could handle action points here?
-		controller.chooseAction(this).choose(this);
+		if(!isDead) {
+			controller.chooseAction(this).choose(this);
+		}
 	}
 	
 }

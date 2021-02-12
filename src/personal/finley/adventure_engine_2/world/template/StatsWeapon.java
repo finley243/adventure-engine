@@ -1,6 +1,6 @@
 package personal.finley.adventure_engine_2.world.template;
 
-public class TemplateWeapon {
+public class StatsWeapon {
 	
 	public enum WeaponType{
 		PISTOL(true, false, 2),
@@ -26,7 +26,7 @@ public class TemplateWeapon {
 	private String name;
 	private WeaponType type;
 	
-	public TemplateWeapon() {
+	public StatsWeapon() {
 		
 	}
 	

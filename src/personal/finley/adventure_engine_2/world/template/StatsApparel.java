@@ -1,6 +1,6 @@
 package personal.finley.adventure_engine_2.world.template;
 
-public class TemplateApparel {
+public class StatsApparel {
 
 	public enum ApparelType{
 		BODY, FACE, HEAD, FEET, ARMS, LEGS
@@ -9,7 +9,7 @@ public class TemplateApparel {
 	private String name;
 	private ApparelType type;
 	
-	public TemplateApparel() {
+	public StatsApparel() {
 		
 	}
 	
