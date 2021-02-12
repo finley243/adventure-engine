@@ -10,14 +10,13 @@ import org.xml.sax.SAXException;
 import com.google.common.eventbus.EventBus;
 
 import personal.finley.adventure_engine_2.actor.Actor;
-import personal.finley.adventure_engine_2.actor.ControllerPlayer;
-import personal.finley.adventure_engine_2.actor.ControllerUtility;
-import personal.finley.adventure_engine_2.actor.IController;
 import personal.finley.adventure_engine_2.load.WorldLoader;
 import personal.finley.adventure_engine_2.textgen.LangUtils;
 import personal.finley.adventure_engine_2.textgen.Phrases;
 import personal.finley.adventure_engine_2.textgen.TextPrinter;
 import personal.finley.adventure_engine_2.textgen.TextPrinter.Pronoun;
+import personal.finley.adventure_engine_2.world.template.ActorFactory;
+import personal.finley.adventure_engine_2.world.template.TemplateActor;
 
 public class Game {
 	
@@ -43,11 +42,10 @@ public class Game {
 		
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		
-		IController playerController = new ControllerPlayer();
-		IController npcController = new ControllerUtility();
-		
-		Actor alpha = new Actor(PLAYER_ACTOR, "Alpha", true, Pronoun.YOU, PLAYER_START_AREA, null, null, false, playerController);
+		TemplateActor alphaTemplate = new TemplateActor("Alpha", true, Pronoun.YOU);
+		Actor alpha = ActorFactory.create(PLAYER_ACTOR, PLAYER_START_AREA, alphaTemplate, true);
 		Data.addActor(alpha.getID(), alpha);
+		//Actor alpha = new Actor(PLAYER_ACTOR, "Alpha", true, Pronoun.YOU, PLAYER_START_AREA, null, null, false, playerController);
 		//Actor beta = new Actor("character2", "Beta", true, Pronoun.HE, PLAYER_START_AREA, null, null, false, npcController);
 		//Actor gamma = new Actor("character3", "Gamma", true, Pronoun.SHE, PLAYER_START_AREA, null, null, false, npcController);
 		//Actor delta = new Actor("character4", "Delta", true, Pronoun.IT, PLAYER_START_AREA, null, null, false, npcController);

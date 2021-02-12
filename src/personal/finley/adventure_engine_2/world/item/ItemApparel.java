@@ -6,7 +6,7 @@ public class ItemApparel extends Item {
 
 	private TemplateApparel template;
 	
-	public ItemApparel(String ID, String areaID, String name, TemplateApparel template) {
+	public ItemApparel(String ID, String areaID, TemplateApparel template) {
 		super(ID, areaID, template.getName());
 		this.template = template;
 	}

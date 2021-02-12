@@ -24,29 +24,25 @@ public class Actor implements INoun, IPhysical {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
 	}
 	
-	private String ID;
+	private TemplateActor template;
 	
-	private String name;
-	private boolean isProperName;
-	private Pronoun pronoun;
+	private String ID;
 	
 	private boolean isDead;
 	
 	private Inventory inventory;
 	
-	private String currentAreaID;
+	private String areaID;
 	
 	private String defaultTopic;
 	private Queue<String> topicQueue;
 	
 	IController controller;
 	
-	public Actor(String ID, String name, boolean isProperName, Pronoun pronoun, String startingAreaID, String defaultTopic, String initTopic, boolean isDead, IController controller) {
+	public Actor(String ID, String areaID, TemplateActor template, String defaultTopic, String initTopic, boolean isDead, IController controller) {
 		this.ID = ID;
-		this.name = name;
-		this.isProperName = isProperName;
-		this.pronoun = pronoun;
-		this.move(Data.getArea(startingAreaID));
+		this.move(Data.getArea(areaID));
+		this.template = template;
 		this.defaultTopic = defaultTopic;
 		this.topicQueue = new LinkedList<String>();
 		if(initTopic != null) {
@@ -67,7 +63,7 @@ public class Actor implements INoun, IPhysical {
 	
 	@Override
 	public String getName() {
-		return name;
+		return template.getName();
 	}
 	
 	@Override
@@ -77,17 +73,17 @@ public class Actor implements INoun, IPhysical {
 	
 	@Override
 	public boolean isProperName() {
-		return isProperName;
+		return template.isProperName();
 	}
 	
 	@Override
 	public Pronoun getPronoun() {
-		return pronoun;
+		return template.getPronoun();
 	}
 	
 	@Override
 	public Area getArea() {
-		return Data.getArea(currentAreaID);
+		return Data.getArea(areaID);
 	}
 	
 	public void addTopicToQueue(String topic) {
@@ -102,10 +98,10 @@ public class Actor implements INoun, IPhysical {
 	}
 	
 	public void move(Area area) {
-		if(currentAreaID != null) {
-			Data.getArea(currentAreaID).removeActor(this);
+		if(areaID != null) {
+			Data.getArea(areaID).removeActor(this);
 		}
-		currentAreaID = area.getID();
+		areaID = area.getID();
 		area.addActor(this);
 	}
 	
