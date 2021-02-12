@@ -1,8 +1,7 @@
-package personal.finley.adventure_engine_2.action.interact;
+package personal.finley.adventure_engine_2.action;
 
 import personal.finley.adventure_engine_2.Game;
 import personal.finley.adventure_engine_2.EnumTypes.Benefitting;
-import personal.finley.adventure_engine_2.action.IAction;
 import personal.finley.adventure_engine_2.actor.Actor;
 import personal.finley.adventure_engine_2.event.TextEvent;
 import personal.finley.adventure_engine_2.event.TextPrintEvent;

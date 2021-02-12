@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import personal.finley.adventure_engine_2.Data;
+import personal.finley.adventure_engine_2.action.ActionMoveExit;
 import personal.finley.adventure_engine_2.action.ActionUnlockExit;
 import personal.finley.adventure_engine_2.action.IAction;
-import personal.finley.adventure_engine_2.action.move.ActionMoveExit;
 import personal.finley.adventure_engine_2.actor.Actor;
 import personal.finley.adventure_engine_2.world.environment.Area;
 

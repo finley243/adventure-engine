@@ -10,15 +10,15 @@ import java.util.Set;
 import personal.finley.adventure_engine_2.Data;
 import personal.finley.adventure_engine_2.EnumTypes.Pronoun;
 import personal.finley.adventure_engine_2.Game;
+import personal.finley.adventure_engine_2.action.ActionMove;
 import personal.finley.adventure_engine_2.action.IAction;
-import personal.finley.adventure_engine_2.action.move.ActionMove;
-import personal.finley.adventure_engine_2.world.IActionable;
+import personal.finley.adventure_engine_2.world.IPhysical;
 import personal.finley.adventure_engine_2.world.INoun;
-import personal.finley.adventure_engine_2.world.Inventory;
 import personal.finley.adventure_engine_2.world.environment.Area;
 import personal.finley.adventure_engine_2.world.object.ObjectBase;
+import personal.finley.adventure_engine_2.world.template.TemplateActor;
 
-public class Actor implements INoun, IActionable {
+public class Actor implements INoun, IPhysical {
 	
 	private String ID;
 	
@@ -50,8 +50,15 @@ public class Actor implements INoun, IActionable {
 		}
 		this.isDead = isDead;
 		this.inventory = new Inventory();
-		Data.addActor(ID, this);
 		this.controller = controller;
+	}
+	
+	public Actor(String ID, String areaID, TemplateActor template) {
+		
+	}
+	
+	public String getID() {
+		return ID;
 	}
 	
 	@Override
@@ -123,8 +130,8 @@ public class Actor implements INoun, IActionable {
 		return new ArrayList<IAction>();
 	}
 	
-	public Set<IActionable> getVisibleObjects() {
-		Set<IActionable> objects = new HashSet<IActionable>();
+	public Set<IPhysical> getVisibleObjects() {
+		Set<IPhysical> objects = new HashSet<IPhysical>();
 		
 		return objects;
 	}

@@ -1,4 +1,4 @@
-package personal.finley.adventure_engine_2.world.object.item;
+package personal.finley.adventure_engine_2.world.item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,10 @@ import personal.finley.adventure_engine_2.action.IAction;
 import personal.finley.adventure_engine_2.actor.Actor;
 import personal.finley.adventure_engine_2.world.object.ObjectBase;
 
-public class Item extends ObjectBase {
+public abstract class Item extends ObjectBase {
 	
-	public Item(String ID, String currentAreaID, String name) {
-		super(ID, currentAreaID, name);
+	public Item(String ID, String areaID, String name) {
+		super(ID, areaID, name);
 	}
 
 	@Override

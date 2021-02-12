@@ -27,7 +27,6 @@ public class WorldLoader {
 		if(dir.isDirectory()) {
 			File[] files = dir.listFiles();
 			for(File file : files) {
-				//loadRoom(file);
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.parse(file);

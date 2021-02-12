@@ -1,8 +1,7 @@
-package personal.finley.adventure_engine_2.action.item;
+package personal.finley.adventure_engine_2.action;
 
-import personal.finley.adventure_engine_2.action.IAction;
 import personal.finley.adventure_engine_2.actor.Actor;
-import personal.finley.adventure_engine_2.world.object.item.Item;
+import personal.finley.adventure_engine_2.world.item.Item;
 
 public class ActionItemTake implements IAction {
 

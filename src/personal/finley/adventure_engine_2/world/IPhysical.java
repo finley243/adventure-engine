@@ -6,7 +6,7 @@ import personal.finley.adventure_engine_2.action.IAction;
 import personal.finley.adventure_engine_2.actor.Actor;
 import personal.finley.adventure_engine_2.world.environment.Area;
 
-public interface IActionable {
+public interface IPhysical {
 	
 	public Area getArea();
 	
