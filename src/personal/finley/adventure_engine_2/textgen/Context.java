@@ -1,6 +1,6 @@
 package personal.finley.adventure_engine_2.textgen;
 
-import personal.finley.adventure_engine_2.EnumTypes.Benefitting;
+import personal.finley.adventure_engine_2.textgen.TextPrinter.Benefitting;
 import personal.finley.adventure_engine_2.world.INoun;
 
 public class Context {

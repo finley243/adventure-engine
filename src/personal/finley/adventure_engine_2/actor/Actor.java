@@ -8,17 +8,21 @@ import java.util.Queue;
 import java.util.Set;
 
 import personal.finley.adventure_engine_2.Data;
-import personal.finley.adventure_engine_2.EnumTypes.Pronoun;
 import personal.finley.adventure_engine_2.Game;
 import personal.finley.adventure_engine_2.action.ActionMove;
 import personal.finley.adventure_engine_2.action.IAction;
-import personal.finley.adventure_engine_2.world.IPhysical;
+import personal.finley.adventure_engine_2.textgen.TextPrinter.Pronoun;
 import personal.finley.adventure_engine_2.world.INoun;
+import personal.finley.adventure_engine_2.world.IPhysical;
 import personal.finley.adventure_engine_2.world.environment.Area;
 import personal.finley.adventure_engine_2.world.object.ObjectBase;
 import personal.finley.adventure_engine_2.world.template.TemplateActor;
 
 public class Actor implements INoun, IPhysical {
+	
+	public enum Skill{
+		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
+	}
 	
 	private String ID;
 	

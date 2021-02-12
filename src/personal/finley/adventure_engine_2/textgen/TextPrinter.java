@@ -7,13 +7,38 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.google.common.eventbus.Subscribe;
 
 import personal.finley.adventure_engine_2.Data;
-import personal.finley.adventure_engine_2.EnumTypes.Pronoun;
 import personal.finley.adventure_engine_2.Game;
 import personal.finley.adventure_engine_2.event.TextEvent;
 import personal.finley.adventure_engine_2.event.TextPrintEvent;
 import personal.finley.adventure_engine_2.world.INoun;
 
 public class TextPrinter {
+	
+	public enum Pronoun{
+		HE("he", "him", "his", "himself", true),
+		SHE("she", "her", "her", "herself", true),
+		THEY("they", "them", "their", "themselves", false),
+		IT("it", "it", "its", "itself", true),
+		I("I", "me", "my", "myself", false),
+		WE("we", "us", "our", "ourselves", false),
+		YOU("you", "you", "your", "yourself", false),
+		YOUALL("you", "you", "your", "yourselves", false);
+		
+		public final String subject, object, possessive, reflexive;
+		public final boolean thirdPersonVerb;
+		
+		Pronoun(String subject, String object, String possessive, String reflexive, boolean thirdPersonVerb){
+			this.subject = subject;
+			this.object = object;
+			this.possessive = possessive;
+			this.reflexive = reflexive;
+			this.thirdPersonVerb = thirdPersonVerb;
+		}
+	}
+	
+	public enum Benefitting{
+		SUBJECT, OBJECT
+	}
 	
 	public static final char RANDOM_OPEN = '{';
 	public static final char RANDOM_CLOSE = '}';

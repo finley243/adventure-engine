@@ -1,6 +1,6 @@
 package personal.finley.adventure_engine_2.world.template;
 
-import personal.finley.adventure_engine_2.EnumTypes.Pronoun;
+import personal.finley.adventure_engine_2.textgen.TextPrinter.Pronoun;
 
 public class TemplateActor {
 

@@ -1,6 +1,5 @@
 package personal.finley.adventure_engine_2.event;
 
-import personal.finley.adventure_engine_2.EnumTypes.Benefitting;
 import personal.finley.adventure_engine_2.textgen.Context;
 import personal.finley.adventure_engine_2.textgen.Phrases;
 

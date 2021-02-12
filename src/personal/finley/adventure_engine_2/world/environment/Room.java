@@ -2,7 +2,7 @@ package personal.finley.adventure_engine_2.world.environment;
 
 import java.util.Set;
 
-import personal.finley.adventure_engine_2.EnumTypes.Pronoun;
+import personal.finley.adventure_engine_2.textgen.TextPrinter.Pronoun;
 import personal.finley.adventure_engine_2.world.INoun;
 
 public class Room implements INoun {

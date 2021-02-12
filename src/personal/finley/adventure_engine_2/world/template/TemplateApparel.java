@@ -1,9 +1,11 @@
 package personal.finley.adventure_engine_2.world.template;
 
-import personal.finley.adventure_engine_2.EnumTypes.ApparelType;
-
 public class TemplateApparel {
 
+	public enum ApparelType{
+		BODY, FACE, HEAD, FEET, ARMS, LEGS
+	}
+	
 	private String name;
 	private ApparelType type;
 	

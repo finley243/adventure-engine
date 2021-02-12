@@ -1,9 +1,11 @@
 package personal.finley.adventure_engine_2.world.template;
 
-import personal.finley.adventure_engine_2.EnumTypes.ConsumableType;
-
 public class TemplateConsumable {
 
+	public enum ConsumableType{
+		FOOD, DRINK, OTHER
+	}
+	
 	private String name;
 	private ConsumableType type;
 	

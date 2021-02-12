@@ -1,11 +1,11 @@
 package personal.finley.adventure_engine_2.action;
 
 import personal.finley.adventure_engine_2.Game;
-import personal.finley.adventure_engine_2.EnumTypes.Benefitting;
 import personal.finley.adventure_engine_2.actor.Actor;
 import personal.finley.adventure_engine_2.event.TextEvent;
 import personal.finley.adventure_engine_2.event.TextPrintEvent;
 import personal.finley.adventure_engine_2.textgen.Context;
+import personal.finley.adventure_engine_2.textgen.TextPrinter.Benefitting;
 import personal.finley.adventure_engine_2.world.environment.Area;
 import personal.finley.adventure_engine_2.world.object.ObjectExit;
 
