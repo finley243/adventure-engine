@@ -30,6 +30,7 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 	
 	private String ID;
 	
+	private int HP;
 	private boolean isDead;
 	
 	private Inventory inventory;
@@ -55,8 +56,10 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 		this.controller = controller;
 	}
 	
-	public Actor(String ID, String areaID, StatsActor template) {
-		
+	public Actor(String ID, String areaID, StatsActor stats) {
+		this.ID = ID;
+		this.areaID = areaID;
+		this.stats = stats;
 	}
 	
 	public String getID() {
@@ -107,12 +110,28 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 		area.addActor(this);
 	}
 	
+	public boolean canMove() {
+		return true;
+	}
+	
 	public Inventory inventory() {
 		return inventory;
 	}
 	
-	public boolean canMove() {
-		return true;
+	public void damage(int amount) {
+		if(amount < 0) throw new IllegalArgumentException();
+		HP -= amount;
+		if(HP <= 0) {
+			isDead = true;
+		}
+	}
+	
+	public void damageIgnoreArmor(int amount) {
+		if(amount < 0) throw new IllegalArgumentException();
+		HP -= amount;
+		if(HP <= 0) {
+			isDead = true;
+		}
 	}
 
 	@Override

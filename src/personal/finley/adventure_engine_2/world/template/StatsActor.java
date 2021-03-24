@@ -8,6 +8,8 @@ public class StatsActor {
 	private boolean isProperName;
 	private Pronoun pronoun;
 	
+	private int maxHP;
+	
 	public StatsActor(String name, boolean isProperName, Pronoun pronoun) {
 		this.name = name;
 		this.isProperName = isProperName;
@@ -24,6 +26,10 @@ public class StatsActor {
 	
 	public Pronoun getPronoun() {
 		return pronoun;
+	}
+	
+	public int getMaxHP() {
+		return maxHP;
 	}
 	
 }
