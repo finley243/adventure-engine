@@ -1,9 +1,22 @@
 <topic id = test_start>
     <line>
         <text></text>
-        <></>
+        <text></text>
+    </line>
+    <line>
+        <text></text>
+        <condition>
+
+        </condition>
+        <link></link>
     </line>
     <choice>
+        <link></link>
         <prompt></prompt>
+        <altlink></altlink>
+        <altprompt></altprompt>
+        <condition>
+
+        </condition>
     </choice>
 </topic>
