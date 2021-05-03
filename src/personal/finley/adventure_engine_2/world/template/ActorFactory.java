@@ -10,14 +10,13 @@ public class ActorFactory {
 	private static final IController NPC_CONTROLLER = new ControllerUtility();
 	private static final IController PLAYER_CONTROLLER = new ControllerPlayer();
 	
-	public static Actor create(String ID, String areaID, StatsActor stats, boolean isPlayer) {
-		IController controller;
-		if(isPlayer) {
-			controller = PLAYER_CONTROLLER;
-		} else {
-			controller = NPC_CONTROLLER;
-		}
-		Actor actor = new Actor(ID, areaID, stats, null, null, false, controller);
+	public static Actor create(String ID, String areaID, StatsActor stats, String topicID) {
+		Actor actor = new Actor(ID, areaID, stats, topicID, false, NPC_CONTROLLER);
+		return actor;
+	}
+	
+	public static Actor createPlayer(String ID, String areaID, StatsActor stats) {
+		Actor actor = new Actor(ID, areaID, stats, null, false, PLAYER_CONTROLLER);
 		return actor;
 	}
 	

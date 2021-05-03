@@ -1,23 +1,25 @@
-<room id="pallasConference">
-    <name proper="false">conference room</name>
-    <description>Testing description.</description>
-    <area id="pallasConferenceWindows">
-        <name proper="false" prox="true">window</name>
-        <links>
-            <link>pallasConferenceEntrance</link>
-        </links>
-        <objects></objects>
-    </area>
-    <area id="pallasConferenceEntrance">
-        <name proper="false" prox="false">entryway</name>
-        <links>
-            <link>pallasConferenceWindows</link>
-        </links>
-        <objects>
-            <object id="pallasConferenceDoor" type="exit">
-                <name>metal door</name>
-                <link>pallasCubiclesConferenceDoor</link>
-            </object>
-        </objects>
-    </area>
-</room>
+<rooms>
+    <room id="pallasConference">
+        <name proper="false">conference room</name>
+        <description>Testing description.</description>
+        <area id="pallasConferenceWindows">
+            <name proper="false" prox="true">window</name>
+            <links>
+                <link>pallasConferenceEntrance</link>
+            </links>
+            <objects></objects>
+        </area>
+        <area id="pallasConferenceEntrance">
+            <name proper="false" prox="false">entryway</name>
+            <links>
+                <link>pallasConferenceWindows</link>
+            </links>
+            <objects>
+                <object id="pallasConferenceDoor" type="exit">
+                    <name>metal door</name>
+                    <link>pallasCubiclesConferenceDoor</link>
+                </object>
+            </objects>
+        </area>
+    </room>
+</rooms>

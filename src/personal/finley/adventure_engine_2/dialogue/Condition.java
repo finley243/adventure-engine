@@ -1,4 +1,4 @@
-package personal.finley.adventure_engine_2;
+package personal.finley.adventure_engine_2.dialogue;
 
 public class Condition {
 

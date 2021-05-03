@@ -2,31 +2,52 @@ package personal.finley.adventure_engine_2.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import personal.finley.adventure_engine_2.Data;
 import personal.finley.adventure_engine_2.actor.Actor;
+import personal.finley.adventure_engine_2.dialogue.Choice;
+import personal.finley.adventure_engine_2.dialogue.Line;
 import personal.finley.adventure_engine_2.dialogue.Topic;
 
 public class MenuDialogue {
 	
 	public static void buildMenuDialogue(Actor target) {
 		boolean dialogueLoop = true;
-		Topic currentTopic = Data.getTopic(target.getTopic());
+		Topic currentTopic = Data.getTopic(target.getTopicID());
 		while(dialogueLoop) {
 			System.out.println(target.getName().toUpperCase());
-			List<String> choices = currentTopic.getChoices();
-			List<Topic> choiceTopics = new ArrayList<Topic>();
-			for(String currentChoice : choices) {
-				choiceTopics.add(Data.getTopic(currentChoice));
+			for(Line line : currentTopic.getLines()) {
+				if(line.shouldShow()) {
+					for(String text : line.getTextList()) {
+						System.out.println(text);
+					}
+					line.trigger();
+					if(line.hasRedirect()) {
+						currentTopic = Data.getTopic(line.getRedirectTopicId());
+					}
+					if(line.shouldExit()) {
+						dialogueLoop = false;
+						break;
+					}
+				}
 			}
-			for(int i = 0; i < choiceTopics.size(); i++) {
-				System.out.println((i+1) + ") " + choiceTopics.get(i).getPrompt());
+			if(dialogueLoop) {
+				List<Choice> validChoices = new ArrayList<Choice>();
+				for(Choice choice : currentTopic.getChoices()) {
+					if(choice.shouldShow()) {
+						validChoices.add(choice);
+					}
+				}
+				System.out.println();
+				if(validChoices.size() > 0) {
+					for(int i = 0; i < validChoices.size(); i++) {
+						System.out.println((i+1) + ") " + validChoices.get(i).getPrompt());
+					}
+					int response = UserInput.intInRange(1, validChoices.size());
+					currentTopic = Data.getTopic(validChoices.get(response - 1).getLinkedId());
+				}
 			}
-			int response = UserInput.intInRange(1, choiceTopics.size());
-			currentTopic = choiceTopics.get(response - 1);
 			System.out.println();
-			if(currentTopic.exit()) {
-				dialogueLoop = false;
-			}
 		}
 	}
 	

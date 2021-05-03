@@ -2,14 +2,13 @@ package personal.finley.adventure_engine_2.actor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Set;
 
 import personal.finley.adventure_engine_2.Data;
 import personal.finley.adventure_engine_2.Game;
 import personal.finley.adventure_engine_2.action.ActionMove;
+import personal.finley.adventure_engine_2.action.ActionTalk;
 import personal.finley.adventure_engine_2.action.ActionWait;
 import personal.finley.adventure_engine_2.action.IAction;
 import personal.finley.adventure_engine_2.textgen.Context.Pronoun;
@@ -37,20 +36,15 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 	
 	private String areaID;
 	
-	private String defaultTopic;
-	private Queue<String> topicQueue;
+	private String topicID;
 	
 	IController controller;
 	
-	public Actor(String ID, String areaID, StatsActor stats, String defaultTopic, String initTopic, boolean isDead, IController controller) {
+	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean isDead, IController controller) {
 		this.ID = ID;
 		this.move(Data.getArea(areaID));
 		this.stats = stats;
-		this.defaultTopic = defaultTopic;
-		this.topicQueue = new LinkedList<String>();
-		if(initTopic != null) {
-			topicQueue.add(initTopic);
-		}
+		this.topicID = topicID;
 		this.isDead = isDead;
 		this.inventory = new Inventory();
 		this.controller = controller;
@@ -91,15 +85,8 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 		return Data.getArea(areaID);
 	}
 	
-	public void addTopicToQueue(String topic) {
-		topicQueue.add(topic);
-	}
-	
-	public String getTopic() {
-		if(!topicQueue.isEmpty()) {
-			return topicQueue.remove();
-		}
-		return defaultTopic;
+	public String getTopicID() {
+		return topicID;
 	}
 	
 	public void move(Area area) {
@@ -140,8 +127,12 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 			return new ArrayList<IAction>();
 		}
 		List<IAction> action = new ArrayList<IAction>();
-		if(defaultTopic != null) {
-			//action.add(new ActionActorTalk(this));
+		if(subject.getID() == Game.PLAYER_ACTOR) { // Player-only actions
+			if(topicID != null) {
+				action.add(new ActionTalk(this));
+			}
+		} else { // NPC-only actions
+			
 		}
 		return action;
 	}

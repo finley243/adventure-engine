@@ -1,31 +1,36 @@
 package personal.finley.adventure_engine_2.dialogue;
 
-import personal.finley.adventure_engine_2.Condition;
-
 public class Choice {
 
-    private boolean hasChosen;
+    private boolean hasTriggered;
 
-    private String topicId;
+    private String linkedTopicId;
     private String prompt;
     private Condition condition;
 
-    private String altTopicId;
-    private String altPrompt;
+    private boolean once;
 
-    public Choice(String topicId, String prompt, Condition condition) {
-        this.topicId = topicId;
+    public Choice(String linkedTopicId, String prompt, Condition condition) {
+        this.linkedTopicId = linkedTopicId;
         this.prompt = prompt;
         this.condition = condition;
-        this.altTopicId = null;
-        this.altPrompt = null;
-        this.hasChosen = false;
+        this.hasTriggered = false;
     }
 
-    public Choice(String topicId, String prompt, Condition condition, String altTopicId, String altPrompt) {
-        this(topicId, prompt, condition);
-        this.altTopicId = altTopicId;
-        this.altPrompt = altPrompt;
+    public boolean shouldShow() {
+        return (condition == null || condition.isMet()) && (!once || !hasTriggered);
+    }
+    
+    public void trigger() {
+    	this.hasTriggered = true;
+    }
+
+    public String getPrompt() {
+        return prompt;
+    }
+
+    public String getLinkedId() {
+        return linkedTopicId;
     }
 
 }

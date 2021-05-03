@@ -10,6 +10,9 @@ import org.xml.sax.SAXException;
 import com.google.common.eventbus.EventBus;
 
 import personal.finley.adventure_engine_2.actor.Actor;
+import personal.finley.adventure_engine_2.actor.ControllerUtility;
+import personal.finley.adventure_engine_2.actor.IController;
+import personal.finley.adventure_engine_2.load.DialogueLoader;
 import personal.finley.adventure_engine_2.load.WorldLoader;
 import personal.finley.adventure_engine_2.textgen.Context.Pronoun;
 import personal.finley.adventure_engine_2.textgen.LangUtils;
@@ -26,6 +29,7 @@ public class Game {
 	public static final String WORLD_DIRECTORY = "/world";
 	public static final String ACTOR_DIRECTORY = "/actors";
 	public static final String ITEM_DIRECTORY = "/items";
+	public static final String DIALOGUE_DIRECTORY = "/dialogues";
 	
 	public static final String PLAYER_ACTOR = "player";
 	public static final String PLAYER_START_AREA = "pallasCubiclesWindows";
@@ -39,16 +43,15 @@ public class Game {
 		EVENT_BUS.register(printer);
 		
 		Phrases.load();
-		
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
+		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		
 		StatsActor alphaTemplate = new StatsActor("Alpha", true, Pronoun.YOU);
-		Actor alpha = ActorFactory.create(PLAYER_ACTOR, PLAYER_START_AREA, alphaTemplate, true);
+		Actor alpha = ActorFactory.createPlayer(PLAYER_ACTOR, PLAYER_START_AREA, alphaTemplate);
 		Data.addActor(alpha.getID(), alpha);
-		//Actor alpha = new Actor(PLAYER_ACTOR, "Alpha", true, Pronoun.YOU, PLAYER_START_AREA, null, null, false, playerController);
-		//Actor beta = new Actor("character2", "Beta", true, Pronoun.HE, PLAYER_START_AREA, null, null, false, npcController);
-		//Actor gamma = new Actor("character3", "Gamma", true, Pronoun.SHE, PLAYER_START_AREA, null, null, false, npcController);
-		//Actor delta = new Actor("character4", "Delta", true, Pronoun.IT, PLAYER_START_AREA, null, null, false, npcController);
+		StatsActor betaTemplate = new StatsActor("guard", false, Pronoun.HE);
+		Actor beta = ActorFactory.create("pallasGuard", PLAYER_START_AREA, betaTemplate, "test_start");
+		Data.addActor(beta.getID(), beta);
 		
 		startGameLoop();
 	}

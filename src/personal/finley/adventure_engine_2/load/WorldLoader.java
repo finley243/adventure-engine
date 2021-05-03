@@ -30,9 +30,15 @@ public class WorldLoader {
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.parse(file);
-				Element roomElement = document.getDocumentElement();
-				Room room = loadRoom(roomElement);
-				Data.addRoom(room.getID(), room);
+				Element rootElement = document.getDocumentElement();
+				NodeList rooms = rootElement.getElementsByTagName("room");
+				for(int i = 0; i < rooms.getLength(); i++) {
+					if(rooms.item(i).getNodeType() == Node.ELEMENT_NODE) {
+						Element roomElement = (Element) rooms.item(i);
+						Room room = loadRoom(roomElement);
+						Data.addRoom(room.getID(), room);
+					}
+				}
 			}
 		}
 	}
