@@ -1,6 +1,7 @@
 package personal.finley.adventure_engine.actor;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,8 +22,26 @@ import personal.finley.adventure_engine.world.template.StatsActor;
 
 public class Actor implements INoun, IPhysical, IAttackTarget {
 	
-	public enum Skill{
+	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
+	}
+	
+	public enum Skill {
+		// BODY
+		
+		
+		// INTELLIGENCE
+		HACKING,
+		HARDWARE,
+		// CHARISMA
+		
+		
+		// DEXTERITY
+		
+		
+		// AGILITY
+		
+		
 	}
 	
 	private StatsActor stats;
@@ -31,6 +50,8 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 	
 	private int HP;
 	private boolean isDead;
+	
+	private EnumMap<Attribute, Integer> attributes;
 	
 	private Inventory inventory;
 	
@@ -48,6 +69,10 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 		this.isDead = isDead;
 		this.inventory = new Inventory();
 		this.controller = controller;
+		this.attributes = new EnumMap<Attribute, Integer>(Attribute.class);
+		for(Attribute attribute : Attribute.values()) {
+			this.attributes.put(attribute, 1);
+		}
 	}
 	
 	public Actor(String ID, String areaID, StatsActor stats) {
@@ -83,6 +108,19 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 	@Override
 	public Area getArea() {
 		return Data.getArea(areaID);
+	}
+	
+	public int getAttribute(Attribute attribute) {
+		return attributes.get(attribute);
+	}
+	
+	public void setAttribute(Attribute attribute, int value) {
+		attributes.put(attribute, value);
+	}
+	
+	public void addAttribute(Attribute attribute, int value) {
+		int currentValue = attributes.get(attribute);
+		attributes.put(attribute, currentValue + value);
 	}
 	
 	public String getTopicID() {

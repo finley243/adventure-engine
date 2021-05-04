@@ -10,6 +10,7 @@ import org.xml.sax.SAXException;
 import com.google.common.eventbus.EventBus;
 
 import personal.finley.adventure_engine.actor.Actor;
+import personal.finley.adventure_engine.gui.Gui;
 import personal.finley.adventure_engine.load.DialogueLoader;
 import personal.finley.adventure_engine.load.WorldLoader;
 import personal.finley.adventure_engine.textgen.LangUtils;
@@ -32,11 +33,13 @@ public class Game {
 	public static final String PLAYER_ACTOR = "player";
 	
 	private TextGenerator printer;
+	//private Gui gui;
 	
 	private boolean continueGameLoop;
 	
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		printer = new TextGenerator();
+		//gui = new Gui();
 		EVENT_BUS.register(printer);
 		
 		Phrases.load();
