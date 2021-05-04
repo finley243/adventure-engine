@@ -4,12 +4,18 @@ import java.util.List;
 
 public class Topic {
 
+	public enum TopicType {
+		SEQUENTIAL, SELECTOR, RANDOM
+	}
+
 	private String ID;
 	
 	private List<Line> lines;
 	private List<Choice> choices;
+
+	private TopicType type;
 	
-	public Topic(String ID, List<Line> lines, List<Choice> choices) {
+	public Topic(String ID, List<Line> lines, List<Choice> choices, TopicType type) {
 		this.ID = ID;
 		this.lines = lines;
 		this.choices = choices;
@@ -25,6 +31,10 @@ public class Topic {
 
 	public List<Choice> getChoices() {
 		return choices;
+	}
+
+	public TopicType getType() {
+		return type;
 	}
 	
 }

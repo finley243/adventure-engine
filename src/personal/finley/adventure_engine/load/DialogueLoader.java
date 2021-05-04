@@ -20,6 +20,7 @@ import personal.finley.adventure_engine.dialogue.Choice;
 import personal.finley.adventure_engine.dialogue.Condition;
 import personal.finley.adventure_engine.dialogue.Line;
 import personal.finley.adventure_engine.dialogue.Topic;
+import personal.finley.adventure_engine.dialogue.Topic.TopicType;
 
 public class DialogueLoader {
 
@@ -63,7 +64,21 @@ public class DialogueLoader {
 				choices.add(choice);
 			}
 		}
-		return new Topic(topicID, lines, choices);
+		TopicType type;
+		String typeString = topic.getAttribute("type");
+		switch(typeString) {
+			case "ran":
+				type = TopicType.RANDOM;
+				break;
+			case "sel":
+				type = TopicType.SELECTOR;
+				break;
+			case "seq":
+			default:
+				type = TopicType.SEQUENTIAL;
+				break;
+		}
+		return new Topic(topicID, lines, choices, type);
 	}
 	
 	private static Line loadLine(Element line) throws ParserConfigurationException, SAXException, IOException {
@@ -93,7 +108,7 @@ public class DialogueLoader {
 		String prompt = singleTag(choice, "prompt");
 		Element conditionElement = (Element) choice.getElementsByTagName("condition").item(0);
 		Condition condition = loadCondition(conditionElement);
-		return new Choice(link, prompt, condition);
+		return new Choice(link, prompt, condition, once);
 	}
 	
 	private static Condition loadCondition(Element condition) throws ParserConfigurationException, SAXException, IOException {

@@ -10,10 +10,11 @@ public class Choice {
 
     private boolean once;
 
-    public Choice(String linkedTopicId, String prompt, Condition condition) {
+    public Choice(String linkedTopicId, String prompt, Condition condition, boolean once) {
         this.linkedTopicId = linkedTopicId;
         this.prompt = prompt;
         this.condition = condition;
+        this.once = once;
         this.hasTriggered = false;
     }
 
