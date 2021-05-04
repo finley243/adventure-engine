@@ -16,8 +16,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import personal.finley.adventure_engine.Data;
+import personal.finley.adventure_engine.condition.Condition;
+import personal.finley.adventure_engine.condition.Condition.Equality;
+import personal.finley.adventure_engine.condition.ConditionMoney;
 import personal.finley.adventure_engine.dialogue.Choice;
-import personal.finley.adventure_engine.dialogue.Condition;
 import personal.finley.adventure_engine.dialogue.Line;
 import personal.finley.adventure_engine.dialogue.Topic;
 import personal.finley.adventure_engine.dialogue.Topic.TopicType;
@@ -44,29 +46,10 @@ public class DialogueLoader {
 		}
 	}
 	
-	private static Topic loadTopic(Element topic) throws ParserConfigurationException, SAXException, IOException {
-		String topicID = topic.getAttribute("id");
-		NodeList lineElements = topic.getElementsByTagName("line");
-		List<Line> lines = new ArrayList<Line>();
-		for(int i = 0; i < lineElements.getLength(); i++) {
-			if(lineElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				Element lineElement = (Element) lineElements.item(i);
-				Line line = loadLine(lineElement);
-				lines.add(line);
-			}
-		}
-		NodeList choiceElements = topic.getElementsByTagName("choice");
-		List<Choice> choices = new ArrayList<Choice>();
-		for(int i = 0; i < choiceElements.getLength(); i++) {
-			if(choiceElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				Element choiceElement = (Element) choiceElements.item(i);
-				Choice choice = loadChoice(choiceElement);
-				choices.add(choice);
-			}
-		}
+	private static Topic loadTopic(Element topicElement) throws ParserConfigurationException, SAXException, IOException {
+		String topicID = topicElement.getAttribute("id");
 		TopicType type;
-		String typeString = topic.getAttribute("type");
-		switch(typeString) {
+		switch(topicElement.getAttribute("type")) {
 			case "sel":
 				type = TopicType.SELECTOR;
 				break;
@@ -75,42 +58,74 @@ public class DialogueLoader {
 				type = TopicType.SEQUENTIAL;
 				break;
 		}
+		NodeList lineElements = topicElement.getElementsByTagName("line");
+		List<Line> lines = new ArrayList<Line>();
+		for(int i = 0; i < lineElements.getLength(); i++) {
+			if(lineElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				Element lineElement = (Element) lineElements.item(i);
+				Line line = loadLine(lineElement);
+				lines.add(line);
+			}
+		}
+		NodeList choiceElements = topicElement.getElementsByTagName("choice");
+		List<Choice> choices = new ArrayList<Choice>();
+		for(int i = 0; i < choiceElements.getLength(); i++) {
+			if(choiceElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				Element choiceElement = (Element) choiceElements.item(i);
+				Choice choice = loadChoice(choiceElement);
+				choices.add(choice);
+			}
+		}
 		return new Topic(topicID, lines, choices, type);
 	}
 	
-	private static Line loadLine(Element line) throws ParserConfigurationException, SAXException, IOException {
-		boolean once = boolAttribute(line, "once");
-		boolean exit = boolAttribute(line, "exit");
-		String redirect = line.getAttribute("redirect");
+	private static Line loadLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
+		boolean once = boolAttribute(lineElement, "once");
+		boolean exit = boolAttribute(lineElement, "exit");
+		String redirect = lineElement.getAttribute("redirect");
 		if(redirect.isEmpty()) {
 			redirect = null;
 		}
-		NodeList textElements = line.getElementsByTagName("text");
+		NodeList textElements = lineElement.getElementsByTagName("text");
 		List<String> texts = new ArrayList<String>();
 		for(int i = 0; i < textElements.getLength(); i++) {
 			if(textElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				Element lineElement = (Element) textElements.item(i);
-				String text = lineElement.getTextContent();
+				Element textElement = (Element) textElements.item(i);
+				String text = textElement.getTextContent();
 				texts.add(text);
 			}
 		}
-		Element conditionElement = (Element) line.getElementsByTagName("condition").item(0);
+		Element conditionElement = (Element) lineElement.getElementsByTagName("condition").item(0);
 		Condition condition = loadCondition(conditionElement);
 		return new Line(texts, condition, once, exit, redirect);
 	}
 	
-	private static Choice loadChoice(Element choice) throws ParserConfigurationException, SAXException, IOException {
-		boolean once = boolAttribute(choice, "once");
-		String link = choice.getAttribute("link");
-		String prompt = singleTag(choice, "prompt");
-		Element conditionElement = (Element) choice.getElementsByTagName("condition").item(0);
+	private static Choice loadChoice(Element choiceElement) throws ParserConfigurationException, SAXException, IOException {
+		boolean once = boolAttribute(choiceElement, "once");
+		String link = choiceElement.getAttribute("link");
+		String prompt = singleTag(choiceElement, "prompt");
+		Element conditionElement = (Element) choiceElement.getElementsByTagName("condition").item(0);
 		Condition condition = loadCondition(conditionElement);
 		return new Choice(link, prompt, condition, once);
 	}
 	
-	private static Condition loadCondition(Element condition) throws ParserConfigurationException, SAXException, IOException {
-		
-		return new Condition();
+	private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
+		if(conditionElement == null) return null;
+		String type = conditionElement.getAttribute("type");
+		Condition condition;
+		switch(type) {
+		case "compound":
+			condition = null;
+			break;
+		case "money":
+			int value = singleTagInt(conditionElement, "value");
+			Equality equality = equalityTag(conditionElement, "equality");
+			condition = new ConditionMoney(value, equality);
+			break;
+		default:
+			condition = null;
+		}
+		return condition;
 	}
 	
 	// ------------------------------------------------------------------------------
@@ -121,6 +136,29 @@ public class DialogueLoader {
 	
 	private static String singleTag(Element element, String name) {
 		return element.getElementsByTagName(name).item(0).getTextContent();
+	}
+	
+	private static int singleTagInt(Element element, String name) {
+		return Integer.parseInt(singleTag(element, name));
+	}
+	
+	private static Equality equalityTag(Element element, String name) {
+		String logicString = singleTag(element, name);
+		switch(logicString) {
+		case "EQUAL":
+			return Equality.EQUAL;
+		case "NOT_EQUAL":
+			return Equality.NOT_EQUAL;
+		case "LESS":
+			return Equality.LESS;
+		case "GREATER":
+			return Equality.GREATER;
+		case "LESS_EQUAL":
+			return Equality.LESS_EQUAL;
+		case "GREATER_EQUAL":
+		default:
+			return Equality.GREATER_EQUAL;
+		}
 	}
 	
 }

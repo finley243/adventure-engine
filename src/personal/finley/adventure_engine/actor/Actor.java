@@ -54,6 +54,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 	private EnumMap<Attribute, Integer> attributes;
 	
 	private Inventory inventory;
+	private int money;
 	
 	private String areaID;
 	
@@ -141,6 +142,14 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	public Inventory inventory() {
 		return inventory;
+	}
+	
+	public int getMoney() {
+		return money;
+	}
+	
+	public void addMoney(int value) {
+		money += value;
 	}
 	
 	public void damage(int amount) {

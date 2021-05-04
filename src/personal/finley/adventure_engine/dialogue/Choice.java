@@ -1,5 +1,9 @@
 package personal.finley.adventure_engine.dialogue;
 
+import personal.finley.adventure_engine.Data;
+import personal.finley.adventure_engine.Game;
+import personal.finley.adventure_engine.condition.Condition;
+
 public class Choice {
 
     private boolean hasTriggered;
@@ -19,7 +23,7 @@ public class Choice {
     }
 
     public boolean shouldShow() {
-        return (condition == null || condition.isMet()) && (!once || !hasTriggered);
+        return (condition == null || condition.isMet(Data.getActor(Game.PLAYER_ACTOR))) && (!once || !hasTriggered);
     }
     
     public void trigger() {

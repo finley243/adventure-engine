@@ -1,12 +1,15 @@
 <topics>
-    <topic id="stratis_receptionist_start">
-        <line redirect="stratis_receptionist_main">
+    <topic id="stratis_receptionist_start" type="sel">
+        <line redirect="stratis_receptionist_main" once="true">
             <text>"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</text>
+        </line>
+        <line redirect="stratis_receptionist_main">
+            <text>"Welcome back. How can I be of assistance?"</text>
         </line>
     </topic>
     <topic id="stratis_receptionist_main_return">
         <line redirect="stratis_receptionist_main">
-            <text>"Very well. Anything else can I do for you?"</text>
+            <text>"Very well. Anything else I can do for you?"</text>
         </line>
     </topic>
     <topic id="stratis_receptionist_main">
@@ -25,10 +28,21 @@
             <text>He taps the screen in front of him and quickly scans its contents.</text>
         </line>
         <line>
-            <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district."</text>
+            <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 100 credits per night."</text>
         </line>
         <choice link="stratis_receptionist_main_return">
             <prompt>I'll take the room.</prompt>
+            <condition type="money">
+                <value>100</value>
+                <equality>GREATER_EQUAL</equality>
+            </condition>
+        </choice>
+        <choice link="stratis_receptionist_main_return">
+            <prompt>I can't afford that right now.</prompt>
+            <condition type="money">
+                <value>100</value>
+                <equality>LESS</equality>
+            </condition>
         </choice>
         <choice link="stratis_receptionist_main_return">
             <prompt>Not right now.</prompt>
