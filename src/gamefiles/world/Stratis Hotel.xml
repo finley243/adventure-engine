@@ -1,0 +1,20 @@
+<rooms>
+    <room id="stratis_hotel_lobby">
+        <name proper="false">lobby</name>
+        <description>You enter an airy two-story lobby. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, glowing with a clean white light. A large desk is positioned opposite the door.</description>
+        <area id="stratis_hotel_lobby_entry">
+            <name proper="false" prox="false">front door</name>
+            <links>
+                <link>stratis_hotel_lobby_desk</link>
+            </links>
+            <objects></objects>
+        </area>
+        <area id="stratis_hotel_lobby_desk">
+            <name proper="false" prox="true">reception desk</name>
+            <links>
+                <link>stratis_hotel_lobby_entry</link>
+            </links>
+            <objects></objects>
+        </area>
+    </room>
+</rooms>

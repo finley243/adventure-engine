@@ -90,7 +90,6 @@ public class DialogueLoader {
 	private static Choice loadChoice(Element choice) throws ParserConfigurationException, SAXException, IOException {
 		boolean once = boolAttribute(choice, "once");
 		String link = choice.getAttribute("link");
-		System.out.println("Linked topic ID: " + link);
 		String prompt = singleTag(choice, "prompt");
 		Element conditionElement = (Element) choice.getElementsByTagName("condition").item(0);
 		Condition condition = loadCondition(conditionElement);

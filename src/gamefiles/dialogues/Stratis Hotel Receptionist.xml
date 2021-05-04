@@ -1,0 +1,49 @@
+<topics>
+    <topic id="stratis_receptionist_start">
+        <line>
+            <text>"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</text>
+        </line>
+        <line>
+            <text>"Very well. Anything else can I do for you?"</text>
+        </line>
+        <choice link="stratis_receptionist_request_room">
+            <prompt>Do you have any rooms available?</prompt>
+        </choice>
+        <choice link="stratis_receptionist_info">
+            <prompt>I'm looking for information.</prompt>
+        </choice>
+        <choice link="stratis_receptionist_end">
+            <prompt>That will be all.</prompt>
+        </choice>
+    </topic>
+    <topic id="stratis_receptionist_request_room">
+        <line>
+            <text>He taps the screen in front of him and quickly scans its contents.</text>
+        </line>
+        <line>
+            <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district."</text>
+        </line>
+        <choice link="stratis_receptionist_start">
+            <prompt>I'll take the room.</prompt>
+        </choice>
+        <choice link="stratis_receptionist_start">
+            <prompt>Not right now.</prompt>
+        </choice>
+    </topic>
+    <topic id="stratis_receptionist_info">
+        <line>
+            <text>"Of course. What would you like to know?"</text>
+        </line>
+        <choice link="stratis_receptionist_start">
+            <prompt>What is there to do here?</prompt>
+        </choice>
+        <choice link="stratis_receptionist_start">
+            <prompt>That's all.</prompt>
+        </choice>
+    </topic>
+    <topic id="stratis_receptionist_end">
+        <line exit="true">
+            <text>"Very well. Have a lovely day."</text>
+        </line>
+    </topic>
+</topics>

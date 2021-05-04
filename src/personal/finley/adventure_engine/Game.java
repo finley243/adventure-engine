@@ -30,7 +30,6 @@ public class Game {
 	public static final String DIALOGUE_DIRECTORY = "/dialogues";
 	
 	public static final String PLAYER_ACTOR = "player";
-	public static final String PLAYER_START_AREA = "pallasCubiclesWindows";
 	
 	private TextGenerator printer;
 	
@@ -44,12 +43,12 @@ public class Game {
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		
-		StatsActor alphaTemplate = new StatsActor("Alpha", true, Pronoun.YOU);
-		Actor alpha = ActorFactory.createPlayer(PLAYER_ACTOR, PLAYER_START_AREA, alphaTemplate);
-		Data.addActor(alpha.getID(), alpha);
-		StatsActor betaTemplate = new StatsActor("guard", false, Pronoun.HE);
-		Actor beta = ActorFactory.create("pallasGuard", PLAYER_START_AREA, betaTemplate, "test_start");
-		Data.addActor(beta.getID(), beta);
+		StatsActor playerStats = new StatsActor("Alpha", true, Pronoun.YOU);
+		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
+		Data.addActor(player.getID(), player);
+		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE);
+		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
+		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		
 		startGameLoop();
 	}
