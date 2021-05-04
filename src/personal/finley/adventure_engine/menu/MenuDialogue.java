@@ -1,7 +1,9 @@
 package personal.finley.adventure_engine.menu;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import personal.finley.adventure_engine.Data;
 import personal.finley.adventure_engine.actor.Actor;
@@ -24,6 +26,7 @@ public class MenuDialogue {
 					line.trigger();
 					if(line.hasRedirect()) {
 						currentTopic = Data.getTopic(line.getRedirectTopicId());
+						break;
 					}
 					if(line.shouldExit()) {
 						dialogueLoop = false;

@@ -1,11 +1,15 @@
 <topics>
     <topic id="stratis_receptionist_start">
-        <line>
+        <line redirect="stratis_receptionist_main">
             <text>"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</text>
         </line>
-        <line>
+    </topic>
+    <topic id="stratis_receptionist_main_return">
+        <line redirect="stratis_receptionist_main">
             <text>"Very well. Anything else can I do for you?"</text>
         </line>
+    </topic>
+    <topic id="stratis_receptionist_main">
         <choice link="stratis_receptionist_request_room">
             <prompt>Do you have any rooms available?</prompt>
         </choice>
@@ -23,10 +27,10 @@
         <line>
             <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district."</text>
         </line>
-        <choice link="stratis_receptionist_start">
+        <choice link="stratis_receptionist_main_return">
             <prompt>I'll take the room.</prompt>
         </choice>
-        <choice link="stratis_receptionist_start">
+        <choice link="stratis_receptionist_main_return">
             <prompt>Not right now.</prompt>
         </choice>
     </topic>
@@ -34,10 +38,10 @@
         <line>
             <text>"Of course. What would you like to know?"</text>
         </line>
-        <choice link="stratis_receptionist_start">
+        <choice link="stratis_receptionist_main_return">
             <prompt>What is there to do here?</prompt>
         </choice>
-        <choice link="stratis_receptionist_start">
+        <choice link="stratis_receptionist_main_return">
             <prompt>That's all.</prompt>
         </choice>
     </topic>
