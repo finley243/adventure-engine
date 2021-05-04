@@ -6,10 +6,10 @@ import java.util.Set;
 import personal.finley.adventure_engine.Data;
 import personal.finley.adventure_engine.actor.Actor;
 import personal.finley.adventure_engine.textgen.Context.Pronoun;
-import personal.finley.adventure_engine.world.INoun;
-import personal.finley.adventure_engine.world.object.ObjectBase;
+import personal.finley.adventure_engine.world.Noun;
+import personal.finley.adventure_engine.world.object.WorldObject;
 
-public class Area implements INoun {
+public class Area implements Noun {
 
 	private String ID;
 	
@@ -26,11 +26,11 @@ public class Area implements INoun {
 	private Set<String> linkedAreas;
 	
 	// All objects in this area
-	private Set<ObjectBase> objects;
+	private Set<WorldObject> objects;
 	// All actors in this area
 	private Set<Actor> actors;
 	
-	public Area(String ID, String name, boolean isProperName, boolean isProximateName, String roomID, Set<String> linkedAreas, Set<ObjectBase> objects) {
+	public Area(String ID, String name, boolean isProperName, boolean isProximateName, String roomID, Set<String> linkedAreas, Set<WorldObject> objects) {
 		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
@@ -55,18 +55,18 @@ public class Area implements INoun {
 		return (isProperName() ? "" : "the ") + getName();
 	}
 	
-	public Set<ObjectBase> getObjects(){
+	public Set<WorldObject> getObjects(){
 		return objects;
 	}
 	
-	public void addObject(ObjectBase object) {
+	public void addObject(WorldObject object) {
 		boolean didAdd = objects.add(object);
 		if(!didAdd) {
 			//System.out.println("Area " + ID + " already contains object " + object + ".");
 		}
 	}
 	
-	public void removeObject(ObjectBase object) {
+	public void removeObject(WorldObject object) {
 		boolean didRemove = objects.remove(object);
 		if(!didRemove) {
 			//System.out.println("Area " + ID + " does not contain object " + object + ".");

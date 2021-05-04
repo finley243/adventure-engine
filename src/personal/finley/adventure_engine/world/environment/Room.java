@@ -3,9 +3,9 @@ package personal.finley.adventure_engine.world.environment;
 import java.util.Set;
 
 import personal.finley.adventure_engine.textgen.Context.Pronoun;
-import personal.finley.adventure_engine.world.INoun;
+import personal.finley.adventure_engine.world.Noun;
 
-public class Room implements INoun {
+public class Room implements Noun {
 
 	private String ID;
 	
@@ -15,6 +15,7 @@ public class Room implements INoun {
 	private String name;
 	private boolean isProperName;
 	private String description;
+	
 	private boolean hasVisited;
 	
 	private Set<Area> areas;

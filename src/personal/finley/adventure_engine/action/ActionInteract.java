@@ -6,19 +6,19 @@ import personal.finley.adventure_engine.event.TextEvent;
 import personal.finley.adventure_engine.event.TextPrintEvent;
 import personal.finley.adventure_engine.textgen.Context;
 import personal.finley.adventure_engine.textgen.Context.Benefitting;
-import personal.finley.adventure_engine.world.INoun;
+import personal.finley.adventure_engine.world.Noun;
 
 /*
  * This action opens a sub-menu of actions (for example, a vending machine selection menu or a dialogue with an actor).
  */
 
-public class ActionInteract implements IAction {
+public class ActionInteract implements Action {
 
-	private INoun object;
+	private Noun object;
 	private String choice;
 	private String text;
 	
-	public ActionInteract(INoun object, String choice, String text) {
+	public ActionInteract(Noun object, String choice, String text) {
 		this.object = object;
 		this.choice = choice;
 		this.text = text;

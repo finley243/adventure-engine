@@ -2,11 +2,11 @@ package personal.finley.adventure_engine.menu;
 
 import java.util.List;
 
-import personal.finley.adventure_engine.action.IAction;
+import personal.finley.adventure_engine.action.Action;
 
 public class Menu {
 	
-	public static IAction buildMenu(List<IAction> actions) {
+	public static Action buildMenu(List<Action> actions) {
 		for(int i = 0; i < actions.size(); i++) {
 			System.out.println((i+1) + ") " + actions.get(i).getChoiceName());
 		}

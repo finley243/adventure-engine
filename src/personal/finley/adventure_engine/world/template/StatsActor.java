@@ -1,7 +1,5 @@
 package personal.finley.adventure_engine.world.template;
 
-import java.util.EnumMap;
-
 import personal.finley.adventure_engine.textgen.Context.Pronoun;
 
 public class StatsActor {

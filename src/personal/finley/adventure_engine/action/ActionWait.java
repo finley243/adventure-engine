@@ -7,7 +7,7 @@ import personal.finley.adventure_engine.event.TextPrintEvent;
 import personal.finley.adventure_engine.textgen.Context;
 import personal.finley.adventure_engine.textgen.Context.Benefitting;
 
-public class ActionWait implements IAction {
+public class ActionWait implements Action {
 
 	public ActionWait() {
 		

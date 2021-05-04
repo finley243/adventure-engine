@@ -1,15 +1,14 @@
 package personal.finley.adventure_engine.menu;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import personal.finley.adventure_engine.Data;
 import personal.finley.adventure_engine.actor.Actor;
 import personal.finley.adventure_engine.dialogue.Choice;
 import personal.finley.adventure_engine.dialogue.Line;
 import personal.finley.adventure_engine.dialogue.Topic;
+import personal.finley.adventure_engine.dialogue.Topic.TopicType;
 
 public class MenuDialogue {
 	
@@ -30,6 +29,9 @@ public class MenuDialogue {
 					}
 					if(line.shouldExit()) {
 						dialogueLoop = false;
+						break;
+					}
+					if(currentTopic.getType() == TopicType.SELECTOR) {
 						break;
 					}
 				}

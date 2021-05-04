@@ -11,16 +11,16 @@ import personal.finley.adventure_engine.Game;
 import personal.finley.adventure_engine.action.ActionMove;
 import personal.finley.adventure_engine.action.ActionTalk;
 import personal.finley.adventure_engine.action.ActionWait;
-import personal.finley.adventure_engine.action.IAction;
+import personal.finley.adventure_engine.action.Action;
 import personal.finley.adventure_engine.textgen.Context.Pronoun;
-import personal.finley.adventure_engine.world.IAttackTarget;
-import personal.finley.adventure_engine.world.INoun;
-import personal.finley.adventure_engine.world.IPhysical;
+import personal.finley.adventure_engine.world.AttackTarget;
+import personal.finley.adventure_engine.world.Noun;
+import personal.finley.adventure_engine.world.Physical;
 import personal.finley.adventure_engine.world.environment.Area;
-import personal.finley.adventure_engine.world.object.ObjectBase;
+import personal.finley.adventure_engine.world.object.WorldObject;
 import personal.finley.adventure_engine.world.template.StatsActor;
 
-public class Actor implements INoun, IPhysical, IAttackTarget {
+public class Actor implements Noun, Physical, AttackTarget {
 	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
@@ -59,9 +59,9 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 	
 	private String topicID;
 	
-	IController controller;
+	Controller controller;
 	
-	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean isDead, IController controller) {
+	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean isDead, Controller controller) {
 		this.ID = ID;
 		this.move(Data.getArea(areaID));
 		this.stats = stats;
@@ -160,11 +160,11 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 	}
 
 	@Override
-	public List<IAction> localActions(Actor subject) {
+	public List<Action> localActions(Actor subject) {
 		if(ID == Game.PLAYER_ACTOR) {
-			return new ArrayList<IAction>();
+			return new ArrayList<Action>();
 		}
-		List<IAction> action = new ArrayList<IAction>();
+		List<Action> action = new ArrayList<Action>();
 		if(subject.getID() == Game.PLAYER_ACTOR) { // Player-only actions
 			if(topicID != null) {
 				action.add(new ActionTalk(this));
@@ -176,18 +176,18 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 	}
 	
 	@Override
-	public List<IAction> remoteActions(Actor subject) {
-		return new ArrayList<IAction>();
+	public List<Action> remoteActions(Actor subject) {
+		return new ArrayList<Action>();
 	}
 	
-	public Set<IPhysical> getVisibleObjects() {
-		Set<IPhysical> objects = new HashSet<IPhysical>();
+	public Set<Physical> getVisibleObjects() {
+		Set<Physical> objects = new HashSet<Physical>();
 		
 		return objects;
 	}
 	
-	public List<IAction> availableActions(){
-		List<IAction> actions = new ArrayList<IAction>();
+	public List<Action> availableActions(){
+		List<Action> actions = new ArrayList<Action>();
 		if(canMove()) {
 			for(Area area : getArea().getLinkedAreas()) {
 				actions.add(new ActionMove(area));
@@ -196,7 +196,7 @@ public class Actor implements INoun, IPhysical, IAttackTarget {
 		for(Actor actor : getArea().getActors()) {
 			actions.addAll(actor.localActions(this));
 		}
-		for(ObjectBase object : getArea().getObjects()) {
+		for(WorldObject object : getArea().getObjects()) {
 			actions.addAll(object.localActions(this));
 		}
 		actions.add(new ActionWait());

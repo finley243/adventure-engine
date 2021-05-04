@@ -67,9 +67,6 @@ public class DialogueLoader {
 		TopicType type;
 		String typeString = topic.getAttribute("type");
 		switch(typeString) {
-			case "ran":
-				type = TopicType.RANDOM;
-				break;
 			case "sel":
 				type = TopicType.SELECTOR;
 				break;

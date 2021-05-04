@@ -6,11 +6,11 @@ import java.util.List;
 import personal.finley.adventure_engine.Data;
 import personal.finley.adventure_engine.action.ActionMoveExit;
 import personal.finley.adventure_engine.action.ActionUnlockExit;
-import personal.finley.adventure_engine.action.IAction;
+import personal.finley.adventure_engine.action.Action;
 import personal.finley.adventure_engine.actor.Actor;
 import personal.finley.adventure_engine.world.environment.Area;
 
-public class ObjectExit extends ObjectBase {
+public class ObjectExit extends WorldObject {
 
 	private String linkedExitID;
 	private boolean isLocked;
@@ -37,8 +37,8 @@ public class ObjectExit extends ObjectBase {
 	}
 	
 	@Override
-	public List<IAction> localActions(Actor subject) {
-		List<IAction> actions = new ArrayList<IAction>();
+	public List<Action> localActions(Actor subject) {
+		List<Action> actions = new ArrayList<Action>();
 		if(isLocked) {
 			actions.add(new ActionUnlockExit(this));
 		} else {

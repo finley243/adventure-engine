@@ -11,7 +11,7 @@ import personal.finley.adventure_engine.Game;
 import personal.finley.adventure_engine.event.TextEvent;
 import personal.finley.adventure_engine.event.TextPrintEvent;
 import personal.finley.adventure_engine.textgen.Context.Pronoun;
-import personal.finley.adventure_engine.world.INoun;
+import personal.finley.adventure_engine.world.Noun;
 
 public class TextGenerator {
 	
@@ -178,9 +178,9 @@ public class TextGenerator {
 	}
 	
 	private String populateFromContext(String line, Context context, boolean useSubjectPronoun, boolean useObjectPronoun, boolean useObject2Pronoun) {
-		INoun subject = context.getSubject();
-		INoun object = context.getObject();
-		INoun object2 = context.getObject2();
+		Noun subject = context.getSubject();
+		Noun object = context.getObject();
+		Noun object2 = context.getObject2();
 		if(useSubjectPronoun) {
 			line = line.replace(SUBJECT, subject.getPronoun().subject);
 			line = line.replace(SUBJECT_POSSESSIVE, subject.getPronoun().possessive);

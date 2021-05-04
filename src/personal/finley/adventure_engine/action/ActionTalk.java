@@ -3,7 +3,7 @@ package personal.finley.adventure_engine.action;
 import personal.finley.adventure_engine.actor.Actor;
 import personal.finley.adventure_engine.menu.MenuDialogue;
 
-public class ActionTalk implements IAction {
+public class ActionTalk implements Action {
 
 	private Actor target;
 	

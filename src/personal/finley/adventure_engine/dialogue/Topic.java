@@ -5,7 +5,7 @@ import java.util.List;
 public class Topic {
 
 	public enum TopicType {
-		SEQUENTIAL, SELECTOR, RANDOM
+		SEQUENTIAL, SELECTOR
 	}
 
 	private String ID;

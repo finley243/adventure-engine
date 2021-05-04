@@ -9,7 +9,7 @@ import personal.finley.adventure_engine.textgen.Context.Benefitting;
 import personal.finley.adventure_engine.world.environment.Area;
 import personal.finley.adventure_engine.world.object.ObjectExit;
 
-public class ActionMoveExit implements IAction {
+public class ActionMoveExit implements Action {
 
 	private ObjectExit exit;
 	

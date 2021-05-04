@@ -1,6 +1,6 @@
 package personal.finley.adventure_engine.textgen;
 
-import personal.finley.adventure_engine.world.INoun;
+import personal.finley.adventure_engine.world.Noun;
 
 public class Context {
 	
@@ -30,24 +30,24 @@ public class Context {
 		SUBJECT, OBJECT
 	}
 
-	private INoun subject;
-	private INoun object;
-	private INoun object2;
+	private Noun subject;
+	private Noun object;
+	private Noun object2;
 	
 	private Benefitting benefitting;
 	
 	public final boolean isCompleteSentence;
 	public final boolean isEndClause;
 	
-	public Context(INoun subject, Benefitting benefitting, boolean isCompleteSentence, boolean isEndClause) {
+	public Context(Noun subject, Benefitting benefitting, boolean isCompleteSentence, boolean isEndClause) {
 		this(subject, subject, subject, benefitting, isCompleteSentence, isEndClause);
 	}
 	
-	public Context(INoun subject, INoun object, Benefitting benefitting, boolean isCompleteSentence, boolean isEndClause) {
+	public Context(Noun subject, Noun object, Benefitting benefitting, boolean isCompleteSentence, boolean isEndClause) {
 		this(subject, object, object, benefitting, isCompleteSentence, isEndClause);
 	}
 	
-	public Context(INoun subject, INoun object, INoun object2, Benefitting benefitting, boolean isCompleteSentence, boolean isEndClause) {
+	public Context(Noun subject, Noun object, Noun object2, Benefitting benefitting, boolean isCompleteSentence, boolean isEndClause) {
 		this.subject = subject;
 		this.object = object;
 		this.object2 = object2;
@@ -55,15 +55,15 @@ public class Context {
 		this.isEndClause = isEndClause;
 	}
 
-	public INoun getSubject() {
+	public Noun getSubject() {
 		return subject;
 	}
 
-	public INoun getObject() {
+	public Noun getObject() {
 		return object;
 	}
 
-	public INoun getObject2() {
+	public Noun getObject2() {
 		return object2;
 	}
 	

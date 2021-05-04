@@ -2,7 +2,7 @@ package personal.finley.adventure_engine.world;
 
 import personal.finley.adventure_engine.textgen.Context.Pronoun;
 
-public interface INoun {
+public interface Noun {
 	
 	public String getName();
 	

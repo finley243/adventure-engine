@@ -8,7 +8,7 @@ import personal.finley.adventure_engine.textgen.Context;
 import personal.finley.adventure_engine.textgen.Context.Benefitting;
 import personal.finley.adventure_engine.world.environment.Area;
 
-public class ActionMove implements IAction {
+public class ActionMove implements Action {
 	
 	private Area area;
 	

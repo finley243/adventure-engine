@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import personal.finley.adventure_engine.action.IAction;
+import personal.finley.adventure_engine.action.Action;
 
-public class ControllerUtility implements IController {
+public class ControllerUtility implements Controller {
 
 	@Override
-	public IAction chooseAction(Actor actor) {
-		List<IAction> actions = actor.availableActions();
-		List<IAction> bestActions = new ArrayList<IAction>();
+	public Action chooseAction(Actor actor) {
+		List<Action> actions = actor.availableActions();
+		List<Action> bestActions = new ArrayList<Action>();
 		float maxWeight = 0.0f;
-		for(IAction currentAction : actions) {
+		for(Action currentAction : actions) {
 			float currentWeight = currentAction.utility(actor);
 			if(currentWeight > maxWeight) {
 				maxWeight = currentWeight;

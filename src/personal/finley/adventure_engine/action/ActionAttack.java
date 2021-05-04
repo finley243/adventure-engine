@@ -1,15 +1,15 @@
 package personal.finley.adventure_engine.action;
 
 import personal.finley.adventure_engine.actor.Actor;
-import personal.finley.adventure_engine.world.IAttackTarget;
+import personal.finley.adventure_engine.world.AttackTarget;
 import personal.finley.adventure_engine.world.item.ItemWeapon;
 
-public class ActionAttack implements IAction {
+public class ActionAttack implements Action {
 
 	private ItemWeapon weapon;
-	private IAttackTarget target;
+	private AttackTarget target;
 	
-	public ActionAttack(ItemWeapon weapon, IAttackTarget target) {
+	public ActionAttack(ItemWeapon weapon, AttackTarget target) {
 		this.weapon = weapon;
 		this.target = target;
 	}

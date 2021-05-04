@@ -2,7 +2,7 @@ package personal.finley.adventure_engine.action;
 
 import personal.finley.adventure_engine.actor.Actor;
 
-public interface IAction {
+public interface Action {
 	
 	public void choose(Actor subject);
 	

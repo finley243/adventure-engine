@@ -3,14 +3,12 @@ package personal.finley.adventure_engine.action;
 import personal.finley.adventure_engine.actor.Actor;
 import personal.finley.adventure_engine.world.item.Item;
 
-public class ActionItemTake implements IAction {
+public class ActionItemTake implements Action {
 
 	private Item item;
-	private String objectID;
 	
-	public ActionItemTake(Item item, String objectID) {
+	public ActionItemTake(Item item) {
 		this.item = item;
-		this.objectID = objectID;
 	}
 	
 	@Override

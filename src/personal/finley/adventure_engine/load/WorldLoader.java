@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 import personal.finley.adventure_engine.Data;
 import personal.finley.adventure_engine.world.environment.Area;
 import personal.finley.adventure_engine.world.environment.Room;
-import personal.finley.adventure_engine.world.object.ObjectBase;
+import personal.finley.adventure_engine.world.object.WorldObject;
 import personal.finley.adventure_engine.world.object.ObjectExit;
 
 public class WorldLoader {
@@ -82,11 +82,11 @@ public class WorldLoader {
 		
 		Element objectsElement = (Element) area.getElementsByTagName("objects").item(0);
 		NodeList objects = objectsElement.getElementsByTagName("object");
-		Set<ObjectBase> objectSet = new HashSet<ObjectBase>();
+		Set<WorldObject> objectSet = new HashSet<WorldObject>();
 		for(int j = 0; j < objects.getLength(); j++) {
 			if(objects.item(j).getNodeType() == Node.ELEMENT_NODE) {
 				Element objectElement = (Element) objects.item(j);
-				ObjectBase object = loadObject(objectElement, areaID);
+				WorldObject object = loadObject(objectElement, areaID);
 				objectSet.add(object);
 				Data.addObject(object.getID(), object);
 			}
@@ -95,7 +95,7 @@ public class WorldLoader {
 		return new Area(areaID, name, isProperName, isProximateName, roomID, linkSet, objectSet);
 	}
 	
-	private static ObjectBase loadObject(Element object, String areaID) {
+	private static WorldObject loadObject(Element object, String areaID) {
 		String objectID = object.getAttribute("id");
 		String objectType = object.getAttribute("type");
 		String objectName = singleTag(object, "name");

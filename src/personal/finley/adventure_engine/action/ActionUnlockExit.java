@@ -8,7 +8,7 @@ import personal.finley.adventure_engine.textgen.Context;
 import personal.finley.adventure_engine.textgen.Context.Benefitting;
 import personal.finley.adventure_engine.world.object.ObjectExit;
 
-public class ActionUnlockExit implements IAction {
+public class ActionUnlockExit implements Action {
 
 	private ObjectExit exit;
 	
