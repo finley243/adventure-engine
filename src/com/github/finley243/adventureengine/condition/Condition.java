@@ -10,4 +10,6 @@ public interface Condition {
 	
 	public boolean isMet(Actor subject);
 	
+	public String getChoiceTag();
+	
 }

@@ -13,9 +13,9 @@ import com.github.finley243.adventureengine.dialogue.Topic.TopicType;
 public class MenuDialogue {
 	
 	public static void buildMenuDialogue(Actor target) {
-		boolean dialogueLoop = true;
+		boolean menuLoop = true;
 		Topic currentTopic = Data.getTopic(target.getTopicID());
-		while(dialogueLoop) {
+		while(menuLoop) {
 			System.out.println(target.getName().toUpperCase());
 			for(Line line : currentTopic.getLines()) {
 				if(line.shouldShow()) {
@@ -28,7 +28,7 @@ public class MenuDialogue {
 						break;
 					}
 					if(line.shouldExit()) {
-						dialogueLoop = false;
+						menuLoop = false;
 						break;
 					}
 					if(currentTopic.getType() == TopicType.SELECTOR) {
@@ -36,7 +36,7 @@ public class MenuDialogue {
 					}
 				}
 			}
-			if(dialogueLoop) {
+			if(menuLoop) {
 				List<Choice> validChoices = new ArrayList<Choice>();
 				for(Choice choice : currentTopic.getChoices()) {
 					if(choice.shouldShow()) {

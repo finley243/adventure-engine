@@ -34,7 +34,6 @@
             <prompt>I'll take the room.</prompt>
             <condition type="money">
                 <value>100</value>
-                <equality>GREATER_EQUAL</equality>
             </condition>
         </choice>
         <choice link="stratis_receptionist_main_return">

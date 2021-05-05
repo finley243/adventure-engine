@@ -23,5 +23,10 @@ public class ConditionCompound implements Condition {
 		}
 		return !useOr;
 	}
+	
+	@Override
+	public String getChoiceTag() {
+		return null;
+	}
 
 }

@@ -31,7 +31,11 @@ public class Choice {
     }
 
     public String getPrompt() {
-        return prompt;
+        if(condition == null || condition.getChoiceTag() == null) {
+        	return prompt;
+        } else {
+        	return "[" + condition.getChoiceTag() + "] " + prompt;
+        }
     }
 
     public String getLinkedId() {

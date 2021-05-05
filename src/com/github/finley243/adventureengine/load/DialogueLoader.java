@@ -119,8 +119,7 @@ public class DialogueLoader {
 			break;
 		case "money":
 			int value = singleTagInt(conditionElement, "value");
-			Equality equality = equalityTag(conditionElement, "equality");
-			condition = new ConditionMoney(value, equality);
+			condition = new ConditionMoney(value);
 			break;
 		default:
 			condition = null;
