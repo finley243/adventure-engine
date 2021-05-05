@@ -38,13 +38,6 @@
             </condition>
         </choice>
         <choice link="stratis_receptionist_main_return">
-            <prompt>I can't afford that right now.</prompt>
-            <condition type="money">
-                <value>100</value>
-                <equality>LESS</equality>
-            </condition>
-        </choice>
-        <choice link="stratis_receptionist_main_return">
             <prompt>Not right now.</prompt>
         </choice>
     </topic>

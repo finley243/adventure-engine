@@ -6,6 +6,8 @@
             <name proper="false" prox="false">front door</name>
             <links>
                 <link>stratis_hotel_lobby_desk</link>
+                <link>stratis_hotel_lobby_seating</link>
+                <link>stratis_hotel_lobby_elevator</link>
             </links>
             <objects></objects>
         </area>
@@ -13,6 +15,26 @@
             <name proper="false" prox="true">reception desk</name>
             <links>
                 <link>stratis_hotel_lobby_entry</link>
+                <link>stratis_hotel_lobby_seating</link>
+                <link>stratis_hotel_lobby_elevator</link>
+            </links>
+            <objects></objects>
+        </area>
+        <area id="stratis_hotel_lobby_seating">
+            <name proper="false" prox="false">seating area</name>
+            <links>
+                <link>stratis_hotel_lobby_entry</link>
+                <link>stratis_hotel_lobby_desk</link>
+                <link>stratis_hotel_lobby_elevator</link>
+            </links>
+            <objects></objects>
+        </area>
+        <area id="stratis_hotel_lobby_elevator">
+            <name proper="false" prox="true">elevators</name>
+            <links>
+                <link>stratis_hotel_lobby_entry</link>
+                <link>stratis_hotel_lobby_desk</link>
+                <link>stratis_hotel_lobby_seating</link>
             </links>
             <objects></objects>
         </area>
