@@ -19,6 +19,7 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
+import com.google.common.eventbus.Subscribe;
 
 public class Actor implements Noun, Physical, AttackTarget {
 	
@@ -74,6 +75,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, 1);
 		}
+		Game.EVENT_BUS.register(this);
 	}
 	
 	public Actor(String ID, String areaID, StatsActor stats) {
@@ -166,6 +168,16 @@ public class Actor implements Noun, Physical, AttackTarget {
 		if(HP <= 0) {
 			isDead = true;
 		}
+	}
+	
+	@Subscribe
+	public void onVisualEvent() {
+		
+	}
+	
+	@Subscribe
+	public void onSoundEvent() {
+		
 	}
 
 	@Override

@@ -24,13 +24,6 @@ public class ActionMoveExit implements Action {
 		Context context = new Context(subject, exit, area.getRoom(), Benefitting.SUBJECT, false, false);
 		TextEvent text;
 		text = new TextEvent(context, "moveExit");
-		/*
-		if(area.isProximateName()) {
-			text = new TextEvent(context, "moveProx");
-		} else {
-			text = new TextEvent(context, "move");
-		}
-		*/
 		Game.EVENT_BUS.post(text);
 		Game.EVENT_BUS.post(new TextPrintEvent());
 	}

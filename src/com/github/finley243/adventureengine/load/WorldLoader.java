@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
+import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -103,6 +104,11 @@ public class WorldLoader {
 			case "exit":
 				String exitLink = singleTag(object, "link");
 				return new ObjectExit(objectID, areaID, objectName, exitLink);
+			case "elevator":
+				int floorNumber = singleTagInt(object, "floornumber");
+				String floorName = singleTag(object, "floorname");
+				Set<String> linkedElevatorIDs = setTags((Element) object.getElementsByTagName("links").item(0), "link");
+				return new ObjectElevator(objectID, areaID, objectName, floorNumber, floorName, linkedElevatorIDs);
 		}
 		return null;
 	}
@@ -115,6 +121,21 @@ public class WorldLoader {
 	
 	private static String singleTag(Element element, String name) {
 		return element.getElementsByTagName(name).item(0).getTextContent();
+	}
+	
+	private static int singleTagInt(Element element, String name) {
+		return Integer.parseInt(singleTag(element, name));
+	}
+	
+	private static Set<String> setTags(Element element, String name) {
+		Set<String> output = new HashSet<String>();
+		NodeList nodes = element.getElementsByTagName(name);
+		for(int i = 0; i < nodes.getLength(); i++) {
+			if(nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				output.add(nodes.item(i).getTextContent());
+			}
+		}
+		return output;
 	}
 	
 }

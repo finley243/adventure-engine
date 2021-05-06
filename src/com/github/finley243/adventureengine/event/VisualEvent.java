@@ -2,9 +2,9 @@ package com.github.finley243.adventureengine.event;
 
 import com.github.finley243.adventureengine.world.environment.Area;
 
-public class SoundEvent {
+public class VisualEvent {
 
-	public SoundEvent(Area origin) {
+	public VisualEvent(Area origin) {
 		
 	}
 	

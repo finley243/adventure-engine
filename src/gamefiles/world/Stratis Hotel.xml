@@ -1,13 +1,13 @@
 <rooms>
     <room id="stratis_hotel_lobby">
         <name proper="false">lobby</name>
-        <description>You enter an airy two-story lobby. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, glowing with a clean white light. A large desk is positioned opposite the door.</description>
+        <description>You enter an airy two-story lobby. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</description>
         <area id="stratis_hotel_lobby_entry">
-            <name proper="false" prox="false">front door</name>
+            <name proper="false" prox="false">main entrance</name>
             <links>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_seating</link>
-                <link>stratis_hotel_lobby_elevator</link>
+                <link>stratis_hotel_lobby_elevators</link>
             </links>
             <objects></objects>
         </area>
@@ -16,7 +16,7 @@
             <links>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_seating</link>
-                <link>stratis_hotel_lobby_elevator</link>
+                <link>stratis_hotel_lobby_elevators</link>
             </links>
             <objects></objects>
         </area>
@@ -25,18 +25,45 @@
             <links>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_desk</link>
-                <link>stratis_hotel_lobby_elevator</link>
+                <link>stratis_hotel_lobby_elevators</link>
             </links>
             <objects></objects>
         </area>
-        <area id="stratis_hotel_lobby_elevator">
+        <area id="stratis_hotel_lobby_elevators">
             <name proper="false" prox="true">elevators</name>
             <links>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_seating</link>
             </links>
-            <objects></objects>
+            <objects>
+                <object type="elevator" id="stratis_hotel_elevator_lobby">
+                    <name proper="false">elevator</name>
+                    <floorname>Lobby</floorname>
+                    <floornumber>1</floornumber>
+                    <links>
+                        <link>stratis_hotel_elevator_corridor</link>
+                    </links>
+                </object>
+            </objects>
+        </area>
+    </room>
+    <room id="stratis_hotel_rooms_corridor">
+        <name proper="false">guest room corridor</name>
+        <description>You enter a dimly-lit corridor with rows of doors on either side. The glossy white floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</description>
+        <area id="stratis_hotel_corridor_elevators">
+            <name proper="false" prox="true">elevators</name>
+            <links></links>
+            <objects>
+                <object type="elevator" id="stratis_hotel_elevator_corridor">
+                    <name proper="false">elevator</name>
+                    <floorname>Guest Rooms</floorname>
+                    <floornumber>5</floornumber>
+                    <links>
+                        <link>stratis_hotel_elevator_lobby</link>
+                    </links>
+                </object>
+            </objects>
         </area>
     </room>
 </rooms>
