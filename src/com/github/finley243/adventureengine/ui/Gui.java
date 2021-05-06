@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.gui;
+package com.github.finley243.adventureengine.ui;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;

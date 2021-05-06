@@ -16,9 +16,6 @@ public class ActionWait implements Action {
 	@Override
 	public void choose(Actor subject) {
 		Context context = new Context(subject, Benefitting.SUBJECT, false, false);
-		//TextGenEvent text = new TextGenEvent(context, "wait");
-		//Game.EVENT_BUS.post(text);
-		//Game.EVENT_BUS.post(new TextPrintEvent());
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("wait"), context));
 	}
 

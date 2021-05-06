@@ -45,6 +45,10 @@
                         <link>stratis_hotel_elevator_corridor</link>
                     </links>
                 </object>
+                <object type="sign" id="stratis_hotel_lobby_elevator_sign">
+                    <name proper="false">navigation sign</name>
+                    <text>1: Lobby, 2-9: Guest Rooms, 10: Restaurant</text>
+                </object>
             </objects>
         </area>
     </room>

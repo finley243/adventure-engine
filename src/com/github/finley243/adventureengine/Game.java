@@ -14,6 +14,8 @@ import com.github.finley243.adventureengine.load.WorldLoader;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGeneratorOld;
+import com.github.finley243.adventureengine.ui.ConsoleInterface;
+import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
@@ -33,16 +35,17 @@ public class Game {
 	
 	private TextGeneratorOld printer;
 	private PerceptionHandler perceptionHandler;
-	//private Gui gui;
+	private UserInterface userInterface;
 	
 	private boolean continueGameLoop;
 	
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		printer = new TextGeneratorOld();
 		perceptionHandler = new PerceptionHandler();
-		//gui = new Gui();
+		userInterface = new ConsoleInterface();
 		EVENT_BUS.register(printer);
 		EVENT_BUS.register(perceptionHandler);
+		EVENT_BUS.register(userInterface);
 		
 		Phrases.load();
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
@@ -65,18 +68,13 @@ public class Game {
 			String locationName = Data.getPlayer().getArea().getName();
 			String roomName = Data.getPlayer().getArea().getRoom().getName();
 			System.out.println("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")");
-			if(!Data.getPlayer().getArea().getRoom().hasVisited()) {
-				System.out.println();
-				System.out.println(Data.getPlayer().getArea().getRoom().getDescription());
-				Data.getPlayer().getArea().getRoom().setVisited();
-			}
 			System.out.println();
 			for(Actor actor : Data.getActors()) {
 				actor.takeTurn();
 			}
-			System.out.println();
-			System.out.println("---------------------------------------------------");
-			System.out.println();
+			//System.out.println();
+			//System.out.println("---------------------------------------------------");
+			//System.out.println();
 		}
 	}
 	

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.action.ActionTalk;
@@ -180,15 +179,11 @@ public class Actor implements Noun, Physical, AttackTarget {
 
 	@Override
 	public List<Action> localActions(Actor subject) {
-		if(ID == Game.PLAYER_ACTOR) {
-			return new ArrayList<Action>();
-		}
 		List<Action> action = new ArrayList<Action>();
-		if(subject.getID() == Game.PLAYER_ACTOR) { // Player-only actions
-			if(topicID != null) {
-				action.add(new ActionTalk(this));
-			}
-		} else { // NPC-only actions
+		if(topicID != null) {
+			action.add(new ActionTalk(this));
+		}
+		if(!(subject instanceof ActorPlayer)) { // NPC-only actions
 			
 		}
 		return action;
@@ -207,16 +202,16 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	public List<Action> availableActions(){
 		List<Action> actions = new ArrayList<Action>();
-		if(canMove()) {
-			for(Area area : getArea().getLinkedAreas()) {
-				actions.add(new ActionMove(area));
-			}
-		}
 		for(Actor actor : getArea().getActors()) {
 			actions.addAll(actor.localActions(this));
 		}
 		for(WorldObject object : getArea().getObjects()) {
 			actions.addAll(object.localActions(this));
+		}
+		if(canMove()) {
+			for(Area area : getArea().getLinkedAreas()) {
+				actions.add(new ActionMove(area));
+			}
 		}
 		actions.add(new ActionWait());
 		return actions;

@@ -20,6 +20,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
+import com.github.finley243.adventureengine.world.object.ObjectSign;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class WorldLoader {
@@ -109,6 +110,9 @@ public class WorldLoader {
 				String floorName = singleTag(object, "floorname");
 				Set<String> linkedElevatorIDs = setTags((Element) object.getElementsByTagName("links").item(0), "link");
 				return new ObjectElevator(objectID, areaID, objectName, floorNumber, floorName, linkedElevatorIDs);
+			case "sign":
+				String signText = singleTag(object, "text");
+				return new ObjectSign(objectID, areaID, objectName, signText);
 		}
 		return null;
 	}
