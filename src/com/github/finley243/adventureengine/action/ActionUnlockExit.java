@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.Context.Benefitting;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
@@ -19,7 +20,7 @@ public class ActionUnlockExit implements Action {
 	public void choose(Actor subject) {
 		exit.unlock();
 		Context context = new Context(subject, exit, exit, Benefitting.SUBJECT, false, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), "unlockExit", context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unlockExit"), context));
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Benefitting;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionMove implements Action {
@@ -25,7 +26,7 @@ public class ActionMove implements Action {
 		} else {
 			line = "move";
 		}
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), line, context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context));
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.Context.Benefitting;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 
@@ -21,7 +22,7 @@ public class ActionMoveElevator implements Action {
 	public void choose(Actor subject) {
 		subject.move(destination.getArea());
 		Context context = new Context(subject, elevator, Benefitting.SUBJECT, false, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), "moveElevator", context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("moveElevator"), context));
 	}
 
 	@Override

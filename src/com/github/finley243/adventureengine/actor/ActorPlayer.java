@@ -29,8 +29,7 @@ public class ActorPlayer extends Actor {
 	
 	@Override
 	public void onVisualEvent(VisualEvent event) {
-		//Game.EVENT_BUS.post(new TextEvent(event.getText()));
-		System.out.println(event.getText());
+		Game.EVENT_BUS.post(new TextEvent(event.getText()));
 	}
 	
 	@Override

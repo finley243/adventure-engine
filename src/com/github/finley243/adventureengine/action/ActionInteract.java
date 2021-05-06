@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.Context.Benefitting;
 import com.github.finley243.adventureengine.world.Noun;
 
@@ -15,18 +16,18 @@ public class ActionInteract implements Action {
 
 	private Noun object;
 	private String choice;
-	private String text;
+	private String line;
 	
-	public ActionInteract(Noun object, String choice, String text) {
+	public ActionInteract(Noun object, String choice, String line) {
 		this.object = object;
 		this.choice = choice;
-		this.text = text;
+		this.line = line;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
 		Context context = new Context(subject, object, object, Benefitting.SUBJECT, false, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), text, context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context));
 	}
 
 	@Override
