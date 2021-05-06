@@ -34,7 +34,7 @@ public class ConsoleInterface implements UserInterface {
 		}
 		int response = InputUtils.intInRange(1, lastMenuEvent.getChoices().size());
 		System.out.println();
-		Game.EVENT_BUS.post(new MenuSelectEvent(response));
+		Game.EVENT_BUS.post(new MenuSelectEvent(response - 1));
 	}
 
 }

@@ -17,6 +17,7 @@ import com.github.finley243.adventureengine.load.WorldLoader;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.Gui;
 import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
@@ -46,7 +47,7 @@ public class Game {
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		//printer = new TextGeneratorOld();
 		perceptionHandler = new PerceptionHandler();
-		userInterface = new Gui();
+		userInterface = new ConsoleInterface();
 		//EVENT_BUS.register(printer);
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
