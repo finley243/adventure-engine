@@ -8,44 +8,49 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ActorPlayer;
+import com.github.finley243.adventureengine.event.EndPlayerTurnEvent;
+import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;
+import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.TextGeneratorOld;
-import com.github.finley243.adventureengine.ui.ConsoleInterface;
+import com.github.finley243.adventureengine.ui.Gui;
 import com.github.finley243.adventureengine.ui.UserInterface;
-import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 public class Game {
 	
 	public static final EventBus EVENT_BUS = new EventBus();
 	
-	public static final String GAMEFILES = "src/gamefiles";
-	public static final String WORLD_DIRECTORY = "/world";
-	public static final String ACTOR_DIRECTORY = "/actors";
-	public static final String ITEM_DIRECTORY = "/items";
-	public static final String DIALOGUE_DIRECTORY = "/dialogues";
-	
 	public static final String PLAYER_ACTOR = "player";
 	
-	private TextGeneratorOld printer;
+	private static final String GAMEFILES = "src/gamefiles";
+	private static final String WORLD_DIRECTORY = "/world";
+	private static final String ACTOR_DIRECTORY = "/actors";
+	private static final String ITEM_DIRECTORY = "/items";
+	private static final String DIALOGUE_DIRECTORY = "/dialogues";
+	
+	//private TextGeneratorOld printer;
 	private PerceptionHandler perceptionHandler;
 	private UserInterface userInterface;
 	
 	private boolean continueGameLoop;
+	private boolean waitingPlayerTurn;
 	
 	public Game() throws ParserConfigurationException, SAXException, IOException {
-		printer = new TextGeneratorOld();
+		//printer = new TextGeneratorOld();
 		perceptionHandler = new PerceptionHandler();
-		userInterface = new ConsoleInterface();
-		EVENT_BUS.register(printer);
+		userInterface = new Gui();
+		//EVENT_BUS.register(printer);
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
+		EVENT_BUS.register(this);
 		
 		Phrases.load();
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
@@ -62,23 +67,39 @@ public class Game {
 		startGameLoop();
 	}
 	
-	public void startGameLoop() {
+	private void startGameLoop() {
 		continueGameLoop = true;
+		waitingPlayerTurn = false;
 		while(continueGameLoop) {
-			String locationName = Data.getPlayer().getArea().getName();
-			String roomName = Data.getPlayer().getArea().getRoom().getName();
-			System.out.println("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")");
-			System.out.println();
-			for(Actor actor : Data.getActors()) {
-				actor.takeTurn();
+			if(!waitingPlayerTurn) {
+				turn();
 			}
-			//System.out.println();
-			//System.out.println("---------------------------------------------------");
-			//System.out.println();
 		}
 	}
 	
-	public void endGameLoop() {
+	private void turn() {
+		String locationName = Data.getPlayer().getArea().getName();
+		String roomName = Data.getPlayer().getArea().getRoom().getName();
+		System.out.println("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")");
+		System.out.println();
+		for(Actor actor : Data.getActors()) {
+			if(!(actor instanceof ActorPlayer)) {
+				actor.takeTurn();
+			}
+		}
+		Data.getPlayer().takeTurn();
+		waitingPlayerTurn = true;
+		//System.out.println();
+		//System.out.println("---------------------------------------------------");
+		//System.out.println();
+	}
+	
+	@Subscribe
+	public void onEndPlayerTurn(EndPlayerTurnEvent event) {
+		waitingPlayerTurn = false;
+	}
+	
+	private void endGameLoop() {
 		continueGameLoop = false;
 	}
 	

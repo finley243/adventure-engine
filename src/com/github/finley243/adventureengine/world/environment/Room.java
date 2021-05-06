@@ -9,9 +9,6 @@ public class Room implements Noun {
 
 	private String ID;
 	
-	private boolean isExterior;
-	private boolean isSoundDampened;
-	
 	private String name;
 	private boolean isProperName;
 	private String description;

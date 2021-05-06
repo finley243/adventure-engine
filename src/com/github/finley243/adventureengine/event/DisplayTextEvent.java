@@ -1,10 +1,10 @@
 package com.github.finley243.adventureengine.event;
 
-public class TextEvent {
+public class DisplayTextEvent {
 
 	private String text;
 	
-	public TextEvent(String text) {
+	public DisplayTextEvent(String text) {
 		this.text = text;
 	}
 	

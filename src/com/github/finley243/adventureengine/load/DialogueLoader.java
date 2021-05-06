@@ -18,7 +18,6 @@ import org.xml.sax.SAXException;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.condition.ConditionMoney;
-import com.github.finley243.adventureengine.condition.Condition.Equality;
 import com.github.finley243.adventureengine.dialogue.Choice;
 import com.github.finley243.adventureengine.dialogue.Line;
 import com.github.finley243.adventureengine.dialogue.Topic;
@@ -141,6 +140,7 @@ public class DialogueLoader {
 		return Integer.parseInt(singleTag(element, name));
 	}
 	
+	/*
 	private static Equality equalityTag(Element element, String name) {
 		String logicString = singleTag(element, name);
 		switch(logicString) {
@@ -159,5 +159,6 @@ public class DialogueLoader {
 			return Equality.GREATER_EQUAL;
 		}
 	}
+	*/
 	
 }

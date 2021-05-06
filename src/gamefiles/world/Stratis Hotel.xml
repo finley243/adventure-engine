@@ -47,7 +47,7 @@
                 </object>
                 <object type="sign" id="stratis_hotel_lobby_elevator_sign">
                     <name proper="false">navigation sign</name>
-                    <text>1: Lobby, 2-9: Guest Rooms, 10: Restaurant</text>
+                    <text>Floor 1: LOBBY, Floor 2-9: GUEST ROOMS, Floor 10: RESTAURANT</text>
                 </object>
             </objects>
         </area>

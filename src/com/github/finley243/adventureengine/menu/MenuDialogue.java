@@ -48,7 +48,7 @@ public class MenuDialogue {
 					for(int i = 0; i < validChoices.size(); i++) {
 						System.out.println((i+1) + ") " + validChoices.get(i).getPrompt());
 					}
-					int response = UserInput.intInRange(1, validChoices.size());
+					int response = InputUtils.intInRange(1, validChoices.size());
 					currentTopic = Data.getTopic(validChoices.get(response - 1).getLinkedId());
 				}
 				System.out.println();
