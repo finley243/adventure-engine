@@ -6,11 +6,11 @@ import java.awt.event.ActionListener;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 
-public class ChoiceActionListener implements ActionListener {
+public class ChoiceButtonListener implements ActionListener {
 
 	private int index;
 	
-	public ChoiceActionListener(int index) {
+	public ChoiceButtonListener(int index) {
 		this.index = index;
 	}
 	

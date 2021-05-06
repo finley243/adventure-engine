@@ -48,7 +48,7 @@ public class Game {
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		//printer = new TextGeneratorOld();
 		perceptionHandler = new PerceptionHandler();
-		userInterface = new ConsoleInterface();
+		userInterface = new Gui();
 		//EVENT_BUS.register(printer);
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);

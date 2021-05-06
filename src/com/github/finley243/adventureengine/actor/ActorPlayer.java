@@ -18,6 +18,7 @@ import com.google.common.eventbus.Subscribe;
 public class ActorPlayer extends Actor {
 
 	private List<Action> lastActions;
+	private MenuSelectEvent lastEvent;
 	
 	public ActorPlayer(String ID, String areaID, StatsActor stats) {
 		super(ID, areaID, stats, null, false);

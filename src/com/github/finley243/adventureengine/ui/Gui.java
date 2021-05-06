@@ -81,7 +81,7 @@ public class Gui implements UserInterface {
 				choicePanel.removeAll();
 				for(int i = 0; i < choices.size(); i++) {
 					JButton button = new JButton(choices.get(i));
-					button.addActionListener(new ChoiceActionListener(i));
+					button.addActionListener(new ChoiceButtonListener(i));
 					choicePanel.add(button);
 				}
 				window.pack();
