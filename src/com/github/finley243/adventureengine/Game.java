@@ -73,6 +73,12 @@ public class Game {
 		while(continueGameLoop) {
 			if(!waitingPlayerTurn) {
 				turn();
+			} else {
+				try {
+					Thread.sleep(20);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -87,8 +93,8 @@ public class Game {
 				actor.takeTurn();
 			}
 		}
-		Data.getPlayer().takeTurn();
 		waitingPlayerTurn = true;
+		Data.getPlayer().takeTurn();
 		//System.out.println();
 		//System.out.println("---------------------------------------------------");
 		//System.out.println();

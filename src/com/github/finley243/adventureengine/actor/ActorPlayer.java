@@ -11,7 +11,6 @@ import com.github.finley243.adventureengine.event.EndPlayerTurnEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.menu.Menu;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.Subscribe;

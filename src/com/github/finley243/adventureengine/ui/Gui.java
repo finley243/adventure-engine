@@ -8,27 +8,28 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.DisplayMenuEvent;
 import com.github.finley243.adventureengine.event.DisplayTextEvent;
-import com.github.finley243.adventureengine.event.EndPlayerTurnEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.google.common.eventbus.Subscribe;
 
 public class Gui implements UserInterface {
 
 	private JFrame window;
+	private JScrollPane textScroll;
 	private JTextArea textPanel;
 	private JPanel choicePanel;
 	
 	public Gui() {
 		this.window = new JFrame("AdventureEngine");
 		this.textPanel = new JTextArea();
+		this.textScroll = new JScrollPane(textPanel);
 		this.choicePanel = new JPanel();
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -40,7 +41,8 @@ public class Gui implements UserInterface {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setPreferredSize(new Dimension(500, 500));
 		
-		window.getContentPane().add(textPanel, BorderLayout.CENTER);
+		//window.getContentPane().add(textPanel, BorderLayout.CENTER);
+		window.getContentPane().add(textScroll, BorderLayout.CENTER);
 		textPanel.setEditable(false);
 		textPanel.setLineWrap(true);
 		textPanel.setWrapStyleWord(true);
