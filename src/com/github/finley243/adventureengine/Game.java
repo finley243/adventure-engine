@@ -8,11 +8,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.TextGenerator;
+import com.github.finley243.adventureengine.textgen.TextGeneratorOld;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
@@ -30,15 +31,18 @@ public class Game {
 	
 	public static final String PLAYER_ACTOR = "player";
 	
-	private TextGenerator printer;
+	private TextGeneratorOld printer;
+	private PerceptionHandler perceptionHandler;
 	//private Gui gui;
 	
 	private boolean continueGameLoop;
 	
 	public Game() throws ParserConfigurationException, SAXException, IOException {
-		printer = new TextGenerator();
+		printer = new TextGeneratorOld();
+		perceptionHandler = new PerceptionHandler();
 		//gui = new Gui();
 		EVENT_BUS.register(printer);
+		EVENT_BUS.register(perceptionHandler);
 		
 		Phrases.load();
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));

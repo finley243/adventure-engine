@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.TextEvent;
+import com.github.finley243.adventureengine.event.TextGenEvent;
 import com.github.finley243.adventureengine.event.TextPrintEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Benefitting;
@@ -22,8 +22,8 @@ public class ActionMoveExit implements Action {
 		Area area = exit.getLinkedArea();
 		subject.move(area);
 		Context context = new Context(subject, exit, area.getRoom(), Benefitting.SUBJECT, false, false);
-		TextEvent text;
-		text = new TextEvent(context, "moveExit");
+		TextGenEvent text;
+		text = new TextGenEvent(context, "moveExit");
 		Game.EVENT_BUS.post(text);
 		Game.EVENT_BUS.post(new TextPrintEvent());
 	}

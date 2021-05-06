@@ -6,13 +6,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.event.TextEvent;
+import com.github.finley243.adventureengine.event.TextGenEvent;
 import com.github.finley243.adventureengine.event.TextPrintEvent;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
 import com.google.common.eventbus.Subscribe;
 
-public class TextGenerator {
+public class TextGeneratorOld {
 	
 	public static final char RANDOM_OPEN = '{';
 	public static final char RANDOM_CLOSE = '}';
@@ -38,14 +38,14 @@ public class TextGenerator {
 	public static final String VERB_BE_NOT = "<isn't>";
 	public static final String VERB_HAVE = "<has>";
 	
-	private List<TextEvent> printQueue;
+	private List<TextGenEvent> printQueue;
 	
-	public TextGenerator() {
-		printQueue = new ArrayList<TextEvent>();
+	public TextGeneratorOld() {
+		printQueue = new ArrayList<TextGenEvent>();
 	}
 	
 	@Subscribe
-	public void onTextEvent(TextEvent e) {
+	public void onTextEvent(TextGenEvent e) {
 		printQueue.add(e);
 	}
 	
@@ -59,7 +59,7 @@ public class TextGenerator {
 		String block = "";
 		boolean isOpenSentence = false;
 		Context lastContext = null;
-		for(TextEvent clause : printQueue) {
+		for(TextGenEvent clause : printQueue) {
 			String line = clause.getText();
 			Context context = clause.getContext();
 			line = chooseRandoms(line);

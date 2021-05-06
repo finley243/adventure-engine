@@ -12,6 +12,8 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.action.ActionWait;
+import com.github.finley243.adventureengine.event.SoundEvent;
+import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Noun;
@@ -19,7 +21,6 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
-import com.google.common.eventbus.Subscribe;
 
 public class Actor implements Noun, Physical, AttackTarget {
 	
@@ -29,7 +30,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	public enum Skill {
 		// BODY
-		
+		MELEE,
 		
 		// INTELLIGENCE
 		HACKING,
@@ -61,7 +62,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	private String topicID;
 	
-	Controller controller;
+	private Controller controller;
 	
 	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean isDead, Controller controller) {
 		this.ID = ID;
@@ -75,7 +76,6 @@ public class Actor implements Noun, Physical, AttackTarget {
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, 1);
 		}
-		Game.EVENT_BUS.register(this);
 	}
 	
 	public Actor(String ID, String areaID, StatsActor stats) {
@@ -170,13 +170,11 @@ public class Actor implements Noun, Physical, AttackTarget {
 		}
 	}
 	
-	@Subscribe
-	public void onVisualEvent() {
+	public void onVisualEvent(VisualEvent event) {
 		
 	}
 	
-	@Subscribe
-	public void onSoundEvent() {
+	public void onSoundEvent(SoundEvent event) {
 		
 	}
 

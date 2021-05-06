@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.template;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Controller;
 import com.github.finley243.adventureengine.actor.ControllerPlayer;
 import com.github.finley243.adventureengine.actor.ControllerUtility;
@@ -16,7 +17,7 @@ public class ActorFactory {
 	}
 	
 	public static Actor createPlayer(String ID, String areaID, StatsActor stats) {
-		Actor actor = new Actor(ID, areaID, stats, null, false, PLAYER_CONTROLLER);
+		Actor actor = new ActorPlayer(ID, areaID, stats, PLAYER_CONTROLLER);
 		return actor;
 	}
 	
