@@ -8,13 +8,14 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.TextEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.menu.Menu;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class ActorPlayer extends Actor {
 
-	public ActorPlayer(String ID, String areaID, StatsActor stats, Controller controller) {
-		super(ID, areaID, stats, null, false, controller);
+	public ActorPlayer(String ID, String areaID, StatsActor stats) {
+		super(ID, areaID, stats, null, false);
 	}
 	
 	@Override
@@ -40,6 +41,13 @@ public class ActorPlayer extends Actor {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		return new ArrayList<Action>();
+	}
+	
+	@Override
+	public void takeTurn() {
+		// Could handle action points here?
+		Action chosenAction = Menu.buildMenu(this.availableActions());
+		chosenAction.choose(this);
 	}
 
 }

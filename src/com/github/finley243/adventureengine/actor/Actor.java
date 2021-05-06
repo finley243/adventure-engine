@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
@@ -61,16 +62,13 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	private String topicID;
 	
-	private Controller controller;
-	
-	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean isDead, Controller controller) {
+	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean isDead) {
 		this.ID = ID;
 		this.move(Data.getArea(areaID));
 		this.stats = stats;
 		this.topicID = topicID;
 		this.isDead = isDead;
 		this.inventory = new Inventory();
-		this.controller = controller;
 		this.attributes = new EnumMap<Attribute, Integer>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, 1);
@@ -220,8 +218,25 @@ public class Actor implements Noun, Physical, AttackTarget {
 	public void takeTurn() {
 		// Could handle action points here?
 		if(!isDead) {
-			controller.chooseAction(this).choose(this);
+			Action chosenAction = chooseAction();
+			chosenAction.choose(this);
 		}
+	}
+	
+	private Action chooseAction() {
+		List<Action> bestActions = new ArrayList<Action>();
+		float maxWeight = 0.0f;
+		for(Action currentAction : this.availableActions()) {
+			float currentWeight = currentAction.utility(this);
+			if(currentWeight > maxWeight) {
+				maxWeight = currentWeight;
+				bestActions.clear();
+				bestActions.add(currentAction);
+			} else if(currentWeight == maxWeight) {
+				bestActions.add(currentAction);
+			}
+		}
+		return bestActions.get(ThreadLocalRandom.current().nextInt(bestActions.size()));
 	}
 	
 }
