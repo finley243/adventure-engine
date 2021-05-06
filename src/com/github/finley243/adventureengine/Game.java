@@ -9,6 +9,7 @@ import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
+import com.github.finley243.adventureengine.event.DisplayTextEvent;
 import com.github.finley243.adventureengine.event.EndPlayerTurnEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
@@ -73,7 +74,7 @@ public class Game {
 		waitingPlayerTurn = false;
 		while(continueGameLoop) {
 			if(!waitingPlayerTurn) {
-				turn();
+				round();
 			} else {
 				try {
 					Thread.sleep(20);
@@ -84,7 +85,7 @@ public class Game {
 		}
 	}
 	
-	private void turn() {
+	private void round() {
 		String locationName = Data.getPlayer().getArea().getName();
 		String roomName = Data.getPlayer().getArea().getRoom().getName();
 		System.out.println("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")");
@@ -94,11 +95,9 @@ public class Game {
 				actor.takeTurn();
 			}
 		}
+		EVENT_BUS.post(new DisplayTextEvent(""));
 		waitingPlayerTurn = true;
 		Data.getPlayer().takeTurn();
-		//System.out.println();
-		//System.out.println("---------------------------------------------------");
-		//System.out.println();
 	}
 	
 	@Subscribe

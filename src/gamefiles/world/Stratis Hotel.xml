@@ -27,7 +27,11 @@
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_elevators</link>
             </links>
-            <objects></objects>
+            <objects>
+                <object type="chair" id="stratis_hotel_lobby_seating_chair">
+                    <name proper="false">lounge chair</name>
+                </object>
+            </objects>
         </area>
         <area id="stratis_hotel_lobby_elevators">
             <name proper="false" prox="true">elevators</name>

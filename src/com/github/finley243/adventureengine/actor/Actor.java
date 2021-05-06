@@ -18,6 +18,7 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
+import com.github.finley243.adventureengine.world.Usable;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
@@ -61,6 +62,8 @@ public class Actor implements Noun, Physical, AttackTarget {
 	private String areaID;
 	
 	private String topicID;
+	
+	private Usable usingObject;
 	
 	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean isDead) {
 		this.ID = ID;
@@ -136,7 +139,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 	}
 	
 	public boolean canMove() {
-		return true;
+		return !isUsingObject();
 	}
 	
 	public Inventory inventory() {
@@ -174,6 +177,18 @@ public class Actor implements Noun, Physical, AttackTarget {
 	public void onSoundEvent(SoundEvent event) {
 		
 	}
+	
+	public void startUsingObject(Usable object) {
+		this.usingObject = object;
+	}
+	
+	public void stopUsingObject() {
+		this.usingObject = null;
+	}
+	
+	public boolean isUsingObject() {
+		return this.usingObject != null;
+	}
 
 	@Override
 	public List<Action> localActions(Actor subject) {
@@ -205,6 +220,9 @@ public class Actor implements Noun, Physical, AttackTarget {
 		}
 		for(WorldObject object : getArea().getObjects()) {
 			actions.addAll(object.localActions(this));
+		}
+		if(isUsingObject()) {
+			actions.addAll(usingObject.usingActions());
 		}
 		if(canMove()) {
 			for(Area area : getArea().getLinkedAreas()) {

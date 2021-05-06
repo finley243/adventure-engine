@@ -6,31 +6,33 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.Context.Benefitting;
-import com.github.finley243.adventureengine.world.object.ObjectExit;
+import com.github.finley243.adventureengine.world.object.ObjectChair;
 
-public class ActionUnlockExit implements Action {
+public class ActionSit implements Action {
 
-	private ObjectExit exit;
+	private ObjectChair chair;
 	
-	public ActionUnlockExit(ObjectExit exit) {
-		this.exit = exit;
+	public ActionSit(ObjectChair chair) {
+		this.chair = chair;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		exit.unlock();
-		Context context = new Context(subject, exit, Benefitting.SUBJECT, false, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unlockExit"), context));
+		chair.setUser(subject);
+		subject.startUsingObject(chair);
+		Context context = new Context(subject, chair, Benefitting.SUBJECT, false, false);
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("sit"), context));
 	}
 
 	@Override
 	public String getChoiceName() {
-		return "Unlock " + exit.getFormattedName();
+		return "Sit in " + chair.getFormattedName();
 	}
 
 	@Override
 	public float utility(Actor subject) {
-		return 0.0f;
+		// TODO Auto-generated method stub
+		return 0;
 	}
-	
+
 }

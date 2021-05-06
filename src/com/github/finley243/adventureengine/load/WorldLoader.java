@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
+import com.github.finley243.adventureengine.world.object.ObjectChair;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.github.finley243.adventureengine.world.object.ObjectSign;
@@ -113,6 +114,8 @@ public class WorldLoader {
 			case "sign":
 				String signText = singleTag(object, "text");
 				return new ObjectSign(objectID, areaID, objectName, signText);
+			case "chair":
+				return new ObjectChair(objectID, areaID, objectName);
 		}
 		return null;
 	}

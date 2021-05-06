@@ -20,9 +20,10 @@ public class ActionMoveExit implements Action {
 	@Override
 	public void choose(Actor subject) {
 		Area area = exit.getLinkedArea();
-		subject.move(area);
 		Context context = new Context(subject, exit, area.getRoom(), Benefitting.SUBJECT, false, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("moveExit"), context));
+		Game.EVENT_BUS.post(new VisualEvent(area, Phrases.get("moveExit"), context));
+		subject.move(area);
 	}
 
 	@Override

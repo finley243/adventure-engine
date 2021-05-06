@@ -2,5 +2,6 @@ move:<subject> go<es> to <object>
 moveProx:<subject> go<es> toward <object>
 moveExit:<subject> go<es> through <object> to <object2>
 moveElevator:<object> arrives and <subject> exit<s>
+sit:<subject> sit<s> in <object>
 unlockExit:<subject> unlock<s> <object>
 wait:<subject> {glance<s> around|sigh<s>}

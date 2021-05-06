@@ -64,7 +64,7 @@ public class Gui implements UserInterface {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				textPanel.append(event.getText() + "\n\n");
+				textPanel.append(event.getText() + "\n");
 				textPanel.repaint();
 				window.pack();
 			}
