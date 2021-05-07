@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.Menu;
+import com.github.finley243.adventureengine.actor.ActorPlayer;
 
 public class ActionTalk implements Action {
 
@@ -13,7 +13,9 @@ public class ActionTalk implements Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		Menu.buildDialogueMenu(target);
+		if(subject instanceof ActorPlayer) {
+			((ActorPlayer) subject).startDialogue(target);
+		}
 	}
 
 	@Override

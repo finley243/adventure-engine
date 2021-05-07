@@ -5,16 +5,16 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.handler.MenuHandler;
+import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class ActorPlayer extends Actor {
 
-	private MenuHandler menuHandler;
+	private MenuManager menuHandler;
 	
 	public ActorPlayer(String ID, String areaID, StatsActor stats) {
 		super(ID, areaID, stats, null, false);
-		this.menuHandler = new MenuHandler();
+		this.menuHandler = new MenuManager();
 		Game.EVENT_BUS.register(this);
 		Game.EVENT_BUS.register(menuHandler);
 	}
@@ -34,6 +34,10 @@ public class ActorPlayer extends Actor {
 		// Could handle action points here?
 		Action chosenAction = menuHandler.actionMenu(this.availableActions());
 		chosenAction.choose(this);
+	}
+	
+	public void startDialogue(Actor target) {
+		menuHandler.dialogueMenu(target);
 	}
 
 	public void updateRoomDescription() {

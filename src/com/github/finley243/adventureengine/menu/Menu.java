@@ -12,18 +12,7 @@ import com.github.finley243.adventureengine.dialogue.Topic.TopicType;
 
 public class Menu {
 	
-	/*public static Action buildActionMenu(List<Action> actions) {
-		for(int i = 0; i < actions.size(); i++) {
-			System.out.println((i+1) + ") " + actions.get(i).getChoiceName());
-		}
-		
-		int inputInt = InputUtils.intInRange(1, actions.size());
-		System.out.println();
-		//actions.get(inputInt - 1).choose(Data.getPlayer());
-		return actions.get(inputInt - 1);
-	}*/
-	
-	public static void buildDialogueMenu(Actor target) {
+	/*public static void buildDialogueMenu(Actor target) {
 		boolean menuLoop = true;
 		Topic currentTopic = Data.getTopic(target.getTopicID());
 		while(menuLoop) {
@@ -65,6 +54,6 @@ public class Menu {
 				System.out.println();
 			}
 		}
-	}
+	}*/
 	
 }

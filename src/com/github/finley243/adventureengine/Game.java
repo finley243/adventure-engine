@@ -10,8 +10,6 @@ import org.xml.sax.SAXException;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.event.EndPlayerTurnEvent;
-import com.github.finley243.adventureengine.handler.MenuHandler;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;
@@ -25,7 +23,6 @@ import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 
 public class Game {
 	
@@ -52,7 +49,6 @@ public class Game {
 		//EVENT_BUS.register(printer);
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
-		EVENT_BUS.register(this);
 		
 		Phrases.load();
 		ItemLoader.loadItems(new File(GAMEFILES + ITEM_DIRECTORY));
