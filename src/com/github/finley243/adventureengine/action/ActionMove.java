@@ -30,7 +30,7 @@ public class ActionMove implements Action {
 	
 	@Override
 	public String getChoiceName() {
-		return "Go toward " + area.getFormattedName();
+		return "Go to " + area.getFormattedName();
 	}
 	
 	@Override

@@ -2,11 +2,12 @@ buyFrom:<subject> buy<s> <object> from <object2>
 consume:<subject> consume<s> <object>
 drink:<subject> drink<s> <object>
 eat:<subject> eat<s> <object>
+enterElevator:<subject> step<s> into <object>
 exitElevator:<object> arrives and <subject> exit<s>
 idle:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
 moveThroughTo:<subject> go<es> through <object> to <object2>
 moveTo:<subject> go<es> to <object>
-moveToward:<subject> go<es> toward <object>
+moveToward:<subject> go<es> to <object>
 sit:<subject> sit<s> in <object>
 stand:<subject> stand<s> up
 unlock:<subject> unlock<s> <object>

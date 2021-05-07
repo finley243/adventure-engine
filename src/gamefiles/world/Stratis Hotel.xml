@@ -3,7 +3,7 @@
         <name proper="false">lobby</name>
         <description>You enter an airy two-story lobby. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</description>
         <area id="stratis_hotel_lobby_entry">
-            <name proper="false" prox="false">main entrance</name>
+            <name proper="false" prox="true">main entrance</name>
             <links>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_seating</link>
@@ -21,7 +21,7 @@
             <objects></objects>
         </area>
         <area id="stratis_hotel_lobby_seating">
-            <name proper="false" prox="false">seating area</name>
+            <name proper="false" prox="true">seating area</name>
             <links>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_desk</link>
@@ -29,7 +29,7 @@
             </links>
             <objects>
                 <object type="chair">
-                    <name proper="false">lounge chair</name>
+                    <name>lounge chair</name>
                 </object>
             </objects>
         </area>
@@ -42,7 +42,7 @@
             </links>
             <objects>
                 <object type="elevator" id="stratis_hotel_elevator_lobby">
-                    <name proper="false">elevator</name>
+                    <name>elevator</name>
                     <floorname>Lobby</floorname>
                     <floornumber>1</floornumber>
                     <links>
@@ -50,7 +50,7 @@
                     </links>
                 </object>
                 <object type="sign">
-                    <name proper="false">navigation sign</name>
+                    <name>navigation sign</name>
                     <text>Floor 1: LOBBY, Floor 2-9: GUEST ROOMS, Floor 10: RESTAURANT</text>
                 </object>
             </objects>
@@ -61,10 +61,12 @@
         <description>You enter a dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</description>
         <area id="stratis_hotel_corridor_elevators">
             <name proper="false" prox="true">elevators</name>
-            <links></links>
+            <links>
+                <link>stratis_hotel_corridor_main</link>
+            </links>
             <objects>
                 <object type="elevator" id="stratis_hotel_elevator_corridor">
-                    <name proper="false">elevator</name>
+                    <name>elevator</name>
                     <floorname>Guest Rooms</floorname>
                     <floornumber>5</floornumber>
                     <links>
@@ -77,6 +79,32 @@
                         <item>nitron_cola</item>
                         <item>nitron_diet</item>
                     </items>
+                </object>
+            </objects>
+        </area>
+        <area id="stratis_hotel_corridor_main">
+            <name proper="false" prox="false">corridor</name>
+            <links>
+                <link>stratis_hotel_corridor_elevators</link>
+            </links>
+            <objects>
+                <object type="exit" id="stratis_hotel_corridor_room_door">
+                    <name>door</name>
+                    <link>stratis_hotel_room_door</link>
+                </object>
+            </objects>
+        </area>
+    </room>
+    <room id="stratis_hotel_room">
+        <name proper="true">room 508</name>
+        <description>The lights come on as you enter, casting a warm glow over the white linens on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</description>
+        <area id="stratis_hotel_room_main">
+            <name proper="false" prox="false">room</name>
+            <links></links>
+            <objects>
+                <object type="exit" id="stratis_hotel_room_door">
+                    <name>door</name>
+                    <link>stratis_hotel_corridor_room_door</link>
                 </object>
             </objects>
         </area>

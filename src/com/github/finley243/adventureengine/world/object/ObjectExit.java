@@ -19,12 +19,7 @@ public class ObjectExit extends LinkedObject {
 		super(ID, name);
 		this.linkedExitID = linkedExitID;
 		
-		this.isLocked = true; // FOR TESTING PURPOSES ONLY
-	}
-	
-	@Override
-	public String getFormattedName() {
-		return super.getFormattedName() + " to " + getLinkedArea().getRoom().getFormattedName();
+		//this.isLocked = true; // FOR TESTING PURPOSES ONLY
 	}
 	
 	public Area getLinkedArea() {
