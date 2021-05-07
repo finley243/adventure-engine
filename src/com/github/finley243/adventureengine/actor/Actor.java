@@ -224,7 +224,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 		if(isUsingObject()) {
 			actions.addAll(usingObject.usingActions());
 		}
-		for(Item item : inventory.getItems()) {
+		for(Item item : inventory.getUniqueItems()) {
 			actions.addAll(item.inventoryActions(this));
 		}
 		if(canMove()) {

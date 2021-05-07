@@ -29,4 +29,20 @@ public class Inventory {
 		return inventory;
 	}
 	
+	public Set<Item> getUniqueItems() {
+		Set<Item> uniqueItems = new HashSet<Item>();
+		for(Item item : inventory) {
+			boolean hasMatch = false;
+			for(Item uniqueItem : uniqueItems) {
+				if(item.equalsInventory(uniqueItem)) {
+					hasMatch = true;
+				}
+			}
+			if(!hasMatch) {
+				uniqueItems.add(item);
+			}
+		}
+		return uniqueItems;
+	}
+	
 }

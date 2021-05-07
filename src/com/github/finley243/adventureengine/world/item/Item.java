@@ -45,6 +45,10 @@ public abstract class Item extends WorldObject {
 	public boolean isInArea() {
 		return getArea() != null;
 	}
+	
+	public boolean equalsInventory(Item other) {
+		return false;
+	}
 
 	@Override
 	public List<Action> localActions(Actor subject) {

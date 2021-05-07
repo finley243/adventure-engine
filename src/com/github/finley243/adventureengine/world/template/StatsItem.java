@@ -43,4 +43,13 @@ public class StatsItem implements Noun {
 		return price;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if(!(o instanceof StatsItem)) {
+			return false;
+		} else {
+			return o == this;
+		}
+	}
+	
 }
