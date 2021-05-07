@@ -54,7 +54,7 @@ public class Game {
 		
 		StatsActor playerStats = new StatsActor("Alpha", true, Pronoun.YOU);
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
-		player.addMoney(500);
+		player.addMoney(40);
 		Data.addActor(player.getID(), player);
 		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");

@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.object;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionVendingMachineBuy;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -20,7 +21,9 @@ public class ObjectVendingMachine extends WorldObject {
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<Action>();
 		for(String item : vendingItems) {
-			actions.add(new ActionVendingMachineBuy(this, item));
+			if(subject.getMoney() >= Data.getItem(item).getPrice()) {
+				actions.add(new ActionVendingMachineBuy(this, item));
+			}
 		}
 		return actions;
 	}
