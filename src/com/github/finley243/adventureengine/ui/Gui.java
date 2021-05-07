@@ -15,8 +15,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.github.finley243.adventureengine.event.DisplayMenuEvent;
-import com.github.finley243.adventureengine.event.DisplayTextEvent;
+import com.github.finley243.adventureengine.event.RenderMenuEvent;
+import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.google.common.eventbus.Subscribe;
 
@@ -66,7 +66,7 @@ public class Gui implements UserInterface {
 
 	@Override
 	@Subscribe
-	public void onTextEvent(DisplayTextEvent event) {
+	public void onTextEvent(RenderTextEvent event) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -80,7 +80,7 @@ public class Gui implements UserInterface {
 
 	@Override
 	@Subscribe
-	public void onMenuEvent(DisplayMenuEvent event) {
+	public void onMenuEvent(RenderMenuEvent event) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {

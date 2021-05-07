@@ -3,15 +3,15 @@ package com.github.finley243.adventureengine.ui;
 import java.util.List;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.event.DisplayMenuEvent;
+import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
-import com.github.finley243.adventureengine.event.DisplayTextEvent;
+import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.InputUtils;
 import com.google.common.eventbus.Subscribe;
 
 public class ConsoleInterface implements UserInterface {
 
-	private DisplayMenuEvent lastMenuEvent;
+	private RenderMenuEvent lastMenuEvent;
 	
 	public ConsoleInterface() {
 		
@@ -19,14 +19,14 @@ public class ConsoleInterface implements UserInterface {
 	
 	@Override
 	@Subscribe
-	public void onTextEvent(DisplayTextEvent event) {
+	public void onTextEvent(RenderTextEvent event) {
 		System.out.println(event.getText());
 		System.out.println();
 	}
 	
 	@Override
 	@Subscribe
-	public void onMenuEvent(DisplayMenuEvent event) {
+	public void onMenuEvent(RenderMenuEvent event) {
 		lastMenuEvent = event;
 		List<String> choices = event.getChoices();
 		for(int i = 0; i < choices.size(); i++) {

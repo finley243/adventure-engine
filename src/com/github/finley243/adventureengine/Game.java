@@ -9,8 +9,9 @@ import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
-import com.github.finley243.adventureengine.event.DisplayTextEvent;
+import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.EndPlayerTurnEvent;
+import com.github.finley243.adventureengine.handler.MenuHandler;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;
@@ -21,9 +22,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.Gui;
 import com.github.finley243.adventureengine.ui.UserInterface;
-import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
-import com.github.finley243.adventureengine.world.template.ItemFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -45,7 +44,6 @@ public class Game {
 	private UserInterface userInterface;
 	
 	private boolean continueGameLoop;
-	private boolean waitingPlayerTurn;
 	
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		//printer = new TextGeneratorOld();
@@ -74,41 +72,25 @@ public class Game {
 	
 	private void startGameLoop() {
 		continueGameLoop = true;
-		waitingPlayerTurn = false;
 		while(continueGameLoop) {
-			if(!waitingPlayerTurn) {
-				round();
-			} else {
-				try {
-					Thread.sleep(20);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			nextRound();
 		}
 	}
 	
-	private void round() {
+	private void nextRound() {
 		String locationName = Data.getPlayer().getArea().getName();
 		String roomName = Data.getPlayer().getArea().getRoom().getName();
-		Game.EVENT_BUS.post(new DisplayTextEvent("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")"));
-		Game.EVENT_BUS.post(new DisplayTextEvent(""));
-		//System.out.println("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")");
-		//System.out.println();
+		Game.EVENT_BUS.post(new RenderTextEvent("------------------------------"));
+		Game.EVENT_BUS.post(new RenderTextEvent("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")"));
+		Game.EVENT_BUS.post(new RenderTextEvent(""));
 		Data.getPlayer().updateRoomDescription();
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();
 			}
 		}
-		EVENT_BUS.post(new DisplayTextEvent(""));
-		waitingPlayerTurn = true;
+		EVENT_BUS.post(new RenderTextEvent(""));
 		Data.getPlayer().takeTurn();
-	}
-	
-	@Subscribe
-	public void onEndPlayerTurn(EndPlayerTurnEvent event) {
-		waitingPlayerTurn = false;
 	}
 	
 	private void endGameLoop() {

@@ -1,12 +1,12 @@
 package com.github.finley243.adventureengine.ui;
 
-import com.github.finley243.adventureengine.event.DisplayMenuEvent;
-import com.github.finley243.adventureengine.event.DisplayTextEvent;
+import com.github.finley243.adventureengine.event.RenderMenuEvent;
+import com.github.finley243.adventureengine.event.RenderTextEvent;
 
 public interface UserInterface {
 
-	public void onTextEvent(DisplayTextEvent event);
+	public void onTextEvent(RenderTextEvent event);
 	
-	public void onMenuEvent(DisplayMenuEvent event);
+	public void onMenuEvent(RenderMenuEvent event);
 	
 }
