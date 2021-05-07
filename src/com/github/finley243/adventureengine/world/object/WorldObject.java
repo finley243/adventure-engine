@@ -13,12 +13,10 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public abstract class WorldObject implements Noun, Physical {
 	
-	private String ID;
 	private String name;
 	private String areaID;
 	
-	public WorldObject(String ID, String areaID, String name) {
-		this.ID = ID;
+	public WorldObject(String areaID, String name) {
 		this.name = name;
 		this.areaID = areaID;
 	}
@@ -56,10 +54,6 @@ public abstract class WorldObject implements Noun, Physical {
 	@Override
 	public List<Action> remoteActions(Actor subject) {
 		return new ArrayList<Action>();
-	}
-	
-	public String getID() {
-		return ID;
 	}
 
 }

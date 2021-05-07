@@ -6,8 +6,8 @@ public class ItemConsumable extends Item {
 
 	private StatsConsumable stats;
 	
-	public ItemConsumable(String ID, String areaID, StatsConsumable stats) {
-		super(ID, areaID, stats.getName());
+	public ItemConsumable(String areaID, StatsConsumable stats) {
+		super(areaID, stats.getName());
 		this.stats = stats;
 	}
 	

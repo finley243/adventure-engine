@@ -11,8 +11,8 @@ public class ObjectSign extends WorldObject {
 
 	private String signText;
 	
-	public ObjectSign(String ID, String areaID, String name, String signText) {
-		super(ID, areaID, name);
+	public ObjectSign(String areaID, String name, String signText) {
+		super(areaID, name);
 		this.signText = signText;
 	}
 	

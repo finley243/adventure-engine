@@ -6,8 +6,8 @@ public class ItemWeapon extends Item {
 	
 	private StatsWeapon stats;
 	
-	public ItemWeapon(String ID, String areaID, StatsWeapon stats) {
-		super(ID, areaID, stats.getName());
+	public ItemWeapon(String areaID, StatsWeapon stats) {
+		super(areaID, stats.getName());
 		this.stats = stats;
 	}
 	

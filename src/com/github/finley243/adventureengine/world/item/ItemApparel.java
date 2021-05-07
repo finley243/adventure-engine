@@ -6,8 +6,8 @@ public class ItemApparel extends Item {
 
 	private StatsApparel stats;
 	
-	public ItemApparel(String ID, String areaID, StatsApparel stats) {
-		super(ID, areaID, stats.getName());
+	public ItemApparel(String areaID, StatsApparel stats) {
+		super(areaID, stats.getName());
 		this.stats = stats;
 	}
 	

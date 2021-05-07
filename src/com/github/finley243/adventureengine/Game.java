@@ -11,7 +11,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.DisplayTextEvent;
 import com.github.finley243.adventureengine.event.EndPlayerTurnEvent;
-import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;

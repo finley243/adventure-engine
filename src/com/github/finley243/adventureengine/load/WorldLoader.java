@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
+import com.github.finley243.adventureengine.world.object.LinkedObject;
 import com.github.finley243.adventureengine.world.object.ObjectChair;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
@@ -91,7 +92,10 @@ public class WorldLoader {
 				Element objectElement = (Element) objects.item(j);
 				WorldObject object = loadObject(objectElement, areaID);
 				objectSet.add(object);
-				Data.addObject(object.getID(), object);
+				if(object instanceof LinkedObject) {
+					LinkedObject linkedObject = (LinkedObject) object;
+					Data.addLinkedObject(linkedObject.getID(), linkedObject);
+				}
 			}
 		}
 		
@@ -99,23 +103,24 @@ public class WorldLoader {
 	}
 	
 	private static WorldObject loadObject(Element object, String areaID) {
-		String objectID = object.getAttribute("id");
 		String objectType = object.getAttribute("type");
 		String objectName = singleTag(object, "name");
 		switch(objectType) {
 		case "exit":
+			String exitID = object.getAttribute("id");
 			String exitLink = singleTag(object, "link");
-			return new ObjectExit(objectID, areaID, objectName, exitLink);
+			return new ObjectExit(exitID, areaID, objectName, exitLink);
 		case "elevator":
+			String elevatorID = object.getAttribute("id");
 			int floorNumber = singleTagInt(object, "floornumber");
 			String floorName = singleTag(object, "floorname");
 			Set<String> linkedElevatorIDs = setTags((Element) object.getElementsByTagName("links").item(0), "link");
-			return new ObjectElevator(objectID, areaID, objectName, floorNumber, floorName, linkedElevatorIDs);
+			return new ObjectElevator(elevatorID, areaID, objectName, floorNumber, floorName, linkedElevatorIDs);
 		case "sign":
 			String signText = singleTag(object, "text");
-			return new ObjectSign(objectID, areaID, objectName, signText);
+			return new ObjectSign(areaID, objectName, signText);
 		case "chair":
-			return new ObjectChair(objectID, areaID, objectName);
+			return new ObjectChair(areaID, objectName);
 		}
 		return null;
 	}

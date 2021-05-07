@@ -10,8 +10,8 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public abstract class Item extends WorldObject {
 	
-	public Item(String ID, String areaID, String name) {
-		super(ID, areaID, name);
+	public Item(String areaID, String name) {
+		super(areaID, name);
 	}
 
 	@Override

@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveElevator;
 import com.github.finley243.adventureengine.actor.Actor;
 
-public class ObjectElevator extends WorldObject {
+public class ObjectElevator extends LinkedObject {
 
 	private int floorNumber;
 	private String floorName;
@@ -43,7 +43,7 @@ public class ObjectElevator extends WorldObject {
 			
 		} else {
 			for(String elevatorID : linkedElevatorIDs) {
-				actions.add(new ActionMoveElevator(this, (ObjectElevator) Data.getObject(elevatorID)));
+				actions.add(new ActionMoveElevator(this, (ObjectElevator) Data.getLinkedObject(elevatorID)));
 			}
 		}
 		return actions;
