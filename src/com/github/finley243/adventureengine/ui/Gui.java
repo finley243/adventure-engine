@@ -24,6 +24,7 @@ public class Gui implements UserInterface {
 	private JFrame window;
 	private JScrollPane textScroll;
 	private JTextArea textPanel;
+	private JScrollPane choiceScroll;
 	private JPanel choicePanel;
 	
 	public Gui() {
@@ -31,6 +32,7 @@ public class Gui implements UserInterface {
 		this.textPanel = new JTextArea();
 		this.textScroll = new JScrollPane(textPanel);
 		this.choicePanel = new JPanel();
+		this.choiceScroll = new JScrollPane(choicePanel);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
@@ -39,16 +41,16 @@ public class Gui implements UserInterface {
 		}
 		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setPreferredSize(new Dimension(500, 500));
+		window.setPreferredSize(new Dimension(500, 600));
 		
-		//window.getContentPane().add(textPanel, BorderLayout.CENTER);
 		window.getContentPane().add(textScroll, BorderLayout.CENTER);
 		textPanel.setEditable(false);
 		textPanel.setLineWrap(true);
 		textPanel.setWrapStyleWord(true);
 		textPanel.setVisible(true);
 		
-		window.getContentPane().add(choicePanel, BorderLayout.PAGE_END);
+		window.getContentPane().add(choiceScroll, BorderLayout.PAGE_END);
+		choiceScroll.setPreferredSize(new Dimension(500, 200));
 		choicePanel.setLayout(new BoxLayout(choicePanel, BoxLayout.PAGE_AXIS));
 		choicePanel.setVisible(true);
 		
@@ -66,7 +68,8 @@ public class Gui implements UserInterface {
 			public void run() {
 				textPanel.append(event.getText() + "\n");
 				textPanel.repaint();
-				window.pack();
+				//window.pack();
+				window.repaint();
 			}
 		});
 	}

@@ -71,6 +71,12 @@
                         <link>stratis_hotel_elevator_lobby</link>
                     </links>
                 </object>
+                <object type="vending_machine">
+                    <name>vending machine</name>
+                    <items>
+                        <item>nitron_cola</item>
+                    </items>
+                </object>
             </objects>
         </area>
     </room>

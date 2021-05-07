@@ -2,7 +2,9 @@ package com.github.finley243.adventureengine.load;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -23,6 +25,7 @@ import com.github.finley243.adventureengine.world.object.ObjectChair;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.github.finley243.adventureengine.world.object.ObjectSign;
+import com.github.finley243.adventureengine.world.object.ObjectVendingMachine;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class WorldLoader {
@@ -125,6 +128,9 @@ public class WorldLoader {
 			return new ObjectSign(objectName, signText);
 		case "chair":
 			return new ObjectChair(objectName);
+		case "vending_machine":
+			List<String> vendingItems = listOfTags((Element) objectElement.getElementsByTagName("items").item(0), "item");
+			return new ObjectVendingMachine(objectName, vendingItems);
 		}
 		return null;
 	}
@@ -145,6 +151,17 @@ public class WorldLoader {
 	
 	private static Set<String> setOfTags(Element element, String name) {
 		Set<String> output = new HashSet<String>();
+		NodeList nodes = element.getElementsByTagName(name);
+		for(int i = 0; i < nodes.getLength(); i++) {
+			if(nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				output.add(nodes.item(i).getTextContent());
+			}
+		}
+		return output;
+	}
+	
+	private static List<String> listOfTags(Element element, String name) {
+		List<String> output = new ArrayList<String>();
 		NodeList nodes = element.getElementsByTagName(name);
 		for(int i = 0; i < nodes.getLength(); i++) {
 			if(nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {

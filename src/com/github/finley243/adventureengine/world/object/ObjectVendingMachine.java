@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionVendingMachineBuy;
 import com.github.finley243.adventureengine.actor.Actor;
 
 public class ObjectVendingMachine extends WorldObject {
@@ -18,7 +19,9 @@ public class ObjectVendingMachine extends WorldObject {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<Action>();
-		
+		for(String item : vendingItems) {
+			actions.add(new ActionVendingMachineBuy(this, item));
+		}
 		return actions;
 	}
 	

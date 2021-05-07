@@ -69,9 +69,6 @@ public class Game {
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		
-		Item cola = ItemFactory.create("nitron_cola");
-		Data.getPlayer().inventory().addItem(cola);
-		
 		startGameLoop();
 	}
 	

@@ -18,6 +18,11 @@ public abstract class Item extends WorldObject {
 		super(name);
 	}
 	
+	@Override
+	public String getFormattedName() {
+		return (isProperName() ? "" : "a ") + getName();
+	}
+	
 	public int getPrice() {
 		return 0;
 	}
