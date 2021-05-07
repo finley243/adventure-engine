@@ -119,12 +119,12 @@ public class TextGen {
 		Noun object = context.getObject();
 		Noun object2 = context.getObject2();
 		
-		line = populatePronoun(line, useSubjectPronoun, subject.getName(), subject.isProperName(), subject.getPronoun().subject, subject.getPronoun().possessive, SUBJECT, SUBJECT_POSSESSIVE);
+		line = populatePronoun(line, useSubjectPronoun, subject.getFormattedName(), subject.getPronoun().subject, subject.getPronoun().possessive, SUBJECT, SUBJECT_POSSESSIVE);
 		line = line.replace(SUBJECT_REFLEXIVE, subject.getPronoun().reflexive);
 		
-		line = populatePronoun(line, useObjectPronoun, object.getName(), object.isProperName(), object.getPronoun().object, object.getPronoun().possessive, OBJECT, OBJECT_POSSESSIVE);
+		line = populatePronoun(line, useObjectPronoun, object.getFormattedName(), object.getPronoun().object, object.getPronoun().possessive, OBJECT, OBJECT_POSSESSIVE);
 		
-		line = populatePronoun(line, useObject2Pronoun, object2.getName(), object2.isProperName(), object2.getPronoun().object, object2.getPronoun().possessive, OBJECT_2, OBJECT_2_POSSESSIVE);
+		line = populatePronoun(line, useObject2Pronoun, object2.getFormattedName(), object2.getPronoun().object, object2.getPronoun().possessive, OBJECT_2, OBJECT_2_POSSESSIVE);
 		
 		line = line.replace(VERB_S, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "s" : ""));
 		line = line.replace(VERB_ES, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "es" : ""));
@@ -136,7 +136,7 @@ public class TextGen {
 		return line;
 	}
 	
-	private static String populatePronoun(String line, boolean usePronoun, String name, boolean isProperName, String pronoun, String possessive, String pronounKey, String possessiveKey) {
+	private static String populatePronoun(String line, boolean usePronoun, String formattedName, String pronoun, String possessive, String pronounKey, String possessiveKey) {
 		if(usePronoun) {
 			line = line.replace(pronounKey, pronoun);
 			line = line.replace(possessiveKey, possessive);
@@ -145,11 +145,11 @@ public class TextGen {
 			int indexOfPossessive = line.indexOf(possessiveKey);
 			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
 			if(!possessiveFirst) {
-				line = line.replaceFirst(pronounKey, (isProperName ? "" : "the ") + name);
+				line = line.replaceFirst(pronounKey, formattedName);
 			}
 			line = line.replace(pronounKey, pronoun);
 			if(possessiveFirst) {
-				line = line.replaceFirst(possessiveKey, (isProperName ? "" : "the ") + LangUtils.possessive(name, false));
+				line = line.replaceFirst(possessiveKey, LangUtils.possessive(formattedName, false));
 			}
 			line = line.replace(possessiveKey, possessive);
 		}
