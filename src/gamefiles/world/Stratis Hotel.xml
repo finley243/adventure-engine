@@ -58,7 +58,7 @@
     </room>
     <room id="stratis_hotel_rooms_corridor">
         <name proper="false">guest room corridor</name>
-        <description>You enter a dimly-lit corridor with rows of doors on either side. The glossy white floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</description>
+        <description>You enter a dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</description>
         <area id="stratis_hotel_corridor_elevators">
             <name proper="false" prox="true">elevators</name>
             <links></links>

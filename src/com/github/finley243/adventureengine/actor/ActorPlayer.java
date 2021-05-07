@@ -48,10 +48,6 @@ public class ActorPlayer extends Actor {
 	public void takeTurn() {
 		// Could handle action points here?
 		//Action chosenAction = Menu.buildMenu(this.availableActions());
-		if(!this.getArea().getRoom().hasVisited()) {
-			Game.EVENT_BUS.post(new DisplayTextEvent(this.getArea().getRoom().getDescription()));
-			this.getArea().getRoom().setVisited();
-		}
 		lastActions = this.availableActions();
 		List<String> choiceStrings = new ArrayList<String>();
 		for(int i = 0; i < lastActions.size(); i++) {
@@ -60,6 +56,13 @@ public class ActorPlayer extends Actor {
 		}
 		Game.EVENT_BUS.post(new DisplayMenuEvent(choiceStrings));
 		//chosenAction.choose(this);
+	}
+
+	public void updateRoomDescription() {
+		if(!this.getArea().getRoom().hasVisited()) {
+			Game.EVENT_BUS.post(new DisplayTextEvent(this.getArea().getRoom().getDescription()));
+			this.getArea().getRoom().setVisited();
+		}
 	}
 	
 	@Subscribe

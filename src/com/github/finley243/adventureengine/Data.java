@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -24,8 +25,8 @@ public class Data {
 	private static Map<String, Topic> topics = new HashMap<String, Topic>();
 	private static Set<String> knowledge = new HashSet<String>();
 	
-	public static Actor getPlayer() {
-		return actors.get(Game.PLAYER_ACTOR);
+	public static ActorPlayer getPlayer() {
+		return (ActorPlayer) actors.get(Game.PLAYER_ACTOR);
 	}
 	
 	public static void setGlobalFlag(String id, boolean value) {
