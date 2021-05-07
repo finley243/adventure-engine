@@ -1,12 +1,12 @@
+buyFrom:<subject> buy<s> <object> from <object2>
 consume:<subject> consume<s> <object>
-consumeFood:<subject> eat<s> <object>
-consumeDrink:<subject> drink<s> <object>
-move:<subject> go<es> to <object>
-moveProx:<subject> go<es> toward <object>
-moveExit:<subject> go<es> through <object> to <object2>
-moveElevator:<object> arrives and <subject> exit<s>
+drink:<subject> drink<s> <object>
+eat:<subject> eat<s> <object>
+exitElevator:<object> arrives and <subject> exit<s>
+idle:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
+moveThroughTo:<subject> go<es> through <object> to <object2>
+moveTo:<subject> go<es> to <object>
+moveToward:<subject> go<es> toward <object>
 sit:<subject> sit<s> in <object>
 stand:<subject> stand<s> up
-unlockExit:<subject> unlock<s> <object>
-vendingMachineBuy:<subject> buy<s> <object> from <object2>
-wait:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
+unlock:<subject> unlock<s> <object>

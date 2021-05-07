@@ -21,7 +21,7 @@ public class ActionMoveElevator implements Action {
 	public void choose(Actor subject) {
 		Context context = new Context(subject, elevator);
 		subject.move(destination.getArea());
-		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("moveElevator"), context));
+		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context));
 	}
 
 	@Override

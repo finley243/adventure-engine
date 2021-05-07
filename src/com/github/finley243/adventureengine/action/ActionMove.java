@@ -21,9 +21,9 @@ public class ActionMove implements Action {
 		Context context = new Context(subject, area, area);
 		String line;
 		if(area.isProximateName()) {
-			line = "moveProx";
+			line = "moveToward";
 		} else {
-			line = "move";
+			line = "moveTo";
 		}
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context));
 	}

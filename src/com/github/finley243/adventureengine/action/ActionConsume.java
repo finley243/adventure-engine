@@ -21,10 +21,10 @@ public class ActionConsume implements Action {
 		Context context = new Context(subject, item);
 		switch(item.getConsumableType()) {
 		case DRINK:
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("consumeDrink"), context));
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drink"), context));
 			break;
 		case FOOD:
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("consumeFood"), context));
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("eat"), context));
 			break;
 		case OTHER:
 		default:
