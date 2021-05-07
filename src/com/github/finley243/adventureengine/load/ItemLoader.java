@@ -51,10 +51,6 @@ public class ItemLoader {
 		return null;
 	}
 	
-	private static boolean boolAttribute(Element element, String name) {
-		return element.getAttribute(name).equalsIgnoreCase("true");
-	}
-	
 	private static String singleTag(Element element, String name) {
 		return element.getElementsByTagName(name).item(0).getTextContent();
 	}

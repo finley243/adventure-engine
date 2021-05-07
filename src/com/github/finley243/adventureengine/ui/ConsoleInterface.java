@@ -21,7 +21,6 @@ public class ConsoleInterface implements UserInterface {
 	@Subscribe
 	public void onTextEvent(RenderTextEvent event) {
 		System.out.println(event.getText());
-		System.out.println();
 	}
 	
 	@Override

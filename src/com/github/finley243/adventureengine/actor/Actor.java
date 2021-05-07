@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.action.ActionTalk;
@@ -19,9 +18,9 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
-import com.github.finley243.adventureengine.world.Usable;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
@@ -65,7 +64,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	private String topicID;
 	
-	private Usable usingObject;
+	private UsableObject usingObject;
 	
 	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean isDead) {
 		this.ID = ID;
@@ -179,7 +178,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 		
 	}
 	
-	public void startUsingObject(Usable object) {
+	public void startUsingObject(UsableObject object) {
 		this.usingObject = object;
 	}
 	

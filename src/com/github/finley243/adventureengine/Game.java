@@ -18,7 +18,7 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
-import com.github.finley243.adventureengine.ui.Gui;
+import com.github.finley243.adventureengine.ui.GraphicalInterface;
 import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
@@ -36,17 +36,14 @@ public class Game {
 	private static final String ITEM_DIRECTORY = "/items";
 	private static final String DIALOGUE_DIRECTORY = "/dialogues";
 	
-	//private TextGeneratorOld printer;
 	private PerceptionHandler perceptionHandler;
 	private UserInterface userInterface;
 	
 	private boolean continueGameLoop;
 	
 	public Game() throws ParserConfigurationException, SAXException, IOException {
-		//printer = new TextGeneratorOld();
 		perceptionHandler = new PerceptionHandler();
-		userInterface = new Gui();
-		//EVENT_BUS.register(printer);
+		userInterface = new GraphicalInterface();
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
 		

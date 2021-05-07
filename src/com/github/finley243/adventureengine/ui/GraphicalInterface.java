@@ -20,7 +20,7 @@ import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.google.common.eventbus.Subscribe;
 
-public class Gui implements UserInterface {
+public class GraphicalInterface implements UserInterface {
 
 	private JFrame window;
 	private JScrollPane textScroll;
@@ -28,7 +28,7 @@ public class Gui implements UserInterface {
 	private JScrollPane choiceScroll;
 	private JPanel choicePanel;
 	
-	public Gui() {
+	public GraphicalInterface() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException

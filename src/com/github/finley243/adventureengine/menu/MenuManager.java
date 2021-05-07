@@ -11,10 +11,9 @@ import com.github.finley243.adventureengine.dialogue.Choice;
 import com.github.finley243.adventureengine.dialogue.Line;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.dialogue.Topic.TopicType;
+import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.event.EndPlayerTurnEvent;
-import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.google.common.eventbus.Subscribe;
 
 public class MenuManager {
@@ -114,7 +113,7 @@ public class MenuManager {
 		if(actionList != null) {
 			actionChoice = actionList.get(event.getIndex());
 			actionList = null;
-			Game.EVENT_BUS.post(new EndPlayerTurnEvent());
+			//Game.EVENT_BUS.post(new EndPlayerTurnEvent());
 		} else if(dialogueList != null) {
 			dialogueChoice = dialogueList.get(event.getIndex());
 			dialogueList = null;

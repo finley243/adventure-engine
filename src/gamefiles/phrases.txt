@@ -3,6 +3,7 @@ moveProx:<subject> go<es> toward <object>
 moveExit:<subject> go<es> through <object> to <object2>
 moveElevator:<object> arrives and <subject> exit<s>
 sit:<subject> sit<s> in <object>
+stand:<subject> stand<s> up
 unlockExit:<subject> unlock<s> <object>
 vendingMachineBuy:<subject> buy<s> <object> from <object2>
 wait:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
