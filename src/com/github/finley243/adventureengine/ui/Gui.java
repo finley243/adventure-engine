@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -41,12 +42,14 @@ public class Gui implements UserInterface {
 		}
 		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setResizable(false);
 		window.setPreferredSize(new Dimension(500, 600));
 		
 		window.getContentPane().add(textScroll, BorderLayout.CENTER);
 		textPanel.setEditable(false);
 		textPanel.setLineWrap(true);
 		textPanel.setWrapStyleWord(true);
+		textPanel.setFont(textPanel.getFont().deriveFont(14f));
 		textPanel.setVisible(true);
 		
 		window.getContentPane().add(choiceScroll, BorderLayout.PAGE_END);
@@ -98,6 +101,7 @@ public class Gui implements UserInterface {
 			@Override
 			public void run() {
 				choicePanel.removeAll();
+				choicePanel.repaint();
 			}
 		});
 	}
