@@ -28,7 +28,7 @@
                 <link>stratis_hotel_lobby_elevators</link>
             </links>
             <objects>
-                <object type="chair" id="stratis_hotel_lobby_seating_chair">
+                <object type="chair">
                     <name proper="false">lounge chair</name>
                 </object>
             </objects>
@@ -49,7 +49,7 @@
                         <link>stratis_hotel_elevator_corridor</link>
                     </links>
                 </object>
-                <object type="sign" id="stratis_hotel_lobby_elevator_sign">
+                <object type="sign">
                     <name proper="false">navigation sign</name>
                     <text>Floor 1: LOBBY, Floor 2-9: GUEST ROOMS, Floor 10: RESTAURANT</text>
                 </object>

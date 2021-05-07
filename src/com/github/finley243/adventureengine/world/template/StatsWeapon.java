@@ -23,15 +23,10 @@ public class StatsWeapon extends StatsItem {
 		}
 	}
 	
-	private String name;
 	private WeaponType type;
 	
-	public StatsWeapon() {
-		
-	}
-	
-	public String getName() {
-		return name;
+	public StatsWeapon(String ID, String name) {
+		super(ID, name);
 	}
 	
 	public WeaponType getType() {

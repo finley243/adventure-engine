@@ -6,15 +6,10 @@ public class StatsApparel extends StatsItem {
 		BODY, FACE, HEAD, FEET, ARMS, LEGS
 	}
 	
-	private String name;
 	private ApparelType type;
 	
-	public StatsApparel() {
-		
-	}
-	
-	public String getName() {
-		return name;
+	public StatsApparel(String ID, String name) {
+		super(ID, name);
 	}
 	
 	public ApparelType getType() {

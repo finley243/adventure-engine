@@ -6,15 +6,10 @@ public class StatsConsumable extends StatsItem {
 		FOOD, DRINK, OTHER
 	}
 	
-	private String name;
 	private ConsumableType type;
 	
-	public StatsConsumable() {
-		
-	}
-	
-	public String getName() {
-		return name;
+	public StatsConsumable(String ID, String name) {
+		super(ID, name);
 	}
 	
 	public ConsumableType getType() {

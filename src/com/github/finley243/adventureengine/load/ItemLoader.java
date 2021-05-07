@@ -14,6 +14,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.world.template.StatsConsumable;
 import com.github.finley243.adventureengine.world.template.StatsItem;
 
 public class ItemLoader {
@@ -39,11 +40,12 @@ public class ItemLoader {
 	}
 	
 	private static StatsItem loadItem(Element itemElement) throws ParserConfigurationException, SAXException, IOException {
-		String id = itemElement.getAttribute("id");
 		String type = itemElement.getAttribute("type");
+		String id = itemElement.getAttribute("id");
 		String name = singleTag(itemElement, "name");
 		switch(type) {
-		
+		case "consumable":
+			return new StatsConsumable(id, name);
 		}
 		return null;
 	}
