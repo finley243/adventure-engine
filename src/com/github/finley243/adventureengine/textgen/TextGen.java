@@ -122,9 +122,16 @@ public class TextGen {
 			line = line.replace(SUBJECT, subject.getPronoun().subject);
 			line = line.replace(SUBJECT_POSSESSIVE, subject.getPronoun().possessive);
 		} else {
-			line = line.replaceFirst(SUBJECT, (subject.isProperName() ? "" : "the ") + subject.getName());
+			int indexOf = line.indexOf(SUBJECT);
+			int indexOfPossessive = line.indexOf(SUBJECT_POSSESSIVE);
+			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
+			if(!possessiveFirst) {
+				line = line.replaceFirst(SUBJECT, (subject.isProperName() ? "" : "the ") + subject.getName());
+			}
 			line = line.replace(SUBJECT, subject.getPronoun().subject);
-			line = line.replaceFirst(SUBJECT_POSSESSIVE, (subject.isProperName() ? "" : "the ") + LangUtils.possessive(subject.getName(), false));
+			if(possessiveFirst) {
+				line = line.replaceFirst(SUBJECT_POSSESSIVE, (subject.isProperName() ? "" : "the ") + LangUtils.possessive(subject.getName(), false));
+			}
 			line = line.replace(SUBJECT_POSSESSIVE, subject.getPronoun().possessive);
 		}
 		line = line.replace(SUBJECT_REFLEXIVE, subject.getPronoun().reflexive);
@@ -133,9 +140,16 @@ public class TextGen {
 			line = line.replace(OBJECT, object.getPronoun().object);
 			line = line.replace(OBJECT_POSSESSIVE, object.getPronoun().possessive);
 		} else {
-			line = line.replaceFirst(OBJECT, (object.isProperName() ? "" : "the ") + object.getName());
+			int indexOf = line.indexOf(OBJECT);
+			int indexOfPossessive = line.indexOf(OBJECT_POSSESSIVE);
+			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
+			if(!possessiveFirst) {
+				line = line.replaceFirst(OBJECT, (object.isProperName() ? "" : "the ") + object.getName());
+			}
 			line = line.replace(OBJECT, object.getPronoun().object);
-			line = line.replaceFirst(OBJECT_POSSESSIVE, (object.isProperName() ? "" : "the ") + LangUtils.possessive(object.getName(), false));
+			if(possessiveFirst) {
+				line = line.replaceFirst(OBJECT_POSSESSIVE, (object.isProperName() ? "" : "the ") + LangUtils.possessive(object.getName(), false));
+			}
 			line = line.replace(OBJECT_POSSESSIVE, object.getPronoun().possessive);
 		}
 		
@@ -143,9 +157,16 @@ public class TextGen {
 			line = line.replace(OBJECT_2, object2.getPronoun().object);
 			line = line.replace(OBJECT_2_POSSESSIVE, object2.getPronoun().possessive);
 		} else {
-			line = line.replaceFirst(OBJECT_2, (object2.isProperName() ? "" : "the ") + object2.getName());
+			int indexOf = line.indexOf(OBJECT_2);
+			int indexOfPossessive = line.indexOf(OBJECT_2_POSSESSIVE);
+			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
+			if(!possessiveFirst) {
+				line = line.replaceFirst(OBJECT_2, (object2.isProperName() ? "" : "the ") + object2.getName());
+			}
 			line = line.replace(OBJECT_2, object2.getPronoun().object);
-			line = line.replaceFirst(OBJECT_2_POSSESSIVE, (object2.isProperName() ? "" : "the ") + LangUtils.possessive(object2.getName(), false));
+			if(possessiveFirst) {
+				line = line.replaceFirst(OBJECT_2_POSSESSIVE, (object2.isProperName() ? "" : "the ") + LangUtils.possessive(object2.getName(), false));
+			}
 			line = line.replace(OBJECT_2_POSSESSIVE, object2.getPronoun().possessive);
 		}
 		

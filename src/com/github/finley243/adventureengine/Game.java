@@ -91,8 +91,10 @@ public class Game {
 	private void round() {
 		String locationName = Data.getPlayer().getArea().getName();
 		String roomName = Data.getPlayer().getArea().getRoom().getName();
-		System.out.println("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")");
-		System.out.println();
+		Game.EVENT_BUS.post(new DisplayTextEvent("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")"));
+		Game.EVENT_BUS.post(new DisplayTextEvent(""));
+		//System.out.println("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")");
+		//System.out.println();
 		Data.getPlayer().updateRoomDescription();
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
