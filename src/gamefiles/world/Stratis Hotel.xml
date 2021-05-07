@@ -75,6 +75,7 @@
                     <name>vending machine</name>
                     <items>
                         <item>nitron_cola</item>
+                        <item>nitron_diet</item>
                     </items>
                 </object>
             </objects>

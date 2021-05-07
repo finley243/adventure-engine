@@ -34,25 +34,18 @@ public class Context {
 	private Noun object;
 	private Noun object2;
 	
-	private Benefitting benefitting;
-	
-	public final boolean isCompleteSentence;
-	public final boolean isEndClause;
-	
-	public Context(Noun subject, Benefitting benefitting, boolean isCompleteSentence, boolean isEndClause) {
-		this(subject, subject, subject, benefitting, isCompleteSentence, isEndClause);
+	public Context(Noun subject) {
+		this(subject, subject, subject);
 	}
 	
-	public Context(Noun subject, Noun object, Benefitting benefitting, boolean isCompleteSentence, boolean isEndClause) {
-		this(subject, object, object, benefitting, isCompleteSentence, isEndClause);
+	public Context(Noun subject, Noun object) {
+		this(subject, object, object);
 	}
 	
-	public Context(Noun subject, Noun object, Noun object2, Benefitting benefitting, boolean isCompleteSentence, boolean isEndClause) {
+	public Context(Noun subject, Noun object, Noun object2) {
 		this.subject = subject;
 		this.object = object;
 		this.object2 = object2;
-		this.isCompleteSentence = isCompleteSentence;
-		this.isEndClause = isEndClause;
 	}
 
 	public Noun getSubject() {
@@ -65,10 +58,6 @@ public class Context {
 
 	public Noun getObject2() {
 		return object2;
-	}
-	
-	public Benefitting getBenefitting() {
-		return benefitting;
 	}
 	
 }

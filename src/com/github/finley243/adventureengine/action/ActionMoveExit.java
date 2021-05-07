@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.Context.Benefitting;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
@@ -20,7 +19,7 @@ public class ActionMoveExit implements Action {
 	@Override
 	public void choose(Actor subject) {
 		Area area = exit.getLinkedArea();
-		Context context = new Context(subject, exit, area.getRoom(), Benefitting.SUBJECT, false, false);
+		Context context = new Context(subject, exit, area.getRoom());
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("moveExit"), context));
 		Game.EVENT_BUS.post(new VisualEvent(area, Phrases.get("moveExit"), context));
 		subject.move(area);

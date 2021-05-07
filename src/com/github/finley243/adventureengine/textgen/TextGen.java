@@ -118,57 +118,13 @@ public class TextGen {
 		Noun subject = context.getSubject();
 		Noun object = context.getObject();
 		Noun object2 = context.getObject2();
-		if(useSubjectPronoun) {
-			line = line.replace(SUBJECT, subject.getPronoun().subject);
-			line = line.replace(SUBJECT_POSSESSIVE, subject.getPronoun().possessive);
-		} else {
-			int indexOf = line.indexOf(SUBJECT);
-			int indexOfPossessive = line.indexOf(SUBJECT_POSSESSIVE);
-			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
-			if(!possessiveFirst) {
-				line = line.replaceFirst(SUBJECT, (subject.isProperName() ? "" : "the ") + subject.getName());
-			}
-			line = line.replace(SUBJECT, subject.getPronoun().subject);
-			if(possessiveFirst) {
-				line = line.replaceFirst(SUBJECT_POSSESSIVE, (subject.isProperName() ? "" : "the ") + LangUtils.possessive(subject.getName(), false));
-			}
-			line = line.replace(SUBJECT_POSSESSIVE, subject.getPronoun().possessive);
-		}
+		
+		line = populatePronoun(line, useSubjectPronoun, subject.getName(), subject.isProperName(), subject.getPronoun().subject, subject.getPronoun().possessive, SUBJECT, SUBJECT_POSSESSIVE);
 		line = line.replace(SUBJECT_REFLEXIVE, subject.getPronoun().reflexive);
 		
-		if(useObjectPronoun) {
-			line = line.replace(OBJECT, object.getPronoun().object);
-			line = line.replace(OBJECT_POSSESSIVE, object.getPronoun().possessive);
-		} else {
-			int indexOf = line.indexOf(OBJECT);
-			int indexOfPossessive = line.indexOf(OBJECT_POSSESSIVE);
-			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
-			if(!possessiveFirst) {
-				line = line.replaceFirst(OBJECT, (object.isProperName() ? "" : "the ") + object.getName());
-			}
-			line = line.replace(OBJECT, object.getPronoun().object);
-			if(possessiveFirst) {
-				line = line.replaceFirst(OBJECT_POSSESSIVE, (object.isProperName() ? "" : "the ") + LangUtils.possessive(object.getName(), false));
-			}
-			line = line.replace(OBJECT_POSSESSIVE, object.getPronoun().possessive);
-		}
+		line = populatePronoun(line, useObjectPronoun, object.getName(), object.isProperName(), object.getPronoun().object, object.getPronoun().possessive, OBJECT, OBJECT_POSSESSIVE);
 		
-		if(useObject2Pronoun) {
-			line = line.replace(OBJECT_2, object2.getPronoun().object);
-			line = line.replace(OBJECT_2_POSSESSIVE, object2.getPronoun().possessive);
-		} else {
-			int indexOf = line.indexOf(OBJECT_2);
-			int indexOfPossessive = line.indexOf(OBJECT_2_POSSESSIVE);
-			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
-			if(!possessiveFirst) {
-				line = line.replaceFirst(OBJECT_2, (object2.isProperName() ? "" : "the ") + object2.getName());
-			}
-			line = line.replace(OBJECT_2, object2.getPronoun().object);
-			if(possessiveFirst) {
-				line = line.replaceFirst(OBJECT_2_POSSESSIVE, (object2.isProperName() ? "" : "the ") + LangUtils.possessive(object2.getName(), false));
-			}
-			line = line.replace(OBJECT_2_POSSESSIVE, object2.getPronoun().possessive);
-		}
+		line = populatePronoun(line, useObject2Pronoun, object2.getName(), object2.isProperName(), object2.getPronoun().object, object2.getPronoun().possessive, OBJECT_2, OBJECT_2_POSSESSIVE);
 		
 		line = line.replace(VERB_S, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "s" : ""));
 		line = line.replace(VERB_ES, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "es" : ""));
@@ -177,6 +133,26 @@ public class TextGen {
 		line = line.replace(VERB_BE, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "is" : (subject.getPronoun() == Pronoun.I ? "am" : "are")));
 		line = line.replace(VERB_BE_NOT, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "isn't" : (subject.getPronoun() == Pronoun.I ? "am not" : "aren't")));
 		line = line.replace(VERB_HAVE, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "has" : "have"));
+		return line;
+	}
+	
+	private static String populatePronoun(String line, boolean usePronoun, String name, boolean isProperName, String pronoun, String possessive, String pronounKey, String possessiveKey) {
+		if(usePronoun) {
+			line = line.replace(pronounKey, pronoun);
+			line = line.replace(possessiveKey, possessive);
+		} else {
+			int indexOf = line.indexOf(pronounKey);
+			int indexOfPossessive = line.indexOf(possessiveKey);
+			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
+			if(!possessiveFirst) {
+				line = line.replaceFirst(pronounKey, (isProperName ? "" : "the ") + name);
+			}
+			line = line.replace(pronounKey, pronoun);
+			if(possessiveFirst) {
+				line = line.replaceFirst(possessiveKey, (isProperName ? "" : "the ") + LangUtils.possessive(name, false));
+			}
+			line = line.replace(possessiveKey, possessive);
+		}
 		return line;
 	}
 	

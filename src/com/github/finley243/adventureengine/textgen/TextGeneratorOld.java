@@ -1,19 +1,8 @@
 package com.github.finley243.adventureengine.textgen;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
-import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.event.TextGenEvent;
-import com.github.finley243.adventureengine.event.TextPrintEvent;
-import com.github.finley243.adventureengine.textgen.Context.Pronoun;
-import com.github.finley243.adventureengine.world.Noun;
-import com.google.common.eventbus.Subscribe;
-
 public class TextGeneratorOld {
 	
+	/*
 	public static final char RANDOM_OPEN = '{';
 	public static final char RANDOM_CLOSE = '}';
 	public static final char RANDOM_SEPARATOR = '|';
@@ -48,12 +37,14 @@ public class TextGeneratorOld {
 	public void onTextEvent(TextGenEvent e) {
 		printQueue.add(e);
 	}
+	*/
 	
 	/*
 	 * Format for tags: <subject> hit<s> <object> with <object2>
 	 * Format for OR expressions: {this thing|other thing} or {<tag> thing|other thing}
 	 */
 	
+	/*
 	@Subscribe
 	public void onTextPrintEvent(TextPrintEvent e) {
 		String block = "";
@@ -220,5 +211,6 @@ public class TextGeneratorOld {
 		line = line.replace(VERB_HAVE, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "has" : "have"));
 		return line;
 	}
+	*/
 	
 }

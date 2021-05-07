@@ -16,7 +16,6 @@ import com.github.finley243.adventureengine.world.template.StatsItem;
 
 public class Data {
 	
-	private static Map<String, Boolean> globalFlags = new HashMap<String, Boolean>();
 	private static Map<String, Area> areas = new HashMap<String, Area>();
 	private static Map<String, Room> rooms = new HashMap<String, Room>();
 	private static Map<String, Actor> actors = new HashMap<String, Actor>();
@@ -29,15 +28,10 @@ public class Data {
 		return (ActorPlayer) actors.get(Game.PLAYER_ACTOR);
 	}
 	
-	public static void setGlobalFlag(String id, boolean value) {
-		globalFlags.put(id, value);
-	}
-	
-	public static boolean getGlobalFlag(String id) {
-		return globalFlags.get(id);
-	}
-	
 	public static void addArea(String id, Area value) {
+		if(areas.containsKey(id)) {
+			System.out.println("WARNING - Adding area with existing ID: " + id);
+		}
 		areas.put(id, value);
 	}
 	
@@ -46,6 +40,9 @@ public class Data {
 	}
 	
 	public static void addRoom(String id, Room value) {
+		if(rooms.containsKey(id)) {
+			System.out.println("WARNING - Adding room with existing ID: " + id);
+		}
 		rooms.put(id, value);
 	}
 	
@@ -54,6 +51,9 @@ public class Data {
 	}
 	
 	public static void addActor(String id, Actor value) {
+		if(actors.containsKey(id)) {
+			System.out.println("WARNING - Adding actor with existing ID: " + id);
+		}
 		actors.put(id, value);
 	}
 	
@@ -66,6 +66,9 @@ public class Data {
 	}
 	
 	public static void addLinkedObject(String id, LinkedObject value) {
+		if(linkedObjects.containsKey(id)) {
+			System.out.println("WARNING - Adding linked object with existing ID: " + id);
+		}
 		linkedObjects.put(id, value);
 	}
 	
@@ -74,6 +77,9 @@ public class Data {
 	}
 	
 	public static void addItem(String id, StatsItem value) {
+		if(items.containsKey(id)) {
+			System.out.println("WARNING - Adding item with existing ID: " + id);
+		}
 		items.put(id, value);
 	}
 	
@@ -82,6 +88,9 @@ public class Data {
 	}
 	
 	public static void addTopic(String id, Topic value) {
+		if(topics.containsKey(id)) {
+			System.out.println("WARNING - Adding topic with existing ID: " + id);
+		}
 		topics.put(id, value);
 	}
 	

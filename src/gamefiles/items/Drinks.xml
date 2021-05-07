@@ -4,4 +4,9 @@
     <price>10</price>
     <effects></effects>
   </item>
+  <item type="consumable" id="nitron_diet">
+    <name>Nitron Diet</name>
+    <price>10</price>
+    <effects></effects>
+  </item>
 </items>

@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.Context.Benefitting;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -19,7 +18,7 @@ public class ActionMove implements Action {
 	@Override
 	public void choose(Actor subject) {
 		subject.move(area);
-		Context context = new Context(subject, area, area, Benefitting.SUBJECT, false, false);
+		Context context = new Context(subject, area, area);
 		String line;
 		if(area.isProximateName()) {
 			line = "moveProx";
