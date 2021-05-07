@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.condition.ConditionCompound;
 import com.github.finley243.adventureengine.condition.ConditionMoney;
 import com.github.finley243.adventureengine.dialogue.Choice;
 import com.github.finley243.adventureengine.dialogue.Line;
@@ -114,7 +115,9 @@ public class DialogueLoader {
 		Condition condition;
 		switch(type) {
 		case "compound":
-			condition = null;
+			List<Condition> subConditions = loadSubConditions(conditionElement);
+			boolean useOr = conditionElement.getAttribute("logic").equalsIgnoreCase("or");
+			condition = new ConditionCompound(subConditions, useOr);
 			break;
 		case "money":
 			int value = singleTagInt(conditionElement, "value");
@@ -124,6 +127,19 @@ public class DialogueLoader {
 			condition = null;
 		}
 		return condition;
+	}
+	
+	private static List<Condition> loadSubConditions(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
+		NodeList subConditionElements = conditionElement.getElementsByTagName("condition");
+		List<Condition> subConditions = new ArrayList<Condition>();
+		for(int i = 0; i < subConditionElements.getLength(); i++) {
+			if(subConditionElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				Element subConditionElement = (Element) subConditionElements.item(i);
+				Condition subCondition = loadCondition(subConditionElement);
+				subConditions.add(subCondition);
+			}
+		}
+		return subConditions;
 	}
 	
 	// ------------------------------------------------------------------------------

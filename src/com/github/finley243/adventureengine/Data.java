@@ -10,7 +10,9 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
+import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.template.StatsItem;
 
 public class Data {
 	
@@ -19,7 +21,7 @@ public class Data {
 	private static Map<String, Room> rooms = new HashMap<String, Room>();
 	private static Map<String, Actor> actors = new HashMap<String, Actor>();
 	private static Map<String, WorldObject> objects = new HashMap<String, WorldObject>();
-	//private static Map<String, Item> items = new HashMap<String, Item>();
+	private static Map<String, StatsItem> items = new HashMap<String, StatsItem>();
 	private static Map<String, Topic> topics = new HashMap<String, Topic>();
 	private static Set<String> knowledge = new HashSet<String>();
 	
@@ -71,15 +73,13 @@ public class Data {
 		return objects.get(id);
 	}
 	
-	/*
-	public static void addItem(String id, Item value) {
+	public static void addItem(String id, StatsItem value) {
 		items.put(id, value);
 	}
 	
-	public static Item getItem(String id) {
+	public static StatsItem getItem(String id) {
 		return items.get(id);
 	}
-	*/
 	
 	public static void addTopic(String id, Topic value) {
 		topics.put(id, value);

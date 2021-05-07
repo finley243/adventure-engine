@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.world.template;
 
-public class StatsWeapon {
+public class StatsWeapon extends StatsItem {
 	
 	public enum WeaponType{
 		PISTOL(true, false, 2),

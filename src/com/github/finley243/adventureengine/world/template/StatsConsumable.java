@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.world.template;
 
-public class StatsConsumable {
+public class StatsConsumable extends StatsItem {
 
 	public enum ConsumableType{
 		FOOD, DRINK, OTHER

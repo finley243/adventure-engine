@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.world.template;
 
-public class StatsApparel {
+public class StatsApparel extends StatsItem {
 
 	public enum ApparelType{
 		BODY, FACE, HEAD, FEET, ARMS, LEGS

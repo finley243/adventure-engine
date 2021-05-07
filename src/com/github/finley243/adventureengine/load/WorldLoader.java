@@ -103,19 +103,19 @@ public class WorldLoader {
 		String objectType = object.getAttribute("type");
 		String objectName = singleTag(object, "name");
 		switch(objectType) {
-			case "exit":
-				String exitLink = singleTag(object, "link");
-				return new ObjectExit(objectID, areaID, objectName, exitLink);
-			case "elevator":
-				int floorNumber = singleTagInt(object, "floornumber");
-				String floorName = singleTag(object, "floorname");
-				Set<String> linkedElevatorIDs = setTags((Element) object.getElementsByTagName("links").item(0), "link");
-				return new ObjectElevator(objectID, areaID, objectName, floorNumber, floorName, linkedElevatorIDs);
-			case "sign":
-				String signText = singleTag(object, "text");
-				return new ObjectSign(objectID, areaID, objectName, signText);
-			case "chair":
-				return new ObjectChair(objectID, areaID, objectName);
+		case "exit":
+			String exitLink = singleTag(object, "link");
+			return new ObjectExit(objectID, areaID, objectName, exitLink);
+		case "elevator":
+			int floorNumber = singleTagInt(object, "floornumber");
+			String floorName = singleTag(object, "floorname");
+			Set<String> linkedElevatorIDs = setTags((Element) object.getElementsByTagName("links").item(0), "link");
+			return new ObjectElevator(objectID, areaID, objectName, floorNumber, floorName, linkedElevatorIDs);
+		case "sign":
+			String signText = singleTag(object, "text");
+			return new ObjectSign(objectID, areaID, objectName, signText);
+		case "chair":
+			return new ObjectChair(objectID, areaID, objectName);
 		}
 		return null;
 	}
