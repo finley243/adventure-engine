@@ -29,17 +29,18 @@ public class Gui implements UserInterface {
 	private JPanel choicePanel;
 	
 	public Gui() {
-		this.window = new JFrame("AdventureEngine");
-		this.textPanel = new JTextArea();
-		this.textScroll = new JScrollPane(textPanel);
-		this.choicePanel = new JPanel();
-		this.choiceScroll = new JScrollPane(choicePanel);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
+		
+		this.window = new JFrame("AdventureEngine");
+		this.textPanel = new JTextArea();
+		this.textScroll = new JScrollPane(textPanel);
+		this.choicePanel = new JPanel();
+		this.choiceScroll = new JScrollPane(choicePanel);
 		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
