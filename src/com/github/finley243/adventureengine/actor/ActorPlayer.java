@@ -28,10 +28,10 @@ public class ActorPlayer extends Actor {
 	@Override
 	public void move(Area area) {
 		super.move(area);
-		if(!this.getArea().getRoom().hasVisited()) {
+		/*if(!this.getArea().getRoom().hasVisited()) {
 			Game.EVENT_BUS.post(new DisplayTextEvent(this.getArea().getRoom().getDescription()));
 			this.getArea().getRoom().setVisited();
-		}
+		}*/
 	}
 	
 	@Override
@@ -48,6 +48,10 @@ public class ActorPlayer extends Actor {
 	public void takeTurn() {
 		// Could handle action points here?
 		//Action chosenAction = Menu.buildMenu(this.availableActions());
+		if(!this.getArea().getRoom().hasVisited()) {
+			Game.EVENT_BUS.post(new DisplayTextEvent(this.getArea().getRoom().getDescription()));
+			this.getArea().getRoom().setVisited();
+		}
 		lastActions = this.availableActions();
 		List<String> choiceStrings = new ArrayList<String>();
 		for(int i = 0; i < lastActions.size(); i++) {
