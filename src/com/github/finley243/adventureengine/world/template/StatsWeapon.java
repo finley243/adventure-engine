@@ -25,8 +25,8 @@ public class StatsWeapon extends StatsItem {
 	
 	private WeaponType type;
 	
-	public StatsWeapon(String ID, String name) {
-		super(ID, name);
+	public StatsWeapon(String ID, String name, int price) {
+		super(ID, name, price);
 	}
 	
 	public WeaponType getType() {

@@ -8,8 +8,8 @@ public class StatsConsumable extends StatsItem {
 	
 	private ConsumableType type;
 	
-	public StatsConsumable(String ID, String name) {
-		super(ID, name);
+	public StatsConsumable(String ID, String name, int price) {
+		super(ID, name, price);
 	}
 	
 	public ConsumableType getType() {

@@ -18,6 +18,10 @@ public abstract class Item extends WorldObject {
 		super(name);
 	}
 	
+	public int getPrice() {
+		return 0;
+	}
+	
 	public void setInInventory(Inventory inventory) {
 		currentInventory = inventory;
 		super.setArea(null);

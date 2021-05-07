@@ -12,6 +12,11 @@ public class ItemApparel extends Item {
 	}
 	
 	@Override
+	public int getPrice() {
+		return stats.getPrice();
+	}
+	
+	@Override
 	public boolean equals(Object o) {
 		if(!(o instanceof ItemApparel)) {
 			return false;

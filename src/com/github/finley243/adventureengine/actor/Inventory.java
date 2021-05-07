@@ -25,4 +25,8 @@ public class Inventory {
 		inventory.remove(item);
 	}
 	
+	public Set<Item> getItems() {
+		return inventory;
+	}
+	
 }

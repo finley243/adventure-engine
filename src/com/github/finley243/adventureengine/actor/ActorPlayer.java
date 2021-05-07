@@ -45,11 +45,6 @@ public class ActorPlayer extends Actor {
 	}
 	
 	@Override
-	public List<Action> localActions(Actor subject) {
-		return new ArrayList<Action>();
-	}
-	
-	@Override
 	public void takeTurn() {
 		// Could handle action points here?
 		//Action chosenAction = Menu.buildMenu(this.availableActions());

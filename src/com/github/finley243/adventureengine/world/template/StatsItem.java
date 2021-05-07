@@ -4,10 +4,12 @@ public class StatsItem {
 
 	private String ID;
 	private String name;
+	private int price;
 	
-	public StatsItem(String ID, String name) {
+	public StatsItem(String ID, String name, int price) {
 		this.ID = ID;
 		this.name = name;
+		this.price = price;
 	}
 	
 	public String getID() {
@@ -16,6 +18,10 @@ public class StatsItem {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public int getPrice() {
+		return price;
 	}
 	
 }

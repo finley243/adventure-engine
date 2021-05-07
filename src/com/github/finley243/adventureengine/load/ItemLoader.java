@@ -43,9 +43,10 @@ public class ItemLoader {
 		String type = itemElement.getAttribute("type");
 		String id = itemElement.getAttribute("id");
 		String name = singleTag(itemElement, "name");
+		int price = singleTagInt(itemElement, "price");
 		switch(type) {
 		case "consumable":
-			return new StatsConsumable(id, name);
+			return new StatsConsumable(id, name, price);
 		}
 		return null;
 	}

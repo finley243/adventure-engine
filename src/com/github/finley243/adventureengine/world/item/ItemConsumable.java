@@ -1,5 +1,11 @@
 package com.github.finley243.adventureengine.world.item;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionConsume;
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
 
 public class ItemConsumable extends Item {
@@ -9,6 +15,18 @@ public class ItemConsumable extends Item {
 	public ItemConsumable(StatsConsumable stats) {
 		super(stats.getName());
 		this.stats = stats;
+	}
+	
+	@Override
+	public int getPrice() {
+		return stats.getPrice();
+	}
+	
+	@Override
+	public List<Action> inventoryActions(Actor subject) {
+		List<Action> actions = new ArrayList<Action>();
+		actions.add(new ActionConsume(this));
+		return actions;
 	}
 	
 	@Override

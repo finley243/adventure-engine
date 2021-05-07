@@ -13,6 +13,7 @@ import com.github.finley243.adventureengine.event.DisplayTextEvent;
 import com.github.finley243.adventureengine.event.EndPlayerTurnEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
+import com.github.finley243.adventureengine.load.ItemLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -20,7 +21,9 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.Gui;
 import com.github.finley243.adventureengine.ui.UserInterface;
+import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
+import com.github.finley243.adventureengine.world.template.ItemFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -54,6 +57,7 @@ public class Game {
 		EVENT_BUS.register(this);
 		
 		Phrases.load();
+		ItemLoader.loadItems(new File(GAMEFILES + ITEM_DIRECTORY));
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		
@@ -64,6 +68,9 @@ public class Game {
 		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
+		
+		Item cola = ItemFactory.create("nitron_cola");
+		Data.getPlayer().inventory().addItem(cola);
 		
 		startGameLoop();
 	}

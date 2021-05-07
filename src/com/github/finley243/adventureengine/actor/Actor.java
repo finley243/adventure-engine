@@ -20,6 +20,7 @@ import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.Usable;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
@@ -76,12 +77,6 @@ public class Actor implements Noun, Physical, AttackTarget {
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, 1);
 		}
-	}
-	
-	public Actor(String ID, String areaID, StatsActor stats) {
-		this.ID = ID;
-		this.move(Data.getArea(areaID));
-		this.stats = stats;
 	}
 	
 	public String getID() {
@@ -228,6 +223,9 @@ public class Actor implements Noun, Physical, AttackTarget {
 		}
 		if(isUsingObject()) {
 			actions.addAll(usingObject.usingActions());
+		}
+		for(Item item : inventory.getItems()) {
+			actions.addAll(item.inventoryActions(this));
 		}
 		if(canMove()) {
 			for(Area area : getArea().getLinkedAreas()) {
