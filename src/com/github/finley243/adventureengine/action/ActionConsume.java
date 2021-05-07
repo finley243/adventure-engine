@@ -19,12 +19,31 @@ public class ActionConsume implements Action {
 	public void choose(Actor subject) {
 		subject.inventory().removeItem(item);
 		Context context = new Context(subject, item);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("consume"), context));
+		switch(item.getConsumableType()) {
+		case DRINK:
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("consumeDrink"), context));
+			break;
+		case FOOD:
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("consumeFood"), context));
+			break;
+		case OTHER:
+		default:
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("consume"), context));
+			break;
+		}
 	}
 
 	@Override
 	public String getChoiceName() {
-		return "Consume " + item.getFormattedName();
+		switch(item.getConsumableType()) {
+		case DRINK:
+			return "Drink " + item.getFormattedName();
+		case FOOD:
+			return "Eat " + item.getFormattedName();
+		case OTHER:
+		default:
+			return "Use " + item.getFormattedName();
+		}
 	}
 
 	@Override

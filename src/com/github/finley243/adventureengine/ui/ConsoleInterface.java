@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.menu.InputUtils;
+import com.github.finley243.adventureengine.menu.ConsoleUtils;
 import com.google.common.eventbus.Subscribe;
 
 public class ConsoleInterface implements UserInterface {
@@ -31,7 +31,7 @@ public class ConsoleInterface implements UserInterface {
 		for(int i = 0; i < choices.size(); i++) {
 			System.out.println((i + 1) + ") " + choices.get(i));
 		}
-		int response = InputUtils.intInRange(1, lastMenuEvent.getChoices().size());
+		int response = ConsoleUtils.intInRange(1, lastMenuEvent.getChoices().size());
 		System.out.println();
 		Game.EVENT_BUS.post(new MenuSelectEvent(response - 1));
 	}

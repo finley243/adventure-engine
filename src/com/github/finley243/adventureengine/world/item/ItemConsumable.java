@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionConsume;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
+import com.github.finley243.adventureengine.world.template.StatsConsumable.ConsumableType;
 
 public class ItemConsumable extends Item {
 
@@ -20,6 +21,10 @@ public class ItemConsumable extends Item {
 	@Override
 	public int getPrice() {
 		return stats.getPrice();
+	}
+	
+	public ConsumableType getConsumableType() {
+		return stats.getType();
 	}
 	
 	@Override

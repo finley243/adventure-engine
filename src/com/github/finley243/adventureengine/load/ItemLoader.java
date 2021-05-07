@@ -15,6 +15,7 @@ import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
+import com.github.finley243.adventureengine.world.template.StatsConsumable.ConsumableType;
 import com.github.finley243.adventureengine.world.template.StatsItem;
 
 public class ItemLoader {
@@ -46,7 +47,8 @@ public class ItemLoader {
 		int price = singleTagInt(itemElement, "price");
 		switch(type) {
 		case "consumable":
-			return new StatsConsumable(id, name, price);
+			ConsumableType consumableType = ConsumableType.valueOf(singleTag(itemElement, "type").toUpperCase());
+			return new StatsConsumable(id, name, price, consumableType);
 		}
 		return null;
 	}

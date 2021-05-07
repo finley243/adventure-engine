@@ -2,11 +2,13 @@
   <item type="consumable" id="nitron_cola">
     <name>Nitron Cola</name>
     <price>10</price>
+    <type>DRINK</type>
     <effects></effects>
   </item>
   <item type="consumable" id="nitron_diet">
     <name>Nitron Diet</name>
     <price>10</price>
+    <type>DRINK</type>
     <effects></effects>
   </item>
 </items>

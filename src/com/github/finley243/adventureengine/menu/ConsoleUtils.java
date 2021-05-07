@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.menu;
 
 import java.util.Scanner;
 
-public class InputUtils {
+public class ConsoleUtils {
 
 	private static final Scanner CONSOLE = new Scanner(System.in);
 	
