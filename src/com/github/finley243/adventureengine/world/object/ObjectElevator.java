@@ -16,8 +16,8 @@ public class ObjectElevator extends LinkedObject {
 	private Set<String> linkedElevatorIDs;
 	private boolean isLocked;
 	
-	public ObjectElevator(String ID, String areaID, String name, int floorNumber, String floorName, Set<String> linkedElevatorIDs) {
-		super(ID, areaID, name);
+	public ObjectElevator(String ID, String name, int floorNumber, String floorName, Set<String> linkedElevatorIDs) {
+		super(ID, name);
 		this.floorNumber = floorNumber;
 		this.floorName = floorName;
 		this.linkedElevatorIDs = linkedElevatorIDs;

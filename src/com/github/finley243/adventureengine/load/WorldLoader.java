@@ -35,10 +35,10 @@ public class WorldLoader {
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.parse(file);
 				Element rootElement = document.getDocumentElement();
-				NodeList rooms = rootElement.getElementsByTagName("room");
-				for(int i = 0; i < rooms.getLength(); i++) {
-					if(rooms.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						Element roomElement = (Element) rooms.item(i);
+				NodeList roomElements = rootElement.getElementsByTagName("room");
+				for(int i = 0; i < roomElements.getLength(); i++) {
+					if(roomElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
+						Element roomElement = (Element) roomElements.item(i);
 						Room room = loadRoom(roomElement);
 						Data.addRoom(room.getID(), room);
 					}
@@ -47,34 +47,34 @@ public class WorldLoader {
 		}
 	}
 	
-	private static Room loadRoom(Element room) throws ParserConfigurationException, SAXException, IOException {
-		String roomID = room.getAttribute("id");
-		Element roomNameElement = (Element) room.getElementsByTagName("name").item(0);
+	private static Room loadRoom(Element roomElement) throws ParserConfigurationException, SAXException, IOException {
+		String roomID = roomElement.getAttribute("id");
+		Element roomNameElement = (Element) roomElement.getElementsByTagName("name").item(0);
 		String roomName = roomNameElement.getTextContent();
 		boolean roomNameIsProper = boolAttribute(roomNameElement, "proper");
-		String roomDescription = singleTag(room, "description");
+		String roomDescription = singleTag(roomElement, "description");
 		
-		NodeList areas = room.getElementsByTagName("area");
-		Set<Area> areaSet = new HashSet<Area>();
-		for(int i = 0; i < areas.getLength(); i++) {
-			if(areas.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				Element areaElement = (Element) areas.item(i);
+		NodeList areaElements = roomElement.getElementsByTagName("area");
+		Set<Area> areas = new HashSet<Area>();
+		for(int i = 0; i < areaElements.getLength(); i++) {
+			if(areaElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				Element areaElement = (Element) areaElements.item(i);
 				Area area = loadArea(areaElement, roomID);
-				areaSet.add(area);
+				areas.add(area);
 				Data.addArea(area.getID(), area);
 			}
 		}
-		return new Room(roomID, roomName, roomNameIsProper, roomDescription, areaSet);
+		return new Room(roomID, roomName, roomNameIsProper, roomDescription, areas);
 	}
 	
-	private static Area loadArea(Element area, String roomID) {
-		String areaID = area.getAttribute("id");
-		Element nameElement = (Element) area.getElementsByTagName("name").item(0);
+	private static Area loadArea(Element areaElement, String roomID) {
+		String areaID = areaElement.getAttribute("id");
+		Element nameElement = (Element) areaElement.getElementsByTagName("name").item(0);
 		String name = nameElement.getTextContent();
 		boolean isProperName = boolAttribute(nameElement, "proper");
 		boolean isProximateName = boolAttribute(nameElement, "prox");
 		
-		Element linksElement = (Element) area.getElementsByTagName("links").item(0);
+		Element linksElement = (Element) areaElement.getElementsByTagName("links").item(0);
 		NodeList links = linksElement.getElementsByTagName("link");
 		Set<String> linkSet = new HashSet<String>();
 		for(int j = 0; j < links.getLength(); j++) {
@@ -84,12 +84,12 @@ public class WorldLoader {
 			}
 		}
 		
-		Element objectsElement = (Element) area.getElementsByTagName("objects").item(0);
-		NodeList objects = objectsElement.getElementsByTagName("object");
+		Element objectsElement = (Element) areaElement.getElementsByTagName("objects").item(0);
+		NodeList objectElements = objectsElement.getElementsByTagName("object");
 		Set<WorldObject> objectSet = new HashSet<WorldObject>();
-		for(int j = 0; j < objects.getLength(); j++) {
-			if(objects.item(j).getNodeType() == Node.ELEMENT_NODE) {
-				Element objectElement = (Element) objects.item(j);
+		for(int j = 0; j < objectElements.getLength(); j++) {
+			if(objectElements.item(j).getNodeType() == Node.ELEMENT_NODE) {
+				Element objectElement = (Element) objectElements.item(j);
 				WorldObject object = loadObject(objectElement, areaID);
 				objectSet.add(object);
 				if(object instanceof LinkedObject) {
@@ -99,28 +99,32 @@ public class WorldLoader {
 			}
 		}
 		
-		return new Area(areaID, name, isProperName, isProximateName, roomID, linkSet, objectSet);
+		Area area = new Area(areaID, name, isProperName, isProximateName, roomID, linkSet, objectSet);
+		for(WorldObject object : objectSet) {
+			object.setArea(area);
+		}
+		return area;
 	}
 	
-	private static WorldObject loadObject(Element object, String areaID) {
-		String objectType = object.getAttribute("type");
-		String objectName = singleTag(object, "name");
+	private static WorldObject loadObject(Element objectElement, String areaID) {
+		String objectType = objectElement.getAttribute("type");
+		String objectName = singleTag(objectElement, "name");
 		switch(objectType) {
 		case "exit":
-			String exitID = object.getAttribute("id");
-			String exitLink = singleTag(object, "link");
-			return new ObjectExit(exitID, areaID, objectName, exitLink);
+			String exitID = objectElement.getAttribute("id");
+			String exitLink = singleTag(objectElement, "link");
+			return new ObjectExit(exitID, objectName, exitLink);
 		case "elevator":
-			String elevatorID = object.getAttribute("id");
-			int floorNumber = singleTagInt(object, "floornumber");
-			String floorName = singleTag(object, "floorname");
-			Set<String> linkedElevatorIDs = setTags((Element) object.getElementsByTagName("links").item(0), "link");
-			return new ObjectElevator(elevatorID, areaID, objectName, floorNumber, floorName, linkedElevatorIDs);
+			String elevatorID = objectElement.getAttribute("id");
+			int floorNumber = singleTagInt(objectElement, "floornumber");
+			String floorName = singleTag(objectElement, "floorname");
+			Set<String> linkedElevatorIDs = setOfTags((Element) objectElement.getElementsByTagName("links").item(0), "link");
+			return new ObjectElevator(elevatorID, objectName, floorNumber, floorName, linkedElevatorIDs);
 		case "sign":
-			String signText = singleTag(object, "text");
-			return new ObjectSign(areaID, objectName, signText);
+			String signText = singleTag(objectElement, "text");
+			return new ObjectSign(objectName, signText);
 		case "chair":
-			return new ObjectChair(areaID, objectName);
+			return new ObjectChair(objectName);
 		}
 		return null;
 	}
@@ -139,7 +143,7 @@ public class WorldLoader {
 		return Integer.parseInt(singleTag(element, name));
 	}
 	
-	private static Set<String> setTags(Element element, String name) {
+	private static Set<String> setOfTags(Element element, String name) {
 		Set<String> output = new HashSet<String>();
 		NodeList nodes = element.getElementsByTagName(name);
 		for(int i = 0; i < nodes.getLength(); i++) {

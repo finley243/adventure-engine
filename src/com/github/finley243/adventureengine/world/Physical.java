@@ -10,6 +10,8 @@ public interface Physical {
 	
 	public Area getArea();
 	
+	public void setArea(Area area);
+	
 	// Actions that can be performed within the same area
 	public List<Action> localActions(Actor subject);
 	

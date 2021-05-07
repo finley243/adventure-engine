@@ -13,8 +13,8 @@ public class ObjectChair extends WorldObject implements Usable {
 
     private Actor user;
 
-    public ObjectChair(String areaID, String name) {
-        super(areaID, name);
+    public ObjectChair(String name) {
+        super(name);
     }
 
 	@Override

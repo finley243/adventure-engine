@@ -6,12 +6,35 @@ import java.util.List;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemTake;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public abstract class Item extends WorldObject {
 	
-	public Item(String areaID, String name) {
-		super(areaID, name);
+	private Inventory currentInventory;
+	
+	public Item(String name) {
+		super(name);
+	}
+	
+	public void setInInventory(Inventory inventory) {
+		currentInventory = inventory;
+		super.setArea(null);
+	}
+	
+	@Override
+	public void setArea(Area area) {
+		super.setArea(area);
+		currentInventory = null;
+	}
+	
+	public boolean isInInventory() {
+		return currentInventory != null;
+	}
+	
+	public boolean isInArea() {
+		return getArea() != null;
 	}
 
 	@Override

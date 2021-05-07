@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.world.object;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
@@ -14,11 +13,10 @@ import com.github.finley243.adventureengine.world.environment.Area;
 public abstract class WorldObject implements Noun, Physical {
 	
 	private String name;
-	private String areaID;
+	private Area area;
 	
-	public WorldObject(String areaID, String name) {
+	public WorldObject(String name) {
 		this.name = name;
-		this.areaID = areaID;
 	}
 	
 	@Override
@@ -43,7 +41,12 @@ public abstract class WorldObject implements Noun, Physical {
 	
 	@Override
 	public Area getArea() {
-		return Data.getArea(areaID);
+		return area;
+	}
+	
+	@Override
+	public void setArea(Area area) {
+		this.area = area;
 	}
 
 	@Override

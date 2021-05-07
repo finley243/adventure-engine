@@ -59,7 +59,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 	private Inventory inventory;
 	private int money;
 	
-	private String areaID;
+	private Area area;
 	
 	private String topicID;
 	
@@ -80,7 +80,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	public Actor(String ID, String areaID, StatsActor stats) {
 		this.ID = ID;
-		this.areaID = areaID;
+		this.move(Data.getArea(areaID));
 		this.stats = stats;
 	}
 	
@@ -110,7 +110,12 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	@Override
 	public Area getArea() {
-		return Data.getArea(areaID);
+		return area;
+	}
+	
+	@Override
+	public void setArea(Area area) {
+		this.area = area;
 	}
 	
 	public int getAttribute(Attribute attribute) {
@@ -131,10 +136,10 @@ public class Actor implements Noun, Physical, AttackTarget {
 	}
 	
 	public void move(Area area) {
-		if(areaID != null) {
-			Data.getArea(areaID).removeActor(this);
+		if(this.area != null) {
+			this.area.removeActor(this);
 		}
-		areaID = area.getID();
+		setArea(area);
 		area.addActor(this);
 	}
 	

@@ -15,8 +15,8 @@ public class ObjectExit extends LinkedObject {
 	private String linkedExitID;
 	private boolean isLocked;
 	
-	public ObjectExit(String ID, String currentAreaID, String name, String linkedExitID) {
-		super(ID, currentAreaID, name);
+	public ObjectExit(String ID, String name, String linkedExitID) {
+		super(ID, name);
 		this.linkedExitID = linkedExitID;
 		
 		this.isLocked = true; // FOR TESTING PURPOSES ONLY
