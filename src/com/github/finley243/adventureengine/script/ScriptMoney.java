@@ -12,7 +12,7 @@ public class ScriptMoney implements Script {
 
 	@Override
 	public void execute(Actor target) {
-		target.addMoney(value);
+		target.adjustMoney(value);
 	}
 	
 }

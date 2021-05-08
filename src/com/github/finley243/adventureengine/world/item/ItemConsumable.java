@@ -45,7 +45,7 @@ public class ItemConsumable extends Item {
 	
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = super.inventoryActions(subject);
 		actions.add(new ActionConsume(this));
 		return actions;
 	}

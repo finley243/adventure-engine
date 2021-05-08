@@ -7,25 +7,25 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
 
-public class ActionItemTake implements Action {
+public class ActionItemDrop implements Action {
 
 	private Item item;
 	
-	public ActionItemTake(Item item) {
+	public ActionItemDrop(Item item) {
 		this.item = item;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		subject.getArea().removeObject(item);
-		subject.inventory().addItem(item);
+		subject.getArea().addObject(item);
+		subject.inventory().removeItem(item);
 		Context context = new Context(subject, item);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("pickUp"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context));
 	}
 	
 	@Override
 	public String getPrompt() {
-		return "Take " + item.getFormattedName();
+		return "Drop " + item.getFormattedName();
 	}
 	
 	@Override

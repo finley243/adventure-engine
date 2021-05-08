@@ -2,9 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
@@ -121,7 +119,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 		attributes.put(attribute, value);
 	}
 	
-	public void addAttribute(Attribute attribute, int value) {
+	public void adjustAttribute(Attribute attribute, int value) {
 		int currentValue = attributes.get(attribute);
 		attributes.put(attribute, currentValue + value);
 	}
@@ -150,7 +148,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 		return money;
 	}
 	
-	public void addMoney(int value) {
+	public void adjustMoney(int value) {
 		money += value;
 	}
 	
@@ -207,12 +205,6 @@ public class Actor implements Noun, Physical, AttackTarget {
 		return new ArrayList<Action>();
 	}
 	
-	public Set<Physical> getVisibleObjects() {
-		Set<Physical> objects = new HashSet<Physical>();
-		
-		return objects;
-	}
-	
 	public List<Action> availableActions(){
 		List<Action> actions = new ArrayList<Action>();
 		for(Actor actor : getArea().getActors()) {
@@ -224,13 +216,13 @@ public class Actor implements Noun, Physical, AttackTarget {
 		if(isUsingObject()) {
 			actions.addAll(usingObject.usingActions());
 		}
-		for(Item item : inventory.getUniqueItems()) {
-			actions.addAll(item.inventoryActions(this));
-		}
 		if(canMove()) {
 			for(Area area : getArea().getLinkedAreas()) {
 				actions.add(new ActionMove(area));
 			}
+		}
+		for(Item item : inventory.getUniqueItems()) {
+			actions.addAll(item.inventoryActions(this));
 		}
 		actions.add(new ActionWait());
 		return actions;
