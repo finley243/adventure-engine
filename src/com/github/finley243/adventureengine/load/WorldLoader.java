@@ -53,8 +53,8 @@ public class WorldLoader {
 		String roomID = roomElement.getAttribute("id");
 		Element roomNameElement = (Element) roomElement.getElementsByTagName("name").item(0);
 		String roomName = roomNameElement.getTextContent();
-		boolean roomNameIsProper = LoadUtils.boolAttribute(roomNameElement, "proper");
-		String roomDescription = LoadUtils.singleTag(roomElement, "description");
+		boolean roomNameIsProper = LoadUtils.boolAttribute(roomNameElement, "proper", false);
+		String roomDescription = LoadUtils.singleTag(roomElement, "description", "");
 		
 		NodeList areaElements = roomElement.getElementsByTagName("area");
 		Set<Area> areas = new HashSet<Area>();
@@ -73,8 +73,8 @@ public class WorldLoader {
 		String areaID = areaElement.getAttribute("id");
 		Element nameElement = (Element) areaElement.getElementsByTagName("name").item(0);
 		String name = nameElement.getTextContent();
-		boolean isProperName = LoadUtils.boolAttribute(nameElement, "proper");
-		boolean isProximateName = LoadUtils.boolAttribute(nameElement, "prox");
+		boolean isProperName = LoadUtils.boolAttribute(nameElement, "proper", false);
+		boolean isProximateName = LoadUtils.boolAttribute(nameElement, "prox", false);
 		
 		Element linksElement = (Element) areaElement.getElementsByTagName("links").item(0);
 		NodeList links = linksElement.getElementsByTagName("link");
@@ -110,17 +110,17 @@ public class WorldLoader {
 	
 	private static WorldObject loadObject(Element objectElement, String areaID) {
 		String objectType = objectElement.getAttribute("type");
-		String objectName = LoadUtils.singleTag(objectElement, "name");
+		String objectName = LoadUtils.singleTag(objectElement, "name", null);
 		switch(objectType) {
 		case "exit":
 			String exitID = objectElement.getAttribute("id");
-			String exitLink = LoadUtils.singleTag(objectElement, "link");
-			String exitKey = LoadUtils.singleTag(objectElement, "key");
+			String exitLink = LoadUtils.singleTag(objectElement, "link", null);
+			String exitKey = LoadUtils.singleTag(objectElement, "key", null);
 			return new ObjectExit(exitID, objectName, exitLink, exitKey);
 		case "elevator":
 			String elevatorID = objectElement.getAttribute("id");
-			int floorNumber = LoadUtils.singleTagInt(objectElement, "floornumber");
-			String floorName = LoadUtils.singleTag(objectElement, "floorname");
+			int floorNumber = LoadUtils.singleTagInt(objectElement, "floornumber", 1);
+			String floorName = LoadUtils.singleTag(objectElement, "floorname", null);
 			Set<String> linkedElevatorIDs = LoadUtils.setOfTags((Element) objectElement.getElementsByTagName("links").item(0), "link");
 			return new ObjectElevator(elevatorID, objectName, floorNumber, floorName, linkedElevatorIDs);
 		case "sign":

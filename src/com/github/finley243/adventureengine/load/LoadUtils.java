@@ -13,25 +13,25 @@ import com.github.finley243.adventureengine.condition.Condition.Equality;
 
 public class LoadUtils {
 
-	public static boolean boolAttribute(Element element, String name) {
-		if(!element.hasAttribute(name)) return false;
+	public static boolean boolAttribute(Element element, String name, boolean defaultValue) {
+		if(!element.hasAttribute(name)) return defaultValue;
 		return element.getAttribute(name).equalsIgnoreCase("true");
 	}
 	
-	public static String singleTag(Element element, String name) {
-		if(element.getElementsByTagName(name).getLength() == 0) return null;
+	public static String singleTag(Element element, String name, String defaultValue) {
+		if(element.getElementsByTagName(name).getLength() == 0) return defaultValue;
 		return element.getElementsByTagName(name).item(0).getTextContent();
 	}
 	
-	public static int singleTagInt(Element element, String name) {
-		String stringValue = LoadUtils.singleTag(element, name);
-		if(stringValue == null) return 0;
+	public static int singleTagInt(Element element, String name, int defaultValue) {
+		String stringValue = LoadUtils.singleTag(element, name, null);
+		if(stringValue == null) return defaultValue;
 		return Integer.parseInt(stringValue);
 	}
 	
-	public static boolean singleTagBoolean(Element element, String name) {
-		String stringValue = LoadUtils.singleTag(element, name);
-		if(stringValue == null) return false;
+	public static boolean singleTagBoolean(Element element, String name, boolean defaultValue) {
+		String stringValue = LoadUtils.singleTag(element, name, null);
+		if(stringValue == null) return defaultValue;
 		return stringValue.equalsIgnoreCase("true");
 	}
 	
@@ -58,7 +58,7 @@ public class LoadUtils {
 	}
 	
 	public static Equality equalityTag(Element element, String name) {
-		String logicString = LoadUtils.singleTag(element, name);
+		String logicString = LoadUtils.singleTag(element, name, null);
 		switch(logicString) {
 		case "EQUAL":
 			return Equality.EQUAL;

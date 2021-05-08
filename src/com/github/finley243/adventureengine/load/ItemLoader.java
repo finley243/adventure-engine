@@ -44,11 +44,11 @@ public class ItemLoader {
 	private static StatsItem loadItem(Element itemElement) throws ParserConfigurationException, SAXException, IOException {
 		String type = itemElement.getAttribute("type");
 		String id = itemElement.getAttribute("id");
-		String name = LoadUtils.singleTag(itemElement, "name");
+		String name = LoadUtils.singleTag(itemElement, "name", null);
 		switch(type) {
 		case "consumable":
-			int consumablePrice = LoadUtils.singleTagInt(itemElement, "price");
-			ConsumableType consumableType = ConsumableType.valueOf(LoadUtils.singleTag(itemElement, "type"));
+			int consumablePrice = LoadUtils.singleTagInt(itemElement, "price", 0);
+			ConsumableType consumableType = ConsumableType.valueOf(LoadUtils.singleTag(itemElement, "type", "OTHER"));
 			return new StatsConsumable(id, name, consumablePrice, consumableType);
 		case "key":
 			return new StatsKey(id, name);

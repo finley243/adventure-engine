@@ -85,8 +85,8 @@ public class DialogueLoader {
 	}
 	
 	private static Line loadLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
-		boolean once = LoadUtils.boolAttribute(lineElement, "once");
-		boolean exit = LoadUtils.boolAttribute(lineElement, "exit");
+		boolean once = LoadUtils.boolAttribute(lineElement, "once", false);
+		boolean exit = LoadUtils.boolAttribute(lineElement, "exit", false);
 		String redirect = lineElement.getAttribute("redirect");
 		if(redirect.isEmpty()) {
 			redirect = null;
@@ -99,9 +99,9 @@ public class DialogueLoader {
 	}
 	
 	private static Choice loadChoice(Element choiceElement) throws ParserConfigurationException, SAXException, IOException {
-		boolean once = LoadUtils.boolAttribute(choiceElement, "once");
+		boolean once = LoadUtils.boolAttribute(choiceElement, "once", false);
 		String link = choiceElement.getAttribute("link");
-		String prompt = LoadUtils.singleTag(choiceElement, "prompt");
+		String prompt = LoadUtils.singleTag(choiceElement, "prompt", null);
 		Element conditionElement = (Element) choiceElement.getElementsByTagName("condition").item(0);
 		Condition condition = loadCondition(conditionElement);
 		return new Choice(link, prompt, condition, once);
@@ -116,11 +116,11 @@ public class DialogueLoader {
 			boolean useOr = conditionElement.getAttribute("logic").equalsIgnoreCase("or");
 			return new ConditionCompound(subConditions, useOr);
 		case "money":
-			int moneyValue = LoadUtils.singleTagInt(conditionElement, "value");
+			int moneyValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
 			return new ConditionMoney(moneyValue);
 		case "knowledge":
-			String knowledgeID = LoadUtils.singleTag(conditionElement, "knowledge");
-			boolean knowledgeValue = LoadUtils.singleTagBoolean(conditionElement, "value");
+			String knowledgeID = LoadUtils.singleTag(conditionElement, "knowledge", null);
+			boolean knowledgeValue = LoadUtils.singleTagBoolean(conditionElement, "value", true);
 			return new ConditionKnowledge(knowledgeID, knowledgeValue);
 		default:
 			return null;
@@ -158,13 +158,13 @@ public class DialogueLoader {
 		String type = scriptElement.getAttribute("type");
 		switch(type) {
 		case "money":
-			int moneyValue = LoadUtils.singleTagInt(scriptElement, "value");
+			int moneyValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
 			return new ScriptMoney(moneyValue);
 		case "add_item":
-			String addItemID = LoadUtils.singleTag(scriptElement, "item");
+			String addItemID = LoadUtils.singleTag(scriptElement, "item", null);
 			return new ScriptAddItem(addItemID);
 		case "knowledge":
-			String knowledgeID = LoadUtils.singleTag(scriptElement, "knowledge");
+			String knowledgeID = LoadUtils.singleTag(scriptElement, "knowledge", null);
 			return new ScriptKnowledge(knowledgeID);
 		default:
 			return null;
