@@ -8,6 +8,7 @@ public class RenderMenuEvent {
 	private List<String[]> menuStructures;
 	
 	public RenderMenuEvent(List<String> choices, List<String[]> menuStructures) {
+		if (choices.size() != menuStructures.size()) throw new IllegalArgumentException();
 		this.choices = choices;
 		this.menuStructures = menuStructures;
 	}

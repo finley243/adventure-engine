@@ -17,7 +17,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
@@ -95,6 +94,15 @@ public class GraphicalInterface implements UserInterface {
 		}
 		return uniqueStructures;
 	}
+	
+	private boolean containsMenuStructure(List<String[]> existingStructures, String[] menuStructure) {
+		for(String[] existingStructure : existingStructures) {
+			if(Arrays.equals(existingStructure, menuStructure)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	@Override
 	@Subscribe
@@ -118,6 +126,7 @@ public class GraphicalInterface implements UserInterface {
 			@Override
 			public void run() {
 				List<String> choices = event.getChoices();
+				List<String[]> menuStructures = event.getMenuStructures();
 				choicePanel.removeAll();
 				for(int i = 0; i < choices.size(); i++) {
 					JButton button = new JButton(choices.get(i));
