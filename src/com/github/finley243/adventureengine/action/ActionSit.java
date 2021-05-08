@@ -37,7 +37,7 @@ public class ActionSit implements Action {
 	
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {"World", LangUtils.capitalize(chair.getName())};
+		return new String[] {"World", LangUtils.titleCase(chair.getName())};
 	}
 
 }

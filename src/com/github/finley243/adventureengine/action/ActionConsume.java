@@ -55,7 +55,7 @@ public class ActionConsume implements Action {
 	
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {"Inventory", LangUtils.capitalize(item.getName())};
+		return new String[] {"Inventory", LangUtils.titleCase(item.getName())};
 	}
 
 }

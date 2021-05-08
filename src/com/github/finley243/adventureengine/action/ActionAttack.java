@@ -32,7 +32,7 @@ public class ActionAttack implements Action {
 	
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {LangUtils.capitalize(weapon.getName())};
+		return new String[] {LangUtils.titleCase(weapon.getName())};
 	}
 	
 }

@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -15,6 +17,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
@@ -74,6 +77,23 @@ public class GraphicalInterface implements UserInterface {
 		// Centers window on screen
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
+	}
+	
+	private List<String[]> getUniqueMenuStructures(List<String[]> menuStructures) {
+		List<String[]> uniqueStructures = new ArrayList<String[]>();
+		for(String[] menuStructure : menuStructures) {
+			boolean unique = true;
+			for(String[] menu : uniqueStructures) {
+				if(menuStructure.length == 0 || Arrays.equals(menu, menuStructure)) {
+					unique = false;
+					break;
+				}
+			}
+			if(unique) {
+				uniqueStructures.add(menuStructure);
+			}
+		}
+		return uniqueStructures;
 	}
 
 	@Override

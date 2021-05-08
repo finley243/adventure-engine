@@ -35,11 +35,13 @@ public class MenuManager {
 		List<Action> actions = subject.availableActions();
 		this.actionList = actions;
 		List<String> menuStrings = new ArrayList<String>();
+		List<String[]> menuStructures = new ArrayList<String[]>();
 		for(Action action : actions) {
 			menuStrings.add(action.getPrompt());
+			menuStructures.add(action.getMenuStructure());
 		}
 		actionChoice = null;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings));
+		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuStructures));
 		while(actionChoice == null) {
 			try {
 				Thread.sleep(20);
@@ -94,11 +96,13 @@ public class MenuManager {
 	private Choice dialogueMenu(List<Choice> choices) {
 		this.dialogueList = choices;
 		List<String> menuStrings = new ArrayList<String>();
+		List<String[]> menuStructures = new ArrayList<String[]>();
 		for(Choice choice : choices) {
 			menuStrings.add(choice.getPrompt());
+			menuStructures.add(new String[] {});
 		}
 		dialogueChoice = null;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings));
+		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuStructures));
 		while(dialogueChoice == null) {
 			try {
 				Thread.sleep(20);

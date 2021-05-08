@@ -31,7 +31,7 @@ public class ActionTalk implements Action {
 	
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {"World", LangUtils.capitalize(target.getName())};
+		return new String[] {"World", LangUtils.titleCase(target.getName())};
 	}
 
 }

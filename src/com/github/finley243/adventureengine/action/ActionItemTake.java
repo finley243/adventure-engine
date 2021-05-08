@@ -36,7 +36,7 @@ public class ActionItemTake implements Action {
 	
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {"World", LangUtils.capitalize(item.getName())};
+		return new String[] {"World", LangUtils.titleCase(item.getName())};
 	}
 	
 }

@@ -47,7 +47,7 @@ public class ActionReadSign implements Action {
 	
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {"World", LangUtils.capitalize(sign.getName())};
+		return new String[] {"World", LangUtils.titleCase(sign.getName())};
 	}
 
 }

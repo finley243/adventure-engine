@@ -37,7 +37,7 @@ public class ActionStand implements Action {
 	
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {LangUtils.capitalize(object.getName())};
+		return new String[] {LangUtils.titleCase(object.getName())};
 	}
 
 }

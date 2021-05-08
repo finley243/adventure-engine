@@ -39,7 +39,7 @@ public class ActionMoveElevator implements Action {
 	
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {"Move", LangUtils.capitalize(elevator.getName())};
+		return new String[] {"Move", LangUtils.titleCase(elevator.getName())};
 	}
 
 }

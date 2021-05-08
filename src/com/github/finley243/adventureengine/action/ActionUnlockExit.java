@@ -35,7 +35,7 @@ public class ActionUnlockExit implements Action {
 	
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {"World", LangUtils.capitalize(exit.getName())};
+		return new String[] {"World", LangUtils.titleCase(exit.getName())};
 	}
 	
 }
