@@ -8,6 +8,7 @@ idle:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> 
 moveThroughTo:<subject> go<es> through <object> to <object2>
 moveTo:<subject> go<es> to <object>
 moveToward:<subject> go<es> to <object>
+read:<subject> read<s> <object>
 sit:<subject> sit<s> in <object>
 stand:<subject> stand<s> up
 unlock:<subject> unlock<s> <object>

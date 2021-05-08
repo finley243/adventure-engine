@@ -124,7 +124,8 @@ public class WorldLoader {
 			Set<String> linkedElevatorIDs = setOfTags((Element) objectElement.getElementsByTagName("links").item(0), "link");
 			return new ObjectElevator(elevatorID, objectName, floorNumber, floorName, linkedElevatorIDs);
 		case "sign":
-			String signText = singleTag(objectElement, "text");
+			//String signText = singleTag(objectElement, "text");
+			List<String> signText = listOfTags((Element) objectElement.getElementsByTagName("lines").item(0), "text");
 			return new ObjectSign(objectName, signText);
 		case "chair":
 			return new ObjectChair(objectName);

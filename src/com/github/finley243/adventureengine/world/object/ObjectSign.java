@@ -4,26 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionReadSign;
+import com.github.finley243.adventureengine.action.ActionRead;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.world.Readable;
 
-public class ObjectSign extends WorldObject {
+public class ObjectSign extends WorldObject implements Readable {
 
-	private String signText;
+	private List<String> text;
 	
-	public ObjectSign(String name, String signText) {
+	public ObjectSign(String name, List<String> text) {
 		super(name);
-		this.signText = signText;
+		this.text = text;
 	}
 	
-	public String getSignText() {
-		return signText;
+	@Override
+	public List<String> getText() {
+		return text;
 	}
 	
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<Action>();
-		actions.add(new ActionReadSign(this));
+		actions.add(new ActionRead(this));
 		return actions;
 	}
 

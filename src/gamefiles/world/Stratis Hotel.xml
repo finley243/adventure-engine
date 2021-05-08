@@ -51,7 +51,11 @@
                 </object>
                 <object type="sign">
                     <name>navigation sign</name>
-                    <text>Floor 1: LOBBY, Floor 2-9: GUEST ROOMS, Floor 10: RESTAURANT</text>
+                    <lines>
+                        <text>FLOOR 1: Lobby</text>
+                        <text>FLOOR 2-9: Guest Rooms</text>
+                        <text>FLOOR 10: Restaurant</text>
+                    </lines>
                 </object>
             </objects>
         </area>
@@ -97,7 +101,7 @@
     </room>
     <room id="stratis_hotel_room">
         <name proper="true">room 508</name>
-        <description>The lights come on as you enter, casting a warm glow over the white linens on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</description>
+        <description>The lights come on as you enter, casting a warm glow over the white linen on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</description>
         <area id="stratis_hotel_room_main">
             <name proper="false" prox="false">room</name>
             <links></links>
