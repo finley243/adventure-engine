@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
@@ -30,6 +31,11 @@ public class ActionUnlockExit implements Action {
 	@Override
 	public float utility(Actor subject) {
 		return 0.0f;
+	}
+	
+	@Override
+	public String[] getMenuStructure() {
+		return new String[] {"World", LangUtils.capitalize(exit.getName())};
 	}
 	
 }

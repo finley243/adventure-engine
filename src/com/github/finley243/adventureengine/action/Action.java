@@ -10,4 +10,6 @@ public interface Action {
 	
 	public float utility(Actor subject);
 	
+	public String[] getMenuStructure();
+	
 }

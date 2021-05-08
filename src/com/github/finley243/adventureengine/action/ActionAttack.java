@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
@@ -27,6 +28,11 @@ public class ActionAttack implements Action {
 	@Override
 	public float utility(Actor subject) {
 		return 0.0f;
+	}
+	
+	@Override
+	public String[] getMenuStructure() {
+		return new String[] {LangUtils.capitalize(weapon.getName())};
 	}
 	
 }

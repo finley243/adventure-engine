@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -16,9 +15,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.google.common.eventbus.Subscribe;
 
 public class GraphicalInterface implements UserInterface {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionRead;
+import com.github.finley243.adventureengine.action.ActionReadSign;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.Readable;
 
@@ -25,7 +25,7 @@ public class ObjectSign extends WorldObject implements Readable {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<Action>();
-		actions.add(new ActionRead(this));
+		actions.add(new ActionReadSign(this));
 		return actions;
 	}
 

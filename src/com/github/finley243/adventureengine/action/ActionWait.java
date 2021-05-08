@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 public class ActionWait implements Action {
 
 	public ActionWait() {
-		
+
 	}
 
 	@Override
@@ -27,5 +27,10 @@ public class ActionWait implements Action {
 	public float utility(Actor subject) {
 		return 0.00001f;
 	}
-	
+
+	@Override
+	public String[] getMenuStructure() {
+		return new String[] {};
+	}
+
 }

@@ -35,5 +35,10 @@ public class ActionMoveExit implements Action {
 	public float utility(Actor subject) {
 		return 0.0f;
 	}
+	
+	@Override
+	public String[] getMenuStructure() {
+		return new String[] {"Move"};
+	}
 
 }

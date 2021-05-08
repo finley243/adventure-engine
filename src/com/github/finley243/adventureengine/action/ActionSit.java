@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.ObjectChair;
 
@@ -32,6 +33,11 @@ public class ActionSit implements Action {
 	public float utility(Actor subject) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	@Override
+	public String[] getMenuStructure() {
+		return new String[] {"World", LangUtils.capitalize(chair.getName())};
 	}
 
 }
