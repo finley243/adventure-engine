@@ -36,7 +36,7 @@ public class ActionRead implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		Noun nounFromReadable = (Noun) sign;
 		return "Read " + nounFromReadable.getFormattedName();
 	}

@@ -18,7 +18,7 @@ public class ActionItemTake implements Action {
 	}
 	
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return "Take " + item.getName();
 	}
 	

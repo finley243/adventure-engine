@@ -26,7 +26,7 @@ public class ActionMoveExit implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return "Go through " + exit.getFormattedName() + " to " + exit.getLinkedArea().getRoom().getFormattedName();
 	}
 

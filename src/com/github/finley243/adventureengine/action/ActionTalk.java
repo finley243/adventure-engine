@@ -19,7 +19,7 @@ public class ActionTalk implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return "Talk to " + target.getFormattedName();
 	}
 

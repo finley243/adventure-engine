@@ -24,7 +24,7 @@ public class ActionSit implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return "Sit in " + chair.getFormattedName();
 	}
 

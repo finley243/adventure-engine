@@ -35,7 +35,7 @@ public class MenuManager {
 		this.actionList = actions;
 		List<String> menuStrings = new ArrayList<String>();
 		for(Action action : actions) {
-			menuStrings.add(action.getChoiceName());
+			menuStrings.add(action.getPrompt());
 		}
 		actionChoice = null;
 		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings));

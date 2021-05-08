@@ -6,7 +6,7 @@ public interface Action {
 	
 	public void choose(Actor subject);
 	
-	public String getChoiceName();
+	public String getPrompt();
 	
 	public float utility(Actor subject);
 	

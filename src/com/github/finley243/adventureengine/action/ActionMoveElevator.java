@@ -26,7 +26,7 @@ public class ActionMoveElevator implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return "Take " + elevator.getFormattedName() + " to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")";
 	}
 

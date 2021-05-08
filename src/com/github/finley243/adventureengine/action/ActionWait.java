@@ -19,7 +19,7 @@ public class ActionWait implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return "Wait";
 	}
 

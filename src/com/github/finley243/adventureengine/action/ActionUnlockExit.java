@@ -23,7 +23,7 @@ public class ActionUnlockExit implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return "Unlock " + exit.getFormattedName();
 	}
 

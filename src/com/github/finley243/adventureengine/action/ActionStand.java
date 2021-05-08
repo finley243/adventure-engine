@@ -24,7 +24,7 @@ public class ActionStand implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return "Stand up";
 	}
 

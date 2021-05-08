@@ -30,7 +30,7 @@ public class ActionVendingMachineBuy implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return "Buy " + Data.getItem(itemID).getFormattedName() + " from " + vendingMachine.getFormattedName() + " [" + Data.getItem(itemID).getPrice() + " credits]";
 	}
 

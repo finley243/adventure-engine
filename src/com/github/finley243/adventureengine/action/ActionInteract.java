@@ -30,7 +30,7 @@ public class ActionInteract implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		return choice;
 	}
 	

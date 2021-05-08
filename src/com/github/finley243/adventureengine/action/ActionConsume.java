@@ -34,7 +34,7 @@ public class ActionConsume implements Action {
 	}
 
 	@Override
-	public String getChoiceName() {
+	public String getPrompt() {
 		switch(item.getConsumableType()) {
 		case DRINK:
 			return "Drink " + item.getFormattedName();
