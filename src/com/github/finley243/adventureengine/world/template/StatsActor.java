@@ -10,10 +10,11 @@ public class StatsActor {
 	
 	private int maxHP;
 	
-	public StatsActor(String name, boolean isProperName, Pronoun pronoun) {
+	public StatsActor(String name, boolean isProperName, Pronoun pronoun, int maxHP) {
 		this.name = name;
 		this.isProperName = isProperName;
 		this.pronoun = pronoun;
+		this.maxHP = maxHP;
 	}
 	
 	public String getName() {

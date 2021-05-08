@@ -1,11 +1,14 @@
 buyFrom:<subject> buy<s> <object> from <object2>
 consume:<subject> consume<s> <object>
+die:<subject> fall<s> over dead
 drink:<subject> drink<s> <object>
 drop:<subject> drop<s> <object>
 eat:<subject> eat<s> <object>
 enterElevator:<subject> step<s> into <object>
 exitElevator:<object> arrives and <subject> exit<s>
 idle:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
+meleeHit:<subject> hit<s> <object> with <object2>
+meleeMiss:<subject> tr<ies> to hit <object> with <object2>, but miss<es>
 moveThroughTo:<subject> go<es> through <object> to <object2>
 moveTo:<subject> go<es> to <object>
 moveToward:<subject> go<es> to <object>

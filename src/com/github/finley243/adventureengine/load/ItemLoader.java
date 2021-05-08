@@ -16,8 +16,10 @@ import org.xml.sax.SAXException;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
 import com.github.finley243.adventureengine.world.template.StatsConsumable.ConsumableType;
+import com.github.finley243.adventureengine.world.template.StatsWeapon.WeaponType;
 import com.github.finley243.adventureengine.world.template.StatsItem;
 import com.github.finley243.adventureengine.world.template.StatsKey;
+import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
 public class ItemLoader {
 
@@ -45,13 +47,18 @@ public class ItemLoader {
 		String type = itemElement.getAttribute("type");
 		String id = itemElement.getAttribute("id");
 		String name = LoadUtils.singleTag(itemElement, "name", null);
+		int price = LoadUtils.singleTagInt(itemElement, "price", 0);
 		switch(type) {
 		case "consumable":
-			int consumablePrice = LoadUtils.singleTagInt(itemElement, "price", 0);
 			ConsumableType consumableType = ConsumableType.valueOf(LoadUtils.singleTag(itemElement, "type", "OTHER"));
-			return new StatsConsumable(id, name, consumablePrice, consumableType);
+			return new StatsConsumable(id, name, price, consumableType);
 		case "key":
 			return new StatsKey(id, name);
+		case "weapon":
+			WeaponType weaponType = WeaponType.valueOf(LoadUtils.singleTag(itemElement, "type", null));
+			int weaponDamage = LoadUtils.singleTagInt(itemElement, "damage", 0);
+			float weaponHitChance = LoadUtils.singleTagFloat(itemElement, "chance", 1.0f);
+			return new StatsWeapon(id, name, price, weaponType, weaponDamage, weaponHitChance);
 		}
 		return null;
 	}

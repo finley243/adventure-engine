@@ -1,5 +1,10 @@
 package com.github.finley243.adventureengine.world.item;
 
+import java.util.List;
+
+import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionAttackMelee;
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
 public class ItemWeapon extends Item {
@@ -19,6 +24,25 @@ public class ItemWeapon extends Item {
 	@Override
 	public String getID() {
 		return stats.getID();
+	}
+	
+	public int getDamage() {
+		return stats.getDamage();
+	}
+	
+	public float getHitChance() {
+		return stats.getHitChance();
+	}
+	
+	@Override
+	public List<Action> inventoryActions(Actor subject) {
+		List<Action> actions = super.inventoryActions(subject);
+		for(Actor target : subject.getArea().getActors()) {
+			if(target != subject) {
+				actions.add(new ActionAttackMelee(this, target));
+			}
+		}
+		return actions;
 	}
 	
 	@Override

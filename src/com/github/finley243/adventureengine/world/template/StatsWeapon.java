@@ -24,13 +24,26 @@ public class StatsWeapon extends StatsItem {
 	}
 	
 	private WeaponType type;
+	private int damage;
+	private float hitChance;
 	
-	public StatsWeapon(String ID, String name, int price) {
+	public StatsWeapon(String ID, String name, int price, WeaponType type, int damage, float hitChance) {
 		super(ID, name, price);
+		this.type = type;
+		this.damage = damage;
+		this.hitChance = hitChance;
 	}
 	
 	public WeaponType getType() {
 		return type;
+	}
+	
+	public int getDamage() {
+		return damage;
+	}
+	
+	public float getHitChance() {
+		return hitChance;
 	}
 	
 }

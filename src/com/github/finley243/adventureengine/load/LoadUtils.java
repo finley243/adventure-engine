@@ -29,6 +29,12 @@ public class LoadUtils {
 		return Integer.parseInt(stringValue);
 	}
 	
+	public static float singleTagFloat(Element element, String name, float defaultValue) {
+		String stringValue = LoadUtils.singleTag(element, name, null);
+		if(stringValue == null) return defaultValue;
+		return Float.parseFloat(stringValue);
+	}
+	
 	public static boolean singleTagBoolean(Element element, String name, boolean defaultValue) {
 		String stringValue = LoadUtils.singleTag(element, name, null);
 		if(stringValue == null) return defaultValue;

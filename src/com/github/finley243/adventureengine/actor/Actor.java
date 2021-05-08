@@ -6,12 +6,16 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.action.ActionWait;
+import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Noun;
@@ -64,12 +68,15 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	private UsableObject usingObject;
 	
-	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean isDead) {
+	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean startDead) {
 		this.ID = ID;
 		this.move(Data.getArea(areaID));
 		this.stats = stats;
 		this.topicID = topicID;
-		this.isDead = isDead;
+		this.isDead = startDead;
+		if(!startDead) {
+			HP = stats.getMaxHP();
+		}
 		this.inventory = new Inventory();
 		this.attributes = new EnumMap<Attribute, Integer>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
@@ -156,16 +163,18 @@ public class Actor implements Noun, Physical, AttackTarget {
 		if(amount < 0) throw new IllegalArgumentException();
 		HP -= amount;
 		if(HP <= 0) {
-			isDead = true;
+			HP = 0;
+			kill();
+		} else {
+			Context context = new Context(this);
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context));
 		}
 	}
 	
-	public void damageIgnoreArmor(int amount) {
-		if(amount < 0) throw new IllegalArgumentException();
-		HP -= amount;
-		if(HP <= 0) {
-			isDead = true;
-		}
+	public void kill() {
+		isDead = true;
+		Context context = new Context(this);
+		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context));
 	}
 	
 	public void onVisualEvent(VisualEvent event) {
@@ -191,10 +200,14 @@ public class Actor implements Noun, Physical, AttackTarget {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> action = new ArrayList<Action>();
-		if(topicID != null) {
-			action.add(new ActionTalk(this));
-		}
-		if(!(subject instanceof ActorPlayer)) { // NPC-only actions
+		if(!isDead) { // Alive
+			if(topicID != null) {
+				action.add(new ActionTalk(this));
+			}
+			if(!(subject instanceof ActorPlayer)) { // NPC-only actions
+				
+			}
+		} else { // Dead
 			
 		}
 		return action;
