@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -23,8 +24,10 @@ import com.google.common.eventbus.Subscribe;
 public class GraphicalInterface implements UserInterface {
 
 	private JFrame window;
-	private JScrollPane textScroll;
+	private JTabbedPane tabPane;
 	private JTextArea textPanel;
+	private JScrollPane historyScroll;
+	private JTextArea historyPanel;
 	private JScrollPane choiceScroll;
 	private JPanel choicePanel;
 	
@@ -37,8 +40,10 @@ public class GraphicalInterface implements UserInterface {
 		}
 		
 		this.window = new JFrame("AdventureEngine");
+		this.tabPane = new JTabbedPane();
 		this.textPanel = new JTextArea();
-		this.textScroll = new JScrollPane(textPanel);
+		this.historyPanel = new JTextArea();
+		this.historyScroll = new JScrollPane(historyPanel);
 		this.choicePanel = new JPanel();
 		this.choiceScroll = new JScrollPane(choicePanel);
 		
@@ -46,12 +51,20 @@ public class GraphicalInterface implements UserInterface {
 		window.setResizable(false);
 		window.setPreferredSize(new Dimension(500, 600));
 		
-		window.getContentPane().add(textScroll, BorderLayout.CENTER);
+		//window.getContentPane().add(historyScroll, BorderLayout.CENTER);
+		tabPane.addTab("Current", textPanel);
+		tabPane.addTab("History", historyScroll);
+		window.getContentPane().add(tabPane, BorderLayout.CENTER);
 		textPanel.setEditable(false);
 		textPanel.setLineWrap(true);
 		textPanel.setWrapStyleWord(true);
-		textPanel.setFont(textPanel.getFont().deriveFont(14f));
+		textPanel.setFont(historyPanel.getFont().deriveFont(14f));
 		textPanel.setVisible(true);
+		historyPanel.setEditable(false);
+		historyPanel.setLineWrap(true);
+		historyPanel.setWrapStyleWord(true);
+		historyPanel.setFont(historyPanel.getFont().deriveFont(14f));
+		historyPanel.setVisible(true);
 		
 		window.getContentPane().add(choiceScroll, BorderLayout.PAGE_END);
 		choiceScroll.setPreferredSize(new Dimension(500, 200));
@@ -72,7 +85,8 @@ public class GraphicalInterface implements UserInterface {
 			public void run() {
 				textPanel.append(event.getText() + "\n");
 				textPanel.repaint();
-				//window.pack();
+				historyPanel.append(event.getText() + "\n");
+				historyPanel.repaint();
 				window.repaint();
 			}
 		});
@@ -103,6 +117,7 @@ public class GraphicalInterface implements UserInterface {
 			public void run() {
 				choicePanel.removeAll();
 				choicePanel.repaint();
+				textPanel.setText(null);
 			}
 		});
 	}
