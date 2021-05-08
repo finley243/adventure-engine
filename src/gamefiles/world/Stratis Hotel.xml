@@ -31,6 +31,9 @@
                 <object type="chair">
                     <name>lounge chair</name>
                 </object>
+                <object type="cover">
+                    <name>lounge chair</name>
+                </object>
             </objects>
         </area>
         <area id="stratis_hotel_lobby_elevators">

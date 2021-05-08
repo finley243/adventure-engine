@@ -16,4 +16,5 @@ pickUp:<subject> pick<s> up <object>
 read:<subject> read<s> <object>
 sit:<subject> sit<s> in <object>
 stand:<subject> stand<s> up
+takeCover:<subject> take<s> cover behind <object>
 unlock:<subject> unlock<s> <object>

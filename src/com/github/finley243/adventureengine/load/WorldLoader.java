@@ -21,6 +21,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.LinkedObject;
 import com.github.finley243.adventureengine.world.object.ObjectChair;
+import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.github.finley243.adventureengine.world.object.ObjectSign;
@@ -111,24 +112,24 @@ public class WorldLoader {
 	private static WorldObject loadObject(Element objectElement, String areaID) {
 		String objectType = objectElement.getAttribute("type");
 		String objectName = LoadUtils.singleTag(objectElement, "name", null);
+		String objectID = objectElement.getAttribute("id");
 		switch(objectType) {
 		case "exit":
-			String exitID = objectElement.getAttribute("id");
 			String exitLink = LoadUtils.singleTag(objectElement, "link", null);
 			String exitKey = LoadUtils.singleTag(objectElement, "key", null);
-			return new ObjectExit(exitID, objectName, exitLink, exitKey);
+			return new ObjectExit(objectID, objectName, exitLink, exitKey);
 		case "elevator":
-			String elevatorID = objectElement.getAttribute("id");
 			int floorNumber = LoadUtils.singleTagInt(objectElement, "floornumber", 1);
 			String floorName = LoadUtils.singleTag(objectElement, "floorname", null);
 			Set<String> linkedElevatorIDs = LoadUtils.setOfTags((Element) objectElement.getElementsByTagName("links").item(0), "link");
-			return new ObjectElevator(elevatorID, objectName, floorNumber, floorName, linkedElevatorIDs);
+			return new ObjectElevator(objectID, objectName, floorNumber, floorName, linkedElevatorIDs);
 		case "sign":
-			//String signText = singleTag(objectElement, "text");
 			List<String> signText = LoadUtils.listOfTags((Element) objectElement.getElementsByTagName("lines").item(0), "text");
 			return new ObjectSign(objectName, signText);
 		case "chair":
 			return new ObjectChair(objectName);
+		case "cover":
+			return new ObjectCover(objectName);
 		case "vending_machine":
 			List<String> vendingItems = LoadUtils.listOfTags((Element) objectElement.getElementsByTagName("items").item(0), "item");
 			return new ObjectVendingMachine(objectName, vendingItems);

@@ -1,7 +1,9 @@
 package com.github.finley243.adventureengine.world.environment;
 
+import java.util.HashSet;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
 
@@ -44,6 +46,14 @@ public class Room implements Noun {
 	
 	public void setVisited() {
 		hasVisited = true;
+	}
+	
+	public Set<Actor> getActors() {
+		Set<Actor> actors = new HashSet<Actor>();
+		for(Area area : areas) {
+			actors.addAll(area.getActors());
+		}
+		return actors;
 	}
 
 	@Override

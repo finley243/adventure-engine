@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.item;
 
 import java.util.List;
+import java.util.Set;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionAttackMelee;
@@ -37,7 +38,8 @@ public class ItemWeapon extends Item {
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = super.inventoryActions(subject);
-		for(Actor target : subject.getArea().getActors()) {
+		Set<Actor> targets = stats.getType().isRanged ? subject.getArea().getRoom().getActors() : subject.getArea().getActors();
+		for(Actor target : targets) {
 			if(target != subject) {
 				actions.add(new ActionAttackMelee(this, target));
 			}
