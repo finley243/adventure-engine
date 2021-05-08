@@ -17,6 +17,11 @@ public class ItemWeapon extends Item {
 	}
 	
 	@Override
+	public String getID() {
+		return stats.getID();
+	}
+	
+	@Override
 	public boolean equals(Object o) {
 		if(!(o instanceof ItemWeapon)) {
 			return false;

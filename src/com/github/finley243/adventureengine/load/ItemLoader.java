@@ -17,6 +17,7 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
 import com.github.finley243.adventureengine.world.template.StatsConsumable.ConsumableType;
 import com.github.finley243.adventureengine.world.template.StatsItem;
+import com.github.finley243.adventureengine.world.template.StatsKey;
 
 public class ItemLoader {
 
@@ -43,22 +44,16 @@ public class ItemLoader {
 	private static StatsItem loadItem(Element itemElement) throws ParserConfigurationException, SAXException, IOException {
 		String type = itemElement.getAttribute("type");
 		String id = itemElement.getAttribute("id");
-		String name = singleTag(itemElement, "name");
-		int price = singleTagInt(itemElement, "price");
+		String name = LoadUtils.singleTag(itemElement, "name");
 		switch(type) {
 		case "consumable":
-			ConsumableType consumableType = ConsumableType.valueOf(singleTag(itemElement, "type").toUpperCase());
-			return new StatsConsumable(id, name, price, consumableType);
+			int consumablePrice = LoadUtils.singleTagInt(itemElement, "price");
+			ConsumableType consumableType = ConsumableType.valueOf(LoadUtils.singleTag(itemElement, "type"));
+			return new StatsConsumable(id, name, consumablePrice, consumableType);
+		case "key":
+			return new StatsKey(id, name);
 		}
 		return null;
-	}
-	
-	private static String singleTag(Element element, String name) {
-		return element.getElementsByTagName(name).item(0).getTextContent();
-	}
-	
-	private static int singleTagInt(Element element, String name) {
-		return Integer.parseInt(singleTag(element, name));
 	}
 	
 }

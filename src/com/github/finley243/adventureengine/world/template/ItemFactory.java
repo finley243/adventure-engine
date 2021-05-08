@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
 import com.github.finley243.adventureengine.world.item.ItemConsumable;
+import com.github.finley243.adventureengine.world.item.ItemKey;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ItemFactory {
@@ -19,6 +20,8 @@ public class ItemFactory {
 			return new ItemApparel((StatsApparel) stats);
 		} else if(stats instanceof StatsWeapon) {
 			return new ItemWeapon((StatsWeapon) stats);
+		} else if(stats instanceof StatsKey) {
+			return new ItemKey((StatsKey) stats);
 		}
 		return null;
 	}

@@ -22,6 +22,7 @@ public class ActionMoveExit implements Action {
 		Context context = new Context(subject, exit, area.getRoom());
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("moveThroughTo"), context));
 		Game.EVENT_BUS.post(new VisualEvent(area, Phrases.get("moveThroughTo"), context));
+		exit.unlock();
 		subject.move(area);
 	}
 

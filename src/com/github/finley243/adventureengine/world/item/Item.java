@@ -27,6 +27,10 @@ public abstract class Item extends WorldObject {
 		return 0;
 	}
 	
+	public String getID() {
+		return null;
+	}
+	
 	public void setInInventory(Inventory inventory) {
 		currentInventory = inventory;
 		super.setArea(null);

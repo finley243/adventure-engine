@@ -95,6 +95,7 @@
                 <object type="exit" id="stratis_hotel_corridor_room_door">
                     <name>door</name>
                     <link>stratis_hotel_room_door</link>
+                    <key>stratis_room_key</key>
                 </object>
             </objects>
         </area>

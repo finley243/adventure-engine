@@ -23,6 +23,11 @@ public class ItemConsumable extends Item {
 		return stats.getPrice();
 	}
 	
+	@Override
+	public String getID() {
+		return stats.getID();
+	}
+	
 	public ConsumableType getConsumableType() {
 		return stats.getType();
 	}

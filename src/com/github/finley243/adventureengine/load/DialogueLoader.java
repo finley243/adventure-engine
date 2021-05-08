@@ -80,8 +80,8 @@ public class DialogueLoader {
 	}
 	
 	private static Line loadLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
-		boolean once = boolAttribute(lineElement, "once");
-		boolean exit = boolAttribute(lineElement, "exit");
+		boolean once = LoadUtils.boolAttribute(lineElement, "once");
+		boolean exit = LoadUtils.boolAttribute(lineElement, "exit");
 		String redirect = lineElement.getAttribute("redirect");
 		if(redirect.isEmpty()) {
 			redirect = null;
@@ -101,9 +101,9 @@ public class DialogueLoader {
 	}
 	
 	private static Choice loadChoice(Element choiceElement) throws ParserConfigurationException, SAXException, IOException {
-		boolean once = boolAttribute(choiceElement, "once");
+		boolean once = LoadUtils.boolAttribute(choiceElement, "once");
 		String link = choiceElement.getAttribute("link");
-		String prompt = singleTag(choiceElement, "prompt");
+		String prompt = LoadUtils.singleTag(choiceElement, "prompt");
 		Element conditionElement = (Element) choiceElement.getElementsByTagName("condition").item(0);
 		Condition condition = loadCondition(conditionElement);
 		return new Choice(link, prompt, condition, once);
@@ -120,7 +120,7 @@ public class DialogueLoader {
 			condition = new ConditionCompound(subConditions, useOr);
 			break;
 		case "money":
-			int value = singleTagInt(conditionElement, "value");
+			int value = LoadUtils.singleTagInt(conditionElement, "value");
 			condition = new ConditionMoney(value);
 			break;
 		default:
@@ -141,40 +141,5 @@ public class DialogueLoader {
 		}
 		return subConditions;
 	}
-	
-	// ------------------------------------------------------------------------------
-	
-	private static boolean boolAttribute(Element element, String name) {
-		return element.getAttribute(name).equalsIgnoreCase("true");
-	}
-	
-	private static String singleTag(Element element, String name) {
-		return element.getElementsByTagName(name).item(0).getTextContent();
-	}
-	
-	private static int singleTagInt(Element element, String name) {
-		return Integer.parseInt(singleTag(element, name));
-	}
-	
-	/*
-	private static Equality equalityTag(Element element, String name) {
-		String logicString = singleTag(element, name);
-		switch(logicString) {
-		case "EQUAL":
-			return Equality.EQUAL;
-		case "NOT_EQUAL":
-			return Equality.NOT_EQUAL;
-		case "LESS":
-			return Equality.LESS;
-		case "GREATER":
-			return Equality.GREATER;
-		case "LESS_EQUAL":
-			return Equality.LESS_EQUAL;
-		case "GREATER_EQUAL":
-		default:
-			return Equality.GREATER_EQUAL;
-		}
-	}
-	*/
 	
 }

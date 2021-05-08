@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.world.template;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
 
-public class StatsItem implements Noun {
+public abstract class StatsItem implements Noun {
 
 	private String ID;
 	private String name;

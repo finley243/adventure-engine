@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.load;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -54,8 +53,8 @@ public class WorldLoader {
 		String roomID = roomElement.getAttribute("id");
 		Element roomNameElement = (Element) roomElement.getElementsByTagName("name").item(0);
 		String roomName = roomNameElement.getTextContent();
-		boolean roomNameIsProper = boolAttribute(roomNameElement, "proper");
-		String roomDescription = singleTag(roomElement, "description");
+		boolean roomNameIsProper = LoadUtils.boolAttribute(roomNameElement, "proper");
+		String roomDescription = LoadUtils.singleTag(roomElement, "description");
 		
 		NodeList areaElements = roomElement.getElementsByTagName("area");
 		Set<Area> areas = new HashSet<Area>();
@@ -74,8 +73,8 @@ public class WorldLoader {
 		String areaID = areaElement.getAttribute("id");
 		Element nameElement = (Element) areaElement.getElementsByTagName("name").item(0);
 		String name = nameElement.getTextContent();
-		boolean isProperName = boolAttribute(nameElement, "proper");
-		boolean isProximateName = boolAttribute(nameElement, "prox");
+		boolean isProperName = LoadUtils.boolAttribute(nameElement, "proper");
+		boolean isProximateName = LoadUtils.boolAttribute(nameElement, "prox");
 		
 		Element linksElement = (Element) areaElement.getElementsByTagName("links").item(0);
 		NodeList links = linksElement.getElementsByTagName("link");
@@ -111,65 +110,30 @@ public class WorldLoader {
 	
 	private static WorldObject loadObject(Element objectElement, String areaID) {
 		String objectType = objectElement.getAttribute("type");
-		String objectName = singleTag(objectElement, "name");
+		String objectName = LoadUtils.singleTag(objectElement, "name");
 		switch(objectType) {
 		case "exit":
 			String exitID = objectElement.getAttribute("id");
-			String exitLink = singleTag(objectElement, "link");
-			return new ObjectExit(exitID, objectName, exitLink);
+			String exitLink = LoadUtils.singleTag(objectElement, "link");
+			String exitKey = LoadUtils.singleTag(objectElement, "key");
+			return new ObjectExit(exitID, objectName, exitLink, exitKey);
 		case "elevator":
 			String elevatorID = objectElement.getAttribute("id");
-			int floorNumber = singleTagInt(objectElement, "floornumber");
-			String floorName = singleTag(objectElement, "floorname");
-			Set<String> linkedElevatorIDs = setOfTags((Element) objectElement.getElementsByTagName("links").item(0), "link");
+			int floorNumber = LoadUtils.singleTagInt(objectElement, "floornumber");
+			String floorName = LoadUtils.singleTag(objectElement, "floorname");
+			Set<String> linkedElevatorIDs = LoadUtils.setOfTags((Element) objectElement.getElementsByTagName("links").item(0), "link");
 			return new ObjectElevator(elevatorID, objectName, floorNumber, floorName, linkedElevatorIDs);
 		case "sign":
 			//String signText = singleTag(objectElement, "text");
-			List<String> signText = listOfTags((Element) objectElement.getElementsByTagName("lines").item(0), "text");
+			List<String> signText = LoadUtils.listOfTags((Element) objectElement.getElementsByTagName("lines").item(0), "text");
 			return new ObjectSign(objectName, signText);
 		case "chair":
 			return new ObjectChair(objectName);
 		case "vending_machine":
-			List<String> vendingItems = listOfTags((Element) objectElement.getElementsByTagName("items").item(0), "item");
+			List<String> vendingItems = LoadUtils.listOfTags((Element) objectElement.getElementsByTagName("items").item(0), "item");
 			return new ObjectVendingMachine(objectName, vendingItems);
 		}
 		return null;
-	}
-	
-	// ------------------------------------------------------------------------------
-	
-	private static boolean boolAttribute(Element element, String name) {
-		return element.getAttribute(name).equalsIgnoreCase("true");
-	}
-	
-	private static String singleTag(Element element, String name) {
-		return element.getElementsByTagName(name).item(0).getTextContent();
-	}
-	
-	private static int singleTagInt(Element element, String name) {
-		return Integer.parseInt(singleTag(element, name));
-	}
-	
-	private static Set<String> setOfTags(Element element, String name) {
-		Set<String> output = new HashSet<String>();
-		NodeList nodes = element.getElementsByTagName(name);
-		for(int i = 0; i < nodes.getLength(); i++) {
-			if(nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				output.add(nodes.item(i).getTextContent());
-			}
-		}
-		return output;
-	}
-	
-	private static List<String> listOfTags(Element element, String name) {
-		List<String> output = new ArrayList<String>();
-		NodeList nodes = element.getElementsByTagName(name);
-		for(int i = 0; i < nodes.getLength(); i++) {
-			if(nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				output.add(nodes.item(i).getTextContent());
-			}
-		}
-		return output;
 	}
 	
 }

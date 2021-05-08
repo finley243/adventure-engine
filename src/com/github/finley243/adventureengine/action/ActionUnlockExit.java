@@ -24,7 +24,7 @@ public class ActionUnlockExit implements Action {
 
 	@Override
 	public String getPrompt() {
-		return "Unlock " + exit.getFormattedName();
+		return "Unlock " + exit.getFormattedName() + " to " + exit.getLinkedArea().getRoom().getFormattedName();
 	}
 
 	@Override

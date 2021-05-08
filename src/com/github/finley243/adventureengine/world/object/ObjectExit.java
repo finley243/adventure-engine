@@ -14,12 +14,13 @@ public class ObjectExit extends LinkedObject {
 
 	private String linkedExitID;
 	private boolean isLocked;
+	private String keyID;
 	
-	public ObjectExit(String ID, String name, String linkedExitID) {
+	public ObjectExit(String ID, String name, String linkedExitID, String keyID) {
 		super(ID, name);
 		this.linkedExitID = linkedExitID;
-		
-		//this.isLocked = true; // FOR TESTING PURPOSES ONLY
+		this.keyID = keyID;
+		this.isLocked = keyID != null;
 	}
 	
 	public Area getLinkedArea() {
@@ -35,7 +36,9 @@ public class ObjectExit extends LinkedObject {
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<Action>();
 		if(isLocked) {
-			actions.add(new ActionUnlockExit(this));
+			if(subject.inventory().hasItemWithID(keyID)) {
+				actions.add(new ActionUnlockExit(this));
+			}
 		} else {
 			actions.add(new ActionMoveExit(this));
 		}
