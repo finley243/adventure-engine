@@ -31,7 +31,8 @@ public class MenuManager {
 		this.dialogueChoice = null;
 	}
 	
-	public Action actionMenu(List<Action> actions) {
+	public Action actionMenu(Actor subject) {
+		List<Action> actions = subject.availableActions();
 		this.actionList = actions;
 		List<String> menuStrings = new ArrayList<String>();
 		for(Action action : actions) {
@@ -49,7 +50,7 @@ public class MenuManager {
 		return actionChoice;
 	}
 	
-	public void dialogueMenu(Actor target) {
+	public void dialogueMenu(Actor subject, Actor target) {
 		boolean dialogueLoop = true;
 		Topic currentTopic = Data.getTopic(target.getTopicID());
 		while(dialogueLoop) {
@@ -59,7 +60,7 @@ public class MenuManager {
 					for(String text : line.getTextList()) {
 						Game.EVENT_BUS.post(new RenderTextEvent(text));
 					}
-					line.trigger();
+					line.trigger(subject);
 					if(line.hasRedirect()) {
 						currentTopic = Data.getTopic(line.getRedirectTopicId());
 						break;
@@ -113,7 +114,6 @@ public class MenuManager {
 		if(actionList != null) {
 			actionChoice = actionList.get(event.getIndex());
 			actionList = null;
-			//Game.EVENT_BUS.post(new EndPlayerTurnEvent());
 		} else if(dialogueList != null) {
 			dialogueChoice = dialogueList.get(event.getIndex());
 			dialogueList = null;

@@ -102,7 +102,7 @@ public class Data {
 		knowledge.add(value);
 	}
 	
-	public boolean hasKnowledge(String value) {
+	public static boolean hasKnowledge(String value) {
 		return knowledge.contains(value);
 	}
 	

@@ -32,12 +32,12 @@ public class ActorPlayer extends Actor {
 	@Override
 	public void takeTurn() {
 		// Could handle action points here?
-		Action chosenAction = menuHandler.actionMenu(this.availableActions());
+		Action chosenAction = menuHandler.actionMenu(this);
 		chosenAction.choose(this);
 	}
 	
 	public void startDialogue(Actor target) {
-		menuHandler.dialogueMenu(target);
+		menuHandler.dialogueMenu(this, target);
 	}
 
 	public void updateRoomDescription() {

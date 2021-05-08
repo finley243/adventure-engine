@@ -29,6 +29,12 @@ public class LoadUtils {
 		return Integer.parseInt(stringValue);
 	}
 	
+	public static boolean singleTagBoolean(Element element, String name) {
+		String stringValue = LoadUtils.singleTag(element, name);
+		if(stringValue == null) return false;
+		return stringValue.equalsIgnoreCase("true");
+	}
+	
 	public static Set<String> setOfTags(Element element, String name) {
 		NodeList nodes = element.getElementsByTagName(name);
 		Set<String> output = new HashSet<String>();

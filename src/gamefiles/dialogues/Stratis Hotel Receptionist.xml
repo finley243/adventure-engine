@@ -15,6 +15,10 @@
     <topic id="stratis_receptionist_main">
         <choice link="stratis_receptionist_request_room">
             <prompt>Do you have any rooms available?</prompt>
+            <condition type="knowledge">
+                <knowledge>purchased_stratis_room</knowledge>
+                <value>false</value>
+            </condition>
         </choice>
         <choice link="stratis_receptionist_info">
             <prompt>I'm looking for information.</prompt>
@@ -26,19 +30,35 @@
     <topic id="stratis_receptionist_request_room">
         <line>
             <text>He taps the screen in front of him and quickly scans its contents.</text>
+            <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits."</text>
         </line>
-        <line>
-            <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 100 credits per night."</text>
-        </line>
-        <choice link="stratis_receptionist_main_return">
+        <choice link="stratis_receptionist_purchase_room" once="true">
             <prompt>I'll take the room.</prompt>
             <condition type="money">
-                <value>100</value>
+                <value>300</value>
             </condition>
         </choice>
         <choice link="stratis_receptionist_main_return">
             <prompt>Not right now.</prompt>
         </choice>
+    </topic>
+    <topic id="stratis_receptionist_purchase_room">
+        <line>
+            <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
+            <text>He hands you a white keycard with the Stratis Hotel logo.</text>
+            <script type="add_item">
+                <item>stratis_room_key</item>
+            </script>
+            <script type="money">
+                <value>-300</value>
+            </script>
+            <script type="knowledge">
+                <knowledge>purchased_stratis_room</knowledge>
+            </script>
+        </line>
+        <line redirect="stratis_receptionist_main">
+            <text>"Enjoy your stay. Is there anything else I can do for you?"</text>
+        </line>
     </topic>
     <topic id="stratis_receptionist_info">
         <line>

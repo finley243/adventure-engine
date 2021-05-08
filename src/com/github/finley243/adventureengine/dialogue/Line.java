@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.Script;
 
 public class Line {
     
@@ -12,15 +14,17 @@ public class Line {
 
     private List<String> textList;
     private Condition condition;
+    private List<Script> scripts;
 
     private boolean once;
     private boolean exit;
     // If non-null, redirect to this topic after line is spoken
     private String redirectTopicId;
 
-    public Line(List<String> textList, Condition condition, boolean once, boolean exit, String redirectTopicId) {
+    public Line(List<String> textList, Condition condition, List<Script> scripts, boolean once, boolean exit, String redirectTopicId) {
         this.textList = textList;
         this.condition = condition;
+        this.scripts = scripts;
         this.once = once;
         this.exit = exit;
         this.redirectTopicId = redirectTopicId;
@@ -34,9 +38,9 @@ public class Line {
     	return (condition == null || condition.isMet(Data.getActor(Game.PLAYER_ACTOR))) && (!once || !hasTriggered);
     }
     
-    public void trigger() {
+    public void trigger(Actor target) {
     	this.hasTriggered = true;
-    	executeActions();
+    	executeScripts(target);
     }
     
     public boolean shouldExit() {
@@ -51,8 +55,10 @@ public class Line {
     	return redirectTopicId;
     }
 
-    private void executeActions() {
-    	// Handle line actions
+    private void executeScripts(Actor target) {
+    	for(Script script : scripts) {
+    		script.execute(target);
+    	}
     }
     
 }

@@ -18,11 +18,16 @@ import org.xml.sax.SAXException;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.condition.ConditionCompound;
+import com.github.finley243.adventureengine.condition.ConditionKnowledge;
 import com.github.finley243.adventureengine.condition.ConditionMoney;
 import com.github.finley243.adventureengine.dialogue.Choice;
 import com.github.finley243.adventureengine.dialogue.Line;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.dialogue.Topic.TopicType;
+import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptAddItem;
+import com.github.finley243.adventureengine.script.ScriptKnowledge;
+import com.github.finley243.adventureengine.script.ScriptMoney;
 
 public class DialogueLoader {
 
@@ -86,18 +91,11 @@ public class DialogueLoader {
 		if(redirect.isEmpty()) {
 			redirect = null;
 		}
-		NodeList textElements = lineElement.getElementsByTagName("text");
-		List<String> texts = new ArrayList<String>();
-		for(int i = 0; i < textElements.getLength(); i++) {
-			if(textElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				Element textElement = (Element) textElements.item(i);
-				String text = textElement.getTextContent();
-				texts.add(text);
-			}
-		}
+		List<String> texts = LoadUtils.listOfTags(lineElement, "text");
 		Element conditionElement = (Element) lineElement.getElementsByTagName("condition").item(0);
 		Condition condition = loadCondition(conditionElement);
-		return new Line(texts, condition, once, exit, redirect);
+		List<Script> scripts = loadScripts(lineElement);
+		return new Line(texts, condition, scripts, once, exit, redirect);
 	}
 	
 	private static Choice loadChoice(Element choiceElement) throws ParserConfigurationException, SAXException, IOException {
@@ -112,21 +110,21 @@ public class DialogueLoader {
 	private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
 		if(conditionElement == null) return null;
 		String type = conditionElement.getAttribute("type");
-		Condition condition;
 		switch(type) {
 		case "compound":
 			List<Condition> subConditions = loadSubConditions(conditionElement);
 			boolean useOr = conditionElement.getAttribute("logic").equalsIgnoreCase("or");
-			condition = new ConditionCompound(subConditions, useOr);
-			break;
+			return new ConditionCompound(subConditions, useOr);
 		case "money":
-			int value = LoadUtils.singleTagInt(conditionElement, "value");
-			condition = new ConditionMoney(value);
-			break;
+			int moneyValue = LoadUtils.singleTagInt(conditionElement, "value");
+			return new ConditionMoney(moneyValue);
+		case "knowledge":
+			String knowledgeID = LoadUtils.singleTag(conditionElement, "knowledge");
+			boolean knowledgeValue = LoadUtils.singleTagBoolean(conditionElement, "value");
+			return new ConditionKnowledge(knowledgeID, knowledgeValue);
 		default:
-			condition = null;
+			return null;
 		}
-		return condition;
 	}
 	
 	private static List<Condition> loadSubConditions(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
@@ -140,6 +138,37 @@ public class DialogueLoader {
 			}
 		}
 		return subConditions;
+	}
+	
+	private static List<Script> loadScripts(Element parentElement) {
+		NodeList scriptElements = parentElement.getElementsByTagName("script");
+		List<Script> scripts = new ArrayList<Script>();
+		for(int i = 0; i < scriptElements.getLength(); i++) {
+			if(scriptElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				Element scriptElement = (Element) scriptElements.item(i);
+				Script script = loadScript(scriptElement);
+				scripts.add(script);
+			}
+		}
+		return scripts;
+	}
+	
+	private static Script loadScript(Element scriptElement) {
+		if(scriptElement == null) return null;
+		String type = scriptElement.getAttribute("type");
+		switch(type) {
+		case "money":
+			int moneyValue = LoadUtils.singleTagInt(scriptElement, "value");
+			return new ScriptMoney(moneyValue);
+		case "add_item":
+			String addItemID = LoadUtils.singleTag(scriptElement, "item");
+			return new ScriptAddItem(addItemID);
+		case "knowledge":
+			String knowledgeID = LoadUtils.singleTag(scriptElement, "knowledge");
+			return new ScriptKnowledge(knowledgeID);
+		default:
+			return null;
+		}
 	}
 	
 }
