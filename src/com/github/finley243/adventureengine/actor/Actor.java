@@ -97,7 +97,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	@Override
 	public String getFormattedName(boolean indefinite) {
-		if(isProperName()) {
+		if(!isProperName()) {
 			return LangUtils.addArticle(getName(), indefinite);
 		} else {
 			return getName();
@@ -247,7 +247,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 			actions.addAll(object.localActions(this));
 		}
 		for(WorldObject object : getArea().getRoom().getObjects()) {
-			actions.addAll(object.localActions(this));
+			actions.addAll(object.remoteActions(this));
 		}
 		if(isUsingObject()) {
 			actions.addAll(usingObject.usingActions());

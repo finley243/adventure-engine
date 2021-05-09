@@ -27,7 +27,7 @@ public abstract class WorldObject implements Noun, Physical {
 	
 	@Override
 	public String getFormattedName(boolean indefinite) {
-		if(isProperName()) {
+		if(!isProperName()) {
 			return LangUtils.addArticle(getName(), indefinite);
 		} else {
 			return getName();
