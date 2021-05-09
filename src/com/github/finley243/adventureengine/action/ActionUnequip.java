@@ -6,39 +6,39 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionItemDrop implements Action {
+public class ActionUnequip implements Action {
 
-	private Item item;
+	private ItemWeapon item;
 	
-	public ActionItemDrop(Item item) {
+	public ActionUnequip(ItemWeapon item) {
 		this.item = item;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		subject.getArea().addObject(item);
-		subject.inventory().removeItem(item);
+		subject.setEquippedItem(null);
+		subject.inventory().addItem(item);
 		Context context = new Context(subject, item);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unequip"), context));
 	}
-	
+
 	@Override
 	public String getPrompt() {
-		return "Drop " + item.getFormattedName();
+		return "Unequip " + item.getFormattedName();
 	}
-	
+
 	@Override
 	public float utility(Actor subject) {
 		return 0;
 	}
-	
+
 	@Override
 	public String[] getMenuStructure() {
-		return new String[] {"Inventory", LangUtils.titleCase(item.getName())};
+		return new String[] {LangUtils.titleCase(item.getName())};
 	}
-	
+
 	@Override
 	public ActionLegality getLegality() {
 		return ActionLegality.LEGAL;

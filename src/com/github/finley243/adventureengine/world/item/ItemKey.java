@@ -15,10 +15,5 @@ public class ItemKey extends Item {
 	public String getID() {
 		return stats.getID();
 	}
-	
-	@Override
-	public String getFormattedName() {
-		return (isProperName() ? "" : "the ") + getName();
-	}
 
 }

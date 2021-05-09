@@ -5,6 +5,7 @@ drink:<subject> drink<s> <object>
 drop:<subject> drop<s> <object>
 eat:<subject> eat<s> <object>
 enterElevator:<subject> step<s> into <object>
+equip:<subject> equip<s> <object>
 exitElevator:<object> arrives and <subject> exit<s>
 idle:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
 meleeHit:<subject> hit<s> <object> with <object2>
@@ -17,4 +18,5 @@ read:<subject> read<s> <object>
 sit:<subject> sit<s> in <object>
 stand:<subject> stand<s> up
 takeCover:<subject> take<s> cover behind <object>
+unequip:<subject> put<s> away <object>
 unlock:<subject> unlock<s> <object>

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.item;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.finley243.adventureengine.action.Action;

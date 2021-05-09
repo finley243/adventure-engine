@@ -11,17 +11,17 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.action.ActionWait;
-import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
@@ -60,6 +60,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 	private EnumMap<Attribute, Integer> attributes;
 	
 	private Inventory inventory;
+	private ItemWeapon equippedItem;
 	private int money;
 	
 	private Area area;
@@ -151,6 +152,14 @@ public class Actor implements Noun, Physical, AttackTarget {
 		return inventory;
 	}
 	
+	public void setEquippedItem(ItemWeapon item) {
+		equippedItem = item;
+	}
+	
+	public boolean hasEquippedItem() {
+		return equippedItem != null;
+	}
+	
 	public int getMoney() {
 		return money;
 	}
@@ -220,6 +229,9 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	public List<Action> availableActions(){
 		List<Action> actions = new ArrayList<Action>();
+		if(hasEquippedItem()) {
+			actions.addAll(equippedItem.equippedActions(this));
+		}
 		for(Actor actor : getArea().getActors()) {
 			actions.addAll(actor.localActions(this));
 		}
