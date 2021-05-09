@@ -2,14 +2,13 @@ package com.github.finley243.adventureengine;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
+import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
@@ -21,11 +20,11 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterface;
 import com.github.finley243.adventureengine.ui.UserInterface;
-import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.ItemFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 public class Game {
 	
@@ -49,21 +48,23 @@ public class Game {
 		userInterface = new GraphicalInterface();
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
+		EVENT_BUS.register(this);
 		
 		Phrases.load();
 		ItemLoader.loadItems(new File(GAMEFILES + ITEM_DIRECTORY));
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		
-		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, 50, 2);
+		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, 30, 3);
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
 		player.adjustMoney(320);
 		Data.addActor(player.getID(), player);
-		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, 30, 2);
+		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, 30, 3);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		
 		player.inventory().addItem(ItemFactory.create("light_pistol"));
+		player.inventory().addItem(ItemFactory.create("baseball_bat"));
 		stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
 		
 		startGameLoop();
@@ -92,7 +93,8 @@ public class Game {
 		Data.getPlayer().takeTurn();
 	}
 	
-	private void endGameLoop() {
+	@Subscribe
+	private void endGameLoop(PlayerDeathEvent event) {
 		continueGameLoop = false;
 	}
 	

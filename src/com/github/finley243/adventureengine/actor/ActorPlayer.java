@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
@@ -29,12 +30,11 @@ public class ActorPlayer extends Actor {
 		
 	}
 	
-	/*@Override
-	public void takeTurn() {
-		// Could handle action points here?
-		Action chosenAction = menuHandler.actionMenu(this);
-		chosenAction.choose(this);
-	}*/
+	@Override
+	public void kill() {
+		super.kill();
+		Game.EVENT_BUS.post(new PlayerDeathEvent());
+	}
 	
 	@Override
 	public Action chooseAction() {

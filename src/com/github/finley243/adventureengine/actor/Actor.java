@@ -12,11 +12,12 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.action.ActionWait;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Noun;
@@ -64,6 +65,8 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	private EnumMap<Attribute, Integer> attributes;
 	
+	private List<Effect> effects;
+	
 	private Inventory inventory;
 	private ItemWeapon equippedItem;
 	private int money;
@@ -88,6 +91,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, 1);
 		}
+		this.effects = new ArrayList<Effect>();
 	}
 	
 	public String getID() {

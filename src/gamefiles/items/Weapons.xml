@@ -3,14 +3,17 @@
         <name>baseball bat</name>
         <price>15</price>
         <type>CLUB</type>
-        <damage>10</damage>
+        <actionpoints>2</actionpoints>
+        <damage>30</damage>
         <chance>0.90</chance>
     </item>
     <item type="weapon" id="light_pistol">
         <name>light pistol</name>
         <price>30</price>
         <type>PISTOL</type>
+        <actionpoints>1</actionpoints>
         <damage>15</damage>
         <chance>0.75</chance>
+        <clipsize>2</clipsize>
     </item>
 </items>

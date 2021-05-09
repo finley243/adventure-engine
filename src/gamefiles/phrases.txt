@@ -17,6 +17,7 @@ pickUp:<subject> pick<s> up <object>
 rangedHit:<subject> fire<s> <object2> at <object>
 rangedMiss:<subject> fire<s> <object2> at <object>, but miss<es>
 read:<subject> read<s> <object>
+reload:<subject> reload<s> <object>
 sit:<subject> sit<s> in <object>
 stand:<subject> stand<s> up
 takeCover:<subject> take<s> cover behind <object>

@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionAttackMelee;
 import com.github.finley243.adventureengine.action.ActionAttackRanged;
 import com.github.finley243.adventureengine.action.ActionEquip;
+import com.github.finley243.adventureengine.action.ActionReload;
 import com.github.finley243.adventureengine.action.ActionUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
@@ -15,6 +16,7 @@ import com.github.finley243.adventureengine.world.template.StatsWeapon;
 public class ItemWeapon extends Item {
 	
 	private StatsWeapon stats;
+	private int ammo;
 	
 	public ItemWeapon(StatsWeapon stats) {
 		super(stats.getName());
@@ -35,8 +37,16 @@ public class ItemWeapon extends Item {
 		return stats.getDamage();
 	}
 	
-	public float getHitChance() {
+	public float getHitChance(Actor subject) {
 		return stats.getHitChance();
+	}
+	
+	public void reloadFull() {
+		ammo = stats.getClipSize();
+	}
+	
+	public void consumeAmmo(int amount) {
+		ammo -= amount;
 	}
 	
 	@Override
@@ -53,9 +63,12 @@ public class ItemWeapon extends Item {
 		Set<Actor> targets = stats.getType().isRanged ? subject.getArea().getRoom().getActors() : subject.getArea().getActors();
 		for(Actor target : targets) {
 			if(target != subject) {
-				if(stats.getType().isRanged && !target.isInCover()) {
-					if(!subject.isInCover()) {
+				if(stats.getType().isRanged) {
+					if(!target.isInCover() && !subject.isInCover() && ammo > 0) {
 						actions.add(new ActionAttackRanged(this, target));
+					}
+					if(ammo < stats.getClipSize()) { // Add check to see if subject has ammo
+						actions.add(new ActionReload(this));
 					}
 				} else {
 					actions.add(new ActionAttackMelee(this, target));

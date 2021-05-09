@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.action;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
@@ -10,52 +8,44 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionAttackRanged implements Action {
+public class ActionReload implements Action {
 
 	private ItemWeapon weapon;
-	private Actor target;
 	
-	public ActionAttackRanged(ItemWeapon weapon, Actor target) {
+	public ActionReload(ItemWeapon weapon) {
 		this.weapon = weapon;
-		this.target = target;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		weapon.consumeAmmo(1);
-		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance(subject)) {
-			Context context = new Context(subject, false, target, false, weapon, false);
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("rangedHit"), context));
-			target.damage(weapon.getDamage());
-		} else {
-			Context context = new Context(subject, false, target, false, weapon, false);
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("rangedMiss"), context));
-		}
+		weapon.reloadFull();
+		Context context = new Context(subject, false, weapon, false);
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reload"), context));
 	}
 
 	@Override
 	public String getPrompt() {
-		return "Attack " + target.getName() + " with " + weapon.getName();
+		return "Reload " + weapon.getName();
 	}
 
 	@Override
 	public float utility(Actor subject) {
-		return 1.0f;
+		return 0.9f;
 	}
-	
+
 	@Override
 	public int actionPoints() {
-		return 1;
+		return 2;
 	}
-	
+
 	@Override
 	public String[] getMenuStructure() {
 		return new String[] {LangUtils.titleCase(weapon.getName())};
 	}
-	
+
 	@Override
 	public ActionLegality getLegality() {
-		return ActionLegality.HOSTILE;
+		return ActionLegality.LEGAL;
 	}
-	
+
 }

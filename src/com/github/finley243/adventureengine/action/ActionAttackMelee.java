@@ -22,7 +22,7 @@ public class ActionAttackMelee implements Action {
 
 	@Override
 	public void choose(Actor subject) {
-		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance()) {
+		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance(subject)) {
 			Context context = new Context(subject, false, target, false, weapon, false);
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("meleeHit"), context));
 			target.damage(weapon.getDamage());

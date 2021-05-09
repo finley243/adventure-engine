@@ -56,9 +56,11 @@ public class ItemLoader {
 			return new StatsKey(id, name);
 		case "weapon":
 			WeaponType weaponType = WeaponType.valueOf(LoadUtils.singleTag(itemElement, "type", null));
+			int weaponActionPoints = LoadUtils.singleTagInt(itemElement, "actionpoints", 1);
 			int weaponDamage = LoadUtils.singleTagInt(itemElement, "damage", 0);
 			float weaponHitChance = LoadUtils.singleTagFloat(itemElement, "chance", 1.0f);
-			return new StatsWeapon(id, name, price, weaponType, weaponDamage, weaponHitChance);
+			int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipsize", 0);
+			return new StatsWeapon(id, name, price, weaponType, weaponActionPoints, weaponDamage, weaponHitChance, weaponClipSize);
 		}
 		return null;
 	}
