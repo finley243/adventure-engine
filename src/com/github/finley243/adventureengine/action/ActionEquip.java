@@ -31,7 +31,7 @@ public class ActionEquip implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return 0;
+		return 1;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionAttackMelee;
+import com.github.finley243.adventureengine.action.ActionAttackRanged;
 import com.github.finley243.adventureengine.action.ActionEquip;
 import com.github.finley243.adventureengine.action.ActionUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -52,7 +53,13 @@ public class ItemWeapon extends Item {
 		Set<Actor> targets = stats.getType().isRanged ? subject.getArea().getRoom().getActors() : subject.getArea().getActors();
 		for(Actor target : targets) {
 			if(target != subject) {
-				actions.add(new ActionAttackMelee(this, target));
+				if(stats.getType().isRanged && !target.isInCover()) {
+					if(!subject.isInCover()) {
+						actions.add(new ActionAttackRanged(this, target));
+					}
+				} else {
+					actions.add(new ActionAttackMelee(this, target));
+				}
 			}
 		}
 		actions.add(new ActionUnequip(this));

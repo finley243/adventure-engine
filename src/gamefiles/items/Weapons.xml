@@ -4,6 +4,13 @@
         <price>15</price>
         <type>CLUB</type>
         <damage>10</damage>
-        <chance>0.85</chance>
+        <chance>0.90</chance>
+    </item>
+    <item type="weapon" id="light_pistol">
+        <name>light pistol</name>
+        <price>30</price>
+        <type>PISTOL</type>
+        <damage>15</damage>
+        <chance>0.75</chance>
     </item>
 </items>

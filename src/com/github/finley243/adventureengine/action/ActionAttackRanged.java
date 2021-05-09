@@ -39,7 +39,7 @@ public class ActionAttackRanged implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return 0.0f;
+		return 1.0f;
 	}
 	
 	@Override

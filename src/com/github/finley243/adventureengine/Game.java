@@ -23,6 +23,7 @@ import com.github.finley243.adventureengine.ui.GraphicalInterface;
 import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
+import com.github.finley243.adventureengine.world.template.ItemFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.EventBus;
 
@@ -62,8 +63,8 @@ public class Game {
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		
-		List<Area> testPath = Pathfinder.findPath(Data.getArea("stratis_hotel_lobby_entry"), Data.getArea("stratis_hotel_room_main"));
-		System.out.println(testPath);
+		player.inventory().addItem(ItemFactory.create("light_pistol"));
+		stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
 		
 		startGameLoop();
 	}

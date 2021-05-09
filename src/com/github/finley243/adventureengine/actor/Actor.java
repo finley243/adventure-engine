@@ -23,6 +23,7 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
@@ -209,6 +210,10 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	public boolean isUsingObject() {
 		return this.usingObject != null;
+	}
+	
+	public boolean isInCover() {
+		return isUsingObject() && usingObject instanceof ObjectCover;
 	}
 
 	@Override
