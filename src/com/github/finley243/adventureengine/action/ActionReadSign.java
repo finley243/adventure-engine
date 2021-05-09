@@ -22,7 +22,7 @@ public class ActionReadSign implements Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		Context context = new Context(subject, sign);
+		Context context = new Context(subject, false, sign, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("read"), context));
 		if(subject instanceof ActorPlayer) {
 			List<String> text = sign.getText();
@@ -36,7 +36,7 @@ public class ActionReadSign implements Action {
 
 	@Override
 	public String getPrompt() {
-		return "Read " + sign.getFormattedName();
+		return "Read " + sign.getFormattedName(false);
 	}
 
 	@Override

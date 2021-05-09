@@ -20,13 +20,13 @@ public class ActionEquip implements Action {
 	public void choose(Actor subject) {
 		subject.setEquippedItem(item);
 		subject.inventory().removeItem(item);
-		Context context = new Context(subject, item);
+		Context context = new Context(subject, false, item, true);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("equip"), context));
 	}
 
 	@Override
 	public String getPrompt() {
-		return "Equip " + item.getFormattedName();
+		return "Equip " + item.getFormattedName(false);
 	}
 
 	@Override

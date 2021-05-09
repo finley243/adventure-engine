@@ -20,13 +20,13 @@ public class ActionSit implements Action {
 	public void choose(Actor subject) {
 		chair.setUser(subject);
 		subject.startUsingObject(chair);
-		Context context = new Context(subject, chair);
+		Context context = new Context(subject, false, chair, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("sit"), context));
 	}
 
 	@Override
 	public String getPrompt() {
-		return "Sit in " + chair.getFormattedName();
+		return "Sit in " + chair.getFormattedName(false);
 	}
 
 	@Override

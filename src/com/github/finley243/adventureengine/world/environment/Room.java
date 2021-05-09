@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -71,8 +72,12 @@ public class Room implements Noun {
 	}
 	
 	@Override
-	public String getFormattedName() {
-		return (isProperName() ? "" : "the ") + getName();
+	public String getFormattedName(boolean indefinite) {
+		if(isProperName()) {
+			return LangUtils.addArticle(getName(), indefinite);
+		} else {
+			return getName();
+		}
 	}
 
 	@Override

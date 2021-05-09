@@ -20,7 +20,7 @@ public class ActionMoveElevator implements Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		Context context = new Context(subject, elevator);
+		Context context = new Context(subject, false, elevator, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("enterElevator"), context));
 		subject.move(destination.getArea());
 		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context));
@@ -28,7 +28,7 @@ public class ActionMoveElevator implements Action {
 
 	@Override
 	public String getPrompt() {
-		return "Take " + elevator.getFormattedName() + " to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")";
+		return "Take " + elevator.getFormattedName(false) + " to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")";
 	}
 
 	@Override

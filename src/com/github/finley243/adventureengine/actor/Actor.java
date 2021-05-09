@@ -14,6 +14,7 @@ import com.github.finley243.adventureengine.action.ActionWait;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -95,8 +96,12 @@ public class Actor implements Noun, Physical, AttackTarget {
 	}
 	
 	@Override
-	public String getFormattedName() {
-		return (isProperName() ? "" : "the ") + getName();
+	public String getFormattedName(boolean indefinite) {
+		if(isProperName()) {
+			return LangUtils.addArticle(getName(), indefinite);
+		} else {
+			return getName();
+		}
 	}
 	
 	@Override
@@ -175,14 +180,14 @@ public class Actor implements Noun, Physical, AttackTarget {
 			HP = 0;
 			kill();
 		} else {
-			Context context = new Context(this);
+			Context context = new Context(this, false);
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context));
 		}
 	}
 	
 	public void kill() {
 		isDead = true;
-		Context context = new Context(this);
+		Context context = new Context(this, false);
 		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context));
 	}
 	

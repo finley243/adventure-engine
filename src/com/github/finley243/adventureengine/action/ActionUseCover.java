@@ -20,13 +20,13 @@ public class ActionUseCover implements Action {
 	public void choose(Actor subject) {
 		cover.setUser(subject);
 		subject.startUsingObject(cover);
-		Context context = new Context(subject, cover);
+		Context context = new Context(subject, false, cover, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeCover"), context));
 	}
 
 	@Override
 	public String getPrompt() {
-		return "Take cover behind " + cover.getFormattedName();
+		return "Take cover behind " + cover.getFormattedName(false);
 	}
 
 	@Override

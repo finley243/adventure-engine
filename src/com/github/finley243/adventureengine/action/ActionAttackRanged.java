@@ -23,11 +23,11 @@ public class ActionAttackRanged implements Action {
 	@Override
 	public void choose(Actor subject) {
 		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance()) {
-			Context context = new Context(subject, target, weapon);
+			Context context = new Context(subject, false, target, false, weapon, false);
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("rangedHit"), context));
 			target.damage(weapon.getDamage());
 		} else {
-			Context context = new Context(subject, target, weapon);
+			Context context = new Context(subject, false, target, false, weapon, false);
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("rangedMiss"), context));
 		}
 	}

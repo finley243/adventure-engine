@@ -10,11 +10,11 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
 
 public class TextGen {
-	
+
 	private static final char RANDOM_OPEN = '{';
 	private static final char RANDOM_CLOSE = '}';
 	private static final char RANDOM_SEPARATOR = '|';
-	
+
 	private static final String SUBJECT = "<subject>";
 	private static final String SUBJECT_POSSESSIVE = "<subject's>";
 	private static final String SUBJECT_REFLEXIVE = "<subjectSelf>";
@@ -22,24 +22,24 @@ public class TextGen {
 	private static final String OBJECT_POSSESSIVE = "<object's>";
 	private static final String OBJECT_2 = "<object2>";
 	private static final String OBJECT_2_POSSESSIVE = "<object2's>";
-	
+
 	// e.g. jumps
 	private static final String VERB_S = "<s>";
 	// e.g. goes/does
 	private static final String VERB_ES = "<es>";
 	// e.g. flies
 	private static final String VERB_IES = "<ies>";
-	
+
 	private static final String VERB_DO_NOT = "<doesn't>";
 	private static final String VERB_BE = "<is>";
 	private static final String VERB_BE_NOT = "<isn't>";
 	private static final String VERB_HAVE = "<has>";
-	
+
 	/*
-	 * Format for tags: <subject> hit<s> <object> with <object2>
-	 * Format for OR expressions: {this thing|other thing} or {<tag> thing|other thing}
+	 * Format for tags: <subject> hit<s> <object> with <object2> Format for OR
+	 * expressions: {this thing|other thing} or {<tag> thing|other thing}
 	 */
-	
+
 	public static String generate(String line, Context context) {
 		String sentence = "";
 		line = chooseRandoms(line);
@@ -48,37 +48,37 @@ public class TextGen {
 		sentence += ".";
 		return sentence;
 	}
-	
+
 	private static String determineContext(String line, Context context) {
 		boolean useSubjectPronoun = false;
 		boolean useObjectPronoun = false;
 		boolean useObject2Pronoun = false;
-		if(context.getSubject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+		if (context.getSubject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
 			useSubjectPronoun = true;
 		}
-		if(context.getObject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+		if (context.getObject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
 			useObjectPronoun = true;
 		}
-		if(context.getObject2().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+		if (context.getObject2().equals(Data.getActor(Game.PLAYER_ACTOR))) {
 			useObject2Pronoun = true;
 		}
 		return populateFromContext(line, context, useSubjectPronoun, useObjectPronoun, useObject2Pronoun);
 	}
-	
+
 	private static String chooseRandoms(String line) {
 		List<String> parts = new ArrayList<String>();
 		int openIndex = -1;
 		int closeIndex = -1;
 		int depth = 0;
-		for(int i = 0; i < line.length(); i++) {
-			if(line.charAt(i) == RANDOM_OPEN) {
-				if(depth == 0) {
+		for (int i = 0; i < line.length(); i++) {
+			if (line.charAt(i) == RANDOM_OPEN) {
+				if (depth == 0) {
 					openIndex = i;
 				}
 				depth++;
-			} else if(line.charAt(i) == RANDOM_CLOSE) {
+			} else if (line.charAt(i) == RANDOM_CLOSE) {
 				depth--;
-				if(depth == 0) {
+				if (depth == 0) {
 					String lineInBrackets = line.substring(openIndex + 1, i);
 					List<String> randomChoices = separateRandomChoices(lineInBrackets);
 					String randomChoice = randomChoices.get(ThreadLocalRandom.current().nextInt(randomChoices.size()));
@@ -90,22 +90,22 @@ public class TextGen {
 		}
 		parts.add(line.substring(closeIndex + 1, line.length()));
 		String newLine = "";
-		for(String current : parts) {
+		for (String current : parts) {
 			newLine += current;
 		}
 		return newLine;
 	}
-	
-	private static List<String> separateRandomChoices(String line){
+
+	private static List<String> separateRandomChoices(String line) {
 		List<String> parts = new ArrayList<String>();
 		int indexOfLastSplit = -1;
 		int depth = 0;
-		for(int i = 0; i < line.length(); i++) {
-			if(line.charAt(i) == RANDOM_OPEN) {
+		for (int i = 0; i < line.length(); i++) {
+			if (line.charAt(i) == RANDOM_OPEN) {
 				depth++;
-			} else if(line.charAt(i) == RANDOM_CLOSE) {
+			} else if (line.charAt(i) == RANDOM_CLOSE) {
 				depth--;
-			} else if(depth == 0 && line.charAt(i) == RANDOM_SEPARATOR) {
+			} else if (depth == 0 && line.charAt(i) == RANDOM_SEPARATOR) {
 				parts.add(line.substring(indexOfLastSplit + 1, i).trim());
 				indexOfLastSplit = i;
 			}
@@ -113,47 +113,55 @@ public class TextGen {
 		parts.add(line.substring(indexOfLastSplit + 1, line.length()).trim());
 		return parts;
 	}
-	
-	private static String populateFromContext(String line, Context context, boolean useSubjectPronoun, boolean useObjectPronoun, boolean useObject2Pronoun) {
+
+	private static String populateFromContext(String line, Context context, boolean useSubjectPronoun,
+			boolean useObjectPronoun, boolean useObject2Pronoun) {
 		Noun subject = context.getSubject();
 		Noun object = context.getObject();
 		Noun object2 = context.getObject2();
-		
-		line = populatePronoun(line, useSubjectPronoun, subject.getFormattedName(), subject.getPronoun().subject, subject.getPronoun().possessive, SUBJECT, SUBJECT_POSSESSIVE);
+
+		line = populatePronoun(line, useSubjectPronoun, subject.getFormattedName(context.indefiniteSubject()),
+				subject.getPronoun().subject, subject.getPronoun().possessive, SUBJECT, SUBJECT_POSSESSIVE);
 		line = line.replace(SUBJECT_REFLEXIVE, subject.getPronoun().reflexive);
-		
-		line = populatePronoun(line, useObjectPronoun, object.getFormattedName(), object.getPronoun().object, object.getPronoun().possessive, OBJECT, OBJECT_POSSESSIVE);
-		
-		line = populatePronoun(line, useObject2Pronoun, object2.getFormattedName(), object2.getPronoun().object, object2.getPronoun().possessive, OBJECT_2, OBJECT_2_POSSESSIVE);
-		
+
+		line = populatePronoun(line, useObjectPronoun, object.getFormattedName(context.indefiniteObject()),
+				object.getPronoun().object, object.getPronoun().possessive, OBJECT, OBJECT_POSSESSIVE);
+
+		line = populatePronoun(line, useObject2Pronoun, object2.getFormattedName(context.indefiniteObject2()),
+				object2.getPronoun().object, object2.getPronoun().possessive, OBJECT_2, OBJECT_2_POSSESSIVE);
+
 		line = line.replace(VERB_S, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "s" : ""));
 		line = line.replace(VERB_ES, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "es" : ""));
 		line = line.replace(VERB_IES, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "ies" : "y"));
-		line = line.replace(VERB_DO_NOT, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "doesn't" : "don't"));
-		line = line.replace(VERB_BE, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "is" : (subject.getPronoun() == Pronoun.I ? "am" : "are")));
-		line = line.replace(VERB_BE_NOT, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "isn't" : (subject.getPronoun() == Pronoun.I ? "am not" : "aren't")));
+		line = line.replace(VERB_DO_NOT,
+				(!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "doesn't" : "don't"));
+		line = line.replace(VERB_BE, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "is"
+				: (subject.getPronoun() == Pronoun.I ? "am" : "are")));
+		line = line.replace(VERB_BE_NOT, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "isn't"
+				: (subject.getPronoun() == Pronoun.I ? "am not" : "aren't")));
 		line = line.replace(VERB_HAVE, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "has" : "have"));
 		return line;
 	}
-	
-	private static String populatePronoun(String line, boolean usePronoun, String formattedName, String pronoun, String possessive, String pronounKey, String possessiveKey) {
-		if(usePronoun) {
+
+	private static String populatePronoun(String line, boolean usePronoun, String formattedName, String pronoun,
+			String possessive, String pronounKey, String possessiveKey) {
+		if (usePronoun) {
 			line = line.replace(pronounKey, pronoun);
 			line = line.replace(possessiveKey, possessive);
 		} else {
 			int indexOf = line.indexOf(pronounKey);
 			int indexOfPossessive = line.indexOf(possessiveKey);
 			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
-			if(!possessiveFirst) {
+			if (!possessiveFirst) {
 				line = line.replaceFirst(pronounKey, formattedName);
 			}
 			line = line.replace(pronounKey, pronoun);
-			if(possessiveFirst) {
+			if (possessiveFirst) {
 				line = line.replaceFirst(possessiveKey, LangUtils.possessive(formattedName, false));
 			}
 			line = line.replace(possessiveKey, possessive);
 		}
 		return line;
 	}
-	
+
 }

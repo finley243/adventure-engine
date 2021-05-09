@@ -19,7 +19,7 @@ public class ActionConsume implements Action {
 	@Override
 	public void choose(Actor subject) {
 		subject.inventory().removeItem(item);
-		Context context = new Context(subject, item);
+		Context context = new Context(subject, false, item, true);
 		switch(item.getConsumableType()) {
 		case DRINK:
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drink"), context));
@@ -38,12 +38,12 @@ public class ActionConsume implements Action {
 	public String getPrompt() {
 		switch(item.getConsumableType()) {
 		case DRINK:
-			return "Drink " + item.getFormattedName();
+			return "Drink " + item.getFormattedName(true);
 		case FOOD:
-			return "Eat " + item.getFormattedName();
+			return "Eat " + item.getFormattedName(true);
 		case OTHER:
 		default:
-			return "Use " + item.getFormattedName();
+			return "Use " + item.getFormattedName(true);
 		}
 	}
 

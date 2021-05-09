@@ -20,13 +20,13 @@ public class ActionItemTake implements Action {
 	public void choose(Actor subject) {
 		subject.getArea().removeObject(item);
 		subject.inventory().addItem(item);
-		Context context = new Context(subject, item);
+		Context context = new Context(subject, false, item, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("pickUp"), context));
 	}
 	
 	@Override
 	public String getPrompt() {
-		return "Take " + item.getFormattedName();
+		return "Take " + item.getFormattedName(false);
 	}
 	
 	@Override

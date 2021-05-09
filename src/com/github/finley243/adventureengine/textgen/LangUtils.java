@@ -47,4 +47,17 @@ public class LangUtils {
 		}
 	}
 	
+	public static String addArticle(String word, boolean indefinite) {
+		if(indefinite) {
+			boolean startsWithVowel = "aeiou".indexOf(word.charAt(0)) >= 0;
+			if(startsWithVowel) {
+				return "an " + word;
+			} else {
+				return "a " + word;
+			}
+		} else {
+			return "the " + word;
+		}
+	}
+	
 }

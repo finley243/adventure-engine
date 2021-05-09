@@ -6,7 +6,7 @@ public interface Noun {
 	
 	public String getName();
 	
-	public String getFormattedName();
+	public String getFormattedName(boolean indefinite);
 	
 	public boolean isProperName();
 	

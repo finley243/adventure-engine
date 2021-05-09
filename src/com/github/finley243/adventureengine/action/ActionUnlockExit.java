@@ -19,13 +19,13 @@ public class ActionUnlockExit implements Action {
 	@Override
 	public void choose(Actor subject) {
 		exit.unlock();
-		Context context = new Context(subject, exit);
+		Context context = new Context(subject, false, exit, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unlock"), context));
 	}
 
 	@Override
 	public String getPrompt() {
-		return "Unlock " + exit.getFormattedName() + " to " + exit.getLinkedArea().getRoom().getFormattedName();
+		return "Unlock " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false);
 	}
 
 	@Override

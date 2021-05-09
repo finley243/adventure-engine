@@ -20,13 +20,13 @@ public class ActionItemDrop implements Action {
 	public void choose(Actor subject) {
 		subject.getArea().addObject(item);
 		subject.inventory().removeItem(item);
-		Context context = new Context(subject, item);
+		Context context = new Context(subject, false, item, true);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context));
 	}
 	
 	@Override
 	public String getPrompt() {
-		return "Drop " + item.getFormattedName();
+		return "Drop " + item.getFormattedName(false);
 	}
 	
 	@Override

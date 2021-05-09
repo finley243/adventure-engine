@@ -20,7 +20,7 @@ public class ActionStand implements Action {
 	public void choose(Actor subject) {
 		object.removeUser();
 		subject.stopUsingObject();
-		Context context = new Context(subject, object);
+		Context context = new Context(subject, false, object, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("stand"), context));
 	}
 

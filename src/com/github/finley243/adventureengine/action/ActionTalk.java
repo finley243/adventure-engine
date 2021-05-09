@@ -21,7 +21,7 @@ public class ActionTalk implements Action {
 
 	@Override
 	public String getPrompt() {
-		return "Talk to " + target.getFormattedName();
+		return "Talk to " + target.getFormattedName(false);
 	}
 
 	@Override

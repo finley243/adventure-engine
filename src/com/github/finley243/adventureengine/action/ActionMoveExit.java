@@ -19,7 +19,7 @@ public class ActionMoveExit implements Action {
 	@Override
 	public void choose(Actor subject) {
 		Area area = exit.getLinkedArea();
-		Context context = new Context(subject, exit, area.getRoom());
+		Context context = new Context(subject, false, exit, false, area.getRoom(), false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("moveThroughTo"), context));
 		Game.EVENT_BUS.post(new VisualEvent(area, Phrases.get("moveThroughTo"), context));
 		exit.unlock();
@@ -28,7 +28,7 @@ public class ActionMoveExit implements Action {
 
 	@Override
 	public String getPrompt() {
-		return "Go through " + exit.getFormattedName() + " to " + exit.getLinkedArea().getRoom().getFormattedName();
+		return "Go through " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false);
 	}
 
 	@Override

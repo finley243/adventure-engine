@@ -26,13 +26,13 @@ public class ActionVendingMachineBuy implements Action {
 		Item item = ItemFactory.create(itemID);
 		subject.adjustMoney(-item.getPrice());
 		subject.inventory().addItem(item);
-		Context context = new Context(subject, item, vendingMachine);
+		Context context = new Context(subject, false, item, true, vendingMachine, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("buyFrom"), context));
 	}
 
 	@Override
 	public String getPrompt() {
-		return "Buy " + Data.getItem(itemID).getFormattedName() + " from " + vendingMachine.getFormattedName() + " [" + Data.getItem(itemID).getPrice() + " credits]";
+		return "Buy " + Data.getItem(itemID).getFormattedName(true) + " from " + vendingMachine.getFormattedName(false) + " [" + Data.getItem(itemID).getPrice() + " credits]";
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class ActionMove implements Action {
 	@Override
 	public void choose(Actor subject) {
 		subject.move(area);
-		Context context = new Context(subject, area, area);
+		Context context = new Context(subject, false, area, false);
 		String line;
 		if(area.isProximateName()) {
 			line = "moveToward";
@@ -30,7 +30,7 @@ public class ActionMove implements Action {
 	
 	@Override
 	public String getPrompt() {
-		return "Go to " + area.getFormattedName();
+		return "Go to " + area.getFormattedName(false);
 	}
 	
 	@Override

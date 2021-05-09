@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.template;
 
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
 
@@ -25,8 +26,12 @@ public abstract class StatsItem implements Noun {
 	}
 	
 	@Override
-	public String getFormattedName() {
-		return (isProperName() ? "" : "a ") + getName();
+	public String getFormattedName(boolean indefinite) {
+		if(isProperName()) {
+			return LangUtils.addArticle(getName(), indefinite);
+		} else {
+			return getName();
+		}
 	}
 	
 	@Override

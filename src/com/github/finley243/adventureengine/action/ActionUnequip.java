@@ -20,13 +20,13 @@ public class ActionUnequip implements Action {
 	public void choose(Actor subject) {
 		subject.setEquippedItem(null);
 		subject.inventory().addItem(item);
-		Context context = new Context(subject, item);
+		Context context = new Context(subject, false, item, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unequip"), context));
 	}
 
 	@Override
 	public String getPrompt() {
-		return "Unequip " + item.getFormattedName();
+		return "Unequip " + item.getFormattedName(false);
 	}
 
 	@Override
