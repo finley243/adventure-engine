@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -20,6 +21,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterface;
 import com.github.finley243.adventureengine.ui.UserInterface;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.EventBus;
@@ -52,13 +54,16 @@ public class Game {
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		
-		StatsActor playerStats = new StatsActor("Alpha", true, Pronoun.YOU, 150);
+		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, 150);
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
 		player.adjustMoney(320);
 		Data.addActor(player.getID(), player);
 		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, 20);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
+		
+		List<Area> testPath = Pathfinder.findPathLocal(Data.getArea("stratis_hotel_lobby_entry"), Data.getArea("stratis_hotel_lobby_elevators"));
+		System.out.println(testPath);
 		
 		startGameLoop();
 	}

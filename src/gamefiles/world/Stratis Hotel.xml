@@ -7,7 +7,6 @@
             <links>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_seating</link>
-                <link>stratis_hotel_lobby_elevators</link>
             </links>
             <objects></objects>
         </area>
@@ -39,7 +38,6 @@
         <area id="stratis_hotel_lobby_elevators">
             <name proper="false" prox="true">elevators</name>
             <links>
-                <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_seating</link>
             </links>

@@ -132,4 +132,9 @@ public class Area implements Noun {
 		return Data.getRoom(roomID);
 	}
 	
+	@Override
+	public String toString() {
+		return getName();
+	}
+	
 }
