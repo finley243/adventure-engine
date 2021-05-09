@@ -18,71 +18,43 @@ public class Pathfinder {
 	
 	public static List<Area> findPath(Area currentArea, Area targetArea) {
 		Set<Area> visited = new HashSet<Area>();
-		return findPath(currentArea, targetArea, visited);
+		return findPath(currentArea, targetArea, visited, -1);
 	}
 	
-	private static List<Area> findPath(Area currentArea, Area targetArea, Set<Area> hasVisited) {
-		System.out.println("findPath(" + currentArea + ", " + targetArea + ", " + hasVisited + ")");
-		if(currentArea.getRoom() == targetArea.getRoom()) {
-			return findPathLocal(currentArea, targetArea, hasVisited);
-		} else {
-			return findPathGlobal(currentArea, targetArea, hasVisited);
-		}
-	}
-	
-	private static List<Area> findPathLocal(Area currentArea, Area targetArea, Set<Area> hasVisited) {
+	// sizeAllowed: length allowed for sub-path (if -1, any length is allowed), based on current shortest path
+	private static List<Area> findPath(Area currentArea, Area targetArea, Set<Area> hasVisited, int sizeAllowed) {
+		//System.out.println("findPath(" + currentArea + ", " + targetArea + ", " + hasVisited + ")");
 		if(currentArea == targetArea) {
 			List<Area> path = new ArrayList<Area>();
 			path.add(0, currentArea);
 			return path;
-		}
-		hasVisited.add(currentArea);
-		List<Area> shortestPath = null;
-		if(hasVisited.containsAll(currentArea.getLinkedAreas())) {
+		} else if(sizeAllowed == 0) {
 			return null;
 		}
-		for(Area linkedArea : currentArea.getLinkedAreas()) {
-			if(!hasVisited.contains(linkedArea)) {
-				List<Area> subPath = findPathLocal(linkedArea, targetArea, hasVisited);
-				if(subPath != null) {
-					subPath.add(0, currentArea);
-					if(shortestPath == null || subPath.size() < shortestPath.size()) {
-						shortestPath = subPath;
-					}
-				}
-			}
-		}
-		hasVisited.remove(currentArea);
-		return shortestPath;
-	}
-	
-	private static List<Area> findPathGlobal(Area currentArea, Area targetArea, Set<Area> hasVisited) {
-		if(currentArea == targetArea) {
-			List<Area> path = new ArrayList<Area>();
-			path.add(0, currentArea);
-			return path;
-		}
 		hasVisited.add(currentArea);
-		List<Area> shortestPath = null;
 		Set<Area> linkedAreasGlobal = new HashSet<Area>();
 		linkedAreasGlobal.addAll(currentArea.getLinkedAreas());
-		for(WorldObject object : currentArea.getObjects()) {
-			if(object instanceof ObjectExit) {
-				linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
-			} else if(object instanceof ObjectElevator) {
-				linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
+		if(currentArea.getRoom() != targetArea.getRoom()) {
+			for(WorldObject object : currentArea.getObjects()) {
+				if(object instanceof ObjectExit) {
+					linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
+				} else if(object instanceof ObjectElevator) {
+					linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
+				}
 			}
 		}
 		if(hasVisited.containsAll(linkedAreasGlobal)) {
 			return null;
 		}
+		List<Area> shortestPath = null;
 		for(Area linkedArea : linkedAreasGlobal) {
 			if(!hasVisited.contains(linkedArea)) {
-				List<Area> subPath = findPath(linkedArea, targetArea, hasVisited);
+				List<Area> subPath = findPath(linkedArea, targetArea, hasVisited, (sizeAllowed == -1 ? -1 : sizeAllowed - 1));
 				if(subPath != null) {
 					subPath.add(0, currentArea);
 					if(shortestPath == null || subPath.size() < shortestPath.size()) {
 						shortestPath = subPath;
+						sizeAllowed = subPath.size();
 					}
 				}
 			}
