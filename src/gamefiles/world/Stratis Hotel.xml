@@ -114,6 +114,9 @@
                     <name>door</name>
                     <link>stratis_hotel_corridor_room_door</link>
                 </object>
+                <object type="item">
+                    <item>baseball_bat</item>
+                </object>
             </objects>
         </area>
     </room>

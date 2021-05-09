@@ -27,6 +27,7 @@ import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.github.finley243.adventureengine.world.object.ObjectSign;
 import com.github.finley243.adventureengine.world.object.ObjectVendingMachine;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class WorldLoader {
 
@@ -133,6 +134,9 @@ public class WorldLoader {
 		case "vending_machine":
 			List<String> vendingItems = LoadUtils.listOfTags((Element) objectElement.getElementsByTagName("items").item(0), "item");
 			return new ObjectVendingMachine(objectName, vendingItems);
+		case "item":
+			String itemID = LoadUtils.singleTag(objectElement, "item", null);
+			return ItemFactory.create(itemID);
 		}
 		return null;
 	}

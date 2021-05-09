@@ -21,7 +21,6 @@ import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterface;
 import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
-import com.github.finley243.adventureengine.world.template.ItemFactory;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.EventBus;
 
@@ -60,8 +59,6 @@ public class Game {
 		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, 20);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
-		
-		player.inventory().addItem(ItemFactory.create("baseball_bat"));
 		
 		startGameLoop();
 	}
