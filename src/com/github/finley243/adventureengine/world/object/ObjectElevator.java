@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -8,6 +9,7 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveElevator;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ObjectElevator extends LinkedObject {
 
@@ -34,6 +36,14 @@ public class ObjectElevator extends LinkedObject {
 	
 	public void unlock() {
 		this.isLocked = false;
+	}
+	
+	public Set<Area> getLinkedAreas() {
+		Set<Area> areas = new HashSet<Area>();
+		for(String elevatorID : linkedElevatorIDs) {
+			areas.add(Data.getLinkedObject(elevatorID).getArea());
+		}
+		return areas;
 	}
 	
 	@Override

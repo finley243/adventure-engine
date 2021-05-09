@@ -6,40 +6,88 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.ObjectElevator;
+import com.github.finley243.adventureengine.world.object.ObjectExit;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class Pathfinder {
 
 	public static int getDistance(Area area1, Area area2) {
-		boolean isSameRoom = area1.getRoom() == area2.getRoom();
-		if(isSameRoom) {
-			return findPathLocal(area1, area2).size() - 1;
+		return findPath(area1, area2).size() - 1;
+	}
+	
+	public static List<Area> findPath(Area currentArea, Area targetArea) {
+		Set<Area> visited = new HashSet<Area>();
+		return findPath(currentArea, targetArea, visited);
+	}
+	
+	private static List<Area> findPath(Area currentArea, Area targetArea, Set<Area> hasVisited) {
+		System.out.println("findPath(" + currentArea + ", " + targetArea + ", " + hasVisited + ")");
+		if(currentArea.getRoom() == targetArea.getRoom()) {
+			return findPathLocal(currentArea, targetArea, hasVisited);
 		} else {
-			return 0;
+			return findPathGlobal(currentArea, targetArea, hasVisited);
 		}
 	}
 	
-	public static List<Area> findPathLocal(Area currentArea, Area targetArea) {
-		Set<Area> visited = new HashSet<Area>();
-		return findPathLocal(currentArea, targetArea, visited);
-	}
-	
-	private static List<Area> findPathLocal(Area areaCurrent, Area areaTarget, Set<Area> hasVisited) {
-		if(areaCurrent == areaTarget) {
+	private static List<Area> findPathLocal(Area currentArea, Area targetArea, Set<Area> hasVisited) {
+		if(currentArea == targetArea) {
 			List<Area> path = new ArrayList<Area>();
-			path.add(0, areaCurrent);
+			path.add(0, currentArea);
 			return path;
 		}
-		hasVisited.add(areaCurrent);
+		hasVisited.add(currentArea);
 		List<Area> shortestPath = null;
-		for(Area linkedArea : areaCurrent.getLinkedAreas()) {
+		if(hasVisited.containsAll(currentArea.getLinkedAreas())) {
+			return null;
+		}
+		for(Area linkedArea : currentArea.getLinkedAreas()) {
 			if(!hasVisited.contains(linkedArea)) {
-				List<Area> subPath = findPathLocal(linkedArea, areaTarget, hasVisited);
-				subPath.add(0, areaCurrent);
-				if(shortestPath == null || subPath.size() < shortestPath.size()) {
-					shortestPath = subPath;
+				List<Area> subPath = findPathLocal(linkedArea, targetArea, hasVisited);
+				if(subPath != null) {
+					subPath.add(0, currentArea);
+					if(shortestPath == null || subPath.size() < shortestPath.size()) {
+						shortestPath = subPath;
+					}
 				}
 			}
 		}
+		hasVisited.remove(currentArea);
+		return shortestPath;
+	}
+	
+	private static List<Area> findPathGlobal(Area currentArea, Area targetArea, Set<Area> hasVisited) {
+		if(currentArea == targetArea) {
+			List<Area> path = new ArrayList<Area>();
+			path.add(0, currentArea);
+			return path;
+		}
+		hasVisited.add(currentArea);
+		List<Area> shortestPath = null;
+		Set<Area> linkedAreasGlobal = new HashSet<Area>();
+		linkedAreasGlobal.addAll(currentArea.getLinkedAreas());
+		for(WorldObject object : currentArea.getObjects()) {
+			if(object instanceof ObjectExit) {
+				linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
+			} else if(object instanceof ObjectElevator) {
+				linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
+			}
+		}
+		if(hasVisited.containsAll(linkedAreasGlobal)) {
+			return null;
+		}
+		for(Area linkedArea : linkedAreasGlobal) {
+			if(!hasVisited.contains(linkedArea)) {
+				List<Area> subPath = findPath(linkedArea, targetArea, hasVisited);
+				if(subPath != null) {
+					subPath.add(0, currentArea);
+					if(shortestPath == null || subPath.size() < shortestPath.size()) {
+						shortestPath = subPath;
+					}
+				}
+			}
+		}
+		hasVisited.remove(currentArea);
 		return shortestPath;
 	}
 	
