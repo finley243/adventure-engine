@@ -45,5 +45,10 @@ public class ActionVendingMachineBuy implements Action {
 	public String[] getMenuStructure() {
 		return new String[] {"World", LangUtils.titleCase(vendingMachine.getName())};
 	}
+	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
 
 }

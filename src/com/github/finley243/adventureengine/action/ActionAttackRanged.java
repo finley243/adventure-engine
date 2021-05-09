@@ -47,4 +47,9 @@ public class ActionAttackRanged implements Action {
 		return new String[] {LangUtils.titleCase(weapon.getName())};
 	}
 	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.HOSTILE;
+	}
+	
 }

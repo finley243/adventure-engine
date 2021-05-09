@@ -39,5 +39,10 @@ public class ActionUseCover implements Action {
 	public String[] getMenuStructure() {
 		return new String[] {"World", LangUtils.titleCase(cover.getName())};
 	}
+	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
 
 }

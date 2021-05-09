@@ -57,5 +57,10 @@ public class ActionConsume implements Action {
 	public String[] getMenuStructure() {
 		return new String[] {"Inventory", LangUtils.titleCase(item.getName())};
 	}
+	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
 
 }

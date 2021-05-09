@@ -41,5 +41,10 @@ public class ActionMoveElevator implements Action {
 	public String[] getMenuStructure() {
 		return new String[] {"Move", LangUtils.titleCase(elevator.getName())};
 	}
+	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
 
 }

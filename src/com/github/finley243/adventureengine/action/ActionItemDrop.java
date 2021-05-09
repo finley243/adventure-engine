@@ -39,4 +39,9 @@ public class ActionItemDrop implements Action {
 		return new String[] {"Inventory", LangUtils.titleCase(item.getName())};
 	}
 	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
+	
 }

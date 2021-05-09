@@ -38,4 +38,9 @@ public class ActionUnlockExit implements Action {
 		return new String[] {"World", LangUtils.titleCase(exit.getName())};
 	}
 	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
+	
 }

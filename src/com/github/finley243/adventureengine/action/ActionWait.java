@@ -32,5 +32,10 @@ public class ActionWait implements Action {
 	public String[] getMenuStructure() {
 		return new String[] {};
 	}
+	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
 
 }

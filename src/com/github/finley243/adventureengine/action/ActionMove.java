@@ -43,4 +43,9 @@ public class ActionMove implements Action {
 		return new String[] {"Move"};
 	}
 	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
+	
 }

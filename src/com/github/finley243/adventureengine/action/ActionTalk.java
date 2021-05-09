@@ -33,5 +33,10 @@ public class ActionTalk implements Action {
 	public String[] getMenuStructure() {
 		return new String[] {"World", LangUtils.titleCase(target.getName())};
 	}
+	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
 
 }

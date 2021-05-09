@@ -49,5 +49,10 @@ public class ActionReadSign implements Action {
 	public String[] getMenuStructure() {
 		return new String[] {"World", LangUtils.titleCase(sign.getName())};
 	}
+	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
 
 }

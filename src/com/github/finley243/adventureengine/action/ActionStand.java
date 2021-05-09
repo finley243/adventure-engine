@@ -39,5 +39,10 @@ public class ActionStand implements Action {
 	public String[] getMenuStructure() {
 		return new String[] {LangUtils.titleCase(object.getName())};
 	}
+	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
 
 }

@@ -46,5 +46,10 @@ public class ActionAttackMelee implements Action {
 	public String[] getMenuStructure() {
 		return new String[] {LangUtils.titleCase(weapon.getName())};
 	}
+
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.HOSTILE;
+	}
 	
 }

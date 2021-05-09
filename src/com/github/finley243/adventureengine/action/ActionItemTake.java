@@ -39,4 +39,9 @@ public class ActionItemTake implements Action {
 		return new String[] {"World", LangUtils.titleCase(item.getName())};
 	}
 	
+	@Override
+	public ActionLegality getLegality() {
+		return ActionLegality.LEGAL;
+	}
+	
 }
