@@ -6,6 +6,7 @@ import java.util.Set;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class Room implements Noun {
 
@@ -46,6 +47,14 @@ public class Room implements Noun {
 	
 	public void setVisited() {
 		hasVisited = true;
+	}
+	
+	public Set<WorldObject> getObjects() {
+		Set<WorldObject> objects = new HashSet<WorldObject>();
+		for(Area area : areas) {
+			objects.addAll(area.getObjects());
+		}
+		return objects;
 	}
 	
 	public Set<Actor> getActors() {

@@ -235,7 +235,13 @@ public class Actor implements Noun, Physical, AttackTarget {
 		for(Actor actor : getArea().getActors()) {
 			actions.addAll(actor.localActions(this));
 		}
+		for(Actor actor : getArea().getRoom().getActors()) {
+			actions.addAll(actor.remoteActions(this));
+		}
 		for(WorldObject object : getArea().getObjects()) {
+			actions.addAll(object.localActions(this));
+		}
+		for(WorldObject object : getArea().getRoom().getObjects()) {
 			actions.addAll(object.localActions(this));
 		}
 		if(isUsingObject()) {
