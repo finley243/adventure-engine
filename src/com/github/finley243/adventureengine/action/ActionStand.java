@@ -36,6 +36,11 @@ public class ActionStand implements Action {
 	}
 	
 	@Override
+	public int actionPoints() {
+		return 1;
+	}
+	
+	@Override
 	public String[] getMenuStructure() {
 		return new String[] {LangUtils.titleCase(object.getName())};
 	}

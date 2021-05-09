@@ -55,11 +55,11 @@ public class Game {
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		
-		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, 150);
+		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, 50, 2);
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
 		player.adjustMoney(320);
 		Data.addActor(player.getID(), player);
-		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, 20);
+		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, 30, 2);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		

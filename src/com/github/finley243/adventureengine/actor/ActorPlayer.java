@@ -29,11 +29,16 @@ public class ActorPlayer extends Actor {
 		
 	}
 	
-	@Override
+	/*@Override
 	public void takeTurn() {
 		// Could handle action points here?
 		Action chosenAction = menuHandler.actionMenu(this);
 		chosenAction.choose(this);
+	}*/
+	
+	@Override
+	public Action chooseAction() {
+		return menuHandler.actionMenu(this);
 	}
 	
 	public void startDialogue(Actor target) {

@@ -14,6 +14,8 @@ public interface Action {
 	
 	public float utility(Actor subject);
 	
+	public int actionPoints();
+	
 	public String[] getMenuStructure();
 	
 	public ActionLegality getLegality();

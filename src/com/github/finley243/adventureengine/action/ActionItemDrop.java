@@ -35,6 +35,11 @@ public class ActionItemDrop implements Action {
 	}
 	
 	@Override
+	public int actionPoints() {
+		return 1;
+	}
+	
+	@Override
 	public String[] getMenuStructure() {
 		return new String[] {"Inventory", LangUtils.titleCase(item.getName())};
 	}

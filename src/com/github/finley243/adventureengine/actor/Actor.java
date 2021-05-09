@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -58,6 +59,8 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	private int HP;
 	private boolean isDead;
+	
+	private int actionPoints;
 	
 	private EnumMap<Attribute, Integer> attributes;
 	
@@ -266,18 +269,30 @@ public class Actor implements Noun, Physical, AttackTarget {
 			actions.addAll(item.inventoryActions(this));
 		}
 		actions.add(new ActionWait());
+		Iterator<Action> itr = actions.iterator();
+		while(itr.hasNext()) {
+			if(itr.next().actionPoints() > actionPoints) {
+				itr.remove();
+			}
+		}
 		return actions;
 	}
 	
 	public void takeTurn() {
-		// Could handle action points here?
-		if(!isDead) {
+		if(isDead) return;
+		actionPoints = stats.getActionPoints();
+		while(actionPoints > 0) {
 			Action chosenAction = chooseAction();
+			actionPoints -= chosenAction.actionPoints();
 			chosenAction.choose(this);
 		}
 	}
 	
-	private Action chooseAction() {
+	public void clearActionPoints() {
+		actionPoints = 0;
+	}
+	
+	public Action chooseAction() {
 		List<Action> bestActions = new ArrayList<Action>();
 		float maxWeight = 0.0f;
 		for(Action currentAction : this.availableActions()) {

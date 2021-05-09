@@ -33,6 +33,11 @@ public class ActionUnequip implements Action {
 	public float utility(Actor subject) {
 		return 0;
 	}
+	
+	@Override
+	public int actionPoints() {
+		return 1;
+	}
 
 	@Override
 	public String[] getMenuStructure() {

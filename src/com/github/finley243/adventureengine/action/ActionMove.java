@@ -39,6 +39,11 @@ public class ActionMove implements Action {
 	}
 	
 	@Override
+	public int actionPoints() {
+		return 1;
+	}
+	
+	@Override
 	public String[] getMenuStructure() {
 		return new String[] {"Move"};
 	}
