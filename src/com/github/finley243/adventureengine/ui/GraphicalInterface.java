@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
@@ -126,7 +127,7 @@ public class GraphicalInterface implements UserInterface {
 			@Override
 			public void run() {
 				List<String> choices = event.getChoices();
-				List<String[]> menuStructures = event.getMenuStructures();
+				//List<String[]> menuStructures = event.getMenuStructures();
 				choicePanel.removeAll();
 				for(int i = 0; i < choices.size(); i++) {
 					JButton button = new JButton(choices.get(i));
@@ -145,6 +146,15 @@ public class GraphicalInterface implements UserInterface {
 			public void run() {
 				choicePanel.removeAll();
 				choicePanel.repaint();
+			}
+		});
+	}
+	
+	@Subscribe
+	public void onEndRoundEvent(TextClearEvent event) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
 				textPanel.setText(null);
 			}
 		});

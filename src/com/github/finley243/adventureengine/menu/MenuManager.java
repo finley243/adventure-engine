@@ -11,7 +11,9 @@ import com.github.finley243.adventureengine.dialogue.Choice;
 import com.github.finley243.adventureengine.dialogue.Line;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.dialogue.Topic.TopicType;
+import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
+import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.google.common.eventbus.Subscribe;
@@ -53,6 +55,7 @@ public class MenuManager {
 	}
 	
 	public void dialogueMenu(Actor subject, Actor target) {
+		Game.EVENT_BUS.post(new TextClearEvent());
 		boolean dialogueLoop = true;
 		Topic currentTopic = Data.getTopic(target.getTopicID());
 		while(dialogueLoop) {
@@ -88,7 +91,15 @@ public class MenuManager {
 					Choice selectedChoice = dialogueMenu(validChoices);
 					currentTopic = Data.getTopic(selectedChoice.getLinkedId());
 				}
-				Game.EVENT_BUS.post(new RenderTextEvent(""));
+				//Game.EVENT_BUS.post(new RenderTextEvent(""));
+			} else {
+				try {
+					Thread.sleep(1500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				Game.EVENT_BUS.post(new TextClearEvent());
+				Game.EVENT_BUS.post(new RenderLocationEvent());
 			}
 		}
 	}
@@ -110,6 +121,7 @@ public class MenuManager {
 				e.printStackTrace();
 			}
 		}
+		Game.EVENT_BUS.post(new TextClearEvent());
 		return dialogueChoice;
 	}
 	

@@ -23,6 +23,7 @@ public class ActorPlayer extends Actor {
 	@Override
 	public void onVisualEvent(VisualEvent event) {
 		Game.EVENT_BUS.post(new RenderTextEvent(event.getText()));
+		//sleep(200);
 	}
 	
 	@Override
@@ -48,7 +49,16 @@ public class ActorPlayer extends Actor {
 	public void updateRoomDescription() {
 		if(!this.getArea().getRoom().hasVisited()) {
 			Game.EVENT_BUS.post(new RenderTextEvent(this.getArea().getRoom().getDescription()));
+			Game.EVENT_BUS.post(new RenderTextEvent(""));
 			this.getArea().getRoom().setVisited();
+		}
+	}
+	
+	private void sleep(int millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 

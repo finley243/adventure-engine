@@ -310,15 +310,15 @@ public class Actor implements Noun, Physical {
 		updateEffects();
 		updateCombatTargets();
 		actionPoints = stats.getActionPoints();
-		while(actionPoints > 0) {
+		while(actionPoints > -1) {
 			Action chosenAction = chooseAction();
 			actionPoints -= chosenAction.actionPoints();
 			chosenAction.choose(this);
 		}
 	}
 	
-	public void clearActionPoints() {
-		actionPoints = 0;
+	public void endTurn() {
+		actionPoints = -1;
 	}
 	
 	public Action chooseAction() {

@@ -12,8 +12,11 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
+import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
+import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
+import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;
@@ -90,25 +93,40 @@ public class Game {
 	
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
-		String locationName = Data.getPlayer().getArea().getName();
-		String roomName = Data.getPlayer().getArea().getRoom().getName();
-		Game.EVENT_BUS.post(new RenderTextEvent("------------------------------"));
-		Game.EVENT_BUS.post(new RenderTextEvent("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")"));
-		Game.EVENT_BUS.post(new RenderTextEvent(""));
+		EVENT_BUS.post(new RenderLocationEvent());
 		Data.getPlayer().updateRoomDescription();
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();
 			}
 		}
-		EVENT_BUS.post(new RenderTextEvent(""));
 		Data.getPlayer().takeTurn();
+		sleep(800);
+		EVENT_BUS.post(new TextClearEvent());
+	}
+	
+	private void sleep(int millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/** Ends the game loop, triggered when the player dies */
 	@Subscribe
 	private void endGameLoop(PlayerDeathEvent event) {
 		continueGameLoop = false;
+	}
+	
+	@Subscribe
+	private void onRenderLocationEvent(RenderLocationEvent event) {
+		ActorPlayer player = Data.getPlayer();
+		String locationName = player.getArea().getName();
+		String roomName = player.getArea().getRoom().getName();
+		Game.EVENT_BUS.post(new RenderTextEvent("------------------------------"));
+		Game.EVENT_BUS.post(new RenderTextEvent("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")"));
+		Game.EVENT_BUS.post(new RenderTextEvent(""));
 	}
 	
 }
