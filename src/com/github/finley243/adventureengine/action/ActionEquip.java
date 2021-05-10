@@ -31,6 +31,7 @@ public class ActionEquip implements Action {
 
 	@Override
 	public float utility(Actor subject) {
+		if(!subject.isInCombat()) return 0;
 		return 1;
 	}
 	

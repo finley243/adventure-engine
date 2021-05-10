@@ -7,6 +7,8 @@ import com.github.finley243.adventureengine.actor.Actor;
  */
 public interface Effect {
 
-	public void updateEffect(Actor target);
+	public void update(Actor target);
+	
+	public boolean isInstant();
 	
 }

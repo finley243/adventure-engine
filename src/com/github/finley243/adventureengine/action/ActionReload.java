@@ -30,7 +30,7 @@ public class ActionReload implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return 0.9f;
+		return 0.5f;
 	}
 
 	@Override

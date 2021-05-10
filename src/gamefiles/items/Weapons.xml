@@ -4,16 +4,16 @@
         <price>15</price>
         <type>CLUB</type>
         <actionpoints>2</actionpoints>
-        <damage>30</damage>
-        <chance>0.90</chance>
+        <damage>20</damage>
+        <chance>0.85</chance>
     </item>
     <item type="weapon" id="light_pistol">
         <name>light pistol</name>
         <price>30</price>
         <type>PISTOL</type>
         <actionpoints>1</actionpoints>
-        <damage>15</damage>
-        <chance>0.75</chance>
+        <damage>10</damage>
+        <chance>0.70</chance>
         <clipsize>12</clipsize>
     </item>
 </items>

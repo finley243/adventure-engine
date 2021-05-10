@@ -2,12 +2,16 @@ package com.github.finley243.adventureengine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
+import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
@@ -56,11 +60,16 @@ public class Game {
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		
-		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, 30, 3);
+		Faction playerFaction = new Faction("player", FactionRelation.NEUTRAL, new HashMap<String, FactionRelation>());
+		Data.addFaction(playerFaction.getID(), playerFaction);
+		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, playerFaction, 50, 3);
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
 		player.adjustMoney(320);
 		Data.addActor(player.getID(), player);
-		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, 30, 3);
+		
+		Faction stratisStaffFaction = new Faction("stratis_hotel_staff", FactionRelation.NEUTRAL, new HashMap<String, FactionRelation>());
+		Data.addFaction(stratisStaffFaction.getID(), stratisStaffFaction);
+		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, stratisStaffFaction, 40, 3);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		

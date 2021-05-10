@@ -63,15 +63,17 @@ public class ItemWeapon extends Item {
 		Set<Actor> targets = stats.getType().isRanged ? subject.getArea().getRoom().getActors() : subject.getArea().getActors();
 		for(Actor target : targets) {
 			if(target != subject) {
-				if(stats.getType().isRanged) {
-					if(!target.isInCover() && !subject.isInCover() && ammo > 0) {
+				if(stats.getType().isRanged) { // Ranged
+					if(!target.isIncapacitated() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && !subject.isInCover() && ammo > 0) {
 						actions.add(new ActionAttackRanged(this, target));
 					}
 					if(ammo < stats.getClipSize()) { // Add check to see if subject has ammo
 						actions.add(new ActionReload(this));
 					}
-				} else {
-					actions.add(new ActionAttackMelee(this, target));
+				} else { // Melee
+					if(!target.isIncapacitated()) {
+						actions.add(new ActionAttackMelee(this, target));
+					}
 				}
 			}
 		}

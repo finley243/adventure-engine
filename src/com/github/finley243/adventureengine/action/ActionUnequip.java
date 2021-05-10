@@ -31,7 +31,8 @@ public class ActionUnequip implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return 0;
+		if(subject.isInCombat()) return 0;
+		return 0.5f;
 	}
 	
 	@Override

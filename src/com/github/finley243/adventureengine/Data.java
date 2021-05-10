@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
+import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -23,6 +24,7 @@ public class Data {
 	private static Map<String, StatsItem> items = new HashMap<String, StatsItem>();
 	private static Map<String, Topic> topics = new HashMap<String, Topic>();
 	private static Set<String> knowledge = new HashSet<String>();
+	private static Map<String, Faction> factions = new HashMap<String, Faction>();
 	
 	public static ActorPlayer getPlayer() {
 		return (ActorPlayer) actors.get(Game.PLAYER_ACTOR);
@@ -104,6 +106,17 @@ public class Data {
 	
 	public static boolean hasKnowledge(String value) {
 		return knowledge.contains(value);
+	}
+	
+	public static void addFaction(String id, Faction value) {
+		if(factions.containsKey(id)) {
+			System.out.println("WARNING - Adding faction with existing ID: " + id);
+		}
+		factions.put(id, value);
+	}
+	
+	public static Faction getFaction(String id) {
+		return factions.get(id);
 	}
 	
 }

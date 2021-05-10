@@ -2,8 +2,10 @@ package com.github.finley243.adventureengine.actor;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
@@ -12,6 +14,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.action.ActionWait;
+import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
@@ -20,7 +23,6 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -31,7 +33,7 @@ import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
-public class Actor implements Noun, Physical, AttackTarget {
+public class Actor implements Noun, Physical {
 	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
@@ -40,19 +42,12 @@ public class Actor implements Noun, Physical, AttackTarget {
 	public enum Skill {
 		// BODY
 		MELEE,
-		
 		// INTELLIGENCE
 		HACKING,
 		HARDWARE,
 		// CHARISMA
-		
-		
 		// DEXTERITY
-		
-		
 		// AGILITY
-		
-		
 	}
 	
 	private StatsActor stats;
@@ -60,17 +55,16 @@ public class Actor implements Noun, Physical, AttackTarget {
 	private Area area;
 	private String topicID;
 	private ActorRoutineManager routineManager;
-	
+	private Set<CombatTarget> combatTargets;
 	private int HP;
 	private boolean isDead;
+	private boolean isUnconscious;
 	private int actionPoints;
 	private EnumMap<Attribute, Integer> attributes;
 	private List<Effect> effects;
-	
 	private Inventory inventory;
 	private ItemWeapon equippedItem;
 	private int money;
-
 	private UsableObject usingObject;
 	
 	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean startDead) {
@@ -79,7 +73,9 @@ public class Actor implements Noun, Physical, AttackTarget {
 		this.stats = stats;
 		this.topicID = topicID;
 		this.routineManager = new ActorRoutineManager();
+		this.combatTargets = new HashSet<CombatTarget>();
 		this.isDead = startDead;
+		this.isUnconscious = startDead;
 		if(!startDead) {
 			HP = stats.getMaxHP();
 		}
@@ -146,6 +142,10 @@ public class Actor implements Noun, Physical, AttackTarget {
 		return topicID;
 	}
 	
+	public Faction getFaction() {
+		return stats.getFaction();
+	}
+	
 	public void move(Area area) {
 		if(this.area != null) {
 			this.area.removeActor(this);
@@ -196,6 +196,18 @@ public class Actor implements Noun, Physical, AttackTarget {
 		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context));
 	}
 	
+	public boolean isDead() {
+		return isDead;
+	}
+	
+	public boolean isUnconscious() {
+		return isUnconscious;
+	}
+	
+	public boolean isIncapacitated() {
+		return isDead || isUnconscious;
+	}
+	
 	public void onVisualEvent(VisualEvent event) {
 		
 	}
@@ -218,6 +230,20 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	public boolean isInCover() {
 		return isUsingObject() && usingObject instanceof ObjectCover;
+	}
+	
+	public boolean isInCombat() {
+		return combatTargets.size() > 0;
+	}
+	
+	public boolean isTarget(Actor target) {
+		boolean isTarget = combatTargets.contains(new CombatTarget(target));
+		System.out.println(this.getName() + " - " + target.getName() + " IS TARGET: " + isTarget);
+		return combatTargets.contains(new CombatTarget(target));
+	}
+	
+	public void addTarget(Actor target) {
+		combatTargets.add(new CombatTarget(target));
 	}
 
 	@Override
@@ -281,6 +307,8 @@ public class Actor implements Noun, Physical, AttackTarget {
 	
 	public void takeTurn() {
 		if(isDead) return;
+		updateEffects();
+		updateCombatTargets();
 		actionPoints = stats.getActionPoints();
 		while(actionPoints > 0) {
 			Action chosenAction = chooseAction();
@@ -307,6 +335,33 @@ public class Actor implements Noun, Physical, AttackTarget {
 			}
 		}
 		return bestActions.get(ThreadLocalRandom.current().nextInt(bestActions.size()));
+	}
+	
+	private void updateEffects() {
+		for(Effect effect : effects) {
+			effect.update(this);
+		}
+	}
+	
+	private void updateCombatTargets() {
+		for(Actor actor : getArea().getRoom().getActors()) {
+			if(actor.getFaction().getRelationTo(getFaction().getID()) == FactionRelation.ENEMY) {
+				CombatTarget newTarget = new CombatTarget(actor);
+				combatTargets.add(newTarget);
+			}
+		}
+		Iterator<CombatTarget> itr = combatTargets.iterator();
+		while(itr.hasNext()) {
+			CombatTarget target = itr.next();
+			target.update(canSee(target.getActor()));
+			if(target.shouldRemove()) {
+				itr.remove();
+			}
+		}
+	}
+	
+	private boolean canSee(Actor actor) {
+		return getArea().getRoom().getActors().contains(actor);
 	}
 	
 }
