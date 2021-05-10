@@ -11,11 +11,23 @@ import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class Pathfinder {
-
+	
+	/**
+	 * Returns the shortest distance between two Areas
+	 * @param area1 The first Area to measure between
+	 * @param area2 The second Area to measure between
+	 * @return The distance from one Area to the other
+	 */
 	public static int getDistance(Area area1, Area area2) {
 		return findPath(area1, area2).size() - 1;
 	}
 	
+	/**
+	 * Returns a list of Areas that represents the shortest path between them
+	 * @param currentArea Start position to path from
+	 * @param targetArea Position the path leads to
+	 * @return Shortest path from currentArea to targetArea
+	 */
 	public static List<Area> findPath(Area currentArea, Area targetArea) {
 		Set<Area> visited = new HashSet<Area>();
 		return findPath(currentArea, targetArea, visited, -1);

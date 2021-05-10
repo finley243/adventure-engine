@@ -43,6 +43,7 @@ public class Game {
 	
 	private boolean continueGameLoop;
 	
+	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		perceptionHandler = new PerceptionHandler();
 		userInterface = new GraphicalInterface();
@@ -70,6 +71,7 @@ public class Game {
 		startGameLoop();
 	}
 	
+	/** Simple game loop that runs nextRound until continueGameLoop is false */
 	private void startGameLoop() {
 		continueGameLoop = true;
 		while(continueGameLoop) {
@@ -77,6 +79,7 @@ public class Game {
 		}
 	}
 	
+	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
 		String locationName = Data.getPlayer().getArea().getName();
 		String roomName = Data.getPlayer().getArea().getRoom().getName();
@@ -93,6 +96,7 @@ public class Game {
 		Data.getPlayer().takeTurn();
 	}
 	
+	/** Ends the game loop, triggered when the player dies */
 	@Subscribe
 	private void endGameLoop(PlayerDeathEvent event) {
 		continueGameLoop = false;

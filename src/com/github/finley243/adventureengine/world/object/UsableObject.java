@@ -6,6 +6,9 @@ import java.util.List;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 
+/**
+ * An object that can have a single "user" (e.g. a chair)
+ */
 public abstract class UsableObject extends WorldObject {
 
 	private Actor user;

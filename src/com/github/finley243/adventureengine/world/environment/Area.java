@@ -10,6 +10,9 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
+/**
+ * Represents a section of a room that can contain objects and actors
+ */
 public class Area implements Noun {
 
 	private String ID;

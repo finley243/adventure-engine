@@ -2,6 +2,9 @@ package com.github.finley243.adventureengine.condition;
 
 import com.github.finley243.adventureengine.actor.Actor;
 
+/**
+ * A pre-condition that can be checked
+ */
 public interface Condition {
 	
 	public enum Equality {

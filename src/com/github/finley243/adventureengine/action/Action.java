@@ -2,6 +2,9 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
 
+/**
+ * An action that an actor can take
+ */
 public interface Action {
 	
 	public enum ActionLegality {

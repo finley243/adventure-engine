@@ -11,6 +11,9 @@ import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 
+/**
+ * A static object that can exist in the game world
+ */
 public abstract class WorldObject implements Noun, Physical {
 	
 	private String name;

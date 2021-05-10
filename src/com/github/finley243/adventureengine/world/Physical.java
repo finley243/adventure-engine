@@ -6,6 +6,9 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
+/**
+ * Represents an object that is located in the game world
+ */
 public interface Physical {
 	
 	public Area getArea();

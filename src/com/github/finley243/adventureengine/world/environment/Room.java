@@ -9,6 +9,9 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
+/**
+ * Represents a self-contained space (e.g. an actual room) that contains smaller areas
+ */
 public class Room implements Noun {
 
 	private String ID;
