@@ -14,6 +14,6 @@
         <actionpoints>1</actionpoints>
         <damage>15</damage>
         <chance>0.75</chance>
-        <clipsize>2</clipsize>
+        <clipsize>12</clipsize>
     </item>
 </items>

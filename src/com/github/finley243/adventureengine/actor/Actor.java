@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.action.ActionWait;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.routine.ActorRoutineManager;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -55,26 +56,21 @@ public class Actor implements Noun, Physical, AttackTarget {
 	}
 	
 	private StatsActor stats;
-	
 	private String ID;
+	private Area area;
+	private String topicID;
+	private ActorRoutineManager routineManager;
 	
 	private int HP;
 	private boolean isDead;
-	
 	private int actionPoints;
-	
 	private EnumMap<Attribute, Integer> attributes;
-	
 	private List<Effect> effects;
 	
 	private Inventory inventory;
 	private ItemWeapon equippedItem;
 	private int money;
-	
-	private Area area;
-	
-	private String topicID;
-	
+
 	private UsableObject usingObject;
 	
 	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean startDead) {
@@ -82,6 +78,7 @@ public class Actor implements Noun, Physical, AttackTarget {
 		this.move(Data.getArea(areaID));
 		this.stats = stats;
 		this.topicID = topicID;
+		this.routineManager = new ActorRoutineManager();
 		this.isDead = startDead;
 		if(!startDead) {
 			HP = stats.getMaxHP();

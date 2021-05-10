@@ -1,5 +1,9 @@
 package com.github.finley243.adventureengine.routine;
 
+import java.util.List;
+
+import com.github.finley243.adventureengine.world.environment.Area;
+
 public class Goal {
 
 	public enum GoalType {
@@ -8,8 +12,9 @@ public class Goal {
 	
 	private GoalType type;
 	private String targetID;
+	private List<Area> path;
 	
-	public Goal() {
+	public Goal(GoalType type, String targetID) {
 		
 	}
 	

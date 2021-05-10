@@ -8,5 +8,9 @@ public class ActorRoutineManager {
 	public ActorRoutineManager() {
 		
 	}
+
+	public void updateRoutine() {
+		
+	}
 	
 }
