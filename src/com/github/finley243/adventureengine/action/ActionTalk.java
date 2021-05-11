@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
+import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 
 public class ActionTalk implements Action {
@@ -42,6 +44,11 @@ public class ActionTalk implements Action {
 	@Override
 	public ActionLegality getLegality() {
 		return ActionLegality.LEGAL;
+	}
+	
+	@Override
+	public MenuData getMenuData() {
+		return new MenuDataWorldActor("Talk", target);
 	}
 
 }

@@ -3,6 +3,8 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -47,6 +49,11 @@ public class ActionItemDrop implements Action {
 	@Override
 	public ActionLegality getLegality() {
 		return ActionLegality.LEGAL;
+	}
+	
+	@Override
+	public MenuData getMenuData() {
+		return new MenuDataInventory("Drop", item);
 	}
 	
 }

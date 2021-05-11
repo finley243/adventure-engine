@@ -127,7 +127,6 @@ public class GraphicalInterface implements UserInterface {
 			@Override
 			public void run() {
 				List<String> choices = event.getChoices();
-				//List<String[]> menuStructures = event.getMenuStructures();
 				choicePanel.removeAll();
 				for(int i = 0; i < choices.size(); i++) {
 					JButton button = new JButton(choices.get(i));

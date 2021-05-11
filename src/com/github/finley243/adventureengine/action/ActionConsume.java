@@ -3,6 +3,8 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -66,6 +68,24 @@ public class ActionConsume implements Action {
 	@Override
 	public ActionLegality getLegality() {
 		return ActionLegality.LEGAL;
+	}
+	
+	@Override
+	public MenuData getMenuData() {
+		String prompt;
+		switch(item.getConsumableType()) {
+		case DRINK:
+			prompt = "Drink";
+			break;
+		case FOOD:
+			prompt = "Eat";
+			break;
+		case OTHER:
+		default:
+			prompt = "Use";
+			break;
+		}
+		return new MenuDataInventory(prompt, item);
 	}
 
 }

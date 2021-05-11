@@ -4,6 +4,8 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -54,6 +56,11 @@ public class ActionVendingMachineBuy implements Action {
 	@Override
 	public ActionLegality getLegality() {
 		return ActionLegality.LEGAL;
+	}
+	
+	@Override
+	public MenuData getMenuData() {
+		return new MenuDataWorldObject("Buy " + Data.getItem(itemID).getName(), vendingMachine);
 	}
 
 }

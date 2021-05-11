@@ -11,11 +11,12 @@ import com.github.finley243.adventureengine.dialogue.Choice;
 import com.github.finley243.adventureengine.dialogue.Line;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.dialogue.Topic.TopicType;
-import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
+import com.github.finley243.adventureengine.event.TextClearEvent;
+import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.google.common.eventbus.Subscribe;
 
 public class MenuManager {
@@ -37,13 +38,13 @@ public class MenuManager {
 		List<Action> actions = subject.availableActions();
 		this.actionList = actions;
 		List<String> menuStrings = new ArrayList<String>();
-		List<String[]> menuStructures = new ArrayList<String[]>();
+		List<MenuData> menuData = new ArrayList<MenuData>();
 		for(Action action : actions) {
 			menuStrings.add(action.getPrompt());
-			menuStructures.add(action.getMenuStructure());
+			menuData.add(action.getMenuData());
 		}
 		actionChoice = null;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuStructures));
+		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
 		while(actionChoice == null) {
 			try {
 				Thread.sleep(20);
@@ -107,13 +108,13 @@ public class MenuManager {
 	private Choice dialogueMenu(List<Choice> choices) {
 		this.dialogueList = choices;
 		List<String> menuStrings = new ArrayList<String>();
-		List<String[]> menuStructures = new ArrayList<String[]>();
+		List<MenuData> menuData = new ArrayList<MenuData>();
 		for(Choice choice : choices) {
 			menuStrings.add(choice.getPrompt());
-			menuStructures.add(new String[] {});
+			menuData.add(null);
 		}
 		dialogueChoice = null;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuStructures));
+		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
 		while(dialogueChoice == null) {
 			try {
 				Thread.sleep(20);
