@@ -21,5 +21,6 @@ reload:<subject> reload<s> <object>
 sit:<subject> sit<s> in <object>
 stand:<subject> stand<s> up
 takeCover:<subject> take<s> cover behind <object>
+takeFrom:<subject> take<s> <object> from <object2>
 unequip:<subject> put<s> away <object>
 unlock:<subject> unlock<s> <object>

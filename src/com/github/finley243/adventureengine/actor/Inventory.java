@@ -1,8 +1,13 @@
 package com.github.finley243.adventureengine.actor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionInventoryTake;
+import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
 
 public class Inventory {
@@ -52,6 +57,14 @@ public class Inventory {
 			}
 		}
 		return uniqueItems;
+	}
+
+	public List<Action> getActions(Noun owner) {
+		List<Action> actions = new ArrayList<Action>();
+		for(Item item : inventory) {
+			actions.add(new ActionInventoryTake(owner, this, item));
+		}
+		return actions;
 	}
 	
 }

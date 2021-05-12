@@ -33,7 +33,6 @@ public class ActionSit implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	

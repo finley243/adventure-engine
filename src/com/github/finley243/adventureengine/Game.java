@@ -77,7 +77,7 @@ public class Game {
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		
-		player.inventory().addItem(ItemFactory.create("light_pistol"));
+		//player.inventory().addItem(ItemFactory.create("light_pistol"));
 		player.inventory().addItem(ItemFactory.create("baseball_bat"));
 		stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
 		

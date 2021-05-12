@@ -201,7 +201,47 @@ public class GraphicalInterfaceNested implements UserInterface {
 						menuUsing.add(menuItem);
 					}
 				}
-				if(!worldActor.isEmpty()) {
+				if(!worldActor.isEmpty() || !worldObject.isEmpty()) {
+					JButton buttonWorld = new JButton("World");
+					choicePanel.add(buttonWorld);
+					JPopupMenu menuWorld = new JPopupMenu();
+					buttonWorld.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							menuWorld.show(buttonWorld, buttonWorld.getWidth(), 0);
+						}
+					});
+					if(!worldActor.isEmpty()) {
+						Map<Actor, JMenu> targetActors = new HashMap<Actor, JMenu>();
+						for(MenuDataWorldActor current : worldActor) {
+							if(!targetActors.containsKey(current.getActor())) {
+								JMenu menuCategory = new JMenu(LangUtils.titleCase(current.getActor().getName()));
+								targetActors.put(current.getActor(), menuCategory);
+							}
+							JMenuItem menuItem = new JMenuItem(current.getPrompt());
+							menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+							targetActors.get(current.getActor()).add(menuItem);
+						}
+						for(JMenuItem categoryMenu : targetActors.values()) {
+							menuWorld.add(categoryMenu);
+						}
+					}
+					if(!worldObject.isEmpty()) {
+						Map<WorldObject, JMenu> targetObjects = new HashMap<WorldObject, JMenu>();
+						for(MenuDataWorldObject current : worldObject) {
+							if(!targetObjects.containsKey(current.getObject())) {
+								JMenu menuCategory = new JMenu(LangUtils.titleCase(current.getObject().getName()));
+								targetObjects.put(current.getObject(), menuCategory);
+							}
+							JMenuItem menuItem = new JMenuItem(current.getPrompt());
+							menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+							targetObjects.get(current.getObject()).add(menuItem);
+						}
+						for(JMenuItem categoryMenu : targetObjects.values()) {
+							menuWorld.add(categoryMenu);
+						}
+					}
+				}
+				/*if(!worldActor.isEmpty()) {
 					JButton buttonWorldActor = new JButton("Actors");
 					choicePanel.add(buttonWorldActor);
 					JPopupMenu menuWorldActor = new JPopupMenu();
@@ -246,7 +286,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 					for(JMenuItem categoryMenu : targetObjects.values()) {
 						menuWorldObject.add(categoryMenu);
 					}
-				}
+				}*/
 				if(!inventory.isEmpty()) {
 					JButton buttonInventory = new JButton("Inventory");
 					choicePanel.add(buttonInventory);

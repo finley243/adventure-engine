@@ -192,6 +192,10 @@ public class Actor implements Noun, Physical {
 	
 	public void kill() {
 		isDead = true;
+		if(equippedItem != null) {
+			inventory.addItem(equippedItem);
+			equippedItem = null;
+		}
 		Context context = new Context(this, false);
 		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context));
 	}
@@ -257,7 +261,7 @@ public class Actor implements Noun, Physical {
 				
 			}
 		} else { // Dead
-			
+			action.addAll(inventory.getActions(this));
 		}
 		return action;
 	}
