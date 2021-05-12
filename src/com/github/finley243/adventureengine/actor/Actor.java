@@ -364,4 +364,18 @@ public class Actor implements Noun, Physical {
 		return getArea().getRoom().getActors().contains(actor);
 	}
 	
+	@Override
+	public int hashCode() {
+		return ID.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if(!(other instanceof Actor)) {
+			return false;
+		} else {
+			return this == other;
+		}
+	}
+	
 }

@@ -26,6 +26,7 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterface;
+import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.ItemFactory;
@@ -53,7 +54,7 @@ public class Game {
 	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		perceptionHandler = new PerceptionHandler();
-		userInterface = new GraphicalInterface();
+		userInterface = new GraphicalInterfaceNested();
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
 		EVENT_BUS.register(this);

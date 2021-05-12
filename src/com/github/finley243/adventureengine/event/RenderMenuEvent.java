@@ -8,12 +8,14 @@ public class RenderMenuEvent {
 
 	private List<String> choices;
 	private List<MenuData> menuData;
-	//private List<String[]> menuStructures;
 	
 	public RenderMenuEvent(List<String> choices, List<MenuData> menuData) {
 		if (choices.size() != menuData.size()) throw new IllegalArgumentException();
 		this.choices = choices;
 		this.menuData = menuData;
+		for(int i = 0; i < menuData.size(); i++) {
+			menuData.get(i).setIndex(i);
+		}
 	}
 	
 	public List<String> getChoices() {

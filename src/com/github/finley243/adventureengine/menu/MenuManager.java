@@ -17,6 +17,7 @@ import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
 import com.google.common.eventbus.Subscribe;
 
 public class MenuManager {
@@ -111,7 +112,7 @@ public class MenuManager {
 		List<MenuData> menuData = new ArrayList<MenuData>();
 		for(Choice choice : choices) {
 			menuStrings.add(choice.getPrompt());
-			menuData.add(null);
+			menuData.add(new MenuDataGlobal(choice.getPrompt()));
 		}
 		dialogueChoice = null;
 		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
