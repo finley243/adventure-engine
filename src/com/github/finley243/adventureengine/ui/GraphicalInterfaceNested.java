@@ -54,12 +54,12 @@ public class GraphicalInterfaceNested implements UserInterface {
 	private JPanel choicePanel;
 	
 	public GraphicalInterfaceNested() {
-		try {
+		/*try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		this.window = new JFrame("AdventureEngine");
 		this.tabPane = new JTabbedPane();
@@ -147,7 +147,6 @@ public class GraphicalInterfaceNested implements UserInterface {
 			@Override
 			public void run() {
 				choicePanel.removeAll();
-				//List<String> choices = event.getChoices();
 				List<MenuDataEquipped> equipped = new ArrayList<MenuDataEquipped>();
 				List<MenuDataUsing> using = new ArrayList<MenuDataUsing>();
 				List<MenuDataWorldActor> worldActor = new ArrayList<MenuDataWorldActor>();
