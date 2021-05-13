@@ -49,7 +49,7 @@ public class ActionReadSign implements Action {
 	
 	@Override
 	public int actionPoints() {
-		return 1;
+		return 0;
 	}
 	
 	@Override

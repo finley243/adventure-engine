@@ -16,7 +16,6 @@ import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;

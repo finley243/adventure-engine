@@ -18,7 +18,6 @@ import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.routine.ActorRoutineManager;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -54,7 +53,6 @@ public class Actor implements Noun, Physical {
 	private String ID;
 	private Area area;
 	private String topicID;
-	private ActorRoutineManager routineManager;
 	private Set<CombatTarget> combatTargets;
 	private int HP;
 	private boolean isDead;
@@ -72,7 +70,6 @@ public class Actor implements Noun, Physical {
 		this.move(Data.getArea(areaID));
 		this.stats = stats;
 		this.topicID = topicID;
-		this.routineManager = new ActorRoutineManager();
 		this.combatTargets = new HashSet<CombatTarget>();
 		this.isDead = startDead;
 		this.isUnconscious = startDead;

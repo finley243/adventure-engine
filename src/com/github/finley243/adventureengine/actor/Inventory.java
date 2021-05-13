@@ -22,10 +22,6 @@ public class Inventory {
 		inventory.add(item);
 	}
 	
-	/*public boolean hasItem(Item item) {
-		return inventory.contains(item);
-	}*/
-	
 	public boolean hasItemWithID(String ID) {
 		for(Item item : inventory) {
 			if(item.getID().equals(ID)) {

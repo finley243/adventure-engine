@@ -4,7 +4,7 @@ public class RoutineCombat implements Routine {
 
 	@Override
 	public Goal getNextGoal() {
-		return new Goal();
+		return null;
 	}
 
 }
