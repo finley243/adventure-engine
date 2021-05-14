@@ -2,18 +2,18 @@ package com.github.finley243.adventureengine.effect;
 
 import com.github.finley243.adventureengine.actor.Actor;
 
-public class EffectHeal implements Effect {
+public class EffectHeal extends Effect {
 
-	@Override
-	public void update(Actor target) {
-		// TODO Auto-generated method stub
-		
+	private int amount;
+	
+	public EffectHeal(int amount) {
+		super(0);
+		this.amount = amount;
 	}
-
+	
 	@Override
-	public boolean isInstant() {
-		// TODO Auto-generated method stub
-		return false;
+	protected void addEffect(Actor target) {
+		target.heal(amount);
 	}
 
 }

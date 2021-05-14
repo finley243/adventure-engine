@@ -175,6 +175,21 @@ public class Actor implements Noun, Physical {
 		money += value;
 	}
 	
+	public void addEffect(Effect effect) {
+		effect.update(this);
+		if(!effect.shouldRemove()) {
+			effects.add(effect);
+		}
+	}
+	
+	public void heal(int amount) {
+		if(amount < 0) throw new IllegalArgumentException();
+		HP += amount;
+		if(HP > stats.getMaxHP()) {
+			HP = stats.getMaxHP();
+		}
+	}
+	
 	public void damage(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();
 		HP -= amount;
@@ -339,8 +354,13 @@ public class Actor implements Noun, Physical {
 	}
 	
 	private void updateEffects() {
-		for(Effect effect : effects) {
+		Iterator<Effect> itr = effects.iterator();
+		while(itr.hasNext()) {
+			Effect effect = itr.next();
 			effect.update(this);
+			if(effect.shouldRemove()) {
+				itr.remove();
+			}
 		}
 	}
 	
