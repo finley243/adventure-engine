@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.load;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,12 +16,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.effect.EffectHeal;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
 import com.github.finley243.adventureengine.world.template.StatsConsumable.ConsumableType;
-import com.github.finley243.adventureengine.world.template.StatsWeapon.WeaponType;
 import com.github.finley243.adventureengine.world.template.StatsItem;
 import com.github.finley243.adventureengine.world.template.StatsKey;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
+import com.github.finley243.adventureengine.world.template.StatsWeapon.WeaponType;
 
 public class ItemLoader {
 
@@ -51,7 +55,8 @@ public class ItemLoader {
 		switch(type) {
 		case "consumable":
 			ConsumableType consumableType = ConsumableType.valueOf(LoadUtils.singleTag(itemElement, "type", "OTHER"));
-			return new StatsConsumable(id, name, price, consumableType);
+			List<Effect> consumableEffects = loadEffects((Element) itemElement.getElementsByTagName("effects").item(0));
+			return new StatsConsumable(id, name, price, consumableType, consumableEffects);
 		case "key":
 			return new StatsKey(id, name);
 		case "weapon":
@@ -63,6 +68,29 @@ public class ItemLoader {
 			return new StatsWeapon(id, name, price, weaponType, weaponActionPoints, weaponDamage, weaponHitChance, weaponClipSize);
 		}
 		return null;
+	}
+	
+	private static List<Effect> loadEffects(Element effectsElement) {
+		NodeList effectElements = effectsElement.getElementsByTagName("effect");
+		List<Effect> effects = new ArrayList<Effect>();
+		for(int i = 0; i < effectElements.getLength(); i++) {
+			if(effectElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
+				Element effectElement = (Element) effectElements.item(i);
+				effects.add(loadEffect(effectElement));
+			}
+		}
+		return effects;
+	}
+	
+	private static Effect loadEffect(Element effectElement) {
+		String effectType = effectElement.getAttribute("type");
+		switch(effectType) {
+		case "heal":
+			int healAmount = LoadUtils.singleTagInt(effectElement, "amount", 0);
+			return new EffectHeal(healAmount);
+		default:
+			return null;
+		}
 	}
 	
 }

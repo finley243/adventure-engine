@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
@@ -33,6 +34,9 @@ public class ActionConsume implements Action {
 		default:
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("consume"), context));
 			break;
+		}
+		for(Effect effect : item.getEffects()) {
+			effect.apply(subject);
 		}
 	}
 

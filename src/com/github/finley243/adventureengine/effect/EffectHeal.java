@@ -15,5 +15,10 @@ public class EffectHeal extends Effect {
 	protected void addEffect(Actor target) {
 		target.heal(amount);
 	}
+	
+	@Override
+	public void apply(Actor target) {
+		target.addEffect(new EffectHeal(amount));
+	}
 
 }

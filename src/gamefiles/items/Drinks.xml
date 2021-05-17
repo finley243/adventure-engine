@@ -3,12 +3,20 @@
         <name>Nitron Cola</name>
         <price>10</price>
         <type>DRINK</type>
-        <effects></effects>
+        <effects>
+            <effect type="heal">
+                <amount>10</amount>
+            </effect>
+        </effects>
     </item>
     <item type="consumable" id="nitron_diet">
         <name>Nitron Diet</name>
         <price>10</price>
         <type>DRINK</type>
-        <effects></effects>
+        <effects>
+            <effect type="heal">
+                <amount>10</amount>
+            </effect>
+        </effects>
     </item>
 </items>

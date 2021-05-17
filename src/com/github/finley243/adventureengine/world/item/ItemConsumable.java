@@ -5,6 +5,7 @@ import java.util.List;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionConsume;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
 import com.github.finley243.adventureengine.world.template.StatsConsumable.ConsumableType;
 
@@ -29,6 +30,10 @@ public class ItemConsumable extends Item {
 	
 	public ConsumableType getConsumableType() {
 		return stats.getType();
+	}
+	
+	public List<Effect> getEffects() {
+		return stats.getEffects();
 	}
 	
 	@Override

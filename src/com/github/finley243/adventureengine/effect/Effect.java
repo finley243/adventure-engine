@@ -40,4 +40,8 @@ public abstract class Effect {
 		return turnsRemaining == 0;
 	}
 	
+	public void apply(Actor target) {
+		
+	}
+	
 }

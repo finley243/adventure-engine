@@ -184,10 +184,10 @@ public class Actor implements Noun, Physical {
 	
 	public void heal(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();
+		amount = Math.min(amount, stats.getMaxHP() - HP);
 		HP += amount;
-		if(HP > stats.getMaxHP()) {
-			HP = stats.getMaxHP();
-		}
+		Context context = new Context(this, false);
+		Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context));
 	}
 	
 	public void damage(int amount) {
