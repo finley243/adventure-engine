@@ -51,10 +51,11 @@ public class ItemWeapon extends Item {
 	
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
-		List<Action> actions = super.inventoryActions(subject);
+		List<Action> actions = new ArrayList<Action>();
 		if(!subject.hasEquippedItem()) {
 			actions.add(new ActionEquip(this));
 		}
+		actions.addAll(super.inventoryActions(subject));
 		return actions;
 	}
 	

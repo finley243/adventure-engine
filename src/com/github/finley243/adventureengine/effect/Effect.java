@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 public abstract class Effect {
 
 	private boolean hasAdded;
-	private int turnsRemaining;
+	protected int turnsRemaining;
 	
 	public Effect(int duration) {
 		this.turnsRemaining = duration;
@@ -16,23 +16,28 @@ public abstract class Effect {
 	
 	public void update(Actor target) {
 		if(!hasAdded) {
-			addEffect(target);
+			start(target);
 			hasAdded = true;
 			if(turnsRemaining > 0) {
 				turnsRemaining--;
 			}
 		} else if(turnsRemaining == 0) {
-			removeEffect(target);
+			end(target);
 		} else {
 			turnsRemaining--;
 		}
+		eachTurn(target);
 	}
 	
-	protected void addEffect(Actor target) {
+	protected void start(Actor target) {
 		
 	}
 	
-	protected void removeEffect(Actor target) {
+	protected void end(Actor target) {
+		
+	}
+	
+	protected void eachTurn(Actor target) {
 		
 	}
 	

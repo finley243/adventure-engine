@@ -18,6 +18,7 @@ import org.xml.sax.SAXException;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.EffectHeal;
+import com.github.finley243.adventureengine.effect.EffectHealOverTime;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
 import com.github.finley243.adventureengine.world.template.StatsConsumable.ConsumableType;
 import com.github.finley243.adventureengine.world.template.StatsItem;
@@ -84,10 +85,13 @@ public class ItemLoader {
 	
 	private static Effect loadEffect(Element effectElement) {
 		String effectType = effectElement.getAttribute("type");
+		int duration = LoadUtils.singleTagInt(effectElement, "duration", 0);
+		int amount = LoadUtils.singleTagInt(effectElement, "amount", 0);
 		switch(effectType) {
 		case "heal":
-			int healAmount = LoadUtils.singleTagInt(effectElement, "amount", 0);
-			return new EffectHeal(healAmount);
+			return new EffectHeal(amount);
+		case "heal_over_time":
+			return new EffectHealOverTime(duration, amount);
 		default:
 			return null;
 		}

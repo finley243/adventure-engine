@@ -14,8 +14,9 @@
         <price>10</price>
         <type>DRINK</type>
         <effects>
-            <effect type="heal">
-                <amount>10</amount>
+            <effect type="heal_over_time">
+                <duration>5</duration>
+                <amount>2</amount>
             </effect>
         </effects>
     </item>

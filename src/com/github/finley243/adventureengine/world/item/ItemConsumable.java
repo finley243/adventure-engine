@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.finley243.adventureengine.action.Action;
@@ -49,8 +50,9 @@ public class ItemConsumable extends Item {
 	
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
-		List<Action> actions = super.inventoryActions(subject);
+		List<Action> actions = new ArrayList<Action>();
 		actions.add(new ActionConsume(this));
+		actions.addAll(super.inventoryActions(subject));
 		return actions;
 	}
 	

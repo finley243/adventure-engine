@@ -253,8 +253,6 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public boolean isTarget(Actor target) {
-		boolean isTarget = combatTargets.contains(new CombatTarget(target));
-		System.out.println(this.getName() + " - " + target.getName() + " IS TARGET: " + isTarget);
 		return combatTargets.contains(new CombatTarget(target));
 	}
 	
