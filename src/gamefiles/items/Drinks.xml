@@ -14,8 +14,9 @@
         <price>10</price>
         <type>DRINK</type>
         <effects>
-            <effect type="heal_over_time">
-                <duration>5</duration>
+            <effect type="attribute">
+                <duration>3</duration>
+                <attribute>CHARISMA</attribute>
                 <amount>2</amount>
             </effect>
         </effects>

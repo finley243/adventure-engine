@@ -16,7 +16,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.actor.Actor.Attribute;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.condition.ConditionAttribute;
 import com.github.finley243.adventureengine.condition.ConditionCompound;
 import com.github.finley243.adventureengine.condition.ConditionKnowledge;
 import com.github.finley243.adventureengine.condition.ConditionMoney;
@@ -116,12 +118,16 @@ public class DialogueLoader {
 			boolean useOr = conditionElement.getAttribute("logic").equalsIgnoreCase("or");
 			return new ConditionCompound(subConditions, useOr);
 		case "money":
-			int moneyValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
-			return new ConditionMoney(moneyValue);
+			int moneyAmount = LoadUtils.singleTagInt(conditionElement, "value", 0);
+			return new ConditionMoney(moneyAmount);
 		case "knowledge":
 			String knowledgeID = LoadUtils.singleTag(conditionElement, "knowledge", null);
 			boolean knowledgeValue = LoadUtils.singleTagBoolean(conditionElement, "value", true);
 			return new ConditionKnowledge(knowledgeID, knowledgeValue);
+		case "attribute":
+			Attribute attribute = Attribute.valueOf(LoadUtils.singleTag(conditionElement, "attribute", null).toUpperCase());
+			int attributeValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
+			return new ConditionAttribute(attribute, attributeValue);
 		default:
 			return null;
 		}

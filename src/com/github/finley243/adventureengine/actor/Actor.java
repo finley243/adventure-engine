@@ -58,7 +58,8 @@ public class Actor implements Noun, Physical {
 	private boolean isDead;
 	private boolean isUnconscious;
 	private int actionPoints;
-	private EnumMap<Attribute, Integer> attributes;
+	// Index: 0 = base, 1 = modifier
+	private EnumMap<Attribute, int[]> attributes;
 	private List<Effect> effects;
 	private Inventory inventory;
 	private ItemWeapon equippedItem;
@@ -77,9 +78,9 @@ public class Actor implements Noun, Physical {
 			HP = stats.getMaxHP();
 		}
 		this.inventory = new Inventory();
-		this.attributes = new EnumMap<Attribute, Integer>(Attribute.class);
+		this.attributes = new EnumMap<Attribute, int[]>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, 1);
+			this.attributes.put(attribute, new int[] {1, 0});
 		}
 		this.effects = new ArrayList<Effect>();
 	}
@@ -123,16 +124,32 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public int getAttribute(Attribute attribute) {
-		return attributes.get(attribute);
+		int[] values = attributes.get(attribute);
+		return values[0] + values[1];
 	}
 	
-	public void setAttribute(Attribute attribute, int value) {
-		attributes.put(attribute, value);
+	public int getAttributeBase(Attribute attribute) {
+		return attributes.get(attribute)[0];
 	}
 	
-	public void adjustAttribute(Attribute attribute, int value) {
-		int currentValue = attributes.get(attribute);
-		attributes.put(attribute, currentValue + value);
+	public void setAttributeBase(Attribute attribute, int value) {
+		attributes.get(attribute)[0] = value;
+	}
+	
+	public void adjustAttributeBase(Attribute attribute, int value) {
+		attributes.get(attribute)[0] += value;
+	}
+	
+	public int getAttributeMod(Attribute attribute) {
+		return attributes.get(attribute)[1];
+	}
+	
+	public void setAttributeMod(Attribute attribute, int value) {
+		attributes.get(attribute)[1] = value;
+	}
+	
+	public void adjustAttributeMod(Attribute attribute, int value) {
+		attributes.get(attribute)[1] += value;
 	}
 	
 	public String getTopicID() {

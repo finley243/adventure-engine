@@ -18,15 +18,11 @@ public abstract class Effect {
 		if(!hasAdded) {
 			start(target);
 			hasAdded = true;
-			if(turnsRemaining > 0) {
-				turnsRemaining--;
-			}
 		} else if(turnsRemaining == 0) {
 			end(target);
-		} else {
-			turnsRemaining--;
 		}
 		eachTurn(target);
+		turnsRemaining--;
 	}
 	
 	protected void start(Actor target) {
@@ -42,11 +38,9 @@ public abstract class Effect {
 	}
 	
 	public boolean shouldRemove() {
-		return turnsRemaining == 0;
+		return turnsRemaining < 0;
 	}
 	
-	public void apply(Actor target) {
-		
-	}
+	public abstract void apply(Actor target);
 	
 }

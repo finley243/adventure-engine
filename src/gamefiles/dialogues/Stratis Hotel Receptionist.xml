@@ -22,6 +22,10 @@
         </choice>
         <choice link="stratis_receptionist_info">
             <prompt>I'm looking for information.</prompt>
+            <condition type="attribute">
+                <attribute>CHARISMA</attribute>
+                <value>3</value>
+            </condition>
         </choice>
         <choice link="stratis_receptionist_end">
             <prompt>That will be all.</prompt>

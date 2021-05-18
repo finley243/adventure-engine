@@ -16,7 +16,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.actor.Actor.Attribute;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.effect.EffectAttribute;
 import com.github.finley243.adventureengine.effect.EffectHeal;
 import com.github.finley243.adventureengine.effect.EffectHealOverTime;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
@@ -92,6 +94,9 @@ public class ItemLoader {
 			return new EffectHeal(amount);
 		case "heal_over_time":
 			return new EffectHealOverTime(duration, amount);
+		case "attribute":
+			Attribute attribute = Attribute.valueOf(LoadUtils.singleTag(effectElement, "attribute", null).toUpperCase());
+			return new EffectAttribute(duration, attribute, amount);
 		default:
 			return null;
 		}

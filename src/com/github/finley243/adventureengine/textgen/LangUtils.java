@@ -24,7 +24,7 @@ public class LangUtils {
 	}
 	
 	public static String titleCase(String line) {
-		String[] words = line.split(" ");
+		String[] words = line.toLowerCase().split(" ");
 		for(int i = 0; i < words.length; i++) {
 			words[i] = capitalize(words[i]);
 		}
