@@ -22,7 +22,6 @@ public class EffectAttribute extends Effect {
 	@Override
 	protected void end(Actor target) {
 		target.adjustAttributeMod(attribute, -amount);
-		System.out.println("EFFECT REMOVED");
 	}
 	
 	@Override
