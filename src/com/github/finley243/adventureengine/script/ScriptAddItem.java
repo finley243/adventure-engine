@@ -14,9 +14,9 @@ public class ScriptAddItem implements Script {
 	}
 	
 	@Override
-	public void execute(Actor target) {
+	public void execute(Actor subject, Actor target) {
 		Item item = ItemFactory.create(Data.getItem(itemID));
-		target.inventory().addItem(item);
+		subject.inventory().addItem(item);
 	}
 	
 }

@@ -67,7 +67,7 @@ public class MenuManager {
 					for(String text : line.getTextList()) {
 						Game.EVENT_BUS.post(new RenderTextEvent(text));
 					}
-					line.trigger(subject);
+					line.trigger(subject, target);
 					if(line.hasRedirect()) {
 						currentTopic = Data.getTopic(line.getRedirectTopicId());
 						break;

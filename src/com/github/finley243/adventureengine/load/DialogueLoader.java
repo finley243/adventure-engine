@@ -30,6 +30,7 @@ import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptAddItem;
 import com.github.finley243.adventureengine.script.ScriptKnowledge;
 import com.github.finley243.adventureengine.script.ScriptMoney;
+import com.github.finley243.adventureengine.script.ScriptTrade;
 
 public class DialogueLoader {
 
@@ -172,6 +173,8 @@ public class DialogueLoader {
 		case "knowledge":
 			String knowledgeID = LoadUtils.singleTag(scriptElement, "knowledge", null);
 			return new ScriptKnowledge(knowledgeID);
+		case "trade":
+			return new ScriptTrade();
 		default:
 			return null;
 		}

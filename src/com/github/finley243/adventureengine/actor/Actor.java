@@ -65,6 +65,7 @@ public class Actor implements Noun, Physical {
 	private ItemWeapon equippedItem;
 	private int money;
 	private UsableObject usingObject;
+	private Inventory tradeInventory;
 	
 	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean startDead) {
 		this.ID = ID;
@@ -174,6 +175,10 @@ public class Actor implements Noun, Physical {
 	
 	public Inventory inventory() {
 		return inventory;
+	}
+	
+	public Inventory getTradeInventory() {
+		return tradeInventory;
 	}
 	
 	public void setEquippedItem(ItemWeapon item) {

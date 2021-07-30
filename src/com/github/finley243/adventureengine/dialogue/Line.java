@@ -38,9 +38,9 @@ public class Line {
     	return (condition == null || condition.isMet(Data.getActor(Game.PLAYER_ACTOR))) && (!once || !hasTriggered);
     }
     
-    public void trigger(Actor target) {
+    public void trigger(Actor subject, Actor target) {
     	this.hasTriggered = true;
-    	executeScripts(target);
+    	executeScripts(subject, target);
     }
     
     public boolean shouldExit() {
@@ -55,9 +55,9 @@ public class Line {
     	return redirectTopicId;
     }
 
-    private void executeScripts(Actor target) {
+    private void executeScripts(Actor subject, Actor target) {
     	for(Script script : scripts) {
-    		script.execute(target);
+    		script.execute(subject, target);
     	}
     }
     

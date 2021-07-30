@@ -2,17 +2,15 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.actor.Actor;
 
-public class ScriptMoney implements Script {
-
-	private int value;
+public class ScriptTrade implements Script {
 	
-	public ScriptMoney(int value) {
-		this.value = value;
+	public ScriptTrade() {
+		
 	}
 
 	@Override
 	public void execute(Actor subject, Actor target) {
-		subject.adjustMoney(value);
+		
 	}
-	
+
 }

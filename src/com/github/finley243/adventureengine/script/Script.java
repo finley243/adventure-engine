@@ -7,6 +7,6 @@ import com.github.finley243.adventureengine.actor.Actor;
  */
 public interface Script {
 
-	public void execute(Actor target);
+	public void execute(Actor subject, Actor target);
 	
 }
