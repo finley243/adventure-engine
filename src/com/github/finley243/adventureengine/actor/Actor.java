@@ -281,11 +281,8 @@ public class Actor implements Noun, Physical {
 	public List<Action> localActions(Actor subject) {
 		List<Action> action = new ArrayList<Action>();
 		if(!isDead) { // Alive
-			if(topicID != null) {
+			if(topicID != null && !isInCombat()) {
 				action.add(new ActionTalk(this));
-			}
-			if(!(subject instanceof ActorPlayer)) { // NPC-only actions
-				
 			}
 		} else { // Dead
 			action.addAll(inventory.getActions(this));
