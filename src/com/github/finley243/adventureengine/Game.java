@@ -19,6 +19,7 @@ import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;
+import com.github.finley243.adventureengine.load.LootTableLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -44,6 +45,7 @@ public class Game {
 	private static final String ACTOR_DIRECTORY = "/actors";
 	private static final String ITEM_DIRECTORY = "/items";
 	private static final String DIALOGUE_DIRECTORY = "/dialogues";
+	private static final String LOOT_TABLE_DIRECTORY = "/loottables";
 	
 	private PerceptionHandler perceptionHandler;
 	private UserInterface userInterface;
@@ -62,6 +64,7 @@ public class Game {
 		ItemLoader.loadItems(new File(GAMEFILES + ITEM_DIRECTORY));
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
+		LootTableLoader.loadTables(new File(GAMEFILES + LOOT_TABLE_DIRECTORY));
 		
 		Faction playerFaction = new Faction("player", FactionRelation.NEUTRAL, new HashMap<String, FactionRelation>());
 		Data.addFaction(playerFaction.getID(), playerFaction);
@@ -78,7 +81,8 @@ public class Game {
 		
 		//player.inventory().addItem(ItemFactory.create("light_pistol"));
 		player.inventory().addItem(ItemFactory.create("baseball_bat"));
-		stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
+		//stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
+		stratisReceptionist.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
 		
 		startGameLoop();
 	}

@@ -7,12 +7,18 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class LootTable {
 
+	private String ID;
 	private boolean useAll;
 	private List<LootTableEntry> entries;
 	
-	public LootTable(boolean useAll, List<LootTableEntry> entries) {
+	public LootTable(String ID, boolean useAll, List<LootTableEntry> entries) {
+		this.ID = ID;
 		this.useAll = useAll;
 		this.entries = entries;
+	}
+	
+	public String getID() {
+		return ID;
 	}
 	
 	public Set<Item> generateItems() {

@@ -15,14 +15,9 @@ import com.github.finley243.adventureengine.world.item.LootTable;
 public class Inventory {
 
 	private Set<Item> inventory;
-	private String lootTableID;
 	
 	public Inventory() {
 		inventory = new HashSet<Item>();
-	}
-	
-	public Inventory(String lootTableID) {
-		this.lootTableID = lootTableID;
 	}
 	
 	public void addItem(Item item) {
@@ -44,6 +39,10 @@ public class Inventory {
 	
 	public void removeItem(Item item) {
 		inventory.remove(item);
+	}
+	
+	public void clear() {
+		inventory.clear();
 	}
 	
 	public Set<Item> getItems() {
@@ -72,14 +71,6 @@ public class Inventory {
 			actions.add(new ActionInventoryTake(owner, this, item));
 		}
 		return actions;
-	}
-	
-	public void generateContents() {
-		if(lootTableID != null) {
-			inventory.clear();
-			LootTable lootTable = Data.getLootTable(lootTableID);
-			inventory.addAll(lootTable.generateItems());
-		}
 	}
 	
 }

@@ -1,0 +1,14 @@
+<loottables>
+    <loottable id="weapon_basic" useAll="false">
+        <entry>
+            <reference table="false">baseball_bat</reference>
+            <chance>1.0</chance>
+            <count>1</count>
+        </entry>
+        <entry>
+            <reference table="false">light_pistol</reference>
+            <chance>1.0</chance>
+            <count>1</count>
+        </entry>
+    </loottable>
+</loottables>
