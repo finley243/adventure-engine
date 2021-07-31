@@ -35,7 +35,6 @@ public class ActionMoveElevator implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	

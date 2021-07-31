@@ -399,7 +399,12 @@ public class Actor implements Noun, Physical {
 	}
 	
 	private boolean canSee(Actor actor) {
-		return getArea().getRoom().getActors().contains(actor);
+		if(!getArea().getRoom().getActors().contains(actor)) {
+			return false;
+		} else if(actor.isInCover() && !getArea().getActors().contains(actor)) {
+			return false;
+		}
+		return true;
 	}
 	
 	@Override
