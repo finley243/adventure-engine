@@ -5,21 +5,32 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInventoryTake;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.LootTable;
 
 public class Inventory {
 
 	private Set<Item> inventory;
+	private String lootTableID;
 	
 	public Inventory() {
 		inventory = new HashSet<Item>();
 	}
 	
+	public Inventory(String lootTableID) {
+		this.lootTableID = lootTableID;
+	}
+	
 	public void addItem(Item item) {
 		inventory.add(item);
+	}
+	
+	public void addItems(Set<Item> items) {
+		inventory.addAll(items);
 	}
 	
 	public boolean hasItemWithID(String ID) {
@@ -61,6 +72,14 @@ public class Inventory {
 			actions.add(new ActionInventoryTake(owner, this, item));
 		}
 		return actions;
+	}
+	
+	public void generateContents() {
+		if(lootTableID != null) {
+			inventory.clear();
+			LootTable lootTable = Data.getLootTable(lootTableID);
+			inventory.addAll(lootTable.generateItems());
+		}
 	}
 	
 }

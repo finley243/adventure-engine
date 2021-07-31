@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
+import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.object.LinkedObject;
 import com.github.finley243.adventureengine.world.template.StatsItem;
 
@@ -22,6 +23,7 @@ public class Data {
 	private static Map<String, Actor> actors = new HashMap<String, Actor>();
 	private static Map<String, LinkedObject> linkedObjects = new HashMap<String, LinkedObject>();
 	private static Map<String, StatsItem> items = new HashMap<String, StatsItem>();
+	private static Map<String, LootTable> lootTables = new HashMap<String, LootTable>();
 	private static Map<String, Topic> topics = new HashMap<String, Topic>();
 	private static Set<String> knowledge = new HashSet<String>();
 	private static Map<String, Faction> factions = new HashMap<String, Faction>();
@@ -87,6 +89,17 @@ public class Data {
 	
 	public static StatsItem getItem(String id) {
 		return items.get(id);
+	}
+	
+	public static void addLootTable(String id, LootTable value) {
+		if(lootTables.containsKey(id)) {
+			System.out.println("WARNING - Adding loot table with existing ID: " + id);
+		}
+		lootTables.put(id, value);
+	}
+	
+	public static LootTable getLootTable(String id) {
+		return lootTables.get(id);
 	}
 	
 	public static void addTopic(String id, Topic value) {
