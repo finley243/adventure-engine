@@ -49,11 +49,18 @@ public class Actor implements Noun, Physical {
 		// AGILITY
 	}
 	
+	public enum BehaviorState {
+		IDLE, COMBAT
+	}
+	
+	public enum IdleType {
+		FIXED, WANDER, PATH
+	}
+	
 	private StatsActor stats;
 	private String ID;
 	private Area area;
 	private String topicID;
-	private Set<CombatTarget> combatTargets;
 	private int HP;
 	private boolean isDead;
 	private boolean isUnconscious;
@@ -66,6 +73,9 @@ public class Actor implements Noun, Physical {
 	private int money;
 	private UsableObject usingObject;
 	private Inventory tradeInventory;
+	private Set<CombatTarget> combatTargets;
+	private BehaviorState behaviorState;
+	private IdleType idleType;
 	
 	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean startDead) {
 		this.ID = ID;
@@ -272,6 +282,15 @@ public class Actor implements Noun, Physical {
 	
 	public boolean isInCombat() {
 		return combatTargets.size() > 0;
+	}
+	
+	public boolean hasMeleeTargets() {
+		for(CombatTarget target : combatTargets) {
+			if(target.getActor().getArea() == this.getArea()) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public boolean isTarget(Actor target) {

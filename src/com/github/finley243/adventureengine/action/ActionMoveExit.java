@@ -18,6 +18,10 @@ public class ActionMoveExit implements Action {
 		this.exit = exit;
 	}
 	
+	public Area getArea() {
+		return exit.getLinkedArea();
+	}
+	
 	@Override
 	public void choose(Actor subject) {
 		Area area = exit.getLinkedArea();

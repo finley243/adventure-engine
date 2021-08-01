@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.actor;
 public class CombatTarget {
 
 	/** Number of turns it takes for a combat target to be removed if they are not visible */
-	private static final int TURNS_BEFORE_END_COMBAT = 4;
+	private static final int TURNS_BEFORE_END_COMBAT = 5;
 	
 	private Actor actor;
 	private int turnsUntilRemove;
@@ -27,6 +27,10 @@ public class CombatTarget {
 	
 	public Actor getActor() {
 		return actor;
+	}
+	
+	public boolean shouldPursue(Actor subject) {
+		return true;
 	}
 	
 	@Override

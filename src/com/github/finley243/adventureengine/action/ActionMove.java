@@ -17,6 +17,10 @@ public class ActionMove implements Action {
 		this.area = area;
 	}
 	
+	public Area getArea() {
+		return area;
+	}
+	
 	@Override
 	public void choose(Actor subject) {
 		subject.move(area);

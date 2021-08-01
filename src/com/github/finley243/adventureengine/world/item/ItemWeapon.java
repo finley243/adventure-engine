@@ -33,6 +33,10 @@ public class ItemWeapon extends Item {
 		return stats.getID();
 	}
 	
+	public boolean isMelee() {
+		return !stats.getType().isRanged;
+	}
+	
 	public int getDamage() {
 		return stats.getDamage();
 	}

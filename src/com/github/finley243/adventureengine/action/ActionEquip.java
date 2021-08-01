@@ -12,6 +12,9 @@ import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ActionEquip implements Action {
 
+	public static final float SUBOPTIMAL_WEAPON_UTILITY = 0.8f;
+	public static final float OPTIMAL_WEAPON_UTILITY = 1.0f;
+	
 	private ItemWeapon item;
 	
 	public ActionEquip(ItemWeapon item) {
@@ -34,7 +37,15 @@ public class ActionEquip implements Action {
 	@Override
 	public float utility(Actor subject) {
 		if(!subject.isInCombat()) return 0;
-		return 1;
+		if(item.isMelee()) {
+			if(subject.hasMeleeTargets()) {
+				return OPTIMAL_WEAPON_UTILITY;
+			} else {
+				return SUBOPTIMAL_WEAPON_UTILITY;
+			}
+		} else {
+			return OPTIMAL_WEAPON_UTILITY;
+		}
 	}
 	
 	@Override

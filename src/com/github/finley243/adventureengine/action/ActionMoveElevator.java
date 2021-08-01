@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 
 public class ActionMoveElevator implements Action {
@@ -18,6 +19,10 @@ public class ActionMoveElevator implements Action {
 	public ActionMoveElevator(ObjectElevator elevator, ObjectElevator destination) {
 		this.elevator = elevator;
 		this.destination = destination;
+	}
+	
+	public Area getArea() {
+		return destination.getArea();
 	}
 	
 	@Override
