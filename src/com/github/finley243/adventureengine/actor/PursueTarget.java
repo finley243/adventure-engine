@@ -10,14 +10,16 @@ public class PursueTarget {
 	private float targetUtility;
 	private List<Area> path;
 	private int pathIndex;
+	private boolean markForRemoval;
 	
 	public PursueTarget(Area targetArea, float targetUtility) {
 		this.targetArea = targetArea;
 		this.targetUtility = targetUtility;
+		markForRemoval = false;
 	}
 	
 	public void update(Actor subject) {
-		if(path == null) {
+		if(path == null || path.get(path.size() - 1) != targetArea) {
 			path = Pathfinder.findPath(subject.getArea(), targetArea);
 			pathIndex = 0;
 		}
@@ -36,12 +38,24 @@ public class PursueTarget {
 		return targetArea;
 	}
 	
+	public void setTargetArea(Area area) {
+		targetArea = area;
+	}
+	
 	public float getTargetUtility() {
 		return targetUtility;
 	}
 	
+	public void setTargetUtility(float utility) {
+		targetUtility = utility;
+	}
+	
+	public void markForRemoval() {
+		markForRemoval = true;
+	}
+	
 	public boolean shouldRemove() {
-		return pathIndex == path.size() - 1;
+		return markForRemoval || pathIndex == path.size() - 1;
 	}
 	
 	public boolean isOnPath(Area area) {

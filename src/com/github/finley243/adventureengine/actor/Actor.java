@@ -305,6 +305,10 @@ public class Actor implements Noun, Physical {
 		pursueTargets.add(new PursueTarget(area, utility));
 	}
 	
+	public void addPursueTarget(PursueTarget target) {
+		pursueTargets.add(target);
+	}
+	
 	public float getMovementUtilityRank(Area area) {
 		if(pursueTargets.isEmpty()) return 0.0f;
 		float utility = 0.0f;
@@ -428,7 +432,7 @@ public class Actor implements Noun, Physical {
 		Iterator<CombatTarget> itr = combatTargets.iterator();
 		while(itr.hasNext()) {
 			CombatTarget target = itr.next();
-			target.update(canSee(target.getTargetActor()));
+			target.update(this);
 			if(target.shouldRemove()) {
 				itr.remove();
 			}
@@ -446,7 +450,7 @@ public class Actor implements Noun, Physical {
 		}
 	}
 	
-	private boolean canSee(Actor actor) {
+	public boolean canSee(Actor actor) {
 		if(!getArea().getRoom().getActors().contains(actor)) {
 			return false;
 		} else if(actor.isInCover() && !getArea().getActors().contains(actor)) {

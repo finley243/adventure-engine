@@ -3,34 +3,41 @@ package com.github.finley243.adventureengine.actor;
 public class CombatTarget {
 
 	/** Number of turns it takes for a combat target to be removed if they are not visible */
-	private static final int TURNS_BEFORE_END_COMBAT = 5;
+	public static final int TURNS_BEFORE_END_COMBAT = 5;
+	public static final float PURSUE_TARGET_UTILITY = 0.7f;
 	
 	private Actor targetActor;
 	private int turnsUntilRemove;
+	private PursueTarget pursueTarget;
 	
 	public CombatTarget(Actor actor) {
 		this.targetActor = actor;
 		this.turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 	}
 	
-	public void update(boolean isVisible) {
-		if(isVisible) {
+	public void update(Actor subject) {
+		if(pursueTarget == null) {
+			pursueTarget = new PursueTarget(targetActor.getArea(), PURSUE_TARGET_UTILITY);
+			subject.addPursueTarget(pursueTarget);
+		}
+		pursueTarget.setTargetArea(targetActor.getArea());
+		if(subject.canSee(targetActor)) {
 			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
+			pursueTarget.setTargetArea(targetActor.getArea());
 		} else {
 			turnsUntilRemove--;
+		}
+		if(targetActor.isDead()) {
+			pursueTarget.markForRemoval();
 		}
 	}
 	
 	public boolean shouldRemove() {
-		return turnsUntilRemove <= 0;
+		return targetActor.isDead() || turnsUntilRemove <= 0;
 	}
 	
 	public Actor getTargetActor() {
 		return targetActor;
-	}
-	
-	public boolean shouldPursue(Actor subject) {
-		return true;
 	}
 	
 	@Override
