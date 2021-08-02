@@ -5,11 +5,11 @@ public class CombatTarget {
 	/** Number of turns it takes for a combat target to be removed if they are not visible */
 	private static final int TURNS_BEFORE_END_COMBAT = 5;
 	
-	private Actor actor;
+	private Actor targetActor;
 	private int turnsUntilRemove;
 	
 	public CombatTarget(Actor actor) {
-		this.actor = actor;
+		this.targetActor = actor;
 		this.turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 	}
 	
@@ -25,8 +25,8 @@ public class CombatTarget {
 		return turnsUntilRemove <= 0;
 	}
 	
-	public Actor getActor() {
-		return actor;
+	public Actor getTargetActor() {
+		return targetActor;
 	}
 	
 	public boolean shouldPursue(Actor subject) {
@@ -38,13 +38,13 @@ public class CombatTarget {
 		if(!(other instanceof CombatTarget)) {
 			return false;
 		} else {
-			return this.getActor().equals(((CombatTarget) other).getActor());
+			return this.getTargetActor().equals(((CombatTarget) other).getTargetActor());
 		}
 	}
 	
 	@Override
 	public int hashCode() {
-		return getActor().hashCode();
+		return getTargetActor().hashCode();
 	}
 	
 }

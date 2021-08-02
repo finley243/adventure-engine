@@ -11,6 +11,8 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionMove implements Action {
 	
+	public static final float MOVE_UTILITY_MULTIPLIER = 0.7f;
+	
 	private Area area;
 	
 	public ActionMove(Area area) {
@@ -41,7 +43,7 @@ public class ActionMove implements Action {
 	
 	@Override
 	public float utility(Actor subject) {
-		return 0.0f;
+		return subject.getMovementUtilityRank(area) * MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override

@@ -140,4 +140,9 @@ public class Area implements Noun {
 		return getName();
 	}
 	
+	@Override
+	public int hashCode() {
+		return ID.hashCode();
+	}
+	
 }

@@ -81,8 +81,8 @@ public class Game {
 		
 		player.inventory().addItem(ItemFactory.create("light_pistol"));
 		//player.inventory().addItem(ItemFactory.create("baseball_bat"));
-		//stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
-		stratisReceptionist.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
+		stratisReceptionist.inventory().addItem(ItemFactory.create("baseball_bat"));
+		//stratisReceptionist.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
 		
 		startGameLoop();
 	}

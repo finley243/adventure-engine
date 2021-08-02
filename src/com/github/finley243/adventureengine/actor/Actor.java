@@ -50,11 +50,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public enum BehaviorState {
-		IDLE, COMBAT
-	}
-	
-	public enum IdleType {
-		FIXED, WANDER, PATH
+		STATIONARY, WANDER, PATROL, ATTACK, PURSUE
 	}
 	
 	private StatsActor stats;
@@ -74,8 +70,7 @@ public class Actor implements Noun, Physical {
 	private UsableObject usingObject;
 	private Inventory tradeInventory;
 	private Set<CombatTarget> combatTargets;
-	private BehaviorState behaviorState;
-	private IdleType idleType;
+	private Set<PursueTarget> pursueTargets;
 	
 	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean startDead) {
 		this.ID = ID;
@@ -83,6 +78,7 @@ public class Actor implements Noun, Physical {
 		this.stats = stats;
 		this.topicID = topicID;
 		this.combatTargets = new HashSet<CombatTarget>();
+		this.pursueTargets = new HashSet<PursueTarget>();
 		this.isDead = startDead;
 		this.isUnconscious = startDead;
 		if(!startDead) {
@@ -286,19 +282,40 @@ public class Actor implements Noun, Physical {
 	
 	public boolean hasMeleeTargets() {
 		for(CombatTarget target : combatTargets) {
-			if(target.getActor().getArea() == this.getArea()) {
+			if(target.getTargetActor().getArea() == this.getArea()) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public boolean isTarget(Actor target) {
-		return combatTargets.contains(new CombatTarget(target));
+	public boolean isCombatTarget(Actor actor) {
+		return combatTargets.contains(new CombatTarget(actor));
 	}
 	
-	public void addTarget(Actor target) {
-		combatTargets.add(new CombatTarget(target));
+	public void addCombatTarget(Actor actor) {
+		combatTargets.add(new CombatTarget(actor));
+	}
+	
+	public boolean isPursueTarget(Area area) {
+		return pursueTargets.contains(new PursueTarget(area, 1.0f));
+	}
+	
+	public void addPursueTarget(Area area, float utility) {
+		pursueTargets.add(new PursueTarget(area, utility));
+	}
+	
+	public float getMovementUtilityRank(Area area) {
+		if(pursueTargets.isEmpty()) return 0.0f;
+		float utility = 0.0f;
+		for(PursueTarget target : pursueTargets) {
+			if(target.isOnPath(area)) {
+				// Temporary calculation, ignores distance
+				utility += 1.0f;
+				//utility += 1.0f / ((float) target.getDistance());
+			}
+		}
+		return utility / pursueTargets.size();
 	}
 
 	@Override
@@ -361,6 +378,7 @@ public class Actor implements Noun, Physical {
 		if(isDead) return;
 		updateEffects();
 		updateCombatTargets();
+		updatePursueTargets();
 		actionPoints = stats.getActionPoints();
 		while(actionPoints > -1) {
 			Action chosenAction = chooseAction();
@@ -410,7 +428,18 @@ public class Actor implements Noun, Physical {
 		Iterator<CombatTarget> itr = combatTargets.iterator();
 		while(itr.hasNext()) {
 			CombatTarget target = itr.next();
-			target.update(canSee(target.getActor()));
+			target.update(canSee(target.getTargetActor()));
+			if(target.shouldRemove()) {
+				itr.remove();
+			}
+		}
+	}
+	
+	private void updatePursueTargets() {
+		Iterator<PursueTarget> itr = pursueTargets.iterator();
+		while(itr.hasNext()) {
+			PursueTarget target = itr.next();
+			target.update(this);
 			if(target.shouldRemove()) {
 				itr.remove();
 			}

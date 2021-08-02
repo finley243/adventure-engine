@@ -39,7 +39,7 @@ public class ActionMoveExit implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return 0.0f;
+		return subject.getMovementUtilityRank(exit.getLinkedArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override

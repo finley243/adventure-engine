@@ -40,7 +40,7 @@ public class ActionMoveElevator implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return 0;
+		return subject.getMovementUtilityRank(destination.getArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override
