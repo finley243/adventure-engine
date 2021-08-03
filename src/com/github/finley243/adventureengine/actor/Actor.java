@@ -430,7 +430,7 @@ public class Actor implements Noun, Physical {
 	private void generateCombatTargets() {
 		for(Actor actor : getArea().getRoom().getActors()) {
 			if(!actor.isInCover()) {
-				if(actor.getFaction().getRelationTo(getFaction().getID()) == FactionRelation.ENEMY) {
+				if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.ENEMY) {
 					if(!isCombatTarget(actor)) {
 						addCombatTarget(actor);
 					}

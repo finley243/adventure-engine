@@ -78,10 +78,19 @@ public class Game {
 		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, stratisStaffFaction, 40, 3);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
+
+		HashMap<String, FactionRelation> enemyRelations = new HashMap<String, FactionRelation>();
+		enemyRelations.put("stratis_hotel_staff", FactionRelation.ENEMY);
+		Faction enemyFaction = new Faction("enemy", FactionRelation.NEUTRAL, enemyRelations);
+		Data.addFaction(enemyFaction.getID(), enemyFaction);
+		StatsActor enemyStats = new StatsActor("ganger", false, Pronoun.HE, enemyFaction, 40, 3);
+		Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", enemyStats, null);
+		Data.addActor(enemy.getID(), enemy);
+		enemy.inventory().addItem(ItemFactory.create("light_pistol"));
 		
 		player.inventory().addItem(ItemFactory.create("light_pistol"));
 		//player.inventory().addItem(ItemFactory.create("baseball_bat"));
-		stratisReceptionist.inventory().addItem(ItemFactory.create("baseball_bat"));
+		stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
 		//stratisReceptionist.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
 		
 		startGameLoop();

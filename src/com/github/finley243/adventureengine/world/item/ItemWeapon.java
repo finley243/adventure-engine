@@ -48,6 +48,10 @@ public class ItemWeapon extends Item {
 	public void reloadFull() {
 		ammo = stats.getClipSize();
 	}
+
+	public float getAmmoFraction() {
+		return ((float) ammo) / ((float) stats.getClipSize());
+	}
 	
 	public void consumeAmmo(int amount) {
 		ammo -= amount;
