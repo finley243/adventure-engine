@@ -294,7 +294,9 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void addCombatTarget(Actor actor) {
-		combatTargets.add(new CombatTarget(actor));
+		CombatTarget target = new CombatTarget(actor);
+		combatTargets.remove(target);
+		combatTargets.add(target);
 	}
 	
 	public boolean isPursueTarget(Area area) {
@@ -302,7 +304,9 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void addPursueTarget(Area area, float utility) {
-		pursueTargets.add(new PursueTarget(area, utility));
+		PursueTarget target = new PursueTarget(area, utility);
+		pursueTargets.remove(target);
+		pursueTargets.add(target);
 	}
 	
 	public void addPursueTarget(PursueTarget target) {
@@ -316,7 +320,6 @@ public class Actor implements Noun, Physical {
 			if(target.isOnPath(area)) {
 				// Temporary calculation, ignores distance
 				utility += 1.0f;
-				//utility += 1.0f / ((float) target.getDistance());
 			}
 		}
 		return utility / pursueTargets.size();
@@ -381,7 +384,9 @@ public class Actor implements Noun, Physical {
 	public void takeTurn() {
 		if(isDead) return;
 		updateEffects();
+		generateCombatTargets();
 		updateCombatTargets();
+		generatePursueTargets();
 		updatePursueTargets();
 		actionPoints = stats.getActionPoints();
 		while(actionPoints > -1) {
@@ -422,13 +427,19 @@ public class Actor implements Noun, Physical {
 		}
 	}
 	
-	private void updateCombatTargets() {
+	private void generateCombatTargets() {
 		for(Actor actor : getArea().getRoom().getActors()) {
-			if(actor.getFaction().getRelationTo(getFaction().getID()) == FactionRelation.ENEMY) {
-				CombatTarget newTarget = new CombatTarget(actor);
-				combatTargets.add(newTarget);
+			if(canSee(actor)) {
+				if(actor.getFaction().getRelationTo(getFaction().getID()) == FactionRelation.ENEMY) {
+					if(!isCombatTarget(actor)) {
+						addCombatTarget(actor);
+					}
+				}
 			}
 		}
+	}
+	
+	private void updateCombatTargets() {
 		Iterator<CombatTarget> itr = combatTargets.iterator();
 		while(itr.hasNext()) {
 			CombatTarget target = itr.next();
@@ -437,6 +448,10 @@ public class Actor implements Noun, Physical {
 				itr.remove();
 			}
 		}
+	}
+	
+	private void generatePursueTargets() {
+		
 	}
 	
 	private void updatePursueTargets() {
