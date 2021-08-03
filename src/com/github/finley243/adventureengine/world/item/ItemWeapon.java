@@ -76,15 +76,15 @@ public class ItemWeapon extends Item {
 					if(!target.isIncapacitated() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && !subject.isInCover() && ammo > 0) {
 						actions.add(new ActionAttackRanged(this, target));
 					}
-					if(ammo < stats.getClipSize()) { // Add check to see if subject has ammo
-						actions.add(new ActionReload(this));
-					}
 				} else { // Melee
 					if(!target.isIncapacitated()) {
 						actions.add(new ActionAttackMelee(this, target));
 					}
 				}
 			}
+		}
+		if(ammo < stats.getClipSize()) { // Add check to see if subject has ammo
+			actions.add(new ActionReload(this));
 		}
 		actions.add(new ActionUnequip(this));
 		return actions;
