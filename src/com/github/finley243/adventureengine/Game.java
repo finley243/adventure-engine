@@ -68,14 +68,16 @@ public class Game {
 		
 		Faction playerFaction = new Faction("player", FactionRelation.NEUTRAL, new HashMap<String, FactionRelation>());
 		Data.addFaction(playerFaction.getID(), playerFaction);
-		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, playerFaction, 50, 3);
+		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, playerFaction, 50, 2);
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
 		player.adjustMoney(320);
 		Data.addActor(player.getID(), player);
 		
-		Faction stratisStaffFaction = new Faction("stratis_hotel_staff", FactionRelation.NEUTRAL, new HashMap<String, FactionRelation>());
+		HashMap<String, FactionRelation> stratisRelations = new HashMap<String, FactionRelation>();
+		stratisRelations.put("enemy", FactionRelation.ENEMY);
+		Faction stratisStaffFaction = new Faction("stratis_hotel_staff", FactionRelation.NEUTRAL, stratisRelations);
 		Data.addFaction(stratisStaffFaction.getID(), stratisStaffFaction);
-		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, stratisStaffFaction, 40, 3);
+		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, stratisStaffFaction, 40, 2);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 
@@ -83,7 +85,7 @@ public class Game {
 		enemyRelations.put("stratis_hotel_staff", FactionRelation.ENEMY);
 		Faction enemyFaction = new Faction("enemy", FactionRelation.NEUTRAL, enemyRelations);
 		Data.addFaction(enemyFaction.getID(), enemyFaction);
-		StatsActor enemyStats = new StatsActor("ganger", false, Pronoun.HE, enemyFaction, 40, 3);
+		StatsActor enemyStats = new StatsActor("ganger", false, Pronoun.HE, enemyFaction, 40, 2);
 		Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", enemyStats, null);
 		Data.addActor(enemy.getID(), enemy);
 		enemy.inventory().addItem(ItemFactory.create("light_pistol"));

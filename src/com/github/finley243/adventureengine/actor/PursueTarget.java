@@ -61,6 +61,7 @@ public class PursueTarget {
 	}
 	
 	public boolean isOnPath(Area area) {
+		if(pathIndex + 1 >= path.size()) return false;
 		return path.get(pathIndex + 1) == area;
 	}
 	

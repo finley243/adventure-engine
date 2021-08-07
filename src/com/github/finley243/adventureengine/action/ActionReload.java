@@ -49,7 +49,7 @@ public class ActionReload implements Action {
 
 	@Override
 	public int actionPoints() {
-		return 2;
+		return 1;
 	}
 
 	@Override
