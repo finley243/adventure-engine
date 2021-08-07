@@ -20,7 +20,6 @@ public class CombatTarget {
 			pursueTarget = new PursueTarget(targetActor.getArea(), PURSUE_TARGET_UTILITY);
 			subject.addPursueTarget(pursueTarget);
 		}
-		pursueTarget.setTargetArea(targetActor.getArea());
 		if(subject.canSee(targetActor)) {
 			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 			pursueTarget.setTargetArea(targetActor.getArea());
