@@ -300,11 +300,11 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public boolean isPursueTarget(Area area) {
-		return pursueTargets.contains(new PursueTarget(area, 1.0f));
+		return pursueTargets.contains(new PursueTarget(area, 1.0f, false));
 	}
 	
 	public void addPursueTarget(Area area, float utility) {
-		PursueTarget target = new PursueTarget(area, utility);
+		PursueTarget target = new PursueTarget(area, utility, false);
 		pursueTargets.remove(target);
 		pursueTargets.add(target);
 	}

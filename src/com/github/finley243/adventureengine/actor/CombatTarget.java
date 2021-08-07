@@ -17,7 +17,7 @@ public class CombatTarget {
 	
 	public void update(Actor subject) {
 		if(pursueTarget == null) {
-			pursueTarget = new PursueTarget(targetActor.getArea(), PURSUE_TARGET_UTILITY);
+			pursueTarget = new PursueTarget(targetActor.getArea(), PURSUE_TARGET_UTILITY, true);
 			subject.addPursueTarget(pursueTarget);
 		}
 		if(subject.canSee(targetActor)) {
