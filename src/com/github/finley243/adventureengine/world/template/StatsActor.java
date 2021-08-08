@@ -1,9 +1,12 @@
 package com.github.finley243.adventureengine.world.template;
 
+import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 
 public class StatsActor {
+	
+	private String ID;
 	
 	private String name;
 	private boolean isProperName;
@@ -14,13 +17,18 @@ public class StatsActor {
 	private int maxHP;
 	private int actionPoints;
 	
-	public StatsActor(String name, boolean isProperName, Pronoun pronoun, Faction faction, int maxHP, int actionPoints) {
+	public StatsActor(String ID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, int actionPoints) {
+		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
 		this.pronoun = pronoun;
-		this.faction = faction;
+		this.faction = Data.getFaction(faction);
 		this.maxHP = maxHP;
 		this.actionPoints = actionPoints;
+	}
+	
+	public String getID() {
+		return ID;
 	}
 	
 	public String getName() {

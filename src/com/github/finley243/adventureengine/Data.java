@@ -14,6 +14,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.object.LinkedObject;
+import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.github.finley243.adventureengine.world.template.StatsItem;
 
 public class Data {
@@ -21,6 +22,7 @@ public class Data {
 	private static Map<String, Area> areas = new HashMap<String, Area>();
 	private static Map<String, Room> rooms = new HashMap<String, Room>();
 	private static Map<String, Actor> actors = new HashMap<String, Actor>();
+	private static Map<String, StatsActor> actorStats = new HashMap<String, StatsActor>();
 	private static Map<String, LinkedObject> linkedObjects = new HashMap<String, LinkedObject>();
 	private static Map<String, StatsItem> items = new HashMap<String, StatsItem>();
 	private static Map<String, LootTable> lootTables = new HashMap<String, LootTable>();
@@ -67,6 +69,17 @@ public class Data {
 	
 	public static Collection<Actor> getActors() {
 		return actors.values();
+	}
+	
+	public static void addActorStats(String id, StatsActor value) {
+		if(actors.containsKey(id)) {
+			System.out.println("WARNING - Adding actor stats with existing ID: " + id);
+		}
+		actorStats.put(id, value);
+	}
+	
+	public static StatsActor getActorStats(String id) {
+		return actorStats.get(id);
 	}
 	
 	public static void addLinkedObject(String id, LinkedObject value) {

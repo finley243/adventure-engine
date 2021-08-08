@@ -1,0 +1,23 @@
+<actors>
+    <actor id="player">
+        <name proper="true">PLAYER</name>
+        <pronoun>YOU</pronoun>
+        <faction>player</faction>
+        <hp>50</hp>
+        <ap>2</ap>
+    </actor>
+    <actor id="stratisReceptionist">
+        <name proper="false">receptionist</name>
+        <pronoun>HE</pronoun>
+        <faction>stratis_hotel_staff</faction>
+        <hp>40</hp>
+        <ap>2</ap>
+    </actor>
+    <actor id="enemy">
+        <name proper="false">ganger</name>
+        <pronoun>HE</pronoun>
+        <faction>enemy</faction>
+        <hp>40</hp>
+        <ap>2</ap>
+    </actor>
+</actors>

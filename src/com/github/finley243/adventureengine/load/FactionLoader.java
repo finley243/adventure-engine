@@ -29,11 +29,11 @@ public class FactionLoader {
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.parse(file);
 				Element rootElement = document.getDocumentElement();
-				NodeList items = rootElement.getElementsByTagName("faction");
-				for(int i = 0; i < items.getLength(); i++) {
-					if(items.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						Element itemElement = (Element) items.item(i);
-						Faction faction = loadFaction(itemElement);
+				NodeList factions = rootElement.getElementsByTagName("faction");
+				for(int i = 0; i < factions.getLength(); i++) {
+					if(factions.item(i).getNodeType() == Node.ELEMENT_NODE) {
+						Element factionElement = (Element) factions.item(i);
+						Faction faction = loadFaction(factionElement);
 						Data.addFaction(faction.getID(), faction);
 					}
 				}

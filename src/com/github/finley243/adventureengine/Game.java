@@ -17,6 +17,7 @@ import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
+import com.github.finley243.adventureengine.load.ActorLoader;
 import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.FactionLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;
@@ -64,25 +65,23 @@ public class Game {
 		
 		Phrases.load();
 		ItemLoader.loadItems(new File(GAMEFILES + ITEM_DIRECTORY));
-		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
+		LootTableLoader.loadTables(new File(GAMEFILES + LOOT_TABLE_DIRECTORY));
 		FactionLoader.loadFactions(new File(GAMEFILES + FACTION_DIRECTORY));
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
-		LootTableLoader.loadTables(new File(GAMEFILES + LOOT_TABLE_DIRECTORY));
+		ActorLoader.loadActors(new File(GAMEFILES + ACTOR_DIRECTORY));
+		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		
-		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, Data.getFaction("player"), 50, 2);
-		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
+		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", Data.getActorStats("player"));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
 		player.inventory().addItem(ItemFactory.create("light_pistol"));
 		
-		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, Data.getFaction("stratis_hotel_staff"), 40, 2);
-		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
+		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", Data.getActorStats("stratisReceptionist"), "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		//stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
 		stratisReceptionist.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
 		
-		StatsActor enemyStats = new StatsActor("ganger", false, Pronoun.HE, Data.getFaction("enemy"), 40, 2);
-		Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", enemyStats, null);
+		Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", Data.getActorStats("enemy"), null);
 		Data.addActor(enemy.getID(), enemy);
 		//enemy.inventory().addItem(ItemFactory.create("light_pistol"));
 		enemy.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
