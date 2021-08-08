@@ -74,17 +74,12 @@ public class Game {
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", Data.getActorStats("player"));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
-		player.inventory().addItem(ItemFactory.create("light_pistol"));
 		
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", Data.getActorStats("stratisReceptionist"), "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
-		//stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
-		stratisReceptionist.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
 		
 		Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", Data.getActorStats("enemy"), null);
 		Data.addActor(enemy.getID(), enemy);
-		//enemy.inventory().addItem(ItemFactory.create("light_pistol"));
-		enemy.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
 		
 		startGameLoop();
 	}

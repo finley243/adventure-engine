@@ -90,6 +90,9 @@ public class Actor implements Noun, Physical {
 			this.attributes.put(attribute, new int[] {1, 0});
 		}
 		this.effects = new ArrayList<Effect>();
+		if(stats.getLootTable() != null) {
+			inventory.addItems(Data.getLootTable(stats.getLootTable()).generateItems());
+		}
 	}
 	
 	public String getID() {

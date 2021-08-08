@@ -17,7 +17,9 @@ public class StatsActor {
 	private int maxHP;
 	private int actionPoints;
 	
-	public StatsActor(String ID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, int actionPoints) {
+	private String lootTable;
+	
+	public StatsActor(String ID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, int actionPoints, String lootTable) {
 		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
@@ -25,6 +27,7 @@ public class StatsActor {
 		this.faction = Data.getFaction(faction);
 		this.maxHP = maxHP;
 		this.actionPoints = actionPoints;
+		this.lootTable = lootTable;
 	}
 	
 	public String getID() {
@@ -53,6 +56,10 @@ public class StatsActor {
 	
 	public int getActionPoints() {
 		return actionPoints;
+	}
+	
+	public String getLootTable() {
+		return lootTable;
 	}
 	
 }

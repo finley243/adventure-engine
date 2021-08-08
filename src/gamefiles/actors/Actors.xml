@@ -5,6 +5,7 @@
         <faction>player</faction>
         <hp>50</hp>
         <ap>2</ap>
+        <loottable>weapon_basic</loottable>
     </actor>
     <actor id="stratisReceptionist">
         <name proper="false">receptionist</name>
@@ -12,6 +13,7 @@
         <faction>stratis_hotel_staff</faction>
         <hp>40</hp>
         <ap>2</ap>
+        <loottable>weapon_basic</loottable>
     </actor>
     <actor id="enemy">
         <name proper="false">ganger</name>
@@ -19,5 +21,6 @@
         <faction>enemy</faction>
         <hp>40</hp>
         <ap>2</ap>
+        <loottable>weapon_basic</loottable>
     </actor>
 </actors>

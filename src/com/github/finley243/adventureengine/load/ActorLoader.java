@@ -48,7 +48,8 @@ public class ActorLoader {
 		String faction = LoadUtils.singleTag(actorElement, "faction", "default");
 		int hp = LoadUtils.singleTagInt(actorElement, "hp", 0);
 		int ap = LoadUtils.singleTagInt(actorElement, "ap", 0);
-		return new StatsActor(id, name, nameIsProper, pronoun, faction, hp, ap);
+		String lootTable = LoadUtils.singleTag(actorElement, "loottable", null);
+		return new StatsActor(id, name, nameIsProper, pronoun, faction, hp, ap, lootTable);
 	}
 	
 	private static Pronoun pronounTag(Element element, String name) {
