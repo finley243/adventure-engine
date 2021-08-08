@@ -63,7 +63,7 @@ public class MenuManager {
 		while(dialogueLoop) {
 			Game.EVENT_BUS.post(new RenderTextEvent(target.getName().toUpperCase()));
 			for(Line line : currentTopic.getLines()) {
-				if(line.shouldShow()) {
+				if(line.shouldShow(subject, target)) {
 					for(String text : line.getTextList()) {
 						Game.EVENT_BUS.post(new RenderTextEvent(text));
 					}

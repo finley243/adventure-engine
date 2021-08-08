@@ -1,16 +1,16 @@
 package com.github.finley243.adventureengine.dialogue;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
 
 public class Line {
     
-    private boolean hasTriggered;
+	private Set<String> hasTriggered;
 
     private List<String> textList;
     private Condition condition;
@@ -28,18 +28,19 @@ public class Line {
         this.once = once;
         this.exit = exit;
         this.redirectTopicId = redirectTopicId;
+        this.hasTriggered = new HashSet<String>();
     }
     
     public List<String> getTextList() {
     	return textList;
     }
     
-    public boolean shouldShow() {
-    	return (condition == null || condition.isMet(Data.getActor(Game.PLAYER_ACTOR))) && (!once || !hasTriggered);
+    public boolean shouldShow(Actor subject, Actor target) {
+    	return (condition == null || condition.isMet(subject)) && (!once || !hasTriggered.contains(target.getID()));
     }
     
     public void trigger(Actor subject, Actor target) {
-    	this.hasTriggered = true;
+    	hasTriggered.add(target.getID());
     	executeScripts(subject, target);
     }
     
