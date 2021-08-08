@@ -1,0 +1,19 @@
+<factions>
+    <faction id="player">
+        <default>NEUTRAL</default>
+    </faction>
+    <faction id="stratis_hotel_staff">
+        <default>NEUTRAL</default>
+        <relation>
+            <id>enemy</id>
+            <type>ENEMY</type>
+        </relation>
+    </faction>
+    <faction id="enemy">
+        <default>NEUTRAL</default>
+        <relation>
+            <id>stratis_hotel_staff</id>
+            <type>ENEMY</type>
+        </relation>
+    </faction>
+</factions>

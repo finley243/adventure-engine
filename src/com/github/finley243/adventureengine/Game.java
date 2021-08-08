@@ -18,6 +18,7 @@ import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.DialogueLoader;
+import com.github.finley243.adventureengine.load.FactionLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;
 import com.github.finley243.adventureengine.load.LootTableLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;
@@ -43,6 +44,7 @@ public class Game {
 	private static final String GAMEFILES = "src/gamefiles";
 	private static final String WORLD_DIRECTORY = "/world";
 	private static final String ACTOR_DIRECTORY = "/actors";
+	private static final String FACTION_DIRECTORY = "/factions";
 	private static final String ITEM_DIRECTORY = "/items";
 	private static final String DIALOGUE_DIRECTORY = "/dialogues";
 	private static final String LOOT_TABLE_DIRECTORY = "/loottables";
@@ -63,32 +65,23 @@ public class Game {
 		Phrases.load();
 		ItemLoader.loadItems(new File(GAMEFILES + ITEM_DIRECTORY));
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
+		FactionLoader.loadFactions(new File(GAMEFILES + FACTION_DIRECTORY));
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		LootTableLoader.loadTables(new File(GAMEFILES + LOOT_TABLE_DIRECTORY));
 		
-		Faction playerFaction = new Faction("player", FactionRelation.NEUTRAL, new HashMap<String, FactionRelation>());
-		Data.addFaction(playerFaction.getID(), playerFaction);
-		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, playerFaction, 50, 2);
+		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, Data.getFaction("player"), 50, 2);
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
 		player.inventory().addItem(ItemFactory.create("light_pistol"));
 		
-		HashMap<String, FactionRelation> stratisRelations = new HashMap<String, FactionRelation>();
-		stratisRelations.put("enemy", FactionRelation.ENEMY);
-		Faction stratisStaffFaction = new Faction("stratis_hotel_staff", FactionRelation.NEUTRAL, stratisRelations);
-		Data.addFaction(stratisStaffFaction.getID(), stratisStaffFaction);
-		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, stratisStaffFaction, 40, 2);
+		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, Data.getFaction("stratis_hotel_staff"), 40, 2);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		//stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
 		stratisReceptionist.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
 		
-		HashMap<String, FactionRelation> enemyRelations = new HashMap<String, FactionRelation>();
-		enemyRelations.put("stratis_hotel_staff", FactionRelation.ENEMY);
-		Faction enemyFaction = new Faction("enemy", FactionRelation.NEUTRAL, enemyRelations);
-		Data.addFaction(enemyFaction.getID(), enemyFaction);
-		StatsActor enemyStats = new StatsActor("ganger", false, Pronoun.HE, enemyFaction, 40, 2);
+		StatsActor enemyStats = new StatsActor("ganger", false, Pronoun.HE, Data.getFaction("enemy"), 40, 2);
 		Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", enemyStats, null);
 		Data.addActor(enemy.getID(), enemy);
 		//enemy.inventory().addItem(ItemFactory.create("light_pistol"));
