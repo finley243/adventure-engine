@@ -10,6 +10,7 @@
                 <link>stratis_hotel_lobby_elevators</link>
             </links>
             <objects></objects>
+            <actors></actors>
         </area>
         <area id="stratis_hotel_lobby_desk">
             <name proper="false" prox="true">reception desk</name>
@@ -19,6 +20,12 @@
                 <link>stratis_hotel_lobby_elevators</link>
             </links>
             <objects></objects>
+            <actors>
+                <actor id="stratis_receptionist">
+                    <stats>stratis_receptionist</stats>
+                    <topic>stratis_receptionist_start</topic>
+                </actor>
+            </actors>
         </area>
         <area id="stratis_hotel_lobby_seating">
             <name proper="false" prox="true">seating area</name>
@@ -35,6 +42,7 @@
                     <name>pillar</name>
                 </object>
             </objects>
+            <actors></actors>
         </area>
         <area id="stratis_hotel_lobby_elevators">
             <name proper="false" prox="true">elevators</name>
@@ -61,6 +69,11 @@
                     </lines>
                 </object>
             </objects>
+            <actors>
+                <actor id="enemy">
+                    <stats>enemy</stats>
+                </actor>
+            </actors>
         </area>
     </room>
     <room id="stratis_hotel_rooms_corridor">
@@ -88,6 +101,7 @@
                     </items>
                 </object>
             </objects>
+            <actors></actors>
         </area>
         <area id="stratis_hotel_corridor_main">
             <name proper="false" prox="false">corridor</name>
@@ -101,6 +115,7 @@
                     <key>stratis_room_key</key>
                 </object>
             </objects>
+            <actors></actors>
         </area>
     </room>
     <room id="stratis_hotel_room">
@@ -118,6 +133,7 @@
                     <item>baseball_bat</item>
                 </object>
             </objects>
+            <actors></actors>
         </area>
     </room>
 </rooms>

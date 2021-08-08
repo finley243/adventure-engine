@@ -30,10 +30,6 @@ public class Data {
 	private static Set<String> knowledge = new HashSet<String>();
 	private static Map<String, Faction> factions = new HashMap<String, Faction>();
 	
-	public static ActorPlayer getPlayer() {
-		return (ActorPlayer) actors.get(Game.PLAYER_ACTOR);
-	}
-	
 	public static void addArea(String id, Area value) {
 		if(areas.containsKey(id)) {
 			System.out.println("WARNING - Adding area with existing ID: " + id);

@@ -71,15 +71,15 @@ public class Game {
 		ActorLoader.loadActors(new File(GAMEFILES + ACTOR_DIRECTORY));
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		
-		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", Data.getActorStats("player"));
+		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, Data.getArea("stratis_hotel_lobby_entry"), Data.getActorStats("player"));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
 		
-		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", Data.getActorStats("stratisReceptionist"), "stratis_receptionist_start");
-		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
+		//Actor stratisReceptionist = ActorFactory.create("stratis_receptionist", "stratis_hotel_lobby_desk", Data.getActorStats("stratisReceptionist"), "stratis_receptionist_start");
+		//Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
 		
-		Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", Data.getActorStats("enemy"), null);
-		Data.addActor(enemy.getID(), enemy);
+		//Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", Data.getActorStats("enemy"), null);
+		//Data.addActor(enemy.getID(), enemy);
 		
 		startGameLoop();
 	}
@@ -95,13 +95,13 @@ public class Game {
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
 		EVENT_BUS.post(new RenderLocationEvent());
-		Data.getPlayer().updateRoomDescription();
+		((ActorPlayer) Data.getActor(PLAYER_ACTOR)).updateRoomDescription();
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();
 			}
 		}
-		Data.getPlayer().takeTurn();
+		((ActorPlayer) Data.getActor(PLAYER_ACTOR)).takeTurn();
 		sleep(800);
 		EVENT_BUS.post(new TextClearEvent());
 	}
@@ -122,7 +122,7 @@ public class Game {
 	
 	@Subscribe
 	private void onRenderLocationEvent(RenderLocationEvent event) {
-		ActorPlayer player = Data.getPlayer();
+		ActorPlayer player = ((ActorPlayer) Data.getActor(PLAYER_ACTOR));
 		String locationName = player.getArea().getName();
 		String roomName = player.getArea().getRoom().getName();
 		Game.EVENT_BUS.post(new RenderTextEvent("------------------------------"));

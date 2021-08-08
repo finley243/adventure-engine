@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.LinkedObject;
@@ -27,6 +28,7 @@ import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.github.finley243.adventureengine.world.object.ObjectSign;
 import com.github.finley243.adventureengine.world.object.ObjectVendingMachine;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class WorldLoader {
@@ -107,6 +109,17 @@ public class WorldLoader {
 		for(WorldObject object : objectSet) {
 			object.setArea(area);
 		}
+		
+		Element actorsElement = (Element) areaElement.getElementsByTagName("actors").item(0);
+		NodeList actorElements = actorsElement.getElementsByTagName("actor");
+		for(int j = 0; j < actorElements.getLength(); j++) {
+			if(actorElements.item(j).getNodeType() == Node.ELEMENT_NODE) {
+				Element actorElement = (Element) actorElements.item(j);
+				Actor actor = loadActor(actorElement, area);
+				Data.addActor(actor.getID(), actor);
+			}
+		}
+		
 		return area;
 	}
 	
@@ -139,6 +152,14 @@ public class WorldLoader {
 			return ItemFactory.create(itemID);
 		}
 		return null;
+	}
+	
+	private static Actor loadActor(Element actorElement, Area area) {
+		String ID = actorElement.getAttribute("id");
+		String stats = LoadUtils.singleTag(actorElement, "stats", null);
+		String topicID = LoadUtils.singleTag(actorElement, "topic", null);
+		boolean startDead = LoadUtils.singleTagBoolean(actorElement, "startdead", false);
+		return ActorFactory.create(ID, area, Data.getActorStats(stats), topicID);
 	}
 	
 }

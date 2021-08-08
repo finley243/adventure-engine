@@ -72,9 +72,9 @@ public class Actor implements Noun, Physical {
 	private Set<CombatTarget> combatTargets;
 	private Set<PursueTarget> pursueTargets;
 	
-	public Actor(String ID, String areaID, StatsActor stats, String topicID, boolean startDead) {
+	public Actor(String ID, Area area, StatsActor stats, String topicID, boolean startDead) {
 		this.ID = ID;
-		this.move(Data.getArea(areaID));
+		this.move(area);
 		this.stats = stats;
 		this.topicID = topicID;
 		this.combatTargets = new HashSet<CombatTarget>();

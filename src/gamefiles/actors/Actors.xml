@@ -7,7 +7,7 @@
         <ap>2</ap>
         <loottable>weapon_basic</loottable>
     </actor>
-    <actor id="stratisReceptionist">
+    <actor id="stratis_receptionist">
         <name proper="false">receptionist</name>
         <pronoun>HE</pronoun>
         <faction>stratis_hotel_staff</faction>
