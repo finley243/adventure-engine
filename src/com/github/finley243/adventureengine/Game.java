@@ -70,8 +70,9 @@ public class Game {
 		Data.addFaction(playerFaction.getID(), playerFaction);
 		StatsActor playerStats = new StatsActor("PLAYER", true, Pronoun.YOU, playerFaction, 50, 2);
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, "stratis_hotel_lobby_entry", playerStats);
-		player.adjustMoney(320);
 		Data.addActor(player.getID(), player);
+		player.adjustMoney(320);
+		player.inventory().addItem(ItemFactory.create("light_pistol"));
 		
 		HashMap<String, FactionRelation> stratisRelations = new HashMap<String, FactionRelation>();
 		stratisRelations.put("enemy", FactionRelation.ENEMY);
@@ -80,7 +81,9 @@ public class Game {
 		StatsActor genericPassiveStats = new StatsActor("receptionist", false, Pronoun.HE, stratisStaffFaction, 40, 2);
 		Actor stratisReceptionist = ActorFactory.create("stratisReceptionist", "stratis_hotel_lobby_desk", genericPassiveStats, "stratis_receptionist_start");
 		Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
-
+		//stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
+		stratisReceptionist.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
+		
 		HashMap<String, FactionRelation> enemyRelations = new HashMap<String, FactionRelation>();
 		enemyRelations.put("stratis_hotel_staff", FactionRelation.ENEMY);
 		Faction enemyFaction = new Faction("enemy", FactionRelation.NEUTRAL, enemyRelations);
@@ -88,12 +91,8 @@ public class Game {
 		StatsActor enemyStats = new StatsActor("ganger", false, Pronoun.HE, enemyFaction, 40, 2);
 		Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", enemyStats, null);
 		Data.addActor(enemy.getID(), enemy);
-		enemy.inventory().addItem(ItemFactory.create("light_pistol"));
-		
-		player.inventory().addItem(ItemFactory.create("light_pistol"));
-		//player.inventory().addItem(ItemFactory.create("baseball_bat"));
-		stratisReceptionist.inventory().addItem(ItemFactory.create("light_pistol"));
-		//stratisReceptionist.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
+		//enemy.inventory().addItem(ItemFactory.create("light_pistol"));
+		enemy.inventory().addItems(Data.getLootTable("weapon_basic").generateItems());
 		
 		startGameLoop();
 	}
