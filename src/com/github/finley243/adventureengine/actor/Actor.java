@@ -34,6 +34,8 @@ import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class Actor implements Noun, Physical {
 	
+	public static final int ACTIONS_PER_TURN = 2;
+	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
 	}
@@ -377,12 +379,6 @@ public class Actor implements Noun, Physical {
 			actions.addAll(item.inventoryActions(this));
 		}
 		actions.add(new ActionWait());
-		/*Iterator<Action> itr = actions.iterator();
-		while(itr.hasNext()) {
-			if(itr.next().actionPoints() > actionPoints) {
-				itr.remove();
-			}
-		}*/
 		return actions;
 	}
 	
@@ -393,18 +389,11 @@ public class Actor implements Noun, Physical {
 		updateCombatTargets();
 		generatePursueTargets();
 		updatePursueTargets();
-		actionPoints = stats.getActionPoints();
-		/*while(actionPoints > -1) {
-			Action chosenAction = chooseAction();
-			actionPoints -= chosenAction.actionPoints();
-			chosenAction.choose(this);
-		}*/
-		this.actionPoints = 2;
+		this.actionPoints = ACTIONS_PER_TURN;
 		int repeatActionsRemaining = 0;
 		Action repeatAction = null;
 		while(actionPoints > 0) {
-			System.out.println("Actions remaining: " + actionPoints);
-			System.out.println("Repeat actions remaining: " + repeatActionsRemaining);
+			Action chosenAction;
 			if(repeatActionsRemaining > 0) {
 				List<Action> repeatActions = new ArrayList<Action>();
 				for(Action action : availableActions()) {
@@ -412,19 +401,19 @@ public class Actor implements Noun, Physical {
 						repeatActions.add(action);
 					}
 				}
-				Action chosenAction = chooseAction(repeatActions);
+				chosenAction = chooseAction(repeatActions);
 				chosenAction.choose(this);
 				repeatActionsRemaining--;
 			} else {
-				Action chosenAction = chooseAction(availableActions());
+				chosenAction = chooseAction(availableActions());
 				if(chosenAction.actionCount() > 1) {
 					repeatActionsRemaining = chosenAction.actionCount() - 1;
 					repeatAction = chosenAction;
 				}
 				chosenAction.choose(this);
-				if(chosenAction.usesAction()) {
-					actionPoints--;
-				}
+			}
+			if(chosenAction.usesAction() && repeatActionsRemaining <= 0) {
+				actionPoints--;
 			}
 		}
 	}
