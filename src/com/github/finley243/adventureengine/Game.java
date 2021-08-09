@@ -2,16 +2,12 @@ package com.github.finley243.adventureengine;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
-import com.github.finley243.adventureengine.actor.Faction;
-import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.RenderLocationEvent;
@@ -23,7 +19,6 @@ import com.github.finley243.adventureengine.load.FactionLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;
 import com.github.finley243.adventureengine.load.LootTableLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;
-import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
@@ -32,8 +27,6 @@ import com.github.finley243.adventureengine.ui.GraphicalInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
-import com.github.finley243.adventureengine.world.template.ItemFactory;
-import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
