@@ -31,11 +31,6 @@ public class ActionWait implements Action {
 	public int actionPoints() {
 		return 0;
 	}
-
-	@Override
-	public String[] getMenuStructure() {
-		return new String[] {};
-	}
 	
 	@Override
 	public ActionLegality getLegality() {

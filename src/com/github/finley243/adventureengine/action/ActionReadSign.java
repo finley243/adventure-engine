@@ -10,7 +10,6 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.ObjectSign;
 
@@ -50,11 +49,6 @@ public class ActionReadSign implements Action {
 	@Override
 	public int actionPoints() {
 		return 0;
-	}
-	
-	@Override
-	public String[] getMenuStructure() {
-		return new String[] {"World", LangUtils.titleCase(sign.getName())};
 	}
 	
 	@Override

@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
@@ -51,11 +50,6 @@ public class ActionEquip implements Action {
 	@Override
 	public int actionPoints() {
 		return 1;
-	}
-
-	@Override
-	public String[] getMenuStructure() {
-		return new String[] {"Inventory", LangUtils.titleCase(item.getName())};
 	}
 
 	@Override

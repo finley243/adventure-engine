@@ -48,11 +48,6 @@ public class ActionMoveExit implements Action {
 	}
 	
 	@Override
-	public String[] getMenuStructure() {
-		return new String[] {"Move"};
-	}
-	
-	@Override
 	public ActionLegality getLegality() {
 		return ActionLegality.LEGAL;
 	}

@@ -20,8 +20,6 @@ public interface Action {
 	
 	public int actionPoints();
 	
-	public String[] getMenuStructure();
-	
 	public ActionLegality getLegality();
 	
 	public MenuData getMenuData();

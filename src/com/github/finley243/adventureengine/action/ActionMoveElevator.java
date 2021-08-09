@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
@@ -46,11 +45,6 @@ public class ActionMoveElevator implements Action {
 	@Override
 	public int actionPoints() {
 		return 1;
-	}
-	
-	@Override
-	public String[] getMenuStructure() {
-		return new String[] {"Move", LangUtils.titleCase(elevator.getName())};
 	}
 	
 	@Override
