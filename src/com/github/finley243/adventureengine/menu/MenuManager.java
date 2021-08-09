@@ -35,8 +35,7 @@ public class MenuManager {
 		this.dialogueChoice = null;
 	}
 	
-	public Action actionMenu(Actor subject) {
-		List<Action> actions = subject.availableActions();
+	public Action actionMenu(List<Action> actions) {
 		this.actionList = actions;
 		List<String> menuStrings = new ArrayList<String>();
 		List<MenuData> menuData = new ArrayList<MenuData>();

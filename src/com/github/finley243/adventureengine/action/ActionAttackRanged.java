@@ -47,8 +47,13 @@ public class ActionAttackRanged implements Action {
 	}
 	
 	@Override
-	public int actionPoints() {
-		return 1;
+	public boolean usesAction() {
+		return true;
+	}
+	
+	@Override
+	public int actionCount() {
+		return weapon.getRate();
 	}
 	
 	@Override

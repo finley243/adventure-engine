@@ -41,6 +41,10 @@ public class ItemWeapon extends Item {
 		return stats.getDamage();
 	}
 	
+	public int getRate() {
+		return stats.getRate();
+	}
+	
 	public float getHitChance(Actor subject) {
 		return stats.getHitChance();
 	}

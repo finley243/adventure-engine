@@ -18,7 +18,9 @@ public interface Action {
 	
 	public float utility(Actor subject);
 	
-	public int actionPoints();
+	public boolean usesAction();
+	
+	public int actionCount();
 	
 	public ActionLegality getLegality();
 	

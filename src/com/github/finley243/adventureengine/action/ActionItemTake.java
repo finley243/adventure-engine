@@ -36,8 +36,13 @@ public class ActionItemTake implements Action {
 	}
 	
 	@Override
-	public int actionPoints() {
-		return 0;
+	public boolean usesAction() {
+		return true;
+	}
+	
+	@Override
+	public int actionCount() {
+		return 1;
 	}
 	
 	@Override

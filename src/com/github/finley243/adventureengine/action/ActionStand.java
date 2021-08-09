@@ -37,7 +37,12 @@ public class ActionStand implements Action {
 	}
 	
 	@Override
-	public int actionPoints() {
+	public boolean usesAction() {
+		return true;
+	}
+	
+	@Override
+	public int actionCount() {
 		return 1;
 	}
 	

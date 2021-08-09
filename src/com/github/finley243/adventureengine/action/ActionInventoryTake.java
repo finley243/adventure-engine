@@ -42,11 +42,16 @@ public class ActionInventoryTake implements Action {
     public float utility(Actor subject) {
         return 0;
     }
-
+    
     @Override
-    public int actionPoints() {
-        return 0;
-    }
+	public boolean usesAction() {
+		return true;
+	}
+    
+    @Override
+	public int actionCount() {
+		return 1;
+	}
 
     @Override
     public ActionLegality getLegality() {

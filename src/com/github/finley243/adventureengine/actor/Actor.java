@@ -377,12 +377,12 @@ public class Actor implements Noun, Physical {
 			actions.addAll(item.inventoryActions(this));
 		}
 		actions.add(new ActionWait());
-		Iterator<Action> itr = actions.iterator();
+		/*Iterator<Action> itr = actions.iterator();
 		while(itr.hasNext()) {
 			if(itr.next().actionPoints() > actionPoints) {
 				itr.remove();
 			}
-		}
+		}*/
 		return actions;
 	}
 	
@@ -394,10 +394,38 @@ public class Actor implements Noun, Physical {
 		generatePursueTargets();
 		updatePursueTargets();
 		actionPoints = stats.getActionPoints();
-		while(actionPoints > -1) {
+		/*while(actionPoints > -1) {
 			Action chosenAction = chooseAction();
 			actionPoints -= chosenAction.actionPoints();
 			chosenAction.choose(this);
+		}*/
+		this.actionPoints = 2;
+		int repeatActionsRemaining = 0;
+		Action repeatAction = null;
+		while(actionPoints > 0) {
+			System.out.println("Actions remaining: " + actionPoints);
+			System.out.println("Repeat actions remaining: " + repeatActionsRemaining);
+			if(repeatActionsRemaining > 0) {
+				List<Action> repeatActions = new ArrayList<Action>();
+				for(Action action : availableActions()) {
+					if(repeatAction.getClass().equals(action.getClass())) {
+						repeatActions.add(action);
+					}
+				}
+				Action chosenAction = chooseAction(repeatActions);
+				chosenAction.choose(this);
+				repeatActionsRemaining--;
+			} else {
+				Action chosenAction = chooseAction(availableActions());
+				if(chosenAction.actionCount() > 1) {
+					repeatActionsRemaining = chosenAction.actionCount() - 1;
+					repeatAction = chosenAction;
+				}
+				chosenAction.choose(this);
+				if(chosenAction.usesAction()) {
+					actionPoints--;
+				}
+			}
 		}
 	}
 	
@@ -405,10 +433,10 @@ public class Actor implements Noun, Physical {
 		actionPoints = -1;
 	}
 	
-	public Action chooseAction() {
+	public Action chooseAction(List<Action> actions) {
 		List<Action> bestActions = new ArrayList<Action>();
 		float maxWeight = 0.0f;
-		for(Action currentAction : this.availableActions()) {
+		for(Action currentAction : actions) {
 			float currentWeight = currentAction.utility(this);
 			if(currentWeight > maxWeight) {
 				maxWeight = currentWeight;

@@ -36,7 +36,12 @@ public class ActionItemDrop implements Action {
 	}
 	
 	@Override
-	public int actionPoints() {
+	public boolean usesAction() {
+		return false;
+	}
+	
+	@Override
+	public int actionCount() {
 		return 1;
 	}
 	

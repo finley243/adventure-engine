@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.actor;
 
+import java.util.List;
+
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
@@ -38,8 +40,8 @@ public class ActorPlayer extends Actor {
 	}
 	
 	@Override
-	public Action chooseAction() {
-		return menuHandler.actionMenu(this);
+	public Action chooseAction(List<Action> actions) {
+		return menuHandler.actionMenu(actions);
 	}
 	
 	public void startDialogue(Actor target) {

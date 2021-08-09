@@ -28,8 +28,13 @@ public class ActionWait implements Action {
 	}
 	
 	@Override
-	public int actionPoints() {
-		return 0;
+	public boolean usesAction() {
+		return false;
+	}
+	
+	@Override
+	public int actionCount() {
+		return 1;
 	}
 	
 	@Override
