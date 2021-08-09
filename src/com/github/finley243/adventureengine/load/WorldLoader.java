@@ -157,9 +157,10 @@ public class WorldLoader {
 	private static Actor loadActor(Element actorElement, Area area) {
 		String ID = actorElement.getAttribute("id");
 		String stats = LoadUtils.singleTag(actorElement, "stats", null);
+		String descriptor = LoadUtils.singleTag(actorElement, "descriptor", null);
 		String topicID = LoadUtils.singleTag(actorElement, "topic", null);
 		boolean startDead = LoadUtils.singleTagBoolean(actorElement, "startdead", false);
-		return ActorFactory.create(ID, area, Data.getActorStats(stats), topicID);
+		return ActorFactory.create(ID, area, Data.getActorStats(stats), descriptor, topicID);
 	}
 	
 }

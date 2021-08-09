@@ -6,8 +6,8 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActorFactory {
 	
-	public static Actor create(String ID, Area area, StatsActor stats, String topicID) {
-		Actor actor = new Actor(ID, area, stats, topicID, false);
+	public static Actor create(String ID, Area area, StatsActor stats, String descriptor, String topicID) {
+		Actor actor = new Actor(ID, area, stats, descriptor, topicID, false);
 		return actor;
 	}
 	

@@ -55,6 +55,7 @@ public class Actor implements Noun, Physical {
 	
 	private StatsActor stats;
 	private String ID;
+	private String descriptor;
 	private Area area;
 	private String topicID;
 	private int HP;
@@ -72,10 +73,11 @@ public class Actor implements Noun, Physical {
 	private Set<CombatTarget> combatTargets;
 	private Set<PursueTarget> pursueTargets;
 	
-	public Actor(String ID, Area area, StatsActor stats, String topicID, boolean startDead) {
+	public Actor(String ID, Area area, StatsActor stats, String descriptor, String topicID, boolean startDead) {
 		this.ID = ID;
 		this.move(area);
 		this.stats = stats;
+		this.descriptor = descriptor;
 		this.topicID = topicID;
 		this.combatTargets = new HashSet<CombatTarget>();
 		this.pursueTargets = new HashSet<PursueTarget>();
@@ -101,7 +103,7 @@ public class Actor implements Noun, Physical {
 	
 	@Override
 	public String getName() {
-		return stats.getName();
+		return (descriptor != null ? descriptor + " " : "") + stats.getName();
 	}
 	
 	@Override
