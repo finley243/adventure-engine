@@ -52,6 +52,11 @@ public class ActionAttackRanged implements Action {
 	}
 	
 	@Override
+	public boolean canRepeat() {
+		return false;
+	}
+	
+	@Override
 	public int actionCount() {
 		return weapon.getRate();
 	}

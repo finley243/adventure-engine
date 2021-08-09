@@ -4,22 +4,22 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
 
-public class ActionWait implements Action {
+public class ActionMultiEnd implements Action {
 
-	public ActionWait() {
+	public ActionMultiEnd() {
 
 	}
 
 	@Override
 	public void choose(Actor subject) {
-		subject.endTurn();
+		subject.endMultiAction();
 		//Context context = new Context(subject, false);
 		//Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("idle"), context));
 	}
 
 	@Override
 	public String getPrompt() {
-		return "End turn";
+		return "End action";
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class ActionWait implements Action {
 	
 	@Override
 	public MenuData getMenuData() {
-		return new MenuDataGlobal("End turn");
+		return new MenuDataGlobal("End action");
 	}
 
 }

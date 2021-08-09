@@ -20,6 +20,8 @@ public interface Action {
 	
 	public boolean usesAction();
 	
+	public boolean canRepeat();
+	
 	public int actionCount();
 	
 	public ActionLegality getLegality();

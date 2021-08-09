@@ -9,14 +9,14 @@
         <default>NEUTRAL</default>
         <relation>
             <id>enemy</id>
-            <type>NEUTRAL</type>
+            <type>ENEMY</type>
         </relation>
     </faction>
     <faction id="enemy">
-        <default>NEUTRAL</default>
+        <default>ENEMY</default>
         <relation>
             <id>stratis_hotel_staff</id>
-            <type>NEUTRAL</type>
+            <type>ENEMY</type>
         </relation>
     </faction>
 </factions>

@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
+import com.github.finley243.adventureengine.action.ActionMultiEnd;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.action.ActionWait;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
@@ -64,6 +65,7 @@ public class Actor implements Noun, Physical {
 	private boolean isDead;
 	private boolean isUnconscious;
 	private int actionPoints;
+	private int repeatActionPoints;
 	// Index: 0 = base, 1 = modifier
 	private EnumMap<Attribute, int[]> attributes;
 	private List<Effect> effects;
@@ -390,36 +392,58 @@ public class Actor implements Noun, Physical {
 		generatePursueTargets();
 		updatePursueTargets();
 		this.actionPoints = ACTIONS_PER_TURN;
-		int repeatActionsRemaining = 0;
+		this.repeatActionPoints = 0;
 		Action repeatAction = null;
+		List<Action> blockedActions = new ArrayList<Action>();
 		while(actionPoints > 0) {
 			Action chosenAction;
-			if(repeatActionsRemaining > 0) {
+			if(repeatActionPoints > 0) {
 				List<Action> repeatActions = new ArrayList<Action>();
 				for(Action action : availableActions()) {
 					if(repeatAction.getClass().equals(action.getClass())) {
 						repeatActions.add(action);
 					}
 				}
+				repeatActions.add(new ActionMultiEnd());
 				chosenAction = chooseAction(repeatActions);
-				chosenAction.choose(this);
-				repeatActionsRemaining--;
+				repeatActionPoints--;
 			} else {
-				chosenAction = chooseAction(availableActions());
+				List<Action> validActions = new ArrayList<Action>();
+				for(Action action : availableActions()) {
+					boolean isBlocked = false;
+					for(Action blockedAction : blockedActions) {
+						if(blockedAction.getClass().equals(action.getClass())) {
+							isBlocked = true;
+							System.out.println("Blocked Action: " + action.getClass().getName());
+							break;
+						}
+					}
+					if(!isBlocked) {
+						validActions.add(action);
+					}
+				}
+				chosenAction = chooseAction(validActions);
 				if(chosenAction.actionCount() > 1) {
-					repeatActionsRemaining = chosenAction.actionCount() - 1;
+					repeatActionPoints = chosenAction.actionCount() - 1;
 					repeatAction = chosenAction;
 				}
-				chosenAction.choose(this);
 			}
-			if(chosenAction.usesAction() && repeatActionsRemaining <= 0) {
+			chosenAction.choose(this);
+			if(chosenAction.usesAction() && repeatActionPoints <= 0) {
 				actionPoints--;
+				if(!chosenAction.canRepeat()) {
+					blockedActions.add(chosenAction);
+				}
 			}
 		}
 	}
 	
 	public void endTurn() {
-		actionPoints = -1;
+		actionPoints = 0;
+	}
+	
+	public void endMultiAction() {
+		repeatActionPoints = 0;
 	}
 	
 	public Action chooseAction(List<Action> actions) {

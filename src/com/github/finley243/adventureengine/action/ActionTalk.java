@@ -36,6 +36,11 @@ public class ActionTalk implements Action {
 	}
 	
 	@Override
+	public boolean canRepeat() {
+		return true;
+	}
+	
+	@Override
 	public int actionCount() {
 		return 1;
 	}
