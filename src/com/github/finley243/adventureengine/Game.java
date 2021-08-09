@@ -26,6 +26,7 @@ import com.github.finley243.adventureengine.load.WorldLoader;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
@@ -75,12 +76,6 @@ public class Game {
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
 		
-		//Actor stratisReceptionist = ActorFactory.create("stratis_receptionist", "stratis_hotel_lobby_desk", Data.getActorStats("stratisReceptionist"), "stratis_receptionist_start");
-		//Data.addActor(stratisReceptionist.getID(), stratisReceptionist);
-		
-		//Actor enemy = ActorFactory.create("enemy", "stratis_hotel_lobby_elevators", Data.getActorStats("enemy"), null);
-		//Data.addActor(enemy.getID(), enemy);
-		
 		startGameLoop();
 	}
 	
@@ -104,6 +99,7 @@ public class Game {
 		((ActorPlayer) Data.getActor(PLAYER_ACTOR)).takeTurn();
 		sleep(800);
 		EVENT_BUS.post(new TextClearEvent());
+		TextGen.clearContext();
 	}
 	
 	private void sleep(int millis) {

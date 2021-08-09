@@ -7,13 +7,10 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemDrop;
 import com.github.finley243.adventureengine.action.ActionItemTake;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public abstract class Item extends WorldObject {
-	
-	private Inventory currentInventory;
 	
 	public Item(String name) {
 		super(name);
@@ -27,28 +24,12 @@ public abstract class Item extends WorldObject {
 		return null;
 	}
 	
-	public void setInInventory(Inventory inventory) {
-		currentInventory = inventory;
-		super.setArea(null);
-	}
-	
 	@Override
 	public void setArea(Area area) {
 		super.setArea(area);
-		currentInventory = null;
 	}
 	
-	public boolean isInInventory() {
-		return currentInventory != null;
-	}
-	
-	public boolean isInArea() {
-		return getArea() != null;
-	}
-	
-	public boolean equalsInventory(Item other) {
-		return false;
-	}
+	public abstract boolean equalsInventory(Item other);
 
 	@Override
 	public List<Action> localActions(Actor subject) {

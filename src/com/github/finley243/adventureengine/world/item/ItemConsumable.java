@@ -38,17 +38,6 @@ public class ItemConsumable extends Item {
 	}
 	
 	@Override
-	public boolean equalsInventory(Item other) {
-		if(!(other instanceof ItemConsumable)) {
-			return false;
-		} else if(((ItemConsumable) other).stats.equals(this.stats)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	@Override
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = new ArrayList<Action>();
 		actions.add(new ActionConsume(this));
@@ -57,12 +46,11 @@ public class ItemConsumable extends Item {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
-		if(!(o instanceof ItemConsumable)) {
+	public boolean equalsInventory(Item other) {
+		if(!(other instanceof ItemConsumable)) {
 			return false;
 		} else {
-			ItemConsumable other = (ItemConsumable) o;
-			return this.stats == other.stats;
+			return ((ItemConsumable) other).stats.equals(this.stats);
 		}
 	}
 	

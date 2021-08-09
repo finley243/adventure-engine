@@ -15,5 +15,14 @@ public class ItemKey extends Item {
 	public String getID() {
 		return stats.getID();
 	}
+	
+	@Override
+	public boolean equalsInventory(Item other) {
+		if(!(other instanceof ItemKey)) {
+			return false;
+		} else {
+			return ((ItemKey) other).stats.equals(this.stats);
+		}
+	}
 
 }

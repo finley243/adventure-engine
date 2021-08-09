@@ -5,12 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInventoryTake;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.item.LootTable;
 
 public class Inventory {
 

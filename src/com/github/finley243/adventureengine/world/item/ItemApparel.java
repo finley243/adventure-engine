@@ -22,7 +22,7 @@ public class ItemApparel extends Item {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
+	public boolean equalsInventory(Item o) {
 		if(!(o instanceof ItemApparel)) {
 			return false;
 		} else {

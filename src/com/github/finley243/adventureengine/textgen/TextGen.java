@@ -34,6 +34,8 @@ public class TextGen {
 	private static final String VERB_BE = "<is>";
 	private static final String VERB_BE_NOT = "<isn't>";
 	private static final String VERB_HAVE = "<has>";
+	
+	private static Context lastContext;
 
 	/*
 	 * Format for tags: <subject> hit<s> <object> with <object2> Format for OR
@@ -46,13 +48,34 @@ public class TextGen {
 		line = determineContext(line, context);
 		sentence += LangUtils.capitalize(line);
 		sentence += ".";
+		lastContext = context;
 		return sentence;
+	}
+	
+	public static void clearContext() {
+		lastContext = null;
 	}
 
 	private static String determineContext(String line, Context context) {
 		boolean useSubjectPronoun = false;
 		boolean useObjectPronoun = false;
 		boolean useObject2Pronoun = false;
+		if(lastContext != null) {
+			if(context.getSubject().equals(lastContext.getSubject())) {
+				useSubjectPronoun = true;
+			}
+			if(context.getObject().equals(lastContext.getObject())) {
+				if(!useSubjectPronoun || context.getObject().getPronoun() != context.getSubject().getPronoun()) {
+					useObjectPronoun = true;
+				}
+			}
+			if(context.getObject2().equals(lastContext.getObject2())) {
+				if((!useSubjectPronoun || context.getObject2().getPronoun() != context.getSubject().getPronoun()) &&
+					(!useObjectPronoun || context.getObject2().getPronoun() != context.getObject().getPronoun())) {
+					useObject2Pronoun = true;
+				}
+			}
+		}
 		if (context.getSubject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
 			useSubjectPronoun = true;
 		}
