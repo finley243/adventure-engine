@@ -26,6 +26,8 @@ public class Area implements Noun {
 	// The room containing this area
 	private String roomID;
 	
+	private String description;
+	
 	// All areas that can be accessed when in this area
 	private Set<String> linkedAreas;
 	
@@ -34,9 +36,10 @@ public class Area implements Noun {
 	// All actors in this area
 	private Set<Actor> actors;
 	
-	public Area(String ID, String name, boolean isProperName, boolean isProximateName, String roomID, Set<String> linkedAreas, Set<WorldObject> objects) {
+	public Area(String ID, String name, String description, boolean isProperName, boolean isProximateName, String roomID, Set<String> linkedAreas, Set<WorldObject> objects) {
 		this.ID = ID;
 		this.name = name;
+		this.description = description;
 		this.isProperName = isProperName;
 		this.isProximateName = isProximateName;
 		this.roomID = roomID;
@@ -52,6 +55,10 @@ public class Area implements Noun {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 	@Override

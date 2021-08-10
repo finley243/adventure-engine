@@ -48,11 +48,15 @@ public class ActorPlayer extends Actor {
 		menuHandler.dialogueMenu(this, target);
 	}
 
-	public void updateRoomDescription() {
-		if(!this.getArea().getRoom().hasVisited()) {
+	public void updateAreaDescription() {
+		/*if(!this.getArea().getRoom().hasVisited()) {
 			Game.EVENT_BUS.post(new RenderTextEvent(this.getArea().getRoom().getDescription()));
 			Game.EVENT_BUS.post(new RenderTextEvent(""));
 			this.getArea().getRoom().setVisited();
+		}*/
+		if(this.getArea().getDescription() != null) {
+			Game.EVENT_BUS.post(new RenderTextEvent(this.getArea().getDescription()));
+			Game.EVENT_BUS.post(new RenderTextEvent(""));
 		}
 	}
 

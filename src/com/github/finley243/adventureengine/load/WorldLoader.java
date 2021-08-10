@@ -79,6 +79,7 @@ public class WorldLoader {
 		String name = nameElement.getTextContent();
 		boolean isProperName = LoadUtils.boolAttribute(nameElement, "proper", false);
 		boolean isProximateName = LoadUtils.boolAttribute(nameElement, "prox", false);
+		String description = LoadUtils.singleTag(areaElement, "description", null);
 		
 		Element linksElement = (Element) areaElement.getElementsByTagName("links").item(0);
 		NodeList links = linksElement.getElementsByTagName("link");
@@ -105,7 +106,7 @@ public class WorldLoader {
 			}
 		}
 		
-		Area area = new Area(areaID, name, isProperName, isProximateName, roomID, linkSet, objectSet);
+		Area area = new Area(areaID, name, description, isProperName, isProximateName, roomID, linkSet, objectSet);
 		for(WorldObject object : objectSet) {
 			object.setArea(area);
 		}

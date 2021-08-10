@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataMove;
@@ -11,6 +12,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionMove implements Action {
 	
+	public static final boolean SHOW_AREA_DESCRIPTIONS = true;
 	public static final float MOVE_UTILITY_MULTIPLIER = 0.7f;
 	
 	private Area area;
@@ -34,6 +36,12 @@ public class ActionMove implements Action {
 			line = "moveTo";
 		}
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context));
+		if(subject instanceof ActorPlayer) {
+			((ActorPlayer) subject).updateAreaDescription();
+		}
+		/*if(subject instanceof ActorPlayer && ActionMove.SHOW_AREA_DESCRIPTIONS && area.getDescription() != null) {
+			Game.EVENT_BUS.post(new RenderTextEvent(area.getDescription()));
+		}*/
 	}
 	
 	@Override

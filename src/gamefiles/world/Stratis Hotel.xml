@@ -4,6 +4,7 @@
         <description>You enter an airy two-story lobby. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</description>
         <area id="stratis_hotel_lobby_entry">
             <name proper="false" prox="true">main entrance</name>
+            <description>The entryway is clean and relatively empty.</description>
             <links>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_seating</link>
@@ -14,6 +15,7 @@
         </area>
         <area id="stratis_hotel_lobby_desk">
             <name proper="false" prox="true">reception desk</name>
+            <description>A white marble desk stretches several meters across. Behind the desk, large chrome lettering spells out "Stratis".</description>
             <links>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_seating</link>
@@ -86,6 +88,7 @@
         <description>You enter a dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</description>
         <area id="stratis_hotel_corridor_elevators">
             <name proper="false" prox="true">elevators</name>
+            <description>The space around the elevators is dimly lit, with a row of doors on the opposite wall.</description>
             <links>
                 <link>stratis_hotel_corridor_main</link>
             </links>
