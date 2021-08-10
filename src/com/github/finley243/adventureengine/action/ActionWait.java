@@ -29,7 +29,7 @@ public class ActionWait implements Action {
 	
 	@Override
 	public boolean usesAction() {
-		return false;
+		return true;
 	}
 	
 	@Override

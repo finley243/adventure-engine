@@ -54,7 +54,9 @@ public class ActionMoveExit implements Action {
 
 	@Override
 	public boolean isRepeatMatch(Action action) {
-		return false;
+		return action instanceof ActionMove ||
+			action instanceof ActionMoveExit ||
+			action instanceof ActionMoveElevator;
 	}
 	
 	@Override

@@ -13,7 +13,7 @@ meleeMiss:<subject> tr<ies> to hit <object> with <object2>, but miss<es>
 moveThroughTo:<subject> go<es> through <object> to <object2>
 moveTo:<subject> go<es> to <object>
 moveToward:<subject> go<es> to <object>
-pickUp:<subject> pick<s> up <object>
+pickUp:<subject> grab<s> <object>
 rangedHit:<subject> fire<s> <object2> at <object>
 rangedMiss:<subject> fire<s> <object2> at <object>, but miss<es>
 read:<subject> read<s> <object>

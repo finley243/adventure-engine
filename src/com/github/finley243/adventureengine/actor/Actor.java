@@ -417,7 +417,7 @@ public class Actor implements Noun, Physical {
 			if(repeatActionPoints > 0) {
 				List<Action> repeatActions = new ArrayList<Action>();
 				for(Action action : availableActions()) {
-					if(repeatAction.equals(action)) {
+					if(repeatAction.isRepeatMatch(action)) {
 						repeatActions.add(action);
 					}
 				}
@@ -432,7 +432,9 @@ public class Actor implements Noun, Physical {
 				}
 			}
 			if(chosenAction.usesAction() && repeatActionPoints <= 0) {
-				actionPoints--;
+				if(actionPoints > 0) {
+					actionPoints--;
+				}
 				if(!chosenAction.canRepeat()) {
 					blockedActions.add(chosenAction);
 				}
