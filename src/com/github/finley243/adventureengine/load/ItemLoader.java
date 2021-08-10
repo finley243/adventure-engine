@@ -54,21 +54,22 @@ public class ItemLoader {
 		String type = itemElement.getAttribute("type");
 		String id = itemElement.getAttribute("id");
 		String name = LoadUtils.singleTag(itemElement, "name", null);
+		String description = LoadUtils.singleTag(itemElement, "description", null);
 		int price = LoadUtils.singleTagInt(itemElement, "price", 0);
 		switch(type) {
 		case "consumable":
 			ConsumableType consumableType = ConsumableType.valueOf(LoadUtils.singleTag(itemElement, "type", "OTHER"));
 			List<Effect> consumableEffects = loadEffects((Element) itemElement.getElementsByTagName("effects").item(0));
-			return new StatsConsumable(id, name, price, consumableType, consumableEffects);
+			return new StatsConsumable(id, name, description, price, consumableType, consumableEffects);
 		case "key":
-			return new StatsKey(id, name);
+			return new StatsKey(id, name, description);
 		case "weapon":
 			WeaponType weaponType = WeaponType.valueOf(LoadUtils.singleTag(itemElement, "type", null));
 			int weaponDamage = LoadUtils.singleTagInt(itemElement, "damage", 0);
 			int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
 			float weaponHitChance = LoadUtils.singleTagFloat(itemElement, "chance", 1.0f);
 			int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipsize", 0);
-			return new StatsWeapon(id, name, price, weaponType, weaponDamage, weaponRate, weaponHitChance, weaponClipSize);
+			return new StatsWeapon(id, name, description, price, weaponType, weaponDamage, weaponRate, weaponHitChance, weaponClipSize);
 		}
 		return null;
 	}

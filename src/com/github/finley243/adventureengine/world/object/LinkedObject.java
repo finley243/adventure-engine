@@ -7,8 +7,8 @@ public abstract class LinkedObject extends WorldObject {
 
 	private String ID;
 	
-	public LinkedObject(String ID, String name) {
-		super(name);
+	public LinkedObject(String ID, String name, String description) {
+		super(name, description);
 		this.ID = ID;
 	}
 	

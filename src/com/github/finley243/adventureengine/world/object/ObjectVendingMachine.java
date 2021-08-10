@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.object;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.finley243.adventureengine.Data;
@@ -12,14 +11,14 @@ public class ObjectVendingMachine extends WorldObject {
 
 	private List<String> vendingItems;
 	
-	public ObjectVendingMachine(String name, List<String> vendingItems) {
-		super(name);
+	public ObjectVendingMachine(String name, String description, List<String> vendingItems) {
+		super(name, description);
 		this.vendingItems = vendingItems;
 	}
 
 	@Override
 	public List<Action> localActions(Actor subject) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = super.localActions(subject);
 		for(String item : vendingItems) {
 			if(subject.getMoney() >= Data.getItem(item).getPrice()) {
 				actions.add(new ActionVendingMachineBuy(this, item));

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.object;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.finley243.adventureengine.action.Action;
@@ -11,13 +10,13 @@ public class ObjectContainer extends WorldObject {
 
 	private Inventory inventory;
 	
-	public ObjectContainer(String name) {
-		super(name);
+	public ObjectContainer(String name, String description) {
+		super(name, description);
 	}
 	
 	@Override
 	public List<Action> localActions(Actor subject) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = super.localActions(subject);
 		
 		return actions;
 	}

@@ -116,6 +116,7 @@
             <objects>
                 <object type="exit" id="stratis_hotel_corridor_room_door">
                     <name>door</name>
+                    <description>The door is made from an elegant dark-stained wood. There is a key card reader above the handle. To the right of the door, a sign reads "508".</description>
                     <link>stratis_hotel_room_door</link>
                     <key>stratis_room_key</key>
                 </object>

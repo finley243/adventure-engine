@@ -127,26 +127,27 @@ public class WorldLoader {
 		String objectType = objectElement.getAttribute("type");
 		String objectName = LoadUtils.singleTag(objectElement, "name", null);
 		String objectID = objectElement.getAttribute("id");
+		String description = LoadUtils.singleTag(objectElement, "description", null);
 		switch(objectType) {
 		case "exit":
 			String exitLink = LoadUtils.singleTag(objectElement, "link", null);
 			String exitKey = LoadUtils.singleTag(objectElement, "key", null);
-			return new ObjectExit(objectID, objectName, exitLink, exitKey);
+			return new ObjectExit(objectID, objectName, description, exitLink, exitKey);
 		case "elevator":
 			int floorNumber = LoadUtils.singleTagInt(objectElement, "floornumber", 1);
 			String floorName = LoadUtils.singleTag(objectElement, "floorname", null);
 			Set<String> linkedElevatorIDs = LoadUtils.setOfTags((Element) objectElement.getElementsByTagName("links").item(0), "link");
-			return new ObjectElevator(objectID, objectName, floorNumber, floorName, linkedElevatorIDs);
+			return new ObjectElevator(objectID, objectName, description, floorNumber, floorName, linkedElevatorIDs);
 		case "sign":
 			List<String> signText = LoadUtils.listOfTags((Element) objectElement.getElementsByTagName("lines").item(0), "text");
-			return new ObjectSign(objectName, signText);
+			return new ObjectSign(objectName, description, signText);
 		case "chair":
-			return new ObjectChair(objectName);
+			return new ObjectChair(objectName, description);
 		case "cover":
-			return new ObjectCover(objectName);
+			return new ObjectCover(objectName, description);
 		case "vending_machine":
 			List<String> vendingItems = LoadUtils.listOfTags((Element) objectElement.getElementsByTagName("items").item(0), "item");
-			return new ObjectVendingMachine(objectName, vendingItems);
+			return new ObjectVendingMachine(objectName, description, vendingItems);
 		case "item":
 			String itemID = LoadUtils.singleTag(objectElement, "item", null);
 			return ItemFactory.create(itemID);

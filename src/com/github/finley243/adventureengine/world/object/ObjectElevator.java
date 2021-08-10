@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.object;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,8 +17,8 @@ public class ObjectElevator extends LinkedObject {
 	private Set<String> linkedElevatorIDs;
 	private boolean isLocked;
 	
-	public ObjectElevator(String ID, String name, int floorNumber, String floorName, Set<String> linkedElevatorIDs) {
-		super(ID, name);
+	public ObjectElevator(String ID, String name, String description, int floorNumber, String floorName, Set<String> linkedElevatorIDs) {
+		super(ID, name, description);
 		this.floorNumber = floorNumber;
 		this.floorName = floorName;
 		this.linkedElevatorIDs = linkedElevatorIDs;
@@ -48,7 +47,7 @@ public class ObjectElevator extends LinkedObject {
 	
 	@Override
 	public List<Action> localActions(Actor subject) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = super.localActions(subject);
 		if(isLocked) {
 			
 		} else {

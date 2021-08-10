@@ -12,6 +12,11 @@ public class ItemKey extends Item {
 	}
 	
 	@Override
+	public String getDescription() {
+		return stats.getDescription();
+	}
+	
+	@Override
 	public String getID() {
 		return stats.getID();
 	}

@@ -8,11 +8,13 @@ public abstract class StatsItem implements Noun {
 
 	private String ID;
 	private String name;
+	private String description;
 	private int price;
 	
-	public StatsItem(String ID, String name, int price) {
+	public StatsItem(String ID, String name, String description, int price) {
 		this.ID = ID;
 		this.name = name;
+		this.description = description;
 		this.price = price;
 	}
 	
@@ -42,6 +44,10 @@ public abstract class StatsItem implements Noun {
 	@Override
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 	public int getPrice() {

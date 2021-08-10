@@ -13,8 +13,8 @@ public abstract class UsableObject extends WorldObject {
 
 	private Actor user;
 	
-	public UsableObject(String name) {
-		super(name);
+	public UsableObject(String name, String description) {
+		super(name, description);
 	}
 	
 	public boolean hasUser() {

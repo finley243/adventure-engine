@@ -9,8 +9,8 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class ObjectCover extends UsableObject {
 
-	public ObjectCover(String name) {
-		super(name);
+	public ObjectCover(String name, String description) {
+		super(name, description);
 	}
 	
 	@Override

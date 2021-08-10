@@ -13,8 +13,8 @@ public class StatsConsumable extends StatsItem {
 	private ConsumableType type;
 	private List<Effect> effects;
 	
-	public StatsConsumable(String ID, String name, int price, ConsumableType type, List<Effect> effects) {
-		super(ID, name, price);
+	public StatsConsumable(String ID, String name, String description, int price, ConsumableType type, List<Effect> effects) {
+		super(ID, name, description, price);
 		this.type = type;
 		this.effects = effects;
 	}

@@ -61,7 +61,7 @@ public class ActionMoveElevator implements Action {
 	
 	@Override
 	public int actionCount() {
-		return 1;
+		return 2;
 	}
 	
 	@Override

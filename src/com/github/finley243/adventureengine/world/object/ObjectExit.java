@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.object;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.finley243.adventureengine.Data;
@@ -16,8 +15,8 @@ public class ObjectExit extends LinkedObject {
 	private boolean isLocked;
 	private String keyID;
 	
-	public ObjectExit(String ID, String name, String linkedExitID, String keyID) {
-		super(ID, name);
+	public ObjectExit(String ID, String name, String description, String linkedExitID, String keyID) {
+		super(ID, name, description);
 		this.linkedExitID = linkedExitID;
 		this.keyID = keyID;
 		this.isLocked = keyID != null;
@@ -34,7 +33,7 @@ public class ObjectExit extends LinkedObject {
 	
 	@Override
 	public List<Action> localActions(Actor subject) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = super.localActions(subject);
 		if(isLocked) {
 			if(subject.inventory().hasItemWithID(keyID)) {
 				actions.add(new ActionUnlockExit(this));

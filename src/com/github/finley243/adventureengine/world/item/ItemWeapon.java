@@ -8,8 +8,10 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionAttackMelee;
 import com.github.finley243.adventureengine.action.ActionAttackRanged;
 import com.github.finley243.adventureengine.action.ActionEquip;
+import com.github.finley243.adventureengine.action.ActionInspect;
 import com.github.finley243.adventureengine.action.ActionReload;
 import com.github.finley243.adventureengine.action.ActionUnequip;
+import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
@@ -21,6 +23,11 @@ public class ItemWeapon extends Item {
 	public ItemWeapon(StatsWeapon stats) {
 		super(stats.getName());
 		this.stats = stats;
+	}
+	
+	@Override
+	public String getDescription() {
+		return stats.getDescription();
 	}
 	
 	@Override
@@ -63,11 +70,10 @@ public class ItemWeapon extends Item {
 	
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = super.inventoryActions(subject);
 		if(!subject.hasEquippedItem()) {
-			actions.add(new ActionEquip(this));
+			actions.add(0, new ActionEquip(this));
 		}
-		actions.addAll(super.inventoryActions(subject));
 		return actions;
 	}
 	
@@ -77,7 +83,7 @@ public class ItemWeapon extends Item {
 		for(Actor target : targets) {
 			if(target != subject) {
 				if(stats.getType().isRanged) { // Ranged
-					if(!target.isIncapacitated() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && !subject.isInCover() && ammo > 0) {
+					if(!target.isIncapacitated() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && ammo > 0) {
 						actions.add(new ActionAttackRanged(this, target));
 					}
 				} else { // Melee
@@ -91,6 +97,9 @@ public class ItemWeapon extends Item {
 			actions.add(new ActionReload(this));
 		}
 		actions.add(new ActionUnequip(this));
+		if(this.getDescription() != null) {
+			actions.add(new ActionInspect(this, InspectType.EQUIPPED));
+		}
 		return actions;
 	}
 	

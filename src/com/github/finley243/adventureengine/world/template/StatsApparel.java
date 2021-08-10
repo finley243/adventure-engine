@@ -8,8 +8,8 @@ public class StatsApparel extends StatsItem {
 	
 	private ApparelType type;
 	
-	public StatsApparel(String ID, String name, int price) {
-		super(ID, name, price);
+	public StatsApparel(String ID, String name, String description, int price) {
+		super(ID, name, description, price);
 	}
 	
 	public ApparelType getType() {
