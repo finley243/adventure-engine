@@ -8,25 +8,33 @@ import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.object.ObjectSign;
+import com.github.finley243.adventureengine.world.Readable;
+import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
-public class ActionReadSign implements Action {
+public class ActionRead implements Action {
 
-	private ObjectSign sign;
+	private WorldObject object;
+	private boolean isInInventory;
 	
-	public ActionReadSign(ObjectSign sign) {
-		this.sign = sign;
+	public ActionRead(WorldObject object, boolean isInInventory) {
+		if(!(object instanceof Readable)) {
+			throw new IllegalArgumentException("WorldObject must implement Readable");
+		}
+		this.object = object;
+		this.isInInventory = isInInventory;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		Context context = new Context(subject, false, sign, false);
+		Context context = new Context(subject, false, object, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("read"), context));
 		if(subject instanceof ActorPlayer) {
-			List<String> text = sign.getText();
+			List<String> text = ((Readable) object).getText();
 			Game.EVENT_BUS.post(new RenderTextEvent("-----------"));
 			for(String line : text) {
 				Game.EVENT_BUS.post(new RenderTextEvent(line));
@@ -37,7 +45,7 @@ public class ActionReadSign implements Action {
 
 	@Override
 	public String getPrompt() {
-		return "Read " + sign.getFormattedName(false);
+		return "Read " + object.getFormattedName(false);
 	}
 
 	@Override
@@ -48,7 +56,7 @@ public class ActionReadSign implements Action {
 	
 	@Override
 	public boolean usesAction() {
-		return true;
+		return false;
 	}
 	
 	@Override
@@ -73,16 +81,20 @@ public class ActionReadSign implements Action {
 	
 	@Override
 	public MenuData getMenuData() {
-		return new MenuDataWorldObject("Read", sign);
+		if(isInInventory) {
+			return new MenuDataInventory("Read", (Item) object);
+		} else {
+			return new MenuDataWorldObject("Read", object);
+		}
 	}
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionReadSign)) {
+        if(!(o instanceof ActionRead)) {
             return false;
         } else {
-            ActionReadSign other = (ActionReadSign) o;
-            return other.sign == this.sign;
+            ActionRead other = (ActionRead) o;
+            return other.object == this.object;
         }
     }
 
