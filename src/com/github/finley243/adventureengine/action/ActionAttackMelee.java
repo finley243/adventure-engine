@@ -54,6 +54,15 @@ public class ActionAttackMelee implements Action {
 	public boolean canRepeat() {
 		return false;
 	}
+
+	@Override
+	public boolean isRepeatMatch(Action action) {
+		if(!(action instanceof ActionAttackMelee)) {
+			return false;
+		} else {
+			return ((ActionAttackMelee) action).weapon == this.weapon;
+		}
+	}
 	
 	@Override
 	public int actionCount() {

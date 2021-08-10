@@ -21,6 +21,8 @@ public interface Action {
 	public boolean usesAction();
 	
 	public boolean canRepeat();
+
+	public boolean isRepeatMatch(Action action);
 	
 	public int actionCount();
 	

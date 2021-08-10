@@ -55,6 +55,15 @@ public class ActionAttackRanged implements Action {
 	public boolean canRepeat() {
 		return false;
 	}
+
+	@Override
+	public boolean isRepeatMatch(Action action) {
+		if(!(action instanceof ActionAttackRanged)) {
+			return false;
+		} else {
+			return ((ActionAttackRanged) action).weapon == this.weapon;
+		}
+	}
 	
 	@Override
 	public int actionCount() {

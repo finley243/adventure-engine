@@ -47,6 +47,11 @@ public class ActionStand implements Action {
 	}
 	
 	@Override
+	public boolean isRepeatMatch(Action action) {
+		return false;
+	}
+
+	@Override
 	public int actionCount() {
 		return 1;
 	}

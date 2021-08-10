@@ -412,9 +412,8 @@ public class Actor implements Noun, Physical {
 				for(Action action : availableActions()) {
 					boolean isBlocked = false;
 					for(Action blockedAction : blockedActions) {
-						if(blockedAction.getClass().equals(action.getClass())) {
+						if(action.isRepeatMatch(blockedAction)) {
 							isBlocked = true;
-							System.out.println("Blocked Action: " + action.getClass().getName());
 							break;
 						}
 					}

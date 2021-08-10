@@ -44,6 +44,11 @@ public class ActionItemTake implements Action {
 	public boolean canRepeat() {
 		return true;
 	}
+
+	@Override
+	public boolean isRepeatMatch(Action action) {
+		return false;
+	}
 	
 	@Override
 	public int actionCount() {
