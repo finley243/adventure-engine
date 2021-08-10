@@ -88,7 +88,7 @@
         <description>You enter a dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</description>
         <area id="stratis_hotel_corridor_elevators">
             <name proper="false" prox="true">elevators</name>
-            <description>The space around the elevators is dimly lit, with a row of doors on the opposite wall.</description>
+            <description>The space outside the elevators is dimly lit, with a row of doors on the opposite wall.</description>
             <links>
                 <link>stratis_hotel_corridor_main</link>
             </links>

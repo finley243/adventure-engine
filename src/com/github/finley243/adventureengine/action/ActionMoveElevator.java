@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
@@ -28,15 +27,15 @@ public class ActionMoveElevator implements Action {
 	@Override
 	public void choose(Actor subject) {
 		Context context = new Context(subject, false, elevator, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("enterElevator"), context));
-		subject.move(destination.getArea());
-		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context));
-		if(subject instanceof ActorPlayer) {
-			((ActorPlayer) subject).updateAreaDescription();
+		String takeElevatorPhrase;
+		if(elevator.getFloorNumber() < destination.getFloorNumber()) {
+			takeElevatorPhrase = "takeElevatorUp";
+		} else {
+			takeElevatorPhrase = "takeElevatorDown";
 		}
-		/*if(subject instanceof ActorPlayer && ActionMove.SHOW_AREA_DESCRIPTIONS && destination.getArea().getDescription() != null) {
-			Game.EVENT_BUS.post(new RenderTextEvent(destination.getArea().getDescription()));
-		}*/
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context));
+		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context));
+		subject.move(destination.getArea());
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataMove;
@@ -27,7 +26,6 @@ public class ActionMove implements Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		subject.move(area);
 		Context context = new Context(subject, false, area, false);
 		String line;
 		if(area.isProximateName()) {
@@ -36,12 +34,7 @@ public class ActionMove implements Action {
 			line = "moveTo";
 		}
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context));
-		if(subject instanceof ActorPlayer) {
-			((ActorPlayer) subject).updateAreaDescription();
-		}
-		/*if(subject instanceof ActorPlayer && ActionMove.SHOW_AREA_DESCRIPTIONS && area.getDescription() != null) {
-			Game.EVENT_BUS.post(new RenderTextEvent(area.getDescription()));
-		}*/
+		subject.move(area);
 	}
 	
 	@Override

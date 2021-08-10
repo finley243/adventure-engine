@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
@@ -31,12 +30,6 @@ public class ActionMoveExit implements Action {
 		Game.EVENT_BUS.post(new VisualEvent(area, Phrases.get("moveThroughTo"), context));
 		exit.unlock();
 		subject.move(area);
-		if(subject instanceof ActorPlayer) {
-			((ActorPlayer) subject).updateAreaDescription();
-		}
-		/*if(subject instanceof ActorPlayer && ActionMove.SHOW_AREA_DESCRIPTIONS && area.getDescription() != null) {
-			Game.EVENT_BUS.post(new RenderTextEvent(area.getDescription()));
-		}*/
 	}
 
 	@Override

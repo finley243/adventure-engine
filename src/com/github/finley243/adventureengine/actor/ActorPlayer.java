@@ -34,6 +34,12 @@ public class ActorPlayer extends Actor {
 	}
 	
 	@Override
+	public void move(Area area) {
+		super.move(area);
+		this.updateAreaDescription();
+	}
+	
+	@Override
 	public void kill() {
 		super.kill();
 		Game.EVENT_BUS.post(new PlayerDeathEvent());
