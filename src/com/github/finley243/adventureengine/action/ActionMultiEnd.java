@@ -24,7 +24,12 @@ public class ActionMultiEnd implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return 0.00001f;
+		Action highestUtilityAction = subject.chooseAction(subject.availableActions());
+		if(highestUtilityAction instanceof ActionMultiEnd) {
+			return highestUtilityAction.utility(subject) - 0.00001f;
+		} else {
+			return 0.00001f;
+		}
 	}
 	
 	@Override
@@ -56,5 +61,10 @@ public class ActionMultiEnd implements Action {
 	public MenuData getMenuData() {
 		return new MenuDataGlobal("End action");
 	}
+
+	@Override
+    public boolean equals(Object o) {    
+        return o instanceof ActionMultiEnd;
+    }
 
 }

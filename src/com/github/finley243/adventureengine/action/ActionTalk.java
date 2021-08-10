@@ -60,4 +60,14 @@ public class ActionTalk implements Action {
 		return new MenuDataWorldActor("Talk", target);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionTalk)) {
+            return false;
+        } else {
+            ActionTalk other = (ActionTalk) o;
+            return other.target == this.target;
+        }
+    }
+
 }

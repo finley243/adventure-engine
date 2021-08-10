@@ -72,4 +72,14 @@ public class ActionMoveExit implements Action {
 		return new MenuDataWorldObject("Go through", exit);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionMoveExit)) {
+            return false;
+        } else {
+            ActionMoveExit other = (ActionMoveExit) o;
+            return other.exit == this.exit;
+        }
+    }
+
 }

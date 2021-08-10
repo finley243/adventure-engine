@@ -66,4 +66,14 @@ public class ActionStand implements Action {
 		return new MenuDataUsing("Stand", object);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionStand)) {
+            return false;
+        } else {
+            ActionStand other = (ActionStand) o;
+            return other.object == this.object;
+        }
+    }
+
 }

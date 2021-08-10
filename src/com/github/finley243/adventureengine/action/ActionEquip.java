@@ -77,4 +77,14 @@ public class ActionEquip implements Action {
 		return new MenuDataInventory("Equip", item);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionEquip)) {
+            return false;
+        } else {
+            ActionEquip other = (ActionEquip) o;
+            return other.item == this.item;
+        }
+    }
+
 }

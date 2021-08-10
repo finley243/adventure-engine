@@ -72,4 +72,14 @@ public class ActionMoveElevator implements Action {
 		return new MenuDataWorldObject("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", elevator);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionMoveElevator)) {
+            return false;
+        } else {
+            ActionMoveElevator other = (ActionMoveElevator) o;
+            return other.elevator == this.elevator && other.destination == this.destination;
+        }
+    }
+
 }

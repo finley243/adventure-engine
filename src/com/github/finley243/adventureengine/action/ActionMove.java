@@ -75,5 +75,15 @@ public class ActionMove implements Action {
 	public MenuData getMenuData() {
 		return new MenuDataMove("Move", area);
 	}
+
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionMove)) {
+            return false;
+        } else {
+            ActionMove other = (ActionMove) o;
+            return other.area == this.area;
+        }
+    }
 	
 }

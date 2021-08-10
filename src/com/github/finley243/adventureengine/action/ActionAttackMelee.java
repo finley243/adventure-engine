@@ -79,4 +79,14 @@ public class ActionAttackMelee implements Action {
 		return new MenuDataEquipped("Attack " + target.getName(), weapon);
 	}
 	
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionAttackMelee)) {
+            return false;
+        } else {
+            ActionAttackMelee other = (ActionAttackMelee) o;
+            return other.weapon == this.weapon && other.target == this.target;
+        }
+    }
+
 }

@@ -57,4 +57,9 @@ public class ActionWait implements Action {
 		return new MenuDataGlobal("End turn");
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        return o instanceof ActionWait;
+    }
+
 }

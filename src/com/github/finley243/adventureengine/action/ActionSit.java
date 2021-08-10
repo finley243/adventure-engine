@@ -65,4 +65,14 @@ public class ActionSit implements Action {
 		return new MenuDataWorldObject("Sit", chair);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionSit)) {
+            return false;
+        } else {
+            ActionSit other = (ActionSit) o;
+            return other.chair == this.chair;
+        }
+    }
+
 }

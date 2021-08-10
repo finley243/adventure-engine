@@ -66,6 +66,7 @@ public class Actor implements Noun, Physical {
 	private boolean isUnconscious;
 	private int actionPoints;
 	private int repeatActionPoints;
+	private List<Action> blockedActions;
 	// Index: 0 = base, 1 = modifier
 	private EnumMap<Attribute, int[]> attributes;
 	private List<Effect> effects;
@@ -99,6 +100,7 @@ public class Actor implements Noun, Physical {
 		if(stats.getLootTable() != null) {
 			inventory.addItems(Data.getLootTable(stats.getLootTable()).generateItems());
 		}
+		this.blockedActions = new ArrayList<Action>();
 	}
 	
 	public String getID() {
@@ -381,6 +383,20 @@ public class Actor implements Noun, Physical {
 			actions.addAll(item.inventoryActions(this));
 		}
 		actions.add(new ActionWait());
+		Iterator<Action> itr = actions.iterator();
+		while(itr.hasNext()) {
+			Action currentAction = itr.next();
+			boolean isBlocked = false;
+			for(Action blockedAction : blockedActions) {
+				if(currentAction.isRepeatMatch(blockedAction)) {
+					isBlocked = true;
+					break;
+				}
+			}
+			if(isBlocked) {
+				itr.remove();
+			}
+		}
 		return actions;
 	}
 	
@@ -390,17 +406,18 @@ public class Actor implements Noun, Physical {
 		generateCombatTargets();
 		updateCombatTargets();
 		generatePursueTargets();
-		updatePursueTargets();
+		//updatePursueTargets();
 		this.actionPoints = ACTIONS_PER_TURN;
 		this.repeatActionPoints = 0;
 		Action repeatAction = null;
-		List<Action> blockedActions = new ArrayList<Action>();
+		this.blockedActions.clear();
 		while(actionPoints > 0) {
+			updatePursueTargets();
 			Action chosenAction;
 			if(repeatActionPoints > 0) {
 				List<Action> repeatActions = new ArrayList<Action>();
 				for(Action action : availableActions()) {
-					if(repeatAction.getClass().equals(action.getClass())) {
+					if(repeatAction.equals(action)) {
 						repeatActions.add(action);
 					}
 				}
@@ -408,32 +425,19 @@ public class Actor implements Noun, Physical {
 				chosenAction = chooseAction(repeatActions);
 				repeatActionPoints--;
 			} else {
-				List<Action> validActions = new ArrayList<Action>();
-				for(Action action : availableActions()) {
-					boolean isBlocked = false;
-					for(Action blockedAction : blockedActions) {
-						if(action.isRepeatMatch(blockedAction)) {
-							isBlocked = true;
-							break;
-						}
-					}
-					if(!isBlocked) {
-						validActions.add(action);
-					}
-				}
-				chosenAction = chooseAction(validActions);
+				chosenAction = chooseAction(availableActions());
 				if(chosenAction.actionCount() > 1) {
 					repeatActionPoints = chosenAction.actionCount() - 1;
 					repeatAction = chosenAction;
 				}
 			}
-			chosenAction.choose(this);
 			if(chosenAction.usesAction() && repeatActionPoints <= 0) {
 				actionPoints--;
 				if(!chosenAction.canRepeat()) {
 					blockedActions.add(chosenAction);
 				}
 			}
+			chosenAction.choose(this);
 		}
 	}
 	

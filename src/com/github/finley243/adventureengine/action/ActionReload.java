@@ -76,4 +76,14 @@ public class ActionReload implements Action {
 		return new MenuDataEquipped("Reload", weapon);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionReload)) {
+            return false;
+        } else {
+            ActionReload other = (ActionReload) o;
+            return other.weapon == this.weapon;
+        }
+    }
+
 }

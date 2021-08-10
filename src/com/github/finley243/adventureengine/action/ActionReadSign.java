@@ -76,4 +76,14 @@ public class ActionReadSign implements Action {
 		return new MenuDataWorldObject("Read", sign);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionReadSign)) {
+            return false;
+        } else {
+            ActionReadSign other = (ActionReadSign) o;
+            return other.sign == this.sign;
+        }
+    }
+
 }

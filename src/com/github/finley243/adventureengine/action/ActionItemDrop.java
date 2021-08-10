@@ -64,5 +64,15 @@ public class ActionItemDrop implements Action {
 	public MenuData getMenuData() {
 		return new MenuDataInventory("Drop", item);
 	}
+
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionItemDrop)) {
+            return false;
+        } else {
+            ActionItemDrop other = (ActionItemDrop) o;
+            return other.item == this.item;
+        }
+    }
 	
 }

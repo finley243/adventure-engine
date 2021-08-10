@@ -79,5 +79,15 @@ public class ActionAttackRanged implements Action {
 	public MenuData getMenuData() {
 		return new MenuDataEquipped("Attack " + target.getName(), weapon);
 	}
+
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionAttackRanged)) {
+            return false;
+        } else {
+            ActionAttackRanged other = (ActionAttackRanged) o;
+            return other.weapon == this.weapon && other.target == this.target;
+        }
+    }
 	
 }

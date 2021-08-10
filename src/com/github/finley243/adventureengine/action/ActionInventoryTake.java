@@ -76,5 +76,15 @@ public class ActionInventoryTake implements Action {
             return new MenuDataWorldObject("Take " + item.getName(), (WorldObject) owner);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionInventoryTake)) {
+            return false;
+        } else {
+            ActionInventoryTake other = (ActionInventoryTake) o;
+            return other.owner == this.owner && other.item == this.item && other.inventory == this.inventory;
+        }
+    }
     
 }

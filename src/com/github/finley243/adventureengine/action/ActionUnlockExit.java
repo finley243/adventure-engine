@@ -63,5 +63,15 @@ public class ActionUnlockExit implements Action {
 	public MenuData getMenuData() {
 		return new MenuDataWorldObject("Unlock", exit);
 	}
+
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionUnlockExit)) {
+            return false;
+        } else {
+            ActionUnlockExit other = (ActionUnlockExit) o;
+            return other.exit == this.exit;
+        }
+    }
 	
 }

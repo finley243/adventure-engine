@@ -101,4 +101,14 @@ public class ActionConsume implements Action {
 		return new MenuDataInventory(prompt, item);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionConsume)) {
+            return false;
+        } else {
+            ActionConsume other = (ActionConsume) o;
+            return other.item == this.item;
+        }
+    }
+
 }

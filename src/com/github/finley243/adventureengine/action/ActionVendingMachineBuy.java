@@ -72,4 +72,14 @@ public class ActionVendingMachineBuy implements Action {
 		return new MenuDataWorldObject("Buy " + Data.getItem(itemID).getName(), vendingMachine);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionVendingMachineBuy)) {
+            return false;
+        } else {
+            ActionVendingMachineBuy other = (ActionVendingMachineBuy) o;
+            return other.vendingMachine == this.vendingMachine && other.itemID.equals(this.itemID);
+        }
+    }
+
 }

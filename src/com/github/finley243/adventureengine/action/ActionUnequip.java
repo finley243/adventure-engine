@@ -67,5 +67,15 @@ public class ActionUnequip implements Action {
 	public MenuData getMenuData() {
 		return new MenuDataEquipped("Unequip", item);
 	}
+
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionUnequip)) {
+            return false;
+        } else {
+            ActionUnequip other = (ActionUnequip) o;
+            return other.item == this.item;
+        }
+    }
 	
 }

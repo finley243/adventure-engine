@@ -66,4 +66,14 @@ public class ActionUseCover implements Action {
 		return new MenuDataWorldObject("Take cover", cover);
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionUseCover)) {
+            return false;
+        } else {
+            ActionUseCover other = (ActionUseCover) o;
+            return other.cover == this.cover;
+        }
+    }
+
 }

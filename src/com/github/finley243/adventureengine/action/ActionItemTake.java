@@ -64,5 +64,15 @@ public class ActionItemTake implements Action {
 	public MenuData getMenuData() {
 		return new MenuDataWorldObject("Take", item);
 	}
+
+	@Override
+    public boolean equals(Object o) {
+        if(!(o instanceof ActionItemTake)) {
+            return false;
+        } else {
+            ActionItemTake other = (ActionItemTake) o;
+            return other.item == this.item;
+        }
+    }
 	
 }
