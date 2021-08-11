@@ -24,6 +24,7 @@ import com.github.finley243.adventureengine.load.DialogueLoader;
 import com.github.finley243.adventureengine.load.FactionLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;
 import com.github.finley243.adventureengine.load.LootTableLoader;
+import com.github.finley243.adventureengine.load.SceneLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -51,6 +52,7 @@ public class Game {
 	private static final String ITEM_DIRECTORY = "/items";
 	private static final String DIALOGUE_DIRECTORY = "/dialogues";
 	private static final String LOOT_TABLE_DIRECTORY = "/loottables";
+	private static final String SCENES_DIRECTORY = "/scenes";
 	
 	private PerceptionHandler perceptionHandler;
 	private UserInterface userInterface;
@@ -72,18 +74,19 @@ public class Game {
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		ActorLoader.loadActors(new File(GAMEFILES + ACTOR_DIRECTORY));
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
+		SceneLoader.loadScenes(new File(GAMEFILES + SCENES_DIRECTORY));
 		
-		List<SceneLine> lines = new ArrayList<SceneLine>();
+		/*List<SceneLine> lines = new ArrayList<SceneLine>();
 		List<String> text = new ArrayList<String>();
 		text.add("The receptionist leans on the desk and sighs. He turns to the security guard.");
 		text.add("\"Man, could this day be any longer?\"");
 		text.add("The guard smirks. \"Don't tempt fate.\"");
 		lines.add(new SceneLine(null, text));
-		Scene testScene = new Scene(new ConditionActorLocation(new ActorReference(ReferenceType.REFERENCE, "stratis_receptionist"), "stratis_hotel_lobby_desk", false), new ArrayList<Script>(), lines, false);
-		Data.addScene("test", testScene);
+		Scene testScene = new Scene("test", new ConditionActorLocation(new ActorReference(ReferenceType.REFERENCE, "stratis_receptionist"), "stratis_hotel_lobby_desk", false), new ArrayList<Script>(), lines, false);
+		Data.addScene(testScene.getID(), testScene);*/
 		List<String> scenes = new ArrayList<String>();
 		scenes.add("test");
-		SceneManager manager = new SceneManager(Data.getArea("stratis_hotel_lobby_desk"), false, 0.5f, scenes);
+		SceneManager manager = new SceneManager(Data.getArea("stratis_hotel_lobby_desk"), false, 1.0f, scenes);
 		Data.getRoom("stratis_hotel_lobby").addSceneManager(manager);
 		
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, Data.getArea("stratis_hotel_lobby_entry"), Data.getActorStats("player"));
@@ -104,12 +107,13 @@ public class Game {
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
 		EVENT_BUS.post(new RenderLocationEvent());
+		Data.getPlayer().getArea().getRoom().triggerSceneManager();
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();
 			}
 		}
-		((ActorPlayer) Data.getActor(PLAYER_ACTOR)).takeTurn();
+		Data.getPlayer().takeTurn();
 		sleep(800);
 		EVENT_BUS.post(new TextClearEvent());
 		TextGen.clearContext();
@@ -131,7 +135,7 @@ public class Game {
 	
 	@Subscribe
 	private void onRenderLocationEvent(RenderLocationEvent event) {
-		ActorPlayer player = ((ActorPlayer) Data.getActor(PLAYER_ACTOR));
+		ActorPlayer player = Data.getPlayer();
 		String locationName = player.getArea().getName();
 		String roomName = player.getArea().getRoom().getName();
 		Game.EVENT_BUS.post(new RenderTextEvent("------------------------------"));

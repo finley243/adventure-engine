@@ -65,11 +65,5 @@ public class ActorPlayer extends Actor {
 			Game.EVENT_BUS.post(new RenderTextEvent(""));
 		}
 	}
-	
-	@Override
-	public void takeTurn() {
-		getArea().getRoom().triggerSceneManager();
-		super.takeTurn();
-	}
 
 }

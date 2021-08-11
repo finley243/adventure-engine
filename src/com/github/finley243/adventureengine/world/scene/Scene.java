@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class Scene {
 
+	private String ID;
 	private Condition condition;
 	private List<Script> scripts;
 	// These lines are printed when the scene is played
@@ -19,12 +20,17 @@ public class Scene {
 	private boolean isRepeatable;
 	private boolean hasPlayed;
 	
-	public Scene(Condition condition, List<Script> scripts, List<SceneLine> lines, boolean isRepeatable) {
+	public Scene(String ID, Condition condition, List<Script> scripts, List<SceneLine> lines, boolean isRepeatable) {
+		this.ID = ID;
 		this.condition = condition;
 		this.scripts = scripts;
 		this.lines = lines;
 		this.isRepeatable = isRepeatable;
 		this.hasPlayed = false;
+	}
+	
+	public String getID() {
+		return ID;
 	}
 	
 	public boolean canPlay() {

@@ -20,6 +20,7 @@ import com.github.finley243.adventureengine.actor.Actor.Attribute;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.actor.ActorReference.ReferenceType;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.condition.ConditionActorLocation;
 import com.github.finley243.adventureengine.condition.ConditionAttribute;
 import com.github.finley243.adventureengine.condition.ConditionCompound;
 import com.github.finley243.adventureengine.condition.ConditionKnowledge;
@@ -112,7 +113,7 @@ public class DialogueLoader {
 		return new Choice(link, prompt, condition, once);
 	}
 	
-	private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
+	protected static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
 		if(conditionElement == null) return null;
 		String type = conditionElement.getAttribute("type");
 		ActorReference actorRef = loadActorReference(conditionElement);
@@ -132,6 +133,11 @@ public class DialogueLoader {
 			Attribute attribute = Attribute.valueOf(LoadUtils.singleTag(conditionElement, "attribute", null).toUpperCase());
 			int attributeValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
 			return new ConditionAttribute(actorRef, attribute, attributeValue);
+		case "actorLocation":
+			String actorArea = LoadUtils.singleTag(conditionElement, "area", null);
+			String actorRoom = LoadUtils.singleTag(conditionElement, "room", null);
+			boolean useRoom = actorArea == null;
+			return new ConditionActorLocation(actorRef, (useRoom ? actorRoom : actorArea), useRoom);
 		default:
 			return null;
 		}
@@ -150,7 +156,7 @@ public class DialogueLoader {
 		return subConditions;
 	}
 	
-	private static List<Script> loadScripts(Element parentElement) {
+	protected static List<Script> loadScripts(Element parentElement) {
 		NodeList scriptElements = parentElement.getElementsByTagName("script");
 		List<Script> scripts = new ArrayList<Script>();
 		for(int i = 0; i < scriptElements.getLength(); i++) {
