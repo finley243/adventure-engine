@@ -27,7 +27,7 @@ import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.item.ItemEquippable;
 import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -78,7 +78,7 @@ public class Actor implements Noun, Physical {
 	private EnumMap<Attribute, int[]> attributes;
 	private List<Effect> effects;
 	private Inventory inventory;
-	private ItemWeapon equippedItem;
+	private ItemEquippable equippedItem;
 	private int money;
 	private UsableObject usingObject;
 	private Inventory tradeInventory;
@@ -205,7 +205,7 @@ public class Actor implements Noun, Physical {
 		return tradeInventory;
 	}
 	
-	public void setEquippedItem(ItemWeapon item) {
+	public void setEquippedItem(ItemEquippable item) {
 		equippedItem = item;
 	}
 	
