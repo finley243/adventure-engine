@@ -83,7 +83,6 @@ public class Game {
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
 		EVENT_BUS.post(new RenderLocationEvent());
-		//((ActorPlayer) Data.getActor(PLAYER_ACTOR)).updateRoomDescription();
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();

@@ -44,12 +44,19 @@ public class Actor implements Noun, Physical {
 	public enum Skill {
 		// BODY
 		MELEE,
+		RESISTANCE,
 		// INTELLIGENCE
-		HACKING,
+		SOFTWARE,
 		HARDWARE,
 		// CHARISMA
+		BARTER,
+		PERSUASION,
+		DECEPTION,
 		// DEXTERITY
+		HANDGUNS,
+		RIFLES,
 		// AGILITY
+		STEALTH
 	}
 	
 	public enum BehaviorState {
