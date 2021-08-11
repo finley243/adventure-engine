@@ -50,8 +50,8 @@ public class ActorPlayer extends Actor {
 		return menuHandler.actionMenu(actions);
 	}
 	
-	public void startDialogue(Actor target) {
-		menuHandler.dialogueMenu(this, target);
+	public void startDialogue(Actor subject) {
+		menuHandler.dialogueMenu(subject);
 	}
 
 	public void updateAreaDescription() {

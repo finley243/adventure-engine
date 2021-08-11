@@ -35,13 +35,13 @@ public class Line {
     	return textList;
     }
     
-    public boolean shouldShow(Actor subject, Actor target) {
-    	return (condition == null || condition.isMet(subject)) && (!once || !hasTriggered.contains(target.getID()));
+    public boolean shouldShow(Actor subject) {
+    	return (condition == null || condition.isMet(subject)) && (!once || !hasTriggered.contains(subject.getID()));
     }
     
-    public void trigger(Actor subject, Actor target) {
-    	hasTriggered.add(target.getID());
-    	executeScripts(subject, target);
+    public void trigger(Actor subject) {
+    	hasTriggered.add(subject.getID());
+    	executeScripts(subject);
     }
     
     public boolean shouldExit() {
@@ -56,9 +56,9 @@ public class Line {
     	return redirectTopicId;
     }
 
-    private void executeScripts(Actor subject, Actor target) {
+    private void executeScripts(Actor subject) {
     	for(Script script : scripts) {
-    		script.execute(subject, target);
+    		script.execute(subject);
     	}
     }
     

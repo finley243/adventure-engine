@@ -55,18 +55,18 @@ public class MenuManager {
 		return actionChoice;
 	}
 	
-	public void dialogueMenu(Actor subject, Actor target) {
+	public void dialogueMenu(Actor subject) {
 		Game.EVENT_BUS.post(new TextClearEvent());
 		boolean dialogueLoop = true;
-		Topic currentTopic = Data.getTopic(target.getTopicID());
+		Topic currentTopic = Data.getTopic(subject.getTopicID());
 		while(dialogueLoop) {
-			Game.EVENT_BUS.post(new RenderTextEvent(target.getName().toUpperCase()));
+			Game.EVENT_BUS.post(new RenderTextEvent(subject.getName().toUpperCase()));
 			for(Line line : currentTopic.getLines()) {
-				if(line.shouldShow(subject, target)) {
+				if(line.shouldShow(subject)) {
 					for(String text : line.getTextList()) {
 						Game.EVENT_BUS.post(new RenderTextEvent(text));
 					}
-					line.trigger(subject, target);
+					line.trigger(subject);
 					if(line.hasRedirect()) {
 						currentTopic = Data.getTopic(line.getRedirectTopicId());
 						break;
@@ -83,7 +83,7 @@ public class MenuManager {
 			if(dialogueLoop) {
 				List<Choice> validChoices = new ArrayList<Choice>();
 				for(Choice choice : currentTopic.getChoices()) {
-					if(choice.shouldShow()) {
+					if(choice.shouldShow(subject)) {
 						validChoices.add(choice);
 					}
 				}

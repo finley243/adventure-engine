@@ -17,6 +17,8 @@ import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor.Attribute;
+import com.github.finley243.adventureengine.actor.ActorReference;
+import com.github.finley243.adventureengine.actor.ActorReference.ReferenceType;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.condition.ConditionAttribute;
 import com.github.finley243.adventureengine.condition.ConditionCompound;
@@ -113,6 +115,7 @@ public class DialogueLoader {
 	private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
 		if(conditionElement == null) return null;
 		String type = conditionElement.getAttribute("type");
+		ActorReference actorRef = loadActorReference(conditionElement);
 		switch(type) {
 		case "compound":
 			List<Condition> subConditions = loadSubConditions(conditionElement);
@@ -120,7 +123,7 @@ public class DialogueLoader {
 			return new ConditionCompound(subConditions, useOr);
 		case "money":
 			int moneyAmount = LoadUtils.singleTagInt(conditionElement, "value", 0);
-			return new ConditionMoney(moneyAmount);
+			return new ConditionMoney(actorRef, moneyAmount);
 		case "knowledge":
 			String knowledgeID = LoadUtils.singleTag(conditionElement, "knowledge", null);
 			boolean knowledgeValue = LoadUtils.singleTagBoolean(conditionElement, "value", true);
@@ -128,7 +131,7 @@ public class DialogueLoader {
 		case "attribute":
 			Attribute attribute = Attribute.valueOf(LoadUtils.singleTag(conditionElement, "attribute", null).toUpperCase());
 			int attributeValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
-			return new ConditionAttribute(attribute, attributeValue);
+			return new ConditionAttribute(actorRef, attribute, attributeValue);
 		default:
 			return null;
 		}
@@ -163,13 +166,14 @@ public class DialogueLoader {
 	private static Script loadScript(Element scriptElement) {
 		if(scriptElement == null) return null;
 		String type = scriptElement.getAttribute("type");
+		ActorReference actorRef = loadActorReference(scriptElement);
 		switch(type) {
 		case "money":
 			int moneyValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
-			return new ScriptMoney(moneyValue);
+			return new ScriptMoney(actorRef, moneyValue);
 		case "add_item":
 			String addItemID = LoadUtils.singleTag(scriptElement, "item", null);
-			return new ScriptAddItem(addItemID);
+			return new ScriptAddItem(actorRef, addItemID);
 		case "knowledge":
 			String knowledgeID = LoadUtils.singleTag(scriptElement, "knowledge", null);
 			return new ScriptKnowledge(knowledgeID);
@@ -178,6 +182,25 @@ public class DialogueLoader {
 		default:
 			return null;
 		}
+	}
+	
+	private static ActorReference loadActorReference(Element actorReferenceElement) {
+		String targetTypeString = actorReferenceElement.getAttribute("target");
+		ReferenceType targetType;
+		switch(targetTypeString) {
+		case "player":
+			targetType = ReferenceType.PLAYER;
+			break;
+		case "reference":
+			targetType = ReferenceType.REFERENCE;
+			break;
+		case "subject":
+		default:
+			targetType = ReferenceType.SUBJECT;
+			break;
+		}
+		String targetRef = LoadUtils.singleTag(actorReferenceElement, "actor", null);
+		return new ActorReference(targetType, targetRef);
 	}
 	
 }

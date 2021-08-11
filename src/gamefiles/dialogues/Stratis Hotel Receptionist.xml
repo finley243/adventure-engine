@@ -22,7 +22,7 @@
         </choice>
         <choice link="stratis_receptionist_info">
             <prompt>I'm looking for information.</prompt>
-            <condition type="attribute">
+            <condition type="attribute" target="player">
                 <attribute>CHARISMA</attribute>
                 <value>3</value>
             </condition>
@@ -38,7 +38,7 @@
         </line>
         <choice link="stratis_receptionist_purchase_room" once="true">
             <prompt>I'll take the room.</prompt>
-            <condition type="money">
+            <condition type="money" target="player">
                 <value>300</value>
             </condition>
         </choice>
@@ -50,10 +50,10 @@
         <line>
             <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
             <text>He hands you a white keycard with the Stratis Hotel logo.</text>
-            <script type="add_item">
+            <script type="add_item" target="player">
                 <item>stratis_room_key</item>
             </script>
-            <script type="money">
+            <script type="money" target="player">
                 <value>-300</value>
             </script>
             <script type="knowledge">

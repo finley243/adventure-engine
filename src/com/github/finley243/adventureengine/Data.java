@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -18,6 +19,8 @@ import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.github.finley243.adventureengine.world.template.StatsItem;
 
 public class Data {
+	
+	private static ActorPlayer player = null;
 	
 	private static Map<String, Area> areas = new HashMap<String, Area>();
 	private static Map<String, Room> rooms = new HashMap<String, Room>();
@@ -66,6 +69,19 @@ public class Data {
 	
 	public static Collection<Actor> getActors() {
 		return actors.values();
+	}
+	
+	public static void replaceActor(String id, Actor value) {
+		if(!actors.containsKey(id)) {
+			System.out.println("WARNING - Replacing actor with ID that does not exist: " + id);
+		}
+	}
+	
+	public static ActorPlayer getPlayer() {
+		if(player == null) {
+			player = (ActorPlayer) getActor(Game.PLAYER_ACTOR);
+		}
+		return player;
 	}
 	
 	public static void addActorStats(String id, StatsActor value) {

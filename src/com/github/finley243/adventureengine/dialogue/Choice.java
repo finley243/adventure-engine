@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.dialogue;
 
-import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 
 public class Choice {
@@ -22,8 +21,8 @@ public class Choice {
         this.hasTriggered = false;
     }
 
-    public boolean shouldShow() {
-        return (condition == null || condition.isMet(Data.getActor(Game.PLAYER_ACTOR))) && (!once || !hasTriggered);
+    public boolean shouldShow(Actor subject) {
+        return (condition == null || condition.isMet(subject)) && (!once || !hasTriggered);
     }
     
     public void trigger() {

@@ -12,7 +12,7 @@ public class ScriptKnowledge implements Script {
 	}
 	
 	@Override
-	public void execute(Actor subject, Actor target) {
+	public void execute(Actor subject) {
 		Data.addKnowledge(knowledgeID);
 	}
 
