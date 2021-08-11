@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.dialogue.Topic;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.object.LinkedObject;
+import com.github.finley243.adventureengine.world.scene.Scene;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.github.finley243.adventureengine.world.template.StatsItem;
 
@@ -29,6 +29,7 @@ public class Data {
 	private static Map<String, Topic> topics = new HashMap<String, Topic>();
 	private static Set<String> knowledge = new HashSet<String>();
 	private static Map<String, Faction> factions = new HashMap<String, Faction>();
+	private static Map<String, Scene> scenes = new HashMap<String, Scene>();
 	
 	public static void addArea(String id, Area value) {
 		if(areas.containsKey(id)) {
@@ -139,6 +140,17 @@ public class Data {
 	
 	public static Faction getFaction(String id) {
 		return factions.get(id);
+	}
+	
+	public static void addScene(String id, Scene value) {
+		if(scenes.containsKey(id)) {
+			System.out.println("WARNING - Adding scene with existing ID: " + id);
+		}
+		scenes.put(id, value);
+	}
+	
+	public static Scene getScene(String id) {
+		return scenes.get(id);
 	}
 	
 }

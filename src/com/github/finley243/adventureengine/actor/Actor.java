@@ -87,7 +87,9 @@ public class Actor implements Noun, Physical {
 	
 	public Actor(String ID, Area area, StatsActor stats, String descriptor, String topicID, boolean startDead) {
 		this.ID = ID;
-		this.move(area);
+		if(area != null) {
+			this.move(area);
+		}
 		this.stats = stats;
 		this.descriptor = descriptor;
 		this.topicID = topicID;
