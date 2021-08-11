@@ -11,7 +11,7 @@
         <pronoun>HE</pronoun>
         <faction>stratis_hotel_staff</faction>
         <hp>40</hp>
-        <loottable>weapon_basic</loottable>
+        <loottable>stratis_receptionist</loottable>
     </actor>
     <actor id="enemy">
         <name proper="false">ganger</name>

@@ -58,7 +58,7 @@ public class WorldLoader {
 		Element roomNameElement = (Element) roomElement.getElementsByTagName("name").item(0);
 		String roomName = roomNameElement.getTextContent();
 		boolean roomNameIsProper = LoadUtils.boolAttribute(roomNameElement, "proper", false);
-		String roomDescription = LoadUtils.singleTag(roomElement, "description", "");
+		String roomDescription = LoadUtils.singleTag(roomElement, "roomDescription", null);
 		
 		NodeList areaElements = roomElement.getElementsByTagName("area");
 		Set<Area> areas = new HashSet<Area>();
@@ -79,7 +79,7 @@ public class WorldLoader {
 		String name = nameElement.getTextContent();
 		boolean isProperName = LoadUtils.boolAttribute(nameElement, "proper", false);
 		boolean isProximateName = LoadUtils.boolAttribute(nameElement, "prox", false);
-		String description = LoadUtils.singleTag(areaElement, "description", null);
+		String description = LoadUtils.singleTag(areaElement, "areaDescription", null);
 		
 		Element linksElement = (Element) areaElement.getElementsByTagName("links").item(0);
 		NodeList links = linksElement.getElementsByTagName("link");
@@ -132,8 +132,8 @@ public class WorldLoader {
 		switch(objectType) {
 		case "exit":
 			String exitLink = LoadUtils.singleTag(objectElement, "link", null);
-			String exitKey = LoadUtils.singleTag(objectElement, "key", null);
-			return new ObjectExit(objectID, objectName, description, exitLink, exitKey);
+			Set<String> exitKeys = LoadUtils.setOfTags(objectElement, "key");
+			return new ObjectExit(objectID, objectName, description, exitLink, exitKeys);
 		case "elevator":
 			int floorNumber = LoadUtils.singleTagInt(objectElement, "floornumber", 1);
 			String floorName = LoadUtils.singleTag(objectElement, "floorname", null);
