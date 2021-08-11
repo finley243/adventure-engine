@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.item;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -9,13 +8,12 @@ import com.github.finley243.adventureengine.action.ActionAttackMelee;
 import com.github.finley243.adventureengine.action.ActionAttackRanged;
 import com.github.finley243.adventureengine.action.ActionEquip;
 import com.github.finley243.adventureengine.action.ActionInspect;
-import com.github.finley243.adventureengine.action.ActionReload;
-import com.github.finley243.adventureengine.action.ActionUnequip;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
+import com.github.finley243.adventureengine.action.ActionReload;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
-public class ItemWeapon extends Item {
+public class ItemWeapon extends ItemEquippable {
 	
 	private StatsWeapon stats;
 	private int ammo;
@@ -77,8 +75,9 @@ public class ItemWeapon extends Item {
 		return actions;
 	}
 	
+	@Override
 	public List<Action> equippedActions(Actor subject) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = super.equippedActions(subject);
 		Set<Actor> targets = stats.getType().isRanged ? subject.getArea().getRoom().getActors() : subject.getArea().getActors();
 		for(Actor target : targets) {
 			if(target != subject) {
@@ -96,7 +95,6 @@ public class ItemWeapon extends Item {
 		if(ammo < stats.getClipSize()) { // Add check to see if subject has ammo
 			actions.add(new ActionReload(this));
 		}
-		actions.add(new ActionUnequip(this));
 		if(this.getDescription() != null) {
 			actions.add(new ActionInspect(this, InspectType.EQUIPPED));
 		}

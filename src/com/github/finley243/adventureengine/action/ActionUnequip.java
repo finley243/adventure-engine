@@ -7,13 +7,13 @@ import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.item.ItemEquippable;
 
 public class ActionUnequip implements Action {
 
-	private ItemWeapon item;
+	private ItemEquippable item;
 	
-	public ActionUnequip(ItemWeapon item) {
+	public ActionUnequip(ItemEquippable item) {
 		this.item = item;
 	}
 	
