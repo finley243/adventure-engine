@@ -2,16 +2,22 @@ package com.github.finley243.adventureengine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
-import com.github.finley243.adventureengine.event.TextClearEvent;
+import com.github.finley243.adventureengine.actor.ActorReference;
+import com.github.finley243.adventureengine.actor.ActorReference.ReferenceType;
+import com.github.finley243.adventureengine.condition.ConditionActorLocation;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
+import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.ActorLoader;
 import com.github.finley243.adventureengine.load.DialogueLoader;
@@ -19,13 +25,15 @@ import com.github.finley243.adventureengine.load.FactionLoader;
 import com.github.finley243.adventureengine.load.ItemLoader;
 import com.github.finley243.adventureengine.load.LootTableLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
-import com.github.finley243.adventureengine.ui.ConsoleInterface;
-import com.github.finley243.adventureengine.ui.GraphicalInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
+import com.github.finley243.adventureengine.world.scene.Scene;
+import com.github.finley243.adventureengine.world.scene.SceneLine;
+import com.github.finley243.adventureengine.world.scene.SceneManager;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -64,6 +72,19 @@ public class Game {
 		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
 		ActorLoader.loadActors(new File(GAMEFILES + ACTOR_DIRECTORY));
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
+		
+		List<SceneLine> lines = new ArrayList<SceneLine>();
+		List<String> text = new ArrayList<String>();
+		text.add("The receptionist leans on the desk and sighs. He turns to the security guard.");
+		text.add("\"Man, could this day be any longer?\"");
+		text.add("The guard smirks. \"Don't tempt fate.\"");
+		lines.add(new SceneLine(null, text));
+		Scene testScene = new Scene(new ConditionActorLocation(new ActorReference(ReferenceType.REFERENCE, "stratis_receptionist"), "stratis_hotel_lobby_desk", false), new ArrayList<Script>(), lines, false);
+		Data.addScene("test", testScene);
+		List<String> scenes = new ArrayList<String>();
+		scenes.add("test");
+		SceneManager manager = new SceneManager(Data.getArea("stratis_hotel_lobby_desk"), false, 0.5f, scenes);
+		Data.getRoom("stratis_hotel_lobby").addSceneManager(manager);
 		
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, Data.getArea("stratis_hotel_lobby_entry"), Data.getActorStats("player"));
 		Data.addActor(player.getID(), player);

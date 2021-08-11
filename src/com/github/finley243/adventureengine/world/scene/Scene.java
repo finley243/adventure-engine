@@ -19,14 +19,21 @@ public class Scene {
 	private boolean isRepeatable;
 	private boolean hasPlayed;
 	
-	public Scene() {
-		
+	public Scene(Condition condition, List<Script> scripts, List<SceneLine> lines, boolean isRepeatable) {
+		this.condition = condition;
+		this.scripts = scripts;
+		this.lines = lines;
+		this.isRepeatable = isRepeatable;
+		this.hasPlayed = false;
 	}
 	
 	public boolean canPlay() {
 		if(!isRepeatable && hasPlayed) {
 			return false;
 		} else {
+			if(condition == null) {
+				return true;
+			}
 			return condition.isMet(Data.getActor(Game.PLAYER_ACTOR));
 		}
 	}
@@ -43,6 +50,10 @@ public class Scene {
 			script.execute(null);
 		}
 		hasPlayed = true;
+	}
+	
+	public boolean hasPlayed() {
+		return hasPlayed;
 	}
 
 }
