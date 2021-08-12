@@ -1,10 +1,15 @@
-package com.github.finley243.adventureengine.actor;
+package com.github.finley243.adventureengine.actor.ai;
+
+import com.github.finley243.adventureengine.actor.Actor;
 
 public class CombatTarget {
 
 	/** Number of turns it takes for a combat target to be removed if they are not visible */
 	public static final int TURNS_BEFORE_END_COMBAT = 5;
-	public static final float PURSUE_TARGET_UTILITY = 0.7f;
+	public static final float PURSUE_TARGET_UTILITY_MELEE = 0.7f;
+	public static final float PURSUE_TARGET_UTILITY_RANGED = 0.0f;
+	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.7f;
+	public static final float PURSUE_TARGET_UTILITY_NOWEAPON = 0.0f;
 	
 	private Actor targetActor;
 	private int turnsUntilRemove;
@@ -17,13 +22,21 @@ public class CombatTarget {
 	
 	public void update(Actor subject) {
 		if(pursueTarget == null) {
-			pursueTarget = new PursueTarget(targetActor.getArea(), PURSUE_TARGET_UTILITY, true);
+			pursueTarget = new PursueTarget(targetActor.getArea(), PURSUE_TARGET_UTILITY_RANGED, true);
 			subject.addPursueTarget(pursueTarget);
 		}
 		if(subject.canSee(targetActor)) {
 			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 			pursueTarget.setTargetArea(targetActor.getArea());
+			if(subject.hasRangedWeaponEquipped()) {
+				pursueTarget.setTargetUtility(PURSUE_TARGET_UTILITY_RANGED);
+			} else if(subject.hasMeleeWeaponEquipped()) {
+				pursueTarget.setTargetUtility(PURSUE_TARGET_UTILITY_MELEE);
+			} else {
+				pursueTarget.setTargetUtility(PURSUE_TARGET_UTILITY_NOWEAPON);
+			}
 		} else {
+			pursueTarget.setTargetUtility(PURSUE_TARGET_UTILITY_INVISIBLE);
 			turnsUntilRemove--;
 		}
 		if(targetActor.isDead()) {

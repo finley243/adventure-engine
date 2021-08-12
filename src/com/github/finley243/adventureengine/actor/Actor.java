@@ -16,6 +16,8 @@ import com.github.finley243.adventureengine.action.ActionMultiEnd;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.action.ActionWait;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
+import com.github.finley243.adventureengine.actor.ai.CombatTarget;
+import com.github.finley243.adventureengine.actor.ai.PursueTarget;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
@@ -28,6 +30,7 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemEquippable;
+import com.github.finley243.adventureengine.world.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -310,6 +313,14 @@ public class Actor implements Noun, Physical {
 		return false;
 	}
 	
+	public boolean hasRangedWeaponEquipped() {
+		return equippedItem != null && equippedItem instanceof ItemWeapon && ((ItemWeapon) equippedItem).isRanged();
+	}
+	
+	public boolean hasMeleeWeaponEquipped() {
+		return equippedItem != null && equippedItem instanceof ItemWeapon && !((ItemWeapon) equippedItem).isRanged();
+	}
+	
 	public boolean isCombatTarget(Actor actor) {
 		return combatTargets.contains(new CombatTarget(actor));
 	}
@@ -340,7 +351,7 @@ public class Actor implements Noun, Physical {
 		for(PursueTarget target : pursueTargets) {
 			if(target.isOnPath(area)) {
 				// Temporary calculation, ignores distance
-				utility += 1.0f;
+				utility += target.getTargetUtility();
 			}
 		}
 		return utility / pursueTargets.size();

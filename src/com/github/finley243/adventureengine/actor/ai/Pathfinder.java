@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.actor;
+package com.github.finley243.adventureengine.actor.ai;
 
 import java.util.ArrayList;
 import java.util.HashSet;

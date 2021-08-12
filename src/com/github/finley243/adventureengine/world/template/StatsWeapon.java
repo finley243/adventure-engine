@@ -24,14 +24,16 @@ public class StatsWeapon extends StatsItem {
 	private WeaponType type;
 	private int damage;
 	private int rate;
+	private int critDamage;
 	private float hitChance;
 	private int clipSize;
 	
-	public StatsWeapon(String ID, String name, String description, int price, WeaponType type, int damage, int rate, float hitChance, int clipSize) {
+	public StatsWeapon(String ID, String name, String description, int price, WeaponType type, int damage, int rate, int critDamage, float hitChance, int clipSize) {
 		super(ID, name, description, price);
 		this.type = type;
 		this.damage = damage;
 		this.rate = rate;
+		this.critDamage = critDamage;
 		this.hitChance = hitChance;
 		this.clipSize = clipSize;
 	}
@@ -46,6 +48,10 @@ public class StatsWeapon extends StatsItem {
 	
 	public int getRate() {
 		return rate;
+	}
+	
+	public int getCritDamage() {
+		return critDamage;
 	}
 	
 	public float getHitChance() {

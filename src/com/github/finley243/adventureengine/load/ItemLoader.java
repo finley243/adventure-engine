@@ -67,9 +67,10 @@ public class ItemLoader {
 			WeaponType weaponType = WeaponType.valueOf(LoadUtils.singleTag(itemElement, "type", null));
 			int weaponDamage = LoadUtils.singleTagInt(itemElement, "damage", 0);
 			int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
+			int critDamage = LoadUtils.singleTagInt(itemElement, "critDamage", 0);
 			float weaponHitChance = LoadUtils.singleTagFloat(itemElement, "chance", 1.0f);
 			int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipsize", 0);
-			return new StatsWeapon(id, name, description, price, weaponType, weaponDamage, weaponRate, weaponHitChance, weaponClipSize);
+			return new StatsWeapon(id, name, description, price, weaponType, weaponDamage, weaponRate, critDamage, weaponHitChance, weaponClipSize);
 		}
 		return null;
 	}

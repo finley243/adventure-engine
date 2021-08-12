@@ -2,7 +2,9 @@ package com.github.finley243.adventureengine.world.item;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionAttackMelee;
 import com.github.finley243.adventureengine.action.ActionAttackRanged;
@@ -11,9 +13,15 @@ import com.github.finley243.adventureengine.action.ActionInspect;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.action.ActionReload;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.RenderTextEvent;
+import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
 public class ItemWeapon extends ItemEquippable {
+	
+	public static final float CRIT_CHANCE = 0.05f;
 	
 	private StatsWeapon stats;
 	private int ammo;
@@ -38,8 +46,8 @@ public class ItemWeapon extends ItemEquippable {
 		return stats.getID();
 	}
 	
-	public boolean isMelee() {
-		return !stats.getType().isRanged;
+	public boolean isRanged() {
+		return stats.getType().isRanged;
 	}
 	
 	public int getDamage() {
@@ -48,6 +56,10 @@ public class ItemWeapon extends ItemEquippable {
 	
 	public int getRate() {
 		return stats.getRate();
+	}
+	
+	public int getCritDamage() {
+		return stats.getCritDamage();
 	}
 	
 	public float getHitChance(Actor subject) {
@@ -64,6 +76,25 @@ public class ItemWeapon extends ItemEquippable {
 	
 	public void consumeAmmo(int amount) {
 		ammo -= amount;
+	}
+	
+	public void attack(Actor subject, Actor target) {
+		if(isRanged()) {
+			consumeAmmo(1);
+		}
+		target.addCombatTarget(subject);
+		Context context = new Context(subject, false, target, false, this, false);
+		if(ThreadLocalRandom.current().nextFloat() < getHitChance(subject)) {
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get((isRanged() ? "rangedHit" : "meleeHit")), context));
+			if(ThreadLocalRandom.current().nextFloat() < CRIT_CHANCE) {
+				Game.EVENT_BUS.post(new RenderTextEvent("Critical Hit!"));
+				target.damage(getDamage() + getCritDamage());
+			} else {
+				target.damage(getDamage());
+			}
+		} else {
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get((isRanged() ? "rangedMiss" : "meleeMiss")), context));
+		}
 	}
 	
 	@Override

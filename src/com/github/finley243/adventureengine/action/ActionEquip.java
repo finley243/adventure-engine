@@ -36,14 +36,18 @@ public class ActionEquip implements Action {
 	@Override
 	public float utility(Actor subject) {
 		if(!subject.isInCombat()) return 0;
-		if(item.isMelee()) {
+		if(item.isRanged()) {
+			if(subject.hasMeleeTargets()) {
+				return SUBOPTIMAL_WEAPON_UTILITY;
+			} else {
+				return OPTIMAL_WEAPON_UTILITY;
+			}
+		} else {
 			if(subject.hasMeleeTargets()) {
 				return OPTIMAL_WEAPON_UTILITY;
 			} else {
 				return SUBOPTIMAL_WEAPON_UTILITY;
 			}
-		} else {
-			return OPTIMAL_WEAPON_UTILITY;
 		}
 	}
 	

@@ -1,7 +1,8 @@
-package com.github.finley243.adventureengine.actor;
+package com.github.finley243.adventureengine.actor.ai;
 
 import java.util.List;
 
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class BehaviorIdle {
