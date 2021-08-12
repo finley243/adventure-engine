@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.dialogue;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 
-public class Choice {
+public class DialogueChoice {
 
     private boolean hasTriggered;
 
@@ -13,7 +13,7 @@ public class Choice {
 
     private boolean once;
 
-    public Choice(String linkedTopicId, String prompt, Condition condition, boolean once) {
+    public DialogueChoice(String linkedTopicId, String prompt, Condition condition, boolean once) {
         this.linkedTopicId = linkedTopicId;
         this.prompt = prompt;
         this.condition = condition;

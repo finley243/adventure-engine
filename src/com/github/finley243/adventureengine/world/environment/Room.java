@@ -8,7 +8,6 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.scene.SceneManager;
 
 /**
  * Represents a self-contained space (e.g. an actual room) that contains smaller areas
@@ -24,7 +23,6 @@ public class Room implements Noun {
 	private boolean hasVisited;
 	
 	private Set<Area> areas;
-	private SceneManager sceneManager;
 	
 	public Room(String ID, String name, boolean isProperName, String description, Set<Area> areas) {
 		this.ID = ID;
@@ -33,7 +31,6 @@ public class Room implements Noun {
 		this.description = description;
 		this.areas = areas;
 		this.hasVisited = false;
-		this.sceneManager = sceneManager;
 	}
 	
 	public String getID() {
@@ -70,14 +67,6 @@ public class Room implements Noun {
 			actors.addAll(area.getActors());
 		}
 		return actors;
-	}
-	
-	public void triggerSceneManager() {
-		sceneManager.trigger();
-	}
-	
-	public void addSceneManager(SceneManager sceneManager) {
-		this.sceneManager = sceneManager;
 	}
 
 	@Override

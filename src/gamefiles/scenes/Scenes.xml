@@ -1,8 +1,13 @@
 <scenes>
     <scene id="test" isRepeatable="false">
-        <condition type="actorLocation" target="reference">
-            <actor>stratis_receptionist</actor>
-            <area>stratis_hotel_lobby_desk</area>
+        <condition type="compound" logic="and">
+            <condition type="actorAvailableForScene" target="reference">
+                <actor>stratis_receptionist</actor>
+            </condition>
+            <condition type="actorLocation" target="reference">
+                <actor>stratis_receptionist</actor>
+                <area>stratis_hotel_lobby_desk</area>
+            </condition>
         </condition>
         <line>
             <text>The receptionist leans on the desk and sighs. He turns to the security guard.</text>

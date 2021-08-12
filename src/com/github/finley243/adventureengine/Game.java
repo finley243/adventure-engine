@@ -76,19 +76,6 @@ public class Game {
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		SceneLoader.loadScenes(new File(GAMEFILES + SCENES_DIRECTORY));
 		
-		/*List<SceneLine> lines = new ArrayList<SceneLine>();
-		List<String> text = new ArrayList<String>();
-		text.add("The receptionist leans on the desk and sighs. He turns to the security guard.");
-		text.add("\"Man, could this day be any longer?\"");
-		text.add("The guard smirks. \"Don't tempt fate.\"");
-		lines.add(new SceneLine(null, text));
-		Scene testScene = new Scene("test", new ConditionActorLocation(new ActorReference(ReferenceType.REFERENCE, "stratis_receptionist"), "stratis_hotel_lobby_desk", false), new ArrayList<Script>(), lines, false);
-		Data.addScene(testScene.getID(), testScene);*/
-		List<String> scenes = new ArrayList<String>();
-		scenes.add("test");
-		SceneManager manager = new SceneManager(Data.getArea("stratis_hotel_lobby_desk"), false, 1.0f, scenes);
-		Data.getRoom("stratis_hotel_lobby").addSceneManager(manager);
-		
 		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, Data.getArea("stratis_hotel_lobby_entry"), Data.getActorStats("player"));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
@@ -107,7 +94,7 @@ public class Game {
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
 		EVENT_BUS.post(new RenderLocationEvent());
-		Data.getPlayer().getArea().getRoom().triggerSceneManager();
+		Data.getPlayer().triggerSceneManager();
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();

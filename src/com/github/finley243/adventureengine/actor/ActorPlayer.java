@@ -10,17 +10,20 @@ import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.scene.SceneManager;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class ActorPlayer extends Actor {
 
-	private MenuManager menuHandler;
+	private MenuManager menuManager;
+	private SceneManager sceneManager;
 	
 	public ActorPlayer(String ID, Area area, StatsActor stats) {
 		super(ID, area, stats, null, null, false);
-		this.menuHandler = new MenuManager();
+		this.menuManager = new MenuManager();
 		Game.EVENT_BUS.register(this);
-		Game.EVENT_BUS.register(menuHandler);
+		Game.EVENT_BUS.register(menuManager);
+		sceneManager = new SceneManager();
 	}
 	
 	@Override
@@ -47,11 +50,11 @@ public class ActorPlayer extends Actor {
 	
 	@Override
 	public Action chooseAction(List<Action> actions) {
-		return menuHandler.actionMenu(actions);
+		return menuManager.actionMenu(actions);
 	}
 	
 	public void startDialogue(Actor subject) {
-		menuHandler.dialogueMenu(subject);
+		menuManager.dialogueMenu(subject);
 	}
 
 	public void updateAreaDescription() {
@@ -64,6 +67,10 @@ public class ActorPlayer extends Actor {
 			Game.EVENT_BUS.post(new RenderTextEvent(this.getArea().getDescription()));
 			Game.EVENT_BUS.post(new RenderTextEvent(""));
 		}
+	}
+	
+	public void triggerSceneManager() {
+		sceneManager.trigger();
 	}
 
 }

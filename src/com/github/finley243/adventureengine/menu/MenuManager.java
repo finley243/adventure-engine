@@ -7,10 +7,10 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.dialogue.Choice;
-import com.github.finley243.adventureengine.dialogue.Line;
-import com.github.finley243.adventureengine.dialogue.Topic;
-import com.github.finley243.adventureengine.dialogue.Topic.TopicType;
+import com.github.finley243.adventureengine.dialogue.DialogueChoice;
+import com.github.finley243.adventureengine.dialogue.DialogueLine;
+import com.github.finley243.adventureengine.dialogue.DialogueTopic;
+import com.github.finley243.adventureengine.dialogue.DialogueTopic.TopicType;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
@@ -23,10 +23,10 @@ import com.google.common.eventbus.Subscribe;
 public class MenuManager {
 
 	private List<Action> actionList;
-	private List<Choice> dialogueList;
+	private List<DialogueChoice> dialogueList;
 	
 	private Action actionChoice;
-	private Choice dialogueChoice;
+	private DialogueChoice dialogueChoice;
 	
 	public MenuManager() {
 		this.actionList = null;
@@ -58,10 +58,10 @@ public class MenuManager {
 	public void dialogueMenu(Actor subject) {
 		Game.EVENT_BUS.post(new TextClearEvent());
 		boolean dialogueLoop = true;
-		Topic currentTopic = Data.getTopic(subject.getTopicID());
+		DialogueTopic currentTopic = Data.getTopic(subject.getTopicID());
 		while(dialogueLoop) {
 			Game.EVENT_BUS.post(new RenderTextEvent(subject.getName().toUpperCase()));
-			for(Line line : currentTopic.getLines()) {
+			for(DialogueLine line : currentTopic.getLines()) {
 				if(line.shouldShow(subject)) {
 					for(String text : line.getTextList()) {
 						Game.EVENT_BUS.post(new RenderTextEvent(text));
@@ -81,15 +81,15 @@ public class MenuManager {
 				}
 			}
 			if(dialogueLoop) {
-				List<Choice> validChoices = new ArrayList<Choice>();
-				for(Choice choice : currentTopic.getChoices()) {
+				List<DialogueChoice> validChoices = new ArrayList<DialogueChoice>();
+				for(DialogueChoice choice : currentTopic.getChoices()) {
 					if(choice.shouldShow(subject)) {
 						validChoices.add(choice);
 					}
 				}
 				Game.EVENT_BUS.post(new RenderTextEvent(""));
 				if(validChoices.size() > 0) {
-					Choice selectedChoice = dialogueMenu(validChoices);
+					DialogueChoice selectedChoice = dialogueMenu(validChoices);
 					currentTopic = Data.getTopic(selectedChoice.getLinkedId());
 				}
 				//Game.EVENT_BUS.post(new RenderTextEvent(""));
@@ -105,11 +105,11 @@ public class MenuManager {
 		}
 	}
 	
-	private Choice dialogueMenu(List<Choice> choices) {
+	private DialogueChoice dialogueMenu(List<DialogueChoice> choices) {
 		this.dialogueList = choices;
 		List<String> menuStrings = new ArrayList<String>();
 		List<MenuData> menuData = new ArrayList<MenuData>();
-		for(Choice choice : choices) {
+		for(DialogueChoice choice : choices) {
 			menuStrings.add(choice.getPrompt());
 			menuData.add(new MenuDataGlobal(choice.getPrompt()));
 		}

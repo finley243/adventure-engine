@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
 
-public class Line {
+public class DialogueLine {
     
 	private Set<String> hasTriggered;
 
@@ -21,7 +21,7 @@ public class Line {
     // If non-null, redirect to this topic after line is spoken
     private String redirectTopicId;
 
-    public Line(List<String> textList, Condition condition, List<Script> scripts, boolean once, boolean exit, String redirectTopicId) {
+    public DialogueLine(List<String> textList, Condition condition, List<Script> scripts, boolean once, boolean exit, String redirectTopicId) {
         this.textList = textList;
         this.condition = condition;
         this.scripts = scripts;

@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.dialogue;
 
 import java.util.List;
 
-public class Topic {
+public class DialogueTopic {
 
 	public enum TopicType {
 		SEQUENTIAL, SELECTOR
@@ -10,12 +10,12 @@ public class Topic {
 
 	private String ID;
 	
-	private List<Line> lines;
-	private List<Choice> choices;
+	private List<DialogueLine> lines;
+	private List<DialogueChoice> choices;
 
 	private TopicType type;
 	
-	public Topic(String ID, List<Line> lines, List<Choice> choices, TopicType type) {
+	public DialogueTopic(String ID, List<DialogueLine> lines, List<DialogueChoice> choices, TopicType type) {
 		this.ID = ID;
 		this.lines = lines;
 		this.choices = choices;
@@ -25,11 +25,11 @@ public class Topic {
 		return ID;
 	}
 	
-	public List<Line> getLines() {
+	public List<DialogueLine> getLines() {
 		return lines;
 	}
 
-	public List<Choice> getChoices() {
+	public List<DialogueChoice> getChoices() {
 		return choices;
 	}
 

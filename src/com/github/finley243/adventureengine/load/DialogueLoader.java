@@ -21,14 +21,15 @@ import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.actor.ActorReference.ReferenceType;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.condition.ConditionActorLocation;
+import com.github.finley243.adventureengine.condition.ConditionActorAvailableForScene;
 import com.github.finley243.adventureengine.condition.ConditionAttribute;
 import com.github.finley243.adventureengine.condition.ConditionCompound;
 import com.github.finley243.adventureengine.condition.ConditionKnowledge;
 import com.github.finley243.adventureengine.condition.ConditionMoney;
-import com.github.finley243.adventureengine.dialogue.Choice;
-import com.github.finley243.adventureengine.dialogue.Line;
-import com.github.finley243.adventureengine.dialogue.Topic;
-import com.github.finley243.adventureengine.dialogue.Topic.TopicType;
+import com.github.finley243.adventureengine.dialogue.DialogueChoice;
+import com.github.finley243.adventureengine.dialogue.DialogueLine;
+import com.github.finley243.adventureengine.dialogue.DialogueTopic;
+import com.github.finley243.adventureengine.dialogue.DialogueTopic.TopicType;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptAddItem;
 import com.github.finley243.adventureengine.script.ScriptKnowledge;
@@ -49,7 +50,7 @@ public class DialogueLoader {
 				for(int i = 0; i < topics.getLength(); i++) {
 					if(topics.item(i).getNodeType() == Node.ELEMENT_NODE) {
 						Element topicElement = (Element) topics.item(i);
-						Topic topic = loadTopic(topicElement);
+						DialogueTopic topic = loadTopic(topicElement);
 						Data.addTopic(topic.getID(), topic);
 					}
 				}
@@ -57,7 +58,7 @@ public class DialogueLoader {
 		}
 	}
 	
-	private static Topic loadTopic(Element topicElement) throws ParserConfigurationException, SAXException, IOException {
+	private static DialogueTopic loadTopic(Element topicElement) throws ParserConfigurationException, SAXException, IOException {
 		String topicID = topicElement.getAttribute("id");
 		TopicType type;
 		switch(topicElement.getAttribute("type")) {
@@ -70,27 +71,27 @@ public class DialogueLoader {
 				break;
 		}
 		NodeList lineElements = topicElement.getElementsByTagName("line");
-		List<Line> lines = new ArrayList<Line>();
+		List<DialogueLine> lines = new ArrayList<DialogueLine>();
 		for(int i = 0; i < lineElements.getLength(); i++) {
 			if(lineElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element lineElement = (Element) lineElements.item(i);
-				Line line = loadLine(lineElement);
+				DialogueLine line = loadLine(lineElement);
 				lines.add(line);
 			}
 		}
 		NodeList choiceElements = topicElement.getElementsByTagName("choice");
-		List<Choice> choices = new ArrayList<Choice>();
+		List<DialogueChoice> choices = new ArrayList<DialogueChoice>();
 		for(int i = 0; i < choiceElements.getLength(); i++) {
 			if(choiceElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element choiceElement = (Element) choiceElements.item(i);
-				Choice choice = loadChoice(choiceElement);
+				DialogueChoice choice = loadChoice(choiceElement);
 				choices.add(choice);
 			}
 		}
-		return new Topic(topicID, lines, choices, type);
+		return new DialogueTopic(topicID, lines, choices, type);
 	}
 	
-	private static Line loadLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
+	private static DialogueLine loadLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
 		boolean once = LoadUtils.boolAttribute(lineElement, "once", false);
 		boolean exit = LoadUtils.boolAttribute(lineElement, "exit", false);
 		String redirect = lineElement.getAttribute("redirect");
@@ -101,16 +102,16 @@ public class DialogueLoader {
 		Element conditionElement = (Element) lineElement.getElementsByTagName("condition").item(0);
 		Condition condition = loadCondition(conditionElement);
 		List<Script> scripts = loadScripts(lineElement);
-		return new Line(texts, condition, scripts, once, exit, redirect);
+		return new DialogueLine(texts, condition, scripts, once, exit, redirect);
 	}
 	
-	private static Choice loadChoice(Element choiceElement) throws ParserConfigurationException, SAXException, IOException {
+	private static DialogueChoice loadChoice(Element choiceElement) throws ParserConfigurationException, SAXException, IOException {
 		boolean once = LoadUtils.boolAttribute(choiceElement, "once", false);
 		String link = choiceElement.getAttribute("link");
 		String prompt = LoadUtils.singleTag(choiceElement, "prompt", null);
 		Element conditionElement = (Element) choiceElement.getElementsByTagName("condition").item(0);
 		Condition condition = loadCondition(conditionElement);
-		return new Choice(link, prompt, condition, once);
+		return new DialogueChoice(link, prompt, condition, once);
 	}
 	
 	protected static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
@@ -138,6 +139,8 @@ public class DialogueLoader {
 			String actorRoom = LoadUtils.singleTag(conditionElement, "room", null);
 			boolean useRoom = actorArea == null;
 			return new ConditionActorLocation(actorRef, (useRoom ? actorRoom : actorArea), useRoom);
+		case "actorAvailableForScene":
+			return new ConditionActorAvailableForScene(actorRef);
 		default:
 			return null;
 		}

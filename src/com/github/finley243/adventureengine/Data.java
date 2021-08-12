@@ -9,7 +9,7 @@ import java.util.Set;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Faction;
-import com.github.finley243.adventureengine.dialogue.Topic;
+import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.LootTable;
@@ -29,7 +29,7 @@ public class Data {
 	private static Map<String, LinkedObject> linkedObjects = new HashMap<String, LinkedObject>();
 	private static Map<String, StatsItem> items = new HashMap<String, StatsItem>();
 	private static Map<String, LootTable> lootTables = new HashMap<String, LootTable>();
-	private static Map<String, Topic> topics = new HashMap<String, Topic>();
+	private static Map<String, DialogueTopic> topics = new HashMap<String, DialogueTopic>();
 	private static Set<String> knowledge = new HashSet<String>();
 	private static Map<String, Faction> factions = new HashMap<String, Faction>();
 	private static Map<String, Scene> scenes = new HashMap<String, Scene>();
@@ -128,14 +128,14 @@ public class Data {
 		return lootTables.get(id);
 	}
 	
-	public static void addTopic(String id, Topic value) {
+	public static void addTopic(String id, DialogueTopic value) {
 		if(topics.containsKey(id)) {
 			System.out.println("WARNING - Adding topic with existing ID: " + id);
 		}
 		topics.put(id, value);
 	}
 	
-	public static Topic getTopic(String id) {
+	public static DialogueTopic getTopic(String id) {
 		return topics.get(id);
 	}
 	
@@ -167,6 +167,10 @@ public class Data {
 	
 	public static Scene getScene(String id) {
 		return scenes.get(id);
+	}
+	
+	public static Collection<Scene> getScenes() {
+		return scenes.values();
 	}
 	
 }
