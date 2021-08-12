@@ -2,11 +2,9 @@ package com.github.finley243.adventureengine.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,8 +20,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
@@ -47,6 +43,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 
 	private JFrame window;
 	private JTabbedPane tabPane;
+	private JScrollPane textScroll;
 	private JTextArea textPanel;
 	private JScrollPane historyScroll;
 	private JTextArea historyPanel;
@@ -64,6 +61,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 		this.window = new JFrame("AdventureEngine");
 		this.tabPane = new JTabbedPane();
 		this.textPanel = new JTextArea();
+		this.textScroll = new JScrollPane(textPanel);
 		this.historyPanel = new JTextArea();
 		this.historyScroll = new JScrollPane(historyPanel);
 		this.choicePanel = new JPanel();
@@ -74,7 +72,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 		window.setPreferredSize(new Dimension(500, 600));
 		
 		//window.getContentPane().add(historyScroll, BorderLayout.CENTER);
-		tabPane.addTab("Current", textPanel);
+		tabPane.addTab("Current", textScroll);
 		tabPane.addTab("History", historyScroll);
 		window.getContentPane().add(tabPane, BorderLayout.CENTER);
 		textPanel.setEditable(false);
@@ -97,32 +95,6 @@ public class GraphicalInterfaceNested implements UserInterface {
 		// Centers window on screen
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
-	}
-	
-	private List<String[]> getUniqueMenuStructures(List<String[]> menuStructures) {
-		List<String[]> uniqueStructures = new ArrayList<String[]>();
-		for(String[] menuStructure : menuStructures) {
-			boolean unique = true;
-			for(String[] menu : uniqueStructures) {
-				if(menuStructure.length == 0 || Arrays.equals(menu, menuStructure)) {
-					unique = false;
-					break;
-				}
-			}
-			if(unique) {
-				uniqueStructures.add(menuStructure);
-			}
-		}
-		return uniqueStructures;
-	}
-	
-	private boolean containsMenuStructure(List<String[]> existingStructures, String[] menuStructure) {
-		for(String[] existingStructure : existingStructures) {
-			if(Arrays.equals(existingStructure, menuStructure)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
