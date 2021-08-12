@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.scene;
+package com.github.finley243.adventureengine.scene;
 
 import java.util.ArrayList;
 import java.util.List;

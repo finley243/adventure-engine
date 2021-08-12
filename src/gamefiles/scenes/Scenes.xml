@@ -1,6 +1,6 @@
 <scenes>
     <scene id="test" isRepeatable="true" playImmediately="false">
-        <chance>0.4</chance>
+        <chance>1.0</chance>
         <cooldown>7</cooldown>
         <condition type="compound" logic="and">
             <condition type="actorAvailableForScene" target="reference">
@@ -16,7 +16,11 @@
             <text>"Man, could this day be any longer?"</text>
             <text>The guard smirks. "Don't tempt fate."</text>
             <text>The receptionist shrugs. "Looks to me like it's fate's day off."</text>
-            <text>He turns back to the computer.</text>
+            <text>As he turns back to the computer, he notices you and clears his throat.</text>
+            <script type="dialogue" target="reference">
+                <actor>stratis_receptionist</actor>
+                <topic>stratis_receptionist_start</topic>
+            </script>
         </line>
     </scene>
 </scenes>

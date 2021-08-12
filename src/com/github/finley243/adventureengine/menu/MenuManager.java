@@ -12,10 +12,8 @@ import com.github.finley243.adventureengine.dialogue.DialogueLine;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic.TopicType;
 import com.github.finley243.adventureengine.event.MenuSelectEvent;
-import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
 import com.google.common.eventbus.Subscribe;
@@ -56,11 +54,11 @@ public class MenuManager {
 	}
 	
 	public void dialogueMenu(Actor subject, String startTopic) {
-		Game.EVENT_BUS.post(new TextClearEvent());
+		//Game.EVENT_BUS.post(new TextClearEvent());
 		boolean dialogueLoop = true;
 		DialogueTopic currentTopic = Data.getTopic(startTopic);
 		while(dialogueLoop) {
-			Game.EVENT_BUS.post(new RenderTextEvent(subject.getName().toUpperCase()));
+			//Game.EVENT_BUS.post(new RenderTextEvent(subject.getName().toUpperCase()));
 			for(DialogueLine line : currentTopic.getLines()) {
 				if(line.shouldShow(subject)) {
 					for(String text : line.getTextList()) {
@@ -91,16 +89,18 @@ public class MenuManager {
 				if(validChoices.size() > 0) {
 					DialogueChoice selectedChoice = dialogueMenu(validChoices);
 					currentTopic = Data.getTopic(selectedChoice.getLinkedId());
+					Game.EVENT_BUS.post(new RenderTextEvent(selectedChoice.getPrompt()));
+					Game.EVENT_BUS.post(new RenderTextEvent(""));
 				}
 				//Game.EVENT_BUS.post(new RenderTextEvent(""));
 			} else {
-				try {
+				/*try {
 					Thread.sleep(1500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}
-				Game.EVENT_BUS.post(new TextClearEvent());
-				Game.EVENT_BUS.post(new RenderLocationEvent());
+				}*/
+				//Game.EVENT_BUS.post(new TextClearEvent());
+				//Game.EVENT_BUS.post(new RenderLocationEvent());
 			}
 		}
 	}
@@ -122,7 +122,7 @@ public class MenuManager {
 				e.printStackTrace();
 			}
 		}
-		Game.EVENT_BUS.post(new TextClearEvent());
+		//Game.EVENT_BUS.post(new TextClearEvent());
 		return dialogueChoice;
 	}
 	

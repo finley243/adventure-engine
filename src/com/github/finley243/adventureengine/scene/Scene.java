@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.scene;
+package com.github.finley243.adventureengine.scene;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -7,13 +7,11 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.script.Script;
 
 public class Scene {
 
 	private String ID;
 	private Condition condition;
-	private List<Script> scripts;
 	// These lines are printed when the scene is played
 	private List<SceneLine> lines;
 	
@@ -25,10 +23,9 @@ public class Scene {
 	private int cooldown;
 	private int cooldownCounter;
 	
-	public Scene(String ID, Condition condition, List<Script> scripts, List<SceneLine> lines, boolean isRepeatable, boolean playImmediately, float chance, int cooldown) {
+	public Scene(String ID, Condition condition, List<SceneLine> lines, boolean isRepeatable, boolean playImmediately, float chance, int cooldown) {
 		this.ID = ID;
 		this.condition = condition;
-		this.scripts = scripts;
 		this.lines = lines;
 		this.isRepeatable = isRepeatable;
 		this.hasPlayed = false;
@@ -74,10 +71,8 @@ public class Scene {
 				for(String text : line.getText()) {
 					Game.EVENT_BUS.post(new RenderTextEvent(text));
 				}
+				line.executeScripts(null);
 			}
-		}
-		for(Script script : scripts) {
-			script.execute(null);
 		}
 		hasPlayed = true;
 		cooldownCounter = cooldown;

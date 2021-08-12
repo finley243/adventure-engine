@@ -17,9 +17,9 @@ import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.world.scene.Scene;
-import com.github.finley243.adventureengine.world.scene.SceneLine;
 
 public class SceneLoader {
 
@@ -49,7 +49,6 @@ public class SceneLoader {
 		boolean playImmediately = LoadUtils.boolAttribute(sceneElement, "playImmediately", false);
 		Element conditionElement = (Element) sceneElement.getElementsByTagName("condition").item(0);
 		Condition condition = DialogueLoader.loadCondition(conditionElement);
-		List<Script> scripts = DialogueLoader.loadScripts(sceneElement);
 		NodeList lineElements = sceneElement.getElementsByTagName("line");
 		List<SceneLine> lines = new ArrayList<SceneLine>();
 		for(int i = 0; i < lineElements.getLength(); i++) {
@@ -61,14 +60,15 @@ public class SceneLoader {
 		}
 		float chance = LoadUtils.singleTagFloat(sceneElement, "chance", 1.0f);
 		int cooldown = LoadUtils.singleTagInt(sceneElement, "cooldown", 0);
-		return new Scene(sceneID, condition, scripts, lines, isRepeatable, playImmediately, chance, cooldown);
+		return new Scene(sceneID, condition, lines, isRepeatable, playImmediately, chance, cooldown);
 	}
 
 	private static SceneLine loadSceneLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
 		Element conditionElement = (Element) lineElement.getElementsByTagName("condition").item(0);
 		Condition condition = DialogueLoader.loadCondition(conditionElement);
 		List<String> text = LoadUtils.listOfTags(lineElement, "text");
-		return new SceneLine(condition, text);
+		List<Script> scripts = DialogueLoader.loadScripts(lineElement);
+		return new SceneLine(condition, text, scripts);
 	}
 
 }
