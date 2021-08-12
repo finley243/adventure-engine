@@ -35,7 +35,7 @@ import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class Actor implements Noun, Physical {
 	
-	public static final int ACTIONS_PER_TURN = 2;
+	public static final int ACTIONS_PER_TURN = 1;
 	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
@@ -71,6 +71,7 @@ public class Actor implements Noun, Physical {
 	private int HP;
 	private boolean isDead;
 	private boolean isUnconscious;
+	private boolean endTurn;
 	private int actionPoints;
 	private int repeatActionPoints;
 	private List<Action> blockedActions;
@@ -391,7 +392,6 @@ public class Actor implements Noun, Physical {
 		for(Item item : inventory.getUniqueItems()) {
 			actions.addAll(item.inventoryActions(this));
 		}
-		actions.add(new ActionWait());
 		Iterator<Action> itr = actions.iterator();
 		while(itr.hasNext()) {
 			Action currentAction = itr.next();
@@ -406,6 +406,7 @@ public class Actor implements Noun, Physical {
 				itr.remove();
 			}
 		}
+		actions.add(new ActionWait());
 		return actions;
 	}
 	
@@ -420,7 +421,8 @@ public class Actor implements Noun, Physical {
 		this.repeatActionPoints = 0;
 		Action repeatAction = null;
 		this.blockedActions.clear();
-		while(actionPoints > 0) {
+		this.endTurn = false;
+		while(!endTurn) {
 			updatePursueTargets();
 			Action chosenAction;
 			if(repeatActionPoints > 0) {
@@ -434,17 +436,20 @@ public class Actor implements Noun, Physical {
 				chosenAction = chooseAction(repeatActions);
 				repeatActionPoints--;
 			} else {
-				chosenAction = chooseAction(availableActions());
+				List<Action> validActions = new ArrayList<Action>();
+				for(Action action : availableActions()) {
+					if(!action.usesAction() || actionPoints > 0) {
+						validActions.add(action);
+					}
+				}
+				chosenAction = chooseAction(validActions);
+				if(chosenAction.usesAction()) {
+					actionPoints--;
+				}
 				if(chosenAction.actionCount() > 1) {
 					repeatActionPoints = chosenAction.actionCount() - 1;
 					repeatAction = chosenAction;
-				}
-			}
-			if(chosenAction.usesAction() && repeatActionPoints <= 0) {
-				if(actionPoints > 0) {
-					actionPoints--;
-				}
-				if(!chosenAction.canRepeat()) {
+				} else if(!chosenAction.canRepeat()) {
 					blockedActions.add(chosenAction);
 				}
 			}
@@ -454,6 +459,7 @@ public class Actor implements Noun, Physical {
 	
 	public void endTurn() {
 		actionPoints = 0;
+		endTurn = true;
 	}
 	
 	public void endMultiAction() {

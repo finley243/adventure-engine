@@ -44,12 +44,12 @@ public class ActionMoveExit implements Action {
 	
 	@Override
 	public boolean usesAction() {
-		return true;
+		return false;
 	}
 	
 	@Override
 	public boolean canRepeat() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class ActionMoveExit implements Action {
 	
 	@Override
 	public int actionCount() {
-		return 2;
+		return 1;
 	}
 	
 	@Override

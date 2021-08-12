@@ -37,7 +37,7 @@ public class ActionItemTake implements Action {
 	
 	@Override
 	public boolean usesAction() {
-		return true;
+		return false;
 	}
 	
 	@Override

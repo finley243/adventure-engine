@@ -45,7 +45,7 @@ public class ActionInventoryTake implements Action {
     
     @Override
 	public boolean usesAction() {
-		return true;
+		return false;
 	}
     
     @Override
