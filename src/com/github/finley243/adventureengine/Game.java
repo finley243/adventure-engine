@@ -2,8 +2,6 @@ package com.github.finley243.adventureengine;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -11,9 +9,6 @@ import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
-import com.github.finley243.adventureengine.actor.ActorReference;
-import com.github.finley243.adventureengine.actor.ActorReference.ReferenceType;
-import com.github.finley243.adventureengine.condition.ConditionActorLocation;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
@@ -26,15 +21,11 @@ import com.github.finley243.adventureengine.load.ItemLoader;
 import com.github.finley243.adventureengine.load.LootTableLoader;
 import com.github.finley243.adventureengine.load.SceneLoader;
 import com.github.finley243.adventureengine.load.WorldLoader;
-import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
-import com.github.finley243.adventureengine.world.scene.Scene;
-import com.github.finley243.adventureengine.world.scene.SceneLine;
-import com.github.finley243.adventureengine.world.scene.SceneManager;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;

@@ -55,10 +55,10 @@ public class MenuManager {
 		return actionChoice;
 	}
 	
-	public void dialogueMenu(Actor subject) {
+	public void dialogueMenu(Actor subject, String startTopic) {
 		Game.EVENT_BUS.post(new TextClearEvent());
 		boolean dialogueLoop = true;
-		DialogueTopic currentTopic = Data.getTopic(subject.getTopicID());
+		DialogueTopic currentTopic = Data.getTopic(startTopic);
 		while(dialogueLoop) {
 			Game.EVENT_BUS.post(new RenderTextEvent(subject.getName().toUpperCase()));
 			for(DialogueLine line : currentTopic.getLines()) {

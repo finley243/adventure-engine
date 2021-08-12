@@ -16,7 +16,7 @@ public class ActionTalk implements Action {
 	@Override
 	public void choose(Actor subject) {
 		if(subject instanceof ActorPlayer) {
-			((ActorPlayer) subject).startDialogue(target);
+			((ActorPlayer) subject).startDialogue(target, target.getTopicID());
 		}
 	}
 

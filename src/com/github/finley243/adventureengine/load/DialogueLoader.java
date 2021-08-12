@@ -20,8 +20,8 @@ import com.github.finley243.adventureengine.actor.Actor.Attribute;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.actor.ActorReference.ReferenceType;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.condition.ConditionActorLocation;
 import com.github.finley243.adventureengine.condition.ConditionActorAvailableForScene;
+import com.github.finley243.adventureengine.condition.ConditionActorLocation;
 import com.github.finley243.adventureengine.condition.ConditionAttribute;
 import com.github.finley243.adventureengine.condition.ConditionCompound;
 import com.github.finley243.adventureengine.condition.ConditionKnowledge;
@@ -32,6 +32,7 @@ import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic.TopicType;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptAddItem;
+import com.github.finley243.adventureengine.script.ScriptDialogue;
 import com.github.finley243.adventureengine.script.ScriptKnowledge;
 import com.github.finley243.adventureengine.script.ScriptMoney;
 import com.github.finley243.adventureengine.script.ScriptTrade;
@@ -188,6 +189,9 @@ public class DialogueLoader {
 			return new ScriptKnowledge(knowledgeID);
 		case "trade":
 			return new ScriptTrade();
+		case "dialogue":
+			String topic = LoadUtils.singleTag(scriptElement, "topic", null);
+			return new ScriptDialogue(actorRef, topic);
 		default:
 			return null;
 		}
