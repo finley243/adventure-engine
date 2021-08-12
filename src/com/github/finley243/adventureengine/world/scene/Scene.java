@@ -22,8 +22,10 @@ public class Scene {
 	private boolean playImmediately;
 	private boolean isRepeatable;
 	private boolean hasPlayed;
+	private int cooldown;
+	private int cooldownCounter;
 	
-	public Scene(String ID, Condition condition, List<Script> scripts, List<SceneLine> lines, boolean isRepeatable, boolean playImmediately, float chance) {
+	public Scene(String ID, Condition condition, List<Script> scripts, List<SceneLine> lines, boolean isRepeatable, boolean playImmediately, float chance, int cooldown) {
 		this.ID = ID;
 		this.condition = condition;
 		this.scripts = scripts;
@@ -32,6 +34,8 @@ public class Scene {
 		this.hasPlayed = false;
 		this.playImmediately = playImmediately;
 		this.chance = chance;
+		this.cooldown = cooldown;
+		this.cooldownCounter = 0;
 	}
 	
 	public String getID() {
@@ -40,6 +44,8 @@ public class Scene {
 	
 	public boolean canPlay() {
 		if(!isRepeatable && hasPlayed) {
+			return false;
+		} else if(cooldownCounter > 0) {
 			return false;
 		} else {
 			if(ThreadLocalRandom.current().nextFloat() >= chance) {
@@ -56,6 +62,12 @@ public class Scene {
 		return playImmediately;
 	}
 	
+	public void updateCooldown() {
+		if(cooldownCounter > 0) {
+			cooldownCounter--;
+		}
+	}
+	
 	public void play() {
 		for(SceneLine line : lines) {
 			if(line.shouldShow()) {
@@ -68,6 +80,7 @@ public class Scene {
 			script.execute(null);
 		}
 		hasPlayed = true;
+		cooldownCounter = cooldown;
 	}
 	
 	public boolean hasPlayed() {

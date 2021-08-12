@@ -22,6 +22,7 @@ public class SceneManager {
 	private Scene selectScene() {
 		List<Scene> validScenes = new ArrayList<Scene>();
 		for(Scene scene : Data.getScenes()) {
+			scene.updateCooldown();
 			if(scene.canPlay()) {
 				if(scene.playImmediately()) {
 					return scene;

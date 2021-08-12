@@ -1,5 +1,7 @@
 <scenes>
-    <scene id="test" isRepeatable="false">
+    <scene id="test" isRepeatable="true" playImmediately="false">
+        <chance>0.4</chance>
+        <cooldown>7</cooldown>
         <condition type="compound" logic="and">
             <condition type="actorAvailableForScene" target="reference">
                 <actor>stratis_receptionist</actor>
@@ -10,9 +12,11 @@
             </condition>
         </condition>
         <line>
-            <text>The receptionist leans on the desk and sighs. He turns to the security guard.</text>
+            <text>The receptionist leans on the desk and sighs. He looks up from the computer and turns to the security guard.</text>
             <text>"Man, could this day be any longer?"</text>
             <text>The guard smirks. "Don't tempt fate."</text>
+            <text>The receptionist shrugs. "Looks to me like it's fate's day off."</text>
+            <text>He turns back to the computer.</text>
         </line>
     </scene>
 </scenes>
