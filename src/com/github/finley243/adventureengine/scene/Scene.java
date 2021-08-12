@@ -10,7 +10,6 @@ import com.github.finley243.adventureengine.event.RenderTextEvent;
 
 public class Scene {
 
-	private String ID;
 	private Condition condition;
 	// These lines are printed when the scene is played
 	private List<SceneLine> lines;
@@ -23,8 +22,7 @@ public class Scene {
 	private int cooldown;
 	private int cooldownCounter;
 	
-	public Scene(String ID, Condition condition, List<SceneLine> lines, boolean isRepeatable, boolean playImmediately, float chance, int cooldown) {
-		this.ID = ID;
+	public Scene(Condition condition, List<SceneLine> lines, boolean isRepeatable, boolean playImmediately, float chance, int cooldown) {
 		this.condition = condition;
 		this.lines = lines;
 		this.isRepeatable = isRepeatable;
@@ -33,10 +31,6 @@ public class Scene {
 		this.chance = chance;
 		this.cooldown = cooldown;
 		this.cooldownCounter = 0;
-	}
-	
-	public String getID() {
-		return ID;
 	}
 	
 	public boolean canPlay() {

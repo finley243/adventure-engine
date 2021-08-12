@@ -1,8 +1,10 @@
 package com.github.finley243.adventureengine;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +34,7 @@ public class Data {
 	private static Map<String, DialogueTopic> topics = new HashMap<String, DialogueTopic>();
 	private static Set<String> knowledge = new HashSet<String>();
 	private static Map<String, Faction> factions = new HashMap<String, Faction>();
-	private static Map<String, Scene> scenes = new HashMap<String, Scene>();
+	private static List<Scene> scenes = new ArrayList<Scene>();
 	
 	public static void addArea(String id, Area value) {
 		if(areas.containsKey(id)) {
@@ -158,19 +160,12 @@ public class Data {
 		return factions.get(id);
 	}
 	
-	public static void addScene(String id, Scene value) {
-		if(scenes.containsKey(id)) {
-			System.out.println("WARNING - Adding scene with existing ID: " + id);
-		}
-		scenes.put(id, value);
+	public static void addScene(Scene value) {
+		scenes.add(value);
 	}
 	
-	public static Scene getScene(String id) {
-		return scenes.get(id);
-	}
-	
-	public static Collection<Scene> getScenes() {
-		return scenes.values();
+	public static List<Scene> getScenes() {
+		return scenes;
 	}
 	
 }

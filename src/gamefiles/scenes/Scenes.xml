@@ -1,5 +1,5 @@
 <scenes>
-    <scene id="test" isRepeatable="true" playImmediately="false">
+    <scene isRepeatable="true" playImmediately="false">
         <chance>1.0</chance>
         <cooldown>7</cooldown>
         <condition type="compound" logic="and">
