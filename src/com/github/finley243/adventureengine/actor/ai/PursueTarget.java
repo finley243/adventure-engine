@@ -58,7 +58,7 @@ public class PursueTarget {
 	}
 	
 	public boolean shouldRemove() {
-		return markForRemoval || (!manualRemoval && pathIndex == path.size() - 1);
+		return markForRemoval || (!manualRemoval && path != null && pathIndex == path.size() - 1);
 	}
 	
 	public boolean isOnPath(Area area) {

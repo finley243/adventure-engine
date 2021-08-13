@@ -29,6 +29,7 @@ public class ItemWeapon extends ItemEquippable {
 	public ItemWeapon(StatsWeapon stats) {
 		super(stats.getName());
 		this.stats = stats;
+		reloadFull();
 	}
 	
 	@Override

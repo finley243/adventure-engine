@@ -54,9 +54,13 @@ public class Scene {
 	}
 	
 	public void updateCooldown() {
+		if(!condition.isMet(Data.getActor(Game.PLAYER_ACTOR))) {
+			return;
+		}
 		if(cooldownCounter > 0) {
 			cooldownCounter--;
 		}
+		System.out.println("Updated cooldown");
 	}
 	
 	public void play() {

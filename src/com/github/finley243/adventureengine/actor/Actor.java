@@ -16,6 +16,7 @@ import com.github.finley243.adventureengine.action.ActionMultiEnd;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.action.ActionWait;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
+import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
 import com.github.finley243.adventureengine.actor.ai.CombatTarget;
 import com.github.finley243.adventureengine.actor.ai.PursueTarget;
 import com.github.finley243.adventureengine.effect.Effect;
@@ -62,9 +63,9 @@ public class Actor implements Noun, Physical {
 		STEALTH
 	}
 	
-	public enum BehaviorState {
+	/*public enum BehaviorState {
 		STATIONARY, WANDER, PATROL, ATTACK, PURSUE
-	}
+	}*/
 	
 	private StatsActor stats;
 	private String ID;
@@ -88,6 +89,7 @@ public class Actor implements Noun, Physical {
 	private Inventory tradeInventory;
 	private Set<CombatTarget> combatTargets;
 	private Set<PursueTarget> pursueTargets;
+	private BehaviorIdle behaviorIdle;
 	
 	public Actor(String ID, Area area, StatsActor stats, String descriptor, String topicID, boolean startDead) {
 		this.ID = ID;
@@ -114,6 +116,7 @@ public class Actor implements Noun, Physical {
 			inventory.addItems(Data.getLootTable(stats.getLootTable()).generateItems());
 		}
 		this.blockedActions = new ArrayList<Action>();
+		this.behaviorIdle = new BehaviorIdle(stats.getIdle());
 	}
 	
 	public String getID() {
@@ -200,7 +203,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public boolean canMove() {
-		return !isUsingObject();
+		return !isUsingObject() && !stats.preventMovement();
 	}
 	
 	public Inventory inventory() {
@@ -424,6 +427,7 @@ public class Actor implements Noun, Physical {
 	public void takeTurn() {
 		if(isDead) return;
 		updateEffects();
+		behaviorIdle.update(this);
 		generateCombatTargets();
 		updateCombatTargets();
 		generatePursueTargets();

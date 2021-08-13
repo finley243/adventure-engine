@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.load;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,9 +48,17 @@ public class ActorLoader {
 		boolean nameIsProper = LoadUtils.boolAttribute(nameElement, "proper", false);
 		Pronoun pronoun = pronounTag(actorElement, "pronoun");
 		String faction = LoadUtils.singleTag(actorElement, "faction", "default");
+		List<String> idle;
+		if(actorElement.getElementsByTagName("idle").getLength() > 0) {
+			Element idleElement = (Element) actorElement.getElementsByTagName("idle").item(0);
+			idle = LoadUtils.listOfTags(idleElement, "area");
+		} else {
+			idle = new ArrayList<String>();
+		}
+		boolean preventMovement = LoadUtils.singleTagBoolean(actorElement, "preventMovement", false);
 		int hp = LoadUtils.singleTagInt(actorElement, "hp", 0);
 		String lootTable = LoadUtils.singleTag(actorElement, "loottable", null);
-		return new StatsActor(id, name, nameIsProper, pronoun, faction, hp, lootTable);
+		return new StatsActor(id, name, nameIsProper, pronoun, faction, idle, preventMovement, hp, lootTable);
 	}
 	
 	private static Pronoun pronounTag(Element element, String name) {
