@@ -60,7 +60,6 @@ public class Scene {
 		if(cooldownCounter > 0) {
 			cooldownCounter--;
 		}
-		System.out.println("Updated cooldown");
 	}
 	
 	public void play() {

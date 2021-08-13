@@ -88,7 +88,7 @@ public class Actor implements Noun, Physical {
 	private UsableObject usingObject;
 	private Inventory tradeInventory;
 	private Set<CombatTarget> combatTargets;
-	private Set<PursueTarget> pursueTargets;
+	private List<PursueTarget> pursueTargets;
 	private BehaviorIdle behaviorIdle;
 	
 	public Actor(String ID, Area area, StatsActor stats, String descriptor, String topicID, boolean startDead) {
@@ -100,7 +100,7 @@ public class Actor implements Noun, Physical {
 		this.descriptor = descriptor;
 		this.topicID = topicID;
 		this.combatTargets = new HashSet<CombatTarget>();
-		this.pursueTargets = new HashSet<PursueTarget>();
+		this.pursueTargets = new ArrayList<PursueTarget>();
 		this.isDead = startDead;
 		this.isUnconscious = startDead;
 		if(!startDead) {

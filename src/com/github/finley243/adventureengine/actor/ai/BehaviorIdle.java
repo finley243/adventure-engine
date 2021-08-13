@@ -12,7 +12,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class BehaviorIdle {
 
-	public static final float IDLE_MOVEMENT_WEIGHT = 0.8f;
+	public static final float IDLE_MOVEMENT_WEIGHT = 0.4f;
 	public static final int TURNS_PER_STEP = 1;
 	
 	// empty = wander within room, 1 = stationary, >1 = patrol path (uses shortest path between points)
@@ -34,7 +34,7 @@ public class BehaviorIdle {
 			return;
 		}
 		if(currentTarget == null) {
-			currentTarget = new PursueTarget(Data.getArea(steps.get(0)), IDLE_MOVEMENT_WEIGHT, false);
+			currentTarget = new PursueTarget(Data.getArea(steps.get(0)), IDLE_MOVEMENT_WEIGHT, steps.size() == 1);
 			subject.addPursueTarget(currentTarget);
 		}
 		if(currentTarget.shouldRemove()) {

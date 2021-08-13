@@ -4,7 +4,7 @@
         <pronoun>YOU</pronoun>
         <faction>player</faction>
         <hp>50</hp>
-        <loottable>weapon_basic</loottable>
+        <loottable>weapon_ranged</loottable>
     </actor>
     <actor id="stratis_receptionist">
         <name proper="false">receptionist</name>
@@ -12,8 +12,6 @@
         <faction>stratis_hotel_staff</faction>
         <idle>
             <area>stratis_hotel_lobby_desk</area>
-            <area>stratis_hotel_lobby_entry</area>
-            <area>stratis_hotel_lobby_elevators</area>
         </idle>
         <hp>40</hp>
         <loottable>stratis_receptionist</loottable>
@@ -22,7 +20,7 @@
         <name proper="false">ganger</name>
         <pronoun>HE</pronoun>
         <faction>enemy</faction>
-        <hp>40</hp>
-        <loottable>weapon_basic</loottable>
+        <hp>20</hp>
+        <loottable>weapon_ranged</loottable>
     </actor>
 </actors>
