@@ -19,8 +19,10 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor.Attribute;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.actor.ActorReference.ReferenceType;
+import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.condition.ConditionActorAvailableForScene;
+import com.github.finley243.adventureengine.condition.ConditionActorDead;
 import com.github.finley243.adventureengine.condition.ConditionActorLocation;
 import com.github.finley243.adventureengine.condition.ConditionAttribute;
 import com.github.finley243.adventureengine.condition.ConditionCompound;
@@ -33,6 +35,7 @@ import com.github.finley243.adventureengine.dialogue.DialogueTopic.TopicType;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptAddItem;
 import com.github.finley243.adventureengine.script.ScriptDialogue;
+import com.github.finley243.adventureengine.script.ScriptFactionRelation;
 import com.github.finley243.adventureengine.script.ScriptKnowledge;
 import com.github.finley243.adventureengine.script.ScriptMoney;
 import com.github.finley243.adventureengine.script.ScriptTrade;
@@ -142,6 +145,8 @@ public class DialogueLoader {
 			return new ConditionActorLocation(actorRef, (useRoom ? actorRoom : actorArea), useRoom);
 		case "actorAvailableForScene":
 			return new ConditionActorAvailableForScene(actorRef);
+		case "actorDead":
+			return new ConditionActorDead(actorRef);
 		default:
 			return null;
 		}
@@ -192,6 +197,24 @@ public class DialogueLoader {
 		case "dialogue":
 			String topic = LoadUtils.singleTag(scriptElement, "topic", null);
 			return new ScriptDialogue(actorRef, topic);
+		case "factionRelation":
+			String targetFaction = LoadUtils.singleTag(scriptElement, "targetFaction", null);
+			String relationFaction = LoadUtils.singleTag(scriptElement, "relationFaction", null);
+			String relationString = LoadUtils.singleTag(scriptElement, "relation", null);
+			FactionRelation relation;
+			switch(relationString) {
+			case "FRIEND":
+				relation = FactionRelation.FRIEND;
+				break;
+			case "ENEMY":
+				relation = FactionRelation.ENEMY;
+				break;
+			case "NEUTRAL":
+			default:
+				relation = FactionRelation.NEUTRAL;
+				break;
+			}
+			return new ScriptFactionRelation(targetFaction, relationFaction, relation);
 		default:
 			return null;
 		}

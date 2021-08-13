@@ -32,4 +32,8 @@ public class Faction {
 		}
 	}
 	
+	public void setRelation(String factionID, FactionRelation relation) {
+		relations.put(factionID, relation);
+	}
+	
 }
