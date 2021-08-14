@@ -15,7 +15,7 @@ public class ConditionActorAvailableForScene implements Condition {
 
 	@Override
 	public boolean isMet(Actor subject) {
-		return !actor.getActor(subject).isInCombat() && Data.getPlayer().canSee(actor.getActor(subject));
+		return !actor.getActor(subject).isIncapacitated() && !actor.getActor(subject).isInCombat() && Data.getPlayer().canSee(actor.getActor(subject));
 	}
 
 	@Override

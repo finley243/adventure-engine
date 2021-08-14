@@ -13,11 +13,13 @@ public class PursueTarget {
 	private int pathIndex;
 	private boolean manualRemoval;
 	private boolean markForRemoval;
+	private boolean shouldFlee;
 	
-	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval) {
+	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee) {
 		this.targetArea = targetArea;
 		this.targetUtility = targetUtility;
 		this.manualRemoval = manualRemoval;
+		this.shouldFlee = shouldFlee;
 		markForRemoval = false;
 	}
 	
@@ -59,6 +61,14 @@ public class PursueTarget {
 	
 	public boolean shouldRemove() {
 		return markForRemoval || (!manualRemoval && path != null && pathIndex == path.size() - 1);
+	}
+	
+	public boolean shouldFlee() {
+		return shouldFlee;
+	}
+	
+	public void setShouldFlee(boolean shouldFlee) {
+		this.shouldFlee = shouldFlee;
 	}
 	
 	public boolean isOnPath(Area area) {

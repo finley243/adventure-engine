@@ -13,14 +13,14 @@
         <idle>
             <area>stratis_hotel_lobby_desk</area>
         </idle>
-        <hp>40</hp>
+        <hp>60</hp>
         <loottable>stratis_receptionist</loottable>
     </actor>
     <actor id="enemy">
         <name proper="false">ganger</name>
         <pronoun>HE</pronoun>
         <faction>enemy</faction>
-        <hp>20</hp>
+        <hp>40</hp>
         <loottable>weapon_ranged</loottable>
     </actor>
 </actors>

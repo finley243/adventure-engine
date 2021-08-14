@@ -76,10 +76,10 @@
                     <stats>enemy</stats>
                     <descriptor>black-haired</descriptor>
                 </actor>
-                <actor id="enemy2">
+                <!--<actor id="enemy2">
                     <stats>enemy</stats>
                     <descriptor>taller</descriptor>
-                </actor>
+                </actor>-->
             </actors>
         </area>
     </room>

@@ -316,6 +316,13 @@ public class Actor implements Noun, Physical {
 		return false;
 	}
 	
+	public boolean shouldFleeFrom(Actor actor) {
+		if(hasRangedWeaponEquipped() && actor.hasMeleeWeaponEquipped()) {
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean hasRangedWeaponEquipped() {
 		return equippedItem != null && equippedItem instanceof ItemWeapon && ((ItemWeapon) equippedItem).isRanged();
 	}
@@ -335,24 +342,29 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public boolean isPursueTarget(Area area) {
-		return pursueTargets.contains(new PursueTarget(area, 1.0f, false));
+		return pursueTargets.contains(new PursueTarget(area, 1.0f, false, false));
 	}
 	
-	public void addPursueTarget(Area area, float utility) {
-		PursueTarget target = new PursueTarget(area, utility, false);
+	/*public void addPursueTarget(Area area, float utility) {
+		PursueTarget target = new PursueTarget(area, utility, false, false);
 		pursueTargets.remove(target);
 		pursueTargets.add(target);
-	}
+	}*/
 	
 	public void addPursueTarget(PursueTarget target) {
+		System.out.println(getName() + " - PursueTarget added");
 		pursueTargets.add(target);
 	}
 	
 	public float getMovementUtilityRank(Area area) {
-		if(pursueTargets.isEmpty()) return 0.0f;
+		if(pursueTargets.isEmpty()) {
+			return 0.0f;
+		}
 		float utility = 0.0f;
 		for(PursueTarget target : pursueTargets) {
-			if(target.isOnPath(area)) {
+			if(target.shouldFlee() && getArea() == target.getTargetArea()) {
+				utility += target.getTargetUtility();
+			} else if(target.shouldFlee() ^ target.isOnPath(area)) { // XOR
 				// Temporary calculation, ignores distance
 				utility += target.getTargetUtility();
 			}
@@ -537,6 +549,9 @@ public class Actor implements Noun, Physical {
 	
 	private void updatePursueTargets() {
 		Iterator<PursueTarget> itr = pursueTargets.iterator();
+		System.out.println("Actor: " + getName());
+		System.out.println("PursueTargets: " + pursueTargets.size());
+		System.out.println("CombatTargets: " + combatTargets.size());
 		while(itr.hasNext()) {
 			PursueTarget target = itr.next();
 			target.update(this);
