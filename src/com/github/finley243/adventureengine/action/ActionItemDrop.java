@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
 import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -12,15 +13,21 @@ import com.github.finley243.adventureengine.world.item.Item;
 public class ActionItemDrop implements Action {
 
 	private Item item;
+	private boolean isEquipped;
 	
-	public ActionItemDrop(Item item) {
+	public ActionItemDrop(Item item, boolean isEquipped) {
 		this.item = item;
+		this.isEquipped = isEquipped;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
+		if(isEquipped) {
+			subject.setEquippedItem(null);
+		} else {
+			subject.inventory().removeItem(item);
+		}
 		subject.getArea().addObject(item);
-		subject.inventory().removeItem(item);
 		Context context = new Context(subject, false, item, true);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context));
 	}
@@ -62,7 +69,11 @@ public class ActionItemDrop implements Action {
 	
 	@Override
 	public MenuData getMenuData() {
-		return new MenuDataInventory("Drop", item);
+		if(isEquipped) {
+			return new MenuDataEquipped("Drop", item);
+		} else {
+			return new MenuDataInventory("Drop", item);
+		}
 	}
 
 	@Override
