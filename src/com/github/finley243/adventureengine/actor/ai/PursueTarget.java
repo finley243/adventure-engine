@@ -14,13 +14,19 @@ public class PursueTarget {
 	private boolean manualRemoval;
 	private boolean markForRemoval;
 	private boolean shouldFlee;
+	private String origin;
 	
-	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee) {
+	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee, String origin) {
 		this.targetArea = targetArea;
 		this.targetUtility = targetUtility;
 		this.manualRemoval = manualRemoval;
 		this.shouldFlee = shouldFlee;
 		markForRemoval = false;
+		this.origin = origin;
+	}
+	
+	public String getOrigin() {
+		return origin;
 	}
 	
 	public void update(Actor subject) {
@@ -72,6 +78,7 @@ public class PursueTarget {
 	}
 	
 	public boolean isOnPath(Area area) {
+		if(path == null) return false;
 		if(pathIndex + 1 >= path.size()) return false;
 		return path.get(pathIndex + 1) == area;
 	}
@@ -94,7 +101,7 @@ public class PursueTarget {
 		if(!(other instanceof PursueTarget)) {
 			return false;
 		} else {
-			return this.getTargetArea().equals(((PursueTarget) other).getTargetArea());
+			return this.getTargetArea() == ((PursueTarget) other).getTargetArea();
 		}
 	}
 	

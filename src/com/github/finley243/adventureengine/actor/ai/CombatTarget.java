@@ -17,14 +17,14 @@ public class CombatTarget {
 	private PursueTarget pursueTarget;
 	
 	public CombatTarget(Actor actor) {
-		System.out.println("CombatTarget constructed - target: " + actor.getName());
 		this.targetActor = actor;
 		this.turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
+		pursueTarget = null;
 	}
 	
 	public void update(Actor subject) {
 		if(pursueTarget == null) {
-			pursueTarget = new PursueTarget(targetActor.getArea(), PURSUE_TARGET_UTILITY_RANGED, true, false);
+			pursueTarget = new PursueTarget(targetActor.getArea(), PURSUE_TARGET_UTILITY_RANGED, true, false, "CombatTarget Init");
 			subject.addPursueTarget(pursueTarget);
 		}
 		if(subject.canSee(targetActor)) {
@@ -44,7 +44,7 @@ public class CombatTarget {
 			pursueTarget.setTargetUtility(PURSUE_TARGET_UTILITY_INVISIBLE);
 			turnsUntilRemove--;
 		}
-		if(targetActor.isDead()) {
+		if(shouldRemove()) {
 			pursueTarget.markForRemoval();
 		}
 	}
