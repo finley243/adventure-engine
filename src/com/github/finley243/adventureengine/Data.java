@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
+import com.github.finley243.adventureengine.quest.Quest;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -35,6 +36,7 @@ public class Data {
 	private static Set<String> knowledge = new HashSet<String>();
 	private static Map<String, Faction> factions = new HashMap<String, Faction>();
 	private static List<Scene> scenes = new ArrayList<Scene>();
+	private static Map<String, Quest> quests = new HashMap<String, Quest>();
 	
 	public static void addArea(String id, Area value) {
 		if(areas.containsKey(id)) {
@@ -166,6 +168,17 @@ public class Data {
 	
 	public static List<Scene> getScenes() {
 		return scenes;
+	}
+	
+	public static void addQuest(String id, Quest value) {
+		if(quests.containsKey(id)) {
+			System.out.println("WARNING - Adding quest with existing ID: " + id);
+		}
+		quests.put(id, value);
+	}
+	
+	public static Quest getQuest(String id) {
+		return quests.get(id);
 	}
 	
 }
