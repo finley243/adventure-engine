@@ -5,4 +5,7 @@
     <item type="key" id="stratis_master_key">
         <name>Stratis master keycard</name>
     </item>
+    <item type="key" id="nexus_bouncer_key">
+        <name>Nexus bouncer key</name>
+    </item>
 </items>

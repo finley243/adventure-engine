@@ -19,6 +19,7 @@ public class DialogueTopic {
 		this.ID = ID;
 		this.lines = lines;
 		this.choices = choices;
+		this.type = type;
 	}
 	
 	public String getID() {

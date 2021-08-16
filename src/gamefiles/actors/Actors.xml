@@ -32,6 +32,6 @@
         </idle>
         <preventMovement>true</preventMovement>
         <hp>70</hp>
-        <loottable>bouncer</loottable>
+        <loottable>nexus_bouncer</loottable>
     </actor>
 </actors>

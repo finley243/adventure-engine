@@ -35,6 +35,7 @@ public class Game {
 	public static final EventBus EVENT_BUS = new EventBus();
 	
 	public static final String PLAYER_ACTOR = "player";
+	public static final String PLAYER_START_LOCATION = "street_corner_nexus";
 	
 	private static final String GAMEFILES = "src/gamefiles";
 	private static final String WORLD_DIRECTORY = "/world";
@@ -67,7 +68,7 @@ public class Game {
 		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
 		SceneLoader.loadScenes(new File(GAMEFILES + SCENES_DIRECTORY));
 		
-		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, Data.getArea("stratis_hotel_lobby_entry"), Data.getActorStats("player"));
+		Actor player = ActorFactory.createPlayer(PLAYER_ACTOR, Data.getArea(PLAYER_START_LOCATION), Data.getActorStats("player"));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
 		

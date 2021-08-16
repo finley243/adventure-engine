@@ -25,4 +25,16 @@
             <count>1</count>
         </entry>
     </loottable>
+    <loottable id="nexus_bouncer" useAll="true">
+        <entry>
+            <reference table="true">weapon_ranged</reference>
+            <chance>1.0</chance>
+            <count>1</count>
+        </entry>
+        <entry>
+            <reference table="false">nexus_bouncer_key</reference>
+            <chance>1.0</chance>
+            <count>1</count>
+        </entry>
+    </loottable>
 </loottables>

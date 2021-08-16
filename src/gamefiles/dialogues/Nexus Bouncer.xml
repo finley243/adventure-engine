@@ -5,13 +5,18 @@
             <text>"This club is for VIPs only. I don't know you, so you're not gettin' in."</text>
         </line>
         <line>
-            <text>The bouncer looks up at you. "Didn't I tell you to leave?"</text>
+            <text>The bouncer looks up at you. "Didn't I tell you to leave? VIPs only."</text>
         </line>
-        <choice link="">
-            <prompt></prompt>
+        <choice link="nexus_bouncer_end">
+            <prompt>I have business with your boss.</prompt>
         </choice>
-        <choice link="">
-            <prompt></prompt>
+        <choice link="nexus_bouncer_end">
+            <prompt>Sorry, my mistake.</prompt>
         </choice>
+    </topic>
+    <topic id="nexus_bouncer_end">
+        <line exit="true">
+            <text>He turns away.</text>
+        </line>
     </topic>
 </topics>
