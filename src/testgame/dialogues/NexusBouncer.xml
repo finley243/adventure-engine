@@ -1,0 +1,17 @@
+<topics>
+    <topic id="nexus_bouncer_start" type="sel">
+        <line once="true">
+            <text>The bouncer glances at you and frowns.</text>
+            <text>"This club is for VIPs only. I don't know you, so you're not gettin' in."</text>
+        </line>
+        <line>
+            <text>The bouncer looks up at you. "Didn't I tell you to leave?"</text>
+        </line>
+        <choice link="">
+            <prompt></prompt>
+        </choice>
+        <choice link="">
+            <prompt></prompt>
+        </choice>
+    </topic>
+</topics>

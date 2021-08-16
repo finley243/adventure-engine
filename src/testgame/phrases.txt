@@ -1,0 +1,28 @@
+buyFrom:<subject> buy<s> <object> from <object2>
+consume:<subject> consume<s> <object>
+die:<subject> fall<s> over dead
+drink:<subject> drink<s> <object>
+drop:<subject> drop<s> <object>
+eat:<subject> eat<s> <object>
+equip:<subject> equip<s> <object>
+exitElevator:<subject> exit<s> <object>
+idle:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
+meleeHit:<subject> hit<s> <object> with <object2>
+meleeMiss:<subject> tr<ies> to hit <object> with <object2>, but miss<es>
+moveThroughTo:<subject> go<es> through <object> to <object2>
+moveTo:<subject> move<s> to <object>
+moveToward:<subject> move<s> to <object>
+patrolTelegraph:<subject> prepare<s> to move to <object>
+pickUp:<subject> grab<s> <object>
+rangedHit:<subject> fire<s> <object2> at <object>
+rangedMiss:<subject> fire<s> <object2> at <object>, but miss<es>
+read:<subject> read<s> <object>
+reload:<subject> reload<s> <object>
+sit:<subject> sit<s> in <object>
+stand:<subject> stand<s> up
+takeCover:<subject> take<s> cover behind <object>
+takeElevatorDown:<subject> take<s> <object> down
+takeElevatorUp:<subject> take<s> <object> up
+takeFrom:<subject> take<s> <object> from <object2>
+unequip:<subject> put<s> away <object>
+unlock:<subject> unlock<s> <object>

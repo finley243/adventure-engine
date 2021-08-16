@@ -1,0 +1,11 @@
+<factions>
+    <faction id="default">
+        <default>NEUTRAL</default>
+    </faction>
+    <faction id="player">
+        <default>NEUTRAL</default>
+    </faction>
+    <faction id="nexus_staff">
+        <default>NEUTRAL</default>
+    </faction>
+</factions>

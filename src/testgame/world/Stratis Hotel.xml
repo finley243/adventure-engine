@@ -1,0 +1,23 @@
+<rooms>
+    <room id="street_corner">
+        <name proper="false">street corner</name>
+        <roomDescription></roomDescription>
+        <area id="street_corner_nexus">
+            <name proper="false" prox="true">Nexus entrance</name>
+            <areaDescription></areaDescription>
+            <links></links>
+            <objects>
+                <object type="exit" id="nexus_entrance_exterior">
+                    <name>Nexus front door</name>
+                    <link>nexus_entrance_interior</link>
+                </object>
+            </objects>
+            <actors>
+                <actor id="nexus_bouncer">
+                    <stats>nexus_bouncer</stats>
+                    <topic>nexus_bouncer_start</topic>
+                </actor>
+            </actors>
+        </area>
+    </room>
+</rooms>

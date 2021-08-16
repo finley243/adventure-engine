@@ -36,7 +36,7 @@ public class Game {
 	
 	public static final String PLAYER_ACTOR = "player";
 	
-	private static final String GAMEFILES = "src/gamefiles";
+	private static final String GAMEFILES = "src/testgame";
 	private static final String WORLD_DIRECTORY = "/world";
 	private static final String ACTOR_DIRECTORY = "/actors";
 	private static final String FACTION_DIRECTORY = "/factions";
