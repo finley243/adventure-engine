@@ -19,4 +19,7 @@
             <type>ENEMY</type>
         </relation>
     </faction>
+    <faction id="nexus_staff">
+        <default>NEUTRAL</default>
+    </faction>
 </factions>

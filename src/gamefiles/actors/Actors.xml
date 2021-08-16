@@ -23,4 +23,15 @@
         <hp>40</hp>
         <loottable>weapon_ranged</loottable>
     </actor>
+    <actor id="nexus_bouncer">
+        <name proper="false">bouncer</name>
+        <pronoun>HE</pronoun>
+        <faction>nexus_staff</faction>
+        <idle>
+            <area>street_corner_nexus</area>
+        </idle>
+        <preventMovement>true</preventMovement>
+        <hp>70</hp>
+        <loottable>bouncer</loottable>
+    </actor>
 </actors>
