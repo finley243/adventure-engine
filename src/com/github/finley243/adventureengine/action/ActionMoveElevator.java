@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
@@ -45,7 +46,7 @@ public class ActionMoveElevator implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return subject.getMovementUtilityRank(destination.getArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
+		return UtilityUtils.getMovementUtility(subject, destination.getArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override

@@ -359,20 +359,8 @@ public class Actor implements Noun, Physical {
 		}
 	}
 	
-	public float getMovementUtilityRank(Area area) {
-		if(pursueTargets.isEmpty()) {
-			return 0.0f;
-		}
-		float utility = 0.0f;
-		for(PursueTarget target : pursueTargets) {
-			if(target.shouldFlee() && getArea() == target.getTargetArea()) {
-				utility += target.getTargetUtility();
-			} else if(target.shouldFlee() ^ target.isOnPath(area)) { // XOR
-				// Temporary calculation, ignores distance
-				utility += target.getTargetUtility();
-			}
-		}
-		return utility / pursueTargets.size();
+	public Set<PursueTarget> getPursueTargets() {
+		return pursueTargets;
 	}
 
 	@Override
