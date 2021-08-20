@@ -14,19 +14,13 @@ public class PursueTarget {
 	private boolean manualRemoval;
 	private boolean markForRemoval;
 	private boolean shouldFlee;
-	private String origin;
 	
-	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee, String origin) {
+	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee) {
 		this.targetArea = targetArea;
 		this.targetUtility = targetUtility;
 		this.manualRemoval = manualRemoval;
 		this.shouldFlee = shouldFlee;
 		markForRemoval = false;
-		this.origin = origin;
-	}
-	
-	public String getOrigin() {
-		return origin;
 	}
 	
 	public void update(Actor subject) {

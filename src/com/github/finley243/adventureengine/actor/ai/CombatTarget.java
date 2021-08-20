@@ -6,11 +6,6 @@ public class CombatTarget {
 
 	/** Number of turns it takes for a combat target to be removed if they are not visible */
 	public static final int TURNS_BEFORE_END_COMBAT = 5;
-	public static final float PURSUE_TARGET_UTILITY_MELEE = 0.7f;
-	public static final float PURSUE_TARGET_UTILITY_RANGED = 0.0f;
-	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.6f;
-	public static final float PURSUE_TARGET_UTILITY_NOWEAPON = 0.0f;
-	public static final float FLEE_TARGET_UTILITY = 0.5f;
 	
 	private Actor targetActor;
 	private int turnsUntilRemove;
@@ -24,24 +19,16 @@ public class CombatTarget {
 	
 	public void update(Actor subject) {
 		if(pursueTarget == null) {
-			pursueTarget = new PursueTarget(targetActor.getArea(), PURSUE_TARGET_UTILITY_RANGED, true, false, "CombatTarget Init");
+			pursueTarget = new PursueTarget(targetActor.getArea(), 0.0f, true, false);
 			subject.addPursueTarget(pursueTarget);
 		}
 		if(subject.canSee(targetActor)) {
 			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 			pursueTarget.setTargetArea(targetActor.getArea());
 			pursueTarget.setShouldFlee(subject.shouldFleeFrom(targetActor));
-			if(subject.shouldFleeFrom(targetActor)) {
-				pursueTarget.setTargetUtility(FLEE_TARGET_UTILITY);
-			} else if(subject.hasRangedWeaponEquipped()) {
-				pursueTarget.setTargetUtility(PURSUE_TARGET_UTILITY_RANGED);
-			} else if(subject.hasMeleeWeaponEquipped()) {
-				pursueTarget.setTargetUtility(PURSUE_TARGET_UTILITY_MELEE);
-			} else {
-				pursueTarget.setTargetUtility(PURSUE_TARGET_UTILITY_NOWEAPON);
-			}
+			pursueTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
 		} else {
-			pursueTarget.setTargetUtility(PURSUE_TARGET_UTILITY_INVISIBLE);
+			pursueTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
 			turnsUntilRemove--;
 		}
 		if(shouldRemove()) {
