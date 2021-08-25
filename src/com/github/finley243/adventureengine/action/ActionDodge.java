@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
 
 public class ActionDodge implements Action {
-
+	
 	public ActionDodge() {
 		// TODO Auto-generated constructor stub
 	}

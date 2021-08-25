@@ -90,11 +90,14 @@ public class ItemWeapon extends ItemEquippable {
 		Context contextReaction = new Context(target, false, subject, false, this, false);
 		if(ThreadLocalRandom.current().nextFloat() < getHitChance(subject)) {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get((isRanged() ? "rangedHit" : "meleeHit")), context));
-			Action reaction = target.chooseAction(reactionActions(target));
-			if(reaction instanceof ActionDodge) {
-				Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reactionDodge"), contextReaction));
-			} else if (reaction instanceof ActionBlock) {
-				Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reactionBlock"), contextReaction));
+			List<Action> reactions = reactionActions(target);
+			if(!reactions.isEmpty()) {
+				Action reaction = target.chooseAction(reactions);
+				if(reaction instanceof ActionDodge) {
+					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reactionDodge"), contextReaction));
+				} else if (reaction instanceof ActionBlock) {
+					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reactionBlock"), contextReaction));
+				}
 			}
 			if(ThreadLocalRandom.current().nextFloat() < CRIT_CHANCE) {
 				Game.EVENT_BUS.post(new RenderTextEvent("Critical Hit!"));
@@ -107,7 +110,7 @@ public class ItemWeapon extends ItemEquippable {
 		}
 	}
 	
-	private List<Action> reactionActions(Actor target) {
+	public List<Action> reactionActions(Actor target) {
 		List<Action> actions = new ArrayList<Action>();
 		if(!isRanged() && target.hasMeleeWeaponEquipped()) {
 			actions.add(new ActionBlock());
