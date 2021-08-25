@@ -4,7 +4,7 @@
         <pronoun>YOU</pronoun>
         <faction>player</faction>
         <hp>50</hp>
-        <loottable>weapon_ranged</loottable>
+        <loottable>weapon_melee</loottable>
     </actor>
     <actor id="stratis_receptionist">
         <name proper="false">receptionist</name>

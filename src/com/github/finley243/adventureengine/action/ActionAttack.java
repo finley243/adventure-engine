@@ -5,16 +5,16 @@ import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionAttackRanged implements Action {
+public class ActionAttack implements Action {
 	
 	private ItemWeapon weapon;
 	private Actor target;
 	
-	public ActionAttackRanged(ItemWeapon weapon, Actor target) {
+	public ActionAttack(ItemWeapon weapon, Actor target) {
 		this.weapon = weapon;
 		this.target = target;
 	}
-	
+
 	@Override
 	public void choose(Actor subject) {
 		weapon.attack(subject, target);
@@ -43,10 +43,10 @@ public class ActionAttackRanged implements Action {
 
 	@Override
 	public boolean isRepeatMatch(Action action) {
-		if(!(action instanceof ActionAttackRanged)) {
+		if(!(action instanceof ActionAttack)) {
 			return false;
 		} else {
-			return ((ActionAttackRanged) action).weapon == this.weapon;
+			return ((ActionAttack) action).weapon == this.weapon;
 		}
 	}
 	
@@ -54,7 +54,7 @@ public class ActionAttackRanged implements Action {
 	public int actionCount() {
 		return weapon.getRate();
 	}
-	
+
 	@Override
 	public ActionLegality getLegality() {
 		return ActionLegality.HOSTILE;
@@ -64,15 +64,15 @@ public class ActionAttackRanged implements Action {
 	public MenuData getMenuData() {
 		return new MenuDataEquipped("Attack " + target.getName(), weapon);
 	}
-
+	
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionAttackRanged)) {
+        if(!(o instanceof ActionAttack)) {
             return false;
         } else {
-            ActionAttackRanged other = (ActionAttackRanged) o;
+            ActionAttack other = (ActionAttack) o;
             return other.weapon == this.weapon && other.target == this.target;
         }
     }
-	
+
 }

@@ -1,13 +1,15 @@
 package com.github.finley243.adventureengine.world.item;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionAttackMelee;
-import com.github.finley243.adventureengine.action.ActionAttackRanged;
+import com.github.finley243.adventureengine.action.ActionAttack;
+import com.github.finley243.adventureengine.action.ActionBlock;
+import com.github.finley243.adventureengine.action.ActionDodge;
 import com.github.finley243.adventureengine.action.ActionEquip;
 import com.github.finley243.adventureengine.action.ActionInspect;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
@@ -85,8 +87,15 @@ public class ItemWeapon extends ItemEquippable {
 		}
 		target.addCombatTarget(subject);
 		Context context = new Context(subject, false, target, false, this, false);
+		Context contextReaction = new Context(target, false, subject, false, this, false);
 		if(ThreadLocalRandom.current().nextFloat() < getHitChance(subject)) {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get((isRanged() ? "rangedHit" : "meleeHit")), context));
+			Action reaction = target.chooseAction(reactionActions(target));
+			if(reaction instanceof ActionDodge) {
+				Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reactionDodge"), contextReaction));
+			} else if (reaction instanceof ActionBlock) {
+				Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reactionBlock"), contextReaction));
+			}
 			if(ThreadLocalRandom.current().nextFloat() < CRIT_CHANCE) {
 				Game.EVENT_BUS.post(new RenderTextEvent("Critical Hit!"));
 				target.damage(getDamage() + getCritDamage());
@@ -96,6 +105,15 @@ public class ItemWeapon extends ItemEquippable {
 		} else {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get((isRanged() ? "rangedMiss" : "meleeMiss")), context));
 		}
+	}
+	
+	private List<Action> reactionActions(Actor target) {
+		List<Action> actions = new ArrayList<Action>();
+		if(!isRanged() && target.hasMeleeWeaponEquipped()) {
+			actions.add(new ActionBlock());
+		}
+		actions.add(new ActionDodge());
+		return actions;
 	}
 	
 	@Override
@@ -115,11 +133,11 @@ public class ItemWeapon extends ItemEquippable {
 			if(target != subject) {
 				if(stats.getType().isRanged) { // Ranged
 					if(!target.isIncapacitated() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && ammo > 0) {
-						actions.add(new ActionAttackRanged(this, target));
+						actions.add(new ActionAttack(this, target));
 					}
 				} else { // Melee
 					if(!target.isIncapacitated()) {
-						actions.add(new ActionAttackMelee(this, target));
+						actions.add(new ActionAttack(this, target));
 					}
 				}
 			}

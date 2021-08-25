@@ -27,7 +27,7 @@
     </loottable>
     <loottable id="nexus_bouncer" useAll="true">
         <entry>
-            <reference table="true">weapon_ranged</reference>
+            <reference table="true">weapon_melee</reference>
             <chance>1.0</chance>
             <count>1</count>
         </entry>
