@@ -9,6 +9,7 @@ exitElevator:<subject> exit<s> <object>
 idle:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
 meleeHit:<subject> swing<s> <object2> at <object>
 meleeMiss:<subject> tr<ies> to hit <object> with <object2>, but miss<es>
+meleeTelegraph:<subject> swing<s> <object2> at <object>
 moveThroughTo:<subject> go<es> through <object> to <object2>
 moveTo:<subject> move<s> to <object>
 moveToward:<subject> move<s> to <object>
@@ -16,6 +17,7 @@ patrolTelegraph:<subject> prepare<s> to move to <object>
 pickUp:<subject> grab<s> <object>
 rangedHit:<subject> fire<s> <object2> at <object>
 rangedMiss:<subject> fire<s> <object2> at <object>, but miss<es>
+rangedTelegraph:<subject> aim<s> <object2> at <object>{|, ready to shoot|, finger on the trigger}
 reactionBlock:<subject> block<s> {<object2>|<object's> attack}
 reactionDodge:<subject> {jump<s> back, avoiding|dodge<s>} <object's> attack
 read:<subject> read<s> <object>
@@ -28,3 +30,7 @@ takeElevatorUp:<subject> take<s> <object> up
 takeFrom:<subject> take<s> <object> from <object2>
 unequip:<subject> put<s> away <object>
 unlock:<subject> unlock<s> <object>
+blockSuccess:<subject> {manage<s> to block <object2> just in time|block<s> <object2> and push<es> it away}
+blockFail:<subject> tr<ies> to block <object2> but <is> too {late|slow}
+dodgeSuccess:<subject> manage<s> to {dodge|move} {out of the way of|away from} <object2>
+dodgeFail:<subject> tr<ies> to dodge <object2> but <is> too {late|slow}

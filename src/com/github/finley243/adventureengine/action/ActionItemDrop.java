@@ -63,11 +63,6 @@ public class ActionItemDrop implements Action {
 	}
 	
 	@Override
-	public ActionLegality getLegality() {
-		return ActionLegality.LEGAL;
-	}
-	
-	@Override
 	public MenuData getMenuData() {
 		if(isEquipped) {
 			return new MenuDataEquipped("Drop", item);

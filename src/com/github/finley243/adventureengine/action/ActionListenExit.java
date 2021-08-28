@@ -66,11 +66,6 @@ public class ActionListenExit implements Action {
 	}
 
 	@Override
-	public ActionLegality getLegality() {
-		return ActionLegality.LEGAL;
-	}
-
-	@Override
 	public MenuData getMenuData() {
 		return new MenuDataWorldObject("Listen", exit);
 	}

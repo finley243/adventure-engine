@@ -72,11 +72,6 @@ public class ActionMoveElevator implements Action {
 	}
 	
 	@Override
-	public ActionLegality getLegality() {
-		return ActionLegality.LEGAL;
-	}
-	
-	@Override
 	public MenuData getMenuData() {
 		return new MenuDataWorldObject("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", elevator);
 	}

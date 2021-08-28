@@ -64,11 +64,6 @@ public class ActionInspect implements Action {
 	}
 	
 	@Override
-	public ActionLegality getLegality() {
-		return ActionLegality.LEGAL;
-	}
-	
-	@Override
 	public MenuData getMenuData() {
 		switch(type) {
 		case EQUIPPED:

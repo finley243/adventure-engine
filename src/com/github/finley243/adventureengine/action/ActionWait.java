@@ -48,11 +48,6 @@ public class ActionWait implements Action {
 	}
 	
 	@Override
-	public ActionLegality getLegality() {
-		return ActionLegality.LEGAL;
-	}
-	
-	@Override
 	public MenuData getMenuData() {
 		return new MenuDataGlobal("End turn");
 	}

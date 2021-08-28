@@ -54,11 +54,6 @@ public class ActionAttack implements Action {
 	public int actionCount() {
 		return weapon.getRate();
 	}
-
-	@Override
-	public ActionLegality getLegality() {
-		return ActionLegality.HOSTILE;
-	}
 	
 	@Override
 	public MenuData getMenuData() {

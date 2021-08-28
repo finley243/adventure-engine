@@ -57,11 +57,6 @@ public class ActionUnequip implements Action {
 	public int actionCount() {
 		return 1;
 	}
-
-	@Override
-	public ActionLegality getLegality() {
-		return ActionLegality.LEGAL;
-	}
 	
 	@Override
 	public MenuData getMenuData() {

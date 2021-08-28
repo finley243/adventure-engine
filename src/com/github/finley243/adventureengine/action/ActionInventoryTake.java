@@ -64,11 +64,6 @@ public class ActionInventoryTake implements Action {
 	}
 
     @Override
-    public ActionLegality getLegality() {
-        return ActionLegality.LEGAL;
-    }
-
-    @Override
     public MenuData getMenuData() {
         if(owner instanceof Actor) {
             return new MenuDataWorldActor("Take " + item.getName(), (Actor) owner);

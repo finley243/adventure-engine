@@ -75,11 +75,6 @@ public class ActionRead implements Action {
 	}
 	
 	@Override
-	public ActionLegality getLegality() {
-		return ActionLegality.LEGAL;
-	}
-	
-	@Override
 	public MenuData getMenuData() {
 		if(isInInventory) {
 			return new MenuDataInventory("Read", (Item) object);

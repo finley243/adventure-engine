@@ -4,10 +4,20 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
 
-public class ActionDodge implements Action {
+public class ActionReaction implements Action {
+
+	public enum ReactionType {
+		BLOCK, DODGE
+	}
 	
-	public ActionDodge() {
-		// TODO Auto-generated constructor stub
+	private ReactionType type;
+	
+	public ActionReaction(ReactionType type) {
+		this.type = type;
+	}
+	
+	public ReactionType getType() {
+		return type;
 	}
 
 	@Override
@@ -18,8 +28,14 @@ public class ActionDodge implements Action {
 
 	@Override
 	public String getPrompt() {
-		// TODO Auto-generated method stub
-		return "Dodge";
+		switch(type) {
+		case BLOCK:
+			return "Block";
+		case DODGE:
+			return "Dodge";
+		default:
+			return null;
+		}
 	}
 
 	@Override
@@ -49,19 +65,19 @@ public class ActionDodge implements Action {
 	@Override
 	public int actionCount() {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public ActionLegality getLegality() {
-		// TODO Auto-generated method stub
-		return null;
+		return 1;
 	}
 
 	@Override
 	public MenuData getMenuData() {
-		// TODO Auto-generated method stub
-		return new MenuDataGlobal("Dodge");
+		switch(type) {
+		case BLOCK:
+			return new MenuDataGlobal("Block");
+		case DODGE:
+			return new MenuDataGlobal("Dodge");
+		default:
+			return null;
+		}
 	}
 
 }

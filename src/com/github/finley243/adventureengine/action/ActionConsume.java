@@ -79,11 +79,6 @@ public class ActionConsume implements Action {
 	}
 	
 	@Override
-	public ActionLegality getLegality() {
-		return ActionLegality.LEGAL;
-	}
-	
-	@Override
 	public MenuData getMenuData() {
 		String prompt;
 		switch(item.getConsumableType()) {

@@ -3,22 +3,17 @@ package com.github.finley243.adventureengine.world.item;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionAttack;
-import com.github.finley243.adventureengine.action.ActionBlock;
-import com.github.finley243.adventureengine.action.ActionDodge;
 import com.github.finley243.adventureengine.action.ActionEquip;
 import com.github.finley243.adventureengine.action.ActionInspect;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
+import com.github.finley243.adventureengine.action.ActionReaction;
+import com.github.finley243.adventureengine.action.ActionReaction.ReactionType;
 import com.github.finley243.adventureengine.action.ActionReload;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
 public class ItemWeapon extends ItemEquippable {
@@ -85,37 +80,17 @@ public class ItemWeapon extends ItemEquippable {
 		if(isRanged()) {
 			consumeAmmo(1);
 		}
-		target.addCombatTarget(subject);
-		Context context = new Context(subject, false, target, false, this, false);
-		Context contextReaction = new Context(target, false, subject, false, this, false);
-		if(ThreadLocalRandom.current().nextFloat() < getHitChance(subject)) {
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get((isRanged() ? "rangedHit" : "meleeHit")), context));
-			List<Action> reactions = reactionActions(target);
-			if(!reactions.isEmpty()) {
-				Action reaction = target.chooseAction(reactions);
-				if(reaction instanceof ActionDodge) {
-					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reactionDodge"), contextReaction));
-				} else if (reaction instanceof ActionBlock) {
-					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reactionBlock"), contextReaction));
-				}
-			}
-			if(ThreadLocalRandom.current().nextFloat() < CRIT_CHANCE) {
-				Game.EVENT_BUS.post(new RenderTextEvent("Critical Hit!"));
-				target.damage(getDamage() + getCritDamage());
-			} else {
-				target.damage(getDamage());
-			}
-		} else {
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get((isRanged() ? "rangedMiss" : "meleeMiss")), context));
-		}
+		CombatHelper.handleAttack(subject, target, this);
 	}
 	
 	public List<Action> reactionActions(Actor target) {
 		List<Action> actions = new ArrayList<Action>();
 		if(!isRanged() && target.hasMeleeWeaponEquipped()) {
-			actions.add(new ActionBlock());
+			actions.add(new ActionReaction(ReactionType.BLOCK));
 		}
-		actions.add(new ActionDodge());
+		if(!isRanged()) {
+			actions.add(new ActionReaction(ReactionType.DODGE));
+		}
 		return actions;
 	}
 	

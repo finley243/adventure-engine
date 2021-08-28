@@ -8,10 +8,6 @@ import com.github.finley243.adventureengine.menu.data.MenuData;
  */
 public interface Action {
 	
-	public enum ActionLegality {
-		LEGAL, ILLEGAL, HOSTILE
-	}
-	
 	public void choose(Actor subject);
 	
 	public String getPrompt();
@@ -25,8 +21,6 @@ public interface Action {
 	public boolean isRepeatMatch(Action action);
 	
 	public int actionCount();
-	
-	public ActionLegality getLegality();
 	
 	public MenuData getMenuData();
 	
