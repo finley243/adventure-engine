@@ -73,6 +73,7 @@ public class Actor implements Noun, Physical {
 	private Area area;
 	private String topicID;
 	private int HP;
+	private boolean isEnabled;
 	private boolean isDead;
 	private boolean isUnconscious;
 	private boolean endTurn;
@@ -117,6 +118,7 @@ public class Actor implements Noun, Physical {
 		}
 		this.blockedActions = new ArrayList<Action>();
 		this.behaviorIdle = new BehaviorIdle(stats.getIdle());
+		this.isEnabled = true;
 	}
 	
 	public String getID() {
@@ -155,6 +157,21 @@ public class Actor implements Noun, Physical {
 	@Override
 	public void setArea(Area area) {
 		this.area = area;
+	}
+	
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+	
+	public void setEnabled(boolean enable) {
+		if(isEnabled != enable) {
+			isEnabled = enable;
+			if(enable) {
+				area.addActor(this);
+			} else {
+				area.removeActor(this);
+			}
+		}
 	}
 	
 	public int getAttribute(Attribute attribute) {
@@ -428,7 +445,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void takeTurn() {
-		if(isDead) return;
+		if(isDead || !isEnabled()) return;
 		updateEffects();
 		behaviorIdle.update(this);
 		this.actionPoints = ACTIONS_PER_TURN;
