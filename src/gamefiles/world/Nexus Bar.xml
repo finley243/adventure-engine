@@ -18,6 +18,10 @@
                     <stats>nexus_bouncer</stats>
                     <topic>nexus_bouncer_start</topic>
                 </actor>
+                <actor id="lucas_simms">
+                    <stats>lucas_simms</stats>
+                    <topic>lucas_simms_start</topic>
+                </actor>
             </actors>
         </area>
     </room>

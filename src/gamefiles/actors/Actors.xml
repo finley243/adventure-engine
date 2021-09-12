@@ -34,4 +34,14 @@
         <hp>70</hp>
         <loottable>nexus_bouncer</loottable>
     </actor>
+    <actor id="lucas_simms">
+        <name proper="true">Lucas Simms</name>
+        <pronoun>HE</pronoun>
+        <faction>nexus_staff</faction>
+        <idle>
+            <area>street_corner_nexus</area>
+        </idle>
+        <hp>50</hp>
+        <loottable>nexus_bouncer</loottable>
+    </actor>
 </actors>
