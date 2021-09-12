@@ -41,6 +41,8 @@ import com.google.common.eventbus.Subscribe;
 
 public class GraphicalInterfaceNested implements UserInterface {
 
+	private static final boolean USE_WORLD_CATEGORY = false;
+	
 	private JFrame window;
 	private JTabbedPane tabPane;
 	private JScrollPane textScroll;
@@ -174,43 +176,57 @@ public class GraphicalInterfaceNested implements UserInterface {
 					}
 				}
 				if(!worldActor.isEmpty() || !worldObject.isEmpty()) {
-					JButton buttonWorld = new JButton("World");
-					choicePanel.add(buttonWorld);
+					/*JButton buttonWorld = new JButton("World");
 					JPopupMenu menuWorld = new JPopupMenu();
+					choicePanel.add(buttonWorld);
 					buttonWorld.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							menuWorld.show(buttonWorld, buttonWorld.getWidth(), 0);
 						}
-					});
+					});*/
 					if(!worldActor.isEmpty()) {
-						Map<Actor, JMenu> targetActors = new HashMap<Actor, JMenu>();
+						Map<Actor, JPopupMenu> targetActors = new HashMap<Actor, JPopupMenu>();
 						for(MenuDataWorldActor current : worldActor) {
 							if(!targetActors.containsKey(current.getActor())) {
-								JMenu menuCategory = new JMenu(LangUtils.titleCase(current.getActor().getName()));
+								JButton actorButton = new JButton(LangUtils.titleCase(current.getActor().getName()));
+								choicePanel.add(actorButton);
+								JPopupMenu menuCategory = new JPopupMenu(LangUtils.titleCase(current.getActor().getName()));
+								actorButton.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent e) {
+										menuCategory.show(actorButton, actorButton.getWidth(), 0);
+									}
+								});
 								targetActors.put(current.getActor(), menuCategory);
 							}
 							JMenuItem menuItem = new JMenuItem(current.getPrompt());
 							menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
 							targetActors.get(current.getActor()).add(menuItem);
 						}
-						for(JMenuItem categoryMenu : targetActors.values()) {
+						/*for(JMenuItem categoryMenu : targetActors.values()) {
 							menuWorld.add(categoryMenu);
-						}
+						}*/
 					}
 					if(!worldObject.isEmpty()) {
-						Map<WorldObject, JMenu> targetObjects = new HashMap<WorldObject, JMenu>();
+						Map<WorldObject, JPopupMenu> targetObjects = new HashMap<WorldObject, JPopupMenu>();
 						for(MenuDataWorldObject current : worldObject) {
 							if(!targetObjects.containsKey(current.getObject())) {
-								JMenu menuCategory = new JMenu(LangUtils.titleCase(current.getObject().getName()));
+								JButton objectButton = new JButton(LangUtils.titleCase(current.getObject().getName()));
+								choicePanel.add(objectButton);
+								JPopupMenu menuCategory = new JPopupMenu(LangUtils.titleCase(current.getObject().getName()));
+								objectButton.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent e) {
+										menuCategory.show(objectButton, objectButton.getWidth(), 0);
+									}
+								});
 								targetObjects.put(current.getObject(), menuCategory);
 							}
 							JMenuItem menuItem = new JMenuItem(current.getPrompt());
 							menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
 							targetObjects.get(current.getObject()).add(menuItem);
 						}
-						for(JMenuItem categoryMenu : targetObjects.values()) {
+						/*for(JMenuItem categoryMenu : targetObjects.values()) {
 							menuWorld.add(categoryMenu);
-						}
+						}*/
 					}
 				}
 				/*if(!worldActor.isEmpty()) {
