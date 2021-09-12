@@ -76,13 +76,13 @@ public class TextGen {
 				}
 			}
 		}
-		if (context.getSubject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+		if (context.getSubject().equals(Data.getPlayer())) {
 			useSubjectPronoun = true;
 		}
-		if (context.getObject().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+		if (context.getObject().equals(Data.getPlayer())) {
 			useObjectPronoun = true;
 		}
-		if (context.getObject2().equals(Data.getActor(Game.PLAYER_ACTOR))) {
+		if (context.getObject2().equals(Data.getPlayer())) {
 			useObject2Pronoun = true;
 		}
 		return populateFromContext(line, context, useSubjectPronoun, useObjectPronoun, useObject2Pronoun);

@@ -25,6 +25,8 @@ public class Data {
 	
 	private static ActorPlayer player = null;
 	
+	private static Map<String, String> config = new HashMap<String, String>();
+	
 	private static Map<String, Area> areas = new HashMap<String, Area>();
 	private static Map<String, Room> rooms = new HashMap<String, Room>();
 	private static Map<String, Actor> actors = new HashMap<String, Actor>();
@@ -37,6 +39,17 @@ public class Data {
 	private static Map<String, Faction> factions = new HashMap<String, Faction>();
 	private static List<Scene> scenes = new ArrayList<Scene>();
 	private static Map<String, Quest> quests = new HashMap<String, Quest>();
+	
+	public static void addConfig(String id, String value) {
+		if(config.containsKey(id)) {
+			System.out.println("WARNING - Adding config with existing ID: " + id);
+		}
+		config.put(id, value);
+	}
+	
+	public static String getConfig(String id) {
+		return config.get(id);
+	}
 	
 	public static void addArea(String id, Area value) {
 		if(areas.containsKey(id)) {
@@ -83,7 +96,7 @@ public class Data {
 	
 	public static ActorPlayer getPlayer() {
 		if(player == null) {
-			player = (ActorPlayer) getActor(Game.PLAYER_ACTOR);
+			player = (ActorPlayer) getActor(getConfig("playerID"));
 		}
 		return player;
 	}

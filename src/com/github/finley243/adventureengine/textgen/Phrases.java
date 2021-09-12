@@ -7,13 +7,10 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Phrases {
-
-	public static final String PHRASE_FILE_LOCATION = "src/gamefiles/phrases.txt";
 	
 	private static Map<String, String> phrases = new HashMap<String, String>();
 	
-	public static void load() throws FileNotFoundException {
-		File file = new File(PHRASE_FILE_LOCATION);
+	public static void load(File file) throws FileNotFoundException {
 		Scanner scanner = new Scanner(file);
 		while(scanner.hasNextLine()) {
 			String line = scanner.nextLine();

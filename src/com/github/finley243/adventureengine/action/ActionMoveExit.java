@@ -45,7 +45,7 @@ public class ActionMoveExit implements Action {
 	
 	@Override
 	public boolean usesAction() {
-		return false;
+		return true;
 	}
 	
 	@Override

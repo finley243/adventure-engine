@@ -45,7 +45,7 @@ public class Scene {
 			if(condition == null) {
 				return true;
 			}
-			return condition.isMet(Data.getActor(Game.PLAYER_ACTOR));
+			return condition.isMet(Data.getPlayer());
 		}
 	}
 	
@@ -54,7 +54,7 @@ public class Scene {
 	}
 	
 	public void updateCooldown() {
-		if(!condition.isMet(Data.getActor(Game.PLAYER_ACTOR))) {
+		if(!condition.isMet(Data.getPlayer())) {
 			return;
 		}
 		if(cooldownCounter > 0) {
