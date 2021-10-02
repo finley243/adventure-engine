@@ -25,7 +25,6 @@
             <actors>
                 <actor id="stratis_receptionist">
                     <stats>stratis_receptionist</stats>
-                    <topic>stratis_receptionist_start</topic>
                 </actor>
             </actors>
         </area>

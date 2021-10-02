@@ -71,7 +71,6 @@ public class Actor implements Noun, Physical {
 	private String ID;
 	private String descriptor;
 	private Area area;
-	private String topicID;
 	private int HP;
 	private boolean isEnabled;
 	private boolean isDead;
@@ -92,14 +91,13 @@ public class Actor implements Noun, Physical {
 	private Set<PursueTarget> pursueTargets;
 	private BehaviorIdle behaviorIdle;
 	
-	public Actor(String ID, Area area, StatsActor stats, String descriptor, String topicID, boolean startDead) {
+	public Actor(String ID, Area area, StatsActor stats, String descriptor, boolean startDead) {
 		this.ID = ID;
 		if(area != null) {
 			this.move(area);
 		}
 		this.stats = stats;
 		this.descriptor = descriptor;
-		this.topicID = topicID;
 		this.combatTargets = new HashSet<CombatTarget>();
 		this.pursueTargets = new HashSet<PursueTarget>();
 		this.isDead = startDead;
@@ -204,7 +202,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public String getTopicID() {
-		return topicID;
+		return stats.getTopic();
 	}
 	
 	public Faction getFaction() {
@@ -384,7 +382,7 @@ public class Actor implements Noun, Physical {
 	public List<Action> localActions(Actor subject) {
 		List<Action> action = new ArrayList<Action>();
 		if(!isDead) { // Alive
-			if(topicID != null && !isInCombat()) {
+			if(stats.getTopic() != null && !isInCombat()) {
 				action.add(new ActionTalk(this));
 			}
 		} else { // Dead

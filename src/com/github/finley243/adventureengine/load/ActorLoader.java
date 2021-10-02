@@ -58,7 +58,8 @@ public class ActorLoader {
 		boolean preventMovement = LoadUtils.singleTagBoolean(actorElement, "preventMovement", false);
 		int hp = LoadUtils.singleTagInt(actorElement, "hp", 0);
 		String lootTable = LoadUtils.singleTag(actorElement, "loottable", null);
-		return new StatsActor(id, name, nameIsProper, pronoun, faction, idle, preventMovement, hp, lootTable);
+		String topic = LoadUtils.singleTag(actorElement, "topic", null);
+		return new StatsActor(id, name, nameIsProper, pronoun, faction, idle, preventMovement, hp, lootTable, topic);
 	}
 	
 	private static Pronoun pronounTag(Element element, String name) {

@@ -15,6 +15,7 @@
         </idle>
         <hp>60</hp>
         <loottable>stratis_receptionist</loottable>
+        <topic>stratis_receptionist_start</topic>
     </actor>
     <actor id="enemy">
         <name proper="false">ganger</name>
@@ -33,6 +34,7 @@
         <preventMovement>true</preventMovement>
         <hp>70</hp>
         <loottable>nexus_bouncer</loottable>
+        <topic>nexus_bouncer_start</topic>
     </actor>
     <actor id="lucas_simms">
         <name proper="true">Lucas Simms</name>
@@ -43,5 +45,6 @@
         </idle>
         <hp>50</hp>
         <loottable>nexus_bouncer</loottable>
+        <topic>lucas_simms_start</topic>
     </actor>
 </actors>
