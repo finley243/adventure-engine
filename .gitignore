@@ -1,6 +1,9 @@
 # Maven target directory (unused)
 target/
 
+# IntelliJ directory
+.idea/
+
 # Compiled class file
 *.class
 
