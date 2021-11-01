@@ -1,9 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
@@ -29,8 +26,11 @@ public class Pathfinder {
 	 * @return Shortest path from currentArea to targetArea
 	 */
 	public static List<Area> findPath(Area currentArea, Area targetArea) {
+		/*
 		Set<Area> visited = new HashSet<Area>();
 		return findPath(currentArea, targetArea, visited, -1);
+		*/
+		return findPathBFS(currentArea, targetArea);
 	}
 	
 	// sizeAllowed: length allowed for sub-path (if -1, any length is allowed), based on current shortest path
@@ -73,6 +73,41 @@ public class Pathfinder {
 		}
 		hasVisited.remove(currentArea);
 		return shortestPath;
+	}
+
+	private static List<Area> findPathBFS(Area startArea, Area targetArea) {
+		Set<Area> hasVisited = new HashSet<Area>();
+		Queue<List<Area>> paths = new LinkedList<>();
+		List<Area> startPath = new ArrayList<>();
+		startPath.add(startArea);
+		paths.add(startPath);
+		hasVisited.add(startArea);
+		while(!paths.isEmpty()) {
+			List<Area> currentPath = paths.remove();
+			Area pathEnd = currentPath.get(currentPath.size() - 1);
+			if(pathEnd.equals(targetArea)) {
+				return currentPath;
+			}
+			Set<Area> linkedAreasGlobal = new HashSet<>(pathEnd.getLinkedAreas());
+			if(pathEnd.getRoom() != targetArea.getRoom()) {
+				for(WorldObject object : pathEnd.getObjects()) {
+					if(object instanceof ObjectExit) {
+						linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
+					} else if(object instanceof ObjectElevator) {
+						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
+					}
+				}
+			}
+			for(Area linkedArea : linkedAreasGlobal) {
+				if(!hasVisited.contains(linkedArea)) {
+					List<Area> linkedPath = new ArrayList<>(currentPath);
+					linkedPath.add(linkedArea);
+					paths.add(linkedPath);
+					hasVisited.add(linkedArea);
+				}
+			}
+		}
+		return null;
 	}
 	
 }
