@@ -25,20 +25,20 @@ public class Data {
 	
 	private static ActorPlayer player = null;
 	
-	private static Map<String, String> config = new HashMap<String, String>();
+	private static final Map<String, String> config = new HashMap<>();
 	
-	private static Map<String, Area> areas = new HashMap<String, Area>();
-	private static Map<String, Room> rooms = new HashMap<String, Room>();
-	private static Map<String, Actor> actors = new HashMap<String, Actor>();
-	private static Map<String, StatsActor> actorStats = new HashMap<String, StatsActor>();
-	private static Map<String, LinkedObject> linkedObjects = new HashMap<String, LinkedObject>();
-	private static Map<String, StatsItem> items = new HashMap<String, StatsItem>();
-	private static Map<String, LootTable> lootTables = new HashMap<String, LootTable>();
-	private static Map<String, DialogueTopic> topics = new HashMap<String, DialogueTopic>();
-	private static Set<String> knowledge = new HashSet<String>();
-	private static Map<String, Faction> factions = new HashMap<String, Faction>();
-	private static List<Scene> scenes = new ArrayList<Scene>();
-	private static Map<String, Quest> quests = new HashMap<String, Quest>();
+	private static final Map<String, Area> areas = new HashMap<>();
+	private static final Map<String, Room> rooms = new HashMap<>();
+	private static final Map<String, Actor> actors = new HashMap<>();
+	private static final Map<String, StatsActor> actorStats = new HashMap<>();
+	private static final Map<String, LinkedObject> linkedObjects = new HashMap<>();
+	private static final Map<String, StatsItem> items = new HashMap<>();
+	private static final Map<String, LootTable> lootTables = new HashMap<>();
+	private static final Map<String, DialogueTopic> topics = new HashMap<>();
+	private static final Set<String> knowledge = new HashSet<>();
+	private static final Map<String, Faction> factions = new HashMap<>();
+	private static final List<Scene> scenes = new ArrayList<>();
+	private static final Map<String, Quest> quests = new HashMap<>();
 	
 	public static void addConfig(String id, String value) {
 		if(config.containsKey(id)) {
