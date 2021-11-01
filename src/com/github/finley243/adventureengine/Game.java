@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.github.finley243.adventureengine.ui.ConsoleInterface;
+import com.google.common.graph.Graph;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;

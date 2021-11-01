@@ -29,7 +29,7 @@ public class Pathfinder {
 	 * @param targetArea Position the path leads to
 	 * @return Shortest path from currentArea to targetArea
 	 */
-	private static List<Area> findPath(Area startArea, Area targetArea) {
+	public static List<Area> findPath(Area startArea, Area targetArea) {
 		Set<Area> hasVisited = new HashSet<>();
 		Queue<List<Area>> paths = new LinkedList<>();
 		List<Area> startPath = new ArrayList<>();
