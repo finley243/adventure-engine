@@ -2,18 +2,16 @@ package com.github.finley243.adventureengine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.github.finley243.adventureengine.ui.ConsoleInterface;
+import com.github.finley243.adventureengine.event.*;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
-import com.github.finley243.adventureengine.event.PlayerDeathEvent;
-import com.github.finley243.adventureengine.event.RenderLocationEvent;
-import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.ActorLoader;
 import com.github.finley243.adventureengine.load.ConfigLoader;
@@ -52,6 +50,9 @@ public class Game {
 	private final UserInterface userInterface;
 	
 	private boolean continueGameLoop;
+
+	private final List<Actor> turnOrder;
+	private int currentTurn;
 	
 	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException {
@@ -75,23 +76,29 @@ public class Game {
 		Actor player = ActorFactory.createPlayer(Data.getConfig("playerID"), Data.getArea(Data.getConfig("playerStartArea")), Data.getActorStats(Data.getConfig("playerStats")));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
-		
+
+		turnOrder = new ArrayList<>(Data.getActors().size());
+		updateTurnOrder();
+
 		startGameLoop();
 	}
 	
 	/** Simple game loop that runs nextRound until continueGameLoop is false */
 	private void startGameLoop() {
 		continueGameLoop = true;
-		while(continueGameLoop) {
-			nextRound();
-		}
+		//while(continueGameLoop) {
+			//nextRound();
+		//}
+		nextRound();
 	}
 	
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
+		EVENT_BUS.post(new TextClearEvent());
+		TextGen.clearContext();
 		EVENT_BUS.post(new RenderLocationEvent());
 		Data.getPlayer().triggerSceneManager();
-		for(Actor actor : Data.getActors()) {
+		/*for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();
 			}
@@ -99,7 +106,35 @@ public class Game {
 		Data.getPlayer().takeTurn();
 		sleep(800);
 		EVENT_BUS.post(new TextClearEvent());
-		TextGen.clearContext();
+		TextGen.clearContext();*/
+		updateTurnOrder();
+		startTurn();
+	}
+
+	private void updateTurnOrder() {
+		turnOrder.clear();
+		for(Actor actor : Data.getActors()) {
+			if(!(actor instanceof ActorPlayer)) {
+				turnOrder.add(actor);
+			}
+		}
+		turnOrder.add(Data.getPlayer());
+		currentTurn = 0;
+	}
+
+	private void startTurn() {
+		Actor actor = turnOrder.get(currentTurn);
+		actor.takeTurn();
+	}
+
+	@Subscribe
+	private void endTurn(CompletedActionEvent event) {
+		currentTurn++;
+		if(currentTurn == turnOrder.size()) {
+			nextRound();
+		} else {
+			startTurn();
+		}
 	}
 	
 	private void sleep(int millis) {

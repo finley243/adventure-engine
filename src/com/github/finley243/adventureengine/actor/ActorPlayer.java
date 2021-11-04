@@ -15,8 +15,8 @@ import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class ActorPlayer extends Actor {
 
-	private MenuManager menuManager;
-	private SceneManager sceneManager;
+	private final MenuManager menuManager;
+	private final SceneManager sceneManager;
 	
 	public ActorPlayer(String ID, Area area, StatsActor stats) {
 		super(ID, area, stats, null, false);
