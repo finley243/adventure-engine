@@ -20,6 +20,7 @@ import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
 import com.github.finley243.adventureengine.actor.ai.CombatTarget;
 import com.github.finley243.adventureengine.actor.ai.PursueTarget;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.event.CompletedTurnEvent;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
@@ -79,6 +80,8 @@ public class Actor implements Noun, Physical {
 	private int actionPoints;
 	private int repeatActionPoints;
 	private List<Action> blockedActions;
+	private Action repeatAction;
+	private boolean isInDialogue;
 	// Index: 0 = base, 1 = modifier
 	private EnumMap<Attribute, int[]> attributes;
 	private List<Effect> effects;
@@ -443,49 +446,54 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void takeTurn() {
-		if(isDead || !isEnabled()) return;
-		updateEffects();
-		behaviorIdle.update(this);
-		this.actionPoints = ACTIONS_PER_TURN;
-		this.repeatActionPoints = 0;
-		Action repeatAction = null;
-		this.blockedActions.clear();
-		this.endTurn = false;
-		while(!endTurn) {
-			generateCombatTargets();
-			generatePursueTargets();
-			updatePursueTargets();
-			updateCombatTargets();
-			Action chosenAction;
-			if(repeatActionPoints > 0) {
-				List<Action> repeatActions = new ArrayList<Action>();
-				for(Action action : availableActions()) {
-					if(repeatAction.isRepeatMatch(action)) {
-						repeatActions.add(action);
-					}
-				}
-				repeatActions.add(new ActionMultiEnd());
-				chosenAction = chooseAction(repeatActions);
-				repeatActionPoints--;
-			} else {
-				List<Action> validActions = new ArrayList<Action>();
-				for(Action action : availableActions()) {
-					if(!action.usesAction() || actionPoints > 0) {
-						validActions.add(action);
-					}
-				}
-				chosenAction = chooseAction(validActions);
-				if(chosenAction.usesAction()) {
-					actionPoints--;
-				}
-				if(chosenAction.actionCount() > 1) {
-					repeatActionPoints = chosenAction.actionCount() - 1;
-					repeatAction = chosenAction;
-				} else if(!chosenAction.canRepeat()) {
-					blockedActions.add(chosenAction);
+		if(isDead || !isEnabled()) {
+			Game.EVENT_BUS.post(new CompletedTurnEvent());
+		} else {
+			updateEffects();
+			behaviorIdle.update(this);
+			this.actionPoints = ACTIONS_PER_TURN;
+			this.repeatActionPoints = 0;
+			repeatAction = null;
+			this.blockedActions.clear();
+			this.endTurn = false;
+			takeTurnAction();
+		}
+	}
+
+	private void takeTurnAction() {
+		generateCombatTargets();
+		generatePursueTargets();
+		updatePursueTargets();
+		updateCombatTargets();
+		if(repeatActionPoints > 0) {
+			List<Action> repeatActions = new ArrayList<>();
+			for(Action action : availableActions()) {
+				if(repeatAction.isRepeatMatch(action)) {
+					repeatActions.add(action);
 				}
 			}
-			chosenAction.choose(this);
+			repeatActions.add(new ActionMultiEnd());
+			chooseAction(repeatActions);
+			//chosenAction = chooseAction(repeatActions);
+			//repeatActionPoints--;
+		} else {
+			List<Action> validActions = new ArrayList<>();
+			for(Action action : availableActions()) {
+				if(!action.usesAction() || actionPoints > 0) {
+					validActions.add(action);
+				}
+			}
+			chooseAction(validActions);
+			/*chosenAction = chooseAction(validActions);
+			if(chosenAction.usesAction()) {
+				actionPoints--;
+			}
+			if(chosenAction.actionCount() > 1) {
+				repeatActionPoints = chosenAction.actionCount() - 1;
+				repeatAction = chosenAction;
+			} else if(!chosenAction.canRepeat()) {
+				blockedActions.add(chosenAction);
+			}*/
 		}
 	}
 	
@@ -498,8 +506,13 @@ public class Actor implements Noun, Physical {
 		repeatActionPoints = 0;
 	}
 	
-	public Action chooseAction(List<Action> actions) {
-		List<Action> bestActions = new ArrayList<Action>();
+	public void chooseAction(List<Action> actions) {
+		Action choice = highestUtilityAction(actions);
+		handleActionSelection(choice);
+	}
+
+	public Action highestUtilityAction(List<Action> actions) {
+		List<Action> bestActions = new ArrayList<>();
 		float maxWeight = 0.0f;
 		for(Action currentAction : actions) {
 			float currentWeight = currentAction.utility(this);
@@ -512,6 +525,37 @@ public class Actor implements Noun, Physical {
 			}
 		}
 		return bestActions.get(ThreadLocalRandom.current().nextInt(bestActions.size()));
+	}
+
+	public void handleActionSelection(Action action) {
+		if(repeatActionPoints > 0) {
+			repeatActionPoints--;
+		} else {
+			if(action.usesAction()) {
+				actionPoints--;
+			}
+			if(action.actionCount() > 1) {
+				repeatActionPoints = action.actionCount() - 1;
+				repeatAction = action;
+			} else if(!action.canRepeat()) {
+				blockedActions.add(action);
+			}
+		}
+		action.choose(this);
+		if(!isInDialogue) {
+			if(!endTurn) {
+				takeTurnAction();
+			} else {
+				Game.EVENT_BUS.post(new CompletedTurnEvent());
+			}
+		}
+	}
+
+	public void setIsInDialogue(boolean isInDialogue) {
+		if(this.isInDialogue && !isInDialogue && !endTurn) {
+			takeTurnAction();
+		}
+		this.isInDialogue = isInDialogue;
 	}
 	
 	private void updateEffects() {

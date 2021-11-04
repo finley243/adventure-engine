@@ -34,7 +34,7 @@ public class MenuManager {
 		this.dialogueSubject = null;
 	}
 	
-	public Action actionMenu(List<Action> actions) {
+	public void actionMenu(List<Action> actions) {
 		this.actionList = actions;
 		List<String> menuStrings = new ArrayList<>();
 		List<MenuData> menuData = new ArrayList<>();
@@ -44,14 +44,14 @@ public class MenuManager {
 		}
 		actionChoice = null;
 		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
-		while(actionChoice == null) {
+		/*while(actionChoice == null) {
 			try {
 				Thread.sleep(20);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		return actionChoice;
+		return actionChoice;*/
 	}
 
 	public void dialogueMenu(Actor subject, String startTopic) {
@@ -62,6 +62,7 @@ public class MenuManager {
 	private void dialogueMenu(String topic) {
 		//Game.EVENT_BUS.post(new TextClearEvent());
 		boolean showChoices = true;
+		boolean exit = false;
 		DialogueTopic currentTopic = Data.getTopic(topic);
 		//while(showChoices) {
 			//Game.EVENT_BUS.post(new RenderTextEvent(subject.getName().toUpperCase()));
@@ -73,10 +74,12 @@ public class MenuManager {
 					line.trigger(dialogueSubject);
 					if(line.hasRedirect()) {
 						currentTopic = Data.getTopic(line.getRedirectTopicId());
+						showChoices = false;
 						break;
 					}
 					if(line.shouldExit()) {
 						showChoices = false;
+						exit = true;
 						break;
 					}
 					if(currentTopic.getType() == TopicType.SELECTOR) {
@@ -99,6 +102,11 @@ public class MenuManager {
 					//Game.EVENT_BUS.post(new RenderTextEvent(selectedChoice.getPrompt()));
 					//Game.EVENT_BUS.post(new RenderTextEvent(""));
 				}
+			}
+			if(!exit) {
+				dialogueSubject.setIsInDialogue(false);
+			} else {
+				dialogueMenu(currentTopic.getID());
 			}
 		//}
 	}
@@ -125,7 +133,7 @@ public class MenuManager {
 	}
 
 	private void onSelectAction(Action selected) {
-		//TODO
+		Game.EVENT_BUS.post(new PlayerActionSelectEvent(selected));
 	}
 
 	private void onSelectDialogue(DialogueChoice selected) {

@@ -128,7 +128,14 @@ public class Game {
 	}
 
 	@Subscribe
-	private void endTurn(CompletedActionEvent event) {
+	public void onPlayerActionSelectEvent(PlayerActionSelectEvent event) {
+		if(turnOrder.get(currentTurn) instanceof ActorPlayer) {
+			turnOrder.get(currentTurn).handleActionSelection(event.getAction());
+		}
+	}
+
+	@Subscribe
+	private void endTurn(CompletedTurnEvent event) {
 		currentTurn++;
 		if(currentTurn == turnOrder.size()) {
 			nextRound();
@@ -137,13 +144,13 @@ public class Game {
 		}
 	}
 	
-	private void sleep(int millis) {
+	/*private void sleep(int millis) {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	/** Ends the game loop, triggered when the player dies */
 	@Subscribe

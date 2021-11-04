@@ -34,9 +34,10 @@ public class CombatHelper {
 		}
 		List<Action> reactions = weapon.reactionActions(target);
 		Context reactionContext = new Context(target, false, subject, false, weapon, false);
-		if(reactions.isEmpty()) {
+		//TODO - convert to event-based system
+		//if(reactions.isEmpty()) {
 			target.damage(damage);
-		} else {
+		/*} else {
 			ActionReaction reaction = (ActionReaction) target.chooseAction(weapon.reactionActions(target));
 			switch(reaction.getType()) {
 			case BLOCK:
@@ -58,7 +59,7 @@ public class CombatHelper {
 			default:
 				break;
 			}
-		}
+		}*/
 	}
 	
 	

@@ -24,7 +24,7 @@ public class ActionMultiEnd implements Action {
 
 	@Override
 	public float utility(Actor subject) {
-		Action highestUtilityAction = subject.chooseAction(subject.availableActions());
+		Action highestUtilityAction = subject.highestUtilityAction(subject.availableActions());
 		if(highestUtilityAction instanceof ActionMultiEnd) {
 			return highestUtilityAction.utility(subject) - 0.00001f;
 		} else {
