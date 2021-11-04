@@ -6,7 +6,6 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
-import com.google.common.graph.Graph;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
@@ -33,6 +32,7 @@ import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
+@SuppressWarnings("UnstableApiUsage")
 public class Game {
 	
 	public static final EventBus EVENT_BUS = new EventBus();
@@ -48,8 +48,8 @@ public class Game {
 	private static final String PHRASE_FILE = "/phrases.txt";
 	private static final String CONFIG_FILE = "/config.xml";
 	
-	private PerceptionHandler perceptionHandler;
-	private UserInterface userInterface;
+	private final PerceptionHandler perceptionHandler;
+	private final UserInterface userInterface;
 	
 	private boolean continueGameLoop;
 	

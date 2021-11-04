@@ -88,12 +88,6 @@ public class Data {
 		return actors.values();
 	}
 	
-	public static void replaceActor(String id, Actor value) {
-		if(!actors.containsKey(id)) {
-			System.out.println("WARNING - Replacing actor with ID that does not exist: " + id);
-		}
-	}
-	
 	public static ActorPlayer getPlayer() {
 		if(player == null) {
 			player = (ActorPlayer) getActor(getConfig("playerID"));
