@@ -4,10 +4,14 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.world.Physical;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class ActionGeneric implements Action{
 
     public enum ActionMatchType {
-        NONE, EXACT
+        NONE, OBJECT, ACTION
     }
 
     private final Physical object;
@@ -17,10 +21,11 @@ public class ActionGeneric implements Action{
     private final boolean usesAction;
     private final boolean canRepeat;
     private final ActionMatchType matchType;
+    private final Set<String> matchActions;
     private final int actionCount;
     private MenuData menuData;
 
-    public ActionGeneric(Physical object, String action, String prompt, float utility, boolean usesAction, boolean canRepeat, ActionMatchType matchType, int actionCount, MenuData menuData) {
+    public ActionGeneric(Physical object, String action, String prompt, float utility, boolean usesAction, boolean canRepeat, ActionMatchType matchType, int actionCount, MenuData menuData, String... otherMatches) {
         this.object = object;
         this.action = action;
         this.prompt = prompt;
@@ -30,6 +35,11 @@ public class ActionGeneric implements Action{
         this.matchType = matchType;
         this.actionCount = actionCount;
         this.menuData = menuData;
+        this.matchActions = new HashSet<String>();
+        matchActions.add(this.action);
+        if(otherMatches != null) {
+            matchActions.addAll(Arrays.asList(otherMatches));
+        }
     }
 
     @Override
@@ -60,8 +70,10 @@ public class ActionGeneric implements Action{
     @Override
     public boolean isRepeatMatch(Action action) {
         switch(matchType) {
-            case EXACT:
-                return (action instanceof ActionGeneric) && this.equalsExact((ActionGeneric) action);
+            case OBJECT:
+                return (action instanceof ActionGeneric) && this.action.equals(((ActionGeneric) action).action) && this.object.equals(((ActionGeneric) action).object);
+            case ACTION:
+                return (action instanceof ActionGeneric) && this.matchActions.contains(((ActionGeneric) action).action);
             case NONE:
             default:
                 return false;
@@ -78,7 +90,4 @@ public class ActionGeneric implements Action{
         return menuData;
     }
 
-    private boolean equalsExact(ActionGeneric other) {
-        return this.action.equals(other.action) && this.object.equals(other.object);
-    }
 }
