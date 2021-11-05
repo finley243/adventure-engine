@@ -1,11 +1,27 @@
 package com.github.finley243.adventureengine.network.action;
 
-public interface NetworkAction {
+public class NetworkAction {
 
-    public void execute();
+    private final String action;
+    private final float detectionChance;
+    private final int cost;
 
-    public float detectionChance();
+    public NetworkAction(String action, float detectionChance, int cost) {
+        this.action = action;
+        this.detectionChance = detectionChance;
+        this.cost = cost;
+    }
 
-    public int cost();
+    public void execute() {
+
+    }
+
+    public float detectionChance() {
+        return detectionChance;
+    }
+
+    public int cost() {
+        return cost;
+    }
 
 }
