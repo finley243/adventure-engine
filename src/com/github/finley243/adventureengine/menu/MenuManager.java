@@ -42,13 +42,9 @@ public class MenuManager {
 			menuData.add(action.getMenuData());
 		}
 		actionChoice = null;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
+		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData, this));
 		while(actionChoice == null) {
-			try {
-				Thread.sleep(20);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			Game.THREAD_CONTROL.pause();
 		}
 		return actionChoice;
 	}
@@ -105,7 +101,7 @@ public class MenuManager {
 		}
 	}
 	
-	private DialogueChoice dialogueMenu(List<DialogueChoice> choices) {
+	private synchronized DialogueChoice dialogueMenu(List<DialogueChoice> choices) {
 		this.dialogueList = choices;
 		List<String> menuStrings = new ArrayList<String>();
 		List<MenuData> menuData = new ArrayList<MenuData>();
@@ -114,13 +110,9 @@ public class MenuManager {
 			menuData.add(new MenuDataGlobal(choice.getPrompt()));
 		}
 		dialogueChoice = null;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
+		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData, this));
 		while(dialogueChoice == null) {
-			try {
-				Thread.sleep(20);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			Game.THREAD_CONTROL.pause();
 		}
 		//Game.EVENT_BUS.post(new TextClearEvent());
 		return dialogueChoice;

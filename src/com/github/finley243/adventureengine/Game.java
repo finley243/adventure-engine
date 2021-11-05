@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
+import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import org.xml.sax.SAXException;
 
@@ -54,11 +55,13 @@ public class Game {
 	private final UserInterface userInterface;
 	
 	private boolean continueGameLoop;
-	
+
+	public static final ThreadControl THREAD_CONTROL = new ThreadControl();
+
 	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		perceptionHandler = new PerceptionHandler();
-		userInterface = new ConsoleInterface();
+		userInterface = new GraphicalInterfaceNested();
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
 		EVENT_BUS.register(this);

@@ -17,6 +17,7 @@ public class ChoiceButtonListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Game.EVENT_BUS.post(new MenuSelectEvent(index));
+		Game.THREAD_CONTROL.unpause();
 	}
 
 }
