@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -57,12 +58,11 @@ public class Game {
 	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		perceptionHandler = new PerceptionHandler();
-		userInterface = new GraphicalInterfaceNested();
+		userInterface = new ConsoleInterface();
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
 		EVENT_BUS.register(this);
-		
-		
+
 		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
 		ConfigLoader.loadConfig(new File(GAMEFILES + CONFIG_FILE));
 		ItemLoader.loadItems(new File(GAMEFILES + ITEM_DIRECTORY));

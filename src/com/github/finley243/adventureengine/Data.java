@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
+import com.github.finley243.adventureengine.network.Network;
 import com.github.finley243.adventureengine.quest.Quest;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -39,6 +40,7 @@ public class Data {
 	private static final Map<String, Faction> factions = new HashMap<>();
 	private static final List<Scene> scenes = new ArrayList<>();
 	private static final Map<String, Quest> quests = new HashMap<>();
+	private static final Map<String, Network> networks = new HashMap<>();
 	
 	public static void addConfig(String id, String value) {
 		if(config.containsKey(id)) {
@@ -186,6 +188,17 @@ public class Data {
 	
 	public static Quest getQuest(String id) {
 		return quests.get(id);
+	}
+
+	public static void addNetwork(String id, Network value) {
+		if(networks.containsKey(id)) {
+			System.out.println("WARNING - Adding network with existing ID: " + id);
+		}
+		networks.put(id, value);
+	}
+
+	public static Network getNetwork(String id) {
+		return networks.get(id);
 	}
 	
 }
