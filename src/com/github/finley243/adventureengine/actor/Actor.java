@@ -454,6 +454,7 @@ public class Actor implements Noun, Physical {
 			repeatAction = null;
 			this.blockedActions.clear();
 			this.endTurn = false;
+			System.out.println("Queued from takeTurn");
 			Game.queueEvent(new NextActionEvent());
 			Game.nextQueueEvent();
 			//takeTurnAction();
@@ -543,6 +544,7 @@ public class Actor implements Noun, Physical {
 		}
 		action.choose(this);
 		if(!endTurn) {
+			System.out.println("Queued from handleActionSelection");
 			Game.queueEvent(new NextActionEvent());
 			Game.nextQueueEvent();
 			//takeTurnAction();

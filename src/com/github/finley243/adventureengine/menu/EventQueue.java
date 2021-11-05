@@ -5,13 +5,14 @@ import com.github.finley243.adventureengine.event.NextQueueEvent;
 import com.github.finley243.adventureengine.event.QueueEvent;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class EventQueue {
 
     // Do not queue GUI events, only game events
-    private final Queue<Object> events;
+    private final Deque<Object> events;
 
     public EventQueue() {
         this.events = new LinkedList<>();

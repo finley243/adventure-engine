@@ -75,7 +75,9 @@ public class MenuManager {
 					line.trigger(dialogueSubject);
 					if(line.hasRedirect()) {
 						//currentTopic = Data.getTopic(line.getRedirectTopicId());
-						Game.queueEvent(new DialogueMenuEvent(dialogueSubject, line.getRedirectTopicId()));
+						//Game.queueEvent(new DialogueMenuEvent(dialogueSubject, line.getRedirectTopicId()));
+						System.out.println("REDIRECT 1");
+						Game.EVENT_BUS.post(new DialogueMenuEvent(dialogueSubject, line.getRedirectTopicId()));
 						showChoices = false;
 						redirect = true;
 						break;
@@ -107,6 +109,7 @@ public class MenuManager {
 				}
 			}
 			if(exit || redirect) {
+				System.out.println("REDIRECT 2");
 				Game.nextQueueEvent();
 			} else {
 				//dialogueMenu(currentTopic.getID());
@@ -144,6 +147,7 @@ public class MenuManager {
 		Game.EVENT_BUS.post(new RenderTextEvent(selected.getPrompt()));
 		Game.EVENT_BUS.post(new RenderTextEvent(""));
 		//dialogueMenu(selected.getLinkedId());
+		System.out.println("Queue dialogue menu from choice");
 		Game.queueEvent(new DialogueMenuEvent(dialogueSubject, selected.getLinkedId()));
 		Game.nextQueueEvent();
 	}
