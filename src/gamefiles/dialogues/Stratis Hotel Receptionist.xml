@@ -34,7 +34,7 @@
     <topic id="stratis_receptionist_request_room">
         <line>
             <text>He taps the screen in front of him and quickly scans its contents.</text>
-            <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits."</text>
+            <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."</text>
         </line>
         <choice link="stratis_receptionist_purchase_room" once="true">
             <prompt>I'll take the room.</prompt>

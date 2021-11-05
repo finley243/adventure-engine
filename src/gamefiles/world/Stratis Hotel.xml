@@ -26,6 +26,9 @@
                 <actor id="stratis_receptionist">
                     <stats>stratis_receptionist</stats>
                 </actor>
+                <actor id="stratis_guard">
+                    <stats>stratis_guard</stats>
+                </actor>
             </actors>
         </area>
         <area id="stratis_hotel_lobby_seating">
@@ -71,10 +74,10 @@
                 </object>
             </objects>
             <actors>
-                <actor id="enemy">
+                <!--<actor id="enemy">
                     <stats>enemy</stats>
                     <descriptor>black-haired</descriptor>
-                </actor>
+                </actor>-->
                 <!--<actor id="enemy2">
                     <stats>enemy</stats>
                     <descriptor>taller</descriptor>

@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 public class CombatTarget {
 
 	/** Number of turns it takes for a combat target to be removed if they are not visible */
-	public static final int TURNS_BEFORE_END_COMBAT = 5;
+	public static final int TURNS_BEFORE_END_COMBAT = 8;
 	
 	private Actor targetActor;
 	private int turnsUntilRemove;

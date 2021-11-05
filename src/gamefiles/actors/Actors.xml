@@ -13,9 +13,19 @@
         <idle>
             <area>stratis_hotel_lobby_desk</area>
         </idle>
-        <hp>60</hp>
+        <hp>40</hp>
         <loottable>stratis_receptionist</loottable>
         <topic>stratis_receptionist_start</topic>
+    </actor>
+    <actor id="stratis_guard">
+        <name proper="false">guard</name>
+        <pronoun>HE</pronoun>
+        <faction>stratis_hotel_staff</faction>
+        <!--<idle>
+            <area>stratis_hotel_lobby_desk</area>
+        </idle>-->
+        <hp>60</hp>
+        <loottable>stratis_guard</loottable>
     </actor>
     <actor id="enemy">
         <name proper="false">ganger</name>
