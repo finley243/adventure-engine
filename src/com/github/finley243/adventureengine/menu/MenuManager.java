@@ -63,6 +63,7 @@ public class MenuManager {
 		//Game.EVENT_BUS.post(new TextClearEvent());
 		boolean showChoices = true;
 		boolean exit = false;
+		boolean redirect = false;
 		DialogueTopic currentTopic = Data.getTopic(topic);
 		//while(showChoices) {
 			//Game.EVENT_BUS.post(new RenderTextEvent(subject.getName().toUpperCase()));
@@ -73,8 +74,10 @@ public class MenuManager {
 					}
 					line.trigger(dialogueSubject);
 					if(line.hasRedirect()) {
-						currentTopic = Data.getTopic(line.getRedirectTopicId());
+						//currentTopic = Data.getTopic(line.getRedirectTopicId());
+						Game.queueEvent(new DialogueMenuEvent(dialogueSubject, line.getRedirectTopicId()));
 						showChoices = false;
+						redirect = true;
 						break;
 					}
 					if(line.shouldExit()) {
@@ -103,10 +106,11 @@ public class MenuManager {
 					//Game.EVENT_BUS.post(new RenderTextEvent(""));
 				}
 			}
-			if(!exit) {
-				dialogueSubject.setIsInDialogue(false);
+			if(exit || redirect) {
+				Game.nextQueueEvent();
 			} else {
-				dialogueMenu(currentTopic.getID());
+				//dialogueMenu(currentTopic.getID());
+				//Game.queueEvent(new DialogueMenuEvent(dialogueSubject, currentTopic.getID()));
 			}
 		//}
 	}
@@ -120,7 +124,7 @@ public class MenuManager {
 			menuData.add(new MenuDataGlobal(choice.getPrompt()));
 		}
 		dialogueChoice = null;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
+		//Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
 		/*while(dialogueChoice == null) {
 			try {
 				Thread.sleep(20);
@@ -139,7 +143,9 @@ public class MenuManager {
 	private void onSelectDialogue(DialogueChoice selected) {
 		Game.EVENT_BUS.post(new RenderTextEvent(selected.getPrompt()));
 		Game.EVENT_BUS.post(new RenderTextEvent(""));
-		dialogueMenu(selected.getLinkedId());
+		//dialogueMenu(selected.getLinkedId());
+		Game.queueEvent(new DialogueMenuEvent(dialogueSubject, selected.getLinkedId()));
+		Game.nextQueueEvent();
 	}
 	
 	@Subscribe
@@ -153,6 +159,17 @@ public class MenuManager {
 			dialogueList = null;
 			onSelectDialogue(dialogueChoice);
 		}
+	}
+
+	@Subscribe
+	public void onDialogueMenuEvent(DialogueMenuEvent e) {
+		System.out.println(e.getSubject().getName() + ", " + e.getStartTopic());
+		dialogueMenu(e.getSubject(), e.getStartTopic());
+	}
+
+	@Subscribe
+	public void onActionMenuEvent(ActionMenuEvent e) {
+		actionMenu(e.getActions());
 	}
 	
 }

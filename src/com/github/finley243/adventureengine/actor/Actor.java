@@ -20,9 +20,7 @@ import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
 import com.github.finley243.adventureengine.actor.ai.CombatTarget;
 import com.github.finley243.adventureengine.actor.ai.PursueTarget;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.event.CompletedTurnEvent;
-import com.github.finley243.adventureengine.event.SoundEvent;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.*;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -81,7 +79,6 @@ public class Actor implements Noun, Physical {
 	private int repeatActionPoints;
 	private List<Action> blockedActions;
 	private Action repeatAction;
-	private boolean isInDialogue;
 	// Index: 0 = base, 1 = modifier
 	private EnumMap<Attribute, int[]> attributes;
 	private List<Effect> effects;
@@ -447,7 +444,8 @@ public class Actor implements Noun, Physical {
 	
 	public void takeTurn() {
 		if(isDead || !isEnabled()) {
-			Game.EVENT_BUS.post(new CompletedTurnEvent());
+			Game.queueEvent(new NextTurnEvent());
+			Game.nextQueueEvent();
 		} else {
 			updateEffects();
 			behaviorIdle.update(this);
@@ -456,11 +454,13 @@ public class Actor implements Noun, Physical {
 			repeatAction = null;
 			this.blockedActions.clear();
 			this.endTurn = false;
-			takeTurnAction();
+			Game.queueEvent(new NextActionEvent());
+			Game.nextQueueEvent();
+			//takeTurnAction();
 		}
 	}
 
-	private void takeTurnAction() {
+	public void takeTurnAction() {
 		generateCombatTargets();
 		generatePursueTargets();
 		updatePursueTargets();
@@ -542,20 +542,14 @@ public class Actor implements Noun, Physical {
 			}
 		}
 		action.choose(this);
-		if(!isInDialogue) {
-			if(!endTurn) {
-				takeTurnAction();
-			} else {
-				Game.EVENT_BUS.post(new CompletedTurnEvent());
-			}
+		if(!endTurn) {
+			Game.queueEvent(new NextActionEvent());
+			Game.nextQueueEvent();
+			//takeTurnAction();
+		} else {
+			Game.queueEvent(new NextTurnEvent());
+			Game.nextQueueEvent();
 		}
-	}
-
-	public void setIsInDialogue(boolean isInDialogue) {
-		if(this.isInDialogue && !isInDialogue && !endTurn) {
-			takeTurnAction();
-		}
-		this.isInDialogue = isInDialogue;
 	}
 	
 	private void updateEffects() {

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.github.finley243.adventureengine.event.*;
+import com.github.finley243.adventureengine.menu.EventQueue;
 import org.xml.sax.SAXException;
 
 import com.github.finley243.adventureengine.actor.Actor;
@@ -48,6 +49,7 @@ public class Game {
 	
 	private final PerceptionHandler perceptionHandler;
 	private final UserInterface userInterface;
+	private final EventQueue eventQueue;
 	
 	private boolean continueGameLoop;
 
@@ -58,8 +60,10 @@ public class Game {
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		perceptionHandler = new PerceptionHandler();
 		userInterface = new GraphicalInterfaceNested();
+		eventQueue = new EventQueue();
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
+		EVENT_BUS.register(eventQueue);
 		EVENT_BUS.register(this);
 		
 		
@@ -78,7 +82,6 @@ public class Game {
 		player.adjustMoney(320);
 
 		turnOrder = new ArrayList<>(Data.getActors().size());
-		updateTurnOrder();
 
 		startGameLoop();
 	}
@@ -97,7 +100,7 @@ public class Game {
 		EVENT_BUS.post(new TextClearEvent());
 		TextGen.clearContext();
 		EVENT_BUS.post(new RenderLocationEvent());
-		Data.getPlayer().triggerSceneManager();
+		//Data.getPlayer().triggerSceneManager();
 		/*for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();
@@ -108,7 +111,9 @@ public class Game {
 		EVENT_BUS.post(new TextClearEvent());
 		TextGen.clearContext();*/
 		updateTurnOrder();
+		currentTurn = 0;
 		startTurn();
+		//Game.nextQueueEvent();
 	}
 
 	private void updateTurnOrder() {
@@ -123,19 +128,26 @@ public class Game {
 	}
 
 	private void startTurn() {
+		System.out.println("Start actor turn: " + turnOrder.get(currentTurn).getName());
 		Actor actor = turnOrder.get(currentTurn);
 		actor.takeTurn();
 	}
 
 	@Subscribe
-	public void onPlayerActionSelectEvent(PlayerActionSelectEvent event) {
+	private void nextAction(NextActionEvent event) {
+		Actor actor = turnOrder.get(currentTurn);
+		actor.takeTurnAction();
+	}
+
+	@Subscribe
+	private void onPlayerActionSelectEvent(PlayerActionSelectEvent event) {
 		if(turnOrder.get(currentTurn) instanceof ActorPlayer) {
 			turnOrder.get(currentTurn).handleActionSelection(event.getAction());
 		}
 	}
 
 	@Subscribe
-	private void endTurn(CompletedTurnEvent event) {
+	private void endTurn(NextTurnEvent event) {
 		currentTurn++;
 		if(currentTurn == turnOrder.size()) {
 			nextRound();
@@ -166,6 +178,15 @@ public class Game {
 		Game.EVENT_BUS.post(new RenderTextEvent("------------------------------"));
 		Game.EVENT_BUS.post(new RenderTextEvent("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")"));
 		Game.EVENT_BUS.post(new RenderTextEvent(""));
+	}
+
+	public static void queueEvent(Object event) {
+		Game.EVENT_BUS.post(new QueueEvent(event));
+		//Game.EVENT_BUS.post(new NextQueueEvent());
+	}
+
+	public static void nextQueueEvent() {
+		Game.EVENT_BUS.post(new NextQueueEvent());
 	}
 	
 }

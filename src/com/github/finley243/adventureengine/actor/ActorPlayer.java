@@ -48,12 +48,15 @@ public class ActorPlayer extends Actor {
 	
 	@Override
 	public void chooseAction(List<Action> actions) {
-		menuManager.actionMenu(actions);
+		//menuManager.actionMenu(actions);
+		Game.queueEvent(new ActionMenuEvent(actions));
+		Game.nextQueueEvent();
 	}
 	
 	public void startDialogue(Actor subject, String startTopic) {
-		setIsInDialogue(true);
-		menuManager.dialogueMenu(subject, startTopic);
+		//menuManager.dialogueMenu(subject, startTopic);
+		Game.queueEvent(new DialogueMenuEvent(subject, startTopic));
+		Game.nextQueueEvent();
 	}
 
 	public void updateAreaDescription() {
