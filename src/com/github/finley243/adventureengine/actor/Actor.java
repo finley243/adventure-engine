@@ -10,11 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionMove;
-import com.github.finley243.adventureengine.action.ActionMultiEnd;
-import com.github.finley243.adventureengine.action.ActionTalk;
-import com.github.finley243.adventureengine.action.ActionWait;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
 import com.github.finley243.adventureengine.actor.ai.CombatTarget;
@@ -22,6 +18,7 @@ import com.github.finley243.adventureengine.actor.ai.PursueTarget;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -383,7 +380,11 @@ public class Actor implements Noun, Physical {
 		List<Action> action = new ArrayList<Action>();
 		if(!isDead) { // Alive
 			if(stats.getTopic() != null && !isInCombat()) {
-				action.add(new ActionTalk(this));
+				//action.add(new ActionTalk(this));
+				action.add(new ActionGeneric(this, "TALK",
+						"Talk to " + this.getFormattedName(false),
+						0.0f, true, true, ActionGeneric.ActionMatchType.NONE, 1,
+						new MenuDataWorldActor("Talk", this)));
 			}
 		} else { // Dead
 			action.addAll(inventory.getActions(this));
@@ -395,7 +396,24 @@ public class Actor implements Noun, Physical {
 	public List<Action> remoteActions(Actor subject) {
 		return new ArrayList<Action>();
 	}
-	
+
+	@Override
+	public void executeAction(String action, Actor subject) {
+		switch(action.toUpperCase()) {
+			case "TALK":
+				actionTalk(subject);
+				break;
+			default:
+				throw new IllegalArgumentException("Action " + action + " does not exist for object " + this.getClass().getSimpleName());
+		}
+	}
+
+	private void actionTalk(Actor subject) {
+		if(subject instanceof ActorPlayer) {
+			((ActorPlayer) subject).startDialogue(this, this.getTopicID());
+		}
+	}
+
 	public List<Action> availableActions(){
 		List<Action> actions = new ArrayList<Action>();
 		if(hasEquippedItem()) {

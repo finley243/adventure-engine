@@ -79,4 +79,19 @@ public abstract class WorldObject implements Noun, Physical {
 		return new ArrayList<Action>();
 	}
 
+	@Override
+	public void executeAction(String action, Actor subject) {
+		switch(action.toUpperCase()) {
+			case "INSPECT":
+				actionInspect();
+				break;
+			default:
+				throw new IllegalArgumentException("Action " + action + " does not exist for object " + this.getClass().getSimpleName());
+		}
+	}
+
+	private void actionInspect() {
+
+	}
+
 }

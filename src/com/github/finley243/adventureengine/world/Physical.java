@@ -20,5 +20,7 @@ public interface Physical {
 	
 	// Actions that can be performed anywhere within the same room
 	public List<Action> remoteActions(Actor subject);
+
+	public void executeAction(String action, Actor subject);
 	
 }
