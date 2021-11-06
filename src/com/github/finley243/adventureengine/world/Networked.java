@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface Networked {
 
+    public String getName();
+    
     public String getNetwork();
 
     public List<NetworkAction> networkActions();

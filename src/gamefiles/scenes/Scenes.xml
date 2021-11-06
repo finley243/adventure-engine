@@ -7,19 +7,19 @@
                 <actor>stratis_receptionist</actor>
             </condition>
             <condition type="actorAvailableForScene" target="reference">
-                <actor>stratis_guard</actor>
+                <actor>stratis_guard_lobby</actor>
             </condition>
             <condition type="actorLocation" target="reference">
                 <actor>stratis_receptionist</actor>
                 <area>stratis_hotel_lobby_desk</area>
             </condition>
             <condition type="actorLocation" target="reference">
-                <actor>stratis_guard</actor>
-                <area>stratis_hotel_lobby_desk</area>
+                <actor>stratis_guard_lobby</actor>
+                <area>stratis_hotel_lobby_seating</area>
             </condition>
         </condition>
         <line>
-            <text>The receptionist leans on the desk and sighs. He looks up from the computer and turns to the security guard.</text>
+            <text>The receptionist leans on the desk and sighs. He looks up from the computer, towards the security guard standing near the seating area.</text>
             <text>"Man, could this day be any longer?"</text>
             <text>The guard smirks. "Don't tempt fate."</text>
             <text>The receptionist shrugs. "Looks to me like it's fate's day off."</text>

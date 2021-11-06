@@ -15,7 +15,7 @@ moveToward:<subject> move<s> to <object>
 patrolTelegraph:<subject> prepare<s> to move to <object>
 pickUp:<subject> grab<s> <object>
 rangedMiss:<subject> fire<s> <object2> at <object>, but miss<es>
-rangedTelegraph:<subject> aim<s> <object2> at <object>{|, ready to shoot|, finger on the trigger}
+rangedTelegraph:<subject> fire<s> <object2> at <object>
 reactionBlock:<subject> block<s> {<object2>|<object's> attack}
 reactionDodge:<subject> {jump<s> back, avoiding|dodge<s>} <object's> attack
 read:<subject> read<s> <object>

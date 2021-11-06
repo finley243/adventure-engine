@@ -18,4 +18,24 @@
         <chance>0.70</chance>
         <clipsize>12</clipsize>
     </item>
+    <item type="weapon" id="heavy_pistol">
+        <name>heavy pistol</name>
+        <price>50</price>
+        <type>PISTOL</type>
+        <damage>14</damage>
+        <critDamage>6</critDamage>
+        <rate>2</rate>
+        <chance>0.70</chance>
+        <clipsize>6</clipsize>
+    </item>
+    <item type="weapon" id="auto_rifle">
+        <name>auto rifle</name>
+        <price>90</price>
+        <type>ASSAULT_RIFLE</type>
+        <damage>10</damage>
+        <critDamage>3</critDamage>
+        <rate>3</rate>
+        <chance>0.65</chance>
+        <clipsize>20</clipsize>
+    </item>
 </items>

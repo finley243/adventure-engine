@@ -11,15 +11,15 @@ public class Network {
 
     private final String ID;
     private final String name;
-    private final List<List<Networked>> connected;
+    private final List<SubNetwork> network;
 
-    public Network(String ID, String name, int levels) {
-        if(levels < 1) throw new IllegalArgumentException("Network must have at least 1 level");
+    public Network(String ID, String name, int[] securityLevels) {
+        if(securityLevels.length < 1) throw new IllegalArgumentException("Network must have at least 1 level");
         this.ID = ID;
         this.name = name;
-        connected = new ArrayList<>(levels);
-        for(int i = 0; i < levels; i++) {
-            connected.add(new ArrayList<Networked>());
+        network = new ArrayList<SubNetwork>(securityLevels.length);
+        for (int securityLevel : securityLevels) {
+            network.add(new SubNetwork(securityLevel));
         }
     }
 
@@ -32,13 +32,13 @@ public class Network {
     }
 
     public void connectObject(Networked object, int level) {
-        if(level < 1 || level >= connected.size()) throw new IllegalArgumentException("Attempted to add object to invalid network level");
-        connected.get(level).add(object);
+        if(level < 1 || level >= network.size()) throw new IllegalArgumentException("Attempted to add object to invalid network level");
+        network.get(level).connected.add(object);
     }
 
     public List<Networked> getConnectedAtLevel(int level) {
-        if(level < 1 || level >= connected.size()) throw new IllegalArgumentException("Attempted to access objects at invalid network level");
-        return connected.get(level);
+        if(level < 1 || level >= network.size()) throw new IllegalArgumentException("Attempted to access objects at invalid network level");
+        return network.get(level).connected;
     }
 
     @Override
@@ -54,6 +54,18 @@ public class Network {
             Network other = (Network) o;
             return this.getID().equals(other.getID()) && this.getName().equals(other.getName());
         }
+    }
+
+    private static class SubNetwork {
+
+        final List<Networked> connected;
+        final int securityLevel;
+
+        public SubNetwork(int securityLevel) {
+            this.connected = new ArrayList<>();
+            this.securityLevel = securityLevel;
+        }
+
     }
 
 }

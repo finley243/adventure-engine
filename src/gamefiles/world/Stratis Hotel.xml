@@ -26,9 +26,6 @@
                 <actor id="stratis_receptionist">
                     <stats>stratis_receptionist</stats>
                 </actor>
-                <actor id="stratis_guard">
-                    <stats>stratis_guard</stats>
-                </actor>
             </actors>
         </area>
         <area id="stratis_hotel_lobby_seating">
@@ -45,8 +42,17 @@
                 <object type="cover">
                     <name>pillar</name>
                 </object>
+                <object type="exit" id="stratis_hotel_lobby_security_door">
+                    <name>door</name>
+                    <link>stratis_hotel_security_door</link>
+                    <key>stratis_security_key</key>
+                </object>
             </objects>
-            <actors></actors>
+            <actors>
+                <actor id="stratis_guard_lobby">
+                    <stats>stratis_guard_lobby</stats>
+                </actor>
+            </actors>
         </area>
         <area id="stratis_hotel_lobby_elevators">
             <name proper="false" prox="true">elevators</name>
@@ -143,6 +149,20 @@
                 </object>
                 <object type="item">
                     <item>baseball_bat</item>
+                </object>
+            </objects>
+            <actors></actors>
+        </area>
+    </room>
+    <room id="stratis_hotel_security">
+        <name proper="false">security office</name>
+        <area id="stratis_hotel_security_main">
+            <name proper="false" prox="false">office</name>
+            <links></links>
+            <objects>
+                <object type="exit" id="stratis_hotel_security_door">
+                    <name>door</name>
+                    <link>stratis_hotel_lobby_security_door</link>
                 </object>
             </objects>
             <actors></actors>
