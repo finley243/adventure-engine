@@ -30,13 +30,13 @@ public class Context {
 		SUBJECT, OBJECT
 	}
 
-	private Noun subject;
-	private Noun object;
-	private Noun object2;
+	private final Noun subject;
+	private final Noun object;
+	private final Noun object2;
 	
-	private boolean indefiniteSubject;
-	private boolean indefiniteObject;
-	private boolean indefiniteObject2;
+	private final boolean indefiniteSubject;
+	private final boolean indefiniteObject;
+	private final boolean indefiniteObject2;
 	
 	public Context(Noun subject, boolean indefiniteSubject) {
 		this(subject, indefiniteSubject, subject, indefiniteSubject, subject, indefiniteSubject);

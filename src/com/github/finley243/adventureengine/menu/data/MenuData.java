@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.menu.data;
 public abstract class MenuData {
 
 	private int index;
-	private String prompt;
+	private final String prompt;
 	
 	public MenuData(String prompt) {
 		this.prompt = prompt;

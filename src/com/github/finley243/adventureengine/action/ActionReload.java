@@ -15,7 +15,7 @@ public class ActionReload implements Action {
 	public static final float RELOAD_UTILITY_COMBAT = 0.6f;
 	public static final float RELOAD_UTILITY_COMBAT_EMPTY = 0.8f;
 
-	private ItemWeapon weapon;
+	private final ItemWeapon weapon;
 	
 	public ActionReload(ItemWeapon weapon) {
 		this.weapon = weapon;

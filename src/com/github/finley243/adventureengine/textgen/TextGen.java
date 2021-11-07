@@ -1,13 +1,12 @@
 package com.github.finley243.adventureengine.textgen;
 
+import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.world.Noun;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
-import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.textgen.Context.Pronoun;
-import com.github.finley243.adventureengine.world.Noun;
 
 public class TextGen {
 
@@ -89,7 +88,7 @@ public class TextGen {
 	}
 
 	private static String chooseRandoms(String line) {
-		List<String> parts = new ArrayList<String>();
+		List<String> parts = new ArrayList<>();
 		int openIndex = -1;
 		int closeIndex = -1;
 		int depth = 0;
@@ -111,7 +110,7 @@ public class TextGen {
 				}
 			}
 		}
-		parts.add(line.substring(closeIndex + 1, line.length()));
+		parts.add(line.substring(closeIndex + 1));
 		String newLine = "";
 		for (String current : parts) {
 			newLine += current;
@@ -120,7 +119,7 @@ public class TextGen {
 	}
 
 	private static List<String> separateRandomChoices(String line) {
-		List<String> parts = new ArrayList<String>();
+		List<String> parts = new ArrayList<>();
 		int indexOfLastSplit = -1;
 		int depth = 0;
 		for (int i = 0; i < line.length(); i++) {
@@ -133,7 +132,7 @@ public class TextGen {
 				indexOfLastSplit = i;
 			}
 		}
-		parts.add(line.substring(indexOfLastSplit + 1, line.length()).trim());
+		parts.add(line.substring(indexOfLastSplit + 1).trim());
 		return parts;
 	}
 
@@ -170,7 +169,6 @@ public class TextGen {
 			String possessive, String pronounKey, String possessiveKey) {
 		if (usePronoun) {
 			line = line.replace(pronounKey, pronoun);
-			line = line.replace(possessiveKey, possessive);
 		} else {
 			int indexOf = line.indexOf(pronounKey);
 			int indexOfPossessive = line.indexOf(possessiveKey);
@@ -182,8 +180,8 @@ public class TextGen {
 			if (possessiveFirst) {
 				line = line.replaceFirst(possessiveKey, LangUtils.possessive(formattedName, false));
 			}
-			line = line.replace(possessiveKey, possessive);
 		}
+		line = line.replace(possessiveKey, possessive);
 		return line;
 	}
 

@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 public class MenuDataInventory extends MenuData {
 
-	private Item item;
+	private final Item item;
 	
 	public MenuDataInventory(String prompt, Item item) {
 		super(prompt);

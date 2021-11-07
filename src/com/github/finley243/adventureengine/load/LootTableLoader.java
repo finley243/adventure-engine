@@ -41,11 +41,11 @@ public class LootTableLoader {
 		}
 	}
 	
-	private static LootTable loadTable(Element tableElement) throws ParserConfigurationException, SAXException, IOException {
+	private static LootTable loadTable(Element tableElement) {
 		String tableID = tableElement.getAttribute("id");
 		boolean useAll = LoadUtils.boolAttribute(tableElement, "useAll", false);
 		NodeList entryElements = tableElement.getElementsByTagName("entry");
-		List<LootTableEntry> entries = new ArrayList<LootTableEntry>();
+		List<LootTableEntry> entries = new ArrayList<>();
 		for(int i = 0; i < entryElements.getLength(); i++) {
 			if(entryElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element entryElement = (Element) entryElements.item(i);

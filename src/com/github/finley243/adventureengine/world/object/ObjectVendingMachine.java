@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class ObjectVendingMachine extends WorldObject {
 
-	private List<String> vendingItems;
+	private final List<String> vendingItems;
 	
 	public ObjectVendingMachine(String name, String description, List<String> vendingItems) {
 		super(name, description);

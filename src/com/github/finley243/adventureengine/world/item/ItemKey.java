@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.world.template.StatsKey;
 
 public class ItemKey extends Item {
 
-	private StatsKey stats;
+	private final StatsKey stats;
 	
 	public ItemKey(StatsKey stats) {
 		super(stats.getName());

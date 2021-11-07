@@ -14,15 +14,15 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
  */
 public class Room implements Noun {
 
-	private String ID;
+	private final String ID;
 	
-	private String name;
-	private boolean isProperName;
-	private String description;
+	private final String name;
+	private final boolean isProperName;
+	private final String description;
 	
 	private boolean hasVisited;
 	
-	private Set<Area> areas;
+	private final Set<Area> areas;
 	
 	public Room(String ID, String name, boolean isProperName, String description, Set<Area> areas) {
 		this.ID = ID;
@@ -54,7 +54,7 @@ public class Room implements Noun {
 	}
 	
 	public Set<WorldObject> getObjects() {
-		Set<WorldObject> objects = new HashSet<WorldObject>();
+		Set<WorldObject> objects = new HashSet<>();
 		for(Area area : areas) {
 			objects.addAll(area.getObjects());
 		}
@@ -62,7 +62,7 @@ public class Room implements Noun {
 	}
 	
 	public Set<Actor> getActors() {
-		Set<Actor> actors = new HashSet<Actor>();
+		Set<Actor> actors = new HashSet<>();
 		for(Area area : areas) {
 			actors.addAll(area.getActors());
 		}

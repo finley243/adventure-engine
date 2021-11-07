@@ -12,7 +12,7 @@ import com.github.finley243.adventureengine.world.item.ItemConsumable;
 
 public class ActionConsume implements Action {
 
-	private ItemConsumable item;
+	private final ItemConsumable item;
 	
 	public ActionConsume(ItemConsumable item) {
 		this.item = item;

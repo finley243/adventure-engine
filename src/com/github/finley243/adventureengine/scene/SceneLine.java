@@ -9,9 +9,9 @@ import com.github.finley243.adventureengine.script.Script;
 
 public class SceneLine {
 
-	private Condition condition;
-	private List<String> text;
-	private List<Script> scripts;
+	private final Condition condition;
+	private final List<String> text;
+	private final List<Script> scripts;
 	
 	public SceneLine(Condition condition, List<String> text, List<Script> scripts) {
 		this.condition = condition;

@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.world.object.ObjectExit;
 
 public class ActionListenExit implements Action {
 
-	private ObjectExit exit;
+	private final ObjectExit exit;
 	
 	public ActionListenExit(ObjectExit exit) {
 		this.exit = exit;
@@ -20,7 +20,7 @@ public class ActionListenExit implements Action {
 		String text = "";
 		int actorCount = 0;
 		for(Actor actor : exit.getLinkedArea().getRoom().getActors()) {
-			if(!actor.isIncapacitated()) {
+			if(actor.isActive()) {
 				actorCount++;
 			}
 		}

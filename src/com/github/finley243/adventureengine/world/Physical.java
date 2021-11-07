@@ -11,16 +11,16 @@ import com.github.finley243.adventureengine.world.environment.Area;
  */
 public interface Physical {
 	
-	public Area getArea();
+	Area getArea();
 	
-	public void setArea(Area area);
+	void setArea(Area area);
 	
 	// Actions that can be performed within the same area
-	public List<Action> localActions(Actor subject);
+	List<Action> localActions(Actor subject);
 	
 	// Actions that can be performed anywhere within the same room
-	public List<Action> remoteActions(Actor subject);
+	List<Action> remoteActions(Actor subject);
 
-	public void executeAction(String action, Actor subject);
+	void executeAction(String action, Actor subject);
 	
 }

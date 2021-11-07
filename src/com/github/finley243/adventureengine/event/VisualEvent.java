@@ -6,9 +6,9 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class VisualEvent {
 
-	private Area origin;
-	private String line;
-	private Context context;
+	private final Area origin;
+	private final String line;
+	private final Context context;
 	
 	public VisualEvent(Area origin, String line, Context context) {
 		this.origin = origin;

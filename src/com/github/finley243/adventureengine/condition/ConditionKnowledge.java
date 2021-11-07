@@ -5,11 +5,12 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class ConditionKnowledge implements Condition {
 
-	private String knowledgeID;
-	private boolean invert;
+	private final String knowledgeID;
+	private final boolean invert;
 	
 	public ConditionKnowledge(String knowledgeID, boolean invert) {
 		this.knowledgeID = knowledgeID;
+		this.invert = invert;
 	}
 
 	@Override

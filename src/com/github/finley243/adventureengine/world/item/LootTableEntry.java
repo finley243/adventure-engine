@@ -9,10 +9,10 @@ import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class LootTableEntry {
 
-	private String referenceID;
-	private boolean isLootTable;
-	private float chance;
-	private int count;
+	private final String referenceID;
+	private final boolean isLootTable;
+	private final float chance;
+	private final int count;
 	
 	public LootTableEntry(String referenceID, boolean isLootTable, float chance, int count) {
 		this.referenceID = referenceID;
@@ -22,7 +22,7 @@ public class LootTableEntry {
 	}
 	
 	public Set<Item> generateItems() {
-		Set<Item> items = new HashSet<Item>();
+		Set<Item> items = new HashSet<>();
 		if(ThreadLocalRandom.current().nextFloat() < chance) {
 			if(isLootTable) {
 				LootTable table = Data.getLootTable(referenceID);

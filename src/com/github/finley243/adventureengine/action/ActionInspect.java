@@ -17,8 +17,8 @@ public class ActionInspect implements Action {
 		WORLD, INVENTORY, EQUIPPED
 	}
 	
-	private WorldObject object;
-	private InspectType type;
+	private final WorldObject object;
+	private final InspectType type;
 	
 	public ActionInspect(WorldObject object, InspectType type) {
 		this.object = object;

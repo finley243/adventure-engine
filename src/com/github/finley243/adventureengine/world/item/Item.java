@@ -44,7 +44,7 @@ public abstract class Item extends WorldObject {
 	}
 	
 	public List<Action> inventoryActions(Actor subject) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionItemDrop(this, false));
 		if(this.getDescription() != null) {
 			actions.add(new ActionInspect(this, InspectType.INVENTORY));

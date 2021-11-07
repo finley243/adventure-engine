@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Phrases {
 	
-	private static Map<String, String> phrases = new HashMap<String, String>();
+	private static final Map<String, String> phrases = new HashMap<String, String>();
 	
 	public static void load(File file) throws FileNotFoundException {
 		Scanner scanner = new Scanner(file);

@@ -12,9 +12,9 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ObjectElevator extends LinkedObject {
 
-	private int floorNumber;
-	private String floorName;
-	private Set<String> linkedElevatorIDs;
+	private final int floorNumber;
+	private final String floorName;
+	private final Set<String> linkedElevatorIDs;
 	private boolean isLocked;
 	
 	public ObjectElevator(String ID, String name, String description, int floorNumber, String floorName, Set<String> linkedElevatorIDs) {
@@ -38,7 +38,7 @@ public class ObjectElevator extends LinkedObject {
 	}
 	
 	public Set<Area> getLinkedAreas() {
-		Set<Area> areas = new HashSet<Area>();
+		Set<Area> areas = new HashSet<>();
 		for(String elevatorID : linkedElevatorIDs) {
 			areas.add(Data.getLinkedObject(elevatorID).getArea());
 		}

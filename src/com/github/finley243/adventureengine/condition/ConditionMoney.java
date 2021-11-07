@@ -5,8 +5,8 @@ import com.github.finley243.adventureengine.actor.ActorReference;
 
 public class ConditionMoney implements Condition {
 
-	private ActorReference actor;
-	private int value;
+	private final ActorReference actor;
+	private final int value;
 
 	public ConditionMoney(ActorReference actor, int value) {
 		this.actor = actor;

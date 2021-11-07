@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.event;
 
 public class RenderTextEvent {
 
-	private String text;
+	private final String text;
 	
 	public RenderTextEvent(String text) {
 		this.text = text;

@@ -8,8 +8,8 @@ import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class ScriptAddItem implements Script {
 
-	private ActorReference actor;
-	private String itemID;
+	private final ActorReference actor;
+	private final String itemID;
 	
 	public ScriptAddItem(ActorReference actor, String itemID) {
 		this.actor = actor;

@@ -18,9 +18,9 @@ import com.github.finley243.adventureengine.world.environment.Area;
  */
 public abstract class WorldObject implements Noun, Physical {
 	
-	private String name;
+	private final String name;
 	private Area area;
-	private String description;
+	private final String description;
 	
 	public WorldObject(String name, String description) {
 		this.name = name;
@@ -67,7 +67,7 @@ public abstract class WorldObject implements Noun, Physical {
 
 	@Override
 	public List<Action> localActions(Actor subject) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = new ArrayList<>();
 		if(description != null) {
 			actions.add(new ActionInspect(this, InspectType.WORLD));
 		}
@@ -76,7 +76,7 @@ public abstract class WorldObject implements Noun, Physical {
 	
 	@Override
 	public List<Action> remoteActions(Actor subject) {
-		return new ArrayList<Action>();
+		return new ArrayList<>();
 	}
 
 	@Override

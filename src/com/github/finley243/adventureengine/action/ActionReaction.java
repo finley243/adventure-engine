@@ -10,7 +10,7 @@ public class ActionReaction implements Action {
 		BLOCK, DODGE
 	}
 	
-	private ReactionType type;
+	private final ReactionType type;
 	
 	public ActionReaction(ReactionType type) {
 		this.type = type;

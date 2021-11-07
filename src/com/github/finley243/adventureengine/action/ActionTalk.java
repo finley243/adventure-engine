@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
 
 public class ActionTalk implements Action {
 
-	private Actor target;
+	private final Actor target;
 	
 	public ActionTalk(Actor target) {
 		this.target = target;

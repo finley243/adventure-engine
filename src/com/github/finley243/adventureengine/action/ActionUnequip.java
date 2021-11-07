@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.world.item.ItemEquippable;
 
 public class ActionUnequip implements Action {
 
-	private ItemEquippable item;
+	private final ItemEquippable item;
 	
 	public ActionUnequip(ItemEquippable item) {
 		this.item = item;

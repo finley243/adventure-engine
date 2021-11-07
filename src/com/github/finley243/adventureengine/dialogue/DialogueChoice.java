@@ -3,30 +3,33 @@ package com.github.finley243.adventureengine.dialogue;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class DialogueChoice {
 
-    private boolean hasTriggered;
+    private final Set<String> hasTriggered;
 
-    private String linkedTopicId;
-    private String prompt;
-    private Condition condition;
+    private final String linkedTopicId;
+    private final String prompt;
+    private final Condition condition;
 
-    private boolean once;
+    private final boolean once;
 
     public DialogueChoice(String linkedTopicId, String prompt, Condition condition, boolean once) {
         this.linkedTopicId = linkedTopicId;
         this.prompt = prompt;
         this.condition = condition;
         this.once = once;
-        this.hasTriggered = false;
+        this.hasTriggered = new HashSet<>();
     }
 
     public boolean shouldShow(Actor subject) {
-        return (condition == null || condition.isMet(subject)) && (!once || !hasTriggered);
+        return (condition == null || condition.isMet(subject)) && (!once || !hasTriggered.contains(subject.getID()));
     }
     
-    public void trigger() {
-    	this.hasTriggered = true;
+    public void trigger(Actor subject) {
+    	this.hasTriggered.add(subject.getID());
     }
 
     public String getPrompt() {

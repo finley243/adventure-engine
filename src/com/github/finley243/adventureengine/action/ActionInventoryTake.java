@@ -15,9 +15,9 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInventoryTake implements Action {
 
-    private Noun owner;
-    private Inventory inventory;
-    private Item item;
+    private final Noun owner;
+    private final Inventory inventory;
+    private final Item item;
 
     public ActionInventoryTake(Noun owner, Inventory inventory, Item item) {
         this.owner = owner;

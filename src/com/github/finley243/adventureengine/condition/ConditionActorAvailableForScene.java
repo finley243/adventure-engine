@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.actor.ActorReference;
 
 public class ConditionActorAvailableForScene implements Condition {
 
-	private ActorReference actor;
+	private final ActorReference actor;
 	
 	public ConditionActorAvailableForScene(ActorReference actor) {
 		if(actor.isPlayer()) throw new IllegalArgumentException("ConditionActorAvailableForScene must have a non-player actor reference");
@@ -15,7 +15,7 @@ public class ConditionActorAvailableForScene implements Condition {
 
 	@Override
 	public boolean isMet(Actor subject) {
-		return !actor.getActor(subject).isIncapacitated() && !actor.getActor(subject).isInCombat() && Data.getPlayer().canSee(actor.getActor(subject));
+		return actor.getActor(subject).isActive() && !actor.getActor(subject).isInCombat() && Data.getPlayer().canSee(actor.getActor(subject));
 	}
 
 	@Override

@@ -6,10 +6,10 @@ import com.github.finley243.adventureengine.world.Noun;
 
 public abstract class StatsItem implements Noun {
 
-	private String ID;
-	private String name;
-	private String description;
-	private int price;
+	private final String ID;
+	private final String name;
+	private final String description;
+	private final int price;
 	
 	public StatsItem(String ID, String name, String description, int price) {
 		this.ID = ID;

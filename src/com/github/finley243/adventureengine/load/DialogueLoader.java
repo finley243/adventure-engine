@@ -75,7 +75,7 @@ public class DialogueLoader {
 				break;
 		}
 		NodeList lineElements = topicElement.getElementsByTagName("line");
-		List<DialogueLine> lines = new ArrayList<DialogueLine>();
+		List<DialogueLine> lines = new ArrayList<>();
 		for(int i = 0; i < lineElements.getLength(); i++) {
 			if(lineElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element lineElement = (Element) lineElements.item(i);
@@ -84,7 +84,7 @@ public class DialogueLoader {
 			}
 		}
 		NodeList choiceElements = topicElement.getElementsByTagName("choice");
-		List<DialogueChoice> choices = new ArrayList<DialogueChoice>();
+		List<DialogueChoice> choices = new ArrayList<>();
 		for(int i = 0; i < choiceElements.getLength(); i++) {
 			if(choiceElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element choiceElement = (Element) choiceElements.item(i);
@@ -154,7 +154,7 @@ public class DialogueLoader {
 	
 	private static List<Condition> loadSubConditions(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
 		NodeList subConditionElements = conditionElement.getElementsByTagName("condition");
-		List<Condition> subConditions = new ArrayList<Condition>();
+		List<Condition> subConditions = new ArrayList<>();
 		for(int i = 0; i < subConditionElements.getLength(); i++) {
 			if(subConditionElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element subConditionElement = (Element) subConditionElements.item(i);
@@ -167,7 +167,7 @@ public class DialogueLoader {
 	
 	protected static List<Script> loadScripts(Element parentElement) {
 		NodeList scriptElements = parentElement.getElementsByTagName("script");
-		List<Script> scripts = new ArrayList<Script>();
+		List<Script> scripts = new ArrayList<>();
 		for(int i = 0; i < scriptElements.getLength(); i++) {
 			if(scriptElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element scriptElement = (Element) scriptElements.item(i);

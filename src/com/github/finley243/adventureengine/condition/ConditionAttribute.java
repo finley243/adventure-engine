@@ -6,9 +6,9 @@ import com.github.finley243.adventureengine.actor.Actor.Attribute;
 
 public class ConditionAttribute implements Condition {
 
-	private ActorReference actor;
-	private Attribute attribute;
-	private int value;
+	private final ActorReference actor;
+	private final Attribute attribute;
+	private final int value;
 	
 	public ConditionAttribute(ActorReference actor, Attribute attribute, int value) {
 		this.actor = actor;

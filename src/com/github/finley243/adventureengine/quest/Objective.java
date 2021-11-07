@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.event.RenderTextEvent;
 public class Objective {
 
 	private boolean isEnabled;
-	private String prompt;
+	private final String prompt;
 	
 	public Objective(String prompt) {
 		this.isEnabled = false;

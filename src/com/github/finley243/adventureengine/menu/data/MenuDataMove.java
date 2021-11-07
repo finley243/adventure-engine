@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class MenuDataMove extends MenuData {
 
-	private Area area;
+	private final Area area;
 	
 	public MenuDataMove(String prompt, Area area) {
 		super(prompt);

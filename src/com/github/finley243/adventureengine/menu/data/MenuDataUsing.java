@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.world.object.UsableObject;
 
 public class MenuDataUsing extends MenuData {
 
-	private UsableObject usableObject;
+	private final UsableObject usableObject;
 	
 	public MenuDataUsing(String prompt, UsableObject usableObject) {
 		super(prompt);

@@ -10,16 +10,16 @@ import com.github.finley243.adventureengine.event.RenderTextEvent;
 
 public class Scene {
 
-	private Condition condition;
+	private final Condition condition;
 	// These lines are printed when the scene is played
-	private List<SceneLine> lines;
+	private final List<SceneLine> lines;
 	
-	private float chance;
+	private final float chance;
 	// As soon as it is possible to play it, skip the random selection and play this one
-	private boolean playImmediately;
-	private boolean isRepeatable;
+	private final boolean playImmediately;
+	private final boolean isRepeatable;
 	private boolean hasPlayed;
-	private int cooldown;
+	private final int cooldown;
 	private int cooldownCounter;
 	
 	public Scene(Condition condition, List<SceneLine> lines, boolean isRepeatable, boolean playImmediately, float chance, int cooldown) {
@@ -73,10 +73,6 @@ public class Scene {
 		}
 		hasPlayed = true;
 		cooldownCounter = cooldown;
-	}
-	
-	public boolean hasPlayed() {
-		return hasPlayed;
 	}
 
 }

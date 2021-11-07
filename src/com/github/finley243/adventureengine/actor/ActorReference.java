@@ -8,8 +8,8 @@ public class ActorReference {
 		PLAYER, SUBJECT, REFERENCE
 	}
 	
-	private ReferenceType type;
-	private String reference;
+	private final ReferenceType type;
+	private final String reference;
 	
 	public ActorReference(ReferenceType type, String reference) {
 		this.type = type;

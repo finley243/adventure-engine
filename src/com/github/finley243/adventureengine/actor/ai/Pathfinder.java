@@ -8,20 +8,6 @@ import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class Pathfinder {
-	
-	/**
-	 * Returns the shortest distance between two Areas
-	 * @param area1 The first Area to measure between
-	 * @param area2 The second Area to measure between
-	 * @return The distance from one Area to the other
-	 */
-	public static int getDistance(Area area1, Area area2) {
-		List<Area> path = findPath(area1, area2);
-		if(path == null) {
-			return -1;
-		}
-		return path.size() - 1;
-	}
 
 	/**
 	 * Returns a list of Areas that represents the shortest path between them

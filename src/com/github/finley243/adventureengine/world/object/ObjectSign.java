@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.world.Readable;
 
 public class ObjectSign extends WorldObject implements Readable {
 
-	private List<String> text;
+	private final List<String> text;
 	
 	public ObjectSign(String name, String description, List<String> text) {
 		super(name, description);

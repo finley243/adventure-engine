@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class MenuDataWorldActor extends MenuData {
 
-	private Actor actor;
+	private final Actor actor;
 	
 	public MenuDataWorldActor(String prompt, Actor actor) {
 		super(prompt);

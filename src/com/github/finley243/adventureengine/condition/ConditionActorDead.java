@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.ActorReference;
 
 public class ConditionActorDead implements Condition {
 
-	private ActorReference actor;
+	private final ActorReference actor;
 	
 	public ConditionActorDead(ActorReference actor) {
 		this.actor = actor;

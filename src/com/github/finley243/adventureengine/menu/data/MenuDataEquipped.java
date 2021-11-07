@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 public class MenuDataEquipped extends MenuData {
 
-	private Item item;
+	private final Item item;
 	
 	public MenuDataEquipped(String prompt, Item item) {
 		super(prompt);

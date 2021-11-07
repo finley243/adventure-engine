@@ -6,9 +6,9 @@ import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 
 public class ScriptFactionRelation implements Script {
 
-	private String targetFaction;
-	private String relationFaction;
-	private FactionRelation relation;
+	private final String targetFaction;
+	private final String relationFaction;
+	private final FactionRelation relation;
 	
 	public ScriptFactionRelation(String targetFaction, String relationFaction, FactionRelation relation) {
 		this.targetFaction = targetFaction;

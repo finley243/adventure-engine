@@ -10,8 +10,8 @@ public class StatsConsumable extends StatsItem {
 		FOOD, DRINK, OTHER
 	}
 	
-	private ConsumableType type;
-	private List<Effect> effects;
+	private final ConsumableType type;
+	private final List<Effect> effects;
 	
 	public StatsConsumable(String ID, String name, String description, int price, ConsumableType type, List<Effect> effects) {
 		super(ID, name, description, price);

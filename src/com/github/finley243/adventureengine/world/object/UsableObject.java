@@ -17,8 +17,8 @@ public abstract class UsableObject extends WorldObject {
 		super(name, description);
 	}
 	
-	public boolean hasUser() {
-		return user != null;
+	public boolean isAvailableToUse() {
+		return user == null;
 	}
 
 	public Actor getUser() {
@@ -34,7 +34,7 @@ public abstract class UsableObject extends WorldObject {
 	}
 	
 	public List<Action> usingActions() {
-		return new ArrayList<Action>();
+		return new ArrayList<>();
 	}
 	
 }

@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class EffectHeal extends Effect {
 
-	private int amount;
+	private final int amount;
 	
 	public EffectHeal(int amount) {
 		super(0);

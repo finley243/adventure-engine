@@ -16,7 +16,7 @@ public class ObjectCover extends UsableObject {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
-		if(!hasUser() && !subject.isUsingObject()) {
+		if(isAvailableToUse() && !subject.isUsingObject()) {
 			actions.add(new ActionUseCover(this));
 		}
 		return actions;

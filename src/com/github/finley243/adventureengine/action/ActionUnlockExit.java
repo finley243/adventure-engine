@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.world.object.ObjectExit;
 
 public class ActionUnlockExit implements Action {
 
-	private ObjectExit exit;
+	private final ObjectExit exit;
 	
 	public ActionUnlockExit(ObjectExit exit) {
 		this.exit = exit;

@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class EffectHealOverTime extends Effect {
 
-	private int amount;
+	private final int amount;
 	
 	public EffectHealOverTime(int duration, int amount) {
 		super(duration);

@@ -41,7 +41,7 @@ public class FactionLoader {
 		}
 	}
 	
-	private static Faction loadFaction(Element factionElement) throws ParserConfigurationException, SAXException, IOException {
+	private static Faction loadFaction(Element factionElement) {
 		String id = factionElement.getAttribute("id");
 		FactionRelation defaultRelation = factionRelationTag(factionElement, "default");
 		Map<String, FactionRelation> relations = loadRelations(factionElement);
@@ -49,7 +49,7 @@ public class FactionLoader {
 	}
 	
 	private static Map<String, FactionRelation> loadRelations(Element factionElement) {
-		Map<String, FactionRelation> relations = new HashMap<String, FactionRelation>();
+		Map<String, FactionRelation> relations = new HashMap<>();
 		NodeList relationElements = factionElement.getElementsByTagName("relation");
 		for(int i = 0; i < relationElements.getLength(); i++) {
 			if(relationElements.item(i).getNodeType() == Node.ELEMENT_NODE) {

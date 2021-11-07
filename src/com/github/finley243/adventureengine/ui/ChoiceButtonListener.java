@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.event.MenuSelectEvent;
 
 public class ChoiceButtonListener implements ActionListener {
 
-	private int index;
+	private final int index;
 	
 	public ChoiceButtonListener(int index) {
 		this.index = index;

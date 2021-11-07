@@ -11,7 +11,7 @@ public class PursueTarget {
 	private float targetUtility;
 	private List<Area> path;
 	private int pathIndex;
-	private boolean manualRemoval;
+	private final boolean manualRemoval;
 	private boolean markForRemoval;
 	private boolean shouldFlee;
 	

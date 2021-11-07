@@ -6,8 +6,8 @@ import com.github.finley243.adventureengine.actor.ActorReference;
 
 public class ScriptDialogue implements Script {
 
-	private ActorReference actor;
-	private String topic;
+	private final ActorReference actor;
+	private final String topic;
 	
 	public ScriptDialogue(ActorReference actor, String topic) {
 		if(actor.isPlayer()) throw new IllegalArgumentException("ScriptDialogue must have a non-player actor reference");

@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.world.template.StatsApparel;
 
 public class ItemApparel extends Item {
 
-	private StatsApparel stats;
+	private final StatsApparel stats;
 	
 	public ItemApparel(StatsApparel stats) {
 		super(stats.getName());

@@ -5,8 +5,8 @@ import com.github.finley243.adventureengine.actor.ActorReference;
 
 public class ScriptMoney implements Script {
 
-	private ActorReference actor;
-	private int value;
+	private final ActorReference actor;
+	private final int value;
 	
 	public ScriptMoney(ActorReference actor, int value) {
 		this.actor = actor;

@@ -6,9 +6,9 @@ import com.github.finley243.adventureengine.actor.ActorReference;
 
 public class ConditionActorLocation implements Condition {
 
-	private ActorReference actor;
-	private String location;
-	private boolean isRoom;
+	private final ActorReference actor;
+	private final String location;
+	private final boolean isRoom;
 	
 	public ConditionActorLocation(ActorReference actor, String location, boolean isRoom) {
 		this.actor = actor;

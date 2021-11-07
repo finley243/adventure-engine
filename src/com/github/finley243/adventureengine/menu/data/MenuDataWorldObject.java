@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class MenuDataWorldObject extends MenuData {
 
-	private WorldObject object;
+	private final WorldObject object;
 	
 	public MenuDataWorldObject(String prompt, WorldObject object) {
 		super(prompt);

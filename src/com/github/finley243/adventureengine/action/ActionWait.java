@@ -13,8 +13,6 @@ public class ActionWait implements Action {
 	@Override
 	public void choose(Actor subject) {
 		subject.endTurn();
-		//Context context = new Context(subject, false);
-		//Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("idle"), context));
 	}
 
 	@Override

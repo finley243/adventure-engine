@@ -7,9 +7,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class LootTable {
 
-	private String ID;
-	private boolean useAll;
-	private List<LootTableEntry> entries;
+	private final String ID;
+	private final boolean useAll;
+	private final List<LootTableEntry> entries;
 	
 	public LootTable(String ID, boolean useAll, List<LootTableEntry> entries) {
 		this.ID = ID;
@@ -22,7 +22,7 @@ public class LootTable {
 	}
 	
 	public Set<Item> generateItems() {
-		Set<Item> generatedItems = new HashSet<Item>();
+		Set<Item> generatedItems = new HashSet<>();
 		if(useAll) {
 			for(LootTableEntry entry : entries) {
 				generatedItems.addAll(entry.generateItems());

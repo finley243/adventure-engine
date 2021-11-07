@@ -8,12 +8,12 @@ public class DialogueTopic {
 		SEQUENTIAL, SELECTOR
 	}
 
-	private String ID;
+	private final String ID;
 	
-	private List<DialogueLine> lines;
-	private List<DialogueChoice> choices;
+	private final List<DialogueLine> lines;
+	private final List<DialogueChoice> choices;
 
-	private TopicType type;
+	private final TopicType type;
 	
 	public DialogueTopic(String ID, List<DialogueLine> lines, List<DialogueChoice> choices, TopicType type) {
 		this.ID = ID;

@@ -12,10 +12,10 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 public class Inventory {
 
-	private Set<Item> inventory;
+	private final Set<Item> inventory;
 	
 	public Inventory() {
-		inventory = new HashSet<Item>();
+		inventory = new HashSet<>();
 	}
 	
 	public void addItem(Item item) {
@@ -48,7 +48,7 @@ public class Inventory {
 	}
 	
 	public Set<Item> getUniqueItems() {
-		Set<Item> uniqueItems = new HashSet<Item>();
+		Set<Item> uniqueItems = new HashSet<>();
 		for(Item item : inventory) {
 			boolean hasMatch = false;
 			for(Item uniqueItem : uniqueItems) {
@@ -64,7 +64,7 @@ public class Inventory {
 	}
 
 	public List<Action> getActions(Noun owner) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = new ArrayList<>();
 		for(Item item : inventory) {
 			actions.add(new ActionInventoryTake(owner, this, item));
 		}

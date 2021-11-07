@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.world.object.ObjectChair;
 
 public class ActionSit implements Action {
 
-	private ObjectChair chair;
+	private final ObjectChair chair;
 	
 	public ActionSit(ObjectChair chair) {
 		this.chair = chair;

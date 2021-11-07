@@ -13,9 +13,9 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ObjectExit extends LinkedObject {
 
-	private String linkedExitID;
+	private final String linkedExitID;
 	private boolean isLocked;
-	private Set<String> keyIDs;
+	private final Set<String> keyIDs;
 	
 	public ObjectExit(String ID, String name, String description, String linkedExitID, Set<String> keyIDs) {
 		super(ID, name, description);

@@ -14,8 +14,8 @@ import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class ActionVendingMachineBuy implements Action {
 
-	private ObjectVendingMachine vendingMachine;
-	private String itemID;
+	private final ObjectVendingMachine vendingMachine;
+	private final String itemID;
 	
 	public ActionVendingMachineBuy(ObjectVendingMachine vendingMachine, String itemID) {
 		this.vendingMachine = vendingMachine;

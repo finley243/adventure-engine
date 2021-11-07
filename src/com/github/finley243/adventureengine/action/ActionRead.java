@@ -18,8 +18,8 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionRead implements Action {
 
-	private WorldObject object;
-	private boolean isInInventory;
+	private final WorldObject object;
+	private final boolean isInInventory;
 	
 	public ActionRead(WorldObject object, boolean isInInventory) {
 		if(!(object instanceof Readable)) {

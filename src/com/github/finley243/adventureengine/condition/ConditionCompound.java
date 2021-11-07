@@ -6,8 +6,8 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class ConditionCompound implements Condition {
 	
-	private List<Condition> subconditions;
-	private boolean useOr;
+	private final List<Condition> subconditions;
+	private final boolean useOr;
 	
 	public ConditionCompound(List<Condition> subconditions, boolean useOr) {
 		this.subconditions = subconditions;

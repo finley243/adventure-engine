@@ -1,16 +1,5 @@
 package com.github.finley243.adventureengine;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.function.Consumer;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.menu.ThreadControl;
-import com.github.finley243.adventureengine.ui.ConsoleInterface;
-import org.xml.sax.SAXException;
-
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
@@ -18,14 +7,8 @@ import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
-import com.github.finley243.adventureengine.load.ActorLoader;
-import com.github.finley243.adventureengine.load.ConfigLoader;
-import com.github.finley243.adventureengine.load.DialogueLoader;
-import com.github.finley243.adventureengine.load.FactionLoader;
-import com.github.finley243.adventureengine.load.ItemLoader;
-import com.github.finley243.adventureengine.load.LootTableLoader;
-import com.github.finley243.adventureengine.load.SceneLoader;
-import com.github.finley243.adventureengine.load.WorldLoader;
+import com.github.finley243.adventureengine.load.*;
+import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
@@ -34,6 +17,11 @@ import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Game {
@@ -116,12 +104,12 @@ public class Game {
 	
 	/** Ends the game loop, triggered when the player dies */
 	@Subscribe
-	private void endGameLoop(PlayerDeathEvent event) {
+	private void endGameLoop(PlayerDeathEvent e) {
 		continueGameLoop = false;
 	}
 	
 	@Subscribe
-	private void onRenderLocationEvent(RenderLocationEvent event) {
+	private void onRenderLocationEvent(RenderLocationEvent e) {
 		ActorPlayer player = Data.getPlayer();
 		String locationName = player.getArea().getName();
 		String roomName = player.getArea().getRoom().getName();

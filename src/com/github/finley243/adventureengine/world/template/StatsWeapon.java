@@ -21,12 +21,12 @@ public class StatsWeapon extends StatsItem {
 		}
 	}
 	
-	private WeaponType type;
-	private int damage;
-	private int rate;
-	private int critDamage;
-	private float hitChance;
-	private int clipSize;
+	private final WeaponType type;
+	private final int damage;
+	private final int rate;
+	private final int critDamage;
+	private final float hitChance;
+	private final int clipSize;
 	
 	public StatsWeapon(String ID, String name, String description, int price, WeaponType type, int damage, int rate, int critDamage, float hitChance, int clipSize) {
 		super(ID, name, description, price);

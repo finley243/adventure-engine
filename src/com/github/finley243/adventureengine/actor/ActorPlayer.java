@@ -15,13 +15,12 @@ import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class ActorPlayer extends Actor {
 
-	private MenuManager menuManager;
-	private SceneManager sceneManager;
+	private final MenuManager menuManager;
+	private final SceneManager sceneManager;
 	
 	public ActorPlayer(String ID, Area area, StatsActor stats) {
 		super(ID, area, stats, null, false);
 		this.menuManager = new MenuManager();
-		Game.EVENT_BUS.register(this);
 		Game.EVENT_BUS.register(menuManager);
 		sceneManager = new SceneManager();
 	}
@@ -58,11 +57,6 @@ public class ActorPlayer extends Actor {
 	}
 
 	public void updateAreaDescription() {
-		/*if(!this.getArea().getRoom().hasVisited()) {
-			Game.EVENT_BUS.post(new RenderTextEvent(this.getArea().getRoom().getDescription()));
-			Game.EVENT_BUS.post(new RenderTextEvent(""));
-			this.getArea().getRoom().setVisited();
-		}*/
 		if(this.getArea().getDescription() != null) {
 			Game.EVENT_BUS.post(new RenderTextEvent(this.getArea().getDescription()));
 			Game.EVENT_BUS.post(new RenderTextEvent(""));

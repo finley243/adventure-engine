@@ -12,10 +12,9 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionMove implements Action {
 	
-	public static final boolean SHOW_AREA_DESCRIPTIONS = true;
 	public static final float MOVE_UTILITY_MULTIPLIER = 0.7f;
 	
-	private Area area;
+	private final Area area;
 	
 	public ActionMove(Area area) {
 		this.area = area;

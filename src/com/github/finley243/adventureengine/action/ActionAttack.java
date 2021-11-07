@@ -7,8 +7,8 @@ import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ActionAttack implements Action {
 	
-	private ItemWeapon weapon;
-	private Actor target;
+	private final ItemWeapon weapon;
+	private final Actor target;
 	
 	public ActionAttack(ItemWeapon weapon, Actor target) {
 		this.weapon = weapon;

@@ -16,7 +16,7 @@ public class PerceptionHandler {
 	@Subscribe
 	public void onVisualEvent(VisualEvent event) {
 		Set<Area> visibleFromAreas = event.getOrigin().getRoom().getAreas();
-		Set<Actor> visibleActors = new HashSet<Actor>();
+		Set<Actor> visibleActors = new HashSet<>();
 		for(Area area : visibleFromAreas) {
 			visibleActors.addAll(area.getActors());
 		}

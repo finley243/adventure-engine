@@ -23,7 +23,7 @@ public class ActionGeneric implements Action{
     private final ActionMatchType matchType;
     private final Set<String> matchActions;
     private final int actionCount;
-    private MenuData menuData;
+    private final MenuData menuData;
 
     public ActionGeneric(Physical object, String action, String prompt, float utility, boolean usesAction, boolean canRepeat, ActionMatchType matchType, int actionCount, MenuData menuData, String... otherMatches) {
         this.object = object;
@@ -35,7 +35,7 @@ public class ActionGeneric implements Action{
         this.matchType = matchType;
         this.actionCount = actionCount;
         this.menuData = menuData;
-        this.matchActions = new HashSet<String>();
+        this.matchActions = new HashSet<>();
         matchActions.add(this.action);
         if(otherMatches != null) {
             matchActions.addAll(Arrays.asList(otherMatches));

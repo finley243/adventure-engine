@@ -7,6 +7,6 @@ import java.util.List;
  */
 public interface Readable {
     
-    public List<String> getText();
+    List<String> getText();
 
 }

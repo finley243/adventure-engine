@@ -7,12 +7,12 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
  */
 public interface Noun {
 	
-	public String getName();
+	String getName();
 	
-	public String getFormattedName(boolean indefinite);
+	String getFormattedName(boolean indefinite);
 	
-	public boolean isProperName();
+	boolean isProperName();
 	
-	public Pronoun getPronoun();
+	Pronoun getPronoun();
 	
 }

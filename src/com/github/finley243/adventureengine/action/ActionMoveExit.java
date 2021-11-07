@@ -13,7 +13,7 @@ import com.github.finley243.adventureengine.world.object.ObjectExit;
 
 public class ActionMoveExit implements Action {
 
-	private ObjectExit exit;
+	private final ObjectExit exit;
 	
 	public ActionMoveExit(ObjectExit exit) {
 		this.exit = exit;

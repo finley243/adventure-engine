@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.world.object.ObjectExit;
 
 public class ScriptUnlock implements Script {
 
-	private String object;
+	private final String object;
 	
 	public ScriptUnlock(String object) {
 		this.object = object;

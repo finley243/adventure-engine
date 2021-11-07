@@ -13,8 +13,8 @@ import com.github.finley243.adventureengine.world.object.ObjectElevator;
 
 public class ActionMoveElevator implements Action {
 
-	private ObjectElevator elevator;
-	private ObjectElevator destination;
+	private final ObjectElevator elevator;
+	private final ObjectElevator destination;
 	
 	public ActionMoveElevator(ObjectElevator elevator, ObjectElevator destination) {
 		this.elevator = elevator;

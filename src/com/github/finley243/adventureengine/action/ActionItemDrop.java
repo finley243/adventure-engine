@@ -12,8 +12,8 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 public class ActionItemDrop implements Action {
 
-	private Item item;
-	private boolean isEquipped;
+	private final Item item;
+	private final boolean isEquipped;
 	
 	public ActionItemDrop(Item item, boolean isEquipped) {
 		this.item = item;

@@ -8,21 +8,21 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 
 public class StatsActor {
 	
-	private String ID;
+	private final String ID;
 	
-	private String name;
-	private boolean isProperName;
-	private Pronoun pronoun;
+	private final String name;
+	private final boolean isProperName;
+	private final Pronoun pronoun;
 	
-	private Faction faction;
+	private final Faction faction;
 	
-	private List<String> idle;
-	private boolean preventMovement;
+	private final List<String> idle;
+	private final boolean preventMovement;
 	
-	private int maxHP;
+	private final int maxHP;
 	
-	private String lootTable;
-	private String topic;
+	private final String lootTable;
+	private final String topic;
 	
 	public StatsActor(String ID, String name, boolean isProperName, Pronoun pronoun, String faction, List<String> idle, boolean preventMovement, int maxHP, String lootTable, String topic) {
 		this.ID = ID;

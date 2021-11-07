@@ -3,9 +3,7 @@ package com.github.finley243.adventureengine.network;
 import com.github.finley243.adventureengine.world.Networked;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Network {
 
@@ -17,7 +15,7 @@ public class Network {
         if(securityLevels.length < 1) throw new IllegalArgumentException("Network must have at least 1 level");
         this.ID = ID;
         this.name = name;
-        network = new ArrayList<SubNetwork>(securityLevels.length);
+        network = new ArrayList<>(securityLevels.length);
         for (int securityLevel : securityLevels) {
             network.add(new SubNetwork(securityLevel));
         }

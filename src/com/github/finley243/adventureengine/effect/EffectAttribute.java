@@ -5,8 +5,8 @@ import com.github.finley243.adventureengine.actor.Actor.Attribute;
 
 public class EffectAttribute extends Effect {
 
-	private Attribute attribute;
-	private int amount;
+	private final Attribute attribute;
+	private final int amount;
 	
 	public EffectAttribute(int duration, Attribute attribute, int amount) {
 		super(duration);

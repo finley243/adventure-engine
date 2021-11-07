@@ -6,10 +6,11 @@ public class StatsApparel extends StatsItem {
 		BODY, FACE, HEAD, FEET, ARMS, LEGS
 	}
 	
-	private ApparelType type;
+	private final ApparelType type;
 	
-	public StatsApparel(String ID, String name, String description, int price) {
+	public StatsApparel(String ID, String name, String description, int price, ApparelType type) {
 		super(ID, name, description, price);
+		this.type = type;
 	}
 	
 	public ApparelType getType() {

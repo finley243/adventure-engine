@@ -20,7 +20,7 @@ public class ItemWeapon extends ItemEquippable {
 	
 	public static final float CRIT_CHANCE = 0.05f;
 	
-	private StatsWeapon stats;
+	private final StatsWeapon stats;
 	private int ammo;
 	
 	public ItemWeapon(StatsWeapon stats) {
@@ -84,7 +84,7 @@ public class ItemWeapon extends ItemEquippable {
 	}
 	
 	public List<Action> reactionActions(Actor target) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = new ArrayList<>();
 		if(!isRanged() && target.hasMeleeWeaponEquipped()) {
 			actions.add(new ActionReaction(ReactionType.BLOCK));
 		}
@@ -110,11 +110,11 @@ public class ItemWeapon extends ItemEquippable {
 		for(Actor target : targets) {
 			if(target != subject) {
 				if(stats.getType().isRanged) { // Ranged
-					if(!target.isIncapacitated() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && ammo > 0) {
+					if(target.isActive() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && ammo > 0) {
 						actions.add(new ActionAttack(this, target));
 					}
 				} else { // Melee
-					if(!target.isIncapacitated()) {
+					if(target.isActive()) {
 						actions.add(new ActionAttack(this, target));
 					}
 				}

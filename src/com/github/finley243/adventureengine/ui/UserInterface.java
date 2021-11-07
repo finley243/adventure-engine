@@ -5,8 +5,8 @@ import com.github.finley243.adventureengine.event.RenderTextEvent;
 
 public interface UserInterface {
 
-	public void onTextEvent(RenderTextEvent event);
+	void onTextEvent(RenderTextEvent event);
 	
-	public void onMenuEvent(RenderMenuEvent event);
+	void onMenuEvent(RenderMenuEvent event);
 	
 }

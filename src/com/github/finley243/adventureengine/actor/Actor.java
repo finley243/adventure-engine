@@ -60,13 +60,9 @@ public class Actor implements Noun, Physical {
 		STEALTH
 	}
 	
-	/*public enum BehaviorState {
-		STATIONARY, WANDER, PATROL, ATTACK, PURSUE
-	}*/
-	
-	private StatsActor stats;
-	private String ID;
-	private String descriptor;
+	private final StatsActor stats;
+	private final String ID;
+	private final String descriptor;
 	private Area area;
 	private int HP;
 	private boolean isEnabled;
@@ -75,18 +71,18 @@ public class Actor implements Noun, Physical {
 	private boolean endTurn;
 	private int actionPoints;
 	private int repeatActionPoints;
-	private List<Action> blockedActions;
+	private final List<Action> blockedActions;
 	// Index: 0 = base, 1 = modifier
-	private EnumMap<Attribute, int[]> attributes;
-	private List<Effect> effects;
-	private Inventory inventory;
+	private final EnumMap<Attribute, int[]> attributes;
+	private final List<Effect> effects;
+	private final Inventory inventory;
 	private ItemEquippable equippedItem;
 	private int money;
 	private UsableObject usingObject;
 	private Inventory tradeInventory;
-	private Set<CombatTarget> combatTargets;
-	private Set<PursueTarget> pursueTargets;
-	private BehaviorIdle behaviorIdle;
+	private final Set<CombatTarget> combatTargets;
+	private final Set<PursueTarget> pursueTargets;
+	private final BehaviorIdle behaviorIdle;
 	
 	public Actor(String ID, Area area, StatsActor stats, String descriptor, boolean startDead) {
 		this.ID = ID;
@@ -95,23 +91,23 @@ public class Actor implements Noun, Physical {
 		}
 		this.stats = stats;
 		this.descriptor = descriptor;
-		this.combatTargets = new HashSet<CombatTarget>();
-		this.pursueTargets = new HashSet<PursueTarget>();
+		this.combatTargets = new HashSet<>();
+		this.pursueTargets = new HashSet<>();
 		this.isDead = startDead;
 		this.isUnconscious = startDead;
 		if(!startDead) {
 			HP = stats.getMaxHP();
 		}
 		this.inventory = new Inventory();
-		this.attributes = new EnumMap<Attribute, int[]>(Attribute.class);
+		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, new int[] {1, 0});
 		}
-		this.effects = new ArrayList<Effect>();
+		this.effects = new ArrayList<>();
 		if(stats.getLootTable() != null) {
 			inventory.addItems(Data.getLootTable(stats.getLootTable()).generateItems());
 		}
-		this.blockedActions = new ArrayList<Action>();
+		this.blockedActions = new ArrayList<>();
 		this.behaviorIdle = new BehaviorIdle(stats.getIdle());
 		this.isEnabled = true;
 	}
@@ -287,8 +283,8 @@ public class Actor implements Noun, Physical {
 		return isUnconscious;
 	}
 	
-	public boolean isIncapacitated() {
-		return isDead || isUnconscious;
+	public boolean isActive() {
+		return !isDead && !isUnconscious;
 	}
 	
 	public void onVisualEvent(VisualEvent event) {
@@ -329,10 +325,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public boolean shouldFleeFrom(Actor actor) {
-		if(hasRangedWeaponEquipped() && actor.hasMeleeWeaponEquipped()) {
-			return true;
-		}
-		return false;
+		return hasRangedWeaponEquipped() && actor.hasMeleeWeaponEquipped();
 	}
 	
 	public boolean hasRangedWeaponEquipped() {
@@ -377,7 +370,7 @@ public class Actor implements Noun, Physical {
 
 	@Override
 	public List<Action> localActions(Actor subject) {
-		List<Action> action = new ArrayList<Action>();
+		List<Action> action = new ArrayList<>();
 		if(!isDead) { // Alive
 			if(stats.getTopic() != null && !isInCombat()) {
 				//action.add(new ActionTalk(this));
@@ -394,7 +387,7 @@ public class Actor implements Noun, Physical {
 	
 	@Override
 	public List<Action> remoteActions(Actor subject) {
-		return new ArrayList<Action>();
+		return new ArrayList<>();
 	}
 
 	@Override
@@ -415,7 +408,7 @@ public class Actor implements Noun, Physical {
 	}
 
 	public List<Action> availableActions(){
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = new ArrayList<>();
 		if(hasEquippedItem()) {
 			actions.addAll(equippedItem.equippedActions(this));
 		}
@@ -476,7 +469,7 @@ public class Actor implements Noun, Physical {
 			updateCombatTargets();
 			Action chosenAction;
 			if(repeatActionPoints > 0) {
-				List<Action> repeatActions = new ArrayList<Action>();
+				List<Action> repeatActions = new ArrayList<>();
 				for(Action action : availableActions()) {
 					if(repeatAction.isRepeatMatch(action)) {
 						repeatActions.add(action);
@@ -486,7 +479,7 @@ public class Actor implements Noun, Physical {
 				chosenAction = chooseAction(repeatActions);
 				repeatActionPoints--;
 			} else {
-				List<Action> validActions = new ArrayList<Action>();
+				List<Action> validActions = new ArrayList<>();
 				for(Action action : availableActions()) {
 					if(!action.usesAction() || actionPoints > 0) {
 						validActions.add(action);
@@ -517,7 +510,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public Action chooseAction(List<Action> actions) {
-		List<Action> bestActions = new ArrayList<Action>();
+		List<Action> bestActions = new ArrayList<>();
 		float maxWeight = 0.0f;
 		for(Action currentAction : actions) {
 			float currentWeight = currentAction.utility(this);
@@ -584,10 +577,9 @@ public class Actor implements Noun, Physical {
 	public boolean canSee(Actor actor) {
 		if(!getArea().getRoom().getActors().contains(actor)) {
 			return false;
-		} else if(actor.isInCover() && getArea() != actor.getArea()) {
-			return false;
+		} else {
+			return !actor.isInCover() || getArea() == actor.getArea();
 		}
-		return true;
 	}
 	
 	@Override

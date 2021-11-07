@@ -8,10 +8,10 @@ public class Attack {
 		NORMAL, AIMED
 	}
 	
-	private Actor subject;
-	private Actor target;
-	private ItemWeapon weapon;
-	private AttackType type;
+	private final Actor subject;
+	private final Actor target;
+	private final ItemWeapon weapon;
+	private final AttackType type;
 	
 	public Attack(Actor subject, Actor target, ItemWeapon weapon, AttackType type) {
 		this.subject = subject;

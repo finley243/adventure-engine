@@ -8,9 +8,9 @@ public class Faction {
 		ENEMY, NEUTRAL, FRIEND
 	}
 	
-	private String ID;
-	private FactionRelation defaultRelation;
-	private Map<String, FactionRelation> relations;
+	private final String ID;
+	private final FactionRelation defaultRelation;
+	private final Map<String, FactionRelation> relations;
 	
 	public Faction(String ID, FactionRelation defaultRelation, Map<String, FactionRelation> relations) {
 		this.ID = ID;
@@ -25,10 +25,8 @@ public class Faction {
 	public FactionRelation getRelationTo(String factionID) {
 		if(factionID.equals(this.ID)) {
 			return FactionRelation.FRIEND;
-		} else if(!relations.containsKey(factionID)) {
-			return defaultRelation;
 		} else {
-			return relations.get(factionID);
+			return relations.getOrDefault(factionID, defaultRelation);
 		}
 	}
 	

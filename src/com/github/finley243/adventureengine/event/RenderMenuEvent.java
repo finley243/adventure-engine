@@ -1,21 +1,18 @@
 package com.github.finley243.adventureengine.event;
 
-import java.util.List;
-
-import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.data.MenuData;
+
+import java.util.List;
 
 public class RenderMenuEvent {
 
-	private List<String> choices;
-	private List<MenuData> menuData;
-	private MenuManager manager;
+	private final List<String> choices;
+	private final List<MenuData> menuData;
 	
-	public RenderMenuEvent(List<String> choices, List<MenuData> menuData, MenuManager manager) {
+	public RenderMenuEvent(List<String> choices, List<MenuData> menuData) {
 		if (choices.size() != menuData.size()) throw new IllegalArgumentException();
 		this.choices = choices;
 		this.menuData = menuData;
-		this.manager = manager;
 		for(int i = 0; i < menuData.size(); i++) {
 			menuData.get(i).setIndex(i);
 		}
@@ -27,10 +24,6 @@ public class RenderMenuEvent {
 	
 	public List<MenuData> getMenuData() {
 		return menuData;
-	}
-
-	public MenuManager getManager() {
-		return manager;
 	}
 	
 }

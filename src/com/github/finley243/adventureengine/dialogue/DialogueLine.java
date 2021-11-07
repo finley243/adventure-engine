@@ -10,16 +10,16 @@ import com.github.finley243.adventureengine.script.Script;
 
 public class DialogueLine {
     
-	private Set<String> hasTriggered;
+	private final Set<String> hasTriggered;
 
-    private List<String> textList;
-    private Condition condition;
-    private List<Script> scripts;
+    private final List<String> textList;
+    private final Condition condition;
+    private final List<Script> scripts;
 
-    private boolean once;
-    private boolean exit;
+    private final boolean once;
+    private final boolean exit;
     // If non-null, redirect to this topic after line is spoken
-    private String redirectTopicId;
+    private final String redirectTopicId;
 
     public DialogueLine(List<String> textList, Condition condition, List<Script> scripts, boolean once, boolean exit, String redirectTopicId) {
         this.textList = textList;
@@ -28,7 +28,7 @@ public class DialogueLine {
         this.once = once;
         this.exit = exit;
         this.redirectTopicId = redirectTopicId;
-        this.hasTriggered = new HashSet<String>();
+        this.hasTriggered = new HashSet<>();
     }
     
     public List<String> getTextList() {

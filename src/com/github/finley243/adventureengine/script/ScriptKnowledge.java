@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class ScriptKnowledge implements Script {
 
-	private String knowledgeID;
+	private final String knowledgeID;
 	
 	public ScriptKnowledge(String knowledgeID) {
 		this.knowledgeID = knowledgeID;

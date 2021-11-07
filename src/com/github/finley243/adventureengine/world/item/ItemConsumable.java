@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.world.template.StatsConsumable.Consu
 
 public class ItemConsumable extends Item {
 
-	private StatsConsumable stats;
+	private final StatsConsumable stats;
 	
 	public ItemConsumable(StatsConsumable stats) {
 		super(stats.getName());

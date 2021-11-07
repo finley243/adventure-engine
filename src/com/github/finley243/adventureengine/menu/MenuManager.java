@@ -27,8 +27,8 @@ public class MenuManager {
 	}
 	
 	public Action actionMenu(List<Action> actions) {
-		List<String> menuStrings = new ArrayList<String>();
-		List<MenuData> menuData = new ArrayList<MenuData>();
+		List<String> menuStrings = new ArrayList<>();
+		List<MenuData> menuData = new ArrayList<>();
 		for(Action action : actions) {
 			menuStrings.add(action.getPrompt());
 			menuData.add(action.getMenuData());
@@ -61,7 +61,7 @@ public class MenuManager {
 				}
 			}
 			if(dialogueLoop) {
-				List<DialogueChoice> validChoices = new ArrayList<DialogueChoice>();
+				List<DialogueChoice> validChoices = new ArrayList<>();
 				for(DialogueChoice choice : currentTopic.getChoices()) {
 					if(choice.shouldShow(subject)) {
 						validChoices.add(choice);
@@ -70,6 +70,7 @@ public class MenuManager {
 				Game.EVENT_BUS.post(new RenderTextEvent(""));
 				if(validChoices.size() > 0) {
 					DialogueChoice selectedChoice = dialogueMenuInput(validChoices);
+					selectedChoice.trigger(subject);
 					currentTopic = Data.getTopic(selectedChoice.getLinkedId());
 					Game.EVENT_BUS.post(new RenderTextEvent(selectedChoice.getPrompt()));
 					Game.EVENT_BUS.post(new RenderTextEvent(""));
@@ -78,9 +79,9 @@ public class MenuManager {
 		}
 	}
 	
-	private synchronized DialogueChoice dialogueMenuInput(List<DialogueChoice> choices) {
-		List<String> menuStrings = new ArrayList<String>();
-		List<MenuData> menuData = new ArrayList<MenuData>();
+	private DialogueChoice dialogueMenuInput(List<DialogueChoice> choices) {
+		List<String> menuStrings = new ArrayList<>();
+		List<MenuData> menuData = new ArrayList<>();
 		for(DialogueChoice choice : choices) {
 			menuStrings.add(choice.getPrompt());
 			menuData.add(new MenuDataGlobal(choice.getPrompt()));
@@ -91,7 +92,7 @@ public class MenuManager {
 
 	private synchronized int getMenuInput(List<String> menuStrings, List<MenuData> menuData) {
 		this.index = -1;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData, this));
+		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
 		while(this.index == -1) {
 			Game.THREAD_CONTROL.pause();
 		}
@@ -99,8 +100,8 @@ public class MenuManager {
 	}
 	
 	@Subscribe
-	public void onMenuSelectEvent(MenuSelectEvent event) {
-		this.index = event.getIndex();
+	public void onMenuSelectEvent(MenuSelectEvent e) {
+		this.index = e.getIndex();
 	}
 	
 }

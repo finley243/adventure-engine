@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 public class ActionItemTake implements Action {
 
-	private Item item;
+	private final Item item;
 	
 	public ActionItemTake(Item item) {
 		this.item = item;

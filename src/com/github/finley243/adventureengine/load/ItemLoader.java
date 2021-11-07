@@ -50,7 +50,7 @@ public class ItemLoader {
 		}
 	}
 	
-	private static StatsItem loadItem(Element itemElement) throws ParserConfigurationException, SAXException, IOException {
+	private static StatsItem loadItem(Element itemElement) {
 		String type = itemElement.getAttribute("type");
 		String id = itemElement.getAttribute("id");
 		String name = LoadUtils.singleTag(itemElement, "name", null);
@@ -77,7 +77,7 @@ public class ItemLoader {
 	
 	private static List<Effect> loadEffects(Element effectsElement) {
 		NodeList effectElements = effectsElement.getElementsByTagName("effect");
-		List<Effect> effects = new ArrayList<Effect>();
+		List<Effect> effects = new ArrayList<>();
 		for(int i = 0; i < effectElements.getLength(); i++) {
 			if(effectElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element effectElement = (Element) effectElements.item(i);

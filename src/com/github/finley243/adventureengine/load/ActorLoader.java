@@ -41,7 +41,7 @@ public class ActorLoader {
 		}
 	}
 	
-	private static StatsActor loadActor(Element actorElement) throws ParserConfigurationException, SAXException, IOException {
+	private static StatsActor loadActor(Element actorElement) {
 		String id = actorElement.getAttribute("id");
 		Element nameElement = (Element) actorElement.getElementsByTagName("name").item(0);
 		String name = nameElement.getTextContent();
@@ -53,7 +53,7 @@ public class ActorLoader {
 			Element idleElement = (Element) actorElement.getElementsByTagName("idle").item(0);
 			idle = LoadUtils.listOfTags(idleElement, "area");
 		} else {
-			idle = new ArrayList<String>();
+			idle = new ArrayList<>();
 		}
 		boolean preventMovement = LoadUtils.singleTagBoolean(actorElement, "preventMovement", false);
 		int hp = LoadUtils.singleTagInt(actorElement, "hp", 0);

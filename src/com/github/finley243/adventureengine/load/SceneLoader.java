@@ -49,7 +49,7 @@ public class SceneLoader {
 		Element conditionElement = (Element) sceneElement.getElementsByTagName("condition").item(0);
 		Condition condition = DialogueLoader.loadCondition(conditionElement);
 		NodeList lineElements = sceneElement.getElementsByTagName("line");
-		List<SceneLine> lines = new ArrayList<SceneLine>();
+		List<SceneLine> lines = new ArrayList<>();
 		for(int i = 0; i < lineElements.getLength(); i++) {
 			if(lineElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element lineElement = (Element) lineElements.item(i);

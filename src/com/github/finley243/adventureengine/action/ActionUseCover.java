@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.world.object.ObjectCover;
 
 public class ActionUseCover implements Action {
 
-	private ObjectCover cover;
+	private final ObjectCover cover;
 	
 	public ActionUseCover(ObjectCover cover) {
 		this.cover = cover;

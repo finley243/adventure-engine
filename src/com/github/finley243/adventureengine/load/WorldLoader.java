@@ -53,7 +53,7 @@ public class WorldLoader {
 		}
 	}
 	
-	private static Room loadRoom(Element roomElement) throws ParserConfigurationException, SAXException, IOException {
+	private static Room loadRoom(Element roomElement) {
 		String roomID = roomElement.getAttribute("id");
 		Element roomNameElement = (Element) roomElement.getElementsByTagName("name").item(0);
 		String roomName = roomNameElement.getTextContent();
@@ -61,7 +61,7 @@ public class WorldLoader {
 		String roomDescription = LoadUtils.singleTag(roomElement, "roomDescription", null);
 		
 		NodeList areaElements = roomElement.getElementsByTagName("area");
-		Set<Area> areas = new HashSet<Area>();
+		Set<Area> areas = new HashSet<>();
 		for(int i = 0; i < areaElements.getLength(); i++) {
 			if(areaElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
 				Element areaElement = (Element) areaElements.item(i);
@@ -83,7 +83,7 @@ public class WorldLoader {
 		
 		Element linksElement = (Element) areaElement.getElementsByTagName("links").item(0);
 		NodeList links = linksElement.getElementsByTagName("link");
-		Set<String> linkSet = new HashSet<String>();
+		Set<String> linkSet = new HashSet<>();
 		for(int j = 0; j < links.getLength(); j++) {
 			if(links.item(j).getNodeType() == Node.ELEMENT_NODE) {
 				String linkText = links.item(j).getTextContent();
@@ -93,11 +93,11 @@ public class WorldLoader {
 		
 		Element objectsElement = (Element) areaElement.getElementsByTagName("objects").item(0);
 		NodeList objectElements = objectsElement.getElementsByTagName("object");
-		Set<WorldObject> objectSet = new HashSet<WorldObject>();
+		Set<WorldObject> objectSet = new HashSet<>();
 		for(int j = 0; j < objectElements.getLength(); j++) {
 			if(objectElements.item(j).getNodeType() == Node.ELEMENT_NODE) {
 				Element objectElement = (Element) objectElements.item(j);
-				WorldObject object = loadObject(objectElement, areaID);
+				WorldObject object = loadObject(objectElement);
 				objectSet.add(object);
 				if(object instanceof LinkedObject) {
 					LinkedObject linkedObject = (LinkedObject) object;
@@ -124,7 +124,7 @@ public class WorldLoader {
 		return area;
 	}
 	
-	private static WorldObject loadObject(Element objectElement, String areaID) {
+	private static WorldObject loadObject(Element objectElement) {
 		String objectType = objectElement.getAttribute("type");
 		String objectName = LoadUtils.singleTag(objectElement, "name", null);
 		String objectID = objectElement.getAttribute("id");

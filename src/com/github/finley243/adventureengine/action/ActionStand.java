@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.world.object.UsableObject;
 
 public class ActionStand implements Action {
 
-	private UsableObject object;
+	private final UsableObject object;
 	
 	public ActionStand(UsableObject object) {
 		this.object = object;

@@ -15,8 +15,8 @@ public class BehaviorIdle {
 	public static final float IDLE_MOVEMENT_WEIGHT = 0.4f;
 	public static final int TURNS_PER_STEP = 1;
 	
-	// empty = wander within room, 1 = stationary, >1 = patrol path (uses shortest path between points)
-	private List<String> steps;
+	// empty = wander within room, 1 = stationary, >1 = patrol path (uses the shortest path between points)
+	private final List<String> steps;
 	
 	private int stepIndex;
 	private int stepTurnCounter;
