@@ -16,4 +16,9 @@ public abstract class LinkedObject extends WorldObject {
 		return ID;
 	}
 
+	@Override
+	public int hashCode() {
+		return ID.hashCode();
+	}
+
 }

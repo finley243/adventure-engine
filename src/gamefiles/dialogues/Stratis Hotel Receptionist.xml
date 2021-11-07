@@ -21,11 +21,7 @@
             </condition>
         </choice>
         <choice link="stratis_receptionist_info">
-            <prompt>I'm looking for information.</prompt>
-            <condition type="attribute" target="player">
-                <attribute>CHARISMA</attribute>
-                <value>3</value>
-            </condition>
+            <prompt>I have some questions.</prompt>
         </choice>
         <choice link="stratis_receptionist_end">
             <prompt>That will be all.</prompt>
@@ -66,10 +62,13 @@
     </topic>
     <topic id="stratis_receptionist_info">
         <line>
-            <text>"Of course. What would you like to know?"</text>
+            <text>"Of course."</text>
         </line>
         <choice link="stratis_receptionist_main_return">
-            <prompt>What is there to do here?</prompt>
+            <prompt>Get a lot of high-profile guests here?</prompt>
+        </choice>
+        <choice link="stratis_receptionist_main_return">
+            <prompt>Is there someone staying here by the name of Abel Rees?</prompt>
         </choice>
         <choice link="stratis_receptionist_main_return">
             <prompt>That's all.</prompt>

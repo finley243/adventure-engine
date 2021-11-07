@@ -20,41 +20,27 @@ import com.google.common.eventbus.Subscribe;
 
 public class MenuManager {
 
-	private List<Action> actionList;
-	private List<DialogueChoice> dialogueList;
-	
-	private Action actionChoice;
-	private DialogueChoice dialogueChoice;
+	private int index;
 	
 	public MenuManager() {
-		this.actionList = null;
-		this.dialogueList = null;
-		this.actionChoice = null;
-		this.dialogueChoice = null;
+		this.index = -1;
 	}
 	
 	public Action actionMenu(List<Action> actions) {
-		this.actionList = actions;
 		List<String> menuStrings = new ArrayList<String>();
 		List<MenuData> menuData = new ArrayList<MenuData>();
 		for(Action action : actions) {
 			menuStrings.add(action.getPrompt());
 			menuData.add(action.getMenuData());
 		}
-		actionChoice = null;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData, this));
-		while(actionChoice == null) {
-			Game.THREAD_CONTROL.pause();
-		}
-		return actionChoice;
+		int actionIndex = getMenuInput(menuStrings, menuData);
+		return actions.get(actionIndex);
 	}
 	
 	public void dialogueMenu(Actor subject, String startTopic) {
-		//Game.EVENT_BUS.post(new TextClearEvent());
 		boolean dialogueLoop = true;
 		DialogueTopic currentTopic = Data.getTopic(startTopic);
 		while(dialogueLoop) {
-			//Game.EVENT_BUS.post(new RenderTextEvent(subject.getName().toUpperCase()));
 			for(DialogueLine line : currentTopic.getLines()) {
 				if(line.shouldShow(subject)) {
 					for(String text : line.getTextList()) {
@@ -83,50 +69,38 @@ public class MenuManager {
 				}
 				Game.EVENT_BUS.post(new RenderTextEvent(""));
 				if(validChoices.size() > 0) {
-					DialogueChoice selectedChoice = dialogueMenu(validChoices);
+					DialogueChoice selectedChoice = dialogueMenuInput(validChoices);
 					currentTopic = Data.getTopic(selectedChoice.getLinkedId());
 					Game.EVENT_BUS.post(new RenderTextEvent(selectedChoice.getPrompt()));
 					Game.EVENT_BUS.post(new RenderTextEvent(""));
 				}
-				//Game.EVENT_BUS.post(new RenderTextEvent(""));
-			} else {
-				/*try {
-					Thread.sleep(1500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}*/
-				//Game.EVENT_BUS.post(new TextClearEvent());
-				//Game.EVENT_BUS.post(new RenderLocationEvent());
 			}
 		}
 	}
 	
-	private synchronized DialogueChoice dialogueMenu(List<DialogueChoice> choices) {
-		this.dialogueList = choices;
+	private synchronized DialogueChoice dialogueMenuInput(List<DialogueChoice> choices) {
 		List<String> menuStrings = new ArrayList<String>();
 		List<MenuData> menuData = new ArrayList<MenuData>();
 		for(DialogueChoice choice : choices) {
 			menuStrings.add(choice.getPrompt());
 			menuData.add(new MenuDataGlobal(choice.getPrompt()));
 		}
-		dialogueChoice = null;
+		int dialogueIndex = getMenuInput(menuStrings, menuData);
+		return choices.get(dialogueIndex);
+	}
+
+	private synchronized int getMenuInput(List<String> menuStrings, List<MenuData> menuData) {
+		this.index = -1;
 		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData, this));
-		while(dialogueChoice == null) {
+		while(this.index == -1) {
 			Game.THREAD_CONTROL.pause();
 		}
-		//Game.EVENT_BUS.post(new TextClearEvent());
-		return dialogueChoice;
+		return this.index;
 	}
 	
 	@Subscribe
 	public void onMenuSelectEvent(MenuSelectEvent event) {
-		if(actionList != null) {
-			actionChoice = actionList.get(event.getIndex());
-			actionList = null;
-		} else if(dialogueList != null) {
-			dialogueChoice = dialogueList.get(event.getIndex());
-			dialogueList = null;
-		}
+		this.index = event.getIndex();
 	}
 	
 }
