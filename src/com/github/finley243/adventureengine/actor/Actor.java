@@ -349,19 +349,8 @@ public class Actor implements Noun, Physical {
 		combatTargets.add(new CombatTarget(actor));
 	}
 	
-	public boolean isPursueTarget(Area area) {
-		for(PursueTarget target : pursueTargets) {
-			if(target.getTargetArea() == area) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public void addPursueTarget(PursueTarget target) {
-		if(!pursueTargets.contains(target)) {
-			pursueTargets.add(target);
-		}
+		pursueTargets.add(target);
 	}
 	
 	public Set<PursueTarget> getPursueTargets() {

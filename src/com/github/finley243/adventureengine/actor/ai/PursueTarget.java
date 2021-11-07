@@ -95,7 +95,7 @@ public class PursueTarget {
 		if(!(other instanceof PursueTarget)) {
 			return false;
 		} else {
-			return this.getTargetArea() == ((PursueTarget) other).getTargetArea();
+			return this == other;
 		}
 	}
 	
