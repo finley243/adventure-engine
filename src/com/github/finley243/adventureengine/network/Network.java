@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.network;
 
+import com.github.finley243.adventureengine.network.action.NetworkAction;
 import com.github.finley243.adventureengine.world.Networked;
 
 import java.util.ArrayList;
@@ -30,13 +31,32 @@ public class Network {
     }
 
     public void connectObject(Networked object, int level) {
-        if(level < 1 || level >= network.size()) throw new IllegalArgumentException("Attempted to add object to invalid network level");
-        network.get(level).connected.add(object);
+        if(level < 1 || level >= levels()) throw new IllegalArgumentException("Attempted to add object to invalid network level");
+        network.get(level - 1).connected.add(object);
     }
 
     public List<Networked> getConnectedAtLevel(int level) {
-        if(level < 1 || level >= network.size()) throw new IllegalArgumentException("Attempted to access objects at invalid network level");
-        return network.get(level).connected;
+        if(level < 1 || level >= levels()) throw new IllegalArgumentException("Attempted to access objects at invalid network level");
+        return network.get(level - 1).connected;
+    }
+
+    public List<NetworkAction> getActionsAtLevel(int level) {
+        if(level < 1 || level >= levels()) throw new IllegalArgumentException("Attempted to access actions at invalid network level");
+        List<NetworkAction> actions = new ArrayList<>();
+        for(Networked object : getConnectedAtLevel(level)) {
+            actions.addAll(object.networkActions());
+        }
+        if(level < levels()) {
+            // Go up 1 level
+        }
+        if(level > 1) {
+            // Go down 1 level
+        }
+        return actions;
+    }
+
+    public int levels() {
+        return network.size();
     }
 
     @Override

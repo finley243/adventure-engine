@@ -443,7 +443,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void takeTurn() {
-		if(isDead || !isEnabled()) return;
+		if(!isActive() || !isEnabled()) return;
 		updateEffects();
 		behaviorIdle.update(this);
 		this.actionPoints = ACTIONS_PER_TURN;
@@ -564,11 +564,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public boolean canSee(Actor actor) {
-		if(!getArea().getRoom().getActors().contains(actor)) {
-			return false;
-		} else {
-			return !actor.isInCover() || getArea() == actor.getArea();
-		}
+		return getArea().getRoom() == actor.getArea().getRoom() && (!actor.isInCover() || getArea() == actor.getArea());
 	}
 	
 	@Override

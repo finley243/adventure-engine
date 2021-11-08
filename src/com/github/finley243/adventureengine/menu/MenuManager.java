@@ -16,6 +16,8 @@ import com.github.finley243.adventureengine.event.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
+import com.github.finley243.adventureengine.network.Network;
+import com.github.finley243.adventureengine.network.action.NetworkAction;
 import com.google.common.eventbus.Subscribe;
 
 public class MenuManager {
@@ -35,6 +37,14 @@ public class MenuManager {
 		}
 		int actionIndex = getMenuInput(menuStrings, menuData);
 		return actions.get(actionIndex);
+	}
+
+	public void networkMenu(Network network, int startLevel) {
+		boolean networkLoop = true;
+		int level = startLevel;
+		while(networkLoop) {
+			List<NetworkAction> levelActions = network.getActionsAtLevel(level);
+		}
 	}
 	
 	public void dialogueMenu(Actor subject, String startTopic) {
