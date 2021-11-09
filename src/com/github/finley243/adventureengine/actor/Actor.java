@@ -348,6 +348,10 @@ public class Actor implements Noun, Physical {
 	public void addCombatTarget(Actor actor) {
 		combatTargets.add(new CombatTarget(actor));
 	}
+
+	public Set<CombatTarget> getCombatTargets() {
+		return combatTargets;
+	}
 	
 	public void addPursueTarget(PursueTarget target) {
 		pursueTargets.add(target);
@@ -531,6 +535,12 @@ public class Actor implements Noun, Physical {
 				if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.ENEMY) {
 					if(!isCombatTarget(actor)) {
 						addCombatTarget(actor);
+					}
+				} else if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.FRIEND) {
+					for(CombatTarget allyTarget : actor.getCombatTargets()) {
+						if(!isCombatTarget(allyTarget.getTargetActor())) {
+							addCombatTarget(allyTarget.getTargetActor());
+						}
 					}
 				}
 			}

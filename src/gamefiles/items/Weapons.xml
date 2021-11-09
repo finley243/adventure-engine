@@ -34,7 +34,7 @@
         <type>ASSAULT_RIFLE</type>
         <damage>10</damage>
         <critDamage>3</critDamage>
-        <rate>3</rate>
+        <rate>4</rate>
         <chance>0.65</chance>
         <clipsize>20</clipsize>
     </item>

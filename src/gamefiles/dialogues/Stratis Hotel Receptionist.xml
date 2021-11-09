@@ -70,9 +70,21 @@
         <choice link="stratis_receptionist_main_return">
             <prompt>Is there someone staying here by the name of Abel Rees?</prompt>
         </choice>
+        <choice link="stratis_receptionist_combat">
+            <prompt>[Attack] Any last words?</prompt>
+        </choice>
         <choice link="stratis_receptionist_main_return">
             <prompt>That's all.</prompt>
         </choice>
+    </topic>
+    <topic id="stratis_receptionist_combat">
+        <line exit="true">
+            <text>The receptionist grits his teeth.</text>
+            <text>"I don't give up that easily."</text>
+            <script type="combat" target="subject">
+                <combatant target="player"></combatant>
+            </script>
+        </line>
     </topic>
     <topic id="stratis_receptionist_end">
         <line exit="true">

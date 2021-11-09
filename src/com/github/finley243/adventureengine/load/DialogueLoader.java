@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.github.finley243.adventureengine.script.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,13 +33,6 @@ import com.github.finley243.adventureengine.dialogue.DialogueChoice;
 import com.github.finley243.adventureengine.dialogue.DialogueLine;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic.TopicType;
-import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.script.ScriptAddItem;
-import com.github.finley243.adventureengine.script.ScriptDialogue;
-import com.github.finley243.adventureengine.script.ScriptFactionRelation;
-import com.github.finley243.adventureengine.script.ScriptKnowledge;
-import com.github.finley243.adventureengine.script.ScriptMoney;
-import com.github.finley243.adventureengine.script.ScriptTrade;
 
 public class DialogueLoader {
 
@@ -197,6 +191,10 @@ public class DialogueLoader {
 		case "dialogue":
 			String topic = LoadUtils.singleTag(scriptElement, "topic", null);
 			return new ScriptDialogue(actorRef, topic);
+		case "combat":
+			Element combatantElement = (Element) scriptElement.getElementsByTagName("combatant").item(0);
+			ActorReference combatantRef = loadActorReference(combatantElement);
+			return new ScriptCombat(actorRef, combatantRef);
 		case "factionRelation":
 			String targetFaction = LoadUtils.singleTag(scriptElement, "targetFaction", null);
 			String relationFaction = LoadUtils.singleTag(scriptElement, "relationFaction", null);
