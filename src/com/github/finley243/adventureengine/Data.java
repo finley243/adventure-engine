@@ -1,13 +1,5 @@
 package com.github.finley243.adventureengine;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Faction;
@@ -21,6 +13,8 @@ import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.object.LinkedObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.github.finley243.adventureengine.world.template.StatsItem;
+
+import java.util.*;
 
 public class Data {
 	
@@ -43,9 +37,7 @@ public class Data {
 	private static final Map<String, Network> networks = new HashMap<>();
 	
 	public static void addConfig(String id, String value) {
-		if(config.containsKey(id)) {
-			System.out.println("WARNING - Adding config with existing ID: " + id);
-		}
+		if(config.containsKey(id)) throw new IllegalArgumentException("Cannot add config with existing ID: " + id);
 		config.put(id, value);
 	}
 	
@@ -54,9 +46,7 @@ public class Data {
 	}
 	
 	public static void addArea(String id, Area value) {
-		if(areas.containsKey(id)) {
-			System.out.println("WARNING - Adding area with existing ID: " + id);
-		}
+		if(areas.containsKey(id)) throw new IllegalArgumentException("Cannot add area with existing ID: " + id);
 		areas.put(id, value);
 	}
 	
@@ -65,9 +55,7 @@ public class Data {
 	}
 	
 	public static void addRoom(String id, Room value) {
-		if(rooms.containsKey(id)) {
-			System.out.println("WARNING - Adding room with existing ID: " + id);
-		}
+		if(rooms.containsKey(id)) throw new IllegalArgumentException("Cannot add room with existing ID: " + id);
 		rooms.put(id, value);
 	}
 	
@@ -76,9 +64,7 @@ public class Data {
 	}
 	
 	public static void addActor(String id, Actor value) {
-		if(actors.containsKey(id)) {
-			System.out.println("WARNING - Adding actor with existing ID: " + id);
-		}
+		if(actors.containsKey(id)) throw new IllegalArgumentException("Cannot add actor with existing ID: " + id);
 		actors.put(id, value);
 	}
 	
@@ -98,9 +84,7 @@ public class Data {
 	}
 	
 	public static void addActorStats(String id, StatsActor value) {
-		if(actors.containsKey(id)) {
-			System.out.println("WARNING - Adding actor stats with existing ID: " + id);
-		}
+		if(actorStats.containsKey(id)) throw new IllegalArgumentException("Cannot add actor stats with existing ID: " + id);
 		actorStats.put(id, value);
 	}
 	
@@ -109,9 +93,7 @@ public class Data {
 	}
 	
 	public static void addLinkedObject(String id, LinkedObject value) {
-		if(linkedObjects.containsKey(id)) {
-			System.out.println("WARNING - Adding linked object with existing ID: " + id);
-		}
+		if(linkedObjects.containsKey(id)) throw new IllegalArgumentException("Cannot add linked object with existing ID: " + id);
 		linkedObjects.put(id, value);
 	}
 	
@@ -120,9 +102,7 @@ public class Data {
 	}
 	
 	public static void addItem(String id, StatsItem value) {
-		if(items.containsKey(id)) {
-			System.out.println("WARNING - Adding item with existing ID: " + id);
-		}
+		if(items.containsKey(id)) throw new IllegalArgumentException("Cannot add item with existing ID: " + id);
 		items.put(id, value);
 	}
 	
@@ -131,9 +111,7 @@ public class Data {
 	}
 	
 	public static void addLootTable(String id, LootTable value) {
-		if(lootTables.containsKey(id)) {
-			System.out.println("WARNING - Adding loot table with existing ID: " + id);
-		}
+		if(lootTables.containsKey(id)) throw new IllegalArgumentException("Cannot add loot table with existing ID: " + id);
 		lootTables.put(id, value);
 	}
 	
@@ -142,9 +120,7 @@ public class Data {
 	}
 	
 	public static void addTopic(String id, DialogueTopic value) {
-		if(topics.containsKey(id)) {
-			System.out.println("WARNING - Adding topic with existing ID: " + id);
-		}
+		if(topics.containsKey(id)) throw new IllegalArgumentException("Cannot add topic with existing ID: " + id);
 		topics.put(id, value);
 	}
 	
@@ -161,9 +137,7 @@ public class Data {
 	}
 	
 	public static void addFaction(String id, Faction value) {
-		if(factions.containsKey(id)) {
-			System.out.println("WARNING - Adding faction with existing ID: " + id);
-		}
+		if(factions.containsKey(id)) throw new IllegalArgumentException("Cannot add faction with existing ID: " + id);
 		factions.put(id, value);
 	}
 	
@@ -172,6 +146,7 @@ public class Data {
 	}
 	
 	public static void addScene(String id, Scene value) {
+		if(scenes.containsKey(id)) throw new IllegalArgumentException("Cannot add scene with existing ID: " + id);
 		scenes.put(id, value);
 	}
 
@@ -184,9 +159,7 @@ public class Data {
 	}
 	
 	public static void addQuest(String id, Quest value) {
-		if(quests.containsKey(id)) {
-			System.out.println("WARNING - Adding quest with existing ID: " + id);
-		}
+		if(quests.containsKey(id)) throw new IllegalArgumentException("Cannot add quest with existing ID: " + id);
 		quests.put(id, value);
 	}
 	
@@ -195,9 +168,7 @@ public class Data {
 	}
 
 	public static void addNetwork(String id, Network value) {
-		if(networks.containsKey(id)) {
-			System.out.println("WARNING - Adding network with existing ID: " + id);
-		}
+		if(networks.containsKey(id)) throw new IllegalArgumentException("Cannot add network with existing ID: " + id);
 		networks.put(id, value);
 	}
 
