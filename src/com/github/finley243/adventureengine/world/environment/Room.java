@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.environment;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.actor.Actor;
@@ -19,16 +20,19 @@ public class Room implements Noun {
 	private final String name;
 	private final boolean isProperName;
 	private final String description;
+
+	private final List<String> scenes;
 	
 	private boolean hasVisited;
 	
 	private final Set<Area> areas;
 	
-	public Room(String ID, String name, boolean isProperName, String description, Set<Area> areas) {
+	public Room(String ID, String name, boolean isProperName, String description, List<String> scenes, Set<Area> areas) {
 		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
 		this.description = description;
+		this.scenes = scenes;
 		this.areas = areas;
 		this.hasVisited = false;
 	}
@@ -51,6 +55,10 @@ public class Room implements Noun {
 	
 	public void setVisited() {
 		hasVisited = true;
+	}
+
+	public List<String> getScenes() {
+		return scenes;
 	}
 	
 	public Set<WorldObject> getObjects() {

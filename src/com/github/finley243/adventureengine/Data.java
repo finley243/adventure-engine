@@ -38,7 +38,7 @@ public class Data {
 	private static final Map<String, DialogueTopic> topics = new HashMap<>();
 	private static final Set<String> knowledge = new HashSet<>();
 	private static final Map<String, Faction> factions = new HashMap<>();
-	private static final List<Scene> scenes = new ArrayList<>();
+	private static final Map<String, Scene> scenes = new HashMap<>();
 	private static final Map<String, Quest> quests = new HashMap<>();
 	private static final Map<String, Network> networks = new HashMap<>();
 	
@@ -171,12 +171,16 @@ public class Data {
 		return factions.get(id);
 	}
 	
-	public static void addScene(Scene value) {
-		scenes.add(value);
+	public static void addScene(String id, Scene value) {
+		scenes.put(id, value);
+	}
+
+	public static Scene getScene(String id) {
+		return scenes.get(id);
 	}
 	
-	public static List<Scene> getScenes() {
-		return scenes;
+	public static Collection<Scene> getScenes() {
+		return scenes.values();
 	}
 	
 	public static void addQuest(String id, Quest value) {

@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.event.TextClearEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.*;
 import com.github.finley243.adventureengine.menu.ThreadControl;
+import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
@@ -82,7 +83,7 @@ public class Game {
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
 		EVENT_BUS.post(new RenderLocationEvent());
-		Data.getPlayer().triggerSceneManager();
+		SceneManager.trigger(Data.getPlayer().getArea().getRoom().getScenes());
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();

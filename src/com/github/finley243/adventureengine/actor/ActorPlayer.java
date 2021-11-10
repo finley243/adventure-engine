@@ -16,13 +16,11 @@ import com.github.finley243.adventureengine.world.template.StatsActor;
 public class ActorPlayer extends Actor {
 
 	private final MenuManager menuManager;
-	private final SceneManager sceneManager;
 	
 	public ActorPlayer(String ID, Area area, StatsActor stats) {
 		super(ID, area, stats, null, false);
 		this.menuManager = new MenuManager();
 		Game.EVENT_BUS.register(menuManager);
-		sceneManager = new SceneManager();
 	}
 	
 	@Override
@@ -61,10 +59,6 @@ public class ActorPlayer extends Actor {
 			Game.EVENT_BUS.post(new RenderTextEvent(this.getArea().getDescription()));
 			Game.EVENT_BUS.post(new RenderTextEvent(""));
 		}
-	}
-	
-	public void triggerSceneManager() {
-		sceneManager.trigger();
 	}
 
 }

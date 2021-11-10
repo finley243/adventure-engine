@@ -36,7 +36,7 @@ public class SceneLoader {
 					if(scenes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 						Element sceneElement = (Element) scenes.item(i);
 						Scene scene = loadScene(sceneElement);
-						Data.addScene(scene);
+						Data.addScene(scene.getID(), scene);
 					}
 				}
 			}
@@ -46,6 +46,7 @@ public class SceneLoader {
 	private static Scene loadScene(Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
 		boolean isRepeatable = LoadUtils.boolAttribute(sceneElement, "isRepeatable", true);
 		boolean playImmediately = LoadUtils.boolAttribute(sceneElement, "playImmediately", false);
+		String sceneID = sceneElement.getAttribute("id");
 		Element conditionElement = (Element) sceneElement.getElementsByTagName("condition").item(0);
 		Condition condition = DialogueLoader.loadCondition(conditionElement);
 		NodeList lineElements = sceneElement.getElementsByTagName("line");
@@ -59,7 +60,7 @@ public class SceneLoader {
 		}
 		float chance = LoadUtils.singleTagFloat(sceneElement, "chance", 1.0f);
 		int cooldown = LoadUtils.singleTagInt(sceneElement, "cooldown", 0);
-		return new Scene(condition, lines, isRepeatable, playImmediately, chance, cooldown);
+		return new Scene(sceneID, condition, lines, isRepeatable, playImmediately, chance, cooldown);
 	}
 
 	private static SceneLine loadSceneLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {

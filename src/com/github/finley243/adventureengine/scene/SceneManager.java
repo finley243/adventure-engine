@@ -8,21 +8,18 @@ import com.github.finley243.adventureengine.Data;
 
 public class SceneManager {
 	
-	public SceneManager() {
-		
-	}
-	
-	public void trigger() {
-		Scene scene = selectScene();
+	public static void trigger(List<String> scenes) {
+		updateCooldowns();
+		Scene scene = selectScene(scenes);
 		if(scene != null) {
 			scene.play();
 		}
 	}
 	
-	private Scene selectScene() {
+	private static Scene selectScene(List<String> scenes) {
 		List<Scene> validScenes = new ArrayList<>();
-		for(Scene scene : Data.getScenes()) {
-			scene.updateCooldown();
+		for(String sceneID : scenes) {
+			Scene scene = Data.getScene(sceneID);
 			if(scene.canPlay()) {
 				if(scene.playImmediately()) {
 					return scene;
@@ -34,6 +31,12 @@ public class SceneManager {
 			return null;
 		}
 		return validScenes.get(ThreadLocalRandom.current().nextInt(validScenes.size()));
+	}
+
+	private static void updateCooldowns() {
+		for(Scene scene : Data.getScenes()) {
+			scene.updateCooldown();
+		}
 	}
 
 }

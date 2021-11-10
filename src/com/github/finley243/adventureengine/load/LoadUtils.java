@@ -42,6 +42,7 @@ public class LoadUtils {
 	}
 	
 	public static Set<String> setOfTags(Element element, String name) {
+		if(element == null) return new HashSet<>();
 		NodeList nodes = element.getElementsByTagName(name);
 		Set<String> output = new HashSet<>();
 		for(int i = 0; i < nodes.getLength(); i++) {
@@ -53,6 +54,7 @@ public class LoadUtils {
 	}
 	
 	public static List<String> listOfTags(Element element, String name) {
+		if(element == null) return new ArrayList<>();
 		NodeList nodes = element.getElementsByTagName(name);
 		List<String> output = new ArrayList<>();
 		for(int i = 0; i < nodes.getLength(); i++) {
