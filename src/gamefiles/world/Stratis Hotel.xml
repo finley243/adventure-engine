@@ -54,6 +54,7 @@
             <actors>
                 <actor id="stratis_guard_lobby">
                     <stats>stratis_guard_lobby</stats>
+                    <descriptor>lobby</descriptor>
                 </actor>
             </actors>
         </area>
@@ -168,8 +169,16 @@
                     <name>door</name>
                     <link>stratis_hotel_lobby_security_door</link>
                 </object>
+                <object type="item">
+                    <item>rifle_auto</item>
+                </object>
             </objects>
-            <actors></actors>
+            <actors>
+                <actor id="stratis_guard_office">
+                    <stats>stratis_guard_office</stats>
+                    <descriptor>office</descriptor>
+                </actor>
+            </actors>
         </area>
     </room>
 </rooms>

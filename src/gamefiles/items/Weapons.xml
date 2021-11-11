@@ -8,7 +8,7 @@
         <rate>2</rate>
         <chance>0.85</chance>
     </item>
-    <item type="weapon" id="light_pistol">
+    <item type="weapon" id="pistol_light">
         <name>light pistol</name>
         <price>30</price>
         <type>PISTOL</type>
@@ -18,7 +18,7 @@
         <chance>0.70</chance>
         <clipSize>12</clipSize>
     </item>
-    <item type="weapon" id="heavy_pistol">
+    <item type="weapon" id="pistol_heavy">
         <name>heavy pistol</name>
         <price>50</price>
         <type>PISTOL</type>
@@ -28,7 +28,7 @@
         <chance>0.70</chance>
         <clipSize>6</clipSize>
     </item>
-    <item type="weapon" id="auto_rifle">
+    <item type="weapon" id="rifle_auto">
         <name>auto rifle</name>
         <price>90</price>
         <type>ASSAULT_RIFLE</type>

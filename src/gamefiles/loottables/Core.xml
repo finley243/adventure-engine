@@ -1,7 +1,7 @@
 <lootTables>
     <lootTable id="player" useAll="true">
         <entry>
-            <reference table="false">heavy_pistol</reference>
+            <reference table="false">pistol_heavy</reference>
             <chance>1.0</chance>
             <count>1</count>
         </entry>
@@ -15,24 +15,24 @@
     </lootTable>
     <lootTable id="weapon_ranged" useAll="false">
         <entry>
-            <reference table="false">light_pistol</reference>
+            <reference table="false">pistol_light</reference>
             <chance>1.0</chance>
             <count>1</count>
         </entry>
         <entry>
-            <reference table="false">heavy_pistol</reference>
+            <reference table="false">pistol_heavy</reference>
             <chance>1.0</chance>
             <count>1</count>
         </entry>
         <entry>
-            <reference table="false">auto_rifle</reference>
+            <reference table="false">rifle_auto</reference>
             <chance>1.0</chance>
             <count>1</count>
         </entry>
     </lootTable>
     <lootTable id="stratis_receptionist" useAll="true">
         <entry>
-            <reference table="false">light_pistol</reference>
+            <reference table="false">pistol_light</reference>
             <chance>1.0</chance>
             <count>1</count>
         </entry>
@@ -44,7 +44,7 @@
     </lootTable>
     <lootTable id="stratis_guard" useAll="true">
         <entry>
-            <reference table="false">auto_rifle</reference>
+            <reference table="false">rifle_auto</reference>
             <chance>1.0</chance>
             <count>1</count>
         </entry>
