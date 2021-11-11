@@ -59,6 +59,7 @@ public class WorldLoader {
 		String roomName = roomNameElement.getTextContent();
 		boolean roomNameIsProper = LoadUtils.boolAttribute(roomNameElement, "proper", false);
 		String roomDescription = LoadUtils.singleTag(roomElement, "roomDescription", null);
+		String roomOwnerFaction = LoadUtils.singleTag(roomElement, "ownerFaction", null);
 		Element roomScenesElement = (Element) roomElement.getElementsByTagName("scenes").item(0);
 		List<String> roomScenes = LoadUtils.listOfTags(roomScenesElement, "scene");
 		
@@ -72,7 +73,7 @@ public class WorldLoader {
 				Data.addArea(area.getID(), area);
 			}
 		}
-		return new Room(roomID, roomName, roomNameIsProper, roomDescription, roomScenes, areas);
+		return new Room(roomID, roomName, roomNameIsProper, roomDescription, roomScenes, roomOwnerFaction, areas);
 	}
 	
 	private static Area loadArea(Element areaElement, String roomID) {

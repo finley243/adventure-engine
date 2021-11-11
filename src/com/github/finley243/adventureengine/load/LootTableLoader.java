@@ -29,7 +29,7 @@ public class LootTableLoader {
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.parse(file);
 				Element rootElement = document.getDocumentElement();
-				NodeList tables = rootElement.getElementsByTagName("loottable");
+				NodeList tables = rootElement.getElementsByTagName("lootTable");
 				for(int i = 0; i < tables.getLength(); i++) {
 					if(tables.item(i).getNodeType() == Node.ELEMENT_NODE) {
 						Element tableElement = (Element) tables.item(i);

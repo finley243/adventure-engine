@@ -159,6 +159,7 @@
     </room>
     <room id="stratis_hotel_security">
         <name proper="false">security office</name>
+        <ownerFaction>stratis_hotel_staff</ownerFaction>
         <area id="stratis_hotel_security_main">
             <name proper="false" prox="false">office</name>
             <links></links>

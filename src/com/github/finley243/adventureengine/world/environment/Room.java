@@ -16,23 +16,22 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 public class Room implements Noun {
 
 	private final String ID;
-	
 	private final String name;
 	private final boolean isProperName;
 	private final String description;
-
 	private final List<String> scenes;
-	
-	private boolean hasVisited;
-	
+	private final String ownerFaction;
 	private final Set<Area> areas;
-	
-	public Room(String ID, String name, boolean isProperName, String description, List<String> scenes, Set<Area> areas) {
+
+	private boolean hasVisited;
+
+	public Room(String ID, String name, boolean isProperName, String description, List<String> scenes, String ownerFaction, Set<Area> areas) {
 		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
 		this.description = description;
 		this.scenes = scenes;
+		this.ownerFaction = ownerFaction;
 		this.areas = areas;
 		this.hasVisited = false;
 	}
@@ -59,6 +58,10 @@ public class Room implements Noun {
 
 	public List<String> getScenes() {
 		return scenes;
+	}
+
+	public String getOwnerFaction() {
+		return ownerFaction;
 	}
 	
 	public Set<WorldObject> getObjects() {

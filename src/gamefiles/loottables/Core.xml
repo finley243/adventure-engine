@@ -1,19 +1,19 @@
-<loottables>
-    <loottable id="player" useAll="true">
+<lootTables>
+    <lootTable id="player" useAll="true">
         <entry>
             <reference table="false">heavy_pistol</reference>
             <chance>1.0</chance>
             <count>1</count>
         </entry>
-    </loottable>
-    <loottable id="weapon_melee" useAll="false">
+    </lootTable>
+    <lootTable id="weapon_melee" useAll="false">
         <entry>
             <reference table="false">baseball_bat</reference>
             <chance>1.0</chance>
             <count>1</count>
         </entry>
-    </loottable>
-    <loottable id="weapon_ranged" useAll="false">
+    </lootTable>
+    <lootTable id="weapon_ranged" useAll="false">
         <entry>
             <reference table="false">light_pistol</reference>
             <chance>1.0</chance>
@@ -29,8 +29,8 @@
             <chance>1.0</chance>
             <count>1</count>
         </entry>
-    </loottable>
-    <loottable id="stratis_receptionist" useAll="true">
+    </lootTable>
+    <lootTable id="stratis_receptionist" useAll="true">
         <entry>
             <reference table="false">light_pistol</reference>
             <chance>1.0</chance>
@@ -41,8 +41,8 @@
             <chance>1.0</chance>
             <count>1</count>
         </entry>
-    </loottable>
-    <loottable id="stratis_guard" useAll="true">
+    </lootTable>
+    <lootTable id="stratis_guard" useAll="true">
         <entry>
             <reference table="false">auto_rifle</reference>
             <chance>1.0</chance>
@@ -53,8 +53,8 @@
             <chance>1.0</chance>
             <count>1</count>
         </entry>
-    </loottable>
-    <loottable id="nexus_bouncer" useAll="true">
+    </lootTable>
+    <lootTable id="nexus_bouncer" useAll="true">
         <entry>
             <reference table="true">weapon_melee</reference>
             <chance>1.0</chance>
@@ -65,5 +65,5 @@
             <chance>1.0</chance>
             <count>1</count>
         </entry>
-    </loottable>
-</loottables>
+    </lootTable>
+</lootTables>
