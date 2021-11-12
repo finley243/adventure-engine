@@ -14,7 +14,7 @@ public class StatsActor {
 	private final boolean isProperName;
 	private final Pronoun pronoun;
 	
-	private final Faction faction;
+	private final String faction;
 	
 	private final List<String> idle;
 	private final boolean preventMovement;
@@ -29,7 +29,7 @@ public class StatsActor {
 		this.name = name;
 		this.isProperName = isProperName;
 		this.pronoun = pronoun;
-		this.faction = Data.getFaction(faction);
+		this.faction = faction;
 		this.idle = idle;
 		this.preventMovement = preventMovement;
 		this.maxHP = maxHP;
@@ -53,7 +53,7 @@ public class StatsActor {
 		return pronoun;
 	}
 	
-	public Faction getFaction() {
+	public String getFaction() {
 		return faction;
 	}
 	

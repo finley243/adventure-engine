@@ -68,8 +68,8 @@
             <objects>
                 <object type="elevator" id="stratis_hotel_elevator_lobby">
                     <name>elevator</name>
-                    <floorname>Lobby</floorname>
-                    <floornumber>1</floornumber>
+                    <floorName>Lobby</floorName>
+                    <floorNumber>1</floorNumber>
                     <links>
                         <link>stratis_hotel_elevator_corridor</link>
                     </links>
@@ -107,8 +107,8 @@
             <objects>
                 <object type="elevator" id="stratis_hotel_elevator_corridor">
                     <name>elevator</name>
-                    <floorname>Guest Rooms</floorname>
-                    <floornumber>5</floornumber>
+                    <floorName>Guest Rooms</floorName>
+                    <floorNumber>5</floorNumber>
                     <links>
                         <link>stratis_hotel_elevator_lobby</link>
                     </links>

@@ -1,15 +1,13 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.condition.Condition.Equality;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.github.finley243.adventureengine.condition.Condition.Equality;
 
 public class LoadUtils {
 
@@ -19,9 +17,9 @@ public class LoadUtils {
 	}
 	
 	public static String singleTag(Element parent, String name, String defaultValue) {
-		List<Element> elements = directChildrenWithName(parent, name);
-		if(elements.isEmpty()) return defaultValue;
-		return elements.get(0).getTextContent();
+		Element element = singleChildWithName(parent, name);
+		if(element == null) return defaultValue;
+		return element.getTextContent();
 	}
 	
 	public static int singleTagInt(Element parent, String name, int defaultValue) {
@@ -65,13 +63,24 @@ public class LoadUtils {
 	public static List<Element> directChildrenWithName(Element parent, String name) {
 		List<Element> matches = new ArrayList<>();
 		Node currentChild = parent.getFirstChild();
-		while(currentChild.getNextSibling() != null) {
+		while(currentChild != null) {
 			if(currentChild.getNodeType() == Node.ELEMENT_NODE && ((Element) currentChild).getNodeName().equals(name)) {
 				matches.add((Element) currentChild);
 			}
 			currentChild = currentChild.getNextSibling();
 		}
 		return matches;
+	}
+
+	public static Element singleChildWithName(Element parent, String name) {
+		Node currentChild = parent.getFirstChild();
+		while(currentChild != null) {
+			if(currentChild.getNodeType() == Node.ELEMENT_NODE && ((Element) currentChild).getNodeName().equals(name)) {
+				return (Element) currentChild;
+			}
+			currentChild = currentChild.getNextSibling();
+		}
+		return null;
 	}
 	
 	public static Equality equalityTag(Element element, String name) {

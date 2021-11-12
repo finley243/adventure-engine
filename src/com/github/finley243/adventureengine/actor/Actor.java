@@ -199,7 +199,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public Faction getFaction() {
-		return stats.getFaction();
+		return Data.getFaction(stats.getFaction());
 	}
 	
 	public void move(Area area) {
