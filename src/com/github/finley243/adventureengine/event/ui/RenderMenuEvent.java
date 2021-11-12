@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.event;
+package com.github.finley243.adventureengine.event.ui;
 
 import com.github.finley243.adventureengine.menu.data.MenuData;
 

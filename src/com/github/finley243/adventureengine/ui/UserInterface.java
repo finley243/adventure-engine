@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.ui;
 
-import com.github.finley243.adventureengine.event.RenderMenuEvent;
-import com.github.finley243.adventureengine.event.RenderTextEvent;
+import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 
 public interface UserInterface {
 

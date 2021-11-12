@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.event.RenderTextEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 
 public class Scene {
 

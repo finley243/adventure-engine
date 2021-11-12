@@ -4,9 +4,9 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
-import com.github.finley243.adventureengine.event.RenderLocationEvent;
-import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.event.TextClearEvent;
+import com.github.finley243.adventureengine.event.ui.RenderLocationEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
+import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.*;
 import com.github.finley243.adventureengine.menu.ThreadControl;
@@ -75,6 +75,7 @@ public class Game {
 		SceneManager.trigger(Data.getPlayer().getArea().getRoom().getScenes());
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
+				System.out.println("Turn: " + actor.getID());
 				CombatHelper.newTurn();
 				actor.takeTurn();
 			}

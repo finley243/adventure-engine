@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.quest;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.event.RenderTextEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 
 public class Objective {
 

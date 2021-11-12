@@ -1,10 +1,10 @@
 package com.github.finley243.adventureengine.ui;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.MenuSelectEvent;
-import com.github.finley243.adventureengine.event.RenderMenuEvent;
-import com.github.finley243.adventureengine.event.RenderTextEvent;
-import com.github.finley243.adventureengine.event.TextClearEvent;
+import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
+import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
+import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.menu.data.*;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.item.Item;

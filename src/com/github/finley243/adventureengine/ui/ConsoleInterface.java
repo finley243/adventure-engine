@@ -3,9 +3,9 @@ package com.github.finley243.adventureengine.ui;
 import java.util.List;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.event.RenderMenuEvent;
-import com.github.finley243.adventureengine.event.MenuSelectEvent;
-import com.github.finley243.adventureengine.event.RenderTextEvent;
+import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
+import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.ConsoleUtils;
 import com.google.common.eventbus.Subscribe;
 

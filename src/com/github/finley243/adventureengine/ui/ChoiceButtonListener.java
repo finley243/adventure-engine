@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.event.MenuSelectEvent;
+import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
 
 public class ChoiceButtonListener implements ActionListener {
 
