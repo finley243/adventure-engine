@@ -64,10 +64,13 @@
         <line>
             <text>"Of course."</text>
         </line>
-        <choice link="stratis_receptionist_main_return">
+        <choice link="stratis_receptionist_info_amentities">
+            <prompt>What amentities are available here?</prompt>
+        </choice>
+        <choice link="stratis_receptionist_info_guests">
             <prompt>Get a lot of high-profile guests here?</prompt>
         </choice>
-        <choice link="stratis_receptionist_main_return">
+        <choice link="stratis_receptionist_info_rees">
             <prompt>Is there someone staying here by the name of Abel Rees?</prompt>
         </choice>
         <choice link="stratis_receptionist_combat">
@@ -76,6 +79,25 @@
         <choice link="stratis_receptionist_main_return">
             <prompt>That's all.</prompt>
         </choice>
+    </topic>
+    <topic id="stratis_receptionist_info_amentities">
+        <line redirect="stratis_receptionist_main">
+            <text>The receptionist grins slightly.</text>
+            <text>"Everything you could need. Five-star restaurant, rooftop pool."</text>
+            <text>"We also provide the fastest network access of any hotel in the area, included with every room."</text>
+        </line>
+    </topic>
+    <topic id="stratis_receptionist_info_guests">
+        <line redirect="stratis_receptionist_main">
+            <text>"Why yes, of course. The Stratis is the best, and most secure, hotel in the area."</text>
+        </line>
+    </topic>
+    <topic id="stratis_receptionist_info_rees">
+        <line redirect="stratis_receptionist_main">
+            <text>The receptionist narrows his eyes.</text>
+            <text>"We can't disclose the identity of our guests to the public."</text>
+            <text>"As you can imagine, that would be bad for business."</text>
+        </line>
     </topic>
     <topic id="stratis_receptionist_combat">
         <line exit="true">
