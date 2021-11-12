@@ -4,14 +4,11 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
-import com.github.finley243.adventureengine.event.ui.RenderLocationEvent;
-import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.*;
 import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.scene.SceneManager;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
@@ -44,15 +41,15 @@ public class Game {
 
 	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException {
+		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
+		ConfigLoader.loadConfig(new File(GAMEFILES + CONFIG_FILE));
+		DataLoader.loadFromDir(new File(GAMEFILES + DATA_DIRECTORY));
+
 		perceptionHandler = new PerceptionHandler();
 		userInterface = new GraphicalInterfaceNested();
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
 		EVENT_BUS.register(this);
-
-		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
-		ConfigLoader.loadConfig(new File(GAMEFILES + CONFIG_FILE));
-		DataLoader.loadFromDir(new File(GAMEFILES + DATA_DIRECTORY));
 		
 		Actor player = ActorFactory.createPlayer(Data.getConfig("playerID"), Data.getArea(Data.getConfig("playerStartArea")), Data.getActorStats(Data.getConfig("playerStats")));
 		Data.addActor(player.getID(), player);
@@ -71,15 +68,14 @@ public class Game {
 	
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
-		EVENT_BUS.post(new RenderLocationEvent());
 		SceneManager.trigger(Data.getPlayer().getArea().getRoom().getScenes());
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
-				System.out.println("Turn: " + actor.getID());
 				CombatHelper.newTurn();
 				actor.takeTurn();
 			}
 		}
+		CombatHelper.newTurn();
 		Data.getPlayer().takeTurn();
 		sleep(800);
 		EVENT_BUS.post(new TextClearEvent());
@@ -98,16 +94,6 @@ public class Game {
 	@Subscribe
 	private void endGameLoop(PlayerDeathEvent e) {
 		continueGameLoop = false;
-	}
-	
-	@Subscribe
-	private void onRenderLocationEvent(RenderLocationEvent e) {
-		ActorPlayer player = Data.getPlayer();
-		String locationName = player.getArea().getName();
-		String roomName = player.getArea().getRoom().getName();
-		Game.EVENT_BUS.post(new RenderTextEvent("------------------------------"));
-		Game.EVENT_BUS.post(new RenderTextEvent("Location: " + LangUtils.titleCase(roomName) + " (" + LangUtils.titleCase(locationName) + ")"));
-		Game.EVENT_BUS.post(new RenderTextEvent(""));
 	}
 	
 }

@@ -1,10 +1,8 @@
 package com.github.finley243.adventureengine.ui;
 
+import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
-import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
-import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.event.ui.TextClearEvent;
+import com.github.finley243.adventureengine.event.ui.*;
 import com.github.finley243.adventureengine.menu.data.*;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.item.Item;
@@ -22,14 +20,17 @@ public class GraphicalInterfaceNested implements UserInterface {
 	
 	private final JFrame window;
 	private final JTextArea textPanel;
+	private final JTextArea areaPanel;
 	private final JTextArea historyPanel;
 	private final JPanel choicePanel;
 	
 	public GraphicalInterfaceNested() {
-		this.window = new JFrame("AdventureEngine");
+		this.window = new JFrame(Data.getConfig("gameName"));
 		JTabbedPane tabPane = new JTabbedPane();
 		this.textPanel = new JTextArea();
+		this.areaPanel = new JTextArea();
 		JScrollPane textScroll = new JScrollPane(textPanel);
+
 		this.historyPanel = new JTextArea();
 		JScrollPane historyScroll = new JScrollPane(historyPanel);
 		this.choicePanel = new JPanel();
@@ -46,13 +47,17 @@ public class GraphicalInterfaceNested implements UserInterface {
 		textPanel.setEditable(false);
 		textPanel.setLineWrap(true);
 		textPanel.setWrapStyleWord(true);
-		textPanel.setFont(historyPanel.getFont().deriveFont(14f));
+		textPanel.setFont(textPanel.getFont().deriveFont(14f));
 		textPanel.setVisible(true);
 		historyPanel.setEditable(false);
 		historyPanel.setLineWrap(true);
 		historyPanel.setWrapStyleWord(true);
 		historyPanel.setFont(historyPanel.getFont().deriveFont(14f));
 		historyPanel.setVisible(true);
+
+		areaPanel.setEditable(false);
+		areaPanel.setFont(areaPanel.getFont().deriveFont(14f).deriveFont(Font.BOLD));
+		window.getContentPane().add(areaPanel, BorderLayout.PAGE_START);
 		
 		window.getContentPane().add(choiceScroll, BorderLayout.PAGE_END);
 		choiceScroll.setPreferredSize(new Dimension(500, 200));
@@ -73,6 +78,15 @@ public class GraphicalInterfaceNested implements UserInterface {
 			textPanel.repaint();
 			historyPanel.append(e.getText() + "\n");
 			historyPanel.repaint();
+			window.repaint();
+		});
+	}
+
+	@Subscribe
+	public void onAreaEvent(RenderAreaEvent e) {
+		SwingUtilities.invokeLater(() -> {
+			areaPanel.setText(e.getRoom() + " (" + e.getArea() + ")");
+			areaPanel.repaint();
 			window.repaint();
 		});
 	}
