@@ -32,28 +32,8 @@ import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class WorldLoader {
-
-	public static void loadWorld(File dir) throws ParserConfigurationException, SAXException, IOException {
-		if(dir.isDirectory()) {
-			File[] files = dir.listFiles();
-			for(File file : files) {
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.parse(file);
-				Element rootElement = document.getDocumentElement();
-				NodeList roomElements = rootElement.getElementsByTagName("room");
-				for(int i = 0; i < roomElements.getLength(); i++) {
-					if(roomElements.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						Element roomElement = (Element) roomElements.item(i);
-						Room room = loadRoom(roomElement);
-						Data.addRoom(room.getID(), room);
-					}
-				}
-			}
-		}
-	}
 	
-	private static Room loadRoom(Element roomElement) {
+	public static Room loadRoom(Element roomElement) {
 		String roomID = roomElement.getAttribute("id");
 		Element roomNameElement = (Element) roomElement.getElementsByTagName("name").item(0);
 		String roomName = roomNameElement.getTextContent();

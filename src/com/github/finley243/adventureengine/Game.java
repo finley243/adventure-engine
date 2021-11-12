@@ -30,13 +30,7 @@ public class Game {
 	public static final EventBus EVENT_BUS = new EventBus();
 	
 	private static final String GAMEFILES = "src/gamefiles";
-	private static final String WORLD_DIRECTORY = "/world";
-	private static final String ACTOR_DIRECTORY = "/actors";
-	private static final String FACTION_DIRECTORY = "/factions";
-	private static final String ITEM_DIRECTORY = "/items";
-	private static final String DIALOGUE_DIRECTORY = "/dialogues";
-	private static final String LOOT_TABLE_DIRECTORY = "/loottables";
-	private static final String SCENES_DIRECTORY = "/scenes";
+	private static final String DATA_DIRECTORY = "/data";
 	private static final String PHRASE_FILE = "/phrases.txt";
 	private static final String CONFIG_FILE = "/config.xml";
 	
@@ -57,13 +51,7 @@ public class Game {
 
 		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
 		ConfigLoader.loadConfig(new File(GAMEFILES + CONFIG_FILE));
-		ItemLoader.loadItems(new File(GAMEFILES + ITEM_DIRECTORY));
-		LootTableLoader.loadTables(new File(GAMEFILES + LOOT_TABLE_DIRECTORY));
-		FactionLoader.loadFactions(new File(GAMEFILES + FACTION_DIRECTORY));
-		DialogueLoader.loadDialogue(new File(GAMEFILES + DIALOGUE_DIRECTORY));
-		ActorLoader.loadActors(new File(GAMEFILES + ACTOR_DIRECTORY));
-		WorldLoader.loadWorld(new File(GAMEFILES + WORLD_DIRECTORY));
-		SceneLoader.loadScenes(new File(GAMEFILES + SCENES_DIRECTORY));
+		DataLoader.loadFromDir(new File(GAMEFILES + DATA_DIRECTORY));
 		
 		Actor player = ActorFactory.createPlayer(Data.getConfig("playerID"), Data.getArea(Data.getConfig("playerStartArea")), Data.getActorStats(Data.getConfig("playerStats")));
 		Data.addActor(player.getID(), player);

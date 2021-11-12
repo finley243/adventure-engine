@@ -35,28 +35,8 @@ import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic.TopicType;
 
 public class DialogueLoader {
-
-	public static void loadDialogue(File dir) throws ParserConfigurationException, SAXException, IOException {
-		if(dir.isDirectory()) {
-			File[] files = dir.listFiles();
-			for(File file : files) {
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.parse(file);
-				Element rootElement = document.getDocumentElement();
-				NodeList topics = rootElement.getElementsByTagName("topic");
-				for(int i = 0; i < topics.getLength(); i++) {
-					if(topics.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						Element topicElement = (Element) topics.item(i);
-						DialogueTopic topic = loadTopic(topicElement);
-						Data.addTopic(topic.getID(), topic);
-					}
-				}
-			}
-		}
-	}
 	
-	private static DialogueTopic loadTopic(Element topicElement) throws ParserConfigurationException, SAXException, IOException {
+	public static DialogueTopic loadTopic(Element topicElement) throws ParserConfigurationException, SAXException, IOException {
 		String topicID = topicElement.getAttribute("id");
 		TopicType type;
 		switch(topicElement.getAttribute("type")) {

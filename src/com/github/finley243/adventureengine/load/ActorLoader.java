@@ -20,28 +20,8 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class ActorLoader {
-
-	public static void loadActors(File dir) throws ParserConfigurationException, SAXException, IOException {
-		if(dir.isDirectory()) {
-			File[] files = dir.listFiles();
-			for(File file : files) {
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.parse(file);
-				Element rootElement = document.getDocumentElement();
-				NodeList actors = rootElement.getElementsByTagName("actor");
-				for(int i = 0; i < actors.getLength(); i++) {
-					if(actors.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						Element actorElement = (Element) actors.item(i);
-						StatsActor actor = loadActor(actorElement);
-						Data.addActorStats(actor.getID(), actor);
-					}
-				}
-			}
-		}
-	}
 	
-	private static StatsActor loadActor(Element actorElement) {
+	public static StatsActor loadActor(Element actorElement) {
 		String id = actorElement.getAttribute("id");
 		Element nameElement = (Element) actorElement.getElementsByTagName("name").item(0);
 		String name = nameElement.getTextContent();

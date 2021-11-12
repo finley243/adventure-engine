@@ -29,28 +29,8 @@ import com.github.finley243.adventureengine.world.template.StatsWeapon;
 import com.github.finley243.adventureengine.world.template.StatsWeapon.WeaponType;
 
 public class ItemLoader {
-
-	public static void loadItems(File dir) throws ParserConfigurationException, SAXException, IOException {
-		if(dir.isDirectory()) {
-			File[] files = dir.listFiles();
-			for(File file : files) {
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.parse(file);
-				Element rootElement = document.getDocumentElement();
-				NodeList items = rootElement.getElementsByTagName("item");
-				for(int i = 0; i < items.getLength(); i++) {
-					if(items.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						Element itemElement = (Element) items.item(i);
-						StatsItem item = loadItem(itemElement);
-						Data.addItem(item.getID(), item);
-					}
-				}
-			}
-		}
-	}
 	
-	private static StatsItem loadItem(Element itemElement) {
+	public static StatsItem loadItem(Element itemElement) {
 		String type = itemElement.getAttribute("type");
 		String id = itemElement.getAttribute("id");
 		String name = LoadUtils.singleTag(itemElement, "name", null);

@@ -18,51 +18,60 @@ public class LoadUtils {
 		return element.getAttribute(name).equalsIgnoreCase("true");
 	}
 	
-	public static String singleTag(Element element, String name, String defaultValue) {
-		if(element.getElementsByTagName(name).getLength() == 0) return defaultValue;
-		return element.getElementsByTagName(name).item(0).getTextContent();
+	public static String singleTag(Element parent, String name, String defaultValue) {
+		List<Element> elements = directChildrenWithName(parent, name);
+		if(elements.isEmpty()) return defaultValue;
+		return elements.get(0).getTextContent();
 	}
 	
-	public static int singleTagInt(Element element, String name, int defaultValue) {
-		String stringValue = LoadUtils.singleTag(element, name, null);
+	public static int singleTagInt(Element parent, String name, int defaultValue) {
+		String stringValue = LoadUtils.singleTag(parent, name, null);
 		if(stringValue == null) return defaultValue;
 		return Integer.parseInt(stringValue);
 	}
 	
-	public static float singleTagFloat(Element element, String name, float defaultValue) {
-		String stringValue = LoadUtils.singleTag(element, name, null);
+	public static float singleTagFloat(Element parent, String name, float defaultValue) {
+		String stringValue = LoadUtils.singleTag(parent, name, null);
 		if(stringValue == null) return defaultValue;
 		return Float.parseFloat(stringValue);
 	}
 	
-	public static boolean singleTagBoolean(Element element, String name, boolean defaultValue) {
-		String stringValue = LoadUtils.singleTag(element, name, null);
+	public static boolean singleTagBoolean(Element parent, String name, boolean defaultValue) {
+		String stringValue = LoadUtils.singleTag(parent, name, null);
 		if(stringValue == null) return defaultValue;
 		return stringValue.equalsIgnoreCase("true");
 	}
 	
-	public static Set<String> setOfTags(Element element, String name) {
-		if(element == null) return new HashSet<>();
-		NodeList nodes = element.getElementsByTagName(name);
+	public static Set<String> setOfTags(Element parent, String name) {
+		if(parent == null) return new HashSet<>();
+		List<Element> elements = directChildrenWithName(parent, name);
 		Set<String> output = new HashSet<>();
-		for(int i = 0; i < nodes.getLength(); i++) {
-			if(nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				output.add(nodes.item(i).getTextContent());
-			}
+		for (Element element : elements) {
+			output.add(element.getTextContent());
 		}
 		return output;
 	}
 	
-	public static List<String> listOfTags(Element element, String name) {
-		if(element == null) return new ArrayList<>();
-		NodeList nodes = element.getElementsByTagName(name);
+	public static List<String> listOfTags(Element parent, String name) {
+		if(parent == null) return new ArrayList<>();
+		List<Element> elements = directChildrenWithName(parent, name);
 		List<String> output = new ArrayList<>();
-		for(int i = 0; i < nodes.getLength(); i++) {
-			if(nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-				output.add(nodes.item(i).getTextContent());
-			}
+		for (Element element : elements) {
+			output.add(element.getTextContent());
 		}
 		return output;
+	}
+
+	public static List<Element> directChildrenWithName(Element parent, String name) {
+		List<Element> matches = new ArrayList<>();
+		Node currentChild = parent.getFirstChild();
+		while(currentChild.getNextSibling() != null) {
+			if(currentChild.getNodeType() == Node.ELEMENT_NODE && ((Element) currentChild).getNodeName().equals(name)) {
+				matches.add((Element) currentChild);
+			}
+			currentChild = currentChild.getNextSibling();
+		}
+		return matches;
 	}
 	
 	public static Equality equalityTag(Element element, String name) {

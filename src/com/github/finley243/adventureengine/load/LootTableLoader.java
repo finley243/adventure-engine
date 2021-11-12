@@ -20,28 +20,8 @@ import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.item.LootTableEntry;
 
 public class LootTableLoader {
-
-	public static void loadTables(File dir) throws ParserConfigurationException, SAXException, IOException {
-		if(dir.isDirectory()) {
-			File[] files = dir.listFiles();
-			for(File file : files) {
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.parse(file);
-				Element rootElement = document.getDocumentElement();
-				NodeList tables = rootElement.getElementsByTagName("lootTable");
-				for(int i = 0; i < tables.getLength(); i++) {
-					if(tables.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						Element tableElement = (Element) tables.item(i);
-						LootTable table = loadTable(tableElement);
-						Data.addLootTable(table.getID(), table);
-					}
-				}
-			}
-		}
-	}
 	
-	private static LootTable loadTable(Element tableElement) {
+	public static LootTable loadTable(Element tableElement) {
 		String tableID = tableElement.getAttribute("id");
 		boolean useAll = LoadUtils.boolAttribute(tableElement, "useAll", false);
 		NodeList entryElements = tableElement.getElementsByTagName("entry");

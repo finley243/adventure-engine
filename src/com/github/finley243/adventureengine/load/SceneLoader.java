@@ -22,28 +22,8 @@ import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.Script;
 
 public class SceneLoader {
-
-	public static void loadScenes(File dir) throws ParserConfigurationException, SAXException, IOException {
-		if(dir.isDirectory()) {
-			File[] files = dir.listFiles();
-			for(File file : files) {
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.parse(file);
-				Element rootElement = document.getDocumentElement();
-				NodeList scenes = rootElement.getElementsByTagName("scene");
-				for(int i = 0; i < scenes.getLength(); i++) {
-					if(scenes.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						Element sceneElement = (Element) scenes.item(i);
-						Scene scene = loadScene(sceneElement);
-						Data.addScene(scene.getID(), scene);
-					}
-				}
-			}
-		}
-	}
 	
-	private static Scene loadScene(Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
+	public static Scene loadScene(Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
 		boolean isRepeatable = LoadUtils.boolAttribute(sceneElement, "isRepeatable", true);
 		boolean playImmediately = LoadUtils.boolAttribute(sceneElement, "playImmediately", false);
 		String sceneID = sceneElement.getAttribute("id");

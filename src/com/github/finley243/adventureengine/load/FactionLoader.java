@@ -20,28 +20,8 @@ import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 
 public class FactionLoader {
-
-	public static void loadFactions(File dir) throws ParserConfigurationException, SAXException, IOException {
-		if(dir.isDirectory()) {
-			File[] files = dir.listFiles();
-			for(File file : files) {
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document document = builder.parse(file);
-				Element rootElement = document.getDocumentElement();
-				NodeList factions = rootElement.getElementsByTagName("faction");
-				for(int i = 0; i < factions.getLength(); i++) {
-					if(factions.item(i).getNodeType() == Node.ELEMENT_NODE) {
-						Element factionElement = (Element) factions.item(i);
-						Faction faction = loadFaction(factionElement);
-						Data.addFaction(faction.getID(), faction);
-					}
-				}
-			}
-		}
-	}
 	
-	private static Faction loadFaction(Element factionElement) {
+	public static Faction loadFaction(Element factionElement) {
 		String id = factionElement.getAttribute("id");
 		FactionRelation defaultRelation = factionRelationTag(factionElement, "default");
 		Map<String, FactionRelation> relations = loadRelations(factionElement);
