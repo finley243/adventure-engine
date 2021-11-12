@@ -15,16 +15,26 @@ public class CombatHelper {
 
 	public static final float BLOCK_CHANCE = 0.3f;
 	public static final float DODGE_CHANCE = 0.4f;
-	
+
+	public static Context lastAttack;
+
+	public static void newTurn() {
+		lastAttack = null;
+	}
+
 	public static void handleAttack(Actor subject, Actor target, ItemWeapon weapon) {
+		boolean isRepeat = lastAttack != null && lastAttack.getSubject() == subject && lastAttack.getObject() == target && lastAttack.getObject2() == weapon;
 		target.addCombatTarget(subject);
 		Context attackContext = new Context(subject, false, target, false, weapon, false);
-		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance(subject)) {
+		if(!isRepeat) {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedTelegraph" : "meleeTelegraph"), attackContext));
+		}
+		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance(subject)) {
 			handleReaction(subject, target, weapon);
 		} else {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedMiss" : "meleeMiss"), attackContext));
 		}
+		lastAttack = attackContext;
 	}
 	
 	private static void handleReaction(Actor subject, Actor target, ItemWeapon weapon) {
@@ -33,8 +43,10 @@ public class CombatHelper {
 			damage += weapon.getCritDamage();
 		}
 		List<Action> reactions = weapon.reactionActions(target);
+		Context attackContext = new Context(subject, false, target, false, weapon, false);
 		Context reactionContext = new Context(target, false, subject, false, weapon, false);
 		if(reactions.isEmpty()) {
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedHit" : "meleeHit"), attackContext));
 			target.damage(damage);
 		} else {
 			ActionReaction reaction = (ActionReaction) target.chooseAction(weapon.reactionActions(target));
@@ -44,6 +56,7 @@ public class CombatHelper {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("blockSuccess"), reactionContext));
 				} else {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("blockFail"), reactionContext));
+					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedHit" : "meleeHit"), attackContext));
 					target.damage(damage);
 				}
 				break;
@@ -52,6 +65,7 @@ public class CombatHelper {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("dodgeSuccess"), reactionContext));
 				} else {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("dodgeFail"), reactionContext));
+					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedHit" : "meleeHit"), attackContext));
 					target.damage(damage);
 				}
 				break;

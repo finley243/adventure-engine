@@ -7,6 +7,7 @@ eat:<subject> eat<s> <object>
 equip:<subject> equip<s> <object>
 exitElevator:<subject> exit<s> <object>
 idle:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
+meleeHit:<object2> hits <object> in the {arm|leg|shoulder|chest}
 meleeMiss:<subject> tr<ies> to hit <object> with <object2>, but miss<es>
 meleeTelegraph:<subject> swing<s> <object2> at <object>
 moveThroughTo:<subject> go<es> through <object> to <object2>
@@ -14,7 +15,8 @@ moveTo:<subject> move<s> to <object>
 moveToward:<subject> move<s> to <object>
 patrolTelegraph:<subject> prepare<s> to move to <object>
 pickUp:<subject> grab<s> <object>
-rangedMiss:<subject> fire<s> <object2> at <object>, but miss<es>
+rangedHit:a bullet hits <object's> {arm|leg|shoulder|chest}
+rangedMiss:a bullet {whips past <object's> {arm|leg|hand}|flies over <object's> {head|shoulder}}
 rangedTelegraph:<subject> fire<s> <object2> at <object>
 reactionBlock:<subject> block<s> {<object2>|<object's> attack}
 reactionDodge:<subject> {jump<s> back, avoiding|dodge<s>} <object's> attack

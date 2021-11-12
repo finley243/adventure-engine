@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
+import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.RenderLocationEvent;
 import com.github.finley243.adventureengine.event.RenderTextEvent;
@@ -74,6 +75,7 @@ public class Game {
 		SceneManager.trigger(Data.getPlayer().getArea().getRoom().getScenes());
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
+				CombatHelper.newTurn();
 				actor.takeTurn();
 			}
 		}
