@@ -15,8 +15,8 @@ moveTo:<subject> move<s> to <object>
 moveToward:<subject> move<s> to <object>
 patrolTelegraph:<subject> prepare<s> to move to <object>
 pickUp:<subject> grab<s> <object>
-rangedHit:a bullet hits <object's> {arm|leg|shoulder|chest}
-rangedMiss:a bullet {whips past <object's> {arm|leg|hand}|flies over <object's> {head|shoulder}}
+rangedHit:a bullet hits <object's> {{left|right} {arm|leg|shoulder}|chest}
+rangedMiss:a bullet {whips past <object's> {left|right} {arm|leg|hand}|flies over <object's> {head|{left|right} shoulder}}
 rangedTelegraph:<subject> fire<s> <object2> at <object>
 reactionBlock:<subject> block<s> {<object2>|<object's> attack}
 reactionDodge:<subject> {jump<s> back, avoiding|dodge<s>} <object's> attack

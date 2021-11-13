@@ -542,6 +542,10 @@ public class Actor implements Noun, Physical {
 							addCombatTarget(allyTarget.getTargetActor());
 						}
 					}
+				} else if(getArea().getRoom().getOwnerFaction() != null && Data.getFaction(getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != FactionRelation.FRIEND) {
+					if(!isCombatTarget(actor)) {
+						addCombatTarget(actor);
+					}
 				}
 			}
 		}

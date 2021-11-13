@@ -19,15 +19,17 @@ public class ActionListenExit implements Action {
 	public void choose(Actor subject) {
 		String text = "";
 		int actorCount = 0;
-		for(Actor actor : exit.getLinkedArea().getRoom().getActors()) {
-			if(actor.isActive()) {
+		for (Actor actor : exit.getLinkedArea().getRoom().getActors()) {
+			if (actor.isActive()) {
 				actorCount++;
 			}
 		}
-		if(actorCount == 0) {
+		if (actorCount == 0) {
 			text += "You don't hear anyone";
-		} else if(actorCount > 5) {
+		} else if (actorCount > 5) {
 			text += "You hear more than 5 people";
+		} else if(actorCount == 1) {
+			text += "You hear 1 person";
 		} else {
 			text += "You hear " + actorCount + " people";
 		}

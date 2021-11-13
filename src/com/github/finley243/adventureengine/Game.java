@@ -63,11 +63,14 @@ public class Game {
 		continueGameLoop = true;
 		while(continueGameLoop) {
 			nextRound();
+			sleep(800);
 		}
 	}
 	
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
+		EVENT_BUS.post(new TextClearEvent());
+		TextGen.clearContext();
 		SceneManager.trigger(Data.getPlayer().getArea().getRoom().getScenes());
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
@@ -77,9 +80,6 @@ public class Game {
 		}
 		CombatHelper.newTurn();
 		Data.getPlayer().takeTurn();
-		sleep(800);
-		EVENT_BUS.post(new TextClearEvent());
-		TextGen.clearContext();
 	}
 	
 	private void sleep(int millis) {

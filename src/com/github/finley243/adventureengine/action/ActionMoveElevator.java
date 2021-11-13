@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.CombatTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
@@ -10,6 +11,9 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class ActionMoveElevator implements Action {
 
@@ -36,6 +40,22 @@ public class ActionMoveElevator implements Action {
 		}
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context));
 		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context));
+		Set<Area> visibleFromAreas = subject.getArea().getRoom().getAreas();
+		Set<Actor> visibleActors = new HashSet<>();
+		for(Area visibleFromArea : visibleFromAreas) {
+			visibleActors.addAll(visibleFromArea.getActors());
+		}
+		Set<CombatTarget> combatTargets = new HashSet<>();
+		for(Actor actor : visibleActors) {
+			if(actor.canSee(subject)) {
+				combatTargets.addAll(actor.getCombatTargets());
+			}
+		}
+		for(CombatTarget target : combatTargets) {
+			if(target.getTargetActor() == subject) {
+				target.setUsedElevator(elevator);
+			}
+		}
 		subject.move(destination.getArea());
 	}
 
