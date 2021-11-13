@@ -43,7 +43,7 @@
                     <name>lounge chair</name>
                 </object>
                 <object type="cover">
-                    <name>pillar</name>
+                    <name>table</name>
                 </object>
                 <object type="exit" id="stratis_hotel_lobby_security_door">
                     <name>door</name>
@@ -135,6 +135,9 @@
                     <link>stratis_hotel_room_door</link>
                     <key>stratis_room_key</key>
                     <key>stratis_master_key</key>
+                </object>
+                <object type="cover">
+                    <name>corner</name>
                 </object>
             </objects>
             <actors></actors>

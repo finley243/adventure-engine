@@ -24,10 +24,6 @@
             <text>The guard smirks. "Don't tempt fate."</text>
             <text>The receptionist shrugs. "Looks to me like it's fate's day off."</text>
             <text>As he turns back to the computer, he notices you and clears his throat.</text>
-            <script type="dialogue" target="reference">
-                <actor>stratis_receptionist</actor>
-                <topic>stratis_receptionist_start</topic>
-            </script>
         </line>
     </scene>
 </scenes>

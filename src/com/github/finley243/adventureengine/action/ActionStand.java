@@ -7,6 +7,8 @@ import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataUsing;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.world.object.ObjectChair;
+import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 
 public class ActionStand implements Action {
@@ -27,7 +29,11 @@ public class ActionStand implements Action {
 
 	@Override
 	public String getPrompt() {
-		return "Stand up";
+		if(object instanceof ObjectCover) {
+			return "Leave cover";
+		} else {
+			return "Stand up";
+		}
 	}
 
 	@Override
@@ -58,7 +64,11 @@ public class ActionStand implements Action {
 	
 	@Override
 	public MenuData getMenuData() {
-		return new MenuDataUsing("Stand", object);
+		if(object instanceof ObjectCover) {
+			return new MenuDataUsing("Leave cover", object);
+		} else {
+			return new MenuDataUsing("Stand", object);
+		}
 	}
 
 	@Override
