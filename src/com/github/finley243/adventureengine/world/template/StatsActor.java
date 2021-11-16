@@ -16,22 +16,17 @@ public class StatsActor {
 	
 	private final String faction;
 	
-	private final List<String> idle;
-	private final boolean preventMovement;
-	
 	private final int maxHP;
 	
 	private final String lootTable;
 	private final String topic;
 	
-	public StatsActor(String ID, String name, boolean isProperName, Pronoun pronoun, String faction, List<String> idle, boolean preventMovement, int maxHP, String lootTable, String topic) {
+	public StatsActor(String ID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, String lootTable, String topic) {
 		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
 		this.pronoun = pronoun;
 		this.faction = faction;
-		this.idle = idle;
-		this.preventMovement = preventMovement;
 		this.maxHP = maxHP;
 		this.lootTable = lootTable;
 		this.topic = topic;
@@ -55,14 +50,6 @@ public class StatsActor {
 	
 	public String getFaction() {
 		return faction;
-	}
-	
-	public List<String> getIdle() {
-		return idle;
-	}
-	
-	public boolean preventMovement() {
-		return preventMovement;
 	}
 	
 	public int getMaxHP() {

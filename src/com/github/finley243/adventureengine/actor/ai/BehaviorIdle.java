@@ -30,7 +30,7 @@ public class BehaviorIdle {
 	}
 	
 	public void update(Actor subject) {
-		if(steps.isEmpty()) {
+		if(steps == null || steps.isEmpty()) {
 			return;
 		}
 		if(currentTarget == null) {

@@ -83,14 +83,18 @@ public class Actor implements Noun, Physical {
 	private final Set<CombatTarget> combatTargets;
 	private final Set<PursueTarget> pursueTargets;
 	private final BehaviorIdle behaviorIdle;
+	private final List<String> idle;
+	private final boolean preventMovement;
 	
-	public Actor(String ID, Area area, StatsActor stats, String descriptor, boolean startDead) {
+	public Actor(String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead) {
 		this.ID = ID;
 		if(area != null) {
 			this.move(area);
 		}
 		this.stats = stats;
 		this.descriptor = descriptor;
+		this.idle = idle;
+		this.preventMovement = preventMovement;
 		this.combatTargets = new HashSet<>();
 		this.pursueTargets = new HashSet<>();
 		this.isDead = startDead;
@@ -108,7 +112,7 @@ public class Actor implements Noun, Physical {
 			inventory.addItems(Data.getLootTable(stats.getLootTable()).generateItems());
 		}
 		this.blockedActions = new ArrayList<>();
-		this.behaviorIdle = new BehaviorIdle(stats.getIdle());
+		this.behaviorIdle = new BehaviorIdle(idle);
 		this.isEnabled = true;
 	}
 	
@@ -211,7 +215,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public boolean canMove() {
-		return !isUsingObject() && !stats.preventMovement();
+		return !isUsingObject() && !preventMovement;
 	}
 	
 	public Inventory inventory() {

@@ -28,6 +28,9 @@
             <actors>
                 <actor id="stratis_receptionist">
                     <stats>stratis_receptionist</stats>
+                    <idle>
+                        <area>stratis_hotel_lobby_desk</area>
+                    </idle>
                 </actor>
             </actors>
         </area>
@@ -53,8 +56,11 @@
             </objects>
             <actors>
                 <actor id="stratis_guard_lobby">
-                    <stats>stratis_guard_lobby</stats>
+                    <stats>stratis_guard</stats>
                     <descriptor>lobby</descriptor>
+                    <idle>
+                        <area>stratis_hotel_lobby_seating</area>
+                    </idle>
                 </actor>
             </actors>
         </area>
@@ -178,8 +184,11 @@
             </objects>
             <actors>
                 <actor id="stratis_guard_office">
-                    <stats>stratis_guard_office</stats>
+                    <stats>stratis_guard</stats>
                     <descriptor>office</descriptor>
+                    <idle>
+                        <area>stratis_hotel_security_main</area>
+                    </idle>
                 </actor>
             </actors>
         </area>

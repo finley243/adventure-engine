@@ -19,7 +19,7 @@ public class ActorPlayer extends Actor {
 	private final MenuManager menuManager;
 	
 	public ActorPlayer(String ID, Area area, StatsActor stats) {
-		super(ID, area, stats, null, false);
+		super(ID, area, stats, null, null, false, false);
 		this.menuManager = new MenuManager();
 		Game.EVENT_BUS.register(menuManager);
 	}

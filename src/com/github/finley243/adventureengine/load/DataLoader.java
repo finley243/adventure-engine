@@ -89,18 +89,10 @@ public class DataLoader {
         boolean nameIsProper = LoadUtils.boolAttribute(nameElement, "proper", false);
         Context.Pronoun pronoun = pronounTag(actorElement, "pronoun");
         String faction = LoadUtils.singleTag(actorElement, "faction", "default");
-        List<String> idle;
-        Element idleElement = LoadUtils.singleChildWithName(actorElement, "idle");
-        if(idleElement != null) {
-            idle = LoadUtils.listOfTags(idleElement, "area");
-        } else {
-            idle = new ArrayList<>();
-        }
-        boolean preventMovement = LoadUtils.singleTagBoolean(actorElement, "preventMovement", false);
         int hp = LoadUtils.singleTagInt(actorElement, "hp", 0);
         String lootTable = LoadUtils.singleTag(actorElement, "loottable", null);
         String topic = LoadUtils.singleTag(actorElement, "topic", null);
-        return new StatsActor(id, name, nameIsProper, pronoun, faction, idle, preventMovement, hp, lootTable, topic);
+        return new StatsActor(id, name, nameIsProper, pronoun, faction, hp, lootTable, topic);
     }
 
     private static Context.Pronoun pronounTag(Element element, String name) {
@@ -523,7 +515,15 @@ public class DataLoader {
         String ID = actorElement.getAttribute("id");
         String stats = LoadUtils.singleTag(actorElement, "stats", null);
         String descriptor = LoadUtils.singleTag(actorElement, "descriptor", null);
-        return ActorFactory.create(ID, area, Data.getActorStats(stats), descriptor);
+        List<String> idle;
+        Element idleElement = LoadUtils.singleChildWithName(actorElement, "idle");
+        if(idleElement != null) {
+            idle = LoadUtils.listOfTags(idleElement, "area");
+        } else {
+            idle = new ArrayList<>();
+        }
+        boolean preventMovement = LoadUtils.singleTagBoolean(actorElement, "preventMovement", false);
+        return ActorFactory.create(ID, area, Data.getActorStats(stats), descriptor, idle, preventMovement);
     }
 
 }
