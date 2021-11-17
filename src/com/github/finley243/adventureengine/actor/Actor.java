@@ -14,6 +14,7 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
 import com.github.finley243.adventureengine.actor.ai.CombatTarget;
+import com.github.finley243.adventureengine.actor.ai.InvestigateTarget;
 import com.github.finley243.adventureengine.actor.ai.PursueTarget;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
@@ -82,6 +83,7 @@ public class Actor implements Noun, Physical {
 	private Inventory tradeInventory;
 	private final Set<CombatTarget> combatTargets;
 	private final Set<PursueTarget> pursueTargets;
+	private final InvestigateTarget investigateTarget;
 	private final BehaviorIdle behaviorIdle;
 	private final List<String> idle;
 	private final boolean preventMovement;
@@ -97,6 +99,7 @@ public class Actor implements Noun, Physical {
 		this.preventMovement = preventMovement;
 		this.combatTargets = new HashSet<>();
 		this.pursueTargets = new HashSet<>();
+		this.investigateTarget = new InvestigateTarget();
 		this.isDead = startDead;
 		this.isUnconscious = startDead;
 		if(!startDead) {
@@ -296,7 +299,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void onSoundEvent(SoundEvent event) {
-		
+		investigateTarget.setTargetArea(event.getOrigin());
 	}
 	
 	public void startUsingObject(UsableObject object) {
@@ -464,6 +467,7 @@ public class Actor implements Noun, Physical {
 			generatePursueTargets();
 			updatePursueTargets();
 			updateCombatTargets();
+			investigateTarget.update(this);
 			Action chosenAction;
 			if(repeatActionPoints > 0) {
 				List<Action> repeatActions = new ArrayList<>();

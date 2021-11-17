@@ -12,7 +12,9 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ActionMoveElevator implements Action {
@@ -45,9 +47,9 @@ public class ActionMoveElevator implements Action {
 		for(Area visibleFromArea : visibleFromAreas) {
 			visibleActors.addAll(visibleFromArea.getActors());
 		}
-		Set<CombatTarget> combatTargets = new HashSet<>();
+		List<CombatTarget> combatTargets = new ArrayList<>();
 		for(Actor actor : visibleActors) {
-			if(actor.canSee(subject)) {
+			if(actor != subject && actor.canSee(subject)) {
 				combatTargets.addAll(actor.getCombatTargets());
 			}
 		}

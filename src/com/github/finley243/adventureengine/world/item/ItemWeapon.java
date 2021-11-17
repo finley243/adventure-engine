@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionAttack;
 import com.github.finley243.adventureengine.action.ActionEquip;
@@ -14,6 +15,7 @@ import com.github.finley243.adventureengine.action.ActionReaction.ReactionType;
 import com.github.finley243.adventureengine.action.ActionReload;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
+import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
 public class ItemWeapon extends ItemEquippable {
@@ -79,6 +81,7 @@ public class ItemWeapon extends ItemEquippable {
 	public void attack(Actor subject, Actor target) {
 		if(isRanged()) {
 			consumeAmmo(1);
+			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
 		}
 		CombatHelper.handleAttack(subject, target, this);
 	}

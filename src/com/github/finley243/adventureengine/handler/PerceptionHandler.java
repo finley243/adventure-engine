@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.google.common.eventbus.Subscribe;
 
 public class PerceptionHandler {
@@ -14,20 +15,30 @@ public class PerceptionHandler {
 	public PerceptionHandler() {}
 	
 	@Subscribe
-	public void onVisualEvent(VisualEvent event) {
-		Set<Area> visibleFromAreas = event.getOrigin().getRoom().getAreas();
+	public void onVisualEvent(VisualEvent e) {
+		Set<Area> visibleFromAreas = e.getOrigin().getRoom().getAreas();
 		Set<Actor> visibleActors = new HashSet<>();
 		for(Area area : visibleFromAreas) {
 			visibleActors.addAll(area.getActors());
 		}
 		for(Actor actor : visibleActors) {
-			actor.onVisualEvent(event);
+			actor.onVisualEvent(e);
 		}
 	}
 	
 	@Subscribe
-	public void onSoundEvent(SoundEvent event) {
-		
+	public void onSoundEvent(SoundEvent e) {
+		Set<Actor> audibleActors = e.getOrigin().getRoom().getActors();
+		if(e.isLoud()) {
+			for(Object areaObject : e.getOrigin().getRoom().getObjects()) {
+				if(areaObject instanceof ObjectExit) {
+					audibleActors.addAll(((ObjectExit) areaObject).getLinkedArea().getRoom().getActors());
+				}
+			}
+		}
+		for(Actor actor : audibleActors) {
+			actor.onSoundEvent(e);
+		}
 	}
 	
 }

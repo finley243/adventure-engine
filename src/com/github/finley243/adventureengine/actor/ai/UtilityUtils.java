@@ -10,6 +10,7 @@ public class UtilityUtils {
 	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.6f;
 	public static final float PURSUE_TARGET_UTILITY_NOWEAPON = 0.0f;
 	public static final float FLEE_TARGET_UTILITY = 0.5f;
+	public static final float INVESTIGATE_NOISE_UTILITY = 0.5f;
 	
 	public static float getMovementUtility(Actor subject, Area area) {
 		if(subject.getPursueTargets().isEmpty()) {
