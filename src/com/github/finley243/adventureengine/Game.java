@@ -14,6 +14,8 @@ import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
+import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.ItemDistraction;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -55,6 +57,9 @@ public class Game {
 		Actor player = ActorFactory.createPlayer(Data.getConfig("playerID"), Data.getArea(Data.getConfig("playerStartArea")), Data.getActorStats(Data.getConfig("playerStats")));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
+
+		Item coin = new ItemDistraction("coin");
+		Data.getPlayer().inventory().addItem(coin);
 
 		startGameLoop();
 	}
