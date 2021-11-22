@@ -39,14 +39,17 @@ public class CombatHelper {
 	
 	private static void handleReaction(Actor subject, Actor target, ItemWeapon weapon) {
 		int damage = weapon.getDamage();
+		boolean crit = false;
 		if(ThreadLocalRandom.current().nextFloat() < ItemWeapon.CRIT_CHANCE) {
 			damage += weapon.getCritDamage();
+			crit = true;
 		}
 		List<Action> reactions = weapon.reactionActions(target);
 		Context attackContext = new Context(subject, false, target, false, weapon, false);
 		Context reactionContext = new Context(target, false, subject, false, weapon, false);
+		String hitPhrase = weapon.isRanged() ? (crit ? "rangedHitCrit" : "rangedHit") : (crit ? "meleeHitCrit" : "meleeHit");
 		if(reactions.isEmpty()) {
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedHit" : "meleeHit"), attackContext, null, null));
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
 			target.damage(damage);
 		} else {
 			ActionReaction reaction = (ActionReaction) target.chooseAction(weapon.reactionActions(target));
@@ -56,7 +59,7 @@ public class CombatHelper {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("blockSuccess"), reactionContext, null, null));
 				} else {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("blockFail"), reactionContext, null, null));
-					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedHit" : "meleeHit"), attackContext, null, null));
+					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
 					target.damage(damage);
 				}
 				break;
@@ -65,7 +68,7 @@ public class CombatHelper {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("dodgeSuccess"), reactionContext, null, null));
 				} else {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("dodgeFail"), reactionContext, null, null));
-					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedHit" : "meleeHit"), attackContext, null, null));
+					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
 					target.damage(damage);
 				}
 				break;

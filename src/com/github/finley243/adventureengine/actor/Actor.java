@@ -36,7 +36,8 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class Actor implements Noun, Physical {
-	
+
+	public static final boolean SHOW_DAMAGE_NUMBERS = false;
 	public static final int ACTIONS_PER_TURN = 1;
 	
 	public enum Attribute {
@@ -256,8 +257,10 @@ public class Actor implements Noun, Physical {
 		if(amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, stats.getMaxHP() - HP);
 		HP += amount;
-		Context context = new Context(this, false);
-		Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context, null, null));
+		if(SHOW_DAMAGE_NUMBERS) {
+			Context context = new Context(this, false);
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context, null, null));
+		}
 	}
 	
 	public void damage(int amount) {
@@ -266,7 +269,7 @@ public class Actor implements Noun, Physical {
 		if(HP <= 0) {
 			HP = 0;
 			kill();
-		} else {
+		} else if(SHOW_DAMAGE_NUMBERS) {
 			Context context = new Context(this, false);
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
 		}
