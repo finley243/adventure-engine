@@ -13,6 +13,10 @@ public class ItemDistraction extends Item {
         super(name);
     }
 
+    public String getID() {
+        return "TEMP";
+    }
+
     @Override
     public String getDescription() {
         return null;

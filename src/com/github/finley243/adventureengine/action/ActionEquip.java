@@ -25,7 +25,7 @@ public class ActionEquip implements Action {
 		subject.setEquippedItem(item);
 		subject.inventory().removeItem(item);
 		Context context = new Context(subject, false, item, true);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("equip"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("equip"), context, this, subject));
 	}
 
 	@Override

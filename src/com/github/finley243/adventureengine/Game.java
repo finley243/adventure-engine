@@ -49,7 +49,7 @@ public class Game {
 		DataLoader.loadFromDir(new File(GAMEFILES + DATA_DIRECTORY));
 
 		perceptionHandler = new PerceptionHandler();
-		userInterface = new GraphicalInterfaceNested();
+		userInterface = new ConsoleInterface();
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
 		EVENT_BUS.register(this);

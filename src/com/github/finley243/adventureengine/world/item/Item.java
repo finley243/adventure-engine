@@ -22,9 +22,7 @@ public abstract class Item extends WorldObject {
 		return 0;
 	}
 	
-	public String getID() {
-		return null;
-	}
+	public abstract String getID();
 	
 	@Override
 	public abstract String getDescription();

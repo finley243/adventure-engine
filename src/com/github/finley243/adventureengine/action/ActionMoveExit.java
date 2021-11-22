@@ -28,30 +28,18 @@ public class ActionMoveExit implements Action {
 	public Area getArea() {
 		return exit.getLinkedArea();
 	}
+
+	public ObjectExit getExit() {
+		return exit;
+	}
 	
 	@Override
 	public void choose(Actor subject) {
 		Area area = exit.getLinkedArea();
 		Context context = new Context(subject, false, exit, false, area.getRoom(), false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("moveThroughTo"), context));
-		Game.EVENT_BUS.post(new VisualEvent(area, Phrases.get("moveThroughTo"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("moveThroughTo"), context, this, subject));
+		Game.EVENT_BUS.post(new VisualEvent(area, Phrases.get("moveThroughTo"), context, this, subject));
 		exit.unlock();
-		Set<Area> visibleFromAreas = subject.getArea().getRoom().getAreas();
-		Set<Actor> visibleActors = new HashSet<>();
-		for(Area visibleFromArea : visibleFromAreas) {
-			visibleActors.addAll(visibleFromArea.getActors());
-		}
-		List<CombatTarget> combatTargets = new ArrayList<>();
-		for(Actor actor : visibleActors) {
-			if(actor != subject && actor.canSee(subject)) {
-				combatTargets.addAll(actor.getCombatTargets());
-			}
-		}
-		for(CombatTarget target : combatTargets) {
-			if(target.getTargetActor() == subject) {
-				target.setUsedExit(exit);
-			}
-		}
 		subject.move(area);
 	}
 

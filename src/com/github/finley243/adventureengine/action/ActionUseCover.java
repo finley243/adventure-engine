@@ -22,7 +22,7 @@ public class ActionUseCover implements Action {
 		cover.setUser(subject);
 		subject.startUsingObject(cover);
 		Context context = new Context(subject, false, cover, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeCover"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeCover"), context, this, subject));
 	}
 
 	@Override

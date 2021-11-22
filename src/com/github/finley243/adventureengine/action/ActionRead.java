@@ -32,7 +32,7 @@ public class ActionRead implements Action {
 	@Override
 	public void choose(Actor subject) {
 		Context context = new Context(subject, false, object, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("read"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("read"), context, this, subject));
 		if(subject instanceof ActorPlayer) {
 			List<String> text = ((Readable) object).getText();
 			Game.EVENT_BUS.post(new RenderTextEvent("-----------"));

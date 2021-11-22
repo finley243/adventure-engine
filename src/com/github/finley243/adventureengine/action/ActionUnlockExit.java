@@ -21,7 +21,7 @@ public class ActionUnlockExit implements Action {
 	public void choose(Actor subject) {
 		exit.unlock();
 		Context context = new Context(subject, false, exit, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unlock"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unlock"), context, this, subject));
 	}
 
 	@Override

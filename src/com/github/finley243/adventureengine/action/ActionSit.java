@@ -22,7 +22,7 @@ public class ActionSit implements Action {
 		chair.setUser(subject);
 		subject.startUsingObject(chair);
 		Context context = new Context(subject, false, chair, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("sit"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("sit"), context, this, subject));
 	}
 
 	@Override

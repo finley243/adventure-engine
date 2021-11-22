@@ -29,7 +29,7 @@ public class ActionItemDrop implements Action {
 		}
 		subject.getArea().addObject(item);
 		Context context = new Context(subject, false, item, true);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context, this, subject));
 	}
 	
 	@Override

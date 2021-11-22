@@ -25,7 +25,7 @@ public class ActionReload implements Action {
 	public void choose(Actor subject) {
 		weapon.reloadFull();
 		Context context = new Context(subject, false, weapon, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reload"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reload"), context, this, subject));
 	}
 
 	@Override

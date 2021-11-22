@@ -49,7 +49,7 @@ public class BehaviorIdle {
 			} else {
 				if(stepTurnCounter == 1) {
 					Context context = new Context(subject, false, getNextArea(), false);
-					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("patrolTelegraph"), context));
+					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("patrolTelegraph"), context, null, null));
 				}
 				stepTurnCounter--;
 			}

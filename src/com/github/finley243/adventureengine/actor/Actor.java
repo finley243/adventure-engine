@@ -257,7 +257,7 @@ public class Actor implements Noun, Physical {
 		amount = Math.min(amount, stats.getMaxHP() - HP);
 		HP += amount;
 		Context context = new Context(this, false);
-		Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context));
+		Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context, null, null));
 	}
 	
 	public void damage(int amount) {
@@ -268,7 +268,7 @@ public class Actor implements Noun, Physical {
 			kill();
 		} else {
 			Context context = new Context(this, false);
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context));
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
 		}
 	}
 	
@@ -279,7 +279,7 @@ public class Actor implements Noun, Physical {
 			equippedItem = null;
 		}
 		Context context = new Context(this, false);
-		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context));
+		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context, null, null));
 	}
 	
 	public boolean isDead() {
@@ -295,7 +295,19 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void onVisualEvent(VisualEvent event) {
-		
+		if(event.getAction() instanceof ActionMoveExit) {
+			for(CombatTarget target : combatTargets) {
+				if(target.getTargetActor() == event.getSubject()) {
+					target.setUsedExit(((ActionMoveExit) event.getAction()).getExit());
+				}
+			}
+		} else if(event.getAction() instanceof ActionMoveElevator) {
+			for(CombatTarget target : combatTargets) {
+				if(target.getTargetActor() == event.getSubject()) {
+					target.setUsedElevator(((ActionMoveElevator) event.getAction()).getElevator());
+				}
+			}
+		}
 	}
 	
 	public void onSoundEvent(SoundEvent event) {

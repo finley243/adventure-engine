@@ -22,7 +22,7 @@ public class ActionUnequip implements Action {
 		subject.setEquippedItem(null);
 		subject.inventory().addItem(item);
 		Context context = new Context(subject, false, item, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unequip"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unequip"), context, this, subject));
 	}
 
 	@Override

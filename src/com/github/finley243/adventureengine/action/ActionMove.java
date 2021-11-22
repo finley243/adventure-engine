@@ -33,7 +33,7 @@ public class ActionMove implements Action {
 		} else {
 			line = "moveTo";
 		}
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context, this, subject));
 		subject.move(area);
 	}
 	

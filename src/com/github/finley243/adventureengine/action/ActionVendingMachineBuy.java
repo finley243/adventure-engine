@@ -28,7 +28,7 @@ public class ActionVendingMachineBuy implements Action {
 		subject.adjustMoney(-item.getPrice());
 		subject.inventory().addItem(item);
 		Context context = new Context(subject, false, item, true, vendingMachine, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("buyFrom"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("buyFrom"), context, this, subject));
 	}
 
 	@Override

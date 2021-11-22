@@ -30,6 +30,10 @@ public class ActionMoveElevator implements Action {
 	public Area getArea() {
 		return destination.getArea();
 	}
+
+	public ObjectElevator getElevator() {
+		return elevator;
+	}
 	
 	@Override
 	public void choose(Actor subject) {
@@ -40,24 +44,8 @@ public class ActionMoveElevator implements Action {
 		} else {
 			takeElevatorPhrase = "takeElevatorDown";
 		}
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context));
-		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context));
-		Set<Area> visibleFromAreas = subject.getArea().getRoom().getAreas();
-		Set<Actor> visibleActors = new HashSet<>();
-		for(Area visibleFromArea : visibleFromAreas) {
-			visibleActors.addAll(visibleFromArea.getActors());
-		}
-		List<CombatTarget> combatTargets = new ArrayList<>();
-		for(Actor actor : visibleActors) {
-			if(actor != subject && actor.canSee(subject)) {
-				combatTargets.addAll(actor.getCombatTargets());
-			}
-		}
-		for(CombatTarget target : combatTargets) {
-			if(target.getTargetActor() == subject) {
-				target.setUsedElevator(elevator);
-			}
-		}
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject));
+		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject));
 		subject.move(destination.getArea());
 	}
 

@@ -24,7 +24,7 @@ public class ActionStand implements Action {
 		object.removeUser();
 		subject.stopUsingObject();
 		Context context = new Context(subject, false, object, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("stand"), context));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("stand"), context, this, subject));
 	}
 
 	@Override

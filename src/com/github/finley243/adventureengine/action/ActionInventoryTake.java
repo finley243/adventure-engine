@@ -30,7 +30,7 @@ public class ActionInventoryTake implements Action {
         inventory.removeItem(item);
         subject.inventory().addItem(item);
         Context context = new Context(subject, false, item, true, owner, false);
-        Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context));
+        Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
 
     @Override
