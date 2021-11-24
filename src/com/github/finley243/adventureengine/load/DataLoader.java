@@ -10,7 +10,7 @@ import com.github.finley243.adventureengine.dialogue.DialogueLine;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.EffectAttribute;
-import com.github.finley243.adventureengine.effect.EffectHeal;
+import com.github.finley243.adventureengine.effect.EffectHealInstant;
 import com.github.finley243.adventureengine.effect.EffectHealOverTime;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneLine;
@@ -327,7 +327,7 @@ public class DataLoader {
         switch(type) {
             case "consumable":
                 StatsConsumable.ConsumableType consumableType = StatsConsumable.ConsumableType.valueOf(LoadUtils.singleTag(itemElement, "type", "OTHER"));
-                List<Effect> consumableEffects = loadEffects(LoadUtils.singleChildWithName(itemElement, "effects"));
+                List<Effect> consumableEffects = loadEffects(LoadUtils.singleChildWithName(itemElement, "effects"), false);
                 return new StatsConsumable(id, name, description, price, consumableType, consumableEffects);
             case "key":
                 return new StatsKey(id, name, description);
@@ -343,27 +343,27 @@ public class DataLoader {
         return null;
     }
 
-    private static List<Effect> loadEffects(Element effectsElement) {
+    private static List<Effect> loadEffects(Element effectsElement, boolean manualRemoval) {
         List<Element> effectElements = LoadUtils.directChildrenWithName(effectsElement, "effect");
         List<Effect> effects = new ArrayList<>();
         for(Element effectElement : effectElements) {
-            effects.add(loadEffect(effectElement));
+            effects.add(loadEffect(effectElement, manualRemoval));
         }
         return effects;
     }
 
-    private static Effect loadEffect(Element effectElement) {
+    private static Effect loadEffect(Element effectElement, boolean manualRemoval) {
         String effectType = effectElement.getAttribute("type");
         int duration = LoadUtils.singleTagInt(effectElement, "duration", 0);
         int amount = LoadUtils.singleTagInt(effectElement, "amount", 0);
         switch(effectType) {
             case "heal":
-                return new EffectHeal(amount);
+                return new EffectHealInstant(amount);
             case "heal_over_time":
-                return new EffectHealOverTime(duration, amount);
+                return new EffectHealOverTime(duration, manualRemoval, amount);
             case "attribute":
                 Actor.Attribute attribute = Actor.Attribute.valueOf(LoadUtils.singleTag(effectElement, "attribute", null).toUpperCase());
-                return new EffectAttribute(duration, attribute, amount);
+                return new EffectAttribute(duration, manualRemoval, attribute, amount);
             default:
                 return null;
         }

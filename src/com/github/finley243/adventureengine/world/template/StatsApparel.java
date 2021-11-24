@@ -1,20 +1,33 @@
 package com.github.finley243.adventureengine.world.template;
 
-public class StatsApparel extends StatsItem {
+import com.github.finley243.adventureengine.actor.ApparelManager;
+import com.github.finley243.adventureengine.effect.Effect;
 
-	public enum ApparelType{
-		BODY, FACE, HEAD, FEET, ARMS, LEGS
-	}
+import java.util.Set;
+
+public class StatsApparel extends StatsItem {
 	
-	private final ApparelType type;
+	private final ApparelManager.ApparelSlot slot;
+	private final int damageResistance;
+	private final Set<Effect> effects;
 	
-	public StatsApparel(String ID, String name, String description, int price, ApparelType type) {
+	public StatsApparel(String ID, String name, String description, int price, ApparelManager.ApparelSlot slot, int damageResistance, Set<Effect> effects) {
 		super(ID, name, description, price);
-		this.type = type;
+		this.slot = slot;
+		this.damageResistance = damageResistance;
+		this.effects = effects;
 	}
 	
-	public ApparelType getType() {
-		return type;
+	public ApparelManager.ApparelSlot getSlot() {
+		return slot;
+	}
+
+	public int getDamageResistance() {
+		return damageResistance;
+	}
+
+	public Set<Effect> getEffects() {
+		return effects;
 	}
 	
 }

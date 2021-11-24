@@ -6,19 +6,25 @@ public class EffectHealOverTime extends Effect {
 
 	private final int amount;
 	
-	public EffectHealOverTime(int duration, int amount) {
-		super(duration);
+	public EffectHealOverTime(int duration, boolean manualRemoval, int amount) {
+		super(duration, manualRemoval);
 		this.amount = amount;
 	}
+
+	@Override
+	public void start(Actor target){}
+
+	@Override
+	public void end(Actor target){}
 	
 	@Override
-	protected void eachTurn(Actor target) {
+	public void eachTurn(Actor target) {
 		target.heal(amount);
 	}
 	
 	@Override
-	public void apply(Actor target) {
-		target.addEffect(new EffectHealOverTime(this.turnsRemaining, amount));
+	public Effect generate() {
+		return new EffectHealOverTime(this.turnsRemaining, manualRemoval, amount);
 	}
 
 }

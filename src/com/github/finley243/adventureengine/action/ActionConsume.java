@@ -35,7 +35,7 @@ public class ActionConsume implements Action {
 			break;
 		}
 		for(Effect effect : item.getEffects()) {
-			effect.apply(subject);
+			subject.addEffect(effect.generate());
 		}
 	}
 

@@ -1,10 +1,17 @@
 package com.github.finley243.adventureengine.world.item;
 
+import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ApparelManager;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.world.template.StatsApparel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemApparel extends Item {
 
 	private final StatsApparel stats;
+	private List<Effect> effects;
 	
 	public ItemApparel(StatsApparel stats) {
 		super(stats.getName());
@@ -24,6 +31,32 @@ public class ItemApparel extends Item {
 	@Override
 	public String getID() {
 		return stats.getID();
+	}
+
+	public ApparelManager.ApparelSlot getApparelSlot() {
+		return stats.getSlot();
+	}
+
+	public int getDamageResistance() {
+		return stats.getDamageResistance();
+	}
+
+	public void equip(Actor target) {
+		if(effects != null) throw new UnsupportedOperationException("Cannot equip ItemApparel " + this.getID() + " because it is already equipped");
+		effects = new ArrayList<>();
+		for(Effect effect : stats.getEffects()) {
+			Effect generatedEffect = effect.generate();
+			effects.add(generatedEffect);
+			target.addEffect(generatedEffect);
+		}
+	}
+
+	public void unequip(Actor target) {
+		if(effects == null) throw new UnsupportedOperationException("Cannot unequip ItemApparel " + this.getID() + " because it is not equipped");
+		for(Effect effect : effects) {
+			target.removeEffect(effect);
+		}
+		effects = null;
 	}
 	
 	@Override

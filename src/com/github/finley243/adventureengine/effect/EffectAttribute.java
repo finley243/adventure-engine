@@ -8,25 +8,28 @@ public class EffectAttribute extends Effect {
 	private final Attribute attribute;
 	private final int amount;
 	
-	public EffectAttribute(int duration, Attribute attribute, int amount) {
-		super(duration);
+	public EffectAttribute(int duration, boolean manualRemoval, Attribute attribute, int amount) {
+		super(duration, manualRemoval);
 		this.attribute = attribute;
 		this.amount = amount;
 	}
 	
 	@Override
-	protected void start(Actor target) {
+	public void start(Actor target) {
 		target.adjustAttributeMod(attribute, amount);
 	}
 	
 	@Override
-	protected void end(Actor target) {
+	public void end(Actor target) {
 		target.adjustAttributeMod(attribute, -amount);
 	}
+
+	@Override
+	public void eachTurn(Actor target){}
 	
 	@Override
-	public void apply(Actor target) {
-		target.addEffect(new EffectAttribute(this.turnsRemaining, attribute, amount));
+	public Effect generate() {
+		return new EffectAttribute(this.turnsRemaining, manualRemoval, attribute, amount);
 	}
 
 }

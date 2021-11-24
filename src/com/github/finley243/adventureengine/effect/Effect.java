@@ -7,40 +7,44 @@ import com.github.finley243.adventureengine.actor.Actor;
  */
 public abstract class Effect {
 
+	protected final boolean manualRemoval;
+
 	private boolean hasAdded;
 	protected int turnsRemaining;
-	
-	public Effect(int duration) {
+
+	public Effect(int duration, boolean manualRemoval) {
+		this.manualRemoval = manualRemoval;
 		this.turnsRemaining = duration;
 	}
 	
 	public void update(Actor target) {
-		if(!hasAdded) {
-			start(target);
-			hasAdded = true;
-		} else if(turnsRemaining == 0) {
-			end(target);
+		if(!manualRemoval) {
+			if (!hasAdded) {
+				start(target);
+				hasAdded = true;
+			} else if (turnsRemaining == 0) {
+				end(target);
+			}
+			turnsRemaining--;
 		}
 		eachTurn(target);
-		turnsRemaining--;
 	}
 	
-	protected void start(Actor target) {
-		
-	}
+	public abstract void start(Actor target);
 	
-	protected void end(Actor target) {
-		
-	}
+	public abstract void end(Actor target);
 	
-	protected void eachTurn(Actor target) {
-		
-	}
+	public abstract void eachTurn(Actor target);
 	
 	public boolean shouldRemove() {
-		return turnsRemaining < 0;
+		return !manualRemoval && turnsRemaining < 0;
 	}
 	
-	public abstract void apply(Actor target);
+	public abstract Effect generate();
+
+	@Override
+	public boolean equals(Object o) {
+		return o == this;
+	}
 	
 }

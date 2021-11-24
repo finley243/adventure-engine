@@ -78,6 +78,7 @@ public class Actor implements Noun, Physical {
 	private final EnumMap<Attribute, int[]> attributes;
 	private final List<Effect> effects;
 	private final Inventory inventory;
+	private final ApparelManager apparelManager;
 	private ItemEquippable equippedItem;
 	private int money;
 	private UsableObject usingObject;
@@ -107,6 +108,7 @@ public class Actor implements Noun, Physical {
 			HP = stats.getMaxHP();
 		}
 		this.inventory = new Inventory();
+		this.apparelManager = new ApparelManager();
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, new int[] {1, 0});
@@ -225,6 +227,10 @@ public class Actor implements Noun, Physical {
 	public Inventory inventory() {
 		return inventory;
 	}
+
+	public ApparelManager apparelManager() {
+		return apparelManager;
+	}
 	
 	public Inventory getTradeInventory() {
 		return tradeInventory;
@@ -251,6 +257,10 @@ public class Actor implements Noun, Physical {
 		if(!effect.shouldRemove()) {
 			effects.add(effect);
 		}
+	}
+
+	public void removeEffect(Effect effect) {
+		effects.remove(effect);
 	}
 	
 	public void heal(int amount) {
