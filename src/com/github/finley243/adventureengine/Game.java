@@ -17,6 +17,7 @@ import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemDistraction;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
+import com.github.finley243.adventureengine.world.template.ItemFactory;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.xml.sax.SAXException;
@@ -60,6 +61,8 @@ public class Game {
 
 		Item coin = new ItemDistraction("coin");
 		Data.getPlayer().inventory().addItem(coin);
+
+		Data.getPlayer().inventory().addItem(ItemFactory.create("kevlar_vest"));
 
 		startGameLoop();
 	}

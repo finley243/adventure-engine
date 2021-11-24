@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
+import com.github.finley243.adventureengine.actor.ApparelManager;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.dialogue.DialogueChoice;
@@ -325,6 +326,11 @@ public class DataLoader {
         String description = LoadUtils.singleTag(itemElement, "description", null);
         int price = LoadUtils.singleTagInt(itemElement, "price", 0);
         switch(type) {
+            case "apparel":
+                ApparelManager.ApparelSlot apparelSlot = ApparelManager.ApparelSlot.valueOf(LoadUtils.singleTag(itemElement, "slot", "TORSO"));
+                int damageResistance = LoadUtils.singleTagInt(itemElement, "damageResistance", 0);
+                List<Effect> apparelEffects = loadEffects(itemElement, true);
+                return new StatsApparel(id, name, description, price, apparelSlot, damageResistance, apparelEffects);
             case "consumable":
                 StatsConsumable.ConsumableType consumableType = StatsConsumable.ConsumableType.valueOf(LoadUtils.singleTag(itemElement, "type", "OTHER"));
                 List<Effect> consumableEffects = loadEffects(LoadUtils.singleChildWithName(itemElement, "effects"), false);

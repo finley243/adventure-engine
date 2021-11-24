@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine.actor;
 
+import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public class ApparelManager {
 
@@ -42,6 +42,16 @@ public class ApparelManager {
     public void unequip(ItemApparel item, Actor subject) {
         item.unequip(subject);
         equipped.put(item.getApparelSlot(), null);
+    }
+
+    public Set<ItemApparel> getEquippedItems() {
+        Set<ItemApparel> items = new HashSet<>();
+        for(ItemApparel item : equipped.values()) {
+            if(item != null) {
+                items.add(item);
+            }
+        }
+        return items;
     }
 
 }

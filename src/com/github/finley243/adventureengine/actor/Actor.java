@@ -28,6 +28,7 @@ import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.ItemApparel;
 import com.github.finley243.adventureengine.world.item.ItemEquippable;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.object.ObjectCover;
@@ -37,7 +38,7 @@ import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class Actor implements Noun, Physical {
 
-	public static final boolean SHOW_DAMAGE_NUMBERS = false;
+	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 1;
 	
 	public enum Attribute {
@@ -267,7 +268,7 @@ public class Actor implements Noun, Physical {
 		if(amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, stats.getMaxHP() - HP);
 		HP += amount;
-		if(SHOW_DAMAGE_NUMBERS) {
+		if(SHOW_HP_CHANGES) {
 			Context context = new Context(this, false);
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context, null, null));
 		}
@@ -279,7 +280,7 @@ public class Actor implements Noun, Physical {
 		if(HP <= 0) {
 			HP = 0;
 			kill();
-		} else if(SHOW_DAMAGE_NUMBERS) {
+		} else if(SHOW_HP_CHANGES) {
 			Context context = new Context(this, false);
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
 		}
@@ -459,6 +460,9 @@ public class Actor implements Noun, Physical {
 		}
 		for(Item item : inventory.getUniqueItems()) {
 			actions.addAll(item.inventoryActions(this));
+		}
+		for(ItemApparel item : apparelManager.getEquippedItems()) {
+			actions.addAll(item.equippedApparelActions(this));
 		}
 		Iterator<Action> itr = actions.iterator();
 		while(itr.hasNext()) {
