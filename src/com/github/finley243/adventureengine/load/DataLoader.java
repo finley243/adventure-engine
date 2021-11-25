@@ -85,15 +85,16 @@ public class DataLoader {
 
     private static StatsActor loadActor(Element actorElement) {
         String id = actorElement.getAttribute("id");
+        String parentID = actorElement.getAttribute("parent");
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
-        String name = nameElement.getTextContent();
-        boolean nameIsProper = LoadUtils.boolAttribute(nameElement, "proper", false);
+        String name = nameElement != null ? nameElement.getTextContent() : null;
+        boolean nameIsProper = nameElement != null ? LoadUtils.boolAttribute(nameElement, "proper", false) : null;
         Context.Pronoun pronoun = pronounTag(actorElement, "pronoun");
         String faction = LoadUtils.singleTag(actorElement, "faction", "default");
         int hp = LoadUtils.singleTagInt(actorElement, "hp", 0);
         String lootTable = LoadUtils.singleTag(actorElement, "loottable", null);
         String topic = LoadUtils.singleTag(actorElement, "topic", null);
-        return new StatsActor(id, name, nameIsProper, pronoun, faction, hp, lootTable, topic);
+        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, lootTable, topic);
     }
 
     private static Context.Pronoun pronounTag(Element element, String name) {

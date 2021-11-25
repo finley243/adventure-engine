@@ -1,11 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
@@ -35,6 +30,8 @@ import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class Actor implements Noun, Physical {
 
@@ -68,6 +65,7 @@ public class Actor implements Noun, Physical {
 	private final String descriptor;
 	private Area area;
 	private int HP;
+	private final Map<Limb, Integer> limbConditions;
 	private boolean isEnabled;
 	private boolean isDead;
 	private boolean isUnconscious;
@@ -98,6 +96,10 @@ public class Actor implements Noun, Physical {
 		}
 		this.stats = stats;
 		this.descriptor = descriptor;
+		this.limbConditions = new HashMap<>();
+		for(Limb limb : stats.getLimbs()) {
+			limbConditions.put(limb, limb.getMaxCondition());
+		}
 		this.idle = idle;
 		this.preventMovement = preventMovement;
 		this.combatTargets = new HashSet<>();
@@ -273,10 +275,40 @@ public class Actor implements Noun, Physical {
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context, null, null));
 		}
 	}
+
+	public void healLimb(int amount, Limb limb) {
+		if(amount < 0) throw new IllegalArgumentException();
+		int oldCondition = limbConditions.get(limb);
+		int newCondition = oldCondition + amount;
+		if(newCondition < 0) newCondition = 0;
+		limbConditions.put(limb, newCondition);
+		if(oldCondition == 0 && newCondition > 0) {
+			limb.setCrippled(false, this);
+		}
+	}
 	
 	public void damage(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();
 		HP -= amount;
+		if(HP <= 0) {
+			HP = 0;
+			kill();
+		} else if(SHOW_HP_CHANGES) {
+			Context context = new Context(this, false);
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
+		}
+	}
+
+	public void damageLimb(int amount, Limb limb) {
+		if(amount < 0) throw new IllegalArgumentException();
+		int oldCondition = limbConditions.get(limb);
+		int newCondition = oldCondition - amount;
+		if(newCondition < 0) newCondition = 0;
+		limbConditions.put(limb, newCondition);
+		if(oldCondition > 0 && newCondition == 0) {
+			limb.setCrippled(true, this);
+		}
+		HP -= amount * limb.getDamageMult();
 		if(HP <= 0) {
 			HP = 0;
 			kill();
@@ -462,7 +494,7 @@ public class Actor implements Noun, Physical {
 			actions.addAll(item.inventoryActions(this));
 		}
 		for(ItemApparel item : apparelManager.getEquippedItems()) {
-			actions.addAll(item.equippedApparelActions(this));
+			actions.addAll(item.equippedActions(this));
 		}
 		Iterator<Action> itr = actions.iterator();
 		while(itr.hasNext()) {

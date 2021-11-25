@@ -69,7 +69,7 @@ public class ItemApparel extends Item {
 		return actions;
 	}
 
-	public List<Action> equippedApparelActions(Actor subject) {
+	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionApparelUnequip(this));
 		return actions;
