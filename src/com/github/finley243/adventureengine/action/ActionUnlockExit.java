@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.world.object.ObjectExit;
 
 public class ActionUnlockExit implements Action {
 
+	private boolean disabled;
 	private final ObjectExit exit;
 	
 	public ActionUnlockExit(ObjectExit exit) {
@@ -26,7 +27,7 @@ public class ActionUnlockExit implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		if(!exit.isLocked()) return false;
+		if(disabled || !exit.isLocked()) return false;
 		boolean hasKey = false;
 		for(String keyID : exit.getKeyIDs()) {
 			if(subject.inventory().hasItemWithID(keyID)) {
@@ -35,6 +36,11 @@ public class ActionUnlockExit implements Action {
 			}
 		}
 		return hasKey;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import java.util.Set;
 
 public class ActionMoveExit implements Action {
 
+	private boolean disabled;
 	private final ObjectExit exit;
 	
 	public ActionMoveExit(ObjectExit exit) {
@@ -45,7 +46,12 @@ public class ActionMoveExit implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !exit.isLocked();
+		return !disabled && !exit.isLocked();
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

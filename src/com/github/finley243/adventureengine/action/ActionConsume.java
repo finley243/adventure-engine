@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.world.item.ItemConsumable;
 
 public class ActionConsume implements Action {
 
+	private boolean disabled;
 	private final ItemConsumable item;
 	
 	public ActionConsume(ItemConsumable item) {
@@ -41,7 +42,12 @@ public class ActionConsume implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

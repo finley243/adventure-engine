@@ -9,7 +9,8 @@ public class ActionReaction implements Action {
 	public enum ReactionType {
 		BLOCK, DODGE
 	}
-	
+
+	private boolean disabled;
 	private final ReactionType type;
 	
 	public ActionReaction(ReactionType type) {
@@ -28,7 +29,12 @@ public class ActionReaction implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

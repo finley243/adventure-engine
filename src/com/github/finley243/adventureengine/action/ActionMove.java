@@ -13,7 +13,8 @@ import com.github.finley243.adventureengine.world.environment.Area;
 public class ActionMove implements Action {
 	
 	public static final float MOVE_UTILITY_MULTIPLIER = 0.7f;
-	
+
+	private boolean disabled;
 	private final Area area;
 	
 	public ActionMove(Area area) {
@@ -39,7 +40,12 @@ public class ActionMove implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 	
 	@Override

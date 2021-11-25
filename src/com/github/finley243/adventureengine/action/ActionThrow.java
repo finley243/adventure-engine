@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 public class ActionThrow implements Action {
 
+    private boolean disabled;
     private final Area area;
     private final Item item;
 
@@ -28,7 +29,12 @@ public class ActionThrow implements Action {
 
     @Override
     public boolean canChoose(Actor subject) {
-        return true;
+        return !disabled;
+    }
+
+    @Override
+    public void disable() {
+        disabled = true;
     }
 
     @Override

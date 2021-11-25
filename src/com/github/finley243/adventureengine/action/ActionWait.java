@@ -6,6 +6,8 @@ import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
 
 public class ActionWait implements Action {
 
+	private boolean disabled;
+
 	public ActionWait() {
 
 	}
@@ -17,7 +19,12 @@ public class ActionWait implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

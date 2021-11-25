@@ -11,6 +11,8 @@ public interface Action {
 	void choose(Actor subject);
 
 	boolean canChoose(Actor subject);
+
+	void disable();
 	
 	String getPrompt();
 	

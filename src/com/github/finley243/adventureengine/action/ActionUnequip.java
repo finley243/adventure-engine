@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.world.item.ItemEquippable;
 
 public class ActionUnequip implements Action {
 
+	private boolean disabled;
 	private final ItemEquippable item;
 	
 	public ActionUnequip(ItemEquippable item) {
@@ -28,7 +29,12 @@ public class ActionUnequip implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

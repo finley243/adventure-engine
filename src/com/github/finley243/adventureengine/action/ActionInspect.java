@@ -16,7 +16,8 @@ public class ActionInspect implements Action {
 	public enum InspectType {
 		WORLD, INVENTORY, EQUIPPED
 	}
-	
+
+	private boolean disabled;
 	private final WorldObject object;
 	private final InspectType type;
 	
@@ -34,7 +35,12 @@ public class ActionInspect implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

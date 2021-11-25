@@ -14,6 +14,7 @@ public class ActionGeneric implements Action{
         NONE, OBJECT, ACTION
     }
 
+    private boolean disabled;
     private final Physical object;
     private final String action;
     private final String prompt;
@@ -49,7 +50,12 @@ public class ActionGeneric implements Action{
 
     @Override
     public boolean canChoose(Actor subject) {
-        return true;
+        return !disabled;
+    }
+
+    @Override
+    public void disable() {
+        disabled = true;
     }
 
     @Override

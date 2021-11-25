@@ -19,6 +19,7 @@ import java.util.Set;
 
 public class ActionMoveElevator implements Action {
 
+	private boolean disabled;
 	private final ObjectElevator elevator;
 	private final ObjectElevator destination;
 	
@@ -51,7 +52,12 @@ public class ActionMoveElevator implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

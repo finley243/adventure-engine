@@ -514,7 +514,8 @@ public class Actor implements Noun, Physical {
 				}
 			}
 			if(isBlocked) {
-				itr.remove();
+				//itr.remove();
+				currentAction.disable();
 			}
 		}
 		actions.add(new ActionWait());

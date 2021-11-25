@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 public class ActionItemTake implements Action {
 
+	private boolean disabled;
 	private final Item item;
 	
 	public ActionItemTake(Item item) {
@@ -27,7 +28,12 @@ public class ActionItemTake implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 	
 	@Override

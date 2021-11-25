@@ -14,6 +14,7 @@ import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class ActionVendingMachineBuy implements Action {
 
+	private boolean disabled;
 	private final ObjectVendingMachine vendingMachine;
 	private final String itemID;
 	
@@ -33,7 +34,12 @@ public class ActionVendingMachineBuy implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return subject.getMoney() >= Data.getItem(itemID).getPrice();
+		return !disabled && subject.getMoney() >= Data.getItem(itemID).getPrice();
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
 
 public class ActionTalk implements Action {
 
+	private boolean disabled;
 	private final Actor target;
 	
 	public ActionTalk(Actor target) {
@@ -22,7 +23,12 @@ public class ActionTalk implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return target.isInCombat();
+		return !disabled && !target.isInCombat();
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

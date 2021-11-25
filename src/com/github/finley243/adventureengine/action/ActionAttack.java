@@ -8,7 +8,8 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ActionAttack implements Action {
-	
+
+	private boolean disabled;
 	private final ItemWeapon weapon;
 	private final Actor target;
 	
@@ -24,7 +25,12 @@ public class ActionAttack implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

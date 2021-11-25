@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 public class ActionItemDrop implements Action {
 
+	private boolean disabled;
 	private final Item item;
 	private final boolean isEquipped;
 	
@@ -34,7 +35,12 @@ public class ActionItemDrop implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 	
 	@Override

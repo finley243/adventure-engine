@@ -16,6 +16,7 @@ public class ActionReload implements Action {
 	public static final float RELOAD_UTILITY_COMBAT = 0.6f;
 	public static final float RELOAD_UTILITY_COMBAT_EMPTY = 0.8f;
 
+	private boolean disabled;
 	private final ItemWeapon weapon;
 	
 	public ActionReload(ItemWeapon weapon) {
@@ -31,7 +32,12 @@ public class ActionReload implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return weapon.getAmmoFraction() < 1.0f;
+		return !disabled && weapon.getAmmoFraction() < 1.0f;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

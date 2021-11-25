@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.world.item.ItemApparel;
 
 public class ActionApparelEquip implements Action {
 
+    private boolean disabled;
     private final ItemApparel item;
 
     public ActionApparelEquip(ItemApparel item) {
@@ -21,7 +22,12 @@ public class ActionApparelEquip implements Action {
 
     @Override
     public boolean canChoose(Actor subject) {
-        return true;
+        return !disabled;
+    }
+
+    @Override
+    public void disable() {
+        disabled = true;
     }
 
     @Override

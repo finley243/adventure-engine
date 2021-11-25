@@ -13,6 +13,7 @@ import com.github.finley243.adventureengine.world.object.UsableObject;
 
 public class ActionStand implements Action {
 
+	private boolean disabled;
 	private final UsableObject object;
 	
 	public ActionStand(UsableObject object) {
@@ -29,7 +30,12 @@ public class ActionStand implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

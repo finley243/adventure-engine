@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ActionAttackTargeted implements Action {
 
+	private boolean disabled;
 	private final ItemWeapon weapon;
 	private final Actor target;
 	private final Limb limb;
@@ -26,7 +27,12 @@ public class ActionAttackTargeted implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

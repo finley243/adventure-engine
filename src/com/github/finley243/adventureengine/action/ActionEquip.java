@@ -13,7 +13,8 @@ public class ActionEquip implements Action {
 
 	public static final float SUBOPTIMAL_WEAPON_UTILITY = 0.8f;
 	public static final float OPTIMAL_WEAPON_UTILITY = 1.0f;
-	
+
+	private boolean disabled;
 	private final ItemWeapon item;
 	
 	public ActionEquip(ItemWeapon item) {
@@ -30,7 +31,12 @@ public class ActionEquip implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !subject.hasEquippedItem();
+		return !disabled && !subject.hasEquippedItem();
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

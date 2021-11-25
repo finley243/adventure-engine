@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInventoryTake implements Action {
 
+    private boolean disabled;
     private final Noun owner;
     private final Inventory inventory;
     private final Item item;
@@ -35,7 +36,12 @@ public class ActionInventoryTake implements Action {
 
     @Override
     public boolean canChoose(Actor subject) {
-        return true;
+        return !disabled;
+    }
+
+    @Override
+    public void disable() {
+        disabled = true;
     }
 
     @Override

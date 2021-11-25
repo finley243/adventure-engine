@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.world.object.ObjectCover;
 
 public class ActionUseCover implements Action {
 
+	private boolean disabled;
 	private final ObjectCover cover;
 	
 	public ActionUseCover(ObjectCover cover) {
@@ -27,7 +28,12 @@ public class ActionUseCover implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

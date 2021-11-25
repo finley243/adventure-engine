@@ -18,6 +18,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionRead implements Action {
 
+	private boolean disabled;
 	private final WorldObject object;
 	private final boolean isInInventory;
 	
@@ -45,7 +46,12 @@ public class ActionRead implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override

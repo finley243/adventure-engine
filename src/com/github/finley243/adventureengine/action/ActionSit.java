@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.world.object.ObjectChair;
 
 public class ActionSit implements Action {
 
+	private boolean disabled;
 	private final ObjectChair chair;
 	
 	public ActionSit(ObjectChair chair) {
@@ -27,7 +28,12 @@ public class ActionSit implements Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return true;
+		return !disabled;
+	}
+
+	@Override
+	public void disable() {
+		disabled = true;
 	}
 
 	@Override
