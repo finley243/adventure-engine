@@ -280,7 +280,7 @@ public class Actor implements Noun, Physical {
 		if(amount < 0) throw new IllegalArgumentException();
 		int oldCondition = limbConditions.get(limb);
 		int newCondition = oldCondition + amount;
-		if(newCondition < 0) newCondition = 0;
+		if(newCondition > limb.getMaxCondition()) newCondition = limb.getMaxCondition();
 		limbConditions.put(limb, newCondition);
 		if(oldCondition == 0 && newCondition > 0) {
 			limb.setCrippled(false, this);
@@ -301,6 +301,8 @@ public class Actor implements Noun, Physical {
 
 	public void damageLimb(int amount, Limb limb) {
 		if(amount < 0) throw new IllegalArgumentException();
+		amount -= apparelManager.getDamageResistance(limb.getApparelSlot());
+		if(amount < 0) amount = 0;
 		int oldCondition = limbConditions.get(limb);
 		int newCondition = oldCondition - amount;
 		if(newCondition < 0) newCondition = 0;

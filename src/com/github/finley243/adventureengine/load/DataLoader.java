@@ -1,10 +1,7 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorReference;
-import com.github.finley243.adventureengine.actor.ApparelManager;
-import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.dialogue.DialogueChoice;
 import com.github.finley243.adventureengine.dialogue.DialogueLine;
@@ -92,9 +89,29 @@ public class DataLoader {
         Context.Pronoun pronoun = pronounTag(actorElement, "pronoun");
         String faction = LoadUtils.singleTag(actorElement, "faction", "default");
         int hp = LoadUtils.singleTagInt(actorElement, "hp", 0);
+        List<Limb> limbs = loadLimbs(LoadUtils.singleChildWithName(actorElement, "limbs"));
         String lootTable = LoadUtils.singleTag(actorElement, "loottable", null);
         String topic = LoadUtils.singleTag(actorElement, "topic", null);
-        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, lootTable, topic);
+        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, lootTable, topic);
+    }
+
+    private static List<Limb> loadLimbs(Element element) {
+        List<Limb> limbs = new ArrayList<>();
+        if(element == null) return limbs;
+        for(Element limbElement : LoadUtils.directChildrenWithName(element, "limb")) {
+            limbs.add(loadLimb(limbElement));
+        }
+        return limbs;
+    }
+
+    private static Limb loadLimb(Element element) {
+        String name = LoadUtils.singleTag(element, "name", null);
+        float hitChance = LoadUtils.singleTagFloat(element, "hitChance", 1.0f);
+        float damageMult = LoadUtils.singleTagFloat(element, "damageMult", 1.0f);
+        ApparelManager.ApparelSlot apparelSlot = ApparelManager.ApparelSlot.valueOf(LoadUtils.singleTag(element, "apparelSlot", "TORSO"));
+        int maxCondition = LoadUtils.singleTagInt(element, "maxCondition", 0);
+        List<Effect> crippledEffects = loadEffects(LoadUtils.singleChildWithName(element, "effects"), true);
+        return new Limb(name, hitChance, damageMult, apparelSlot, maxCondition, crippledEffects);
     }
 
     private static Context.Pronoun pronounTag(Element element, String name) {
