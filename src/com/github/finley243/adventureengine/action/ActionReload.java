@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
+import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
@@ -68,7 +69,7 @@ public class ActionReload implements Action {
 	
 	@Override
 	public MenuData getMenuData() {
-		return new MenuDataEquipped("Reload", weapon);
+		return new MenuDataInventory("Reload (" + weapon.getAmmoRemaining() + ")", weapon);
 	}
 
 	@Override

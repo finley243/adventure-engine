@@ -36,7 +36,7 @@ import com.google.common.collect.ImmutableSet;
 public class Actor implements Noun, Physical {
 
 	public static final boolean SHOW_HP_CHANGES = true;
-	public static final int ACTIONS_PER_TURN = 1;
+	public static final int ACTIONS_PER_TURN = 2;
 	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
@@ -524,6 +524,8 @@ public class Actor implements Noun, Physical {
 	public void takeTurn() {
 		if(!isActive() || !isEnabled()) return;
 		updateEffects();
+		updateCombatTargetsTurn();
+		investigateTarget.nextTurn(this);
 		behaviorIdle.update(this);
 		this.actionPoints = ACTIONS_PER_TURN;
 		this.repeatActionPoints = 0;
@@ -532,7 +534,6 @@ public class Actor implements Noun, Physical {
 		this.endTurn = false;
 		while(!endTurn) {
 			generateCombatTargets();
-			generatePursueTargets();
 			updatePursueTargets();
 			updateCombatTargets();
 			investigateTarget.update(this);
@@ -561,7 +562,8 @@ public class Actor implements Noun, Physical {
 				if(chosenAction.actionCount() > 1) {
 					repeatActionPoints = chosenAction.actionCount() - 1;
 					repeatAction = chosenAction;
-				} else if(!chosenAction.canRepeat()) {
+				}
+				if(!chosenAction.canRepeat()) {
 					blockedActions.add(chosenAction);
 				}
 			}
@@ -626,6 +628,12 @@ public class Actor implements Noun, Physical {
 			}
 		}
 	}
+
+	private void updateCombatTargetsTurn() {
+		for(CombatTarget target : combatTargets) {
+			target.nextTurn();
+		}
+	}
 	
 	private void updateCombatTargets() {
 		Iterator<CombatTarget> itr = combatTargets.iterator();
@@ -636,10 +644,6 @@ public class Actor implements Noun, Physical {
 				itr.remove();
 			}
 		}
-	}
-	
-	private void generatePursueTargets() {
-		
 	}
 	
 	private void updatePursueTargets() {

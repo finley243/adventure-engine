@@ -62,7 +62,8 @@ public class Game {
 		Item coin = new ItemDistraction("coin");
 		Data.getPlayer().inventory().addItem(coin);
 
-		Data.getPlayer().inventory().addItem(ItemFactory.create("kevlar_vest"));
+		Data.getPlayer().inventory().addItem(ItemFactory.create("tactical_vest"));
+		Data.getPlayer().inventory().addItem(ItemFactory.create("tactical_helmet"));
 
 		startGameLoop();
 	}

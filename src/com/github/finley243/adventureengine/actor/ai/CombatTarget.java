@@ -27,6 +27,12 @@ public class CombatTarget {
 		usedExit = null;
 		usedElevator = null;
 	}
+
+	public void nextTurn() {
+		if(turnsUntilRemove > 0) {
+			turnsUntilRemove--;
+		}
+	}
 	
 	public void update(Actor subject) {
 		if(pursueTarget == null) {
@@ -50,7 +56,7 @@ public class CombatTarget {
 				usedElevator = null;
 			}
 			pursueTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
-			turnsUntilRemove--;
+			//turnsUntilRemove--;
 		}
 		if(shouldRemove()) {
 			pursueTarget.markForRemoval();

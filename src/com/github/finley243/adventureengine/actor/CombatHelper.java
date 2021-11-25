@@ -32,7 +32,11 @@ public class CombatHelper {
 		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance(subject) * (limb != null ? limb.getHitChance() : 1.0f)) {
 			handleHit(subject, target, limb, weapon);
 		} else {
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedMiss" : "meleeMiss"), attackContext, null, null));
+			if(limb == null) {
+				Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedMiss" : "meleeMiss"), attackContext, null, null));
+			} else {
+				Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedMiss" : "meleeMiss"), attackContext, null, null));
+			}
 		}
 		lastAttack = attackContext;
 	}

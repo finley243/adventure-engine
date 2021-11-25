@@ -17,6 +17,17 @@ public class InvestigateTarget {
         this.turnsUntilRemove = TURNS_BEFORE_END_SEARCH;
     }
 
+    public void nextTurn(Actor subject) {
+        if(subject.getArea() == targetArea) {
+            turnsUntilRemove--;
+            if(turnsUntilRemove <= 0) {
+                pursueTarget.markForRemoval();
+                pursueTarget = null;
+                targetArea = null;
+            }
+        }
+    }
+
     public void update(Actor subject) {
         if(pursueTarget == null && targetArea != null) {
             pursueTarget = new PursueTarget(targetArea, UtilityUtils.INVESTIGATE_NOISE_UTILITY, true, false);

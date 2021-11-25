@@ -1,8 +1,14 @@
 <data>
-    <item type="apparel" id="kevlar_vest">
-        <name>Kevlar vest</name>
+    <item type="apparel" id="tactical_vest">
+        <name>tactical vest</name>
         <price>40</price>
         <slot>TORSO</slot>
+        <damageResistance>5</damageResistance>
+    </item>
+    <item type="apparel" id="tactical_helmet">
+        <name>tactical helmet</name>
+        <price>30</price>
+        <slot>HEAD</slot>
         <damageResistance>5</damageResistance>
     </item>
 </data>

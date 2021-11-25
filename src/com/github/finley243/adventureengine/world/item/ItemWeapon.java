@@ -66,6 +66,10 @@ public class ItemWeapon extends ItemEquippable {
 		ammo = stats.getClipSize();
 	}
 
+	public int getAmmoRemaining() {
+		return ammo;
+	}
+
 	public float getAmmoFraction() {
 		return ((float) ammo) / ((float) stats.getClipSize());
 	}
