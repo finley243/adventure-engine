@@ -6,8 +6,8 @@ public class MenuDataUsing extends MenuData {
 
 	private final UsableObject usableObject;
 	
-	public MenuDataUsing(String prompt, UsableObject usableObject) {
-		super(prompt);
+	public MenuDataUsing(String prompt, boolean enabled, UsableObject usableObject) {
+		super(prompt, enabled);
 		this.usableObject = usableObject;
 	}
 	

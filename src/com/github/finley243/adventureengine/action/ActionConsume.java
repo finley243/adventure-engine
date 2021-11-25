@@ -40,6 +40,11 @@ public class ActionConsume implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		switch(item.getConsumableType()) {
 		case DRINK:
@@ -79,7 +84,7 @@ public class ActionConsume implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
+	public MenuData getMenuData(Actor subject) {
 		String prompt;
 		switch(item.getConsumableType()) {
 		case DRINK:
@@ -93,7 +98,7 @@ public class ActionConsume implements Action {
 			prompt = "Use";
 			break;
 		}
-		return new MenuDataInventory(prompt, item);
+		return new MenuDataInventory(prompt, canChoose(subject), item);
 	}
 
 	@Override

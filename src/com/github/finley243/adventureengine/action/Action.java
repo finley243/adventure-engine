@@ -9,6 +9,8 @@ import com.github.finley243.adventureengine.menu.data.MenuData;
 public interface Action {
 	
 	void choose(Actor subject);
+
+	boolean canChoose(Actor subject);
 	
 	String getPrompt();
 	
@@ -22,6 +24,6 @@ public interface Action {
 	
 	int actionCount();
 	
-	MenuData getMenuData();
+	MenuData getMenuData(Actor subject);
 	
 }

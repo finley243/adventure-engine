@@ -44,6 +44,11 @@ public class ActionRead implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Read " + object.getFormattedName(false);
 	}
@@ -75,11 +80,11 @@ public class ActionRead implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
+	public MenuData getMenuData(Actor subject) {
 		if(isInInventory) {
-			return new MenuDataInventory("Read", (Item) object);
+			return new MenuDataInventory("Read", canChoose(subject), (Item) object);
 		} else {
-			return new MenuDataWorldObject("Read", object);
+			return new MenuDataWorldObject("Read", canChoose(subject), object);
 		}
 	}
 

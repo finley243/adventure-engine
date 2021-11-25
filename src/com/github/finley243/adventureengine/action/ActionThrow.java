@@ -27,6 +27,11 @@ public class ActionThrow implements Action {
     }
 
     @Override
+    public boolean canChoose(Actor subject) {
+        return true;
+    }
+
+    @Override
     public String getPrompt() {
         return "Throw " + item.getFormattedName(false) + " towards " + area.getFormattedName(false);
     }
@@ -57,7 +62,7 @@ public class ActionThrow implements Action {
     }
 
     @Override
-    public MenuData getMenuData() {
-        return new MenuDataInventory("Throw towards " + area.getName(), item);
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataInventory("Throw towards " + area.getName(), canChoose(subject), item);
     }
 }

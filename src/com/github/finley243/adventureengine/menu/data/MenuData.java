@@ -4,9 +4,11 @@ public abstract class MenuData {
 
 	private int index;
 	private final String prompt;
+	private final boolean enabled;
 	
-	public MenuData(String prompt) {
+	public MenuData(String prompt, boolean enabled) {
 		this.prompt = prompt;
+		this.enabled = enabled;
 	}
 	
 	public void setIndex(int index) {
@@ -20,5 +22,9 @@ public abstract class MenuData {
 	public String getPrompt() {
 		return prompt;
 	}
-	
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
 }

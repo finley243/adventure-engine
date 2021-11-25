@@ -25,6 +25,19 @@ public class ActionUnlockExit implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		if(!exit.isLocked()) return false;
+		boolean hasKey = false;
+		for(String keyID : exit.getKeyIDs()) {
+			if(subject.inventory().hasItemWithID(keyID)) {
+				hasKey = true;
+				break;
+			}
+		}
+		return hasKey;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Unlock " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false);
 	}
@@ -55,8 +68,8 @@ public class ActionUnlockExit implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataWorldObject("Unlock", exit);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataWorldObject("Unlock", canChoose(subject), exit);
 	}
 
 	@Override

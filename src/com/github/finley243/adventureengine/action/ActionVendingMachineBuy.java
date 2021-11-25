@@ -32,6 +32,11 @@ public class ActionVendingMachineBuy implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return subject.getMoney() >= Data.getItem(itemID).getPrice();
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Buy " + Data.getItem(itemID).getFormattedName(true) + " from " + vendingMachine.getFormattedName(false) + " [" + Data.getItem(itemID).getPrice() + " credits]";
 	}
@@ -63,8 +68,8 @@ public class ActionVendingMachineBuy implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataWorldObject("Buy " + Data.getItem(itemID).getName(), vendingMachine);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataWorldObject("Buy " + Data.getItem(itemID).getName(), canChoose(subject), vendingMachine);
 	}
 
 	@Override

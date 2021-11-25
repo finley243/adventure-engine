@@ -44,6 +44,11 @@ public class ActionMoveExit implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return !exit.isLocked();
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Go through " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false);
 	}
@@ -76,8 +81,8 @@ public class ActionMoveExit implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataWorldObject("Go through", exit);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataWorldObject("Go through", canChoose(subject), exit);
 	}
 
 	@Override

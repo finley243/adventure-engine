@@ -29,6 +29,11 @@ public class ActionEquip implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return !subject.hasEquippedItem();
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Equip " + item.getFormattedName(false);
 	}
@@ -72,8 +77,8 @@ public class ActionEquip implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataInventory("Equip", item);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataInventory("Equip", canChoose(subject), item);
 	}
 
 	@Override

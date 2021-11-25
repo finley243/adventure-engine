@@ -36,6 +36,11 @@ public class ActionMove implements Action {
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context, this, subject));
 		subject.move(area);
 	}
+
+	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
 	
 	@Override
 	public String getPrompt() {
@@ -70,8 +75,8 @@ public class ActionMove implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataMove("Move", area);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataMove("Move", canChoose(subject), area);
 	}
 
 	@Override

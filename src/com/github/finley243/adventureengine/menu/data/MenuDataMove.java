@@ -6,8 +6,8 @@ public class MenuDataMove extends MenuData {
 
 	private final Area area;
 	
-	public MenuDataMove(String prompt, Area area) {
-		super(prompt);
+	public MenuDataMove(String prompt, boolean enabled, Area area) {
+		super(prompt, enabled);
 		this.area = area;
 	}
 	

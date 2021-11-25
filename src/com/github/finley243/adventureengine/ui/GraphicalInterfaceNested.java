@@ -128,6 +128,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 				for(MenuDataEquipped current : equipped) {
 					JMenuItem menuItem = new JMenuItem(current.getPrompt());
 					menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+					menuItem.setEnabled(current.isEnabled());
 					menuEquipped.add(menuItem);
 				}
 			}
@@ -139,6 +140,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 				for(MenuDataUsing current : using) {
 					JMenuItem menuItem = new JMenuItem(current.getPrompt());
 					menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+					menuItem.setEnabled(current.isEnabled());
 					menuUsing.add(menuItem);
 				}
 			}
@@ -155,6 +157,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 						}
 						JMenuItem menuItem = new JMenuItem(current.getPrompt());
 						menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+						menuItem.setEnabled(current.isEnabled());
 						targetActors.get(current.getActor()).add(menuItem);
 					}
 				}
@@ -170,6 +173,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 						}
 						JMenuItem menuItem = new JMenuItem(current.getPrompt());
 						menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+						menuItem.setEnabled(current.isEnabled());
 						targetObjects.get(current.getObject()).add(menuItem);
 					}
 				}
@@ -187,6 +191,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 					}
 					JMenuItem menuItem = new JMenuItem(current.getPrompt());
 					menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+					menuItem.setEnabled(current.isEnabled());
 					targetItems.get(current.getItem()).add(menuItem);
 				}
 				for(JMenuItem categoryMenu : targetItems.values()) {
@@ -201,12 +206,14 @@ public class GraphicalInterfaceNested implements UserInterface {
 				for(MenuDataMove current : move) {
 					JMenuItem menuItem = new JMenuItem(LangUtils.titleCase(current.getArea().getName()));
 					menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+					menuItem.setEnabled(current.isEnabled());
 					menuMove.add(menuItem);
 				}
 			}
 			for(MenuDataGlobal current : global) {
 				JButton button = new JButton(current.getPrompt());
 				button.addActionListener(new ChoiceButtonListener(current.getIndex()));
+				button.setEnabled(current.isEnabled());
 				choicePanel.add(button);
 			}
 			window.pack();

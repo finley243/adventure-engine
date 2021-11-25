@@ -442,7 +442,7 @@ public class Actor implements Noun, Physical {
 				action.add(new ActionGeneric(this, "TALK",
 						"Talk to " + this.getFormattedName(false),
 						0.0f, true, true, ActionGeneric.ActionMatchType.NONE, 1,
-						new MenuDataWorldActor("Talk", this)));
+						new MenuDataWorldActor("Talk", true, this)));
 			}
 		} else { // Dead
 			action.addAll(inventory.getActions(this));
@@ -584,13 +584,15 @@ public class Actor implements Noun, Physical {
 		List<Action> bestActions = new ArrayList<>();
 		float maxWeight = 0.0f;
 		for(Action currentAction : actions) {
-			float currentWeight = currentAction.utility(this);
-			if(currentWeight > maxWeight) {
-				maxWeight = currentWeight;
-				bestActions.clear();
-				bestActions.add(currentAction);
-			} else if(currentWeight == maxWeight) {
-				bestActions.add(currentAction);
+			if(currentAction.canChoose(this)) {
+				float currentWeight = currentAction.utility(this);
+				if (currentWeight > maxWeight) {
+					maxWeight = currentWeight;
+					bestActions.clear();
+					bestActions.add(currentAction);
+				} else if (currentWeight == maxWeight) {
+					bestActions.add(currentAction);
+				}
 			}
 		}
 		return bestActions.get(ThreadLocalRandom.current().nextInt(bestActions.size()));

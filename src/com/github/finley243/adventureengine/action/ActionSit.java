@@ -26,6 +26,11 @@ public class ActionSit implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Sit in " + chair.getFormattedName(false);
 	}
@@ -56,8 +61,8 @@ public class ActionSit implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataWorldObject("Sit", chair);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataWorldObject("Sit", canChoose(subject), chair);
 	}
 
 	@Override

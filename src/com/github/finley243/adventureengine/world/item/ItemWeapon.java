@@ -129,9 +129,7 @@ public class ItemWeapon extends ItemEquippable {
 				}
 			}
 		}
-		if(ammo < stats.getClipSize()) { // Add check to see if subject has ammo
-			actions.add(new ActionReload(this));
-		}
+		actions.add(new ActionReload(this));
 		if(this.getDescription() != null) {
 			actions.add(new ActionInspect(this, InspectType.EQUIPPED));
 		}

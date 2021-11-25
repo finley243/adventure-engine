@@ -24,6 +24,11 @@ public class ActionItemTake implements Action {
 		Context context = new Context(subject, false, item, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("pickUp"), context, this, subject));
 	}
+
+	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
 	
 	@Override
 	public String getPrompt() {
@@ -56,8 +61,8 @@ public class ActionItemTake implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataWorldObject("Take", item);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataWorldObject("Take", canChoose(subject), item);
 	}
 
 	@Override

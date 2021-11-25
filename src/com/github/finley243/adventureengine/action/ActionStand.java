@@ -28,6 +28,11 @@ public class ActionStand implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		if(object instanceof ObjectCover) {
 			return "Leave cover";
@@ -63,11 +68,11 @@ public class ActionStand implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
+	public MenuData getMenuData(Actor subject) {
 		if(object instanceof ObjectCover) {
-			return new MenuDataUsing("Leave cover", object);
+			return new MenuDataUsing("Leave cover", canChoose(subject), object);
 		} else {
-			return new MenuDataUsing("Stand", object);
+			return new MenuDataUsing("Stand", canChoose(subject), object);
 		}
 	}
 

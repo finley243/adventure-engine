@@ -28,12 +28,12 @@ public class MenuManager {
 		this.index = -1;
 	}
 	
-	public Action actionMenu(List<Action> actions) {
+	public Action actionMenu(List<Action> actions, Actor subject) {
 		List<String> menuStrings = new ArrayList<>();
 		List<MenuData> menuData = new ArrayList<>();
 		for(Action action : actions) {
 			menuStrings.add(action.getPrompt());
-			menuData.add(action.getMenuData());
+			menuData.add(action.getMenuData(subject));
 		}
 		int actionIndex = getMenuInput(menuStrings, menuData);
 		return actions.get(actionIndex);
@@ -94,7 +94,7 @@ public class MenuManager {
 		List<MenuData> menuData = new ArrayList<>();
 		for(DialogueChoice choice : choices) {
 			menuStrings.add(choice.getPrompt());
-			menuData.add(new MenuDataGlobal(choice.getPrompt()));
+			menuData.add(new MenuDataGlobal(choice.getPrompt(), true));
 		}
 		int dialogueIndex = getMenuInput(menuStrings, menuData);
 		return choices.get(dialogueIndex);

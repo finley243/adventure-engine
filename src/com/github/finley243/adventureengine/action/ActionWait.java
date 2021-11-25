@@ -16,6 +16,11 @@ public class ActionWait implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "End turn";
 	}
@@ -46,8 +51,8 @@ public class ActionWait implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataGlobal("End turn");
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataGlobal("End turn", canChoose(subject));
 	}
 
 	@Override

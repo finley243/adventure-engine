@@ -20,6 +20,11 @@ public class ActionApparelEquip implements Action {
     }
 
     @Override
+    public boolean canChoose(Actor subject) {
+        return true;
+    }
+
+    @Override
     public String getPrompt() {
         return "Equip " + item.getFormattedName(false);
     }
@@ -50,7 +55,7 @@ public class ActionApparelEquip implements Action {
     }
 
     @Override
-    public MenuData getMenuData() {
-        return new MenuDataInventory("Equip", item);
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataInventory("Equip", canChoose(subject), item);
     }
 }

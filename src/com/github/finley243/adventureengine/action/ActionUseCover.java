@@ -26,6 +26,11 @@ public class ActionUseCover implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Take cover behind " + cover.getFormattedName(false);
 	}
@@ -57,8 +62,8 @@ public class ActionUseCover implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataWorldObject("Take cover", cover);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataWorldObject("Take cover", canChoose(subject), cover);
 	}
 
 	@Override

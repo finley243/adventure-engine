@@ -16,6 +16,11 @@ public class ActionMultiEnd implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "End action";
 	}
@@ -51,8 +56,8 @@ public class ActionMultiEnd implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataGlobal("End action");
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataGlobal("End action", canChoose(subject));
 	}
 
 	@Override

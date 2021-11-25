@@ -33,6 +33,11 @@ public class ActionInspect implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Inspect " + object.getFormattedName(false);
 	}
@@ -64,14 +69,14 @@ public class ActionInspect implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
+	public MenuData getMenuData(Actor subject) {
 		switch(type) {
 		case EQUIPPED:
-			return new MenuDataEquipped("Inspect", (Item) object);
+			return new MenuDataEquipped("Inspect", canChoose(subject), (Item) object);
 		case INVENTORY:
-			return new MenuDataInventory("Inspect", (Item) object);
+			return new MenuDataInventory("Inspect", canChoose(subject), (Item) object);
 		case WORLD:
-			return new MenuDataWorldObject("Inspect", object);
+			return new MenuDataWorldObject("Inspect", canChoose(subject), object);
 		default:
 			return null;
 		}

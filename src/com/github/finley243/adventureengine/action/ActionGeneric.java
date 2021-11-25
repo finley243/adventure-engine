@@ -48,6 +48,11 @@ public class ActionGeneric implements Action{
     }
 
     @Override
+    public boolean canChoose(Actor subject) {
+        return true;
+    }
+
+    @Override
     public String getPrompt() {
         return prompt;
     }
@@ -86,7 +91,7 @@ public class ActionGeneric implements Action{
     }
 
     @Override
-    public MenuData getMenuData() {
+    public MenuData getMenuData(Actor subject) {
         return menuData;
     }
 

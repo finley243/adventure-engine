@@ -49,7 +49,7 @@ public class ActorPlayer extends Actor {
 	
 	@Override
 	public Action chooseAction(List<Action> actions) {
-		return menuManager.actionMenu(actions);
+		return menuManager.actionMenu(actions, this);
 	}
 	
 	public void startDialogue(Actor subject, String startTopic) {

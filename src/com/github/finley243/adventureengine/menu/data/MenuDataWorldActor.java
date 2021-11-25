@@ -6,8 +6,8 @@ public class MenuDataWorldActor extends MenuData {
 
 	private final Actor actor;
 	
-	public MenuDataWorldActor(String prompt, Actor actor) {
-		super(prompt);
+	public MenuDataWorldActor(String prompt, boolean enabled, Actor actor) {
+		super(prompt, enabled);
 		this.actor = actor;
 	}
 	

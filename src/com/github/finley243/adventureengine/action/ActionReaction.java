@@ -27,6 +27,11 @@ public class ActionReaction implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		switch(type) {
 		case BLOCK:
@@ -69,12 +74,12 @@ public class ActionReaction implements Action {
 	}
 
 	@Override
-	public MenuData getMenuData() {
+	public MenuData getMenuData(Actor subject) {
 		switch(type) {
 		case BLOCK:
-			return new MenuDataGlobal("Block");
+			return new MenuDataGlobal("Block", canChoose(subject));
 		case DODGE:
-			return new MenuDataGlobal("Dodge");
+			return new MenuDataGlobal("Dodge", canChoose(subject));
 		default:
 			return null;
 		}

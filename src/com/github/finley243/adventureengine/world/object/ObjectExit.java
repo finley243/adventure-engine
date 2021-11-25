@@ -32,25 +32,21 @@ public class ObjectExit extends LinkedObject {
 		this.isLocked = false;
 		((ObjectExit) Data.getLinkedObject(linkedExitID)).isLocked = false;
 	}
+
+	public boolean isLocked() {
+		return isLocked;
+	}
+
+	public Set<String> getKeyIDs() {
+		return keyIDs;
+	}
 	
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
 		actions.add(new ActionListenExit(this));
-		if(isLocked) {
-			boolean hasKey = false;
-			for(String keyID : keyIDs) {
-				if(subject.inventory().hasItemWithID(keyID)) {
-					hasKey = true;
-					break;
-				}
-			}
-			if(hasKey) {
-				actions.add(new ActionUnlockExit(this));
-			}
-		} else {
-			actions.add(new ActionMoveExit(this));
-		}
+		actions.add(new ActionUnlockExit(this));
+		actions.add(new ActionMoveExit(this));
 		return actions;
 	}
 	

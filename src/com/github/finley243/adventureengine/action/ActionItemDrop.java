@@ -31,6 +31,11 @@ public class ActionItemDrop implements Action {
 		Context context = new Context(subject, false, item, true);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context, this, subject));
 	}
+
+	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
 	
 	@Override
 	public String getPrompt() {
@@ -63,11 +68,11 @@ public class ActionItemDrop implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
+	public MenuData getMenuData(Actor subject) {
 		//if(isEquipped) {
 		//	return new MenuDataEquipped("Drop", item);
 		//} else {
-			return new MenuDataInventory("Drop", item);
+			return new MenuDataInventory("Drop", canChoose(subject), item);
 		//}
 	}
 

@@ -23,6 +23,11 @@ public class ActionAttack implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Attack " + target.getName() + " with " + weapon.getName();
 	}
@@ -58,8 +63,8 @@ public class ActionAttack implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataWorldActor("Attack (" + LangUtils.titleCase(weapon.getName()) + ")", target);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataWorldActor("Attack (" + LangUtils.titleCase(weapon.getName()) + ")", canChoose(subject), target);
 	}
 	
 	@Override

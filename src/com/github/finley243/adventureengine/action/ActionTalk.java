@@ -21,6 +21,11 @@ public class ActionTalk implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return target.isInCombat();
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Talk to " + target.getFormattedName(false);
 	}
@@ -51,8 +56,8 @@ public class ActionTalk implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataWorldActor("Talk", target);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataWorldActor("Talk", canChoose(subject), target);
 	}
 
 	@Override

@@ -38,6 +38,11 @@ public class ActionListenExit implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return true;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Listen through " + exit.getFormattedName(false);
 	}
@@ -68,8 +73,8 @@ public class ActionListenExit implements Action {
 	}
 
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataWorldObject("Listen", exit);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataWorldObject("Listen", canChoose(subject), exit);
 	}
 
 }

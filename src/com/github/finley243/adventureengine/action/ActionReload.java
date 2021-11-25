@@ -30,6 +30,11 @@ public class ActionReload implements Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		return weapon.getAmmoFraction() < 1.0f;
+	}
+
+	@Override
 	public String getPrompt() {
 		return "Reload " + weapon.getName();
 	}
@@ -68,8 +73,8 @@ public class ActionReload implements Action {
 	}
 	
 	@Override
-	public MenuData getMenuData() {
-		return new MenuDataInventory("Reload (" + weapon.getAmmoRemaining() + ")", weapon);
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataInventory("Reload (" + weapon.getAmmoRemaining() + ")", canChoose(subject), weapon);
 	}
 
 	@Override

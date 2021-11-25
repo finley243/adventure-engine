@@ -21,6 +21,11 @@ public class ActionApparelUnequip implements Action {
     }
 
     @Override
+    public boolean canChoose(Actor subject) {
+        return true;
+    }
+
+    @Override
     public String getPrompt() {
         return "Unequip " + item.getFormattedName(false);
     }
@@ -51,7 +56,7 @@ public class ActionApparelUnequip implements Action {
     }
 
     @Override
-    public MenuData getMenuData() {
-        return new MenuDataInventory("Unequip", item);
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataInventory("Unequip", canChoose(subject), item);
     }
 }
