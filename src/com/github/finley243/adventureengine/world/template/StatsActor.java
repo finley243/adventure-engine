@@ -66,10 +66,12 @@ public class StatsActor {
 	}
 	
 	public String getLootTable() {
+		if(lootTable == null && parentID.isEmpty()) return null;
 		return lootTable != null ? lootTable : Data.getActorStats(parentID).getLootTable();
 	}
 
 	public String getTopic() {
+		if(topic == null && parentID.isEmpty()) return null;
 		return topic != null ? topic : Data.getActorStats(parentID).getTopic();
 	}
 	

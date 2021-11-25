@@ -1,30 +1,32 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionAttack implements Action {
-	
+public class ActionAttackTargeted implements Action {
+
 	private final ItemWeapon weapon;
 	private final Actor target;
-	
-	public ActionAttack(ItemWeapon weapon, Actor target) {
+	private final Limb limb;
+
+	public ActionAttackTargeted(ItemWeapon weapon, Actor target, Limb limb) {
 		this.weapon = weapon;
 		this.target = target;
+		this.limb = limb;
 	}
 
 	@Override
 	public void choose(Actor subject) {
-		weapon.attack(subject, target, null);
+		weapon.attack(subject, target, limb);
 	}
 
 	@Override
 	public String getPrompt() {
-		return "Attack " + target.getName() + " with " + weapon.getName();
+		return "Attack " + target.getName() + " with " + weapon.getName() + " (targeted: " + limb.getName() + ")";
 	}
 
 	@Override
@@ -45,10 +47,10 @@ public class ActionAttack implements Action {
 
 	@Override
 	public boolean isRepeatMatch(Action action) {
-		if(!(action instanceof ActionAttack)) {
+		if(!(action instanceof ActionAttackTargeted)) {
 			return false;
 		} else {
-			return ((ActionAttack) action).weapon == this.weapon;
+			return ((ActionAttackTargeted) action).weapon == this.weapon;
 		}
 	}
 	
@@ -59,15 +61,15 @@ public class ActionAttack implements Action {
 	
 	@Override
 	public MenuData getMenuData() {
-		return new MenuDataWorldActor("Attack (" + LangUtils.titleCase(weapon.getName()) + ")", target);
+		return new MenuDataWorldActor("Targeted Attack (" + LangUtils.titleCase(weapon.getName()) + ", " + LangUtils.titleCase(limb.getName()) + ")", target);
 	}
 	
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionAttack)) {
+        if(!(o instanceof ActionAttackTargeted)) {
             return false;
         } else {
-            ActionAttack other = (ActionAttack) o;
+            ActionAttackTargeted other = (ActionAttackTargeted) o;
             return other.weapon == this.weapon && other.target == this.target;
         }
     }

@@ -22,22 +22,22 @@ public class CombatHelper {
 		lastAttack = null;
 	}
 
-	public static void handleAttack(Actor subject, Actor target, ItemWeapon weapon) {
+	public static void handleAttack(Actor subject, Actor target, Limb limb, ItemWeapon weapon) {
 		boolean isRepeat = lastAttack != null && lastAttack.getSubject() == subject && lastAttack.getObject() == target && lastAttack.getObject2() == weapon;
 		target.addCombatTarget(subject);
 		Context attackContext = new Context(subject, false, target, false, weapon, false);
 		if(!isRepeat) {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedTelegraph" : "meleeTelegraph"), attackContext, null, null));
 		}
-		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance(subject)) {
-			handleHit(subject, target, weapon);
+		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance(subject) * (limb != null ? limb.getHitChance() : 1.0f)) {
+			handleHit(subject, target, limb, weapon);
 		} else {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedMiss" : "meleeMiss"), attackContext, null, null));
 		}
 		lastAttack = attackContext;
 	}
 	
-	private static void handleHit(Actor subject, Actor target, ItemWeapon weapon) {
+	private static void handleHit(Actor subject, Actor target, Limb limb, ItemWeapon weapon) {
 		int damage = weapon.getDamage();
 		boolean crit = false;
 		if(ThreadLocalRandom.current().nextFloat() < ItemWeapon.CRIT_CHANCE) {
@@ -47,10 +47,19 @@ public class CombatHelper {
 		List<Action> reactions = weapon.reactionActions(target);
 		Context attackContext = new Context(subject, false, target, false, weapon, false);
 		Context reactionContext = new Context(target, false, subject, false, weapon, false);
-		String hitPhrase = weapon.isRanged() ? (crit ? "rangedHitCrit" : "rangedHit") : (crit ? "meleeHitCrit" : "meleeHit");
+		String hitPhrase;
+		if(limb == null) {
+			hitPhrase = weapon.isRanged() ? (crit ? "rangedHitCrit" : "rangedHit") : (crit ? "meleeHitCrit" : "meleeHit");
+		} else {
+			hitPhrase = weapon.isRanged() ? (crit ? limb.getRangedCritHitPhrase() : limb.getRangedHitPhrase()) : (crit ? limb.getMeleeCritHitPhrase() : limb.getMeleeHitPhrase());
+		}
 		if(reactions.isEmpty()) {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
-			target.damage(damage);
+			if(limb == null) {
+				target.damage(damage);
+			} else {
+				target.damageLimb(damage, limb);
+			}
 		} else {
 			ActionReaction reaction = (ActionReaction) target.chooseAction(weapon.reactionActions(target));
 			switch(reaction.getType()) {
@@ -60,7 +69,11 @@ public class CombatHelper {
 				} else {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("blockFail"), reactionContext, null, null));
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
-					target.damage(damage);
+					if(limb == null) {
+						target.damage(damage);
+					} else {
+						target.damageLimb(damage, limb);
+					}
 				}
 				break;
 			case DODGE:
@@ -69,7 +82,11 @@ public class CombatHelper {
 				} else {
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("dodgeFail"), reactionContext, null, null));
 					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
-					target.damage(damage);
+					if(limb == null) {
+						target.damage(damage);
+					} else {
+						target.damageLimb(damage, limb);
+					}
 				}
 				break;
 			default:

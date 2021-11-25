@@ -1,12 +1,54 @@
 <actors>
-    <actor id="player">
+    <actor id="default">
+        <name proper="false">DEFAULT</name>
+        <pronoun>THEY</pronoun>
+        <limbs>
+            <limb>
+                <name>head</name>
+                <meleeHitPhrase>meleeHitHead</meleeHitPhrase>
+                <meleeCritHitPhrase>meleeHitCritHead</meleeCritHitPhrase>
+                <rangedHitPhrase>rangedHitHead</rangedHitPhrase>
+                <rangedCritHitPhrase>rangedHitCritHead</rangedCritHitPhrase>
+                <hitChance>0.70</hitChance>
+                <damageMult>1.50</damageMult>
+                <apparelSlot>HEAD</apparelSlot>
+                <maxCondition>20</maxCondition>
+                <effects></effects>
+            </limb>
+            <limb>
+                <name>arm</name>
+                <meleeHitPhrase>meleeHitArm</meleeHitPhrase>
+                <meleeCritHitPhrase>meleeHitCritArm</meleeCritHitPhrase>
+                <rangedHitPhrase>rangedHitArm</rangedHitPhrase>
+                <rangedCritHitPhrase>rangedHitCritArm</rangedCritHitPhrase>
+                <hitChance>0.80</hitChance>
+                <damageMult>1.00</damageMult>
+                <apparelSlot>TORSO</apparelSlot>
+                <maxCondition>20</maxCondition>
+                <effects></effects>
+            </limb>
+            <limb>
+                <name>leg</name>
+                <meleeHitPhrase>meleeHitLeg</meleeHitPhrase>
+                <meleeCritHitPhrase>meleeHitCritLeg</meleeCritHitPhrase>
+                <rangedHitPhrase>rangedHitLeg</rangedHitPhrase>
+                <rangedCritHitPhrase>rangedHitCritLeg</rangedCritHitPhrase>
+                <hitChance>0.85</hitChance>
+                <damageMult>1.00</damageMult>
+                <apparelSlot>LEGS</apparelSlot>
+                <maxCondition>20</maxCondition>
+                <effects></effects>
+            </limb>
+        </limbs>
+    </actor>
+    <actor id="player" parent="default">
         <name proper="true">PLAYER</name>
         <pronoun>YOU</pronoun>
         <faction>player</faction>
         <hp>50</hp>
         <loottable>player</loottable>
     </actor>
-    <actor id="stratis_receptionist">
+    <actor id="stratis_receptionist" parent="default">
         <name proper="false">receptionist</name>
         <pronoun>HE</pronoun>
         <faction>stratis_hotel_staff</faction>
@@ -14,21 +56,21 @@
         <loottable>stratis_receptionist</loottable>
         <topic>stratis_receptionist_start</topic>
     </actor>
-    <actor id="stratis_guard">
+    <actor id="stratis_guard" parent="default">
         <name proper="false">guard</name>
         <pronoun>HE</pronoun>
         <faction>stratis_hotel_staff</faction>
         <hp>70</hp>
         <loottable>stratis_guard</loottable>
     </actor>
-    <actor id="enemy">
+    <actor id="enemy" parent="default">
         <name proper="false">ganger</name>
         <pronoun>HE</pronoun>
         <faction>enemy</faction>
         <hp>40</hp>
         <loottable>weapon_ranged</loottable>
     </actor>
-    <actor id="nexus_bouncer">
+    <actor id="nexus_bouncer" parent="default">
         <name proper="false">bouncer</name>
         <pronoun>HE</pronoun>
         <faction>nexus_staff</faction>
@@ -36,7 +78,7 @@
         <loottable>nexus_bouncer</loottable>
         <topic>nexus_bouncer_start</topic>
     </actor>
-    <actor id="lucas_simms">
+    <actor id="lucas_simms" parent="default">
         <name proper="true">Lucas Simms</name>
         <pronoun>HE</pronoun>
         <faction>nexus_staff</faction>

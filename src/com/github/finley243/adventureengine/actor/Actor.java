@@ -234,6 +234,10 @@ public class Actor implements Noun, Physical {
 	public ApparelManager apparelManager() {
 		return apparelManager;
 	}
+
+	public List<Limb> getLimbs() {
+		return stats.getLimbs();
+	}
 	
 	public Inventory getTradeInventory() {
 		return tradeInventory;
@@ -310,7 +314,8 @@ public class Actor implements Noun, Physical {
 		if(oldCondition > 0 && newCondition == 0) {
 			limb.setCrippled(true, this);
 		}
-		HP -= amount * limb.getDamageMult();
+		amount *= limb.getDamageMult();
+		HP -= amount;
 		if(HP <= 0) {
 			HP = 0;
 			kill();

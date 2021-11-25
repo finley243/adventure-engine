@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
+import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
 
 public class ActionApparelUnequip implements Action {
@@ -51,6 +52,6 @@ public class ActionApparelUnequip implements Action {
 
     @Override
     public MenuData getMenuData() {
-        return new MenuDataEquipped("Unequip", item);
+        return new MenuDataInventory("Unequip", item);
     }
 }

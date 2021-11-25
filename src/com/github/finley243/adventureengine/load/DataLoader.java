@@ -106,12 +106,16 @@ public class DataLoader {
 
     private static Limb loadLimb(Element element) {
         String name = LoadUtils.singleTag(element, "name", null);
+        String meleeHitPhrase = LoadUtils.singleTag(element, "meleeHitPhrase", null);
+        String meleeCritHitPhrase = LoadUtils.singleTag(element, "meleeCritHitPhrase", null);
+        String rangedHitPhrase = LoadUtils.singleTag(element, "rangedHitPhrase", null);
+        String rangedCritHitPhrase = LoadUtils.singleTag(element, "rangedCritHitPhrase", null);
         float hitChance = LoadUtils.singleTagFloat(element, "hitChance", 1.0f);
         float damageMult = LoadUtils.singleTagFloat(element, "damageMult", 1.0f);
         ApparelManager.ApparelSlot apparelSlot = ApparelManager.ApparelSlot.valueOf(LoadUtils.singleTag(element, "apparelSlot", "TORSO"));
         int maxCondition = LoadUtils.singleTagInt(element, "maxCondition", 0);
         List<Effect> crippledEffects = loadEffects(LoadUtils.singleChildWithName(element, "effects"), true);
-        return new Limb(name, hitChance, damageMult, apparelSlot, maxCondition, crippledEffects);
+        return new Limb(name, meleeHitPhrase, meleeCritHitPhrase, rangedHitPhrase, rangedCritHitPhrase, hitChance, damageMult, apparelSlot, maxCondition, crippledEffects);
     }
 
     private static Context.Pronoun pronounTag(Element element, String name) {

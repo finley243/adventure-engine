@@ -64,11 +64,11 @@ public class ActionItemDrop implements Action {
 	
 	@Override
 	public MenuData getMenuData() {
-		if(isEquipped) {
-			return new MenuDataEquipped("Drop", item);
-		} else {
+		//if(isEquipped) {
+		//	return new MenuDataEquipped("Drop", item);
+		//} else {
 			return new MenuDataInventory("Drop", item);
-		}
+		//}
 	}
 
 	@Override

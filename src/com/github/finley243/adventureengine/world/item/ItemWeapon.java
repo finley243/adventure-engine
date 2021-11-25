@@ -5,16 +5,12 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionAttack;
-import com.github.finley243.adventureengine.action.ActionEquip;
-import com.github.finley243.adventureengine.action.ActionInspect;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
-import com.github.finley243.adventureengine.action.ActionReaction;
 import com.github.finley243.adventureengine.action.ActionReaction.ReactionType;
-import com.github.finley243.adventureengine.action.ActionReload;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
+import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
@@ -78,12 +74,12 @@ public class ItemWeapon extends ItemEquippable {
 		ammo -= amount;
 	}
 	
-	public void attack(Actor subject, Actor target) {
+	public void attack(Actor subject, Actor target, Limb limb) {
 		if(isRanged()) {
 			consumeAmmo(1);
 			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
 		}
-		CombatHelper.handleAttack(subject, target, this);
+		CombatHelper.handleAttack(subject, target, limb, this);
 	}
 	
 	public List<Action> reactionActions(Actor target) {
@@ -115,10 +111,16 @@ public class ItemWeapon extends ItemEquippable {
 				if(stats.getType().isRanged) { // Ranged
 					if(target.isActive() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && ammo > 0) {
 						actions.add(new ActionAttack(this, target));
+						for(Limb limb : target.getLimbs()) {
+							actions.add(new ActionAttackTargeted(this, target, limb));
+						}
 					}
 				} else { // Melee
 					if(target.isActive()) {
 						actions.add(new ActionAttack(this, target));
+						for(Limb limb : target.getLimbs()) {
+							actions.add(new ActionAttackTargeted(this, target, limb));
+						}
 					}
 				}
 			}

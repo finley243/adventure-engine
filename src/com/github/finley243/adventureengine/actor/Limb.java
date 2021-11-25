@@ -7,14 +7,22 @@ import java.util.List;
 public class Limb {
 
     private final String name;
+    private final String meleeHitPhrase;
+    private final String meleeCritHitPhrase;
+    private final String rangedHitPhrase;
+    private final String rangedCritHitPhrase;
     private final float hitChance;
     private final float damageMult;
     private final ApparelManager.ApparelSlot apparelSlot;
     private final int maxCondition;
     private final List<Effect> crippledEffects;
 
-    public Limb(String name, float hitChance, float damageMult, ApparelManager.ApparelSlot apparelSlot, int maxCondition, List<Effect> crippledEffects) {
+    public Limb(String name, String meleeHitPhrase, String meleeCritHitPhrase, String rangedHitPhrase, String rangedCritHitPhrase, float hitChance, float damageMult, ApparelManager.ApparelSlot apparelSlot, int maxCondition, List<Effect> crippledEffects) {
         this.name = name;
+        this.meleeHitPhrase = meleeHitPhrase;
+        this.meleeCritHitPhrase = meleeCritHitPhrase;
+        this.rangedHitPhrase = rangedHitPhrase;
+        this.rangedCritHitPhrase = rangedCritHitPhrase;
         this.hitChance = hitChance;
         this.damageMult = damageMult;
         this.apparelSlot = apparelSlot;
@@ -24,6 +32,22 @@ public class Limb {
 
     public String getName() {
         return name;
+    }
+
+    public String getMeleeHitPhrase() {
+        return meleeHitPhrase;
+    }
+
+    public String getMeleeCritHitPhrase() {
+        return meleeCritHitPhrase;
+    }
+
+    public String getRangedHitPhrase() {
+        return rangedHitPhrase;
+    }
+
+    public String getRangedCritHitPhrase() {
+        return rangedCritHitPhrase;
     }
 
     public float getHitChance() {
