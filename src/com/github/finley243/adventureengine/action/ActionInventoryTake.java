@@ -4,15 +4,11 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataNested;
-import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
-import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInventoryTake extends Action {
 
@@ -42,7 +38,7 @@ public class ActionInventoryTake extends Action {
     @Override
     public MenuData getMenuData(Actor subject) {
         String fullPrompt = "Take " + item.getFormattedName(true) + " from " + owner.getFormattedName(false);
-        return new MenuDataNested("Take " + item.getName(), fullPrompt, canChoose(subject), new String[]{owner.getName()});
+        return new MenuData("Take " + item.getName(), fullPrompt, canChoose(subject), new String[]{owner.getName()});
     }
 
     @Override

@@ -4,9 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataMove;
-import com.github.finley243.adventureengine.menu.data.MenuDataNested;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -58,7 +56,7 @@ public class ActionMove extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataNested(LangUtils.titleCase(area.getName()), "Move to " + area.getFormattedName(false), canChoose(subject), new String[]{"move"});
+		return new MenuData(LangUtils.titleCase(area.getName()), "Move to " + area.getFormattedName(false), canChoose(subject), new String[]{"move"});
 	}
 
 	@Override

@@ -2,11 +2,8 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SoundEvent;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
-import com.github.finley243.adventureengine.menu.data.MenuDataNested;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
@@ -30,6 +27,6 @@ public class ActionThrow extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuDataNested(LangUtils.titleCase(area.getName()), "Throw " + item.getFormattedName(false) + " towards " + area.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName(), "throw"});
+        return new MenuData(LangUtils.titleCase(area.getName()), "Throw " + item.getFormattedName(false) + " towards " + area.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName(), "throw"});
     }
 }

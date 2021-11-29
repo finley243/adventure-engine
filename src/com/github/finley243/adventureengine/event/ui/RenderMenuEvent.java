@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.event.ui;
 
-import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.MenuData;
 
 import java.util.List;
 

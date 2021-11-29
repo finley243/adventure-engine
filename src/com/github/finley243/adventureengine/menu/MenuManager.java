@@ -14,8 +14,6 @@ import com.github.finley243.adventureengine.dialogue.DialogueTopic.TopicType;
 import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
 import com.github.finley243.adventureengine.network.Network;
 import com.github.finley243.adventureengine.network.action.NetworkAction;
 import com.google.common.eventbus.Subscribe;
@@ -90,7 +88,7 @@ public class MenuManager {
 	private DialogueChoice dialogueMenuInput(List<DialogueChoice> choices) {
 		List<MenuData> menuData = new ArrayList<>();
 		for(DialogueChoice choice : choices) {
-			menuData.add(new MenuDataGlobal(choice.getPrompt(), choice.getPrompt(), true));
+			menuData.add(new MenuData(choice.getPrompt(), choice.getPrompt(), true));
 		}
 		int dialogueIndex = getMenuInput(menuData);
 		return choices.get(dialogueIndex);

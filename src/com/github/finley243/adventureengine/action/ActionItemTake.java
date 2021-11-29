@@ -3,9 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataNested;
-import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
@@ -33,7 +31,7 @@ public class ActionItemTake extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataNested("Take", "Take " + item.getFormattedName(false), canChoose(subject), new String[]{item.getName()});
+		return new MenuData("Take", "Take " + item.getFormattedName(false), canChoose(subject), new String[]{item.getName()});
 	}
 
 	@Override

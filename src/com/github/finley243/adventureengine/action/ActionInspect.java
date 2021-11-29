@@ -4,8 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.menu.data.*;
-import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInspect extends Action {
@@ -39,9 +38,9 @@ public class ActionInspect extends Action {
 		switch(type) {
 		case EQUIPPED:
 		case INVENTORY:
-			return new MenuDataNested("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), new String[]{"inventory", object.getName()});
+			return new MenuData("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), new String[]{"inventory", object.getName()});
 		case WORLD:
-			return new MenuDataNested("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), new String[]{object.getName()});
+			return new MenuData("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), new String[]{object.getName()});
 		default:
 			return null;
 		}

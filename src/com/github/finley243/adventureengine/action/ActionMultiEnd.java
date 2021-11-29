@@ -1,9 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
-import com.github.finley243.adventureengine.menu.data.MenuDataNested;
+import com.github.finley243.adventureengine.menu.MenuData;
 
 public class ActionMultiEnd extends Action {
 
@@ -28,7 +26,7 @@ public class ActionMultiEnd extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataNested("End action", "End action", canChoose(subject));
+		return new MenuData("End action", "End action", canChoose(subject));
 	}
 
 	@Override

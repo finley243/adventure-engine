@@ -5,13 +5,11 @@ import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.ConsoleUtils;
-import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class ConsoleInterface implements UserInterface {
 
@@ -33,7 +31,7 @@ public class ConsoleInterface implements UserInterface {
 			}
 		}
 		for(int i = 0; i < validChoices.size(); i++) {
-			System.out.println((i + 1) + ") " + validChoices.get(i));
+			System.out.println((i + 1) + ") " + validChoices.get(i).getFullPrompt());
 		}
 		int response = ConsoleUtils.intInRange(1, validChoices.size());
 		System.out.println();

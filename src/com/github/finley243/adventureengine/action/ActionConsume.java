@@ -4,9 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
-import com.github.finley243.adventureengine.menu.data.MenuDataNested;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemConsumable;
@@ -59,7 +57,7 @@ public class ActionConsume extends Action {
 			fullPrompt = "Use " + item.getFormattedName(true);
 			break;
 		}
-		return new MenuDataNested(prompt, fullPrompt, canChoose(subject), new String[]{"inventory", item.getName()});
+		return new MenuData(prompt, fullPrompt, canChoose(subject), new String[]{"inventory", item.getName()});
 	}
 
 	@Override

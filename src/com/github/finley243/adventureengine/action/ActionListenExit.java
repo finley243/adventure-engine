@@ -3,9 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataNested;
-import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
 public class ActionListenExit extends Action {
@@ -45,7 +43,7 @@ public class ActionListenExit extends Action {
 
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataNested("Listen", "Listen through " + exit.getFormattedName(false), canChoose(subject), new String[]{exit.getName()});
+		return new MenuData("Listen", "Listen through " + exit.getFormattedName(false), canChoose(subject), new String[]{exit.getName()});
 	}
 
 }

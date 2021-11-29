@@ -14,7 +14,7 @@ import com.github.finley243.adventureengine.actor.ai.PursueTarget;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -30,8 +30,6 @@ import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 public class Actor implements Noun, Physical {
 
@@ -439,7 +437,7 @@ public class Actor implements Noun, Physical {
 				//action.add(new ActionTalk(this));
 				action.add(new ActionGeneric(this, "TALK",
 						0.0f, true, true, ActionGeneric.ActionMatchType.NONE, 1,
-						new MenuDataWorldActor("Talk", "Talk to " + this.getFormattedName(false), true, this)));
+						new MenuData("Talk", "Talk to " + this.getFormattedName(false), true, new String[]{this.getName()})));
 			}
 		} else { // Dead
 			action.addAll(inventory.getActions(this));

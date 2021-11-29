@@ -1,9 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
-import com.github.finley243.adventureengine.menu.data.MenuDataNested;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
 
 public class ActionApparelEquip extends Action {
@@ -23,6 +21,6 @@ public class ActionApparelEquip extends Action {
     @Override
     public MenuData getMenuData(Actor subject) {
         //return new MenuDataInventory("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), item);
-        return new MenuDataNested("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName()});
+        return new MenuData("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName()});
     }
 }

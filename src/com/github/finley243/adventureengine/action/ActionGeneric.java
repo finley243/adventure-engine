@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.world.Physical;
 
 import java.util.Arrays;

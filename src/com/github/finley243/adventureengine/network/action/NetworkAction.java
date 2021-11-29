@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.network.action;
 
-import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.world.Networked;
 
 public class NetworkAction {

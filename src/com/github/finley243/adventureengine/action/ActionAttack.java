@@ -1,10 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
-import com.github.finley243.adventureengine.menu.data.MenuDataNested;
-import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
@@ -50,7 +47,7 @@ public class ActionAttack extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataNested("Attack (" + LangUtils.titleCase(weapon.getName()) + ")", "Attack " + target.getFormattedName(false) + " with " + weapon.getFormattedName(false), canChoose(subject), new String[]{target.getName()});
+		return new MenuData("Attack (" + LangUtils.titleCase(weapon.getName()) + ")", "Attack " + target.getFormattedName(false) + " with " + weapon.getFormattedName(false), canChoose(subject), new String[]{target.getName()});
 	}
 	
 	@Override
