@@ -8,14 +8,14 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionEquip extends Action {
+public class ActionItemEquip extends Action {
 
 	public static final float SUBOPTIMAL_WEAPON_UTILITY = 0.8f;
 	public static final float OPTIMAL_WEAPON_UTILITY = 1.0f;
 
 	private final ItemWeapon item;
 	
-	public ActionEquip(ItemWeapon item) {
+	public ActionItemEquip(ItemWeapon item) {
 		this.item = item;
 	}
 	
@@ -57,10 +57,10 @@ public class ActionEquip extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionEquip)) {
+        if(!(o instanceof ActionItemEquip)) {
             return false;
         } else {
-            ActionEquip other = (ActionEquip) o;
+            ActionItemEquip other = (ActionItemEquip) o;
             return other.item == this.item;
         }
     }

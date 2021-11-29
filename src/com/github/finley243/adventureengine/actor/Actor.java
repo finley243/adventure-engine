@@ -513,7 +513,7 @@ public class Actor implements Noun, Physical {
 				currentAction.disable();
 			}
 		}
-		actions.add(new ActionWait());
+		actions.add(new ActionEnd());
 		return actions;
 	}
 	
@@ -541,7 +541,7 @@ public class Actor implements Noun, Physical {
 						repeatActions.add(action);
 					}
 				}
-				repeatActions.add(new ActionMultiEnd());
+				repeatActions.add(new ActionEndMulti());
 				chosenAction = chooseAction(repeatActions);
 				repeatActionPoints--;
 			} else {

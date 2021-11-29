@@ -101,7 +101,7 @@ public class ItemWeapon extends ItemEquippable {
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = super.inventoryActions(subject);
 		if(!subject.hasEquippedItem()) {
-			actions.add(0, new ActionEquip(this));
+			actions.add(0, new ActionItemEquip(this));
 		}
 		return actions;
 	}
@@ -114,22 +114,22 @@ public class ItemWeapon extends ItemEquippable {
 			if(target != subject) {
 				if(stats.getType().isRanged) { // Ranged
 					if(target.isActive() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && ammo > 0) {
-						actions.add(new ActionAttack(this, target));
+						actions.add(new ActionWeaponAttack(this, target));
 						for(Limb limb : target.getLimbs()) {
-							actions.add(new ActionAttackTargeted(this, target, limb));
+							actions.add(new ActionWeaponAttackTargeted(this, target, limb));
 						}
 					}
 				} else { // Melee
 					if(target.isActive()) {
-						actions.add(new ActionAttack(this, target));
+						actions.add(new ActionWeaponAttack(this, target));
 						for(Limb limb : target.getLimbs()) {
-							actions.add(new ActionAttackTargeted(this, target, limb));
+							actions.add(new ActionWeaponAttackTargeted(this, target, limb));
 						}
 					}
 				}
 			}
 		}
-		actions.add(new ActionReload(this));
+		actions.add(new ActionWeaponReload(this));
 		if(this.getDescription() != null) {
 			actions.add(new ActionInspect(this, InspectType.EQUIPPED));
 		}

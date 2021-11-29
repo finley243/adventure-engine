@@ -5,9 +5,9 @@ import java.util.Set;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionListenExit;
+import com.github.finley243.adventureengine.action.ActionExitListen;
 import com.github.finley243.adventureengine.action.ActionMoveExit;
-import com.github.finley243.adventureengine.action.ActionUnlockExit;
+import com.github.finley243.adventureengine.action.ActionExitUnlock;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -44,8 +44,8 @@ public class ObjectExit extends LinkedObject {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
-		actions.add(new ActionListenExit(this));
-		actions.add(new ActionUnlockExit(this));
+		actions.add(new ActionExitListen(this));
+		actions.add(new ActionExitUnlock(this));
 		actions.add(new ActionMoveExit(this));
 		return actions;
 	}

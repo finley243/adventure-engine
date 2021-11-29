@@ -6,40 +6,52 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.world.object.ObjectChair;
 import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 
-public class ActionStand extends Action {
+public class ActionUseStart extends Action {
 
 	private final UsableObject object;
 	
-	public ActionStand(UsableObject object) {
+	public ActionUseStart(UsableObject object) {
 		this.object = object;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		object.removeUser();
-		subject.stopUsingObject();
+		object.setUser(subject);
+		subject.startUsingObject(object);
 		Context context = new Context(subject, false, object, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("stand"), context, this, subject));
+		String phrase = null;
+		if(object instanceof ObjectCover) {
+			phrase = "takeCover";
+		} else if(object instanceof ObjectChair) {
+			phrase = "sit";
+		}
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(phrase), context, this, subject));
 	}
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
+		String prompt = null;
+		String fullPrompt = null;
 		if(object instanceof ObjectCover) {
-			return new MenuData("Leave cover", "Leave cover", canChoose(subject), new String[]{object.getName()});
-		} else {
-			return new MenuData("Stand", "Stand up", canChoose(subject), new String[]{object.getName()});
+			prompt = "Take cover";
+			fullPrompt = "Take cover behind " + object.getFormattedName(false);
+		} else if(object instanceof ObjectChair) {
+			prompt = "Sit";
+			fullPrompt = "Sit in " + object.getFormattedName(false);
 		}
+		return new MenuData(prompt, fullPrompt, canChoose(subject), new String[]{object.getName()});
 	}
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionStand)) {
+        if(!(o instanceof ActionUseStart)) {
             return false;
         } else {
-            ActionStand other = (ActionStand) o;
+            ActionUseStart other = (ActionUseStart) o;
             return other.object == this.object;
         }
     }

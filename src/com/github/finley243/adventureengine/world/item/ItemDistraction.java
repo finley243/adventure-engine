@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionThrow;
+import com.github.finley243.adventureengine.action.ActionItemThrow;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -31,7 +31,7 @@ public class ItemDistraction extends Item {
     public List<Action> inventoryActions(Actor subject) {
         List<Action> actions = super.inventoryActions(subject);
         for(Area area : subject.getArea().getRoom().getAreas()) {
-            actions.add(new ActionThrow(area, this));
+            actions.add(new ActionItemThrow(area, this));
         }
         return actions;
     }

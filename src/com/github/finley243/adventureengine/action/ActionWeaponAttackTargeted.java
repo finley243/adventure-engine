@@ -6,13 +6,13 @@ import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionAttackTargeted extends Action {
+public class ActionWeaponAttackTargeted extends Action {
 
 	private final ItemWeapon weapon;
 	private final Actor target;
 	private final Limb limb;
 
-	public ActionAttackTargeted(ItemWeapon weapon, Actor target, Limb limb) {
+	public ActionWeaponAttackTargeted(ItemWeapon weapon, Actor target, Limb limb) {
 		this.weapon = weapon;
 		this.target = target;
 		this.limb = limb;
@@ -36,10 +36,10 @@ public class ActionAttackTargeted extends Action {
 
 	@Override
 	public boolean isRepeatMatch(Action action) {
-		if(!(action instanceof ActionAttackTargeted)) {
+		if(!(action instanceof ActionWeaponAttackTargeted)) {
 			return false;
 		} else {
-			return ((ActionAttackTargeted) action).weapon == this.weapon;
+			return ((ActionWeaponAttackTargeted) action).weapon == this.weapon;
 		}
 	}
 	
@@ -55,10 +55,10 @@ public class ActionAttackTargeted extends Action {
 	
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionAttackTargeted)) {
+        if(!(o instanceof ActionWeaponAttackTargeted)) {
             return false;
         } else {
-            ActionAttackTargeted other = (ActionAttackTargeted) o;
+            ActionWeaponAttackTargeted other = (ActionWeaponAttackTargeted) o;
             return other.weapon == this.weapon && other.target == this.target;
         }
     }

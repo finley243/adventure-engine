@@ -8,12 +8,12 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
 
-public class ActionThrow extends Action {
+public class ActionItemThrow extends Action {
 
     private final Area area;
     private final Item item;
 
-    public ActionThrow(Area area, Item item) {
+    public ActionItemThrow(Area area, Item item) {
         this.area = area;
         this.item = item;
     }

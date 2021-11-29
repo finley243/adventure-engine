@@ -3,9 +3,9 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuData;
 
-public class ActionWait extends Action {
+public class ActionEnd extends Action {
 
-	public ActionWait() {
+	public ActionEnd() {
 
 	}
 
@@ -31,7 +31,7 @@ public class ActionWait extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        return o instanceof ActionWait;
+        return o instanceof ActionEnd;
     }
 
 }

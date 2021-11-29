@@ -8,11 +8,11 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
-public class ActionUnlockExit extends Action {
+public class ActionExitUnlock extends Action {
 
 	private final ObjectExit exit;
 	
-	public ActionUnlockExit(ObjectExit exit) {
+	public ActionExitUnlock(ObjectExit exit) {
 		this.exit = exit;
 	}
 	
@@ -43,10 +43,10 @@ public class ActionUnlockExit extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionUnlockExit)) {
+        if(!(o instanceof ActionExitUnlock)) {
             return false;
         } else {
-            ActionUnlockExit other = (ActionUnlockExit) o;
+            ActionExitUnlock other = (ActionExitUnlock) o;
             return other.exit == this.exit;
         }
     }

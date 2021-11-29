@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.world.item;
 import java.util.List;
 
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionConsume;
+import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
@@ -44,7 +44,7 @@ public class ItemConsumable extends Item {
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = super.inventoryActions(subject);
-		actions.add(0, new ActionConsume(this));
+		actions.add(0, new ActionItemConsume(this));
 		return actions;
 	}
 	

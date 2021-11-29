@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionReload extends Action {
+public class ActionWeaponReload extends Action {
 
 	public static final float RELOAD_UTILITY_NONCOMBAT = 0.5f;
 	public static final float RELOAD_UTILITY_COMBAT = 0.6f;
@@ -16,7 +16,7 @@ public class ActionReload extends Action {
 
 	private final ItemWeapon weapon;
 	
-	public ActionReload(ItemWeapon weapon) {
+	public ActionWeaponReload(ItemWeapon weapon) {
 		this.weapon = weapon;
 	}
 	
@@ -52,10 +52,10 @@ public class ActionReload extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionReload)) {
+        if(!(o instanceof ActionWeaponReload)) {
             return false;
         } else {
-            ActionReload other = (ActionReload) o;
+            ActionWeaponReload other = (ActionWeaponReload) o;
             return other.weapon == this.weapon;
         }
     }

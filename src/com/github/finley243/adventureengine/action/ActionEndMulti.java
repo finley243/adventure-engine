@@ -3,9 +3,9 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuData;
 
-public class ActionMultiEnd extends Action {
+public class ActionEndMulti extends Action {
 
-	public ActionMultiEnd() {
+	public ActionEndMulti() {
 
 	}
 
@@ -17,7 +17,7 @@ public class ActionMultiEnd extends Action {
 	@Override
 	public float utility(Actor subject) {
 		Action highestUtilityAction = subject.chooseAction(subject.availableActions());
-		if(highestUtilityAction instanceof ActionMultiEnd) {
+		if(highestUtilityAction instanceof ActionEndMulti) {
 			return highestUtilityAction.utility(subject) - 0.00001f;
 		} else {
 			return 0.00001f;
@@ -31,7 +31,7 @@ public class ActionMultiEnd extends Action {
 
 	@Override
     public boolean equals(Object o) {    
-        return o instanceof ActionMultiEnd;
+        return o instanceof ActionEndMulti;
     }
 
 }

@@ -6,11 +6,11 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
-public class ActionListenExit extends Action {
+public class ActionExitListen extends Action {
 
 	private final ObjectExit exit;
 	
-	public ActionListenExit(ObjectExit exit) {
+	public ActionExitListen(ObjectExit exit) {
 		this.exit = exit;
 	}
 

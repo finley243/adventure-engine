@@ -8,11 +8,11 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemEquippable;
 
-public class ActionUnequip extends Action {
+public class ActionItemUnequip extends Action {
 
 	private final ItemEquippable item;
 	
-	public ActionUnequip(ItemEquippable item) {
+	public ActionItemUnequip(ItemEquippable item) {
 		this.item = item;
 	}
 	
@@ -39,10 +39,10 @@ public class ActionUnequip extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionUnequip)) {
+        if(!(o instanceof ActionItemUnequip)) {
             return false;
         } else {
-            ActionUnequip other = (ActionUnequip) o;
+            ActionItemUnequip other = (ActionItemUnequip) o;
             return other.item == this.item;
         }
     }

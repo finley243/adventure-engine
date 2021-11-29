@@ -9,11 +9,11 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemConsumable;
 
-public class ActionConsume extends Action {
+public class ActionItemConsume extends Action {
 
 	private final ItemConsumable item;
 	
-	public ActionConsume(ItemConsumable item) {
+	public ActionItemConsume(ItemConsumable item) {
 		this.item = item;
 	}
 	
@@ -62,10 +62,10 @@ public class ActionConsume extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionConsume)) {
+        if(!(o instanceof ActionItemConsume)) {
             return false;
         } else {
-            ActionConsume other = (ActionConsume) o;
+            ActionItemConsume other = (ActionItemConsume) o;
             return other.item == this.item;
         }
     }
