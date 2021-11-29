@@ -10,13 +10,12 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionReload implements Action {
+public class ActionReload extends Action {
 
 	public static final float RELOAD_UTILITY_NONCOMBAT = 0.5f;
 	public static final float RELOAD_UTILITY_COMBAT = 0.6f;
 	public static final float RELOAD_UTILITY_COMBAT_EMPTY = 0.8f;
 
-	private boolean disabled;
 	private final ItemWeapon weapon;
 	
 	public ActionReload(ItemWeapon weapon) {
@@ -36,11 +35,6 @@ public class ActionReload implements Action {
 	}
 
 	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		if(!subject.isInCombat()) {
 			return RELOAD_UTILITY_NONCOMBAT;
@@ -51,26 +45,6 @@ public class ActionReload implements Action {
 				return RELOAD_UTILITY_COMBAT;
 			}
 		}
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
-	}
-	
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

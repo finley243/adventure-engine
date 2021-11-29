@@ -10,11 +10,10 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
-public class ActionMove implements Action {
+public class ActionMove extends Action {
 	
 	public static final float MOVE_UTILITY_MULTIPLIER = 0.7f;
 
-	private boolean disabled;
 	private final Area area;
 	
 	public ActionMove(Area area) {
@@ -37,25 +36,10 @@ public class ActionMove implements Action {
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context, this, subject));
 		subject.move(area);
 	}
-
-	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
 	
 	@Override
 	public float utility(Actor subject) {
 		return UtilityUtils.getMovementUtility(subject, area) * MOVE_UTILITY_MULTIPLIER;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
 	}
 	
 	@Override
@@ -68,11 +52,6 @@ public class ActionMove implements Action {
 		return action instanceof ActionMove ||
 			action instanceof ActionMoveExit ||
 			action instanceof ActionMoveElevator;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

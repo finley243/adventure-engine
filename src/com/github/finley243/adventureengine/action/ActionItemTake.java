@@ -9,9 +9,8 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
 
-public class ActionItemTake implements Action {
+public class ActionItemTake extends Action {
 
-	private boolean disabled;
 	private final Item item;
 	
 	public ActionItemTake(Item item) {
@@ -25,40 +24,10 @@ public class ActionItemTake implements Action {
 		Context context = new Context(subject, false, item, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("pickUp"), context, this, subject));
 	}
-
-	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-	
-	@Override
-	public float utility(Actor subject) {
-		return 0.0f;
-	}
 	
 	@Override
 	public boolean usesAction() {
 		return false;
-	}
-	
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

@@ -7,9 +7,8 @@ import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
-public class ActionListenExit implements Action {
+public class ActionListenExit extends Action {
 
-	private boolean disabled;
 	private final ObjectExit exit;
 	
 	public ActionListenExit(ObjectExit exit) {
@@ -39,38 +38,8 @@ public class ActionListenExit implements Action {
 	}
 
 	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
-	public float utility(Actor subject) {
-		return 0;
-	}
-
-	@Override
 	public boolean usesAction() {
 		return false;
-	}
-
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 
 	@Override

@@ -13,9 +13,8 @@ import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
-public class ActionInventoryTake implements Action {
+public class ActionInventoryTake extends Action {
 
-    private boolean disabled;
     private final Noun owner;
     private final Inventory inventory;
     private final Item item;
@@ -33,40 +32,10 @@ public class ActionInventoryTake implements Action {
         Context context = new Context(subject, false, item, true, owner, false);
         Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
-
-    @Override
-    public boolean canChoose(Actor subject) {
-        return !disabled;
-    }
-
-    @Override
-    public void disable() {
-        disabled = true;
-    }
-
-    @Override
-    public float utility(Actor subject) {
-        return 0;
-    }
     
     @Override
 	public boolean usesAction() {
 		return false;
-	}
-    
-    @Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-    @Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-    
-    @Override
-	public int actionCount() {
-		return 1;
 	}
 
     @Override

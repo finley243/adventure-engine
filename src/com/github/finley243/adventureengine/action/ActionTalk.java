@@ -5,9 +5,8 @@ import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
 
-public class ActionTalk implements Action {
+public class ActionTalk extends Action {
 
-	private boolean disabled;
 	private final Actor target;
 	
 	public ActionTalk(Actor target) {
@@ -24,36 +23,6 @@ public class ActionTalk implements Action {
 	@Override
 	public boolean canChoose(Actor subject) {
 		return !disabled && !target.isInCombat();
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
-	public float utility(Actor subject) {
-		return 0;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
-	}
-	
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

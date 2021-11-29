@@ -12,9 +12,8 @@ import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.object.ObjectVendingMachine;
 import com.github.finley243.adventureengine.world.template.ItemFactory;
 
-public class ActionVendingMachineBuy implements Action {
+public class ActionVendingMachineBuy extends Action {
 
-	private boolean disabled;
 	private final ObjectVendingMachine vendingMachine;
 	private final String itemID;
 	
@@ -35,37 +34,6 @@ public class ActionVendingMachineBuy implements Action {
 	@Override
 	public boolean canChoose(Actor subject) {
 		return !disabled && subject.getMoney() >= Data.getItem(itemID).getPrice();
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
-	public float utility(Actor subject) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
-	}
-	
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

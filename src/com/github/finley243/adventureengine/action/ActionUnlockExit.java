@@ -9,9 +9,8 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
-public class ActionUnlockExit implements Action {
+public class ActionUnlockExit extends Action {
 
-	private boolean disabled;
 	private final ObjectExit exit;
 	
 	public ActionUnlockExit(ObjectExit exit) {
@@ -36,36 +35,6 @@ public class ActionUnlockExit implements Action {
 			}
 		}
 		return hasKey;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
-	public float utility(Actor subject) {
-		return 0.0f;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
-	}
-	
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

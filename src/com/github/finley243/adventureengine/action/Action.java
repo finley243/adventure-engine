@@ -6,24 +6,40 @@ import com.github.finley243.adventureengine.menu.data.MenuData;
 /**
  * An action that an actor can take
  */
-public interface Action {
-	
-	void choose(Actor subject);
+public abstract class Action {
 
-	boolean canChoose(Actor subject);
+	protected boolean disabled;
 
-	void disable();
-	
-	float utility(Actor subject);
-	
-	boolean usesAction();
-	
-	boolean canRepeat();
+	public abstract void choose(Actor subject);
 
-	boolean isRepeatMatch(Action action);
+	public boolean canChoose(Actor subject) {
+		return !disabled;
+	}
+
+	public void disable() {
+		disabled = true;
+	}
 	
-	int actionCount();
+	public float utility(Actor subject) {
+		return 0.0f;
+	}
+
+	public boolean usesAction() {
+		return true;
+	}
 	
-	MenuData getMenuData(Actor subject);
+	public boolean canRepeat() {
+		return true;
+	}
+
+	public boolean isRepeatMatch(Action action) {
+		return false;
+	}
+	
+	public int actionCount() {
+		return 1;
+	}
+	
+	public abstract MenuData getMenuData(Actor subject);
 	
 }

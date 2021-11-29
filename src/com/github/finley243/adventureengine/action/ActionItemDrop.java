@@ -10,9 +10,8 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
 
-public class ActionItemDrop implements Action {
+public class ActionItemDrop extends Action {
 
-	private boolean disabled;
 	private final Item item;
 	private final boolean isEquipped;
 	
@@ -32,21 +31,6 @@ public class ActionItemDrop implements Action {
 		Context context = new Context(subject, false, item, true);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context, this, subject));
 	}
-
-	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-	
-	@Override
-	public float utility(Actor subject) {
-		return 0;
-	}
 	
 	@Override
 	public boolean usesAction() {
@@ -54,27 +38,8 @@ public class ActionItemDrop implements Action {
 	}
 	
 	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
-	}
-	
-	@Override
 	public MenuData getMenuData(Actor subject) {
-		//if(isEquipped) {
-		//	return new MenuDataEquipped("Drop", item);
-		//} else {
-			return new MenuDataInventory("Drop", "Drop " + item.getFormattedName(false), canChoose(subject), item);
-		//}
+		return new MenuDataInventory("Drop", "Drop " + item.getFormattedName(false), canChoose(subject), item);
 	}
 
 	@Override

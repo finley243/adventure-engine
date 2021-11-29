@@ -11,9 +11,8 @@ import com.github.finley243.adventureengine.world.object.ObjectChair;
 import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 
-public class ActionStand implements Action {
+public class ActionStand extends Action {
 
-	private boolean disabled;
 	private final UsableObject object;
 	
 	public ActionStand(UsableObject object) {
@@ -26,42 +25,6 @@ public class ActionStand implements Action {
 		subject.stopUsingObject();
 		Context context = new Context(subject, false, object, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("stand"), context, this, subject));
-	}
-
-	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
-	public float utility(Actor subject) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
-	}
-	
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-	
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

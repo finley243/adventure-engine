@@ -10,9 +10,8 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemEquippable;
 
-public class ActionUnequip implements Action {
+public class ActionUnequip extends Action {
 
-	private boolean disabled;
 	private final ItemEquippable item;
 	
 	public ActionUnequip(ItemEquippable item) {
@@ -28,41 +27,11 @@ public class ActionUnequip implements Action {
 	}
 
 	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		if(subject.isInCombat()) {
 			return 0;
 		}
 		return 0.5f;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
-	}
-	
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

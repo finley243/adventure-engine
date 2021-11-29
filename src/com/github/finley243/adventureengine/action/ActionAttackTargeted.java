@@ -7,9 +7,8 @@ import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionAttackTargeted implements Action {
+public class ActionAttackTargeted extends Action {
 
-	private boolean disabled;
 	private final ItemWeapon weapon;
 	private final Actor target;
 	private final Limb limb;
@@ -26,24 +25,9 @@ public class ActionAttackTargeted implements Action {
 	}
 
 	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		if (!subject.isCombatTarget(target)) return 0;
 		return 0.8f;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
 	}
 	
 	@Override

@@ -17,9 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ActionMoveExit implements Action {
+public class ActionMoveExit extends Action {
 
-	private boolean disabled;
 	private final ObjectExit exit;
 	
 	public ActionMoveExit(ObjectExit exit) {
@@ -50,18 +49,8 @@ public class ActionMoveExit implements Action {
 	}
 
 	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		return UtilityUtils.getMovementUtility(subject, exit.getLinkedArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
 	}
 	
 	@Override
@@ -74,11 +63,6 @@ public class ActionMoveExit implements Action {
 		return action instanceof ActionMove ||
 			action instanceof ActionMoveExit ||
 			action instanceof ActionMoveElevator;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

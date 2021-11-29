@@ -8,13 +8,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ActionGeneric implements Action{
+public class ActionGeneric extends Action{
 
     public enum ActionMatchType {
         NONE, OBJECT, ACTION
     }
 
-    private boolean disabled;
     private final Physical object;
     private final String action;
     private final float utility;
@@ -44,16 +43,6 @@ public class ActionGeneric implements Action{
     @Override
     public void choose(Actor subject) {
         object.executeAction(action, subject);
-    }
-
-    @Override
-    public boolean canChoose(Actor subject) {
-        return !disabled;
-    }
-
-    @Override
-    public void disable() {
-        disabled = true;
     }
 
     @Override

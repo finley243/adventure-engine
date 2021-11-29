@@ -10,9 +10,8 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemConsumable;
 
-public class ActionConsume implements Action {
+public class ActionConsume extends Action {
 
-	private boolean disabled;
 	private final ItemConsumable item;
 	
 	public ActionConsume(ItemConsumable item) {
@@ -38,42 +37,6 @@ public class ActionConsume implements Action {
 		for(Effect effect : item.getEffects()) {
 			subject.addEffect(effect.generate());
 		}
-	}
-
-	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
-	public float utility(Actor subject) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
-	}
-	
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

@@ -11,13 +11,12 @@ import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
-public class ActionInspect implements Action {
+public class ActionInspect extends Action {
 
 	public enum InspectType {
 		WORLD, INVENTORY, EQUIPPED
 	}
 
-	private boolean disabled;
 	private final WorldObject object;
 	private final InspectType type;
 	
@@ -32,41 +31,10 @@ public class ActionInspect implements Action {
 			Game.EVENT_BUS.post(new RenderTextEvent(object.getDescription()));
 		}
 	}
-
-	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
-	public float utility(Actor subject) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 	
 	@Override
 	public boolean usesAction() {
 		return false;
-	}
-	
-	@Override
-	public boolean canRepeat() {
-		return true;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return false;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override

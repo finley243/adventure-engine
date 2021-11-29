@@ -6,9 +6,8 @@ import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
 import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
 
-public class ActionApparelUnequip implements Action {
+public class ActionApparelUnequip extends Action {
 
-    private boolean disabled;
     private final ItemApparel item;
 
     public ActionApparelUnequip(ItemApparel item) {
@@ -19,41 +18,6 @@ public class ActionApparelUnequip implements Action {
     public void choose(Actor subject) {
         subject.apparelManager().unequip(item, subject);
         subject.inventory().addItem(item);
-    }
-
-    @Override
-    public boolean canChoose(Actor subject) {
-        return !disabled;
-    }
-
-    @Override
-    public void disable() {
-        disabled = true;
-    }
-
-    @Override
-    public float utility(Actor subject) {
-        return 0;
-    }
-
-    @Override
-    public boolean usesAction() {
-        return true;
-    }
-
-    @Override
-    public boolean canRepeat() {
-        return false;
-    }
-
-    @Override
-    public boolean isRepeatMatch(Action action) {
-        return false;
-    }
-
-    @Override
-    public int actionCount() {
-        return 0;
     }
 
     @Override

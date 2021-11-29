@@ -9,9 +9,8 @@ import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
 
-public class ActionThrow implements Action {
+public class ActionThrow extends Action {
 
-    private boolean disabled;
     private final Area area;
     private final Item item;
 
@@ -25,41 +24,6 @@ public class ActionThrow implements Action {
         subject.inventory().removeItem(item);
         area.addObject(item);
         Game.EVENT_BUS.post(new SoundEvent(area, false));
-    }
-
-    @Override
-    public boolean canChoose(Actor subject) {
-        return !disabled;
-    }
-
-    @Override
-    public void disable() {
-        disabled = true;
-    }
-
-    @Override
-    public float utility(Actor subject) {
-        return 0;
-    }
-
-    @Override
-    public boolean usesAction() {
-        return true;
-    }
-
-    @Override
-    public boolean canRepeat() {
-        return false;
-    }
-
-    @Override
-    public boolean isRepeatMatch(Action action) {
-        return false;
-    }
-
-    @Override
-    public int actionCount() {
-        return 1;
     }
 
     @Override

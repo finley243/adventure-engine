@@ -17,9 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ActionMoveElevator implements Action {
+public class ActionMoveElevator extends Action {
 
-	private boolean disabled;
 	private final ObjectElevator elevator;
 	private final ObjectElevator destination;
 	
@@ -51,23 +50,8 @@ public class ActionMoveElevator implements Action {
 	}
 
 	@Override
-	public boolean canChoose(Actor subject) {
-		return !disabled;
-	}
-
-	@Override
-	public void disable() {
-		disabled = true;
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		return UtilityUtils.getMovementUtility(subject, destination.getArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
-	}
-	
-	@Override
-	public boolean usesAction() {
-		return true;
 	}
 	
 	@Override
@@ -80,11 +64,6 @@ public class ActionMoveElevator implements Action {
 		return action instanceof ActionMove ||
 			action instanceof ActionMoveExit ||
 			action instanceof ActionMoveElevator;
-	}
-	
-	@Override
-	public int actionCount() {
-		return 1;
 	}
 	
 	@Override
