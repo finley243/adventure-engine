@@ -86,7 +86,6 @@ public class Actor implements Noun, Physical {
 	private final Set<PursueTarget> pursueTargets;
 	private final InvestigateTarget investigateTarget;
 	private final BehaviorIdle behaviorIdle;
-	private final List<String> idle;
 	private final boolean preventMovement;
 	
 	public Actor(String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead) {
@@ -100,7 +99,6 @@ public class Actor implements Noun, Physical {
 		for(Limb limb : stats.getLimbs()) {
 			limbConditions.put(limb, limb.getMaxCondition());
 		}
-		this.idle = idle;
 		this.preventMovement = preventMovement;
 		this.combatTargets = new HashSet<>();
 		this.pursueTargets = new HashSet<>();

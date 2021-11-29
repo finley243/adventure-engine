@@ -11,10 +11,8 @@ import com.google.common.eventbus.Subscribe;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class GraphicalInterfaceNested implements UserInterface {
 	
@@ -103,6 +101,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 			List<MenuDataInventory> inventory = new ArrayList<>();
 			List<MenuDataMove> move = new ArrayList<>();
 			List<MenuDataGlobal> global = new ArrayList<>();
+			List<MenuDataNested> nested = new ArrayList<>();
 			for(MenuData current : e.getMenuData()) {
 				if(current instanceof MenuDataEquipped) {
 					equipped.add((MenuDataEquipped) current);
@@ -116,6 +115,8 @@ public class GraphicalInterfaceNested implements UserInterface {
 					inventory.add((MenuDataInventory) current);
 				} else if(current instanceof MenuDataMove) {
 					move.add((MenuDataMove) current);
+				} else if(current instanceof MenuDataNested) {
+					nested.add((MenuDataNested) current);
 				} else {
 					global.add((MenuDataGlobal) current);
 				}
@@ -175,6 +176,64 @@ public class GraphicalInterfaceNested implements UserInterface {
 						menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
 						menuItem.setEnabled(current.isEnabled());
 						targetObjects.get(current.getObject()).add(menuItem);
+					}
+				}
+			}
+			if(!nested.isEmpty()) {
+				Map<String, JPopupMenu> categories = new HashMap<>();
+				for(MenuDataNested current : nested) {
+					if(current.getCategory().length == 0) {
+						JButton button = new JButton(current.getPrompt());
+						button.addActionListener(new ChoiceButtonListener(current.getIndex()));
+						button.setEnabled(current.isEnabled());
+						choicePanel.add(button);
+					} else {
+						if (!categories.containsKey(current.getCategory()[0])) {
+							JButton categoryButton = new JButton(LangUtils.titleCase(current.getCategory()[0]));
+							choicePanel.add(categoryButton);
+							JPopupMenu menuCategory = new JPopupMenu(current.getCategory()[0]);
+							categoryButton.addActionListener(eAction -> menuCategory.show(categoryButton, categoryButton.getWidth(), 0));
+							categories.put(current.getCategory()[0], menuCategory);
+						}
+						if(current.getCategory().length > 1) {
+							JMenu parentElement = null;
+							for (MenuElement subElement : categories.get(current.getCategory()[0]).getSubElements()) {
+								if (subElement.getComponent().getName().equals(current.getCategory()[1])) {
+									parentElement = (JMenu) subElement.getComponent();
+									break;
+								}
+							}
+							if (parentElement == null) {
+								parentElement = new JMenu(LangUtils.titleCase(current.getCategory()[1]));
+								parentElement.setName(current.getCategory()[1]);
+								categories.get(current.getCategory()[0]).add(parentElement);
+							}
+							JMenu lastParent = null;
+							for(int i = 2; i < current.getCategory().length; i++) {
+								lastParent = parentElement;
+								parentElement = null;
+								for (MenuElement subElement : lastParent.getSubElements()) {
+									if (subElement instanceof JMenu && ((JMenu) subElement).getName().equals(current.getCategory()[i])) {
+										parentElement = (JMenu) subElement;
+										break;
+									}
+								}
+								if (parentElement == null) {
+									parentElement = new JMenu(LangUtils.titleCase(current.getCategory()[i]));
+									parentElement.setName(current.getCategory()[i]);
+									lastParent.add(parentElement);
+								}
+							}
+							JMenuItem menuItem = new JMenuItem(current.getPrompt());
+							menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+							menuItem.setEnabled(current.isEnabled());
+							parentElement.add(menuItem);
+						} else {
+							JMenuItem menuItem = new JMenuItem(current.getPrompt());
+							menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+							menuItem.setEnabled(current.isEnabled());
+							categories.get(current.getCategory()[0]).add(menuItem);
+						}
 					}
 				}
 			}
