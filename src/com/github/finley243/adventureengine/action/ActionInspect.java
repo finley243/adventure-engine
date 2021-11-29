@@ -4,10 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.menu.data.MenuData;
-import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
-import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
-import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
+import com.github.finley243.adventureengine.menu.data.*;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -41,11 +38,10 @@ public class ActionInspect extends Action {
 	public MenuData getMenuData(Actor subject) {
 		switch(type) {
 		case EQUIPPED:
-			return new MenuDataEquipped("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), (Item) object);
 		case INVENTORY:
-			return new MenuDataInventory("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), (Item) object);
+			return new MenuDataNested("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), new String[]{"inventory", object.getName()});
 		case WORLD:
-			return new MenuDataWorldObject("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), object);
+			return new MenuDataNested("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), new String[]{object.getName()});
 		default:
 			return null;
 		}

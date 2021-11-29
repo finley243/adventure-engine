@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.actor.ai.CombatTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataNested;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -68,7 +69,7 @@ public class ActionMoveElevator extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldObject("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", "Take " + elevator.getFormattedName(false) + " to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), elevator);
+		return new MenuDataNested("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", "Take " + elevator.getFormattedName(false) + " to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), new String[]{"move", elevator.getName()});
 	}
 
 	@Override

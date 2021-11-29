@@ -6,8 +6,10 @@ import com.github.finley243.adventureengine.actor.ai.CombatTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataNested;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
@@ -67,7 +69,7 @@ public class ActionMoveExit extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldObject("Go through", "Go through " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false), canChoose(subject), exit);
+		return new MenuDataNested(LangUtils.titleCase(exit.getName()), "Go through " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false), canChoose(subject), new String[]{"move"});
 	}
 
 	@Override

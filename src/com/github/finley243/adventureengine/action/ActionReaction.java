@@ -3,6 +3,8 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataGlobal;
+import com.github.finley243.adventureengine.menu.data.MenuDataMove;
+import com.github.finley243.adventureengine.menu.data.MenuDataNested;
 
 public class ActionReaction extends Action {
 
@@ -34,9 +36,9 @@ public class ActionReaction extends Action {
 	public MenuData getMenuData(Actor subject) {
 		switch(type) {
 		case BLOCK:
-			return new MenuDataGlobal("Block", "Block", canChoose(subject));
+			return new MenuDataNested("Block", "Block", canChoose(subject));
 		case DODGE:
-			return new MenuDataGlobal("Dodge", "Dodge", canChoose(subject));
+			return new MenuDataNested("Dodge", "Dodge", canChoose(subject));
 		default:
 			return null;
 		}

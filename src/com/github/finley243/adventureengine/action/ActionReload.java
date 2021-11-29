@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
 import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
+import com.github.finley243.adventureengine.menu.data.MenuDataNested;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
@@ -49,7 +50,7 @@ public class ActionReload extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataInventory("Reload (" + weapon.getAmmoRemaining() + ")", "Reload " + weapon.getFormattedName(false), canChoose(subject), weapon);
+		return new MenuDataNested("Reload (" + weapon.getAmmoRemaining() + ")", "Reload " + weapon.getFormattedName(false), canChoose(subject), new String[]{weapon.getName()});
 	}
 
 	@Override

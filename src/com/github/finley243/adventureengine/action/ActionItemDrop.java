@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataEquipped;
 import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
+import com.github.finley243.adventureengine.menu.data.MenuDataNested;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
@@ -39,7 +40,7 @@ public class ActionItemDrop extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataInventory("Drop", "Drop " + item.getFormattedName(false), canChoose(subject), item);
+		return new MenuDataNested("Drop", "Drop " + item.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName()});
 	}
 
 	@Override

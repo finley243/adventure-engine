@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataNested;
 import com.github.finley243.adventureengine.menu.data.MenuDataUsing;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -30,9 +31,9 @@ public class ActionStand extends Action {
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		if(object instanceof ObjectCover) {
-			return new MenuDataUsing("Leave cover", "Leave cover", canChoose(subject), object);
+			return new MenuDataNested("Leave cover", "Leave cover", canChoose(subject), new String[]{object.getName()});
 		} else {
-			return new MenuDataUsing("Stand", "Stand up", canChoose(subject), object);
+			return new MenuDataNested("Stand", "Stand up", canChoose(subject), new String[]{object.getName()});
 		}
 	}
 

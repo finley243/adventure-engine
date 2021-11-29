@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.menu.data.MenuData;
+import com.github.finley243.adventureengine.menu.data.MenuDataNested;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldActor;
 
 public class ActionTalk extends Action {
@@ -27,7 +28,7 @@ public class ActionTalk extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldActor("Talk", "Talk to " + target.getFormattedName(false), canChoose(subject), target);
+		return new MenuDataNested("Talk", "Talk to " + target.getFormattedName(false), canChoose(subject), new String[]{target.getName()});
 	}
 
 	@Override

@@ -23,6 +23,6 @@ public class ActionApparelEquip extends Action {
     @Override
     public MenuData getMenuData(Actor subject) {
         //return new MenuDataInventory("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), item);
-        return new MenuDataNested("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), new String[]{"inventory", "apparel", item.getName()});
+        return new MenuDataNested("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName()});
     }
 }

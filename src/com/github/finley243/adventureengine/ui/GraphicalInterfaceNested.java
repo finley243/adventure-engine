@@ -94,16 +94,16 @@ public class GraphicalInterfaceNested implements UserInterface {
 	public void onMenuEvent(RenderMenuEvent e) {
 		SwingUtilities.invokeLater(() -> {
 			choicePanel.removeAll();
-			List<MenuDataEquipped> equipped = new ArrayList<>();
+			/*List<MenuDataEquipped> equipped = new ArrayList<>();
 			List<MenuDataUsing> using = new ArrayList<>();
 			List<MenuDataWorldActor> worldActor = new ArrayList<>();
 			List<MenuDataWorldObject> worldObject = new ArrayList<>();
 			List<MenuDataInventory> inventory = new ArrayList<>();
 			List<MenuDataMove> move = new ArrayList<>();
-			List<MenuDataGlobal> global = new ArrayList<>();
-			List<MenuDataNested> nested = new ArrayList<>();
+			List<MenuDataGlobal> global = new ArrayList<>();*/
+			List<MenuDataNested> nested = new ArrayList<>(e.getMenuData().size());
 			for(MenuData current : e.getMenuData()) {
-				if(current instanceof MenuDataEquipped) {
+				/*if(current instanceof MenuDataEquipped) {
 					equipped.add((MenuDataEquipped) current);
 				} else if(current instanceof MenuDataUsing) {
 					using.add((MenuDataUsing) current);
@@ -119,9 +119,12 @@ public class GraphicalInterfaceNested implements UserInterface {
 					nested.add((MenuDataNested) current);
 				} else {
 					global.add((MenuDataGlobal) current);
+				}*/
+				if(current instanceof MenuDataNested) {
+					nested.add((MenuDataNested) current);
 				}
 			}
-			if(!equipped.isEmpty()) {
+			/*if(!equipped.isEmpty()) {
 				JButton buttonEquipped = new JButton(LangUtils.titleCase(equipped.get(0).getItem().getName()));
 				choicePanel.add(buttonEquipped);
 				JPopupMenu menuEquipped = new JPopupMenu();
@@ -178,7 +181,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 						targetObjects.get(current.getObject()).add(menuItem);
 					}
 				}
-			}
+			}*/
 			if(!nested.isEmpty()) {
 				Map<String, JPopupMenu> categories = new HashMap<>();
 				for(MenuDataNested current : nested) {
@@ -198,7 +201,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 						if(current.getCategory().length > 1) {
 							JMenu parentElement = null;
 							for (MenuElement subElement : categories.get(current.getCategory()[0]).getSubElements()) {
-								if (subElement.getComponent().getName().equals(current.getCategory()[1])) {
+								if (subElement.getComponent().getName().equalsIgnoreCase(current.getCategory()[1])) {
 									parentElement = (JMenu) subElement.getComponent();
 									break;
 								}
@@ -212,9 +215,9 @@ public class GraphicalInterfaceNested implements UserInterface {
 							for(int i = 2; i < current.getCategory().length; i++) {
 								lastParent = parentElement;
 								parentElement = null;
-								for (MenuElement subElement : lastParent.getSubElements()) {
-									if (subElement instanceof JMenu && ((JMenu) subElement).getName().equals(current.getCategory()[i])) {
-										parentElement = (JMenu) subElement;
+								for (Component subComponent : lastParent.getMenuComponents()) {
+									if (subComponent instanceof JMenu && ((JMenu) subComponent).getName().equalsIgnoreCase(current.getCategory()[i])) {
+										parentElement = (JMenu) subComponent;
 										break;
 									}
 								}
@@ -237,7 +240,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 					}
 				}
 			}
-			if(!inventory.isEmpty()) {
+			/*if(!inventory.isEmpty()) {
 				JButton buttonInventory = new JButton("Inventory");
 				choicePanel.add(buttonInventory);
 				JPopupMenu menuInventory = new JPopupMenu();
@@ -274,7 +277,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 				button.addActionListener(new ChoiceButtonListener(current.getIndex()));
 				button.setEnabled(current.isEnabled());
 				choicePanel.add(button);
-			}
+			}*/
 			window.pack();
 		});
 	}

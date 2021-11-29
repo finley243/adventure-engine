@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.data.MenuData;
 import com.github.finley243.adventureengine.menu.data.MenuDataInventory;
+import com.github.finley243.adventureengine.menu.data.MenuDataNested;
 import com.github.finley243.adventureengine.menu.data.MenuDataWorldObject;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -51,9 +52,9 @@ public class ActionRead extends Action {
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		if(isInInventory) {
-			return new MenuDataInventory("Read", "Read " + object.getFormattedName(false), canChoose(subject), (Item) object);
+			return new MenuDataNested("Read", "Read " + object.getFormattedName(false), canChoose(subject), new String[]{"inventory", object.getName()});
 		} else {
-			return new MenuDataWorldObject("Read", "Read " + object.getFormattedName(false), canChoose(subject), object);
+			return new MenuDataNested("Read", "Read " + object.getFormattedName(false), canChoose(subject), new String[]{object.getName()});
 		}
 	}
 
