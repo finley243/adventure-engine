@@ -73,6 +73,7 @@ public class Actor implements Noun, Physical {
 	private final List<Action> blockedActions;
 	// Index: 0 = base, 1 = modifier
 	private final EnumMap<Attribute, int[]> attributes;
+	private final EnumMap<Skill, int[]> skills;
 	private final List<Effect> effects;
 	private final Inventory inventory;
 	private final ApparelManager apparelManager;
@@ -111,6 +112,10 @@ public class Actor implements Noun, Physical {
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, new int[] {1, 0});
+		}
+		this.skills = new EnumMap<>(Skill.class);
+		for(Skill skill : Skill.values()) {
+			this.skills.put(skill, new int[] {1, 0});
 		}
 		this.effects = new ArrayList<>();
 		if(stats.getLootTable() != null) {
@@ -201,6 +206,35 @@ public class Actor implements Noun, Physical {
 	
 	public void adjustAttributeMod(Attribute attribute, int value) {
 		attributes.get(attribute)[1] += value;
+	}
+
+	public int getSkill(Skill skill) {
+		int[] values = skills.get(skill);
+		return values[0] + values[1];
+	}
+
+	public int getSkillBase(Skill skill) {
+		return skills.get(skill)[0];
+	}
+
+	public void setSkillBase(Skill skill, int value) {
+		skills.get(skill)[0] = value;
+	}
+
+	public void adjustSkillBase(Skill skill, int value) {
+		skills.get(skill)[0] += value;
+	}
+
+	public int getSkillMod(Skill skill) {
+		return skills.get(skill)[1];
+	}
+
+	public void setSkillMod(Skill skill, int value) {
+		skills.get(skill)[1] = value;
+	}
+
+	public void adjustSkillMod(Skill skill, int value) {
+		skills.get(skill)[1] += value;
 	}
 	
 	public String getTopicID() {

@@ -6,10 +6,7 @@ import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.dialogue.DialogueChoice;
 import com.github.finley243.adventureengine.dialogue.DialogueLine;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
-import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.effect.EffectAttribute;
-import com.github.finley243.adventureengine.effect.EffectHealInstant;
-import com.github.finley243.adventureengine.effect.EffectHealOverTime;
+import com.github.finley243.adventureengine.effect.*;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
@@ -211,6 +208,10 @@ public class DataLoader {
                 Actor.Attribute attribute = Actor.Attribute.valueOf(LoadUtils.singleTag(conditionElement, "attribute", null).toUpperCase());
                 int attributeValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
                 return new ConditionAttribute(actorRef, attribute, attributeValue);
+            case "skill":
+                Actor.Skill skill = Actor.Skill.valueOf(LoadUtils.singleTag(conditionElement, "skill", null).toUpperCase());
+                int skillValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
+                return new ConditionSkill(actorRef, skill, skillValue);
             case "actorLocation":
                 String actorArea = LoadUtils.singleTag(conditionElement, "area", null);
                 String actorRoom = LoadUtils.singleTag(conditionElement, "room", null);
@@ -392,6 +393,9 @@ public class DataLoader {
             case "attribute":
                 Actor.Attribute attribute = Actor.Attribute.valueOf(LoadUtils.singleTag(effectElement, "attribute", null).toUpperCase());
                 return new EffectAttribute(duration, manualRemoval, attribute, amount);
+            case "skill":
+                Actor.Skill skill = Actor.Skill.valueOf(LoadUtils.singleTag(effectElement, "skill", null).toUpperCase());
+                return new EffectSkill(duration, manualRemoval, skill, amount);
             default:
                 return null;
         }
