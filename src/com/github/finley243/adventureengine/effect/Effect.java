@@ -18,11 +18,11 @@ public abstract class Effect {
 	}
 	
 	public void update(Actor target) {
-		if(!manualRemoval) {
-			if (!hasAdded) {
-				start(target);
-				hasAdded = true;
-			} else if (turnsRemaining == 0) {
+		if (!hasAdded) {
+			start(target);
+			hasAdded = true;
+		} else if (!manualRemoval) {
+			if(turnsRemaining == 0) {
 				end(target);
 			}
 			turnsRemaining--;

@@ -263,6 +263,7 @@ public class Actor implements Noun, Physical {
 	}
 
 	public void removeEffect(Effect effect) {
+		effect.end(this);
 		effects.remove(effect);
 	}
 	
