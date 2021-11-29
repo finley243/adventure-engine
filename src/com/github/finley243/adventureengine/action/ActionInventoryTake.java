@@ -45,11 +45,6 @@ public class ActionInventoryTake implements Action {
     }
 
     @Override
-    public String getPrompt() {
-        return "Take " + item.getFormattedName(true) + " from " + owner.getFormattedName(false);
-    }
-
-    @Override
     public float utility(Actor subject) {
         return 0;
     }
@@ -76,10 +71,11 @@ public class ActionInventoryTake implements Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
+        String fullPrompt = "Take " + item.getFormattedName(true) + " from " + owner.getFormattedName(false);
         if(owner instanceof Actor) {
-            return new MenuDataWorldActor("Take " + item.getName(), canChoose(subject), (Actor) owner);
+            return new MenuDataWorldActor("Take " + item.getName(), fullPrompt, canChoose(subject), (Actor) owner);
         } else {
-            return new MenuDataWorldObject("Take " + item.getName(), canChoose(subject), (WorldObject) owner);
+            return new MenuDataWorldObject("Take " + item.getName(), fullPrompt, canChoose(subject), (WorldObject) owner);
         }
     }
 

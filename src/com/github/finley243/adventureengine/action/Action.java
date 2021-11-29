@@ -14,8 +14,6 @@ public interface Action {
 
 	void disable();
 	
-	String getPrompt();
-	
 	float utility(Actor subject);
 	
 	boolean usesAction();

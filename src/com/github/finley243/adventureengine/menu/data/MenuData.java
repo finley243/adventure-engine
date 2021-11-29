@@ -1,13 +1,15 @@
 package com.github.finley243.adventureengine.menu.data;
 
-public abstract class MenuData {
+public abstract class MenuData implements Comparable<MenuData> {
 
 	private int index;
 	private final String prompt;
+	private final String fullPrompt;
 	private final boolean enabled;
 	
-	public MenuData(String prompt, boolean enabled) {
+	public MenuData(String prompt, String fullPrompt, boolean enabled) {
 		this.prompt = prompt;
+		this.fullPrompt = fullPrompt;
 		this.enabled = enabled;
 	}
 	
@@ -23,8 +25,17 @@ public abstract class MenuData {
 		return prompt;
 	}
 
+	public String getFullPrompt() {
+		return fullPrompt;
+	}
+
 	public boolean isEnabled() {
 		return enabled;
+	}
+
+	@Override
+	public int compareTo(MenuData other) {
+		return Integer.compare(this.getIndex(), other.getIndex());
 	}
 
 }

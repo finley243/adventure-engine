@@ -49,11 +49,6 @@ public class ActionMove implements Action {
 	}
 	
 	@Override
-	public String getPrompt() {
-		return "Move to " + area.getFormattedName(false);
-	}
-	
-	@Override
 	public float utility(Actor subject) {
 		return UtilityUtils.getMovementUtility(subject, area) * MOVE_UTILITY_MULTIPLIER;
 	}
@@ -82,7 +77,7 @@ public class ActionMove implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataMove("Move", canChoose(subject), area);
+		return new MenuDataMove("Move", "Move to " + area.getFormattedName(false), canChoose(subject), area);
 	}
 
 	@Override

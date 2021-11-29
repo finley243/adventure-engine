@@ -36,11 +36,6 @@ public class ActionAttackTargeted implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Attack " + target.getName() + " with " + weapon.getName() + " (targeted: " + limb.getName() + ")";
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		if (!subject.isCombatTarget(target)) return 0;
 		return 0.8f;
@@ -72,7 +67,7 @@ public class ActionAttackTargeted implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldActor("Targeted Attack (" + LangUtils.titleCase(weapon.getName()) + ", " + LangUtils.titleCase(limb.getName()) + ")", canChoose(subject), target);
+		return new MenuDataWorldActor("Targeted Attack (" + LangUtils.titleCase(weapon.getName()) + ", " + LangUtils.titleCase(limb.getName()) + ")", "Attack " + target.getFormattedName(false) + " with " + weapon.getFormattedName(false) + " (targeted: " + limb.getName() + ")", canChoose(subject), target);
 	}
 	
 	@Override

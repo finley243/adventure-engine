@@ -37,11 +37,6 @@ public class ActionSit implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Sit in " + chair.getFormattedName(false);
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		return 0;
 	}
@@ -68,7 +63,7 @@ public class ActionSit implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldObject("Sit", canChoose(subject), chair);
+		return new MenuDataWorldObject("Sit", "Sit in " + chair.getFormattedName(false), canChoose(subject), chair);
 	}
 
 	@Override

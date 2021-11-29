@@ -440,9 +440,8 @@ public class Actor implements Noun, Physical {
 			if(stats.getTopic() != null && !isInCombat()) {
 				//action.add(new ActionTalk(this));
 				action.add(new ActionGeneric(this, "TALK",
-						"Talk to " + this.getFormattedName(false),
 						0.0f, true, true, ActionGeneric.ActionMatchType.NONE, 1,
-						new MenuDataWorldActor("Talk", true, this)));
+						new MenuDataWorldActor("Talk", "Talk to " + this.getFormattedName(false), true, this)));
 			}
 		} else { // Dead
 			action.addAll(inventory.getActions(this));

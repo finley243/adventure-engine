@@ -43,11 +43,6 @@ public class ActionVendingMachineBuy implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Buy " + Data.getItem(itemID).getFormattedName(true) + " from " + vendingMachine.getFormattedName(false) + " [" + Data.getItem(itemID).getPrice() + " credits]";
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -75,7 +70,7 @@ public class ActionVendingMachineBuy implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldObject("Buy " + Data.getItem(itemID).getName(), canChoose(subject), vendingMachine);
+		return new MenuDataWorldObject("Buy " + Data.getItem(itemID).getName(), "Buy " + Data.getItem(itemID).getFormattedName(true) + " from " + vendingMachine.getFormattedName(false) + " [" + Data.getItem(itemID).getPrice() + " credits]", canChoose(subject), vendingMachine);
 	}
 
 	@Override

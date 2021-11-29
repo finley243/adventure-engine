@@ -61,11 +61,6 @@ public class ActionMoveElevator implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Take " + elevator.getFormattedName(false) + " to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")";
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		return UtilityUtils.getMovementUtility(subject, destination.getArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
 	}
@@ -94,7 +89,7 @@ public class ActionMoveElevator implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldObject("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), elevator);
+		return new MenuDataWorldObject("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", "Take " + elevator.getFormattedName(false) + " to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), elevator);
 	}
 
 	@Override

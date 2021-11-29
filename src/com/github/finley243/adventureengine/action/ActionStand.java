@@ -39,15 +39,6 @@ public class ActionStand implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		if(object instanceof ObjectCover) {
-			return "Leave cover";
-		} else {
-			return "Stand up";
-		}
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -76,9 +67,9 @@ public class ActionStand implements Action {
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		if(object instanceof ObjectCover) {
-			return new MenuDataUsing("Leave cover", canChoose(subject), object);
+			return new MenuDataUsing("Leave cover", "Leave cover", canChoose(subject), object);
 		} else {
-			return new MenuDataUsing("Stand", canChoose(subject), object);
+			return new MenuDataUsing("Stand", "Stand up", canChoose(subject), object);
 		}
 	}
 

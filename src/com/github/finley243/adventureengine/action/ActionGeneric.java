@@ -17,7 +17,6 @@ public class ActionGeneric implements Action{
     private boolean disabled;
     private final Physical object;
     private final String action;
-    private final String prompt;
     private final float utility;
     private final boolean usesAction;
     private final boolean canRepeat;
@@ -26,10 +25,9 @@ public class ActionGeneric implements Action{
     private final int actionCount;
     private final MenuData menuData;
 
-    public ActionGeneric(Physical object, String action, String prompt, float utility, boolean usesAction, boolean canRepeat, ActionMatchType matchType, int actionCount, MenuData menuData, String... otherMatches) {
+    public ActionGeneric(Physical object, String action, float utility, boolean usesAction, boolean canRepeat, ActionMatchType matchType, int actionCount, MenuData menuData, String... otherMatches) {
         this.object = object;
         this.action = action;
-        this.prompt = prompt;
         this.utility = utility;
         this.usesAction = usesAction;
         this.canRepeat = canRepeat;
@@ -56,11 +54,6 @@ public class ActionGeneric implements Action{
     @Override
     public void disable() {
         disabled = true;
-    }
-
-    @Override
-    public String getPrompt() {
-        return prompt;
     }
 
     @Override

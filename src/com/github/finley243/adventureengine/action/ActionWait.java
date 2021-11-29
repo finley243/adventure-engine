@@ -28,11 +28,6 @@ public class ActionWait implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "End turn";
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		return 0.00001f;
 	}
@@ -59,7 +54,7 @@ public class ActionWait implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataGlobal("End turn", canChoose(subject));
+		return new MenuDataGlobal("End turn", "End turn", canChoose(subject));
 	}
 
 	@Override

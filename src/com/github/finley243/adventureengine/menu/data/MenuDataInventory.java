@@ -6,8 +6,8 @@ public class MenuDataInventory extends MenuData {
 
 	private final Item item;
 	
-	public MenuDataInventory(String prompt, boolean enabled, Item item) {
-		super(prompt, enabled);
+	public MenuDataInventory(String prompt, String fullPrompt, boolean enabled, Item item) {
+		super(prompt, fullPrompt, enabled);
 		this.item = item;
 	}
 	

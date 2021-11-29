@@ -38,11 +38,6 @@ public class ActionThrow implements Action {
     }
 
     @Override
-    public String getPrompt() {
-        return "Throw " + item.getFormattedName(false) + " towards " + area.getFormattedName(false);
-    }
-
-    @Override
     public float utility(Actor subject) {
         return 0;
     }
@@ -69,6 +64,6 @@ public class ActionThrow implements Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuDataInventory("Throw towards " + area.getName(), canChoose(subject), item);
+        return new MenuDataInventory("Throw towards " + area.getName(), "Throw " + item.getFormattedName(false) + " towards " + area.getFormattedName(false), canChoose(subject), item);
     }
 }

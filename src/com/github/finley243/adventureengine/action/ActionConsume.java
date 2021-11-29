@@ -51,19 +51,6 @@ public class ActionConsume implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		switch(item.getConsumableType()) {
-		case DRINK:
-			return "Drink " + item.getFormattedName(true);
-		case FOOD:
-			return "Eat " + item.getFormattedName(true);
-		case OTHER:
-		default:
-			return "Use " + item.getFormattedName(true);
-		}
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -92,19 +79,23 @@ public class ActionConsume implements Action {
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		String prompt;
+		String fullPrompt;
 		switch(item.getConsumableType()) {
 		case DRINK:
 			prompt = "Drink";
+			fullPrompt = "Drink " + item.getFormattedName(true);
 			break;
 		case FOOD:
 			prompt = "Eat";
+			fullPrompt = "Eat " + item.getFormattedName(true);
 			break;
 		case OTHER:
 		default:
 			prompt = "Use";
+			fullPrompt = "Use " + item.getFormattedName(true);
 			break;
 		}
-		return new MenuDataInventory(prompt, canChoose(subject), item);
+		return new MenuDataInventory(prompt, fullPrompt, canChoose(subject), item);
 	}
 
 	@Override

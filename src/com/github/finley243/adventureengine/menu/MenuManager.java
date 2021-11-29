@@ -29,13 +29,11 @@ public class MenuManager {
 	}
 	
 	public Action actionMenu(List<Action> actions, Actor subject) {
-		List<String> menuStrings = new ArrayList<>();
 		List<MenuData> menuData = new ArrayList<>();
 		for(Action action : actions) {
-			menuStrings.add(action.getPrompt());
 			menuData.add(action.getMenuData(subject));
 		}
-		int actionIndex = getMenuInput(menuStrings, menuData);
+		int actionIndex = getMenuInput(menuData);
 		return actions.get(actionIndex);
 	}
 
@@ -90,19 +88,17 @@ public class MenuManager {
 	}
 	
 	private DialogueChoice dialogueMenuInput(List<DialogueChoice> choices) {
-		List<String> menuStrings = new ArrayList<>();
 		List<MenuData> menuData = new ArrayList<>();
 		for(DialogueChoice choice : choices) {
-			menuStrings.add(choice.getPrompt());
-			menuData.add(new MenuDataGlobal(choice.getPrompt(), true));
+			menuData.add(new MenuDataGlobal(choice.getPrompt(), choice.getPrompt(), true));
 		}
-		int dialogueIndex = getMenuInput(menuStrings, menuData);
+		int dialogueIndex = getMenuInput(menuData);
 		return choices.get(dialogueIndex);
 	}
 
-	private synchronized int getMenuInput(List<String> menuStrings, List<MenuData> menuData) {
+	private synchronized int getMenuInput(List<MenuData> menuData) {
 		this.index = -1;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuStrings, menuData));
+		Game.EVENT_BUS.post(new RenderMenuEvent(menuData));
 		while(this.index == -1) {
 			Game.THREAD_CONTROL.pause();
 		}

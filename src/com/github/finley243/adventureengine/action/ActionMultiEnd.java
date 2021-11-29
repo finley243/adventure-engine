@@ -28,11 +28,6 @@ public class ActionMultiEnd implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "End action";
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		Action highestUtilityAction = subject.chooseAction(subject.availableActions());
 		if(highestUtilityAction instanceof ActionMultiEnd) {
@@ -64,7 +59,7 @@ public class ActionMultiEnd implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataGlobal("End action", canChoose(subject));
+		return new MenuDataGlobal("End action", "End action", canChoose(subject));
 	}
 
 	@Override

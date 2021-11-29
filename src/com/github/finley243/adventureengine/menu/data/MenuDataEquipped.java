@@ -6,8 +6,8 @@ public class MenuDataEquipped extends MenuData {
 
 	private final Item item;
 	
-	public MenuDataEquipped(String prompt, boolean enabled, Item item) {
-		super(prompt, enabled);
+	public MenuDataEquipped(String prompt, String fullPrompt, boolean enabled, Item item) {
+		super(prompt, fullPrompt, enabled);
 		this.item = item;
 	}
 	

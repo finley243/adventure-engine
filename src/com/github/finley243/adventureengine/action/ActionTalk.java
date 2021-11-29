@@ -32,11 +32,6 @@ public class ActionTalk implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Talk to " + target.getFormattedName(false);
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		return 0;
 	}
@@ -63,7 +58,7 @@ public class ActionTalk implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldActor("Talk", canChoose(subject), target);
+		return new MenuDataWorldActor("Talk", "Talk to " + target.getFormattedName(false), canChoose(subject), target);
 	}
 
 	@Override

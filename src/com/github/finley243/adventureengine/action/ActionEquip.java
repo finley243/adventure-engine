@@ -40,11 +40,6 @@ public class ActionEquip implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Equip " + item.getFormattedName(false);
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		if(!subject.isInCombat()) return 0;
 		if(item.isRanged()) {
@@ -84,7 +79,7 @@ public class ActionEquip implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataInventory("Equip", canChoose(subject), item);
+		return new MenuDataInventory("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), item);
 	}
 
 	@Override

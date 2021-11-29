@@ -37,11 +37,6 @@ public class ActionUseCover implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Take cover behind " + cover.getFormattedName(false);
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -69,7 +64,7 @@ public class ActionUseCover implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldObject("Take cover", canChoose(subject), cover);
+		return new MenuDataWorldObject("Take cover", "Take cover behind " + cover.getFormattedName(false), canChoose(subject), cover);
 	}
 
 	@Override

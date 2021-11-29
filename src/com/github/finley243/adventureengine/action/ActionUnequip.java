@@ -38,11 +38,6 @@ public class ActionUnequip implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Unequip " + item.getFormattedName(false);
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		if(subject.isInCombat()) {
 			return 0;
@@ -72,7 +67,7 @@ public class ActionUnequip implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataInventory("Unequip", canChoose(subject), item);
+		return new MenuDataInventory("Unequip", "Unequip " + item.getFormattedName(false), canChoose(subject), item);
 	}
 
 	@Override

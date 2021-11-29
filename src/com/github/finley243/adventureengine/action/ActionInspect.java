@@ -44,11 +44,6 @@ public class ActionInspect implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Inspect " + object.getFormattedName(false);
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -78,11 +73,11 @@ public class ActionInspect implements Action {
 	public MenuData getMenuData(Actor subject) {
 		switch(type) {
 		case EQUIPPED:
-			return new MenuDataEquipped("Inspect", canChoose(subject), (Item) object);
+			return new MenuDataEquipped("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), (Item) object);
 		case INVENTORY:
-			return new MenuDataInventory("Inspect", canChoose(subject), (Item) object);
+			return new MenuDataInventory("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), (Item) object);
 		case WORLD:
-			return new MenuDataWorldObject("Inspect", canChoose(subject), object);
+			return new MenuDataWorldObject("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), object);
 		default:
 			return null;
 		}

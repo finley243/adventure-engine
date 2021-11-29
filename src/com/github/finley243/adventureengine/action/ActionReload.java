@@ -41,11 +41,6 @@ public class ActionReload implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Reload " + weapon.getName();
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		if(!subject.isInCombat()) {
 			return RELOAD_UTILITY_NONCOMBAT;
@@ -80,7 +75,7 @@ public class ActionReload implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataInventory("Reload (" + weapon.getAmmoRemaining() + ")", canChoose(subject), weapon);
+		return new MenuDataInventory("Reload (" + weapon.getAmmoRemaining() + ")", "Reload " + weapon.getFormattedName(false), canChoose(subject), weapon);
 	}
 
 	@Override

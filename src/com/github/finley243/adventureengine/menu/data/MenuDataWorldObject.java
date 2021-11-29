@@ -6,8 +6,8 @@ public class MenuDataWorldObject extends MenuData {
 
 	private final WorldObject object;
 	
-	public MenuDataWorldObject(String prompt, boolean enabled, WorldObject object) {
-		super(prompt, enabled);
+	public MenuDataWorldObject(String prompt, String fullPrompt, boolean enabled, WorldObject object) {
+		super(prompt, fullPrompt, enabled);
 		this.object = object;
 	}
 	

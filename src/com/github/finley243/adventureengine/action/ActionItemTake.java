@@ -37,11 +37,6 @@ public class ActionItemTake implements Action {
 	}
 	
 	@Override
-	public String getPrompt() {
-		return "Take " + item.getFormattedName(false);
-	}
-	
-	@Override
 	public float utility(Actor subject) {
 		return 0.0f;
 	}
@@ -68,7 +63,7 @@ public class ActionItemTake implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldObject("Take", canChoose(subject), item);
+		return new MenuDataWorldObject("Take", "Take " + item.getFormattedName(false), canChoose(subject), item);
 	}
 
 	@Override

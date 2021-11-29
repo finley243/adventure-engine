@@ -44,11 +44,6 @@ public class ActionUnlockExit implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Unlock " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false);
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		return 0.0f;
 	}
@@ -75,7 +70,7 @@ public class ActionUnlockExit implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldObject("Unlock", canChoose(subject), exit);
+		return new MenuDataWorldObject("Unlock", "Unlock " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false), canChoose(subject), exit);
 	}
 
 	@Override

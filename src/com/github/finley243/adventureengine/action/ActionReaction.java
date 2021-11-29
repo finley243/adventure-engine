@@ -38,18 +38,6 @@ public class ActionReaction implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		switch(type) {
-		case BLOCK:
-			return "Block";
-		case DODGE:
-			return "Dodge";
-		default:
-			return null;
-		}
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -83,9 +71,9 @@ public class ActionReaction implements Action {
 	public MenuData getMenuData(Actor subject) {
 		switch(type) {
 		case BLOCK:
-			return new MenuDataGlobal("Block", canChoose(subject));
+			return new MenuDataGlobal("Block", "Block", canChoose(subject));
 		case DODGE:
-			return new MenuDataGlobal("Dodge", canChoose(subject));
+			return new MenuDataGlobal("Dodge", "Dodge", canChoose(subject));
 		default:
 			return null;
 		}

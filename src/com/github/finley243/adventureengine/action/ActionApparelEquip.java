@@ -31,11 +31,6 @@ public class ActionApparelEquip implements Action {
     }
 
     @Override
-    public String getPrompt() {
-        return "Equip " + item.getFormattedName(false);
-    }
-
-    @Override
     public float utility(Actor subject) {
         return 0;
     }
@@ -62,6 +57,6 @@ public class ActionApparelEquip implements Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuDataInventory("Equip", canChoose(subject), item);
+        return new MenuDataInventory("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), item);
     }
 }

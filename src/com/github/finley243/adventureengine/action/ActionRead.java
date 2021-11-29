@@ -55,11 +55,6 @@ public class ActionRead implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Read " + object.getFormattedName(false);
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		// TODO Auto-generated method stub
 		return 0;
@@ -88,9 +83,9 @@ public class ActionRead implements Action {
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		if(isInInventory) {
-			return new MenuDataInventory("Read", canChoose(subject), (Item) object);
+			return new MenuDataInventory("Read", "Read " + object.getFormattedName(false), canChoose(subject), (Item) object);
 		} else {
-			return new MenuDataWorldObject("Read", canChoose(subject), object);
+			return new MenuDataWorldObject("Read", "Read " + object.getFormattedName(false), canChoose(subject), object);
 		}
 	}
 

@@ -55,11 +55,6 @@ public class ActionMoveExit implements Action {
 	}
 
 	@Override
-	public String getPrompt() {
-		return "Go through " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false);
-	}
-
-	@Override
 	public float utility(Actor subject) {
 		return UtilityUtils.getMovementUtility(subject, exit.getLinkedArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
 	}
@@ -88,7 +83,7 @@ public class ActionMoveExit implements Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataWorldObject("Go through", canChoose(subject), exit);
+		return new MenuDataWorldObject("Go through", "Go through " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false), canChoose(subject), exit);
 	}
 
 	@Override

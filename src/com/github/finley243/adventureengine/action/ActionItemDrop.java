@@ -44,11 +44,6 @@ public class ActionItemDrop implements Action {
 	}
 	
 	@Override
-	public String getPrompt() {
-		return "Drop " + item.getFormattedName(false);
-	}
-	
-	@Override
 	public float utility(Actor subject) {
 		return 0;
 	}
@@ -78,7 +73,7 @@ public class ActionItemDrop implements Action {
 		//if(isEquipped) {
 		//	return new MenuDataEquipped("Drop", item);
 		//} else {
-			return new MenuDataInventory("Drop", canChoose(subject), item);
+			return new MenuDataInventory("Drop", "Drop " + item.getFormattedName(false), canChoose(subject), item);
 		//}
 	}
 
