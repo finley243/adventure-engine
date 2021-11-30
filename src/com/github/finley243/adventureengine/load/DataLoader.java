@@ -398,6 +398,8 @@ public class DataLoader {
             case "skill":
                 Actor.Skill skill = Actor.Skill.valueOf(LoadUtils.singleTag(effectElement, "skill", null).toUpperCase());
                 return new EffectSkill(duration, manualRemoval, skill, amount);
+            case "drop_equipped":
+                return new EffectDropEquipped();
             default:
                 return null;
         }

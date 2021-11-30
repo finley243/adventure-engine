@@ -53,6 +53,11 @@ public class ActionMoveElevator extends Action {
 	}
 
 	@Override
+	public boolean usesAction() {
+		return false;
+	}
+
+	@Override
 	public boolean isRepeatMatch(Action action) {
 		return action instanceof ActionMove ||
 			action instanceof ActionMoveExit ||

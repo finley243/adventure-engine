@@ -32,6 +32,22 @@
                 <effects></effects>
             </limb>
             <limb>
+                <name>hand</name>
+                <meleeHitPhrase>meleeHitHand</meleeHitPhrase>
+                <meleeCritHitPhrase>meleeHitCritHand</meleeCritHitPhrase>
+                <meleeMissPhrase>meleeMissHand</meleeMissPhrase>
+                <rangedHitPhrase>rangedHitHand</rangedHitPhrase>
+                <rangedCritHitPhrase>rangedHitCritHand</rangedCritHitPhrase>
+                <rangedMissPhrase>rangedMissHand</rangedMissPhrase>
+                <hitChance>0.70</hitChance>
+                <damageMult>1.00</damageMult>
+                <apparelSlot>TORSO</apparelSlot>
+                <maxCondition>0</maxCondition>
+                <effects>
+                    <effect type="drop_equipped"></effect>
+                </effects>
+            </limb>
+            <limb>
                 <name>leg</name>
                 <meleeHitPhrase>meleeHitLeg</meleeHitPhrase>
                 <meleeCritHitPhrase>meleeHitCritLeg</meleeCritHitPhrase>

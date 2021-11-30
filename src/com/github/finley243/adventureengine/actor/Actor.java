@@ -276,6 +276,10 @@ public class Actor implements Noun, Physical {
 	public void setEquippedItem(ItemEquippable item) {
 		equippedItem = item;
 	}
+
+	public ItemEquippable getEquippedItem() {
+		return equippedItem;
+	}
 	
 	public boolean hasEquippedItem() {
 		return equippedItem != null;
