@@ -12,7 +12,7 @@
                 <rangedCritHitPhrase>rangedHitCritHead</rangedCritHitPhrase>
                 <rangedMissPhrase>rangedMissHead</rangedMissPhrase>
                 <hitChance>0.70</hitChance>
-                <damageMult>1.50</damageMult>
+                <damageMult>2.00</damageMult>
                 <apparelSlot>HEAD</apparelSlot>
                 <maxCondition>20</maxCondition>
                 <effects></effects>

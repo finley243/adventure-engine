@@ -613,21 +613,45 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public Action chooseAction(List<Action> actions) {
-		List<Action> bestActions = new ArrayList<>();
-		float maxWeight = 0.0f;
+		int chaos = 1;
+		List<List<Action>> bestActions = new ArrayList<>(chaos + 1);
+		List<Float> maxWeights = new ArrayList<>(chaos + 1);
+		for(int i = 0; i < chaos + 1; i++) {
+			bestActions.add(new ArrayList<>());
+			maxWeights.add(0.0f);
+		}
 		for(Action currentAction : actions) {
 			if(currentAction.canChoose(this)) {
 				float currentWeight = currentAction.utility(this);
-				if (currentWeight > maxWeight) {
-					maxWeight = currentWeight;
-					bestActions.clear();
-					bestActions.add(currentAction);
-				} else if (currentWeight == maxWeight) {
-					bestActions.add(currentAction);
+				for(int i = 0; i < chaos + 1; i++) {
+					if(currentWeight == maxWeights.get(i)) {
+						bestActions.get(i).add(currentAction);
+						break;
+					} else if(currentWeight > maxWeights.get(i)) {
+						maxWeights.remove(maxWeights.size() - 1);
+						maxWeights.add(i, currentWeight);
+						bestActions.remove(bestActions.size() - 1);
+						bestActions.add(i, new ArrayList<>());
+						bestActions.get(i).add(currentAction);
+						break;
+					}
 				}
 			}
 		}
-		return bestActions.get(ThreadLocalRandom.current().nextInt(bestActions.size()));
+		float weightSum = 0.0f;
+		for(float weight : maxWeights) {
+			weightSum += weight;
+		}
+		float partialWeightSum = 0.0f;
+		float random = ThreadLocalRandom.current().nextFloat();
+		for(int i = 0; i < chaos + 1; i++) {
+			if(random < partialWeightSum + (maxWeights.get(i) / weightSum)) {
+				return bestActions.get(i).get(ThreadLocalRandom.current().nextInt(bestActions.get(i).size()));
+			} else {
+				partialWeightSum += (maxWeights.get(i) / weightSum);
+			}
+		}
+		return null;
 	}
 	
 	private void updateEffects() {
