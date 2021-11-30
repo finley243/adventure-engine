@@ -16,9 +16,9 @@ moveTo:<subject> move<s> to <object>
 moveToward:<subject> move<s> to <object>
 patrolTelegraph:<subject> prepare<s> to move to <object>
 pickUp:<subject> grab<s> <object>
-rangedHit:a bullet hits <object's> {{left|right} shoulder|side}
-rangedHitCrit:a bullet hits <object's> {chest|stomach}
-rangedMiss:a bullet {whips past <object's> {left|right} {arm|leg|hand}|flies over <object's> {head|{left|right} shoulder}}
+rangedHit:a bullet hits <object's> {shoulder|side}
+rangedHitCrit:a bullet hits <object's> chest
+rangedMiss:a bullet {whips past <object's> {arm|leg}|flies over <object's> {head|shoulder}}
 rangedTelegraph:<subject> fire<s> <object2> at <object>
 reactionBlock:<subject> block<s> {<object2>|<object's> attack}
 reactionDodge:<subject> {jump<s> back, avoiding|dodge<s>} <object's> attack
@@ -38,13 +38,19 @@ dodgeSuccess:<subject> manage<s> to {dodge|move} {out of the way of|away from} <
 dodgeFail:<subject> tr<ies> to dodge <object2> but <is> too {late|slow}
 meleeHitHead:<object2> hits <object> in the head
 meleeHitArm:<object2> hits <object> in the arm
-meleeHitLeg:<object2> hits <object> in the {shin|calf}
+meleeHitLeg:<object2> hits <object> in the leg
 rangedHitHead:a bullet hits <object> in the head
 rangedHitArm:a bullet hits <object> in the arm
-rangedHitLeg:a bullet hits <object> in the {shin|calf}
+rangedHitLeg:a bullet hits <object> in the leg
 meleeHitCritHead:<object2> hits <object> in the head
 meleeHitCritArm:<object2> hits <object> in the arm
-meleeHitCritLeg:<object2> hits <object> in the {shin|calf}
+meleeHitCritLeg:<object2> hits <object> in the leg
 rangedHitCritHead:a bullet hits <object> in the head
 rangedHitCritArm:a bullet hits <object> in the arm
-rangedHitCritLeg:a bullet hits <object> in the {shin|calf}
+rangedHitCritLeg:a bullet hits <object> in the leg
+meleeMissHead:<object2> {{just|barely} misses|{swings|swipes} over} <object's> head
+meleeMissArm:<object2> {just misses|barely misses} <object's> arm
+meleeMissLeg:<object2> {just misses|barely misses} <object's> leg
+rangedMissHead:a bullet {flies over|whips past} <object's> head
+rangedMissArm:a bullet {flies|whips} past <object's> arm
+rangedMissLeg:a bullet {{flies|whips} past|hits the ground near} <object's> leg

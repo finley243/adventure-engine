@@ -7,8 +7,10 @@
                 <name>head</name>
                 <meleeHitPhrase>meleeHitHead</meleeHitPhrase>
                 <meleeCritHitPhrase>meleeHitCritHead</meleeCritHitPhrase>
+                <meleeMissPhrase>meleeMissHead</meleeMissPhrase>
                 <rangedHitPhrase>rangedHitHead</rangedHitPhrase>
                 <rangedCritHitPhrase>rangedHitCritHead</rangedCritHitPhrase>
+                <rangedMissPhrase>rangedMissHead</rangedMissPhrase>
                 <hitChance>0.70</hitChance>
                 <damageMult>1.50</damageMult>
                 <apparelSlot>HEAD</apparelSlot>
@@ -19,8 +21,10 @@
                 <name>arm</name>
                 <meleeHitPhrase>meleeHitArm</meleeHitPhrase>
                 <meleeCritHitPhrase>meleeHitCritArm</meleeCritHitPhrase>
+                <meleeMissPhrase>meleeMissArm</meleeMissPhrase>
                 <rangedHitPhrase>rangedHitArm</rangedHitPhrase>
                 <rangedCritHitPhrase>rangedHitCritArm</rangedCritHitPhrase>
+                <rangedMissPhrase>rangedMissArm</rangedMissPhrase>
                 <hitChance>0.80</hitChance>
                 <damageMult>1.00</damageMult>
                 <apparelSlot>TORSO</apparelSlot>
@@ -31,8 +35,10 @@
                 <name>leg</name>
                 <meleeHitPhrase>meleeHitLeg</meleeHitPhrase>
                 <meleeCritHitPhrase>meleeHitCritLeg</meleeCritHitPhrase>
+                <meleeMissPhrase>meleeMissLeg</meleeMissPhrase>
                 <rangedHitPhrase>rangedHitLeg</rangedHitPhrase>
                 <rangedCritHitPhrase>rangedHitCritLeg</rangedCritHitPhrase>
+                <rangedMissPhrase>rangedMissLeg</rangedMissPhrase>
                 <hitChance>0.85</hitChance>
                 <damageMult>1.00</damageMult>
                 <apparelSlot>LEGS</apparelSlot>

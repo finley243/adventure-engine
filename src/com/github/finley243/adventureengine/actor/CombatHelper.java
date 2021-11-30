@@ -41,7 +41,7 @@ public class CombatHelper {
 			if(limb == null) {
 				Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedMiss" : "meleeMiss"), attackContext, null, null));
 			} else {
-				Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedMiss" : "meleeMiss"), attackContext, null, null));
+				Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? limb.getRangedMissPhrase() : limb.getMeleeMissPhrase()), attackContext, null, null));
 			}
 		}
 		lastAttack = attackContext;

@@ -9,20 +9,24 @@ public class Limb {
     private final String name;
     private final String meleeHitPhrase;
     private final String meleeCritHitPhrase;
+    private final String meleeMissPhrase;
     private final String rangedHitPhrase;
     private final String rangedCritHitPhrase;
+    private final String rangedMissPhrase;
     private final float hitChance;
     private final float damageMult;
     private final ApparelManager.ApparelSlot apparelSlot;
     private final int maxCondition;
     private final List<Effect> crippledEffects;
 
-    public Limb(String name, String meleeHitPhrase, String meleeCritHitPhrase, String rangedHitPhrase, String rangedCritHitPhrase, float hitChance, float damageMult, ApparelManager.ApparelSlot apparelSlot, int maxCondition, List<Effect> crippledEffects) {
+    public Limb(String name, String meleeHitPhrase, String meleeCritHitPhrase, String meleeMissPhrase, String rangedHitPhrase, String rangedCritHitPhrase, String rangedMissPhrase, float hitChance, float damageMult, ApparelManager.ApparelSlot apparelSlot, int maxCondition, List<Effect> crippledEffects) {
         this.name = name;
         this.meleeHitPhrase = meleeHitPhrase;
         this.meleeCritHitPhrase = meleeCritHitPhrase;
+        this.meleeMissPhrase = meleeMissPhrase;
         this.rangedHitPhrase = rangedHitPhrase;
         this.rangedCritHitPhrase = rangedCritHitPhrase;
+        this.rangedMissPhrase = rangedMissPhrase;
         this.hitChance = hitChance;
         this.damageMult = damageMult;
         this.apparelSlot = apparelSlot;
@@ -42,12 +46,20 @@ public class Limb {
         return meleeCritHitPhrase;
     }
 
+    public String getMeleeMissPhrase() {
+        return meleeMissPhrase;
+    }
+
     public String getRangedHitPhrase() {
         return rangedHitPhrase;
     }
 
     public String getRangedCritHitPhrase() {
         return rangedCritHitPhrase;
+    }
+
+    public String getRangedMissPhrase() {
+        return rangedMissPhrase;
     }
 
     public float getHitChance() {
