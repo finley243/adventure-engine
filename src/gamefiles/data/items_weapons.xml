@@ -6,7 +6,6 @@
         <damage>10</damage>
         <critDamage>5</critDamage>
         <rate>2</rate>
-        <chance>0.85</chance>
     </item>
     <item type="weapon" id="pistol_light">
         <name>light pistol</name>
@@ -15,7 +14,7 @@
         <damage>10</damage>
         <critDamage>5</critDamage>
         <rate>2</rate>
-        <chance>0.70</chance>
+        <range>1</range>
         <clipSize>12</clipSize>
     </item>
     <item type="weapon" id="pistol_heavy">
@@ -25,7 +24,7 @@
         <damage>14</damage>
         <critDamage>6</critDamage>
         <rate>2</rate>
-        <chance>0.70</chance>
+        <range>1</range>
         <clipSize>6</clipSize>
     </item>
     <item type="weapon" id="rifle_auto">
@@ -35,7 +34,7 @@
         <damage>10</damage>
         <critDamage>3</critDamage>
         <rate>4</rate>
-        <chance>0.65</chance>
+        <range>2</range>
         <clipSize>20</clipSize>
     </item>
 </items>

@@ -10,14 +10,14 @@
         </effects>
     </item>
     <item type="consumable" id="nitron_diet">
-        <name>Nitron Diet</name>
+        <name>Nitron Sharpshooter</name>
         <price>10</price>
         <type>DRINK</type>
         <effects>
-            <effect type="attribute">
+            <effect type="skill">
                 <duration>3</duration>
-                <attribute>CHARISMA</attribute>
-                <amount>2</amount>
+                <skill>HANDGUNS</skill>
+                <amount>9</amount>
             </effect>
         </effects>
     </item>

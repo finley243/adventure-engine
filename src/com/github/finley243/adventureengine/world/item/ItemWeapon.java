@@ -58,10 +58,6 @@ public class ItemWeapon extends ItemEquippable {
 		return stats.getCritDamage();
 	}
 	
-	public float getHitChance(Actor subject) {
-		return stats.getHitChance();
-	}
-	
 	public void reloadFull() {
 		ammo = stats.getClipSize();
 	}
@@ -84,6 +80,24 @@ public class ItemWeapon extends ItemEquippable {
 			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
 		}
 		CombatHelper.handleAttack(subject, target, limb, this);
+	}
+
+	public Actor.Skill getSkill() {
+		switch(stats.getType()) {
+			case PISTOL:
+			case SMG:
+				return Actor.Skill.HANDGUNS;
+			case SHOTGUN:
+			case ASSAULT_RIFLE:
+			case SNIPER_RIFLE:
+				return Actor.Skill.RIFLES;
+			case KNIFE:
+			case SWORD:
+			case CLUB:
+			case AXE:
+				return Actor.Skill.MELEE;
+		}
+		return null;
 	}
 	
 	public List<Action> reactionActions(Actor target) {

@@ -502,7 +502,7 @@ public class Actor implements Noun, Physical {
 		}
 	}
 
-	public List<Action> availableActions(){
+	public List<Action> availableActions(boolean ignoreBlocked){
 		List<Action> actions = new ArrayList<>();
 		if(hasEquippedItem()) {
 			actions.addAll(equippedItem.equippedActions(this));
@@ -533,19 +533,20 @@ public class Actor implements Noun, Physical {
 		for(ItemApparel item : apparelManager.getEquippedItems()) {
 			actions.addAll(item.equippedActions(this));
 		}
-		Iterator<Action> itr = actions.iterator();
-		while(itr.hasNext()) {
-			Action currentAction = itr.next();
-			boolean isBlocked = false;
-			for(Action blockedAction : blockedActions) {
-				if(currentAction.isRepeatMatch(blockedAction)) {
-					isBlocked = true;
-					break;
+		if(!ignoreBlocked) {
+			Iterator<Action> itr = actions.iterator();
+			while (itr.hasNext()) {
+				Action currentAction = itr.next();
+				boolean isBlocked = false;
+				for (Action blockedAction : blockedActions) {
+					if (currentAction.isRepeatMatch(blockedAction)) {
+						isBlocked = true;
+						break;
+					}
 				}
-			}
-			if(isBlocked) {
-				//itr.remove();
-				currentAction.disable();
+				if (isBlocked) {
+					currentAction.disable();
+				}
 			}
 		}
 		actions.add(new ActionEnd());
@@ -571,7 +572,7 @@ public class Actor implements Noun, Physical {
 			Action chosenAction;
 			if(repeatActionPoints > 0) {
 				List<Action> repeatActions = new ArrayList<>();
-				for(Action action : availableActions()) {
+				for(Action action : availableActions(true)) {
 					if(repeatAction.isRepeatMatch(action)) {
 						repeatActions.add(action);
 					}
@@ -580,13 +581,13 @@ public class Actor implements Noun, Physical {
 				chosenAction = chooseAction(repeatActions);
 				repeatActionPoints--;
 			} else {
-				List<Action> validActions = new ArrayList<>();
-				for(Action action : availableActions()) {
-					if(!action.usesAction() || actionPoints > 0) {
-						validActions.add(action);
+				List<Action> availableActions = availableActions(false);
+				for(Action action : availableActions) {
+					if(action.usesAction() && actionPoints <= 0) {
+						action.disable();
 					}
 				}
-				chosenAction = chooseAction(validActions);
+				chosenAction = chooseAction(availableActions);
 				if(chosenAction.usesAction()) {
 					actionPoints--;
 				}

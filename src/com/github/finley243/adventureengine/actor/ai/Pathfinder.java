@@ -16,6 +16,7 @@ public class Pathfinder {
 	 * @return Shortest path from currentArea to targetArea
 	 */
 	public static List<Area> findPath(Area startArea, Area targetArea) {
+		if(startArea == targetArea) return Collections.singletonList(startArea);
 		Set<Area> hasVisited = new HashSet<>();
 		Queue<List<Area>> paths = new LinkedList<>();
 		List<Area> startPath = new ArrayList<>();

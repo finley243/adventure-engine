@@ -6,12 +6,18 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionReaction;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class CombatHelper {
+
+	public static final float HIT_CHANCE_MAX = 0.85f;
+	public static final float HIT_CHANCE_MIN = 0.15f;
+	public static final float RANGE_PENALTY = 0.10f;
+	public static final float RANGE_PENALTY_MAX = 0.50f;
 
 	public static final float BLOCK_CHANCE = 0.3f;
 	public static final float DODGE_CHANCE = 0.4f;
@@ -29,7 +35,7 @@ public class CombatHelper {
 		if(!isRepeat) {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(weapon.isRanged() ? "rangedTelegraph" : "meleeTelegraph"), attackContext, null, null));
 		}
-		if(ThreadLocalRandom.current().nextFloat() < weapon.getHitChance(subject) * (limb != null ? limb.getHitChance() : 1.0f)) {
+		if(ThreadLocalRandom.current().nextFloat() < calculateHitChance(subject, target, limb, weapon)) {
 			handleHit(subject, target, limb, weapon);
 		} else {
 			if(limb == null) {
@@ -99,6 +105,18 @@ public class CombatHelper {
 		}
 	}
 	
-	
+	public static float calculateHitChance(Actor attacker, Actor target, Limb limb, ItemWeapon weapon) {
+		float skill = (float) attacker.getSkill(weapon.getSkill());
+		float chance = HIT_CHANCE_MIN + ((HIT_CHANCE_MAX - HIT_CHANCE_MIN) / 9.0f) * (skill - 1.0f);
+		if(limb != null) {
+			chance *= limb.getHitChance();
+		}
+		if(weapon.isRanged()) {
+			int distance = Pathfinder.findPath(attacker.getArea(), target.getArea()).size() - 1;
+			float rangePenalty = Math.min(distance * RANGE_PENALTY, RANGE_PENALTY_MAX);
+			chance *= (1.0f - rangePenalty);
+		}
+		return chance;
+	}
 
 }

@@ -16,12 +16,7 @@ public class ActionEndMulti extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		Action highestUtilityAction = subject.chooseAction(subject.availableActions());
-		if(highestUtilityAction instanceof ActionEndMulti) {
-			return highestUtilityAction.utility(subject) - 0.00001f;
-		} else {
-			return 0.00001f;
-		}
+		return 0.00001f;
 	}
 	
 	@Override
