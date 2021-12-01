@@ -69,7 +69,7 @@ public class Actor implements Noun, Physical {
 	private boolean isUnconscious;
 	private boolean endTurn;
 	private int actionPoints;
-	private int repeatActionPoints;
+	private int multiActionPoints;
 	private final List<Action> blockedActions;
 	// Index: 0 = base, 1 = modifier
 	private final EnumMap<Attribute, int[]> attributes;
@@ -564,8 +564,8 @@ public class Actor implements Noun, Physical {
 		investigateTarget.nextTurn(this);
 		behaviorIdle.update(this);
 		this.actionPoints = ACTIONS_PER_TURN;
-		this.repeatActionPoints = 0;
-		Action repeatAction = null;
+		this.multiActionPoints = 0;
+		Action multiAction = null;
 		this.blockedActions.clear();
 		this.endTurn = false;
 		while(!endTurn) {
@@ -574,16 +574,16 @@ public class Actor implements Noun, Physical {
 			updateCombatTargets();
 			investigateTarget.update(this);
 			Action chosenAction;
-			if(repeatActionPoints > 0) {
+			if(multiActionPoints > 0 && multiAction != null) {
 				List<Action> repeatActions = new ArrayList<>();
 				for(Action action : availableActions(true)) {
-					if(repeatAction.isRepeatMatch(action)) {
+					if(multiAction.isMultiMatch(action)) {
 						repeatActions.add(action);
 					}
 				}
 				repeatActions.add(new ActionEndMulti());
 				chosenAction = chooseAction(repeatActions);
-				repeatActionPoints--;
+				multiActionPoints--;
 			} else {
 				List<Action> availableActions = availableActions(false);
 				for(Action action : availableActions) {
@@ -595,9 +595,9 @@ public class Actor implements Noun, Physical {
 				if(chosenAction.usesAction()) {
 					actionPoints--;
 				}
-				if(chosenAction.actionCount() > 1) {
-					repeatActionPoints = chosenAction.actionCount() - 1;
-					repeatAction = chosenAction;
+				if(chosenAction.multiCount() > 1) {
+					multiActionPoints = chosenAction.multiCount() - 1;
+					multiAction = chosenAction;
 				}
 				if(!chosenAction.canRepeat()) {
 					blockedActions.add(chosenAction);
@@ -613,7 +613,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void endMultiAction() {
-		repeatActionPoints = 0;
+		multiActionPoints = 0;
 	}
 	
 	public Action chooseAction(List<Action> actions) {

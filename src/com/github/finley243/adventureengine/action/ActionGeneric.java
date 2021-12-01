@@ -74,7 +74,7 @@ public class ActionGeneric extends Action{
     }
 
     @Override
-    public int actionCount() {
+    public int multiCount() {
         return actionCount;
     }
 

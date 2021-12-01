@@ -5,59 +5,40 @@ import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionWeaponAttack extends Action {
-
-	private final ItemWeapon weapon;
-	private final Actor target;
+public class ActionWeaponAttack extends ActionAttack {
 	
 	public ActionWeaponAttack(ItemWeapon weapon, Actor target) {
-		this.weapon = weapon;
-		this.target = target;
+		super(weapon, target);
 	}
 
 	@Override
 	public void choose(Actor subject) {
-		weapon.attack(subject, target, null);
+		getWeapon().attack(subject, getTarget(), null);
 	}
 
 	@Override
 	public float utility(Actor subject) {
-		if (!subject.isCombatTarget(target)) return 0;
+		if (!subject.isCombatTarget(getTarget())) return 0;
 		return 0.8f;
 	}
 	
 	@Override
-	public boolean canRepeat() {
-		return false;
+	public int multiCount() {
+		return getWeapon().getRate();
 	}
 
 	@Override
-	public boolean isRepeatMatch(Action action) {
-		if(!(action instanceof ActionWeaponAttack)) {
-			return false;
+	public boolean isMultiMatch(Action action) {
+		if(action instanceof ActionWeaponAttack) {
+			return ((ActionWeaponAttack) action).getWeapon() == this.getWeapon();
 		} else {
-			return ((ActionWeaponAttack) action).weapon == this.weapon;
+			return false;
 		}
 	}
 	
 	@Override
-	public int actionCount() {
-		return weapon.getRate();
-	}
-	
-	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Attack (" + LangUtils.titleCase(weapon.getName()) + ")", "Attack " + target.getFormattedName(false) + " with " + weapon.getFormattedName(false), canChoose(subject), new String[]{target.getName()});
+		return new MenuData("Attack (" + LangUtils.titleCase(getWeapon().getName()) + ")", "Attack " + getTarget().getFormattedName(false) + " with " + getWeapon().getFormattedName(false), canChoose(subject), new String[]{getTarget().getName()});
 	}
-	
-	@Override
-    public boolean equals(Object o) {
-        if(!(o instanceof ActionWeaponAttack)) {
-            return false;
-        } else {
-            ActionWeaponAttack other = (ActionWeaponAttack) o;
-            return other.weapon == this.weapon && other.target == this.target;
-        }
-    }
 
 }

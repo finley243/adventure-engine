@@ -40,14 +40,4 @@ public class ActionVendingMachineBuy extends Action {
 		return new MenuData("Buy " + Data.getItem(itemID).getName(), "Buy " + Data.getItem(itemID).getFormattedName(true) + " from " + vendingMachine.getFormattedName(false) + " [" + Data.getItem(itemID).getPrice() + " credits]", canChoose(subject), new String[]{vendingMachine.getName()});
 	}
 
-	@Override
-    public boolean equals(Object o) {
-        if(!(o instanceof ActionVendingMachineBuy)) {
-            return false;
-        } else {
-            ActionVendingMachineBuy other = (ActionVendingMachineBuy) o;
-            return other.vendingMachine == this.vendingMachine && other.itemID.equals(this.itemID);
-        }
-    }
-
 }

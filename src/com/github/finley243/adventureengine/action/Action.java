@@ -36,8 +36,12 @@ public abstract class Action {
 		return false;
 	}
 	
-	public int actionCount() {
+	public int multiCount() {
 		return 1;
+	}
+
+	public boolean isMultiMatch(Action action) {
+		return false;
 	}
 	
 	public abstract MenuData getMenuData(Actor subject);
