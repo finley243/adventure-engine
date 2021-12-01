@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ActionItemTake extends Action {
 
@@ -22,6 +23,15 @@ public class ActionItemTake extends Action {
 		subject.inventory().addItem(item);
 		Context context = new Context(subject, false, item, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("pickUp"), context, this, subject));
+	}
+
+	@Override
+	public float utility(Actor subject) {
+		if(item instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
+			return 0.7f;
+		} else {
+			return 0.0f;
+		}
 	}
 	
 	@Override

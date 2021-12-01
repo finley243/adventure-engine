@@ -7,10 +7,7 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
-import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
-import com.github.finley243.adventureengine.actor.ai.CombatTarget;
-import com.github.finley243.adventureengine.actor.ai.InvestigateTarget;
-import com.github.finley243.adventureengine.actor.ai.PursueTarget;
+import com.github.finley243.adventureengine.actor.ai.*;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
@@ -35,6 +32,10 @@ public class Actor implements Noun, Physical {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 2;
+	public static final int ATTRIBUTE_MIN = 1;
+	public static final int ATTRIBUTE_MAX = 10;
+	public static final int SKILL_MIN = 1;
+	public static final int SKILL_MAX = 10;
 	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
@@ -63,7 +64,6 @@ public class Actor implements Noun, Physical {
 	private final String descriptor;
 	private Area area;
 	private int HP;
-	private final Map<Limb, Integer> limbConditions;
 	private boolean isEnabled;
 	private boolean isDead;
 	private boolean isUnconscious;
@@ -94,10 +94,6 @@ public class Actor implements Noun, Physical {
 		}
 		this.stats = stats;
 		this.descriptor = descriptor;
-		this.limbConditions = new HashMap<>();
-		for(Limb limb : stats.getLimbs()) {
-			limbConditions.put(limb, limb.getMaxCondition());
-		}
 		this.preventMovement = preventMovement;
 		this.combatTargets = new HashSet<>();
 		this.pursueTargets = new HashSet<>();
@@ -181,7 +177,14 @@ public class Actor implements Noun, Physical {
 	
 	public int getAttribute(Attribute attribute) {
 		int[] values = attributes.get(attribute);
-		return values[0] + values[1];
+		int sum = values[0] + values[1];
+		if(sum < ATTRIBUTE_MIN) {
+			return ATTRIBUTE_MIN;
+		} else if(sum > ATTRIBUTE_MAX) {
+			return ATTRIBUTE_MAX;
+		} else {
+			return sum;
+		}
 	}
 	
 	public int getAttributeBase(Attribute attribute) {
@@ -210,7 +213,14 @@ public class Actor implements Noun, Physical {
 
 	public int getSkill(Skill skill) {
 		int[] values = skills.get(skill);
-		return values[0] + values[1];
+		int sum = values[0] + values[1];
+		if(sum < SKILL_MIN) {
+			return SKILL_MIN;
+		} else if(sum > SKILL_MAX) {
+			return SKILL_MAX;
+		} else {
+			return sum;
+		}
 	}
 
 	public int getSkillBase(Skill skill) {
@@ -314,20 +324,10 @@ public class Actor implements Noun, Physical {
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context, null, null));
 		}
 	}
-
-	public void healLimb(int amount, Limb limb) {
-		if(amount < 0) throw new IllegalArgumentException();
-		int oldCondition = limbConditions.get(limb);
-		int newCondition = oldCondition + amount;
-		if(newCondition > limb.getMaxCondition()) newCondition = limb.getMaxCondition();
-		limbConditions.put(limb, newCondition);
-		if(oldCondition == 0 && newCondition > 0) {
-			limb.setCrippled(false, this);
-		}
-	}
 	
 	public void damage(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();
+		amount -= apparelManager.getDamageResistance(ApparelManager.ApparelSlot.TORSO);
 		HP -= amount;
 		if(HP <= 0) {
 			HP = 0;
@@ -342,12 +342,8 @@ public class Actor implements Noun, Physical {
 		if(amount < 0) throw new IllegalArgumentException();
 		amount -= apparelManager.getDamageResistance(limb.getApparelSlot());
 		if(amount < 0) amount = 0;
-		int oldCondition = limbConditions.get(limb);
-		int newCondition = oldCondition - amount;
-		if(newCondition < 0) newCondition = 0;
-		limbConditions.put(limb, newCondition);
-		if(oldCondition > 0 && newCondition == 0) {
-			limb.setCrippled(true, this);
+		if(amount > 0) {
+			limb.applyEffects(this);
 		}
 		amount *= limb.getDamageMult();
 		HP -= amount;
@@ -362,12 +358,14 @@ public class Actor implements Noun, Physical {
 	
 	public void kill() {
 		isDead = true;
-		if(equippedItem != null) {
-			inventory.addItem(equippedItem);
-			equippedItem = null;
-		}
 		Context context = new Context(this, false);
 		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context, null, null));
+		if(equippedItem != null) {
+			getArea().addObject(equippedItem);
+			context = new Context(this, false, equippedItem, false);
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
+			equippedItem = null;
+		}
 	}
 	
 	public boolean isDead() {
@@ -441,6 +439,15 @@ public class Actor implements Noun, Physical {
 	
 	public boolean hasMeleeWeaponEquipped() {
 		return equippedItem != null && equippedItem instanceof ItemWeapon && !((ItemWeapon) equippedItem).isRanged();
+	}
+
+	public boolean hasWeapon() {
+		for(Item item : inventory.getItems()) {
+			if(item instanceof ItemWeapon) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public boolean isCombatTarget(Actor actor) {

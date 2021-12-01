@@ -16,10 +16,9 @@ public class Limb {
     private final float hitChance;
     private final float damageMult;
     private final ApparelManager.ApparelSlot apparelSlot;
-    private final int maxCondition;
-    private final List<Effect> crippledEffects;
+    private final List<Effect> hitEffects;
 
-    public Limb(String name, String meleeHitPhrase, String meleeCritHitPhrase, String meleeMissPhrase, String rangedHitPhrase, String rangedCritHitPhrase, String rangedMissPhrase, float hitChance, float damageMult, ApparelManager.ApparelSlot apparelSlot, int maxCondition, List<Effect> crippledEffects) {
+    public Limb(String name, String meleeHitPhrase, String meleeCritHitPhrase, String meleeMissPhrase, String rangedHitPhrase, String rangedCritHitPhrase, String rangedMissPhrase, float hitChance, float damageMult, ApparelManager.ApparelSlot apparelSlot, List<Effect> hitEffects) {
         this.name = name;
         this.meleeHitPhrase = meleeHitPhrase;
         this.meleeCritHitPhrase = meleeCritHitPhrase;
@@ -30,8 +29,7 @@ public class Limb {
         this.hitChance = hitChance;
         this.damageMult = damageMult;
         this.apparelSlot = apparelSlot;
-        this.maxCondition = maxCondition;
-        this.crippledEffects = crippledEffects;
+        this.hitEffects = hitEffects;
     }
 
     public String getName() {
@@ -74,17 +72,9 @@ public class Limb {
         return apparelSlot;
     }
 
-    public int getMaxCondition() {
-        return maxCondition;
-    }
-
-    public void setCrippled(boolean isCrippled, Actor target) {
-        for(Effect effect : crippledEffects) {
-            if(isCrippled) {
-                target.addEffect(effect);
-            } else {
-                target.removeEffect(effect);
-            }
+    public void applyEffects(Actor target) {
+        for(Effect effect : hitEffects) {
+            target.addEffect(effect.generate());
         }
     }
 

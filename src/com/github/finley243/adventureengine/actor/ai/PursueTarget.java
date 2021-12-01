@@ -38,7 +38,7 @@ public class PursueTarget {
 			}
 		}
 	}
-	
+
 	public Area getTargetArea() {
 		return targetArea;
 	}

@@ -14,7 +14,6 @@
                 <hitChance>0.70</hitChance>
                 <damageMult>2.00</damageMult>
                 <apparelSlot>HEAD</apparelSlot>
-                <maxCondition>20</maxCondition>
                 <effects></effects>
             </limb>
             <limb>
@@ -28,7 +27,6 @@
                 <hitChance>0.80</hitChance>
                 <damageMult>1.00</damageMult>
                 <apparelSlot>TORSO</apparelSlot>
-                <maxCondition>20</maxCondition>
                 <effects></effects>
             </limb>
             <limb>
@@ -42,7 +40,6 @@
                 <hitChance>0.70</hitChance>
                 <damageMult>1.00</damageMult>
                 <apparelSlot>TORSO</apparelSlot>
-                <maxCondition>0</maxCondition>
                 <effects>
                     <effect type="drop_equipped"></effect>
                 </effects>
@@ -58,7 +55,6 @@
                 <hitChance>0.85</hitChance>
                 <damageMult>1.00</damageMult>
                 <apparelSlot>LEGS</apparelSlot>
-                <maxCondition>20</maxCondition>
                 <effects></effects>
             </limb>
         </limbs>
