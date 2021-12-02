@@ -1,19 +1,31 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.CombatHelper;
+import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionWeaponAttack extends ActionAttack {
+public class ActionRangedAttack extends ActionAttack {
 	
-	public ActionWeaponAttack(ItemWeapon weapon, Actor target) {
+	public ActionRangedAttack(ItemWeapon weapon, Actor target) {
 		super(weapon, target);
 	}
 
 	@Override
 	public void choose(Actor subject) {
-		getWeapon().attack(subject, getTarget(), null);
+		if(getWeapon().isRanged()) {
+			getWeapon().consumeAmmo(1);
+			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
+		}
+		CombatHelper.handleAttack(subject, getTarget(), getWeapon(), null, false);
+	}
+
+	@Override
+	public boolean canChoose(Actor subject) {
+		return super.canChoose(subject) && getWeapon().getAmmoRemaining() >= 1 && subject.canSee(getTarget());
 	}
 
 	@Override
@@ -29,8 +41,8 @@ public class ActionWeaponAttack extends ActionAttack {
 
 	@Override
 	public boolean isMultiMatch(Action action) {
-		if(action instanceof ActionWeaponAttack) {
-			return ((ActionWeaponAttack) action).getWeapon() == this.getWeapon();
+		if(action instanceof ActionRangedAttack) {
+			return ((ActionRangedAttack) action).getWeapon() == this.getWeapon();
 		} else {
 			return false;
 		}

@@ -31,9 +31,9 @@
         <name>auto rifle</name>
         <price>90</price>
         <type>ASSAULT_RIFLE</type>
-        <damage>10</damage>
-        <critDamage>3</critDamage>
-        <rate>4</rate>
+        <damage>15</damage>
+        <critDamage>4</critDamage>
+        <rate>2</rate>
         <range>2</range>
         <clipSize>20</clipSize>
     </item>

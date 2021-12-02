@@ -545,12 +545,10 @@ public class Actor implements Noun, Physical {
 			actions.addAll(item.equippedActions(this));
 		}
 		if(!ignoreBlocked) {
-			Iterator<Action> itr = actions.iterator();
-			while (itr.hasNext()) {
-				Action currentAction = itr.next();
+			for(Action currentAction : actions) {
 				boolean isBlocked = false;
 				for (Action blockedAction : blockedActions) {
-					if (currentAction.isRepeatMatch(blockedAction)) {
+					if (blockedAction.isRepeatMatch(currentAction)) {
 						isBlocked = true;
 						break;
 					}
@@ -581,7 +579,7 @@ public class Actor implements Noun, Physical {
 			updateCombatTargets();
 			investigateTarget.update(this);
 			Action chosenAction;
-			if(multiActionPoints > 0 && multiAction != null) {
+			if(multiActionPoints > 0) {
 				List<Action> repeatActions = new ArrayList<>();
 				for(Action action : availableActions(true)) {
 					if(multiAction.isMultiMatch(action)) {

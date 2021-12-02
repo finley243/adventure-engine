@@ -3,21 +3,22 @@ package com.github.finley243.adventureengine.world.template;
 public class StatsWeapon extends StatsItem {
 	
 	public enum WeaponType{
-		PISTOL(true, false),
-		SMG(true, false),
-		SHOTGUN(true, true),
-		ASSAULT_RIFLE(true, true),
-		SNIPER_RIFLE(true, true),
-		KNIFE(false, false),
-		SWORD(false, true),
-		CLUB(false, true),
-		AXE(false, true);
+		PISTOL(true, false, false),
+		SMG(true, false, true),
+		SHOTGUN(true, true, false),
+		ASSAULT_RIFLE(true, true, true),
+		SNIPER_RIFLE(true, true, false),
+		KNIFE(false, false, false),
+		SWORD(false, true, false),
+		CLUB(false, true, false),
+		AXE(false, true, false);
 		
-		public final boolean isRanged, isTwoHanded;
+		public final boolean isRanged, isTwoHanded, hasAuto;
 		
-		WeaponType(boolean isRanged, boolean isTwoHanded) {
+		WeaponType(boolean isRanged, boolean isTwoHanded, boolean hasAuto) {
 			this.isRanged = isRanged;
 			this.isTwoHanded = isTwoHanded;
+			this.hasAuto = hasAuto;
 		}
 	}
 	

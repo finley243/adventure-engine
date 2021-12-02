@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.action.ActionReaction.ReactionType;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
 public class ItemWeapon extends ItemEquippable {
@@ -73,14 +70,6 @@ public class ItemWeapon extends ItemEquippable {
 	public void consumeAmmo(int amount) {
 		ammo -= amount;
 	}
-	
-	public void attack(Actor subject, Actor target, Limb limb) {
-		if(isRanged()) {
-			consumeAmmo(1);
-			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
-		}
-		CombatHelper.handleAttack(subject, target, limb, this);
-	}
 
 	public Actor.Skill getSkill() {
 		switch(stats.getType()) {
@@ -102,10 +91,8 @@ public class ItemWeapon extends ItemEquippable {
 	
 	public List<Action> reactionActions(Actor target) {
 		List<Action> actions = new ArrayList<>();
-		if(!isRanged() && target.hasMeleeWeaponEquipped()) {
-			actions.add(new ActionReaction(ReactionType.BLOCK));
-		}
 		if(!isRanged()) {
+			actions.add(new ActionReaction(ReactionType.BLOCK));
 			actions.add(new ActionReaction(ReactionType.DODGE));
 		}
 		return actions;
@@ -123,22 +110,21 @@ public class ItemWeapon extends ItemEquippable {
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
-		Set<Actor> targets = stats.getType().isRanged ? subject.getArea().getRoom().getActors() : subject.getArea().getActors();
+		Set<Actor> targets = subject.getArea().getRoom().getActors();
 		for(Actor target : targets) {
-			if(target != subject) {
+			if(target != subject && target.isActive()) {
 				if(stats.getType().isRanged) { // Ranged
-					if(target.isActive() && (!target.isInCover() || target.getArea().equals(subject.getArea())) && ammo > 0) {
-						actions.add(new ActionWeaponAttack(this, target));
-						for(Limb limb : target.getLimbs()) {
-							actions.add(new ActionWeaponAttackTargeted(this, target, limb));
-						}
+					actions.add(new ActionRangedAttack(this, target));
+					for(Limb limb : target.getLimbs()) {
+						actions.add(new ActionRangedAttackTargeted(this, target, limb));
+					}
+					if(stats.getType().hasAuto) {
+						actions.add(new ActionRangedAttackAuto(this, target));
 					}
 				} else { // Melee
-					if(target.isActive()) {
-						actions.add(new ActionWeaponAttack(this, target));
-						for(Limb limb : target.getLimbs()) {
-							actions.add(new ActionWeaponAttackTargeted(this, target, limb));
-						}
+					actions.add(new ActionMeleeAttack(this, target));
+					for(Limb limb : target.getLimbs()) {
+						actions.add(new ActionMeleeAttackTargeted(this, target, limb));
 					}
 				}
 			}

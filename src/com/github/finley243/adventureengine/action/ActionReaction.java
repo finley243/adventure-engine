@@ -25,6 +25,18 @@ public class ActionReaction extends Action {
 	}
 
 	@Override
+	public boolean canChoose(Actor subject) {
+		switch(type) {
+		case BLOCK:
+			return subject.hasMeleeWeaponEquipped();
+		case DODGE:
+			return subject.canMove();
+		default:
+			return false;
+		}
+	}
+
+	@Override
 	public boolean usesAction() {
 		return false;
 	}
