@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuData;
 
-public class ActionReaction extends Action {
+public class ActionReactionOld extends Action {
 
 	public enum ReactionType {
 		BLOCK, DODGE
@@ -11,7 +11,7 @@ public class ActionReaction extends Action {
 
 	private final ReactionType type;
 	
-	public ActionReaction(ReactionType type) {
+	public ActionReactionOld(ReactionType type) {
 		this.type = type;
 	}
 	

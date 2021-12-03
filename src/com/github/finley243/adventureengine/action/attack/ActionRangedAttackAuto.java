@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.action;
+package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -11,42 +11,44 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionRangedAttack extends ActionAttack {
-	
-	public ActionRangedAttack(ItemWeapon weapon, Actor target) {
+public class ActionRangedAttackAuto extends ActionAttack {
+
+	public static final int AMMO_USED = 6;
+
+	public ActionRangedAttackAuto(ItemWeapon weapon, Actor target) {
 		super(weapon, target);
 	}
 
 	@Override
 	public void onStart(Actor subject) {
-		getWeapon().consumeAmmo(1);
+		getWeapon().consumeAmmo(AMMO_USED);
 		Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
 		getTarget().addCombatTarget(subject);
 		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
 		if(!CombatHelper.isRepeat(attackContext)) {
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, false)), attackContext, null, null));
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, true)), attackContext, null, null));
 		}
 	}
 
 	@Override
 	public void onSuccess(Actor subject) {
-		CombatHelper.handleHit(subject, getTarget(), null, getWeapon(), false);
+		CombatHelper.handleHit(subject, getTarget(), null, getWeapon(), true);
 	}
 
 	@Override
 	public void onFail(Actor subject) {
 		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, false)), attackContext, this, subject));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, true)), attackContext, this, subject));
 	}
 
 	@Override
 	public float chance(Actor subject) {
-		return CombatHelper.calculateHitChance(subject, getTarget(), null, getWeapon(), false);
+		return CombatHelper.calculateHitChance(subject, getTarget(), null, getWeapon(), true);
 	}
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && getWeapon().getAmmoRemaining() >= 1 && subject.canSee(getTarget());
+		return super.canChoose(subject) && getWeapon().getAmmoRemaining() >= AMMO_USED && subject.canSee(getTarget());
 	}
 
 	@Override
@@ -56,22 +58,8 @@ public class ActionRangedAttack extends ActionAttack {
 	}
 	
 	@Override
-	public int multiCount() {
-		return getWeapon().getRate();
-	}
-
-	@Override
-	public boolean isMultiMatch(Action action) {
-		if(action instanceof ActionRangedAttack) {
-			return ((ActionRangedAttack) action).getWeapon() == this.getWeapon();
-		} else {
-			return false;
-		}
-	}
-	
-	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Attack (" + LangUtils.titleCase(getWeapon().getName()) + ")", "Attack " + getTarget().getFormattedName(false) + " with " + getWeapon().getFormattedName(false), canChoose(subject), new String[]{getTarget().getName()});
+		return new MenuData("Attack (" + LangUtils.titleCase(getWeapon().getName()) + ", Autofire)", "Attack " + getTarget().getFormattedName(false) + " with " + getWeapon().getFormattedName(false), canChoose(subject), new String[]{getTarget().getName()});
 	}
 
 }

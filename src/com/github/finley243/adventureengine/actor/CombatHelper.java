@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionReaction;
+import com.github.finley243.adventureengine.action.ActionReactionOld;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
@@ -74,7 +74,7 @@ public class CombatHelper {
 				target.damageLimb(damage, limb);
 			}
 		} else {
-			ActionReaction reaction = (ActionReaction) target.chooseAction(reactions);
+			ActionReactionOld reaction = (ActionReactionOld) target.chooseAction(reactions);
 			switch(reaction.getType()) {
 			case BLOCK:
 				if(ThreadLocalRandom.current().nextFloat() < BLOCK_CHANCE) {

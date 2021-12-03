@@ -36,6 +36,8 @@ public class Actor implements Noun, Physical {
 	public static final int ATTRIBUTE_MAX = 10;
 	public static final int SKILL_MIN = 1;
 	public static final int SKILL_MAX = 10;
+	public static final int SKILL_ATTR_MIN = ATTRIBUTE_MIN + SKILL_MIN;
+	public static final int SKILL_ATTR_MAX = ATTRIBUTE_MAX + SKILL_MAX;
 	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
@@ -43,20 +45,26 @@ public class Actor implements Noun, Physical {
 	
 	public enum Skill {
 		// BODY
-		MELEE,
-		RESISTANCE,
+		MELEE(Attribute.BODY),
+		RESISTANCE(Attribute.BODY),
 		// INTELLIGENCE
-		SOFTWARE,
-		HARDWARE,
+		SOFTWARE(Attribute.INTELLIGENCE),
+		HARDWARE(Attribute.INTELLIGENCE),
 		// CHARISMA
-		BARTER,
-		PERSUASION,
-		DECEPTION,
+		BARTER(Attribute.CHARISMA),
+		PERSUASION(Attribute.CHARISMA),
+		DECEPTION(Attribute.CHARISMA),
 		// DEXTERITY
-		HANDGUNS,
-		RIFLES,
+		HANDGUNS(Attribute.DEXTERITY),
+		RIFLES(Attribute.DEXTERITY),
 		// AGILITY
-		STEALTH
+		STEALTH(Attribute.AGILITY);
+
+		public final Attribute attribute;
+
+		Skill(Attribute attribute) {
+			this.attribute = attribute;
+		}
 	}
 	
 	private final StatsActor stats;
@@ -221,6 +229,10 @@ public class Actor implements Noun, Physical {
 		} else {
 			return sum;
 		}
+	}
+
+	public int getSkillWithAttribute(Skill skill) {
+		return getSkill(skill) + getAttribute(skill.attribute);
 	}
 
 	public int getSkillBase(Skill skill) {

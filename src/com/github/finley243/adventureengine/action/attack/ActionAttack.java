@@ -1,5 +1,7 @@
-package com.github.finley243.adventureengine.action;
+package com.github.finley243.adventureengine.action.attack;
 
+import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionRandom;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 

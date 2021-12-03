@@ -1,9 +1,9 @@
-package com.github.finley243.adventureengine.action;
+package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
-import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;

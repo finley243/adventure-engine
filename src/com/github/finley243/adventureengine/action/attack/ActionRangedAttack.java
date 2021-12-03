@@ -1,9 +1,9 @@
-package com.github.finley243.adventureengine.action;
+package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
-import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
@@ -12,13 +12,10 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionRangedAttackTargeted extends ActionAttack {
-
-	private final Limb limb;
-
-	public ActionRangedAttackTargeted(ItemWeapon weapon, Actor target, Limb limb) {
+public class ActionRangedAttack extends ActionAttack {
+	
+	public ActionRangedAttack(ItemWeapon weapon, Actor target) {
 		super(weapon, target);
-		this.limb = limb;
 	}
 
 	@Override
@@ -28,24 +25,24 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 		getTarget().addCombatTarget(subject);
 		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
 		if(!CombatHelper.isRepeat(attackContext)) {
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), limb, false)), attackContext, null, null));
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, false)), attackContext, null, null));
 		}
 	}
 
 	@Override
 	public void onSuccess(Actor subject) {
-		CombatHelper.handleHit(subject, getTarget(), limb, getWeapon(), false);
+		CombatHelper.handleHit(subject, getTarget(), null, getWeapon(), false);
 	}
 
 	@Override
 	public void onFail(Actor subject) {
 		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), limb, false)), attackContext, this, subject));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, false)), attackContext, this, subject));
 	}
 
 	@Override
 	public float chance(Actor subject) {
-		return CombatHelper.calculateHitChance(subject, getTarget(), limb, getWeapon(), false);
+		return CombatHelper.calculateHitChance(subject, getTarget(), null, getWeapon(), false);
 	}
 
 	@Override
@@ -60,8 +57,22 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 	}
 	
 	@Override
+	public int multiCount() {
+		return getWeapon().getRate();
+	}
+
+	@Override
+	public boolean isMultiMatch(Action action) {
+		if(action instanceof ActionRangedAttack) {
+			return ((ActionRangedAttack) action).getWeapon() == this.getWeapon();
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Targeted Attack (" + LangUtils.titleCase(getWeapon().getName()) + ", " + LangUtils.titleCase(limb.getName()) + ")", "Attack " + getTarget().getFormattedName(false) + " with " + getWeapon().getFormattedName(false) + " (targeted: " + limb.getName() + ")", canChoose(subject), new String[]{getTarget().getName()});
+		return new MenuData("Attack (" + LangUtils.titleCase(getWeapon().getName()) + ")", "Attack " + getTarget().getFormattedName(false) + " with " + getWeapon().getFormattedName(false), canChoose(subject), new String[]{getTarget().getName()});
 	}
 
 }
