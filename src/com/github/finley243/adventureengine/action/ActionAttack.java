@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public abstract class ActionAttack extends Action {
+public abstract class ActionAttack extends ActionRandom {
 
     private final Actor target;
     private final ItemWeapon weapon;

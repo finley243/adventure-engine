@@ -4,8 +4,11 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.SoundEvent;
+import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ActionRangedAttackAuto extends ActionAttack {
@@ -17,12 +20,30 @@ public class ActionRangedAttackAuto extends ActionAttack {
 	}
 
 	@Override
-	public void choose(Actor subject) {
-		if(getWeapon().isRanged()) {
-			getWeapon().consumeAmmo(AMMO_USED);
-			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
+	public void onStart(Actor subject) {
+		getWeapon().consumeAmmo(AMMO_USED);
+		Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
+		getTarget().addCombatTarget(subject);
+		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
+		if(!CombatHelper.isRepeat(attackContext)) {
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, true)), attackContext, null, null));
 		}
-		CombatHelper.handleAttack(subject, getTarget(), getWeapon(), null, true);
+	}
+
+	@Override
+	public void onSuccess(Actor subject) {
+		CombatHelper.handleHit(subject, getTarget(), null, getWeapon(), true);
+	}
+
+	@Override
+	public void onFail(Actor subject) {
+		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, true)), attackContext, this, subject));
+	}
+
+	@Override
+	public float chance(Actor subject) {
+		return CombatHelper.calculateHitChance(subject, getTarget(), null, getWeapon(), true);
 	}
 
 	@Override

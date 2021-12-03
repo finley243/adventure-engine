@@ -4,8 +4,11 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.SoundEvent;
+import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ActionMeleeAttack extends ActionAttack {
@@ -15,12 +18,28 @@ public class ActionMeleeAttack extends ActionAttack {
 	}
 
 	@Override
-	public void choose(Actor subject) {
-		if(getWeapon().isRanged()) {
-			getWeapon().consumeAmmo(1);
-			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
+	public void onStart(Actor subject) {
+		getTarget().addCombatTarget(subject);
+		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
+		if(!CombatHelper.isRepeat(attackContext)) {
+			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, false)), attackContext, null, null));
 		}
-		CombatHelper.handleAttack(subject, getTarget(), getWeapon(), null, false);
+	}
+
+	@Override
+	public void onSuccess(Actor subject) {
+		CombatHelper.handleHit(subject, getTarget(), null, getWeapon(), false);
+	}
+
+	@Override
+	public void onFail(Actor subject) {
+		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, false)), attackContext, this, subject));
+	}
+
+	@Override
+	public float chance(Actor subject) {
+		return CombatHelper.calculateHitChance(subject, getTarget(), null, getWeapon(), false);
 	}
 
 	@Override

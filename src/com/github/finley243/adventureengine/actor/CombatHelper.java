@@ -31,7 +31,7 @@ public class CombatHelper {
 		lastAttack = null;
 	}
 
-	public static void handleAttack(Actor subject, Actor target, ItemWeapon weapon, Limb limb, boolean auto) {
+	/*public static void handleAttack(Actor subject, Actor target, ItemWeapon weapon, Limb limb, boolean auto) {
 		boolean isRepeat = lastAttack != null && lastAttack.getSubject() == subject && lastAttack.getObject() == target && lastAttack.getObject2() == weapon;
 		target.addCombatTarget(subject);
 		Context attackContext = new Context(subject, false, target, false, weapon, false);
@@ -44,9 +44,15 @@ public class CombatHelper {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(getMissPhrase(weapon, limb, auto)), attackContext, null, null));
 		}
 		lastAttack = attackContext;
+	}*/
+
+	public static boolean isRepeat(Context attackContext) {
+		boolean isRepeat = lastAttack != null && lastAttack.getSubject() == attackContext.getSubject() && lastAttack.getObject() == attackContext.getObject() && lastAttack.getObject2() == attackContext.getObject2();
+		lastAttack = attackContext;
+		return isRepeat;
 	}
 	
-	private static void handleHit(Actor subject, Actor target, Limb limb, ItemWeapon weapon, boolean auto) {
+	public static void handleHit(Actor subject, Actor target, Limb limb, ItemWeapon weapon, boolean auto) {
 		int damage = weapon.getDamage();
 		if(auto) {
 			damage *= AUTOFIRE_DAMAGE_MULT;
@@ -119,7 +125,7 @@ public class CombatHelper {
 		return chance;
 	}
 
-	private static String getHitPhrase(ItemWeapon weapon, Limb limb, boolean crit, boolean auto) {
+	public static String getHitPhrase(ItemWeapon weapon, Limb limb, boolean crit, boolean auto) {
 		if(weapon.isRanged()) {
 			if(auto) {
 				return crit ? "rangedAutoHitCrit" : "rangedAutoHit";
@@ -137,7 +143,7 @@ public class CombatHelper {
 		}
 	}
 
-	private static String getTelegraphPhrase(ItemWeapon weapon, Limb limb, boolean auto) {
+	public static String getTelegraphPhrase(ItemWeapon weapon, Limb limb, boolean auto) {
 		if(weapon.isRanged()) {
 			return "rangedTelegraph";
 		} else {
@@ -145,7 +151,7 @@ public class CombatHelper {
 		}
 	}
 
-	private static String getMissPhrase(ItemWeapon weapon, Limb limb, boolean auto) {
+	public static String getMissPhrase(ItemWeapon weapon, Limb limb, boolean auto) {
 		if(weapon.isRanged()) {
 			if(auto) {
 				return "rangedAutoMiss";
