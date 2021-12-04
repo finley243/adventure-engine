@@ -1,8 +1,10 @@
 package com.github.finley243.adventureengine.world.template;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
@@ -20,11 +22,13 @@ public class StatsActor {
 	
 	private final int maxHP;
 	private final List<Limb> limbs;
+	private final Map<Actor.Attribute, Integer> attributes;
+	private final Map<Actor.Skill, Integer> skills;
 	
 	private final String lootTable;
 	private final String topic;
 	
-	public StatsActor(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, String lootTable, String topic) {
+	public StatsActor(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
@@ -33,6 +37,8 @@ public class StatsActor {
 		this.faction = faction;
 		this.maxHP = maxHP;
 		this.limbs = limbs;
+		this.attributes = attributes;
+		this.skills = skills;
 		this.lootTable = lootTable;
 		this.topic = topic;
 	}
@@ -63,6 +69,14 @@ public class StatsActor {
 
 	public List<Limb> getLimbs() {
 		return !limbs.isEmpty() ? limbs : Data.getActorStats(parentID).getLimbs();
+	}
+
+	public int getAttribute(Actor.Attribute attribute) {
+		return attributes.containsKey(attribute) ? attributes.get(attribute) : Data.getActorStats(parentID).getAttribute(attribute);
+	}
+
+	public int getSkill(Actor.Skill skill) {
+		return skills.containsKey(skill) ? skills.get(skill) : Data.getActorStats(parentID).getSkill(skill);
 	}
 	
 	public String getLootTable() {

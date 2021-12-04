@@ -118,11 +118,11 @@ public class Actor implements Noun, Physical {
 		this.apparelManager = new ApparelManager();
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new int[] {1, 0});
+			this.attributes.put(attribute, new int[] {stats.getAttribute(attribute), 0});
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for(Skill skill : Skill.values()) {
-			this.skills.put(skill, new int[] {1, 0});
+			this.skills.put(skill, new int[] {stats.getSkill(skill), 0});
 		}
 		this.effects = new ArrayList<>();
 		if(stats.getLootTable() != null) {

@@ -12,7 +12,7 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_BASE_MIN = 0.05f;
 	public static final float RANGE_PENALTY = 0.05f;
 	public static final float RANGE_PENALTY_MAX = 0.40f;
-	public static final float EVASION_PENALTY = 0.05f;
+	public static final float EVASION_PENALTY = 0.02f;
 
 	public static final float AUTOFIRE_DAMAGE_MULT = 4.00f;
 	public static final float AUTOFIRE_HIT_CHANCE_MULT = 0.50f;

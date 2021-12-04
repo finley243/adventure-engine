@@ -14,7 +14,7 @@
         <damage>10</damage>
         <critDamage>5</critDamage>
         <rate>2</rate>
-        <range>1</range>
+        <range>0</range>
         <clipSize>12</clipSize>
     </item>
     <item type="weapon" id="pistol_heavy">
@@ -24,7 +24,7 @@
         <damage>14</damage>
         <critDamage>6</critDamage>
         <rate>2</rate>
-        <range>1</range>
+        <range>0</range>
         <clipSize>6</clipSize>
     </item>
     <item type="weapon" id="rifle_auto">

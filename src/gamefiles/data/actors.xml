@@ -2,6 +2,28 @@
     <actor id="default">
         <name proper="false">DEFAULT</name>
         <pronoun>THEY</pronoun>
+        <attributes>
+            <attribute key="BODY">4</attribute>
+            <attribute key="INTELLIGENCE">4</attribute>
+            <attribute key="CHARISMA">4</attribute>
+            <attribute key="DEXTERITY">4</attribute>
+            <attribute key="AGILITY">4</attribute>
+        </attributes>
+        <skills>
+            <skill key="MELEE">4</skill>
+            <skill key="THROWING">4</skill>
+            <skill key="SOFTWARE">4</skill>
+            <skill key="HARDWARE">4</skill>
+            <skill key="FIRST_AID">4</skill>
+            <skill key="BARTER">4</skill>
+            <skill key="PERSUASION">4</skill>
+            <skill key="DECEPTION">4</skill>
+            <skill key="HANDGUNS">4</skill>
+            <skill key="LONG_ARMS">4</skill>
+            <skill key="LOCKPICK">4</skill>
+            <skill key="STEALTH">4</skill>
+            <skill key="EVASION">4</skill>
+        </skills>
         <limbs>
             <limb>
                 <name>head</name>

@@ -37,6 +37,11 @@ public class BehaviorIdle {
 			currentTarget = new PursueTarget(Data.getArea(steps.get(0)), IDLE_MOVEMENT_WEIGHT, steps.size() == 1, false);
 			subject.addPursueTarget(currentTarget);
 		}
+		if(subject.isInCombat()) {
+			currentTarget.setTargetUtility(0.0f);
+		} else {
+			currentTarget.setTargetUtility(IDLE_MOVEMENT_WEIGHT);
+		}
 		if(currentTarget.shouldRemove()) {
 			if(stepTurnCounter <= 0) {
 				stepIndex++;

@@ -89,7 +89,9 @@ public class DataLoader {
         List<Limb> limbs = loadLimbs(LoadUtils.singleChildWithName(actorElement, "limbs"));
         String lootTable = LoadUtils.singleTag(actorElement, "loottable", null);
         String topic = LoadUtils.singleTag(actorElement, "topic", null);
-        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, lootTable, topic);
+        Map<Actor.Attribute, Integer> attributes = loadAttributes(LoadUtils.singleChildWithName(actorElement, "attributes"));
+        Map<Actor.Skill, Integer> skills = loadSkills(LoadUtils.singleChildWithName(actorElement, "skills"));
+        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, topic);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -114,6 +116,28 @@ public class DataLoader {
         ApparelManager.ApparelSlot apparelSlot = ApparelManager.ApparelSlot.valueOf(LoadUtils.singleTag(element, "apparelSlot", "TORSO"));
         List<Effect> crippledEffects = loadEffects(LoadUtils.singleChildWithName(element, "effects"), false);
         return new Limb(name, meleeHitPhrase, meleeCritHitPhrase, meleeMissPhrase, rangedHitPhrase, rangedCritHitPhrase, rangedMissPhrase, hitChance, damageMult, apparelSlot, crippledEffects);
+    }
+
+    private static Map<Actor.Attribute, Integer> loadAttributes(Element element) {
+        Map<Actor.Attribute, Integer> attributes = new EnumMap<>(Actor.Attribute.class);
+        if(element == null) return attributes;
+        for(Element attributeElement : LoadUtils.directChildrenWithName(element, "attribute")) {
+            Actor.Attribute attribute = Actor.Attribute.valueOf(attributeElement.getAttribute("key").toUpperCase());
+            int value = Integer.parseInt(attributeElement.getTextContent());
+            attributes.put(attribute, value);
+        }
+        return attributes;
+    }
+
+    private static Map<Actor.Skill, Integer> loadSkills(Element element) {
+        Map<Actor.Skill, Integer> skills = new EnumMap<>(Actor.Skill.class);
+        if(element == null) return skills;
+        for(Element skillElement : LoadUtils.directChildrenWithName(element, "skill")) {
+            Actor.Skill skill = Actor.Skill.valueOf(skillElement.getAttribute("key").toUpperCase());
+            int value = Integer.parseInt(skillElement.getTextContent());
+            skills.put(skill, value);
+        }
+        return skills;
     }
 
     private static Context.Pronoun pronounTag(Element element, String name) {

@@ -5,6 +5,11 @@
             <chance>1.0</chance>
             <count>1</count>
         </entry>
+        <entry>
+            <reference table="false">baseball_bat</reference>
+            <chance>1.0</chance>
+            <count>1</count>
+        </entry>
     </lootTable>
     <lootTable id="weapon_melee" useAll="false">
         <entry>
