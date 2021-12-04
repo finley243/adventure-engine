@@ -46,19 +46,22 @@ public class Actor implements Noun, Physical {
 	public enum Skill {
 		// BODY
 		MELEE(Attribute.BODY),
-		RESISTANCE(Attribute.BODY),
+		THROWING(Attribute.BODY),
 		// INTELLIGENCE
 		SOFTWARE(Attribute.INTELLIGENCE),
 		HARDWARE(Attribute.INTELLIGENCE),
+		FIRST_AID(Attribute.INTELLIGENCE),
 		// CHARISMA
 		BARTER(Attribute.CHARISMA),
 		PERSUASION(Attribute.CHARISMA),
 		DECEPTION(Attribute.CHARISMA),
 		// DEXTERITY
 		HANDGUNS(Attribute.DEXTERITY),
-		RIFLES(Attribute.DEXTERITY),
+		LONG_ARMS(Attribute.DEXTERITY),
+		LOCKPICK(Attribute.DEXTERITY),
 		// AGILITY
-		STEALTH(Attribute.AGILITY);
+		STEALTH(Attribute.AGILITY),
+		EVASION(Attribute.AGILITY);
 
 		public final Attribute attribute;
 

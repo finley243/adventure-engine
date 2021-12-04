@@ -12,6 +12,9 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class ActionRangedAttack extends ActionAttack {
 	
 	public ActionRangedAttack(ItemWeapon weapon, Actor target) {
@@ -31,7 +34,16 @@ public class ActionRangedAttack extends ActionAttack {
 
 	@Override
 	public void onSuccess(Actor subject) {
-		CombatHelper.handleHit(subject, getTarget(), null, getWeapon(), false);
+		int damage = weapon.getDamage();
+		boolean crit = false;
+		if(ThreadLocalRandom.current().nextFloat() < ItemWeapon.CRIT_CHANCE) {
+			damage += weapon.getCritDamage();
+			crit = true;
+		}
+		Context attackContext = new Context(subject, false, target, false, weapon, false);
+		String hitPhrase = CombatHelper.getHitPhrase(weapon, null, crit, false);
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
+		target.damage(damage);
 	}
 
 	@Override

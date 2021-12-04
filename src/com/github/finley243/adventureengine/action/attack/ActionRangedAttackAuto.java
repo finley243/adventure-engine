@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.SoundEvent;
@@ -10,6 +11,9 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
+
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ActionRangedAttackAuto extends ActionAttack {
 
@@ -32,7 +36,17 @@ public class ActionRangedAttackAuto extends ActionAttack {
 
 	@Override
 	public void onSuccess(Actor subject) {
-		CombatHelper.handleHit(subject, getTarget(), null, getWeapon(), true);
+		int damage = weapon.getDamage();
+		damage *= CombatHelper.AUTOFIRE_DAMAGE_MULT;
+		boolean crit = false;
+		if(ThreadLocalRandom.current().nextFloat() < ItemWeapon.CRIT_CHANCE) {
+			damage += weapon.getCritDamage();
+			crit = true;
+		}
+		Context attackContext = new Context(subject, false, target, false, weapon, false);
+		String hitPhrase = CombatHelper.getHitPhrase(weapon, null, crit, true);
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
+		target.damage(damage);
 	}
 
 	@Override

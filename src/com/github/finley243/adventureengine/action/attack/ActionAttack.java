@@ -2,13 +2,16 @@ package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandom;
+import com.github.finley243.adventureengine.action.reaction.ActionReaction;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
+import java.util.List;
+
 public abstract class ActionAttack extends ActionRandom {
 
-    private final Actor target;
-    private final ItemWeapon weapon;
+    protected final Actor target;
+    protected final ItemWeapon weapon;
 
     public ActionAttack(ItemWeapon weapon, Actor target) {
         this.weapon = weapon;
@@ -21,6 +24,12 @@ public abstract class ActionAttack extends ActionRandom {
 
     public Actor getTarget() {
         return target;
+    }
+
+    protected ActionReaction getReaction(Actor subject) {
+        List<Action> reactions = getWeapon().reactionActions(getTarget());
+        Action chosenAction = target.chooseAction(reactions);
+        return chosenAction instanceof ActionReaction ? (ActionReaction) chosenAction : null;
     }
 
     @Override

@@ -55,6 +55,10 @@ public class ItemWeapon extends ItemEquippable {
 	public int getCritDamage() {
 		return stats.getCritDamage();
 	}
+
+	public int getRange() {
+		return stats.getRange();
+	}
 	
 	public void reloadFull() {
 		ammo = stats.getClipSize();
@@ -80,7 +84,7 @@ public class ItemWeapon extends ItemEquippable {
 			case SHOTGUN:
 			case ASSAULT_RIFLE:
 			case SNIPER_RIFLE:
-				return Actor.Skill.RIFLES;
+				return Actor.Skill.LONG_ARMS;
 			case KNIFE:
 			case SWORD:
 			case CLUB:
