@@ -106,6 +106,45 @@ public class Room implements Noun {
 		return actors;
 	}
 
+	public String getLocationDescription(int x, int y) {
+		String description = "";
+		Area area = getArea(x, y);
+		if(!area.getObjects().isEmpty()) {
+			WorldObject object = area.getObjects().iterator().next();
+			description += "near " + object.getFormattedName(false);
+		} else {
+			Set<WorldObject> adjacentObjects = new HashSet<>();
+			for(Area adjacentArea : area.getLinkedAreas()) {
+				adjacentObjects.addAll(adjacentArea.getObjects());
+			}
+			if(!adjacentObjects.isEmpty()) {
+				WorldObject object = adjacentObjects.iterator().next();
+				description += "next to " + object.getFormattedName(false);
+			}
+		}
+		if(x == 0) {
+			description += (description.isEmpty() ? "" : ", ");
+			description += "against the west wall";
+		} else if(x == this.roomGrid.length - 1) {
+			description += (description.isEmpty() ? "" : ", ");
+			description += "against the east wall";
+		} else if(y == 0) {
+			description += (description.isEmpty() ? "" : ", ");
+			description += "against the north wall";
+		} else if(y == this.roomGrid[0].length - 1) {
+			description += (description.isEmpty() ? "" : ", ");
+			description += "against the south wall";
+		}
+		if(description.isEmpty()) {
+			description += "in the middle of the room";
+		}
+		return description;
+	}
+
+	public String getMovementDescription(int x1, int y1, int x2, int y2) {
+		return null;
+	}
+
 	@Override
 	public String getName() {
 		return name;

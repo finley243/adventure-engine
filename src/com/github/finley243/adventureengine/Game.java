@@ -4,11 +4,13 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
+import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.*;
 import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.scene.SceneManager;
+import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
@@ -91,10 +93,14 @@ public class Game {
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				CombatHelper.newTurn();
+				Context context = new Context(actor, false);
+				EVENT_BUS.post(new VisualEvent(actor.getArea(), "<subject> <is> " + actor.getRoom().getLocationDescription(actor.getX(), actor.getY()), context, null, actor));
 				actor.takeTurn();
 			}
 		}
 		CombatHelper.newTurn();
+		Context context = new Context(Data.getPlayer(), false);
+		EVENT_BUS.post(new VisualEvent(Data.getPlayer().getArea(), "<subject> <is> " + Data.getPlayer().getRoom().getLocationDescription(Data.getPlayer().getX(), Data.getPlayer().getY()), context, null, Data.getPlayer()));
 		Data.getPlayer().takeTurn();
 	}
 	
