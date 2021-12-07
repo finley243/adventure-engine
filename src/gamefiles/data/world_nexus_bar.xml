@@ -1,5 +1,5 @@
 <rooms>
-    <room id="street_corner">
+    <roomOld id="street_corner">
         <name proper="false">street corner</name>
         <roomDescription></roomDescription>
         <area id="street_corner_nexus">
@@ -29,8 +29,8 @@
                 </actor>
             </actors>
         </area>
-    </room>
-    <room id="nexus">
+    </roomOld>
+    <roomOld id="nexus">
         <name proper="false">Nexus</name>
         <roomDescription></roomDescription>
         <area id="nexus_entry">
@@ -45,5 +45,5 @@
             </objects>
             <actors></actors>
         </area>
-    </room>
+    </roomOld>
 </rooms>

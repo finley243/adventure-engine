@@ -37,9 +37,17 @@ public class Room implements Noun {
 		this.roomGrid = new Area[xDim][yDim];
 		for(int x = 0; x < xDim; x++) {
 			for(int y = 0; y < yDim; y++) {
-				Area area = new Area(name + "_" + x + "_" + y, name, null, false, Area.AreaNameType.ABS, ID, x, y, new HashSet<>());
+				Area area = new Area(name + "_" + x + "_" + y, name, null, false, Area.AreaNameType.ABS, this, x, y, new HashSet<>());
 				roomGrid[x][y] = area;
 				Data.addArea(area.getID(), area);
+			}
+		}
+		for(WorldObject object : objects) {
+			object.setRoom(this);
+			for(int x = object.getX(); x < object.getX() + object.getXDim(); x++) {
+				for(int y = object.getY(); y < object.getY() + object.getYDim(); y++) {
+					roomGrid[x][y].addObject(object);
+				}
 			}
 		}
 		this.hasVisited = false;

@@ -74,9 +74,6 @@ public class Actor extends Physical implements Noun {
 	private final StatsActor stats;
 	private final String ID;
 	private final String descriptor;
-	private Room room;
-	private int x;
-	private int y;
 	private int HP;
 	private boolean isEnabled;
 	private boolean isDead;
@@ -173,9 +170,9 @@ public class Actor extends Physical implements Noun {
 		if(isEnabled != enable) {
 			isEnabled = enable;
 			if(enable) {
-				room.getArea(getX(), getY()).addActor(this);
+				getArea().addActor(this);
 			} else {
-				room.getArea(getX(), getY()).removeActor(this);
+				getArea().removeActor(this);
 			}
 		}
 	}
@@ -482,31 +479,6 @@ public class Actor extends Physical implements Noun {
 	}
 
 	@Override
-	public Room getRoom() {
-		return room;
-	}
-
-	@Override
-	public int getX() {
-		return x;
-	}
-
-	@Override
-	public int getY() {
-		return y;
-	}
-
-	@Override
-	public int getXDim() {
-		return 1;
-	}
-
-	@Override
-	public int getYDim() {
-		return 1;
-	}
-
-	@Override
 	public void setPosition(Room room, int x, int y) {
 		if(getArea() != null) {
 			getArea().removeActor(this);
@@ -575,7 +547,9 @@ public class Actor extends Physical implements Noun {
 		}
 		if(canMove()) {
 			for(Area area : getArea().getLinkedAreas()) {
-				actions.add(new ActionMove(area));
+				if(!area.isObstructed()) {
+					actions.add(new ActionMove(area));
+				}
 			}
 		}
 		for(Item item : inventory.getUniqueItems()) {

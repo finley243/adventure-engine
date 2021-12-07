@@ -29,7 +29,7 @@ public class Area implements Noun {
 	// Format used to describe the area (abs: "move to [name]", near: "move near [name]", behind:"move behind [name]", etc.)
 	private final AreaNameType nameType;
 	// The room containing this area
-	private final String roomID;
+	private final Room room;
 	// Coordinates in room
 	private final int x;
 	private final int y;
@@ -41,13 +41,13 @@ public class Area implements Noun {
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, int x, int y, Set<WorldObject> objects) {
+	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, Room room, int x, int y, Set<WorldObject> objects) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
 		this.isProperName = isProperName;
 		this.nameType = nameType;
-		this.roomID = roomID;
+		this.room = room;
 		this.x = x;
 		this.y = y;
 		this.objects = objects;
@@ -103,6 +103,24 @@ public class Area implements Noun {
 			return getRelativeName();
 		}
 	}
+
+	public boolean isObstructed() {
+		for(WorldObject object : objects) {
+			if(object.isPartialObstruction() || object.isFullObstruction()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isFullyObstructed() {
+		for(WorldObject object : objects) {
+			if(object.isFullObstruction()) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public Set<WorldObject> getObjects(){
 		return objects;
@@ -142,7 +160,6 @@ public class Area implements Noun {
 	
 	public Set<Area> getLinkedAreas() {
 		Set<Area> output = new HashSet<>();
-		Room room = Data.getRoom(roomID);
 		Area left = room.getArea(x - 1, y);
 		Area right = room.getArea(x + 1, y);
 		Area up = room.getArea(x, y + 1);
@@ -164,7 +181,7 @@ public class Area implements Noun {
 	
 	public Set<Area> getVisibleAreas() {
 		// TODO - Implement visibility system using obstructions
-		Area[][] roomAreas = Data.getRoom(roomID).getAreas();
+		Area[][] roomAreas = room.getAreas();
 		Set<Area> visibleAreas = new HashSet<>();
 		for(Area[] current : roomAreas) {
 			visibleAreas.addAll(Arrays.asList(current));
@@ -188,7 +205,7 @@ public class Area implements Noun {
 	}
 	
 	public Room getRoom() {
-		return Data.getRoom(roomID);
+		return room;
 	}
 
 	public int getX() {

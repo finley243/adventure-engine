@@ -68,11 +68,11 @@ public class DataLoader {
                     Scene scene = loadScene(sceneElement);
                     Data.addScene(scene.getID(), scene);
                 }
-                /*List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
+                List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
                 for (Element roomElement : rooms) {
                     Room room = loadRoom(roomElement);
                     Data.addRoom(room.getID(), room);
-                }*/
+                }
             }
         }
     }
@@ -473,6 +473,47 @@ public class DataLoader {
         List<String> text = LoadUtils.listOfTags(lineElement, "text");
         List<Script> scripts = loadScripts(lineElement);
         return new SceneLine(condition, text, scripts);
+    }
+
+    private static Room loadRoom(Element roomElement) {
+        String roomID = roomElement.getAttribute("id");
+        int roomX = Integer.parseInt(roomElement.getAttribute("x"));
+        int roomY = Integer.parseInt(roomElement.getAttribute("y"));
+        Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
+        String roomName = roomNameElement.getTextContent();
+        boolean roomNameIsProper = LoadUtils.boolAttribute(roomNameElement, "proper", false);
+        String roomDescription = LoadUtils.singleTag(roomElement, "roomDescription", null);
+        String roomOwnerFaction = LoadUtils.singleTag(roomElement, "ownerFaction", null);
+        Element roomScenesElement = LoadUtils.singleChildWithName(roomElement, "scenes");
+        List<String> roomScenes = LoadUtils.listOfTags(roomScenesElement, "scene");
+
+        Element objectsElement = LoadUtils.singleChildWithName(roomElement, "objects");
+        List<Element> objectElements = LoadUtils.directChildrenWithName(objectsElement, "object");
+        Set<WorldObject> objectSet = new HashSet<>();
+        for(Element objectElement : objectElements) {
+            WorldObject object = loadObject(objectElement);
+            int objectX = Integer.parseInt(objectElement.getAttribute("x"));
+            int objectY = Integer.parseInt(objectElement.getAttribute("y"));
+            object.setPosition(objectX, objectY);
+            objectSet.add(object);
+            if(object instanceof LinkedObject) {
+                LinkedObject linkedObject = (LinkedObject) object;
+                Data.addLinkedObject(linkedObject.getID(), linkedObject);
+            }
+        }
+
+        Room room = new Room(roomID, roomName, roomNameIsProper, roomDescription, roomScenes, roomOwnerFaction, roomX, roomY, objectSet);
+
+        Element actorsElement = LoadUtils.singleChildWithName(roomElement, "actors");
+        List<Element> actorElements = LoadUtils.directChildrenWithName(actorsElement, "actor");
+        for(Element actorElement : actorElements) {
+            int actorX = Integer.parseInt(actorElement.getAttribute("x"));
+            int actorY = Integer.parseInt(actorElement.getAttribute("y"));
+            Actor actor = loadActorInstance(actorElement, room.getArea(actorX, actorY));
+            Data.addActor(actor.getID(), actor);
+        }
+
+        return room;
     }
 
     /*private static Room loadRoom(Element roomElement) {

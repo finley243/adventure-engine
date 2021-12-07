@@ -1,12 +1,19 @@
 <data>
-    <room x="5" y="8">
+    <room id="grid_load_test" x="5" y="8">
         <name proper="false">warehouse</name>
         <objects>
-            <object x="" y="" type=""></object>
-            <object x="" y="" width="" height="" type=""></object>
+            <object type="vending_machine" x="2" y="0">
+                <name>vending machine</name>
+                <items>
+                    <item>nitron_cola</item>
+                    <item>nitron_diet</item>
+                </items>
+            </object>
         </objects>
         <actors>
-
+            <actor id="enemy" x="3" y="3">
+                <stats>enemy</stats>
+            </actor>
         </actors>
     </room>
 </data>

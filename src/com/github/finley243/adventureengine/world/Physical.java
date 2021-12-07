@@ -61,6 +61,20 @@ public abstract class Physical {
 	public int getYDim() {
 		return yDim;
 	}
+
+	public void setPosition(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public void setDimensions(int xDim, int yDim) {
+		this.xDim = xDim;
+		this.yDim = yDim;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
+	}
 	
 	public void setPosition(Room room, int x, int y) {
 		this.room = room;

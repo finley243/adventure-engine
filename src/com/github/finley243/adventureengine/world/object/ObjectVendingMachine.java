@@ -17,7 +17,7 @@ public class ObjectVendingMachine extends WorldObject {
 	}
 
 	@Override
-	public boolean isPartialObstruction() {
+	public boolean isFullObstruction() {
 		return true;
 	}
 

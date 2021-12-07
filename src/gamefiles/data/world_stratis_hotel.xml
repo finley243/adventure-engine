@@ -1,5 +1,5 @@
 <rooms>
-    <room id="stratis_hotel_lobby">
+    <roomOld id="stratis_hotel_lobby">
         <name proper="false">lobby</name>
         <roomDescription>You enter an airy two-story lobby. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</roomDescription>
         <scenes>
@@ -110,8 +110,8 @@
                 </actor>-->
             </actors>
         </area>
-    </room>
-    <room id="stratis_hotel_rooms_corridor">
+    </roomOld>
+    <roomOld id="stratis_hotel_rooms_corridor">
         <name proper="false">guest room corridor</name>
         <areaDescription>You enter a dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</areaDescription>
         <area id="stratis_hotel_corridor_elevators">
@@ -158,8 +158,8 @@
             </objects>
             <actors></actors>
         </area>
-    </room>
-    <room id="stratis_hotel_room">
+    </roomOld>
+    <roomOld id="stratis_hotel_room">
         <name proper="true">room 508</name>
         <description>The lights come on as you enter, casting a warm glow over the white linen on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</description>
         <area id="stratis_hotel_room_main">
@@ -176,8 +176,8 @@
             </objects>
             <actors></actors>
         </area>
-    </room>
-    <room id="stratis_hotel_security">
+    </roomOld>
+    <roomOld id="stratis_hotel_security">
         <name proper="false">security office</name>
         <ownerFaction>stratis_hotel_staff</ownerFaction>
         <area id="stratis_hotel_security_main">
@@ -202,5 +202,5 @@
                 </actor>
             </actors>
         </area>
-    </room>
+    </roomOld>
 </rooms>

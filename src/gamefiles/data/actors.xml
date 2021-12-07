@@ -108,7 +108,7 @@
         <pronoun>HE</pronoun>
         <faction>enemy</faction>
         <hp>40</hp>
-        <loottable>weapon_ranged</loottable>
+        <loottable>weapon_melee</loottable>
     </actor>
     <actor id="nexus_bouncer" parent="default">
         <name proper="false">bouncer</name>

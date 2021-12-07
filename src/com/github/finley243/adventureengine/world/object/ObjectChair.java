@@ -12,6 +12,11 @@ public class ObjectChair extends UsableObject {
     public ObjectChair(String name, String description) {
         super(name, description);
     }
+
+	@Override
+	public boolean isPartialObstruction() {
+		return true;
+	}
 	
 	@Override
 	public List<Action> localActions(Actor subject) {

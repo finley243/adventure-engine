@@ -17,6 +17,8 @@ import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemDistraction;
+import com.github.finley243.adventureengine.world.object.ObjectObstruction;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.ItemFactory;
 import com.google.common.eventbus.EventBus;
@@ -28,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Game {
@@ -58,10 +61,7 @@ public class Game {
 		EVENT_BUS.register(userInterface);
 		EVENT_BUS.register(this);
 
-		Room gridTestRoom = new Room("grid_test_room", "warehouse", false, null, new ArrayList<>(), null, 5, 8, new HashSet<>());
-		Data.addRoom(gridTestRoom.getID(), gridTestRoom);
-		
-		Actor player = ActorFactory.createPlayer(Data.getConfig("playerID"), gridTestRoom.getArea(0, 0)/*Data.getArea(Data.getConfig("playerStartArea"))*/, Data.getActorStats(Data.getConfig("playerStats")));
+		Actor player = ActorFactory.createPlayer(Data.getConfig("playerID"), Data.getRoom(Data.getConfig("playerStartRoom")).getArea(Integer.parseInt(Data.getConfig("playerStartX")), Integer.parseInt(Data.getConfig("playerStartY")))/*Data.getArea(Data.getConfig("playerStartArea"))*/, Data.getActorStats(Data.getConfig("playerStats")));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
 
