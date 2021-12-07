@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.action.ActionItemTake;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public abstract class Item extends WorldObject {
@@ -26,11 +27,6 @@ public abstract class Item extends WorldObject {
 	
 	@Override
 	public abstract String getDescription();
-	
-	@Override
-	public void setArea(Area area) {
-		super.setArea(area);
-	}
 	
 	public abstract boolean equalsInventory(Item other);
 

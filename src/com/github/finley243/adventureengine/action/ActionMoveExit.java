@@ -34,7 +34,7 @@ public class ActionMoveExit extends Action {
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("moveThroughTo"), context, this, subject));
 		Game.EVENT_BUS.post(new VisualEvent(area, Phrases.get("moveThroughTo"), context, this, subject));
 		exit.unlock();
-		subject.move(area);
+		subject.move(area.getRoom(), area.getX(), area.getY());
 	}
 
 	@Override

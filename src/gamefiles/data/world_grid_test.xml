@@ -1,0 +1,12 @@
+<data>
+    <room x="5" y="8">
+        <name proper="false">warehouse</name>
+        <objects>
+            <object x="" y="" type=""></object>
+            <object x="" y="" width="" height="" type=""></object>
+        </objects>
+        <actors>
+
+        </actors>
+    </room>
+</data>

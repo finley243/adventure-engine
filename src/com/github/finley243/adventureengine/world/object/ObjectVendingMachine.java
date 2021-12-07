@@ -17,6 +17,11 @@ public class ObjectVendingMachine extends WorldObject {
 	}
 
 	@Override
+	public boolean isPartialObstruction() {
+		return true;
+	}
+
+	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
 		for(String item : vendingItems) {

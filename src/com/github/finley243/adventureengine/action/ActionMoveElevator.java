@@ -39,7 +39,7 @@ public class ActionMoveElevator extends Action {
 		}
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject));
 		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject));
-		subject.move(destination.getArea());
+		subject.move(destination.getArea().getRoom(), destination.getArea().getX(), destination.getArea().getY());
 	}
 
 	@Override

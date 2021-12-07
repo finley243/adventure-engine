@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -21,18 +22,26 @@ public class Room implements Noun {
 	private final String description;
 	private final List<String> scenes;
 	private final String ownerFaction;
-	private final Set<Area> areas;
+	// null = not part of room
+	private final Area[][] roomGrid;
 
 	private boolean hasVisited;
 
-	public Room(String ID, String name, boolean isProperName, String description, List<String> scenes, String ownerFaction, Set<Area> areas) {
+	public Room(String ID, String name, boolean isProperName, String description, List<String> scenes, String ownerFaction, int xDim, int yDim, Set<WorldObject> objects) {
 		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
 		this.description = description;
 		this.scenes = scenes;
 		this.ownerFaction = ownerFaction;
-		this.areas = areas;
+		this.roomGrid = new Area[xDim][yDim];
+		for(int x = 0; x < xDim; x++) {
+			for(int y = 0; y < yDim; y++) {
+				Area area = new Area(name + "_" + x + "_" + y, name, null, false, Area.AreaNameType.ABS, ID, x, y, new HashSet<>());
+				roomGrid[x][y] = area;
+				Data.addArea(area.getID(), area);
+			}
+		}
 		this.hasVisited = false;
 	}
 	
@@ -40,8 +49,13 @@ public class Room implements Noun {
 		return ID;
 	}
 	
-	public Set<Area> getAreas(){
-		return areas;
+	public Area[][] getAreas(){
+		return roomGrid;
+	}
+
+	public Area getArea(int x, int y) {
+		if(x < 0 || x > roomGrid.length - 1 || y < 0 || y > roomGrid[0].length - 1) return null;
+		return roomGrid[x][y];
 	}
 	
 	public String getDescription() {
@@ -66,16 +80,20 @@ public class Room implements Noun {
 	
 	public Set<WorldObject> getObjects() {
 		Set<WorldObject> objects = new HashSet<>();
-		for(Area area : areas) {
-			objects.addAll(area.getObjects());
+		for(Area[] current : roomGrid) {
+			for(Area area : current) {
+				objects.addAll(area.getObjects());
+			}
 		}
 		return objects;
 	}
 	
 	public Set<Actor> getActors() {
 		Set<Actor> actors = new HashSet<>();
-		for(Area area : areas) {
-			actors.addAll(area.getActors());
+		for(Area[] current : roomGrid) {
+			for(Area area : current) {
+				actors.addAll(area.getActors());
+			}
 		}
 		return actors;
 	}

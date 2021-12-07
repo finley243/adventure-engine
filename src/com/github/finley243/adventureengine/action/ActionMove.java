@@ -28,7 +28,7 @@ public class ActionMove extends Action {
 	public void choose(Actor subject) {
 
 		Context context = new Context(subject, false, area, false);
-		/*String line;
+		String line;
 		switch(area.getNameType()) {
 			case ABS:
 			default:
@@ -52,10 +52,9 @@ public class ActionMove extends Action {
 			case BETWEEN:
 				line = "moveBetween";
 				break;
-		}*/
-		String line = "move";
+		}
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context, this, subject));
-		subject.move(area);
+		subject.move(area.getRoom(), area.getX(), area.getY());
 	}
 	
 	@Override

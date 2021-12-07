@@ -12,17 +12,19 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.Room;
 
 /**
  * A static object that can exist in the game world
  */
-public abstract class WorldObject implements Noun, Physical {
+public abstract class WorldObject extends Physical implements Noun {
 	
 	private final String name;
-	private Area area;
+	private Room room;
 	private final String description;
 	
 	public WorldObject(String name, String description) {
+		super(1, 1);
 		this.name = name;
 		this.description = description;
 	}
@@ -34,6 +36,16 @@ public abstract class WorldObject implements Noun, Physical {
 	
 	public String getDescription() {
 		return description;
+	}
+
+	// Partial obstruction = no movement, allows visibility
+	public boolean isPartialObstruction() {
+		return false;
+	}
+
+	// Full obstruction = no movement, no visibility
+	public boolean isFullObstruction() {
+		return false;
 	}
 	
 	@Override
@@ -54,15 +66,16 @@ public abstract class WorldObject implements Noun, Physical {
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
 	}
-	
+
 	@Override
-	public Area getArea() {
-		return area;
-	}
-	
-	@Override
-	public void setArea(Area area) {
-		this.area = area;
+	public void setPosition(Room room, int x, int y) {
+		for(Area area : getAreas()) {
+			area.removeObject(this);
+		}
+		super.setPosition(room, x, y);
+		for(Area area : getAreas()) {
+			area.addObject(this);
+		}
 	}
 
 	@Override

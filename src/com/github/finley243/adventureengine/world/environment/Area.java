@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.environment;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +21,7 @@ public class Area implements Noun {
 	}
 
 	private final String ID;
-	
+
 	// The name of the area
 	private final String name;
 	// Whether the name is a proper name (if false, should be preceded with "the" or "a")
@@ -29,36 +30,37 @@ public class Area implements Noun {
 	private final AreaNameType nameType;
 	// The room containing this area
 	private final String roomID;
+	// Coordinates in room
+	private final int x;
+	private final int y;
 	
 	private final String description;
-	
-	// All areas that can be accessed when in this area
-	private final Set<String> linkedAreas;
 	
 	// All objects in this area
 	private final Set<WorldObject> objects;
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, Set<String> linkedAreas, Set<WorldObject> objects) {
+	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, int x, int y, Set<WorldObject> objects) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
 		this.isProperName = isProperName;
 		this.nameType = nameType;
 		this.roomID = roomID;
-		this.linkedAreas = linkedAreas;
+		this.x = x;
+		this.y = y;
 		this.objects = objects;
 		this.actors = new HashSet<>();
 	}
-	
+
 	public String getID() {
 		return ID;
 	}
-	
+
 	@Override
 	public String getName() {
-		return name;
+		return name + " (" + x + ", " + y + ")";
 	}
 	
 	public String getDescription() {
@@ -140,15 +142,35 @@ public class Area implements Noun {
 	
 	public Set<Area> getLinkedAreas() {
 		Set<Area> output = new HashSet<>();
-		for(String linkedID : linkedAreas) {
-			output.add(Data.getArea(linkedID));
+		Room room = Data.getRoom(roomID);
+		Area left = room.getArea(x - 1, y);
+		Area right = room.getArea(x + 1, y);
+		Area up = room.getArea(x, y + 1);
+		Area down = room.getArea(x, y - 1);
+		if(left != null) {
+			output.add(left);
+		}
+		if(right != null) {
+			output.add(right);
+		}
+		if(up != null) {
+			output.add(up);
+		}
+		if(down != null) {
+			output.add(down);
 		}
 		return output;
 	}
 	
 	public Set<Area> getVisibleAreas() {
-		// Areas in current room
-		return new HashSet<>(getRoom().getAreas());
+		// TODO - Implement visibility system using obstructions
+		Area[][] roomAreas = Data.getRoom(roomID).getAreas();
+		Set<Area> visibleAreas = new HashSet<>();
+		for(Area[] current : roomAreas) {
+			visibleAreas.addAll(Arrays.asList(current));
+		}
+		visibleAreas.remove(null);
+		return visibleAreas;
 	}
 
 	@Override
@@ -167,6 +189,14 @@ public class Area implements Noun {
 	
 	public Room getRoom() {
 		return Data.getRoom(roomID);
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
 	}
 	
 	@Override

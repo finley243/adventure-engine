@@ -19,6 +19,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
 import com.github.finley243.adventureengine.world.item.ItemEquippable;
@@ -28,7 +29,7 @@ import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
-public class Actor implements Noun, Physical {
+public class Actor extends Physical implements Noun {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 2;
@@ -73,7 +74,9 @@ public class Actor implements Noun, Physical {
 	private final StatsActor stats;
 	private final String ID;
 	private final String descriptor;
-	private Area area;
+	private Room room;
+	private int x;
+	private int y;
 	private int HP;
 	private boolean isEnabled;
 	private boolean isDead;
@@ -99,9 +102,10 @@ public class Actor implements Noun, Physical {
 	private final boolean preventMovement;
 	
 	public Actor(String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead) {
+		super(1, 1);
 		this.ID = ID;
 		if(area != null) {
-			this.move(area);
+			this.move(area.getRoom(), area.getX(), area.getY());
 		}
 		this.stats = stats;
 		this.descriptor = descriptor;
@@ -161,16 +165,6 @@ public class Actor implements Noun, Physical {
 		return stats.getPronoun();
 	}
 	
-	@Override
-	public Area getArea() {
-		return area;
-	}
-	
-	@Override
-	public void setArea(Area area) {
-		this.area = area;
-	}
-	
 	public boolean isEnabled() {
 		return isEnabled;
 	}
@@ -179,9 +173,9 @@ public class Actor implements Noun, Physical {
 		if(isEnabled != enable) {
 			isEnabled = enable;
 			if(enable) {
-				area.addActor(this);
+				room.getArea(getX(), getY()).addActor(this);
 			} else {
-				area.removeActor(this);
+				room.getArea(getX(), getY()).removeActor(this);
 			}
 		}
 	}
@@ -269,13 +263,10 @@ public class Actor implements Noun, Physical {
 	public Faction getFaction() {
 		return Data.getFaction(stats.getFaction());
 	}
-	
-	public void move(Area area) {
-		if(this.area != null) {
-			this.area.removeActor(this);
-		}
-		setArea(area);
-		area.addActor(this);
+
+	// TODO - Replace uses? (redundant method)
+	public void move(Room room, int x, int y) {
+		setPosition(room, x, y);
 	}
 	
 	public boolean canMove() {
@@ -488,6 +479,40 @@ public class Actor implements Noun, Physical {
 	
 	public Set<PursueTarget> getPursueTargets() {
 		return pursueTargets;
+	}
+
+	@Override
+	public Room getRoom() {
+		return room;
+	}
+
+	@Override
+	public int getX() {
+		return x;
+	}
+
+	@Override
+	public int getY() {
+		return y;
+	}
+
+	@Override
+	public int getXDim() {
+		return 1;
+	}
+
+	@Override
+	public int getYDim() {
+		return 1;
+	}
+
+	@Override
+	public void setPosition(Room room, int x, int y) {
+		if(getArea() != null) {
+			getArea().removeActor(this);
+		}
+		super.setPosition(room, x, y);
+		getArea().addActor(this);
 	}
 
 	@Override

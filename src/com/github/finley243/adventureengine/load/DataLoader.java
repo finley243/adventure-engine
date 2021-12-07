@@ -68,11 +68,11 @@ public class DataLoader {
                     Scene scene = loadScene(sceneElement);
                     Data.addScene(scene.getID(), scene);
                 }
-                List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
+                /*List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
                 for (Element roomElement : rooms) {
                     Room room = loadRoom(roomElement);
                     Data.addRoom(room.getID(), room);
-                }
+                }*/
             }
         }
     }
@@ -475,7 +475,7 @@ public class DataLoader {
         return new SceneLine(condition, text, scripts);
     }
 
-    private static Room loadRoom(Element roomElement) {
+    /*private static Room loadRoom(Element roomElement) {
         String roomID = roomElement.getAttribute("id");
         Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
         String roomName = roomNameElement.getTextContent();
@@ -493,9 +493,9 @@ public class DataLoader {
             Data.addArea(area.getID(), area);
         }
         return new Room(roomID, roomName, roomNameIsProper, roomDescription, roomScenes, roomOwnerFaction, areas);
-    }
+    }*/
 
-    private static Area loadArea(Element areaElement, String roomID) {
+    /*private static Area loadArea(Element areaElement, String roomID) {
         String areaID = areaElement.getAttribute("id");
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = nameElement.getTextContent();
@@ -536,7 +536,7 @@ public class DataLoader {
         }
 
         return area;
-    }
+    }*/
 
     private static WorldObject loadObject(Element objectElement) {
         String objectType = objectElement.getAttribute("type");
