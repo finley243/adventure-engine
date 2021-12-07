@@ -500,7 +500,7 @@ public class DataLoader {
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = nameElement.getTextContent();
         boolean isProperName = LoadUtils.boolAttribute(nameElement, "proper", false);
-        boolean isProximateName = LoadUtils.boolAttribute(nameElement, "prox", false);
+        Area.AreaNameType nameType = Area.AreaNameType.valueOf(LoadUtils.attribute(nameElement, "type", "abs").toUpperCase());
         String description = LoadUtils.singleTag(areaElement, "areaDescription", null);
 
         Element linksElement = LoadUtils.singleChildWithName(areaElement, "links");
@@ -523,7 +523,7 @@ public class DataLoader {
             }
         }
 
-        Area area = new Area(areaID, name, description, isProperName, isProximateName, roomID, linkSet, objectSet);
+        Area area = new Area(areaID, name, description, isProperName, nameType, roomID, linkSet, objectSet);
         for(WorldObject object : objectSet) {
             object.setArea(area);
         }

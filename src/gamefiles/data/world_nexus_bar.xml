@@ -3,7 +3,7 @@
         <name proper="false">street corner</name>
         <roomDescription></roomDescription>
         <area id="street_corner_nexus">
-            <name proper="false" prox="true">Nexus entrance</name>
+            <name proper="false" type="near">Nexus entrance</name>
             <areaDescription></areaDescription>
             <links></links>
             <objects>
@@ -34,7 +34,7 @@
         <name proper="false">Nexus</name>
         <roomDescription></roomDescription>
         <area id="nexus_entry">
-            <name proper="false" prox="true">Nexus entrance</name>
+            <name proper="false" type="near">Nexus entrance</name>
             <areaDescription></areaDescription>
             <links></links>
             <objects>

@@ -13,8 +13,14 @@ meleeHitCrit:<object2> hits <object>
 meleeMiss:<subject> tr<ies> to hit <object> with <object2>, but miss<es>
 meleeTelegraph:<subject> swing<s> <object2> at <object>
 moveThroughTo:<subject> go<es> through <object> to <object2>
+move:<subject> move<s> <object>
 moveTo:<subject> move<s> to <object>
-moveToward:<subject> move<s> to <object>
+moveNear:<subject> move<s> near <object>
+moveLeft:<subject> move<s> to the left of <object>
+moveRight:<subject> move<s> to the right of <object>
+moveFront:<subject> move<s> in front of <object>
+moveBehind:<subject> move<s> behind <object>
+moveBetween:<subject> move<s> between <object>
 patrolTelegraph:<subject> prepare<s> to move to <object>
 pickUp:<subject> grab<s> <object>
 rangedHit:a bullet hits <object>

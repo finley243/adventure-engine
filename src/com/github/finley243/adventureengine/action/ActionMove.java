@@ -26,13 +26,34 @@ public class ActionMove extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
+
 		Context context = new Context(subject, false, area, false);
-		String line;
-		if(area.isProximateName()) {
-			line = "moveToward";
-		} else {
-			line = "moveTo";
-		}
+		/*String line;
+		switch(area.getNameType()) {
+			case ABS:
+			default:
+				line = "moveTo";
+				break;
+			case NEAR:
+				line = "moveNear";
+				break;
+			case LEFT:
+				line = "moveLeft";
+				break;
+			case RIGHT:
+				line = "moveRight";
+				break;
+			case FRONT:
+				line = "moveFront";
+				break;
+			case BEHIND:
+				line = "moveBehind";
+				break;
+			case BETWEEN:
+				line = "moveBetween";
+				break;
+		}*/
+		String line = "move";
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(line), context, this, subject));
 		subject.move(area);
 	}
@@ -61,7 +82,7 @@ public class ActionMove extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(LangUtils.titleCase(area.getName()), "Move to " + area.getFormattedName(false), canChoose(subject), new String[]{"move"});
+		return new MenuData(LangUtils.titleCase(area.getRelativeName()), "Move " + area.getMoveDescription(), canChoose(subject), new String[]{"move"});
 	}
 
 	@Override

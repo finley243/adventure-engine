@@ -6,7 +6,7 @@
             <scene>stratis_lobby_intro</scene>
         </scenes>
         <area id="stratis_hotel_lobby_entry">
-            <name proper="false" prox="true">main entrance</name>
+            <name proper="false" type="near">main entrance</name>
             <areaDescription>The entryway is clean and relatively empty.</areaDescription>
             <links>
                 <link>stratis_hotel_lobby_desk</link>
@@ -17,11 +17,21 @@
             <actors></actors>
         </area>
         <area id="stratis_hotel_lobby_desk">
-            <name proper="false" prox="true">reception desk</name>
+            <name proper="false" type="front">reception desk</name>
             <areaDescription>A white marble desk stretches several meters across. Behind the desk, large chrome lettering spells out "Stratis".</areaDescription>
             <links>
                 <link>stratis_hotel_lobby_entry</link>
+                <link>stratis_hotel_lobby_desk_behind</link>
                 <link>stratis_hotel_lobby_seating</link>
+                <link>stratis_hotel_lobby_elevators</link>
+            </links>
+            <objects></objects>
+            <actors></actors>
+        </area>
+        <area id="stratis_hotel_lobby_desk_behind">
+            <name proper="false" type="behind">reception desk</name>
+            <links>
+                <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_elevators</link>
             </links>
             <objects></objects>
@@ -35,7 +45,7 @@
             </actors>
         </area>
         <area id="stratis_hotel_lobby_seating">
-            <name proper="false" prox="true">seating area</name>
+            <name proper="false">seating area</name>
             <links>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_desk</link>
@@ -65,7 +75,7 @@
             </actors>
         </area>
         <area id="stratis_hotel_lobby_elevators">
-            <name proper="false" prox="true">elevators</name>
+            <name proper="false" type="near">elevators</name>
             <links>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_entry</link>
@@ -105,7 +115,7 @@
         <name proper="false">guest room corridor</name>
         <areaDescription>You enter a dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</areaDescription>
         <area id="stratis_hotel_corridor_elevators">
-            <name proper="false" prox="true">elevators</name>
+            <name proper="false" type="near">elevators</name>
             <description>The space outside the elevators is dimly lit, with a row of doors on the opposite wall.</description>
             <links>
                 <link>stratis_hotel_corridor_main</link>
@@ -130,7 +140,7 @@
             <actors></actors>
         </area>
         <area id="stratis_hotel_corridor_main">
-            <name proper="false" prox="false">corridor</name>
+            <name proper="false">corridor</name>
             <links>
                 <link>stratis_hotel_corridor_elevators</link>
             </links>
@@ -153,7 +163,7 @@
         <name proper="true">room 508</name>
         <description>The lights come on as you enter, casting a warm glow over the white linen on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</description>
         <area id="stratis_hotel_room_main">
-            <name proper="false" prox="false">room</name>
+            <name proper="false">room</name>
             <links></links>
             <objects>
                 <object type="exit" id="stratis_hotel_room_door">
@@ -171,7 +181,7 @@
         <name proper="false">security office</name>
         <ownerFaction>stratis_hotel_staff</ownerFaction>
         <area id="stratis_hotel_security_main">
-            <name proper="false" prox="false">office</name>
+            <name proper="false">office</name>
             <links></links>
             <objects>
                 <object type="exit" id="stratis_hotel_security_door">

@@ -11,6 +11,11 @@ import java.util.Set;
 
 public class LoadUtils {
 
+	public static String attribute(Element element, String name, String defaultValue) {
+		if(!element.hasAttribute(name)) return defaultValue;
+		return element.getAttribute(name);
+	}
+
 	public static boolean boolAttribute(Element element, String name, boolean defaultValue) {
 		if(!element.hasAttribute(name)) return defaultValue;
 		return element.getAttribute(name).equalsIgnoreCase("true");

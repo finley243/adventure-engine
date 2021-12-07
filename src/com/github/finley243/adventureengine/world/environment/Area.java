@@ -15,14 +15,18 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
  */
 public class Area implements Noun {
 
+	public enum AreaNameType {
+		ABS, NEAR, LEFT, RIGHT, FRONT, BEHIND, BETWEEN
+	}
+
 	private final String ID;
 	
 	// The name of the area
 	private final String name;
 	// Whether the name is a proper name (if false, should be preceded with "the" or "a")
 	private final boolean isProperName;
-	// Whether the name is a "proximity-based" name (if true, formats name as "near [name]", respects proper and improper names)
-	private final boolean isProximateName;
+	// Format used to describe the area (abs: "move to [name]", near: "move near [name]", behind:"move behind [name]", etc.)
+	private final AreaNameType nameType;
 	// The room containing this area
 	private final String roomID;
 	
@@ -36,12 +40,12 @@ public class Area implements Noun {
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(String ID, String name, String description, boolean isProperName, boolean isProximateName, String roomID, Set<String> linkedAreas, Set<WorldObject> objects) {
+	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, Set<String> linkedAreas, Set<WorldObject> objects) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
 		this.isProperName = isProperName;
-		this.isProximateName = isProximateName;
+		this.nameType = nameType;
 		this.roomID = roomID;
 		this.linkedAreas = linkedAreas;
 		this.objects = objects;
@@ -67,6 +71,34 @@ public class Area implements Noun {
 			return LangUtils.addArticle(getName(), indefinite);
 		} else {
 			return getName();
+		}
+	}
+
+	public String getRelativeName() {
+		switch(nameType) {
+			case ABS:
+			default:
+				return getFormattedName(false);
+			case NEAR:
+				return "near " + getFormattedName(false);
+			case LEFT:
+				return "to the left of " + getFormattedName(false);
+			case RIGHT:
+				return "to the right of " + getFormattedName(false);
+			case FRONT:
+				return "in front of " + getFormattedName(false);
+			case BEHIND:
+				return "behind " + getFormattedName(false);
+			case BETWEEN:
+				return "between " + getFormattedName(false);
+		}
+	}
+
+	public String getMoveDescription() {
+		if(nameType == AreaNameType.ABS) {
+			return "to " + getFormattedName(false);
+		} else {
+			return getRelativeName();
 		}
 	}
 	
@@ -123,9 +155,9 @@ public class Area implements Noun {
 	public boolean isProperName() {
 		return isProperName;
 	}
-	
-	public boolean isProximateName() {
-		return isProximateName;
+
+	public AreaNameType getNameType() {
+		return nameType;
 	}
 
 	@Override
