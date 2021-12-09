@@ -549,7 +549,7 @@ public class Actor implements Noun, Physical {
 			actions.addAll(usingObject.usingActions());
 		}
 		if(canMove()) {
-			for(Area area : getArea().getLinkedAreas()) {
+			for(Area area : getArea().getMovableAreas()) {
 				actions.add(new ActionMove(area));
 			}
 		}

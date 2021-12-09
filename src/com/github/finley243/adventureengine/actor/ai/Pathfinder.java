@@ -29,7 +29,7 @@ public class Pathfinder {
 			if(pathEnd.equals(targetArea)) {
 				return currentPath;
 			}
-			Set<Area> linkedAreasGlobal = new HashSet<>(pathEnd.getLinkedAreas());
+			Set<Area> linkedAreasGlobal = new HashSet<>(pathEnd.getMovableAreas());
 			if(pathEnd.getRoom() != targetArea.getRoom()) {
 				for(WorldObject object : pathEnd.getObjects()) {
 					if(object instanceof ObjectExit) {
