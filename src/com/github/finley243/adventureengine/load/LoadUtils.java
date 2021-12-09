@@ -67,6 +67,7 @@ public class LoadUtils {
 
 	public static List<Element> directChildrenWithName(Element parent, String name) {
 		List<Element> matches = new ArrayList<>();
+		if(parent == null) return matches;
 		Node currentChild = parent.getFirstChild();
 		while(currentChild != null) {
 			if(currentChild.getNodeType() == Node.ELEMENT_NODE && ((Element) currentChild).getNodeName().equals(name)) {
@@ -78,6 +79,7 @@ public class LoadUtils {
 	}
 
 	public static Element singleChildWithName(Element parent, String name) {
+		if(parent == null) return null;
 		Node currentChild = parent.getFirstChild();
 		while(currentChild != null) {
 			if(currentChild.getNodeType() == Node.ELEMENT_NODE && ((Element) currentChild).getNodeName().equals(name)) {

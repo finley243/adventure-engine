@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
+import com.github.finley243.adventureengine.world.object.ObjectObstruction;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 /**
@@ -16,11 +17,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 public class Area implements Noun {
 
 	public enum AreaNameType {
-		ABS, NEAR, LEFT, RIGHT, FRONT, BEHIND, BETWEEN
-	}
-
-	public enum AreaObstructionType {
-		NONE, PARTIAL, FULL
+		IN, NEAR, LEFT, RIGHT, FRONT, BEHIND, ON, AGAINST
 	}
 
 	private final String ID;
@@ -38,17 +35,13 @@ public class Area implements Noun {
 	
 	// All areas that can be accessed when in this area
 	private final Set<AreaLink> linkedAreas;
-	private final AreaObstructionType obstructionNorth;
-	private final AreaObstructionType obstructionSouth;
-	private final AreaObstructionType obstructionEast;
-	private final AreaObstructionType obstructionWest;
 	
 	// All objects in this area
 	private final Set<WorldObject> objects;
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, Set<AreaLink> linkedAreas, Set<WorldObject> objects, AreaObstructionType obstructionNorth, AreaObstructionType obstructionSouth, AreaObstructionType obstructionEast, AreaObstructionType obstructionWest) {
+	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, Set<AreaLink> linkedAreas, Set<WorldObject> objects) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
@@ -58,10 +51,6 @@ public class Area implements Noun {
 		this.linkedAreas = linkedAreas;
 		this.objects = objects;
 		this.actors = new HashSet<>();
-		this.obstructionNorth = obstructionNorth;
-		this.obstructionSouth = obstructionSouth;
-		this.obstructionEast = obstructionEast;
-		this.obstructionWest = obstructionWest;
 	}
 	
 	public String getID() {
@@ -88,7 +77,8 @@ public class Area implements Noun {
 
 	public String getRelativeName() {
 		switch(nameType) {
-			case ABS:
+			case IN:
+			case ON:
 			default:
 				return getFormattedName(false);
 			case NEAR:
@@ -101,13 +91,13 @@ public class Area implements Noun {
 				return "in front of " + getFormattedName(false);
 			case BEHIND:
 				return "behind " + getFormattedName(false);
-			case BETWEEN:
-				return "between " + getFormattedName(false);
+			case AGAINST:
+				return "against " + getFormattedName(false);
 		}
 	}
 
 	public String getMoveDescription() {
-		if(nameType == AreaNameType.ABS) {
+		if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
 			return "to " + getFormattedName(false);
 		} else {
 			return getRelativeName();
@@ -189,31 +179,12 @@ public class Area implements Noun {
 			if(combinedDirection != null) {
 				Area area = Data.getArea(link.getAreaID());
 				boolean obstructed = false;
-				switch(combinedDirection) {
-					case NORTH:
-						obstructed = area.obstructionNorth != AreaObstructionType.NONE;
+				for(WorldObject object : area.getObjects()) {
+					if(object instanceof ObjectObstruction && ((ObjectObstruction) object).obstructsFrom(combinedDirection)) {
+						System.out.println("Area - Found obstruction!!!");
+						obstructed = true;
 						break;
-					case SOUTH:
-						obstructed = area.obstructionSouth != AreaObstructionType.NONE;
-						break;
-					case EAST:
-						obstructed = area.obstructionEast != AreaObstructionType.NONE;
-						break;
-					case WEST:
-						obstructed = area.obstructionWest != AreaObstructionType.NONE;
-						break;
-					case NORTHEAST:
-						obstructed = area.obstructionNorth != AreaObstructionType.NONE || area.obstructionEast != AreaObstructionType.NONE;
-						break;
-					case NORTHWEST:
-						obstructed = area.obstructionNorth != AreaObstructionType.NONE || area.obstructionWest != AreaObstructionType.NONE;
-						break;
-					case SOUTHEAST:
-						obstructed = area.obstructionSouth != AreaObstructionType.NONE || area.obstructionEast != AreaObstructionType.NONE;
-						break;
-					case SOUTHWEST:
-						obstructed = area.obstructionSouth != AreaObstructionType.NONE || area.obstructionWest != AreaObstructionType.NONE;
-						break;
+					}
 				}
 				if(!obstructed) {
 					visibleAreas.add(area);

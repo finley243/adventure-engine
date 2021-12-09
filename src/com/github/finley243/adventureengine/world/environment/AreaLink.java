@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.world.environment;
 
+import com.github.finley243.adventureengine.world.object.ObjectObstruction;
+
 public class AreaLink {
 
     public enum RelativeDirection {
@@ -121,22 +123,6 @@ public class AreaLink {
             return RelativeDirection.SOUTHWEST;
         } else if (d1 == RelativeDirection.SOUTHEAST && (d2 == RelativeDirection.SOUTH || d2 == RelativeDirection.EAST) || d2 == RelativeDirection.SOUTHEAST && (d1 == RelativeDirection.SOUTH || d1 == RelativeDirection.EAST)) {
             return RelativeDirection.SOUTHEAST;
-        } else if (d1 == RelativeDirection.NORTHWEST && d2 == RelativeDirection.EAST || d2 == RelativeDirection.NORTHWEST && d1 == RelativeDirection.EAST) {
-            return RelativeDirection.NORTH;
-        } else if (d1 == RelativeDirection.NORTHWEST && d2 == RelativeDirection.SOUTH || d2 == RelativeDirection.NORTHWEST && d1 == RelativeDirection.SOUTH) {
-            return RelativeDirection.WEST;
-        } else if (d1 == RelativeDirection.NORTHEAST && d2 == RelativeDirection.WEST || d2 == RelativeDirection.NORTHEAST && d1 == RelativeDirection.WEST) {
-            return RelativeDirection.NORTH;
-        } else if (d1 == RelativeDirection.NORTHEAST && d2 == RelativeDirection.SOUTH || d2 == RelativeDirection.NORTHEAST && d1 == RelativeDirection.SOUTH) {
-            return RelativeDirection.EAST;
-        } else if (d1 == RelativeDirection.SOUTHWEST && d2 == RelativeDirection.EAST || d2 == RelativeDirection.SOUTHWEST && d1 == RelativeDirection.EAST) {
-            return RelativeDirection.SOUTH;
-        } else if (d1 == RelativeDirection.SOUTHWEST && d2 == RelativeDirection.NORTH || d2 == RelativeDirection.SOUTHWEST && d1 == RelativeDirection.NORTH) {
-            return RelativeDirection.WEST;
-        } else if (d1 == RelativeDirection.SOUTHEAST && d2 == RelativeDirection.WEST || d2 == RelativeDirection.SOUTHEAST && d1 == RelativeDirection.WEST) {
-            return RelativeDirection.SOUTH;
-        } else if (d1 == RelativeDirection.SOUTHEAST && d2 == RelativeDirection.NORTH || d2 == RelativeDirection.SOUTHEAST && d1 == RelativeDirection.NORTH) {
-            return RelativeDirection.EAST;
         } else {
             return null;
         }

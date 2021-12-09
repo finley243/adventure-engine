@@ -1,0 +1,124 @@
+<data>
+    <room id="warehouse">
+        <name>warehouse</name>
+        <area id="warehouse_entrance">
+            <name type="near">entrance</name>
+            <links>
+                <link dir="east">warehouse_fuel</link>
+                <link dir="north">warehouse_container_front</link>
+                <link dir="west">warehouse_wall_south</link>
+            </links>
+        </area>
+        <area id="warehouse_fuel">
+            <name type="near">fuel tank</name>
+            <links>
+                <link dir="west">warehouse_entrance</link>
+                <link dir="north">warehouse_container_right</link>
+                <link dir="northeast">warehouse_wall_east</link>
+            </links>
+        </area>
+        <area id="warehouse_wall_west">
+            <name type="against">west wall</name>
+            <links>
+                <link dir="east">warehouse_container_left</link>
+                <link dir="southeast">warehouse_wall_south</link>
+                <link dir="northeast">warehouse_wall_north</link>
+            </links>
+        </area>
+        <area id="warehouse_wall_north">
+            <name type="against">north wall</name>
+            <links>
+                <link dir="southwest">warehouse_wall_west</link>
+                <link dir="south">warehouse_container_behind</link>
+                <link dir="southeast">warehouse_wall_east</link>
+            </links>
+        </area>
+        <area id="warehouse_wall_east">
+            <name type="against">east wall</name>
+            <links>
+                <link dir="northwest">warehouse_wall_north</link>
+                <link dir="southwest">warehouse_fuel</link>
+            </links>
+        </area>
+        <area id="warehouse_wall_south">
+            <name type="against">south wall</name>
+            <links>
+                <link dir="northwest">warehouse_wall_west</link>
+                <link dir="north">warehouse_container_left</link>
+                <link dir="east">warehouse_entrance</link>
+            </links>
+        </area>
+        <area id="warehouse_container_front">
+            <name type="front">shipping container</name>
+            <links>
+                <link dir="south">warehouse_entrance</link>
+                <link dir="northwest">warehouse_container_left</link>
+                <link dir="northeast">warehouse_container_right</link>
+            </links>
+            <objects>
+                <object type="obstruction">
+                    <name>shipping container</name>
+                    <direction>NORTH</direction>
+                    <type>FULL</type>
+                </object>
+            </objects>
+        </area>
+        <area id="warehouse_container_left">
+            <name type="left">shipping container</name>
+            <links>
+                <link dir="west">warehouse_wall_west</link>
+                <link dir="south">warehouse_wall_south</link>
+                <link dir="southeast">warehouse_container_front</link>
+                <link dir="northeast">warehouse_container_behind</link>
+            </links>
+            <objects>
+                <object type="obstruction">
+                    <name>shipping container</name>
+                    <direction>EAST</direction>
+                    <type>FULL</type>
+                </object>
+            </objects>
+        </area>
+        <area id="warehouse_container_right">
+            <name type="right">shipping container</name>
+            <links>
+                <link dir="south">warehouse_fuel</link>
+                <link dir="southwest">warehouse_container_front</link>
+                <link dir="northwest">warehouse_container_behind</link>
+            </links>
+            <objects>
+                <object type="obstruction">
+                    <name>shipping container</name>
+                    <direction>WEST</direction>
+                    <type>FULL</type>
+                </object>
+            </objects>
+        </area>
+        <area id="warehouse_container_behind">
+            <name type="behind">shipping container</name>
+            <links>
+                <link dir="north">warehouse_wall_north</link>
+                <link dir="southwest">warehouse_container_left</link>
+                <link dir="northwest">warehouse_container_right</link>
+            </links>
+            <objects>
+                <object type="obstruction">
+                    <name>shipping container</name>
+                    <direction>SOUTH</direction>
+                    <type>FULL</type>
+                </object>
+            </objects>
+            <actors>
+                <actor id="warehouse_enemy">
+                    <stats>enemy</stats>
+                </actor>
+            </actors>
+        </area>
+        <area id="warehouse_catwalk">
+            <name type="on">catwalk</name>
+            <links>
+                <link dir="south" height="above_high">warehouse_wall_north</link>
+            </links>
+        </area>
+    </room>
+</data>

@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.item.LootTableEntry;
@@ -500,15 +501,17 @@ public class DataLoader {
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = nameElement.getTextContent();
         boolean isProperName = LoadUtils.boolAttribute(nameElement, "proper", false);
-        Area.AreaNameType nameType = Area.AreaNameType.valueOf(LoadUtils.attribute(nameElement, "type", "abs").toUpperCase());
+        Area.AreaNameType nameType = Area.AreaNameType.valueOf(LoadUtils.attribute(nameElement, "type", "in").toUpperCase());
         String description = LoadUtils.singleTag(areaElement, "areaDescription", null);
 
         Element linksElement = LoadUtils.singleChildWithName(areaElement, "links");
         List<Element> linkElements = LoadUtils.directChildrenWithName(linksElement, "link");
-        Set<String> linkSet = new HashSet<>();
+        Set<AreaLink> linkSet = new HashSet<>();
         for(Element linkElement : linkElements) {
-            String linkText = linkElement.getTextContent();
-            linkSet.add(linkText);
+            String linkAreaID = linkElement.getTextContent();
+            AreaLink.RelativeDirection linkDirection = AreaLink.RelativeDirection.valueOf(LoadUtils.attribute(linkElement, "dir", "NORTH").toUpperCase());
+            AreaLink.RelativeHeight linkHeight = AreaLink.RelativeHeight.valueOf(LoadUtils.attribute(linkElement, "height", "EQUAL").toUpperCase());
+            linkSet.add(new AreaLink(linkAreaID, linkDirection, linkHeight));
         }
 
         Element objectsElement = LoadUtils.singleChildWithName(areaElement, "objects");
@@ -560,6 +563,10 @@ public class DataLoader {
                 return new ObjectChair(objectName, description);
             case "cover":
                 return new ObjectCover(objectName, description);
+            case "obstruction":
+                ObjectObstruction.ObstructionDirection obstructionDirection = ObjectObstruction.ObstructionDirection.valueOf(LoadUtils.singleTag(objectElement, "direction", null).toUpperCase());
+                ObjectObstruction.ObstructionType obstructionType = ObjectObstruction.ObstructionType.valueOf(LoadUtils.singleTag(objectElement, "type", null).toUpperCase());
+                return new ObjectObstruction(objectName, description, obstructionDirection, obstructionType);
             case "vending_machine":
                 List<String> vendingItems = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "items"), "item");
                 return new ObjectVendingMachine(objectName, description, vendingItems);

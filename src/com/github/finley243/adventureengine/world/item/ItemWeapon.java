@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.item;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import com.github.finley243.adventureengine.action.ActionReactionOld.ReactionTyp
 import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
 public class ItemWeapon extends ItemEquippable {
@@ -115,7 +117,12 @@ public class ItemWeapon extends ItemEquippable {
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
-		Set<Actor> targets = subject.getArea().getRoom().getActors();
+		Set<Actor> targets = new HashSet<>();
+		// TODO - Redesign to account for partial cover
+		for(Area area : subject.getArea().getVisibleAreas()) {
+			targets.addAll(area.getActors());
+		}
+		//Set<Actor> targets = subject.getArea().getRoom().getActors();
 		for(Actor target : targets) {
 			if(target != subject && target.isActive()) {
 				if(stats.getType().isRanged) { // Ranged
