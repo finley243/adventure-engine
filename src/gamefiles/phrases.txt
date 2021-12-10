@@ -1,5 +1,7 @@
 buyFrom:<subject> buy<s> <object> from <object2>
 consume:<subject> consume<s> <object>
+crouch:<subject> crouch<es> down
+crouchStop:<subject> rise<s> from crouching
 die:<subject> fall<s> over dead
 drink:<subject> drink<s> <object>
 drop:<subject> drop<s> <object>

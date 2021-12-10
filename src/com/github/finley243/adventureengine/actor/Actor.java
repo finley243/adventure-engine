@@ -563,6 +563,11 @@ public class Actor implements Noun, Physical {
 		for(ItemApparel item : apparelManager.getEquippedItems()) {
 			actions.addAll(item.equippedActions(this));
 		}
+		if(isCrouching()) {
+			actions.add(new ActionCrouchStop());
+		} else {
+			actions.add(new ActionCrouch());
+		}
 		if(!ignoreBlocked) {
 			for(Action currentAction : actions) {
 				boolean isBlocked = false;
