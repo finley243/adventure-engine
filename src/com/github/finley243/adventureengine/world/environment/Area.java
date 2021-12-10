@@ -159,7 +159,6 @@ public class Area implements Noun {
 	public Set<Area> getMovableAreas() {
 		Set<Area> output = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
-			// Only set as a "moveable" area if the height is equal to the current area
 			if(link.getType() == AreaLink.AreaLinkType.MOVE && link.heightChange() == 0) {
 				output.add(Data.getArea(link.getAreaID()));
 			}
@@ -167,29 +166,21 @@ public class Area implements Noun {
 		return output;
 	}
 
-	public Set<Area> getVisibleAreas() {
+	public Set<Area> getVisibleAreas(Actor subject) {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
 		for(AreaLink link : linkedAreas.values()) {
-			Area area = Data.getArea(link.getAreaID());
-			visibleAreas.add(area);
-		}
-		return visibleAreas;
-	}
-
-	public Set<Area> getVisibleAreasUnobstructed() {
-		Set<Area> visibleAreas = new HashSet<>();
-		visibleAreas.add(this);
-		for(AreaLink link : linkedAreas.values()) {
-			Area area = Data.getArea(link.getAreaID());
-			boolean isObstructed = false;
-			for(WorldObject object : area.getObjects()) {
-				if(object instanceof ObjectCover && ((ObjectCover) object).obstructsFrom(link.getDirection())) {
-					isObstructed = true;
-					break;
+			boolean obstructed = false;
+			if(subject.isCrouching()) {
+				for (WorldObject object : getObjects()) {
+					if (object instanceof ObjectCover && ((ObjectCover) object).obstructsTo(link.getDirection())) {
+						obstructed = true;
+						break;
+					}
 				}
 			}
-			if(!isObstructed) {
+			if(!obstructed) {
+				Area area = Data.getArea(link.getAreaID());
 				visibleAreas.add(area);
 			}
 		}

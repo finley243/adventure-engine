@@ -511,7 +511,7 @@ public class DataLoader {
             String linkAreaID = linkElement.getTextContent();
             AreaLink.RelativeDirection linkDirection = AreaLink.RelativeDirection.valueOf(LoadUtils.attribute(linkElement, "dir", "NORTH").toUpperCase());
             AreaLink.RelativeHeight linkHeight = AreaLink.RelativeHeight.valueOf(LoadUtils.attribute(linkElement, "height", "EQUAL").toUpperCase());
-            AreaLink.AreaLinkType linkType = AreaLink.AreaLinkType.valueOf(LoadUtils.attribute(linkElement, "type", "MOVE"));
+            AreaLink.AreaLinkType linkType = AreaLink.AreaLinkType.valueOf(LoadUtils.attribute(linkElement, "type", "MOVE").toUpperCase());
             linkSet.put(linkAreaID, new AreaLink(linkAreaID, linkDirection, linkHeight, linkType));
         }
 

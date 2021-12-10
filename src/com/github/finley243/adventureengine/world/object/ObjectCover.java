@@ -43,4 +43,27 @@ public class ObjectCover extends WorldObject {
         }
     }
 
+    public boolean obstructsTo(AreaLink.RelativeDirection direction) {
+        switch(direction) {
+            case NORTH:
+                return this.direction == CoverDirection.NORTH;
+            case SOUTH:
+                return this.direction == CoverDirection.SOUTH;
+            case EAST:
+                return this.direction == CoverDirection.EAST;
+            case WEST:
+                return this.direction == CoverDirection.WEST;
+            case NORTHEAST:
+                return this.direction == CoverDirection.NORTH || this.direction == CoverDirection.EAST;
+            case NORTHWEST:
+                return this.direction == CoverDirection.NORTH || this.direction == CoverDirection.WEST;
+            case SOUTHEAST:
+                return this.direction == CoverDirection.SOUTH || this.direction == CoverDirection.EAST;
+            case SOUTHWEST:
+                return this.direction == CoverDirection.SOUTH || this.direction == CoverDirection.WEST;
+            default:
+                return false;
+        }
+    }
+
 }

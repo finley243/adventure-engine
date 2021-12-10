@@ -90,6 +90,7 @@ public class Actor implements Noun, Physical {
 	private ItemEquippable equippedItem;
 	private int money;
 	private UsableObject usingObject;
+	private boolean isCrouching;
 	private Inventory tradeInventory;
 	private final Set<CombatTarget> combatTargets;
 	private final Set<PursueTarget> pursueTargets;
@@ -279,6 +280,14 @@ public class Actor implements Noun, Physical {
 	
 	public boolean canMove() {
 		return !isUsingObject() && !preventMovement;
+	}
+
+	public boolean isCrouching() {
+		return isCrouching;
+	}
+
+	public void setCrouching(boolean state) {
+		isCrouching = state;
 	}
 	
 	public Inventory inventory() {
@@ -734,8 +743,8 @@ public class Actor implements Noun, Physical {
 		}
 	}
 	
-	public boolean canSee(Actor actor) {
-		return getArea().getVisibleAreas().contains(actor.getArea()) && (!getArea().isBehindCover(actor.getArea()));
+	public boolean canSee(Actor target) {
+		return getArea().getVisibleAreas(this).contains(target.getArea()) && (!target.isCrouching || !getArea().isBehindCover(target.getArea()));
 	}
 	
 	@Override

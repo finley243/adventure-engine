@@ -120,7 +120,7 @@ public class ItemWeapon extends ItemEquippable {
 		List<Action> actions = super.equippedActions(subject);
 		Set<Actor> targets = new HashSet<>();
 		// TODO - Redesign to account for partial cover
-		for(Area area : subject.getArea().getVisibleAreas()) {
+		for(Area area : subject.getArea().getVisibleAreas(subject)) {
 			targets.addAll(area.getActors());
 		}
 		//Set<Actor> targets = subject.getArea().getRoom().getActors();
