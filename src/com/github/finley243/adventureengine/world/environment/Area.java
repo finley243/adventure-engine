@@ -1,6 +1,8 @@
 package com.github.finley243.adventureengine.world.environment;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Data;
@@ -153,60 +155,40 @@ public class Area implements Noun {
 	
 	public Set<Area> getVisibleAreas() {
 		Set<Area> visibleAreas = new HashSet<>();
+		visibleAreas.add(this);
+		Set<String> visited = new HashSet<>();
 		for(AreaLink link : linkedAreas) {
-			if(link.heightChange() > 0) {
-				// Current area is below linked area, can only see directly-linked area
-				visibleAreas.add(Data.getArea(link.getAreaID()));
-			} else if(link.heightChange() < 0) {
-				// Current area is above linked area, can see past obstructions (but not directly-obstructed areas)
-				Area linkedArea = Data.getArea(link.getAreaID());
-				visibleAreas.add(linkedArea);
-				visibleAreas.addAll(linkedArea.getVisibleAreasAbove(link.getRelativeDirection()));
-			} else {
-				// Current area is level with linked area, cannot see past obstructions
-				Area linkedArea = Data.getArea(link.getAreaID());
-				visibleAreas.add(linkedArea);
-				visibleAreas.addAll(linkedArea.getVisibleAreas(link.getRelativeDirection()));
-			}
+			Area linkedArea = Data.getArea(link.getAreaID());
+			visibleAreas.addAll(linkedArea.getVisibleAreas(link.getRelativeDirection(), visited));
 		}
+		System.out.println("Visible Areas: " + visibleAreas);
 		return visibleAreas;
 	}
 
-	private Set<Area> getVisibleAreas(AreaLink.RelativeDirection direction) {
+	private Set<Area> getVisibleAreas(AreaLink.RelativeDirection direction, Set<String> visited) {
+		//System.out.println("getVisibleAreas - area: " + this.getID() + ", direction: " + direction);
+		visited.add(this.getID());
+		//System.out.println("visited: " + visited);
 		Set<Area> visibleAreas = new HashSet<>();
+		for(WorldObject object : this.getObjects()) {
+			if(object instanceof ObjectObstruction && ((ObjectObstruction) object).obstructsFrom(direction)) {
+				//System.out.println("Blocked by obstruction!");
+				return visibleAreas;
+			}
+		}
+		visibleAreas.add(this);
 		for(AreaLink link : linkedAreas) {
 			AreaLink.RelativeDirection combinedDirection = AreaLink.combinedDirection(direction, link.getRelativeDirection());
 			if(combinedDirection != null) {
 				Area area = Data.getArea(link.getAreaID());
-				boolean obstructed = false;
-				for(WorldObject object : area.getObjects()) {
-					if(object instanceof ObjectObstruction && ((ObjectObstruction) object).obstructsFrom(combinedDirection)) {
-						System.out.println("Area - Found obstruction!!!");
-						obstructed = true;
-						break;
-					}
-				}
-				if(!obstructed) {
-					visibleAreas.add(area);
-					visibleAreas.addAll(area.getVisibleAreas(combinedDirection));
+				if(!visited.contains(area.getID())) {
+					//System.out.println("Recursive call opened - " + area.getID());
+					visibleAreas.addAll(area.getVisibleAreas(combinedDirection, visited));
+					//System.out.println("Recursive call closed - " + area.getID());
 				}
 			}
 		}
-		return visibleAreas;
-	}
-
-	// Does not include directly-obstructed areas
-	private Set<Area> getVisibleAreasAbove(AreaLink.RelativeDirection direction) {
-		Set<Area> visibleAreas = new HashSet<>();
-		for(AreaLink link : linkedAreas) {
-			AreaLink.RelativeDirection combinedDirection = AreaLink.combinedDirection(direction, link.getRelativeDirection());
-			if(combinedDirection != null) {
-				// Current area is above linked area, can see past obstructions (but not directly-obstructed areas)
-				Area area = Data.getArea(link.getAreaID());
-				visibleAreas.add(area);
-				visibleAreas.addAll(area.getVisibleAreasAbove(combinedDirection));
-			}
-		}
+		//System.out.println("Partial visibleAreas (from " + this.getID() + "): " + visibleAreas);
 		return visibleAreas;
 	}
 
@@ -230,7 +212,7 @@ public class Area implements Noun {
 	
 	@Override
 	public String toString() {
-		return getName();
+		return getID();
 	}
 	
 	@Override
