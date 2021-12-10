@@ -59,7 +59,6 @@
                 <object type="obstruction">
                     <name>shipping container</name>
                     <direction>NORTH</direction>
-                    <type>FULL</type>
                 </object>
             </objects>
         </area>
@@ -75,7 +74,6 @@
                 <object type="obstruction">
                     <name>shipping container</name>
                     <direction>EAST</direction>
-                    <type>FULL</type>
                 </object>
             </objects>
         </area>
@@ -90,7 +88,6 @@
                 <object type="obstruction">
                     <name>shipping container</name>
                     <direction>WEST</direction>
-                    <type>FULL</type>
                 </object>
             </objects>
         </area>
@@ -99,13 +96,12 @@
             <links>
                 <link dir="north">warehouse_wall_north</link>
                 <link dir="southwest">warehouse_container_left</link>
-                <link dir="northwest">warehouse_container_right</link>
+                <link dir="southeast">warehouse_container_right</link>
             </links>
             <objects>
                 <object type="obstruction">
                     <name>shipping container</name>
                     <direction>SOUTH</direction>
-                    <type>FULL</type>
                 </object>
             </objects>
             <actors>

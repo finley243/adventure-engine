@@ -1,8 +1,7 @@
 package com.github.finley243.adventureengine.world.environment;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Data;
@@ -10,7 +9,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
-import com.github.finley243.adventureengine.world.object.ObjectObstruction;
+import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 /**
@@ -35,15 +34,15 @@ public class Area implements Noun {
 	
 	private final String description;
 	
-	// All areas that can be accessed when in this area
-	private final Set<AreaLink> linkedAreas;
+	// All areas that can be accessed when in this area (key is areaID)
+	private final Map<String, AreaLink> linkedAreas;
 	
 	// All objects in this area
 	private final Set<WorldObject> objects;
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, Set<AreaLink> linkedAreas, Set<WorldObject> objects) {
+	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, Map<String, AreaLink> linkedAreas, Set<WorldObject> objects) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
@@ -61,7 +60,7 @@ public class Area implements Noun {
 	
 	@Override
 	public String getName() {
-		return name;
+		return getRelativeName();
 	}
 	
 	public String getDescription() {
@@ -70,39 +69,54 @@ public class Area implements Noun {
 	
 	@Override
 	public String getFormattedName(boolean indefinite) {
-		if(!isProperName()) {
-			return LangUtils.addArticle(getName(), indefinite);
+		/*if(!isProperName()) {
+			return LangUtils.addArticle(name, indefinite);
 		} else {
-			return getName();
-		}
+			return name;
+		}*/
+		return getRelativeName();
 	}
 
 	public String getRelativeName() {
+		String formattedName;
+		if(!isProperName()) {
+			formattedName = LangUtils.addArticle(name, false);
+		} else {
+			formattedName = name;
+		}
 		switch(nameType) {
 			case IN:
 			case ON:
 			default:
-				return getFormattedName(false);
+				return formattedName;
 			case NEAR:
-				return "near " + getFormattedName(false);
+				return "near " + formattedName;
 			case LEFT:
-				return "to the left of " + getFormattedName(false);
+				return "to the left of " + formattedName;
 			case RIGHT:
-				return "to the right of " + getFormattedName(false);
+				return "to the right of " + formattedName;
 			case FRONT:
-				return "in front of " + getFormattedName(false);
+				return "in front of " + formattedName;
 			case BEHIND:
-				return "behind " + getFormattedName(false);
+				return "behind " + formattedName;
 			case AGAINST:
-				return "against " + getFormattedName(false);
+				return "against " + formattedName;
 		}
 	}
 
 	public String getMoveDescription() {
 		if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
-			return "to " + getFormattedName(false);
+			return "to " + getRelativeName();
 		} else {
 			return getRelativeName();
+		}
+	}
+
+	public String getMovePhrase() {
+		if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
+			return "moveTo";
+		} else {
+			return "move";
 		}
 	}
 	
@@ -144,52 +158,53 @@ public class Area implements Noun {
 	
 	public Set<Area> getMovableAreas() {
 		Set<Area> output = new HashSet<>();
-		for(AreaLink link : linkedAreas) {
+		for(AreaLink link : linkedAreas.values()) {
 			// Only set as a "moveable" area if the height is equal to the current area
-			if(link.heightChange() == 0) {
+			if(link.getType() == AreaLink.AreaLinkType.MOVE && link.heightChange() == 0) {
 				output.add(Data.getArea(link.getAreaID()));
 			}
 		}
 		return output;
 	}
-	
+
 	public Set<Area> getVisibleAreas() {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
-		Set<String> visited = new HashSet<>();
-		for(AreaLink link : linkedAreas) {
-			Area linkedArea = Data.getArea(link.getAreaID());
-			visibleAreas.addAll(linkedArea.getVisibleAreas(link.getRelativeDirection(), visited));
+		for(AreaLink link : linkedAreas.values()) {
+			Area area = Data.getArea(link.getAreaID());
+			visibleAreas.add(area);
 		}
-		System.out.println("Visible Areas: " + visibleAreas);
 		return visibleAreas;
 	}
 
-	private Set<Area> getVisibleAreas(AreaLink.RelativeDirection direction, Set<String> visited) {
-		//System.out.println("getVisibleAreas - area: " + this.getID() + ", direction: " + direction);
-		visited.add(this.getID());
-		//System.out.println("visited: " + visited);
+	public Set<Area> getVisibleAreasUnobstructed() {
 		Set<Area> visibleAreas = new HashSet<>();
-		for(WorldObject object : this.getObjects()) {
-			if(object instanceof ObjectObstruction && ((ObjectObstruction) object).obstructsFrom(direction)) {
-				//System.out.println("Blocked by obstruction!");
-				return visibleAreas;
+		visibleAreas.add(this);
+		for(AreaLink link : linkedAreas.values()) {
+			Area area = Data.getArea(link.getAreaID());
+			boolean isObstructed = false;
+			for(WorldObject object : area.getObjects()) {
+				if(object instanceof ObjectCover && ((ObjectCover) object).obstructsFrom(link.getDirection())) {
+					isObstructed = true;
+					break;
+				}
+			}
+			if(!isObstructed) {
+				visibleAreas.add(area);
 			}
 		}
-		visibleAreas.add(this);
-		for(AreaLink link : linkedAreas) {
-			AreaLink.RelativeDirection combinedDirection = AreaLink.combinedDirection(direction, link.getRelativeDirection());
-			if(combinedDirection != null) {
-				Area area = Data.getArea(link.getAreaID());
-				if(!visited.contains(area.getID())) {
-					//System.out.println("Recursive call opened - " + area.getID());
-					visibleAreas.addAll(area.getVisibleAreas(combinedDirection, visited));
-					//System.out.println("Recursive call closed - " + area.getID());
+		return visibleAreas;
+	}
+
+	public boolean isBehindCover(Area target) {
+		if (linkedAreas.containsKey(target.getID())) {
+			for (WorldObject object : target.getObjects()) {
+				if (object instanceof ObjectCover && ((ObjectCover) object).obstructsFrom(linkedAreas.get(target.getID()).getDirection())) {
+					return true;
 				}
 			}
 		}
-		//System.out.println("Partial visibleAreas (from " + this.getID() + "): " + visibleAreas);
-		return visibleAreas;
+		return false;
 	}
 
 	@Override

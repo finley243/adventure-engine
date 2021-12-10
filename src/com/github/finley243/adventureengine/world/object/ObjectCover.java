@@ -1,32 +1,46 @@
 package com.github.finley243.adventureengine.world.object;
 
-import java.util.List;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
 
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionUseStop;
-import com.github.finley243.adventureengine.action.ActionUseStart;
-import com.github.finley243.adventureengine.actor.Actor;
+public class ObjectCover extends WorldObject {
 
-public class ObjectCover extends UsableObject {
+    public enum CoverDirection {
+        NORTH, SOUTH, EAST, WEST
+    }
 
-	public ObjectCover(String name, String description) {
-		super(name, description);
-	}
-	
-	@Override
-	public List<Action> localActions(Actor subject) {
-		List<Action> actions = super.localActions(subject);
-		if(isAvailableToUse() && !subject.isUsingObject()) {
-			actions.add(new ActionUseStart(this));
-		}
-		return actions;
-	}
+    private CoverDirection direction;
 
-	@Override
-	public List<Action> usingActions() {
-		List<Action> actions = super.usingActions();
-		actions.add(new ActionUseStop(this));
-		return actions;
-	}
+    public ObjectCover(String name, String description, CoverDirection direction) {
+        super(name, description);
+        this.direction = direction;
+    }
+
+    public CoverDirection getDirection() {
+        return direction;
+    }
+
+    // Is this area obstructed from the given direction
+    public boolean obstructsFrom(AreaLink.RelativeDirection direction) {
+        switch(direction) {
+            case NORTH:
+                return this.direction == CoverDirection.SOUTH;
+            case SOUTH:
+                return this.direction == CoverDirection.NORTH;
+            case EAST:
+                return this.direction == CoverDirection.WEST;
+            case WEST:
+                return this.direction == CoverDirection.EAST;
+            case NORTHEAST:
+                return this.direction == CoverDirection.SOUTH || this.direction == CoverDirection.WEST;
+            case NORTHWEST:
+                return this.direction == CoverDirection.SOUTH || this.direction == CoverDirection.EAST;
+            case SOUTHEAST:
+                return this.direction == CoverDirection.NORTH || this.direction == CoverDirection.WEST;
+            case SOUTHWEST:
+                return this.direction == CoverDirection.NORTH || this.direction == CoverDirection.EAST;
+            default:
+                return false;
+        }
+    }
 
 }

@@ -12,7 +12,37 @@ public class ObjectChair extends UsableObject {
     public ObjectChair(String name, String description) {
         super(name, description);
     }
-	
+
+	@Override
+	public String getStartPhrase() {
+		return "sit";
+	}
+
+	@Override
+	public String getStopPhrase() {
+		return "stand";
+	}
+
+	@Override
+	public String getStartPrompt() {
+		return "Sit";
+	}
+
+	@Override
+	public String getStopPrompt() {
+		return "Stand";
+	}
+
+	@Override
+	public String getStartPromptFull() {
+		return "Sit in " + getFormattedName(false);
+	}
+
+	@Override
+	public String getStopPromptFull() {
+		return "Stand up";
+	}
+
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);

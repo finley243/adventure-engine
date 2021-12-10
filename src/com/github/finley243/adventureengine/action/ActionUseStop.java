@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 
 public class ActionUseStop extends Action {
@@ -22,16 +21,12 @@ public class ActionUseStop extends Action {
 		object.removeUser();
 		subject.stopUsingObject();
 		Context context = new Context(subject, false, object, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("stand"), context, this, subject));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(object.getStopPhrase()), context, this, subject));
 	}
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		if(object instanceof ObjectCover) {
-			return new MenuData("Leave cover", "Leave cover", canChoose(subject), new String[]{object.getName()});
-		} else {
-			return new MenuData("Stand", "Stand up", canChoose(subject), new String[]{object.getName()});
-		}
+		return new MenuData(object.getStopPrompt(), object.getStopPromptFull(), canChoose(subject), new String[]{object.getName()});
 	}
 
 	@Override

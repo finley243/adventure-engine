@@ -12,11 +12,23 @@ import com.github.finley243.adventureengine.actor.Actor;
 public abstract class UsableObject extends WorldObject {
 
 	private Actor user;
-	
+
 	public UsableObject(String name, String description) {
 		super(name, description);
 	}
-	
+
+	public abstract String getStartPhrase();
+
+	public abstract String getStopPhrase();
+
+	public abstract String getStartPrompt();
+
+	public abstract String getStopPrompt();
+
+	public abstract String getStartPromptFull();
+
+	public abstract String getStopPromptFull();
+
 	public boolean isAvailableToUse() {
 		return user == null;
 	}

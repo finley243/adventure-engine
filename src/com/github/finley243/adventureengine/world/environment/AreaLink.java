@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.world.environment;
 
-import com.github.finley243.adventureengine.world.object.ObjectObstruction;
-
 public class AreaLink {
 
     public enum RelativeDirection {
@@ -15,31 +13,41 @@ public class AreaLink {
         EQUAL, ABOVE, BELOW, ABOVE_HIGH, BELOW_HIGH, ABOVE_EXTREME, BELOW_EXTREME
     }
 
+    public enum AreaLinkType {
+        MOVE, VIS
+    }
+
     private final String areaID;
     // 1 = north, -1 = south, 0 = equal
-    private final RelativeDirection relativeDirection;
-    private final RelativeHeight relativeHeight;
+    private final RelativeDirection direction;
+    private final RelativeHeight height;
+    private final AreaLinkType type;
 
-    public AreaLink(String areaID, RelativeDirection relativeDirection, RelativeHeight relativeHeight) {
+    public AreaLink(String areaID, RelativeDirection direction, RelativeHeight height, AreaLinkType type) {
         this.areaID = areaID;
-        this.relativeDirection = relativeDirection;
-        this.relativeHeight = relativeHeight;
+        this.direction = direction;
+        this.height = height;
+        this.type = type;
     }
 
     public String getAreaID() {
         return areaID;
     }
 
-    public RelativeDirection getRelativeDirection() {
-        return relativeDirection;
+    public RelativeDirection getDirection() {
+        return direction;
     }
 
-    public RelativeHeight getRelativeHeight() {
-        return relativeHeight;
+    public RelativeHeight getHeight() {
+        return height;
+    }
+
+    public AreaLinkType getType() {
+        return type;
     }
 
     public int heightChange() {
-        switch(relativeHeight) {
+        switch(height) {
             case ABOVE:
                 return 1;
             case ABOVE_HIGH:
@@ -59,7 +67,7 @@ public class AreaLink {
     }
 
     public int northSouthChange() {
-        switch(relativeDirection) {
+        switch(direction) {
             case NORTH:
             case NORTHEAST:
             case NORTHWEST:
@@ -76,7 +84,7 @@ public class AreaLink {
     }
 
     public int eastWestChange() {
-        switch(relativeDirection) {
+        switch(direction) {
             case EAST:
             case NORTHEAST:
             case SOUTHEAST:

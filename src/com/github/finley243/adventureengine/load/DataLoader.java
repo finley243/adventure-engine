@@ -506,12 +506,13 @@ public class DataLoader {
 
         Element linksElement = LoadUtils.singleChildWithName(areaElement, "links");
         List<Element> linkElements = LoadUtils.directChildrenWithName(linksElement, "link");
-        Set<AreaLink> linkSet = new HashSet<>();
+        Map<String, AreaLink> linkSet = new HashMap<>();
         for(Element linkElement : linkElements) {
             String linkAreaID = linkElement.getTextContent();
             AreaLink.RelativeDirection linkDirection = AreaLink.RelativeDirection.valueOf(LoadUtils.attribute(linkElement, "dir", "NORTH").toUpperCase());
             AreaLink.RelativeHeight linkHeight = AreaLink.RelativeHeight.valueOf(LoadUtils.attribute(linkElement, "height", "EQUAL").toUpperCase());
-            linkSet.add(new AreaLink(linkAreaID, linkDirection, linkHeight));
+            AreaLink.AreaLinkType linkType = AreaLink.AreaLinkType.valueOf(LoadUtils.attribute(linkElement, "type", "MOVE"));
+            linkSet.put(linkAreaID, new AreaLink(linkAreaID, linkDirection, linkHeight, linkType));
         }
 
         Element objectsElement = LoadUtils.singleChildWithName(areaElement, "objects");
@@ -561,12 +562,9 @@ public class DataLoader {
                 return new ObjectSign(objectName, description, signText);
             case "chair":
                 return new ObjectChair(objectName, description);
-            case "cover":
-                return new ObjectCover(objectName, description);
             case "obstruction":
-                ObjectObstruction.ObstructionDirection obstructionDirection = ObjectObstruction.ObstructionDirection.valueOf(LoadUtils.singleTag(objectElement, "direction", null).toUpperCase());
-                ObjectObstruction.ObstructionType obstructionType = ObjectObstruction.ObstructionType.valueOf(LoadUtils.singleTag(objectElement, "type", null).toUpperCase());
-                return new ObjectObstruction(objectName, description, obstructionDirection, obstructionType);
+                ObjectCover.CoverDirection coverDirection = ObjectCover.CoverDirection.valueOf(LoadUtils.singleTag(objectElement, "direction", null).toUpperCase());
+                return new ObjectCover(objectName, description, coverDirection);
             case "vending_machine":
                 List<String> vendingItems = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "items"), "item");
                 return new ObjectVendingMachine(objectName, description, vendingItems);

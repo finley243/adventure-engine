@@ -6,8 +6,6 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.object.ObjectChair;
-import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 
 public class ActionUseStart extends Action {
@@ -23,27 +21,12 @@ public class ActionUseStart extends Action {
 		object.setUser(subject);
 		subject.startUsingObject(object);
 		Context context = new Context(subject, false, object, false);
-		String phrase = null;
-		if(object instanceof ObjectCover) {
-			phrase = "takeCover";
-		} else if(object instanceof ObjectChair) {
-			phrase = "sit";
-		}
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(phrase), context, this, subject));
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(object.getStartPhrase()), context, this, subject));
 	}
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		String prompt = null;
-		String fullPrompt = null;
-		if(object instanceof ObjectCover) {
-			prompt = "Take cover";
-			fullPrompt = "Take cover behind " + object.getFormattedName(false);
-		} else if(object instanceof ObjectChair) {
-			prompt = "Sit";
-			fullPrompt = "Sit in " + object.getFormattedName(false);
-		}
-		return new MenuData(prompt, fullPrompt, canChoose(subject), new String[]{object.getName()});
+		return new MenuData(object.getStartPrompt(), object.getStartPromptFull(), canChoose(subject), new String[]{object.getName()});
 	}
 
 	@Override
