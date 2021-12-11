@@ -10,8 +10,8 @@ public class ObjectContainer extends WorldObject {
 
 	private Inventory inventory;
 	
-	public ObjectContainer(String name, String description) {
-		super(name, description);
+	public ObjectContainer(String ID, String name, String description) {
+		super(ID, name, description);
 	}
 	
 	@Override

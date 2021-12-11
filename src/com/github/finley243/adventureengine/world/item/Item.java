@@ -15,14 +15,14 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 public abstract class Item extends WorldObject {
 	
 	public Item(String name) {
-		super(name, null);
+		super(null, name, null);
 	}
 	
 	public int getPrice() {
 		return 0;
 	}
 	
-	public abstract String getID();
+	public abstract String getStatsID();
 	
 	@Override
 	public abstract String getDescription();

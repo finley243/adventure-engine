@@ -32,7 +32,7 @@ public class ItemApparel extends Item {
 	}
 	
 	@Override
-	public String getID() {
+	public String getStatsID() {
 		return stats.getID();
 	}
 
@@ -45,7 +45,7 @@ public class ItemApparel extends Item {
 	}
 
 	public void equip(Actor target) {
-		if(effects != null) throw new UnsupportedOperationException("Cannot equip ItemApparel " + this.getID() + " because it is already equipped");
+		if(effects != null) throw new UnsupportedOperationException("Cannot equip ItemApparel " + this.getStatsID() + " because it is already equipped");
 		effects = new ArrayList<>();
 		for(Effect effect : stats.getEffects()) {
 			Effect generatedEffect = effect.generate();
@@ -55,7 +55,7 @@ public class ItemApparel extends Item {
 	}
 
 	public void unequip(Actor target) {
-		if(effects == null) throw new UnsupportedOperationException("Cannot unequip ItemApparel " + this.getID() + " because it is not equipped");
+		if(effects == null) throw new UnsupportedOperationException("Cannot unequip ItemApparel " + this.getStatsID() + " because it is not equipped");
 		for(Effect effect : effects) {
 			target.removeEffect(effect);
 		}

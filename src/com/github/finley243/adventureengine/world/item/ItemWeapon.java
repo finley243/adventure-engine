@@ -39,7 +39,7 @@ public class ItemWeapon extends ItemEquippable {
 	}
 	
 	@Override
-	public String getID() {
+	public String getStatsID() {
 		return stats.getID();
 	}
 	

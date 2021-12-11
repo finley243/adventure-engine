@@ -10,7 +10,7 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.LootTable;
-import com.github.finley243.adventureengine.world.object.LinkedObject;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 import com.github.finley243.adventureengine.world.template.StatsItem;
 
@@ -26,11 +26,11 @@ public class Data {
 	private static final Map<String, Room> rooms = new HashMap<>();
 	private static final Map<String, Actor> actors = new HashMap<>();
 	private static final Map<String, StatsActor> actorStats = new HashMap<>();
-	private static final Map<String, LinkedObject> linkedObjects = new HashMap<>();
+	private static final Map<String, WorldObject> objects = new HashMap<>();
 	private static final Map<String, StatsItem> items = new HashMap<>();
 	private static final Map<String, LootTable> lootTables = new HashMap<>();
 	private static final Map<String, DialogueTopic> topics = new HashMap<>();
-	private static final Set<String> knowledge = new HashSet<>();
+	private static final Map<String, Integer> variables = new HashMap<>();
 	private static final Map<String, Faction> factions = new HashMap<>();
 	private static final Map<String, Scene> scenes = new HashMap<>();
 	private static final Map<String, Quest> quests = new HashMap<>();
@@ -97,14 +97,14 @@ public class Data {
 		return actorStats.get(id);
 	}
 	
-	public static void addLinkedObject(String id, LinkedObject value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add linked object with blank ID");
-		if(linkedObjects.containsKey(id)) throw new IllegalArgumentException("Cannot add linked object with existing ID: " + id);
-		linkedObjects.put(id, value);
+	public static void addObject(String id, WorldObject value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add object with blank ID");
+		if(objects.containsKey(id)) throw new IllegalArgumentException("Cannot add object with existing ID: " + id);
+		objects.put(id, value);
 	}
 	
-	public static LinkedObject getLinkedObject(String id) {
-		return linkedObjects.get(id);
+	public static WorldObject getObject(String id) {
+		return objects.get(id);
 	}
 	
 	public static void addItem(String id, StatsItem value) {
@@ -136,13 +136,15 @@ public class Data {
 	public static DialogueTopic getTopic(String id) {
 		return topics.get(id);
 	}
-	
-	public static void addKnowledge(String value) {
-		knowledge.add(value);
+
+	public static void setVariable(String id, int value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set variable with blank ID");
+		variables.put(id, value);
 	}
-	
-	public static boolean hasKnowledge(String value) {
-		return knowledge.contains(value);
+
+	public static int getVariable(String id) {
+		if(!variables.containsKey(id)) return 0;
+		return variables.get(id);
 	}
 	
 	public static void addFaction(String id, Faction value) {

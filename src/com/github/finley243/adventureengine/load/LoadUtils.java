@@ -92,6 +92,7 @@ public class LoadUtils {
 	
 	public static Equality equalityTag(Element element, String name) {
 		String logicString = LoadUtils.singleTag(element, name, null);
+		if(logicString != null) logicString = logicString.toUpperCase();
 		switch(logicString) {
 		case "EQUAL":
 			return Equality.EQUAL;

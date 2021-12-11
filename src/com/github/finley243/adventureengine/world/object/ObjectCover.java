@@ -10,8 +10,8 @@ public class ObjectCover extends WorldObject {
 
     private CoverDirection direction;
 
-    public ObjectCover(String name, String description, CoverDirection direction) {
-        super(name, description);
+    public ObjectCover(String ID, String name, String description, CoverDirection direction) {
+        super(ID, name, description);
         this.direction = direction;
     }
 

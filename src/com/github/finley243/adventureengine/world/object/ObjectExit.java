@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.action.ActionExitUnlock;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
-public class ObjectExit extends LinkedObject {
+public class ObjectExit extends WorldObject {
 
 	private final String linkedExitID;
 	private boolean isLocked;
@@ -25,12 +25,12 @@ public class ObjectExit extends LinkedObject {
 	}
 	
 	public Area getLinkedArea() {
-		return Data.getLinkedObject(linkedExitID).getArea();
+		return Data.getObject(linkedExitID).getArea();
 	}
 	
 	public void unlock() {
 		this.isLocked = false;
-		((ObjectExit) Data.getLinkedObject(linkedExitID)).isLocked = false;
+		((ObjectExit) Data.getObject(linkedExitID)).isLocked = false;
 	}
 
 	public boolean isLocked() {

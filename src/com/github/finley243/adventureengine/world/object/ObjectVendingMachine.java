@@ -11,8 +11,8 @@ public class ObjectVendingMachine extends WorldObject {
 
 	private final List<String> vendingItems;
 	
-	public ObjectVendingMachine(String name, String description, List<String> vendingItems) {
-		super(name, description);
+	public ObjectVendingMachine(String ID, String name, String description, List<String> vendingItems) {
+		super(ID, name, description);
 		this.vendingItems = vendingItems;
 	}
 

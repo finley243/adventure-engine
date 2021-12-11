@@ -47,6 +47,7 @@ public class MenuManager {
 		boolean dialogueLoop = true;
 		DialogueTopic currentTopic = Data.getTopic(startTopic);
 		while(dialogueLoop) {
+			currentTopic.setVisited();
 			for(DialogueLine line : currentTopic.getLines()) {
 				if(line.shouldShow(subject)) {
 					for(String text : line.getTextList()) {

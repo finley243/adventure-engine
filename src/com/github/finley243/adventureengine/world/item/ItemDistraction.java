@@ -13,7 +13,7 @@ public class ItemDistraction extends Item {
         super(name);
     }
 
-    public String getID() {
+    public String getStatsID() {
         return "TEMP";
     }
 

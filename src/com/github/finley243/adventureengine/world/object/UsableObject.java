@@ -13,8 +13,8 @@ public abstract class UsableObject extends WorldObject {
 
 	private Actor user;
 
-	public UsableObject(String name, String description) {
-		super(name, description);
+	public UsableObject(String ID, String name, String description) {
+		super(ID, name, description);
 	}
 
 	public abstract String getStartPhrase();

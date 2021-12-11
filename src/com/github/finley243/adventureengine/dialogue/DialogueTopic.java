@@ -14,6 +14,8 @@ public class DialogueTopic {
 	private final List<DialogueChoice> choices;
 
 	private final TopicType type;
+
+	private boolean hasVisited;
 	
 	public DialogueTopic(String ID, List<DialogueLine> lines, List<DialogueChoice> choices, TopicType type) {
 		this.ID = ID;
@@ -36,6 +38,14 @@ public class DialogueTopic {
 
 	public TopicType getType() {
 		return type;
+	}
+
+	public void setVisited() {
+		hasVisited = true;
+	}
+
+	public boolean hasVisited() {
+		return hasVisited;
 	}
 	
 }

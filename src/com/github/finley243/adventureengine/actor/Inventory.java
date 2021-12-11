@@ -28,7 +28,7 @@ public class Inventory {
 	
 	public boolean hasItemWithID(String ID) {
 		for(Item item : inventory) {
-			if(item.getID().equals(ID)) {
+			if(item.getStatsID().equals(ID)) {
 				return true;
 			}
 		}

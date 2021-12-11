@@ -9,8 +9,8 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class ObjectChair extends UsableObject {
 
-    public ObjectChair(String name, String description) {
-        super(name, description);
+    public ObjectChair(String ID, String name, String description) {
+        super(ID, name, description);
     }
 
 	@Override

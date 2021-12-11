@@ -17,14 +17,20 @@ import com.github.finley243.adventureengine.world.environment.Area;
  * A static object that can exist in the game world
  */
 public abstract class WorldObject implements Noun, Physical {
-	
+
+	private final String ID;
 	private final String name;
 	private Area area;
 	private final String description;
 	
-	public WorldObject(String name, String description) {
+	public WorldObject(String ID, String name, String description) {
+		this.ID = ID;
 		this.name = name;
 		this.description = description;
+	}
+
+	public String getID() {
+		return ID;
 	}
 	
 	@Override
@@ -88,6 +94,11 @@ public abstract class WorldObject implements Noun, Physical {
 			default:
 				throw new IllegalArgumentException("Action " + action + " does not exist for object " + this.getClass().getSimpleName());
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return ID.hashCode();
 	}
 
 	private void actionInspect() {

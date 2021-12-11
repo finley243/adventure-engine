@@ -11,8 +11,8 @@ public class ObjectSign extends WorldObject implements Readable {
 
 	private final List<String> text;
 	
-	public ObjectSign(String name, String description, List<String> text) {
-		super(name, description);
+	public ObjectSign(String ID, String name, String description, List<String> text) {
+		super(ID, name, description);
 		this.text = text;
 	}
 	

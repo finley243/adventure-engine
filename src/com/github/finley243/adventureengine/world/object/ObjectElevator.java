@@ -10,7 +10,7 @@ import com.github.finley243.adventureengine.action.ActionMoveElevator;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
-public class ObjectElevator extends LinkedObject {
+public class ObjectElevator extends WorldObject {
 
 	private final int floorNumber;
 	private final String floorName;
@@ -40,7 +40,7 @@ public class ObjectElevator extends LinkedObject {
 	public Set<Area> getLinkedAreas() {
 		Set<Area> areas = new HashSet<>();
 		for(String elevatorID : linkedElevatorIDs) {
-			areas.add(Data.getLinkedObject(elevatorID).getArea());
+			areas.add(Data.getObject(elevatorID).getArea());
 		}
 		return areas;
 	}
@@ -52,7 +52,7 @@ public class ObjectElevator extends LinkedObject {
 			
 		} else {
 			for(String elevatorID : linkedElevatorIDs) {
-				actions.add(new ActionMoveElevator(this, (ObjectElevator) Data.getLinkedObject(elevatorID)));
+				actions.add(new ActionMoveElevator(this, (ObjectElevator) Data.getObject(elevatorID)));
 			}
 		}
 		return actions;

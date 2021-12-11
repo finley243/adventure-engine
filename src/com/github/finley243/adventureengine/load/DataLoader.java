@@ -226,10 +226,11 @@ public class DataLoader {
             case "money":
                 int moneyAmount = LoadUtils.singleTagInt(conditionElement, "value", 0);
                 return new ConditionMoney(actorRef, moneyAmount);
-            case "knowledge":
-                String knowledgeID = LoadUtils.singleTag(conditionElement, "knowledge", null);
-                boolean knowledgeValue = LoadUtils.singleTagBoolean(conditionElement, "value", true);
-                return new ConditionKnowledge(knowledgeID, knowledgeValue);
+            case "var":
+                String varID = LoadUtils.singleTag(conditionElement, "variable", null);
+                Condition.Equality varEquality = LoadUtils.equalityTag(conditionElement, "equality");
+                int varValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
+                return new ConditionVariable(varID, varEquality, varValue);
             case "attribute":
                 Actor.Attribute attribute = Actor.Attribute.valueOf(LoadUtils.singleTag(conditionElement, "attribute", null).toUpperCase());
                 int attributeValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
@@ -283,9 +284,14 @@ public class DataLoader {
             case "add_item":
                 String addItemID = LoadUtils.singleTag(scriptElement, "item", null);
                 return new ScriptAddItem(actorRef, addItemID);
-            case "knowledge":
-                String knowledgeID = LoadUtils.singleTag(scriptElement, "knowledge", null);
-                return new ScriptKnowledge(knowledgeID);
+            case "var_set":
+                String varSetID = LoadUtils.singleTag(scriptElement, "variable", null);
+                int varSetValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
+                return new ScriptVariableSet(varSetID, varSetValue);
+            case "var_mod":
+                String varModID = LoadUtils.singleTag(scriptElement, "variable", null);
+                int varModValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
+                return new ScriptVariableMod(varModID, varModValue);
             case "trade":
                 return new ScriptTrade();
             case "dialogue":
@@ -521,10 +527,7 @@ public class DataLoader {
         for(Element objectElement : objectElements) {
             WorldObject object = loadObject(objectElement);
             objectSet.add(object);
-            if(object instanceof LinkedObject) {
-                LinkedObject linkedObject = (LinkedObject) object;
-                Data.addLinkedObject(linkedObject.getID(), linkedObject);
-            }
+            Data.addObject(object.getID(), object);
         }
 
         Area area = new Area(areaID, name, description, isProperName, nameType, roomID, linkSet, objectSet);
@@ -559,15 +562,15 @@ public class DataLoader {
                 return new ObjectElevator(objectID, objectName, description, floorNumber, floorName, linkedElevatorIDs);
             case "sign":
                 List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "lines"), "text");
-                return new ObjectSign(objectName, description, signText);
+                return new ObjectSign(objectID, objectName, description, signText);
             case "chair":
-                return new ObjectChair(objectName, description);
+                return new ObjectChair(objectID, objectName, description);
             case "obstruction":
                 ObjectCover.CoverDirection coverDirection = ObjectCover.CoverDirection.valueOf(LoadUtils.singleTag(objectElement, "direction", null).toUpperCase());
-                return new ObjectCover(objectName, description, coverDirection);
+                return new ObjectCover(objectID, objectName, description, coverDirection);
             case "vending_machine":
                 List<String> vendingItems = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "items"), "item");
-                return new ObjectVendingMachine(objectName, description, vendingItems);
+                return new ObjectVendingMachine(objectID, objectName, description, vendingItems);
             case "item":
                 String itemID = LoadUtils.singleTag(objectElement, "item", null);
                 return ItemFactory.create(itemID);

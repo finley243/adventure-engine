@@ -14,7 +14,7 @@ public class ScriptUnlock implements Script {
 
 	@Override
 	public void execute(Actor subject) {
-		((ObjectExit) Data.getLinkedObject(object)).unlock();
+		((ObjectExit) Data.getObject(object)).unlock();
 	}
 
 }

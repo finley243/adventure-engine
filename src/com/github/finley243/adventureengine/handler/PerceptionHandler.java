@@ -12,8 +12,6 @@ import com.google.common.eventbus.Subscribe;
 
 public class PerceptionHandler {
 
-	public PerceptionHandler() {}
-	
 	@Subscribe
 	public void onVisualEvent(VisualEvent e) {
 		Set<Actor> roomActors = e.getOrigin().getRoom().getActors();
