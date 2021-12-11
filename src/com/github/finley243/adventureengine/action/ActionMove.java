@@ -27,7 +27,7 @@ public class ActionMove extends Action {
 	@Override
 	public void choose(Actor subject) {
 		Context context = new Context(subject, false, area, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(area.getMovePhrase()), context, this, subject));
+		Game.EVENT_BUS.post(new VisualEvent(new Area[]{subject.getArea(), area}, Phrases.get(area.getMovePhrase()), context, this, subject));
 		subject.move(area);
 	}
 	

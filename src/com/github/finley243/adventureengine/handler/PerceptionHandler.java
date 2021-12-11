@@ -14,14 +14,22 @@ public class PerceptionHandler {
 
 	@Subscribe
 	public void onVisualEvent(VisualEvent e) {
-		Set<Actor> roomActors = e.getOrigin().getRoom().getActors();
+		Set<Actor> roomActors = new HashSet<>();
+		for(Area origin : e.getOrigins()) {
+			roomActors.addAll(origin.getRoom().getActors());
+		}
 		for(Actor actor : roomActors) {
 			if(e.getSubject() != null) {
 				if(actor.canSee(e.getSubject())) {
 					actor.onVisualEvent(e);
 				}
-			} else if(actor.getArea().getVisibleAreas(actor).contains(e.getOrigin())) {
-				actor.onVisualEvent(e);
+			} else {
+				for(Area origin : e.getOrigins()) {
+					if (actor.getArea().getVisibleAreas(actor).contains(origin)) {
+						actor.onVisualEvent(e);
+						break;
+					}
+				}
 			}
 		}
 	}

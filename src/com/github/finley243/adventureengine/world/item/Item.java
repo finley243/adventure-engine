@@ -13,9 +13,11 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public abstract class Item extends WorldObject {
-	
+
+	private static int idCounter = 0;
+
 	public Item(String name) {
-		super(null, name, null);
+		super(name + idCounter, name, null);
 	}
 	
 	public int getPrice() {

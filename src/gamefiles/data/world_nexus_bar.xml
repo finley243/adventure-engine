@@ -1,11 +1,8 @@
 <rooms>
     <room id="street_corner">
         <name proper="false">street corner</name>
-        <roomDescription></roomDescription>
         <area id="street_corner_nexus">
             <name proper="false" type="near">Nexus entrance</name>
-            <areaDescription></areaDescription>
-            <links></links>
             <objects>
                 <object type="exit" id="nexus_entrance_exterior">
                     <name>Nexus front door</name>
@@ -32,18 +29,14 @@
     </room>
     <room id="nexus">
         <name proper="false">Nexus</name>
-        <roomDescription></roomDescription>
         <area id="nexus_entry">
             <name proper="false" type="near">Nexus entrance</name>
-            <areaDescription></areaDescription>
-            <links></links>
             <objects>
                 <object type="exit" id="nexus_entrance_interior">
                     <name>front door</name>
                     <link>nexus_entrance_exterior</link>
                 </object>
             </objects>
-            <actors></actors>
         </area>
     </room>
 </rooms>

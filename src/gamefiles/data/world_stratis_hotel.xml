@@ -47,7 +47,7 @@
                 <link dir="north">stratis_hotel_lobby_elevators</link>
             </links>
             <objects>
-                <object type="chair">
+                <object type="chair" id="stratis_hotel_lobby_chair">
                     <name>lounge chair</name>
                 </object>
                 <object type="exit" id="stratis_hotel_lobby_security_door">
@@ -82,7 +82,7 @@
                         <link>stratis_hotel_elevator_corridor</link>
                     </links>
                 </object>
-                <object type="sign">
+                <object type="sign" id="stratis_hotel_lobby_sign_navigation">
                     <name>navigation sign</name>
                     <lines>
                         <text>FLOOR 1: Lobby</text>
@@ -121,7 +121,7 @@
                         <link>stratis_hotel_elevator_lobby</link>
                     </links>
                 </object>
-                <object type="vending_machine">
+                <object type="vending_machine" id="stratis_hotel_vending_machine">
                     <name>vending machine</name>
                     <items>
                         <item>nitron_cola</item>
@@ -151,13 +151,12 @@
         <description>The lights come on as you enter, casting a warm glow over the white linen on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</description>
         <area id="stratis_hotel_room_main">
             <name proper="false">room</name>
-            <links></links>
             <objects>
                 <object type="exit" id="stratis_hotel_room_door">
                     <name>door</name>
                     <link>stratis_hotel_corridor_room_door</link>
                 </object>
-                <object type="item">
+                <object type="item" id="stratis_hotel_room_baseball_bat">
                     <item>baseball_bat</item>
                 </object>
             </objects>
@@ -168,13 +167,12 @@
         <ownerFaction>stratis_hotel_staff</ownerFaction>
         <area id="stratis_hotel_security_main">
             <name proper="false">office</name>
-            <links></links>
             <objects>
                 <object type="exit" id="stratis_hotel_security_door">
                     <name>door</name>
                     <link>stratis_hotel_lobby_security_door</link>
                 </object>
-                <object type="item">
+                <object type="item" id="stratis_hotel_security_rifle">
                     <item>rifle_auto</item>
                 </object>
             </objects>

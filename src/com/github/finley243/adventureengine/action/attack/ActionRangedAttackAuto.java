@@ -17,7 +17,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ActionRangedAttackAuto extends ActionAttack {
 
-	public static final int AMMO_USED = 6;
+	private static final int AMMO_USED = 6;
+	private static final float AUTOFIRE_DAMAGE_MULT = 3.00f;
 
 	public ActionRangedAttackAuto(ItemWeapon weapon, Actor target) {
 		super(weapon, target);
@@ -37,7 +38,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 	@Override
 	public void onSuccess(Actor subject) {
 		int damage = weapon.getDamage();
-		damage *= CombatHelper.AUTOFIRE_DAMAGE_MULT;
+		damage *= AUTOFIRE_DAMAGE_MULT;
 		boolean crit = false;
 		if(ThreadLocalRandom.current().nextFloat() < ItemWeapon.CRIT_CHANCE) {
 			damage += weapon.getCritDamage();
@@ -73,7 +74,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Attack (" + LangUtils.titleCase(getWeapon().getName()) + ", Autofire, hit chance: " + chance(subject) + ")", "Attack " + getTarget().getFormattedName(false) + " with " + getWeapon().getFormattedName(false), canChoose(subject), new String[]{getTarget().getName()});
+		return new MenuData("Attack (" + LangUtils.titleCase(getWeapon().getName()) + ", Autofire, hit chance: " + Math.ceil(chance(subject)*100) + ")", "Attack " + getTarget().getFormattedName(false) + " with " + getWeapon().getFormattedName(false), canChoose(subject), new String[]{getTarget().getName()});
 	}
 
 }

@@ -38,6 +38,7 @@
             <links>
                 <link dir="northwest">warehouse_wall_north</link>
                 <link dir="southwest">warehouse_fuel</link>
+                <link dir="west" type="vis">warehouse_container_behind</link>
             </links>
         </area>
         <area id="warehouse_wall_south">
@@ -56,7 +57,7 @@
                 <link dir="northeast">warehouse_container_right</link>
             </links>
             <objects>
-                <object type="obstruction">
+                <object type="obstruction" id="warehouse_container_south">
                     <name>shipping container</name>
                     <direction>NORTH</direction>
                 </object>
@@ -71,7 +72,7 @@
                 <link dir="northeast">warehouse_container_behind</link>
             </links>
             <objects>
-                <object type="obstruction">
+                <object type="obstruction" id="warehouse_container_west">
                     <name>shipping container</name>
                     <direction>EAST</direction>
                 </object>
@@ -85,7 +86,7 @@
                 <link dir="northwest">warehouse_container_behind</link>
             </links>
             <objects>
-                <object type="obstruction">
+                <object type="obstruction" id="warehouse_container_east">
                     <name>shipping container</name>
                     <direction>WEST</direction>
                 </object>
@@ -97,9 +98,10 @@
                 <link dir="north">warehouse_wall_north</link>
                 <link dir="southwest">warehouse_container_left</link>
                 <link dir="southeast">warehouse_container_right</link>
+                <link dir="east" type="vis">warehouse_wall_east</link>
             </links>
             <objects>
-                <object type="obstruction">
+                <object type="obstruction" id="warehouse_container_north">
                     <name>shipping container</name>
                     <direction>SOUTH</direction>
                 </object>

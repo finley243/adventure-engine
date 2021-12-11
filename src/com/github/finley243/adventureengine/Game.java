@@ -54,7 +54,7 @@ public class Game {
 		EVENT_BUS.register(perceptionHandler);
 		EVENT_BUS.register(userInterface);
 		EVENT_BUS.register(this);
-		
+
 		Actor player = ActorFactory.createPlayer(Data.getConfig("playerID"), Data.getArea(Data.getConfig("playerStartArea")), Data.getActorStats(Data.getConfig("playerStats")));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);

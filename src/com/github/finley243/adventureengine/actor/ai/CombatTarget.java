@@ -17,15 +17,12 @@ public class CombatTarget {
 	private final Actor targetActor;
 	private int turnsUntilRemove;
 	private PursueTarget pursueTarget;
-	private ObjectExit usedExit;
-	private ObjectElevator usedElevator;
+	private Area lastKnownArea;
 	
 	public CombatTarget(Actor actor) {
 		this.targetActor = actor;
 		this.turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 		pursueTarget = null;
-		usedExit = null;
-		usedElevator = null;
 	}
 
 	public void nextTurn() {
@@ -40,21 +37,13 @@ public class CombatTarget {
 			subject.addPursueTarget(pursueTarget);
 		}
 		if(subject.canSee(targetActor)) {
-			usedExit = null;
-			usedElevator = null;
+			lastKnownArea = targetActor.getArea();
 			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 			pursueTarget.setTargetArea(targetActor.getArea());
 			pursueTarget.setShouldFlee(subject.shouldFleeFrom(targetActor));
 			pursueTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
 		} else {
-			if(usedExit != null) {
-				pursueTarget.setTargetArea(usedExit.getLinkedArea());
-				usedExit = null;
-			} else if(usedElevator != null) {
-				List<Area> linkedAreas = new ArrayList<>(usedElevator.getLinkedAreas());
-				pursueTarget.setTargetArea(linkedAreas.get(ThreadLocalRandom.current().nextInt(linkedAreas.size())));
-				usedElevator = null;
-			}
+			pursueTarget.setTargetArea(lastKnownArea);
 			pursueTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
 			//turnsUntilRemove--;
 		}
@@ -63,14 +52,17 @@ public class CombatTarget {
 		}
 	}
 
-	public void setUsedExit(ObjectExit exit) {
-		this.usedExit = exit;
-		usedElevator = null;
+	public void onMoved(Area area) {
+		lastKnownArea = area;
 	}
 
-	public void setUsedElevator(ObjectElevator elevator) {
-		this.usedElevator = elevator;
-		usedExit = null;
+	public void onUsedExit(ObjectExit exit) {
+		lastKnownArea = exit.getLinkedArea();
+	}
+
+	public void onUsedElevator(ObjectElevator elevator) {
+		List<Area> possibleAreas = new ArrayList<>(elevator.getLinkedAreas());
+		lastKnownArea = possibleAreas.get(ThreadLocalRandom.current().nextInt(possibleAreas.size()));
 	}
 	
 	public boolean shouldRemove() {
