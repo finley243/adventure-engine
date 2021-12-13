@@ -12,6 +12,8 @@ public abstract class Action {
 
 	public abstract void choose(Actor subject);
 
+	public abstract MenuData getMenuData(Actor subject);
+
 	public boolean canChoose(Actor subject) {
 		return !disabled;
 	}
@@ -43,7 +45,9 @@ public abstract class Action {
 	public boolean isMultiMatch(Action action) {
 		return false;
 	}
-	
-	public abstract MenuData getMenuData(Actor subject);
-	
+
+	public boolean isIllegal() {
+		return false;
+	}
+
 }

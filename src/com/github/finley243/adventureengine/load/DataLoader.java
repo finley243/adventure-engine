@@ -509,6 +509,12 @@ public class DataLoader {
         boolean isProperName = LoadUtils.boolAttribute(nameElement, "proper", false);
         Area.AreaNameType nameType = Area.AreaNameType.valueOf(LoadUtils.attribute(nameElement, "type", "in").toUpperCase());
         String description = LoadUtils.singleTag(areaElement, "areaDescription", null);
+        String areaOwnerFaction = LoadUtils.singleTag(areaElement, "ownerFaction", null);
+        Element areaOwnerElement = LoadUtils.singleChildWithName(areaElement, "ownerFaction");
+        boolean areaIsPrivate = false;
+        if(areaOwnerElement != null) {
+            areaIsPrivate = LoadUtils.boolAttribute(areaOwnerElement, "private", false);
+        }
 
         Element linksElement = LoadUtils.singleChildWithName(areaElement, "links");
         List<Element> linkElements = LoadUtils.directChildrenWithName(linksElement, "link");
@@ -517,8 +523,9 @@ public class DataLoader {
             String linkAreaID = linkElement.getTextContent();
             AreaLink.RelativeDirection linkDirection = AreaLink.RelativeDirection.valueOf(LoadUtils.attribute(linkElement, "dir", "NORTH").toUpperCase());
             AreaLink.RelativeHeight linkHeight = AreaLink.RelativeHeight.valueOf(LoadUtils.attribute(linkElement, "height", "EQUAL").toUpperCase());
-            AreaLink.AreaLinkType linkType = AreaLink.AreaLinkType.valueOf(LoadUtils.attribute(linkElement, "type", "MOVE").toUpperCase());
-            linkSet.put(linkAreaID, new AreaLink(linkAreaID, linkDirection, linkHeight, linkType));
+            AreaLink.AreaLinkType linkType = AreaLink.AreaLinkType.valueOf(LoadUtils.attribute(linkElement, "type", "DEFAULT").toUpperCase());
+            AreaLink.AreaLinkDistance linkDistance = AreaLink.AreaLinkDistance.valueOf(LoadUtils.attribute(linkElement, "dist", "FAR").toUpperCase());
+            linkSet.put(linkAreaID, new AreaLink(linkAreaID, linkDirection, linkHeight, linkType, linkDistance));
         }
 
         Element objectsElement = LoadUtils.singleChildWithName(areaElement, "objects");
@@ -530,7 +537,7 @@ public class DataLoader {
             Data.addObject(object.getID(), object);
         }
 
-        Area area = new Area(areaID, name, description, isProperName, nameType, roomID, linkSet, objectSet);
+        Area area = new Area(areaID, name, description, isProperName, nameType, roomID, areaOwnerFaction, areaIsPrivate, linkSet, objectSet);
         for(WorldObject object : objectSet) {
             object.setArea(area);
         }

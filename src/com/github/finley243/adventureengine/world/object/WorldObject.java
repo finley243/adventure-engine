@@ -86,17 +86,6 @@ public abstract class WorldObject implements Noun, Physical {
 	}
 
 	@Override
-	public void executeAction(String action, Actor subject) {
-		switch(action.toUpperCase()) {
-			case "INSPECT":
-				actionInspect();
-				break;
-			default:
-				throw new IllegalArgumentException("Action " + action + " does not exist for object " + this.getClass().getSimpleName());
-		}
-	}
-
-	@Override
 	public int hashCode() {
 		return ID.hashCode();
 	}

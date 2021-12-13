@@ -118,13 +118,7 @@ public class ItemWeapon extends ItemEquippable {
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
-		Set<Actor> targets = new HashSet<>();
-		// TODO - Redesign to account for partial cover
-		for(Area area : subject.getArea().getVisibleAreas(subject)) {
-			targets.addAll(area.getActors());
-		}
-		//Set<Actor> targets = subject.getArea().getRoom().getActors();
-		for(Actor target : targets) {
+		for(Actor target : subject.getVisibleActors()) {
 			if(target != subject && target.isActive()) {
 				if(stats.getType().isRanged) { // Ranged
 					actions.add(new ActionRangedAttack(this, target));

@@ -504,14 +504,22 @@ public class Actor implements Noun, Physical {
 	public List<Action> localActions(Actor subject) {
 		List<Action> action = new ArrayList<>();
 		if(!isDead) { // Alive
-			if(stats.getTopic() != null && !isInCombat()) {
-				//action.add(new ActionTalk(this));
-				action.add(new ActionGeneric(this, "TALK",
-						0.0f, true, true, ActionGeneric.ActionMatchType.NONE, 1,
-						new MenuData("Talk", "Talk to " + this.getFormattedName(false), true, new String[]{this.getName()})));
+			if(stats.getTopic() != null) {
+				action.add(new ActionTalk(this));
 			}
 		} else { // Dead
 			action.addAll(inventory.getActions(this));
+		}
+		return action;
+	}
+
+	@Override
+	public List<Action> adjacentActions(Actor subject) {
+		List<Action> action = new ArrayList<>();
+		if(!isDead) { // Alive
+			if(stats.getTopic() != null) {
+				action.add(new ActionTalk(this));
+			}
 		}
 		return action;
 	}
@@ -519,17 +527,6 @@ public class Actor implements Noun, Physical {
 	@Override
 	public List<Action> remoteActions(Actor subject) {
 		return new ArrayList<>();
-	}
-
-	@Override
-	public void executeAction(String action, Actor subject) {
-		switch(action.toUpperCase()) {
-			case "TALK":
-				actionTalk(subject);
-				break;
-			default:
-				throw new IllegalArgumentException("Action " + action + " does not exist for object " + this.getClass().getSimpleName());
-		}
 	}
 
 	private void actionTalk(Actor subject) {
@@ -546,13 +543,23 @@ public class Actor implements Noun, Physical {
 		for(Actor actor : getArea().getActors()) {
 			actions.addAll(actor.localActions(this));
 		}
-		for(Actor actor : getArea().getRoom().getActors()) {
+		for(Area nearArea : getArea().getNearAreas()) {
+			for(Actor actor : nearArea.getActors()) {
+				actions.addAll(actor.adjacentActions(this));
+			}
+		}
+		for(Actor actor : getVisibleActors()) {
 			actions.addAll(actor.remoteActions(this));
 		}
 		for(WorldObject object : getArea().getObjects()) {
 			actions.addAll(object.localActions(this));
 		}
-		for(WorldObject object : getArea().getRoom().getObjects()) {
+		for(Area nearArea : getArea().getNearAreas()) {
+			for(WorldObject object : nearArea.getObjects()) {
+				actions.addAll(object.adjacentActions(this));
+			}
+		}
+		for(WorldObject object : getVisibleObjects()) {
 			actions.addAll(object.remoteActions(this));
 		}
 		if(isUsingObject()) {
@@ -705,8 +712,8 @@ public class Actor implements Noun, Physical {
 	}
 	
 	private void generateCombatTargets() {
-		for(Actor actor : getArea().getRoom().getActors()) {
-			if(actor != this && canSee(actor) && !actor.isDead()) {
+		for(Actor actor : getVisibleActors()) {
+			if(actor != this && !actor.isDead()) {
 				if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.ENEMY) {
 					if(!isCombatTarget(actor)) {
 						addCombatTarget(actor);
@@ -752,6 +759,30 @@ public class Actor implements Noun, Physical {
 				itr.remove();
 			}
 		}
+	}
+
+	public Set<Actor> getVisibleActors() {
+		Set<Actor> visibleActors = new HashSet<>();
+		Set<Area> visibleAreas = getArea().getVisibleAreas(this);
+		// TODO - Optimize (check if each area is visible once)
+		for(Actor actor : getArea().getRoom().getActors()) {
+			if(visibleAreas.contains(actor.getArea()) && (!actor.isCrouching() || !getArea().isBehindCover(actor.getArea()))) {
+				visibleActors.add(actor);
+			}
+		}
+		return visibleActors;
+	}
+
+	public Set<WorldObject> getVisibleObjects() {
+		Set<WorldObject> visibleObjects = new HashSet<>();
+		Set<Area> visibleAreas = getArea().getVisibleAreas(this);
+		// TODO - Optimize (check if each area is visible once)
+		for(WorldObject object : getArea().getRoom().getObjects()) {
+			if(visibleAreas.contains(object.getArea())) {
+				visibleObjects.add(object);
+			}
+		}
+		return visibleObjects;
 	}
 	
 	public boolean canSee(Actor target) {

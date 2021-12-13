@@ -33,6 +33,10 @@ public class Area implements Noun {
 	private final String roomID;
 	
 	private final String description;
+
+	private final String ownerFaction;
+	// Whether members and allies of ownerFaction should react negatively to non-allies in area
+	private final boolean isPrivate;
 	
 	// All areas that can be accessed when in this area (key is areaID)
 	private final Map<String, AreaLink> linkedAreas;
@@ -42,13 +46,15 @@ public class Area implements Noun {
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, Map<String, AreaLink> linkedAreas, Set<WorldObject> objects) {
+	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Set<WorldObject> objects) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
 		this.isProperName = isProperName;
 		this.nameType = nameType;
 		this.roomID = roomID;
+		this.ownerFaction = ownerFaction;
+		this.isPrivate = isPrivate;
 		this.linkedAreas = linkedAreas;
 		this.objects = objects;
 		this.actors = new HashSet<>();
@@ -65,6 +71,15 @@ public class Area implements Noun {
 	
 	public String getDescription() {
 		return description;
+	}
+
+	public String getOwnerFaction() {
+		if(ownerFaction == null) return getRoom().getOwnerFaction();
+		return ownerFaction;
+	}
+
+	public boolean isPrivate() {
+		return isPrivate;
 	}
 	
 	@Override
@@ -155,33 +170,46 @@ public class Area implements Noun {
 			System.out.println("Area " + ID + " does not contain actor " + actor + ".");
 		}
 	}
-	
-	public Set<Area> getMovableAreas() {
-		Set<Area> output = new HashSet<>();
+
+	public Set<Area> getNearAreas() {
+		Set<Area> nearAreas = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
-			if(link.getType() == AreaLink.AreaLinkType.MOVE && link.heightChange() == 0) {
-				output.add(Data.getArea(link.getAreaID()));
+			if(link.getDistance() == AreaLink.AreaLinkDistance.NEAR) {
+				nearAreas.add(Data.getArea(link.getAreaID()));
 			}
 		}
-		return output;
+		return nearAreas;
+	}
+	
+	public Set<Area> getMovableAreas() {
+		Set<Area> movableAreas = new HashSet<>();
+		for(AreaLink link : linkedAreas.values()) {
+			if((link.getType() == AreaLink.AreaLinkType.DEFAULT || link.getType() == AreaLink.AreaLinkType.MOVE) && link.heightChange() == 0) {
+				movableAreas.add(Data.getArea(link.getAreaID()));
+			}
+		}
+		return movableAreas;
 	}
 
 	public Set<Area> getVisibleAreas(Actor subject) {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
 		for(AreaLink link : linkedAreas.values()) {
-			boolean obstructed = false;
-			if(subject.isCrouching()) {
-				for (WorldObject object : getObjects()) {
-					if (object instanceof ObjectCover && ((ObjectCover) object).obstructsTo(link.getDirection())) {
-						obstructed = true;
-						break;
+			if(link.getType() != AreaLink.AreaLinkType.MOVE) {
+				// TODO - Redesign inefficient check
+				boolean obstructed = false;
+				if (subject.isCrouching()) {
+					for (WorldObject object : getObjects()) {
+						if (object instanceof ObjectCover && ((ObjectCover) object).obstructsTo(link.getDirection())) {
+							obstructed = true;
+							break;
+						}
 					}
 				}
-			}
-			if(!obstructed) {
-				Area area = Data.getArea(link.getAreaID());
-				visibleAreas.add(area);
+				if (!obstructed) {
+					Area area = Data.getArea(link.getAreaID());
+					visibleAreas.add(area);
+				}
 			}
 		}
 		return visibleAreas;
