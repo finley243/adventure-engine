@@ -556,31 +556,34 @@ public class DataLoader {
         String objectType = objectElement.getAttribute("type");
         String objectName = LoadUtils.singleTag(objectElement, "name", null);
         String objectID = objectElement.getAttribute("id");
-        String description = LoadUtils.singleTag(objectElement, "description", null);
+        String objectDescription = LoadUtils.singleTag(objectElement, "description", null);
         switch(objectType) {
             case "exit":
                 String exitLink = LoadUtils.singleTag(objectElement, "link", null);
                 Set<String> exitKeys = LoadUtils.setOfTags(objectElement, "key");
-                return new ObjectExit(objectID, objectName, description, exitLink, exitKeys);
+                return new ObjectExit(objectID, objectName, objectDescription, exitLink, exitKeys);
             case "elevator":
                 int floorNumber = LoadUtils.singleTagInt(objectElement, "floorNumber", 1);
                 String floorName = LoadUtils.singleTag(objectElement, "floorName", null);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(LoadUtils.singleChildWithName(objectElement, "links"), "link");
-                return new ObjectElevator(objectID, objectName, description, floorNumber, floorName, linkedElevatorIDs);
+                return new ObjectElevator(objectID, objectName, objectDescription, floorNumber, floorName, linkedElevatorIDs);
             case "sign":
                 List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "lines"), "text");
-                return new ObjectSign(objectID, objectName, description, signText);
+                return new ObjectSign(objectID, objectName, objectDescription, signText);
             case "chair":
-                return new ObjectChair(objectID, objectName, description);
+                return new ObjectChair(objectID, objectName, objectDescription);
             case "obstruction":
                 ObjectCover.CoverDirection coverDirection = ObjectCover.CoverDirection.valueOf(LoadUtils.singleTag(objectElement, "direction", null).toUpperCase());
-                return new ObjectCover(objectID, objectName, description, coverDirection);
+                return new ObjectCover(objectID, objectName, objectDescription, coverDirection);
             case "vending_machine":
                 List<String> vendingItems = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "items"), "item");
-                return new ObjectVendingMachine(objectID, objectName, description, vendingItems);
+                return new ObjectVendingMachine(objectID, objectName, objectDescription, vendingItems);
             case "item":
                 String itemID = LoadUtils.singleTag(objectElement, "item", null);
                 return ItemFactory.create(itemID);
+            case "container":
+                String containerLootTable = LoadUtils.singleTag(objectElement, "lootTable", null);
+                return new ObjectContainer(objectID, objectName, objectDescription, containerLootTable);
         }
         return null;
     }
