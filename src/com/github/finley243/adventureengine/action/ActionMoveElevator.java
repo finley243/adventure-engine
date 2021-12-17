@@ -10,7 +10,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 
-public class ActionMoveElevator extends Action {
+public class ActionMoveElevator extends ActionMove {
 
 	private final ObjectElevator elevator;
 	private final ObjectElevator destination;
@@ -44,26 +44,7 @@ public class ActionMoveElevator extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return UtilityUtils.getMovementUtility(subject, destination.getArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
-	}
-
-	@Override
-	public int repeatCount() {
-		return 1;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return action instanceof ActionMove ||
-			action instanceof ActionMoveExit ||
-			action instanceof ActionMoveElevator;
-	}
-
-	@Override
-	public boolean isBlockedMatch(Action action) {
-		return action instanceof ActionMove ||
-				action instanceof ActionMoveExit ||
-				action instanceof ActionMoveElevator;
+		return UtilityUtils.getMovementUtility(subject, destination.getArea()) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override

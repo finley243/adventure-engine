@@ -403,10 +403,10 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void onVisualEvent(VisualEvent event) {
-		if(event.getAction() instanceof ActionMove) {
+		if(event.getAction() instanceof ActionMoveArea) {
 			for(CombatTarget target : combatTargets) {
 				if(target.getTargetActor() == event.getSubject()) {
-					target.onMoved(((ActionMove) event.getAction()).getArea());
+					target.onMoved(((ActionMoveArea) event.getAction()).getArea());
 				}
 			}
 		} else if(event.getAction() instanceof ActionMoveExit) {

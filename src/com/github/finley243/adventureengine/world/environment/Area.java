@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionMove;
+import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
@@ -187,7 +187,7 @@ public class Area implements Noun {
 		for(AreaLink link : linkedAreas.values()) {
 			if(link.getType() == AreaLink.AreaLinkType.DEFAULT || link.getType() == AreaLink.AreaLinkType.MOVE) {
 				if(link.heightChange() == 0) {
-					moveActions.add(new ActionMove(Data.getArea(link.getAreaID()), link.getDirection()));
+					moveActions.add(new ActionMoveArea(Data.getArea(link.getAreaID()), link.getDirection()));
 				}
 			}
 		}

@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
-public class ActionMoveExit extends Action {
+public class ActionMoveExit extends ActionMove {
 
 	private final ObjectExit exit;
 	
@@ -44,26 +44,7 @@ public class ActionMoveExit extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		return UtilityUtils.getMovementUtility(subject, exit.getLinkedArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
-	}
-
-	@Override
-	public int repeatCount() {
-		return 1;
-	}
-
-	@Override
-	public boolean isRepeatMatch(Action action) {
-		return action instanceof ActionMove ||
-			action instanceof ActionMoveExit ||
-			action instanceof ActionMoveElevator;
-	}
-
-	@Override
-	public boolean isBlockedMatch(Action action) {
-		return action instanceof ActionMove ||
-				action instanceof ActionMoveExit ||
-				action instanceof ActionMoveElevator;
+		return UtilityUtils.getMovementUtility(subject, exit.getLinkedArea()) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override
