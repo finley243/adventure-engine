@@ -10,7 +10,9 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuManager;
+import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
@@ -36,9 +38,13 @@ public class ActorPlayer extends Actor {
 	
 	@Override
 	public void move(Area area) {
+		boolean shouldShowDescription = getArea() != null;
 		super.move(area);
 		Game.EVENT_BUS.post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
-		this.updateAreaDescription();
+		if(shouldShowDescription) {
+			this.updateAreaDescription();
+			this.describeSurroundings();
+		}
 	}
 	
 	@Override
@@ -61,6 +67,17 @@ public class ActorPlayer extends Actor {
 			Game.EVENT_BUS.post(new RenderTextEvent(this.getArea().getDescription()));
 			Game.EVENT_BUS.post(new RenderTextEvent(""));
 		}
+	}
+
+	public void describeSurroundings() {
+		for(Actor actor : getVisibleActors()) {
+			Context context = new Context(actor, false);
+			String line = "<subject> <is> " + actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase();
+			String description = TextGen.generate(line, context);
+			Game.EVENT_BUS.post(new RenderTextEvent(description));
+		}
+		Game.EVENT_BUS.post(new RenderTextEvent(""));
+		TextGen.clearContext();
 	}
 
 }

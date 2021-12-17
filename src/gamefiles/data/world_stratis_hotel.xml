@@ -34,7 +34,7 @@
                 <actor id="stratis_receptionist">
                     <stats>stratis_receptionist</stats>
                     <idle>
-                        <area>stratis_hotel_lobby_desk</area>
+                        <area>stratis_hotel_lobby_desk_behind</area>
                     </idle>
                 </actor>
             </actors>

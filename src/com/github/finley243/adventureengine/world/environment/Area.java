@@ -66,7 +66,7 @@ public class Area implements Noun {
 	
 	@Override
 	public String getName() {
-		return getRelativeName();
+		return getFormattedName(false);
 	}
 	
 	public String getDescription() {
@@ -84,18 +84,9 @@ public class Area implements Noun {
 	
 	@Override
 	public String getFormattedName(boolean indefinite) {
-		/*if(!isProperName()) {
-			return LangUtils.addArticle(name, indefinite);
-		} else {
-			return name;
-		}*/
-		return getRelativeName();
-	}
-
-	public String getRelativeName() {
 		String formattedName;
 		if(!isProperName()) {
-			formattedName = LangUtils.addArticle(name, false);
+			formattedName = LangUtils.addArticle(name, indefinite);
 		} else {
 			formattedName = name;
 		}
@@ -119,11 +110,21 @@ public class Area implements Noun {
 		}
 	}
 
+	public String getRelativeName() {
+		if(nameType == AreaNameType.IN) {
+			return "in " + getFormattedName(false);
+		} else if(nameType == AreaNameType.ON) {
+			return "on " + getFormattedName(false);
+		} else {
+			return getFormattedName(false);
+		}
+	}
+
 	public String getMoveDescription() {
 		if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
-			return "to " + getRelativeName();
+			return "to " + getFormattedName(false);
 		} else {
-			return getRelativeName();
+			return getFormattedName(false);
 		}
 	}
 
@@ -239,6 +240,7 @@ public class Area implements Noun {
 	}
 
 	public AreaLink.RelativeDirection getRelativeDirectionOf(Area other) {
+		if(!linkedAreas.containsKey(other.getID())) return null;
 		return linkedAreas.get(other.getID()).getDirection();
 	}
 

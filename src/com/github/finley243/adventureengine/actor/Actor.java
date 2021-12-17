@@ -763,7 +763,7 @@ public class Actor implements Noun, Physical {
 		Set<Area> visibleAreas = getArea().getVisibleAreas(this);
 		// TODO - Optimize (check if each area is visible once)
 		for(Actor actor : getArea().getRoom().getActors()) {
-			if(visibleAreas.contains(actor.getArea()) && (!actor.isCrouching() || !getArea().isBehindCover(actor.getArea()))) {
+			if(actor != this && visibleAreas.contains(actor.getArea()) && (!actor.isCrouching() || !getArea().isBehindCover(actor.getArea()))) {
 				visibleActors.add(actor);
 			}
 		}

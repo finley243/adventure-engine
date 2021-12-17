@@ -89,6 +89,7 @@ public class Game {
 			}
 		}
 		CombatHelper.newTurn();
+		Data.getPlayer().describeSurroundings();
 		Data.getPlayer().takeTurn();
 	}
 	
