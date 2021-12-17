@@ -1,10 +1,10 @@
 package com.github.finley243.adventureengine.world.environment;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
@@ -180,7 +180,19 @@ public class Area implements Noun {
 		}
 		return nearAreas;
 	}
-	
+
+	public List<Action> getMoveActions() {
+		List<Action> moveActions = new ArrayList<>();
+		for(AreaLink link : linkedAreas.values()) {
+			if(link.getType() == AreaLink.AreaLinkType.DEFAULT || link.getType() == AreaLink.AreaLinkType.MOVE) {
+				if(link.heightChange() == 0) {
+					moveActions.add(new ActionMove(Data.getArea(link.getAreaID()), link.getDirection()));
+				}
+			}
+		}
+		return moveActions;
+	}
+
 	public Set<Area> getMovableAreas() {
 		Set<Area> movableAreas = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
@@ -224,6 +236,10 @@ public class Area implements Noun {
 			}
 		}
 		return false;
+	}
+
+	public AreaLink.RelativeDirection getRelativeDirectionOf(Area other) {
+		return linkedAreas.get(other.getID()).getDirection();
 	}
 
 	@Override

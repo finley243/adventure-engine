@@ -3,7 +3,13 @@ package com.github.finley243.adventureengine.world.environment;
 public class AreaLink {
 
     public enum RelativeDirection {
-        NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST
+        NORTH("N"), SOUTH("S"), EAST("E"), WEST("W"), NORTHEAST("NE"), NORTHWEST("NW"), SOUTHEAST("SE"), SOUTHWEST("SW");
+
+        public final String tag;
+
+        RelativeDirection(String tag) {
+            this.tag = tag;
+        }
     }
 
     // ABOVE/BELOW = can climb up and jump down (e.g. raised front step)

@@ -6,7 +6,7 @@
             <scene>stratis_lobby_intro</scene>
         </scenes>
         <area id="stratis_hotel_lobby_entry">
-            <name proper="false" type="near">main entrance</name>
+            <name proper="false" type="near">entrance</name>
             <areaDescription>The entryway is clean and relatively empty.</areaDescription>
             <links>
                 <link dir="north">stratis_hotel_lobby_desk</link>

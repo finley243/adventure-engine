@@ -11,7 +11,6 @@ import com.github.finley243.adventureengine.actor.ai.*;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -566,9 +565,7 @@ public class Actor implements Noun, Physical {
 			actions.addAll(usingObject.usingActions());
 		}
 		if(canMove()) {
-			for(Area area : getArea().getMovableAreas()) {
-				actions.add(new ActionMove(area));
-			}
+			actions.addAll(getArea().getMoveActions());
 		}
 		for(Item item : inventory.getUniqueItems()) {
 			actions.addAll(item.inventoryActions(this));

@@ -9,15 +9,18 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 public class ActionMove extends Action {
 	
 	public static final float MOVE_UTILITY_MULTIPLIER = 0.7f;
 
 	private final Area area;
+	private final AreaLink.RelativeDirection direction;
 	
-	public ActionMove(Area area) {
+	public ActionMove(Area area, AreaLink.RelativeDirection direction) {
 		this.area = area;
+		this.direction = direction;
 	}
 	
 	public Area getArea() {
@@ -55,7 +58,7 @@ public class ActionMove extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(LangUtils.titleCase(area.getRelativeName()), "Move " + area.getMoveDescription(), canChoose(subject), new String[]{"move"});
+		return new MenuData(LangUtils.titleCase(area.getMoveDescription()) + " (" + direction.tag + ")", "Move " + area.getMoveDescription() + " (" + direction.tag + ")", canChoose(subject), new String[]{"move"});
 	}
 
 	@Override
