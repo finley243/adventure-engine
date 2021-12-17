@@ -40,13 +40,8 @@ public class ActionMove extends Action {
 	}
 	
 	@Override
-	public boolean canRepeat() {
-		return false;
-	}
-
-	@Override
-	public boolean usesAction() {
-		return false;
+	public int repeatCount() {
+		return 1;
 	}
 
 	@Override
@@ -54,6 +49,13 @@ public class ActionMove extends Action {
 		return action instanceof ActionMove ||
 			action instanceof ActionMoveExit ||
 			action instanceof ActionMoveElevator;
+	}
+
+	@Override
+	public boolean isBlockedMatch(Action action) {
+		return action instanceof ActionMove ||
+				action instanceof ActionMoveExit ||
+				action instanceof ActionMoveElevator;
 	}
 	
 	@Override

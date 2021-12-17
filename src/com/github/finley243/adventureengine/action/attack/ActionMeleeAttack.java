@@ -64,14 +64,14 @@ public class ActionMeleeAttack extends ActionAttack {
 		if (!subject.isCombatTarget(getTarget())) return 0;
 		return 0.8f;
 	}
-	
+
 	@Override
-	public int multiCount() {
-		return getWeapon().getRate();
+	public int repeatCount() {
+		return weapon.getRate();
 	}
 
 	@Override
-	public boolean isMultiMatch(Action action) {
+	public boolean isRepeatMatch(Action action) {
 		if(action instanceof ActionMeleeAttack) {
 			return ((ActionMeleeAttack) action).getWeapon() == this.getWeapon();
 		} else {

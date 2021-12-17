@@ -22,8 +22,8 @@ public class ActionCrouch extends Action {
     }
 
     @Override
-    public boolean usesAction() {
-        return false;
+    public int actionPoints() {
+        return 0;
     }
 
 }

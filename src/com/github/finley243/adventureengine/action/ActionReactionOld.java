@@ -37,8 +37,8 @@ public class ActionReactionOld extends Action {
 	}
 
 	@Override
-	public boolean usesAction() {
-		return false;
+	public int actionPoints() {
+		return 0;
 	}
 
 	@Override

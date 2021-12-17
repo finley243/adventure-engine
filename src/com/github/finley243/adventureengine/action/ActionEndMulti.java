@@ -18,6 +18,11 @@ public class ActionEndMulti extends Action {
 	public float utility(Actor subject) {
 		return 0.00001f;
 	}
+
+	@Override
+	public int actionPoints() {
+		return 0;
+	}
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {

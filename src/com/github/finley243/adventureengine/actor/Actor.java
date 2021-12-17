@@ -79,7 +79,7 @@ public class Actor implements Noun, Physical {
 	private boolean endTurn;
 	private int actionPoints;
 	private int multiActionPoints;
-	private final List<Action> blockedActions;
+	private final Map<Action, Integer> blockedActions;
 	// Index: 0 = base, 1 = modifier
 	private final EnumMap<Attribute, int[]> attributes;
 	private final EnumMap<Skill, int[]> skills;
@@ -127,7 +127,7 @@ public class Actor implements Noun, Physical {
 		if(stats.getLootTable() != null) {
 			inventory.addItems(Data.getLootTable(stats.getLootTable()).generateItems());
 		}
-		this.blockedActions = new ArrayList<>();
+		this.blockedActions = new HashMap<>();
 		this.behaviorIdle = new BehaviorIdle(idle);
 		this.isEnabled = true;
 	}
@@ -581,8 +581,8 @@ public class Actor implements Noun, Physical {
 		if(!ignoreBlocked) {
 			for(Action currentAction : actions) {
 				boolean isBlocked = false;
-				for (Action blockedAction : blockedActions) {
-					if (blockedAction.isRepeatMatch(currentAction)) {
+				for (Action blockedAction : blockedActions.keySet()) {
+					if (!(blockedActions.get(blockedAction) > 0 && blockedAction.isRepeatMatch(currentAction)) && blockedAction.isBlockedMatch(currentAction)) {
 						isBlocked = true;
 						break;
 					}
@@ -603,8 +603,6 @@ public class Actor implements Noun, Physical {
 		investigateTarget.nextTurn(this);
 		behaviorIdle.update(this);
 		this.actionPoints = ACTIONS_PER_TURN;
-		this.multiActionPoints = 0;
-		Action multiAction = null;
 		this.blockedActions.clear();
 		this.endTurn = false;
 		while(!endTurn) {
@@ -612,35 +610,25 @@ public class Actor implements Noun, Physical {
 			updatePursueTargets();
 			updateCombatTargets();
 			investigateTarget.update(this);
-			Action chosenAction;
-			if(multiActionPoints > 0) {
-				List<Action> repeatActions = new ArrayList<>();
-				for(Action action : availableActions(true)) {
-					if(multiAction.isMultiMatch(action)) {
-						repeatActions.add(action);
-					}
+			List<Action> availableActions = availableActions(false);
+			for(Action action : availableActions) {
+				if(actionPoints < action.actionPoints()) {
+					action.disable();
 				}
-				repeatActions.add(new ActionEndMulti());
-				chosenAction = chooseAction(repeatActions);
-				multiActionPoints--;
-			} else {
-				List<Action> availableActions = availableActions(false);
-				for(Action action : availableActions) {
-					if(action.usesAction() && actionPoints <= 0) {
-						action.disable();
-					}
+			}
+			Action chosenAction = chooseAction(availableActions);
+			actionPoints -= chosenAction.actionPoints();
+			boolean actionIsBlocked = false;
+			for(Action repeatAction : blockedActions.keySet()) {
+				if(repeatAction.isRepeatMatch(chosenAction)) {
+					int countRemaining = blockedActions.get(repeatAction) - 1;
+					blockedActions.put(repeatAction, countRemaining);
+					actionIsBlocked = true;
+					break;
 				}
-				chosenAction = chooseAction(availableActions);
-				if(chosenAction.usesAction()) {
-					actionPoints--;
-				}
-				if(chosenAction.multiCount() > 1) {
-					multiActionPoints = chosenAction.multiCount() - 1;
-					multiAction = chosenAction;
-				}
-				if(!chosenAction.canRepeat()) {
-					blockedActions.add(chosenAction);
-				}
+			}
+			if(!actionIsBlocked && chosenAction.repeatCount() > 0) {
+				blockedActions.put(chosenAction, chosenAction.repeatCount() - 1);
 			}
 			chosenAction.choose(this);
 		}

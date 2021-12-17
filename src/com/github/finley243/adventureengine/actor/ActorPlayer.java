@@ -71,8 +71,8 @@ public class ActorPlayer extends Actor {
 
 	public void describeSurroundings() {
 		for(Actor actor : getVisibleActors()) {
-			Context context = new Context(actor, false);
-			String line = "<subject> <is> " + actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase();
+			Context context = new Context(actor, false, this, false);
+			String line = "<subject> <is> " + (getArea() == actor.getArea() ? "next to <object>" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
 			String description = TextGen.generate(line, context);
 			Game.EVENT_BUS.post(new RenderTextEvent(description));
 		}

@@ -29,10 +29,10 @@ public class ActionItemDrop extends Action {
 		Context context = new Context(subject, false, item, true);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context, this, subject));
 	}
-	
+
 	@Override
-	public boolean usesAction() {
-		return false;
+	public int actionPoints() {
+		return 0;
 	}
 	
 	@Override

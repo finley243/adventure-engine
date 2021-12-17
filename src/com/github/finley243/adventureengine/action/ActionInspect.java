@@ -27,10 +27,10 @@ public class ActionInspect extends Action {
 			Game.EVENT_BUS.post(new RenderTextEvent(object.getDescription()));
 		}
 	}
-	
+
 	@Override
-	public boolean usesAction() {
-		return false;
+	public int actionPoints() {
+		return 0;
 	}
 	
 	@Override

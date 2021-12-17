@@ -33,12 +33,7 @@ public abstract class ActionAttack extends ActionRandom {
     }
 
     @Override
-    public boolean canRepeat() {
-        return false;
-    }
-
-    @Override
-    public boolean isRepeatMatch(Action action) {
+    public boolean isBlockedMatch(Action action) {
         if(action instanceof ActionAttack) {
             return ((ActionAttack) action).getWeapon() == this.getWeapon();
         } else {

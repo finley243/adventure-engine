@@ -46,15 +46,10 @@ public class ActionMoveExit extends Action {
 	public float utility(Actor subject) {
 		return UtilityUtils.getMovementUtility(subject, exit.getLinkedArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
 	}
-	
-	@Override
-	public boolean canRepeat() {
-		return false;
-	}
 
 	@Override
-	public boolean usesAction() {
-		return false;
+	public int repeatCount() {
+		return 1;
 	}
 
 	@Override
@@ -62,6 +57,13 @@ public class ActionMoveExit extends Action {
 		return action instanceof ActionMove ||
 			action instanceof ActionMoveExit ||
 			action instanceof ActionMoveElevator;
+	}
+
+	@Override
+	public boolean isBlockedMatch(Action action) {
+		return action instanceof ActionMove ||
+				action instanceof ActionMoveExit ||
+				action instanceof ActionMoveElevator;
 	}
 	
 	@Override

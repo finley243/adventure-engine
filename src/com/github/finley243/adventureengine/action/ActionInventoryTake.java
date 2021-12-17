@@ -29,11 +29,11 @@ public class ActionInventoryTake extends Action {
         Context context = new Context(subject, false, item, true, owner, false);
         Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
-    
+
     @Override
-	public boolean usesAction() {
-		return false;
-	}
+    public int actionPoints() {
+        return 0;
+    }
 
     @Override
     public MenuData getMenuData(Actor subject) {

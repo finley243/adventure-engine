@@ -33,10 +33,10 @@ public class ActionItemTake extends Action {
 			return 0.0f;
 		}
 	}
-	
+
 	@Override
-	public boolean usesAction() {
-		return false;
+	public int actionPoints() {
+		return 0;
 	}
 	
 	@Override

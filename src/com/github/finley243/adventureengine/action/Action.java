@@ -26,23 +26,19 @@ public abstract class Action {
 		return 0.0f;
 	}
 
-	public boolean usesAction() {
-		return true;
+	public int actionPoints() {
+		return 1;
 	}
 	
-	public boolean canRepeat() {
-		return true;
+	public int repeatCount() {
+		return 0;
 	}
 
 	public boolean isRepeatMatch(Action action) {
 		return false;
 	}
-	
-	public int multiCount() {
-		return 1;
-	}
 
-	public boolean isMultiMatch(Action action) {
+	public boolean isBlockedMatch(Action action) {
 		return false;
 	}
 

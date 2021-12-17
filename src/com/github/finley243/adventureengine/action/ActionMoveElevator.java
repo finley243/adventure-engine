@@ -46,15 +46,10 @@ public class ActionMoveElevator extends Action {
 	public float utility(Actor subject) {
 		return UtilityUtils.getMovementUtility(subject, destination.getArea()) * ActionMove.MOVE_UTILITY_MULTIPLIER;
 	}
-	
-	@Override
-	public boolean canRepeat() {
-		return false;
-	}
 
 	@Override
-	public boolean usesAction() {
-		return false;
+	public int repeatCount() {
+		return 1;
 	}
 
 	@Override
@@ -62,6 +57,13 @@ public class ActionMoveElevator extends Action {
 		return action instanceof ActionMove ||
 			action instanceof ActionMoveExit ||
 			action instanceof ActionMoveElevator;
+	}
+
+	@Override
+	public boolean isBlockedMatch(Action action) {
+		return action instanceof ActionMove ||
+				action instanceof ActionMoveExit ||
+				action instanceof ActionMoveElevator;
 	}
 	
 	@Override

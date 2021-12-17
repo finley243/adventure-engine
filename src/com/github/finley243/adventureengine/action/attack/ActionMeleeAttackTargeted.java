@@ -64,6 +64,11 @@ public class ActionMeleeAttackTargeted extends ActionAttack {
 	}
 
 	@Override
+	public int repeatCount() {
+		return 1;
+	}
+
+	@Override
 	public float utility(Actor subject) {
 		if (!subject.isCombatTarget(getTarget())) return 0;
 		return 0.8f;

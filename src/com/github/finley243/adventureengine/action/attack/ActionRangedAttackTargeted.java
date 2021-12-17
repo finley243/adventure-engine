@@ -71,6 +71,11 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 		if (!subject.isCombatTarget(getTarget())) return 0;
 		return 0.8f;
 	}
+
+	@Override
+	public int repeatCount() {
+		return 1;
+	}
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {

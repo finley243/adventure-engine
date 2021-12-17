@@ -18,10 +18,10 @@ public class ActionEnd extends Action {
 	public float utility(Actor subject) {
 		return 0.00001f;
 	}
-	
+
 	@Override
-	public boolean usesAction() {
-		return false;
+	public int actionPoints() {
+		return 0;
 	}
 	
 	@Override
