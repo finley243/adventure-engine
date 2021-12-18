@@ -144,13 +144,18 @@ public class ItemWeapon extends ItemEquippable {
 	}
 	
 	@Override
-	public boolean equalsInventory(Item o) {
+	public boolean equals(Object o) {
 		if(!(o instanceof ItemWeapon)) {
 			return false;
 		} else {
 			ItemWeapon other = (ItemWeapon) o;
 			return this.stats == other.stats;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return stats.getID().hashCode();
 	}
 
 }

@@ -33,8 +33,6 @@ public abstract class Item extends WorldObject {
 	public void setArea(Area area) {
 		super.setArea(area);
 	}
-	
-	public abstract boolean equalsInventory(Item other);
 
 	@Override
 	public List<Action> localActions(Actor subject) {

@@ -49,12 +49,17 @@ public class ItemConsumable extends Item {
 	}
 	
 	@Override
-	public boolean equalsInventory(Item other) {
+	public boolean equals(Object other) {
 		if(!(other instanceof ItemConsumable)) {
 			return false;
 		} else {
 			return ((ItemConsumable) other).stats.equals(this.stats);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return stats.getID().hashCode();
 	}
 	
 }

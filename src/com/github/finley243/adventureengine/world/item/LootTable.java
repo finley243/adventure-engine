@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.item;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,8 +22,8 @@ public class LootTable {
 		return ID;
 	}
 	
-	public Set<Item> generateItems() {
-		Set<Item> generatedItems = new HashSet<>();
+	public List<Item> generateItems() {
+		List<Item> generatedItems = new ArrayList<>();
 		if(useAll) {
 			for(LootTableEntry entry : entries) {
 				generatedItems.addAll(entry.generateItems());

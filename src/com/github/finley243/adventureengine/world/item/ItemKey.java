@@ -22,12 +22,17 @@ public class ItemKey extends Item {
 	}
 	
 	@Override
-	public boolean equalsInventory(Item other) {
+	public boolean equals(Object other) {
 		if(!(other instanceof ItemKey)) {
 			return false;
 		} else {
 			return ((ItemKey) other).stats.equals(this.stats);
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return stats.getID().hashCode();
 	}
 
 }

@@ -22,7 +22,7 @@ public class Inventory {
 		items.get(item.getStatsID()).add(item);
 	}
 	
-	public void addItems(Set<Item> itemSet) {
+	public void addItems(List<Item> itemSet) {
 		for(Item item : itemSet) {
 			addItem(item);
 		}
@@ -51,8 +51,8 @@ public class Inventory {
 		items.clear();
 	}
 	
-	public Set<Item> getUniqueItems() {
-		Set<Item> uniqueItems = new HashSet<>();
+	public List<Item> getUniqueItems() {
+		List<Item> uniqueItems = new ArrayList<>();
 		for(List<Item> current : items.values()) {
 			uniqueItems.add(current.get(0));
 		}

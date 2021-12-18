@@ -76,13 +76,18 @@ public class ItemApparel extends Item {
 	}
 	
 	@Override
-	public boolean equalsInventory(Item o) {
+	public boolean equals(Object o) {
 		if(!(o instanceof ItemApparel)) {
 			return false;
 		} else {
 			ItemApparel other = (ItemApparel) o;
 			return this.stats == other.stats;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return stats.getID().hashCode();
 	}
 
 }

@@ -11,11 +11,8 @@ import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
-import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
-import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.item.ItemDistraction;
 import com.github.finley243.adventureengine.world.template.ActorFactory;
 import com.github.finley243.adventureengine.world.template.ItemFactory;
 import com.google.common.eventbus.EventBus;
@@ -58,9 +55,6 @@ public class Game {
 		Actor player = ActorFactory.createPlayer(Data.getConfig("playerID"), Data.getArea(Data.getConfig("playerStartArea")), Data.getActorStats(Data.getConfig("playerStats")));
 		Data.addActor(player.getID(), player);
 		player.adjustMoney(320);
-
-		Item coin = new ItemDistraction("coin");
-		Data.getPlayer().inventory().addItem(coin);
 
 		Data.getPlayer().inventory().addItem(ItemFactory.create("tactical_vest"));
 		Data.getPlayer().inventory().addItem(ItemFactory.create("tactical_helmet"));
