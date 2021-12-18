@@ -466,7 +466,7 @@ public class Actor implements Noun, Physical {
 	}
 
 	public boolean hasWeapon() {
-		for(Item item : inventory.getItems()) {
+		for(Item item : inventory.getUniqueItems()) {
 			if(item instanceof ItemWeapon) {
 				return true;
 			}
@@ -507,7 +507,7 @@ public class Actor implements Noun, Physical {
 				action.add(new ActionTalk(this));
 			}
 		} else { // Dead
-			action.addAll(inventory.getActions(this));
+			action.addAll(inventory.getExternalActions(this));
 		}
 		return action;
 	}

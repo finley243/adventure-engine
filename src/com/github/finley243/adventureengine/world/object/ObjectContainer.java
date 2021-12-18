@@ -20,7 +20,7 @@ public class ObjectContainer extends WorldObject {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
-		actions.addAll(inventory.getActions(this));
+		actions.addAll(inventory.getExternalActions(this));
 		return actions;
 	}
 
