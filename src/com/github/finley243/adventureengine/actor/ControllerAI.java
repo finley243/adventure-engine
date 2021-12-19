@@ -2,19 +2,23 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
+import com.github.finley243.adventureengine.event.SoundEvent;
+import com.github.finley243.adventureengine.event.VisualEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class BehaviorAI implements BehaviorComponent {
+public class ControllerAI implements ControllerComponent {
 
     private final Actor actor;
     private final TargetManager targetManager;
+    private final BehaviorIdle behaviorIdle;
 
-    public BehaviorAI(Actor actor) {
+    public ControllerAI(Actor actor, List<String> idle) {
         this.actor = actor;
         targetManager = new TargetManager(actor);
+        behaviorIdle = new BehaviorIdle(idle);
     }
 
     public Action chooseAction(List<Action> actions) {
@@ -62,11 +66,22 @@ public class BehaviorAI implements BehaviorComponent {
     @Override
     public void onStartTurn() {
         targetManager.onStartTurn();
+        behaviorIdle.update(actor);
     }
 
     @Override
     public void onStartAction() {
         targetManager.onStartAction();
+    }
+
+    @Override
+    public void onVisualEvent(VisualEvent e) {
+        targetManager.onVisualEvent(e);
+    }
+
+    @Override
+    public void onSoundEvent(SoundEvent e) {
+        targetManager.onSoundEvent(e);
     }
 
 }

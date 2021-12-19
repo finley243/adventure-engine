@@ -1,9 +1,14 @@
 package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.action.ActionMoveArea;
+import com.github.finley243.adventureengine.action.ActionMoveElevator;
+import com.github.finley243.adventureengine.action.ActionMoveExit;
 import com.github.finley243.adventureengine.actor.ai.CombatTarget;
 import com.github.finley243.adventureengine.actor.ai.InvestigateTarget;
 import com.github.finley243.adventureengine.actor.ai.PursueTarget;
+import com.github.finley243.adventureengine.event.SoundEvent;
+import com.github.finley243.adventureengine.event.VisualEvent;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -48,6 +53,23 @@ public class TargetManager {
         return pursueTargets;
     }
 
+    public boolean isInCombat() {
+        return combatTargets.size() > 0;
+    }
+
+    public boolean hasMeleeTargets() {
+        for(CombatTarget target : combatTargets) {
+            if(target.getTargetActor().getArea() == actor.getArea()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean shouldFleeFrom(Actor target) {
+        return actor.hasRangedWeaponEquipped() && target.hasMeleeWeaponEquipped();
+    }
+
     public void onStartTurn() {
         updateCombatTargetsTurn();
         investigateTarget.nextTurn(actor);
@@ -58,6 +80,32 @@ public class TargetManager {
         updatePursueTargets();
         updateCombatTargets();
         investigateTarget.update(actor);
+    }
+
+    public void onVisualEvent(VisualEvent e) {
+        if(e.getAction() instanceof ActionMoveArea) {
+            for(CombatTarget target : combatTargets) {
+                if(target.getTargetActor() == e.getSubject()) {
+                    target.onMoved(((ActionMoveArea) e.getAction()).getArea());
+                }
+            }
+        } else if(e.getAction() instanceof ActionMoveExit) {
+            for(CombatTarget target : combatTargets) {
+                if(target.getTargetActor() == e.getSubject()) {
+                    target.onUsedExit(((ActionMoveExit) e.getAction()).getExit());
+                }
+            }
+        } else if(e.getAction() instanceof ActionMoveElevator) {
+            for(CombatTarget target : combatTargets) {
+                if(target.getTargetActor() == e.getSubject()) {
+                    target.onUsedElevator(((ActionMoveElevator) e.getAction()).getElevator());
+                }
+            }
+        }
+    }
+
+    public void onSoundEvent(SoundEvent event) {
+        investigateTarget.setTargetArea(event.getOrigin());
     }
 
     private void generateCombatTargets() {

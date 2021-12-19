@@ -5,12 +5,12 @@ import com.github.finley243.adventureengine.menu.MenuManager;
 
 import java.util.List;
 
-public class BehaviorPlayer implements BehaviorComponent {
+public class ControllerPlayer implements ControllerComponent {
 
     private final MenuManager menuManager;
     private final Actor actor;
 
-    public BehaviorPlayer(Actor actor) {
+    public ControllerPlayer(Actor actor) {
         this.actor = actor;
         menuManager = new MenuManager();
     }
