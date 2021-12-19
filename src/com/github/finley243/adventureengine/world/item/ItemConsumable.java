@@ -14,7 +14,7 @@ public class ItemConsumable extends Item {
 	private final StatsConsumable stats;
 	
 	public ItemConsumable(StatsConsumable stats) {
-		super(stats.getName());
+		super(stats.generateInstanceID(), stats.getName());
 		this.stats = stats;
 	}
 	

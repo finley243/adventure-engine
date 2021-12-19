@@ -6,6 +6,8 @@ import com.github.finley243.adventureengine.world.Noun;
 
 public abstract class StatsItem implements Noun {
 
+	private int generatedCount;
+
 	private final String ID;
 	private final String name;
 	private final String description;
@@ -16,6 +18,13 @@ public abstract class StatsItem implements Noun {
 		this.name = name;
 		this.description = description;
 		this.price = price;
+		this.generatedCount = 1;
+	}
+
+	public String generateInstanceID() {
+		String newID = ID + "_" + generatedCount;
+		generatedCount += 1;
+		return newID;
 	}
 	
 	public String getID() {

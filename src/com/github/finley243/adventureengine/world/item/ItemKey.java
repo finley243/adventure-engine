@@ -7,7 +7,7 @@ public class ItemKey extends Item {
 	private final StatsKey stats;
 	
 	public ItemKey(StatsKey stats) {
-		super(stats.getName());
+		super(stats.generateInstanceID(), stats.getName());
 		this.stats = stats;
 	}
 	

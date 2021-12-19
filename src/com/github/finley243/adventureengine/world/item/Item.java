@@ -14,10 +14,8 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public abstract class Item extends WorldObject {
 
-	private static int idCounter = 0;
-
-	public Item(String name) {
-		super(name + idCounter, name, null);
+	public Item(String ID, String name) {
+		super(ID, name, null);
 	}
 	
 	public int getPrice() {
@@ -28,11 +26,6 @@ public abstract class Item extends WorldObject {
 	
 	@Override
 	public abstract String getDescription();
-	
-	@Override
-	public void setArea(Area area) {
-		super.setArea(area);
-	}
 
 	@Override
 	public List<Action> localActions(Actor subject) {

@@ -17,7 +17,7 @@ public class ItemApparel extends Item {
 	private List<Effect> effects;
 	
 	public ItemApparel(StatsApparel stats) {
-		super(stats.getName());
+		super(stats.generateInstanceID(), stats.getName());
 		this.stats = stats;
 	}
 	

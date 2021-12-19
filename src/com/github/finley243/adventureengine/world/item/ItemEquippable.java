@@ -10,8 +10,8 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public abstract class ItemEquippable extends Item {
 
-	public ItemEquippable(String name) {
-		super(name);
+	public ItemEquippable(String ID, String name) {
+		super(ID, name);
 	}
 	
 	public List<Action> equippedActions(Actor subject) {
