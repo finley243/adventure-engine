@@ -12,9 +12,11 @@ public class ApparelManager {
     }
 
     private final Map<ApparelSlot, ItemApparel> equipped;
+    private final Actor actor;
 
-    public ApparelManager() {
+    public ApparelManager(Actor actor) {
         equipped = new EnumMap<>(ApparelSlot.class);
+        this.actor = actor;
     }
 
     public int getDamageResistance(ApparelSlot slot) {
@@ -30,17 +32,17 @@ public class ApparelManager {
         return isSlotEmpty(item.getApparelSlot());
     }
 
-    public void equip(ItemApparel item, Actor subject) {
+    public void equip(ItemApparel item) {
         ItemApparel lastEquipped = equipped.get(item.getApparelSlot());
         if(lastEquipped != null) {
-            lastEquipped.unequip(subject);
+            lastEquipped.unequip(actor);
         }
         equipped.put(item.getApparelSlot(), item);
-        item.equip(subject);
+        item.equip(actor);
     }
 
-    public void unequip(ItemApparel item, Actor subject) {
-        item.unequip(subject);
+    public void unequip(ItemApparel item) {
+        item.unequip(actor);
         equipped.put(item.getApparelSlot(), null);
     }
 

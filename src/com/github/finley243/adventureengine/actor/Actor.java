@@ -78,19 +78,17 @@ public class Actor implements Noun, Physical {
 	private boolean isUnconscious;
 	private boolean endTurn;
 	private int actionPoints;
-	private int multiActionPoints;
 	private final Map<Action, Integer> blockedActions;
 	// Index: 0 = base, 1 = modifier
 	private final EnumMap<Attribute, int[]> attributes;
 	private final EnumMap<Skill, int[]> skills;
-	private final List<Effect> effects;
+	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final ApparelManager apparelManager;
 	private ItemEquippable equippedItem;
 	private int money;
 	private UsableObject usingObject;
 	private boolean isCrouching;
-	private Inventory tradeInventory;
 	private final Set<CombatTarget> combatTargets;
 	private final Set<PursueTarget> pursueTargets;
 	private final InvestigateTarget investigateTarget;
@@ -114,7 +112,7 @@ public class Actor implements Noun, Physical {
 			HP = stats.getMaxHP();
 		}
 		this.inventory = new Inventory();
-		this.apparelManager = new ApparelManager();
+		this.apparelManager = new ApparelManager(this);
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, new int[] {stats.getAttribute(attribute), 0});
@@ -123,7 +121,7 @@ public class Actor implements Noun, Physical {
 		for(Skill skill : Skill.values()) {
 			this.skills.put(skill, new int[] {stats.getSkill(skill), 0});
 		}
-		this.effects = new ArrayList<>();
+		this.effectComponent = new EffectComponent(this);
 		if(stats.getLootTable() != null) {
 			inventory.addItems(Data.getLootTable(stats.getLootTable()).generateItems());
 		}
@@ -301,10 +299,6 @@ public class Actor implements Noun, Physical {
 		return stats.getLimbs();
 	}
 	
-	public Inventory getTradeInventory() {
-		return tradeInventory;
-	}
-	
 	public void setEquippedItem(ItemEquippable item) {
 		equippedItem = item;
 	}
@@ -324,17 +318,9 @@ public class Actor implements Noun, Physical {
 	public void adjustMoney(int value) {
 		money += value;
 	}
-	
-	public void addEffect(Effect effect) {
-		effect.update(this);
-		if(!effect.shouldRemove()) {
-			effects.add(effect);
-		}
-	}
 
-	public void removeEffect(Effect effect) {
-		effect.end(this);
-		effects.remove(effect);
+	public EffectComponent effectComponent() {
+		return effectComponent;
 	}
 	
 	public void heal(int amount) {
@@ -598,7 +584,7 @@ public class Actor implements Noun, Physical {
 	
 	public void takeTurn() {
 		if(!isActive() || !isEnabled()) return;
-		updateEffects();
+		effectComponent().onStartTurn();
 		updateCombatTargetsTurn();
 		investigateTarget.nextTurn(this);
 		behaviorIdle.update(this);
@@ -637,10 +623,6 @@ public class Actor implements Noun, Physical {
 	public void endTurn() {
 		actionPoints = 0;
 		endTurn = true;
-	}
-	
-	public void endMultiAction() {
-		multiActionPoints = 0;
 	}
 	
 	public Action chooseAction(List<Action> actions) {
@@ -683,17 +665,6 @@ public class Actor implements Noun, Physical {
 			}
 		}
 		return null;
-	}
-	
-	private void updateEffects() {
-		Iterator<Effect> itr = effects.iterator();
-		while(itr.hasNext()) {
-			Effect effect = itr.next();
-			effect.update(this);
-			if(effect.shouldRemove()) {
-				itr.remove();
-			}
-		}
 	}
 	
 	private void generateCombatTargets() {

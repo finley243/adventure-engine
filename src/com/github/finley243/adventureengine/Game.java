@@ -35,7 +35,7 @@ public class Game {
 	
 	private final PerceptionHandler perceptionHandler;
 	private final UserInterface userInterface;
-	
+
 	private boolean continueGameLoop;
 
 	public static final ThreadControl THREAD_CONTROL = new ThreadControl();
