@@ -1,11 +1,10 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
 
 import java.util.*;
 
-public class ApparelManager {
+public class EquipmentComponent {
 
     public enum ApparelSlot {
         HEAD, TORSO, LEGS
@@ -14,7 +13,7 @@ public class ApparelManager {
     private final Map<ApparelSlot, ItemApparel> equipped;
     private final Actor actor;
 
-    public ApparelManager(Actor actor) {
+    public EquipmentComponent(Actor actor) {
         equipped = new EnumMap<>(ApparelSlot.class);
         this.actor = actor;
     }

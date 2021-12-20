@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionApparelEquip;
 import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ApparelManager;
+import com.github.finley243.adventureengine.actor.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.world.template.StatsApparel;
 
@@ -36,7 +36,7 @@ public class ItemApparel extends Item {
 		return stats.getID();
 	}
 
-	public ApparelManager.ApparelSlot getApparelSlot() {
+	public EquipmentComponent.ApparelSlot getApparelSlot() {
 		return stats.getSlot();
 	}
 

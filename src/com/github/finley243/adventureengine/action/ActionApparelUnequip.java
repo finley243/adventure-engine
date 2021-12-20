@@ -14,7 +14,7 @@ public class ActionApparelUnequip extends Action {
 
     @Override
     public void choose(Actor subject) {
-        subject.apparelManager().unequip(item);
+        subject.equipmentComponent().unequip(item);
         subject.inventory().addItem(item);
     }
 

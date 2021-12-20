@@ -15,10 +15,10 @@ public class Limb {
     private final String rangedMissPhrase;
     private final float hitChance;
     private final float damageMult;
-    private final ApparelManager.ApparelSlot apparelSlot;
+    private final EquipmentComponent.ApparelSlot apparelSlot;
     private final List<Effect> hitEffects;
 
-    public Limb(String name, String meleeHitPhrase, String meleeCritHitPhrase, String meleeMissPhrase, String rangedHitPhrase, String rangedCritHitPhrase, String rangedMissPhrase, float hitChance, float damageMult, ApparelManager.ApparelSlot apparelSlot, List<Effect> hitEffects) {
+    public Limb(String name, String meleeHitPhrase, String meleeCritHitPhrase, String meleeMissPhrase, String rangedHitPhrase, String rangedCritHitPhrase, String rangedMissPhrase, float hitChance, float damageMult, EquipmentComponent.ApparelSlot apparelSlot, List<Effect> hitEffects) {
         this.name = name;
         this.meleeHitPhrase = meleeHitPhrase;
         this.meleeCritHitPhrase = meleeCritHitPhrase;
@@ -68,7 +68,7 @@ public class Limb {
         return damageMult;
     }
 
-    public ApparelManager.ApparelSlot getApparelSlot() {
+    public EquipmentComponent.ApparelSlot getApparelSlot() {
         return apparelSlot;
     }
 

@@ -83,7 +83,7 @@ public class Actor implements Noun, Physical {
 	private final EnumMap<Skill, int[]> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
-	private final ApparelManager apparelManager;
+	private final EquipmentComponent equipmentComponent;
 	private ItemEquippable equippedItem;
 	private int money;
 	private UsableObject usingObject;
@@ -112,7 +112,7 @@ public class Actor implements Noun, Physical {
 			HP = stats.getMaxHP();
 		}
 		this.inventory = new Inventory();
-		this.apparelManager = new ApparelManager(this);
+		this.equipmentComponent = new EquipmentComponent(this);
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, new int[] {stats.getAttribute(attribute), 0});
@@ -300,8 +300,8 @@ public class Actor implements Noun, Physical {
 		return inventory;
 	}
 
-	public ApparelManager apparelManager() {
-		return apparelManager;
+	public EquipmentComponent equipmentComponent() {
+		return equipmentComponent;
 	}
 
 	public List<Limb> getLimbs() {
@@ -344,7 +344,7 @@ public class Actor implements Noun, Physical {
 	
 	public void damage(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();
-		amount -= apparelManager.getDamageResistance(ApparelManager.ApparelSlot.TORSO);
+		amount -= equipmentComponent.getDamageResistance(EquipmentComponent.ApparelSlot.TORSO);
 		HP -= amount;
 		if(HP <= 0) {
 			HP = 0;
@@ -357,7 +357,7 @@ public class Actor implements Noun, Physical {
 
 	public void damageLimb(int amount, Limb limb) {
 		if(amount < 0) throw new IllegalArgumentException();
-		amount -= apparelManager.getDamageResistance(limb.getApparelSlot());
+		amount -= equipmentComponent.getDamageResistance(limb.getApparelSlot());
 		if(amount < 0) amount = 0;
 		if(amount > 0) {
 			limb.applyEffects(this);
@@ -533,7 +533,7 @@ public class Actor implements Noun, Physical {
 		}
 	}
 
-	public List<Action> availableActions(boolean ignoreBlocked){
+	public List<Action> availableActions(){
 		List<Action> actions = new ArrayList<>();
 		if(hasEquippedItem()) {
 			actions.addAll(equippedItem.equippedActions(this));
@@ -569,7 +569,7 @@ public class Actor implements Noun, Physical {
 		for(Item item : inventory.getUniqueItems()) {
 			actions.addAll(item.inventoryActions(this));
 		}
-		for(ItemApparel item : apparelManager.getEquippedItems()) {
+		for(ItemApparel item : equipmentComponent.getEquippedItems()) {
 			actions.addAll(item.equippedActions(this));
 		}
 		if(isCrouching()) {
@@ -577,18 +577,16 @@ public class Actor implements Noun, Physical {
 		} else {
 			actions.add(new ActionCrouch());
 		}
-		if(!ignoreBlocked) {
-			for(Action currentAction : actions) {
-				boolean isBlocked = false;
-				for (Action blockedAction : blockedActions.keySet()) {
-					if (!(blockedActions.get(blockedAction) > 0 && blockedAction.isRepeatMatch(currentAction)) && blockedAction.isBlockedMatch(currentAction)) {
-						isBlocked = true;
-						break;
-					}
+		for(Action currentAction : actions) {
+			boolean isBlocked = false;
+			for (Action blockedAction : blockedActions.keySet()) {
+				if (!(blockedActions.get(blockedAction) > 0 && blockedAction.isRepeatMatch(currentAction)) && blockedAction.isBlockedMatch(currentAction)) {
+					isBlocked = true;
+					break;
 				}
-				if (isBlocked) {
-					currentAction.disable();
-				}
+			}
+			if (isBlocked) {
+				currentAction.disable();
 			}
 		}
 		actions.add(new ActionEnd());
@@ -609,7 +607,7 @@ public class Actor implements Noun, Physical {
 			updatePursueTargets();
 			updateCombatTargets();
 			investigateTarget.update(this);
-			List<Action> availableActions = availableActions(false);
+			List<Action> availableActions = availableActions();
 			for(Action action : availableActions) {
 				if(actionPoints < action.actionPoints()) {
 					action.disable();

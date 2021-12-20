@@ -114,7 +114,7 @@ public class DataLoader {
         String rangedMissPhrase = LoadUtils.singleTag(element, "rangedMissPhrase", null);
         float hitChance = LoadUtils.singleTagFloat(element, "hitChance", 1.0f);
         float damageMult = LoadUtils.singleTagFloat(element, "damageMult", 1.0f);
-        ApparelManager.ApparelSlot apparelSlot = ApparelManager.ApparelSlot.valueOf(LoadUtils.singleTag(element, "apparelSlot", "TORSO"));
+        EquipmentComponent.ApparelSlot apparelSlot = EquipmentComponent.ApparelSlot.valueOf(LoadUtils.singleTag(element, "apparelSlot", "TORSO"));
         List<Effect> crippledEffects = loadEffects(LoadUtils.singleChildWithName(element, "effects"), false);
         return new Limb(name, meleeHitPhrase, meleeCritHitPhrase, meleeMissPhrase, rangedHitPhrase, rangedCritHitPhrase, rangedMissPhrase, hitChance, damageMult, apparelSlot, crippledEffects);
     }
@@ -382,7 +382,7 @@ public class DataLoader {
         int price = LoadUtils.singleTagInt(itemElement, "price", 0);
         switch(type) {
             case "apparel":
-                ApparelManager.ApparelSlot apparelSlot = ApparelManager.ApparelSlot.valueOf(LoadUtils.singleTag(itemElement, "slot", "TORSO"));
+                EquipmentComponent.ApparelSlot apparelSlot = EquipmentComponent.ApparelSlot.valueOf(LoadUtils.singleTag(itemElement, "slot", "TORSO"));
                 int damageResistance = LoadUtils.singleTagInt(itemElement, "damageResistance", 0);
                 List<Effect> apparelEffects = loadEffects(itemElement, true);
                 return new StatsApparel(id, name, description, price, apparelSlot, damageResistance, apparelEffects);
