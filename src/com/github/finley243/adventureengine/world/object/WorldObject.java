@@ -84,11 +84,6 @@ public abstract class WorldObject implements Noun, Physical {
 	public List<Action> adjacentActions(Actor subject) {
 		return new ArrayList<>();
 	}
-	
-	@Override
-	public List<Action> remoteActions(Actor subject) {
-		return new ArrayList<>();
-	}
 
 	@Override
 	public int hashCode() {

@@ -21,7 +21,4 @@ public interface Physical {
 	// Actions that can be performed across near-linked areas
 	List<Action> adjacentActions(Actor subject);
 	
-	// Actions that can be performed anywhere within the same room
-	List<Action> remoteActions(Actor subject);
-	
 }

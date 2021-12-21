@@ -511,11 +511,6 @@ public class Actor implements Noun, Physical {
 		}
 		return action;
 	}
-	
-	@Override
-	public List<Action> remoteActions(Actor subject) {
-		return new ArrayList<>();
-	}
 
 	private void actionTalk(Actor subject) {
 		if(subject instanceof ActorPlayer) {
@@ -536,9 +531,6 @@ public class Actor implements Noun, Physical {
 				actions.addAll(actor.adjacentActions(this));
 			}
 		}
-		for(Actor actor : getVisibleActors()) {
-			actions.addAll(actor.remoteActions(this));
-		}
 		for(WorldObject object : getArea().getObjects()) {
 			actions.addAll(object.localActions(this));
 		}
@@ -546,9 +538,6 @@ public class Actor implements Noun, Physical {
 			for(WorldObject object : nearArea.getObjects()) {
 				actions.addAll(object.adjacentActions(this));
 			}
-		}
-		for(WorldObject object : getVisibleObjects()) {
-			actions.addAll(object.remoteActions(this));
 		}
 		if(isUsingObject()) {
 			actions.addAll(usingObject.usingActions());
