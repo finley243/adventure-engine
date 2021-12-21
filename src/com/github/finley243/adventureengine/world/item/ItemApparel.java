@@ -50,14 +50,14 @@ public class ItemApparel extends Item {
 		for(Effect effect : stats.getEffects()) {
 			Effect generatedEffect = effect.generate();
 			effects.add(generatedEffect);
-			target.addEffect(generatedEffect);
+			target.effectComponent().addEffect(generatedEffect);
 		}
 	}
 
 	public void unequip(Actor target) {
 		if(effects == null) throw new UnsupportedOperationException("Cannot unequip ItemApparel " + this.getStatsID() + " because it is not equipped");
 		for(Effect effect : effects) {
-			target.removeEffect(effect);
+			target.effectComponent().removeEffect(effect);
 		}
 		effects = null;
 	}

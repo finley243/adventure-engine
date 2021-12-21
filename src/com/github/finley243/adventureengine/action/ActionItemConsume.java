@@ -34,7 +34,7 @@ public class ActionItemConsume extends Action {
 			break;
 		}
 		for(Effect effect : item.getEffects()) {
-			subject.addEffect(effect.generate());
+			subject.effectComponent().addEffect(effect.generate());
 		}
 	}
 	

@@ -93,9 +93,8 @@ public class Actor implements Noun, Physical {
 	private final InvestigateTarget investigateTarget;
 	private final BehaviorIdle behaviorIdle;
 	private final boolean preventMovement;
-	private final ControllerComponent controller;
-	
-	public Actor(String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead, boolean isPlayer) {
+
+	public Actor(String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead) {
 		this.ID = ID;
 		if(area != null) {
 			this.move(area);
@@ -128,11 +127,6 @@ public class Actor implements Noun, Physical {
 		this.blockedActions = new HashMap<>();
 		this.behaviorIdle = new BehaviorIdle(idle);
 		this.isEnabled = true;
-		if(isPlayer) {
-			this.controller = new ControllerPlayer(this);
-		} else {
-			this.controller = new ControllerAI(this, idle);
-		}
 	}
 	
 	public String getID() {
@@ -186,10 +180,6 @@ public class Actor implements Noun, Physical {
 				area.removeActor(this);
 			}
 		}
-	}
-
-	public ControllerComponent controller() {
-		return controller;
 	}
 	
 	public int getAttribute(Attribute attribute) {
