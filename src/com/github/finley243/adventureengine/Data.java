@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.network.Network;
-import com.github.finley243.adventureengine.quest.Quest;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -33,7 +32,6 @@ public class Data {
 	private static final Map<String, Integer> variables = new HashMap<>();
 	private static final Map<String, Faction> factions = new HashMap<>();
 	private static final Map<String, Scene> scenes = new HashMap<>();
-	private static final Map<String, Quest> quests = new HashMap<>();
 	private static final Map<String, Network> networks = new HashMap<>();
 	
 	public static void addConfig(String id, String value) {
@@ -169,16 +167,6 @@ public class Data {
 	
 	public static Collection<Scene> getScenes() {
 		return scenes.values();
-	}
-	
-	public static void addQuest(String id, Quest value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add quest with blank ID");
-		if(quests.containsKey(id)) throw new IllegalArgumentException("Cannot add quest with existing ID: " + id);
-		quests.put(id, value);
-	}
-	
-	public static Quest getQuest(String id) {
-		return quests.get(id);
 	}
 
 	public static void addNetwork(String id, Network value) {
