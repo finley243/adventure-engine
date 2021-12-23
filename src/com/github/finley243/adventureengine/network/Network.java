@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.network;
 
-import com.github.finley243.adventureengine.network.action.NetworkAction;
+import com.github.finley243.adventureengine.action.network.NetworkAction;
 import com.github.finley243.adventureengine.world.Networked;
 
 import java.util.ArrayList;
@@ -76,8 +76,10 @@ public class Network {
 
     private static class SubNetwork {
 
-        final List<Networked> connected;
-        final int securityLevel;
+        private final List<Networked> connected;
+        private final int securityLevel;
+
+        private boolean isBreached;
 
         public SubNetwork(int securityLevel) {
             this.connected = new ArrayList<>();
