@@ -40,12 +40,12 @@ public class CombatTarget {
 			lastKnownArea = targetActor.getArea();
 			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 			pursueTarget.setTargetArea(targetActor.getArea());
-			pursueTarget.setShouldFlee(subject.shouldFleeFrom(targetActor));
+			pursueTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, this));
+			pursueTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, this));
 			pursueTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
 		} else {
 			pursueTarget.setTargetArea(lastKnownArea);
 			pursueTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
-			//turnsUntilRemove--;
 		}
 		if(shouldRemove()) {
 			pursueTarget.markForRemoval();
@@ -71,6 +71,10 @@ public class CombatTarget {
 	
 	public Actor getTargetActor() {
 		return targetActor;
+	}
+
+	public int getTargetDistance() {
+		return pursueTarget.getDistance();
 	}
 	
 	@Override

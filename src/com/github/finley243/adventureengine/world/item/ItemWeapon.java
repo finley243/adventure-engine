@@ -59,8 +59,12 @@ public class ItemWeapon extends ItemEquippable {
 		return stats.getCritDamage();
 	}
 
-	public int getRange() {
-		return stats.getRange();
+	public int getRangeMin() {
+		return stats.getRangeMin();
+	}
+
+	public int getRangeMax() {
+		return stats.getRangeMax();
 	}
 	
 	public void reloadFull() {

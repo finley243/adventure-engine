@@ -442,10 +442,6 @@ public class Actor implements Noun, Physical {
 		return false;
 	}
 	
-	public boolean shouldFleeFrom(Actor actor) {
-		return hasRangedWeaponEquipped() && actor.hasMeleeWeaponEquipped();
-	}
-	
 	public boolean hasRangedWeaponEquipped() {
 		return equippedItem != null && equippedItem instanceof ItemWeapon && ((ItemWeapon) equippedItem).isRanged();
 	}

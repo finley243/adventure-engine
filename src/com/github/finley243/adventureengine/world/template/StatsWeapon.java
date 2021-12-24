@@ -26,16 +26,18 @@ public class StatsWeapon extends StatsItem {
 	private final int damage;
 	private final int rate;
 	private final int critDamage;
-	private final int range;
+	private final int rangeMin;
+	private final int rangeMax;
 	private final int clipSize;
 	
-	public StatsWeapon(String ID, String name, String description, int price, WeaponType type, int damage, int rate, int critDamage, int range, int clipSize) {
+	public StatsWeapon(String ID, String name, String description, int price, WeaponType type, int damage, int rate, int critDamage, int rangeMin, int rangeMax, int clipSize) {
 		super(ID, name, description, price);
 		this.type = type;
 		this.damage = damage;
 		this.rate = rate;
 		this.critDamage = critDamage;
-		this.range = range;
+		this.rangeMin = rangeMin;
+		this.rangeMax = rangeMax;
 		this.clipSize = clipSize;
 	}
 	
@@ -55,8 +57,12 @@ public class StatsWeapon extends StatsItem {
 		return critDamage;
 	}
 
-	public int getRange() {
-		return range;
+	public int getRangeMin() {
+		return rangeMin;
+	}
+
+	public int getRangeMax() {
+		return rangeMax;
 	}
 	
 	public int getClipSize() {

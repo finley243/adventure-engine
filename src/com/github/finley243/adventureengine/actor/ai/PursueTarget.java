@@ -13,6 +13,7 @@ public class PursueTarget {
 	private int pathIndex;
 	private final boolean manualRemoval;
 	private boolean markForRemoval;
+	private boolean isActive;
 	private boolean shouldFlee;
 	
 	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee) {
@@ -21,6 +22,7 @@ public class PursueTarget {
 		this.manualRemoval = manualRemoval;
 		this.shouldFlee = shouldFlee;
 		markForRemoval = false;
+		isActive = true;
 	}
 	
 	public void update(Actor subject) {
@@ -62,7 +64,15 @@ public class PursueTarget {
 	public boolean shouldRemove() {
 		return markForRemoval || (!manualRemoval && path != null && pathIndex == path.size() - 1);
 	}
-	
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	public boolean shouldFlee() {
 		return shouldFlee;
 	}

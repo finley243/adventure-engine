@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor.ai;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class UtilityUtils {
 
@@ -18,18 +19,20 @@ public class UtilityUtils {
 		}
 		float utility = 0.0f;
 		for(PursueTarget target : subject.getPursueTargets()) {
-			if(target.shouldFlee() && subject.getArea() == target.getTargetArea()) {
-				utility += target.getTargetUtility();
-			} else if(target.shouldFlee() ^ target.isOnPath(area)) { // XOR
-				// Temporary calculation, ignores distance
-				utility += target.getTargetUtility();
+			if(target.isActive()) {
+				if (target.shouldFlee() && subject.getArea() == target.getTargetArea()) {
+					utility += target.getTargetUtility();
+				} else if (target.shouldFlee() ^ target.isOnPath(area)) { // XOR
+					// Temporary calculation, ignores distance
+					utility += target.getTargetUtility();
+				}
 			}
 		}
 		return utility / subject.getPursueTargets().size();
 	}
 	
 	public static float getPursueTargetUtility(Actor subject, Actor target) {
-		if(subject.shouldFleeFrom(target)) {
+		if(shouldFleeFrom(subject, target)) {
 			return FLEE_TARGET_UTILITY;
 		} else if(subject.hasRangedWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_RANGED;
@@ -37,6 +40,30 @@ public class UtilityUtils {
 			return PURSUE_TARGET_UTILITY_MELEE;
 		} else {
 			return PURSUE_TARGET_UTILITY_NOWEAPON;
+		}
+	}
+
+	public static boolean shouldFleeFrom(Actor subject, Actor target) {
+		return !subject.hasMeleeWeaponEquipped() && target.hasMeleeWeaponEquipped();
+	}
+
+	// Returns true if subject needs to move to get into ideal range for attacking target (false if already in ideal range)
+	public static boolean shouldActivatePursueTarget(Actor subject, CombatTarget target) {
+		if(subject.getEquippedItem() != null && subject.getEquippedItem() instanceof ItemWeapon) {
+			ItemWeapon weapon = (ItemWeapon) subject.getEquippedItem();
+			int targetDistance = target.getTargetDistance();
+			return targetDistance < weapon.getRangeMin() || targetDistance > weapon.getRangeMax();
+		} else {
+			return true;
+		}
+	}
+
+	public static boolean shouldMoveAwayFrom(Actor subject, CombatTarget target) {
+		if(subject.hasRangedWeaponEquipped()) {
+			int rangeMin = ((ItemWeapon) subject.getEquippedItem()).getRangeMin();
+			return target.getTargetDistance() < rangeMin;
+		} else {
+			return !subject.hasMeleeWeaponEquipped();
 		}
 	}
 	
