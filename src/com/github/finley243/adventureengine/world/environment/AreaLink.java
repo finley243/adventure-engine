@@ -29,21 +29,14 @@ public class AreaLink {
         DEFAULT, MOVE, VIS
     }
 
-    /**
-     * Determines ability to perform local actions from connected areas
-     */
-    public enum AreaLinkDistance {
-        NEAR, FAR
-    }
-
     private final String areaID;
     // 1 = north, -1 = south, 0 = equal
     private final RelativeDirection direction;
     private final RelativeHeight height;
     private final AreaLinkType type;
-    private final AreaLinkDistance distance;
+    private final int distance;
 
-    public AreaLink(String areaID, RelativeDirection direction, RelativeHeight height, AreaLinkType type, AreaLinkDistance distance) {
+    public AreaLink(String areaID, RelativeDirection direction, RelativeHeight height, AreaLinkType type, int distance) {
         this.areaID = areaID;
         this.direction = direction;
         this.height = height;
@@ -67,7 +60,7 @@ public class AreaLink {
         return type;
     }
 
-    public AreaLinkDistance getDistance() {
+    public int getDistance() {
         return distance;
     }
 

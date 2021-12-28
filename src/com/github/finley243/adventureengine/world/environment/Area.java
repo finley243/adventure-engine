@@ -175,7 +175,7 @@ public class Area implements Noun {
 	public Set<Area> getNearAreas() {
 		Set<Area> nearAreas = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
-			if(link.getDistance() == AreaLink.AreaLinkDistance.NEAR) {
+			if(link.getDistance() == 0) {
 				nearAreas.add(Data.getArea(link.getAreaID()));
 			}
 		}
@@ -242,6 +242,11 @@ public class Area implements Noun {
 	public AreaLink.RelativeDirection getRelativeDirectionOf(Area other) {
 		if(!linkedAreas.containsKey(other.getID())) return null;
 		return linkedAreas.get(other.getID()).getDirection();
+	}
+
+	public int getDistanceTo(Area other) {
+		if(!linkedAreas.containsKey(other.getID())) return -1;
+		return linkedAreas.get(other.getID()).getDistance();
 	}
 
 	@Override

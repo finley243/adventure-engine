@@ -20,6 +20,11 @@ public class LoadUtils {
 		if(!element.hasAttribute(name)) return defaultValue;
 		return element.getAttribute(name).equalsIgnoreCase("true");
 	}
+
+	public static int intAttribute(Element element, String name, int defaultValue) {
+		if(!element.hasAttribute(name)) return defaultValue;
+		return Integer.parseInt(element.getAttribute(name));
+	}
 	
 	public static String singleTag(Element parent, String name, String defaultValue) {
 		Element element = singleChildWithName(parent, name);
