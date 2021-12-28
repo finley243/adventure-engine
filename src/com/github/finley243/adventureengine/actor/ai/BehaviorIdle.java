@@ -34,7 +34,7 @@ public class BehaviorIdle {
 			return;
 		}
 		if(currentTarget == null) {
-			currentTarget = new PursueTarget(Data.getArea(steps.get(0)), IDLE_MOVEMENT_WEIGHT, steps.size() == 1, false);
+			currentTarget = new PursueTarget(Data.getArea(steps.get(0)), IDLE_MOVEMENT_WEIGHT, steps.size() == 1, false, false);
 			subject.addPursueTarget(currentTarget);
 		}
 		if(subject.isInCombat()) {
@@ -48,7 +48,7 @@ public class BehaviorIdle {
 				if(stepIndex >= steps.size()) {
 					stepIndex = 0;
 				}
-				currentTarget = new PursueTarget(Data.getArea(steps.get(stepIndex)), IDLE_MOVEMENT_WEIGHT, false, false);
+				currentTarget = new PursueTarget(Data.getArea(steps.get(stepIndex)), IDLE_MOVEMENT_WEIGHT, false, false, false);
 				subject.addPursueTarget(currentTarget);
 				stepTurnCounter = TURNS_PER_STEP;
 			} else {

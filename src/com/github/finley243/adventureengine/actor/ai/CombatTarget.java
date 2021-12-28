@@ -33,7 +33,7 @@ public class CombatTarget {
 	
 	public void update(Actor subject) {
 		if(pursueTarget == null) {
-			pursueTarget = new PursueTarget(targetActor.getArea(), 0.0f, true, false);
+			pursueTarget = new PursueTarget(targetActor.getArea(), 0.0f, true, false, false);
 			subject.addPursueTarget(pursueTarget);
 		}
 		if(subject.canSee(targetActor)) {

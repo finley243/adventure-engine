@@ -30,7 +30,7 @@ public class InvestigateTarget {
 
     public void update(Actor subject) {
         if(pursueTarget == null && targetArea != null) {
-            pursueTarget = new PursueTarget(targetArea, UtilityUtils.INVESTIGATE_NOISE_UTILITY, true, false);
+            pursueTarget = new PursueTarget(targetArea, UtilityUtils.INVESTIGATE_NOISE_UTILITY, true, false, false);
             subject.addPursueTarget(pursueTarget);
         }
         if(subject.getArea() == targetArea) {

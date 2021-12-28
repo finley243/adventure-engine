@@ -15,12 +15,14 @@ public class PursueTarget {
 	private boolean markForRemoval;
 	private boolean isActive;
 	private boolean shouldFlee;
+	private boolean fleeThroughExits;
 	
-	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee) {
+	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughExits) {
 		this.targetArea = targetArea;
 		this.targetUtility = targetUtility;
 		this.manualRemoval = manualRemoval;
 		this.shouldFlee = shouldFlee;
+		this.fleeThroughExits = fleeThroughExits;
 		markForRemoval = false;
 		isActive = true;
 	}
@@ -79,6 +81,14 @@ public class PursueTarget {
 	
 	public void setShouldFlee(boolean shouldFlee) {
 		this.shouldFlee = shouldFlee;
+	}
+
+	public boolean shouldUseExits() {
+		return !shouldFlee || fleeThroughExits;
+	}
+
+	public void setFleeThroughExits(boolean fleeThroughExits) {
+		this.fleeThroughExits = fleeThroughExits;
 	}
 	
 	public boolean isOnPath(Area area) {
