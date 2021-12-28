@@ -44,7 +44,7 @@ public class ActionMoveElevator extends ActionMove {
 
 	@Override
 	public float utility(Actor subject) {
-		return UtilityUtils.getMovementUtility(subject, destination.getArea()) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
+		return UtilityUtils.getMovementUtility(subject, destination.getArea(), true) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override

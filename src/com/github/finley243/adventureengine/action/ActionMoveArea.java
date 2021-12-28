@@ -36,7 +36,7 @@ public class ActionMoveArea extends ActionMove {
 	
 	@Override
 	public float utility(Actor subject) {
-		return UtilityUtils.getMovementUtility(subject, area) * MOVE_UTILITY_MULTIPLIER;
+		return UtilityUtils.getMovementUtility(subject, area, false) * MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override

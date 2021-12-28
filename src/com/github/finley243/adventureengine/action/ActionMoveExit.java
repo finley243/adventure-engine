@@ -44,7 +44,7 @@ public class ActionMoveExit extends ActionMove {
 
 	@Override
 	public float utility(Actor subject) {
-		return UtilityUtils.getMovementUtility(subject, exit.getLinkedArea()) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
+		return UtilityUtils.getMovementUtility(subject, exit.getLinkedArea(), true) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override
