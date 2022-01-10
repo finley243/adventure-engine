@@ -2,11 +2,14 @@ package com.github.finley243.adventureengine.actor.ai;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CombatTarget {
@@ -33,18 +36,18 @@ public class CombatTarget {
 	
 	public void update(Actor subject) {
 		if(pursueTarget == null) {
-			pursueTarget = new PursueTarget(targetActor.getArea(), 0.0f, true, false, false);
+			pursueTarget = new PursueTarget(idealAreas(subject, targetActor.getArea()), 0.0f, true, false, false);
 			subject.addPursueTarget(pursueTarget);
 		}
 		if(subject.canSee(targetActor)) {
 			lastKnownArea = targetActor.getArea();
 			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
-			pursueTarget.setTargetArea(targetActor.getArea());
+			pursueTarget.setTargetAreas(idealAreas(subject, targetActor.getArea()));
 			pursueTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, this));
 			pursueTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, this));
 			pursueTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
 		} else {
-			pursueTarget.setTargetArea(lastKnownArea);
+			pursueTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
 			pursueTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
 		}
 		if(shouldRemove()) {
@@ -89,6 +92,22 @@ public class CombatTarget {
 	@Override
 	public int hashCode() {
 		return getTargetActor().hashCode();
+	}
+
+	private Set<Area> idealAreas(Actor subject, Area origin) {
+		int idealDistanceMin = 0;
+		int idealDistanceMax = 0;
+		if(subject.hasRangedWeaponEquipped()) {
+			ItemWeapon weapon = (ItemWeapon) subject.getEquippedItem();
+			idealDistanceMin = weapon.getRangeMin();
+			idealDistanceMax = weapon.getRangeMax();
+		}
+		if(idealDistanceMax == 0) {
+			Set<Area> idealAreas = new HashSet<>();
+			idealAreas.add(origin);
+			return idealAreas;
+		}
+		return origin.visibleAreasInRange(idealDistanceMin, idealDistanceMax);
 	}
 	
 }

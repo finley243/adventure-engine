@@ -20,7 +20,7 @@ public class UtilityUtils {
 		float utility = 0.0f;
 		for(PursueTarget target : subject.getPursueTargets()) {
 			if(target.isActive() && (!throughExit || target.shouldUseExits())) {
-				if (target.shouldFlee() && subject.getArea() == target.getTargetArea()) {
+				if (target.shouldFlee() && target.getTargetAreas().contains(subject.getArea())) {
 					utility += target.getTargetUtility();
 				} else if (target.shouldFlee() ^ target.isOnPath(area)) { // XOR
 					// Temporary calculation, ignores distance

@@ -26,7 +26,15 @@ public class AreaLink {
     }
 
     public enum AreaLinkType {
-        DEFAULT, MOVE, VIS
+        DEFAULT(true, true), MOVE(false, true), VIS(true, false);
+
+        public final boolean isVisible;
+        public final boolean isMovable;
+
+        AreaLinkType(boolean isVisible, boolean isMovable) {
+            this.isVisible = isVisible;
+            this.isMovable = isMovable;
+        }
     }
 
     private final String areaID;

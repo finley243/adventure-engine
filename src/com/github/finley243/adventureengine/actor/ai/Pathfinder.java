@@ -16,7 +16,19 @@ public class Pathfinder {
 	 * @return Shortest path from currentArea to targetArea
 	 */
 	public static List<Area> findPath(Area startArea, Area targetArea) {
-		if(startArea == targetArea) return Collections.singletonList(startArea);
+		Set<Area> targetSet = new HashSet<>();
+		targetSet.add(targetArea);
+		return findPath(startArea, targetSet);
+	}
+
+	/**
+	 * Returns a list of Areas that represents the shortest path between them
+	 * @param startArea Start position to path from
+	 * @param targetAreas Positions the path could lead to
+	 * @return Shortest path from currentArea to targetArea
+	 */
+	public static List<Area> findPath(Area startArea, Set<Area> targetAreas) {
+		if(targetAreas.contains(startArea)) return Collections.singletonList(startArea);
 		Set<Area> hasVisited = new HashSet<>();
 		Queue<List<Area>> paths = new LinkedList<>();
 		List<Area> startPath = new ArrayList<>();
@@ -26,11 +38,11 @@ public class Pathfinder {
 		while(!paths.isEmpty()) {
 			List<Area> currentPath = paths.remove();
 			Area pathEnd = currentPath.get(currentPath.size() - 1);
-			if(pathEnd.equals(targetArea)) {
+			if(targetAreas.contains(pathEnd)) {
 				return currentPath;
 			}
-			Set<Area> linkedAreasGlobal = new HashSet<>(pathEnd.getMovableAreas());
-			if(pathEnd.getRoom() != targetArea.getRoom()) {
+			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
+			//if(pathEnd.getRoom() != targetArea.getRoom()) {
 				for(WorldObject object : pathEnd.getObjects()) {
 					if(object instanceof ObjectExit) {
 						linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
@@ -38,7 +50,8 @@ public class Pathfinder {
 						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
 					}
 				}
-			}
+			//}
+			Collections.shuffle(linkedAreasGlobal);
 			for(Area linkedArea : linkedAreasGlobal) {
 				if(!hasVisited.contains(linkedArea)) {
 					List<Area> linkedPath = new ArrayList<>(currentPath);

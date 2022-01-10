@@ -1,6 +1,8 @@
 package com.github.finley243.adventureengine.actor.ai;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
@@ -34,7 +36,9 @@ public class BehaviorIdle {
 			return;
 		}
 		if(currentTarget == null) {
-			currentTarget = new PursueTarget(Data.getArea(steps.get(0)), IDLE_MOVEMENT_WEIGHT, steps.size() == 1, false, false);
+			Set<Area> targetSet = new HashSet<>();
+			targetSet.add(Data.getArea(steps.get(0)));
+			currentTarget = new PursueTarget(targetSet, IDLE_MOVEMENT_WEIGHT, steps.size() == 1, false, false);
 			subject.addPursueTarget(currentTarget);
 		}
 		if(subject.isInCombat()) {
@@ -48,7 +52,9 @@ public class BehaviorIdle {
 				if(stepIndex >= steps.size()) {
 					stepIndex = 0;
 				}
-				currentTarget = new PursueTarget(Data.getArea(steps.get(stepIndex)), IDLE_MOVEMENT_WEIGHT, false, false, false);
+				Set<Area> targetSet = new HashSet<>();
+				targetSet.add(Data.getArea(steps.get(stepIndex)));
+				currentTarget = new PursueTarget(targetSet, IDLE_MOVEMENT_WEIGHT, false, false, false);
 				subject.addPursueTarget(currentTarget);
 				stepTurnCounter = TURNS_PER_STEP;
 			} else {

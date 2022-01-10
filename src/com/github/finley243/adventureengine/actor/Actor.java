@@ -622,17 +622,19 @@ public class Actor implements Noun, Physical {
 		for(Action currentAction : actions) {
 			if(currentAction.canChoose(this)) {
 				float currentWeight = currentAction.utility(this);
-				for(int i = 0; i < chaos + 1; i++) {
-					if(currentWeight == maxWeights.get(i)) {
-						bestActions.get(i).add(currentAction);
-						break;
-					} else if(currentWeight > maxWeights.get(i)) {
-						maxWeights.remove(maxWeights.size() - 1);
-						maxWeights.add(i, currentWeight);
-						bestActions.remove(bestActions.size() - 1);
-						bestActions.add(i, new ArrayList<>());
-						bestActions.get(i).add(currentAction);
-						break;
+				if(currentWeight != 0) {
+					for (int i = 0; i < chaos + 1; i++) {
+						if (currentWeight == maxWeights.get(i)) {
+							bestActions.get(i).add(currentAction);
+							break;
+						} else if (currentWeight > maxWeights.get(i)) {
+							maxWeights.remove(maxWeights.size() - 1);
+							maxWeights.add(i, currentWeight);
+							bestActions.remove(bestActions.size() - 1);
+							bestActions.add(i, new ArrayList<>());
+							bestActions.get(i).add(currentAction);
+							break;
+						}
 					}
 				}
 			}

@@ -244,9 +244,27 @@ public class Area implements Noun {
 		return linkedAreas.get(other.getID()).getDirection();
 	}
 
-	public int getDistanceTo(Area other) {
-		if(!linkedAreas.containsKey(other.getID())) return -1;
-		return linkedAreas.get(other.getID()).getDistance();
+	public boolean isVisible(String areaID) {
+		if(!linkedAreas.containsKey(areaID)) {
+			return false;
+		}
+		AreaLink link = linkedAreas.get(areaID);
+		return link.getType().isVisible;
+	}
+
+	public int getDistanceTo(String areaID) {
+		if(!linkedAreas.containsKey(areaID)) return -1;
+		return linkedAreas.get(areaID).getDistance();
+	}
+
+	public Set<Area> visibleAreasInRange(int rangeMin, int rangeMax) {
+		Set<Area> areas = new HashSet<>();
+		for(AreaLink link : linkedAreas.values()) {
+			if(isVisible(link.getAreaID()) && getDistanceTo(link.getAreaID()) >= rangeMin && getDistanceTo(link.getAreaID()) <= rangeMax) {
+				areas.add(Data.getArea(link.getAreaID()));
+			}
+		}
+		return areas;
 	}
 
 	@Override

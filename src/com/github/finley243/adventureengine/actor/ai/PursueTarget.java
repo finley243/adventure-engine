@@ -1,13 +1,14 @@
 package com.github.finley243.adventureengine.actor.ai;
 
 import java.util.List;
+import java.util.Set;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class PursueTarget {
 
-	private Area targetArea;
+	private Set<Area> targetAreas;
 	private float targetUtility;
 	private List<Area> path;
 	private int pathIndex;
@@ -17,8 +18,8 @@ public class PursueTarget {
 	private boolean shouldFlee;
 	private boolean fleeThroughExits;
 	
-	public PursueTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughExits) {
-		this.targetArea = targetArea;
+	public PursueTarget(Set<Area> targetAreas, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughExits) {
+		this.targetAreas = targetAreas;
 		this.targetUtility = targetUtility;
 		this.manualRemoval = manualRemoval;
 		this.shouldFlee = shouldFlee;
@@ -28,14 +29,14 @@ public class PursueTarget {
 	}
 	
 	public void update(Actor subject) {
-		if(path == null || path.get(path.size() - 1) != targetArea) {
-			path = Pathfinder.findPath(subject.getArea(), targetArea);
+		if(path == null || !targetAreas.contains(path.get(path.size() - 1))) {
+			path = Pathfinder.findPath(subject.getArea(), targetAreas);
 			pathIndex = 0;
 		}
 		if(path.get(pathIndex) != subject.getArea()) {
 			int currentIndex = getCurrentIndex(subject);
 			if(currentIndex == -1) {
-				path = Pathfinder.findPath(subject.getArea(), targetArea);
+				path = Pathfinder.findPath(subject.getArea(), targetAreas);
 				pathIndex = 0;
 			} else {
 				pathIndex = currentIndex;
@@ -43,12 +44,12 @@ public class PursueTarget {
 		}
 	}
 
-	public Area getTargetArea() {
-		return targetArea;
+	public Set<Area> getTargetAreas() {
+		return targetAreas;
 	}
 	
-	public void setTargetArea(Area area) {
-		targetArea = area;
+	public void setTargetAreas(Set<Area> areas) {
+		targetAreas = areas;
 	}
 	
 	public float getTargetUtility() {
@@ -121,7 +122,7 @@ public class PursueTarget {
 	
 	@Override
 	public int hashCode() {
-		return getTargetArea().hashCode();
+		return getTargetAreas().hashCode();
 	}
 
 }
