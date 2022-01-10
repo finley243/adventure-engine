@@ -34,8 +34,8 @@ public class CombatHelper {
 		float skill = (float) attacker.getSkill(weapon.getSkill());
 		float chance = HIT_CHANCE_BASE_MIN + ((HIT_CHANCE_BASE_MAX - HIT_CHANCE_BASE_MIN) / (Actor.SKILL_MAX - Actor.SKILL_MIN)) * (skill - Actor.SKILL_MIN);
 		if(weapon.isRanged()) {
-			int distance = Pathfinder.findPath(attacker.getArea(), target.getArea()).size() - 1;
-			//int distance = attacker.getArea().getDistanceTo(target.getArea());
+			//int distance = Pathfinder.findPath(attacker.getArea(), target.getArea()).size() - 1;
+			int distance = attacker.getArea().getDistanceTo(target.getArea().getID());
 			int distFromRange = Math.abs(weapon.getRangeMax() - distance);
 			float rangePenalty = distFromRange * (distFromRange <= 1 ? RANGE_PENALTY_NEAR : RANGE_PENALTY_FAR);
 			chance -= Math.min(rangePenalty, RANGE_PENALTY_MAX);
