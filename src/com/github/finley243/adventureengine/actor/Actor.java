@@ -47,7 +47,7 @@ public class Actor implements Noun, Physical {
 		// INTELLIGENCE
 		SOFTWARE(Attribute.INTELLIGENCE),
 		HARDWARE(Attribute.INTELLIGENCE),
-		FIRST_AID(Attribute.INTELLIGENCE),
+		MEDICINE(Attribute.INTELLIGENCE),
 		// CHARISMA
 		BARTER(Attribute.CHARISMA),
 		PERSUASION(Attribute.CHARISMA),
@@ -506,12 +506,6 @@ public class Actor implements Noun, Physical {
 			}
 		}
 		return action;
-	}
-
-	private void actionTalk(Actor subject) {
-		if(subject instanceof ActorPlayer) {
-			((ActorPlayer) subject).startDialogue(this, this.getTopicID());
-		}
 	}
 
 	public List<Action> availableActions(){
