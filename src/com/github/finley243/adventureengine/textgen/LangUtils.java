@@ -18,9 +18,16 @@ public class LangUtils {
 		if(word.length() < 1) {
 			return word;
 		}
-		String firstLetter = word.substring(0, 1);
-		String restOfWord = word.substring(1);
-		return firstLetter.toUpperCase() + restOfWord;
+		for(int i = 0; i < word.length(); i++) {
+			if(Character.isAlphabetic(word.charAt(i))) {
+				String preCap = word.substring(0, i);
+				String cap = word.substring(i, i + 1);
+				String postCap = word.substring(i + 1);
+				return preCap + cap.toUpperCase() + postCap;
+			}
+		}
+		// If no alphabetic characters, return the unmodified string
+		return word;
 	}
 	
 	public static String titleCase(String line) {

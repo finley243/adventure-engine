@@ -110,7 +110,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 					if(current.getCategory().length > 1) {
 						JMenu parentElement = null;
 						for (MenuElement subElement : categories.get(current.getCategory()[0]).getSubElements()) {
-							if (subElement.getComponent().getName().equalsIgnoreCase(current.getCategory()[1])) {
+							if (subElement.getComponent().getName() != null && subElement.getComponent().getName().equalsIgnoreCase(current.getCategory()[1])) {
 								parentElement = (JMenu) subElement.getComponent();
 								break;
 							}

@@ -51,8 +51,9 @@ public class UtilityUtils {
 	public static boolean shouldActivatePursueTarget(Actor subject, CombatTarget target) {
 		if(subject.getEquippedItem() != null && subject.getEquippedItem() instanceof ItemWeapon) {
 			ItemWeapon weapon = (ItemWeapon) subject.getEquippedItem();
-			int targetDistance = target.getTargetDistance();
-			return targetDistance < weapon.getRangeMin() || targetDistance > weapon.getRangeMax();
+			//int targetDistance = target.getTargetDistance();
+			int targetDistance = subject.getArea().getDistanceTo(target.getTargetActor().getArea().getID());
+			return targetDistance == -1 || targetDistance < weapon.getRangeMin() || targetDistance > weapon.getRangeMax();
 		} else {
 			return true;
 		}
@@ -61,7 +62,12 @@ public class UtilityUtils {
 	public static boolean shouldMoveAwayFrom(Actor subject, CombatTarget target) {
 		if(subject.hasRangedWeaponEquipped()) {
 			int rangeMin = ((ItemWeapon) subject.getEquippedItem()).getRangeMin();
-			return target.getTargetDistance() < rangeMin;
+			//return target.getTargetDistance() < rangeMin;
+			int distance = subject.getArea().getDistanceTo(target.getTargetActor().getArea().getID());
+			if(distance == -1) {
+				return false;
+			}
+			return distance < rangeMin;
 		} else {
 			return !subject.hasMeleeWeaponEquipped();
 		}

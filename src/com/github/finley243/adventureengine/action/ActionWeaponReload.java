@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.world.item.ItemWeapon;
 public class ActionWeaponReload extends Action {
 
 	public static final float RELOAD_UTILITY_NONCOMBAT = 0.5f;
-	public static final float RELOAD_UTILITY_COMBAT = 0.6f;
+	public static final float RELOAD_UTILITY_COMBAT = 0.4f;
 	public static final float RELOAD_UTILITY_COMBAT_EMPTY = 0.8f;
 
 	private final ItemWeapon weapon;
@@ -35,12 +35,12 @@ public class ActionWeaponReload extends Action {
 	@Override
 	public float utility(Actor subject) {
 		if(!subject.isInCombat()) {
-			return RELOAD_UTILITY_NONCOMBAT;
+			return (1.0f - weapon.getAmmoFraction()) * RELOAD_UTILITY_NONCOMBAT;
 		} else {
 			if(weapon.getAmmoFraction() == 0) {
 				return RELOAD_UTILITY_COMBAT_EMPTY;
 			} else {
-				return RELOAD_UTILITY_COMBAT;
+				return (1.0f - weapon.getAmmoFraction()) * RELOAD_UTILITY_COMBAT;
 			}
 		}
 	}
