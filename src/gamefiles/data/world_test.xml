@@ -5,7 +5,9 @@
             <name>area 1</name>
             <links>
                 <link dir="west" dist="1">test_area_2</link>
-                <link dir="south" dist="3" type="vis">test_area_5</link>
+                <link dir="southwest" dist="2" type="vis">test_area_3</link>
+                <link dir="southwest" dist="2" type="vis">test_area_4</link>
+                <link dir="south" dist="2" type="vis">test_area_5</link>
             </links>
             <objects>
                 <object type="cover" id="test_cover_1">
@@ -24,18 +26,24 @@
             <links>
                 <link dir="east" dist="1">test_area_1</link>
                 <link dir="south" dist="1">test_area_3</link>
+                <link dir="south" dist="2" type="vis">test_area_4</link>
+                <link dir="southeast" dist="2" type="vis">test_area_5</link>
             </links>
         </area>
         <area id="test_area_3">
             <name>area 3</name>
             <links>
+                <link dir="northeast" dist="2" type="vis">test_area_1</link>
                 <link dir="north" dist="1">test_area_2</link>
                 <link dir="south" dist="1">test_area_4</link>
+                <link dir="northeast" dist="2" type="vis">test_area_5</link>
             </links>
         </area>
         <area id="test_area_4">
             <name>area 4</name>
             <links>
+                <link dir="northeast" dist="2" type="vis">test_area_1</link>
+                <link dir="north" dist="2" type="vis">test_area_2</link>
                 <link dir="north" dist="1">test_area_3</link>
                 <link dir="east" dist="1">test_area_5</link>
             </links>
@@ -43,8 +51,10 @@
         <area id="test_area_5">
             <name>area 5</name>
             <links>
+                <link dir="north" dist="2" type="vis">test_area_1</link>
+                <link dir="northwest" dist="2" type="vis">test_area_2</link>
+                <link dir="southwest" dist="2" type="vis">test_area_3</link>
                 <link dir="west" dist="1">test_area_4</link>
-                <link dir="north" dist="3" type="vis">test_area_1</link>
             </links>
             <objects>
                 <object type="cover" id="test_cover_5">
