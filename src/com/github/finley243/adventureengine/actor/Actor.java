@@ -391,19 +391,20 @@ public class Actor implements Noun, Physical {
 		if(event.getAction() instanceof ActionMoveArea) {
 			for(CombatTarget target : combatTargets) {
 				if(target.getTargetActor() == event.getSubject()) {
-					target.onMoved(((ActionMoveArea) event.getAction()).getArea());
+					target.setLastKnownArea(((ActionMoveArea) event.getAction()).getArea());
 				}
 			}
 		} else if(event.getAction() instanceof ActionMoveExit) {
 			for(CombatTarget target : combatTargets) {
 				if(target.getTargetActor() == event.getSubject()) {
-					target.onUsedExit(((ActionMoveExit) event.getAction()).getExit());
+					target.setLastKnownArea(((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
 				}
 			}
 		} else if(event.getAction() instanceof ActionMoveElevator) {
 			for(CombatTarget target : combatTargets) {
 				if(target.getTargetActor() == event.getSubject()) {
-					target.onUsedElevator(((ActionMoveElevator) event.getAction()).getElevator());
+					List<Area> possibleAreas = new ArrayList<>(((ActionMoveElevator) event.getAction()).getElevator().getLinkedAreas());
+					target.setLastKnownArea(possibleAreas.get(ThreadLocalRandom.current().nextInt(possibleAreas.size())));
 				}
 			}
 		}

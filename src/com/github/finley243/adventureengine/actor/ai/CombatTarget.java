@@ -38,13 +38,13 @@ public class CombatTarget {
 	
 	public void update(Actor subject) {
 		if(pursueTarget == null) {
-			pursueTarget = new PursueTarget(idealAreas(subject, targetActor.getArea()), 0.0f, true, false, false);
+			pursueTarget = new PursueTarget(idealAreas(subject, lastKnownArea), 0.0f, true, false, false);
 			subject.addPursueTarget(pursueTarget);
 		}
 		if(subject.canSee(targetActor)) {
 			lastKnownArea = targetActor.getArea();
 			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
-			pursueTarget.setTargetAreas(idealAreas(subject, targetActor.getArea()));
+			pursueTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
 			pursueTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, this));
 			pursueTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, this));
 			pursueTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
@@ -57,17 +57,8 @@ public class CombatTarget {
 		}
 	}
 
-	public void onMoved(Area area) {
+	public void setLastKnownArea(Area area) {
 		lastKnownArea = area;
-	}
-
-	public void onUsedExit(ObjectExit exit) {
-		lastKnownArea = exit.getLinkedArea();
-	}
-
-	public void onUsedElevator(ObjectElevator elevator) {
-		List<Area> possibleAreas = new ArrayList<>(elevator.getLinkedAreas());
-		lastKnownArea = possibleAreas.get(ThreadLocalRandom.current().nextInt(possibleAreas.size()));
 	}
 	
 	public boolean shouldRemove() {
