@@ -1,0 +1,57 @@
+<data>
+    <room id="test_room">
+        <name proper="false">test room</name>
+        <area id="test_area_1">
+            <name>area 1</name>
+            <links>
+                <link dir="west" dist="1">test_area_2</link>
+                <link dir="south" dist="3" type="vis">test_area_5</link>
+            </links>
+            <objects>
+                <object type="cover" id="test_cover_1">
+                    <name>cover</name>
+                    <direction>SOUTH</direction>
+                </object>
+            </objects>
+            <actors>
+                <actor id="test_enemy_1">
+                    <stats>enemy</stats>
+                </actor>
+            </actors>
+        </area>
+        <area id="test_area_2">
+            <name>area 2</name>
+            <links>
+                <link dir="east" dist="1">test_area_1</link>
+                <link dir="south" dist="1">test_area_3</link>
+            </links>
+        </area>
+        <area id="test_area_3">
+            <name>area 3</name>
+            <links>
+                <link dir="north" dist="1">test_area_2</link>
+                <link dir="south" dist="1">test_area_4</link>
+            </links>
+        </area>
+        <area id="test_area_4">
+            <name>area 4</name>
+            <links>
+                <link dir="north" dist="1">test_area_3</link>
+                <link dir="east" dist="1">test_area_5</link>
+            </links>
+        </area>
+        <area id="test_area_5">
+            <name>area 5</name>
+            <links>
+                <link dir="west" dist="1">test_area_4</link>
+                <link dir="north" dist="3" type="vis">test_area_1</link>
+            </links>
+            <objects>
+                <object type="cover" id="test_cover_5">
+                    <name>cover</name>
+                    <direction>NORTH</direction>
+                </object>
+            </objects>
+        </area>
+    </room>
+</data>

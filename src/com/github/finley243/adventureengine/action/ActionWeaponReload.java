@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.world.item.ItemWeapon;
 public class ActionWeaponReload extends Action {
 
 	public static final float RELOAD_UTILITY_NONCOMBAT = 0.5f;
-	public static final float RELOAD_UTILITY_COMBAT = 0.4f;
+	public static final float RELOAD_UTILITY_COMBAT = 0.35f;
 	public static final float RELOAD_UTILITY_COMBAT_EMPTY = 0.8f;
 
 	private final ItemWeapon weapon;

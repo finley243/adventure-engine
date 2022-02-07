@@ -100,7 +100,7 @@ public class PursueTarget {
 	
 	public int getDistance() {
 		if(path == null) {
-			
+
 		}
 		return path.size() - (pathIndex + 1);
 	}

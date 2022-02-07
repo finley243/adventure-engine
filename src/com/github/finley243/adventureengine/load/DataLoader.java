@@ -573,7 +573,7 @@ public class DataLoader {
                 return new ObjectSign(objectID, objectName, objectDescription, signText);
             case "chair":
                 return new ObjectChair(objectID, objectName, objectDescription);
-            case "obstruction":
+            case "cover":
                 ObjectCover.CoverDirection coverDirection = ObjectCover.CoverDirection.valueOf(LoadUtils.singleTag(objectElement, "direction", null).toUpperCase());
                 return new ObjectCover(objectID, objectName, objectDescription, coverDirection);
             case "vending_machine":

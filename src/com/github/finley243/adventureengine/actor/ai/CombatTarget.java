@@ -26,6 +26,8 @@ public class CombatTarget {
 		this.targetActor = actor;
 		this.turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 		pursueTarget = null;
+		// Could cause issues if a combat target is added before an actor "knows" they are there
+		lastKnownArea = actor.getArea();
 	}
 
 	public void nextTurn() {
@@ -74,10 +76,6 @@ public class CombatTarget {
 	
 	public Actor getTargetActor() {
 		return targetActor;
-	}
-
-	public int getTargetDistance() {
-		return pursueTarget.getDistance();
 	}
 	
 	@Override

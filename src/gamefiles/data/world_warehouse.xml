@@ -57,7 +57,7 @@
                 <link dir="northeast">warehouse_container_right</link>
             </links>
             <objects>
-                <object type="obstruction" id="warehouse_container_south">
+                <object type="cover" id="warehouse_container_south">
                     <name>shipping container</name>
                     <direction>NORTH</direction>
                 </object>
@@ -72,7 +72,7 @@
                 <link dir="northeast">warehouse_container_behind</link>
             </links>
             <objects>
-                <object type="obstruction" id="warehouse_container_west">
+                <object type="cover" id="warehouse_container_west">
                     <name>shipping container</name>
                     <direction>EAST</direction>
                 </object>
@@ -86,7 +86,7 @@
                 <link dir="northwest">warehouse_container_behind</link>
             </links>
             <objects>
-                <object type="obstruction" id="warehouse_container_east">
+                <object type="cover" id="warehouse_container_east">
                     <name>shipping container</name>
                     <direction>WEST</direction>
                 </object>
@@ -101,7 +101,7 @@
                 <link dir="east" type="vis">warehouse_wall_east</link>
             </links>
             <objects>
-                <object type="obstruction" id="warehouse_container_north">
+                <object type="cover" id="warehouse_container_north">
                     <name>shipping container</name>
                     <direction>SOUTH</direction>
                 </object>

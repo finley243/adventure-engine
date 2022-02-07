@@ -62,6 +62,7 @@
                     <descriptor>lobby</descriptor>
                     <idle>
                         <area>stratis_hotel_lobby_seating</area>
+                        <area>stratis_hotel_lobby_elevators</area>
                     </idle>
                 </actor>
             </actors>
