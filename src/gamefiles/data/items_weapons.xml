@@ -15,7 +15,7 @@
         <critDamage>5</critDamage>
         <rate>2</rate>
         <rangeMin>0</rangeMin>
-        <rangeMax>1</rangeMax>
+        <rangeMax>2</rangeMax>
         <clipSize>12</clipSize>
     </item>
     <item type="weapon" id="pistol_heavy">
@@ -26,7 +26,7 @@
         <critDamage>6</critDamage>
         <rate>2</rate>
         <rangeMin>0</rangeMin>
-        <rangeMax>1</rangeMax>
+        <rangeMax>2</rangeMax>
         <clipSize>6</clipSize>
     </item>
     <item type="weapon" id="rifle_auto">
@@ -36,7 +36,7 @@
         <damage>15</damage>
         <critDamage>4</critDamage>
         <rate>2</rate>
-        <rangeMin>1</rangeMin>
+        <rangeMin>2</rangeMin>
         <rangeMax>3</rangeMax>
         <clipSize>20</clipSize>
     </item>

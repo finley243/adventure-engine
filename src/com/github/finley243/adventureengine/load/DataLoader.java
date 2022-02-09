@@ -308,10 +308,10 @@ public class DataLoader {
                 Faction.FactionRelation relation;
                 switch(relationString) {
                     case "FRIEND":
-                        relation = Faction.FactionRelation.FRIEND;
+                        relation = Faction.FactionRelation.ASSIST;
                         break;
                     case "ENEMY":
-                        relation = Faction.FactionRelation.ENEMY;
+                        relation = Faction.FactionRelation.HOSTILE;
                         break;
                     case "NEUTRAL":
                     default:
@@ -364,10 +364,10 @@ public class DataLoader {
     private static Faction.FactionRelation factionRelationTag(Element element, String name) {
         String factionRelationString = LoadUtils.singleTag(element, name, null);
         switch(factionRelationString) {
-            case "FRIEND":
-                return Faction.FactionRelation.FRIEND;
-            case "ENEMY":
-                return Faction.FactionRelation.ENEMY;
+            case "ASSIST":
+                return Faction.FactionRelation.ASSIST;
+            case "HOSTILE":
+                return Faction.FactionRelation.HOSTILE;
             case "NEUTRAL":
             default:
                 return Faction.FactionRelation.NEUTRAL;

@@ -47,6 +47,7 @@ public class CombatTarget {
 			pursueTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
 			pursueTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, this));
 			pursueTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, this));
+			System.out.println("Setting target " + targetActor.getID() + " active for subject " + subject.getID() + ": " + (UtilityUtils.shouldActivatePursueTarget(subject, this)));
 			pursueTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
 		} else {
 			pursueTarget.setTargetAreas(idealAreas(subject, lastKnownArea));

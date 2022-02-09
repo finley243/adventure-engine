@@ -72,7 +72,13 @@ public class ActorPlayer extends Actor {
 	public void describeSurroundings() {
 		for(Actor actor : getVisibleActors()) {
 			Context context = new Context(actor, false, this, false);
-			String line = "<subject> <is> " + (getArea() == actor.getArea() ? "next to <object>" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+			if(actor.isDead()) {
+				String line = "<subject> lie<s> dead " + (getArea() == actor.getArea() ? "next to <object>" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+			} else if(actor.isUnconscious()) {
+				String line = "<subject> lie<s> unconscious " + (getArea() == actor.getArea() ? "next to <object>" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+			} else {
+				String line = "<subject> <is> " + (getArea() == actor.getArea() ? "next to <object>" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+			}
 			String description = TextGen.generate(line, context);
 			Game.EVENT_BUS.post(new RenderTextEvent(description));
 		}

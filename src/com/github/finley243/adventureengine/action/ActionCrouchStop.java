@@ -17,13 +17,18 @@ public class ActionCrouchStop extends Action {
     }
 
     @Override
+    public float utility(Actor subject) {
+        return 0.1f;
+    }
+
+    @Override
     public MenuData getMenuData(Actor subject) {
         return new MenuData("Stop crouching", "Stop crouching", canChoose(subject));
     }
 
     @Override
     public int actionPoints() {
-        return 0;
+        return 1;
     }
     
 }

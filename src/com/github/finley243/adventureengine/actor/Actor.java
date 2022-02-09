@@ -653,17 +653,17 @@ public class Actor implements Noun, Physical {
 	private void generateCombatTargets() {
 		for(Actor actor : getVisibleActors()) {
 			if(actor != this && !actor.isDead()) {
-				if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.ENEMY) {
+				if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.HOSTILE) {
 					if(!isCombatTarget(actor)) {
 						addCombatTarget(actor);
 					}
-				} else if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.FRIEND) {
+				} else if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.ASSIST) {
 					for(CombatTarget allyTarget : actor.getCombatTargets()) {
 						if(!isCombatTarget(allyTarget.getTargetActor())) {
 							addCombatTarget(allyTarget.getTargetActor());
 						}
 					}
-				} else if(getArea().getRoom().getOwnerFaction() != null && Data.getFaction(getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != FactionRelation.FRIEND) {
+				} else if(getArea().getRoom().getOwnerFaction() != null && Data.getFaction(getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != FactionRelation.ASSIST) {
 					if(!isCombatTarget(actor)) {
 						addCombatTarget(actor);
 					}

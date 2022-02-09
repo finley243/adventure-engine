@@ -36,9 +36,14 @@ public class CombatHelper {
 		if(weapon.isRanged()) {
 			//int distance = Pathfinder.findPath(attacker.getArea(), target.getArea()).size() - 1;
 			int distance = attacker.getArea().getDistanceTo(target.getArea().getID());
-			int distFromRange = Math.abs(weapon.getRangeMax() - distance);
-			float rangePenalty = distFromRange * (distFromRange <= 1 ? RANGE_PENALTY_NEAR : RANGE_PENALTY_FAR);
-			chance -= Math.min(rangePenalty, RANGE_PENALTY_MAX);
+			//int distFromRange = Math.abs(weapon.getRangeMax() - distance);
+			//float rangePenalty = distFromRange * (distFromRange <= 1 ? RANGE_PENALTY_NEAR : RANGE_PENALTY_FAR);
+			//chance -= Math.min(rangePenalty, RANGE_PENALTY_MAX);
+			if(distance < weapon.getRangeMin()) {
+				chance -= RANGE_PENALTY_FAR * (weapon.getRangeMin() - distance);
+			} else if(distance > weapon.getRangeMax()) {
+				chance -= RANGE_PENALTY_FAR * (distance - weapon.getRangeMax());
+			}
 		} else {
 			float evasionSkill = (float) target.getSkill(Actor.Skill.EVASION);
 			float meleeEvasionMod = EVASION_PENALTY * evasionSkill;

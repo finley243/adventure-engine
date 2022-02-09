@@ -5,7 +5,7 @@ import java.util.Map;
 public class Faction {
 
 	public enum FactionRelation {
-		ENEMY, NEUTRAL, FRIEND
+		HOSTILE, NEUTRAL, ASSIST
 	}
 	
 	private final String ID;
@@ -24,7 +24,7 @@ public class Faction {
 	
 	public FactionRelation getRelationTo(String factionID) {
 		if(factionID.equals(this.ID)) {
-			return FactionRelation.FRIEND;
+			return FactionRelation.ASSIST;
 		} else {
 			return relations.getOrDefault(factionID, defaultRelation);
 		}

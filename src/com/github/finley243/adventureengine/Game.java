@@ -76,6 +76,7 @@ public class Game {
 		EVENT_BUS.post(new TextClearEvent());
 		TextGen.clearContext();
 		SceneManager.trigger(Data.getPlayer().getArea().getRoom().getScenes());
+		Data.getPlayer().describeSurroundings();
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				CombatHelper.newTurn();

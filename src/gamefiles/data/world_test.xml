@@ -2,11 +2,11 @@
     <room id="test_room">
         <name proper="false">test room</name>
         <area id="test_area_1">
-            <name>area 1</name>
+            <name proper="true">area one</name>
             <links>
                 <link dir="west" dist="1">test_area_2</link>
                 <link dir="southwest" dist="2" type="vis">test_area_3</link>
-                <link dir="southwest" dist="2" type="vis">test_area_4</link>
+                <link dir="southwest" dist="3" type="vis">test_area_4</link>
                 <link dir="south" dist="2" type="vis">test_area_5</link>
             </links>
             <objects>
@@ -18,42 +18,49 @@
             <actors>
                 <actor id="test_enemy_1">
                     <stats>enemy</stats>
+                    <descriptor>first</descriptor>
                 </actor>
             </actors>
         </area>
         <area id="test_area_2">
-            <name>area 2</name>
+            <name proper="true">area two</name>
             <links>
                 <link dir="east" dist="1">test_area_1</link>
                 <link dir="south" dist="1">test_area_3</link>
                 <link dir="south" dist="2" type="vis">test_area_4</link>
-                <link dir="southeast" dist="2" type="vis">test_area_5</link>
+                <link dir="southeast" dist="3" type="vis">test_area_5</link>
             </links>
+            <actors>
+                <actor id="test_enemy_2">
+                    <stats>enemy</stats>
+                    <descriptor>second</descriptor>
+                </actor>
+            </actors>
         </area>
         <area id="test_area_3">
-            <name>area 3</name>
+            <name proper="true">area three</name>
             <links>
                 <link dir="northeast" dist="2" type="vis">test_area_1</link>
                 <link dir="north" dist="1">test_area_2</link>
                 <link dir="south" dist="1">test_area_4</link>
-                <link dir="northeast" dist="2" type="vis">test_area_5</link>
+                <link dir="southeast" dist="2" type="vis">test_area_5</link>
             </links>
         </area>
         <area id="test_area_4">
-            <name>area 4</name>
+            <name proper="true">area four</name>
             <links>
-                <link dir="northeast" dist="2" type="vis">test_area_1</link>
+                <link dir="northeast" dist="3" type="vis">test_area_1</link>
                 <link dir="north" dist="2" type="vis">test_area_2</link>
                 <link dir="north" dist="1">test_area_3</link>
                 <link dir="east" dist="1">test_area_5</link>
             </links>
         </area>
         <area id="test_area_5">
-            <name>area 5</name>
+            <name proper="true">area five</name>
             <links>
                 <link dir="north" dist="2" type="vis">test_area_1</link>
-                <link dir="northwest" dist="2" type="vis">test_area_2</link>
-                <link dir="southwest" dist="2" type="vis">test_area_3</link>
+                <link dir="northwest" dist="3" type="vis">test_area_2</link>
+                <link dir="northwest" dist="2" type="vis">test_area_3</link>
                 <link dir="west" dist="1">test_area_4</link>
             </links>
             <objects>
