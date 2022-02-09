@@ -19,13 +19,13 @@ public class ActionCrouch extends Action {
 
     @Override
     public float utility(Actor subject) {
-        float utility = 0.0f;
+        int targetsBlocked = 0;
         for(CombatTarget target : subject.getCombatTargets()) {
             if(target.getTargetActor().getArea().isBehindCover(subject.getArea())) {
-                utility += 0.05f;
+                targetsBlocked++;
             }
         }
-        return utility;
+        return 0.2f * (((float) targetsBlocked) / ((float) subject.getCombatTargets().size()));
     }
 
     @Override

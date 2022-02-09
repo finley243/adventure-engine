@@ -38,6 +38,6 @@
         <rate>2</rate>
         <rangeMin>2</rangeMin>
         <rangeMax>3</rangeMax>
-        <clipSize>20</clipSize>
+        <clipSize>16</clipSize>
     </item>
 </items>
