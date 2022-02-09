@@ -304,20 +304,7 @@ public class DataLoader {
             case "factionRelation":
                 String targetFaction = LoadUtils.singleTag(scriptElement, "targetFaction", null);
                 String relationFaction = LoadUtils.singleTag(scriptElement, "relationFaction", null);
-                String relationString = LoadUtils.singleTag(scriptElement, "relation", null);
-                Faction.FactionRelation relation;
-                switch(relationString) {
-                    case "FRIEND":
-                        relation = Faction.FactionRelation.ASSIST;
-                        break;
-                    case "ENEMY":
-                        relation = Faction.FactionRelation.HOSTILE;
-                        break;
-                    case "NEUTRAL":
-                    default:
-                        relation = Faction.FactionRelation.NEUTRAL;
-                        break;
-                }
+                Faction.FactionRelation relation = factionRelationTag(scriptElement, "relation");
                 return new ScriptFactionRelation(targetFaction, relationFaction, relation);
             default:
                 return null;
@@ -400,7 +387,9 @@ public class DataLoader {
                 int weaponRangeMin = LoadUtils.singleTagInt(itemElement, "rangeMin", 0);
                 int weaponRangeMax = LoadUtils.singleTagInt(itemElement, "rangeMax", 0);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
-                return new StatsWeapon(id, name, description, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize);
+                float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
+                boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
+                return new StatsWeapon(id, name, description, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced);
         }
         return null;
     }

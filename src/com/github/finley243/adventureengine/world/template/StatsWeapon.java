@@ -29,8 +29,10 @@ public class StatsWeapon extends StatsItem {
 	private final int rangeMin;
 	private final int rangeMax;
 	private final int clipSize;
+	private final float accuracyBonus;
+	private final boolean silenced;
 	
-	public StatsWeapon(String ID, String name, String description, int price, WeaponType type, int damage, int rate, int critDamage, int rangeMin, int rangeMax, int clipSize) {
+	public StatsWeapon(String ID, String name, String description, int price, WeaponType type, int damage, int rate, int critDamage, int rangeMin, int rangeMax, int clipSize, float accuracyBonus, boolean silenced) {
 		super(ID, name, description, price);
 		this.type = type;
 		this.damage = damage;
@@ -39,6 +41,8 @@ public class StatsWeapon extends StatsItem {
 		this.rangeMin = rangeMin;
 		this.rangeMax = rangeMax;
 		this.clipSize = clipSize;
+		this.accuracyBonus = accuracyBonus;
+		this.silenced = silenced;
 	}
 	
 	public WeaponType getType() {
@@ -67,6 +71,14 @@ public class StatsWeapon extends StatsItem {
 	
 	public int getClipSize() {
 		return clipSize;
+	}
+
+	public float getAccuracyBonus() {
+		return accuracyBonus;
+	}
+
+	public boolean isSilenced() {
+		return silenced;
 	}
 	
 }
