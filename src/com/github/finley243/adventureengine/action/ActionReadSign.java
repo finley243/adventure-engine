@@ -10,28 +10,24 @@ import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.Readable;
-import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.ObjectSign;
 
-public class ActionRead extends Action {
+public class ActionReadSign extends Action {
 
-	private final WorldObject object;
+	private final ObjectSign sign;
 	private final boolean isInInventory;
 	
-	public ActionRead(WorldObject object, boolean isInInventory) {
-		if(!(object instanceof Readable)) {
-			throw new IllegalArgumentException("WorldObject must implement Readable");
-		}
-		this.object = object;
+	public ActionReadSign(ObjectSign sign, boolean isInInventory) {
+		this.sign = sign;
 		this.isInInventory = isInInventory;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		Context context = new Context(subject, false, object, false);
+		Context context = new Context(subject, false, sign, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("read"), context, this, subject));
 		if(subject instanceof ActorPlayer) {
-			List<String> text = ((Readable) object).getText();
+			List<String> text = sign.getText();
 			Game.EVENT_BUS.post(new RenderTextEvent("-----------"));
 			for(String line : text) {
 				Game.EVENT_BUS.post(new RenderTextEvent(line));
@@ -48,19 +44,19 @@ public class ActionRead extends Action {
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		if(isInInventory) {
-			return new MenuData("Read", "Read " + object.getFormattedName(false), canChoose(subject), new String[]{"inventory", object.getName()});
+			return new MenuData("Read", "Read " + sign.getFormattedName(false), canChoose(subject), new String[]{"inventory", sign.getName()});
 		} else {
-			return new MenuData("Read", "Read " + object.getFormattedName(false), canChoose(subject), new String[]{object.getName()});
+			return new MenuData("Read", "Read " + sign.getFormattedName(false), canChoose(subject), new String[]{sign.getName()});
 		}
 	}
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionRead)) {
+        if(!(o instanceof ActionReadSign)) {
             return false;
         } else {
-            ActionRead other = (ActionRead) o;
-            return other.object == this.object;
+            ActionReadSign other = (ActionReadSign) o;
+            return other.sign == this.sign;
         }
     }
 

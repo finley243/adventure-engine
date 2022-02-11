@@ -3,11 +3,10 @@ package com.github.finley243.adventureengine.world.object;
 import java.util.List;
 
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionRead;
+import com.github.finley243.adventureengine.action.ActionReadSign;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.world.Readable;
 
-public class ObjectSign extends WorldObject implements Readable {
+public class ObjectSign extends WorldObject {
 
 	private final List<String> text;
 	
@@ -15,8 +14,7 @@ public class ObjectSign extends WorldObject implements Readable {
 		super(ID, name, description);
 		this.text = text;
 	}
-	
-	@Override
+
 	public List<String> getText() {
 		return text;
 	}
@@ -24,7 +22,7 @@ public class ObjectSign extends WorldObject implements Readable {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
-		actions.add(new ActionRead(this, false));
+		actions.add(new ActionReadSign(this, false));
 		return actions;
 	}
 
