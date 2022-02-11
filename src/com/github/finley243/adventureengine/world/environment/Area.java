@@ -185,7 +185,7 @@ public class Area implements Noun {
 	public List<Action> getMoveActions() {
 		List<Action> moveActions = new ArrayList<>();
 		for(AreaLink link : linkedAreas.values()) {
-			if(link.getType() == AreaLink.AreaLinkType.DEFAULT || link.getType() == AreaLink.AreaLinkType.MOVE) {
+			if(link.getType().isMovable) {
 				if(link.heightChange() == 0) {
 					moveActions.add(new ActionMoveArea(Data.getArea(link.getAreaID()), link.getDirection()));
 				}
@@ -197,7 +197,7 @@ public class Area implements Noun {
 	public Set<Area> getMovableAreas() {
 		Set<Area> movableAreas = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
-			if((link.getType() == AreaLink.AreaLinkType.DEFAULT || link.getType() == AreaLink.AreaLinkType.MOVE) && link.heightChange() == 0) {
+			if((link.getType().isMovable) && link.heightChange() == 0) {
 				movableAreas.add(Data.getArea(link.getAreaID()));
 			}
 		}
@@ -207,19 +207,15 @@ public class Area implements Noun {
 	public Set<Area> getVisibleAreas(Actor subject) {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
+		Set<AreaLink.RelativeDirection> obstructedDirections = EnumSet.noneOf(AreaLink.RelativeDirection.class);
+		for(WorldObject object : getObjects()) {
+			if(object instanceof ObjectCover) {
+				obstructedDirections.addAll(Arrays.asList(((ObjectCover) object).getDirection().obstructsTo));
+			}
+		}
 		for(AreaLink link : linkedAreas.values()) {
-			if(link.getType() != AreaLink.AreaLinkType.MOVE) {
-				// TODO - Redesign inefficient check
-				boolean obstructed = false;
-				if (subject.isCrouching()) {
-					for (WorldObject object : getObjects()) {
-						if (object instanceof ObjectCover && ((ObjectCover) object).obstructsTo(link.getDirection())) {
-							obstructed = true;
-							break;
-						}
-					}
-				}
-				if (!obstructed) {
+			if(link.getType().isVisible) {
+				if (!(subject.isCrouching() && obstructedDirections.contains(link.getDirection()))) {
 					Area area = Data.getArea(link.getAreaID());
 					visibleAreas.add(area);
 				}

@@ -57,8 +57,7 @@ public class ActionItemConsume extends Action {
 			fullPrompt = "Use " + item.getFormattedName(true);
 			break;
 		}
-		int count = subject.inventory().itemCountWithID(item.getStatsID());
-		return new MenuData(prompt, fullPrompt, canChoose(subject), new String[]{"inventory", item.getName() + (count > 1 ? "(" + count + ")" : "")});
+		return new MenuData(prompt, fullPrompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getStatsID())});
 	}
 
 	@Override

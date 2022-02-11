@@ -37,8 +37,7 @@ public class ActionItemDrop extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		int count = subject.inventory().itemCountWithID(item.getStatsID());
-		return new MenuData("Drop", "Drop " + item.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName() + (count > 1 ? "(" + count + ")" : "")});
+		return new MenuData("Drop", "Drop " + item.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getStatsID())});
 	}
 
 	@Override

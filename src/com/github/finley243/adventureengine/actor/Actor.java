@@ -703,10 +703,12 @@ public class Actor implements Noun, Physical {
 	public Set<Actor> getVisibleActors() {
 		Set<Actor> visibleActors = new HashSet<>();
 		Set<Area> visibleAreas = getArea().getVisibleAreas(this);
-		// TODO - Optimize (check if each area is visible once)
-		for(Actor actor : getArea().getRoom().getActors()) {
-			if(actor != this && visibleAreas.contains(actor.getArea()) && (!actor.isCrouching() || !getArea().isBehindCover(actor.getArea()))) {
-				visibleActors.add(actor);
+		for(Area visibleArea : visibleAreas) {
+			boolean areaBehindCover = getArea().isBehindCover(visibleArea);
+			for(Actor actor : visibleArea.getActors()) {
+				if(actor != this && !(actor.isCrouching() && areaBehindCover)) {
+					visibleActors.add(actor);
+				}
 			}
 		}
 		return visibleActors;
@@ -715,11 +717,8 @@ public class Actor implements Noun, Physical {
 	public Set<WorldObject> getVisibleObjects() {
 		Set<WorldObject> visibleObjects = new HashSet<>();
 		Set<Area> visibleAreas = getArea().getVisibleAreas(this);
-		// TODO - Optimize (check if each area is visible once)
-		for(WorldObject object : getArea().getRoom().getObjects()) {
-			if(visibleAreas.contains(object.getArea())) {
-				visibleObjects.add(object);
-			}
+		for(Area visibleArea : visibleAreas) {
+			visibleObjects.addAll(visibleArea.getObjects());
 		}
 		return visibleObjects;
 	}

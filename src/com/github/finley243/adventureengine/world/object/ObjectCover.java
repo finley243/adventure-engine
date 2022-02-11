@@ -5,7 +5,16 @@ import com.github.finley243.adventureengine.world.environment.AreaLink;
 public class ObjectCover extends WorldObject {
 
     public enum CoverDirection {
-        NORTH, SOUTH, EAST, WEST
+        NORTH(new AreaLink.RelativeDirection[]{AreaLink.RelativeDirection.NORTH, AreaLink.RelativeDirection.NORTHWEST, AreaLink.RelativeDirection.NORTHEAST}),
+        SOUTH(new AreaLink.RelativeDirection[]{AreaLink.RelativeDirection.SOUTH, AreaLink.RelativeDirection.SOUTHWEST, AreaLink.RelativeDirection.SOUTHEAST}),
+        EAST(new AreaLink.RelativeDirection[]{AreaLink.RelativeDirection.EAST, AreaLink.RelativeDirection.NORTHEAST, AreaLink.RelativeDirection.SOUTHEAST}),
+        WEST(new AreaLink.RelativeDirection[]{AreaLink.RelativeDirection.WEST, AreaLink.RelativeDirection.NORTHWEST, AreaLink.RelativeDirection.SOUTHWEST});
+
+        public final AreaLink.RelativeDirection[] obstructsTo;
+
+        CoverDirection(AreaLink.RelativeDirection[] obstructsTo) {
+            this.obstructsTo = obstructsTo;
+        }
     }
 
     private CoverDirection direction;

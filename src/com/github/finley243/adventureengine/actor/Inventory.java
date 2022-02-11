@@ -36,6 +36,14 @@ public class Inventory {
 		if(!items.containsKey(ID)) return 0;
 		return items.get(ID).size();
 	}
+
+	public String itemCountLabel(String ID) {
+		if(itemCountWithID(ID) <= 1) {
+			return "";
+		} else {
+			return " (" + itemCountWithID(ID) + ")";
+		}
+	}
 	
 	public void removeItem(Item item) {
 		if(items.containsKey(item.getStatsID())) {
