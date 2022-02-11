@@ -35,6 +35,13 @@
             <count>1</count>
         </entry>
     </lootTable>
+    <lootTable id="weapon_ranged_3" useAll="true">
+        <entry>
+            <reference table="true">weapon_ranged</reference>
+            <chance>1.0</chance>
+            <count>3</count>
+        </entry>
+    </lootTable>
     <lootTable id="stratis_receptionist" useAll="true">
         <entry>
             <reference table="false">pistol_light</reference>

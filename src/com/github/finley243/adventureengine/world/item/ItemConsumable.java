@@ -48,18 +48,4 @@ public class ItemConsumable extends Item {
 		return actions;
 	}
 	
-	@Override
-	public boolean equals(Object other) {
-		if(!(other instanceof ItemConsumable)) {
-			return false;
-		} else {
-			return ((ItemConsumable) other).stats.equals(this.stats);
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return stats.getID().hashCode();
-	}
-	
 }

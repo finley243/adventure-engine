@@ -90,8 +90,14 @@ public abstract class WorldObject implements Noun, Physical {
 		return ID.hashCode();
 	}
 
-	private void actionInspect() {
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof WorldObject && ((WorldObject) o).getID().equals(this.getID());
+	}
 
+	@Override
+	public String toString() {
+		return this.getID();
 	}
 
 }

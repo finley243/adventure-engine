@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 public class Inventory {
 
+	// Keys are statsIDs, values are lists of items with the corresponding statsID
 	private final Map<String, List<Item>> items;
 	
 	public Inventory() {

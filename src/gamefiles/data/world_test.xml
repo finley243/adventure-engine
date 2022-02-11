@@ -68,6 +68,10 @@
                     <name>cover</name>
                     <direction>NORTH</direction>
                 </object>
+                <object type="container" id="test_container_locker">
+                    <name>weapon locker</name>
+                    <lootTable>weapon_ranged_3</lootTable>
+                </object>
             </objects>
         </area>
     </room>

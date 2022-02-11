@@ -74,20 +74,5 @@ public class ItemApparel extends Item {
 		actions.add(new ActionApparelUnequip(this));
 		return actions;
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if(!(o instanceof ItemApparel)) {
-			return false;
-		} else {
-			ItemApparel other = (ItemApparel) o;
-			return this.stats == other.stats;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return stats.getID().hashCode();
-	}
 
 }

@@ -20,19 +20,5 @@ public class ItemKey extends Item {
 	public String getStatsID() {
 		return stats.getID();
 	}
-	
-	@Override
-	public boolean equals(Object other) {
-		if(!(other instanceof ItemKey)) {
-			return false;
-		} else {
-			return ((ItemKey) other).stats.equals(this.stats);
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return stats.getID().hashCode();
-	}
 
 }
