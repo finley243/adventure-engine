@@ -493,7 +493,7 @@ public class Actor implements Noun, Physical {
 				action.add(new ActionTalk(this));
 			}
 		} else { // Dead
-			action.addAll(inventory.getExternalActions(this));
+			action.addAll(inventory.getExternalActions(this, subject));
 		}
 		return action;
 	}

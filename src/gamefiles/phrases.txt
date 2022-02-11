@@ -29,6 +29,7 @@ read:<subject> read<s> <object>
 reload:<subject> reload<s> <object>
 sit:<subject> sit<s> in <object>
 stand:<subject> stand<s> up
+storeIn:<subject> put<s> <object> in <object2>
 takeCover:<subject> take<s> cover behind <object>
 takeElevatorDown:<subject> take<s> <object> down
 takeElevatorUp:<subject> take<s> <object> up

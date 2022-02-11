@@ -10,14 +10,15 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.object.ObjectContainer;
 
-public class ActionInventoryTake extends Action {
+public class ActionInventoryStore extends Action {
 
     private final Noun owner;
     private final Inventory inventory;
     private final Item item;
 
-    public ActionInventoryTake(Noun owner, Inventory inventory, Item item) {
+    public ActionInventoryStore(Noun owner, Inventory inventory, Item item) {
         this.owner = owner;
         this.inventory = inventory;
         this.item = item;
@@ -25,10 +26,10 @@ public class ActionInventoryTake extends Action {
 
     @Override
     public void choose(Actor subject) {
-        inventory.removeItem(item);
-        subject.inventory().addItem(item);
+        subject.inventory().removeItem(item);
+        inventory.addItem(item);
         Context context = new Context(subject, false, item, true, owner, false);
-        Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
+        Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("storeIn"), context, this, subject));
     }
 
     @Override
@@ -38,18 +39,18 @@ public class ActionInventoryTake extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        String fullPrompt = "Take " + item.getFormattedName(true) + " from " + owner.getFormattedName(false);
-        return new MenuData("Take " + LangUtils.titleCase(item.getName()) + inventory.itemCountLabel(item.getStatsID()), fullPrompt, canChoose(subject), new String[]{owner.getName()});
+        String fullPrompt = "Put " + item.getFormattedName(true) + " in " + owner.getFormattedName(false);
+        return new MenuData(LangUtils.titleCase(item.getName()) + inventory.itemCountLabel(item.getStatsID()), fullPrompt, canChoose(subject), new String[]{owner.getName(), "store"});
     }
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionInventoryTake)) {
+        if(!(o instanceof ActionInventoryStore)) {
             return false;
         } else {
-            ActionInventoryTake other = (ActionInventoryTake) o;
+            ActionInventoryStore other = (ActionInventoryStore) o;
             return other.owner == this.owner && other.item == this.item && other.inventory == this.inventory;
         }
     }
-    
+
 }
