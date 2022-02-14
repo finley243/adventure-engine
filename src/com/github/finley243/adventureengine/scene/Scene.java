@@ -61,7 +61,7 @@ public class Scene {
 	}
 	
 	public void updateCooldown() {
-		if(!condition.isMet(Data.getPlayer())) {
+		if(condition != null && !condition.isMet(Data.getPlayer())) {
 			return;
 		}
 		if(cooldownCounter > 0) {

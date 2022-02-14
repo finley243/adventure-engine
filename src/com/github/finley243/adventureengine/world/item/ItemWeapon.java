@@ -23,7 +23,7 @@ public class ItemWeapon extends ItemEquippable {
 	private int ammo;
 	
 	public ItemWeapon(StatsWeapon stats) {
-		super(stats.generateInstanceID(), stats.getName());
+		super(stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 		reloadFull();
 	}

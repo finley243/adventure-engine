@@ -78,7 +78,7 @@ public class DataLoader {
         }
     }
 
-    private static StatsActor loadActor(Element actorElement) {
+    private static StatsActor loadActor(Element actorElement) throws ParserConfigurationException, IOException, SAXException {
         String id = actorElement.getAttribute("id");
         String parentID = actorElement.getAttribute("parent");
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
@@ -92,7 +92,8 @@ public class DataLoader {
         String topic = LoadUtils.singleTag(actorElement, "topic", null);
         Map<Actor.Attribute, Integer> attributes = loadAttributes(LoadUtils.singleChildWithName(actorElement, "attributes"));
         Map<Actor.Skill, Integer> skills = loadSkills(LoadUtils.singleChildWithName(actorElement, "skills"));
-        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, topic);
+        Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
+        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, topic, scripts);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -263,7 +264,7 @@ public class DataLoader {
         return subConditions;
     }
 
-    private static List<Script> loadScripts(Element parentElement) {
+    private static List<Script> loadScripts(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
         List<Element> scriptElements = LoadUtils.directChildrenWithName(parentElement, "script");
         List<Script> scripts = new ArrayList<>();
         for(Element scriptElement : scriptElements) {
@@ -273,39 +274,58 @@ public class DataLoader {
         return scripts;
     }
 
-    private static Script loadScript(Element scriptElement) {
+    private static Map<String, Script> loadScriptsWithTriggers(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
+        Map<String, Script> scripts = new HashMap<String, Script>();
+        List<Element> scriptElements = LoadUtils.directChildrenWithName(parentElement, "script");
+        for(Element scriptElement : scriptElements) {
+            String trigger = scriptElement.getAttribute("trigger");
+            Script script = loadScript(scriptElement);
+            scripts.put(trigger, script);
+        }
+        return scripts;
+    }
+
+    private static Script loadScript(Element scriptElement) throws ParserConfigurationException, IOException, SAXException {
         if(scriptElement == null) return null;
         String type = scriptElement.getAttribute("type");
+        Element conditionElement = LoadUtils.singleChildWithName(scriptElement, "condition");
+        Condition condition = loadCondition(conditionElement);
         ActorReference actorRef = loadActorReference(scriptElement);
         switch(type) {
+            case "compound":
+                List<Script> subScripts = loadScripts(scriptElement);
+                return new ScriptCompound(condition, subScripts);
             case "money":
                 int moneyValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
-                return new ScriptMoney(actorRef, moneyValue);
+                return new ScriptMoney(condition, actorRef, moneyValue);
             case "add_item":
                 String addItemID = LoadUtils.singleTag(scriptElement, "item", null);
-                return new ScriptAddItem(actorRef, addItemID);
+                return new ScriptAddItem(condition, actorRef, addItemID);
+            case "scene":
+                List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
+                return new ScriptScene(condition, scenes);
             case "var_set":
                 String varSetID = LoadUtils.singleTag(scriptElement, "variable", null);
                 int varSetValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
-                return new ScriptVariableSet(varSetID, varSetValue);
+                return new ScriptVariableSet(condition, varSetID, varSetValue);
             case "var_mod":
                 String varModID = LoadUtils.singleTag(scriptElement, "variable", null);
                 int varModValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
-                return new ScriptVariableMod(varModID, varModValue);
+                return new ScriptVariableMod(condition, varModID, varModValue);
             case "trade":
-                return new ScriptTrade();
+                return new ScriptTrade(condition);
             case "dialogue":
                 String topic = LoadUtils.singleTag(scriptElement, "topic", null);
-                return new ScriptDialogue(actorRef, topic);
+                return new ScriptDialogue(condition, actorRef, topic);
             case "combat":
                 Element combatantElement = LoadUtils.singleChildWithName(scriptElement, "combatant");
                 ActorReference combatantRef = loadActorReference(combatantElement);
-                return new ScriptCombat(actorRef, combatantRef);
+                return new ScriptCombat(condition, actorRef, combatantRef);
             case "factionRelation":
                 String targetFaction = LoadUtils.singleTag(scriptElement, "targetFaction", null);
                 String relationFaction = LoadUtils.singleTag(scriptElement, "relationFaction", null);
                 Faction.FactionRelation relation = factionRelationTag(scriptElement, "relation");
-                return new ScriptFactionRelation(targetFaction, relationFaction, relation);
+                return new ScriptFactionRelation(condition, targetFaction, relationFaction, relation);
             default:
                 return null;
         }
@@ -361,24 +381,25 @@ public class DataLoader {
         }
     }
 
-    private static StatsItem loadItem(Element itemElement) {
+    private static StatsItem loadItem(Element itemElement) throws ParserConfigurationException, IOException, SAXException {
         String type = itemElement.getAttribute("type");
         String id = itemElement.getAttribute("id");
         String name = LoadUtils.singleTag(itemElement, "name", null);
         String description = LoadUtils.singleTag(itemElement, "description", null);
+        Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
         int price = LoadUtils.singleTagInt(itemElement, "price", 0);
         switch(type) {
             case "apparel":
                 EquipmentComponent.ApparelSlot apparelSlot = EquipmentComponent.ApparelSlot.valueOf(LoadUtils.singleTag(itemElement, "slot", "TORSO"));
                 int damageResistance = LoadUtils.singleTagInt(itemElement, "damageResistance", 0);
                 List<Effect> apparelEffects = loadEffects(itemElement, true);
-                return new StatsApparel(id, name, description, price, apparelSlot, damageResistance, apparelEffects);
+                return new StatsApparel(id, name, description, scripts, price, apparelSlot, damageResistance, apparelEffects);
             case "consumable":
                 StatsConsumable.ConsumableType consumableType = StatsConsumable.ConsumableType.valueOf(LoadUtils.singleTag(itemElement, "type", "OTHER"));
                 List<Effect> consumableEffects = loadEffects(LoadUtils.singleChildWithName(itemElement, "effects"), false);
-                return new StatsConsumable(id, name, description, price, consumableType, consumableEffects);
+                return new StatsConsumable(id, name, description, scripts, price, consumableType, consumableEffects);
             case "key":
-                return new StatsKey(id, name, description);
+                return new StatsKey(id, name, description, scripts);
             case "weapon":
                 StatsWeapon.WeaponType weaponType = StatsWeapon.WeaponType.valueOf(LoadUtils.singleTag(itemElement, "type", null));
                 int weaponDamage = LoadUtils.singleTagInt(itemElement, "damage", 0);
@@ -389,7 +410,7 @@ public class DataLoader {
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
-                return new StatsWeapon(id, name, description, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced);
+                return new StatsWeapon(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced);
         }
         return null;
     }
@@ -472,7 +493,7 @@ public class DataLoader {
         return new SceneLine(condition, text, scripts);
     }
 
-    private static Room loadRoom(Element roomElement) {
+    private static Room loadRoom(Element roomElement) throws ParserConfigurationException, IOException, SAXException {
         String roomID = roomElement.getAttribute("id");
         Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
         String roomName = roomNameElement.getTextContent();
@@ -492,7 +513,7 @@ public class DataLoader {
         return new Room(roomID, roomName, roomNameIsProper, roomDescription, roomScenes, roomOwnerFaction, areas);
     }
 
-    private static Area loadArea(Element areaElement, String roomID) {
+    private static Area loadArea(Element areaElement, String roomID) throws ParserConfigurationException, IOException, SAXException {
         String areaID = areaElement.getAttribute("id");
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = nameElement.getTextContent();
@@ -542,38 +563,39 @@ public class DataLoader {
         return area;
     }
 
-    private static WorldObject loadObject(Element objectElement) {
+    private static WorldObject loadObject(Element objectElement) throws ParserConfigurationException, IOException, SAXException {
         String objectType = objectElement.getAttribute("type");
         String objectName = LoadUtils.singleTag(objectElement, "name", null);
         String objectID = objectElement.getAttribute("id");
         String objectDescription = LoadUtils.singleTag(objectElement, "description", null);
+        Map<String, Script> objectScripts = loadScriptsWithTriggers(objectElement);
         switch(objectType) {
             case "exit":
                 String exitLink = LoadUtils.singleTag(objectElement, "link", null);
                 Set<String> exitKeys = LoadUtils.setOfTags(objectElement, "key");
-                return new ObjectExit(objectID, objectName, objectDescription, exitLink, exitKeys);
+                return new ObjectExit(objectID, objectName, objectDescription, objectScripts, exitLink, exitKeys);
             case "elevator":
                 int floorNumber = LoadUtils.singleTagInt(objectElement, "floorNumber", 1);
                 String floorName = LoadUtils.singleTag(objectElement, "floorName", null);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(LoadUtils.singleChildWithName(objectElement, "links"), "link");
-                return new ObjectElevator(objectID, objectName, objectDescription, floorNumber, floorName, linkedElevatorIDs);
+                return new ObjectElevator(objectID, objectName, objectDescription, objectScripts, floorNumber, floorName, linkedElevatorIDs);
             case "sign":
                 List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "lines"), "text");
-                return new ObjectSign(objectID, objectName, objectDescription, signText);
+                return new ObjectSign(objectID, objectName, objectDescription, objectScripts, signText);
             case "chair":
-                return new ObjectChair(objectID, objectName, objectDescription);
+                return new ObjectChair(objectID, objectName, objectDescription, objectScripts);
             case "cover":
                 ObjectCover.CoverDirection coverDirection = ObjectCover.CoverDirection.valueOf(LoadUtils.singleTag(objectElement, "direction", null).toUpperCase());
-                return new ObjectCover(objectID, objectName, objectDescription, coverDirection);
+                return new ObjectCover(objectID, objectName, objectDescription, objectScripts, coverDirection);
             case "vending_machine":
                 List<String> vendingItems = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "items"), "item");
-                return new ObjectVendingMachine(objectID, objectName, objectDescription, vendingItems);
+                return new ObjectVendingMachine(objectID, objectName, objectDescription, objectScripts, vendingItems);
             case "item":
                 String itemID = LoadUtils.singleTag(objectElement, "item", null);
                 return ItemFactory.create(itemID);
             case "container":
                 String containerLootTable = LoadUtils.singleTag(objectElement, "lootTable", null);
-                return new ObjectContainer(objectID, objectName, objectDescription, containerLootTable);
+                return new ObjectContainer(objectID, objectName, objectDescription, objectScripts, containerLootTable);
         }
         return null;
     }

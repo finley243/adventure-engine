@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.Data;
 public class SceneManager {
 	
 	public static void trigger(List<String> scenes) {
-		updateCooldowns();
+		updateCooldowns(scenes);
 		Scene scene = selectScene(scenes);
 		if(scene != null) {
 			scene.play();
@@ -33,9 +33,12 @@ public class SceneManager {
 		return validScenes.get(ThreadLocalRandom.current().nextInt(validScenes.size()));
 	}
 
-	private static void updateCooldowns() {
-		for(Scene scene : Data.getScenes()) {
+	private static void updateCooldowns(List<String> scenes) {
+		/*for(Scene scene : Data.getScenes()) {
 			scene.updateCooldown();
+		}*/
+		for(String scene : scenes) {
+			Data.getScene(scene).updateCooldown();
 		}
 	}
 

@@ -6,10 +6,12 @@ import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.template.StatsApparel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ItemApparel extends Item {
 
@@ -17,7 +19,7 @@ public class ItemApparel extends Item {
 	private List<Effect> effects;
 	
 	public ItemApparel(StatsApparel stats) {
-		super(stats.generateInstanceID(), stats.getName());
+		super(stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
 	

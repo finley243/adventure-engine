@@ -109,6 +109,9 @@
         <faction>enemy</faction>
         <hp>40</hp>
         <loottable>weapon_ranged</loottable>
+        <script trigger="on_combat_start" type="scene">
+            <scene>test_combat_bark</scene>
+        </script>
     </actor>
     <actor id="nexus_bouncer" parent="default">
         <name proper="false">bouncer</name>

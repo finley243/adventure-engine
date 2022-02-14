@@ -1,6 +1,9 @@
 package com.github.finley243.adventureengine.world.object;
 
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
+
+import java.util.Map;
 
 public class ObjectCover extends WorldObject {
 
@@ -19,8 +22,8 @@ public class ObjectCover extends WorldObject {
 
     private CoverDirection direction;
 
-    public ObjectCover(String ID, String name, String description, CoverDirection direction) {
-        super(ID, name, description);
+    public ObjectCover(String ID, String name, String description, Map<String, Script> scripts, CoverDirection direction) {
+        super(ID, name, description, scripts);
         this.direction = direction;
     }
 

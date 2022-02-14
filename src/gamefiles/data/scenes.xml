@@ -26,4 +26,11 @@
             <text>As he turns back to the computer, he notices you and clears his throat.</text>
         </line>
     </scene>
+    <scene id="test_combat_bark">
+        <chance>1.0</chance>
+        <cooldown>0</cooldown>
+        <line>
+            <text>Never should have come here!</text>
+        </line>
+    </scene>
 </scenes>

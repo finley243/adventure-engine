@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Data;
@@ -9,6 +10,7 @@ import com.github.finley243.adventureengine.action.ActionExitListen;
 import com.github.finley243.adventureengine.action.ActionMoveExit;
 import com.github.finley243.adventureengine.action.ActionExitUnlock;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ObjectExit extends WorldObject {
@@ -17,8 +19,8 @@ public class ObjectExit extends WorldObject {
 	private boolean isLocked;
 	private final Set<String> keyIDs;
 	
-	public ObjectExit(String ID, String name, String description, String linkedExitID, Set<String> keyIDs) {
-		super(ID, name, description);
+	public ObjectExit(String ID, String name, String description, Map<String, Script> scripts, String linkedExitID, Set<String> keyIDs) {
+		super(ID, name, description, scripts);
 		this.linkedExitID = linkedExitID;
 		this.keyIDs = keyIDs;
 		this.isLocked = !keyIDs.isEmpty();

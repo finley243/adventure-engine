@@ -2,8 +2,10 @@ package com.github.finley243.adventureengine.world.template;
 
 import com.github.finley243.adventureengine.actor.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.script.Script;
 
 import java.util.List;
+import java.util.Map;
 
 public class StatsApparel extends StatsItem {
 	
@@ -11,8 +13,8 @@ public class StatsApparel extends StatsItem {
 	private final int damageResistance;
 	private final List<Effect> effects;
 	
-	public StatsApparel(String ID, String name, String description, int price, EquipmentComponent.ApparelSlot slot, int damageResistance, List<Effect> effects) {
-		super(ID, name, description, price);
+	public StatsApparel(String ID, String name, String description, Map<String, Script> scripts, int price, EquipmentComponent.ApparelSlot slot, int damageResistance, List<Effect> effects) {
+		super(ID, name, description, scripts, price);
 		this.slot = slot;
 		this.damageResistance = damageResistance;
 		this.effects = effects;

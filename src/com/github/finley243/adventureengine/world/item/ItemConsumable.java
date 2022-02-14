@@ -1,11 +1,13 @@
 package com.github.finley243.adventureengine.world.item;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.template.StatsConsumable;
 import com.github.finley243.adventureengine.world.template.StatsConsumable.ConsumableType;
 
@@ -14,7 +16,7 @@ public class ItemConsumable extends Item {
 	private final StatsConsumable stats;
 	
 	public ItemConsumable(StatsConsumable stats) {
-		super(stats.generateInstanceID(), stats.getName());
+		super(stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
 	

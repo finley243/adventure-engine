@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 
 public class StatsActor {
@@ -27,8 +28,10 @@ public class StatsActor {
 	
 	private final String lootTable;
 	private final String topic;
+
+	private final Map<String, Script> scripts;
 	
-	public StatsActor(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic) {
+	public StatsActor(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic, Map<String, Script> scripts) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
@@ -41,6 +44,7 @@ public class StatsActor {
 		this.skills = skills;
 		this.lootTable = lootTable;
 		this.topic = topic;
+		this.scripts = scripts;
 	}
 	
 	public String getID() {
@@ -87,6 +91,10 @@ public class StatsActor {
 	public String getTopic() {
 		if(topic == null && parentID.isEmpty()) return null;
 		return topic != null ? topic : Data.getActorStats(parentID).getTopic();
+	}
+
+	public Map<String, Script> getScripts() {
+		return scripts;
 	}
 	
 }

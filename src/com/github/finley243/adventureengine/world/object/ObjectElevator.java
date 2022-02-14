@@ -2,12 +2,14 @@ package com.github.finley243.adventureengine.world.object;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveElevator;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ObjectElevator extends WorldObject {
@@ -17,8 +19,8 @@ public class ObjectElevator extends WorldObject {
 	private final Set<String> linkedElevatorIDs;
 	private boolean isLocked;
 	
-	public ObjectElevator(String ID, String name, String description, int floorNumber, String floorName, Set<String> linkedElevatorIDs) {
-		super(ID, name, description);
+	public ObjectElevator(String ID, String name, String description, Map<String, Script> scripts, int floorNumber, String floorName, Set<String> linkedElevatorIDs) {
+		super(ID, name, description, scripts);
 		this.floorNumber = floorNumber;
 		this.floorName = floorName;
 		this.linkedElevatorIDs = linkedElevatorIDs;

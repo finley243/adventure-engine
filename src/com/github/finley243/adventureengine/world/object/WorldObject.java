@@ -2,11 +2,13 @@ package com.github.finley243.adventureengine.world.object;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspect;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.Noun;
@@ -22,11 +24,13 @@ public abstract class WorldObject implements Noun, Physical {
 	private final String name;
 	private Area area;
 	private final String description;
+	private Map<String, Script> scripts;
 	
-	public WorldObject(String ID, String name, String description) {
+	public WorldObject(String ID, String name, String description, Map<String, Script> scripts) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
+		this.scripts = scripts;
 	}
 
 	public String getID() {
@@ -83,6 +87,12 @@ public abstract class WorldObject implements Noun, Physical {
 	@Override
 	public List<Action> adjacentActions(Actor subject) {
 		return new ArrayList<>();
+	}
+
+	public void triggerScript(String entryPoint, Actor subject) {
+		if(scripts.containsKey(entryPoint)) {
+			scripts.get(entryPoint).execute(subject);
+		}
 	}
 
 	@Override

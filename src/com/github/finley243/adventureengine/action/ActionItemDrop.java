@@ -26,6 +26,7 @@ public class ActionItemDrop extends Action {
 			subject.inventory().removeItem(item);
 		}
 		subject.getArea().addObject(item);
+		item.setArea(subject.getArea());
 		Context context = new Context(subject, false, item, true);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drop"), context, this, subject));
 	}

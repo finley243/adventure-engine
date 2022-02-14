@@ -47,6 +47,7 @@ public class Context {
 	}
 	
 	public Context(Noun subject, boolean indefiniteSubject, Noun object, boolean indefiniteObject, Noun object2, boolean indefiniteObject2) {
+		if(subject == null || object == null || object2 == null) throw new IllegalArgumentException("Context arguments cannot be null");
 		this.subject = subject;
 		this.object = object;
 		this.object2 = object2;

@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.actor.ai.*;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -326,10 +327,11 @@ public class Actor implements Noun, Physical {
 		if(amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, stats.getMaxHP() - HP);
 		HP += amount;
+		Context context = new Context(this, false);
 		if(SHOW_HP_CHANGES) {
-			Context context = new Context(this, false);
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context, null, null));
 		}
+		Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> <is> " + this.getConditionDescription(), context, null, null));
 	}
 	
 	public void damage(int amount) {
@@ -339,9 +341,13 @@ public class Actor implements Noun, Physical {
 		if(HP <= 0) {
 			HP = 0;
 			kill();
-		} else if(SHOW_HP_CHANGES) {
+		} else {
+			triggerScript("on_damaged");
 			Context context = new Context(this, false);
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
+			if(SHOW_HP_CHANGES) {
+				Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
+			}
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> <is> " + this.getConditionDescription(), context, null, null));
 		}
 	}
 
@@ -357,13 +363,18 @@ public class Actor implements Noun, Physical {
 		if(HP <= 0) {
 			HP = 0;
 			kill();
-		} else if(SHOW_HP_CHANGES) {
+		} else {
+			triggerScript("on_damaged");
 			Context context = new Context(this, false);
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
+			if(SHOW_HP_CHANGES) {
+				Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
+			}
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> <is> " + this.getConditionDescription(), context, null, null));
 		}
 	}
 	
 	public void kill() {
+		triggerScript("on_death");
 		isDead = true;
 		Context context = new Context(this, false);
 		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context, null, null));
@@ -372,6 +383,25 @@ public class Actor implements Noun, Physical {
 			context = new Context(this, false, equippedItem, false);
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 			equippedItem = null;
+		}
+	}
+
+	public String getConditionDescription() {
+		float hpProportion = ((float) this.HP) / ((float) stats.getMaxHP());
+		if(hpProportion == 1.0f) {
+			return "in perfect condition";
+		} else if(hpProportion >= 0.9f) {
+			return "barely scratched";
+		} else if(hpProportion >= 0.75f) {
+			return "lightly injured";
+		} else if(hpProportion >= 0.55f) {
+			return "moderately injured";
+		} else if(hpProportion >= 0.35f) {
+			return "heavily injured";
+		} else if(hpProportion >= 0.15f) {
+			return "dangerously injured";
+		} else {
+			return "clinging to life";
 		}
 	}
 	
@@ -470,6 +500,9 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void addCombatTarget(Actor actor) {
+		if(combatTargets.isEmpty()) {
+			triggerScript("on_combat_start");
+		}
 		combatTargets.add(new CombatTarget(actor));
 	}
 
@@ -679,6 +712,7 @@ public class Actor implements Noun, Physical {
 	}
 	
 	private void updateCombatTargets() {
+		boolean hadTargets = !combatTargets.isEmpty();
 		Iterator<CombatTarget> itr = combatTargets.iterator();
 		while(itr.hasNext()) {
 			CombatTarget target = itr.next();
@@ -686,6 +720,9 @@ public class Actor implements Noun, Physical {
 			if(target.shouldRemove()) {
 				itr.remove();
 			}
+		}
+		if(hadTargets && combatTargets.isEmpty()) {
+			triggerScript("on_combat_end");
 		}
 	}
 	
@@ -725,6 +762,12 @@ public class Actor implements Noun, Physical {
 	
 	public boolean canSee(Actor target) {
 		return getArea().getVisibleAreas(this).contains(target.getArea()) && (!target.isCrouching || !getArea().isBehindCover(target.getArea()));
+	}
+
+	public void triggerScript(String entryPoint) {
+		if(stats.getScripts().containsKey(entryPoint)) {
+			stats.getScripts().get(entryPoint).execute(this);
+		}
 	}
 	
 	@Override

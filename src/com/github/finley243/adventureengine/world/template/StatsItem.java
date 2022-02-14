@@ -1,8 +1,12 @@
 package com.github.finley243.adventureengine.world.template;
 
+import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
+
+import java.util.Map;
 
 public abstract class StatsItem implements Noun {
 
@@ -12,11 +16,13 @@ public abstract class StatsItem implements Noun {
 	private final String name;
 	private final String description;
 	private final int price;
+	private final Map<String, Script> scripts;
 	
-	public StatsItem(String ID, String name, String description, int price) {
+	public StatsItem(String ID, String name, String description, Map<String, Script> scripts, int price) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
+		this.scripts = scripts;
 		this.price = price;
 		this.generatedCount = 1;
 	}
@@ -61,6 +67,10 @@ public abstract class StatsItem implements Noun {
 	
 	public int getPrice() {
 		return price;
+	}
+
+	public Map<String, Script> getScripts() {
+		return scripts;
 	}
 	
 	@Override
