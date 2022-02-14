@@ -15,7 +15,7 @@ public abstract class Script {
 	}
 
 	public boolean canExecute(Actor subject) {
-		return condition.isMet(subject);
+		return condition == null || condition.isMet(subject);
 	}
 
 	public abstract void execute(Actor subject);
