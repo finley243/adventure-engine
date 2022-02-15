@@ -250,8 +250,7 @@ public class DataLoader {
             case "actorDead":
                 return new ConditionActorDead(actorRef);
             case "combatTarget":
-                Element targetElement = LoadUtils.singleChildWithName(conditionElement, "target");
-                ActorReference targetRef = loadActorReference(targetElement, "target");
+                ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatTarget(actorRef, targetRef);
             default:
                 return null;
@@ -337,6 +336,7 @@ public class DataLoader {
 
     private static ActorReference loadActorReference(Element parentElement, String name) {
         Element refElement = LoadUtils.singleChildWithName(parentElement, name);
+        if(refElement == null) return null;
         String targetTypeString = refElement.getAttribute("target");
         ActorReference.ReferenceType targetType;
         switch(targetTypeString) {
