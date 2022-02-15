@@ -35,7 +35,8 @@
         </line>
         <choice link="stratis_receptionist_purchase_room" once="true">
             <prompt>I'll take the room.</prompt>
-            <condition type="money" target="player">
+            <condition type="money">
+                <actor target="player"></actor>
                 <value>300</value>
             </condition>
         </choice>
@@ -47,10 +48,12 @@
         <line>
             <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
             <text>He hands you a white keycard with the Stratis Hotel logo.</text>
-            <script type="add_item" target="player">
+            <script type="add_item">
+                <actor target="player"></actor>
                 <item>stratis_room_key</item>
             </script>
-            <script type="money" target="player">
+            <script type="money">
+                <actor target="player"></actor>
                 <value>-300</value>
             </script>
             <script type="var_set">
@@ -105,7 +108,8 @@
         <line exit="true">
             <text>The receptionist grits his teeth.</text>
             <text>"I don't give up that easily."</text>
-            <script type="combat" target="subject">
+            <script type="combat">
+                <actor target="subject"></actor>
                 <combatant target="player"></combatant>
             </script>
         </line>

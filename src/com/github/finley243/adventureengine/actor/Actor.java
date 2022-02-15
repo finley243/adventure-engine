@@ -34,8 +34,6 @@ public class Actor implements Noun, Physical {
 	public static final int ATTRIBUTE_MAX = 10;
 	public static final int SKILL_MIN = 1;
 	public static final int SKILL_MAX = 10;
-	public static final int SKILL_ATTR_MIN = ATTRIBUTE_MIN + SKILL_MIN;
-	public static final int SKILL_ATTR_MAX = ATTRIBUTE_MAX + SKILL_MAX;
 	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY

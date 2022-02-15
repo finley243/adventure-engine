@@ -3,18 +3,18 @@
         <chance>1.0</chance>
         <cooldown>7</cooldown>
         <condition type="compound" logic="and">
-            <condition type="actorAvailableForScene" target="reference">
-                <actor>stratis_receptionist</actor>
+            <condition type="actorAvailableForScene">
+                <actor target="reference">stratis_receptionist</actor>
             </condition>
-            <condition type="actorAvailableForScene" target="reference">
-                <actor>stratis_guard_lobby</actor>
+            <condition type="actorAvailableForScene">
+                <actor target="reference">stratis_guard_lobby</actor>
             </condition>
-            <condition type="actorLocation" target="reference">
-                <actor>stratis_receptionist</actor>
+            <condition type="actorLocation">
+                <actor target="reference">stratis_receptionist</actor>
                 <area>stratis_hotel_lobby_desk</area>
             </condition>
-            <condition type="actorLocation" target="reference">
-                <actor>stratis_guard_lobby</actor>
+            <condition type="actorLocation">
+                <actor target="reference">stratis_guard_lobby</actor>
                 <area>stratis_hotel_lobby_seating</area>
             </condition>
         </condition>

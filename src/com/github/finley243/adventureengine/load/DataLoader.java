@@ -218,7 +218,7 @@ public class DataLoader {
     private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
         if(conditionElement == null) return null;
         String type = conditionElement.getAttribute("type");
-        ActorReference actorRef = loadActorReference(conditionElement);
+        ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch(type) {
             case "compound":
                 List<Condition> subConditions = loadSubConditions(conditionElement);
@@ -249,6 +249,10 @@ public class DataLoader {
                 return new ConditionActorAvailableForScene(actorRef);
             case "actorDead":
                 return new ConditionActorDead(actorRef);
+            case "combatTarget":
+                Element targetElement = LoadUtils.singleChildWithName(conditionElement, "target");
+                ActorReference targetRef = loadActorReference(targetElement, "target");
+                return new ConditionCombatTarget(actorRef, targetRef);
             default:
                 return null;
         }
@@ -290,7 +294,7 @@ public class DataLoader {
         String type = scriptElement.getAttribute("type");
         Element conditionElement = LoadUtils.singleChildWithName(scriptElement, "condition");
         Condition condition = loadCondition(conditionElement);
-        ActorReference actorRef = loadActorReference(scriptElement);
+        ActorReference actorRef = loadActorReference(scriptElement, "actor");
         switch(type) {
             case "compound":
                 List<Script> subScripts = loadScripts(scriptElement);
@@ -319,8 +323,7 @@ public class DataLoader {
                 String topic = LoadUtils.singleTag(scriptElement, "topic", null);
                 return new ScriptDialogue(condition, actorRef, topic);
             case "combat":
-                Element combatantElement = LoadUtils.singleChildWithName(scriptElement, "combatant");
-                ActorReference combatantRef = loadActorReference(combatantElement);
+                ActorReference combatantRef = loadActorReference(scriptElement, "combatant");
                 return new ScriptCombat(condition, actorRef, combatantRef);
             case "factionRelation":
                 String targetFaction = LoadUtils.singleTag(scriptElement, "targetFaction", null);
@@ -332,8 +335,9 @@ public class DataLoader {
         }
     }
 
-    private static ActorReference loadActorReference(Element actorReferenceElement) {
-        String targetTypeString = actorReferenceElement.getAttribute("target");
+    private static ActorReference loadActorReference(Element parentElement, String name) {
+        Element refElement = LoadUtils.singleChildWithName(parentElement, name);
+        String targetTypeString = refElement.getAttribute("target");
         ActorReference.ReferenceType targetType;
         switch(targetTypeString) {
             case "player":
@@ -347,7 +351,7 @@ public class DataLoader {
                 targetType = ActorReference.ReferenceType.SUBJECT;
                 break;
         }
-        String targetRef = LoadUtils.singleTag(actorReferenceElement, "actor", null);
+        String targetRef = refElement.getTextContent();
         return new ActorReference(targetType, targetRef);
     }
 
