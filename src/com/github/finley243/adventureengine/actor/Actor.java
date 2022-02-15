@@ -320,6 +320,14 @@ public class Actor implements Noun, Physical {
 	public EffectComponent effectComponent() {
 		return effectComponent;
 	}
+
+	public int getHP() {
+		return HP;
+	}
+
+	public float getHPProportion() {
+		return ((float) HP) / ((float) stats.getMaxHP());
+	}
 	
 	public void heal(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();

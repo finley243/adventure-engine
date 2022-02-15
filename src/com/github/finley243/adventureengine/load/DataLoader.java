@@ -249,6 +249,10 @@ public class DataLoader {
                 return new ConditionActorAvailableForScene(actorRef);
             case "actorDead":
                 return new ConditionActorDead(actorRef);
+            case "actorHP":
+                Condition.Equality hpEquality = LoadUtils.equalityTag(conditionElement, "equality");
+                float hpValue = LoadUtils.singleTagFloat(conditionElement, "value", 0);
+                return new ConditionActorHP(actorRef, hpEquality, hpValue);
             case "combatTarget":
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatTarget(actorRef, targetRef);
