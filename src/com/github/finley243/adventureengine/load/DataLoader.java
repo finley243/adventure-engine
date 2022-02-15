@@ -294,7 +294,8 @@ public class DataLoader {
         switch(type) {
             case "compound":
                 List<Script> subScripts = loadScripts(scriptElement);
-                return new ScriptCompound(condition, subScripts);
+                boolean compoundSelect = LoadUtils.boolAttribute(scriptElement, "select", false);
+                return new ScriptCompound(condition, subScripts, compoundSelect);
             case "money":
                 int moneyValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
                 return new ScriptMoney(condition, actorRef, moneyValue);

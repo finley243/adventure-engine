@@ -17,7 +17,9 @@ public class ScriptMoney extends Script {
 
 	@Override
 	public void execute(Actor subject) {
-		actor.getActor(subject).adjustMoney(value);
+		if(canExecute(subject)) {
+			actor.getActor(subject).adjustMoney(value);
+		}
 	}
 	
 }

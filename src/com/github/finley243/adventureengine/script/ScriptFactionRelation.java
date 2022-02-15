@@ -20,7 +20,9 @@ public class ScriptFactionRelation extends Script {
 
 	@Override
 	public void execute(Actor subject) {
-		Data.getFaction(targetFaction).setRelation(relationFaction, relation);
+		if(canExecute(subject)) {
+			Data.getFaction(targetFaction).setRelation(relationFaction, relation);
+		}
 	}
 
 }

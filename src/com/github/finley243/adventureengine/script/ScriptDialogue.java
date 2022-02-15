@@ -19,7 +19,9 @@ public class ScriptDialogue extends Script {
 
 	@Override
 	public void execute(Actor subject) {
-		Data.getPlayer().startDialogue(actor.getActor(subject), topic);
+		if(canExecute(subject)) {
+			Data.getPlayer().startDialogue(actor.getActor(subject), topic);
+		}
 	}
 
 }

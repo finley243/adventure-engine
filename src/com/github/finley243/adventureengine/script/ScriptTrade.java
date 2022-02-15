@@ -11,7 +11,9 @@ public class ScriptTrade extends Script {
 
 	@Override
 	public void execute(Actor subject) {
-		
+		if(canExecute(subject)) {
+
+		}
 	}
 
 }

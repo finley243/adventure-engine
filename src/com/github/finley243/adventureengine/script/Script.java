@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.condition.Condition;
  */
 public abstract class Script {
 
-	private Condition condition;
+	private final Condition condition;
 
 	public Script(Condition condition) {
 		this.condition = condition;
@@ -19,5 +19,5 @@ public abstract class Script {
 	}
 
 	public abstract void execute(Actor subject);
-	
+
 }

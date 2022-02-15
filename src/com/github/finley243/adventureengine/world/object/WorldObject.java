@@ -24,7 +24,7 @@ public abstract class WorldObject implements Noun, Physical {
 	private final String name;
 	private Area area;
 	private final String description;
-	private Map<String, Script> scripts;
+	private final Map<String, Script> scripts;
 	
 	public WorldObject(String ID, String name, String description, Map<String, Script> scripts) {
 		this.ID = ID;
