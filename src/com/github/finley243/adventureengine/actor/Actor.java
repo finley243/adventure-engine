@@ -386,6 +386,7 @@ public class Actor implements Noun, Physical {
 		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context, null, null));
 		if(equippedItem != null) {
 			getArea().addObject(equippedItem);
+			equippedItem.setArea(getArea());
 			context = new Context(this, false, equippedItem, false);
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 			equippedItem = null;
