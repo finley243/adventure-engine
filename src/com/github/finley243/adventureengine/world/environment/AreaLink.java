@@ -26,7 +26,7 @@ public class AreaLink {
     }
 
     public enum AreaLinkType {
-        DEFAULT(true, true), MOVE(false, true), VIS(true, false);
+        DIRECT(true, true), CORNER(false, true), FAR(true, false);
 
         public final boolean isVisible;
         public final boolean isMovable;

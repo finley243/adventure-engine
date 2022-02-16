@@ -27,7 +27,7 @@ public class Area implements Noun {
 	private final String name;
 	// Whether the name is a proper name (if false, should be preceded with "the" or "a")
 	private final boolean isProperName;
-	// Format used to describe the area (abs: "move to [name]", near: "move near [name]", behind:"move behind [name]", etc.)
+	// Format used to describe the area (in: "move to [name]", near: "move near [name]", behind:"move behind [name]", etc.)
 	private final AreaNameType nameType;
 	// The room containing this area
 	private final String roomID;

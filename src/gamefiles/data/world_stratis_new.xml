@@ -1,0 +1,163 @@
+<data>
+    <room id="stratis_lobby">
+        <name proper="false">Stratis Hotel lobby</name>
+        <area id="stratis_lobby_entry">
+            <name proper="false" type="near">entrance</name>
+            <links>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_security</link>
+                <link>stratis_lobby_desk_front</link>
+                <link>stratis_lobby_desk_behind</link>
+                <link>stratis_lobby_desk_left</link>
+                <link>stratis_lobby_desk_right</link>
+                <link>stratis_lobby_backrooms</link>
+                <link>stratis_lobby_emergency_exit</link>
+                <link>stratis_lobby_coffee</link>
+                <link>stratis_lobby_lounge</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_security">
+            <name proper="false" type="near">security office</name>
+            <links>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_desk_front</link>
+                <link>stratis_lobby_desk_behind</link>
+                <link>stratis_lobby_desk_left</link>
+                <link>stratis_lobby_desk_right</link>
+                <link>stratis_lobby_elevators</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_entry_corner">
+            <name proper="false" type="in">corner near the entrance</name>
+            <links>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_security</link>
+                <link>stratis_lobby_desk_front</link>
+                <link>stratis_lobby_desk_behind</link>
+                <link>stratis_lobby_desk_left</link>
+                <link>stratis_lobby_desk_right</link>
+                <link>stratis_lobby_backrooms</link>
+                <link>stratis_lobby_emergency_exit</link>
+                <link>stratis_lobby_coffee</link>
+                <link>stratis_lobby_lounge</link>
+                <link>stratis_lobby_elevators</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_desk_front">
+            <name proper="false" type="front">desk</name>
+            <links>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_security</link>
+                <link>stratis_lobby_desk_behind</link>
+                <link>stratis_lobby_desk_left</link>
+                <link>stratis_lobby_desk_right</link>
+                <link>stratis_lobby_lounge</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_desk_left">
+            <name proper="false" type="left">desk</name>
+            <links>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_security</link>
+                <link>stratis_lobby_desk_behind</link>
+                <link>stratis_lobby_desk_front</link>
+                <link>stratis_lobby_desk_right</link>
+                <link>stratis_lobby_lounge</link>
+                <link>stratis_lobby_backrooms</link>
+                <link>stratis_lobby_elevators</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_desk_behind">
+            <name proper="false" type="behind">desk</name>
+            <links>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_security</link>
+                <link>stratis_lobby_desk_front</link>
+                <link>stratis_lobby_desk_left</link>
+                <link>stratis_lobby_desk_right</link>
+                <link>stratis_lobby_lounge</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_desk_right">
+            <name proper="false" type="right">desk</name>
+            <links>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_security</link>
+                <link>stratis_lobby_desk_behind</link>
+                <link>stratis_lobby_desk_left</link>
+                <link>stratis_lobby_desk_front</link>
+                <link>stratis_lobby_lounge</link>
+                <link>stratis_lobby_coffee</link>
+                <link>stratis_lobby_emergency_exit</link>
+                <link>stratis_lobby_elevators</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_backrooms">
+            <name proper="false" type="near">employee door</name>
+            <links>
+                <link>stratis_lobby_elevators</link>
+                <link>stratis_lobby_desk_left</link>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_coffee</link>
+                <link>stratis_lobby_emergency_exit</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_elevators">
+            <name proper="false" type="near">elevators</name>
+            <links>
+                <link>stratis_lobby_backrooms</link>
+                <link>stratis_lobby_lounge</link>
+                <link>stratis_lobby_coffee</link>
+                <link>stratis_lobby_emergency_exit</link>
+                <link>stratis_lobby_desk_left</link>
+                <link>stratis_lobby_desk_right</link>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_security</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_lounge">
+            <name proper="false" type="in">lounge</name>
+            <links>
+                <link>stratis_lobby_desk_left</link>
+                <link>stratis_lobby_desk_right</link>
+                <link>stratis_lobby_desk_behind</link>
+                <link>stratis_lobby_desk_front</link>
+                <link>stratis_lobby_coffee</link>
+                <link>stratis_lobby_emergency_exit</link>
+                <link>stratis_lobby_elevators</link>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_entry_corner</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_coffee">
+            <name proper="false" type="near">coffee bar</name>
+            <links>
+                <link>stratis_lobby_lounge</link>
+                <link>stratis_lobby_emergency_exit</link>
+                <link>stratis_lobby_elevators</link>
+                <link>stratis_lobby_backrooms</link>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_desk_right</link>
+            </links>
+        </area>
+        <area id="stratis_lobby_emergency_exit">
+            <name proper="false" type="near">emergency exit</name>
+            <links>
+                <link>stratis_lobby_lounge</link>
+                <link>stratis_lobby_coffee</link>
+                <link>stratis_lobby_elevators</link>
+                <link>stratis_lobby_backrooms</link>
+                <link>stratis_lobby_entry</link>
+                <link>stratis_lobby_entry_corner</link>
+                <link>stratis_lobby_desk_right</link>
+            </links>
+        </area>
+    </room>
+</data>

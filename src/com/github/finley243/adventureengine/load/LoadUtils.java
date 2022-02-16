@@ -4,10 +4,7 @@ import com.github.finley243.adventureengine.condition.Condition.Equality;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class LoadUtils {
 
@@ -18,12 +15,23 @@ public class LoadUtils {
 
 	public static boolean boolAttribute(Element element, String name, boolean defaultValue) {
 		if(!element.hasAttribute(name)) return defaultValue;
-		return element.getAttribute(name).equalsIgnoreCase("true");
+		return element.getAttribute(name).equalsIgnoreCase("true") || element.getAttribute(name).equalsIgnoreCase("t");
 	}
 
 	public static int intAttribute(Element element, String name, int defaultValue) {
 		if(!element.hasAttribute(name)) return defaultValue;
 		return Integer.parseInt(element.getAttribute(name));
+	}
+
+	public static <T extends Enum<T>> T enumAttribute(Element element, String name, Class<T> enumClass, T defaultValue) {
+		if(!element.hasAttribute(name)) return defaultValue;
+		String stringValue = element.getAttribute(name);
+		for(T current : EnumSet.allOf(enumClass)) {
+			if(stringValue.equalsIgnoreCase(current.toString())) {
+				return current;
+			}
+		}
+		return defaultValue;
 	}
 	
 	public static String singleTag(Element parent, String name, String defaultValue) {
@@ -47,7 +55,18 @@ public class LoadUtils {
 	public static boolean singleTagBoolean(Element parent, String name, boolean defaultValue) {
 		String stringValue = LoadUtils.singleTag(parent, name, null);
 		if(stringValue == null) return defaultValue;
-		return stringValue.equalsIgnoreCase("true");
+		return stringValue.equalsIgnoreCase("true") || stringValue.equalsIgnoreCase("t");
+	}
+
+	public static <T extends Enum<T>> T singleTagEnum(Element parent, String name, Class<T> enumClass, T defaultValue) {
+		String stringValue = LoadUtils.singleTag(parent, name, null);
+		if(stringValue == null) return defaultValue;
+		for(T current : EnumSet.allOf(enumClass)) {
+			if(stringValue.equalsIgnoreCase(current.toString())) {
+				return current;
+			}
+		}
+		return defaultValue;
 	}
 	
 	public static Set<String> setOfTags(Element parent, String name) {
@@ -97,8 +116,8 @@ public class LoadUtils {
 	
 	public static Equality equalityTag(Element element, String name) {
 		String logicString = LoadUtils.singleTag(element, name, null);
-		if(logicString != null) logicString = logicString.toUpperCase();
-		switch(logicString) {
+		if(logicString == null) return Equality.GREATER_EQUAL;
+		switch(logicString.toUpperCase()) {
 		case "EQUAL":
 			return Equality.EQUAL;
 		case "NOT_EQUAL":
