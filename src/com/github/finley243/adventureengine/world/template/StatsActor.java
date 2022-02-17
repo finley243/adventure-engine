@@ -1,14 +1,13 @@
 package com.github.finley243.adventureengine.world.template;
 
-import java.util.List;
-import java.util.Map;
-
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+
+import java.util.List;
+import java.util.Map;
 
 public class StatsActor {
 	
@@ -29,9 +28,14 @@ public class StatsActor {
 	private final String lootTable;
 	private final String topic;
 
+	private final boolean isVendor;
+	private final String vendorLootTable;
+	private final boolean vendorCanBuy;
+	private final boolean vendorStartDisabled;
+
 	private final Map<String, Script> scripts;
 	
-	public StatsActor(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic, Map<String, Script> scripts) {
+	public StatsActor(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, boolean vendorCanBuy, boolean vendorStartDisabled) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
@@ -45,6 +49,10 @@ public class StatsActor {
 		this.lootTable = lootTable;
 		this.topic = topic;
 		this.scripts = scripts;
+		this.isVendor = isVendor;
+		this.vendorLootTable = vendorLootTable;
+		this.vendorCanBuy = vendorCanBuy;
+		this.vendorStartDisabled = vendorStartDisabled;
 	}
 	
 	public String getID() {
@@ -95,6 +103,22 @@ public class StatsActor {
 
 	public Map<String, Script> getScripts() {
 		return scripts;
+	}
+
+	public boolean isVendor() {
+		return isVendor;
+	}
+
+	public String getVendorLootTable() {
+		return vendorLootTable;
+	}
+
+	public boolean vendorCanBuy() {
+		return vendorCanBuy;
+	}
+
+	public boolean vendorStartDisabled() {
+		return vendorStartDisabled;
 	}
 	
 }

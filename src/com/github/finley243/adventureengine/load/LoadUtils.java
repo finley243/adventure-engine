@@ -114,24 +114,4 @@ public class LoadUtils {
 		return null;
 	}
 	
-	public static Equality equalityTag(Element element, String name) {
-		String logicString = LoadUtils.singleTag(element, name, null);
-		if(logicString == null) return Equality.GREATER_EQUAL;
-		switch(logicString.toUpperCase()) {
-		case "EQUAL":
-			return Equality.EQUAL;
-		case "NOT_EQUAL":
-			return Equality.NOT_EQUAL;
-		case "LESS":
-			return Equality.LESS;
-		case "GREATER":
-			return Equality.GREATER;
-		case "LESS_EQUAL":
-			return Equality.LESS_EQUAL;
-		case "GREATER_EQUAL":
-		default:
-			return Equality.GREATER_EQUAL;
-		}
-	}
-	
 }

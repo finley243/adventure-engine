@@ -83,6 +83,7 @@ public class Actor implements Noun, Physical {
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final EquipmentComponent equipmentComponent;
+	private final VendorComponent vendorComponent;
 	private ItemEquippable equippedItem;
 	private int money;
 	private UsableObject usingObject;
@@ -93,11 +94,9 @@ public class Actor implements Noun, Physical {
 	private final BehaviorIdle behaviorIdle;
 	private final boolean preventMovement;
 
-	public Actor(String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead) {
+	public Actor(String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead, boolean startDisabled) {
 		this.ID = ID;
-		if(area != null) {
-			this.move(area);
-		}
+		this.area = area;
 		this.stats = stats;
 		this.descriptor = descriptor;
 		this.preventMovement = preventMovement;
@@ -111,6 +110,11 @@ public class Actor implements Noun, Physical {
 		}
 		this.inventory = new Inventory();
 		this.equipmentComponent = new EquipmentComponent(this);
+		if(stats.isVendor()) {
+			this.vendorComponent = new VendorComponent(this, stats.getVendorLootTable(), stats.vendorCanBuy(), stats.vendorStartDisabled());
+		} else {
+			this.vendorComponent = null;
+		}
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, new int[] {stats.getAttribute(attribute), 0});
@@ -125,7 +129,7 @@ public class Actor implements Noun, Physical {
 		}
 		this.blockedActions = new HashMap<>();
 		this.behaviorIdle = new BehaviorIdle(idle);
-		this.isEnabled = true;
+		setEnabled(!startDisabled);
 	}
 	
 	public String getID() {
@@ -528,11 +532,14 @@ public class Actor implements Noun, Physical {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> action = new ArrayList<>();
-		if(!isDead) { // Alive
+		if(isActive()) {
 			if(stats.getTopic() != null) {
 				action.add(new ActionTalk(this));
 			}
-		} else { // Dead
+			if(vendorComponent != null) {
+				action.addAll(vendorComponent.getActions(subject));
+			}
+		} else {
 			action.addAll(inventory.getExternalActions(this, subject));
 		}
 		return action;
@@ -541,9 +548,12 @@ public class Actor implements Noun, Physical {
 	@Override
 	public List<Action> adjacentActions(Actor subject) {
 		List<Action> action = new ArrayList<>();
-		if(!isDead) { // Alive
+		if(isActive()) {
 			if(stats.getTopic() != null) {
 				action.add(new ActionTalk(this));
+			}
+			if(vendorComponent != null) {
+				action.addAll(vendorComponent.getActions(subject));
 			}
 		}
 		return action;

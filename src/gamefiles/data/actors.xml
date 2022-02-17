@@ -86,14 +86,14 @@
         <pronoun>YOU</pronoun>
         <faction>player</faction>
         <hp>50</hp>
-        <loottable>player</loottable>
+        <lootTable>player</lootTable>
     </actor>
     <actor id="stratis_receptionist" parent="default">
         <name proper="false">receptionist</name>
         <pronoun>HE</pronoun>
         <faction>stratis_hotel_staff</faction>
         <hp>40</hp>
-        <loottable>stratis_receptionist</loottable>
+        <lootTable>stratis_receptionist</lootTable>
         <topic>stratis_receptionist_start</topic>
     </actor>
     <actor id="stratis_guard" parent="default">
@@ -101,14 +101,14 @@
         <pronoun>HE</pronoun>
         <faction>stratis_hotel_staff</faction>
         <hp>70</hp>
-        <loottable>stratis_guard</loottable>
+        <lootTable>stratis_guard</lootTable>
     </actor>
     <actor id="enemy" parent="default">
         <name proper="false">ganger</name>
         <pronoun>HE</pronoun>
         <faction>enemy</faction>
         <hp>40</hp>
-        <loottable>weapon_ranged</loottable>
+        <lootTable>weapon_ranged</lootTable>
         <script trigger="on_combat_start" type="scene">
             <scene>test_combat_bark</scene>
         </script>
@@ -118,7 +118,7 @@
         <pronoun>HE</pronoun>
         <faction>nexus_staff</faction>
         <hp>70</hp>
-        <loottable>nexus_bouncer</loottable>
+        <lootTable>nexus_bouncer</lootTable>
         <topic>nexus_bouncer_start</topic>
     </actor>
     <actor id="lucas_simms" parent="default">
@@ -126,7 +126,18 @@
         <pronoun>HE</pronoun>
         <faction>nexus_staff</faction>
         <hp>50</hp>
-        <loottable>nexus_bouncer</loottable>
+        <lootTable>nexus_bouncer</lootTable>
         <topic>lucas_simms_start</topic>
+    </actor>
+    <actor id="test_vendor" parent="default">
+        <name proper="false">vendor</name>
+        <pronoun>SHE</pronoun>
+        <faction>nexus_staff</faction>
+        <hp>40</hp>
+        <lootTable>stratis_receptionist</lootTable>
+        <topic>stratis_receptionist_start</topic>
+        <vendor>
+            <lootTable>weapon_ranged_3</lootTable>
+        </vendor>
     </actor>
 </actors>

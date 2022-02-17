@@ -1,3 +1,4 @@
+buy:<subject> buy<s> <object>
 buyFrom:<subject> buy<s> <object> from <object2>
 consume:<subject> consume<s> <object>
 crouch:<subject> crouch<es> down

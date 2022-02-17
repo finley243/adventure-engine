@@ -16,8 +16,10 @@ public class EffectDropEquipped extends Effect {
     @Override
     public void start(Actor target) {
         ItemEquippable item = target.getEquippedItem();
+        if(item == null) return;
         target.setEquippedItem(null);
         target.getArea().addObject(item);
+        item.setArea(target.getArea());
         Context context = new Context(target, false, item, false);
         Game.EVENT_BUS.post(new VisualEvent(target.getArea(), Phrases.get("forceDrop"), context, null, target));
     }
