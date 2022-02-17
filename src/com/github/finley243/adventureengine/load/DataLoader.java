@@ -428,6 +428,8 @@ public class DataLoader {
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 return new StatsWeapon(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced);
+            case "junk":
+                return new StatsJunk(id, name, description, scripts, price);
         }
         return null;
     }

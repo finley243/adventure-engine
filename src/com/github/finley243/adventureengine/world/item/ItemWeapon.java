@@ -29,11 +29,6 @@ public class ItemWeapon extends ItemEquippable {
 	}
 	
 	@Override
-	public String getDescription() {
-		return stats.getDescription();
-	}
-	
-	@Override
 	public int getPrice() {
 		return stats.getPrice();
 	}

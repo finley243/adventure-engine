@@ -1,11 +1,7 @@
 package com.github.finley243.adventureengine.world.template;
 
 import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.item.ItemApparel;
-import com.github.finley243.adventureengine.world.item.ItemConsumable;
-import com.github.finley243.adventureengine.world.item.ItemKey;
-import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.item.*;
 
 public class ItemFactory {
 
@@ -22,6 +18,8 @@ public class ItemFactory {
 			return new ItemWeapon((StatsWeapon) stats);
 		} else if(stats instanceof StatsKey) {
 			return new ItemKey((StatsKey) stats);
+		} else if(stats instanceof StatsJunk) {
+			return new ItemJunk((StatsJunk) stats);
 		}
 		return null;
 	}

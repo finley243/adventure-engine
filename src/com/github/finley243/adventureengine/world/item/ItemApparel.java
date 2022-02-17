@@ -24,11 +24,6 @@ public class ItemApparel extends Item {
 	}
 	
 	@Override
-	public String getDescription() {
-		return stats.getDescription();
-	}
-	
-	@Override
 	public int getPrice() {
 		return stats.getPrice();
 	}

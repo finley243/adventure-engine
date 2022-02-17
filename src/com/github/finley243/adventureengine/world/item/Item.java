@@ -25,9 +25,6 @@ public abstract class Item extends WorldObject {
 	}
 	
 	public abstract String getStatsID();
-	
-	@Override
-	public abstract String getDescription();
 
 	@Override
 	public List<Action> localActions(Actor subject) {
