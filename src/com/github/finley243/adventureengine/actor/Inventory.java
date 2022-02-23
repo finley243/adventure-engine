@@ -2,9 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import java.util.*;
 
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionInventoryStore;
-import com.github.finley243.adventureengine.action.ActionInventoryTake;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.world.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
 
@@ -73,6 +71,9 @@ public class Inventory {
 		List<Action> actions = new ArrayList<>();
 		for(List<Item> current : items.values()) {
 			actions.add(new ActionInventoryStore(owner, other, current.get(0)));
+			if(current.size() > 1) {
+				actions.add(new ActionInventoryStoreAll(owner, other, current));
+			}
 		}
 		return actions;
 	}
@@ -81,6 +82,9 @@ public class Inventory {
 		List<Action> actions = new ArrayList<>();
 		for(List<Item> current : items.values()) {
 			actions.add(new ActionInventoryTake(owner, this, current.get(0)));
+			if(current.size() > 1) {
+				actions.add(new ActionInventoryTakeAll(owner, this, current));
+			}
 		}
 		actions.addAll(subject.inventory().getStoreActions(owner, this));
 		return actions;

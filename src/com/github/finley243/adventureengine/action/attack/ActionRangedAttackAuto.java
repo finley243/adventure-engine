@@ -27,7 +27,9 @@ public class ActionRangedAttackAuto extends ActionAttack {
 	@Override
 	public void onStart(Actor subject) {
 		getWeapon().consumeAmmo(AMMO_USED);
-		Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
+		if(!getWeapon().isSilenced()) {
+			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
+		}
 		getTarget().addCombatTarget(subject);
 		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
 		if(!CombatHelper.isRepeat(attackContext)) {

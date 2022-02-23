@@ -61,6 +61,10 @@ public class ItemWeapon extends ItemEquippable {
 	public int getRangeMax() {
 		return stats.getRangeMax();
 	}
+
+	public float getAccuracyBonus() {
+		return stats.getAccuracyBonus();
+	}
 	
 	public void reloadFull() {
 		ammo = stats.getClipSize();
@@ -76,6 +80,10 @@ public class ItemWeapon extends ItemEquippable {
 	
 	public void consumeAmmo(int amount) {
 		ammo -= amount;
+	}
+
+	public boolean isSilenced() {
+		return stats.isSilenced();
 	}
 
 	public Actor.Skill getSkill() {

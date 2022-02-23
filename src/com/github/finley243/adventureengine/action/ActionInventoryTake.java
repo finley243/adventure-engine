@@ -39,7 +39,7 @@ public class ActionInventoryTake extends Action {
     @Override
     public MenuData getMenuData(Actor subject) {
         String fullPrompt = "Take " + item.getFormattedName(true) + " from " + owner.getFormattedName(false);
-        return new MenuData("Take " + LangUtils.titleCase(item.getName()) + inventory.itemCountLabel(item.getStatsID()), fullPrompt, canChoose(subject), new String[]{owner.getName()});
+        return new MenuData("Take", fullPrompt, canChoose(subject), new String[]{owner.getName(), item.getName() + inventory.itemCountLabel(item.getStatsID())});
     }
 
     @Override

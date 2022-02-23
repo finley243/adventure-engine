@@ -31,6 +31,7 @@
     </item>
     <item type="weapon" id="rifle_auto">
         <name>auto rifle</name>
+        <description>A full-auto assault rifle.</description>
         <price>90</price>
         <type>ASSAULT_RIFLE</type>
         <damage>15</damage>
