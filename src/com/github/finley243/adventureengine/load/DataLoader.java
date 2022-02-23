@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.dialogue.DialogueChoice;
@@ -83,8 +84,8 @@ public class DataLoader {
         String parentID = actorElement.getAttribute("parent");
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
         String name = nameElement != null ? nameElement.getTextContent() : null;
-        boolean nameIsProper = nameElement != null ? LoadUtils.boolAttribute(nameElement, "proper", false) : null;
-        Context.Pronoun pronoun = pronounTag(actorElement, "pronoun");
+        boolean nameIsProper = nameElement != null && LoadUtils.boolAttribute(nameElement, "proper", false);
+        Context.Pronoun pronoun = LoadUtils.singleTagEnum(actorElement, "pronoun", Context.Pronoun.class, Context.Pronoun.THEY);
         String faction = LoadUtils.singleTag(actorElement, "faction", "default");
         int hp = LoadUtils.singleTagInt(actorElement, "hp", 0);
         List<Limb> limbs = loadLimbs(LoadUtils.singleChildWithName(actorElement, "limbs"));
@@ -150,29 +151,6 @@ public class DataLoader {
             skills.put(skill, value);
         }
         return skills;
-    }
-
-    private static Context.Pronoun pronounTag(Element element, String name) {
-        String factionRelationString = LoadUtils.singleTag(element, name, null);
-        switch(factionRelationString) {
-            case "I":
-                return Context.Pronoun.I;
-            case "YOU":
-                return Context.Pronoun.YOU;
-            case "IT":
-                return Context.Pronoun.IT;
-            case "HE":
-                return Context.Pronoun.HE;
-            case "SHE":
-                return Context.Pronoun.SHE;
-            case "THEY":
-            default:
-                return Context.Pronoun.THEY;
-            case "YOUALL":
-                return Context.Pronoun.YOUALL;
-            case "WE":
-                return Context.Pronoun.WE;
-        }
     }
 
     private static DialogueTopic loadTopic(Element topicElement) throws ParserConfigurationException, SAXException, IOException {
@@ -615,8 +593,24 @@ public class DataLoader {
             case "container":
                 String containerLootTable = LoadUtils.singleTag(objectElement, "lootTable", null);
                 return new ObjectContainer(objectID, objectName, objectDescription, objectScripts, containerLootTable);
+            case "custom":
+                List<ActionCustom> objectActions = loadCustomActions(objectElement);
+                return new ObjectCustom(objectID, objectName, objectDescription, objectScripts, objectActions);
         }
         return null;
+    }
+
+    private static List<ActionCustom> loadCustomActions(Element objectElement) throws ParserConfigurationException, IOException, SAXException {
+        List<ActionCustom> actions = new ArrayList<>();
+        for (Element actionElement : LoadUtils.directChildrenWithName(objectElement, "action")) {
+            String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
+            String fullPrompt = LoadUtils.singleTag(actionElement, "fullPrompt", null);
+            String description = LoadUtils.singleTag(actionElement, "description", null);
+            Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
+            Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
+            actions.add(new ActionCustom(prompt, fullPrompt, description, condition, script));
+        }
+        return actions;
     }
 
     private static Actor loadActorInstance(Element actorElement, Area area) {
