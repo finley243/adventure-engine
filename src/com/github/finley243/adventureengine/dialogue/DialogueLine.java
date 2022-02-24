@@ -14,17 +14,17 @@ public class DialogueLine {
 
     private final List<String> textList;
     private final Condition condition;
-    private final List<Script> scripts;
+    private final Script script;
 
     private final boolean once;
     private final boolean exit;
     // If non-null, redirect to this topic after line is spoken
     private final String redirectTopicId;
 
-    public DialogueLine(List<String> textList, Condition condition, List<Script> scripts, boolean once, boolean exit, String redirectTopicId) {
+    public DialogueLine(List<String> textList, Condition condition, Script script, boolean once, boolean exit, String redirectTopicId) {
         this.textList = textList;
         this.condition = condition;
-        this.scripts = scripts;
+        this.script = script;
         this.once = once;
         this.exit = exit;
         this.redirectTopicId = redirectTopicId;
@@ -41,7 +41,9 @@ public class DialogueLine {
     
     public void trigger(Actor subject) {
     	hasTriggered.add(subject.getID());
-    	executeScripts(subject);
+        if(script != null) {
+            script.execute(subject);
+        }
     }
     
     public boolean shouldExit() {
@@ -54,12 +56,6 @@ public class DialogueLine {
     
     public String getRedirectTopicId() {
     	return redirectTopicId;
-    }
-
-    private void executeScripts(Actor subject) {
-    	for(Script script : scripts) {
-    		script.execute(subject);
-    	}
     }
     
 }

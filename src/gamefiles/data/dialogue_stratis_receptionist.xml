@@ -48,17 +48,19 @@
         <line>
             <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
             <text>He hands you a white keycard with the Stratis Hotel logo.</text>
-            <script type="add_item">
-                <actor target="player"></actor>
-                <item>stratis_room_key</item>
-            </script>
-            <script type="money">
-                <actor target="player"></actor>
-                <value>-300</value>
-            </script>
-            <script type="var_set">
-                <variable>purchased_stratis_room</variable>
-                <value>1</value>
+            <script type="compound">
+                <script type="add_item">
+                    <actor target="player"></actor>
+                    <item>stratis_room_key</item>
+                </script>
+                <script type="money">
+                    <actor target="player"></actor>
+                    <value>-300</value>
+                </script>
+                <script type="var_set">
+                    <variable>purchased_stratis_room</variable>
+                    <value>1</value>
+                </script>
             </script>
         </line>
         <line redirect="stratis_receptionist_main">

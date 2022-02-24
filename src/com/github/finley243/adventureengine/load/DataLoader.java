@@ -188,10 +188,9 @@ public class DataLoader {
             redirect = null;
         }
         List<String> texts = LoadUtils.listOfTags(lineElement, "text");
-        Element conditionElement = LoadUtils.singleChildWithName(lineElement, "condition");
-        Condition condition = loadCondition(conditionElement);
-        List<Script> scripts = loadScripts(lineElement);
-        return new DialogueLine(texts, condition, scripts, once, exit, redirect);
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
+        Script script = loadScript(LoadUtils.singleChildWithName(lineElement, "script"));
+        return new DialogueLine(texts, condition, script, once, exit, redirect);
     }
 
     private static DialogueChoice loadChoice(Element choiceElement) throws ParserConfigurationException, SAXException, IOException {
@@ -259,7 +258,7 @@ public class DataLoader {
         return subConditions;
     }
 
-    private static List<Script> loadScripts(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
+    private static List<Script> loadSubScripts(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
         List<Element> scriptElements = LoadUtils.directChildrenWithName(parentElement, "script");
         List<Script> scripts = new ArrayList<>();
         for(Element scriptElement : scriptElements) {
@@ -288,7 +287,7 @@ public class DataLoader {
         ActorReference actorRef = loadActorReference(scriptElement, "actor");
         switch(type) {
             case "compound":
-                List<Script> subScripts = loadScripts(scriptElement);
+                List<Script> subScripts = loadSubScripts(scriptElement);
                 boolean compoundSelect = LoadUtils.boolAttribute(scriptElement, "select", false);
                 return new ScriptCompound(condition, subScripts, compoundSelect);
             case "money":
@@ -486,8 +485,8 @@ public class DataLoader {
         Element conditionElement = LoadUtils.singleChildWithName(lineElement, "condition");
         Condition condition = loadCondition(conditionElement);
         List<String> text = LoadUtils.listOfTags(lineElement, "text");
-        List<Script> scripts = loadScripts(lineElement);
-        return new SceneLine(condition, text, scripts);
+        Script script = loadScript(LoadUtils.singleChildWithName(lineElement, "script"));
+        return new SceneLine(condition, text, script);
     }
 
     private static Room loadRoom(Element roomElement) throws ParserConfigurationException, IOException, SAXException {

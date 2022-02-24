@@ -13,7 +13,6 @@ public class MultiNoun implements Noun {
 
     public MultiNoun(List<? extends Noun> nouns) {
         if(nouns.isEmpty()) throw new IllegalArgumentException("MultiNoun cannot have empty noun list");
-        if(nouns.size() == 1) throw new IllegalArgumentException("MultiNoun cannot have single noun element");
         this.nouns = nouns;
     }
 
@@ -51,7 +50,6 @@ public class MultiNoun implements Noun {
                 name.append(LangUtils.addArticle(uniqueNamesList.get(i), indefinite));
             }
         }
-        System.out.println("MultiNoun: " + name.toString());
         return name.toString();
     }
 

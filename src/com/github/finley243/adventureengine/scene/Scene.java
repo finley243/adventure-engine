@@ -75,7 +75,7 @@ public class Scene {
 				for(String text : line.getText()) {
 					Game.EVENT_BUS.post(new RenderTextEvent(text));
 				}
-				line.executeScripts(null);
+				line.executeScript(null);
 			}
 		}
 		hasPlayed = true;

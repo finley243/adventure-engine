@@ -11,12 +11,12 @@ public class SceneLine {
 
 	private final Condition condition;
 	private final List<String> text;
-	private final List<Script> scripts;
+	private final Script script;
 	
-	public SceneLine(Condition condition, List<String> text, List<Script> scripts) {
+	public SceneLine(Condition condition, List<String> text, Script script) {
 		this.condition = condition;
 		this.text = text;
-		this.scripts = scripts;
+		this.script = script;
 	}
 	
 	public boolean shouldShow() {
@@ -28,8 +28,8 @@ public class SceneLine {
 		return text;
 	}
 	
-	public void executeScripts(Actor subject) {
-		for(Script script : scripts) {
+	public void executeScript(Actor subject) {
+		if(script != null) {
 			script.execute(subject);
 		}
 	}
