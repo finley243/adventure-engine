@@ -138,6 +138,7 @@
         <topic>stratis_receptionist_start</topic>
         <vendor>
             <lootTable>weapon_ranged_3</lootTable>
+            <canBuy>true</canBuy>
         </vendor>
     </actor>
 </actors>

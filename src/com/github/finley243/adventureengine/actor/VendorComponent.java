@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionVendorBuy;
+import com.github.finley243.adventureengine.action.ActionVendorSell;
 import com.github.finley243.adventureengine.world.item.Item;
 
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ public class VendorComponent {
         List<Action> actions = new ArrayList<>();
         for(Item item : vendorInventory.getUniqueItems()) {
             actions.add(new ActionVendorBuy(vendor, vendorInventory, item));
+        }
+        if(canBuy) {
+            for (Item item : subject.inventory().getUniqueItems()) {
+                actions.add(new ActionVendorSell(vendor, vendorInventory, item));
+            }
         }
         return actions;
     }

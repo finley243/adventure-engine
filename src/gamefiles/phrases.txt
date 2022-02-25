@@ -28,6 +28,7 @@ reactionBlock:<subject> block<s> {<object2>|<object's> attack}
 reactionDodge:<subject> {jump<s> back, avoiding|dodge<s>} <object's> attack
 read:<subject> read<s> <object>
 reload:<subject> reload<s> <object>
+sell:<subject> sell<s> <object>
 sit:<subject> sit<s> in <object>
 stand:<subject> stand<s> up
 storeIn:<subject> put<s> <object> in <object2>
