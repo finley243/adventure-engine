@@ -4,13 +4,14 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.actor.Actor.Attribute;
 
-public class ConditionAttribute implements Condition {
+public class ConditionAttribute extends Condition {
 
 	private final ActorReference actor;
 	private final Attribute attribute;
 	private final int value;
 	
-	public ConditionAttribute(ActorReference actor, Attribute attribute, int value) {
+	public ConditionAttribute(boolean invert, ActorReference actor, Attribute attribute, int value) {
+		super(invert);
 		this.actor = actor;
 		this.attribute = attribute;
 		this.value = value;
@@ -18,7 +19,7 @@ public class ConditionAttribute implements Condition {
 
 	@Override
 	public boolean isMet(Actor subject) {
-		return actor.getActor(subject).getAttribute(attribute) >= value;
+		return (actor.getActor(subject).getAttribute(attribute) >= value) != invert;
 	}
 
 	@Override

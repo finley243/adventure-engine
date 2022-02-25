@@ -204,45 +204,49 @@ public class DataLoader {
 
     private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
         if(conditionElement == null) return null;
-        String type = conditionElement.getAttribute("type");
+        String type = LoadUtils.attribute(conditionElement, "type", "compound");
+        boolean invert = LoadUtils.boolAttribute(conditionElement, "invert", false);
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch(type) {
             case "compound":
                 List<Condition> subConditions = loadSubConditions(conditionElement);
                 boolean useOr = conditionElement.getAttribute("logic").equalsIgnoreCase("or");
-                return new ConditionCompound(subConditions, useOr);
+                return new ConditionCompound(invert, subConditions, useOr);
             case "money":
                 int moneyAmount = LoadUtils.singleTagInt(conditionElement, "value", 0);
-                return new ConditionMoney(actorRef, moneyAmount);
+                return new ConditionMoney(invert, actorRef, moneyAmount);
             case "var":
                 String varID = LoadUtils.singleTag(conditionElement, "variable", null);
                 Condition.Equality varEquality = LoadUtils.singleTagEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
                 int varValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
-                return new ConditionVariable(varID, varEquality, varValue);
+                return new ConditionVariable(invert, varID, varEquality, varValue);
             case "attribute":
                 Actor.Attribute attribute = LoadUtils.singleTagEnum(conditionElement, "attribute", Actor.Attribute.class, null);
                 int attributeValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
-                return new ConditionAttribute(actorRef, attribute, attributeValue);
+                return new ConditionAttribute(invert, actorRef, attribute, attributeValue);
             case "skill":
                 Actor.Skill skill = LoadUtils.singleTagEnum(conditionElement, "skill", Actor.Skill.class, null);
                 int skillValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
-                return new ConditionSkill(actorRef, skill, skillValue);
+                return new ConditionSkill(invert, actorRef, skill, skillValue);
             case "actorLocation":
                 String actorArea = LoadUtils.singleTag(conditionElement, "area", null);
                 String actorRoom = LoadUtils.singleTag(conditionElement, "room", null);
                 boolean useRoom = actorArea == null;
-                return new ConditionActorLocation(actorRef, (useRoom ? actorRoom : actorArea), useRoom);
+                return new ConditionActorLocation(invert, actorRef, (useRoom ? actorRoom : actorArea), useRoom);
             case "actorAvailableForScene":
-                return new ConditionActorAvailableForScene(actorRef);
+                return new ConditionActorAvailableForScene(invert, actorRef);
             case "actorDead":
-                return new ConditionActorDead(actorRef);
+                return new ConditionActorDead(invert, actorRef);
             case "actorHP":
                 Condition.Equality hpEquality = LoadUtils.singleTagEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
                 float hpValue = LoadUtils.singleTagFloat(conditionElement, "value", 0);
-                return new ConditionActorHP(actorRef, hpEquality, hpValue);
+                return new ConditionActorHP(invert, actorRef, hpEquality, hpValue);
             case "combatTarget":
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
-                return new ConditionCombatTarget(actorRef, targetRef);
+                return new ConditionCombatTarget(invert, actorRef, targetRef);
+            case "equippedItem":
+                String itemTag = LoadUtils.singleTag(conditionElement, "itemTag", null);
+                return new ConditionEquippedItem(invert, actorRef, itemTag);
             default:
                 return null;
         }

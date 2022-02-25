@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.item;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspect;
@@ -25,6 +26,8 @@ public abstract class Item extends WorldObject {
 	}
 	
 	public abstract String getStatsID();
+
+	public abstract Set<String> getTags();
 
 	@Override
 	public List<Action> localActions(Actor subject) {

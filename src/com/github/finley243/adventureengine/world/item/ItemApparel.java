@@ -9,9 +9,7 @@ import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.template.StatsApparel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ItemApparel extends Item {
 
@@ -21,6 +19,13 @@ public class ItemApparel extends Item {
 	public ItemApparel(StatsApparel stats) {
 		super(stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
+	}
+
+	@Override
+	public Set<String> getTags() {
+		Set<String> tags = new HashSet<>();
+		tags.add("apparel");
+		return tags;
 	}
 	
 	@Override

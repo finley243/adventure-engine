@@ -27,6 +27,47 @@ public class ItemWeapon extends ItemEquippable {
 		this.stats = stats;
 		reloadFull();
 	}
+
+	@Override
+	public Set<String> getTags() {
+		Set<String> tags = new HashSet<>();
+		tags.add("weapon");
+		if(stats.getType().isRanged) {
+			tags.add("weapon_ranged");
+		} else {
+			tags.add("weapon_melee");
+		}
+		switch(stats.getType()) {
+			case PISTOL:
+				tags.add("weapon_pistol");
+				break;
+			case SMG:
+				tags.add("weapon_smg");
+				break;
+			case SHOTGUN:
+				tags.add("weapon_shotgun");
+				break;
+			case ASSAULT_RIFLE:
+				tags.add("weapon_assault_rifle");
+				break;
+			case SNIPER_RIFLE:
+				tags.add("weapon_sniper_rifle");
+				break;
+			case KNIFE:
+				tags.add("weapon_knife");
+				break;
+			case SWORD:
+				tags.add("weapon_sword");
+				break;
+			case CLUB:
+				tags.add("weapon_club");
+				break;
+			case AXE:
+				tags.add("weapon_axe");
+				break;
+		}
+		return tags;
+	}
 	
 	@Override
 	public int getPrice() {

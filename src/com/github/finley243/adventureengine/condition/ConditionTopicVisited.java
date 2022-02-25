@@ -3,22 +3,18 @@ package com.github.finley243.adventureengine.condition;
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
 
-public class ConditionTopicVisited implements Condition {
+public class ConditionTopicVisited extends Condition {
 
     private final String topicID;
 
-    public ConditionTopicVisited(String topicID) {
+    public ConditionTopicVisited(boolean invert, String topicID) {
+        super(invert);
         this.topicID = topicID;
     }
 
     @Override
     public boolean isMet(Actor subject) {
-        return Data.getTopic(topicID).hasVisited();
-    }
-
-    @Override
-    public String getChoiceTag() {
-        return null;
+        return Data.getTopic(topicID).hasVisited() != invert;
     }
 
 }

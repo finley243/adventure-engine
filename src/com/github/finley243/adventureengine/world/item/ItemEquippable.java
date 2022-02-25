@@ -1,8 +1,6 @@
 package com.github.finley243.adventureengine.world.item;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemDrop;

@@ -1,7 +1,9 @@
 package com.github.finley243.adventureengine.world.item;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
@@ -18,6 +20,13 @@ public class ItemConsumable extends Item {
 	public ItemConsumable(StatsConsumable stats) {
 		super(stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
+	}
+
+	@Override
+	public Set<String> getTags() {
+		Set<String> tags = new HashSet<>();
+		tags.add("consumable");
+		return tags;
 	}
 	
 	@Override
