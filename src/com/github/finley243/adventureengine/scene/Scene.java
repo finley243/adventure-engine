@@ -18,6 +18,7 @@ public class Scene {
 	
 	private final float chance;
 	// As soon as it is possible to play it, skip the random selection and play this one
+	// TODO - Replace with priority system
 	private final boolean playImmediately;
 	private final boolean isRepeatable;
 	private boolean hasPlayed;

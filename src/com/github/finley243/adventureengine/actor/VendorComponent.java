@@ -14,6 +14,7 @@ public class VendorComponent {
     private final Actor vendor;
     private final Inventory vendorInventory;
     private final String lootTable;
+    // TODO - Replace with item flag set
     private final boolean canBuy;
 
     private boolean enabled;
@@ -41,6 +42,7 @@ public class VendorComponent {
         for(Item item : vendorInventory.getUniqueItems()) {
             actions.add(new ActionVendorBuy(vendor, vendorInventory, item));
         }
+        // TODO - Implement item tag checking
         if(canBuy) {
             for (Item item : subject.inventory().getUniqueItems()) {
                 actions.add(new ActionVendorSell(vendor, vendorInventory, item));
