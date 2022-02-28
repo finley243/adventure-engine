@@ -33,4 +33,29 @@
             <text>Never should have come here!</text>
         </line>
     </scene>
+    <scene id="test_weapon_bark">
+        <chance>1.0</chance>
+        <cooldown>0</cooldown>
+        <line>
+            <condition type="equippedItem">
+                <actor target="player"></actor>
+                <tag>weapon_handgun</tag>
+            </condition>
+            <text>"Hey, holster that firearm! No open carry allowed here."</text>
+        </line>
+        <line>
+            <condition type="equippedItem">
+                <actor target="player"></actor>
+                <tag>weapon_long_arm</tag>
+            </condition>
+            <text>"Hey, put away that rifle! No open carry allowed here."</text>
+        </line>
+        <line>
+            <condition type="equippedItem">
+                <actor target="player"></actor>
+                <tag>weapon_melee</tag>
+            </condition>
+            <text>"Hey, put that away! No open carry allowed here. And that applies to ALL weapons, not just guns."</text>
+        </line>
+    </scene>
 </scenes>

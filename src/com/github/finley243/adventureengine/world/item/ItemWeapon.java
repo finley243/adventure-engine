@@ -37,6 +37,14 @@ public class ItemWeapon extends ItemEquippable {
 		} else {
 			tags.add("weapon_melee");
 		}
+		switch(getSkill()) {
+			case HANDGUNS:
+				tags.add("weapon_handgun");
+				break;
+			case LONG_ARMS:
+				tags.add("weapon_long_arm");
+				break;
+		}
 		switch(stats.getType()) {
 			case PISTOL:
 				tags.add("weapon_pistol");

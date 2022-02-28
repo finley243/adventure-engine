@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Noun;
@@ -40,13 +41,15 @@ public class Area implements Noun {
 	
 	// All areas that can be accessed when in this area (key is areaID)
 	private final Map<String, AreaLink> linkedAreas;
+
+	private final Map<String, Script> scripts;
 	
 	// All objects in this area
 	private final Set<WorldObject> objects;
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Set<WorldObject> objects) {
+	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Set<WorldObject> objects, Map<String, Script> scripts) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
@@ -58,6 +61,7 @@ public class Area implements Noun {
 		this.linkedAreas = linkedAreas;
 		this.objects = objects;
 		this.actors = new HashSet<>();
+		this.scripts = scripts;
 	}
 	
 	public String getID() {
@@ -279,6 +283,12 @@ public class Area implements Noun {
 	
 	public Room getRoom() {
 		return Data.getRoom(roomID);
+	}
+
+	public void triggerScript(String entryPoint, Actor subject) {
+		if(scripts.containsKey(entryPoint)) {
+			scripts.get(entryPoint).execute(subject);
+		}
 	}
 	
 	@Override

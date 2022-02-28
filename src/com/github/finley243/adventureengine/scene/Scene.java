@@ -50,10 +50,7 @@ public class Scene {
 			if(ThreadLocalRandom.current().nextFloat() >= chance) {
 				return false;
 			}
-			if(condition == null) {
-				return true;
-			}
-			return condition.isMet(Data.getPlayer());
+			return condition == null || condition.isMet(Data.getPlayer());
 		}
 	}
 	

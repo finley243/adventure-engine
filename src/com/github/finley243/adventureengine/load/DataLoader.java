@@ -245,7 +245,7 @@ public class DataLoader {
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatTarget(invert, actorRef, targetRef);
             case "equippedItem":
-                String itemTag = LoadUtils.singleTag(conditionElement, "itemTag", null);
+                String itemTag = LoadUtils.singleTag(conditionElement, "tag", null);
                 return new ConditionEquippedItem(invert, actorRef, itemTag);
             default:
                 return null;
@@ -506,8 +506,7 @@ public class DataLoader {
         boolean roomNameIsProper = LoadUtils.boolAttribute(roomNameElement, "proper", false);
         String roomDescription = LoadUtils.singleTag(roomElement, "roomDescription", null);
         String roomOwnerFaction = LoadUtils.singleTag(roomElement, "ownerFaction", null);
-        Element roomScenesElement = LoadUtils.singleChildWithName(roomElement, "scenes");
-        List<String> roomScenes = LoadUtils.listOfTags(roomScenesElement, "scene");
+        Map<String, Script> roomScripts = loadScriptsWithTriggers(roomElement);
 
         List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
         Set<Area> areas = new HashSet<>();
@@ -516,7 +515,7 @@ public class DataLoader {
             areas.add(area);
             Data.addArea(area.getID(), area);
         }
-        return new Room(roomID, roomName, roomNameIsProper, roomDescription, roomScenes, roomOwnerFaction, areas);
+        return new Room(roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, areas, roomScripts);
     }
 
     private static Area loadArea(Element areaElement, String roomID) throws ParserConfigurationException, IOException, SAXException {
@@ -554,7 +553,9 @@ public class DataLoader {
             Data.addObject(object.getID(), object);
         }
 
-        Area area = new Area(areaID, name, description, isProperName, nameType, roomID, areaOwnerFaction, areaIsPrivate, linkSet, objectSet);
+        Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
+
+        Area area = new Area(areaID, name, description, isProperName, nameType, roomID, areaOwnerFaction, areaIsPrivate, linkSet, objectSet, areaScripts);
         for(WorldObject object : objectSet) {
             object.setArea(area);
         }

@@ -34,9 +34,6 @@ public class SceneManager {
 	}
 
 	private static void updateCooldowns(List<String> scenes) {
-		/*for(Scene scene : Data.getScenes()) {
-			scene.updateCooldown();
-		}*/
 		for(String scene : scenes) {
 			Data.getScene(scene).updateCooldown();
 		}
