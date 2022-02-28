@@ -16,10 +16,8 @@ public class ScriptScene extends Script {
     }
 
     @Override
-    public void execute(Actor subject) {
-        if(canExecute(subject)) {
-            SceneManager.trigger(scenes);
-        }
+    public void executeSuccess(Actor subject) {
+        SceneManager.trigger(scenes);
     }
 
 }

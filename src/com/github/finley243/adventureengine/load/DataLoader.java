@@ -322,6 +322,12 @@ public class DataLoader {
                 String relationFaction = LoadUtils.singleTag(scriptElement, "relationFaction", null);
                 Faction.FactionRelation relation = factionRelationTag(scriptElement, "relation");
                 return new ScriptFactionRelation(condition, targetFaction, relationFaction, relation);
+            case "moveActor":
+                String moveActorArea = LoadUtils.singleTag(scriptElement, "area", null);
+                return new ScriptMoveActor(condition, actorRef, moveActorArea);
+            case "actorState":
+                boolean actorEnabled = LoadUtils.singleTagBoolean(scriptElement, "enabled", true);
+                return new ScriptActorState(condition, actorRef, actorEnabled);
             default:
                 return null;
         }

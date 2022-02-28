@@ -16,10 +16,8 @@ public class ScriptVariableSet extends Script {
     }
 
     @Override
-    public void execute(Actor subject) {
-        if(canExecute(subject)) {
-            Data.setVariable(variableID, value);
-        }
+    public void executeSuccess(Actor subject) {
+        Data.setVariable(variableID, value);
     }
 
 }

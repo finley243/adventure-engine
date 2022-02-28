@@ -14,10 +14,28 @@ public abstract class Script {
 		this.condition = condition;
 	}
 
-	public boolean canExecute(Actor subject) {
-		return condition == null || condition.isMet(subject);
+	/**
+	 * Execute the script if the conditions are met
+	 * @param subject The contextual subject actor
+	 * @return Whether the script was executed
+	 */
+	public boolean execute(Actor subject) {
+		if(canExecute(subject)) {
+			executeSuccess(subject);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
-	public abstract void execute(Actor subject);
+	/**
+	 * Executed if all conditions are met when calling Script::execute
+	 * @param subject The contextual subject actor
+	 */
+	protected abstract void executeSuccess(Actor subject);
+
+	private boolean canExecute(Actor subject) {
+		return condition == null || condition.isMet(subject);
+	}
 
 }

@@ -16,10 +16,8 @@ public class ScriptCombat extends Script{
     }
 
     @Override
-    public void execute(Actor subject) {
-        if(canExecute(subject)) {
-            target.getActor(subject).addCombatTarget(combatant.getActor(subject));
-        }
+    public void executeSuccess(Actor subject) {
+        target.getActor(subject).addCombatTarget(combatant.getActor(subject));
     }
 
 }

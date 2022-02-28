@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.world.item.Item;
 public class ConditionEquippedItem extends Condition {
 
 	private final ActorReference actor;
+	// If tag is null, condition will be met if any item is equipped
 	private final String tag;
 
 	public ConditionEquippedItem(boolean invert, ActorReference actor, String tag) {

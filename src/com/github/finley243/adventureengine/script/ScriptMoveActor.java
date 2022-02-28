@@ -4,24 +4,25 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.template.ItemFactory;
 
-public class ScriptAddItem extends Script {
+public class ScriptMoveActor extends Script {
 
 	private final ActorReference actor;
-	private final String itemID;
-	
-	public ScriptAddItem(Condition condition, ActorReference actor, String itemID) {
+	private final String areaID;
+
+	public ScriptMoveActor(Condition condition, ActorReference actor, String areaID) {
 		super(condition);
 		this.actor = actor;
-		this.itemID = itemID;
+		this.areaID = areaID;
 	}
 	
 	@Override
 	public void executeSuccess(Actor subject) {
-		Item item = ItemFactory.create(Data.getItem(itemID));
-		actor.getActor(subject).inventory().addItem(item);
+		Area area = Data.getArea(areaID);
+		actor.getActor(subject).move(area);
 	}
 	
 }
