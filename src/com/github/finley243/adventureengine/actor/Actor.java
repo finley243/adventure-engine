@@ -615,6 +615,7 @@ public class Actor implements Noun, Physical {
 	
 	public void takeTurn() {
 		if(!isActive() || !isEnabled()) return;
+		triggerScript("on_start_turn");
 		effectComponent().onStartTurn();
 		updateCombatTargetsTurn();
 		investigateTarget.nextTurn(this);

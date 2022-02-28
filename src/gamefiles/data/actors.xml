@@ -109,8 +109,12 @@
         <faction>enemy</faction>
         <hp>40</hp>
         <lootTable>weapon_ranged</lootTable>
-        <script trigger="on_combat_start" type="scene">
-            <scene>test_combat_bark</scene>
+        <script trigger="on_combat_start" type="bark">
+            <chance>0.8</chance>
+            <line>"Finally, some action!" &lt;subject&gt; yell&lt;s&gt;</line>
+            <line>"Can't wait to take you down!" &lt;subject&gt; yell&lt;s&gt;</line>
+            <line>"Get 'em!" &lt;subject&gt; yell&lt;s&gt;</line>
+            <line>"!" &lt;subject&gt; yell&lt;s&gt;</line>
         </script>
     </actor>
     <actor id="nexus_bouncer" parent="default">
@@ -140,5 +144,12 @@
             <lootTable>weapon_ranged_3</lootTable>
             <canBuy>true</canBuy>
         </vendor>
+        <script trigger="on_player_visible_round" type="bark">
+            <condition type="equippedItem">
+                <actor target="player"></actor>
+                <tag>weapon</tag>
+            </condition>
+            <line>"Hey, no open carry in here! Put that weapon away!" &lt;subject&gt; yell&lt;s&gt;</line>
+        </script>
     </actor>
 </actors>

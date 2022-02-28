@@ -328,6 +328,10 @@ public class DataLoader {
             case "actorState":
                 boolean actorEnabled = LoadUtils.singleTagBoolean(scriptElement, "enabled", true);
                 return new ScriptActorState(condition, actorRef, actorEnabled);
+            case "bark":
+                List<String> barkLines = LoadUtils.listOfTags(scriptElement, "line");
+                float barkChance = LoadUtils.singleTagFloat(scriptElement, "chance", 1.0f);
+                return new ScriptBark(condition, actorRef, barkLines, barkChance);
             default:
                 return null;
         }

@@ -77,6 +77,10 @@ public class Game {
 		TextGen.clearContext();
 		Data.getPlayer().getArea().getRoom().triggerScript("on_player_round", Data.getPlayer());
 		Data.getPlayer().getArea().triggerScript("on_player_round", Data.getPlayer());
+		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
+		for(Actor visibleActor : Data.getPlayer().getVisibleActors()) {
+			visibleActor.triggerScript("on_player_visible_round");
+		}
 		for(Actor actor : Data.getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				CombatHelper.newTurn();

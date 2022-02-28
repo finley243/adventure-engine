@@ -1,13 +1,6 @@
 <data>
     <room id="test_room">
         <name proper="false">test room</name>
-        <script trigger="on_player_round" type="scene">
-            <condition type="equippedItem">
-                <actor target="player"></actor>
-                <tag>weapon</tag>
-            </condition>
-            <scene>test_weapon_bark</scene>
-        </script>
         <area id="test_area_1">
             <name proper="true">area one</name>
             <links>
