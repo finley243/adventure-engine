@@ -111,7 +111,7 @@ public class Actor implements Noun, Physical {
 		this.inventory = new Inventory();
 		this.equipmentComponent = new EquipmentComponent(this);
 		if(stats.isVendor()) {
-			this.vendorComponent = new VendorComponent(this, stats.getVendorLootTable(), stats.vendorCanBuy(), stats.vendorStartDisabled());
+			this.vendorComponent = new VendorComponent(this, stats.getVendorLootTable(), stats.vendorBuyTags(), stats.vendorBuyAll(), stats.vendorStartDisabled());
 		} else {
 			this.vendorComponent = null;
 		}
@@ -615,7 +615,7 @@ public class Actor implements Noun, Physical {
 	
 	public void takeTurn() {
 		if(!isActive() || !isEnabled()) return;
-		triggerScript("on_start_turn");
+		//triggerScript("on_start_turn");
 		effectComponent().onStartTurn();
 		updateCombatTargetsTurn();
 		investigateTarget.nextTurn(this);

@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class StatsActor {
 	
@@ -30,12 +31,13 @@ public class StatsActor {
 
 	private final boolean isVendor;
 	private final String vendorLootTable;
-	private final boolean vendorCanBuy;
+	private final Set<String> vendorBuyTags;
+	private final boolean vendorBuyAll;
 	private final boolean vendorStartDisabled;
 
 	private final Map<String, Script> scripts;
 	
-	public StatsActor(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, boolean vendorCanBuy, boolean vendorStartDisabled) {
+	public StatsActor(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
@@ -51,7 +53,8 @@ public class StatsActor {
 		this.scripts = scripts;
 		this.isVendor = isVendor;
 		this.vendorLootTable = vendorLootTable;
-		this.vendorCanBuy = vendorCanBuy;
+		this.vendorBuyTags = vendorBuyTags;
+		this.vendorBuyAll = vendorBuyAll;
 		this.vendorStartDisabled = vendorStartDisabled;
 	}
 	
@@ -113,8 +116,12 @@ public class StatsActor {
 		return vendorLootTable;
 	}
 
-	public boolean vendorCanBuy() {
-		return vendorCanBuy;
+	public Set<String> vendorBuyTags() {
+		return vendorBuyTags;
+	}
+
+	public boolean vendorBuyAll() {
+		return vendorBuyAll;
 	}
 
 	public boolean vendorStartDisabled() {

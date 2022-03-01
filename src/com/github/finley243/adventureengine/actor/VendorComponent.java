@@ -8,22 +8,25 @@ import com.github.finley243.adventureengine.world.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class VendorComponent {
 
     private final Actor vendor;
     private final Inventory vendorInventory;
     private final String lootTable;
-    // TODO - Replace with item flag set
-    private final boolean canBuy;
+
+    private final Set<String> buyTags;
+    private final boolean buyAll;
 
     private boolean enabled;
 
-    public VendorComponent(Actor vendor, String lootTable, boolean canBuy, boolean startDisabled) {
+    public VendorComponent(Actor vendor, String lootTable, Set<String> buyTags, boolean buyAll, boolean startDisabled) {
         this.vendorInventory = new Inventory();
         this.vendor = vendor;
         this.lootTable = lootTable;
-        this.canBuy = canBuy;
+        this.buyTags = buyTags;
+        this.buyAll = buyAll;
         this.enabled = !startDisabled;
         generateInventory();
     }
@@ -42,10 +45,21 @@ public class VendorComponent {
         for(Item item : vendorInventory.getUniqueItems()) {
             actions.add(new ActionVendorBuy(vendor, vendorInventory, item));
         }
-        // TODO - Implement item tag checking
-        if(canBuy) {
+        if(!buyTags.isEmpty() || buyAll) {
             for (Item item : subject.inventory().getUniqueItems()) {
-                actions.add(new ActionVendorSell(vendor, vendorInventory, item));
+                boolean canBuy = buyAll;
+                if(!canBuy) {
+                    // TODO - Optimize checks?
+                    for(String buyTag : buyTags) {
+                        if(item.getTags().contains(buyTag)) {
+                            canBuy = true;
+                            break;
+                        }
+                    }
+                }
+                if(canBuy) {
+                    actions.add(new ActionVendorSell(vendor, vendorInventory, item));
+                }
             }
         }
         return actions;

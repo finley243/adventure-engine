@@ -97,14 +97,16 @@ public class DataLoader {
         Element vendorElement = LoadUtils.singleChildWithName(actorElement, "vendor");
         boolean isVendor = vendorElement != null;
         String vendorLootTable = null;
-        boolean vendorCanBuy = false;
+        Set<String> vendorBuyTags = new HashSet<>();
+        boolean vendorBuyAll = false;
         boolean vendorStartDisabled = false;
         if(vendorElement != null) {
             vendorLootTable = LoadUtils.singleTag(vendorElement, "lootTable", null);
-            vendorCanBuy = LoadUtils.singleTagBoolean(vendorElement, "canBuy", false);
+            vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
+            vendorBuyAll = LoadUtils.boolAttribute(vendorElement, "buyAll", false);
             vendorStartDisabled = LoadUtils.singleTagBoolean(vendorElement, "startDisabled", false);
         }
-        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, topic, scripts, isVendor, vendorLootTable, vendorCanBuy, vendorStartDisabled);
+        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, topic, scripts, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
     private static List<Limb> loadLimbs(Element element) {

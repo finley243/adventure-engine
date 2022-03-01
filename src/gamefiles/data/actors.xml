@@ -142,7 +142,7 @@
         <topic>stratis_receptionist_start</topic>
         <vendor>
             <lootTable>weapon_ranged_3</lootTable>
-            <canBuy>true</canBuy>
+            <buyTag>weapon_ranged</buyTag>
         </vendor>
         <script trigger="on_player_visible_round" type="bark">
             <condition type="equippedItem">
