@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.world.environment;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,7 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.world.Noun;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 /**

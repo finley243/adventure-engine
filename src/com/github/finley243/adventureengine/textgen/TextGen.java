@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.textgen;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
-import com.github.finley243.adventureengine.world.Noun;
 
 import java.util.ArrayList;
 import java.util.List;

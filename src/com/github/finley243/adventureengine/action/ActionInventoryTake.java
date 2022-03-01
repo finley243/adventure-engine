@@ -6,9 +6,8 @@ import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.Noun;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
 
 public class ActionInventoryTake extends Action {

@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.textgen;
 
-import com.github.finley243.adventureengine.world.Noun;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

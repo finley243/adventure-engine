@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.MultiNoun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.Noun;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
 
 import java.util.ArrayList;

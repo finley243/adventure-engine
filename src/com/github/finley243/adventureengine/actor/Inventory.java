@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import java.util.*;
 
 import com.github.finley243.adventureengine.action.*;
-import com.github.finley243.adventureengine.world.Noun;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
 
 public class Inventory {

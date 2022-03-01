@@ -1,10 +1,9 @@
 package com.github.finley243.adventureengine.world.template;
 
-import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
-import com.github.finley243.adventureengine.world.Noun;
+import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Map;
 
