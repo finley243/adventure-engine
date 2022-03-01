@@ -27,6 +27,6 @@ public class ActionItemThrow extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData(LangUtils.titleCase(area.getName()), "Throw " + item.getFormattedName(false) + " towards " + area.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getStatsID()), "throw"});
+        return new MenuData(LangUtils.titleCase(area.getName()), canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getStatsID()), "throw"});
     }
 }

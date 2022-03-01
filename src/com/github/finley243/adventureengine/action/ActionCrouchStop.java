@@ -23,7 +23,7 @@ public class ActionCrouchStop extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Stop crouching", "Stop crouching", canChoose(subject));
+        return new MenuData("Stop crouching", canChoose(subject));
     }
 
     @Override

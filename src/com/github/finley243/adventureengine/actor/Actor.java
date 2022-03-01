@@ -65,10 +65,12 @@ public class Actor implements Noun, Physical {
 			this.attribute = attribute;
 		}
 	}
-	
+
 	private final StatsActor stats;
 	private final String ID;
 	private final String descriptor;
+	// If isKnown = true, use definite article, else use indefinite article
+	private boolean isKnown;
 	private Area area;
 	private int HP;
 	private boolean isEnabled;
@@ -142,12 +144,22 @@ public class Actor implements Noun, Physical {
 	}
 	
 	@Override
+	public String getFormattedName() {
+		return getFormattedName(!isKnown);
+	}
+
+	@Override
 	public String getFormattedName(boolean indefinite) {
 		if(!isProperName()) {
 			return LangUtils.addArticle(getName(), indefinite);
 		} else {
 			return getName();
 		}
+	}
+
+	@Override
+	public void setKnown() {
+		isKnown = true;
 	}
 	
 	@Override

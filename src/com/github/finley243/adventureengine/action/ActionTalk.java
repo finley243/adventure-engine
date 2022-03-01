@@ -26,7 +26,7 @@ public class ActionTalk extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Talk", "Talk to " + target.getFormattedName(false), canChoose(subject), new String[]{target.getName()});
+		return new MenuData("Talk", canChoose(subject), new String[]{target.getName()});
 	}
 
 	@Override

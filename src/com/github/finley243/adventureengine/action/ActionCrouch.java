@@ -30,7 +30,7 @@ public class ActionCrouch extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Crouch", "Crouch", canChoose(subject));
+        return new MenuData("Crouch", canChoose(subject));
     }
 
     @Override

@@ -44,9 +44,7 @@ public class ActionInventoryTakeAll extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        MultiNoun multiNoun = new MultiNoun(items);
-        String fullPrompt = "Take " + multiNoun.getFormattedName(false) + " from " + owner.getFormattedName(false);
-        return new MenuData("Take all", fullPrompt, canChoose(subject), new String[]{owner.getName(), items.get(0).getName() + inventory.itemCountLabel(items.get(0).getStatsID())});
+        return new MenuData("Take all", canChoose(subject), new String[]{owner.getName(), items.get(0).getName() + inventory.itemCountLabel(items.get(0).getStatsID())});
     }
 
     @Override

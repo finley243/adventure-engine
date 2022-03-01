@@ -38,7 +38,7 @@ public class ActionVendorSell extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData(LangUtils.titleCase(item.getName()) + " [" + item.getPrice() + "]", "Sell " + item.getFormattedName(true) + " [" + item.getPrice() + "]", canChoose(subject), new String[]{vendor.getName(), "sell"});
+        return new MenuData(LangUtils.titleCase(item.getName()) + " [" + item.getPrice() + "]", canChoose(subject), new String[]{vendor.getName(), "sell"});
     }
 
 }

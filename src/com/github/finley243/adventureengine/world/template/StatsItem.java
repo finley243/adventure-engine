@@ -41,6 +41,11 @@ public abstract class StatsItem implements Noun {
 	public String getName() {
 		return name;
 	}
+
+	@Override
+	public String getFormattedName() {
+		return getFormattedName(true);
+	}
 	
 	@Override
 	public String getFormattedName(boolean indefinite) {
@@ -50,6 +55,9 @@ public abstract class StatsItem implements Noun {
 			return getName();
 		}
 	}
+
+	@Override
+	public void setKnown() {}
 	
 	@Override
 	public boolean isProperName() {

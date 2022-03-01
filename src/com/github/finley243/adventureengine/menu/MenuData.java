@@ -1,22 +1,22 @@
 package com.github.finley243.adventureengine.menu;
 
+import com.github.finley243.adventureengine.textgen.LangUtils;
+
 public class MenuData implements Comparable<MenuData> {
 
     private int index;
     private final String prompt;
-    private final String fullPrompt;
     private final boolean enabled;
     private final String[] category;
 
-    public MenuData(String prompt, String fullPrompt, boolean enabled, String[] category) {
+    public MenuData(String prompt, boolean enabled, String[] category) {
         this.prompt = prompt;
-        this.fullPrompt = fullPrompt;
         this.enabled = enabled;
         this.category = category;
     }
 
-    public MenuData(String prompt, String fullPrompt, boolean enabled) {
-        this(prompt, fullPrompt, enabled, new String[0]);
+    public MenuData(String prompt, boolean enabled) {
+        this(prompt, enabled, new String[0]);
     }
 
     public void setIndex(int index) {
@@ -32,7 +32,12 @@ public class MenuData implements Comparable<MenuData> {
     }
 
     public String getFullPrompt() {
-        return fullPrompt;
+        StringBuilder fullPrompt = new StringBuilder();
+        for(String current : category) {
+            fullPrompt.append(LangUtils.titleCase(current)).append(" - ");
+        }
+        fullPrompt.append(prompt);
+        return fullPrompt.toString();
     }
 
     public boolean isEnabled() {

@@ -45,9 +45,9 @@ public class ActionReactionOld extends Action {
 	public MenuData getMenuData(Actor subject) {
 		switch(type) {
 		case BLOCK:
-			return new MenuData("Block", "Block", canChoose(subject));
+			return new MenuData("Block", canChoose(subject));
 		case DODGE:
-			return new MenuData("Dodge", "Dodge", canChoose(subject));
+			return new MenuData("Dodge", canChoose(subject));
 		default:
 			return null;
 		}

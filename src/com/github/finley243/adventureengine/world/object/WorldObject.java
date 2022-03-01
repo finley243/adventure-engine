@@ -22,6 +22,7 @@ public abstract class WorldObject implements Noun, Physical {
 
 	private final String ID;
 	private final String name;
+	private boolean isKnown;
 	private Area area;
 	private final String description;
 	private final Map<String, Script> scripts;
@@ -45,7 +46,12 @@ public abstract class WorldObject implements Noun, Physical {
 	public String getDescription() {
 		return description;
 	}
-	
+
+	@Override
+	public String getFormattedName() {
+		return getFormattedName(!isKnown);
+	}
+
 	@Override
 	public String getFormattedName(boolean indefinite) {
 		if(!isProperName()) {
@@ -53,6 +59,11 @@ public abstract class WorldObject implements Noun, Physical {
 		} else {
 			return getName();
 		}
+	}
+
+	@Override
+	public void setKnown() {
+		isKnown = true;
 	}
 	
 	@Override

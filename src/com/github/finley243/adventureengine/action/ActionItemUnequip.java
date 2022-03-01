@@ -34,7 +34,7 @@ public class ActionItemUnequip extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Unequip", "Unequip " + item.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName()});
+		return new MenuData("Unequip", canChoose(subject), new String[]{"inventory", item.getName()});
 	}
 
 	@Override

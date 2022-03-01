@@ -16,7 +16,7 @@ public class ActionReactionBlock extends ActionReaction {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Block", "Block", true, new String[0]);
+        return new MenuData("Block", true, new String[0]);
     }
 
     @Override

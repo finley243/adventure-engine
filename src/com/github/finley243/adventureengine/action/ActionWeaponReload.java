@@ -47,7 +47,7 @@ public class ActionWeaponReload extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Reload (" + weapon.getAmmoRemaining() + ")", "Reload " + weapon.getFormattedName(false), canChoose(subject), new String[]{weapon.getName()});
+		return new MenuData("Reload (" + weapon.getAmmoRemaining() + ")", canChoose(subject), new String[]{weapon.getName()});
 	}
 
 	@Override

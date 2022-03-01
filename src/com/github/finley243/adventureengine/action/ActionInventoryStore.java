@@ -39,8 +39,7 @@ public class ActionInventoryStore extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        String fullPrompt = "Put " + item.getFormattedName(true) + " in " + owner.getFormattedName(false);
-        return new MenuData("Store", fullPrompt, canChoose(subject), new String[]{owner.getName(), "transfer", item.getName() + subject.inventory().itemCountLabel(item.getStatsID())});
+        return new MenuData("Store", canChoose(subject), new String[]{owner.getName(), "transfer", item.getName() + subject.inventory().itemCountLabel(item.getStatsID())});
     }
 
     @Override

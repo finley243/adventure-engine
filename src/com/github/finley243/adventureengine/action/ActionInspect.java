@@ -34,15 +34,18 @@ public class ActionInspect extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
+		String[] category;
 		switch(type) {
-		case EQUIPPED:
-		case INVENTORY:
-			return new MenuData("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), new String[]{"inventory", object.getName()});
-		case WORLD:
-			return new MenuData("Inspect", "Inspect " + object.getFormattedName(false), canChoose(subject), new String[]{object.getName()});
-		default:
-			return null;
+			case EQUIPPED:
+			case INVENTORY:
+				category = new String[]{"inventory", object.getName()};
+				break;
+			case WORLD:
+			default:
+				category = new String[]{object.getName()};
+				break;
 		}
+		return new MenuData("Inspect", canChoose(subject), category);
 	}
 
 	@Override

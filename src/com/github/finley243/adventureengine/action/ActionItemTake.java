@@ -41,7 +41,7 @@ public class ActionItemTake extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Take", "Take " + item.getFormattedName(false), canChoose(subject), new String[]{item.getName()});
+		return new MenuData("Take", canChoose(subject), new String[]{item.getName()});
 	}
 
 	@Override

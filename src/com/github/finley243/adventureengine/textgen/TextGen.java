@@ -48,6 +48,9 @@ public class TextGen {
 		sentence += LangUtils.capitalize(line);
 		sentence += ".";
 		lastContext = context;
+		context.getSubject().setKnown();
+		context.getObject().setKnown();
+		context.getObject2().setKnown();
 		return sentence;
 	}
 	

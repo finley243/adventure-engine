@@ -81,7 +81,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Autofire (" + LangUtils.titleCase(getWeapon().getName()) + ", " + (int) Math.ceil(chance(subject)*100) + "%)", "Attack " + getTarget().getFormattedName(false) + " with " + getWeapon().getFormattedName(false), canChoose(subject), new String[]{getTarget().getName()});
+		return new MenuData("Autofire (" + LangUtils.titleCase(getWeapon().getName()) + ", " + (int) Math.ceil(chance(subject)*100) + "%)", canChoose(subject), new String[]{getTarget().getName()});
 	}
 
 }

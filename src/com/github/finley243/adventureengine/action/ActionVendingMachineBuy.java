@@ -37,7 +37,7 @@ public class ActionVendingMachineBuy extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Buy " + Data.getItem(itemID).getName(), "Buy " + Data.getItem(itemID).getFormattedName(true) + " from " + vendingMachine.getFormattedName(false) + " [" + Data.getItem(itemID).getPrice() + " credits]", canChoose(subject), new String[]{vendingMachine.getName()});
+		return new MenuData("Buy " + Data.getItem(itemID).getName(), canChoose(subject), new String[]{vendingMachine.getName()});
 	}
 
 }

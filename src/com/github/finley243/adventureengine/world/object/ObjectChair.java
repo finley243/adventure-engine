@@ -36,16 +36,6 @@ public class ObjectChair extends UsableObject {
 	}
 
 	@Override
-	public String getStartPromptFull() {
-		return "Sit in " + getFormattedName(false);
-	}
-
-	@Override
-	public String getStopPromptFull() {
-		return "Stand up";
-	}
-
-	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
 		if(isAvailableToUse() && !subject.isUsingObject()) {

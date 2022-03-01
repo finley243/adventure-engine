@@ -21,6 +21,6 @@ public class ActionApparelEquip extends Action {
     @Override
     public MenuData getMenuData(Actor subject) {
         //return new MenuDataInventory("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), item);
-        return new MenuData("Equip", "Equip " + item.getFormattedName(false), canChoose(subject), new String[]{"inventory", item.getName()});
+        return new MenuData("Equip", canChoose(subject), new String[]{"inventory", item.getName()});
     }
 }

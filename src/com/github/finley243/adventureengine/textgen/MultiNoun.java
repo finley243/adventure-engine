@@ -22,6 +22,11 @@ public class MultiNoun implements Noun {
     }
 
     @Override
+    public String getFormattedName() {
+        return getFormattedName(false);
+    }
+
+    @Override
     public String getFormattedName(boolean indefinite) {
         Map<String, Integer> uniqueNames = new HashMap<>();
         for(Noun noun : nouns) {
@@ -51,6 +56,13 @@ public class MultiNoun implements Noun {
             }
         }
         return name.toString();
+    }
+
+    @Override
+    public void setKnown() {
+        for(Noun noun : nouns) {
+            noun.setKnown();
+        }
     }
 
     @Override

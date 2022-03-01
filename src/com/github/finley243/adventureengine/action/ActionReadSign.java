@@ -43,11 +43,13 @@ public class ActionReadSign extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
+		String[] category;
 		if(isInInventory) {
-			return new MenuData("Read", "Read " + sign.getFormattedName(false), canChoose(subject), new String[]{"inventory", sign.getName()});
+			category = new String[]{"inventory", sign.getName()};
 		} else {
-			return new MenuData("Read", "Read " + sign.getFormattedName(false), canChoose(subject), new String[]{sign.getName()});
+			category = new String[]{sign.getName()};
 		}
+		return new MenuData("Read", canChoose(subject), category);
 	}
 
 	@Override

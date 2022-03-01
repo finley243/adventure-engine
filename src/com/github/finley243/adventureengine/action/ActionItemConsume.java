@@ -21,18 +21,20 @@ public class ActionItemConsume extends Action {
 	public void choose(Actor subject) {
 		subject.inventory().removeItem(item);
 		Context context = new Context(subject, false, item, true);
+		String phrase;
 		switch(item.getConsumableType()) {
-		case DRINK:
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("drink"), context, this, subject));
-			break;
-		case FOOD:
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("eat"), context, this, subject));
-			break;
-		case OTHER:
-		default:
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("consume"), context, this, subject));
-			break;
+			case DRINK:
+				phrase = "drink";
+				break;
+			case FOOD:
+				phrase = "eat";
+				break;
+			case OTHER:
+			default:
+				phrase = "consume";
+				break;
 		}
+		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(phrase), context, this, subject));
 		for(Effect effect : item.getEffects()) {
 			subject.effectComponent().addEffect(effect.generate());
 		}
@@ -45,19 +47,16 @@ public class ActionItemConsume extends Action {
 		switch(item.getConsumableType()) {
 		case DRINK:
 			prompt = "Drink";
-			fullPrompt = "Drink " + item.getFormattedName(true);
 			break;
 		case FOOD:
 			prompt = "Eat";
-			fullPrompt = "Eat " + item.getFormattedName(true);
 			break;
 		case OTHER:
 		default:
 			prompt = "Use";
-			fullPrompt = "Use " + item.getFormattedName(true);
 			break;
 		}
-		return new MenuData(prompt, fullPrompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getStatsID())});
+		return new MenuData(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getStatsID())});
 	}
 
 	@Override

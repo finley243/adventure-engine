@@ -79,7 +79,7 @@ public class MenuManager {
 	private DialogueChoice dialogueMenuInput(List<DialogueChoice> choices) {
 		List<MenuData> menuData = new ArrayList<>();
 		for(DialogueChoice choice : choices) {
-			menuData.add(new MenuData(choice.getPrompt(), choice.getPrompt(), true));
+			menuData.add(new MenuData(choice.getPrompt(), true));
 		}
 		int dialogueIndex = getMenuInput(menuData);
 		return choices.get(dialogueIndex);

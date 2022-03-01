@@ -626,11 +626,10 @@ public class DataLoader {
         List<ActionCustom> actions = new ArrayList<>();
         for (Element actionElement : LoadUtils.directChildrenWithName(objectElement, "action")) {
             String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
-            String fullPrompt = LoadUtils.singleTag(actionElement, "fullPrompt", null);
             String description = LoadUtils.singleTag(actionElement, "description", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
             Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
-            actions.add(new ActionCustom(prompt, fullPrompt, description, condition, script));
+            actions.add(new ActionCustom(prompt, description, condition, script));
         }
         return actions;
     }

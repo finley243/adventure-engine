@@ -32,7 +32,7 @@ public class ActionExitListen extends Action {
 		} else {
 			text += "You hear " + actorCount + " people";
 		}
-		text += " through " + exit.getFormattedName(false) + ".";
+		text += " through " + exit.getFormattedName() + ".";
 		Game.EVENT_BUS.post(new RenderTextEvent(text));
 	}
 
@@ -43,7 +43,7 @@ public class ActionExitListen extends Action {
 
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Listen", "Listen through " + exit.getFormattedName(false), canChoose(subject), new String[]{exit.getName()});
+		return new MenuData("Listen", canChoose(subject), new String[]{exit.getName()});
 	}
 
 }

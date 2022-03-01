@@ -9,10 +9,14 @@ public interface Noun {
 	
 	String getName();
 	
+	String getFormattedName();
+
 	String getFormattedName(boolean indefinite);
+
+	void setKnown();
 	
 	boolean isProperName();
 	
 	Pronoun getPronoun();
-	
+
 }

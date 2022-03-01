@@ -14,14 +14,12 @@ public class ActionCustom extends Action {
 
     private WorldObject object;
     private final String prompt;
-    private final String fullPrompt;
     private final String description;
     private final Condition condition;
     private final Script script;
 
-    public ActionCustom(String prompt, String fullPrompt, String description, Condition condition, Script script) {
+    public ActionCustom(String prompt, String description, Condition condition, Script script) {
         this.prompt = prompt;
-        this.fullPrompt = fullPrompt;
         this.description = description;
         this.condition = condition;
         this.script = script;
@@ -47,7 +45,7 @@ public class ActionCustom extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData(prompt, fullPrompt, canChoose(subject), new String[] {object.getName()});
+        return new MenuData(prompt, canChoose(subject), new String[] {object.getName()});
     }
 
 }

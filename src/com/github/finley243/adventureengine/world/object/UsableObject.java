@@ -27,10 +27,6 @@ public abstract class UsableObject extends WorldObject {
 
 	public abstract String getStopPrompt();
 
-	public abstract String getStartPromptFull();
-
-	public abstract String getStopPromptFull();
-
 	public boolean isAvailableToUse() {
 		return user == null;
 	}

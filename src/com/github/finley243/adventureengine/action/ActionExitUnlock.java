@@ -38,7 +38,7 @@ public class ActionExitUnlock extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Unlock", "Unlock " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false), canChoose(subject), new String[]{exit.getName()});
+		return new MenuData("Unlock", canChoose(subject), new String[]{exit.getName()});
 	}
 
 	@Override

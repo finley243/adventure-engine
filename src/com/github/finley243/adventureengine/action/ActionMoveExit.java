@@ -49,7 +49,7 @@ public class ActionMoveExit extends ActionMove {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(LangUtils.titleCase(exit.getName()), "Go through " + exit.getFormattedName(false) + " to " + exit.getLinkedArea().getRoom().getFormattedName(false), canChoose(subject), new String[]{"move"});
+		return new MenuData(LangUtils.titleCase(exit.getName()), canChoose(subject), new String[]{"move"});
 	}
 
 	@Override

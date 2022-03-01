@@ -26,7 +26,7 @@ public class ActionUseStop extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(object.getStopPrompt(), object.getStopPromptFull(), canChoose(subject), new String[]{object.getName()});
+		return new MenuData(object.getStopPrompt(), canChoose(subject), new String[]{object.getName()});
 	}
 
 	@Override

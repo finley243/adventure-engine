@@ -28,6 +28,7 @@ public class Area implements Noun {
 	private final String name;
 	// Whether the name is a proper name (if false, should be preceded with "the" or "a")
 	private final boolean isProperName;
+	private boolean isKnown;
 	// Format used to describe the area (in: "move to [name]", near: "move near [name]", behind:"move behind [name]", etc.)
 	private final AreaNameType nameType;
 	// The room containing this area
@@ -85,6 +86,11 @@ public class Area implements Noun {
 	public boolean isPrivate() {
 		return isPrivate;
 	}
+
+	@Override
+	public String getFormattedName() {
+		return getFormattedName(!isKnown);
+	}
 	
 	@Override
 	public String getFormattedName(boolean indefinite) {
@@ -112,6 +118,10 @@ public class Area implements Noun {
 			case AGAINST:
 				return "against " + formattedName;
 		}
+	}
+
+	public void setKnown() {
+		isKnown = true;
 	}
 
 	public String getRelativeName() {

@@ -20,6 +20,7 @@ public class Room implements Noun {
 	private final String ID;
 	private final String name;
 	private final boolean isProperName;
+	private boolean isKnown;
 	private final String description;
 	private final String ownerFaction;
 	private final Set<Area> areas;
@@ -83,7 +84,12 @@ public class Room implements Noun {
 	public String getName() {
 		return name;
 	}
-	
+
+	@Override
+	public String getFormattedName() {
+		return getFormattedName(!isKnown);
+	}
+
 	@Override
 	public String getFormattedName(boolean indefinite) {
 		if(!isProperName()) {
@@ -91,6 +97,11 @@ public class Room implements Noun {
 		} else {
 			return getName();
 		}
+	}
+
+	@Override
+	public void setKnown() {
+		isKnown = true;
 	}
 
 	@Override

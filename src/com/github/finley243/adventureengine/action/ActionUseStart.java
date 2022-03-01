@@ -26,7 +26,7 @@ public class ActionUseStart extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(object.getStartPrompt(), object.getStartPromptFull(), canChoose(subject), new String[]{object.getName()});
+		return new MenuData(object.getStartPrompt(), canChoose(subject), new String[]{object.getName()});
 	}
 
 	@Override

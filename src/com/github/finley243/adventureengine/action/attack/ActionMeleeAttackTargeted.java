@@ -77,7 +77,6 @@ public class ActionMeleeAttackTargeted extends ActionAttack {
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		return new MenuData(LangUtils.titleCase(limb.getName()) + " (" + (int) Math.ceil(chance(subject)*100) + "%)",
-				"Attack " + getTarget().getFormattedName(false) + " with " + getWeapon().getFormattedName(false) + " (targeted: " + limb.getName() + ")",
 				canChoose(subject), new String[]{getTarget().getName(), "Targeted Attack (" + LangUtils.titleCase(getWeapon().getName()) + ")"});
 	}
 
