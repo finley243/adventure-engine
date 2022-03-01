@@ -444,8 +444,9 @@ public class Actor implements Noun, Physical {
 		} else if(event.getAction() instanceof ActionMoveElevator) {
 			for(CombatTarget target : combatTargets) {
 				if(target.getTargetActor() == event.getSubject()) {
-					List<Area> possibleAreas = new ArrayList<>(((ActionMoveElevator) event.getAction()).getElevator().getLinkedAreas());
-					target.setLastKnownArea(possibleAreas.get(ThreadLocalRandom.current().nextInt(possibleAreas.size())));
+					//List<Area> possibleAreas = new ArrayList<>(((ActionMoveElevator) event.getAction()).getElevator().getLinkedAreas());
+					//target.setLastKnownArea(possibleAreas.get(ThreadLocalRandom.current().nextInt(possibleAreas.size())));
+					target.setLastKnownArea(((ActionMoveElevator) event.getAction()).getDestination().getArea());
 				}
 			}
 		}
@@ -783,9 +784,12 @@ public class Actor implements Noun, Physical {
 		return getArea().getVisibleAreas(this).contains(target.getArea()) && (!target.isCrouching || !getArea().isBehindCover(target.getArea()));
 	}
 
-	public void triggerScript(String entryPoint) {
+	public boolean triggerScript(String entryPoint) {
 		if(stats.getScripts().containsKey(entryPoint)) {
 			stats.getScripts().get(entryPoint).execute(this);
+			return true;
+		} else {
+			return false;
 		}
 	}
 	

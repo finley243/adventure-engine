@@ -27,6 +27,10 @@ public class ActionMoveElevator extends ActionMove {
 	public ObjectElevator getElevator() {
 		return elevator;
 	}
+
+	public ObjectElevator getDestination() {
+		return destination;
+	}
 	
 	@Override
 	public void choose(Actor subject) {

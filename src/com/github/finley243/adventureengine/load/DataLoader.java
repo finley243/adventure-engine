@@ -334,6 +334,9 @@ public class DataLoader {
                 List<String> barkLines = LoadUtils.listOfTags(scriptElement, "line");
                 float barkChance = LoadUtils.singleTagFloat(scriptElement, "chance", 1.0f);
                 return new ScriptBark(condition, actorRef, barkLines, barkChance);
+            case "nearestActorScript":
+                String nearestTrigger = LoadUtils.singleTag(scriptElement, "trigger", null);
+                return new ScriptNearestActorWithScript(condition, nearestTrigger);
             case "compound":
             default:
                 List<Script> subScripts = loadSubScripts(scriptElement);
