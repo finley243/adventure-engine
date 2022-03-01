@@ -144,12 +144,81 @@
             <lootTable>weapon_ranged_3</lootTable>
             <buyTag>weapon_ranged</buyTag>
         </vendor>
-        <script trigger="on_player_visible_round" type="bark">
-            <condition type="equippedItem">
-                <actor target="player"></actor>
-                <tag>weapon</tag>
-            </condition>
-            <line>"Hey, no open carry in here! Put that weapon away!" &lt;subject&gt; yell&lt;s&gt;</line>
+        <script trigger="on_player_visible_round">
+            <script select="true">
+                <script select="true">
+                    <condition type="equippedItem">
+                        <actor target="player"></actor>
+                        <tag>weapon</tag>
+                    </condition>
+                    <script>
+                        <condition type="var">
+                            <variable>test_vendor_weapon_warning</variable>
+                            <equality>EQUAL</equality>
+                            <value>0</value>
+                        </condition>
+                        <script type="bark">
+                            <line>"Hey, no open carry in here! Put that weapon away!" &lt;subject&gt; yell&lt;s&gt;</line>
+                        </script>
+                        <script type="varMod">
+                            <variable>test_vendor_weapon_warning</variable>
+                            <value>1</value>
+                        </script>
+                    </script>
+                    <script>
+                        <condition type="var">
+                            <variable>test_vendor_weapon_warning</variable>
+                            <equality>EQUAL</equality>
+                            <value>1</value>
+                        </condition>
+                        <script type="bark">
+                            <line>"Hey, I'm serious, put that weapon away now!" &lt;subject&gt; yell&lt;s&gt;</line>
+                        </script>
+                        <script type="varMod">
+                            <variable>test_vendor_weapon_warning</variable>
+                            <value>1</value>
+                        </script>
+                    </script>
+                    <script>
+                        <condition type="var">
+                            <variable>test_vendor_weapon_warning</variable>
+                            <equality>GREATER_EQUAL</equality>
+                            <value>2</value>
+                        </condition>
+                        <script type="bark">
+                            <line>"Alright, you asked for it!" &lt;subject&gt; yell&lt;s&gt;</line>
+                        </script>
+                        <script type="combat">
+                            <combatant target="player"></combatant>
+                        </script>
+                    </script>
+                </script>
+                <script>
+                    <condition type="equippedItem" invert="true">
+                        <actor target="player"></actor>
+                        <tag>weapon</tag>
+                    </condition>
+                    <script select="true">
+                        <condition>
+                            <condition type="var">
+                                <variable>test_vendor_weapon_warning</variable>
+                                <equality>GREATER</equality>
+                                <value>0</value>
+                            </condition>
+                            <condition type="inCombat" invert="true"></condition>
+                        </condition>
+                        <script>
+                            <script type="bark">
+                                <line>"Good. Now keep that weapon out of sight while you're in here," &lt;subject&gt; say&lt;s&gt;, glaring at you</line>
+                            </script>
+                            <script type="varSet">
+                                <variable>test_vendor_weapon_warning</variable>
+                                <value>0</value>
+                            </script>
+                        </script>
+                    </script>
+                </script>
+            </script>
         </script>
     </actor>
 </actors>

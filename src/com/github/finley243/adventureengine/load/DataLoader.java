@@ -299,17 +299,17 @@ public class DataLoader {
             case "money":
                 int moneyValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
                 return new ScriptMoney(condition, actorRef, moneyValue);
-            case "add_item":
+            case "addItem":
                 String addItemID = LoadUtils.singleTag(scriptElement, "item", null);
                 return new ScriptAddItem(condition, actorRef, addItemID);
             case "scene":
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
                 return new ScriptScene(condition, scenes);
-            case "var_set":
+            case "varSet":
                 String varSetID = LoadUtils.singleTag(scriptElement, "variable", null);
                 int varSetValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
                 return new ScriptVariableSet(condition, varSetID, varSetValue);
-            case "var_mod":
+            case "varMod":
                 String varModID = LoadUtils.singleTag(scriptElement, "variable", null);
                 int varModValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
                 return new ScriptVariableMod(condition, varModID, varModValue);
@@ -347,7 +347,7 @@ public class DataLoader {
 
     private static ActorReference loadActorReference(Element parentElement, String name) {
         Element refElement = LoadUtils.singleChildWithName(parentElement, name);
-        if(refElement == null) return null;
+        if(refElement == null) return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
         String targetTypeString = refElement.getAttribute("target");
         ActorReference.ReferenceType targetType;
         switch(targetTypeString) {
