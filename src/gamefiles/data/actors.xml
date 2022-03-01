@@ -172,7 +172,7 @@
                             <value>1</value>
                         </condition>
                         <script type="bark">
-                            <line>"Hey, I'm serious, put that weapon away now!" &lt;subject&gt; yell&lt;s&gt;</line>
+                            <line>"Put that weapon away now! This is your final warning!" &lt;subject&gt; yell&lt;s&gt;</line>
                         </script>
                         <script type="varMod">
                             <variable>test_vendor_weapon_warning</variable>
