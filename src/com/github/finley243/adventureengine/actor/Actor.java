@@ -453,6 +453,7 @@ public class Actor implements Noun, Physical {
 	
 	public void onSoundEvent(SoundEvent event) {
 		investigateTarget.setTargetArea(event.getOrigin());
+		triggerScript("on_investigate_start");
 	}
 	
 	public void startUsingObject(UsableObject object) {

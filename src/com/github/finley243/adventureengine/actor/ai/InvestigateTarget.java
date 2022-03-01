@@ -20,6 +20,10 @@ public class InvestigateTarget {
         this.turnsUntilRemove = TURNS_BEFORE_END_SEARCH;
     }
 
+    /**
+     * Progresses the investigation timer at the start of each turn
+     * @param subject The investigating actor
+     */
     public void nextTurn(Actor subject) {
         if(subject.getArea() == targetArea) {
             turnsUntilRemove--;
@@ -27,6 +31,7 @@ public class InvestigateTarget {
                 pursueTarget.markForRemoval();
                 pursueTarget = null;
                 targetArea = null;
+                subject.triggerScript("on_investigate_end");
             }
         }
     }
