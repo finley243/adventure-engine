@@ -210,10 +210,6 @@ public class DataLoader {
         boolean invert = LoadUtils.boolAttribute(conditionElement, "invert", false);
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch(type) {
-            case "compound":
-                List<Condition> subConditions = loadSubConditions(conditionElement);
-                boolean useOr = conditionElement.getAttribute("logic").equalsIgnoreCase("or");
-                return new ConditionCompound(invert, subConditions, useOr);
             case "money":
                 int moneyAmount = LoadUtils.singleTagInt(conditionElement, "value", 0);
                 return new ConditionMoney(invert, actorRef, moneyAmount);
@@ -249,8 +245,16 @@ public class DataLoader {
             case "equippedItem":
                 String itemTag = LoadUtils.singleTag(conditionElement, "tag", null);
                 return new ConditionEquippedItem(invert, actorRef, itemTag);
+            case "actorVisible":
+                ActorReference visibleTargetRef = loadActorReference(conditionElement, "target");
+                return new ConditionActorVisible(invert, actorRef, visibleTargetRef);
+            case "inCombat":
+                return new ConditionActorInCombat(invert, actorRef);
+            case "compound":
             default:
-                return null;
+                List<Condition> subConditions = loadSubConditions(conditionElement);
+                boolean useOr = LoadUtils.attribute(conditionElement, "logic", "and").equalsIgnoreCase("or");
+                return new ConditionCompound(invert, subConditions, useOr);
         }
     }
 
@@ -292,10 +296,6 @@ public class DataLoader {
         Condition condition = loadCondition(conditionElement);
         ActorReference actorRef = loadActorReference(scriptElement, "actor");
         switch(type) {
-            case "compound":
-                List<Script> subScripts = loadSubScripts(scriptElement);
-                boolean compoundSelect = LoadUtils.boolAttribute(scriptElement, "select", false);
-                return new ScriptCompound(condition, subScripts, compoundSelect);
             case "money":
                 int moneyValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
                 return new ScriptMoney(condition, actorRef, moneyValue);
@@ -334,8 +334,11 @@ public class DataLoader {
                 List<String> barkLines = LoadUtils.listOfTags(scriptElement, "line");
                 float barkChance = LoadUtils.singleTagFloat(scriptElement, "chance", 1.0f);
                 return new ScriptBark(condition, actorRef, barkLines, barkChance);
+            case "compound":
             default:
-                return null;
+                List<Script> subScripts = loadSubScripts(scriptElement);
+                boolean compoundSelect = LoadUtils.boolAttribute(scriptElement, "select", false);
+                return new ScriptCompound(condition, subScripts, compoundSelect);
         }
     }
 
