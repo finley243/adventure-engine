@@ -12,7 +12,7 @@ public class ActionCrouchStop extends Action {
     @Override
     public void choose(Actor subject) {
         subject.setCrouching(false);
-        Context context = new Context(subject, false);
+        Context context = new Context(subject);
         Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("crouchStop"), context, this, subject));
     }
 

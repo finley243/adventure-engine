@@ -27,7 +27,7 @@ public class ActionVendorBuy extends Action {
         vendorInventory.removeItem(item);
         subject.adjustMoney(-item.getPrice());
         subject.inventory().addItem(item);
-        Context context = new Context(subject, false, item, true);
+        Context context = new Context(subject, item);
         Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("buy"), context, this, subject));
     }
 

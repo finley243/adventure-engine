@@ -20,7 +20,7 @@ public class ActionUseStop extends Action {
 	public void choose(Actor subject) {
 		object.removeUser();
 		subject.stopUsingObject();
-		Context context = new Context(subject, false, object, false);
+		Context context = new Context(subject, object);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(object.getStopPhrase()), context, this, subject));
 	}
 	

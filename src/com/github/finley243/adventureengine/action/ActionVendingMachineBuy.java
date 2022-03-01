@@ -26,7 +26,7 @@ public class ActionVendingMachineBuy extends Action {
 		Item item = ItemFactory.create(itemID);
 		subject.adjustMoney(-item.getPrice());
 		subject.inventory().addItem(item);
-		Context context = new Context(subject, false, item, true, vendingMachine, false);
+		Context context = new Context(subject, item, vendingMachine);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("buyFrom"), context, this, subject));
 	}
 

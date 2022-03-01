@@ -30,7 +30,7 @@ public class ScriptBark extends Script {
     protected void executeSuccess(Actor subject) {
         if(ThreadLocalRandom.current().nextFloat() < chance) {
             String selectedLine = lines.get(ThreadLocalRandom.current().nextInt(lines.size()));
-            Game.EVENT_BUS.post(new RenderTextEvent(TextGen.generate(selectedLine, new Context(actor.getActor(subject), false))));
+            Game.EVENT_BUS.post(new RenderTextEvent(TextGen.generate(selectedLine, new Context(actor.getActor(subject)))));
         }
     }
 

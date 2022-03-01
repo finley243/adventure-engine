@@ -26,7 +26,7 @@ public class ActionInventoryTake extends Action {
     public void choose(Actor subject) {
         inventory.removeItem(item);
         subject.inventory().addItem(item);
-        Context context = new Context(subject, false, item, true, owner, false);
+        Context context = new Context(subject, item, owner);
         Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
 

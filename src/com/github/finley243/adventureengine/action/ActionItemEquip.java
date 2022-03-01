@@ -23,7 +23,7 @@ public class ActionItemEquip extends Action {
 	public void choose(Actor subject) {
 		subject.setEquippedItem(item);
 		subject.inventory().removeItem(item);
-		Context context = new Context(subject, false, item, true);
+		Context context = new Context(subject, item);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("equip"), context, this, subject));
 	}
 

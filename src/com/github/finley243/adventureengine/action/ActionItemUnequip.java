@@ -20,7 +20,7 @@ public class ActionItemUnequip extends Action {
 	public void choose(Actor subject) {
 		subject.setEquippedItem(null);
 		subject.inventory().addItem(item);
-		Context context = new Context(subject, false, item, false);
+		Context context = new Context(subject, item);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unequip"), context, this, subject));
 	}
 

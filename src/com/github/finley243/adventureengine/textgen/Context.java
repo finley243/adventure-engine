@@ -32,26 +32,19 @@ public class Context {
 	private final Noun object;
 	private final Noun object2;
 	
-	private final boolean indefiniteSubject;
-	private final boolean indefiniteObject;
-	private final boolean indefiniteObject2;
-	
-	public Context(Noun subject, boolean indefiniteSubject) {
-		this(subject, indefiniteSubject, subject, indefiniteSubject, subject, indefiniteSubject);
+	public Context(Noun subject) {
+		this(subject, subject, subject);
 	}
 	
-	public Context(Noun subject, boolean indefiniteSubject, Noun object, boolean indefiniteObject) {
-		this(subject, indefiniteSubject, object, indefiniteObject, object, indefiniteObject);
+	public Context(Noun subject, Noun object) {
+		this(subject, object, object);
 	}
 	
-	public Context(Noun subject, boolean indefiniteSubject, Noun object, boolean indefiniteObject, Noun object2, boolean indefiniteObject2) {
+	public Context(Noun subject, Noun object, Noun object2) {
 		if(subject == null || object == null || object2 == null) throw new IllegalArgumentException("Context arguments cannot be null");
 		this.subject = subject;
 		this.object = object;
 		this.object2 = object2;
-		this.indefiniteSubject = indefiniteSubject;
-		this.indefiniteObject = indefiniteObject;
-		this.indefiniteObject2 = indefiniteObject2;
 	}
 
 	public Noun getSubject() {
@@ -64,18 +57,6 @@ public class Context {
 
 	public Noun getObject2() {
 		return object2;
-	}
-	
-	public boolean indefiniteSubject() {
-		return indefiniteSubject;
-	}
-	
-	public boolean indefiniteObject() {
-		return indefiniteObject;
-	}
-	
-	public boolean indefiniteObject2() {
-		return indefiniteObject2;
 	}
 	
 }

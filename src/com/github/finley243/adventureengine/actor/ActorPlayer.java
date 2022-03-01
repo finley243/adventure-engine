@@ -76,7 +76,7 @@ public class ActorPlayer extends Actor {
 
 	public void describeSurroundings() {
 		for(Actor actor : getVisibleActors()) {
-			Context context = new Context(actor, false, this, false);
+			Context context = new Context(actor, this);
 			String line;
 			if(actor.isDead()) {
 				line = "<subject> lie<s> dead " + (getArea() == actor.getArea() ? "next to <object>" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());

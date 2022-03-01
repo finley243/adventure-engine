@@ -32,7 +32,7 @@ public class ActionInventoryTakeAll extends Action {
             inventory.removeItem(item);
             subject.inventory().addItem(item);
         }
-        Context context = new Context(subject, false, new MultiNoun(items), true, owner, false);
+        Context context = new Context(subject, new MultiNoun(items), owner);
         Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
 

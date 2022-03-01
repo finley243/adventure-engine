@@ -348,7 +348,7 @@ public class Actor implements Noun, Physical {
 		if(amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, stats.getMaxHP() - HP);
 		HP += amount;
-		Context context = new Context(this, false);
+		Context context = new Context(this);
 		if(SHOW_HP_CHANGES) {
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context, null, null));
 		}
@@ -364,7 +364,7 @@ public class Actor implements Noun, Physical {
 			kill();
 		} else {
 			triggerScript("on_damaged");
-			Context context = new Context(this, false);
+			Context context = new Context(this);
 			if(SHOW_HP_CHANGES) {
 				Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
 			}
@@ -386,7 +386,7 @@ public class Actor implements Noun, Physical {
 			kill();
 		} else {
 			triggerScript("on_damaged");
-			Context context = new Context(this, false);
+			Context context = new Context(this);
 			if(SHOW_HP_CHANGES) {
 				Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
 			}
@@ -397,12 +397,12 @@ public class Actor implements Noun, Physical {
 	public void kill() {
 		triggerScript("on_death");
 		isDead = true;
-		Context context = new Context(this, false);
+		Context context = new Context(this);
 		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context, null, null));
 		if(equippedItem != null) {
 			getArea().addObject(equippedItem);
 			equippedItem.setArea(getArea());
-			context = new Context(this, false, equippedItem, false);
+			context = new Context(this, equippedItem);
 			Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 			equippedItem = null;
 		}

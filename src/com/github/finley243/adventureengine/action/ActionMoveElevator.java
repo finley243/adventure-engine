@@ -34,7 +34,7 @@ public class ActionMoveElevator extends ActionMove {
 	
 	@Override
 	public void choose(Actor subject) {
-		Context context = new Context(subject, false, elevator, false);
+		Context context = new Context(subject, elevator);
 		String takeElevatorPhrase;
 		if(elevator.getFloorNumber() < destination.getFloorNumber()) {
 			takeElevatorPhrase = "takeElevatorUp";

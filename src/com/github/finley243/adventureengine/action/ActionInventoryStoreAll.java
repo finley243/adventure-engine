@@ -32,7 +32,7 @@ public class ActionInventoryStoreAll extends Action {
             subject.inventory().removeItem(item);
             inventory.addItem(item);
         }
-        Context context = new Context(subject, false, new MultiNoun(items), true, owner, false);
+        Context context = new Context(subject, new MultiNoun(items), owner);
         Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("storeIn"), context, this, subject));
     }
 

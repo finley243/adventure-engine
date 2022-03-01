@@ -20,7 +20,7 @@ public class ActionUseStart extends Action {
 	public void choose(Actor subject) {
 		object.setUser(subject);
 		subject.startUsingObject(object);
-		Context context = new Context(subject, false, object, false);
+		Context context = new Context(subject, object);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(object.getStartPhrase()), context, this, subject));
 	}
 	

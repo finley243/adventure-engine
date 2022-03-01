@@ -20,7 +20,7 @@ public class ActionItemConsume extends Action {
 	@Override
 	public void choose(Actor subject) {
 		subject.inventory().removeItem(item);
-		Context context = new Context(subject, false, item, true);
+		Context context = new Context(subject, item);
 		String phrase;
 		switch(item.getConsumableType()) {
 			case DRINK:

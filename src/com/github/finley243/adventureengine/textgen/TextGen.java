@@ -144,14 +144,14 @@ public class TextGen {
 		Noun object = context.getObject();
 		Noun object2 = context.getObject2();
 
-		line = populatePronoun(line, useSubjectPronoun, subject.getFormattedName(context.indefiniteSubject()),
+		line = populatePronoun(line, useSubjectPronoun, subject.getFormattedName(/*context.indefiniteSubject()*/),
 				subject.getPronoun().subject, subject.getPronoun().possessive, SUBJECT, SUBJECT_POSSESSIVE);
 		line = line.replace(SUBJECT_REFLEXIVE, subject.getPronoun().reflexive);
 
-		line = populatePronoun(line, useObjectPronoun, object.getFormattedName(context.indefiniteObject()),
+		line = populatePronoun(line, useObjectPronoun, object.getFormattedName(/*context.indefiniteObject()*/),
 				object.getPronoun().object, object.getPronoun().possessive, OBJECT, OBJECT_POSSESSIVE);
 
-		line = populatePronoun(line, useObject2Pronoun, object2.getFormattedName(context.indefiniteObject2()),
+		line = populatePronoun(line, useObject2Pronoun, object2.getFormattedName(/*context.indefiniteObject2()*/),
 				object2.getPronoun().object, object2.getPronoun().possessive, OBJECT_2, OBJECT_2_POSSESSIVE);
 
 		line = line.replace(VERB_S, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "s" : ""));

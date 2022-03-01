@@ -31,7 +31,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
 		}
 		getTarget().addCombatTarget(subject);
-		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
+		Context attackContext = new Context(subject, getTarget(), getWeapon());
 		if(!CombatHelper.isRepeat(attackContext)) {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, true)), attackContext, null, null));
 		}
@@ -46,7 +46,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 			damage += weapon.getCritDamage();
 			crit = true;
 		}
-		Context attackContext = new Context(subject, false, target, false, weapon, false);
+		Context attackContext = new Context(subject, target, weapon);
 		String hitPhrase = CombatHelper.getHitPhrase(weapon, null, crit, true);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
 		target.damage(damage);
@@ -54,7 +54,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 
 	@Override
 	public void onFail(Actor subject) {
-		Context attackContext = new Context(subject, false, getTarget(), false, getWeapon(), false);
+		Context attackContext = new Context(subject, getTarget(), getWeapon());
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, true)), attackContext, this, subject));
 	}
 
