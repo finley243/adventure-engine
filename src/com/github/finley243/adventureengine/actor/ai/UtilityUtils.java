@@ -18,7 +18,7 @@ public class UtilityUtils {
 			return 0.0f;
 		}
 		float utility = 0.0f;
-		for(PursueTarget target : subject.getPursueTargets()) {
+		for(AreaTarget target : subject.getPursueTargets()) {
 			if(target.isActive() && (!throughExit || target.shouldUseExits())) {
 				if (target.shouldFlee() && target.getTargetAreas().contains(subject.getArea())) {
 					utility += target.getTargetUtility();
@@ -48,7 +48,7 @@ public class UtilityUtils {
 	}
 
 	// Returns true if subject needs to move to get into ideal range for attacking target (false if already in ideal range)
-	public static boolean shouldActivatePursueTarget(Actor subject, CombatTarget target) {
+	public static boolean shouldActivatePursueTarget(Actor subject, ActorTarget target) {
 		if(subject.getEquippedItem() != null && subject.getEquippedItem() instanceof ItemWeapon) {
 			ItemWeapon weapon = (ItemWeapon) subject.getEquippedItem();
 			//int targetDistance = target.getTargetDistance();
@@ -59,7 +59,7 @@ public class UtilityUtils {
 		}
 	}
 
-	public static boolean shouldMoveAwayFrom(Actor subject, CombatTarget target) {
+	public static boolean shouldMoveAwayFrom(Actor subject, ActorTarget target) {
 		if(subject.hasRangedWeaponEquipped()) {
 			int rangeMin = ((ItemWeapon) subject.getEquippedItem()).getRangeMin();
 			//return target.getTargetDistance() < rangeMin;

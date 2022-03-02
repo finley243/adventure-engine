@@ -89,8 +89,8 @@ public class Actor implements Noun, Physical {
 	private int money;
 	private UsableObject usingObject;
 	private boolean isCrouching;
-	private final Set<CombatTarget> combatTargets;
-	private final Set<PursueTarget> pursueTargets;
+	private final Set<ActorTarget> actorTargets;
+	private final Set<AreaTarget> areaTargets;
 	private final InvestigateTarget investigateTarget;
 	private final BehaviorIdle behaviorIdle;
 	private final boolean preventMovement;
@@ -101,8 +101,8 @@ public class Actor implements Noun, Physical {
 		this.stats = stats;
 		this.descriptor = descriptor;
 		this.preventMovement = preventMovement;
-		this.combatTargets = new HashSet<>();
-		this.pursueTargets = new HashSet<>();
+		this.actorTargets = new HashSet<>();
+		this.areaTargets = new HashSet<>();
 		this.investigateTarget = new InvestigateTarget();
 		this.isDead = startDead;
 		this.isUnconscious = startDead;
@@ -441,19 +441,19 @@ public class Actor implements Noun, Physical {
 	
 	public void onVisualEvent(VisualEvent event) {
 		if(event.getAction() instanceof ActionMoveArea) {
-			for(CombatTarget target : combatTargets) {
+			for(ActorTarget target : actorTargets) {
 				if(target.getTargetActor() == event.getSubject()) {
 					target.setLastKnownArea(((ActionMoveArea) event.getAction()).getArea());
 				}
 			}
 		} else if(event.getAction() instanceof ActionMoveExit) {
-			for(CombatTarget target : combatTargets) {
+			for(ActorTarget target : actorTargets) {
 				if(target.getTargetActor() == event.getSubject()) {
 					target.setLastKnownArea(((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
 				}
 			}
 		} else if(event.getAction() instanceof ActionMoveElevator) {
-			for(CombatTarget target : combatTargets) {
+			for(ActorTarget target : actorTargets) {
 				if(target.getTargetActor() == event.getSubject()) {
 					//List<Area> possibleAreas = new ArrayList<>(((ActionMoveElevator) event.getAction()).getElevator().getLinkedAreas());
 					//target.setLastKnownArea(possibleAreas.get(ThreadLocalRandom.current().nextInt(possibleAreas.size())));
@@ -485,12 +485,15 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public boolean isInCombat() {
-		return combatTargets.size() > 0;
+		for(ActorTarget target : actorTargets) {
+			if(target.isEnemy()) return true;
+		}
+		return false;
 	}
 	
 	public boolean hasMeleeTargets() {
-		for(CombatTarget target : combatTargets) {
-			if(target.getTargetActor().getArea() == this.getArea()) {
+		for(ActorTarget target : actorTargets) {
+			if(target.isEnemy() && target.getTargetActor().getArea() == this.getArea()) {
 				return true;
 			}
 		}
@@ -515,8 +518,8 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public boolean isCombatTarget(Actor actor) {
-		for(CombatTarget target : combatTargets) {
-			if(target.getTargetActor() == actor) {
+		for(ActorTarget target : actorTargets) {
+			if(target.isEnemy() && target.getTargetActor() == actor) {
 				return true;
 			}
 		}
@@ -524,22 +527,22 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public void addCombatTarget(Actor actor) {
-		if(combatTargets.isEmpty()) {
+		if(actorTargets.isEmpty()) {
 			triggerScript("on_combat_start");
 		}
-		combatTargets.add(new CombatTarget(actor));
+		actorTargets.add(new ActorTarget(actor, true));
 	}
 
-	public Set<CombatTarget> getCombatTargets() {
-		return combatTargets;
+	public Set<ActorTarget> getCombatTargets() {
+		return actorTargets;
 	}
 	
-	public void addPursueTarget(PursueTarget target) {
-		pursueTargets.add(target);
+	public void addPursueTarget(AreaTarget target) {
+		areaTargets.add(target);
 	}
 	
-	public Set<PursueTarget> getPursueTargets() {
-		return pursueTargets;
+	public Set<AreaTarget> getPursueTargets() {
+		return areaTargets;
 	}
 
 	@Override
@@ -722,7 +725,7 @@ public class Actor implements Noun, Physical {
 						addCombatTarget(actor);
 					}
 				} else if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.ASSIST) {
-					for(CombatTarget allyTarget : actor.getCombatTargets()) {
+					for(ActorTarget allyTarget : actor.getCombatTargets()) {
 						if(!isCombatTarget(allyTarget.getTargetActor())) {
 							addCombatTarget(allyTarget.getTargetActor());
 						}
@@ -737,30 +740,30 @@ public class Actor implements Noun, Physical {
 	}
 
 	private void updateCombatTargetsTurn() {
-		for(CombatTarget target : combatTargets) {
+		for(ActorTarget target : actorTargets) {
 			target.nextTurn();
 		}
 	}
 	
 	private void updateCombatTargets() {
-		boolean hadTargets = !combatTargets.isEmpty();
-		Iterator<CombatTarget> itr = combatTargets.iterator();
+		boolean hadTargets = !actorTargets.isEmpty();
+		Iterator<ActorTarget> itr = actorTargets.iterator();
 		while(itr.hasNext()) {
-			CombatTarget target = itr.next();
+			ActorTarget target = itr.next();
 			target.update(this);
 			if(target.shouldRemove()) {
 				itr.remove();
 			}
 		}
-		if(hadTargets && combatTargets.isEmpty()) {
+		if(hadTargets && actorTargets.isEmpty()) {
 			triggerScript("on_combat_end");
 		}
 	}
 	
 	private void updatePursueTargets() {
-		Iterator<PursueTarget> itr = pursueTargets.iterator();
+		Iterator<AreaTarget> itr = areaTargets.iterator();
 		while(itr.hasNext()) {
-			PursueTarget target = itr.next();
+			AreaTarget target = itr.next();
 			target.update(this);
 			if(target.shouldRemove()) {
 				itr.remove();

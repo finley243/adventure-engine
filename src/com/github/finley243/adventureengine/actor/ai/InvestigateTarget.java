@@ -12,11 +12,11 @@ public class InvestigateTarget {
 
     private Area targetArea;
     private int turnsUntilRemove;
-    private PursueTarget pursueTarget;
+    private AreaTarget areaTarget;
 
     public InvestigateTarget() {
         this.targetArea = null;
-        this.pursueTarget = null;
+        this.areaTarget = null;
         this.turnsUntilRemove = TURNS_BEFORE_END_SEARCH;
     }
 
@@ -28,8 +28,8 @@ public class InvestigateTarget {
         if(subject.getArea() == targetArea) {
             turnsUntilRemove--;
             if(turnsUntilRemove <= 0) {
-                pursueTarget.markForRemoval();
-                pursueTarget = null;
+                areaTarget.markForRemoval();
+                areaTarget = null;
                 targetArea = null;
                 subject.triggerScript("on_investigate_end");
             }
@@ -37,17 +37,17 @@ public class InvestigateTarget {
     }
 
     public void update(Actor subject) {
-        if(pursueTarget == null && targetArea != null) {
+        if(areaTarget == null && targetArea != null) {
             Set<Area> targetSet = new HashSet<>();
             targetSet.add(targetArea);
-            pursueTarget = new PursueTarget(targetSet, UtilityUtils.INVESTIGATE_NOISE_UTILITY, true, false, false);
-            subject.addPursueTarget(pursueTarget);
+            areaTarget = new AreaTarget(targetSet, UtilityUtils.INVESTIGATE_NOISE_UTILITY, true, false, false);
+            subject.addPursueTarget(areaTarget);
         }
         if(subject.getArea() == targetArea) {
             turnsUntilRemove--;
             if(turnsUntilRemove <= 0) {
-                pursueTarget.markForRemoval();
-                pursueTarget = null;
+                areaTarget.markForRemoval();
+                areaTarget = null;
                 targetArea = null;
             }
         }
@@ -55,9 +55,9 @@ public class InvestigateTarget {
 
     public void setTargetArea(Area targetArea) {
         this.targetArea = targetArea;
-        if(pursueTarget != null) {
-            pursueTarget.markForRemoval();
-            pursueTarget = null;
+        if(areaTarget != null) {
+            areaTarget.markForRemoval();
+            areaTarget = null;
         }
         turnsUntilRemove = TURNS_BEFORE_END_SEARCH;
     }

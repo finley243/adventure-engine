@@ -3,31 +3,37 @@ package com.github.finley243.adventureengine.actor.ai;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
-import com.github.finley243.adventureengine.world.object.ObjectElevator;
-import com.github.finley243.adventureengine.world.object.ObjectExit;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
-public class CombatTarget {
+public class ActorTarget {
 
-	/** Number of turns it takes for a combat target to be removed if they are not visible */
+	/** Number of turns it takes for a target to be removed if they are not visible */
 	public static final int TURNS_BEFORE_END_COMBAT = 5;
 	
 	private final Actor targetActor;
+	private final boolean isEnemy;
+
+	private boolean markForRemoval;
 	private int turnsUntilRemove;
-	private PursueTarget pursueTarget;
+	private AreaTarget areaTarget;
 	private Area lastKnownArea;
 	
-	public CombatTarget(Actor actor) {
+	public ActorTarget(Actor actor, boolean isEnemy) {
 		this.targetActor = actor;
+		this.isEnemy = isEnemy;
 		this.turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
-		pursueTarget = null;
-		// Could cause issues if a combat target is added before an actor "knows" they are there
+		areaTarget = null;
 		lastKnownArea = actor.getArea();
+	}
+
+	public void markForRemoval() {
+		markForRemoval = true;
+	}
+
+	public boolean isEnemy() {
+		return isEnemy;
 	}
 
 	public void nextTurn() {
@@ -37,23 +43,27 @@ public class CombatTarget {
 	}
 	
 	public void update(Actor subject) {
-		if(pursueTarget == null) {
-			pursueTarget = new PursueTarget(idealAreas(subject, lastKnownArea), 0.0f, true, false, false);
-			subject.addPursueTarget(pursueTarget);
+		if(areaTarget == null) {
+			if(isEnemy) {
+				areaTarget = new AreaTarget(idealAreas(subject, lastKnownArea), 0.0f, true, false, false);
+			} else {
+				areaTarget = new AreaTarget(Set.of(lastKnownArea), 0.0f, true, false, false);
+			}
+			subject.addPursueTarget(areaTarget);
 		}
 		if(subject.canSee(targetActor)) {
 			lastKnownArea = targetActor.getArea();
 			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
-			pursueTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
-			pursueTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, this));
-			pursueTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, this));
-			pursueTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
+			areaTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
+			areaTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, this));
+			areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, this));
+			areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
 		} else {
-			pursueTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
-			pursueTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
+			areaTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
+			areaTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
 		}
 		if(shouldRemove()) {
-			pursueTarget.markForRemoval();
+			areaTarget.markForRemoval();
 		}
 	}
 
@@ -62,7 +72,7 @@ public class CombatTarget {
 	}
 	
 	public boolean shouldRemove() {
-		return targetActor.isDead() || turnsUntilRemove <= 0;
+		return targetActor.isDead() || (isEnemy && turnsUntilRemove <= 0) || markForRemoval;
 	}
 	
 	public Actor getTargetActor() {
@@ -71,10 +81,10 @@ public class CombatTarget {
 	
 	@Override
 	public boolean equals(Object other) {
-		if(!(other instanceof CombatTarget)) {
+		if(!(other instanceof ActorTarget)) {
 			return false;
 		} else {
-			return this.getTargetActor().equals(((CombatTarget) other).getTargetActor());
+			return this.getTargetActor().equals(((ActorTarget) other).getTargetActor());
 		}
 	}
 	

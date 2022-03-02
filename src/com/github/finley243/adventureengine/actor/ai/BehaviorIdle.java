@@ -23,7 +23,7 @@ public class BehaviorIdle {
 	private int stepIndex;
 	private int stepTurnCounter;
 	
-	private PursueTarget currentTarget;
+	private AreaTarget currentTarget;
 	
 	public BehaviorIdle(List<String> steps) {
 		this.steps = steps;
@@ -38,7 +38,7 @@ public class BehaviorIdle {
 		if(currentTarget == null) {
 			Set<Area> targetSet = new HashSet<>();
 			targetSet.add(Data.getArea(steps.get(0)));
-			currentTarget = new PursueTarget(targetSet, IDLE_MOVEMENT_WEIGHT, steps.size() == 1, false, false);
+			currentTarget = new AreaTarget(targetSet, IDLE_MOVEMENT_WEIGHT, steps.size() == 1, false, false);
 			subject.addPursueTarget(currentTarget);
 		}
 		if(subject.isInCombat()) {
@@ -54,7 +54,7 @@ public class BehaviorIdle {
 				}
 				Set<Area> targetSet = new HashSet<>();
 				targetSet.add(Data.getArea(steps.get(stepIndex)));
-				currentTarget = new PursueTarget(targetSet, IDLE_MOVEMENT_WEIGHT, false, false, false);
+				currentTarget = new AreaTarget(targetSet, IDLE_MOVEMENT_WEIGHT, false, false, false);
 				subject.addPursueTarget(currentTarget);
 				stepTurnCounter = TURNS_PER_STEP;
 			} else {

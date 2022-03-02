@@ -6,7 +6,7 @@ import java.util.Set;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
-public class PursueTarget {
+public class AreaTarget {
 
 	private Set<Area> targetAreas;
 	private float targetUtility;
@@ -18,7 +18,7 @@ public class PursueTarget {
 	private boolean shouldFlee;
 	private boolean fleeThroughExits;
 	
-	public PursueTarget(Set<Area> targetAreas, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughExits) {
+	public AreaTarget(Set<Area> targetAreas, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughExits) {
 		this.targetAreas = targetAreas;
 		this.targetUtility = targetUtility;
 		this.manualRemoval = manualRemoval;
@@ -116,7 +116,7 @@ public class PursueTarget {
 	
 	@Override
 	public boolean equals(Object other) {
-		if(!(other instanceof PursueTarget)) {
+		if(!(other instanceof AreaTarget)) {
 			return false;
 		} else {
 			return this == other;
