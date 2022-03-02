@@ -111,10 +111,9 @@
         <lootTable>weapon_ranged</lootTable>
         <script trigger="on_combat_start" type="bark">
             <chance>0.8</chance>
-            <line>"Finally, some action!" &lt;subject&gt; yell&lt;s&gt;</line>
-            <line>"Can't wait to take you down!" &lt;subject&gt; yell&lt;s&gt;</line>
-            <line>"Get 'em!" &lt;subject&gt; yell&lt;s&gt;</line>
-            <line>"!" &lt;subject&gt; yell&lt;s&gt;</line>
+            <line>"Finally, some action!" $subject yell$s</line>
+            <line>"Can't wait to take you down!" $subject yell$s</line>
+            <line>"Get 'em!" $subject yell$s</line>
         </script>
     </actor>
     <actor id="nexus_bouncer" parent="default">
@@ -158,7 +157,7 @@
                             <value>0</value>
                         </condition>
                         <script type="bark">
-                            <line>"Hey, no open carry in here! Put that weapon away!" &lt;subject&gt; yell&lt;s&gt;</line>
+                            <line>"Hey, no open carry in here! Put that weapon away!" $subject yell$s</line>
                         </script>
                         <script type="varMod">
                             <variable>test_vendor_weapon_warning</variable>
@@ -172,7 +171,7 @@
                             <value>1</value>
                         </condition>
                         <script type="bark">
-                            <line>"Put that weapon away now! This is your final warning!" &lt;subject&gt; yell&lt;s&gt;</line>
+                            <line>"Put that weapon away now! This is your final warning!" $subject yell$s</line>
                         </script>
                         <script type="varMod">
                             <variable>test_vendor_weapon_warning</variable>
@@ -186,7 +185,7 @@
                             <value>2</value>
                         </condition>
                         <script type="bark">
-                            <line>"Alright, you asked for it!" &lt;subject&gt; yell&lt;s&gt;</line>
+                            <line>"Alright, you asked for it!" $subject yell$s</line>
                         </script>
                         <script type="combat">
                             <combatant target="player"></combatant>
@@ -209,7 +208,7 @@
                         </condition>
                         <script>
                             <script type="bark">
-                                <line>"Good. Now keep that weapon out of sight while you're in here," &lt;subject&gt; say&lt;s&gt;, glaring at you</line>
+                                <line>"Good. Now keep that weapon out of sight while you're in here," $subject say$s, glaring at you</line>
                             </script>
                             <script type="varSet">
                                 <variable>test_vendor_weapon_warning</variable>

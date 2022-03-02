@@ -1,71 +1,71 @@
-buy:<subject> buy<s> <object>
-buyFrom:<subject> buy<s> <object> from <object2>
-consume:<subject> consume<s> <object>
-crouch:<subject> crouch<es> down
-crouchStop:<subject> rise<s> from crouching
-die:<subject> fall<s> over dead
-drink:<subject> drink<s> <object>
-drop:<subject> drop<s> <object>
-forceDrop:<subject> drop<s> <object> on the ground
-eat:<subject> eat<s> <object>
-equip:<subject> equip<s> <object>
-exitElevator:<subject> exit<s> <object>
-idle:<subject> {glance<s> around|sigh<s>|twiddle<s> <subject's> thumbs|clear<s> <subject's> throat}
-meleeHit:<object2> hits <object>
-meleeHitCrit:<object2> hits <object>
-meleeMiss:<subject> tr<ies> to hit <object> with <object2>, but miss<es>
-meleeTelegraph:<subject> swing<s> <object2> at <object>
-moveThroughTo:<subject> go<es> through <object> to <object2>
-move:<subject> move<s> <object>
-moveTo:<subject> move<s> to <object>
-patrolTelegraph:<subject> prepare<s> to move to <object>
-pickUp:<subject> grab<s> <object>
-rangedHit:a bullet hits <object>
-rangedHitCrit:a bullet hits <object>
-rangedMiss:a bullet {whips|flies} past <object>
-rangedTelegraph:<subject> fire<s> <object2> at <object>
-reactionBlock:<subject> block<s> {<object2>|<object's> attack}
-reactionDodge:<subject> {jump<s> back, avoiding|dodge<s>} <object's> attack
-read:<subject> read<s> <object>
-reload:<subject> reload<s> <object>
-sell:<subject> sell<s> <object>
-sit:<subject> sit<s> in <object>
-stand:<subject> stand<s> up
-storeIn:<subject> put<s> <object> in <object2>
-takeCover:<subject> take<s> cover behind <object>
-takeElevatorDown:<subject> take<s> <object> down
-takeElevatorUp:<subject> take<s> <object> up
-takeFrom:<subject> take<s> <object> from <object2>
-unequip:<subject> put<s> away <object>
-unlock:<subject> unlock<s> <object>
-blockSuccess:<subject> {manage<s> to block <object2> just in time|block<s> <object2> and push<es> <object2> away}
-blockFail:<subject> tr<ies> to block <object2> but <is> too {late|slow}
-dodgeSuccess:<subject> manage<s> to {dodge|move} {out of the way of|away from} <object2>
-dodgeFail:<subject> tr<ies> to dodge <object2> but <is> too {late|slow}
-meleeHitHead:<object2> hits <object> in the head
-meleeHitArm:<object2> hits <object> in the arm
-meleeHitHand:<object2> hits <object> in the hand
-meleeHitLeg:<object2> hits <object> in the leg
-rangedHitHead:a bullet hits <object> in the head
-rangedHitArm:a bullet hits <object> in the arm
-rangedHitHand:a bullet hits <object> in the hand
-rangedHitLeg:a bullet hits <object> in the leg
-meleeHitCritHead:<object2> hits <object> in the head
-meleeHitCritArm:<object2> hits <object> in the arm
-meleeHitCritHand:<object2> hits <object> in the hand
-meleeHitCritLeg:<object2> hits <object> in the leg
-rangedHitCritHead:a bullet hits <object> in the head
-rangedHitCritArm:a bullet hits <object> in the arm
-rangedHitCritHand:a bullet hits <object> in the hand
-rangedHitCritLeg:a bullet hits <object> in the leg
-meleeMissHead:<object2> {{just|barely} misses|{swings|swipes} over} <object's> head
-meleeMissArm:<object2> {just misses|barely misses} <object's> arm
-meleeMissHand:<object2> {just misses|barely misses} <object's> hand
-meleeMissLeg:<object2> {just misses|barely misses} <object's> leg
-rangedMissHead:a bullet {flies over|whips past} <object's> head
-rangedMissArm:a bullet {flies|whips} past <object's> arm
-rangedMissHand:a bullet {flies|whips} past <object's> hand
-rangedMissLeg:a bullet {{flies|whips} past|hits the ground near} <object's> leg
-rangedAutoMiss:a spray of bullets {{flies|whips} past|hits the ground near} <object>
-rangedAutoHit:a spray of bullets hits <object>
-rangedAutoHitCrit:a spray of bullets hits <object>
+buy:$subject buy$s $object1
+buyFrom:$subject buy$s $object1 from $object2
+consume:$subject consume$s $object1
+crouch:$subject crouch$es down
+crouchStop:$subject rise$s from crouching
+die:$subject fall$s over dead
+drink:$subject drink$s $object1
+drop:$subject drop$s $object1
+forceDrop:$subject drop$s $object1 on the ground
+eat:$subject eat$s $object1
+equip:$subject equip$s $object1
+exitElevator:$subject exit$s $object1
+idle:$subject {glance$s around|sigh$s|twiddle$s $subject's thumbs|clear$s $subject's throat}
+meleeHit:$object2 hits $object1
+meleeHitCrit:$object2 hits $object1
+meleeMiss:$subject tr$ies to hit $object1 with $object2, but miss$es
+meleeTelegraph:$subject swing$s $object2 at $object1
+moveThroughTo:$subject go$es through $object1 to $object2
+move:$subject move$s $object1
+moveTo:$subject move$s to $object1
+patrolTelegraph:$subject prepare$s to move to $object1
+pickUp:$subject grab$s $object1
+rangedHit:a bullet hits $object1
+rangedHitCrit:a bullet hits $object1
+rangedMiss:a bullet {whips|flies} past $object1
+rangedTelegraph:$subject fire$s $object2 at $object1
+reactionBlock:$subject block$s {$object2|$object1's attack}
+reactionDodge:$subject {jump$s back, avoiding|dodge$s} $object1's attack
+read:$subject read$s $object1
+reload:$subject reload$s $object1
+sell:$subject sell$s $object1
+sit:$subject sit$s in $object1
+stand:$subject stand$s up
+storeIn:$subject put$s $object1 in $object2
+takeCover:$subject take$s cover behind $object1
+takeElevatorDown:$subject take$s $object1 down
+takeElevatorUp:$subject take$s $object1 up
+takeFrom:$subject take$s $object1 from $object2
+unequip:$subject put$s away $object1
+unlock:$subject unlock$s $object1
+blockSuccess:$subject {manage$s to block $object2 just in time|block$s $object2 and push$es $object2 away}
+blockFail:$subject tr$ies to block $object2 but $is too {late|slow}
+dodgeSuccess:$subject manage$s to {dodge|move} {out of the way of|away from} $object2
+dodgeFail:$subject tr$ies to dodge $object2 but $is too {late|slow}
+meleeHitHead:$object2 hits $object1 in the head
+meleeHitArm:$object2 hits $object1 in the arm
+meleeHitHand:$object2 hits $object1 in the hand
+meleeHitLeg:$object2 hits $object1 in the leg
+rangedHitHead:a bullet hits $object1 in the head
+rangedHitArm:a bullet hits $object1 in the arm
+rangedHitHand:a bullet hits $object1 in the hand
+rangedHitLeg:a bullet hits $object1 in the leg
+meleeHitCritHead:$object2 hits $object1 in the head
+meleeHitCritArm:$object2 hits $object1 in the arm
+meleeHitCritHand:$object2 hits $object1 in the hand
+meleeHitCritLeg:$object2 hits $object1 in the leg
+rangedHitCritHead:a bullet hits $object1 in the head
+rangedHitCritArm:a bullet hits $object1 in the arm
+rangedHitCritHand:a bullet hits $object1 in the hand
+rangedHitCritLeg:a bullet hits $object1 in the leg
+meleeMissHead:$object2 {{just|barely} misses|{swings|swipes} over} $object1's head
+meleeMissArm:$object2 {just misses|barely misses} $object1's arm
+meleeMissHand:$object2 {just misses|barely misses} $object1's hand
+meleeMissLeg:$object2 {just misses|barely misses} $object1's leg
+rangedMissHead:a bullet {flies over|whips past} $object1's head
+rangedMissArm:a bullet {flies|whips} past $object1's arm
+rangedMissHand:a bullet {flies|whips} past $object1's hand
+rangedMissLeg:a bullet {{flies|whips} past|hits the ground near} $object1's leg
+rangedAutoMiss:a spray of bullets {{flies|whips} past|hits the ground near} $object1
+rangedAutoHit:a spray of bullets hits $object1
+rangedAutoHitCrit:a spray of bullets hits $object1

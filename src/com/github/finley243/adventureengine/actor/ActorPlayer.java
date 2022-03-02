@@ -79,13 +79,16 @@ public class ActorPlayer extends Actor {
 			Context context = new Context(actor, this);
 			String line;
 			if(actor.isDead()) {
-				line = "<subject> lie<s> dead " + (getArea() == actor.getArea() ? "next to <object>" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+				line = "$subject lie$s dead " + (getArea() == actor.getArea() ? "next to $object1" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
 			} else if(actor.isUnconscious()) {
-				line = "<subject> lie<s> unconscious " + (getArea() == actor.getArea() ? "next to <object>" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+				line = "$subject lie$s unconscious " + (getArea() == actor.getArea() ? "next to $object1" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
 			} else {
-				line = "<subject> <is> " + (getArea() == actor.getArea() ? "next to <object>" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+				line = "$subject $is " + (getArea() == actor.getArea() ? "next to $object1" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
 			}
+			System.out.println("Line: " + line);
+			System.out.println("Subject: " + context.getSubject().getFormattedName());
 			String description = TextGen.generate(line, context);
+			System.out.println("Generated: " + description);
 			Game.EVENT_BUS.post(new RenderTextEvent(description));
 		}
 		Game.EVENT_BUS.post(new RenderTextEvent(""));

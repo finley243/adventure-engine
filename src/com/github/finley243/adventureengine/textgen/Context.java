@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.textgen;
 
+import java.util.Arrays;
+
 public class Context {
 	
 	public enum Pronoun{
@@ -29,34 +31,29 @@ public class Context {
 	}
 
 	private final Noun subject;
-	private final Noun object;
-	private final Noun object2;
-	
-	public Context(Noun subject) {
-		this(subject, subject, subject);
-	}
-	
-	public Context(Noun subject, Noun object) {
-		this(subject, object, object);
-	}
-	
-	public Context(Noun subject, Noun object, Noun object2) {
-		if(subject == null || object == null || object2 == null) throw new IllegalArgumentException("Context arguments cannot be null");
+	private final Noun[] objects;
+
+	public Context(Noun subject, Noun... objects) {
+		if(subject == null) throw new IllegalArgumentException("Context subject cannot be null");
+		if(objects == null) throw new IllegalArgumentException("Context objects cannot be null");
+		for(Noun object : objects) {
+			if(object == null) throw new IllegalArgumentException("Context objects cannot be null");
+		}
 		this.subject = subject;
-		this.object = object;
-		this.object2 = object2;
+		this.objects = objects;
 	}
 
 	public Noun getSubject() {
 		return subject;
 	}
 
-	public Noun getObject() {
-		return object;
+	public Noun[] getObjects() {
+		return objects;
 	}
 
-	public Noun getObject2() {
-		return object2;
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof Context && subject.equals(((Context) o).getSubject()) && Arrays.equals(objects, ((Context) o).getObjects());
 	}
 	
 }

@@ -350,9 +350,9 @@ public class Actor implements Noun, Physical {
 		HP += amount;
 		Context context = new Context(this);
 		if(SHOW_HP_CHANGES) {
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> gain<s> " + amount + " HP", context, null, null));
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject gain$s " + amount + " HP", context, null, null));
 		}
-		Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> <is> " + this.getConditionDescription(), context, null, null));
+		Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is " + this.getConditionDescription(), context, null, null));
 	}
 	
 	public void damage(int amount) {
@@ -366,9 +366,9 @@ public class Actor implements Noun, Physical {
 			triggerScript("on_damaged");
 			Context context = new Context(this);
 			if(SHOW_HP_CHANGES) {
-				Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
+				Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject lose$s " + amount + " HP", context, null, null));
 			}
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> <is> " + this.getConditionDescription(), context, null, null));
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is " + this.getConditionDescription(), context, null, null));
 		}
 	}
 
@@ -388,9 +388,9 @@ public class Actor implements Noun, Physical {
 			triggerScript("on_damaged");
 			Context context = new Context(this);
 			if(SHOW_HP_CHANGES) {
-				Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> lose<s> " + amount + " HP", context, null, null));
+				Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject lose$s " + amount + " HP", context, null, null));
 			}
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "<subject> <is> " + this.getConditionDescription(), context, null, null));
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is " + this.getConditionDescription(), context, null, null));
 		}
 	}
 	

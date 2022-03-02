@@ -4,15 +4,15 @@ import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
+import java.util.Arrays;
+
 public class CombatHelper {
 
 	private static final float HIT_CHANCE_MAX = 0.99f;
 	private static final float HIT_CHANCE_MIN = 0.01f;
 	private static final float HIT_CHANCE_BASE_MAX = 0.99f;
 	private static final float HIT_CHANCE_BASE_MIN = 0.10f;
-	private static final float RANGE_PENALTY_NEAR = 0.02f;
 	private static final float RANGE_PENALTY_FAR = 0.10f;
-	private static final float RANGE_PENALTY_MAX = 0.40f;
 	private static final float EVASION_PENALTY = 0.02f;
 	private static final float HIT_CHANCE_ADD = 0.15f;
 
@@ -25,7 +25,7 @@ public class CombatHelper {
 	}
 
 	public static boolean isRepeat(Context attackContext) {
-		boolean isRepeat = lastAttack != null && lastAttack.getSubject() == attackContext.getSubject() && lastAttack.getObject() == attackContext.getObject() && lastAttack.getObject2() == attackContext.getObject2();
+		boolean isRepeat = lastAttack != null && lastAttack.equals(attackContext);
 		lastAttack = attackContext;
 		return isRepeat;
 	}
@@ -34,11 +34,7 @@ public class CombatHelper {
 		float skill = (float) attacker.getSkill(weapon.getSkill());
 		float chance = HIT_CHANCE_BASE_MIN + ((HIT_CHANCE_BASE_MAX - HIT_CHANCE_BASE_MIN) / (Actor.SKILL_MAX - Actor.SKILL_MIN)) * (skill - Actor.SKILL_MIN);
 		if(weapon.isRanged()) {
-			//int distance = Pathfinder.findPath(attacker.getArea(), target.getArea()).size() - 1;
 			int distance = attacker.getArea().getDistanceTo(target.getArea().getID());
-			//int distFromRange = Math.abs(weapon.getRangeMax() - distance);
-			//float rangePenalty = distFromRange * (distFromRange <= 1 ? RANGE_PENALTY_NEAR : RANGE_PENALTY_FAR);
-			//chance -= Math.min(rangePenalty, RANGE_PENALTY_MAX);
 			if(distance < weapon.getRangeMin()) {
 				chance -= RANGE_PENALTY_FAR * (weapon.getRangeMin() - distance);
 			} else if(distance > weapon.getRangeMax()) {
