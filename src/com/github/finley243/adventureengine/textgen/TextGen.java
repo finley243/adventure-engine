@@ -4,6 +4,8 @@ import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -146,7 +148,10 @@ public class TextGen {
 					 , objects[i].getPronoun().possessive, "$object" + (i+1), "$object" + (i+1) + "'s");
 		}
 
-		for(String varTag : context.getVars().keySet()) {
+		List<String> varTags = new ArrayList<>(context.getVars().keySet());
+		varTags.sort(Comparator.comparingInt(String::length));
+		Collections.reverse(varTags);
+		for(String varTag : varTags) {
 			line = line.replace("$" + varTag, context.getVars().get(varTag));
 		}
 
