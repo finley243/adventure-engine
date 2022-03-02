@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.object;
 import java.util.List;
 import java.util.Map;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionReadSign;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -12,8 +13,8 @@ public class ObjectSign extends WorldObject {
 
 	private final List<String> text;
 	
-	public ObjectSign(String ID, String name, String description, Map<String, Script> scripts, List<String> text) {
-		super(ID, name, description, scripts);
+	public ObjectSign(Game game, String ID, String name, String description, Map<String, Script> scripts, List<String> text) {
+		super(game, ID, name, description, scripts);
 		this.text = text;
 	}
 

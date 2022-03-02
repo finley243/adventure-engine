@@ -21,7 +21,7 @@ public class ActionUseStop extends Action {
 		object.removeUser();
 		subject.stopUsingObject();
 		Context context = new Context(subject, object);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(object.getStopPhrase()), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(object.getStopPhrase()), context, this, subject));
 	}
 	
 	@Override

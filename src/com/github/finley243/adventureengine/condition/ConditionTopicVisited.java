@@ -14,7 +14,7 @@ public class ConditionTopicVisited extends Condition {
 
     @Override
     public boolean isMet(Actor subject) {
-        return Data.getTopic(topicID).hasVisited() != invert;
+        return subject.game().data().getTopic(topicID).hasVisited() != invert;
     }
 
 }

@@ -27,7 +27,7 @@ public class ActionInventoryStore extends Action {
         subject.inventory().removeItem(item);
         inventory.addItem(item);
         Context context = new Context(subject, item, owner);
-        Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("storeIn"), context, this, subject));
+        subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("storeIn"), context, this, subject));
     }
 
     @Override

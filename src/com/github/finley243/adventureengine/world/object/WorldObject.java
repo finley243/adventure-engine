@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspect;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
@@ -18,7 +20,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 /**
  * A static object that can exist in the game world
  */
-public abstract class WorldObject implements Noun, Physical {
+public abstract class WorldObject extends GameInstanced implements Noun, Physical {
 
 	private final String ID;
 	private final String name;
@@ -27,7 +29,8 @@ public abstract class WorldObject implements Noun, Physical {
 	private final String description;
 	private final Map<String, Script> scripts;
 	
-	public WorldObject(String ID, String name, String description, Map<String, Script> scripts) {
+	public WorldObject(Game gameInstance, String ID, String name, String description, Map<String, Script> scripts) {
+		super(gameInstance);
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
@@ -74,6 +77,11 @@ public abstract class WorldObject implements Noun, Physical {
 	@Override
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
+	}
+
+	@Override
+	public boolean forcePronoun() {
+		return false;
 	}
 	
 	@Override

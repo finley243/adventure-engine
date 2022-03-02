@@ -34,7 +34,7 @@ public class ActionItemConsume extends Action {
 				phrase = "consume";
 				break;
 		}
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(phrase), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(phrase), context, this, subject));
 		for(Effect effect : item.getEffects()) {
 			subject.effectComponent().addEffect(effect.generate());
 		}

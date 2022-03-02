@@ -3,8 +3,8 @@ package com.github.finley243.adventureengine.actor;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.actor.ai.*;
@@ -25,7 +25,7 @@ import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
-public class Actor implements Noun, Physical {
+public class Actor extends GameInstanced implements Noun, Physical {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 2;
@@ -95,7 +95,8 @@ public class Actor implements Noun, Physical {
 	private final BehaviorIdle behaviorIdle;
 	private final boolean preventMovement;
 
-	public Actor(String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead, boolean startDisabled) {
+	public Actor(Game game, String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead, boolean startDisabled) {
+		super(game);
 		this.ID = ID;
 		this.area = area;
 		this.stats = stats;
@@ -107,7 +108,7 @@ public class Actor implements Noun, Physical {
 		this.isDead = startDead;
 		this.isUnconscious = startDead;
 		if(!startDead) {
-			HP = stats.getMaxHP();
+			HP = stats.getMaxHP(game());
 		}
 		this.inventory = new Inventory();
 		this.equipmentComponent = new EquipmentComponent(this);
@@ -118,15 +119,15 @@ public class Actor implements Noun, Physical {
 		}
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new int[] {stats.getAttribute(attribute), 0});
+			this.attributes.put(attribute, new int[] {stats.getAttribute(game(), attribute), 0});
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for(Skill skill : Skill.values()) {
-			this.skills.put(skill, new int[] {stats.getSkill(skill), 0});
+			this.skills.put(skill, new int[] {stats.getSkill(game(), skill), 0});
 		}
 		this.effectComponent = new EffectComponent(this);
-		if(stats.getLootTable() != null) {
-			inventory.addItems(Data.getLootTable(stats.getLootTable()).generateItems());
+		if(stats.getLootTable(game()) != null) {
+			inventory.addItems(game().data().getLootTable(stats.getLootTable(game())).generateItems(game()));
 		}
 		this.blockedActions = new HashMap<>();
 		this.behaviorIdle = new BehaviorIdle(idle);
@@ -139,7 +140,7 @@ public class Actor implements Noun, Physical {
 	
 	@Override
 	public String getName() {
-		return (descriptor != null ? descriptor + " " : "") + stats.getName();
+		return (descriptor != null ? descriptor + " " : "") + stats.getName(game());
 	}
 	
 	@Override
@@ -163,12 +164,17 @@ public class Actor implements Noun, Physical {
 	
 	@Override
 	public boolean isProperName() {
-		return stats.isProperName();
+		return stats.isProperName(game());
 	}
 	
 	@Override
 	public Pronoun getPronoun() {
-		return stats.getPronoun();
+		return stats.getPronoun(game());
+	}
+
+	@Override
+	public boolean forcePronoun() {
+		return false;
 	}
 	
 	@Override
@@ -273,11 +279,11 @@ public class Actor implements Noun, Physical {
 	}
 	
 	public String getTopicID() {
-		return stats.getTopic();
+		return stats.getTopic(game());
 	}
 	
 	public Faction getFaction() {
-		return Data.getFaction(stats.getFaction());
+		return game().data().getFaction(stats.getFaction(game()));
 	}
 	
 	public void move(Area area) {
@@ -309,7 +315,7 @@ public class Actor implements Noun, Physical {
 	}
 
 	public List<Limb> getLimbs() {
-		return stats.getLimbs();
+		return stats.getLimbs(game());
 	}
 	
 	public void setEquippedItem(ItemEquippable item) {
@@ -341,18 +347,18 @@ public class Actor implements Noun, Physical {
 	}
 
 	public float getHPProportion() {
-		return ((float) HP) / ((float) stats.getMaxHP());
+		return ((float) HP) / ((float) stats.getMaxHP(game()));
 	}
 	
 	public void heal(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();
-		amount = Math.min(amount, stats.getMaxHP() - HP);
+		amount = Math.min(amount, stats.getMaxHP(game()) - HP);
 		HP += amount;
 		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 		if(SHOW_HP_CHANGES) {
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject gain$s $amount HP", context, null, null));
+			game().eventBus().post(new VisualEvent(getArea(), "$subject gain$s $amount HP", context, null, null));
 		}
-		Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
+		game().eventBus().post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
 	}
 	
 	public void damage(int amount) {
@@ -366,9 +372,9 @@ public class Actor implements Noun, Physical {
 			triggerScript("on_damaged");
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 			if(SHOW_HP_CHANGES) {
-				Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
+				game().eventBus().post(new VisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
 			}
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
+			game().eventBus().post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
 		}
 	}
 
@@ -388,9 +394,9 @@ public class Actor implements Noun, Physical {
 			triggerScript("on_damaged");
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 			if(SHOW_HP_CHANGES) {
-				Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
+				game().eventBus().post(new VisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
 			}
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
+			game().eventBus().post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
 		}
 	}
 	
@@ -398,18 +404,18 @@ public class Actor implements Noun, Physical {
 		triggerScript("on_death");
 		isDead = true;
 		Context context = new Context(this);
-		Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("die"), context, null, null));
+		game().eventBus().post(new VisualEvent(getArea(), Phrases.get("die"), context, null, null));
 		if(equippedItem != null) {
 			getArea().addObject(equippedItem);
 			equippedItem.setArea(getArea());
 			context = new Context(this, equippedItem);
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
+			game().eventBus().post(new VisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 			equippedItem = null;
 		}
 	}
 
 	public String getConditionDescription() {
-		float hpProportion = ((float) this.HP) / ((float) stats.getMaxHP());
+		float hpProportion = ((float) this.HP) / ((float) stats.getMaxHP(game()));
 		if(hpProportion == 1.0f) {
 			return "in perfect condition";
 		} else if(hpProportion >= 0.9f) {
@@ -549,7 +555,7 @@ public class Actor implements Noun, Physical {
 	public List<Action> localActions(Actor subject) {
 		List<Action> action = new ArrayList<>();
 		if(isActive()) {
-			if(stats.getTopic() != null) {
+			if(stats.getTopic(game()) != null) {
 				action.add(new ActionTalk(this));
 			}
 			if(vendorComponent != null) {
@@ -565,7 +571,7 @@ public class Actor implements Noun, Physical {
 	public List<Action> adjacentActions(Actor subject) {
 		List<Action> action = new ArrayList<>();
 		if(isActive()) {
-			if(stats.getTopic() != null) {
+			if(stats.getTopic(game()) != null) {
 				action.add(new ActionTalk(this));
 			}
 			if(vendorComponent != null) {
@@ -730,7 +736,7 @@ public class Actor implements Noun, Physical {
 							addCombatTarget(allyTarget.getTargetActor());
 						}
 					}
-				} else if(getArea().getRoom().getOwnerFaction() != null && Data.getFaction(getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != FactionRelation.ASSIST) {
+				} else if(getArea().getRoom().getOwnerFaction() != null && game().data().getFaction(getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != FactionRelation.ASSIST) {
 					if(!isCombatTarget(actor)) {
 						addCombatTarget(actor);
 					}

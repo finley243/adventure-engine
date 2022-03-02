@@ -21,8 +21,8 @@ public class ScriptNearestActorWithScript extends Script {
         // TODO - Improve efficiency of nearest actor check
         List<Actor> nearestActor = new ArrayList<>();
         List<Integer> nearestActorDist = new ArrayList<>();
-        for(Actor visibleActor : Data.getPlayer().getVisibleActors()) {
-            int distance = visibleActor.getArea().getDistanceTo(Data.getPlayer().getArea().getID());
+        for(Actor visibleActor : subject.game().data().getPlayer().getVisibleActors()) {
+            int distance = visibleActor.getArea().getDistanceTo(subject.game().data().getPlayer().getArea().getID());
             int addAtIndex = nearestActor.size();
             for(int i = 0; i < nearestActor.size(); i++) {
                 if(distance <= nearestActorDist.get(i)) {

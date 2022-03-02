@@ -27,8 +27,6 @@ import java.io.IOException;
 @SuppressWarnings("UnstableApiUsage")
 public class Game {
 	
-	public static final EventBus EVENT_BUS = new EventBus();
-	
 	private static final String GAMEFILES = "src/gamefiles";
 	private static final String DATA_DIRECTORY = "/data";
 	private static final String PHRASE_FILE = "/phrases.txt";
@@ -37,30 +35,49 @@ public class Game {
 	private final PerceptionHandler perceptionHandler;
 	private final UserInterface userInterface;
 
-	private boolean continueGameLoop;
+	private final EventBus eventBus;
+	private final ThreadControl threadControl;
 
-	public static final ThreadControl THREAD_CONTROL = new ThreadControl();
+	private final Data data;
+
+	private boolean continueGameLoop;
 
 	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException {
+		eventBus = new EventBus();
+		threadControl = new ThreadControl();
+		data = new Data();
+
 		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
-		ConfigLoader.loadConfig(new File(GAMEFILES + CONFIG_FILE));
-		DataLoader.loadFromDir(new File(GAMEFILES + DATA_DIRECTORY));
+		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
+		DataLoader.loadFromDir(this, new File(GAMEFILES + DATA_DIRECTORY));
 
 		perceptionHandler = new PerceptionHandler();
-		userInterface = new GraphicalInterfaceNested();
-		EVENT_BUS.register(perceptionHandler);
-		EVENT_BUS.register(userInterface);
-		EVENT_BUS.register(this);
+		userInterface = new GraphicalInterfaceNested(this);
+		eventBus.register(perceptionHandler);
+		eventBus.register(userInterface);
+		eventBus.register(this);
 
-		Actor player = ActorFactory.createPlayer(Data.getConfig("playerID"), Data.getArea(Data.getConfig("playerStartArea")), Data.getActorStats(Data.getConfig("playerStats")));
-		Data.addActor(player.getID(), player);
+		Actor player = ActorFactory.createPlayer(this, data().getConfig("playerID"), data().getArea(data().getConfig("playerStartArea")), data().getActorStats(data().getConfig("playerStats")));
+		data().addActor(player.getID(), player);
 		player.adjustMoney(320);
 
-		Data.getPlayer().inventory().addItem(ItemFactory.create("tactical_vest"));
-		Data.getPlayer().inventory().addItem(ItemFactory.create("tactical_helmet"));
+		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_vest"));
+		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_helmet"));
 
 		startGameLoop();
+	}
+
+	public EventBus eventBus() {
+		return eventBus;
+	}
+
+	public ThreadControl threadControl() {
+		return threadControl;
+	}
+
+	public Data data() {
+		return data;
 	}
 	
 	/** Simple game loop that runs nextRound until continueGameLoop is false */
@@ -74,23 +91,23 @@ public class Game {
 	
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
-		EVENT_BUS.post(new TextClearEvent());
+		eventBus.post(new TextClearEvent());
 		TextGen.clearContext();
-		Data.getPlayer().getArea().getRoom().triggerScript("on_player_round", Data.getPlayer());
-		Data.getPlayer().getArea().triggerScript("on_player_round", Data.getPlayer());
+		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer());
+		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer());
 		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
-		for(Actor visibleActor : Data.getPlayer().getVisibleActors()) {
+		for(Actor visibleActor : data().getPlayer().getVisibleActors()) {
 			visibleActor.triggerScript("on_player_visible_round");
 		}
-		for(Actor actor : Data.getActors()) {
+		for(Actor actor : data().getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
 				CombatHelper.newTurn();
 				actor.takeTurn();
 			}
 		}
 		CombatHelper.newTurn();
-		Data.getPlayer().describeSurroundings();
-		Data.getPlayer().takeTurn();
+		data().getPlayer().describeSurroundings();
+		data().getPlayer().takeTurn();
 	}
 	
 	private void sleep(int millis) {

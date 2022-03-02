@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.world.item;
 
+import com.github.finley243.adventureengine.Game;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -22,14 +24,14 @@ public class LootTable {
 		return ID;
 	}
 	
-	public List<Item> generateItems() {
+	public List<Item> generateItems(Game game) {
 		List<Item> generatedItems = new ArrayList<>();
 		if(useAll) {
 			for(LootTableEntry entry : entries) {
-				generatedItems.addAll(entry.generateItems());
+				generatedItems.addAll(entry.generateItems(game));
 			}
 		} else {
-			generatedItems.addAll(getRandomEntry().generateItems());
+			generatedItems.addAll(getRandomEntry().generateItems(game));
 		}
 		return generatedItems;
 	}

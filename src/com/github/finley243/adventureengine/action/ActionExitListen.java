@@ -33,7 +33,7 @@ public class ActionExitListen extends Action {
 			text += "You hear " + actorCount + " people";
 		}
 		text += " through " + exit.getFormattedName() + ".";
-		Game.EVENT_BUS.post(new RenderTextEvent(text));
+		subject.game().eventBus().post(new RenderTextEvent(text));
 	}
 
 	@Override

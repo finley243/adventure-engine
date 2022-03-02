@@ -25,12 +25,12 @@ public class ActionRangedAttack extends ActionAttack {
 	public void onStart(Actor subject) {
 		getWeapon().consumeAmmo(1);
 		if(!getWeapon().isSilenced()) {
-			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
+			subject.game().eventBus().post(new SoundEvent(subject.getArea(), true));
 		}
 		getTarget().addCombatTarget(subject);
 		Context attackContext = new Context(subject, getTarget(), getWeapon());
 		if(!CombatHelper.isRepeat(attackContext)) {
-			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, false)), attackContext, null, null));
+			subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, false)), attackContext, null, null));
 		}
 	}
 
@@ -44,14 +44,14 @@ public class ActionRangedAttack extends ActionAttack {
 		}
 		Context attackContext = new Context(subject, target, weapon);
 		String hitPhrase = CombatHelper.getHitPhrase(weapon, null, crit, false);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
 		target.damage(damage);
 	}
 
 	@Override
 	public void onFail(Actor subject) {
 		Context attackContext = new Context(subject, getTarget(), getWeapon());
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, false)), attackContext, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, false)), attackContext, this, subject));
 	}
 
 	@Override

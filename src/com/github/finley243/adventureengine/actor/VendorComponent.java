@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionVendorBuy;
 import com.github.finley243.adventureengine.action.ActionVendorSell;
@@ -33,7 +34,7 @@ public class VendorComponent {
 
     public void generateInventory() {
         vendorInventory.clear();
-        vendorInventory.addItems(Data.getLootTable(lootTable).generateItems());
+        vendorInventory.addItems(vendor.game().data().getLootTable(lootTable).generateItems(vendor.game()));
     }
 
     public void setEnabled(boolean enabled) {

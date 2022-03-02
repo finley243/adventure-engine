@@ -8,6 +8,7 @@ import java.util.Map;
 public class MultiNoun implements Noun {
 
     private final List<? extends Noun> nouns;
+    private boolean isKnown;
 
     public MultiNoun(List<? extends Noun> nouns) {
         if(nouns.isEmpty()) throw new IllegalArgumentException("MultiNoun cannot have empty noun list");
@@ -58,6 +59,7 @@ public class MultiNoun implements Noun {
 
     @Override
     public void setKnown() {
+        isKnown = true;
         for(Noun noun : nouns) {
             noun.setKnown();
         }
@@ -74,6 +76,11 @@ public class MultiNoun implements Noun {
             return Context.Pronoun.IT;
         }
         return Context.Pronoun.THEY;
+    }
+
+    @Override
+    public boolean forcePronoun() {
+        return false;
     }
 
 }

@@ -19,9 +19,9 @@ public class ActorReference {
 	public Actor getActor(Actor subject) {
 		switch(type) {
 		case PLAYER:
-			return Data.getPlayer();
+			return subject.game().data().getPlayer();
 		case REFERENCE:
-			return Data.getActor(reference);
+			return subject.game().data().getActor(reference);
 		case SUBJECT:
 		default:
 			return subject;

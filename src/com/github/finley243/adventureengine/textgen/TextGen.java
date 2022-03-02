@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.textgen;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 
 import java.util.ArrayList;
@@ -74,11 +75,11 @@ public class TextGen {
 				}
 			}
 		}
-		if (context.getSubject().equals(Data.getPlayer())) {
+		if (context.getSubject().forcePronoun()) {
 			useSubjectPronoun = true;
 		}
 		for(int i = 0; i < context.getObjects().length; i++) {
-			if(context.getObjects()[i].equals(Data.getPlayer())) {
+			if(context.getObjects()[i].forcePronoun()) {
 				useObjectPronouns[i] = true;
 			}
 		}

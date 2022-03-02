@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.action.ActionReactionOld.ReactionType;
@@ -22,8 +23,8 @@ public class ItemWeapon extends ItemEquippable {
 	private final StatsWeapon stats;
 	private int ammo;
 	
-	public ItemWeapon(StatsWeapon stats) {
-		super(stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemWeapon(Game game, StatsWeapon stats) {
+		super(game, stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 		reloadFull();
 	}

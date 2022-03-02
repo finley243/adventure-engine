@@ -21,7 +21,7 @@ public class ScriptMoveActor extends Script {
 	
 	@Override
 	public void executeSuccess(Actor subject) {
-		Area area = Data.getArea(areaID);
+		Area area = subject.game().data().getArea(areaID);
 		actor.getActor(subject).move(area);
 	}
 	

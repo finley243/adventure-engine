@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
@@ -14,7 +16,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 /**
  * Represents a self-contained space (e.g. an actual room) that contains smaller areas
  */
-public class Room implements Noun {
+public class Room extends GameInstanced implements Noun {
 
 	private final String ID;
 	private final String name;
@@ -28,7 +30,8 @@ public class Room implements Noun {
 
 	private boolean hasVisited;
 
-	public Room(String ID, String name, boolean isProperName, String description, String ownerFaction, Set<Area> areas, Map<String, Script> scripts) {
+	public Room(Game game, String ID, String name, boolean isProperName, String description, String ownerFaction, Set<Area> areas, Map<String, Script> scripts) {
+		super(game);
 		this.ID = ID;
 		this.name = name;
 		this.isProperName = isProperName;
@@ -111,6 +114,11 @@ public class Room implements Noun {
 	@Override
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
+	}
+
+	@Override
+	public boolean forcePronoun() {
+		return false;
 	}
 
 	public void triggerScript(String entryPoint, Actor subject) {

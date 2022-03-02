@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.item;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.template.StatsKey;
 
@@ -11,8 +12,8 @@ public class ItemKey extends Item {
 
 	private final StatsKey stats;
 	
-	public ItemKey(StatsKey stats) {
-		super(stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemKey(Game game, StatsKey stats) {
+		super(game, stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
 

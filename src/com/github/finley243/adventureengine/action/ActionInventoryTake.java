@@ -27,7 +27,7 @@ public class ActionInventoryTake extends Action {
         inventory.removeItem(item);
         subject.inventory().addItem(item);
         Context context = new Context(subject, item, owner);
-        Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
+        subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
 
     @Override

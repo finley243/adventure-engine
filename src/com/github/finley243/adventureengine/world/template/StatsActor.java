@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.template;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.script.Script;
@@ -62,46 +63,46 @@ public class StatsActor {
 		return ID;
 	}
 	
-	public String getName() {
-		return name != null ? name : Data.getActorStats(parentID).getName();
+	public String getName(Game game) {
+		return name != null ? name : game.data().getActorStats(parentID).getName(game);
 	}
 	
-	public boolean isProperName() {
-		return name != null ? isProperName : Data.getActorStats(parentID).isProperName();
+	public boolean isProperName(Game game) {
+		return name != null ? isProperName : game.data().getActorStats(parentID).isProperName(game);
 	}
 	
-	public Pronoun getPronoun() {
-		return pronoun != null ? pronoun : Data.getActorStats(parentID).getPronoun();
+	public Pronoun getPronoun(Game game) {
+		return pronoun != null ? pronoun : game.data().getActorStats(parentID).getPronoun(game);
 	}
 	
-	public String getFaction() {
-		return faction != null ? faction : Data.getActorStats(parentID).getFaction();
+	public String getFaction(Game game) {
+		return faction != null ? faction : game.data().getActorStats(parentID).getFaction(game);
 	}
 	
-	public int getMaxHP() {
-		return maxHP > 0 ? maxHP : Data.getActorStats(parentID).getMaxHP();
+	public int getMaxHP(Game game) {
+		return maxHP > 0 ? maxHP : game.data().getActorStats(parentID).getMaxHP(game);
 	}
 
-	public List<Limb> getLimbs() {
-		return !limbs.isEmpty() ? limbs : Data.getActorStats(parentID).getLimbs();
+	public List<Limb> getLimbs(Game game) {
+		return !limbs.isEmpty() ? limbs : game.data().getActorStats(parentID).getLimbs(game);
 	}
 
-	public int getAttribute(Actor.Attribute attribute) {
-		return attributes.containsKey(attribute) ? attributes.get(attribute) : Data.getActorStats(parentID).getAttribute(attribute);
+	public int getAttribute(Game game, Actor.Attribute attribute) {
+		return attributes.containsKey(attribute) ? attributes.get(attribute) : game.data().getActorStats(parentID).getAttribute(game, attribute);
 	}
 
-	public int getSkill(Actor.Skill skill) {
-		return skills.containsKey(skill) ? skills.get(skill) : Data.getActorStats(parentID).getSkill(skill);
+	public int getSkill(Game game, Actor.Skill skill) {
+		return skills.containsKey(skill) ? skills.get(skill) : game.data().getActorStats(parentID).getSkill(game, skill);
 	}
 	
-	public String getLootTable() {
+	public String getLootTable(Game game) {
 		if(lootTable == null && parentID.isEmpty()) return null;
-		return lootTable != null ? lootTable : Data.getActorStats(parentID).getLootTable();
+		return lootTable != null ? lootTable : game.data().getActorStats(parentID).getLootTable(game);
 	}
 
-	public String getTopic() {
+	public String getTopic(Game game) {
 		if(topic == null && parentID.isEmpty()) return null;
-		return topic != null ? topic : Data.getActorStats(parentID).getTopic();
+		return topic != null ? topic : game.data().getActorStats(parentID).getTopic(game);
 	}
 
 	public Map<String, Script> getScripts() {

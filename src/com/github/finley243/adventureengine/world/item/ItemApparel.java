@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.item;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionApparelEquip;
 import com.github.finley243.adventureengine.action.ActionApparelUnequip;
@@ -16,8 +17,8 @@ public class ItemApparel extends Item {
 	private final StatsApparel stats;
 	private List<Effect> effects;
 	
-	public ItemApparel(StatsApparel stats) {
-		super(stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemApparel(Game game, StatsApparel stats) {
+		super(game, stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
 

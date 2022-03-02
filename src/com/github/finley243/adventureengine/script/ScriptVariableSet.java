@@ -17,7 +17,7 @@ public class ScriptVariableSet extends Script {
 
     @Override
     public void executeSuccess(Actor subject) {
-        Data.setVariable(variableID, value);
+        subject.game().data().setVariable(variableID, value);
     }
 
 }

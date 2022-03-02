@@ -24,7 +24,7 @@ public class ActionItemEquip extends Action {
 		subject.setEquippedItem(item);
 		subject.inventory().removeItem(item);
 		Context context = new Context(subject, item);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("equip"), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("equip"), context, this, subject));
 	}
 
 	@Override

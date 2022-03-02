@@ -13,7 +13,11 @@ import java.util.List;
 
 public class ConsoleInterface implements UserInterface {
 
-	public ConsoleInterface() {}
+	private final Game game;
+
+	public ConsoleInterface(Game game) {
+		this.game = game;
+	}
 	
 	@Override
 	@Subscribe
@@ -35,7 +39,7 @@ public class ConsoleInterface implements UserInterface {
 		}
 		int response = ConsoleUtils.intInRange(1, validChoices.size());
 		System.out.println();
-		Game.EVENT_BUS.post(new MenuSelectEvent(validChoices.get(response - 1).getIndex()));
+		game.eventBus().post(new MenuSelectEvent(validChoices.get(response - 1).getIndex()));
 	}
 
 }

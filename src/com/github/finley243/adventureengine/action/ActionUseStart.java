@@ -21,7 +21,7 @@ public class ActionUseStart extends Action {
 		object.setUser(subject);
 		subject.startUsingObject(object);
 		Context context = new Context(subject, object);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(object.getStartPhrase()), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(object.getStartPhrase()), context, this, subject));
 	}
 	
 	@Override

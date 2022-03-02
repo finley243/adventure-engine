@@ -20,9 +20,9 @@ public class ConditionActorLocation extends Condition {
 	@Override
 	public boolean isMet(Actor subject) {
 		if(isRoom) {
-			return (actor.getActor(subject).getArea().getRoom() == Data.getRoom(location)) != invert;
+			return (actor.getActor(subject).getArea().getRoom() == subject.game().data().getRoom(location)) != invert;
 		} else {
-			return (actor.getActor(subject).getArea() == Data.getArea(location)) != invert;
+			return (actor.getActor(subject).getArea() == subject.game().data().getArea(location)) != invert;
 		}
 	}
 

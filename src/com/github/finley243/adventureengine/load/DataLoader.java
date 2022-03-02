@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.condition.*;
@@ -32,7 +33,7 @@ import java.util.*;
 
 public class DataLoader {
 
-    public static void loadFromDir(File dir) throws ParserConfigurationException, IOException, SAXException {
+    public static void loadFromDir(Game game, File dir) throws ParserConfigurationException, IOException, SAXException {
         if(dir.isDirectory()) {
             File[] files = dir.listFiles();
             for(File file : files) {
@@ -43,37 +44,37 @@ public class DataLoader {
                 List<Element> factions = LoadUtils.directChildrenWithName(rootElement, "faction");
                 for (Element factionElement : factions) {
                     Faction faction = loadFaction(factionElement);
-                    Data.addFaction(faction.getID(), faction);
+                    game.data().addFaction(faction.getID(), faction);
                 }
                 List<Element> topics = LoadUtils.directChildrenWithName(rootElement, "topic");
                 for (Element topicElement : topics) {
                     DialogueTopic topic = loadTopic(topicElement);
-                    Data.addTopic(topic.getID(), topic);
+                    game.data().addTopic(topic.getID(), topic);
                 }
                 List<Element> actors = LoadUtils.directChildrenWithName(rootElement, "actor");
                 for (Element actorElement : actors) {
                     StatsActor actor = loadActor(actorElement);
-                    Data.addActorStats(actor.getID(), actor);
+                    game.data().addActorStats(actor.getID(), actor);
                 }
                 List<Element> items = LoadUtils.directChildrenWithName(rootElement, "item");
                 for (Element itemElement : items) {
                     StatsItem item = loadItem(itemElement);
-                    Data.addItem(item.getID(), item);
+                    game.data().addItem(item.getID(), item);
                 }
                 List<Element> tables = LoadUtils.directChildrenWithName(rootElement, "lootTable");
                 for (Element tableElement : tables) {
                     LootTable table = loadTable(tableElement);
-                    Data.addLootTable(table.getID(), table);
+                    game.data().addLootTable(table.getID(), table);
                 }
                 List<Element> scenes = LoadUtils.directChildrenWithName(rootElement, "scene");
                 for (Element sceneElement : scenes) {
                     Scene scene = loadScene(sceneElement);
-                    Data.addScene(scene.getID(), scene);
+                    game.data().addScene(scene.getID(), scene);
                 }
                 List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
                 for (Element roomElement : rooms) {
-                    Room room = loadRoom(roomElement);
-                    Data.addRoom(room.getID(), room);
+                    Room room = loadRoom(game, roomElement);
+                    game.data().addRoom(room.getID(), room);
                 }
             }
         }
@@ -506,7 +507,7 @@ public class DataLoader {
         return new SceneLine(condition, text, script);
     }
 
-    private static Room loadRoom(Element roomElement) throws ParserConfigurationException, IOException, SAXException {
+    private static Room loadRoom(Game game, Element roomElement) throws ParserConfigurationException, IOException, SAXException {
         String roomID = roomElement.getAttribute("id");
         Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
         String roomName = roomNameElement.getTextContent();
@@ -518,14 +519,14 @@ public class DataLoader {
         List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
         Set<Area> areas = new HashSet<>();
         for(Element areaElement : areaElements) {
-            Area area = loadArea(areaElement, roomID);
+            Area area = loadArea(game, areaElement, roomID);
             areas.add(area);
-            Data.addArea(area.getID(), area);
+            game.data().addArea(area.getID(), area);
         }
-        return new Room(roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, areas, roomScripts);
+        return new Room(game, roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, areas, roomScripts);
     }
 
-    private static Area loadArea(Element areaElement, String roomID) throws ParserConfigurationException, IOException, SAXException {
+    private static Area loadArea(Game game, Element areaElement, String roomID) throws ParserConfigurationException, IOException, SAXException {
         String areaID = areaElement.getAttribute("id");
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = nameElement.getTextContent();
@@ -555,14 +556,14 @@ public class DataLoader {
         List<Element> objectElements = LoadUtils.directChildrenWithName(objectsElement, "object");
         Set<WorldObject> objectSet = new HashSet<>();
         for(Element objectElement : objectElements) {
-            WorldObject object = loadObject(objectElement);
+            WorldObject object = loadObject(game, objectElement);
             objectSet.add(object);
-            Data.addObject(object.getID(), object);
+            game.data().addObject(object.getID(), object);
         }
 
         Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
 
-        Area area = new Area(areaID, name, description, isProperName, nameType, roomID, areaOwnerFaction, areaIsPrivate, linkSet, objectSet, areaScripts);
+        Area area = new Area(game, areaID, name, description, isProperName, nameType, roomID, areaOwnerFaction, areaIsPrivate, linkSet, objectSet, areaScripts);
         for(WorldObject object : objectSet) {
             object.setArea(area);
         }
@@ -570,14 +571,14 @@ public class DataLoader {
         Element actorsElement = LoadUtils.singleChildWithName(areaElement, "actors");
         List<Element> actorElements = LoadUtils.directChildrenWithName(actorsElement, "actor");
         for(Element actorElement : actorElements) {
-            Actor actor = loadActorInstance(actorElement, area);
-            Data.addActor(actor.getID(), actor);
+            Actor actor = loadActorInstance(game, actorElement, area);
+            game.data().addActor(actor.getID(), actor);
         }
 
         return area;
     }
 
-    private static WorldObject loadObject(Element objectElement) throws ParserConfigurationException, IOException, SAXException {
+    private static WorldObject loadObject(Game game, Element objectElement) throws ParserConfigurationException, IOException, SAXException {
         String objectType = objectElement.getAttribute("type");
         String objectName = LoadUtils.singleTag(objectElement, "name", null);
         String objectID = objectElement.getAttribute("id");
@@ -587,32 +588,32 @@ public class DataLoader {
             case "exit":
                 String exitLink = LoadUtils.singleTag(objectElement, "link", null);
                 Set<String> exitKeys = LoadUtils.setOfTags(objectElement, "key");
-                return new ObjectExit(objectID, objectName, objectDescription, objectScripts, exitLink, exitKeys);
+                return new ObjectExit(game, objectID, objectName, objectDescription, objectScripts, exitLink, exitKeys);
             case "elevator":
                 int floorNumber = LoadUtils.singleTagInt(objectElement, "floorNumber", 1);
                 String floorName = LoadUtils.singleTag(objectElement, "floorName", null);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(LoadUtils.singleChildWithName(objectElement, "links"), "link");
-                return new ObjectElevator(objectID, objectName, objectDescription, objectScripts, floorNumber, floorName, linkedElevatorIDs);
+                return new ObjectElevator(game, objectID, objectName, objectDescription, objectScripts, floorNumber, floorName, linkedElevatorIDs);
             case "sign":
                 List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "lines"), "text");
-                return new ObjectSign(objectID, objectName, objectDescription, objectScripts, signText);
+                return new ObjectSign(game, objectID, objectName, objectDescription, objectScripts, signText);
             case "chair":
-                return new ObjectChair(objectID, objectName, objectDescription, objectScripts);
+                return new ObjectChair(game, objectID, objectName, objectDescription, objectScripts);
             case "cover":
                 ObjectCover.CoverDirection coverDirection = LoadUtils.singleTagEnum(objectElement, "direction", ObjectCover.CoverDirection.class, null);
-                return new ObjectCover(objectID, objectName, objectDescription, objectScripts, coverDirection);
+                return new ObjectCover(game, objectID, objectName, objectDescription, objectScripts, coverDirection);
             case "vending_machine":
                 List<String> vendingItems = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "items"), "item");
-                return new ObjectVendingMachine(objectID, objectName, objectDescription, objectScripts, vendingItems);
+                return new ObjectVendingMachine(game, objectID, objectName, objectDescription, objectScripts, vendingItems);
             case "item":
                 String itemID = LoadUtils.singleTag(objectElement, "item", null);
-                return ItemFactory.create(itemID);
+                return ItemFactory.create(game, itemID);
             case "container":
                 String containerLootTable = LoadUtils.singleTag(objectElement, "lootTable", null);
-                return new ObjectContainer(objectID, objectName, objectDescription, objectScripts, containerLootTable);
+                return new ObjectContainer(game, objectID, objectName, objectDescription, objectScripts, containerLootTable);
             case "custom":
                 List<ActionCustom> objectActions = loadCustomActions(objectElement);
-                return new ObjectCustom(objectID, objectName, objectDescription, objectScripts, objectActions);
+                return new ObjectCustom(game, objectID, objectName, objectDescription, objectScripts, objectActions);
         }
         return null;
     }
@@ -629,7 +630,7 @@ public class DataLoader {
         return actions;
     }
 
-    private static Actor loadActorInstance(Element actorElement, Area area) {
+    private static Actor loadActorInstance(Game game, Element actorElement, Area area) {
         String ID = actorElement.getAttribute("id");
         String stats = LoadUtils.singleTag(actorElement, "stats", null);
         String descriptor = LoadUtils.singleTag(actorElement, "descriptor", null);
@@ -643,7 +644,7 @@ public class DataLoader {
         boolean preventMovement = LoadUtils.singleTagBoolean(actorElement, "preventMovement", false);
         boolean startDead = LoadUtils.singleTagBoolean(actorElement, "startDead", false);
         boolean startDisabled = LoadUtils.singleTagBoolean(actorElement, "startDisabled", false);
-        return ActorFactory.create(ID, area, Data.getActorStats(stats), descriptor, idle, preventMovement, startDead, startDisabled);
+        return ActorFactory.create(game, ID, area, game.data().getActorStats(stats), descriptor, idle, preventMovement, startDead, startDisabled);
     }
 
 }

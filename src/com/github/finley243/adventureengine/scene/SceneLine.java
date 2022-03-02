@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.scene;
 import java.util.List;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
@@ -19,9 +20,9 @@ public class SceneLine {
 		this.script = script;
 	}
 	
-	public boolean shouldShow() {
+	public boolean shouldShow(Game game) {
 		if(condition == null) return true;
-		return condition.isMet(Data.getPlayer());
+		return condition.isMet(game.data().getPlayer());
 	}
 	
 	public List<String> getText() {

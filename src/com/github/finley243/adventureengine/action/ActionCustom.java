@@ -32,7 +32,7 @@ public class ActionCustom extends Action {
 
     @Override
     public void choose(Actor subject) {
-        Game.EVENT_BUS.post(new RenderTextEvent(description));
+        subject.game().eventBus().post(new RenderTextEvent(description));
         if(script != null) {
             script.execute(subject);
         }

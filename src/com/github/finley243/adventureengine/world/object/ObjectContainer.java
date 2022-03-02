@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -13,10 +14,10 @@ public class ObjectContainer extends WorldObject {
 
 	private final Inventory inventory;
 	
-	public ObjectContainer(String ID, String name, String description, Map<String, Script> scripts, String lootTable) {
-		super(ID, name, description, scripts);
+	public ObjectContainer(Game game, String ID, String name, String description, Map<String, Script> scripts, String lootTable) {
+		super(game, ID, name, description, scripts);
 		this.inventory = new Inventory();
-		inventory.addItems(Data.getLootTable(lootTable).generateItems());
+		inventory.addItems(game().data().getLootTable(lootTable).generateItems(game()));
 	}
 	
 	@Override

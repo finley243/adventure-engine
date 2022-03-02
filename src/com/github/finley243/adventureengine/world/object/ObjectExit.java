@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionExitListen;
 import com.github.finley243.adventureengine.action.ActionMoveExit;
@@ -19,20 +20,20 @@ public class ObjectExit extends WorldObject {
 	private boolean isLocked;
 	private final Set<String> keyIDs;
 	
-	public ObjectExit(String ID, String name, String description, Map<String, Script> scripts, String linkedExitID, Set<String> keyIDs) {
-		super(ID, name, description, scripts);
+	public ObjectExit(Game game, String ID, String name, String description, Map<String, Script> scripts, String linkedExitID, Set<String> keyIDs) {
+		super(game, ID, name, description, scripts);
 		this.linkedExitID = linkedExitID;
 		this.keyIDs = keyIDs;
 		this.isLocked = !keyIDs.isEmpty();
 	}
 	
 	public Area getLinkedArea() {
-		return Data.getObject(linkedExitID).getArea();
+		return game().data().getObject(linkedExitID).getArea();
 	}
 	
 	public void unlock() {
 		this.isLocked = false;
-		((ObjectExit) Data.getObject(linkedExitID)).isLocked = false;
+		((ObjectExit) game().data().getObject(linkedExitID)).isLocked = false;
 	}
 
 	public boolean isLocked() {

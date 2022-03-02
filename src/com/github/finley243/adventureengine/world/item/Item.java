@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspect;
 import com.github.finley243.adventureengine.action.ActionItemDrop;
@@ -17,8 +18,8 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public abstract class Item extends WorldObject {
 
-	public Item(String ID, String name, String description, Map<String, Script> scripts) {
-		super(ID, name, description, scripts);
+	public Item(Game game, String ID, String name, String description, Map<String, Script> scripts) {
+		super(game, ID, name, description, scripts);
 	}
 	
 	public int getPrice() {

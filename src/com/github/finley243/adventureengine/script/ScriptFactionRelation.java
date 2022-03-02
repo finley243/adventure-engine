@@ -20,7 +20,7 @@ public class ScriptFactionRelation extends Script {
 
 	@Override
 	public void executeSuccess(Actor subject) {
-		Data.getFaction(targetFaction).setRelation(relationFaction, relation);
+		subject.game().data().getFaction(targetFaction).setRelation(relationFaction, relation);
 	}
 
 }

@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.object;
 import java.util.List;
 import java.util.Map;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionUseStart;
 import com.github.finley243.adventureengine.action.ActionUseStop;
@@ -11,8 +12,8 @@ import com.github.finley243.adventureengine.script.Script;
 
 public class ObjectChair extends UsableObject {
 
-    public ObjectChair(String ID, String name, String description, Map<String, Script> scripts) {
-        super(ID, name, description, scripts);
+    public ObjectChair(Game game, String ID, String name, String description, Map<String, Script> scripts) {
+        super(game, ID, name, description, scripts);
     }
 
 	@Override

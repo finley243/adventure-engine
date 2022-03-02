@@ -67,6 +67,11 @@ public abstract class StatsItem implements Noun {
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
 	}
+
+	@Override
+	public boolean forcePronoun() {
+		return false;
+	}
 	
 	public String getDescription() {
 		return description;

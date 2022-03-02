@@ -41,8 +41,8 @@ public class ActionMoveElevator extends ActionMove {
 		} else {
 			takeElevatorPhrase = "takeElevatorDown";
 		}
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject));
-		Game.EVENT_BUS.post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject));
 		subject.move(destination.getArea());
 	}
 

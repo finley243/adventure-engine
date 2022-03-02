@@ -23,21 +23,21 @@ public class ActionVendingMachineBuy extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		Item item = ItemFactory.create(itemID);
+		Item item = ItemFactory.create(subject.game(), itemID);
 		subject.adjustMoney(-item.getPrice());
 		subject.inventory().addItem(item);
 		Context context = new Context(subject, item, vendingMachine);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("buyFrom"), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("buyFrom"), context, this, subject));
 	}
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && subject.getMoney() >= Data.getItem(itemID).getPrice();
+		return !disabled && subject.getMoney() >= subject.game().data().getItem(itemID).getPrice();
 	}
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Buy " + Data.getItem(itemID).getName(), canChoose(subject), new String[]{vendingMachine.getName()});
+		return new MenuData("Buy " + subject.game().data().getItem(itemID).getName(), canChoose(subject), new String[]{vendingMachine.getName()});
 	}
 
 }

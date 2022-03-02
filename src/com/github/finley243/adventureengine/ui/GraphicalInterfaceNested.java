@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.ui;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.ui.*;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -12,15 +13,18 @@ import java.util.*;
 import java.util.List;
 
 public class GraphicalInterfaceNested implements UserInterface {
-	
+
+	private final Game game;
+
 	private final JFrame window;
 	private final JTextArea textPanel;
 	private final JTextArea areaPanel;
 	private final JTextArea historyPanel;
 	private final JPanel choicePanel;
 	
-	public GraphicalInterfaceNested() {
-		this.window = new JFrame(Data.getConfig("gameName"));
+	public GraphicalInterfaceNested(Game game) {
+		this.game = game;
+		this.window = new JFrame(game.data().getConfig("gameName"));
 		JTabbedPane tabPane = new JTabbedPane();
 		this.textPanel = new JTextArea();
 		this.areaPanel = new JTextArea();
@@ -96,7 +100,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 			for(MenuData current : menuData) {
 				if(current.getCategory().length == 0) {
 					JButton button = new JButton(current.getPrompt());
-					button.addActionListener(new ChoiceButtonListener(current.getIndex()));
+					button.addActionListener(new ChoiceButtonListener(game, current.getIndex()));
 					button.setEnabled(current.isEnabled());
 					choicePanel.add(button);
 				} else {
@@ -137,12 +141,12 @@ public class GraphicalInterfaceNested implements UserInterface {
 							}
 						}
 						JMenuItem menuItem = new JMenuItem(current.getPrompt());
-						menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+						menuItem.addActionListener(new ChoiceButtonListener(game, current.getIndex()));
 						menuItem.setEnabled(current.isEnabled());
 						parentElement.add(menuItem);
 					} else {
 						JMenuItem menuItem = new JMenuItem(current.getPrompt());
-						menuItem.addActionListener(new ChoiceButtonListener(current.getIndex()));
+						menuItem.addActionListener(new ChoiceButtonListener(game, current.getIndex()));
 						menuItem.setEnabled(current.isEnabled());
 						categories.get(current.getCategory()[0]).add(menuItem);
 					}

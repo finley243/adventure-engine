@@ -33,7 +33,7 @@ public class ActionInventoryTakeAll extends Action {
             subject.inventory().addItem(item);
         }
         Context context = new Context(subject, new MultiNoun(items), owner);
-        Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
+        subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
 
     @Override

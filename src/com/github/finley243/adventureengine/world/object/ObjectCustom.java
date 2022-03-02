@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.object;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -12,8 +13,8 @@ public class ObjectCustom extends WorldObject {
 
     private final List<ActionCustom> objectActions;
 
-    public ObjectCustom(String ID, String name, String description, Map<String, Script> scripts, List<ActionCustom> objectActions) {
-        super(ID, name, description, scripts);
+    public ObjectCustom(Game game, String ID, String name, String description, Map<String, Script> scripts, List<ActionCustom> objectActions) {
+        super(game, ID, name, description, scripts);
         this.objectActions = objectActions;
         for(ActionCustom action : objectActions) {
             action.setObject(this);

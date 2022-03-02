@@ -3,6 +3,8 @@ package com.github.finley243.adventureengine.world.environment;
 import java.util.*;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -16,7 +18,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 /**
  * Represents a section of a room that can contain objects and actors
  */
-public class Area implements Noun {
+public class Area extends GameInstanced implements Noun {
 
 	public enum AreaNameType {
 		IN, NEAR, LEFT, RIGHT, FRONT, BEHIND, ON, AGAINST
@@ -50,7 +52,8 @@ public class Area implements Noun {
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Set<WorldObject> objects, Map<String, Script> scripts) {
+	public Area(Game game, String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Set<WorldObject> objects, Map<String, Script> scripts) {
+		super(game);
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
@@ -190,7 +193,7 @@ public class Area implements Noun {
 		Set<Area> nearAreas = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
 			if(link.getDistance() == 0) {
-				nearAreas.add(Data.getArea(link.getAreaID()));
+				nearAreas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
 		return nearAreas;
@@ -201,7 +204,7 @@ public class Area implements Noun {
 		for(AreaLink link : linkedAreas.values()) {
 			if(link.getType().isMovable) {
 				if(link.heightChange() == 0) {
-					moveActions.add(new ActionMoveArea(Data.getArea(link.getAreaID()), link.getDirection()));
+					moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link.getDirection()));
 				}
 			}
 		}
@@ -212,7 +215,7 @@ public class Area implements Noun {
 		Set<Area> movableAreas = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
 			if((link.getType().isMovable) && link.heightChange() == 0) {
-				movableAreas.add(Data.getArea(link.getAreaID()));
+				movableAreas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
 		return movableAreas;
@@ -230,7 +233,7 @@ public class Area implements Noun {
 		for(AreaLink link : linkedAreas.values()) {
 			if(link.getType().isVisible) {
 				if (!(subject.isCrouching() && obstructedDirections.contains(link.getDirection()))) {
-					Area area = Data.getArea(link.getAreaID());
+					Area area = game().data().getArea(link.getAreaID());
 					visibleAreas.add(area);
 				}
 			}
@@ -271,7 +274,7 @@ public class Area implements Noun {
 		Set<Area> areas = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
 			if(isVisible(link.getAreaID()) && getDistanceTo(link.getAreaID()) >= rangeMin && getDistanceTo(link.getAreaID()) <= rangeMax) {
-				areas.add(Data.getArea(link.getAreaID()));
+				areas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
 		return areas;
@@ -290,9 +293,14 @@ public class Area implements Noun {
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
 	}
+
+	@Override
+	public boolean forcePronoun() {
+		return false;
+	}
 	
 	public Room getRoom() {
-		return Data.getRoom(roomID);
+		return game().data().getRoom(roomID);
 	}
 
 	public void triggerScript(String entryPoint, Actor subject) {

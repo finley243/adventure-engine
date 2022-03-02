@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class LootTableEntry {
@@ -22,17 +23,17 @@ public class LootTableEntry {
 		this.count = count;
 	}
 	
-	public Set<Item> generateItems() {
+	public Set<Item> generateItems(Game game) {
 		Set<Item> items = new HashSet<>();
 		if(ThreadLocalRandom.current().nextFloat() < chance) {
 			if(isLootTable) {
-				LootTable table = Data.getLootTable(referenceID);
+				LootTable table = game.data().getLootTable(referenceID);
 				for(int i = 0; i < count; i++) {
-					items.addAll(table.generateItems());
+					items.addAll(table.generateItems(game));
 				}
 			} else {
 				for(int i = 0; i < count; i++) {
-					items.add(ItemFactory.create(referenceID));
+					items.add(ItemFactory.create(game, referenceID));
 				}
 			}
 		}

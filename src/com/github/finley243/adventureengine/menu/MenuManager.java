@@ -29,23 +29,23 @@ public class MenuManager {
 		for(Action action : actions) {
 			menuData.add(action.getMenuData(subject));
 		}
-		int actionIndex = getMenuInput(menuData);
+		int actionIndex = getMenuInput(subject.game(), menuData);
 		return actions.get(actionIndex);
 	}
 	
 	public void dialogueMenu(Actor subject, String startTopic) {
 		boolean dialogueLoop = true;
-		DialogueTopic currentTopic = Data.getTopic(startTopic);
+		DialogueTopic currentTopic = subject.game().data().getTopic(startTopic);
 		while(dialogueLoop) {
 			currentTopic.setVisited();
 			for(DialogueLine line : currentTopic.getLines()) {
 				if(line.shouldShow(subject)) {
 					for(String text : line.getTextList()) {
-						Game.EVENT_BUS.post(new RenderTextEvent(text));
+						subject.game().eventBus().post(new RenderTextEvent(text));
 					}
 					line.trigger(subject);
 					if(line.hasRedirect()) {
-						currentTopic = Data.getTopic(line.getRedirectTopicId());
+						currentTopic = subject.game().data().getTopic(line.getRedirectTopicId());
 						break;
 					}
 					if(line.shouldExit()) {
@@ -64,32 +64,32 @@ public class MenuManager {
 						validChoices.add(choice);
 					}
 				}
-				Game.EVENT_BUS.post(new RenderTextEvent(""));
+				subject.game().eventBus().post(new RenderTextEvent(""));
 				if(validChoices.size() > 0) {
-					DialogueChoice selectedChoice = dialogueMenuInput(validChoices);
+					DialogueChoice selectedChoice = dialogueMenuInput(subject.game(), validChoices);
 					selectedChoice.trigger(subject);
-					currentTopic = Data.getTopic(selectedChoice.getLinkedId());
-					Game.EVENT_BUS.post(new RenderTextEvent(selectedChoice.getPrompt()));
-					Game.EVENT_BUS.post(new RenderTextEvent(""));
+					currentTopic = subject.game().data().getTopic(selectedChoice.getLinkedId());
+					subject.game().eventBus().post(new RenderTextEvent(selectedChoice.getPrompt()));
+					subject.game().eventBus().post(new RenderTextEvent(""));
 				}
 			}
 		}
 	}
 	
-	private DialogueChoice dialogueMenuInput(List<DialogueChoice> choices) {
+	private DialogueChoice dialogueMenuInput(Game game, List<DialogueChoice> choices) {
 		List<MenuData> menuData = new ArrayList<>();
 		for(DialogueChoice choice : choices) {
 			menuData.add(new MenuData(choice.getPrompt(), true));
 		}
-		int dialogueIndex = getMenuInput(menuData);
+		int dialogueIndex = getMenuInput(game, menuData);
 		return choices.get(dialogueIndex);
 	}
 
-	private synchronized int getMenuInput(List<MenuData> menuData) {
+	private synchronized int getMenuInput(Game game, List<MenuData> menuData) {
 		this.index = -1;
-		Game.EVENT_BUS.post(new RenderMenuEvent(menuData));
+		game.eventBus().post(new RenderMenuEvent(menuData));
 		while(this.index == -1) {
-			Game.THREAD_CONTROL.pause();
+			game.threadControl().pause();
 		}
 		return this.index;
 	}

@@ -22,7 +22,7 @@ public class ActionItemThrow extends Action {
     public void choose(Actor subject) {
         subject.inventory().removeItem(item);
         area.addObject(item);
-        Game.EVENT_BUS.post(new SoundEvent(area, false));
+        subject.game().eventBus().post(new SoundEvent(area, false));
     }
 
     @Override

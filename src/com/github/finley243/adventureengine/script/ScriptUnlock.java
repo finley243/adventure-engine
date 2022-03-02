@@ -16,7 +16,7 @@ public class ScriptUnlock extends Script {
 
 	@Override
 	public void executeSuccess(Actor subject) {
-		((ObjectExit) Data.getObject(object)).unlock();
+		((ObjectExit) subject.game().data().getObject(object)).unlock();
 	}
 
 }

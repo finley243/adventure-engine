@@ -21,15 +21,20 @@ public class ActorPlayer extends Actor {
 
 	private final MenuManager menuManager;
 	
-	public ActorPlayer(String ID, Area area, StatsActor stats) {
-		super(ID, area, stats, null, null, false, false, false);
+	public ActorPlayer(Game gameInstance, String ID, Area area, StatsActor stats) {
+		super(gameInstance, ID, area, stats, null, null, false, false, false);
 		this.menuManager = new MenuManager();
-		Game.EVENT_BUS.register(menuManager);
+		game().eventBus().register(menuManager);
+	}
+
+	@Override
+	public boolean forcePronoun() {
+		return true;
 	}
 	
 	@Override
 	public void onVisualEvent(VisualEvent event) {
-		Game.EVENT_BUS.post(new RenderTextEvent(event.getText()));
+		game().eventBus().post(new RenderTextEvent(event.getText()));
 	}
 	
 	@Override
@@ -42,7 +47,7 @@ public class ActorPlayer extends Actor {
 		boolean shouldShowDescription = getArea() != null;
 		boolean newRoom = !getArea().getRoom().equals(area.getRoom());
 		super.move(area);
-		Game.EVENT_BUS.post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
+		game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
 		if(shouldShowDescription) {
 			this.updateAreaDescription();
 			this.describeSurroundings();
@@ -56,7 +61,7 @@ public class ActorPlayer extends Actor {
 	@Override
 	public void kill() {
 		super.kill();
-		Game.EVENT_BUS.post(new PlayerDeathEvent());
+		game().eventBus().post(new PlayerDeathEvent());
 	}
 	
 	@Override
@@ -70,8 +75,8 @@ public class ActorPlayer extends Actor {
 
 	public void updateAreaDescription() {
 		if(this.getArea().getDescription() != null) {
-			Game.EVENT_BUS.post(new RenderTextEvent(this.getArea().getDescription()));
-			Game.EVENT_BUS.post(new RenderTextEvent(""));
+			game().eventBus().post(new RenderTextEvent(this.getArea().getDescription()));
+			game().eventBus().post(new RenderTextEvent(""));
 		}
 	}
 
@@ -93,9 +98,9 @@ public class ActorPlayer extends Actor {
 				line = "$subject $is " + (adjacent ? "next to $object1" : "$inLocation, to the $direction");
 			}
 			String description = TextGen.generate(line, context);
-			Game.EVENT_BUS.post(new RenderTextEvent(description));
+			game().eventBus().post(new RenderTextEvent(description));
 		}
-		Game.EVENT_BUS.post(new RenderTextEvent(""));
+		game().eventBus().post(new RenderTextEvent(""));
 		TextGen.clearContext();
 	}
 

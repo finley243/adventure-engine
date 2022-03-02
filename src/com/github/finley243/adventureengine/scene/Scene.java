@@ -41,7 +41,7 @@ public class Scene {
 		return ID;
 	}
 	
-	public boolean canPlay() {
+	public boolean canPlay(Game game) {
 		if(!isRepeatable && hasPlayed) {
 			return false;
 		} else if(cooldownCounter > 0) {
@@ -50,7 +50,7 @@ public class Scene {
 			if(ThreadLocalRandom.current().nextFloat() >= chance) {
 				return false;
 			}
-			return condition == null || condition.isMet(Data.getPlayer());
+			return condition == null || condition.isMet(game.data().getPlayer());
 		}
 	}
 	
@@ -58,8 +58,8 @@ public class Scene {
 		return playImmediately;
 	}
 	
-	public void updateCooldown() {
-		if(condition != null && !condition.isMet(Data.getPlayer())) {
+	public void updateCooldown(Game game) {
+		if(condition != null && !condition.isMet(game.data().getPlayer())) {
 			return;
 		}
 		if(cooldownCounter > 0) {
@@ -67,11 +67,11 @@ public class Scene {
 		}
 	}
 	
-	public void play() {
+	public void play(Game game) {
 		for(SceneLine line : lines) {
-			if(line.shouldShow()) {
+			if(line.shouldShow(game)) {
 				for(String text : line.getText()) {
-					Game.EVENT_BUS.post(new RenderTextEvent(text));
+					game.eventBus().post(new RenderTextEvent(text));
 				}
 				line.executeScript(null);
 			}

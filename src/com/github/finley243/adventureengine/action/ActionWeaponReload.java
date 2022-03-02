@@ -24,7 +24,7 @@ public class ActionWeaponReload extends Action {
 	public void choose(Actor subject) {
 		weapon.reloadFull();
 		Context context = new Context(subject, weapon);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("reload"), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("reload"), context, this, subject));
 	}
 
 	@Override

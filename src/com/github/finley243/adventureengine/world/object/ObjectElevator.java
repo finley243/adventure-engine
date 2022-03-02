@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveElevator;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -19,8 +20,8 @@ public class ObjectElevator extends WorldObject {
 	private final Set<String> linkedElevatorIDs;
 	private boolean isLocked;
 	
-	public ObjectElevator(String ID, String name, String description, Map<String, Script> scripts, int floorNumber, String floorName, Set<String> linkedElevatorIDs) {
-		super(ID, name, description, scripts);
+	public ObjectElevator(Game game, String ID, String name, String description, Map<String, Script> scripts, int floorNumber, String floorName, Set<String> linkedElevatorIDs) {
+		super(game, ID, name, description, scripts);
 		this.floorNumber = floorNumber;
 		this.floorName = floorName;
 		this.linkedElevatorIDs = linkedElevatorIDs;
@@ -42,7 +43,7 @@ public class ObjectElevator extends WorldObject {
 	public Set<Area> getLinkedAreas() {
 		Set<Area> areas = new HashSet<>();
 		for(String elevatorID : linkedElevatorIDs) {
-			areas.add(Data.getObject(elevatorID).getArea());
+			areas.add(game().data().getObject(elevatorID).getArea());
 		}
 		return areas;
 	}
@@ -54,7 +55,7 @@ public class ObjectElevator extends WorldObject {
 			
 		} else {
 			for(String elevatorID : linkedElevatorIDs) {
-				actions.add(new ActionMoveElevator(this, (ObjectElevator) Data.getObject(elevatorID)));
+				actions.add(new ActionMoveElevator(this, (ObjectElevator) game().data().getObject(elevatorID)));
 			}
 		}
 		return actions;

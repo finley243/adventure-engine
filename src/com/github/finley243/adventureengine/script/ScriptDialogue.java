@@ -19,7 +19,7 @@ public class ScriptDialogue extends Script {
 
 	@Override
 	public void executeSuccess(Actor subject) {
-		Data.getPlayer().startDialogue(actor.getActor(subject), topic);
+		subject.game().data().getPlayer().startDialogue(actor.getActor(subject), topic);
 	}
 
 }

@@ -23,7 +23,7 @@ public class ActionInspect extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		Game.EVENT_BUS.post(new RenderTextEvent(object.getDescription()));
+		subject.game().eventBus().post(new RenderTextEvent(object.getDescription()));
 		object.triggerScript("on_inspect", subject);
 	}
 

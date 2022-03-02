@@ -20,7 +20,7 @@ public class ActionExitUnlock extends Action {
 	public void choose(Actor subject) {
 		exit.unlock();
 		Context context = new Context(subject, exit);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("unlock"), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("unlock"), context, this, subject));
 	}
 
 	@Override

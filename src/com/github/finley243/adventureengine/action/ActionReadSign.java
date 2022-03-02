@@ -25,14 +25,14 @@ public class ActionReadSign extends Action {
 	@Override
 	public void choose(Actor subject) {
 		Context context = new Context(subject, sign);
-		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("read"), context, this, subject));
+		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("read"), context, this, subject));
 		if(subject instanceof ActorPlayer) {
 			List<String> text = sign.getText();
-			Game.EVENT_BUS.post(new RenderTextEvent("-----------"));
+			subject.game().eventBus().post(new RenderTextEvent("-----------"));
 			for(String line : text) {
-				Game.EVENT_BUS.post(new RenderTextEvent(line));
+				subject.game().eventBus().post(new RenderTextEvent(line));
 			}
-			Game.EVENT_BUS.post(new RenderTextEvent("-----------"));
+			subject.game().eventBus().post(new RenderTextEvent("-----------"));
 		}
 	}
 

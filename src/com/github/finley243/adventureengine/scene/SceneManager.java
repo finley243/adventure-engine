@@ -5,22 +5,23 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.Game;
 
 public class SceneManager {
 	
-	public static void trigger(List<String> scenes) {
-		updateCooldowns(scenes);
-		Scene scene = selectScene(scenes);
+	public static void trigger(Game game, List<String> scenes) {
+		updateCooldowns(game, scenes);
+		Scene scene = selectScene(game, scenes);
 		if(scene != null) {
-			scene.play();
+			scene.play(game);
 		}
 	}
 	
-	private static Scene selectScene(List<String> scenes) {
+	private static Scene selectScene(Game game, List<String> scenes) {
 		List<Scene> validScenes = new ArrayList<>();
 		for(String sceneID : scenes) {
-			Scene scene = Data.getScene(sceneID);
-			if(scene.canPlay()) {
+			Scene scene = game.data().getScene(sceneID);
+			if(scene.canPlay(game)) {
 				if(scene.playImmediately()) {
 					return scene;
 				}
@@ -33,9 +34,9 @@ public class SceneManager {
 		return validScenes.get(ThreadLocalRandom.current().nextInt(validScenes.size()));
 	}
 
-	private static void updateCooldowns(List<String> scenes) {
+	private static void updateCooldowns(Game game, List<String> scenes) {
 		for(String scene : scenes) {
-			Data.getScene(scene).updateCooldown();
+			game.data().getScene(scene).updateCooldown(game);
 		}
 	}
 

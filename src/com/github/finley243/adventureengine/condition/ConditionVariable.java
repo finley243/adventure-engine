@@ -18,7 +18,7 @@ public class ConditionVariable extends Condition {
 
     @Override
     public boolean isMet(Actor subject) {
-        int varValue = Data.getVariable(variableID);
+        int varValue = subject.game().data().getVariable(variableID);
         return Condition.equalityCheckInt(varValue, value, equality, invert);
     }
 

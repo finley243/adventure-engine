@@ -27,14 +27,14 @@ public class ActionReactionBlock extends ActionReaction {
     @Override
     public float onSuccess(Actor subject) {
         Context reactionContext = new Context(subject, attacker, weapon);
-        Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("blockSuccess"), reactionContext, null, null));
+        subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("blockSuccess"), reactionContext, null, null));
         return 0.0f;
     }
 
     @Override
     public float onFail(Actor subject) {
         Context reactionContext = new Context(subject, attacker, weapon);
-        Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("blockFail"), reactionContext, null, null));
+        subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("blockFail"), reactionContext, null, null));
         return 1.0f;
     }
 

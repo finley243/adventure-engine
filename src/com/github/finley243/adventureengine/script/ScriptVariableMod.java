@@ -17,8 +17,8 @@ public class ScriptVariableMod extends Script {
 
     @Override
     public void executeSuccess(Actor subject) {
-        int oldValue = Data.getVariable(variableID);
-        Data.setVariable(variableID, oldValue + value);
+        int oldValue = subject.game().data().getVariable(variableID);
+        subject.game().data().setVariable(variableID, oldValue + value);
     }
 
 }

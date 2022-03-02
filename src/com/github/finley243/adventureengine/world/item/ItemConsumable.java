@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -17,8 +18,8 @@ public class ItemConsumable extends Item {
 
 	private final StatsConsumable stats;
 	
-	public ItemConsumable(StatsConsumable stats) {
-		super(stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemConsumable(Game game, StatsConsumable stats) {
+		super(game, stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
 

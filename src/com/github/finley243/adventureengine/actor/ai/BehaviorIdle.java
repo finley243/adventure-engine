@@ -37,7 +37,7 @@ public class BehaviorIdle {
 		}
 		if(currentTarget == null) {
 			Set<Area> targetSet = new HashSet<>();
-			targetSet.add(Data.getArea(steps.get(0)));
+			targetSet.add(subject.game().data().getArea(steps.get(0)));
 			currentTarget = new AreaTarget(targetSet, IDLE_MOVEMENT_WEIGHT, steps.size() == 1, false, false);
 			subject.addPursueTarget(currentTarget);
 		}
@@ -53,25 +53,25 @@ public class BehaviorIdle {
 					stepIndex = 0;
 				}
 				Set<Area> targetSet = new HashSet<>();
-				targetSet.add(Data.getArea(steps.get(stepIndex)));
+				targetSet.add(subject.game().data().getArea(steps.get(stepIndex)));
 				currentTarget = new AreaTarget(targetSet, IDLE_MOVEMENT_WEIGHT, false, false, false);
 				subject.addPursueTarget(currentTarget);
 				stepTurnCounter = TURNS_PER_STEP;
 			} else {
 				if(stepTurnCounter == 1) {
-					Context context = new Context(subject, getNextArea());
-					Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get("patrolTelegraph"), context, null, null));
+					Context context = new Context(subject, getNextArea(subject));
+					subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("patrolTelegraph"), context, null, null));
 				}
 				stepTurnCounter--;
 			}
 		}
 	}
 	
-	private Area getNextArea() {
+	private Area getNextArea(Actor subject) {
 		if(stepIndex + 1 >= steps.size()) {
-			return Data.getArea(steps.get(0));
+			return subject.game().data().getArea(steps.get(0));
 		} else {
-			return Data.getArea(steps.get(stepIndex + 1));
+			return subject.game().data().getArea(steps.get(stepIndex + 1));
 		}
 	}
 
