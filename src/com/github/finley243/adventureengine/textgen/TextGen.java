@@ -155,10 +155,10 @@ public class TextGen {
 		line = line.replace(VERB_IES, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "ies" : "y"));
 		line = line.replace(VERB_DO_NOT,
 				(!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "doesn't" : "don't"));
-		line = line.replace(VERB_BE, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "is"
-				: (subject.getPronoun() == Pronoun.I ? "am" : "are")));
 		line = line.replace(VERB_BE_NOT, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "isn't"
 				: (subject.getPronoun() == Pronoun.I ? "am not" : "aren't")));
+		line = line.replace(VERB_BE, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "is"
+				: (subject.getPronoun() == Pronoun.I ? "am" : "are")));
 		line = line.replace(VERB_HAVE, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "has" : "have"));
 		return line;
 	}
@@ -166,20 +166,21 @@ public class TextGen {
 	private static String populatePronoun(String line, boolean usePronoun, String formattedName, String pronoun,
 			String possessive, String pronounKey, String possessiveKey) {
 		if (usePronoun) {
+			line = line.replace(possessiveKey, possessive);
 			line = line.replace(pronounKey, pronoun);
 		} else {
 			int indexOf = line.indexOf(pronounKey);
 			int indexOfPossessive = line.indexOf(possessiveKey);
 			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
+			if (possessiveFirst) {
+				line = line.replaceFirst("\\" + possessiveKey, LangUtils.possessive(formattedName, false));
+			}
+			line = line.replace(possessiveKey, possessive);
 			if (!possessiveFirst) {
 				line = line.replaceFirst("\\" + pronounKey, formattedName);
 			}
 			line = line.replace(pronounKey, pronoun);
-			if (possessiveFirst) {
-				line = line.replaceFirst("\\" + possessiveKey, LangUtils.possessive(formattedName, false));
-			}
 		}
-		line = line.replace(possessiveKey, possessive);
 		return line;
 	}
 

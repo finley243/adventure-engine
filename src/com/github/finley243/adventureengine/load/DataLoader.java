@@ -120,17 +120,11 @@ public class DataLoader {
 
     private static Limb loadLimb(Element element) {
         String name = LoadUtils.singleTag(element, "name", null);
-        String meleeHitPhrase = LoadUtils.singleTag(element, "meleeHitPhrase", null);
-        String meleeCritHitPhrase = LoadUtils.singleTag(element, "meleeCritHitPhrase", null);
-        String meleeMissPhrase = LoadUtils.singleTag(element, "meleeMissPhrase", null);
-        String rangedHitPhrase = LoadUtils.singleTag(element, "rangedHitPhrase", null);
-        String rangedCritHitPhrase = LoadUtils.singleTag(element, "rangedCritHitPhrase", null);
-        String rangedMissPhrase = LoadUtils.singleTag(element, "rangedMissPhrase", null);
         float hitChance = LoadUtils.singleTagFloat(element, "hitChance", 1.0f);
         float damageMult = LoadUtils.singleTagFloat(element, "damageMult", 1.0f);
         EquipmentComponent.ApparelSlot apparelSlot = LoadUtils.singleTagEnum(element, "apparelSlot", EquipmentComponent.ApparelSlot.class, EquipmentComponent.ApparelSlot.TORSO);
         List<Effect> crippledEffects = loadEffects(LoadUtils.singleChildWithName(element, "effects"), false);
-        return new Limb(name, meleeHitPhrase, meleeCritHitPhrase, meleeMissPhrase, rangedHitPhrase, rangedCritHitPhrase, rangedMissPhrase, hitChance, damageMult, apparelSlot, crippledEffects);
+        return new Limb(name, hitChance, damageMult, apparelSlot, crippledEffects);
     }
 
     private static Map<Actor.Attribute, Integer> loadAttributes(Element element) {
@@ -434,6 +428,7 @@ public class DataLoader {
     }
 
     private static List<Effect> loadEffects(Element effectsElement, boolean manualRemoval) {
+        if(effectsElement == null) return new ArrayList<>();
         List<Element> effectElements = LoadUtils.directChildrenWithName(effectsElement, "effect");
         List<Effect> effects = new ArrayList<>();
         for(Element effectElement : effectElements) {

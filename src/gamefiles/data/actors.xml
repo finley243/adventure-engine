@@ -27,38 +27,18 @@
         <limbs>
             <limb>
                 <name>head</name>
-                <meleeHitPhrase>meleeHitHead</meleeHitPhrase>
-                <meleeCritHitPhrase>meleeHitCritHead</meleeCritHitPhrase>
-                <meleeMissPhrase>meleeMissHead</meleeMissPhrase>
-                <rangedHitPhrase>rangedHitHead</rangedHitPhrase>
-                <rangedCritHitPhrase>rangedHitCritHead</rangedCritHitPhrase>
-                <rangedMissPhrase>rangedMissHead</rangedMissPhrase>
                 <hitChance>0.70</hitChance>
                 <damageMult>2.00</damageMult>
                 <apparelSlot>HEAD</apparelSlot>
-                <effects></effects>
             </limb>
             <limb>
                 <name>arm</name>
-                <meleeHitPhrase>meleeHitArm</meleeHitPhrase>
-                <meleeCritHitPhrase>meleeHitCritArm</meleeCritHitPhrase>
-                <meleeMissPhrase>meleeMissArm</meleeMissPhrase>
-                <rangedHitPhrase>rangedHitArm</rangedHitPhrase>
-                <rangedCritHitPhrase>rangedHitCritArm</rangedCritHitPhrase>
-                <rangedMissPhrase>rangedMissArm</rangedMissPhrase>
                 <hitChance>0.80</hitChance>
                 <damageMult>1.00</damageMult>
                 <apparelSlot>TORSO</apparelSlot>
-                <effects></effects>
             </limb>
             <limb>
                 <name>hand</name>
-                <meleeHitPhrase>meleeHitHand</meleeHitPhrase>
-                <meleeCritHitPhrase>meleeHitCritHand</meleeCritHitPhrase>
-                <meleeMissPhrase>meleeMissHand</meleeMissPhrase>
-                <rangedHitPhrase>rangedHitHand</rangedHitPhrase>
-                <rangedCritHitPhrase>rangedHitCritHand</rangedCritHitPhrase>
-                <rangedMissPhrase>rangedMissHand</rangedMissPhrase>
                 <hitChance>0.70</hitChance>
                 <damageMult>1.00</damageMult>
                 <apparelSlot>TORSO</apparelSlot>
@@ -68,16 +48,9 @@
             </limb>
             <limb>
                 <name>leg</name>
-                <meleeHitPhrase>meleeHitLeg</meleeHitPhrase>
-                <meleeCritHitPhrase>meleeHitCritLeg</meleeCritHitPhrase>
-                <meleeMissPhrase>meleeMissLeg</meleeMissPhrase>
-                <rangedHitPhrase>rangedHitLeg</rangedHitPhrase>
-                <rangedCritHitPhrase>rangedHitCritLeg</rangedCritHitPhrase>
-                <rangedMissPhrase>rangedMissLeg</rangedMissPhrase>
                 <hitChance>0.85</hitChance>
                 <damageMult>1.00</damageMult>
                 <apparelSlot>LEGS</apparelSlot>
-                <effects></effects>
             </limb>
         </limbs>
     </actor>

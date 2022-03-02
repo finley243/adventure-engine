@@ -66,13 +66,13 @@ public class CombatHelper {
 			if(auto) {
 				return crit ? "rangedAutoHitCrit" : "rangedAutoHit";
 			} else if(limb != null) {
-				return crit ? limb.getRangedCritHitPhrase() : limb.getRangedHitPhrase();
+				return crit ? "rangedHitCritLimb" : "rangedHitLimb";
 			} else {
 				return crit ? "rangedHitCrit" : "rangedHit";
 			}
 		} else {
 			if(limb != null) {
-				return crit ? limb.getMeleeCritHitPhrase() : limb.getMeleeHitPhrase();
+				return crit ? "meleeHitCritLimb" : "meleeHitLimb";
 			} else {
 				return crit ? "meleeHitCrit" : "meleeHit";
 			}
@@ -92,13 +92,13 @@ public class CombatHelper {
 			if(auto) {
 				return "rangedAutoMiss";
 			} else if(limb != null) {
-				return limb.getRangedMissPhrase();
+				return "rangedMissLimb";
 			} else {
 				return "rangedMiss";
 			}
 		} else {
 			if(limb != null) {
-				return limb.getMeleeMissPhrase();
+				return "meleeMissLimb";
 			} else {
 				return "meleeMiss";
 			}

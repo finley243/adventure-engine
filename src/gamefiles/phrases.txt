@@ -42,30 +42,12 @@ blockSuccess:$subject {manage$s to block $object2 just in time|block$s $object2 
 blockFail:$subject tr$ies to block $object2 but $is too {late|slow}
 dodgeSuccess:$subject manage$s to {dodge|move} {out of the way of|away from} $object2
 dodgeFail:$subject tr$ies to dodge $object2 but $is too {late|slow}
-meleeHitHead:$object2 hits $object1 in the head
-meleeHitArm:$object2 hits $object1 in the arm
-meleeHitHand:$object2 hits $object1 in the hand
-meleeHitLeg:$object2 hits $object1 in the leg
-rangedHitHead:a bullet hits $object1 in the head
-rangedHitArm:a bullet hits $object1 in the arm
-rangedHitHand:a bullet hits $object1 in the hand
-rangedHitLeg:a bullet hits $object1 in the leg
-meleeHitCritHead:$object2 hits $object1 in the head
-meleeHitCritArm:$object2 hits $object1 in the arm
-meleeHitCritHand:$object2 hits $object1 in the hand
-meleeHitCritLeg:$object2 hits $object1 in the leg
-rangedHitCritHead:a bullet hits $object1 in the head
-rangedHitCritArm:a bullet hits $object1 in the arm
-rangedHitCritHand:a bullet hits $object1 in the hand
-rangedHitCritLeg:a bullet hits $object1 in the leg
-meleeMissHead:$object2 {{just|barely} misses|{swings|swipes} over} $object1's head
-meleeMissArm:$object2 {just misses|barely misses} $object1's arm
-meleeMissHand:$object2 {just misses|barely misses} $object1's hand
-meleeMissLeg:$object2 {just misses|barely misses} $object1's leg
-rangedMissHead:a bullet {flies over|whips past} $object1's head
-rangedMissArm:a bullet {flies|whips} past $object1's arm
-rangedMissHand:a bullet {flies|whips} past $object1's hand
-rangedMissLeg:a bullet {{flies|whips} past|hits the ground near} $object1's leg
+meleeHitLimb:$object2 hits $object1 in the $limb
+rangedHitLimb:a bullet hits $object1 in the $limb
+meleeHitCritLimb:$object2 hits $object1 in the $limb
+rangedHitCritLimb:a bullet hits $object1 in the $limb
+meleeMissLimb:$object2 {{just|barely} misses|{swings|swipes} past} $object1's $limb
+rangedMissLimb:a bullet {flies|whips} past $object1's $limb
 rangedAutoMiss:a spray of bullets {{flies|whips} past|hits the ground near} $object1
 rangedAutoHit:a spray of bullets hits $object1
 rangedAutoHitCrit:a spray of bullets hits $object1

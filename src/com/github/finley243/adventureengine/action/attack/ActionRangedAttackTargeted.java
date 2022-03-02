@@ -14,6 +14,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ActionRangedAttackTargeted extends ActionAttack {
@@ -32,7 +33,7 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 			Game.EVENT_BUS.post(new SoundEvent(subject.getArea(), true));
 		}
 		getTarget().addCombatTarget(subject);
-		Context attackContext = new Context(subject, getTarget(), getWeapon());
+		Context attackContext = new Context(Map.of("limb", limb.getName()), subject, getTarget(), getWeapon());
 		if(!CombatHelper.isRepeat(attackContext)) {
 			Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), limb, false)), attackContext, null, null));
 		}
@@ -46,7 +47,7 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 			damage += weapon.getCritDamage();
 			crit = true;
 		}
-		Context attackContext = new Context(subject, target, weapon);
+		Context attackContext = new Context(Map.of("limb", limb.getName()), subject, target, weapon);
 		String hitPhrase = CombatHelper.getHitPhrase(weapon, limb, crit, false);
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
 		target.damageLimb(damage, limb);
@@ -54,7 +55,7 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 
 	@Override
 	public void onFail(Actor subject) {
-		Context attackContext = new Context(subject, getTarget(), getWeapon());
+		Context attackContext = new Context(Map.of("limb", limb.getName()), subject, getTarget(), getWeapon());
 		Game.EVENT_BUS.post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), limb, false)), attackContext, this, subject));
 	}
 
