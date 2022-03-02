@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor;
 
 import java.util.List;
+import java.util.Map;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
@@ -76,19 +77,22 @@ public class ActorPlayer extends Actor {
 
 	public void describeSurroundings() {
 		for(Actor actor : getVisibleActors()) {
-			Context context = new Context(actor, this);
+			boolean adjacent = getArea() == actor.getArea() || getArea().getDistanceTo(actor.getArea().getID()) == 0;
+			Context context;
+			if(adjacent) {
+				context = new Context(Map.of("inLocation", actor.getArea().getRelativeName()), actor, this);
+			} else {
+				context = new Context(Map.of("inLocation", actor.getArea().getRelativeName(), "direction", getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase()), actor, this);
+			}
 			String line;
 			if(actor.isDead()) {
-				line = "$subject lie$s dead " + (getArea() == actor.getArea() ? "next to $object1" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+				line = "$subject lie$s dead " + (adjacent ? "next to $object1" : "$inLocation, to the $direction");
 			} else if(actor.isUnconscious()) {
-				line = "$subject lie$s unconscious " + (getArea() == actor.getArea() ? "next to $object1" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+				line = "$subject lie$s unconscious " + (adjacent ? "next to $object1" : "$inLocation, to the $direction");
 			} else {
-				line = "$subject $is " + (getArea() == actor.getArea() ? "next to $object1" : actor.getArea().getRelativeName() + ", to the " + getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase());
+				line = "$subject $is " + (adjacent ? "next to $object1" : "$inLocation, to the $direction");
 			}
-			System.out.println("Line: " + line);
-			System.out.println("Subject: " + context.getSubject().getFormattedName());
 			String description = TextGen.generate(line, context);
-			System.out.println("Generated: " + description);
 			Game.EVENT_BUS.post(new RenderTextEvent(description));
 		}
 		Game.EVENT_BUS.post(new RenderTextEvent(""));

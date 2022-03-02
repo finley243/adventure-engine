@@ -146,6 +146,10 @@ public class TextGen {
 					 , objects[i].getPronoun().possessive, "$object" + (i+1), "$object" + (i+1) + "'s");
 		}
 
+		for(String varTag : context.getVars().keySet()) {
+			line = line.replace("$" + varTag, context.getVars().get(varTag));
+		}
+
 		line = line.replace(VERB_S, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "s" : ""));
 		line = line.replace(VERB_ES, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "es" : ""));
 		line = line.replace(VERB_IES, (!useSubjectPronoun || subject.getPronoun().thirdPersonVerb ? "ies" : "y"));

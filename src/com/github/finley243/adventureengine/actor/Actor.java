@@ -348,11 +348,11 @@ public class Actor implements Noun, Physical {
 		if(amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, stats.getMaxHP() - HP);
 		HP += amount;
-		Context context = new Context(this);
+		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 		if(SHOW_HP_CHANGES) {
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject gain$s " + amount + " HP", context, null, null));
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject gain$s $amount HP", context, null, null));
 		}
-		Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is " + this.getConditionDescription(), context, null, null));
+		Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
 	}
 	
 	public void damage(int amount) {
@@ -364,11 +364,11 @@ public class Actor implements Noun, Physical {
 			kill();
 		} else {
 			triggerScript("on_damaged");
-			Context context = new Context(this);
+			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 			if(SHOW_HP_CHANGES) {
-				Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject lose$s " + amount + " HP", context, null, null));
+				Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
 			}
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is " + this.getConditionDescription(), context, null, null));
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
 		}
 	}
 
@@ -386,11 +386,11 @@ public class Actor implements Noun, Physical {
 			kill();
 		} else {
 			triggerScript("on_damaged");
-			Context context = new Context(this);
+			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 			if(SHOW_HP_CHANGES) {
-				Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject lose$s " + amount + " HP", context, null, null));
+				Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
 			}
-			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is " + this.getConditionDescription(), context, null, null));
+			Game.EVENT_BUS.post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
 		}
 	}
 	
