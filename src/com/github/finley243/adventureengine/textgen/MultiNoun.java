@@ -22,13 +22,9 @@ public class MultiNoun implements Noun {
 
     @Override
     public String getFormattedName() {
-        return getFormattedName(false);
-    }
-
-    @Override
-    public String getFormattedName(boolean indefinite) {
         Map<String, Integer> uniqueNamesCount = new HashMap<>();
         Map<String, Boolean> uniqueNamesKnown = new HashMap<>();
+        Map<String, Boolean> uniqueNamesProper = new HashMap<>();
         for(Noun noun : nouns) {
             String name = noun.getName();
             if(uniqueNamesCount.containsKey(name)) {
@@ -36,9 +32,13 @@ public class MultiNoun implements Noun {
                 if(!noun.isKnown()) {
                     uniqueNamesKnown.put(name, false);
                 }
+                if(noun.isProperName()) {
+                    uniqueNamesProper.put(name, true);
+                }
             } else {
                 uniqueNamesCount.put(name, 1);
                 uniqueNamesKnown.put(name, noun.isKnown());
+                uniqueNamesProper.put(name, noun.isProperName());
             }
         }
         StringBuilder name = new StringBuilder();
@@ -54,12 +54,16 @@ public class MultiNoun implements Noun {
             }
             int count = uniqueNamesCount.get(uniqueNamesList.get(i));
             if(count > 1) {
-                if(uniqueNamesKnown.get(uniqueNamesList.get(i))) {
+                if(!uniqueNamesProper.get(uniqueNamesList.get(i)) && uniqueNamesKnown.get(uniqueNamesList.get(i))) {
                     name.append("the ");
                 }
                 name.append(count).append(" ").append(LangUtils.pluralizeNoun(uniqueNamesList.get(i)));
             } else {
-                name.append(LangUtils.addArticle(uniqueNamesList.get(i), !uniqueNamesKnown.get(uniqueNamesList.get(i))));
+                if(uniqueNamesProper.get(uniqueNamesList.get(i))) {
+                    name.append(uniqueNamesList.get(i));
+                } else {
+                    name.append(LangUtils.addArticle(uniqueNamesList.get(i), !uniqueNamesKnown.get(uniqueNamesList.get(i))));
+                }
             }
         }
         return name.toString();

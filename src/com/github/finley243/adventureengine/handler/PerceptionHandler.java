@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.handler;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ public class PerceptionHandler {
 		for(Actor actor : roomActors) {
 			if(e.getSubject() != null) {
 				if(actor.canSee(e.getSubject())) {
+					System.out.println("Triggering OnVisualEvent in Actor: " + actor);
 					actor.onVisualEvent(e);
 				}
 			} else {

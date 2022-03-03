@@ -74,7 +74,7 @@ public class Area extends GameInstanced implements Noun {
 	
 	@Override
 	public String getName() {
-		return getFormattedName(false);
+		return getFormattedName();
 	}
 	
 	public String getDescription() {
@@ -89,17 +89,12 @@ public class Area extends GameInstanced implements Noun {
 	public boolean isPrivate() {
 		return isPrivate;
 	}
-
-	@Override
-	public String getFormattedName() {
-		return getFormattedName(!isKnown);
-	}
 	
 	@Override
-	public String getFormattedName(boolean indefinite) {
+	public String getFormattedName() {
 		String formattedName;
 		if(!isProperName()) {
-			formattedName = LangUtils.addArticle(name, indefinite);
+			formattedName = LangUtils.addArticle(name, !isKnown);
 		} else {
 			formattedName = name;
 		}
@@ -134,19 +129,19 @@ public class Area extends GameInstanced implements Noun {
 
 	public String getRelativeName() {
 		if(nameType == AreaNameType.IN) {
-			return "in " + getFormattedName(false);
+			return "in " + getFormattedName();
 		} else if(nameType == AreaNameType.ON) {
-			return "on " + getFormattedName(false);
+			return "on " + getFormattedName();
 		} else {
-			return getFormattedName(false);
+			return getFormattedName();
 		}
 	}
 
 	public String getMoveDescription() {
 		if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
-			return "to " + getFormattedName(false);
+			return "to " + getFormattedName();
 		} else {
-			return getFormattedName(false);
+			return getFormattedName();
 		}
 	}
 

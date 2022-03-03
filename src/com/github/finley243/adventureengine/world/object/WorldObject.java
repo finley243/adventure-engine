@@ -52,13 +52,8 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 
 	@Override
 	public String getFormattedName() {
-		return getFormattedName(!isKnown);
-	}
-
-	@Override
-	public String getFormattedName(boolean indefinite) {
 		if(!isProperName()) {
-			return LangUtils.addArticle(getName(), indefinite);
+			return LangUtils.addArticle(getName(), !isKnown);
 		} else {
 			return getName();
 		}

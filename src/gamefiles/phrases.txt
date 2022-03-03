@@ -52,8 +52,5 @@ rangedAutoMiss:a spray of bullets {{flies|whips} past|hits the ground near} $obj
 rangedAutoHit:a spray of bullets hits $object1
 rangedAutoHitCrit:a spray of bullets hits $object1
 location:$subject $is $inLocation
-locationDead:$subject lie$s dead $inLocation
-locationUnconscious:$subject lie$s unconscious $inLocation
-locationDirection:$subject $is $inLocation, to the $direction
 locationListNear:near $object1 $is $subject
 locationList:$inLocation to the $direction, there $is $subject

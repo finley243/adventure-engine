@@ -142,18 +142,23 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	public String getName() {
 		return (descriptor != null ? descriptor + " " : "") + stats.getName(game());
 	}
-	
-	@Override
-	public String getFormattedName() {
-		return getFormattedName(!isKnown);
-	}
 
 	@Override
-	public String getFormattedName(boolean indefinite) {
+	public String getFormattedName() {
 		if(!isProperName()) {
-			return LangUtils.addArticle(getName(), indefinite);
+			return LangUtils.addArticle(getNameState() + getName(), !isKnown);
 		} else {
-			return getName();
+			return getNameState() + getName();
+		}
+	}
+
+	private String getNameState() {
+		if(isDead()) {
+			return "dead ";
+		} else if(isUnconscious()) {
+			return "unconscious ";
+		} else {
+			return "";
 		}
 	}
 
@@ -806,7 +811,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	}
 	
 	public boolean canSee(Actor target) {
-		return getArea().getVisibleAreas(this).contains(target.getArea()) && (!target.isCrouching || !getArea().isBehindCover(target.getArea()));
+		return this == target || getArea().getVisibleAreas(this).contains(target.getArea()) && (!target.isCrouching || !getArea().isBehindCover(target.getArea()));
 	}
 
 	public boolean triggerScript(String entryPoint) {

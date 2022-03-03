@@ -1,9 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
@@ -85,7 +82,7 @@ public class ActorPlayer extends Actor {
 		game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("location"), playerContext)));
 		for(Area area : getArea().getVisibleAreas(this)) {
 			List<Noun> nounsInArea = new ArrayList<>();
-			Set<Actor> actorsInArea = area.getActors();
+			Set<Actor> actorsInArea = new HashSet<>(area.getActors());
 			actorsInArea.remove(this);
 			nounsInArea.addAll(actorsInArea);
 			nounsInArea.addAll(area.getObjects());
@@ -101,25 +98,6 @@ public class ActorPlayer extends Actor {
 				}
 			}
 		}
-		/*for(Actor actor : getVisibleActors()) {
-			boolean adjacent = getArea() == actor.getArea() || getArea().getDistanceTo(actor.getArea().getID()) == 0;
-			Context context;
-			if(adjacent) {
-				context = new Context(Map.of("inLocation", actor.getArea().getRelativeName()), actor, this);
-			} else {
-				context = new Context(Map.of("inLocation", actor.getArea().getRelativeName(), "direction", getArea().getRelativeDirectionOf(actor.getArea()).toString().toLowerCase()), actor, this);
-			}
-			String line;
-			if(actor.isDead()) {
-				line = "$subject lie$s dead " + (adjacent ? "next to $object1" : "$inLocation, to the $direction");
-			} else if(actor.isUnconscious()) {
-				line = "$subject lie$s unconscious " + (adjacent ? "next to $object1" : "$inLocation, to the $direction");
-			} else {
-				line = "$subject $is " + (adjacent ? "next to $object1" : "$inLocation, to the $direction");
-			}
-			String description = TextGen.generate(line, context);
-			game().eventBus().post(new RenderTextEvent(description));
-		}*/
 		game().eventBus().post(new RenderTextEvent(""));
 		TextGen.clearContext();
 	}

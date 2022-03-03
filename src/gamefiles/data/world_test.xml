@@ -11,7 +11,7 @@
             </links>
             <objects>
                 <object type="cover" id="test_cover_1">
-                    <name>cover</name>
+                    <name proper="true">cover-providing railing</name>
                     <direction>SOUTH</direction>
                 </object>
             </objects>
@@ -65,7 +65,7 @@
             </links>
             <objects>
                 <object type="cover" id="test_cover_5">
-                    <name>cover</name>
+                    <name>cover-providing railing</name>
                     <direction>NORTH</direction>
                 </object>
                 <object type="container" id="test_container_locker">

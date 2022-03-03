@@ -40,16 +40,11 @@ public abstract class StatsItem implements Noun {
 	public String getName() {
 		return name;
 	}
-
-	@Override
-	public String getFormattedName() {
-		return getFormattedName(true);
-	}
 	
 	@Override
-	public String getFormattedName(boolean indefinite) {
+	public String getFormattedName() {
 		if(!isProperName()) {
-			return LangUtils.addArticle(getName(), indefinite);
+			return LangUtils.addArticle(getName(), true);
 		} else {
 			return getName();
 		}
