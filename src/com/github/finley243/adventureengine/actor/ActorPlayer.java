@@ -1,7 +1,9 @@
 package com.github.finley243.adventureengine.actor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
@@ -11,9 +13,7 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuManager;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.textgen.TextGen;
+import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.template.StatsActor;
 
@@ -81,7 +81,27 @@ public class ActorPlayer extends Actor {
 	}
 
 	public void describeSurroundings() {
-		for(Actor actor : getVisibleActors()) {
+		Context playerContext = new Context(Map.of("inLocation", getArea().getRelativeName()), this);
+		game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("location"), playerContext)));
+		for(Area area : getArea().getVisibleAreas(this)) {
+			List<Noun> nounsInArea = new ArrayList<>();
+			Set<Actor> actorsInArea = area.getActors();
+			actorsInArea.remove(this);
+			nounsInArea.addAll(actorsInArea);
+			nounsInArea.addAll(area.getObjects());
+			if(!nounsInArea.isEmpty()) {
+				MultiNoun multiNoun = new MultiNoun(nounsInArea);
+				boolean adjacent = getArea() == area || getArea().getDistanceTo(area.getID()) == 0;
+				if (adjacent) {
+					Context areaContext = new Context(Map.of("inLocation", area.getRelativeName()), multiNoun, this);
+					game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("locationListNear"), areaContext)));
+				} else {
+					Context areaContext = new Context(Map.of("inLocation", area.getRelativeName(), "direction", getArea().getRelativeDirectionOf(area).toString().toLowerCase()), multiNoun);
+					game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("locationList"), areaContext)));
+				}
+			}
+		}
+		/*for(Actor actor : getVisibleActors()) {
 			boolean adjacent = getArea() == actor.getArea() || getArea().getDistanceTo(actor.getArea().getID()) == 0;
 			Context context;
 			if(adjacent) {
@@ -99,7 +119,7 @@ public class ActorPlayer extends Actor {
 			}
 			String description = TextGen.generate(line, context);
 			game().eventBus().post(new RenderTextEvent(description));
-		}
+		}*/
 		game().eventBus().post(new RenderTextEvent(""));
 		TextGen.clearContext();
 	}

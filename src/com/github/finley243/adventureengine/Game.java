@@ -31,9 +31,6 @@ public class Game {
 	private static final String DATA_DIRECTORY = "/data";
 	private static final String PHRASE_FILE = "/phrases.txt";
 	private static final String CONFIG_FILE = "/config.xml";
-	
-	private final PerceptionHandler perceptionHandler;
-	private final UserInterface userInterface;
 
 	private final EventBus eventBus;
 	private final ThreadControl threadControl;
@@ -52,8 +49,8 @@ public class Game {
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
 		DataLoader.loadFromDir(this, new File(GAMEFILES + DATA_DIRECTORY));
 
-		perceptionHandler = new PerceptionHandler();
-		userInterface = new GraphicalInterfaceNested(this);
+		PerceptionHandler perceptionHandler = new PerceptionHandler();
+		UserInterface userInterface = new GraphicalInterfaceNested(this);
 		eventBus.register(perceptionHandler);
 		eventBus.register(userInterface);
 		eventBus.register(this);

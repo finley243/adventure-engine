@@ -57,6 +57,11 @@ public abstract class StatsItem implements Noun {
 
 	@Override
 	public void setKnown() {}
+
+	@Override
+	public boolean isKnown() {
+		return false;
+	}
 	
 	@Override
 	public boolean isProperName() {

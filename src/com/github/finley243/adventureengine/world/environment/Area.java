@@ -127,6 +127,11 @@ public class Area extends GameInstanced implements Noun {
 		isKnown = true;
 	}
 
+	@Override
+	public boolean isKnown() {
+		return isKnown;
+	}
+
 	public String getRelativeName() {
 		if(nameType == AreaNameType.IN) {
 			return "in " + getFormattedName(false);

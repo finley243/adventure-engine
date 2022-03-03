@@ -68,6 +68,11 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 	public void setKnown() {
 		isKnown = true;
 	}
+
+	@Override
+	public boolean isKnown() {
+		return isKnown;
+	}
 	
 	@Override
 	public boolean isProperName() {

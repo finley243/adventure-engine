@@ -17,7 +17,7 @@ public class MultiNoun implements Noun {
 
     @Override
     public String getName() {
-        return getFormattedName(false);
+        return getFormattedName();
     }
 
     @Override
@@ -27,17 +27,22 @@ public class MultiNoun implements Noun {
 
     @Override
     public String getFormattedName(boolean indefinite) {
-        Map<String, Integer> uniqueNames = new HashMap<>();
+        Map<String, Integer> uniqueNamesCount = new HashMap<>();
+        Map<String, Boolean> uniqueNamesKnown = new HashMap<>();
         for(Noun noun : nouns) {
             String name = noun.getName();
-            if(uniqueNames.containsKey(name)) {
-                uniqueNames.put(name, uniqueNames.get(name) + 1);
+            if(uniqueNamesCount.containsKey(name)) {
+                uniqueNamesCount.put(name, uniqueNamesCount.get(name) + 1);
+                if(!noun.isKnown()) {
+                    uniqueNamesKnown.put(name, false);
+                }
             } else {
-                uniqueNames.put(name, 1);
+                uniqueNamesCount.put(name, 1);
+                uniqueNamesKnown.put(name, noun.isKnown());
             }
         }
         StringBuilder name = new StringBuilder();
-        List<String> uniqueNamesList = new ArrayList<>(uniqueNames.keySet());
+        List<String> uniqueNamesList = new ArrayList<>(uniqueNamesCount.keySet());
         for(int i = 0; i < uniqueNamesList.size(); i++) {
             if(i != 0 && i == uniqueNamesList.size() - 1) {
                 if(uniqueNamesList.size() > 2) {
@@ -47,11 +52,14 @@ public class MultiNoun implements Noun {
             } else if(i > 0) {
                 name.append(", ");
             }
-            int count = uniqueNames.get(uniqueNamesList.get(i));
+            int count = uniqueNamesCount.get(uniqueNamesList.get(i));
             if(count > 1) {
+                if(uniqueNamesKnown.get(uniqueNamesList.get(i))) {
+                    name.append("the ");
+                }
                 name.append(count).append(" ").append(LangUtils.pluralizeNoun(uniqueNamesList.get(i)));
             } else {
-                name.append(LangUtils.addArticle(uniqueNamesList.get(i), indefinite));
+                name.append(LangUtils.addArticle(uniqueNamesList.get(i), !uniqueNamesKnown.get(uniqueNamesList.get(i))));
             }
         }
         return name.toString();
@@ -63,6 +71,11 @@ public class MultiNoun implements Noun {
         for(Noun noun : nouns) {
             noun.setKnown();
         }
+    }
+
+    @Override
+    public boolean isKnown() {
+        return isKnown;
     }
 
     @Override

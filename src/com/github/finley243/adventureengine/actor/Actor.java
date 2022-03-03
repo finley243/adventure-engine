@@ -161,6 +161,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	public void setKnown() {
 		isKnown = true;
 	}
+
+	@Override
+	public boolean isKnown() {
+		return isKnown;
+	}
 	
 	@Override
 	public boolean isProperName() {

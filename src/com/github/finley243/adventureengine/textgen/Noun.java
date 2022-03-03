@@ -14,6 +14,8 @@ public interface Noun {
 	String getFormattedName(boolean indefinite);
 
 	void setKnown();
+
+	boolean isKnown();
 	
 	boolean isProperName();
 	

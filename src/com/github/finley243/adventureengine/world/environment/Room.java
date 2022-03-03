@@ -107,6 +107,11 @@ public class Room extends GameInstanced implements Noun {
 	}
 
 	@Override
+	public boolean isKnown() {
+		return isKnown;
+	}
+
+	@Override
 	public boolean isProperName() {
 		return isProperName;
 	}
