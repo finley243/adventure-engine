@@ -10,7 +10,9 @@ import java.util.Set;
 public class ActorTarget {
 
 	/** Number of turns it takes for a target to be removed if they are not visible */
-	public static final int TURNS_BEFORE_END_COMBAT = 5;
+	public static final int TURNS_BEFORE_END_COMBAT = 4;
+	// Temporary, will be replaced with different values depending on actor alert state
+	public static final int TURNS_BEFORE_DETECTED = 2;
 	
 	private final Actor targetActor;
 	private final boolean isEnemy;
@@ -19,6 +21,9 @@ public class ActorTarget {
 	private int turnsUntilRemove;
 	private AreaTarget areaTarget;
 	private Area lastKnownArea;
+	private boolean isDetected;
+	private boolean wasSeenThisTurn;
+	private int turnsDetected;
 	
 	public ActorTarget(Actor actor, boolean isEnemy) {
 		this.targetActor = actor;
@@ -26,53 +31,68 @@ public class ActorTarget {
 		this.turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 		areaTarget = null;
 		lastKnownArea = actor.getArea();
+		System.out.println(this + " CombatTarget Generated");
 	}
 
 	public void markForRemoval() {
 		markForRemoval = true;
 	}
 
-	public boolean isEnemy() {
-		return isEnemy;
+	public boolean shouldAttack() {
+		return isEnemy && isDetected;
 	}
 
-	public void nextTurn() {
-		if(turnsUntilRemove > 0) {
+	public void nextTurn(Actor subject) {
+		if(isDetected && turnsUntilRemove > 0) {
 			turnsUntilRemove--;
 		}
+		if(!isDetected && (wasSeenThisTurn || subject.canSee(targetActor)) && turnsDetected < TURNS_BEFORE_DETECTED) {
+			System.out.println(this + " ActorTarget has detected you");
+			turnsDetected++;
+		} else if(!isDetected && turnsDetected >= TURNS_BEFORE_DETECTED) {
+			System.out.println(this + " ActorTarget is engaging in combat with you");
+			isDetected = true;
+		}
+		wasSeenThisTurn = false;
 	}
 	
 	public void update(Actor subject) {
-		if(areaTarget == null) {
-			if(isEnemy) {
-				areaTarget = new AreaTarget(idealAreas(subject, lastKnownArea), 0.0f, true, false, false);
-			} else {
-				areaTarget = new AreaTarget(Set.of(lastKnownArea), 0.0f, true, false, false);
+		if(isDetected) { // Combat
+			if (areaTarget == null) {
+				if (isEnemy) {
+					areaTarget = new AreaTarget(idealAreas(subject, lastKnownArea), 0.0f, true, false, false);
+				} else {
+					areaTarget = new AreaTarget(Set.of(lastKnownArea), 0.0f, true, false, false);
+				}
+				subject.addPursueTarget(areaTarget);
 			}
-			subject.addPursueTarget(areaTarget);
-		}
-		if(subject.canSee(targetActor)) {
-			lastKnownArea = targetActor.getArea();
-			turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
-			areaTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
-			areaTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, this));
-			areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, this));
-			areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
-		} else {
-			areaTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
-			areaTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
-		}
-		if(shouldRemove()) {
-			areaTarget.markForRemoval();
+			if (subject.canSee(targetActor)) {
+				lastKnownArea = targetActor.getArea();
+				turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
+				areaTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
+				areaTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, this));
+				areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, this));
+				areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, targetActor));
+			} else {
+				areaTarget.setTargetAreas(idealAreas(subject, lastKnownArea));
+				areaTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
+			}
+			if (shouldRemove()) {
+				areaTarget.markForRemoval();
+			}
+		} else { // Stealth
+
 		}
 	}
 
 	public void setLastKnownArea(Area area) {
 		lastKnownArea = area;
+		wasSeenThisTurn = true;
 	}
 	
 	public boolean shouldRemove() {
-		return targetActor.isDead() || (isEnemy && turnsUntilRemove <= 0) || markForRemoval;
+		System.out.println("ShouldRemove check");
+		return targetActor.isDead() || (isEnemy && turnsUntilRemove <= 0) || (!isDetected && turnsDetected == 0) || markForRemoval;
 	}
 	
 	public Actor getTargetActor() {

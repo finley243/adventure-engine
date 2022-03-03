@@ -22,7 +22,6 @@ public class PerceptionHandler {
 		for(Actor actor : roomActors) {
 			if(e.getSubject() != null) {
 				if(actor.canSee(e.getSubject())) {
-					System.out.println("Triggering OnVisualEvent in Actor: " + actor);
 					actor.onVisualEvent(e);
 				}
 			} else {

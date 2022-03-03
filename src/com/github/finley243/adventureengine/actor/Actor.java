@@ -457,24 +457,34 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	
 	public void onVisualEvent(VisualEvent event) {
 		if(event.getAction() instanceof ActionMoveArea) {
-			for(ActorTarget target : actorTargets) {
-				if(target.getTargetActor() == event.getSubject()) {
-					target.setLastKnownArea(((ActionMoveArea) event.getAction()).getArea());
+			if(isCombatTarget(event.getSubject())) {
+				for (ActorTarget target : actorTargets) {
+					if (target.getTargetActor() == event.getSubject()) {
+						target.setLastKnownArea(((ActionMoveArea) event.getAction()).getArea());
+					}
 				}
+			} else {
+				addCombatTarget(event.getSubject());
 			}
 		} else if(event.getAction() instanceof ActionMoveExit) {
-			for(ActorTarget target : actorTargets) {
-				if(target.getTargetActor() == event.getSubject()) {
-					target.setLastKnownArea(((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
+			if(isCombatTarget(event.getSubject())) {
+				for (ActorTarget target : actorTargets) {
+					if (target.getTargetActor() == event.getSubject()) {
+						target.setLastKnownArea(((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
+					}
 				}
+			} else {
+				addCombatTarget(event.getSubject());
 			}
 		} else if(event.getAction() instanceof ActionMoveElevator) {
-			for(ActorTarget target : actorTargets) {
-				if(target.getTargetActor() == event.getSubject()) {
-					//List<Area> possibleAreas = new ArrayList<>(((ActionMoveElevator) event.getAction()).getElevator().getLinkedAreas());
-					//target.setLastKnownArea(possibleAreas.get(ThreadLocalRandom.current().nextInt(possibleAreas.size())));
-					target.setLastKnownArea(((ActionMoveElevator) event.getAction()).getDestination().getArea());
+			if(isCombatTarget(event.getSubject())) {
+				for (ActorTarget target : actorTargets) {
+					if (target.getTargetActor() == event.getSubject()) {
+						target.setLastKnownArea(((ActionMoveElevator) event.getAction()).getDestination().getArea());
+					}
 				}
+			} else {
+				addCombatTarget(event.getSubject());
 			}
 		}
 	}
@@ -502,14 +512,14 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	
 	public boolean isInCombat() {
 		for(ActorTarget target : actorTargets) {
-			if(target.isEnemy()) return true;
+			if(target.shouldAttack()) return true;
 		}
 		return false;
 	}
 	
 	public boolean hasMeleeTargets() {
 		for(ActorTarget target : actorTargets) {
-			if(target.isEnemy() && target.getTargetActor().getArea() == this.getArea()) {
+			if(target.shouldAttack() && target.getTargetActor().getArea() == this.getArea()) {
 				return true;
 			}
 		}
@@ -535,7 +545,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	
 	public boolean isCombatTarget(Actor actor) {
 		for(ActorTarget target : actorTargets) {
-			if(target.isEnemy() && target.getTargetActor() == actor) {
+			if(target.shouldAttack() && target.getTargetActor() == actor) {
 				return true;
 			}
 		}
@@ -649,6 +659,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		if(!isActive() || !isEnabled()) return;
 		//triggerScript("on_start_turn");
 		effectComponent().onStartTurn();
+		generateCombatTargets();
 		updateCombatTargetsTurn();
 		investigateTarget.nextTurn(this);
 		behaviorIdle.update(this);
@@ -757,7 +768,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 
 	private void updateCombatTargetsTurn() {
 		for(ActorTarget target : actorTargets) {
-			target.nextTurn();
+			target.nextTurn(this);
 		}
 	}
 	

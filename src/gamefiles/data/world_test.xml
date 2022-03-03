@@ -16,10 +16,10 @@
                 </object>
             </objects>
             <actors>
-                <!--<actor id="test_enemy_1">
+                <actor id="test_enemy_1">
                     <stats>enemy</stats>
-                    <descriptor>first</descriptor>
-                </actor>-->
+                    <descriptor>tall</descriptor>
+                </actor>
             </actors>
         </area>
         <area id="test_area_2">
@@ -31,10 +31,10 @@
                 <link dir="southeast" dist="3" type="far">test_area_5</link>
             </links>
             <actors>
-                <!--<actor id="test_enemy_2">
+                <actor id="test_enemy_2">
                     <stats>enemy</stats>
-                    <descriptor>second</descriptor>
-                </actor>-->
+                    <descriptor>short</descriptor>
+                </actor>
             </actors>
         </area>
         <area id="test_area_3">
@@ -73,11 +73,11 @@
                     <lootTable>weapon_ranged_3</lootTable>
                 </object>
             </objects>
-            <actors>
+            <!--<actors>
                 <actor id="test_vendor_actor">
                     <stats>test_vendor</stats>
                 </actor>
-            </actors>
+            </actors>-->
         </area>
     </room>
 </data>
