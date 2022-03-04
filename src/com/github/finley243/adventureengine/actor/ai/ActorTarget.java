@@ -22,7 +22,7 @@ public class ActorTarget {
 	private AreaTarget areaTarget;
 	private Area lastKnownArea;
 	private boolean isDetected;
-	private boolean wasSeenThisTurn;
+	/*private boolean wasSeenThisTurn;*/
 	private int turnsDetected;
 	
 	public ActorTarget(Actor actor, boolean isEnemy) {
@@ -31,7 +31,6 @@ public class ActorTarget {
 		this.turnsUntilRemove = TURNS_BEFORE_END_COMBAT;
 		areaTarget = null;
 		lastKnownArea = actor.getArea();
-		System.out.println(this + " CombatTarget Generated");
 	}
 
 	public void markForRemoval() {
@@ -46,14 +45,13 @@ public class ActorTarget {
 		if(isDetected && turnsUntilRemove > 0) {
 			turnsUntilRemove--;
 		}
-		if(!isDetected && (wasSeenThisTurn || subject.canSee(targetActor)) && turnsDetected < TURNS_BEFORE_DETECTED) {
-			System.out.println(this + " ActorTarget has detected you");
+		if(!isDetected && (/*wasSeenThisTurn ||*/ subject.canSee(targetActor))) {
 			turnsDetected++;
-		} else if(!isDetected && turnsDetected >= TURNS_BEFORE_DETECTED) {
-			System.out.println(this + " ActorTarget is engaging in combat with you");
-			isDetected = true;
+			if(turnsDetected == TURNS_BEFORE_DETECTED) {
+				isDetected = true;
+			}
 		}
-		wasSeenThisTurn = false;
+		/*wasSeenThisTurn = false;*/
 	}
 	
 	public void update(Actor subject) {
@@ -87,12 +85,11 @@ public class ActorTarget {
 
 	public void setLastKnownArea(Area area) {
 		lastKnownArea = area;
-		wasSeenThisTurn = true;
+		/*wasSeenThisTurn = true;*/
 	}
 	
 	public boolean shouldRemove() {
-		System.out.println("ShouldRemove check");
-		return targetActor.isDead() || (isEnemy && turnsUntilRemove <= 0) || (!isDetected && turnsDetected == 0) || markForRemoval;
+		return targetActor.isDead() || (isEnemy && turnsUntilRemove <= 0) || markForRemoval;
 	}
 	
 	public Actor getTargetActor() {

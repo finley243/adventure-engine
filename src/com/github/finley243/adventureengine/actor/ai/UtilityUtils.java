@@ -18,17 +18,20 @@ public class UtilityUtils {
 			return 0.0f;
 		}
 		float utility = 0.0f;
+		int contributers = 0;
 		for(AreaTarget target : subject.getPursueTargets()) {
 			if(target.isActive() && (!throughExit || target.shouldUseExits())) {
 				if (target.shouldFlee() && target.getTargetAreas().contains(subject.getArea())) {
 					utility += target.getTargetUtility();
+					contributers++;
 				} else if (target.shouldFlee() ^ target.isOnPath(area)) { // XOR
 					// Temporary calculation, ignores distance
 					utility += target.getTargetUtility();
+					contributers++;
 				}
 			}
 		}
-		return utility / subject.getPursueTargets().size();
+		return utility / contributers;
 	}
 	
 	public static float getPursueTargetUtility(Actor subject, Actor target) {
