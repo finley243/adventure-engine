@@ -89,7 +89,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private int money;
 	private UsableObject usingObject;
 	private boolean isCrouching;
-	private final Map<Actor, ActorTarget> actorTargets;
+	private final TargetingComponent targetingComponent;
 	private final Set<AreaTarget> areaTargets;
 	private final InvestigateTarget investigateTarget;
 	private final BehaviorIdle behaviorIdle;
@@ -102,7 +102,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		this.stats = stats;
 		this.descriptor = descriptor;
 		this.preventMovement = preventMovement;
-		this.actorTargets = new HashMap<>();
+		this.targetingComponent = new TargetingComponent();
 		this.areaTargets = new HashSet<>();
 		this.investigateTarget = new InvestigateTarget();
 		this.isDead = startDead;
@@ -457,35 +457,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	
 	public void onVisualEvent(VisualEvent event) {
 		if(event.getAction() instanceof ActionMoveArea) {
-			if(isActorTarget(event.getSubject())) {
-				for (ActorTarget target : actorTargets.values()) {
-					if (target.getTargetActor() == event.getSubject()) {
-						target.setLastKnownArea(((ActionMoveArea) event.getAction()).getArea());
-					}
-				}
-			} else {
-				addCombatTarget(event.getSubject());
-			}
+			targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveArea) event.getAction()).getArea());
 		} else if(event.getAction() instanceof ActionMoveExit) {
-			if(isActorTarget(event.getSubject())) {
-				for (ActorTarget target : actorTargets.values()) {
-					if (target.getTargetActor() == event.getSubject()) {
-						target.setLastKnownArea(((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
-					}
-				}
-			} else {
-				addCombatTarget(event.getSubject());
-			}
+			targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
 		} else if(event.getAction() instanceof ActionMoveElevator) {
-			if(isActorTarget(event.getSubject())) {
-				for (ActorTarget target : actorTargets.values()) {
-					if (target.getTargetActor() == event.getSubject()) {
-						target.setLastKnownArea(((ActionMoveElevator) event.getAction()).getDestination().getArea());
-					}
-				}
-			} else {
-				addCombatTarget(event.getSubject());
-			}
+			targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveElevator) event.getAction()).getDestination().getArea());
 		}
 	}
 	
@@ -511,19 +487,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	}
 	
 	public boolean isInCombat() {
-		for(ActorTarget target : actorTargets.values()) {
-			if(target.shouldAttack()) return true;
-		}
-		return false;
+		return targetingComponent.hasCombatants();
 	}
 	
 	public boolean hasMeleeTargets() {
-		for(ActorTarget target : actorTargets.values()) {
-			if(target.shouldAttack() && target.getTargetActor().getArea() == this.getArea()) {
-				return true;
-			}
-		}
-		return false;
+		return targetingComponent.hasCombatantsInArea(getArea());
 	}
 	
 	public boolean hasRangedWeaponEquipped() {
@@ -542,25 +510,17 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		return false;
 	}
-
-	public boolean isActorTarget(Actor actor) {
-		return actorTargets.containsKey(actor);
-	}
 	
 	public boolean isCombatTarget(Actor actor) {
-		if(!actorTargets.containsKey(actor)) return false;
-		return actorTargets.get(actor).shouldAttack();
+		return targetingComponent.isCombatant(actor);
 	}
 	
 	public void addCombatTarget(Actor actor) {
-		//if(actorTargets.isEmpty()) {
-			//triggerScript("on_combat_start");
-		//}
-		actorTargets.put(actor, new ActorTarget(actor, true));
+		targetingComponent.addCombatant(this, actor);
 	}
 
-	public Set<ActorTarget> getCombatTargets() {
-		return new HashSet<>(actorTargets.values());
+	public Set<Actor> getCombatTargets() {
+		return targetingComponent.getCombatants();
 	}
 	
 	public void addPursueTarget(AreaTarget target) {
@@ -657,18 +617,17 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	
 	public void takeTurn() {
 		if(!isActive() || !isEnabled()) return;
-		//triggerScript("on_start_turn");
 		effectComponent().onStartTurn();
-		updateCombatTargetsTurn();
+		targetingComponent.updateTurn(this);
 		investigateTarget.nextTurn(this);
 		behaviorIdle.update(this);
 		this.actionPoints = ACTIONS_PER_TURN;
 		this.blockedActions.clear();
 		this.endTurn = false;
 		while(!endTurn) {
-			generateCombatTargets();
+			//generateCombatTargets();
 			updatePursueTargets();
-			updateCombatTargets();
+			targetingComponent.update(this);
 			investigateTarget.update(this);
 			List<Action> availableActions = availableActions();
 			for(Action action : availableActions) {
@@ -743,48 +702,33 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		return null;
 	}
 	
-	private void generateCombatTargets() {
+	/*private void generateCombatTargets() {
 		for(Actor actor : getVisibleActors()) {
 			if(actor != this && !actor.isDead()) {
 				if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.HOSTILE) {
-					if(!isActorTarget(actor)) {
+					if(!isCombatTarget(actor)) {
 						addCombatTarget(actor);
 					}
 				} else if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.ASSIST) {
 					for(ActorTarget allyTarget : actor.getCombatTargets()) {
-						if(!isActorTarget(allyTarget.getTargetActor())) {
+						if(!isCombatTarget(allyTarget.getTargetActor())) {
 							addCombatTarget(allyTarget.getTargetActor());
 						}
 					}
 				} else if(getArea().getRoom().getOwnerFaction() != null && game().data().getFaction(getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != FactionRelation.ASSIST) {
-					if(!isActorTarget(actor)) {
+					if(!isCombatTarget(actor)) {
 						addCombatTarget(actor);
 					}
 				}
 			}
 		}
-	}
+	}*/
 
-	private void updateCombatTargetsTurn() {
+	/*private void updateCombatTargetsTurn() {
 		for(ActorTarget target : actorTargets.values()) {
 			target.nextTurn(this);
 		}
-	}
-	
-	private void updateCombatTargets() {
-		boolean hadTargets = !actorTargets.isEmpty();
-		Iterator<ActorTarget> itr = actorTargets.values().iterator();
-		while(itr.hasNext()) {
-			ActorTarget target = itr.next();
-			target.update(this);
-			if(target.shouldRemove()) {
-				itr.remove();
-			}
-		}
-		if(hadTargets && actorTargets.isEmpty()) {
-			triggerScript("on_combat_end");
-		}
-	}
+	}*/
 	
 	private void updatePursueTargets() {
 		Iterator<AreaTarget> itr = areaTargets.iterator();

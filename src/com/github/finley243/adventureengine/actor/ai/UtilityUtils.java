@@ -33,6 +33,19 @@ public class UtilityUtils {
 		}
 		return utility / contributers;
 	}
+
+	// TODO - Switch to using last known areas instead of actual current areas
+	public static float getCoverUtility(Actor subject) {
+		int targetsBlocked = 0;
+		int totalTargets = 0;
+		for(Actor target : subject.getCombatTargets()) {
+			if (target.getArea().isBehindCover(subject.getArea())) {
+				targetsBlocked++;
+			}
+			totalTargets++;
+		}
+		return 0.2f * (((float) targetsBlocked) / ((float) totalTargets));
+	}
 	
 	public static float getPursueTargetUtility(Actor subject, Actor target) {
 		if(shouldFleeFrom(subject, target)) {
@@ -51,22 +64,22 @@ public class UtilityUtils {
 	}
 
 	// Returns true if subject needs to move to get into ideal range for attacking target (false if already in ideal range)
-	public static boolean shouldActivatePursueTarget(Actor subject, ActorTarget target) {
+	public static boolean shouldActivatePursueTarget(Actor subject, Actor target) {
 		if(subject.getEquippedItem() != null && subject.getEquippedItem() instanceof ItemWeapon) {
 			ItemWeapon weapon = (ItemWeapon) subject.getEquippedItem();
 			//int targetDistance = target.getTargetDistance();
-			int targetDistance = subject.getArea().getDistanceTo(target.getTargetActor().getArea().getID());
+			int targetDistance = subject.getArea().getDistanceTo(target.getArea().getID());
 			return targetDistance == -1 || targetDistance < weapon.getRangeMin() || targetDistance > weapon.getRangeMax();
 		} else {
 			return true;
 		}
 	}
 
-	public static boolean shouldMoveAwayFrom(Actor subject, ActorTarget target) {
+	public static boolean shouldMoveAwayFrom(Actor subject, Actor target) {
 		if(subject.hasRangedWeaponEquipped()) {
 			int rangeMin = ((ItemWeapon) subject.getEquippedItem()).getRangeMin();
 			//return target.getTargetDistance() < rangeMin;
-			int distance = subject.getArea().getDistanceTo(target.getTargetActor().getArea().getID());
+			int distance = subject.getArea().getDistanceTo(target.getArea().getID());
 			if(distance == -1) {
 				return false;
 			}
