@@ -1,7 +1,9 @@
 package com.github.finley243.adventureengine.actor.ai;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
@@ -62,6 +64,81 @@ public class Pathfinder {
 			}
 		}
 		return null;
+	}
+
+	public static Set<Actor> actorsInRange(Area origin, int range, boolean throughExits) {
+		Set<Area> visited = new HashSet<>();
+		Queue<List<Area>> paths = new LinkedList<>();
+		List<Area> startPath = new ArrayList<>();
+		Set<Actor> actorsInRange = new HashSet<>();
+		startPath.add(origin);
+		paths.add(startPath);
+		visited.add(origin);
+		while(!paths.isEmpty()) {
+			List<Area> currentPath = paths.remove();
+			Area pathEnd = currentPath.get(currentPath.size() - 1);
+			actorsInRange.addAll(pathEnd.getActors());
+			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
+			if(throughExits) {
+				for (WorldObject object : pathEnd.getObjects()) {
+					if (object instanceof ObjectExit) {
+						linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
+					} else if (object instanceof ObjectElevator) {
+						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
+					}
+				}
+			}
+			Collections.shuffle(linkedAreasGlobal);
+			for(Area linkedArea : linkedAreasGlobal) {
+				if(!visited.contains(linkedArea)) {
+					if(currentPath.size() - 1 < range) {
+						List<Area> linkedPath = new ArrayList<>(currentPath);
+						linkedPath.add(linkedArea);
+						paths.add(linkedPath);
+						visited.add(linkedArea);
+					}
+				}
+			}
+		}
+		return actorsInRange;
+	}
+
+	public static Actor nearestActor(Area origin, boolean throughExits) {
+		Set<Area> visited = new HashSet<>();
+		Queue<Area> areaQueue = new LinkedList<>();
+		areaQueue.add(origin);
+		visited.add(origin);
+		while(!areaQueue.isEmpty()) {
+			Area currentArea = areaQueue.remove();
+			Set<Actor> currentAreaActors = currentArea.getActors();
+			if(!currentAreaActors.isEmpty()) {
+				return randomActorFromSet(currentAreaActors);
+			}
+			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas());
+			if(throughExits) {
+				for (WorldObject object : currentArea.getObjects()) {
+					if (object instanceof ObjectExit) {
+						linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
+					} else if (object instanceof ObjectElevator) {
+						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
+					}
+				}
+			}
+			Collections.shuffle(linkedAreasGlobal);
+			for(Area linkedArea : linkedAreasGlobal) {
+				if(!visited.contains(linkedArea)) {
+					areaQueue.add(linkedArea);
+					visited.add(linkedArea);
+				}
+			}
+		}
+		return null;
+	}
+
+	private static Actor randomActorFromSet(Set<Actor> actors) {
+		if(actors.isEmpty()) return null;
+		List<Actor> actorList = new ArrayList<>(actors);
+		return actorList.get(ThreadLocalRandom.current().nextInt(actorList.size()));
 	}
 	
 }
