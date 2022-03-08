@@ -13,6 +13,7 @@ import com.github.finley243.adventureengine.action.ActionItemTake;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -25,7 +26,7 @@ public abstract class Item extends WorldObject {
 	public int getPrice() {
 		return 0;
 	}
-	
+
 	public abstract String getStatsID();
 
 	public abstract Set<String> getTags();

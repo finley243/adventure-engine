@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.textgen;
 
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 
 /**

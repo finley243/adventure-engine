@@ -61,14 +61,14 @@ public class TextGen {
 		boolean useSubjectPronoun = false;
 		boolean[] useObjectPronouns = new boolean[context.getObjects().length];
 		if(lastContext != null) {
-			if(context.getSubject().equals(lastContext.getSubject())) {
+			if(context.getSubject() == lastContext.getSubject()) {
 				useSubjectPronoun = true;
 			}
 			for(int i = 0; i < context.getObjects().length; i++) {
 				Noun object = context.getObjects()[i];
 				if(lastContext.getObjects().length == 0
-						|| lastContext.getObjects().length <= i && object.equals(lastContext.getObjects()[lastContext.getObjects().length - 1])
-						|| object.equals(lastContext.getObjects()[i])) {
+						|| lastContext.getObjects().length <= i && object == lastContext.getObjects()[lastContext.getObjects().length - 1]
+						|| object == lastContext.getObjects()[i]) {
 					if(!matchesAnyPronounsUpToObjectIndex(lastContext, object.getPronoun(), i, useSubjectPronoun, useObjectPronouns)) {
 						useObjectPronouns[i] = true;
 					}
