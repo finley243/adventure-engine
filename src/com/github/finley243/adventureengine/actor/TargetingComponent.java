@@ -34,7 +34,7 @@ public class TargetingComponent {
             }
         }
         // Add remaining visible actors to detected and increment existing actors
-        // TODO - Add checks to only add certain visible actors (faction relations, trespassing, etc.)
+        // TODO - Add allied target adding? (only for active combatants, not detected targets)
         for(Actor actor : visibleActors) {
             if(!combatants.containsKey(actor)) {
                 if (detected.containsKey(actor)) {
@@ -43,8 +43,10 @@ public class TargetingComponent {
                         subject.triggerScript("on_detect_target");
                         addCombatant(subject, actor);
                     } else {
-                        subject.triggerScript("on_notice_target");
-                        detected.put(actor, newValue);
+                        if(!actor.isDead() && (subject.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE || (subject.getArea().getRoom().getOwnerFaction() != null && subject.game().data().getFaction(subject.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST))) {
+                            subject.triggerScript("on_notice_target");
+                            detected.put(actor, newValue);
+                        }
                     }
                 } else {
                     detected.put(actor, 0);
