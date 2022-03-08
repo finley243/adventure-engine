@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
@@ -32,13 +31,13 @@ public class ActionItemDrop extends Action {
 	}
 
 	@Override
-	public int actionPoints() {
+	public int actionPoints(Actor subject) {
 		return 0;
 	}
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Drop", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getStatsID())});
+		return new MenuData("Drop", canChoose(subject), new String[]{"inventory", item.getName() + (isEquipped ? " (equipped)" : subject.inventory().itemCountLabel(item.getStatsID()))});
 	}
 
 	@Override

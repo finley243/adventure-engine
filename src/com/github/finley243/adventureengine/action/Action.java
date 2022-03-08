@@ -26,11 +26,11 @@ public abstract class Action {
 		return 0.0f;
 	}
 
-	public int actionPoints() {
+	public int actionPoints(Actor subject) {
 		return 1;
 	}
 	
-	public int repeatCount() {
+	public int repeatCount(Actor subject) {
 		return 0;
 	}
 

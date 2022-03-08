@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
@@ -37,7 +36,7 @@ public class ActionExitListen extends Action {
 	}
 
 	@Override
-	public int actionPoints() {
+	public int actionPoints(Actor subject) {
 		return 0;
 	}
 

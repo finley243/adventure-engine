@@ -37,7 +37,7 @@ public class ActionReactionOld extends Action {
 	}
 
 	@Override
-	public int actionPoints() {
+	public int actionPoints(Actor subject) {
 		return 0;
 	}
 

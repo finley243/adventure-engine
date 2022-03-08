@@ -1,10 +1,16 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.actor.Actor;
+
 public abstract class ActionMove extends Action {
 
     @Override
-    public int repeatCount() {
-        return 1;
+    public int repeatCount(Actor subject) {
+        if(subject.isCrouching()) {
+            return Actor.MOVES_PER_TURN_CROUCHED;
+        } else {
+            return Actor.MOVES_PER_TURN;
+        }
     }
 
     @Override

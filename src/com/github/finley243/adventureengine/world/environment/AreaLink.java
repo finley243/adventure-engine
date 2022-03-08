@@ -16,7 +16,7 @@ public class AreaLink {
     // ABOVE_HIGH/BELOW_HIGH = cannot climb, jumping down will cause injury (e.g. second story balcony, maintenance catwalk)
     // ABOVE_EXTREME/BELOW_EXTREME = cannot climb, jumping down will cause death (e.g. rooftop of tall building)
     public enum RelativeHeight {
-        EQUAL(null), ABOVE("above"), BELOW("below"), ABOVE_HIGH("above"), BELOW_HIGH("below"), ABOVE_EXTREME("fars above"), BELOW_EXTREME("far below");
+        EQUAL(null), ABOVE("above"), BELOW("below"), ABOVE_HIGH("above"), BELOW_HIGH("below"), ABOVE_EXTREME("far above"), BELOW_EXTREME("far below");
 
         public final String description;
 
@@ -127,7 +127,7 @@ public class AreaLink {
     }
 
     // If directions are opposites, returns null
-    public static RelativeDirection combinedDirection(RelativeDirection d1, RelativeDirection d2) {
+    /*public static RelativeDirection combinedDirection(RelativeDirection d1, RelativeDirection d2) {
         // Check exact match
         if (d1 == d2) return d1;
         // Check combinations of diagonals
@@ -160,6 +160,6 @@ public class AreaLink {
         } else {
             return null;
         }
-    }
+    }*/
 
 }

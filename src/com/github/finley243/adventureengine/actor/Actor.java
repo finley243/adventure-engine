@@ -6,7 +6,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
-import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.actor.ai.*;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.VisualEvent;
@@ -29,6 +28,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 2;
+	public static final int MOVES_PER_TURN = 2;
+	public static final int MOVES_PER_TURN_CROUCHED = 1;
 	public static final int ATTRIBUTE_MIN = 1;
 	public static final int ATTRIBUTE_MAX = 10;
 	public static final int SKILL_MIN = 1;
@@ -631,12 +632,12 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			investigateTarget.update(this);
 			List<Action> availableActions = availableActions();
 			for(Action action : availableActions) {
-				if(actionPoints < action.actionPoints()) {
+				if(actionPoints < action.actionPoints(this)) {
 					action.disable();
 				}
 			}
 			Action chosenAction = chooseAction(availableActions);
-			actionPoints -= chosenAction.actionPoints();
+			actionPoints -= chosenAction.actionPoints(this);
 			boolean actionIsBlocked = false;
 			for(Action repeatAction : blockedActions.keySet()) {
 				if(repeatAction.isRepeatMatch(chosenAction)) {
@@ -646,8 +647,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 					break;
 				}
 			}
-			if(!actionIsBlocked && chosenAction.repeatCount() > 0) {
-				blockedActions.put(chosenAction, chosenAction.repeatCount() - 1);
+			if(!actionIsBlocked && chosenAction.repeatCount(this) > 0) {
+				blockedActions.put(chosenAction, chosenAction.repeatCount(this) - 1);
 			}
 			chosenAction.choose(this);
 		}

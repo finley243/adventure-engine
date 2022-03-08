@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import java.util.List;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
@@ -37,7 +36,7 @@ public class ActionReadSign extends Action {
 	}
 
 	@Override
-	public int actionPoints() {
+	public int actionPoints(Actor subject) {
 		return 0;
 	}
 	

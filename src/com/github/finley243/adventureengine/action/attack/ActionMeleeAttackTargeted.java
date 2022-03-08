@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.action.attack;
 
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
@@ -12,7 +10,6 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -65,7 +62,7 @@ public class ActionMeleeAttackTargeted extends ActionAttack {
 	}
 
 	@Override
-	public int repeatCount() {
+	public int repeatCount(Actor subject) {
 		return 1;
 	}
 

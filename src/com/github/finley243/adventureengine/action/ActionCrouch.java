@@ -1,8 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ai.ActorTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
@@ -29,7 +27,7 @@ public class ActionCrouch extends Action {
     }
 
     @Override
-    public int actionPoints() {
+    public int actionPoints(Actor subject) {
         return 1;
     }
 

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.VisualEvent;
@@ -31,7 +30,7 @@ public class ActionInventoryTake extends Action {
     }
 
     @Override
-    public int actionPoints() {
+    public int actionPoints(Actor subject) {
         return 0;
     }
 

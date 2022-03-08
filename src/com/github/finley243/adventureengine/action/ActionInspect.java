@@ -1,8 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -28,7 +26,7 @@ public class ActionInspect extends Action {
 	}
 
 	@Override
-	public int actionPoints() {
+	public int actionPoints(Actor subject) {
 		return 0;
 	}
 	
