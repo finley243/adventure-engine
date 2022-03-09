@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.network.Network;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.LootTable;
@@ -32,6 +33,7 @@ public class Data {
 	private final Map<String, LootTable> lootTables = new HashMap<>();
 	private final Map<String, DialogueTopic> topics = new HashMap<>();
 	private final Map<String, Integer> variables = new HashMap<>();
+	private final Map<String, Script> scripts = new HashMap<>();
 	private final Map<String, Faction> factions = new HashMap<>();
 	private final Map<String, Scene> scenes = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
@@ -147,6 +149,16 @@ public class Data {
 	public int getVariable(String id) {
 		if(!variables.containsKey(id)) return 0;
 		return variables.get(id);
+	}
+
+	public void addScript(String id, Script script) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add script with blank ID");
+		if(scripts.containsKey(id)) throw new IllegalArgumentException("Cannot add script with existing ID: " + id);
+		scripts.put(id, script);
+	}
+
+	public Script getScript(String id) {
+		return scripts.get(id);
 	}
 	
 	public void addFaction(String id, Faction value) {

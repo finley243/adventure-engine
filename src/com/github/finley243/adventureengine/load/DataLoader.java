@@ -76,6 +76,12 @@ public class DataLoader {
                     Room room = loadRoom(game, roomElement);
                     game.data().addRoom(room.getID(), room);
                 }
+                List<Element> scripts = LoadUtils.directChildrenWithName(rootElement, "script");
+                for (Element scriptElement : scripts) {
+                    String scriptID = LoadUtils.attribute(scriptElement, "id", null);
+                    Script script = loadScript(scriptElement);
+                    game.data().addScript(scriptID, script);
+                }
             }
         }
     }
@@ -291,6 +297,9 @@ public class DataLoader {
         Condition condition = loadCondition(conditionElement);
         ActorReference actorRef = loadActorReference(scriptElement, "actor");
         switch(type) {
+            case "external":
+                String scriptID = LoadUtils.singleTag(scriptElement, "scriptID", null);
+                return new ScriptExternal(condition, scriptID);
             case "money":
                 int moneyValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
                 return new ScriptMoney(condition, actorRef, moneyValue);
