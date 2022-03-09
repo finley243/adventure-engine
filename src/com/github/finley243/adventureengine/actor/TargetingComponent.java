@@ -43,13 +43,21 @@ public class TargetingComponent {
                         subject.triggerScript("on_detect_target");
                         addCombatant(subject, actor);
                     } else {
-                        if(!actor.isDead() && (subject.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE || (subject.getArea().getRoom().getOwnerFaction() != null && subject.game().data().getFaction(subject.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST))) {
-                            subject.triggerScript("on_notice_target");
+                        if(!actor.isDead()) {
                             detected.put(actor, newValue);
                         }
                     }
                 } else {
-                    detected.put(actor, 0);
+                    if(!actor.isDead()) {
+                        if((subject.getArea().getRoom().getOwnerFaction() != null && subject.game().data().getFaction(subject.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
+                                (subject.getArea().getOwnerFaction() != null && subject.game().data().getFaction(subject.getArea().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
+                            subject.triggerScript("on_notice_target_trespassing");
+                            detected.put(actor, 0);
+                        } else if((subject.getFaction().getRelationTo(actor.getFaction().getID())) == Faction.FactionRelation.HOSTILE) {
+                            subject.triggerScript("on_notice_target_faction");
+                            detected.put(actor, 0);
+                        }
+                    }
                 }
             }
         }
