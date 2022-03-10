@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.SoundEvent;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -30,8 +30,8 @@ public class ActorPlayer extends Actor {
 	}
 	
 	@Override
-	public void onVisualEvent(VisualEvent event) {
-		game().eventBus().post(new RenderTextEvent(event.getText()));
+	public void onVisualEvent(AudioVisualEvent event) {
+		game().eventBus().post(new RenderTextEvent(event.getTextVisible()));
 	}
 	
 	@Override

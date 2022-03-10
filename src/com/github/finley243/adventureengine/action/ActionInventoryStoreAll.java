@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.MultiNoun;
@@ -32,7 +32,7 @@ public class ActionInventoryStoreAll extends Action {
             inventory.addItem(item);
         }
         Context context = new Context(subject, new MultiNoun(items), owner);
-        subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("storeIn"), context, this, subject));
+        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("storeIn"), context, this, subject));
     }
 
     @Override

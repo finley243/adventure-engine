@@ -1,12 +1,11 @@
 package com.github.finley243.adventureengine.handler;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SoundEvent;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 import com.google.common.eventbus.Subscribe;
@@ -14,7 +13,7 @@ import com.google.common.eventbus.Subscribe;
 public class PerceptionHandler {
 
 	@Subscribe
-	public void onVisualEvent(VisualEvent e) {
+	public void onVisualEvent(AudioVisualEvent e) {
 		Set<Actor> roomActors = new HashSet<>();
 		for(Area origin : e.getOrigins()) {
 			roomActors.addAll(origin.getRoom().getActors());

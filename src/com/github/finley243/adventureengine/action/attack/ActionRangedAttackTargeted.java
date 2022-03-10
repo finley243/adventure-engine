@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.event.SoundEvent;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -32,7 +32,7 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 		getTarget().addCombatTarget(subject);
 		Context attackContext = new Context(Map.of("limb", limb.getName()), subject, getTarget(), getWeapon());
 		if(!CombatHelper.isRepeat(attackContext)) {
-			subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), limb, false)), attackContext, null, null));
+			subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), limb, false)), "you hear a gunshot", attackContext, AudioVisualEvent.ResponseType.HOSTILE, true, null, null));
 		}
 	}
 
@@ -46,14 +46,14 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 		}
 		Context attackContext = new Context(Map.of("limb", limb.getName()), subject, target, weapon);
 		String hitPhrase = CombatHelper.getHitPhrase(weapon, limb, crit, false);
-		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
+		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
 		target.damageLimb(damage, limb);
 	}
 
 	@Override
 	public void onFail(Actor subject) {
 		Context attackContext = new Context(Map.of("limb", limb.getName()), subject, getTarget(), getWeapon());
-		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), limb, false)), attackContext, this, subject));
+		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), limb, false)), attackContext, this, subject));
 	}
 
 	@Override

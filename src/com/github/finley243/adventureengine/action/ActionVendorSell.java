@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -27,7 +27,7 @@ public class ActionVendorSell extends Action {
         subject.adjustMoney(item.getPrice());
         vendorInventory.addItem(item);
         Context context = new Context(subject, item);
-        subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("sell"), context, this, subject));
+        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("sell"), context, this, subject));
     }
 
     @Override

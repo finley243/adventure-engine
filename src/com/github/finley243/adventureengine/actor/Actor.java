@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.*;
 import com.github.finley243.adventureengine.event.SoundEvent;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -367,9 +367,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		HP += amount;
 		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 		if(SHOW_HP_CHANGES) {
-			game().eventBus().post(new VisualEvent(getArea(), "$subject gain$s $amount HP", context, null, null));
+			game().eventBus().post(new AudioVisualEvent(getArea(), "$subject gain$s $amount HP", context, null, null));
 		}
-		game().eventBus().post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
+		game().eventBus().post(new AudioVisualEvent(getArea(), "$subject $is $condition", context, null, null));
 	}
 	
 	public void damage(int amount) {
@@ -383,9 +383,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			triggerScript("on_damaged");
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 			if(SHOW_HP_CHANGES) {
-				game().eventBus().post(new VisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
+				game().eventBus().post(new AudioVisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
 			}
-			game().eventBus().post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
+			game().eventBus().post(new AudioVisualEvent(getArea(), "$subject $is $condition", context, null, null));
 		}
 	}
 
@@ -405,9 +405,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			triggerScript("on_damaged");
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 			if(SHOW_HP_CHANGES) {
-				game().eventBus().post(new VisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
+				game().eventBus().post(new AudioVisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
 			}
-			game().eventBus().post(new VisualEvent(getArea(), "$subject $is $condition", context, null, null));
+			game().eventBus().post(new AudioVisualEvent(getArea(), "$subject $is $condition", context, null, null));
 		}
 	}
 	
@@ -415,12 +415,12 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		triggerScript("on_death");
 		isDead = true;
 		Context context = new Context(this);
-		game().eventBus().post(new VisualEvent(getArea(), Phrases.get("die"), context, null, null));
+		game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("die"), context, null, null));
 		if(equippedItem != null) {
 			getArea().addObject(equippedItem);
 			equippedItem.setArea(getArea());
 			context = new Context(this, equippedItem);
-			game().eventBus().post(new VisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
+			game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 			equippedItem = null;
 		}
 	}
@@ -456,7 +456,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		return !isDead && !isUnconscious;
 	}
 	
-	public void onVisualEvent(VisualEvent event) {
+	public void onVisualEvent(AudioVisualEvent event) {
 		if(event.getAction() instanceof ActionMoveArea) {
 			targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveArea) event.getAction()).getArea());
 		} else if(event.getAction() instanceof ActionMoveExit) {

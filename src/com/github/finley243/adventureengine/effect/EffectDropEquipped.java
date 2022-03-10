@@ -1,8 +1,7 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemEquippable;
@@ -21,7 +20,7 @@ public class EffectDropEquipped extends Effect {
         target.getArea().addObject(item);
         item.setArea(target.getArea());
         Context context = new Context(target, item);
-        target.game().eventBus().post(new VisualEvent(target.getArea(), Phrases.get("forceDrop"), context, null, target));
+        target.game().eventBus().post(new AudioVisualEvent(target.getArea(), Phrases.get("forceDrop"), context, null, target));
     }
 
     @Override

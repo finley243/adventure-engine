@@ -4,10 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -60,7 +58,7 @@ public class BehaviorIdle {
 			} else {
 				if(stepTurnCounter == 1) {
 					Context context = new Context(subject, getNextArea(subject));
-					subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("patrolTelegraph"), context, null, null));
+					subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("patrolTelegraph"), context, null, null));
 				}
 				stepTurnCounter--;
 			}

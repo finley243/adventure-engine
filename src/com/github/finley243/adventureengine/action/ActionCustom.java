@@ -1,13 +1,10 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.event.VisualEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionCustom extends Action {

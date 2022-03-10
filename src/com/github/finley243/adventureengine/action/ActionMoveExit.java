@@ -1,9 +1,8 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -31,8 +30,8 @@ public class ActionMoveExit extends ActionMove {
 	public void choose(Actor subject) {
 		Area area = exit.getLinkedArea();
 		Context context = new Context(subject, exit, area.getRoom());
-		subject.game().eventBus().post(new VisualEvent(subject.getArea(), Phrases.get("moveThroughTo"), context, this, subject));
-		subject.game().eventBus().post(new VisualEvent(area, Phrases.get("moveThroughTo"), context, this, subject));
+		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("moveThroughTo"), context, this, subject));
+		subject.game().eventBus().post(new AudioVisualEvent(area, Phrases.get("moveThroughTo"), context, this, subject));
 		exit.unlock();
 		subject.move(area);
 	}

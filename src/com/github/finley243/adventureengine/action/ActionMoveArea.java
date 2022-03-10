@@ -1,9 +1,8 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.event.VisualEvent;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -30,7 +29,7 @@ public class ActionMoveArea extends ActionMove {
 	@Override
 	public void choose(Actor subject) {
 		Context context = new Context(subject, area);
-		subject.game().eventBus().post(new VisualEvent(new Area[]{subject.getArea(), area}, Phrases.get(area.getMovePhrase()), context, this, subject));
+		subject.game().eventBus().post(new AudioVisualEvent(new Area[]{subject.getArea(), area}, Phrases.get(area.getMovePhrase()), context, this, subject));
 		subject.move(area);
 	}
 	
