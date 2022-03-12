@@ -1,4 +1,4 @@
-<rooms>
+<data>
     <room id="stratis_hotel_lobby">
         <name proper="false">lobby</name>
         <roomDescription>You lobby is large and airy. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</roomDescription>
@@ -185,4 +185,4 @@
             </actors>
         </area>
     </room>
-</rooms>
+</data>

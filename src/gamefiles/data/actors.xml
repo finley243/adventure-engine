@@ -1,4 +1,4 @@
-<actors>
+<data>
     <actor id="default">
         <name proper="false">DEFAULT</name>
         <pronoun>THEY</pronoun>
@@ -193,4 +193,4 @@
             </script>
         </script>
     </actor>
-</actors>
+</data>

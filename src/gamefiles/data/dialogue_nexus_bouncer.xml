@@ -1,4 +1,4 @@
-<topics>
+<data>
     <topic id="nexus_bouncer_start" type="sel">
         <line once="true">
             <text>The bouncer glances at you and frowns.</text>
@@ -19,4 +19,4 @@
             <text>He turns away.</text>
         </line>
     </topic>
-</topics>
+</data>

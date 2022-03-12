@@ -1,4 +1,4 @@
-<rooms>
+<data>
     <room id="street_corner">
         <name proper="false">street corner</name>
         <area id="street_corner_nexus">
@@ -39,4 +39,4 @@
             </objects>
         </area>
     </room>
-</rooms>
+</data>

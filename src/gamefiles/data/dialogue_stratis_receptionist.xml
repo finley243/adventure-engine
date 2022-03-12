@@ -1,4 +1,4 @@
-<topics>
+<data>
     <topic id="stratis_receptionist_start" type="sel">
         <line redirect="stratis_receptionist_main" once="true">
             <text>"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</text>
@@ -121,4 +121,4 @@
             <text>"Very well. Have a lovely day."</text>
         </line>
     </topic>
-</topics>
+</data>

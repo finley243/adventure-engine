@@ -1,4 +1,4 @@
-<lootTables>
+<data>
     <lootTable id="player" useAll="true">
         <entry>
             <reference table="false">pistol_heavy</reference>
@@ -78,4 +78,4 @@
             <count>1</count>
         </entry>
     </lootTable>
-</lootTables>
+</data>

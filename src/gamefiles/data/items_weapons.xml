@@ -1,4 +1,4 @@
-<items>
+<data>
     <item type="weapon" id="baseball_bat">
         <name>baseball bat</name>
         <price>15</price>
@@ -41,4 +41,4 @@
         <rangeMax>3</rangeMax>
         <clipSize>16</clipSize>
     </item>
-</items>
+</data>

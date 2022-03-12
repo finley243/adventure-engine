@@ -1,4 +1,4 @@
-<factions>
+<data>
     <faction id="default">
         <default>NEUTRAL</default>
     </faction>
@@ -22,4 +22,4 @@
     <faction id="nexus_staff">
         <default>NEUTRAL</default>
     </faction>
-</factions>
+</data>

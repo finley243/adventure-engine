@@ -1,4 +1,4 @@
-<topics>
+<data>
     <topic id="lucas_simms_start" type="sel">
         <line once="true" redirect="lucas_simms_intro_response">
             <text>Name's Lucas Simms, town sheriff. And mayor too, when the need arises.</text>
@@ -128,4 +128,4 @@
             <text>To the south you got Rivet City, but don't bother going to D.C. The place is a warzone.</text>
         </line>
     </topic>
-</topics>
+</data>

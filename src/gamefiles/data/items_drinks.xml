@@ -1,4 +1,4 @@
-<items>
+<data>
     <item type="consumable" id="nitron_cola">
         <name>Nitron Cola</name>
         <price>10</price>
@@ -21,4 +21,4 @@
             </effect>
         </effects>
     </item>
-</items>
+</data>
