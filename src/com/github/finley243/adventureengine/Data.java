@@ -39,6 +39,14 @@ public class Data {
 	private final Map<String, Network> networks = new HashMap<>();
 
 	public Data() {}
+
+	public void saveState() {
+
+	}
+
+	public void loadState() {
+
+	}
 	
 	public void addConfig(String id, String value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add config with blank ID");

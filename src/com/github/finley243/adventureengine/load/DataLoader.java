@@ -565,7 +565,7 @@ public class DataLoader {
         List<Element> objectElements = LoadUtils.directChildrenWithName(objectsElement, "object");
         Set<WorldObject> objectSet = new HashSet<>();
         for(Element objectElement : objectElements) {
-            WorldObject object = loadObject(game, objectElement);
+            WorldObject object = loadObject(game, objectElement, areaID);
             objectSet.add(object);
             game.data().addObject(object.getID(), object);
         }
@@ -587,7 +587,7 @@ public class DataLoader {
         return area;
     }
 
-    private static WorldObject loadObject(Game game, Element objectElement) throws ParserConfigurationException, IOException, SAXException {
+    private static WorldObject loadObject(Game game, Element objectElement, String areaID) throws ParserConfigurationException, IOException, SAXException {
         String objectType = objectElement.getAttribute("type");
         String objectName = LoadUtils.singleTag(objectElement, "name", null);
         String objectID = objectElement.getAttribute("id");

@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspect;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -112,6 +113,23 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 		if(scripts.containsKey(entryPoint)) {
 			scripts.get(entryPoint).execute(subject);
 		}
+	}
+
+	public void loadState(SaveData saveData) {
+		switch(saveData.getParameter()) {
+			case "isKnown":
+				this.isKnown = saveData.getValueBoolean();
+				break;
+		}
+	}
+
+	public List<SaveData> saveState() {
+		List<SaveData> state = new ArrayList<>();
+		if(isKnown) {
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "isKnown", isKnown));
+		}
+		// TODO - Add area loading (requires storing default area)
+		return state;
 	}
 
 	@Override

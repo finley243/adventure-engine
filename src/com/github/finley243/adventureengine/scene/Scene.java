@@ -1,12 +1,13 @@
 package com.github.finley243.adventureengine.scene;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
+import com.github.finley243.adventureengine.load.SaveData;
 
 public class Scene {
 
@@ -21,9 +22,9 @@ public class Scene {
 	// TODO - Replace with priority system
 	private final boolean playImmediately;
 	private final boolean isRepeatable;
-	private boolean hasPlayed;
 	private final int cooldown;
 	private int cooldownCounter;
+	private boolean hasPlayed;
 	
 	public Scene(String ID, Condition condition, List<SceneLine> lines, boolean isRepeatable, boolean playImmediately, float chance, int cooldown) {
 		this.ID = ID;
@@ -78,6 +79,28 @@ public class Scene {
 		}
 		hasPlayed = true;
 		cooldownCounter = cooldown;
+	}
+
+	public void loadState(SaveData saveData) {
+		switch(saveData.getParameter()) {
+			case "cooldownCounter":
+				this.cooldownCounter = saveData.getValueInt();
+				break;
+			case "hasPlayed":
+				this.hasPlayed = saveData.getValueBoolean();
+				break;
+		}
+	}
+
+	public List<SaveData> saveState() {
+		List<SaveData> state = new ArrayList<>();
+		if(cooldownCounter != 0) {
+			state.add(new SaveData(SaveData.DataType.SCENE, this.getID(), "cooldownCounter", cooldownCounter));
+		}
+		if(hasPlayed) {
+			state.add(new SaveData(SaveData.DataType.SCENE, this.getID(), "hasPlayed", hasPlayed));
+		}
+		return state;
 	}
 
 }

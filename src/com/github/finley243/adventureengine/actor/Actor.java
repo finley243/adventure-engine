@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.*;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -71,6 +72,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private final String descriptor;
 	// If isKnown = true, use definite article, else use indefinite article
 	private boolean isKnown;
+	private final Area defaultArea;
 	private Area area;
 	private int HP;
 	private boolean isEnabled;
@@ -99,6 +101,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	public Actor(Game game, String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead, boolean startDisabled) {
 		super(game);
 		this.ID = ID;
+		this.defaultArea = area;
 		this.area = area;
 		this.stats = stats;
 		this.descriptor = descriptor;
@@ -776,6 +779,37 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		} else {
 			return false;
 		}
+	}
+
+	public void loadState(SaveData saveData) {
+		switch(saveData.getParameter()) {
+			case "isKnown":
+				this.isKnown = saveData.getValueBoolean();
+				break;
+			case "area":
+				this.area = game().data().getArea(saveData.getValueString());
+				break;
+			case "target":
+				this.targetingComponent.addCombatant(this, game().data().getActor(saveData.getValueString()));
+				break;
+		}
+	}
+
+	public List<SaveData> saveState() {
+		List<SaveData> state = new ArrayList<>();
+		if(isKnown) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isKnown", isKnown));
+		}
+		if(area != defaultArea) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", area.getID()));
+		}
+		if(!targetingComponent.getCombatants().isEmpty()) {
+			// TODO - Save target search cooldowns (requires multi-value save data)
+			for(Actor combatant : targetingComponent.getCombatants()) {
+				state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "target", combatant.getID()));
+			}
+		}
+		return state;
 	}
 	
 	@Override
