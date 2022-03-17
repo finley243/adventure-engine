@@ -14,6 +14,14 @@ public class Inventory {
 	public Inventory() {
 		items = new HashMap<>();
 	}
+
+	public List<Item> getAllItems() {
+		List<Item> allItems = new ArrayList<>();
+		for(List<Item> itemList : items.values()) {
+			allItems.addAll(itemList);
+		}
+		return allItems;
+	}
 	
 	public void addItem(Item item) {
 		if(!items.containsKey(item.getStatsID())) {
@@ -22,8 +30,8 @@ public class Inventory {
 		items.get(item.getStatsID()).add(item);
 	}
 	
-	public void addItems(List<Item> itemSet) {
-		for(Item item : itemSet) {
+	public void addItems(List<Item> itemList) {
+		for(Item item : itemList) {
 			addItem(item);
 		}
 	}

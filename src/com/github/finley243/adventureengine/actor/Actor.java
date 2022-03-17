@@ -783,15 +783,27 @@ public class Actor extends GameInstanced implements Noun, Physical {
 
 	public void loadState(SaveData saveData) {
 		switch(saveData.getParameter()) {
+			case "hp":
+				this.HP = saveData.getValueInt();
+				break;
+			case "isDead":
+				this.isDead = saveData.getValueBoolean();
+				break;
 			case "isKnown":
 				this.isKnown = saveData.getValueBoolean();
 				break;
 			case "area":
-				this.area = game().data().getArea(saveData.getValueString());
+				if(saveData.getValueString() == null) {
+					this.area = null;
+				} else {
+					this.area = game().data().getArea(saveData.getValueString());
+				}
 				break;
 			case "target":
 				this.targetingComponent.addCombatant(this, game().data().getActor(saveData.getValueString()));
 				break;
+			case "inventory":
+				this.inventory.addItem((Item) game().data().getObject(saveData.getValueString()));
 		}
 	}
 
@@ -801,13 +813,14 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isKnown", isKnown));
 		}
 		if(area != defaultArea) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", area.getID()));
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", (area == null ? null : area.getID())));
 		}
-		if(!targetingComponent.getCombatants().isEmpty()) {
-			// TODO - Save target search cooldowns (requires multi-value save data)
-			for(Actor combatant : targetingComponent.getCombatants()) {
-				state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "target", combatant.getID()));
-			}
+		for(Item item : inventory.getAllItems()) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "inventory", item.getID()));
+		}
+		// TODO - Save target search cooldowns (requires multi-value save data)
+		for(Actor combatant : targetingComponent.getCombatants()) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "target", combatant.getID()));
 		}
 		return state;
 	}

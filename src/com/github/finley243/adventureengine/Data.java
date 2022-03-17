@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.network.Network;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -40,12 +41,38 @@ public class Data {
 
 	public Data() {}
 
-	public void saveState() {
-
+	public List<SaveData> saveState() {
+		List<SaveData> state = new ArrayList<>();
+		for(Area area : areas.values()) {
+			state.addAll(area.saveState());
+		}
+		for(Room room : rooms.values()) {
+			state.addAll(room.saveState());
+		}
+		for(Actor actor : actors.values()) {
+			state.addAll(actor.saveState());
+		}
+		for(WorldObject object : objects.values()) {
+			state.addAll(object.saveState());
+		}
+		for(DialogueTopic topic : topics.values()) {
+			state.addAll(topic.saveState());
+		}
+		for(String variable : variables.keySet()) {
+			if(variables.get(variable) != 0) {
+				state.add(new SaveData(SaveData.DataType.VARIABLE, variable, null, variables.get(variable)));
+			}
+		}
+		for(Scene scene : scenes.values()) {
+			state.addAll(scene.saveState());
+		}
+		return state;
 	}
 
-	public void loadState() {
-
+	public void loadState(List<SaveData> state) {
+		for(SaveData saveData : state) {
+			saveData.apply(this);
+		}
 	}
 	
 	public void addConfig(String id, String value) {

@@ -24,6 +24,11 @@ public class TargetingComponent {
         combatants = new HashMap<>();
     }
 
+    public void clear() {
+        detected.clear();
+        combatants.clear();
+    }
+
     // Executed at the beginning of subject's turn
     public void updateTurn(Actor subject) {
         Set<Actor> visibleActors = subject.getVisibleActors();
