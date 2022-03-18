@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.template.StatsApparel;
 
@@ -76,6 +77,18 @@ public class ItemApparel extends Item {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionApparelUnequip(this));
 		return actions;
+	}
+
+	@Override
+	public void loadState(SaveData saveData) {
+		super.loadState(saveData);
+	}
+
+	@Override
+	public List<SaveData> saveState() {
+		List<SaveData> state = super.saveState();
+
+		return state;
 	}
 
 }

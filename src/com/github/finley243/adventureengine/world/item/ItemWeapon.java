@@ -13,6 +13,7 @@ import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.template.StatsWeapon;
 
@@ -26,7 +27,7 @@ public class ItemWeapon extends ItemEquippable {
 	public ItemWeapon(Game game, String ID, boolean isGenerated, StatsWeapon stats) {
 		super(game, isGenerated, ID, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
-		reloadFull();
+		this.ammo = stats.getClipSize();
 	}
 
 	@Override
@@ -198,6 +199,27 @@ public class ItemWeapon extends ItemEquippable {
 			actions.add(new ActionInspect(this, InspectType.EQUIPPED));
 		}
 		return actions;
+	}
+
+	@Override
+	public void loadState(SaveData saveData) {
+		switch(saveData.getParameter()) {
+			case "ammo":
+				this.ammo = saveData.getValueInt();
+				break;
+			default:
+				super.loadState(saveData);
+				break;
+		}
+	}
+
+	@Override
+	public List<SaveData> saveState() {
+		List<SaveData> state = super.saveState();
+		if(ammo != stats.getClipSize()) {
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammo", ammo));
+		}
+		return state;
 	}
 
 }

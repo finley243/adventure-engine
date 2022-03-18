@@ -57,7 +57,7 @@ public abstract class Item extends WorldObject {
 
 	@Override
 	public void loadState(SaveData saveData) {
-
+		super.loadState(saveData);
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class Game {
 	public Game() throws ParserConfigurationException, SAXException, IOException {
 		eventBus = new EventBus();
 		threadControl = new ThreadControl();
-		data = new Data();
+		data = new Data(this);
 
 		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));

@@ -46,10 +46,6 @@ public class Data {
 		this.game = game;
 	}
 
-	public Game game() {
-		return game;
-	}
-
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
 		for(Area area : areas.values()) {
@@ -82,6 +78,10 @@ public class Data {
 		for(SaveData saveData : state) {
 			saveData.apply(this);
 		}
+	}
+
+	public Game game() {
+		return game;
 	}
 	
 	public void addConfig(String id, String value) {
