@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
+import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.template.StatsActor;
@@ -22,6 +23,8 @@ public class Data {
 	private static final String PLAYER_ID_CONFIG = "playerID";
 
 	private ActorPlayer player;
+
+	private final Game game;
 	
 	private final Map<String, String> config = new HashMap<>();
 	
@@ -39,7 +42,13 @@ public class Data {
 	private final Map<String, Scene> scenes = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
 
-	public Data() {}
+	public Data(Game game) {
+		this.game = game;
+	}
+
+	public Game game() {
+		return game;
+	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();

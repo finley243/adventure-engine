@@ -12,8 +12,8 @@ public class ItemKey extends Item {
 
 	private final StatsKey stats;
 	
-	public ItemKey(Game game, StatsKey stats) {
-		super(game, stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemKey(Game game, String ID, boolean isGenerated, StatsKey stats) {
+		super(game, isGenerated, ID, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
 

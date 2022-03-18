@@ -10,8 +10,8 @@ public class ItemJunk extends Item {
 
     private final StatsJunk stats;
 
-    public ItemJunk(Game game, StatsJunk stats) {
-        super(game, stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
+    public ItemJunk(Game game, String ID, boolean isGenerated, StatsJunk stats) {
+        super(game, isGenerated, ID, stats.getName(), stats.getDescription(), stats.getScripts());
         this.stats = stats;
     }
 

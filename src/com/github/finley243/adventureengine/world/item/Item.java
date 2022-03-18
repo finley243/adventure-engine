@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.action.ActionItemDrop;
 import com.github.finley243.adventureengine.action.ActionItemTake;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -19,8 +20,11 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public abstract class Item extends WorldObject {
 
-	public Item(Game game, String ID, String name, String description, Map<String, Script> scripts) {
+	private final boolean isGenerated;
+
+	public Item(Game game, boolean isGenerated, String ID, String name, String description, Map<String, Script> scripts) {
 		super(game, ID, name, description, scripts);
+		this.isGenerated = isGenerated;
 	}
 	
 	public int getPrice() {
@@ -30,6 +34,10 @@ public abstract class Item extends WorldObject {
 	public abstract String getStatsID();
 
 	public abstract Set<String> getTags();
+
+	public boolean isGenerated() {
+		return isGenerated;
+	}
 
 	@Override
 	public List<Action> localActions(Actor subject) {
@@ -45,6 +53,20 @@ public abstract class Item extends WorldObject {
 			actions.add(new ActionInspect(this, InspectType.INVENTORY));
 		}
 		return actions;
+	}
+
+	@Override
+	public void loadState(SaveData saveData) {
+
+	}
+
+	@Override
+	public List<SaveData> saveState() {
+		List<SaveData> state = super.saveState();
+		if(isGenerated) {
+			state.add(0, new SaveData(SaveData.DataType.ITEM_INSTANCE, this.getID(), null, this.getStatsID()));
+		}
+		return state;
 	}
 	
 }

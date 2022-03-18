@@ -17,8 +17,8 @@ public class ItemApparel extends Item {
 	private final StatsApparel stats;
 	private List<Effect> effects;
 	
-	public ItemApparel(Game game, StatsApparel stats) {
-		super(game, stats.generateInstanceID(), stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemApparel(Game game, String ID, boolean isGenerated, StatsApparel stats) {
+		super(game, isGenerated, ID, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
 

@@ -7,11 +7,12 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class SaveData {
 
     public enum DataType {
-        AREA, ROOM, ACTOR, OBJECT, TOPIC, VARIABLE, SCENE
+        AREA, ROOM, ACTOR, OBJECT, TOPIC, VARIABLE, SCENE, ITEM_INSTANCE
     }
 
     private enum ValueType {
@@ -80,6 +81,9 @@ public class SaveData {
             case SCENE:
                 Scene scene = data.getScene(id);
                 scene.loadState(this);
+                break;
+            case ITEM_INSTANCE:
+                data.addObject(id, ItemFactory.create(data.game(), valueString, id));
                 break;
         }
     }

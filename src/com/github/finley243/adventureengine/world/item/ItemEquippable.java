@@ -11,8 +11,8 @@ import com.github.finley243.adventureengine.script.Script;
 
 public abstract class ItemEquippable extends Item {
 
-	public ItemEquippable(Game game, String ID, String name, String description, Map<String, Script> scripts) {
-		super(game, ID, name, description, scripts);
+	public ItemEquippable(Game game, boolean isGenerated, String ID, String name, String description, Map<String, Script> scripts) {
+		super(game, isGenerated, ID, name, description, scripts);
 	}
 	
 	public List<Action> equippedActions(Actor subject) {
