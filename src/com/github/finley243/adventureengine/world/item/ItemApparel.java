@@ -8,8 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.world.template.StatsApparel;
+import com.github.finley243.adventureengine.world.item.stats.StatsApparel;
 
 import java.util.*;
 

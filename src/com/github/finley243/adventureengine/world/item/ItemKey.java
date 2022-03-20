@@ -1,11 +1,9 @@
 package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.world.template.StatsKey;
+import com.github.finley243.adventureengine.world.item.stats.StatsKey;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class ItemKey extends Item {

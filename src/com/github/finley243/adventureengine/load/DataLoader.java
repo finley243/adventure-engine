@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
@@ -16,10 +15,11 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
+import com.github.finley243.adventureengine.world.item.ItemFactory;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.item.LootTableEntry;
+import com.github.finley243.adventureengine.world.item.stats.*;
 import com.github.finley243.adventureengine.world.object.*;
-import com.github.finley243.adventureengine.world.template.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;

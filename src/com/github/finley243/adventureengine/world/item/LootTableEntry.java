@@ -1,13 +1,10 @@
 package com.github.finley243.adventureengine.world.item;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.world.template.ItemFactory;
 
 public class LootTableEntry {
 

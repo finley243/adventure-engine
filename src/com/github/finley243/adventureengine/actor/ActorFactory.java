@@ -1,8 +1,6 @@
-package com.github.finley243.adventureengine.world.template;
+package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.List;

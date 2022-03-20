@@ -12,10 +12,8 @@ import com.github.finley243.adventureengine.action.ActionReactionOld.ReactionTyp
 import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.template.StatsWeapon;
+import com.github.finley243.adventureengine.world.item.stats.StatsWeapon;
 
 public class ItemWeapon extends ItemEquippable {
 	

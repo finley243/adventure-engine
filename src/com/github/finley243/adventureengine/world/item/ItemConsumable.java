@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.world.item;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Game;
@@ -10,10 +9,8 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.world.template.StatsConsumable;
-import com.github.finley243.adventureengine.world.template.StatsConsumable.ConsumableType;
+import com.github.finley243.adventureengine.world.item.stats.StatsConsumable;
+import com.github.finley243.adventureengine.world.item.stats.StatsConsumable.ConsumableType;
 
 public class ItemConsumable extends Item {
 

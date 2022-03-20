@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.world.template.StatsJunk;
+import com.github.finley243.adventureengine.world.item.stats.StatsJunk;
 
 import java.util.HashSet;
 import java.util.Set;

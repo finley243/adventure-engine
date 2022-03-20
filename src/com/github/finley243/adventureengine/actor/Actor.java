@@ -23,7 +23,6 @@ import com.github.finley243.adventureengine.world.item.ItemEquippable;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.template.StatsActor;
 
 public class Actor extends GameInstanced implements Noun, Physical {
 

@@ -1,6 +1,5 @@
-package com.github.finley243.adventureengine.world.template;
+package com.github.finley243.adventureengine.world.item.stats;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.script.Script;
 
 import java.util.Map;

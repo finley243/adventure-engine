@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.template;
+package com.github.finley243.adventureengine.world.item.stats;
 
 import com.github.finley243.adventureengine.actor.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;

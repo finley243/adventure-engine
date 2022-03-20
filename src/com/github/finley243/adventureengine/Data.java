@@ -10,11 +10,10 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
-import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.template.StatsActor;
-import com.github.finley243.adventureengine.world.template.StatsItem;
+import com.github.finley243.adventureengine.actor.StatsActor;
+import com.github.finley243.adventureengine.world.item.stats.StatsItem;
 
 import java.util.*;
 

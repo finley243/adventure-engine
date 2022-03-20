@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.template.ItemFactory;
+import com.github.finley243.adventureengine.world.item.ItemFactory;
 
 public class SaveData {
 
