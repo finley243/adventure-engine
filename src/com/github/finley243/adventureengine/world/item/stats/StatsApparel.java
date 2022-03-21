@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.world.item.stats;
 
-import com.github.finley243.adventureengine.actor.EquipmentComponent;
+import com.github.finley243.adventureengine.actor.component.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.script.Script;
 

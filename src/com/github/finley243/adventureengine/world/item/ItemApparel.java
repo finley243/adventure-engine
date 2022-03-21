@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionApparelEquip;
 import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.EquipmentComponent;
+import com.github.finley243.adventureengine.actor.component.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.item.stats.StatsApparel;

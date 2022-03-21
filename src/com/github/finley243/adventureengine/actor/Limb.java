@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
+import com.github.finley243.adventureengine.actor.component.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 
 import java.util.List;

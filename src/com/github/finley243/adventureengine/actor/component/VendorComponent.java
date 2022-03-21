@@ -1,10 +1,12 @@
-package com.github.finley243.adventureengine.actor;
+package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionVendorBuy;
 import com.github.finley243.adventureengine.action.ActionVendorSell;
+import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.world.item.Item;
 
 import java.util.ArrayList;

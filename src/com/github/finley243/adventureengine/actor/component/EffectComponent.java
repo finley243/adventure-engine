@@ -1,5 +1,6 @@
-package com.github.finley243.adventureengine.actor;
+package com.github.finley243.adventureengine.actor.component;
 
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 
 import java.util.ArrayList;

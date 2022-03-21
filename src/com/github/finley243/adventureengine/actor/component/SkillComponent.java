@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.actor;
+package com.github.finley243.adventureengine.actor.component;
 
 import java.util.EnumMap;
 

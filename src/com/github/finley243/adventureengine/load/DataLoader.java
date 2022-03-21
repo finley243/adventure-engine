@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
+import com.github.finley243.adventureengine.actor.component.EquipmentComponent;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.dialogue.DialogueChoice;
 import com.github.finley243.adventureengine.dialogue.DialogueLine;
