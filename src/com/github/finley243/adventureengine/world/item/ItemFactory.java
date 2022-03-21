@@ -18,18 +18,22 @@ public class ItemFactory {
 	}
 
 	private static Item create(Game game, StatsItem stats, boolean isGenerated, String ID) {
+		Item item = null;
 		if(stats instanceof StatsConsumable) {
-			return new ItemConsumable(game, ID, isGenerated, (StatsConsumable) stats);
+			item = new ItemConsumable(game, ID, isGenerated, (StatsConsumable) stats);
 		} else if(stats instanceof StatsApparel) {
-			return new ItemApparel(game, ID, isGenerated, (StatsApparel) stats);
+			item = new ItemApparel(game, ID, isGenerated, (StatsApparel) stats);
 		} else if(stats instanceof StatsWeapon) {
-			return new ItemWeapon(game, ID, isGenerated, (StatsWeapon) stats);
+			item = new ItemWeapon(game, ID, isGenerated, (StatsWeapon) stats);
 		} else if(stats instanceof StatsKey) {
-			return new ItemKey(game, ID, isGenerated, (StatsKey) stats);
+			item = new ItemKey(game, ID, isGenerated, (StatsKey) stats);
 		} else if(stats instanceof StatsJunk) {
-			return new ItemJunk(game, ID, isGenerated, (StatsJunk) stats);
+			item = new ItemJunk(game, ID, isGenerated, (StatsJunk) stats);
 		}
-		return null;
+		if(item != null) {
+			game.data().addObject(ID, item);
+		}
+		return item;
 	}
 	
 }
