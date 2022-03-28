@@ -59,6 +59,9 @@ public class Data {
 		for(WorldObject object : objects.values()) {
 			state.addAll(object.saveState());
 		}
+		for(StatsItem statsItem : items.values()) {
+			state.addAll(statsItem.saveState());
+		}
 		for(DialogueTopic topic : topics.values()) {
 			state.addAll(topic.saveState());
 		}

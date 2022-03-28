@@ -6,13 +6,16 @@ import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
-import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.item.ItemFactory;
+import com.github.finley243.adventureengine.world.item.stats.StatsItem;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
-public class SaveData {
+import java.io.Serializable;
+
+public class SaveData implements Serializable {
 
     public enum DataType {
-        AREA, ROOM, ACTOR, OBJECT, TOPIC, VARIABLE, SCENE, ITEM_INSTANCE
+        AREA, ROOM, ACTOR, OBJECT, TOPIC, VARIABLE, SCENE, ITEM_STATS, ITEM_INSTANCE
     }
 
     private enum ValueType {
@@ -62,18 +65,23 @@ public class SaveData {
         switch(type) {
             case AREA:
                 Area area = data.getArea(id);
+                area.loadState(this);
                 break;
             case ROOM:
                 Room room = data.getRoom(id);
+                room.loadState(this);
                 break;
             case ACTOR:
                 Actor actor = data.getActor(id);
+                actor.loadState(this);
                 break;
             case OBJECT:
                 WorldObject object = data.getObject(id);
+                object.loadState(this);
                 break;
             case TOPIC:
                 DialogueTopic topic = data.getTopic(id);
+                topic.loadState(this);
                 break;
             case VARIABLE:
                 data.setVariable(id, valueInt);
@@ -84,6 +92,10 @@ public class SaveData {
                 break;
             case ITEM_INSTANCE:
                 data.addObject(id, ItemFactory.create(data.game(), valueString, id));
+                break;
+            case ITEM_STATS:
+                StatsItem statsItem = data.getItem(id);
+                statsItem.loadState(this);
                 break;
         }
     }

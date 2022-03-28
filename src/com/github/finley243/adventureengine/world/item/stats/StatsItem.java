@@ -1,10 +1,13 @@
 package com.github.finley243.adventureengine.world.item.stats;
 
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.Noun;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public abstract class StatsItem implements Noun {
@@ -83,6 +86,20 @@ public abstract class StatsItem implements Noun {
 
 	public Map<String, Script> getScripts() {
 		return scripts;
+	}
+
+	public void loadState(SaveData saveData) {
+		if(saveData.getParameter().equals("generatedCount")) {
+			this.generatedCount = saveData.getValueInt();
+		}
+	}
+
+	public List<SaveData> saveState() {
+		List<SaveData> state = new ArrayList<>();
+		if(generatedCount > 0) {
+			state.add(new SaveData(SaveData.DataType.ITEM_STATS, this.getID(), "generatedCount", generatedCount));
+		}
+		return state;
 	}
 	
 	@Override
