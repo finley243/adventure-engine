@@ -181,7 +181,7 @@ public class ItemWeapon extends ItemEquippable {
 					for(Limb limb : target.getLimbs()) {
 						actions.add(new ActionRangedAttackTargeted(this, target, limb));
 					}
-					if(stats.getType().hasAuto) {
+					if(stats.getType().attacks.contains(StatsWeapon.AttackType.AUTO)) {
 						actions.add(new ActionRangedAttackAuto(this, target));
 					}
 				} else { // Melee

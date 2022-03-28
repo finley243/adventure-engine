@@ -3,27 +3,33 @@ package com.github.finley243.adventureengine.world.item.stats;
 import com.github.finley243.adventureengine.script.Script;
 
 import java.util.Map;
+import java.util.Set;
 
 public class StatsWeapon extends StatsItem {
 	
-	public enum WeaponType{
-		PISTOL(true, false, false),
-		SMG(true, false, true),
-		SHOTGUN(true, true, false),
-		ASSAULT_RIFLE(true, true, true),
-		SNIPER_RIFLE(true, true, false),
-		KNIFE(false, false, false),
-		SWORD(false, true, false),
-		CLUB(false, true, false),
-		AXE(false, true, false);
+	public enum WeaponType {
+		PISTOL(true, false, Set.of()),
+		SMG(true, false, Set.of(AttackType.AUTO)),
+		SHOTGUN(true, true, Set.of()),
+		ASSAULT_RIFLE(true, true, Set.of(AttackType.AUTO)),
+		SNIPER_RIFLE(true, true, Set.of()),
+		KNIFE(false, false, Set.of()),
+		SWORD(false, true, Set.of(AttackType.THRUST)),
+		CLUB(false, true, Set.of()),
+		AXE(false, true, Set.of(AttackType.SWEEP));
 		
-		public final boolean isRanged, isTwoHanded, hasAuto;
+		public final boolean isRanged, isTwoHanded;
+		public final Set<AttackType> attacks;
 		
-		WeaponType(boolean isRanged, boolean isTwoHanded, boolean hasAuto) {
+		WeaponType(boolean isRanged, boolean isTwoHanded, Set<AttackType> attacks) {
 			this.isRanged = isRanged;
 			this.isTwoHanded = isTwoHanded;
-			this.hasAuto = hasAuto;
+			this.attacks = attacks;
 		}
+	}
+
+	public enum AttackType {
+		AUTO, SWEEP, THRUST
 	}
 	
 	private final WeaponType type;
