@@ -529,6 +529,10 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	public Set<Actor> getCombatTargets() {
 		return targetingComponent.getCombatants();
 	}
+
+	public TargetingComponent targetingComponent() {
+		return targetingComponent;
+	}
 	
 	public void addPursueTarget(AreaTarget target) {
 		areaTargets.add(target);

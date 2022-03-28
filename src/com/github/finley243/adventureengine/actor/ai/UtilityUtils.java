@@ -34,12 +34,12 @@ public class UtilityUtils {
 		return utility / contributers;
 	}
 
-	// TODO - Switch to using last known areas instead of actual current areas
 	public static float getCoverUtility(Actor subject) {
 		int targetsBlocked = 0;
 		int totalTargets = 0;
 		for(Actor target : subject.getCombatTargets()) {
-			if (target.getArea().isBehindCover(subject.getArea())) {
+			Area lastKnownArea = subject.targetingComponent().getLastKnownArea(subject, target);
+			if (target.hasRangedWeaponEquipped() && lastKnownArea != null && lastKnownArea.isBehindCover(subject.getArea())) {
 				targetsBlocked++;
 			}
 			totalTargets++;

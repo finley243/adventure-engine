@@ -141,6 +141,16 @@ public class TargetingComponent {
         return combatants.keySet();
     }
 
+    public Area getLastKnownArea(Actor subject, Actor target) {
+        if(subject.canSee(target)) {
+            return target.getArea();
+        } else if(combatants.containsKey(target)) {
+            return combatants.get(target).lastKnownArea;
+        } else {
+            return null;
+        }
+    }
+
     private Set<Area> idealAreas(Actor subject, Area origin) {
         int idealDistanceMin = 0;
         int idealDistanceMax = 0;
