@@ -25,10 +25,10 @@ import java.io.IOException;
 @SuppressWarnings("UnstableApiUsage")
 public class Game {
 	
-	private static final String GAMEFILES = "src/gamefiles";
-	private static final String DATA_DIRECTORY = "/data";
-	private static final String PHRASE_FILE = "/phrases.txt";
-	private static final String CONFIG_FILE = "/config.xml";
+	public static final String GAMEFILES = "src/gamefiles";
+	public static final String DATA_DIRECTORY = "/data";
+	public static final String PHRASE_FILE = "/phrases.txt";
+	public static final String CONFIG_FILE = "/config.xml";
 
 	private final EventBus eventBus;
 	private final ThreadControl threadControl;
@@ -59,6 +59,16 @@ public class Game {
 
 		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_vest"));
 		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_helmet"));
+
+		File saveFile = new File(GAMEFILES + "/save.aes");
+		SaveLoader.saveGame(saveFile, data());
+		System.out.println("Saved Game");
+		try {
+			SaveLoader.loadGame(saveFile, data());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Loaded Game");
 
 		startGameLoop();
 	}

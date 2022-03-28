@@ -831,6 +831,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		return state;
 	}
+
+	@Override
+	public String toString() {
+		return ID;
+	}
 	
 	@Override
 	public int hashCode() {

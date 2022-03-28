@@ -30,7 +30,7 @@ public class ItemFactory {
 		} else if(stats instanceof StatsJunk) {
 			item = new ItemJunk(game, ID, isGenerated, (StatsJunk) stats);
 		}
-		if(item != null) {
+		if(item != null && isGenerated) {
 			game.data().addObject(ID, item);
 		}
 		return item;

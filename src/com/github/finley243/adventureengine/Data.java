@@ -1,9 +1,8 @@
 package com.github.finley243.adventureengine;
 
-import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorPlayer;
-import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.dialogue.DialogueTopic;
+import com.github.finley243.adventureengine.load.DataLoader;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.network.Network;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -12,9 +11,12 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.actor.StatsActor;
 import com.github.finley243.adventureengine.world.item.stats.StatsItem;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Data {
@@ -76,8 +78,34 @@ public class Data {
 		return state;
 	}
 
-	public void loadState(List<SaveData> state) {
+	public void loadState(List<SaveData> state) throws ParserConfigurationException, IOException, SAXException {
+		areas.clear();
+		rooms.clear();
+		actors.clear();
+		actorStats.clear();
+		objects.clear();
+		items.clear();
+		lootTables.clear();
+		topics.clear();
+		variables.clear();
+		scripts.clear();
+		factions.clear();
+		scenes.clear();
+		networks.clear();
+		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
+		// TODO - Move player loading to general loading function (split into separate New Game function?)
+		Actor player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getActorStats(getConfig("playerStats")));
+		addActor(player.getID(), player);
+		// TODO - Improve efficiency
+		List<SaveData> nonItemSaveData = new ArrayList<>();
 		for(SaveData saveData : state) {
+			if(saveData.isItemInstance()) {
+				saveData.apply(this);
+			} else {
+				nonItemSaveData.add(saveData);
+			}
+		}
+		for(SaveData saveData : nonItemSaveData) {
 			saveData.apply(this);
 		}
 	}

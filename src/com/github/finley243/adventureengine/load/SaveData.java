@@ -73,6 +73,8 @@ public class SaveData implements Serializable {
                 break;
             case ACTOR:
                 Actor actor = data.getActor(id);
+                System.out.println("Actor SaveData ID: " + id);
+                System.out.println("All Actors: " + data.getActors());
                 actor.loadState(this);
                 break;
             case OBJECT:
@@ -98,6 +100,10 @@ public class SaveData implements Serializable {
                 statsItem.loadState(this);
                 break;
         }
+    }
+
+    public boolean isItemInstance() {
+        return type == DataType.ITEM_INSTANCE;
     }
 
     public String getParameter() {
