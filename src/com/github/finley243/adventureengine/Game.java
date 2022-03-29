@@ -45,7 +45,7 @@ public class Game {
 
 		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
-		DataLoader.loadFromDir(this, new File(GAMEFILES + DATA_DIRECTORY));
+		//DataLoader.loadFromDir(this, new File(GAMEFILES + DATA_DIRECTORY));
 
 		PerceptionHandler perceptionHandler = new PerceptionHandler();
 		UserInterface userInterface = new GraphicalInterfaceNested(this);
@@ -53,10 +53,9 @@ public class Game {
 		eventBus.register(userInterface);
 		eventBus.register(this);
 
-		Actor player = ActorFactory.createPlayer(this, data().getConfig("playerID"), data().getArea(data().getConfig("playerStartArea")), data().getActorStats(data().getConfig("playerStats")));
-		data().addActor(player.getID(), player);
-		player.adjustMoney(320);
+		data.newGame();
 
+		data().getPlayer().adjustMoney(320);
 		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_vest"));
 		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_helmet"));
 

@@ -133,12 +133,15 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			this.skills.put(skill, new int[] {stats.getSkill(game(), skill), 0});
 		}
 		this.effectComponent = new EffectComponent(this);
-		if(stats.getLootTable(game()) != null) {
-			inventory.addItems(game().data().getLootTable(stats.getLootTable(game())).generateItems(game()));
-		}
 		this.blockedActions = new HashMap<>();
 		this.behaviorIdle = new BehaviorIdle(idle);
 		setEnabled(!startDisabled);
+	}
+
+	public void newGameInit() {
+		if(stats.getLootTable(game()) != null) {
+			inventory.addItems(game().data().getLootTable(stats.getLootTable(game())).generateItems(game()));
+		}
 	}
 	
 	public String getID() {

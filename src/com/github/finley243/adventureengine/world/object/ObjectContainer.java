@@ -13,11 +13,18 @@ import com.github.finley243.adventureengine.script.Script;
 public class ObjectContainer extends WorldObject {
 
 	private final Inventory inventory;
-	
+	private final String lootTable;
+
 	public ObjectContainer(Game game, String ID, String name, String description, Map<String, Script> scripts, String lootTable) {
 		super(game, ID, name, description, scripts);
 		this.inventory = new Inventory();
-		inventory.addItems(game().data().getLootTable(lootTable).generateItems(game()));
+		this.lootTable = lootTable;
+	}
+
+	public void newGameInit() {
+		if(lootTable != null) {
+			inventory.addItems(game().data().getLootTable(lootTable).generateItems(game()));
+		}
 	}
 	
 	@Override

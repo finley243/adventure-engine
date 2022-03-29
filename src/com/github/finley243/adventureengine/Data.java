@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.LootTable;
+import com.github.finley243.adventureengine.world.object.ObjectContainer;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.item.stats.StatsItem;
 import org.xml.sax.SAXException;
@@ -47,6 +48,38 @@ public class Data {
 		this.game = game;
 	}
 
+	public void newGame() throws ParserConfigurationException, IOException, SAXException {
+		reset();
+		for(Actor actor : actors.values()) {
+			actor.newGameInit();
+		}
+		// Using ArrayList to avoid Concurrent Modification Exception
+		for(WorldObject object : new ArrayList<>(objects.values())) {
+			if (object instanceof ObjectContainer) {
+				((ObjectContainer) object).newGameInit();
+			}
+		}
+	}
+
+	public void reset() throws ParserConfigurationException, IOException, SAXException {
+		areas.clear();
+		rooms.clear();
+		actors.clear();
+		actorStats.clear();
+		objects.clear();
+		items.clear();
+		lootTables.clear();
+		topics.clear();
+		variables.clear();
+		scripts.clear();
+		factions.clear();
+		scenes.clear();
+		networks.clear();
+		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
+		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getActorStats(getConfig("playerStats")));
+		addActor(player.getID(), player);
+	}
+
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
 		for(Area area : areas.values()) {
@@ -79,23 +112,7 @@ public class Data {
 	}
 
 	public void loadState(List<SaveData> state) throws ParserConfigurationException, IOException, SAXException {
-		areas.clear();
-		rooms.clear();
-		actors.clear();
-		actorStats.clear();
-		objects.clear();
-		items.clear();
-		lootTables.clear();
-		topics.clear();
-		variables.clear();
-		scripts.clear();
-		factions.clear();
-		scenes.clear();
-		networks.clear();
-		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
-		// TODO - Move player loading to general loading function (split into separate New Game function?)
-		Actor player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getActorStats(getConfig("playerStats")));
-		addActor(player.getID(), player);
+		reset();
 		// TODO - Improve efficiency
 		List<SaveData> nonItemSaveData = new ArrayList<>();
 		for(SaveData saveData : state) {
@@ -159,9 +176,6 @@ public class Data {
 	}
 	
 	public ActorPlayer getPlayer() {
-		if(player == null) {
-			player = (ActorPlayer) getActor(getConfig(PLAYER_ID_CONFIG));
-		}
 		return player;
 	}
 	
