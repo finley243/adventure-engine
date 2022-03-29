@@ -602,8 +602,9 @@ public class DataLoader {
             case "elevator":
                 int floorNumber = LoadUtils.singleTagInt(objectElement, "floorNumber", 1);
                 String floorName = LoadUtils.singleTag(objectElement, "floorName", null);
+                boolean elevatorStartLocked = LoadUtils.singleTagBoolean(objectElement, "startLocked", false);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(LoadUtils.singleChildWithName(objectElement, "links"), "link");
-                return new ObjectElevator(game, objectID, objectName, objectDescription, objectScripts, floorNumber, floorName, linkedElevatorIDs);
+                return new ObjectElevator(game, objectID, objectName, objectDescription, objectScripts, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
             case "sign":
                 List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "lines"), "text");
                 return new ObjectSign(game, objectID, objectName, objectDescription, objectScripts, signText);

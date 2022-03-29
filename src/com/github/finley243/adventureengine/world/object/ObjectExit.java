@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.action.ActionExitListen;
 import com.github.finley243.adventureengine.action.ActionMoveExit;
 import com.github.finley243.adventureengine.action.ActionExitUnlock;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -51,6 +52,25 @@ public class ObjectExit extends WorldObject {
 		actions.add(new ActionExitUnlock(this));
 		actions.add(new ActionMoveExit(this));
 		return actions;
+	}
+
+	public void loadState(SaveData saveData) {
+		switch(saveData.getParameter()) {
+			case "isLocked":
+				isLocked = saveData.getValueBoolean();
+				break;
+			default:
+				super.loadState(saveData);
+				break;
+		}
+	}
+
+	public List<SaveData> saveState() {
+		List<SaveData> state = super.saveState();
+		if(!isLocked && !keyIDs.isEmpty()) {
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "isLocked", isLocked));
+		}
+		return state;
 	}
 	
 }

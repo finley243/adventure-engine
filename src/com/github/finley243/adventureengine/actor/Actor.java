@@ -814,6 +814,10 @@ public class Actor extends GameInstanced implements Noun, Physical {
 				break;
 			case "inventory":
 				this.inventory.addItem((Item) game().data().getObject(saveData.getValueString()));
+				break;
+			case "usingObject":
+				startUsingObject((UsableObject) game().data().getObject(saveData.getValueString()));
+				break;
 		}
 	}
 
@@ -827,6 +831,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		for(Item item : inventory.getAllItems()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "inventory", item.getID()));
+		}
+		if(usingObject != null) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "usingObject", usingObject.getID()));
 		}
 		// TODO - Save target search cooldowns (requires multi-value save data)
 		for(Actor combatant : targetingComponent.getCombatants()) {

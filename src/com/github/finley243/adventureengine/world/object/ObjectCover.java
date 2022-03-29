@@ -21,7 +21,7 @@ public class ObjectCover extends WorldObject {
         }
     }
 
-    private CoverDirection direction;
+    private final CoverDirection direction;
 
     public ObjectCover(Game game, String ID, String name, String description, Map<String, Script> scripts, CoverDirection direction) {
         super(game, ID, name, description, scripts);
