@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.stats.StatsConsumable;
 import com.github.finley243.adventureengine.world.item.stats.StatsConsumable.ConsumableType;
 
@@ -16,8 +17,8 @@ public class ItemConsumable extends Item {
 
 	private final StatsConsumable stats;
 	
-	public ItemConsumable(Game game, String ID, boolean isGenerated, StatsConsumable stats) {
-		super(game, isGenerated, ID, stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemConsumable(Game game, String ID, Area area, boolean isGenerated, StatsConsumable stats) {
+		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
 

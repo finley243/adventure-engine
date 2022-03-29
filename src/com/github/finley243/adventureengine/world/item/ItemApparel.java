@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.stats.StatsApparel;
 
 import java.util.*;
@@ -17,8 +18,8 @@ public class ItemApparel extends Item {
 	private final StatsApparel stats;
 	private List<Effect> effects;
 	
-	public ItemApparel(Game game, String ID, boolean isGenerated, StatsApparel stats) {
-		super(game, isGenerated, ID, stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemApparel(Game game, String ID, Area area, boolean isGenerated, StatsApparel stats) {
+		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
 

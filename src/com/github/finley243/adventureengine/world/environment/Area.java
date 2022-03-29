@@ -53,7 +53,7 @@ public class Area extends GameInstanced implements Noun {
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(Game game, String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Set<WorldObject> objects, Map<String, Script> scripts) {
+	public Area(Game game, String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game);
 		this.ID = ID;
 		this.name = name;
@@ -64,7 +64,7 @@ public class Area extends GameInstanced implements Noun {
 		this.ownerFaction = ownerFaction;
 		this.isPrivate = isPrivate;
 		this.linkedAreas = linkedAreas;
-		this.objects = objects;
+		this.objects = new HashSet<>();
 		this.actors = new HashSet<>();
 		this.scripts = scripts;
 	}

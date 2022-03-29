@@ -21,7 +21,7 @@ public class StatsActor {
 	private final Pronoun pronoun;
 	
 	private final String faction;
-	
+
 	private final int maxHP;
 	private final List<Limb> limbs;
 	private final Map<Actor.Attribute, Integer> attributes;

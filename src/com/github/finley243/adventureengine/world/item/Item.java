@@ -22,8 +22,8 @@ public abstract class Item extends WorldObject {
 
 	private final boolean isGenerated;
 
-	public Item(Game game, boolean isGenerated, String ID, String name, String description, Map<String, Script> scripts) {
-		super(game, ID, name, description, scripts);
+	public Item(Game game, boolean isGenerated, String ID, Area area, String name, String description, Map<String, Script> scripts) {
+		super(game, ID, area, name, description, scripts);
 		this.isGenerated = isGenerated;
 	}
 	

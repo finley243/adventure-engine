@@ -8,11 +8,12 @@ import com.github.finley243.adventureengine.action.ActionItemDrop;
 import com.github.finley243.adventureengine.action.ActionItemUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.world.environment.Area;
 
 public abstract class ItemEquippable extends Item {
 
-	public ItemEquippable(Game game, boolean isGenerated, String ID, String name, String description, Map<String, Script> scripts) {
-		super(game, isGenerated, ID, name, description, scripts);
+	public ItemEquippable(Game game, boolean isGenerated, String ID, Area area, String name, String description, Map<String, Script> scripts) {
+		super(game, isGenerated, ID, area, name, description, scripts);
 	}
 	
 	public List<Action> equippedActions(Actor subject) {

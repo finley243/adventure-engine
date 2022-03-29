@@ -30,7 +30,7 @@ public class LootTableEntry {
 				}
 			} else {
 				for(int i = 0; i < count; i++) {
-					items.add(ItemFactory.create(game, referenceID));
+					items.add(ItemFactory.create(game, referenceID, null));
 				}
 			}
 		}

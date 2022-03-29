@@ -19,20 +19,23 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 /**
- * A static object that can exist in the game world
+ * An object that can exist in the game world
  */
 public abstract class WorldObject extends GameInstanced implements Noun, Physical {
 
 	private final String ID;
 	private final String name;
 	private boolean isKnown;
+	private final Area defaultArea;
 	private Area area;
 	private final String description;
 	private final Map<String, Script> scripts;
 	
-	public WorldObject(Game gameInstance, String ID, String name, String description, Map<String, Script> scripts) {
+	public WorldObject(Game gameInstance, String ID, Area area, String name, String description, Map<String, Script> scripts) {
 		super(gameInstance);
 		this.ID = ID;
+		this.defaultArea = area;
+		this.area = area;
 		this.name = name;
 		this.description = description;
 		this.scripts = scripts;
@@ -120,6 +123,9 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 			case "isKnown":
 				this.isKnown = saveData.getValueBoolean();
 				break;
+			case "area":
+				this.area = game().data().getArea(saveData.getValueString());
+				break;
 		}
 	}
 
@@ -128,7 +134,9 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 		if(isKnown) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "isKnown", isKnown));
 		}
-		// TODO - Add area loading (requires storing default area)
+		if(area != defaultArea) {
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "area", area.getID()));
+		}
 		return state;
 	}
 

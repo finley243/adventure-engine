@@ -78,9 +78,10 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private final Area defaultArea;
 	private Area area;
 	private int HP;
+	private final boolean startDisabled;
 	private boolean isEnabled;
+	private final boolean startDead;
 	private boolean isDead;
-	private boolean isUnconscious;
 	private boolean endTurn;
 	private int actionPoints;
 	private final Map<Action, Integer> blockedActions;
@@ -112,8 +113,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		this.targetingComponent = new TargetingComponent();
 		this.areaTargets = new HashSet<>();
 		this.investigateTarget = new InvestigateTarget();
+		this.startDead = startDead;
 		this.isDead = startDead;
-		this.isUnconscious = startDead;
 		if(!startDead) {
 			HP = stats.getMaxHP(game());
 		}
@@ -135,6 +136,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		this.effectComponent = new EffectComponent(this);
 		this.blockedActions = new HashMap<>();
 		this.behaviorIdle = new BehaviorIdle(idle);
+		this.startDisabled = startDisabled;
 		setEnabled(!startDisabled);
 	}
 
@@ -165,8 +167,6 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private String getNameState() {
 		if(isDead()) {
 			return "dead ";
-		} else if(isUnconscious()) {
-			return "unconscious ";
 		} else {
 			return "";
 		}
@@ -227,10 +227,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		int sum = values[0] + values[1];
 		if(sum < ATTRIBUTE_MIN) {
 			return ATTRIBUTE_MIN;
-		} else if(sum > ATTRIBUTE_MAX) {
-			return ATTRIBUTE_MAX;
 		} else {
-			return sum;
+			return Math.min(sum, ATTRIBUTE_MAX);
 		}
 	}
 	
@@ -263,10 +261,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		int sum = values[0] + values[1];
 		if(sum < SKILL_MIN) {
 			return SKILL_MIN;
-		} else if(sum > SKILL_MAX) {
-			return SKILL_MAX;
 		} else {
-			return sum;
+			return Math.min(sum, SKILL_MAX);
 		}
 	}
 
@@ -457,12 +453,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		return isDead;
 	}
 	
-	public boolean isUnconscious() {
-		return isUnconscious;
-	}
-	
 	public boolean isActive() {
-		return !isDead && !isUnconscious;
+		return !isDead;
 	}
 	
 	public void onVisualEvent(AudioVisualEvent event) {
@@ -597,7 +589,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			}
 		}
 		if(isUsingObject()) {
-			actions.addAll(usingObject.usingActions());
+			actions.addAll(getUsingObject().usingActions());
 		}
 		if(canMove()) {
 			actions.addAll(getArea().getMoveActions());
@@ -716,34 +708,6 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		return null;
 	}
 	
-	/*private void generateCombatTargets() {
-		for(Actor actor : getVisibleActors()) {
-			if(actor != this && !actor.isDead()) {
-				if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.HOSTILE) {
-					if(!isCombatTarget(actor)) {
-						addCombatTarget(actor);
-					}
-				} else if(getFaction().getRelationTo(actor.getFaction().getID()) == FactionRelation.ASSIST) {
-					for(ActorTarget allyTarget : actor.getCombatTargets()) {
-						if(!isCombatTarget(allyTarget.getTargetActor())) {
-							addCombatTarget(allyTarget.getTargetActor());
-						}
-					}
-				} else if(getArea().getRoom().getOwnerFaction() != null && game().data().getFaction(getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != FactionRelation.ASSIST) {
-					if(!isCombatTarget(actor)) {
-						addCombatTarget(actor);
-					}
-				}
-			}
-		}
-	}*/
-
-	/*private void updateCombatTargetsTurn() {
-		for(ActorTarget target : actorTargets.values()) {
-			target.nextTurn(this);
-		}
-	}*/
-	
 	private void updatePursueTargets() {
 		Iterator<AreaTarget> itr = areaTargets.iterator();
 		while(itr.hasNext()) {
@@ -796,6 +760,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			case "hp":
 				this.HP = saveData.getValueInt();
 				break;
+			case "isEnabled":
+				setEnabled(saveData.getValueBoolean());
 			case "isDead":
 				this.isDead = saveData.getValueBoolean();
 				break;
@@ -818,6 +784,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			case "usingObject":
 				startUsingObject((UsableObject) game().data().getObject(saveData.getValueString()));
 				break;
+			case "isCrouching":
+				this.isCrouching = saveData.getValueBoolean();
 		}
 	}
 
@@ -825,6 +793,12 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		List<SaveData> state = new ArrayList<>();
 		if(isKnown) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isKnown", isKnown));
+		}
+		if(isEnabled == startDisabled) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isEnabled", isEnabled));
+		}
+		if(isDead != startDead) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isDead", isDead));
 		}
 		if(area != defaultArea) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", (area == null ? null : area.getID())));
@@ -834,6 +808,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		if(usingObject != null) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "usingObject", usingObject.getID()));
+		}
+		if(isCrouching) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isCrouching", isCrouching));
 		}
 		// TODO - Save target search cooldowns (requires multi-value save data)
 		for(Actor combatant : targetingComponent.getCombatants()) {

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.stats.StatsJunk;
 
 import java.util.HashSet;
@@ -10,8 +11,8 @@ public class ItemJunk extends Item {
 
     private final StatsJunk stats;
 
-    public ItemJunk(Game game, String ID, boolean isGenerated, StatsJunk stats) {
-        super(game, isGenerated, ID, stats.getName(), stats.getDescription(), stats.getScripts());
+    public ItemJunk(Game game, String ID, Area area, boolean isGenerated, StatsJunk stats) {
+        super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
         this.stats = stats;
     }
 

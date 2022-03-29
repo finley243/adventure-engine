@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
 
 /**
@@ -18,8 +19,8 @@ public abstract class UsableObject extends WorldObject {
 
 	private Actor user;
 
-	public UsableObject(Game game, String ID, String name, String description, Map<String, Script> scripts) {
-		super(game, ID, name, description, scripts);
+	public UsableObject(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts) {
+		super(game, ID, area, name, description, scripts);
 	}
 
 	public abstract String getStartPhrase();

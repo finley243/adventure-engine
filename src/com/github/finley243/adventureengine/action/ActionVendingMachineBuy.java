@@ -21,7 +21,7 @@ public class ActionVendingMachineBuy extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		Item item = ItemFactory.create(subject.game(), itemID);
+		Item item = ItemFactory.create(subject.game(), itemID, null);
 		subject.adjustMoney(-item.getPrice());
 		subject.inventory().addItem(item);
 		Context context = new Context(subject, item, vendingMachine);

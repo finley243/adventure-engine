@@ -22,8 +22,8 @@ public class ObjectElevator extends WorldObject {
 	private final boolean startLocked;
 	private boolean isLocked;
 	
-	public ObjectElevator(Game game, String ID, String name, String description, Map<String, Script> scripts, int floorNumber, String floorName, Set<String> linkedElevatorIDs, boolean startLocked) {
-		super(game, ID, name, description, scripts);
+	public ObjectElevator(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, int floorNumber, String floorName, Set<String> linkedElevatorIDs, boolean startLocked) {
+		super(game, ID, area, name, description, scripts);
 		this.floorNumber = floorNumber;
 		this.floorName = floorName;
 		this.linkedElevatorIDs = linkedElevatorIDs;

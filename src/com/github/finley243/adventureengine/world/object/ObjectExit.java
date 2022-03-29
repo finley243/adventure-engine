@@ -21,8 +21,8 @@ public class ObjectExit extends WorldObject {
 	private boolean isLocked;
 	private final Set<String> keyIDs;
 	
-	public ObjectExit(Game game, String ID, String name, String description, Map<String, Script> scripts, String linkedExitID, Set<String> keyIDs) {
-		super(game, ID, name, description, scripts);
+	public ObjectExit(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, String linkedExitID, Set<String> keyIDs) {
+		super(game, ID, area, name, description, scripts);
 		this.linkedExitID = linkedExitID;
 		this.keyIDs = keyIDs;
 		this.isLocked = !keyIDs.isEmpty();

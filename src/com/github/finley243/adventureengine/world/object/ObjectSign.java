@@ -8,13 +8,14 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionReadSign;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ObjectSign extends WorldObject {
 
 	private final List<String> text;
 	
-	public ObjectSign(Game game, String ID, String name, String description, Map<String, Script> scripts, List<String> text) {
-		super(game, ID, name, description, scripts);
+	public ObjectSign(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, List<String> text) {
+		super(game, ID, area, name, description, scripts);
 		this.text = text;
 	}
 

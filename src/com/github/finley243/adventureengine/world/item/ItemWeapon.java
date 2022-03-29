@@ -13,6 +13,7 @@ import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.stats.StatsWeapon;
 
 public class ItemWeapon extends ItemEquippable {
@@ -22,8 +23,8 @@ public class ItemWeapon extends ItemEquippable {
 	private final StatsWeapon stats;
 	private int ammo;
 	
-	public ItemWeapon(Game game, String ID, boolean isGenerated, StatsWeapon stats) {
-		super(game, isGenerated, ID, stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemWeapon(Game game, String ID, Area area, boolean isGenerated, StatsWeapon stats) {
+		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 		this.ammo = stats.getClipSize();
 	}

@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
 
 public class ObjectContainer extends WorldObject {
@@ -18,8 +19,8 @@ public class ObjectContainer extends WorldObject {
 	private final Inventory inventory;
 	private final String lootTable;
 
-	public ObjectContainer(Game game, String ID, String name, String description, Map<String, Script> scripts, String lootTable) {
-		super(game, ID, name, description, scripts);
+	public ObjectContainer(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, String lootTable) {
+		super(game, ID, area, name, description, scripts);
 		this.inventory = new Inventory();
 		this.lootTable = lootTable;
 	}
