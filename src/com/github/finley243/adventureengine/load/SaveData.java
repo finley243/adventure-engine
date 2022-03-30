@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.ItemFactory;
-import com.github.finley243.adventureengine.world.item.stats.StatsItem;
+import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.io.Serializable;
@@ -94,8 +94,8 @@ public class SaveData implements Serializable {
                 data.addObject(id, ItemFactory.create(data.game(), valueString, id, null));
                 break;
             case ITEM_STATS:
-                StatsItem statsItem = data.getItem(id);
-                statsItem.loadState(this);
+                ItemTemplate itemTemplate = data.getItem(id);
+                itemTemplate.loadState(this);
                 break;
         }
     }

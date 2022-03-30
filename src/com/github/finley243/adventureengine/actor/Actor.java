@@ -70,7 +70,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 	}
 
-	private final StatsActor stats;
+	private final ActorTemplate stats;
 	private final String ID;
 	private final String descriptor;
 	// If isKnown = true, use definite article, else use indefinite article
@@ -101,7 +101,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private final BehaviorIdle behaviorIdle;
 	private final boolean preventMovement;
 
-	public Actor(Game game, String ID, Area area, StatsActor stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead, boolean startDisabled) {
+	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead, boolean startDisabled) {
 		super(game);
 		this.ID = ID;
 		this.defaultArea = area;
@@ -174,7 +174,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 	}
 
-	public StatsActor getStats() {
+	public ActorTemplate getStats() {
 		return stats;
 	}
 

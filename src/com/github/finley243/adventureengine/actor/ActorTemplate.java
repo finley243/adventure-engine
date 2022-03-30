@@ -1,9 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 
@@ -11,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class StatsActor {
+public class ActorTemplate {
 	
 	private final String ID;
 	private final String parentID;
@@ -38,7 +35,7 @@ public class StatsActor {
 
 	private final Map<String, Script> scripts;
 	
-	public StatsActor(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
+	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;

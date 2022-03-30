@@ -19,7 +19,7 @@ import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.ItemFactory;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.item.LootTableEntry;
-import com.github.finley243.adventureengine.world.item.stats.*;
+import com.github.finley243.adventureengine.world.item.template.*;
 import com.github.finley243.adventureengine.world.object.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -55,12 +55,12 @@ public class DataLoader {
                 }
                 List<Element> actors = LoadUtils.directChildrenWithName(rootElement, "actor");
                 for (Element actorElement : actors) {
-                    StatsActor actor = loadActor(actorElement);
+                    ActorTemplate actor = loadActor(actorElement);
                     game.data().addActorStats(actor.getID(), actor);
                 }
                 List<Element> items = LoadUtils.directChildrenWithName(rootElement, "item");
                 for (Element itemElement : items) {
-                    StatsItem item = loadItem(itemElement);
+                    ItemTemplate item = loadItem(itemElement);
                     game.data().addItem(item.getID(), item);
                 }
                 List<Element> tables = LoadUtils.directChildrenWithName(rootElement, "lootTable");
@@ -88,7 +88,7 @@ public class DataLoader {
         }
     }
 
-    private static StatsActor loadActor(Element actorElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ActorTemplate loadActor(Element actorElement) throws ParserConfigurationException, IOException, SAXException {
         String id = actorElement.getAttribute("id");
         String parentID = actorElement.getAttribute("parent");
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
@@ -115,7 +115,7 @@ public class DataLoader {
             vendorBuyAll = LoadUtils.boolAttribute(vendorElement, "buyAll", false);
             vendorStartDisabled = LoadUtils.singleTagBoolean(vendorElement, "startDisabled", false);
         }
-        return new StatsActor(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, topic, scripts, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
+        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, topic, scripts, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -403,7 +403,7 @@ public class DataLoader {
         }
     }
 
-    private static StatsItem loadItem(Element itemElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ItemTemplate loadItem(Element itemElement) throws ParserConfigurationException, IOException, SAXException {
         String type = itemElement.getAttribute("type");
         String id = itemElement.getAttribute("id");
         String name = LoadUtils.singleTag(itemElement, "name", null);
@@ -415,15 +415,15 @@ public class DataLoader {
                 EquipmentComponent.ApparelSlot apparelSlot = LoadUtils.singleTagEnum(itemElement, "slot", EquipmentComponent.ApparelSlot.class, EquipmentComponent.ApparelSlot.TORSO);
                 int damageResistance = LoadUtils.singleTagInt(itemElement, "damageResistance", 0);
                 List<Effect> apparelEffects = loadEffects(itemElement, true);
-                return new StatsApparel(id, name, description, scripts, price, apparelSlot, damageResistance, apparelEffects);
+                return new ApparelTemplate(id, name, description, scripts, price, apparelSlot, damageResistance, apparelEffects);
             case "consumable":
-                StatsConsumable.ConsumableType consumableType = LoadUtils.singleTagEnum(itemElement, "type", StatsConsumable.ConsumableType.class, StatsConsumable.ConsumableType.OTHER);
+                ConsumableTemplate.ConsumableType consumableType = LoadUtils.singleTagEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<Effect> consumableEffects = loadEffects(LoadUtils.singleChildWithName(itemElement, "effects"), false);
-                return new StatsConsumable(id, name, description, scripts, price, consumableType, consumableEffects);
+                return new ConsumableTemplate(id, name, description, scripts, price, consumableType, consumableEffects);
             case "key":
-                return new StatsKey(id, name, description, scripts);
+                return new KeyTemplate(id, name, description, scripts);
             case "weapon":
-                StatsWeapon.WeaponType weaponType = LoadUtils.singleTagEnum(itemElement, "type", StatsWeapon.WeaponType.class, null);
+                WeaponTemplate.WeaponType weaponType = LoadUtils.singleTagEnum(itemElement, "type", WeaponTemplate.WeaponType.class, null);
                 int weaponDamage = LoadUtils.singleTagInt(itemElement, "damage", 0);
                 int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
                 int critDamage = LoadUtils.singleTagInt(itemElement, "critDamage", 0);
@@ -432,9 +432,9 @@ public class DataLoader {
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
-                return new StatsWeapon(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced);
+                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced);
             case "junk":
-                return new StatsJunk(id, name, description, scripts, price);
+                return new JunkTemplate(id, name, description, scripts, price);
         }
         return null;
     }

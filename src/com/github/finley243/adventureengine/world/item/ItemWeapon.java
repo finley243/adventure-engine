@@ -14,16 +14,16 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.item.stats.StatsWeapon;
+import com.github.finley243.adventureengine.world.item.template.WeaponTemplate;
 
 public class ItemWeapon extends ItemEquippable {
 	
 	public static final float CRIT_CHANCE = 0.05f;
 	
-	private final StatsWeapon stats;
+	private final WeaponTemplate stats;
 	private int ammo;
 	
-	public ItemWeapon(Game game, String ID, Area area, boolean isGenerated, StatsWeapon stats) {
+	public ItemWeapon(Game game, String ID, Area area, boolean isGenerated, WeaponTemplate stats) {
 		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 		this.ammo = stats.getClipSize();
@@ -182,7 +182,7 @@ public class ItemWeapon extends ItemEquippable {
 					for(Limb limb : target.getLimbs()) {
 						actions.add(new ActionRangedAttackTargeted(this, target, limb));
 					}
-					if(stats.getType().attacks.contains(StatsWeapon.AttackType.AUTO)) {
+					if(stats.getType().attacks.contains(WeaponTemplate.AttackType.AUTO)) {
 						actions.add(new ActionRangedAttackAuto(this, target));
 					}
 				} else { // Melee

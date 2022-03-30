@@ -1,11 +1,11 @@
-package com.github.finley243.adventureengine.world.item.stats;
+package com.github.finley243.adventureengine.world.item.template;
 
 import com.github.finley243.adventureengine.script.Script;
 
 import java.util.Map;
 import java.util.Set;
 
-public class StatsWeapon extends StatsItem {
+public class WeaponTemplate extends ItemTemplate {
 	
 	public enum WeaponType {
 		PISTOL(true, false, Set.of()),
@@ -42,7 +42,7 @@ public class StatsWeapon extends StatsItem {
 	private final float accuracyBonus;
 	private final boolean silenced;
 	
-	public StatsWeapon(String ID, String name, String description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, int rangeMin, int rangeMax, int clipSize, float accuracyBonus, boolean silenced) {
+	public WeaponTemplate(String ID, String name, String description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, int rangeMin, int rangeMax, int clipSize, float accuracyBonus, boolean silenced) {
 		super(ID, name, description, scripts, price);
 		this.type = type;
 		this.damage = damage;

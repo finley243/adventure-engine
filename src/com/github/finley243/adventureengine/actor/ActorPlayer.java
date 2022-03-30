@@ -17,7 +17,7 @@ public class ActorPlayer extends Actor {
 
 	private final MenuManager menuManager;
 	
-	public ActorPlayer(Game gameInstance, String ID, Area area, StatsActor stats) {
+	public ActorPlayer(Game gameInstance, String ID, Area area, ActorTemplate stats) {
 		super(gameInstance, ID, area, stats, null, null, false, false, false);
 		this.menuManager = new MenuManager();
 		game().eventBus().register(menuManager);

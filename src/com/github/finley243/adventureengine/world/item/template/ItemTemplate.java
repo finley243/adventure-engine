@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.item.stats;
+package com.github.finley243.adventureengine.world.item.template;
 
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class StatsItem implements Noun {
+public abstract class ItemTemplate implements Noun {
 
 	private int generatedCount;
 
@@ -20,7 +20,7 @@ public abstract class StatsItem implements Noun {
 	private final int price;
 	private final Map<String, Script> scripts;
 	
-	public StatsItem(String ID, String name, String description, Map<String, Script> scripts, int price) {
+	public ItemTemplate(String ID, String name, String description, Map<String, Script> scripts, int price) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
@@ -104,7 +104,7 @@ public abstract class StatsItem implements Noun {
 	
 	@Override
 	public boolean equals(Object o) {
-		if(!(o instanceof StatsItem)) {
+		if(!(o instanceof ItemTemplate)) {
 			return false;
 		} else {
 			return o == this;

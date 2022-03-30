@@ -12,7 +12,7 @@ import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.object.ObjectContainer;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.item.stats.StatsItem;
+import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,9 +33,9 @@ public class Data {
 	private final Map<String, Area> areas = new HashMap<>();
 	private final Map<String, Room> rooms = new HashMap<>();
 	private final Map<String, Actor> actors = new HashMap<>();
-	private final Map<String, StatsActor> actorStats = new HashMap<>();
+	private final Map<String, ActorTemplate> actorStats = new HashMap<>();
 	private final Map<String, WorldObject> objects = new HashMap<>();
-	private final Map<String, StatsItem> items = new HashMap<>();
+	private final Map<String, ItemTemplate> items = new HashMap<>();
 	private final Map<String, LootTable> lootTables = new HashMap<>();
 	private final Map<String, DialogueTopic> topics = new HashMap<>();
 	private final Map<String, Integer> variables = new HashMap<>();
@@ -94,8 +94,8 @@ public class Data {
 		for(WorldObject object : objects.values()) {
 			state.addAll(object.saveState());
 		}
-		for(StatsItem statsItem : items.values()) {
-			state.addAll(statsItem.saveState());
+		for(ItemTemplate itemTemplate : items.values()) {
+			state.addAll(itemTemplate.saveState());
 		}
 		for(DialogueTopic topic : topics.values()) {
 			state.addAll(topic.saveState());
@@ -179,13 +179,13 @@ public class Data {
 		return player;
 	}
 	
-	public void addActorStats(String id, StatsActor value) {
+	public void addActorStats(String id, ActorTemplate value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add actor stats with blank ID");
 		if(actorStats.containsKey(id)) throw new IllegalArgumentException("Cannot add actor stats with existing ID: " + id);
 		actorStats.put(id, value);
 	}
 	
-	public StatsActor getActorStats(String id) {
+	public ActorTemplate getActorStats(String id) {
 		return actorStats.get(id);
 	}
 	
@@ -199,13 +199,13 @@ public class Data {
 		return objects.get(id);
 	}
 	
-	public void addItem(String id, StatsItem value) {
+	public void addItem(String id, ItemTemplate value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add item with blank ID");
 		if(items.containsKey(id)) throw new IllegalArgumentException("Cannot add item with existing ID: " + id);
 		items.put(id, value);
 	}
 	
-	public StatsItem getItem(String id) {
+	public ItemTemplate getItem(String id) {
 		return items.get(id);
 	}
 	

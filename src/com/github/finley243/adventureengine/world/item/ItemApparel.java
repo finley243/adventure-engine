@@ -9,16 +9,16 @@ import com.github.finley243.adventureengine.actor.component.EquipmentComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.item.stats.StatsApparel;
+import com.github.finley243.adventureengine.world.item.template.ApparelTemplate;
 
 import java.util.*;
 
 public class ItemApparel extends Item {
 
-	private final StatsApparel stats;
+	private final ApparelTemplate stats;
 	private List<Effect> effects;
 	
-	public ItemApparel(Game game, String ID, Area area, boolean isGenerated, StatsApparel stats) {
+	public ItemApparel(Game game, String ID, Area area, boolean isGenerated, ApparelTemplate stats) {
 		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}

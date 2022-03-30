@@ -10,14 +10,14 @@ import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.item.stats.StatsConsumable;
-import com.github.finley243.adventureengine.world.item.stats.StatsConsumable.ConsumableType;
+import com.github.finley243.adventureengine.world.item.template.ConsumableTemplate;
+import com.github.finley243.adventureengine.world.item.template.ConsumableTemplate.ConsumableType;
 
 public class ItemConsumable extends Item {
 
-	private final StatsConsumable stats;
+	private final ConsumableTemplate stats;
 	
-	public ItemConsumable(Game game, String ID, Area area, boolean isGenerated, StatsConsumable stats) {
+	public ItemConsumable(Game game, String ID, Area area, boolean isGenerated, ConsumableTemplate stats) {
 		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
