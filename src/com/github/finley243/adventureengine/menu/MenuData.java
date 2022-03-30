@@ -48,9 +48,18 @@ public class MenuData implements Comparable<MenuData> {
         return category;
     }
 
+    private String sortingString() {
+        StringBuilder builder = new StringBuilder();
+        for(String current : category) {
+            builder.append(current);
+        }
+        builder.append(prompt);
+        return builder.toString();
+    }
+
     @Override
     public int compareTo(MenuData other) {
-        return Integer.compare(this.getIndex(), other.getIndex());
+        return this.sortingString().compareTo(other.sortingString());
     }
 
 }
