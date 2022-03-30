@@ -1,59 +1,36 @@
 package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.world.item.ItemApparel;
-
-import java.util.*;
+import com.github.finley243.adventureengine.world.item.ItemEquippable;
+import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class EquipmentComponent {
 
-    public enum ApparelSlot {
-        HEAD, TORSO, LEGS
-    }
-
-    private final Map<ApparelSlot, ItemApparel> equipped;
     private final Actor actor;
+    private ItemEquippable equippedItem;
 
     public EquipmentComponent(Actor actor) {
-        equipped = new EnumMap<>(ApparelSlot.class);
         this.actor = actor;
     }
 
-    public int getDamageResistance(ApparelSlot slot) {
-        if(isSlotEmpty(slot)) return 0;
-        return equipped.get(slot).getDamageResistance();
+    public void setEquippedItem(ItemEquippable item) {
+        equippedItem = item;
     }
 
-    public boolean isSlotEmpty(ApparelSlot slot) {
-        return equipped.get(slot) == null;
+    public ItemEquippable getEquippedItem() {
+        return equippedItem;
     }
 
-    public boolean isSlotEmpty(ItemApparel item) {
-        return isSlotEmpty(item.getApparelSlot());
+    public boolean hasEquippedItem() {
+        return equippedItem != null;
     }
 
-    public void equip(ItemApparel item) {
-        ItemApparel lastEquipped = equipped.get(item.getApparelSlot());
-        if(lastEquipped != null) {
-            lastEquipped.unequip(actor);
-        }
-        equipped.put(item.getApparelSlot(), item);
-        item.equip(actor);
+    public boolean hasRangedWeaponEquipped() {
+        return equippedItem != null && equippedItem instanceof ItemWeapon && ((ItemWeapon) equippedItem).isRanged();
     }
 
-    public void unequip(ItemApparel item) {
-        item.unequip(actor);
-        equipped.put(item.getApparelSlot(), null);
-    }
-
-    public Set<ItemApparel> getEquippedItems() {
-        Set<ItemApparel> items = new HashSet<>();
-        for(ItemApparel item : equipped.values()) {
-            if(item != null) {
-                items.add(item);
-            }
-        }
-        return items;
+    public boolean hasMeleeWeaponEquipped() {
+        return equippedItem != null && equippedItem instanceof ItemWeapon && !((ItemWeapon) equippedItem).isRanged();
     }
 
 }

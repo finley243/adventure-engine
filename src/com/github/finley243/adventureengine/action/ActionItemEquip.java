@@ -20,7 +20,7 @@ public class ActionItemEquip extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		subject.setEquippedItem(item);
+		subject.equipmentComponent().setEquippedItem(item);
 		subject.inventory().removeItem(item);
 		Context context = new Context(subject, item);
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("equip"), context, this, subject));
@@ -28,7 +28,7 @@ public class ActionItemEquip extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && !subject.hasEquippedItem();
+		return !disabled && !subject.equipmentComponent().hasEquippedItem();
 	}
 
 	@Override

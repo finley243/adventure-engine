@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.actor.component.EquipmentComponent;
+import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 
 import java.util.List;
@@ -10,10 +10,10 @@ public class Limb {
     private final String name;
     private final float hitChance;
     private final float damageMult;
-    private final EquipmentComponent.ApparelSlot apparelSlot;
+    private final ApparelComponent.ApparelSlot apparelSlot;
     private final List<Effect> hitEffects;
 
-    public Limb(String name, float hitChance, float damageMult, EquipmentComponent.ApparelSlot apparelSlot, List<Effect> hitEffects) {
+    public Limb(String name, float hitChance, float damageMult, ApparelComponent.ApparelSlot apparelSlot, List<Effect> hitEffects) {
         this.name = name;
         this.hitChance = hitChance;
         this.damageMult = damageMult;
@@ -33,7 +33,7 @@ public class Limb {
         return damageMult;
     }
 
-    public EquipmentComponent.ApparelSlot getApparelSlot() {
+    public ApparelComponent.ApparelSlot getApparelSlot() {
         return apparelSlot;
     }
 

@@ -154,8 +154,8 @@ public class TargetingComponent {
     private Set<Area> idealAreas(Actor subject, Area origin) {
         int idealDistanceMin = 0;
         int idealDistanceMax = 0;
-        if(subject.hasRangedWeaponEquipped()) {
-            ItemWeapon weapon = (ItemWeapon) subject.getEquippedItem();
+        if(subject.equipmentComponent().hasRangedWeaponEquipped()) {
+            ItemWeapon weapon = (ItemWeapon) subject.equipmentComponent().getEquippedItem();
             idealDistanceMin = weapon.getRangeMin();
             idealDistanceMax = weapon.getRangeMax();
         }

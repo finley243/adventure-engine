@@ -17,7 +17,7 @@ public class ActionItemUnequip extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		subject.setEquippedItem(null);
+		subject.equipmentComponent().setEquippedItem(null);
 		subject.inventory().addItem(item);
 		Context context = new Context(subject, item);
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("unequip"), context, this, subject));

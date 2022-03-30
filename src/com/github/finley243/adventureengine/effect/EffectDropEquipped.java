@@ -14,9 +14,9 @@ public class EffectDropEquipped extends Effect {
 
     @Override
     public void start(Actor target) {
-        ItemEquippable item = target.getEquippedItem();
+        ItemEquippable item = target.equipmentComponent().getEquippedItem();
         if(item == null) return;
-        target.setEquippedItem(null);
+        target.equipmentComponent().setEquippedItem(null);
         target.getArea().addObject(item);
         item.setArea(target.getArea());
         Context context = new Context(target, item);

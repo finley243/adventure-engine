@@ -20,7 +20,7 @@ public class ActionItemDrop extends Action {
 	@Override
 	public void choose(Actor subject) {
 		if(isEquipped) {
-			subject.setEquippedItem(null);
+			subject.equipmentComponent().setEquippedItem(null);
 		} else {
 			subject.inventory().removeItem(item);
 		}

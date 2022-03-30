@@ -19,7 +19,7 @@ public class ConditionEquippedItem extends Condition {
 
 	@Override
 	public boolean isMet(Actor subject) {
-		Item equippedItem = actor.getActor(subject).getEquippedItem();
+		Item equippedItem = actor.getActor(subject).equipmentComponent().getEquippedItem();
 		if(equippedItem == null) return invert;
 		return (tag == null || equippedItem.getTags().contains(tag)) != invert;
 	}

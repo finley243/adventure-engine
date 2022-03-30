@@ -1,32 +1,30 @@
 package com.github.finley243.adventureengine.actor;
 
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
-import com.github.finley243.adventureengine.actor.ai.*;
-import com.github.finley243.adventureengine.actor.component.EffectComponent;
-import com.github.finley243.adventureengine.actor.component.EquipmentComponent;
-import com.github.finley243.adventureengine.actor.component.TargetingComponent;
-import com.github.finley243.adventureengine.actor.component.VendorComponent;
-import com.github.finley243.adventureengine.event.SoundEvent;
+import com.github.finley243.adventureengine.actor.ai.AreaTarget;
+import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
+import com.github.finley243.adventureengine.actor.ai.InvestigateTarget;
+import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
-import com.github.finley243.adventureengine.world.item.ItemEquippable;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Actor extends GameInstanced implements Noun, Physical {
 
@@ -91,9 +89,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private final EnumMap<Skill, ActorStat> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
+	private final ApparelComponent apparelComponent;
 	private final EquipmentComponent equipmentComponent;
 	private final VendorComponent vendorComponent;
-	private ItemEquippable equippedItem;
 	private int money;
 	private UsableObject usingObject;
 	private boolean isCrouching;
@@ -121,6 +119,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			HP = this.maxHP.value();
 		}
 		this.inventory = new Inventory();
+		this.apparelComponent = new ApparelComponent(this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		if(stats.isVendor()) {
 			this.vendorComponent = new VendorComponent(this);
@@ -271,26 +270,18 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		return inventory;
 	}
 
-	public EquipmentComponent equipmentComponent() {
-		return equipmentComponent;
+	public ApparelComponent apparelComponent() {
+		return apparelComponent;
 	}
 
 	public List<Limb> getLimbs() {
 		return stats.getLimbs(game());
 	}
 	
-	public void setEquippedItem(ItemEquippable item) {
-		equippedItem = item;
+	public EquipmentComponent equipmentComponent() {
+		return equipmentComponent;
 	}
 
-	public ItemEquippable getEquippedItem() {
-		return equippedItem;
-	}
-	
-	public boolean hasEquippedItem() {
-		return equippedItem != null;
-	}
-	
 	public int getMoney() {
 		return money;
 	}
@@ -316,7 +307,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	}
 
 	public void onStatChange() {
-		// Recalculate derived stats/min-max stats
+		// Recalculate state depending on ActorStat values
 		if(HP > maxHP.value()) {
 			HP = maxHP.value();
 		}
@@ -335,7 +326,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	
 	public void damage(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();
-		amount -= equipmentComponent.getDamageResistance(EquipmentComponent.ApparelSlot.TORSO);
+		amount -= apparelComponent.getDamageResistance(ApparelComponent.ApparelSlot.TORSO);
 		HP -= amount;
 		if(HP <= 0) {
 			HP = 0;
@@ -352,7 +343,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 
 	public void damageLimb(int amount, Limb limb) {
 		if(amount < 0) throw new IllegalArgumentException();
-		amount -= equipmentComponent.getDamageResistance(limb.getApparelSlot());
+		amount -= apparelComponent.getDamageResistance(limb.getApparelSlot());
 		if(amount < 0) amount = 0;
 		if(amount > 0) {
 			limb.applyEffects(this);
@@ -377,12 +368,12 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		isDead = true;
 		Context context = new Context(this);
 		game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("die"), context, null, null));
-		if(equippedItem != null) {
-			getArea().addObject(equippedItem);
-			equippedItem.setArea(getArea());
-			context = new Context(this, equippedItem);
+		if(equipmentComponent.hasEquippedItem()) {
+			getArea().addObject(equipmentComponent.getEquippedItem());
+			equipmentComponent.getEquippedItem().setArea(getArea());
+			context = new Context(this, equipmentComponent.getEquippedItem());
 			game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
-			equippedItem = null;
+			equipmentComponent.setEquippedItem(null);
 		}
 	}
 
@@ -451,14 +442,6 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	public boolean hasMeleeTargets() {
 		return targetingComponent.hasCombatantsInArea(getArea());
 	}
-	
-	public boolean hasRangedWeaponEquipped() {
-		return equippedItem != null && equippedItem instanceof ItemWeapon && ((ItemWeapon) equippedItem).isRanged();
-	}
-	
-	public boolean hasMeleeWeaponEquipped() {
-		return equippedItem != null && equippedItem instanceof ItemWeapon && !((ItemWeapon) equippedItem).isRanged();
-	}
 
 	public boolean hasWeapon() {
 		for(Item item : inventory.getUniqueItems()) {
@@ -525,8 +508,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 
 	public List<Action> availableActions(){
 		List<Action> actions = new ArrayList<>();
-		if(hasEquippedItem()) {
-			actions.addAll(equippedItem.equippedActions(this));
+		if(equipmentComponent.hasEquippedItem()) {
+			actions.addAll(equipmentComponent.getEquippedItem().equippedActions(this));
 		}
 		for(Actor actor : getArea().getActors()) {
 			actions.addAll(actor.localActions(this));
@@ -553,7 +536,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		for(Item item : inventory.getUniqueItems()) {
 			actions.addAll(item.inventoryActions(this));
 		}
-		for(ItemApparel item : equipmentComponent.getEquippedItems()) {
+		for(ItemApparel item : apparelComponent.getEquippedItems()) {
 			actions.addAll(item.equippedActions(this));
 		}
 		if(isCrouching()) {
