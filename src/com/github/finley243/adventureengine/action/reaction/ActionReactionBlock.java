@@ -20,7 +20,7 @@ public class ActionReactionBlock extends ActionReaction {
 
     @Override
     public boolean canChoose(Actor subject) {
-        return !disabled && subject.hasMeleeWeaponEquipped();
+        return !disabled && subject.equipmentComponent().hasMeleeWeaponEquipped();
     }
 
     @Override

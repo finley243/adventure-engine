@@ -164,15 +164,6 @@ public class ItemWeapon extends ItemEquippable {
 	}
 	
 	@Override
-	public List<Action> inventoryActions(Actor subject) {
-		List<Action> actions = super.inventoryActions(subject);
-		if(!subject.hasEquippedItem()) {
-			actions.add(0, new ActionItemEquip(this));
-		}
-		return actions;
-	}
-	
-	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
 		for(Actor target : subject.getVisibleActors()) {

@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.world.item.ItemEquippable;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ActionItemEquip extends Action {
@@ -12,9 +13,9 @@ public class ActionItemEquip extends Action {
 	public static final float SUBOPTIMAL_WEAPON_UTILITY = 0.8f;
 	public static final float OPTIMAL_WEAPON_UTILITY = 1.0f;
 
-	private final ItemWeapon item;
+	private final ItemEquippable item;
 	
-	public ActionItemEquip(ItemWeapon item) {
+	public ActionItemEquip(ItemEquippable item) {
 		this.item = item;
 	}
 	
@@ -33,19 +34,24 @@ public class ActionItemEquip extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(!subject.isInCombat()) return 0;
-		if(item.isRanged()) {
-			if(subject.hasMeleeTargets()) {
-				return SUBOPTIMAL_WEAPON_UTILITY;
+		if(item instanceof ItemWeapon) {
+			ItemWeapon weapon = (ItemWeapon) item;
+			if (!subject.isInCombat()) return 0;
+			if (weapon.isRanged()) {
+				if (subject.hasMeleeTargets()) {
+					return SUBOPTIMAL_WEAPON_UTILITY;
+				} else {
+					return OPTIMAL_WEAPON_UTILITY;
+				}
 			} else {
-				return OPTIMAL_WEAPON_UTILITY;
+				if (subject.hasMeleeTargets()) {
+					return OPTIMAL_WEAPON_UTILITY;
+				} else {
+					return SUBOPTIMAL_WEAPON_UTILITY;
+				}
 			}
 		} else {
-			if(subject.hasMeleeTargets()) {
-				return OPTIMAL_WEAPON_UTILITY;
-			} else {
-				return SUBOPTIMAL_WEAPON_UTILITY;
-			}
+			return 0.0f;
 		}
 	}
 	

@@ -28,7 +28,7 @@ public class ActionReactionOld extends Action {
 	public boolean canChoose(Actor subject) {
 		switch(type) {
 		case BLOCK:
-			return subject.hasMeleeWeaponEquipped();
+			return subject.equipmentComponent().hasMeleeWeaponEquipped();
 		case DODGE:
 			return subject.canMove();
 		default:
