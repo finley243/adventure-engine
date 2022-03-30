@@ -121,7 +121,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		this.inventory = new Inventory();
 		this.equipmentComponent = new EquipmentComponent(this);
 		if(stats.isVendor()) {
-			this.vendorComponent = new VendorComponent(this, stats.getVendorLootTable(), stats.vendorBuyTags(), stats.vendorBuyAll(), stats.vendorStartDisabled());
+			this.vendorComponent = new VendorComponent(this);
 		} else {
 			this.vendorComponent = null;
 		}
@@ -143,6 +143,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	public void newGameInit() {
 		if(stats.getLootTable(game()) != null) {
 			inventory.addItems(game().data().getLootTable(stats.getLootTable(game())).generateItems(game()));
+		}
+		if(vendorComponent != null) {
+			vendorComponent.generateInventory();
 		}
 	}
 	
@@ -170,6 +173,10 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		} else {
 			return "";
 		}
+	}
+
+	public StatsActor getStats() {
+		return stats;
 	}
 
 	@Override

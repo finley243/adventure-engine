@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.actor.component;
 
-import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionVendorBuy;
 import com.github.finley243.adventureengine.action.ActionVendorSell;
@@ -24,14 +22,13 @@ public class VendorComponent {
 
     private boolean enabled;
 
-    public VendorComponent(Actor vendor, String lootTable, Set<String> buyTags, boolean buyAll, boolean startDisabled) {
+    public VendorComponent(Actor vendor) {
         this.vendorInventory = new Inventory();
         this.vendor = vendor;
-        this.lootTable = lootTable;
-        this.buyTags = buyTags;
-        this.buyAll = buyAll;
-        this.enabled = !startDisabled;
-        generateInventory();
+        this.lootTable = vendor.getStats().getLootTable(vendor.game());
+        this.buyTags = vendor.getStats().vendorBuyTags();
+        this.buyAll = vendor.getStats().vendorBuyAll();
+        this.enabled = !vendor.getStats().vendorStartDisabled();
     }
 
     public void generateInventory() {
@@ -45,6 +42,7 @@ public class VendorComponent {
 
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
+        if(!enabled) return actions;
         for(Item item : vendorInventory.getUniqueItems()) {
             actions.add(new ActionVendorBuy(vendor, vendorInventory, item));
         }
