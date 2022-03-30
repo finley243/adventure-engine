@@ -2,18 +2,15 @@ package com.github.finley243.adventureengine.actor;
 
 public class ActorStat {
 
+    private final Actor actor;
     private final int min;
     private final int max;
     private int base;
     private int mod;
     private float mult;
 
-    public ActorStat(int min, int max){
-        this.min = min;
-        this.max = max;
-    }
-
-    public ActorStat(int defaultBase, int min, int max) {
+    public ActorStat(Actor actor, int defaultBase, int min, int max) {
+        this.actor = actor;
         this.min = min;
         this.max = max;
         this.base = defaultBase;
@@ -30,18 +27,22 @@ public class ActorStat {
 
     public void setBase(int value) {
         base = Math.min(Math.max(value, min), max);
+        actor.onStatChange();
     }
 
     public void addBase(int value) {
         base = Math.min(Math.max(base + value, min), max);
+        actor.onStatChange();
     }
 
     public void addMod(int value) {
         mod += value;
+        actor.onStatChange();
     }
 
     public void addMult(float value) {
         mult += value;
+        actor.onStatChange();
     }
 
 }

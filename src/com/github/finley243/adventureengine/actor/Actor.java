@@ -38,6 +38,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	public static final int ATTRIBUTE_MAX = 10;
 	public static final int SKILL_MIN = 1;
 	public static final int SKILL_MAX = 10;
+	public static final int MAX_HP = 1000;
 	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
@@ -77,6 +78,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private boolean isKnown;
 	private final Area defaultArea;
 	private Area area;
+	private final ActorStat maxHP;
 	private int HP;
 	private final boolean startDisabled;
 	private boolean isEnabled;
@@ -114,8 +116,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		this.investigateTarget = new InvestigateTarget();
 		this.startDead = startDead;
 		this.isDead = startDead;
+		this.maxHP = new ActorStat(this, stats.getMaxHP(game()), 0, MAX_HP);
 		if(!startDead) {
-			HP = stats.getMaxHP(game());
+			HP = this.maxHP.value();
 		}
 		this.inventory = new Inventory();
 		this.equipmentComponent = new EquipmentComponent(this);
@@ -126,11 +129,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new ActorStat(stats.getAttribute(game(), attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX));
+			this.attributes.put(attribute, new ActorStat(this, stats.getAttribute(game(), attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX));
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for(Skill skill : Skill.values()) {
-			this.skills.put(skill, new ActorStat(stats.getSkill(game(), skill), SKILL_MIN, SKILL_MAX));
+			this.skills.put(skill, new ActorStat(this, stats.getSkill(game(), skill), SKILL_MIN, SKILL_MAX));
 		}
 		this.effectComponent = new EffectComponent(this);
 		this.blockedActions = new HashMap<>();
@@ -305,12 +308,23 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	}
 
 	public float getHPProportion() {
-		return ((float) HP) / ((float) stats.getMaxHP(game()));
+		return ((float) HP) / ((float) maxHP.value());
+	}
+
+	public ActorStat getMaxHP() {
+		return maxHP;
+	}
+
+	public void onStatChange() {
+		// Recalculate derived stats/min-max stats
+		if(HP > maxHP.value()) {
+			HP = maxHP.value();
+		}
 	}
 	
 	public void heal(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();
-		amount = Math.min(amount, stats.getMaxHP(game()) - HP);
+		amount = Math.min(amount, maxHP.value() - HP);
 		HP += amount;
 		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 		if(SHOW_HP_CHANGES) {
@@ -373,7 +387,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	}
 
 	public String getConditionDescription() {
-		float hpProportion = ((float) this.HP) / ((float) stats.getMaxHP(game()));
+		float hpProportion = getHPProportion();
 		if(hpProportion == 1.0f) {
 			return "in perfect condition";
 		} else if(hpProportion >= 0.9f) {
