@@ -15,12 +15,12 @@ public class EffectSkill extends Effect {
 	
 	@Override
 	public void start(Actor target) {
-		target.adjustSkillMod(skill, amount);
+		target.getSkill(skill).addMod(amount);
 	}
 	
 	@Override
 	public void end(Actor target) {
-		target.adjustSkillMod(skill, -amount);
+		target.getSkill(skill).addMod(-amount);
 	}
 
 	@Override

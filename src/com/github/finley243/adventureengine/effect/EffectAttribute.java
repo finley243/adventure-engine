@@ -16,12 +16,12 @@ public class EffectAttribute extends Effect {
 	
 	@Override
 	public void start(Actor target) {
-		target.adjustAttributeMod(attribute, amount);
+		target.getAttribute(attribute).addMod(amount);
 	}
 	
 	@Override
 	public void end(Actor target) {
-		target.adjustAttributeMod(attribute, -amount);
+		target.getAttribute(attribute).addMod(-amount);
 	}
 
 	@Override

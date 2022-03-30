@@ -85,9 +85,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private boolean endTurn;
 	private int actionPoints;
 	private final Map<Action, Integer> blockedActions;
-	// Index: 0 = base, 1 = modifier
-	private final EnumMap<Attribute, int[]> attributes;
-	private final EnumMap<Skill, int[]> skills;
+	private final EnumMap<Attribute, ActorStat> attributes;
+	private final EnumMap<Skill, ActorStat> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final EquipmentComponent equipmentComponent;
@@ -127,11 +126,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new int[] {stats.getAttribute(game(), attribute), 0});
+			this.attributes.put(attribute, new ActorStat(stats.getAttribute(game(), attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX));
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for(Skill skill : Skill.values()) {
-			this.skills.put(skill, new int[] {stats.getSkill(game(), skill), 0});
+			this.skills.put(skill, new ActorStat(stats.getSkill(game(), skill), SKILL_MIN, SKILL_MAX));
 		}
 		this.effectComponent = new EffectComponent(this);
 		this.blockedActions = new HashMap<>();
@@ -229,76 +228,12 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 	}
 	
-	public int getAttribute(Attribute attribute) {
-		int[] values = attributes.get(attribute);
-		int sum = values[0] + values[1];
-		if(sum < ATTRIBUTE_MIN) {
-			return ATTRIBUTE_MIN;
-		} else {
-			return Math.min(sum, ATTRIBUTE_MAX);
-		}
-	}
-	
-	public int getAttributeBase(Attribute attribute) {
-		return attributes.get(attribute)[0];
-	}
-	
-	public void setAttributeBase(Attribute attribute, int value) {
-		attributes.get(attribute)[0] = value;
-	}
-	
-	public void adjustAttributeBase(Attribute attribute, int value) {
-		attributes.get(attribute)[0] += value;
-	}
-	
-	public int getAttributeMod(Attribute attribute) {
-		return attributes.get(attribute)[1];
-	}
-	
-	public void setAttributeMod(Attribute attribute, int value) {
-		attributes.get(attribute)[1] = value;
-	}
-	
-	public void adjustAttributeMod(Attribute attribute, int value) {
-		attributes.get(attribute)[1] += value;
+	public ActorStat getAttribute(Attribute attribute) {
+		return attributes.get(attribute);
 	}
 
-	public int getSkill(Skill skill) {
-		int[] values = skills.get(skill);
-		int sum = values[0] + values[1];
-		if(sum < SKILL_MIN) {
-			return SKILL_MIN;
-		} else {
-			return Math.min(sum, SKILL_MAX);
-		}
-	}
-
-	public int getSkillWithAttribute(Skill skill) {
-		return getSkill(skill) + getAttribute(skill.attribute);
-	}
-
-	public int getSkillBase(Skill skill) {
-		return skills.get(skill)[0];
-	}
-
-	public void setSkillBase(Skill skill, int value) {
-		skills.get(skill)[0] = value;
-	}
-
-	public void adjustSkillBase(Skill skill, int value) {
-		skills.get(skill)[0] += value;
-	}
-
-	public int getSkillMod(Skill skill) {
-		return skills.get(skill)[1];
-	}
-
-	public void setSkillMod(Skill skill, int value) {
-		skills.get(skill)[1] = value;
-	}
-
-	public void adjustSkillMod(Skill skill, int value) {
-		skills.get(skill)[1] += value;
+	public ActorStat getSkill(Skill skill) {
+		return skills.get(skill);
 	}
 	
 	public String getTopicID() {

@@ -19,7 +19,7 @@ public class ConditionAttribute extends Condition {
 
 	@Override
 	public boolean isMet(Actor subject) {
-		return (actor.getActor(subject).getAttribute(attribute) >= value) != invert;
+		return (actor.getActor(subject).getAttribute(attribute).value() >= value) != invert;
 	}
 
 	@Override
