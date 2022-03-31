@@ -110,7 +110,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		this.stats = stats;
 		this.descriptor = descriptor;
 		this.preventMovement = preventMovement;
-		this.targetingComponent = new TargetingComponent();
+		this.targetingComponent = new TargetingComponent(this);
 		this.areaTargets = new HashSet<>();
 		this.investigateTarget = new InvestigateTarget();
 		this.startDead = startDead;
@@ -459,7 +459,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	}
 	
 	public void addCombatTarget(Actor actor) {
-		targetingComponent.addCombatant(this, actor);
+		targetingComponent.addCombatant(actor);
 	}
 
 	public Set<Actor> getCombatTargets() {
@@ -565,16 +565,15 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	public void takeTurn() {
 		if(!isActive() || !isEnabled()) return;
 		effectComponent().onStartTurn();
-		targetingComponent.updateTurn(this);
+		targetingComponent.updateTurn();
 		investigateTarget.nextTurn(this);
 		behaviorIdle.update(this);
 		this.actionPoints = ACTIONS_PER_TURN;
 		this.blockedActions.clear();
 		this.endTurn = false;
 		while(!endTurn) {
-			//generateCombatTargets();
 			updatePursueTargets();
-			targetingComponent.update(this);
+			targetingComponent.update();
 			investigateTarget.update(this);
 			List<Action> availableActions = availableActions();
 			for(Action action : availableActions) {
@@ -717,7 +716,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 				}
 				break;
 			case "target":
-				this.targetingComponent.addCombatant(this, game().data().getActor(saveData.getValueString()));
+				this.targetingComponent.addCombatant(game().data().getActor(saveData.getValueString()));
 				break;
 			case "inventory":
 				this.inventory.addItem((Item) game().data().getObject(saveData.getValueString()));

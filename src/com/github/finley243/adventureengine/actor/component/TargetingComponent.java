@@ -14,6 +14,7 @@ public class TargetingComponent {
     private static final int TURNS_DETECTED_UNTIL_COMBAT = 2;
     private static final int TURNS_UNTIL_END_COMBAT = 4;
 
+    private final Actor subject;
     // Value is number of turns the actor has been detected
     private final Map<Actor, Integer> detected;
 
@@ -21,7 +22,8 @@ public class TargetingComponent {
 
     private Actor followTarget;
 
-    public TargetingComponent() {
+    public TargetingComponent(Actor subject) {
+        this.subject = subject;
         detected = new HashMap<>();
         combatants = new HashMap<>();
     }
@@ -32,7 +34,7 @@ public class TargetingComponent {
     }
 
     // Executed at the beginning of subject's turn
-    public void updateTurn(Actor subject) {
+    public void updateTurn() {
         Set<Actor> visibleActors = subject.getVisibleActors();
         // Remove non-visible actors from detected
         for(Actor actor : detected.keySet()) {
@@ -48,7 +50,7 @@ public class TargetingComponent {
                     int newValue = detected.get(actor) + 1;
                     if (newValue == TURNS_DETECTED_UNTIL_COMBAT) {
                         subject.triggerScript("on_detect_target");
-                        addCombatant(subject, actor);
+                        addCombatant(actor);
                     } else {
                         if(!actor.isDead()) {
                             detected.put(actor, newValue);
@@ -74,24 +76,24 @@ public class TargetingComponent {
     }
 
     // Executed before each action during subject's turn
-    public void update(Actor subject) {
+    public void update() {
         boolean startEmpty = combatants.isEmpty();
         for(Iterator<Actor> itr = combatants.keySet().iterator(); itr.hasNext();) {
             Actor actor = itr.next();
             Combatant combatant = combatants.get(actor);
             if (combatant.areaTarget == null) {
-                combatant.areaTarget = new AreaTarget(idealAreas(subject, combatant.lastKnownArea), 0.0f, true, false, false);
+                combatant.areaTarget = new AreaTarget(idealAreas(combatant.lastKnownArea), 0.0f, true, false, false);
                 subject.addPursueTarget(combatant.areaTarget);
             }
             if (subject.canSee(actor)) {
                 combatant.lastKnownArea = actor.getArea();
                 combatant.turnsUntilRemove = TURNS_UNTIL_END_COMBAT;
-                combatant.areaTarget.setTargetAreas(idealAreas(subject, combatant.lastKnownArea));
+                combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
                 combatant.areaTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, actor));
                 combatant.areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, actor));
                 combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, actor));
             } else {
-                combatant.areaTarget.setTargetAreas(idealAreas(subject, combatant.lastKnownArea));
+                combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
                 combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
             }
             if(actor.isDead() || combatant.turnsUntilRemove <= 0) {
@@ -110,7 +112,7 @@ public class TargetingComponent {
         }
     }
 
-    public void addCombatant(Actor subject, Actor actor) {
+    public void addCombatant(Actor actor) {
         if(combatants.isEmpty()) {
             subject.triggerScript("on_combat_start");
         }
@@ -141,7 +143,7 @@ public class TargetingComponent {
         return combatants.keySet();
     }
 
-    public Area getLastKnownArea(Actor subject, Actor target) {
+    public Area getLastKnownArea(Actor target) {
         if(subject.canSee(target)) {
             return target.getArea();
         } else if(combatants.containsKey(target)) {
@@ -151,7 +153,7 @@ public class TargetingComponent {
         }
     }
 
-    private Set<Area> idealAreas(Actor subject, Area origin) {
+    private Set<Area> idealAreas(Area origin) {
         int idealDistanceMin = 0;
         int idealDistanceMax = 0;
         if(subject.equipmentComponent().hasRangedWeaponEquipped()) {
