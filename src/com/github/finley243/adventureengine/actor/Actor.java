@@ -19,6 +19,7 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
+import com.github.finley243.adventureengine.world.item.ItemEquippable;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -721,6 +722,12 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			case "inventory":
 				this.inventory.addItem((Item) game().data().getObject(saveData.getValueString()));
 				break;
+			case "equippedItem":
+				this.equipmentComponent.equip((ItemEquippable) game().data().getObject(saveData.getValueString()));
+				break;
+			case "equippedApparel":
+				this.apparelComponent.equip((ItemApparel) game().data().getObject(saveData.getValueString()));
+				break;
 			case "usingObject":
 				startUsingObject((UsableObject) game().data().getObject(saveData.getValueString()));
 				break;
@@ -748,6 +755,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		if(equipmentComponent.hasEquippedItem()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedItem", equipmentComponent.getEquippedItem().getID()));
+		}
+		for(ItemApparel item : apparelComponent.getEquippedItems()) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedApparel", item.getID()));
 		}
 		if(usingObject != null) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "usingObject", usingObject.getID()));
