@@ -4,14 +4,13 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.world.item.Item;
 
-public class ConditionEquippedItem extends Condition {
+public class ConditionInventoryItem extends Condition {
 
 	private final ActorReference actor;
-	// If tag and itemID are null, condition will be met if any item is equipped
 	private final String tag;
 	private final String itemID;
 
-	public ConditionEquippedItem(boolean invert, ActorReference actor, String tag, String itemID) {
+	public ConditionInventoryItem(boolean invert, ActorReference actor, String tag, String itemID) {
 		super(invert);
 		this.actor = actor;
 		this.tag = tag;
@@ -20,12 +19,11 @@ public class ConditionEquippedItem extends Condition {
 
 	@Override
 	public boolean isMet(Actor subject) {
-		Item equippedItem = actor.getActor(subject).equipmentComponent().getEquippedItem();
-		if(equippedItem == null) return invert;
 		if(itemID != null) {
-			return equippedItem.getTemplateID().equals(itemID) != invert;
+			return actor.getActor(subject).inventory().hasItemWithID(itemID) != invert;
+		} else {
+			return actor.getActor(subject).inventory().hasItemWithTag(tag) != invert;
 		}
-		return (tag == null || equippedItem.getTags().contains(tag)) != invert;
 	}
 
 	@Override

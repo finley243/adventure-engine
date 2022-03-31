@@ -61,45 +61,45 @@ public class ActorTemplate {
 	}
 	
 	public String getName(Game game) {
-		return name != null ? name : game.data().getActorStats(parentID).getName(game);
+		return name != null ? name : game.data().getActorTemplate(parentID).getName(game);
 	}
 	
 	public boolean isProperName(Game game) {
-		return name != null ? isProperName : game.data().getActorStats(parentID).isProperName(game);
+		return name != null ? isProperName : game.data().getActorTemplate(parentID).isProperName(game);
 	}
 	
 	public Pronoun getPronoun(Game game) {
-		return pronoun != null ? pronoun : game.data().getActorStats(parentID).getPronoun(game);
+		return pronoun != null ? pronoun : game.data().getActorTemplate(parentID).getPronoun(game);
 	}
 	
 	public String getFaction(Game game) {
-		return faction != null ? faction : game.data().getActorStats(parentID).getFaction(game);
+		return faction != null ? faction : game.data().getActorTemplate(parentID).getFaction(game);
 	}
 	
 	public int getMaxHP(Game game) {
-		return maxHP > 0 ? maxHP : game.data().getActorStats(parentID).getMaxHP(game);
+		return maxHP > 0 ? maxHP : game.data().getActorTemplate(parentID).getMaxHP(game);
 	}
 
 	public List<Limb> getLimbs(Game game) {
-		return !limbs.isEmpty() ? limbs : game.data().getActorStats(parentID).getLimbs(game);
+		return !limbs.isEmpty() ? limbs : game.data().getActorTemplate(parentID).getLimbs(game);
 	}
 
 	public int getAttribute(Game game, Actor.Attribute attribute) {
-		return attributes.containsKey(attribute) ? attributes.get(attribute) : game.data().getActorStats(parentID).getAttribute(game, attribute);
+		return attributes.containsKey(attribute) ? attributes.get(attribute) : game.data().getActorTemplate(parentID).getAttribute(game, attribute);
 	}
 
 	public int getSkill(Game game, Actor.Skill skill) {
-		return skills.containsKey(skill) ? skills.get(skill) : game.data().getActorStats(parentID).getSkill(game, skill);
+		return skills.containsKey(skill) ? skills.get(skill) : game.data().getActorTemplate(parentID).getSkill(game, skill);
 	}
 	
 	public String getLootTable(Game game) {
 		if(lootTable == null && parentID.isEmpty()) return null;
-		return lootTable != null ? lootTable : game.data().getActorStats(parentID).getLootTable(game);
+		return lootTable != null ? lootTable : game.data().getActorTemplate(parentID).getLootTable(game);
 	}
 
 	public String getTopic(Game game) {
 		if(topic == null && parentID.isEmpty()) return null;
-		return topic != null ? topic : game.data().getActorStats(parentID).getTopic(game);
+		return topic != null ? topic : game.data().getActorTemplate(parentID).getTopic(game);
 	}
 
 	public Map<String, Script> getScripts() {

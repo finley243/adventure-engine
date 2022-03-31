@@ -57,7 +57,7 @@ public class ActionItemEquip extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Equip", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getStatsID())});
+		return new MenuData("Equip", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getTemplateID())});
 	}
 
 	@Override

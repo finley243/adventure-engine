@@ -17,7 +17,7 @@
             </objects>
             <actors>
                 <actor id="test_enemy_1">
-                    <stats>enemy</stats>
+                    <template>enemy</template>
                     <descriptor>tall</descriptor>
                 </actor>
             </actors>
@@ -32,7 +32,7 @@
             </links>
             <actors>
                 <actor id="test_enemy_2">
-                    <stats>enemy</stats>
+                    <template>enemy</template>
                     <descriptor>short</descriptor>
                 </actor>
             </actors>
@@ -75,7 +75,7 @@
             </objects>
             <!--<actors>
                 <actor id="test_vendor_actor">
-                    <stats>test_vendor</stats>
+                    <template>test_vendor</template>
                 </actor>
             </actors>-->
         </area>

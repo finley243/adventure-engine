@@ -24,10 +24,10 @@ public class Inventory {
 	}
 	
 	public void addItem(Item item) {
-		if(!items.containsKey(item.getStatsID())) {
-			items.put(item.getStatsID(), new ArrayList<>());
+		if(!items.containsKey(item.getTemplateID())) {
+			items.put(item.getTemplateID(), new ArrayList<>());
 		}
-		items.get(item.getStatsID()).add(item);
+		items.get(item.getTemplateID()).add(item);
 	}
 	
 	public void addItems(List<Item> itemList) {
@@ -38,6 +38,15 @@ public class Inventory {
 	
 	public boolean hasItemWithID(String ID) {
 		return items.containsKey(ID);
+	}
+
+	public boolean hasItemWithTag(String tag) {
+		for(Item item : getUniqueItems()) {
+			if(item.getTags().contains(tag)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public int itemCountWithID(String ID) {
@@ -54,11 +63,11 @@ public class Inventory {
 	}
 	
 	public void removeItem(Item item) {
-		if(items.containsKey(item.getStatsID())) {
-			List<Item> itemList = items.get(item.getStatsID());
+		if(items.containsKey(item.getTemplateID())) {
+			List<Item> itemList = items.get(item.getTemplateID());
 			itemList.remove(0);
 			if(itemList.isEmpty()) {
-				items.remove(item.getStatsID());
+				items.remove(item.getTemplateID());
 			}
 		}
 	}

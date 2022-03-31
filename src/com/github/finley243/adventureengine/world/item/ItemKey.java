@@ -24,7 +24,7 @@ public class ItemKey extends Item {
 	}
 	
 	@Override
-	public String getStatsID() {
+	public String getTemplateID() {
 		return stats.getID();
 	}
 

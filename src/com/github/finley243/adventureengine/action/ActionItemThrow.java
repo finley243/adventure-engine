@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
@@ -27,6 +26,6 @@ public class ActionItemThrow extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData(LangUtils.titleCase(area.getName()), canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getStatsID()), "throw"});
+        return new MenuData(LangUtils.titleCase(area.getName()), canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getTemplateID()), "throw"});
     }
 }

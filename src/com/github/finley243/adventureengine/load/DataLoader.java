@@ -56,7 +56,7 @@ public class DataLoader {
                 List<Element> actors = LoadUtils.directChildrenWithName(rootElement, "actor");
                 for (Element actorElement : actors) {
                     ActorTemplate actor = loadActor(actorElement);
-                    game.data().addActorStats(actor.getID(), actor);
+                    game.data().addActorTemplate(actor.getID(), actor);
                 }
                 List<Element> items = LoadUtils.directChildrenWithName(rootElement, "item");
                 for (Element itemElement : items) {
@@ -246,8 +246,13 @@ public class DataLoader {
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatTarget(invert, actorRef, targetRef);
             case "equippedItem":
-                String itemTag = LoadUtils.singleTag(conditionElement, "tag", null);
-                return new ConditionEquippedItem(invert, actorRef, itemTag);
+                String itemEquipTag = LoadUtils.singleTag(conditionElement, "tag", null);
+                String itemEquipExact = LoadUtils.singleTag(conditionElement, "exact", null);
+                return new ConditionEquippedItem(invert, actorRef, itemEquipTag, itemEquipExact);
+            case "inventoryItem":
+                String itemInvTag = LoadUtils.singleTag(conditionElement, "tag", null);
+                String itemInvExact = LoadUtils.singleTag(conditionElement, "exact", null);
+                return new ConditionInventoryItem(invert, actorRef, itemInvTag, itemInvExact);
             case "actorVisible":
                 ActorReference visibleTargetRef = loadActorReference(conditionElement, "target");
                 return new ConditionActorVisible(invert, actorRef, visibleTargetRef);
@@ -466,6 +471,8 @@ public class DataLoader {
                 return new EffectSkill(duration, manualRemoval, skill, amount);
             case "drop_equipped":
                 return new EffectDropEquipped();
+            case "max_hp":
+                return new EffectMaxHealth(duration, manualRemoval, amount);
             default:
                 return null;
         }
@@ -641,7 +648,7 @@ public class DataLoader {
 
     private static Actor loadActorInstance(Game game, Element actorElement, Area area) {
         String ID = actorElement.getAttribute("id");
-        String stats = LoadUtils.singleTag(actorElement, "stats", null);
+        String template = LoadUtils.singleTag(actorElement, "template", null);
         String descriptor = LoadUtils.singleTag(actorElement, "descriptor", null);
         List<String> idle;
         Element idleElement = LoadUtils.singleChildWithName(actorElement, "idle");
@@ -653,7 +660,7 @@ public class DataLoader {
         boolean preventMovement = LoadUtils.singleTagBoolean(actorElement, "preventMovement", false);
         boolean startDead = LoadUtils.singleTagBoolean(actorElement, "startDead", false);
         boolean startDisabled = LoadUtils.singleTagBoolean(actorElement, "startDisabled", false);
-        return ActorFactory.create(game, ID, area, game.data().getActorStats(stats), descriptor, idle, preventMovement, startDead, startDisabled);
+        return ActorFactory.create(game, ID, area, game.data().getActorTemplate(template), descriptor, idle, preventMovement, startDead, startDisabled);
     }
 
 }

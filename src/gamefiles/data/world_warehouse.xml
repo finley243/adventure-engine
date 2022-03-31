@@ -108,7 +108,7 @@
             </objects>
             <actors>
                 <actor id="warehouse_enemy">
-                    <stats>enemy</stats>
+                    <template>enemy</template>
                 </actor>
             </actors>
         </area>

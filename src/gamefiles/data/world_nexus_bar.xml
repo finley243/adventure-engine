@@ -12,14 +12,14 @@
             </objects>
             <actors>
                 <actor id="nexus_bouncer">
-                    <stats>nexus_bouncer</stats>
+                    <template>nexus_bouncer</template>
                     <idle>
                         <area>street_corner_nexus</area>
                     </idle>
                     <preventMovement>true</preventMovement>
                 </actor>
                 <actor id="lucas_simms">
-                    <stats>lucas_simms</stats>
+                    <template>lucas_simms</template>
                     <idle>
                         <area>street_corner_nexus</area>
                     </idle>

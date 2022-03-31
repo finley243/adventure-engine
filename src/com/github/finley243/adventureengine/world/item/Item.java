@@ -14,7 +14,6 @@ import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -31,7 +30,7 @@ public abstract class Item extends WorldObject {
 		return 0;
 	}
 
-	public abstract String getStatsID();
+	public abstract String getTemplateID();
 
 	public abstract Set<String> getTags();
 
@@ -64,7 +63,7 @@ public abstract class Item extends WorldObject {
 	public List<SaveData> saveState() {
 		List<SaveData> state = super.saveState();
 		if(isGenerated) {
-			state.add(0, new SaveData(SaveData.DataType.ITEM_INSTANCE, this.getID(), null, this.getStatsID()));
+			state.add(0, new SaveData(SaveData.DataType.ITEM_INSTANCE, this.getID(), null, this.getTemplateID()));
 		}
 		return state;
 	}

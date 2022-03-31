@@ -24,7 +24,7 @@ public class ItemJunk extends Item {
     }
 
     @Override
-    public String getStatsID() {
+    public String getTemplateID() {
         return stats.getID();
     }
 

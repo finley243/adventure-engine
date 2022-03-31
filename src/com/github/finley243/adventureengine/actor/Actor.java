@@ -745,6 +745,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		for(Item item : inventory.getAllItems()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "inventory", item.getID()));
 		}
+		if(equipmentComponent.hasEquippedItem()) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedItem", equipmentComponent.getEquippedItem().getID()));
+		}
 		if(usingObject != null) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "usingObject", usingObject.getID()));
 		}

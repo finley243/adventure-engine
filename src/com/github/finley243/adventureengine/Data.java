@@ -76,7 +76,7 @@ public class Data {
 		scenes.clear();
 		networks.clear();
 		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
-		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getActorStats(getConfig("playerStats")));
+		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getActorTemplate(getConfig("playerStats")));
 		addActor(player.getID(), player);
 	}
 
@@ -179,13 +179,13 @@ public class Data {
 		return player;
 	}
 	
-	public void addActorStats(String id, ActorTemplate value) {
+	public void addActorTemplate(String id, ActorTemplate value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add actor stats with blank ID");
 		if(actorStats.containsKey(id)) throw new IllegalArgumentException("Cannot add actor stats with existing ID: " + id);
 		actorStats.put(id, value);
 	}
 	
-	public ActorTemplate getActorStats(String id) {
+	public ActorTemplate getActorTemplate(String id) {
 		return actorStats.get(id);
 	}
 	

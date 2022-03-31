@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class SaveData implements Serializable {
 
@@ -19,7 +20,7 @@ public class SaveData implements Serializable {
     }
 
     private enum ValueType {
-        STRING, INT, BOOL
+        STRING, INT, BOOL, MULTI
     }
 
     private final DataType type;
@@ -30,6 +31,7 @@ public class SaveData implements Serializable {
     private final String valueString;
     private final int valueInt;
     private final boolean valueBoolean;
+    private final List<SaveData> valueMulti;
 
     public SaveData(DataType type, String id, String parameter, String valueString) {
         this.type = type;
@@ -39,6 +41,7 @@ public class SaveData implements Serializable {
         this.valueString = valueString;
         this.valueInt = 0;
         this.valueBoolean = false;
+        this.valueMulti = null;
     }
 
     public SaveData(DataType type, String id, String parameter, int valueInt) {
@@ -49,16 +52,29 @@ public class SaveData implements Serializable {
         this.valueString = null;
         this.valueInt = valueInt;
         this.valueBoolean = false;
+        this.valueMulti = null;
     }
 
     public SaveData(DataType type, String id, String parameter, boolean valueBoolean) {
         this.type = type;
         this.id = id;
         this.parameter = parameter;
-        this.valueType = ValueType.INT;
+        this.valueType = ValueType.BOOL;
         this.valueString = null;
         this.valueInt = 0;
         this.valueBoolean = valueBoolean;
+        this.valueMulti = null;
+    }
+
+    public SaveData(DataType type, String id, String parameter, List<SaveData> valueMulti) {
+        this.type = type;
+        this.id = id;
+        this.parameter = parameter;
+        this.valueType = ValueType.MULTI;
+        this.valueString = null;
+        this.valueInt = 0;
+        this.valueBoolean = false;
+        this.valueMulti = valueMulti;
     }
 
     public void apply(Data data) {
@@ -121,6 +137,11 @@ public class SaveData implements Serializable {
     public boolean getValueBoolean() {
         if(valueType != ValueType.BOOL) throw new UnsupportedOperationException("Cannot get boolean value from non-boolean SaveData.");
         return valueBoolean;
+    }
+
+    public List<SaveData> getValueMulti() {
+        if(valueType != ValueType.MULTI) throw new UnsupportedOperationException("Cannot get multi value from non-multi SaveData.");
+        return valueMulti;
     }
 
 }
