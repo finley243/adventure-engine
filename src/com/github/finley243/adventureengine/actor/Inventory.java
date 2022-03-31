@@ -73,7 +73,7 @@ public class Inventory {
 			itemList.remove(item);
 			if(actor != null) {
 				if (item instanceof ItemEquippable && actor.equipmentComponent().getEquippedItem() == item) {
-					actor.equipmentComponent().setEquippedItem(null);
+					actor.equipmentComponent().unequip((ItemEquippable) item);
 				}
 				if (item instanceof ItemApparel && actor.apparelComponent().getEquippedItems().contains(item)) {
 					actor.apparelComponent().unequip((ItemApparel) item);

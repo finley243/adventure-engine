@@ -21,7 +21,7 @@ public class ActionItemEquip extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		subject.equipmentComponent().setEquippedItem(item);
+		subject.equipmentComponent().equip(item);
 		Context context = new Context(subject, item);
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("equip"), context, this, subject));
 	}

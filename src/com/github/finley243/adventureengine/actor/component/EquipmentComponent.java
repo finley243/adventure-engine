@@ -13,8 +13,12 @@ public class EquipmentComponent {
         this.actor = actor;
     }
 
-    public void setEquippedItem(ItemEquippable item) {
+    public void equip(ItemEquippable item) {
         equippedItem = item;
+    }
+
+    public void unequip(ItemEquippable item) {
+        this.equippedItem = null;
     }
 
     public ItemEquippable getEquippedItem() {
