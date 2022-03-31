@@ -35,14 +35,14 @@ public class ApparelComponent {
     public void equip(ItemApparel item) {
         ItemApparel lastEquipped = equipped.get(item.getApparelSlot());
         if(lastEquipped != null) {
-            lastEquipped.unequip(actor);
+            lastEquipped.onUnequip(actor);
         }
         equipped.put(item.getApparelSlot(), item);
-        item.equip(actor);
+        item.onEquip(actor);
     }
 
     public void unequip(ItemApparel item) {
-        item.unequip(actor);
+        item.onUnequip(actor);
         equipped.put(item.getApparelSlot(), null);
     }
 

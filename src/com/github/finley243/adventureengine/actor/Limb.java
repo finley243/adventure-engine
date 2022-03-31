@@ -39,7 +39,7 @@ public class Limb {
 
     public void applyEffects(Actor target) {
         for(Effect effect : hitEffects) {
-            target.effectComponent().addEffect(effect.generate());
+            target.effectComponent().addEffect(effect);
         }
     }
 

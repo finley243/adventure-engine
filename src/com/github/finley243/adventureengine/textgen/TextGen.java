@@ -68,7 +68,7 @@ public class TextGen {
 				Noun object = context.getObjects()[i];
 				if(lastContext.getObjects().length == 0
 						|| lastContext.getObjects().length <= i && object == lastContext.getObjects()[lastContext.getObjects().length - 1]
-						|| object == lastContext.getObjects()[i]) {
+						|| lastContext.getObjects().length < i && object == lastContext.getObjects()[i]) {
 					if(!matchesAnyPronounsUpToObjectIndex(lastContext, object.getPronoun(), i, useSubjectPronoun, useObjectPronouns)) {
 						useObjectPronouns[i] = true;
 					}

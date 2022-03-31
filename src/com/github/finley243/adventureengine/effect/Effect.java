@@ -2,32 +2,19 @@ package com.github.finley243.adventureengine.effect;
 
 import com.github.finley243.adventureengine.actor.Actor;
 
+import java.util.UUID;
+
 /**
- * An effect that modifies an actor (modification can be temporary or permanent)
+ * An effect that modifies an actor
  */
 public abstract class Effect {
 
 	protected final boolean manualRemoval;
-
-	private boolean hasAdded;
-	protected int turnsRemaining;
+	private final int duration;
 
 	public Effect(int duration, boolean manualRemoval) {
 		this.manualRemoval = manualRemoval;
-		this.turnsRemaining = duration;
-	}
-	
-	public void update(Actor target) {
-		if (!hasAdded) {
-			start(target);
-			hasAdded = true;
-		} else if (!manualRemoval) {
-			if(turnsRemaining == 0) {
-				end(target);
-			}
-			turnsRemaining--;
-		}
-		eachTurn(target);
+		this.duration = duration;
 	}
 	
 	public abstract void start(Actor target);
@@ -35,12 +22,18 @@ public abstract class Effect {
 	public abstract void end(Actor target);
 	
 	public abstract void eachTurn(Actor target);
-	
-	public boolean shouldRemove() {
-		return !manualRemoval && turnsRemaining < 0;
+
+	public boolean manualRemoval() {
+		return manualRemoval;
 	}
-	
-	public abstract Effect generate();
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public boolean isInstant() {
+		return !manualRemoval && duration == 0;
+	}
 
 	@Override
 	public boolean equals(Object o) {

@@ -33,9 +33,4 @@ public class EffectDropEquipped extends Effect {
 
     }
 
-    @Override
-    public Effect generate() {
-        return new EffectDropEquipped();
-    }
-
 }

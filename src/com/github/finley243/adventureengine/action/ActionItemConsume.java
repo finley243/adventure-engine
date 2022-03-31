@@ -35,14 +35,13 @@ public class ActionItemConsume extends Action {
 		}
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(phrase), context, this, subject));
 		for(Effect effect : item.getEffects()) {
-			subject.effectComponent().addEffect(effect.generate());
+			subject.effectComponent().addEffect(effect);
 		}
 	}
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		String prompt;
-		String fullPrompt;
 		switch(item.getConsumableType()) {
 		case DRINK:
 			prompt = "Drink";

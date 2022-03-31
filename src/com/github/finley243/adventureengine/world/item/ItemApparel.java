@@ -16,8 +16,7 @@ import java.util.*;
 public class ItemApparel extends Item {
 
 	private final ApparelTemplate stats;
-	private List<Effect> effects;
-	
+
 	public ItemApparel(Game game, String ID, Area area, boolean isGenerated, ApparelTemplate stats) {
 		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
@@ -48,22 +47,16 @@ public class ItemApparel extends Item {
 		return stats.getDamageResistance();
 	}
 
-	public void equip(Actor target) {
-		if(effects != null) throw new UnsupportedOperationException("Cannot equip ItemApparel " + this.getTemplateID() + " because it is already equipped");
-		effects = new ArrayList<>();
+	public void onEquip(Actor target) {
 		for(Effect effect : stats.getEffects()) {
-			Effect generatedEffect = effect.generate();
-			effects.add(generatedEffect);
-			target.effectComponent().addEffect(generatedEffect);
+			target.effectComponent().addEffect(effect);
 		}
 	}
 
-	public void unequip(Actor target) {
-		if(effects == null) throw new UnsupportedOperationException("Cannot unequip ItemApparel " + this.getTemplateID() + " because it is not equipped");
-		for(Effect effect : effects) {
+	public void onUnequip(Actor target) {
+		for(Effect effect : stats.getEffects()) {
 			target.effectComponent().removeEffect(effect);
 		}
-		effects = null;
 	}
 
 	@Override
@@ -77,18 +70,6 @@ public class ItemApparel extends Item {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionApparelUnequip(this));
 		return actions;
-	}
-
-	@Override
-	public void loadState(SaveData saveData) {
-		super.loadState(saveData);
-	}
-
-	@Override
-	public List<SaveData> saveState() {
-		List<SaveData> state = super.saveState();
-
-		return state;
 	}
 
 }

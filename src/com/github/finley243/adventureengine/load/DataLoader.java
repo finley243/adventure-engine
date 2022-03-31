@@ -456,7 +456,7 @@ public class DataLoader {
 
     private static Effect loadEffect(Element effectElement, boolean manualRemoval) {
         String effectType = effectElement.getAttribute("type");
-        int duration = LoadUtils.singleTagInt(effectElement, "duration", 0);
+        int duration = LoadUtils.singleTagInt(effectElement, "duration", 1);
         int amount = LoadUtils.singleTagInt(effectElement, "amount", 0);
         switch(effectType) {
             case "heal":

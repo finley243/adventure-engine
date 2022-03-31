@@ -26,9 +26,4 @@ public class EffectMaxHealth extends Effect {
 
     }
 
-    @Override
-    public Effect generate() {
-        return new EffectMaxHealth(turnsRemaining, manualRemoval, amount);
-    }
-
 }

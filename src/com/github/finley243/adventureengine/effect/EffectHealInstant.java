@@ -21,10 +21,5 @@ public class EffectHealInstant extends Effect {
 
 	@Override
 	public void eachTurn(Actor target){}
-	
-	@Override
-	public Effect generate() {
-		return new EffectHealInstant(amount);
-	}
 
 }

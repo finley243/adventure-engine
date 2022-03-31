@@ -21,10 +21,5 @@ public class EffectHealOverTime extends Effect {
 	public void eachTurn(Actor target) {
 		target.heal(amount);
 	}
-	
-	@Override
-	public Effect generate() {
-		return new EffectHealOverTime(this.turnsRemaining, manualRemoval, amount);
-	}
 
 }

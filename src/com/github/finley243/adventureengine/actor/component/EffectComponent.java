@@ -3,38 +3,40 @@ package com.github.finley243.adventureengine.actor.component;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class EffectComponent {
 
-    private final List<Effect> effects;
     private final Actor actor;
+    // Integer value is number of turns effect has been active (if effect does not require manual removal)
+    private final Map<Effect, Integer> effects;
 
     public EffectComponent(Actor actor) {
-        effects = new ArrayList<>();
+        effects = new HashMap<>();
         this.actor = actor;
     }
 
     public void addEffect(Effect effect) {
-        effect.update(actor);
-        if(!effect.shouldRemove()) {
-            effects.add(effect);
+        effect.start(actor);
+        if(!effect.isInstant()) {
+            effects.put(effect, 0);
         }
     }
 
     public void removeEffect(Effect effect) {
-        effect.end(actor);
-        effects.remove(effect);
+        if(effects.containsKey(effect)) {
+            effect.end(actor);
+            effects.remove(effect);
+        }
     }
 
     public void onStartTurn() {
-        Iterator<Effect> itr = effects.iterator();
+        Iterator<Effect> itr = effects.keySet().iterator();
         while(itr.hasNext()) {
             Effect effect = itr.next();
-            effect.update(actor);
-            if(effect.shouldRemove()) {
+            effect.eachTurn(actor);
+            if(!effect.manualRemoval() && effects.get(effect) == effect.getDuration()) {
+                effect.end(actor);
                 itr.remove();
             }
         }

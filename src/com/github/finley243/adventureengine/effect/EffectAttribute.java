@@ -26,10 +26,5 @@ public class EffectAttribute extends Effect {
 
 	@Override
 	public void eachTurn(Actor target){}
-	
-	@Override
-	public Effect generate() {
-		return new EffectAttribute(this.turnsRemaining, manualRemoval, attribute, amount);
-	}
 
 }

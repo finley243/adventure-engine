@@ -111,6 +111,7 @@ public class Game {
 		}
 		CombatHelper.newTurn();
 		data().getPlayer().describeSurroundings();
+		System.out.println("Player max HP: " + data().getPlayer().getMaxHP().value());
 		data().getPlayer().takeTurn();
 	}
 	

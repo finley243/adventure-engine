@@ -10,5 +10,8 @@
         <price>30</price>
         <slot>HEAD</slot>
         <damageResistance>5</damageResistance>
+        <effect type="max_hp">
+            <amount>10</amount>
+        </effect>
     </item>
 </data>
