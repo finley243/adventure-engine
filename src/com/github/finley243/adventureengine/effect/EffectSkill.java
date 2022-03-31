@@ -5,12 +5,10 @@ import com.github.finley243.adventureengine.actor.Actor;
 public class EffectSkill extends Effect {
 
 	private final Actor.Skill skill;
-	private final int amount;
 
 	public EffectSkill(int duration, boolean manualRemoval, Actor.Skill skill, int amount) {
-		super(duration, manualRemoval);
+		super(duration, manualRemoval, amount);
 		this.skill = skill;
-		this.amount = amount;
 	}
 	
 	@Override
@@ -28,12 +26,12 @@ public class EffectSkill extends Effect {
 
 	@Override
 	public boolean equals(Object o) {
-		return super.equals(o) && skill == ((EffectSkill) o).skill && amount == ((EffectSkill) o).amount;
+		return super.equals(o) && skill == ((EffectSkill) o).skill;
 	}
 
 	@Override
 	public int hashCode() {
-		return 31 * ((31 * super.hashCode()) + amount) + skill.hashCode();
+		return 31 * super.hashCode() + skill.hashCode();
 	}
 
 }

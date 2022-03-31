@@ -10,11 +10,13 @@ import java.util.UUID;
 public abstract class Effect {
 
 	protected final boolean manualRemoval;
-	private final int duration;
+	protected final int duration;
+	protected final int amount;
 
-	public Effect(int duration, boolean manualRemoval) {
+	public Effect(int duration, boolean manualRemoval, int amount) {
 		this.manualRemoval = manualRemoval;
 		this.duration = duration;
+		this.amount = amount;
 	}
 	
 	public abstract void start(Actor target);
@@ -37,12 +39,12 @@ public abstract class Effect {
 
 	@Override
 	public boolean equals(Object o) {
-		return getClass().equals(o.getClass()) && manualRemoval == ((Effect) o).manualRemoval && duration == ((Effect) o).duration;
+		return getClass().equals(o.getClass()) && manualRemoval == ((Effect) o).manualRemoval && duration == ((Effect) o).duration && amount == ((Effect) o).amount;
 	}
 
 	@Override
 	public int hashCode() {
-		return (31 * duration) + Boolean.hashCode(manualRemoval);
+		return 31 * ((31 * duration) + Boolean.hashCode(manualRemoval)) + amount;
 	}
 	
 }

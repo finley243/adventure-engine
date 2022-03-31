@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.world.item.ItemEquippable;
 public class EffectDropEquipped extends Effect {
 
     public EffectDropEquipped() {
-        super(0, false);
+        super(0, false, 0);
     }
 
     @Override

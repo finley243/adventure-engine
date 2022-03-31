@@ -6,12 +6,10 @@ import com.github.finley243.adventureengine.actor.Actor.Attribute;
 public class EffectAttribute extends Effect {
 
 	private final Attribute attribute;
-	private final int amount;
-	
+
 	public EffectAttribute(int duration, boolean manualRemoval, Attribute attribute, int amount) {
-		super(duration, manualRemoval);
+		super(duration, manualRemoval, amount);
 		this.attribute = attribute;
-		this.amount = amount;
 	}
 	
 	@Override
@@ -29,12 +27,12 @@ public class EffectAttribute extends Effect {
 
 	@Override
 	public boolean equals(Object o) {
-		return super.equals(o) && attribute == ((EffectAttribute) o).attribute && amount == ((EffectAttribute) o).amount;
+		return super.equals(o) && attribute == ((EffectAttribute) o).attribute;
 	}
 
 	@Override
 	public int hashCode() {
-		return 31 * ((31 * super.hashCode()) + amount) + attribute.hashCode();
+		return 31 * super.hashCode() + attribute.hashCode();
 	}
 
 }
