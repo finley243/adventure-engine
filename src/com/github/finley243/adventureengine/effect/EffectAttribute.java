@@ -27,4 +27,14 @@ public class EffectAttribute extends Effect {
 	@Override
 	public void eachTurn(Actor target){}
 
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o) && attribute == ((EffectAttribute) o).attribute && amount == ((EffectAttribute) o).amount;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * ((31 * super.hashCode()) + amount) + attribute.hashCode();
+	}
+
 }

@@ -462,7 +462,7 @@ public class DataLoader {
             case "heal":
                 return new EffectHealInstant(amount);
             case "heal_over_time":
-                return new EffectHealOverTime(duration, manualRemoval, amount);
+                return new EffectHeal(duration, manualRemoval, amount);
             case "attribute":
                 Actor.Attribute attribute = LoadUtils.singleTagEnum(effectElement, "attribute", Actor.Attribute.class, null);
                 return new EffectAttribute(duration, manualRemoval, attribute, amount);

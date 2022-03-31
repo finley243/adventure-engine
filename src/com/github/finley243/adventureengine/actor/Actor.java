@@ -374,7 +374,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			inventory.removeItem(item);
 			getArea().addObject(item);
 			item.setArea(getArea());
-			context = new Context(this, equipmentComponent.getEquippedItem());
+			context = new Context(this, item);
 			game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 		}
 	}

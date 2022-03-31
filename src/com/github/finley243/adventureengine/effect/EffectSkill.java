@@ -26,4 +26,14 @@ public class EffectSkill extends Effect {
 	@Override
 	public void eachTurn(Actor target){}
 
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o) && skill == ((EffectSkill) o).skill && amount == ((EffectSkill) o).amount;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 * ((31 * super.hashCode()) + amount) + skill.hashCode();
+	}
+
 }

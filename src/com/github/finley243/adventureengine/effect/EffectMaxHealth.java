@@ -26,4 +26,14 @@ public class EffectMaxHealth extends Effect {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && amount == ((EffectMaxHealth) o).amount;
+    }
+
+    @Override
+    public int hashCode() {
+        return (31 * super.hashCode()) + amount;
+    }
+
 }

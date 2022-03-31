@@ -37,7 +37,12 @@ public abstract class Effect {
 
 	@Override
 	public boolean equals(Object o) {
-		return o == this;
+		return getClass().equals(o.getClass()) && manualRemoval == ((Effect) o).manualRemoval && duration == ((Effect) o).duration;
+	}
+
+	@Override
+	public int hashCode() {
+		return (31 * duration) + Boolean.hashCode(manualRemoval);
 	}
 	
 }

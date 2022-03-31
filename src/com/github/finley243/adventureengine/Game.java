@@ -45,19 +45,19 @@ public class Game {
 
 		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
-		//DataLoader.loadFromDir(this, new File(GAMEFILES + DATA_DIRECTORY));
 
 		PerceptionHandler perceptionHandler = new PerceptionHandler();
 		UserInterface userInterface = new GraphicalInterfaceNested(this);
-		eventBus.register(perceptionHandler);
-		eventBus.register(userInterface);
-		eventBus.register(this);
+		eventBus().register(perceptionHandler);
+		eventBus().register(userInterface);
+		eventBus().register(this);
 
-		data.newGame();
+		data().newGame();
 
 		data().getPlayer().adjustMoney(320);
 		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_vest", null));
 		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_helmet", null));
+		data().getPlayer().inventory().addItem(ItemFactory.create(this, "nitron_cola", null));
 
 		File saveFile = new File(GAMEFILES + "/save.aes");
 		SaveLoader.saveGame(saveFile, data());
@@ -111,7 +111,6 @@ public class Game {
 		}
 		CombatHelper.newTurn();
 		data().getPlayer().describeSurroundings();
-		System.out.println("Player max HP: " + data().getPlayer().getMaxHP().value());
 		data().getPlayer().takeTurn();
 	}
 	
