@@ -29,7 +29,7 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 		if(!getWeapon().isSilenced()) {
 			subject.game().eventBus().post(new SoundEvent(subject.getArea(), true));
 		}
-		getTarget().addCombatTarget(subject);
+		getTarget().targetingComponent().addCombatant(subject);
 		Context attackContext = new Context(Map.of("limb", limb.getName()), subject, getTarget(), getWeapon());
 		if(!CombatHelper.isRepeat(attackContext)) {
 			subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), limb, false)), "you hear a gunshot", attackContext, AudioVisualEvent.ResponseType.HOSTILE, true, null, null));
@@ -68,7 +68,7 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 
 	@Override
 	public float utility(Actor subject) {
-		if (!subject.isCombatTarget(getTarget())) return 0;
+		if (!subject.targetingComponent().isCombatant(getTarget())) return 0;
 		return 0.8f;
 	}
 

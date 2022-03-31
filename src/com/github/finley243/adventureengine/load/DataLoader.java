@@ -242,9 +242,9 @@ public class DataLoader {
                 Condition.Equality hpEquality = LoadUtils.singleTagEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
                 float hpValue = LoadUtils.singleTagFloat(conditionElement, "value", 0);
                 return new ConditionActorHP(invert, actorRef, hpEquality, hpValue);
-            case "combatTarget":
+            case "combatant":
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
-                return new ConditionCombatTarget(invert, actorRef, targetRef);
+                return new ConditionCombatant(invert, actorRef, targetRef);
             case "equippedItem":
                 String itemEquipTag = LoadUtils.singleTag(conditionElement, "tag", null);
                 String itemEquipExact = LoadUtils.singleTag(conditionElement, "exact", null);

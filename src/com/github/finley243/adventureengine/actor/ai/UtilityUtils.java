@@ -37,7 +37,7 @@ public class UtilityUtils {
 	public static float getCoverUtility(Actor subject) {
 		int targetsBlocked = 0;
 		int totalTargets = 0;
-		for(Actor target : subject.getCombatTargets()) {
+		for(Actor target : subject.targetingComponent().getCombatants()) {
 			Area lastKnownArea = subject.targetingComponent().getLastKnownArea(target);
 			if (target.equipmentComponent().hasRangedWeaponEquipped() && lastKnownArea != null && lastKnownArea.isBehindCover(subject.getArea())) {
 				targetsBlocked++;

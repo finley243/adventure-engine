@@ -453,18 +453,6 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		return false;
 	}
-	
-	public boolean isCombatTarget(Actor actor) {
-		return targetingComponent.isCombatant(actor);
-	}
-	
-	public void addCombatTarget(Actor actor) {
-		targetingComponent.addCombatant(actor);
-	}
-
-	public Set<Actor> getCombatTargets() {
-		return targetingComponent.getCombatants();
-	}
 
 	public TargetingComponent targetingComponent() {
 		return targetingComponent;

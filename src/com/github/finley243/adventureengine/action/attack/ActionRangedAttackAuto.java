@@ -26,7 +26,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 		if(!getWeapon().isSilenced()) {
 			subject.game().eventBus().post(new SoundEvent(subject.getArea(), true));
 		}
-		getTarget().addCombatTarget(subject);
+		getTarget().targetingComponent().addCombatant(subject);
 		Context attackContext = new Context(subject, getTarget(), getWeapon());
 		if(!CombatHelper.isRepeat(attackContext)) {
 			subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, true)), "you hear a spray of gunfire", attackContext, AudioVisualEvent.ResponseType.HOSTILE, true, null, null));
@@ -66,7 +66,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 
 	@Override
 	public float utility(Actor subject) {
-		if (!subject.isCombatTarget(getTarget())) return 0;
+		if (!subject.targetingComponent().isCombatant(getTarget())) return 0;
 		return 0.8f;
 	}
 
