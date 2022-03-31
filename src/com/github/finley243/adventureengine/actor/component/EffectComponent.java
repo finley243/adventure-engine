@@ -35,7 +35,9 @@ public class EffectComponent {
         while(itr.hasNext()) {
             Effect effect = itr.next();
             effect.eachTurn(actor);
-            if(!effect.manualRemoval() && effects.get(effect) == effect.getDuration()) {
+            int counterValue = effects.get(effect) + 1;
+            effects.put(effect, counterValue);
+            if(!effect.manualRemoval() && counterValue == effect.getDuration()) {
                 effect.end(actor);
                 itr.remove();
             }
