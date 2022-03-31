@@ -6,24 +6,19 @@ import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.ItemApparel;
 
 public class ActionItemDrop extends Action {
 
 	private final Item item;
-	private final boolean isEquipped;
-	
-	public ActionItemDrop(Item item, boolean isEquipped) {
+
+	public ActionItemDrop(Item item) {
 		this.item = item;
-		this.isEquipped = isEquipped;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		if(isEquipped) {
-			subject.equipmentComponent().setEquippedItem(null);
-		} else {
-			subject.inventory().removeItem(item);
-		}
+		subject.inventory().removeItem(item);
 		subject.getArea().addObject(item);
 		item.setArea(subject.getArea());
 		Context context = new Context(subject, item);
@@ -37,6 +32,7 @@ public class ActionItemDrop extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
+		boolean isEquipped = subject.equipmentComponent().getEquippedItem() == item || item instanceof ItemApparel && subject.apparelComponent().getEquippedItems().contains(item);
 		return new MenuData("Drop", canChoose(subject), new String[]{"inventory", item.getName() + (isEquipped ? " (equipped)" : subject.inventory().itemCountLabel(item.getTemplateID()))});
 	}
 

@@ -5,14 +5,19 @@ import java.util.*;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.ItemApparel;
+import com.github.finley243.adventureengine.world.item.ItemEquippable;
 
 public class Inventory {
 
+	// If inventory belongs to an object or secondary component (e.g. vendor inventory), actor will be null
+	private final Actor actor;
 	// Keys are statsIDs, values are lists of items with the corresponding statsID
 	private final Map<String, List<Item>> items;
 	
-	public Inventory() {
-		items = new HashMap<>();
+	public Inventory(Actor actor) {
+		this.actor = actor;
+		this.items = new HashMap<>();
 	}
 
 	public List<Item> getAllItems() {
@@ -61,11 +66,19 @@ public class Inventory {
 			return " (" + itemCountWithID(ID) + ")";
 		}
 	}
-	
+
 	public void removeItem(Item item) {
 		if(items.containsKey(item.getTemplateID())) {
 			List<Item> itemList = items.get(item.getTemplateID());
-			itemList.remove(0);
+			itemList.remove(item);
+			if(actor != null) {
+				if (item instanceof ItemEquippable && actor.equipmentComponent().getEquippedItem() == item) {
+					actor.equipmentComponent().setEquippedItem(null);
+				}
+				if (item instanceof ItemApparel && actor.apparelComponent().getEquippedItems().contains(item)) {
+					actor.apparelComponent().unequip((ItemApparel) item);
+				}
+			}
 			if(itemList.isEmpty()) {
 				items.remove(item.getTemplateID());
 			}

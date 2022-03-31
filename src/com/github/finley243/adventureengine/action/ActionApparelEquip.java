@@ -14,8 +14,12 @@ public class ActionApparelEquip extends Action {
 
     @Override
     public void choose(Actor subject) {
-        subject.inventory().removeItem(item);
         subject.apparelComponent().equip(item);
+    }
+
+    @Override
+    public boolean canChoose(Actor subject) {
+        return !disabled && subject.apparelComponent().isSlotEmpty(item);
     }
 
     @Override

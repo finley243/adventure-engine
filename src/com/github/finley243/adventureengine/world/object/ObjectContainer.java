@@ -21,7 +21,7 @@ public class ObjectContainer extends WorldObject {
 
 	public ObjectContainer(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, String lootTable) {
 		super(game, ID, area, name, description, scripts);
-		this.inventory = new Inventory();
+		this.inventory = new Inventory(null);
 		this.lootTable = lootTable;
 	}
 

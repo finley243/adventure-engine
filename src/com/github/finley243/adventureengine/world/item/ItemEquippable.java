@@ -29,7 +29,6 @@ public abstract class ItemEquippable extends Item {
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionItemUnequip(this));
-		actions.add(new ActionItemDrop(this, true));
 		return actions;
 	}
 

@@ -23,7 +23,7 @@ public class VendorComponent {
     private boolean enabled;
 
     public VendorComponent(Actor vendor) {
-        this.vendorInventory = new Inventory();
+        this.vendorInventory = new Inventory(null);
         this.vendor = vendor;
         this.lootTable = vendor.getStats().getLootTable(vendor.game());
         this.buyTags = vendor.getStats().vendorBuyTags();

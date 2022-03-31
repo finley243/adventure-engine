@@ -19,6 +19,7 @@ public class ActionItemTake extends Action {
 	@Override
 	public void choose(Actor subject) {
 		item.getArea().removeObject(item);
+		item.setArea(null);
 		subject.inventory().addItem(item);
 		Context context = new Context(subject, item);
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("pickUp"), context, this, subject));
