@@ -1,6 +1,6 @@
 <config>
     <playerStats>player</playerStats>
     <playerID>player</playerID>
-    <playerStartArea>test_area_5</playerStartArea>
+    <playerStartArea>stratis_hotel_lobby_entry</playerStartArea>
     <gameName>AdventureEngine</gameName>
 </config>

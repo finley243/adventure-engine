@@ -1,12 +1,13 @@
 <data>
     <room id="stratis_hotel_lobby">
         <name proper="false">lobby</name>
-        <roomDescription>You lobby is large and airy. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</roomDescription>
+        <roomDescription>The lobby is large and airy. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</roomDescription>
         <area id="stratis_hotel_lobby_entry">
             <name proper="false" type="near">entrance</name>
             <areaDescription>The entryway is clean and relatively empty.</areaDescription>
             <links>
                 <link dir="north">stratis_hotel_lobby_desk</link>
+                <link dir="north" type="far">stratis_hotel_lobby_desk_behind</link>
                 <link dir="east">stratis_hotel_lobby_seating</link>
                 <link dir="northeast">stratis_hotel_lobby_elevators</link>
             </links>
@@ -26,6 +27,8 @@
             <links>
                 <link dir="south" dist="0">stratis_hotel_lobby_desk</link>
                 <link dir="east">stratis_hotel_lobby_elevators</link>
+                <link dir="south" type="far">stratis_hotel_lobby_entry</link>
+                <link dir="southeast">stratis_hotel_lobby_seating</link>
             </links>
             <actors>
                 <actor id="stratis_receptionist">
@@ -41,6 +44,7 @@
             <links>
                 <link dir="west">stratis_hotel_lobby_entry</link>
                 <link dir="northwest">stratis_hotel_lobby_desk</link>
+                <link dir="northwest">stratis_hotel_lobby_desk_behind</link>
                 <link dir="north">stratis_hotel_lobby_elevators</link>
             </links>
             <objects>
@@ -65,11 +69,12 @@
             </actors>
         </area>
         <area id="stratis_hotel_lobby_elevators">
-            <name proper="false" type="near">elevators</name>
+            <name proper="false" type="near">elevator</name>
             <links>
-                <link>stratis_hotel_lobby_desk</link>
-                <link>stratis_hotel_lobby_entry</link>
-                <link>stratis_hotel_lobby_seating</link>
+                <link dir="west">stratis_hotel_lobby_desk</link>
+                <link dir="west">stratis_hotel_lobby_desk_behind</link>
+                <link dir="southwest">stratis_hotel_lobby_entry</link>
+                <link dir="south">stratis_hotel_lobby_seating</link>
             </links>
             <objects>
                 <object type="elevator" id="stratis_hotel_elevator_lobby">

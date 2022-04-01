@@ -100,10 +100,6 @@ public class Area extends GameInstanced implements Noun {
 			formattedName = name;
 		}
 		switch(nameType) {
-			case IN:
-			case ON:
-			default:
-				return formattedName;
 			case NEAR:
 				return "near " + formattedName;
 			case LEFT:
@@ -116,6 +112,10 @@ public class Area extends GameInstanced implements Noun {
 				return "behind " + formattedName;
 			case AGAINST:
 				return "against " + formattedName;
+			case IN:
+			case ON:
+			default:
+				return formattedName;
 		}
 	}
 

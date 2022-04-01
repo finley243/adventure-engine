@@ -81,6 +81,15 @@
         <inventory>
             <entry table="true">stratis_guard</entry>
         </inventory>
+        <script trigger="on_player_visible_round">
+            <condition type="equippedItem">
+                <actor target="player"></actor>
+                <tag>weapon</tag>
+            </condition>
+            <script type="scene">
+                <scene>test_weapon_bark</scene>
+            </script>
+        </script>
     </actor>
     <actor id="enemy" parent="default">
         <name proper="false">ganger</name>

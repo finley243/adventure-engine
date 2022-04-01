@@ -81,6 +81,7 @@ public class ActorPlayer extends Actor {
 		game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("location"), playerContext)));
 		for(Area area : getArea().getVisibleAreas(this)) {
 			List<Noun> nounsInArea = new ArrayList<>();
+			// TODO - Describe whether actors are behind cover
 			Set<Actor> actorsInArea = new HashSet<>(area.getActors());
 			actorsInArea.remove(this);
 			nounsInArea.addAll(actorsInArea);
@@ -95,6 +96,7 @@ public class ActorPlayer extends Actor {
 					Context areaContext = new Context(Map.of("inLocation", area.getRelativeName(), "direction", getArea().getRelativeDirectionOf(area).toString().toLowerCase()), multiNoun);
 					game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("locationList"), areaContext)));
 				}
+				area.setKnown();
 			}
 		}
 		game().eventBus().post(new RenderTextEvent(""));
