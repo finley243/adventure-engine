@@ -78,18 +78,18 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private boolean isKnown;
 	private final Area defaultArea;
 	private Area area;
-	private final ActorStat maxHP;
+	private final ModableStat maxHP;
 	private int HP;
 	private final boolean startDisabled;
 	private boolean isEnabled;
 	private final boolean startDead;
 	private boolean isDead;
 	private boolean endTurn;
-	private final ActorStat actionPoints;
+	private final ModableStat actionPoints;
 	private int actionPointsUsed;
 	private final Map<Action, Integer> blockedActions;
-	private final EnumMap<Attribute, ActorStat> attributes;
-	private final EnumMap<Skill, ActorStat> skills;
+	private final EnumMap<Attribute, ModableStat> attributes;
+	private final EnumMap<Skill, ModableStat> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final ApparelComponent apparelComponent;
@@ -117,8 +117,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		this.investigateTarget = new InvestigateTarget();
 		this.startDead = startDead;
 		this.isDead = startDead;
-		this.maxHP = new ActorStat(this, stats.getMaxHP(game()), 0, MAX_HP);
-		this.actionPoints = new ActorStat(this, ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
+		this.maxHP = new ModableStat(this, stats.getMaxHP(game()), 0, MAX_HP);
+		this.actionPoints = new ModableStat(this, ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
 		if(!startDead) {
 			HP = this.maxHP.value();
 		}
@@ -132,11 +132,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new ActorStat(this, stats.getAttribute(game(), attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX));
+			this.attributes.put(attribute, new ModableStat(this, stats.getAttribute(game(), attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX));
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for(Skill skill : Skill.values()) {
-			this.skills.put(skill, new ActorStat(this, stats.getSkill(game(), skill), SKILL_MIN, SKILL_MAX));
+			this.skills.put(skill, new ModableStat(this, stats.getSkill(game(), skill), SKILL_MIN, SKILL_MAX));
 		}
 		this.effectComponent = new EffectComponent(this);
 		this.blockedActions = new HashMap<>();
@@ -147,7 +147,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 
 	public void newGameInit() {
 		if(stats.getLootTable(game()) != null) {
-			inventory.addItems(game().data().getLootTable(stats.getLootTable(game())).generateItems(game()));
+			inventory.addItems(stats.getLootTable(game()).generateItems(game()));
 		}
 		if(vendorComponent != null) {
 			vendorComponent.generateInventory();
@@ -234,11 +234,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 	}
 	
-	public ActorStat getAttribute(Attribute attribute) {
+	public ModableStat getAttribute(Attribute attribute) {
 		return attributes.get(attribute);
 	}
 
-	public ActorStat getSkill(Skill skill) {
+	public ModableStat getSkill(Skill skill) {
 		return skills.get(skill);
 	}
 	
@@ -306,11 +306,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		return ((float) HP) / ((float) maxHP.value());
 	}
 
-	public ActorStat getMaxHP() {
+	public ModableStat getMaxHP() {
 		return maxHP;
 	}
 
-	public ActorStat getActionPoints() {
+	public ModableStat getActionPoints() {
 		return actionPoints;
 	}
 

@@ -7,6 +7,14 @@
         <critDamage>5</critDamage>
         <rate>2</rate>
     </item>
+    <item type="weapon" id="katana">
+        <name>katana</name>
+        <price>60</price>
+        <type>SWORD</type>
+        <damage>20</damage>
+        <critDamage>10</critDamage>
+        <rate>2</rate>
+    </item>
     <item type="weapon" id="pistol_light">
         <name>light pistol</name>
         <price>30</price>

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.condition.Condition.Equality;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -9,22 +8,27 @@ import java.util.*;
 public class LoadUtils {
 
 	public static String attribute(Element element, String name, String defaultValue) {
-		if(!element.hasAttribute(name)) return defaultValue;
+		if(element == null || !element.hasAttribute(name)) return defaultValue;
 		return element.getAttribute(name);
 	}
 
-	public static boolean boolAttribute(Element element, String name, boolean defaultValue) {
-		if(!element.hasAttribute(name)) return defaultValue;
+	public static boolean attributeBool(Element element, String name, boolean defaultValue) {
+		if(element == null || !element.hasAttribute(name)) return defaultValue;
 		return element.getAttribute(name).equalsIgnoreCase("true") || element.getAttribute(name).equalsIgnoreCase("t");
 	}
 
-	public static int intAttribute(Element element, String name, int defaultValue) {
-		if(!element.hasAttribute(name)) return defaultValue;
+	public static int attributeInt(Element element, String name, int defaultValue) {
+		if(element == null || !element.hasAttribute(name)) return defaultValue;
 		return Integer.parseInt(element.getAttribute(name));
 	}
 
-	public static <T extends Enum<T>> T enumAttribute(Element element, String name, Class<T> enumClass, T defaultValue) {
-		if(!element.hasAttribute(name)) return defaultValue;
+	public static float attributeFloat(Element element, String name, float defaultValue) {
+		if(element == null || !element.hasAttribute(name)) return defaultValue;
+		return Float.parseFloat(element.getAttribute(name));
+	}
+
+	public static <T extends Enum<T>> T attributeEnum(Element element, String name, Class<T> enumClass, T defaultValue) {
+		if(element == null || !element.hasAttribute(name)) return defaultValue;
 		String stringValue = element.getAttribute(name);
 		for(T current : EnumSet.allOf(enumClass)) {
 			if(stringValue.equalsIgnoreCase(current.toString())) {

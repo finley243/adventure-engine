@@ -1,81 +1,30 @@
 <data>
     <lootTable id="player" useAll="true">
-        <entry>
-            <reference table="false">pistol_heavy</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
-        <entry>
-            <reference table="false">baseball_bat</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
+        <entry>pistol_heavy</entry>
+        <entry>baseball_bat</entry>
     </lootTable>
     <lootTable id="weapon_melee" useAll="false">
-        <entry>
-            <reference table="false">baseball_bat</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
+        <entry>baseball_bat</entry>
+        <entry>katana</entry>
     </lootTable>
     <lootTable id="weapon_ranged" useAll="false">
-        <entry>
-            <reference table="false">pistol_light</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
-        <entry>
-            <reference table="false">pistol_heavy</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
-        <entry>
-            <reference table="false">rifle_auto</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
+        <entry>pistol_light</entry>
+        <entry>pistol_heavy</entry>
+        <entry>rifle_auto</entry>
     </lootTable>
     <lootTable id="weapon_ranged_3" useAll="true">
-        <entry>
-            <reference table="true">weapon_ranged</reference>
-            <chance>1.0</chance>
-            <count>3</count>
-        </entry>
+        <entry table="true" count="3">weapon_ranged</entry>
     </lootTable>
     <lootTable id="stratis_receptionist" useAll="true">
-        <entry>
-            <reference table="false">pistol_light</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
-        <entry>
-            <reference table="false">stratis_master_key</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
+        <entry>pistol_light</entry>
+        <entry>stratis_master_key</entry>
     </lootTable>
     <lootTable id="stratis_guard" useAll="true">
-        <entry>
-            <reference table="false">rifle_auto</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
-        <entry>
-            <reference table="false">stratis_security_key</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
+        <entry>rifle_auto</entry>
+        <entry>stratis_security_key</entry>
     </lootTable>
     <lootTable id="nexus_bouncer" useAll="true">
-        <entry>
-            <reference table="true">weapon_melee</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
-        <entry>
-            <reference table="false">nexus_bouncer_key</reference>
-            <chance>1.0</chance>
-            <count>1</count>
-        </entry>
+        <entry table="true">weapon_melee</entry>
+        <entry>nexus_bouncer_key</entry>
     </lootTable>
 </data>

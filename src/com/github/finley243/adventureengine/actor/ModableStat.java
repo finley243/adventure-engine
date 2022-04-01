@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
-public class ActorStat {
+public class ModableStat {
 
     private final Actor actor;
     private final int min;
@@ -9,7 +9,7 @@ public class ActorStat {
     private int mod;
     private float mult;
 
-    public ActorStat(Actor actor, int defaultBase, int min, int max) {
+    public ModableStat(Actor actor, int defaultBase, int min, int max) {
         this.actor = actor;
         this.min = min;
         this.max = max;

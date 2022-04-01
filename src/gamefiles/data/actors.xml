@@ -59,14 +59,18 @@
         <pronoun>YOU</pronoun>
         <faction>player</faction>
         <hp>50</hp>
-        <lootTable>player</lootTable>
+        <inventory>
+            <entry table="true">player</entry>
+        </inventory>
     </actor>
     <actor id="stratis_receptionist" parent="default">
         <name proper="false">receptionist</name>
         <pronoun>HE</pronoun>
         <faction>stratis_hotel_staff</faction>
         <hp>40</hp>
-        <lootTable>stratis_receptionist</lootTable>
+        <inventory>
+            <entry table="true">stratis_receptionist</entry>
+        </inventory>
         <topic>stratis_receptionist_start</topic>
     </actor>
     <actor id="stratis_guard" parent="default">
@@ -74,14 +78,18 @@
         <pronoun>HE</pronoun>
         <faction>stratis_hotel_staff</faction>
         <hp>70</hp>
-        <lootTable>stratis_guard</lootTable>
+        <inventory>
+            <entry table="true">stratis_guard</entry>
+        </inventory>
     </actor>
     <actor id="enemy" parent="default">
         <name proper="false">ganger</name>
         <pronoun>HE</pronoun>
         <faction>enemy</faction>
         <hp>40</hp>
-        <lootTable>weapon_ranged</lootTable>
+        <inventory>
+            <entry table="true">weapon_ranged</entry>
+        </inventory>
         <script trigger="on_combat_start" type="bark">
             <chance>0.8</chance>
             <line>"Finally, some action!" $subject yell$s</line>
@@ -94,7 +102,9 @@
         <pronoun>HE</pronoun>
         <faction>nexus_staff</faction>
         <hp>70</hp>
-        <lootTable>nexus_bouncer</lootTable>
+        <inventory>
+            <entry table="true">nexus_bouncer</entry>
+        </inventory>
         <topic>nexus_bouncer_start</topic>
     </actor>
     <actor id="lucas_simms" parent="default">
@@ -102,7 +112,9 @@
         <pronoun>HE</pronoun>
         <faction>nexus_staff</faction>
         <hp>50</hp>
-        <lootTable>nexus_bouncer</lootTable>
+        <inventory>
+            <entry table="true">nexus_bouncer</entry>
+        </inventory>
         <topic>lucas_simms_start</topic>
     </actor>
     <actor id="test_vendor" parent="default">
@@ -110,7 +122,9 @@
         <pronoun>SHE</pronoun>
         <faction>nexus_staff</faction>
         <hp>40</hp>
-        <lootTable>stratis_receptionist</lootTable>
+        <inventory>
+            <entry table="true">stratis_receptionist</entry>
+        </inventory>
         <topic>stratis_receptionist_start</topic>
         <vendor>
             <lootTable>weapon_ranged_3</lootTable>

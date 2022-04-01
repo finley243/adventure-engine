@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.world.item.LootTable;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class ActorTemplate {
 	private final Map<Actor.Attribute, Integer> attributes;
 	private final Map<Actor.Skill, Integer> skills;
 	
-	private final String lootTable;
+	private final LootTable lootTable;
 	private final String topic;
 
 	private final boolean isVendor;
@@ -35,7 +36,7 @@ public class ActorTemplate {
 
 	private final Map<String, Script> scripts;
 	
-	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, String lootTable, String topic, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
+	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String topic, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
@@ -92,7 +93,7 @@ public class ActorTemplate {
 		return skills.containsKey(skill) ? skills.get(skill) : game.data().getActorTemplate(parentID).getSkill(game, skill);
 	}
 	
-	public String getLootTable(Game game) {
+	public LootTable getLootTable(Game game) {
 		if(lootTable == null && parentID.isEmpty()) return null;
 		return lootTable != null ? lootTable : game.data().getActorTemplate(parentID).getLootTable(game);
 	}
