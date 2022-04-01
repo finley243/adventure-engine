@@ -595,7 +595,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	}
 	
 	public void endTurn() {
-		actionPointsUsed = actionPoints.value();
+		// May cause issues
+		actionPointsUsed = 0;
 		endTurn = true;
 	}
 	
@@ -727,6 +728,10 @@ public class Actor extends GameInstanced implements Noun, Physical {
 				break;
 			case "isCrouching":
 				this.isCrouching = saveData.getValueBoolean();
+				break;
+			case "actionPointsUsed":
+				this.actionPointsUsed = saveData.getValueInt();
+				break;
 		}
 	}
 
@@ -758,6 +763,9 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		if(isCrouching) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isCrouching", isCrouching));
+		}
+		if(actionPointsUsed != 0) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "actionPointsUsed", actionPointsUsed));
 		}
 		// TODO - Save target search cooldowns (requires multi-value save data)
 		for(Actor combatant : targetingComponent.getCombatants()) {

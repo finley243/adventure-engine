@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.load.SaveData;
 
 import java.util.*;
 
@@ -54,6 +55,19 @@ public class EffectComponent {
                 }
             }
         }
+    }
+
+    public List<SaveData> saveState() {
+        for(Effect effect : effects.keySet()) {
+            if(effect.needsSaveData()) {
+                // TODO - Store effect parameters and timer list
+            }
+        }
+        return null;
+    }
+
+    public void loadState(List<SaveData> data) {
+
     }
 
 }

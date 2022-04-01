@@ -37,6 +37,10 @@ public abstract class Effect {
 		return !manualRemoval && duration == 0;
 	}
 
+	public boolean needsSaveData() {
+		return !manualRemoval;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		return getClass().equals(o.getClass()) && manualRemoval == ((Effect) o).manualRemoval && duration == ((Effect) o).duration && amount == ((Effect) o).amount;
