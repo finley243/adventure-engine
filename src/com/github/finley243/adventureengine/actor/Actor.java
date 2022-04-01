@@ -38,6 +38,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	public static final int SKILL_MIN = 1;
 	public static final int SKILL_MAX = 10;
 	public static final int MAX_HP = 1000;
+	public static final int MAX_ACTION_POINTS = 10;
 	
 	public enum Attribute {
 		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
@@ -84,7 +85,8 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private final boolean startDead;
 	private boolean isDead;
 	private boolean endTurn;
-	private int actionPoints;
+	private final ActorStat actionPoints;
+	private int actionPointsUsed;
 	private final Map<Action, Integer> blockedActions;
 	private final EnumMap<Attribute, ActorStat> attributes;
 	private final EnumMap<Skill, ActorStat> skills;
@@ -116,6 +118,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		this.startDead = startDead;
 		this.isDead = startDead;
 		this.maxHP = new ActorStat(this, stats.getMaxHP(game()), 0, MAX_HP);
+		this.actionPoints = new ActorStat(this, ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
 		if(!startDead) {
 			HP = this.maxHP.value();
 		}
@@ -305,6 +308,10 @@ public class Actor extends GameInstanced implements Noun, Physical {
 
 	public ActorStat getMaxHP() {
 		return maxHP;
+	}
+
+	public ActorStat getActionPoints() {
+		return actionPoints;
 	}
 
 	public void onStatChange() {
@@ -556,7 +563,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		targetingComponent.updateTurn();
 		investigateTarget.nextTurn(this);
 		behaviorIdle.update(this);
-		this.actionPoints = ACTIONS_PER_TURN;
+		this.actionPointsUsed = 0;
 		this.blockedActions.clear();
 		this.endTurn = false;
 		while(!endTurn) {
@@ -565,12 +572,12 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			investigateTarget.update(this);
 			List<Action> availableActions = availableActions();
 			for(Action action : availableActions) {
-				if(actionPoints < action.actionPoints(this)) {
+				if(actionPoints.value() - actionPointsUsed < action.actionPoints(this)) {
 					action.disable();
 				}
 			}
 			Action chosenAction = chooseAction(availableActions);
-			actionPoints -= chosenAction.actionPoints(this);
+			actionPointsUsed += chosenAction.actionPoints(this);
 			boolean actionIsBlocked = false;
 			for(Action repeatAction : blockedActions.keySet()) {
 				if(repeatAction.isRepeatMatch(chosenAction)) {
@@ -588,7 +595,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	}
 	
 	public void endTurn() {
-		actionPoints = 0;
+		actionPointsUsed = actionPoints.value();
 		endTurn = true;
 	}
 	

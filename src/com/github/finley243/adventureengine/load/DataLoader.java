@@ -471,6 +471,8 @@ public class DataLoader {
                 return new EffectDropEquipped();
             case "max_hp":
                 return new EffectMaxHealth(duration, manualRemoval, amount);
+            case "action_points":
+                return new EffectActionPoints(duration, manualRemoval, amount);
             default:
                 return null;
         }
