@@ -565,7 +565,6 @@ public class DataLoader {
 
         Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
 
-        System.out.println("Area nameType loaded: " + nameType.toString());
         Area area = new Area(game, areaID, name, description, isProperName, nameType, roomID, areaOwnerFaction, areaIsPrivate, linkSet, areaScripts);
 
         Element objectsElement = LoadUtils.singleChildWithName(areaElement, "objects");
