@@ -333,7 +333,6 @@ public class DataLoader {
             case "factionRelation":
                 String targetFaction = LoadUtils.singleTag(scriptElement, "targetFaction", null);
                 String relationFaction = LoadUtils.singleTag(scriptElement, "relationFaction", null);
-                //Faction.FactionRelation relation = factionRelationTag(scriptElement, "relation");
                 Faction.FactionRelation relation = LoadUtils.singleTagEnum(scriptElement, "relation", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
                 return new ScriptFactionRelation(condition, targetFaction, relationFaction, relation);
             case "moveActor":
@@ -380,7 +379,7 @@ public class DataLoader {
 
     private static Faction loadFaction(Element factionElement) {
         String id = factionElement.getAttribute("id");
-        Faction.FactionRelation defaultRelation = factionRelationTag(factionElement, "default");
+        Faction.FactionRelation defaultRelation = LoadUtils.singleTagEnum(factionElement, "default", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
         Map<String, Faction.FactionRelation> relations = loadFactionRelations(factionElement);
         return new Faction(id, defaultRelation, relations);
     }
@@ -390,23 +389,10 @@ public class DataLoader {
         List<Element> relationElements = LoadUtils.directChildrenWithName(factionElement, "relation");
         for(Element relationElement : relationElements) {
             String id = LoadUtils.singleTag(relationElement, "id", null);
-            Faction.FactionRelation type = factionRelationTag(relationElement, "type");
+            Faction.FactionRelation type = LoadUtils.singleTagEnum(relationElement, "type", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
             relations.put(id, type);
         }
         return relations;
-    }
-
-    private static Faction.FactionRelation factionRelationTag(Element element, String name) {
-        String factionRelationString = LoadUtils.singleTag(element, name, null);
-        switch(factionRelationString) {
-            case "ASSIST":
-                return Faction.FactionRelation.ASSIST;
-            case "HOSTILE":
-                return Faction.FactionRelation.HOSTILE;
-            case "NEUTRAL":
-            default:
-                return Faction.FactionRelation.NEUTRAL;
-        }
     }
 
     private static ItemTemplate loadItem(Element itemElement) throws ParserConfigurationException, IOException, SAXException {
@@ -580,8 +566,6 @@ public class DataLoader {
         for(Element objectElement : objectElements) {
             WorldObject object = loadObject(game, objectElement, area);
             game.data().addObject(object.getID(), object);
-            // TODO - Replace with enable/disable system in WorldObject (similar to Actor)
-            area.addObject(object);
         }
 
         Element actorsElement = LoadUtils.singleChildWithName(areaElement, "actors");

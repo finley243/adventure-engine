@@ -26,6 +26,7 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 	private final String ID;
 	private final String name;
 	private boolean isKnown;
+	private boolean isEnabled;
 	private final Area defaultArea;
 	private Area area;
 	private final String description;
@@ -39,6 +40,7 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 		this.name = name;
 		this.description = description;
 		this.scripts = scripts;
+		setEnabled(true);
 	}
 
 	public String getID() {
@@ -98,6 +100,17 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 		this.area = area;
 	}
 
+	public void setEnabled(boolean enable) {
+		if(area != null && isEnabled != enable) {
+			isEnabled = enable;
+			if(enable) {
+				area.addObject(this);
+			} else {
+				area.removeObject(this);
+			}
+		}
+	}
+
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
@@ -123,6 +136,9 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 			case "isKnown":
 				this.isKnown = saveData.getValueBoolean();
 				break;
+			case "isEnabled":
+				setEnabled(saveData.getValueBoolean());
+				break;
 			case "area":
 				this.area = game().data().getArea(saveData.getValueString());
 				break;
@@ -133,6 +149,9 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 		List<SaveData> state = new ArrayList<>();
 		if(isKnown) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "isKnown", isKnown));
+		}
+		if(!isEnabled) {
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "isEnabled", isEnabled));
 		}
 		if(area != defaultArea) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "area", area.getID()));
