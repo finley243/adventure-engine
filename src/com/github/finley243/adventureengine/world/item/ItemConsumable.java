@@ -50,7 +50,7 @@ public class ItemConsumable extends Item {
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = super.inventoryActions(subject);
-		actions.add(0, new ActionItemConsume(this));
+		actions.add(new ActionItemConsume(this));
 		return actions;
 	}
 	

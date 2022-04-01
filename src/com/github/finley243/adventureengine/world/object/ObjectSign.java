@@ -26,7 +26,7 @@ public class ObjectSign extends WorldObject {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
-		actions.add(new ActionReadSign(this, false));
+		actions.add(new ActionReadSign(this));
 		return actions;
 	}
 

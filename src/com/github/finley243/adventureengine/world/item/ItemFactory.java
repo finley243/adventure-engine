@@ -30,6 +30,8 @@ public class ItemFactory {
 			item = new ItemKey(game, ID, area, isGenerated, (KeyTemplate) stats);
 		} else if(stats instanceof JunkTemplate) {
 			item = new ItemJunk(game, ID, area, isGenerated, (JunkTemplate) stats);
+		} else if(stats instanceof NoteTemplate) {
+			item = new ItemNote(game, ID, area, isGenerated, (NoteTemplate) stats);
 		}
 		if(item != null && isGenerated) {
 			game.data().addObject(ID, item);

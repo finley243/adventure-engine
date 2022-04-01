@@ -34,10 +34,6 @@ public abstract class Item extends WorldObject {
 
 	public abstract Set<String> getTags();
 
-	public boolean isGenerated() {
-		return isGenerated;
-	}
-
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);

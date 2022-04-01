@@ -8,7 +8,6 @@ import java.util.Set;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
-import com.github.finley243.adventureengine.action.ActionReactionOld.ReactionType;
 import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
@@ -155,12 +154,7 @@ public class ItemWeapon extends ItemEquippable {
 	}
 	
 	public List<Action> reactionActions(Actor target) {
-		List<Action> actions = new ArrayList<>();
-		if(!isRanged()) {
-			actions.add(new ActionReactionOld(ReactionType.BLOCK));
-			actions.add(new ActionReactionOld(ReactionType.DODGE));
-		}
-		return actions;
+		return new ArrayList<>();
 	}
 	
 	@Override

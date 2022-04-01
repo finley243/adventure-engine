@@ -82,11 +82,11 @@
                 </object>
                 <object type="sign" id="stratis_hotel_lobby_sign_navigation">
                     <name>navigation sign</name>
-                    <lines>
-                        <text>FLOOR 1: Lobby</text>
-                        <text>FLOOR 2-9: Guest Rooms</text>
-                        <text>FLOOR 10: Restaurant</text>
-                    </lines>
+                    <text>
+                        <line>FLOOR 1: Lobby</line>
+                        <line>FLOOR 2-9: Guest Rooms</line>
+                        <line>FLOOR 10: Restaurant</line>
+                    </text>
                 </object>
             </objects>
             <actors>

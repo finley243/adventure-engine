@@ -425,6 +425,9 @@ public class DataLoader {
                 return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced);
             case "junk":
                 return new JunkTemplate(id, name, description, scripts, price);
+            case "note":
+                List<String> noteText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(itemElement, "text"), "line");
+                return new NoteTemplate(id, name, description, scripts, price, noteText);
         }
         return null;
     }
@@ -600,7 +603,7 @@ public class DataLoader {
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(LoadUtils.singleChildWithName(objectElement, "links"), "link");
                 return new ObjectElevator(game, objectID, area, objectName, objectDescription, objectScripts, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
             case "sign":
-                List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "lines"), "text");
+                List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "text"), "line");
                 return new ObjectSign(game, objectID, area, objectName, objectDescription, objectScripts, signText);
             case "chair":
                 return new ObjectChair(game, objectID, area, objectName, objectDescription, objectScripts);
