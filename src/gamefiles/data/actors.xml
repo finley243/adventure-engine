@@ -43,7 +43,7 @@
                 <damageMult>1.00</damageMult>
                 <apparelSlot>TORSO</apparelSlot>
                 <effects>
-                    <effect type="drop_equipped"></effect>
+                    <effect type="dropEquipped"></effect>
                 </effects>
             </limb>
             <limb>

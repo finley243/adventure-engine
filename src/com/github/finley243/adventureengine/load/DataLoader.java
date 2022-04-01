@@ -333,7 +333,8 @@ public class DataLoader {
             case "factionRelation":
                 String targetFaction = LoadUtils.singleTag(scriptElement, "targetFaction", null);
                 String relationFaction = LoadUtils.singleTag(scriptElement, "relationFaction", null);
-                Faction.FactionRelation relation = factionRelationTag(scriptElement, "relation");
+                //Faction.FactionRelation relation = factionRelationTag(scriptElement, "relation");
+                Faction.FactionRelation relation = LoadUtils.singleTagEnum(scriptElement, "relation", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
                 return new ScriptFactionRelation(condition, targetFaction, relationFaction, relation);
             case "moveActor":
                 String moveActorArea = LoadUtils.singleTag(scriptElement, "area", null);
@@ -467,11 +468,11 @@ public class DataLoader {
             case "skill":
                 Actor.Skill skill = LoadUtils.singleTagEnum(effectElement, "skill", Actor.Skill.class, null);
                 return new EffectSkill(duration, manualRemoval, skill, amount);
-            case "drop_equipped":
+            case "dropEquipped":
                 return new EffectDropEquipped();
-            case "max_hp":
+            case "maxHP":
                 return new EffectMaxHealth(duration, manualRemoval, amount);
-            case "action_points":
+            case "actionPoints":
                 return new EffectActionPoints(duration, manualRemoval, amount);
             default:
                 return null;
@@ -618,7 +619,7 @@ public class DataLoader {
             case "cover":
                 ObjectCover.CoverDirection coverDirection = LoadUtils.singleTagEnum(objectElement, "direction", ObjectCover.CoverDirection.class, null);
                 return new ObjectCover(game, objectID, area, objectName, objectDescription, objectScripts, coverDirection);
-            case "vending_machine":
+            case "vendingMachine":
                 List<String> vendingItems = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "items"), "item");
                 return new ObjectVendingMachine(game, objectID, area, objectName, objectDescription, objectScripts, vendingItems);
             case "item":
