@@ -119,6 +119,10 @@ public class ItemWeapon extends ItemEquippable {
 		ammo = stats.getClipSize();
 	}
 
+	public int getClipSize() {
+		return stats.getClipSize();
+	}
+
 	public int getAmmoRemaining() {
 		return ammo;
 	}
