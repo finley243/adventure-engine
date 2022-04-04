@@ -77,7 +77,7 @@ public class ActorPlayer extends Actor {
 	}
 
 	public void describeSurroundings() {
-		Context playerContext = new Context(Map.of("inLocation", getArea().getRelativeName()), this);
+		/*Context playerContext = new Context(Map.of("inLocation", getArea().getRelativeName()), this);
 		game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("location"), playerContext)));
 		for(Area area : getArea().getVisibleAreas(this)) {
 			List<Noun> nounsInArea = new ArrayList<>();
@@ -85,7 +85,7 @@ public class ActorPlayer extends Actor {
 			Set<Actor> actorsInArea = new HashSet<>(area.getActors());
 			actorsInArea.remove(this);
 			nounsInArea.addAll(actorsInArea);
-			nounsInArea.addAll(area.getObjects());
+			nounsInArea.addAll(area.getObjectsExcludeLandmark());
 			if(!nounsInArea.isEmpty()) {
 				MultiNoun multiNoun = new MultiNoun(nounsInArea);
 				boolean adjacent = getArea() == area || getArea().getDistanceTo(area.getID()) == 0;
@@ -98,7 +98,35 @@ public class ActorPlayer extends Actor {
 				}
 				area.setKnown();
 			}
+		}*/
+		Context areaContext = new Context(this, getArea().getLandmark());
+		game().eventBus().post(new RenderTextEvent(TextGen.generate("$subject $is adjacent to $object1" + (getArea().getActors(this).isEmpty() ? "" : " (" + getArea().getActorList(this) + ")"), areaContext)));
+		Set<Area> nearbyAreas = getArea().getMovableAreas();
+		if(!nearbyAreas.isEmpty()) {
+			List<Area> nearbyAreasList = new ArrayList<>(nearbyAreas);
+			StringBuilder phrase = new StringBuilder("Nearby, there ");
+			if(nearbyAreas.size() > 1) {
+				phrase.append("are ");
+			} else {
+				phrase.append("is ");
+			}
+			for(int i = 0; i < nearbyAreasList.size(); i++) {
+				Area currentArea = nearbyAreasList.get(i);
+				if(i > 0 && i < nearbyAreasList.size() - 1) {
+					phrase.append(", ");
+				} else if(i == nearbyAreasList.size() - 1) {
+					phrase.append(", and ");
+				}
+				phrase.append(currentArea.getFormattedName());
+				if(!currentArea.getActors(this).isEmpty()) {
+					phrase.append(" (").append(currentArea.getActorList(this)).append(")");
+				}
+				currentArea.setKnown();
+			}
+			phrase.append(".");
+			game().eventBus().post(new RenderTextEvent(phrase.toString()));
 		}
+		// TODO - Add distant area descriptions based on closest nearby area
 		game().eventBus().post(new RenderTextEvent(""));
 		TextGen.clearContext();
 	}

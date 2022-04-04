@@ -539,6 +539,7 @@ public class DataLoader {
     private static Area loadArea(Game game, Element areaElement, String roomID) throws ParserConfigurationException, IOException, SAXException {
         if(areaElement == null) return null;
         String areaID = areaElement.getAttribute("id");
+        String landmarkID = LoadUtils.singleTag(areaElement, "landmark", null);
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = nameElement.getTextContent();
         boolean isProperName = LoadUtils.attributeBool(nameElement, "proper", false);
@@ -565,7 +566,7 @@ public class DataLoader {
 
         Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
 
-        Area area = new Area(game, areaID, name, description, isProperName, nameType, roomID, areaOwnerFaction, areaIsPrivate, linkSet, areaScripts);
+        Area area = new Area(game, areaID, landmarkID, name, description, isProperName, nameType, roomID, areaOwnerFaction, areaIsPrivate, linkSet, areaScripts);
 
         Element objectsElement = LoadUtils.singleChildWithName(areaElement, "objects");
         List<Element> objectElements = LoadUtils.directChildrenWithName(objectsElement, "object");

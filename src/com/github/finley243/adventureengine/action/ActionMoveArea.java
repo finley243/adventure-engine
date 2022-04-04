@@ -40,7 +40,7 @@ public class ActionMoveArea extends ActionMove {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(LangUtils.titleCase(area.getMoveDescription()) + " (" + direction.tag + ")", canChoose(subject), new String[]{"move"});
+		return new MenuData(LangUtils.titleCase(area.getName()) /*+ " (" + direction.tag + ")"*/, canChoose(subject), new String[]{"move"});
 	}
 
 	@Override

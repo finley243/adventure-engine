@@ -172,7 +172,6 @@ public class TargetingComponent {
                 idealDistanceMin -= 1;
             }
             idealDistanceMax += 1;
-            idealAreas.clear();
             idealAreas.addAll(origin.visibleAreasInRange(idealDistanceMin, idealDistanceMin));
             idealAreas.addAll(origin.visibleAreasInRange(idealDistanceMax, idealDistanceMax));
         }

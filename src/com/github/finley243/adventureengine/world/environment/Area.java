@@ -32,6 +32,7 @@ public class Area extends GameInstanced implements Noun {
 	// Whether the name is a proper name (if false, should be preceded with "the" or "a")
 	private final boolean isProperName;
 	private boolean isKnown;
+	private final String landmarkID;
 	// Format used to describe the area (in: "move to [name]", near: "move near [name]", behind:"move behind [name]", etc.)
 	private final AreaNameType nameType;
 	// The room containing this area
@@ -53,10 +54,11 @@ public class Area extends GameInstanced implements Noun {
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(Game game, String ID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
+	public Area(Game game, String ID, String landmarkID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game);
 		this.ID = ID;
 		this.name = name;
+		this.landmarkID = landmarkID;
 		this.description = description;
 		this.isProperName = isProperName;
 		this.nameType = nameType;
@@ -72,10 +74,15 @@ public class Area extends GameInstanced implements Noun {
 	public String getID() {
 		return ID;
 	}
-	
+
+	public WorldObject getLandmark() {
+		return game().data().getObject(landmarkID);
+	}
+
 	@Override
 	public String getName() {
-		return getFormattedName();
+		return getLandmark().getName();
+		//return getFormattedName();
 	}
 	
 	public String getDescription() {
@@ -93,7 +100,7 @@ public class Area extends GameInstanced implements Noun {
 	
 	@Override
 	public String getFormattedName() {
-		String formattedName;
+		/*String formattedName;
 		if(!isProperName()) {
 			formattedName = LangUtils.addArticle(name, !isKnown);
 		} else {
@@ -116,46 +123,58 @@ public class Area extends GameInstanced implements Noun {
 			case ON:
 			default:
 				return formattedName;
-		}
+		}*/
+		return getLandmark().getFormattedName();
 	}
 
 	public void setKnown() {
-		isKnown = true;
+		//isKnown = true;
+		getLandmark().setKnown();
 	}
 
 	@Override
 	public boolean isKnown() {
-		return isKnown;
+		//return isKnown;
+		return getLandmark().isKnown();
 	}
 
 	public String getRelativeName() {
-		if(nameType == AreaNameType.IN) {
+		/*if(nameType == AreaNameType.IN) {
 			return "in " + getFormattedName();
 		} else if(nameType == AreaNameType.ON) {
 			return "on " + getFormattedName();
 		} else {
 			return getFormattedName();
-		}
+		}*/
+		return "near " + getLandmark().getFormattedName();
 	}
 
 	public String getMoveDescription() {
-		if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
+		/*if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
 			return "to " + getFormattedName();
 		} else {
 			return getFormattedName();
-		}
+		}*/
+		return "toward " + getLandmark().getFormattedName();
 	}
 
 	public String getMovePhrase() {
-		if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
+		/*if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
 			return "moveTo";
 		} else {
 			return "move";
-		}
+		}*/
+		return "moveToward";
 	}
 	
 	public Set<WorldObject> getObjects(){
 		return objects;
+	}
+
+	public Set<WorldObject> getObjectsExcludeLandmark() {
+		Set<WorldObject> nonLandmarkObjects = new HashSet<>(objects);
+		nonLandmarkObjects.remove(getLandmark());
+		return nonLandmarkObjects;
 	}
 	
 	public void addObject(WorldObject object) {
@@ -174,6 +193,26 @@ public class Area extends GameInstanced implements Noun {
 	
 	public Set<Actor> getActors(){
 		return actors;
+	}
+
+	public Set<Actor> getActors(Actor exclude) {
+		Set<Actor> actorsExclude = new HashSet<>(actors);
+		actorsExclude.remove(exclude);
+		return actorsExclude;
+	}
+
+	public String getActorList(Actor exclude) {
+		StringBuilder actorList = new StringBuilder();
+		boolean firstActor = true;
+		for(Actor actor : getActors(exclude)) {
+			if(!firstActor) {
+				actorList.append(", ");
+			} else {
+				firstActor = false;
+			}
+			actorList.append(actor.getName());
+		}
+		return actorList.toString();
 	}
 	
 	public void addActor(Actor actor) {
@@ -283,7 +322,8 @@ public class Area extends GameInstanced implements Noun {
 
 	@Override
 	public boolean isProperName() {
-		return isProperName;
+		//return isProperName;
+		return getLandmark().isProperName();
 	}
 
 	public AreaNameType getNameType() {

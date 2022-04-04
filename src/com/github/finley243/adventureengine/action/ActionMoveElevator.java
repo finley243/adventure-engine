@@ -52,7 +52,7 @@ public class ActionMoveElevator extends ActionMove {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), new String[]{"move", elevator.getName()});
+		return new MenuData("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), new String[]{elevator.getName()});
 	}
 
 	@Override
