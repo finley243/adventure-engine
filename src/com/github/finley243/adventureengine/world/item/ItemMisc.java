@@ -2,16 +2,16 @@ package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.item.template.JunkTemplate;
+import com.github.finley243.adventureengine.world.item.template.MiscTemplate;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class ItemJunk extends Item {
+public class ItemMisc extends Item {
 
-    private final JunkTemplate stats;
+    private final MiscTemplate stats;
 
-    public ItemJunk(Game game, String ID, Area area, boolean isGenerated, JunkTemplate stats) {
+    public ItemMisc(Game game, String ID, Area area, boolean isGenerated, MiscTemplate stats) {
         super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
         this.stats = stats;
     }
@@ -19,7 +19,7 @@ public class ItemJunk extends Item {
     @Override
     public Set<String> getTags() {
         Set<String> tags = new HashSet<>();
-        tags.add("junk");
+        tags.add("misc");
         return tags;
     }
 

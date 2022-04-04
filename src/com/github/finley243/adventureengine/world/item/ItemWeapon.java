@@ -128,6 +128,7 @@ public class ItemWeapon extends ItemEquippable {
 	}
 
 	public float getAmmoFraction() {
+		if(stats.getClipSize() == 0) return 1.0f;
 		return ((float) ammo) / ((float) stats.getClipSize());
 	}
 	

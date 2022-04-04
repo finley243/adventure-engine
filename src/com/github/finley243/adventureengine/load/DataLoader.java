@@ -410,8 +410,6 @@ public class DataLoader {
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.singleTagEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<Effect> consumableEffects = loadEffects(LoadUtils.singleChildWithName(itemElement, "effects"), false);
                 return new ConsumableTemplate(id, name, description, scripts, price, consumableType, consumableEffects);
-            case "key":
-                return new KeyTemplate(id, name, description, scripts);
             case "weapon":
                 WeaponTemplate.WeaponType weaponType = LoadUtils.singleTagEnum(itemElement, "type", WeaponTemplate.WeaponType.class, null);
                 int weaponDamage = LoadUtils.singleTagInt(itemElement, "damage", 0);
@@ -423,13 +421,13 @@ public class DataLoader {
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced);
-            case "junk":
-                return new JunkTemplate(id, name, description, scripts, price);
             case "note":
                 List<String> noteText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(itemElement, "text"), "line");
                 return new NoteTemplate(id, name, description, scripts, price, noteText);
+            case "misc":
+            default:
+                return new MiscTemplate(id, name, description, scripts, price);
         }
-        return null;
     }
 
     private static List<Effect> loadEffects(Element effectsElement, boolean manualRemoval) {

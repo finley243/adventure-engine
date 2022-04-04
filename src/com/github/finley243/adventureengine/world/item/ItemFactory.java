@@ -26,10 +26,8 @@ public class ItemFactory {
 			item = new ItemApparel(game, ID, area, isGenerated, (ApparelTemplate) stats);
 		} else if(stats instanceof WeaponTemplate) {
 			item = new ItemWeapon(game, ID, area, isGenerated, (WeaponTemplate) stats);
-		} else if(stats instanceof KeyTemplate) {
-			item = new ItemKey(game, ID, area, isGenerated, (KeyTemplate) stats);
-		} else if(stats instanceof JunkTemplate) {
-			item = new ItemJunk(game, ID, area, isGenerated, (JunkTemplate) stats);
+		} else if(stats instanceof MiscTemplate) {
+			item = new ItemMisc(game, ID, area, isGenerated, (MiscTemplate) stats);
 		} else if(stats instanceof NoteTemplate) {
 			item = new ItemNote(game, ID, area, isGenerated, (NoteTemplate) stats);
 		}

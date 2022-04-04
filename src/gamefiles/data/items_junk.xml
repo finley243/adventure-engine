@@ -1,5 +1,5 @@
 <data>
-    <item type="junk" id="soda_can">
+    <item type="misc" id="soda_can">
         <name>empty soda can</name>
         <price>1</price>
     </item>

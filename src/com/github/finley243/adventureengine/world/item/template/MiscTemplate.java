@@ -4,9 +4,9 @@ import com.github.finley243.adventureengine.script.Script;
 
 import java.util.Map;
 
-public class JunkTemplate extends ItemTemplate {
+public class MiscTemplate extends ItemTemplate {
 
-    public JunkTemplate(String ID, String name, String description, Map<String, Script> scripts, int price) {
+    public MiscTemplate(String ID, String name, String description, Map<String, Script> scripts, int price) {
         super(ID, name, description, scripts, price);
     }
 
