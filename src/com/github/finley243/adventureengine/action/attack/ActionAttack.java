@@ -27,9 +27,10 @@ public abstract class ActionAttack extends ActionRandom {
     }
 
     protected ActionReaction getReaction(Actor subject) {
-        List<Action> reactions = getWeapon().reactionActions(getTarget());
-        Action chosenAction = target.chooseAction(reactions);
-        return chosenAction instanceof ActionReaction ? (ActionReaction) chosenAction : null;
+        //List<Action> reactions = getWeapon().reactionActions(getTarget());
+        //Action chosenAction = target.chooseAction(reactions);
+        //return chosenAction instanceof ActionReaction ? (ActionReaction) chosenAction : null;
+        return null;
     }
 
     @Override

@@ -20,9 +20,7 @@ public abstract class ItemEquippable extends Item {
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = super.inventoryActions(subject);
-		if(!subject.equipmentComponent().hasEquippedItem()) {
-			actions.add(new ActionItemEquip(this));
-		}
+		actions.add(new ActionItemEquip(this));
 		return actions;
 	}
 	

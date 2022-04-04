@@ -156,11 +156,7 @@ public class ItemWeapon extends ItemEquippable {
 		}
 		return null;
 	}
-	
-	public List<Action> reactionActions(Actor target) {
-		return new ArrayList<>();
-	}
-	
+
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
@@ -182,7 +178,9 @@ public class ItemWeapon extends ItemEquippable {
 				}
 			}
 		}
-		actions.add(new ActionWeaponReload(this));
+		if(getClipSize() > 0) {
+			actions.add(new ActionWeaponReload(this));
+		}
 		if(this.getDescription() != null) {
 			actions.add(new ActionInspect(this, InspectType.EQUIPPED));
 		}

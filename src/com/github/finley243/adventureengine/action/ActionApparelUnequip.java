@@ -19,6 +19,6 @@ public class ActionApparelUnequip extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Unequip", canChoose(subject), new String[]{"inventory", item.getName() + " (equipped)"});
+        return new MenuData("Unequip", canChoose(subject), new String[]{"inventory", item.getName()});
     }
 }

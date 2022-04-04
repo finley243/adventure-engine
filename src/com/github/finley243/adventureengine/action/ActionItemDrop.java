@@ -32,8 +32,7 @@ public class ActionItemDrop extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		boolean isEquipped = subject.equipmentComponent().getEquippedItem() == item || item instanceof ItemApparel && subject.apparelComponent().getEquippedItems().contains(item);
-		return new MenuData("Drop", canChoose(subject), new String[]{"inventory", item.getName() + (isEquipped ? " (equipped)" : subject.inventory().itemCountLabel(item.getTemplateID()))});
+		return new MenuData("Drop", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getTemplateID())});
 	}
 
 	@Override

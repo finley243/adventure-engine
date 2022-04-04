@@ -156,7 +156,7 @@ public class TargetingComponent {
     private Set<Area> idealAreas(Area origin) {
         int idealDistanceMin = 0;
         int idealDistanceMax = 0;
-        if(subject.equipmentComponent().hasRangedWeaponEquipped()) {
+        if(subject.equipmentComponent().hasEquippedItem()) {
             ItemWeapon weapon = (ItemWeapon) subject.equipmentComponent().getEquippedItem();
             idealDistanceMin = weapon.getRangeMin();
             idealDistanceMax = weapon.getRangeMax();
@@ -166,7 +166,17 @@ public class TargetingComponent {
             idealAreas.add(origin);
             return idealAreas;
         }
-        return origin.visibleAreasInRange(idealDistanceMin, idealDistanceMax);
+        Set<Area> idealAreas = origin.visibleAreasInRange(idealDistanceMin, idealDistanceMax);
+        while(idealAreas.isEmpty()) {
+            if(idealDistanceMin >= 0) {
+                idealDistanceMin -= 1;
+            }
+            idealDistanceMax += 1;
+            idealAreas.clear();
+            idealAreas.addAll(origin.visibleAreasInRange(idealDistanceMin, idealDistanceMin));
+            idealAreas.addAll(origin.visibleAreasInRange(idealDistanceMax, idealDistanceMax));
+        }
+        return idealAreas;
     }
 
     private static class Combatant {
