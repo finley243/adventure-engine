@@ -420,7 +420,8 @@ public class DataLoader {
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
-                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced);
+                String weaponAmmoType = LoadUtils.singleTag(itemElement, "ammo", null);
+                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced, weaponAmmoType);
             case "note":
                 List<String> noteText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(itemElement, "text"), "line");
                 return new NoteTemplate(id, name, description, scripts, price, noteText);

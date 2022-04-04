@@ -2,6 +2,7 @@
     <lootTable id="player" useAll="true">
         <entry>pistol_heavy</entry>
         <entry>baseball_bat</entry>
+        <entry count="20">ammo_pistol</entry>
     </lootTable>
     <lootTable id="weapon_melee" useAll="false">
         <entry>baseball_bat</entry>

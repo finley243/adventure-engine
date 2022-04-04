@@ -114,10 +114,6 @@ public class ItemWeapon extends ItemEquippable {
 	public float getAccuracyBonus() {
 		return stats.getAccuracyBonus();
 	}
-	
-	public void reloadFull() {
-		ammo = stats.getClipSize();
-	}
 
 	public int getClipSize() {
 		return stats.getClipSize();
@@ -131,6 +127,14 @@ public class ItemWeapon extends ItemEquippable {
 		if(stats.getClipSize() == 0) return 1.0f;
 		return ((float) ammo) / ((float) stats.getClipSize());
 	}
+
+	public int reloadCapacity() {
+		return getClipSize() - getAmmoRemaining();
+	}
+
+	public void loadAmmo(int amount) {
+		ammo += amount;
+	}
 	
 	public void consumeAmmo(int amount) {
 		ammo -= amount;
@@ -138,6 +142,10 @@ public class ItemWeapon extends ItemEquippable {
 
 	public boolean isSilenced() {
 		return stats.isSilenced();
+	}
+
+	public String getAmmoType() {
+		return stats.getAmmo();
 	}
 
 	public Actor.Skill getSkill() {

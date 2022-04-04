@@ -84,6 +84,15 @@ public class Inventory {
 			}
 		}
 	}
+
+	public void removeItems(String itemID, int count) {
+		List<Item> matchingItems = items.get(itemID);
+		if(matchingItems.size() >= count) {
+			for(int i = 0; i < count; i++) {
+				matchingItems.remove(matchingItems.size() - 1);
+			}
+		}
+	}
 	
 	public void clear() {
 		items.clear();

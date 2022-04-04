@@ -1,0 +1,8 @@
+<data>
+    <item type="misc" id="ammo_pistol">
+        <name>pistol round</name>
+    </item>
+    <item type="misc" id="ammo_rifle">
+        <name>rifle round</name>
+    </item>
+</data>
