@@ -77,28 +77,6 @@ public class ActorPlayer extends Actor {
 	}
 
 	public void describeSurroundings() {
-		/*Context playerContext = new Context(Map.of("inLocation", getArea().getRelativeName()), this);
-		game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("location"), playerContext)));
-		for(Area area : getArea().getVisibleAreas(this)) {
-			List<Noun> nounsInArea = new ArrayList<>();
-			// TODO - Describe whether actors are behind cover
-			Set<Actor> actorsInArea = new HashSet<>(area.getActors());
-			actorsInArea.remove(this);
-			nounsInArea.addAll(actorsInArea);
-			nounsInArea.addAll(area.getObjectsExcludeLandmark());
-			if(!nounsInArea.isEmpty()) {
-				MultiNoun multiNoun = new MultiNoun(nounsInArea);
-				boolean adjacent = getArea() == area || getArea().getDistanceTo(area.getID()) == 0;
-				if (adjacent) {
-					Context areaContext = new Context(Map.of("inLocation", area.getRelativeName()), multiNoun, this);
-					game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("locationListNear"), areaContext)));
-				} else {
-					Context areaContext = new Context(Map.of("inLocation", area.getRelativeName(), "direction", getArea().getRelativeDirectionOf(area).toString().toLowerCase()), multiNoun);
-					game().eventBus().post(new RenderTextEvent(TextGen.generate(Phrases.get("locationList"), areaContext)));
-				}
-				area.setKnown();
-			}
-		}*/
 		Context areaContext = new Context(this, getArea().getLandmark());
 		game().eventBus().post(new RenderTextEvent(TextGen.generate("$subject $is adjacent to $object1" + (getArea().getActors(this).isEmpty() ? "" : " (" + getArea().getActorList(this) + ")"), areaContext)));
 		Set<Area> nearbyAreas = getArea().getMovableAreas();

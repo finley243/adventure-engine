@@ -21,20 +21,9 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
  */
 public class Area extends GameInstanced implements Noun {
 
-	public enum AreaNameType {
-		IN, NEAR, LEFT, RIGHT, FRONT, BEHIND, ON, AGAINST
-	}
-
 	private final String ID;
-	
-	// The name of the area
-	private final String name;
-	// Whether the name is a proper name (if false, should be preceded with "the" or "a")
-	private final boolean isProperName;
-	private boolean isKnown;
+
 	private final String landmarkID;
-	// Format used to describe the area (in: "move to [name]", near: "move near [name]", behind:"move behind [name]", etc.)
-	private final AreaNameType nameType;
 	// The room containing this area
 	private final String roomID;
 	
@@ -54,14 +43,11 @@ public class Area extends GameInstanced implements Noun {
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(Game game, String ID, String landmarkID, String name, String description, boolean isProperName, AreaNameType nameType, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
+	public Area(Game game, String ID, String landmarkID, String description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game);
 		this.ID = ID;
-		this.name = name;
 		this.landmarkID = landmarkID;
 		this.description = description;
-		this.isProperName = isProperName;
-		this.nameType = nameType;
 		this.roomID = roomID;
 		this.ownerFaction = ownerFaction;
 		this.isPrivate = isPrivate;
@@ -100,71 +86,20 @@ public class Area extends GameInstanced implements Noun {
 	
 	@Override
 	public String getFormattedName() {
-		/*String formattedName;
-		if(!isProperName()) {
-			formattedName = LangUtils.addArticle(name, !isKnown);
-		} else {
-			formattedName = name;
-		}
-		switch(nameType) {
-			case NEAR:
-				return "near " + formattedName;
-			case LEFT:
-				return "to the left of " + formattedName;
-			case RIGHT:
-				return "to the right of " + formattedName;
-			case FRONT:
-				return "in front of " + formattedName;
-			case BEHIND:
-				return "behind " + formattedName;
-			case AGAINST:
-				return "against " + formattedName;
-			case IN:
-			case ON:
-			default:
-				return formattedName;
-		}*/
 		return getLandmark().getFormattedName();
 	}
 
 	public void setKnown() {
-		//isKnown = true;
 		getLandmark().setKnown();
 	}
 
 	@Override
 	public boolean isKnown() {
-		//return isKnown;
 		return getLandmark().isKnown();
 	}
 
 	public String getRelativeName() {
-		/*if(nameType == AreaNameType.IN) {
-			return "in " + getFormattedName();
-		} else if(nameType == AreaNameType.ON) {
-			return "on " + getFormattedName();
-		} else {
-			return getFormattedName();
-		}*/
 		return "near " + getLandmark().getFormattedName();
-	}
-
-	public String getMoveDescription() {
-		/*if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
-			return "to " + getFormattedName();
-		} else {
-			return getFormattedName();
-		}*/
-		return "toward " + getLandmark().getFormattedName();
-	}
-
-	public String getMovePhrase() {
-		/*if(nameType == AreaNameType.IN || nameType == AreaNameType.ON) {
-			return "moveTo";
-		} else {
-			return "move";
-		}*/
-		return "moveToward";
 	}
 	
 	public Set<WorldObject> getObjects(){
@@ -322,12 +257,7 @@ public class Area extends GameInstanced implements Noun {
 
 	@Override
 	public boolean isProperName() {
-		//return isProperName;
 		return getLandmark().isProperName();
-	}
-
-	public AreaNameType getNameType() {
-		return nameType;
 	}
 
 	@Override
@@ -353,15 +283,17 @@ public class Area extends GameInstanced implements Noun {
 	public void loadState(SaveData saveData) {
 		switch(saveData.getParameter()) {
 			case "isKnown":
-				this.isKnown = saveData.getValueBoolean();
+				if(saveData.getValueBoolean()) {
+					setKnown();
+				}
 				break;
 		}
 	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		if(isKnown) {
-			state.add(new SaveData(SaveData.DataType.AREA, this.getID(), "isKnown", isKnown));
+		if(isKnown()) {
+			state.add(new SaveData(SaveData.DataType.AREA, this.getID(), "isKnown", isKnown()));
 		}
 		return state;
 	}

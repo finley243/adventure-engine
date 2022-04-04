@@ -540,10 +540,6 @@ public class DataLoader {
         if(areaElement == null) return null;
         String areaID = areaElement.getAttribute("id");
         String landmarkID = LoadUtils.singleTag(areaElement, "landmark", null);
-        Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
-        String name = nameElement.getTextContent();
-        boolean isProperName = LoadUtils.attributeBool(nameElement, "proper", false);
-        Area.AreaNameType nameType = LoadUtils.attributeEnum(nameElement, "type", Area.AreaNameType.class, Area.AreaNameType.IN);
         String description = LoadUtils.singleTag(areaElement, "areaDescription", null);
         String areaOwnerFaction = LoadUtils.singleTag(areaElement, "ownerFaction", null);
         Element areaOwnerElement = LoadUtils.singleChildWithName(areaElement, "ownerFaction");
@@ -566,7 +562,7 @@ public class DataLoader {
 
         Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
 
-        Area area = new Area(game, areaID, landmarkID, name, description, isProperName, nameType, roomID, areaOwnerFaction, areaIsPrivate, linkSet, areaScripts);
+        Area area = new Area(game, areaID, landmarkID, description, roomID, areaOwnerFaction, areaIsPrivate, linkSet, areaScripts);
 
         Element objectsElement = LoadUtils.singleChildWithName(areaElement, "objects");
         List<Element> objectElements = LoadUtils.directChildrenWithName(objectsElement, "object");
