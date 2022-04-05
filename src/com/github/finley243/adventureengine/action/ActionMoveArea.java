@@ -15,11 +15,9 @@ public class ActionMoveArea extends ActionMove {
 	public static final float MOVE_UTILITY_MULTIPLIER = 0.7f;
 
 	private final Area area;
-	private final AreaLink.RelativeDirection direction;
-	
-	public ActionMoveArea(Area area, AreaLink.RelativeDirection direction) {
+
+	public ActionMoveArea(Area area) {
 		this.area = area;
-		this.direction = direction;
 	}
 	
 	public Area getArea() {
@@ -40,7 +38,7 @@ public class ActionMoveArea extends ActionMove {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(LangUtils.titleCase(area.getName()) /*+ " (" + direction.tag + ")"*/, canChoose(subject), new String[]{"move"});
+		return new MenuData(LangUtils.titleCase(area.getName()), canChoose(subject), new String[]{"move"});
 	}
 
 	@Override

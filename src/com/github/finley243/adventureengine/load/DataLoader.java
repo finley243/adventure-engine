@@ -545,11 +545,10 @@ public class DataLoader {
         Map<String, AreaLink> linkSet = new HashMap<>();
         for(Element linkElement : linkElements) {
             String linkAreaID = linkElement.getTextContent();
-            AreaLink.RelativeDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.RelativeDirection.class, AreaLink.RelativeDirection.NORTH);
             AreaLink.RelativeHeight linkHeight = LoadUtils.attributeEnum(linkElement, "height", AreaLink.RelativeHeight.class, AreaLink.RelativeHeight.EQUAL);
             AreaLink.AreaLinkType linkType = LoadUtils.attributeEnum(linkElement, "type", AreaLink.AreaLinkType.class, AreaLink.AreaLinkType.DIRECT);
             int linkDistance = LoadUtils.attributeInt(linkElement, "dist", 1);
-            linkSet.put(linkAreaID, new AreaLink(linkAreaID, linkDirection, linkHeight, linkType, linkDistance));
+            linkSet.put(linkAreaID, new AreaLink(linkAreaID, linkHeight, linkType, linkDistance));
         }
 
         Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);

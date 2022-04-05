@@ -177,7 +177,7 @@ public class Area extends GameInstanced implements Noun {
 		for(AreaLink link : linkedAreas.values()) {
 			if(link.getType().isMovable) {
 				if(link.heightChange() == 0) {
-					moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link.getDirection()));
+					moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID())));
 				}
 			}
 		}
@@ -206,11 +206,6 @@ public class Area extends GameInstanced implements Noun {
 			}
 		}
 		return visibleAreas;
-	}
-
-	public AreaLink.RelativeDirection getRelativeDirectionOf(Area other) {
-		if(!linkedAreas.containsKey(other.getID())) return null;
-		return linkedAreas.get(other.getID()).getDirection();
 	}
 
 	public boolean isVisible(String areaID) {
