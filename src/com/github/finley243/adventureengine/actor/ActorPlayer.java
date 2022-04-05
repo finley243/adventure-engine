@@ -78,16 +78,11 @@ public class ActorPlayer extends Actor {
 
 	public void describeSurroundings() {
 		Context areaContext = new Context(this, getArea().getLandmark());
-		game().eventBus().post(new RenderTextEvent(TextGen.generate("$subject $is adjacent to $object1" + (getArea().getActors(this).isEmpty() ? "" : " (" + getArea().getActorList(this) + ")"), areaContext)));
+		game().eventBus().post(new RenderTextEvent(TextGen.generate("$subject $is adjacent to $object1" + (getArea().getActors(this).isEmpty() ? "" : " [" + getArea().getActorList(this) + "]"), areaContext)));
 		Set<Area> nearbyAreas = getArea().getMovableAreas();
 		if(!nearbyAreas.isEmpty()) {
 			List<Area> nearbyAreasList = new ArrayList<>(nearbyAreas);
-			StringBuilder phrase = new StringBuilder("Nearby, there ");
-			if(nearbyAreas.size() > 1) {
-				phrase.append("are ");
-			} else {
-				phrase.append("is ");
-			}
+			StringBuilder phrase = new StringBuilder("Nearby, there is ");
 			for(int i = 0; i < nearbyAreasList.size(); i++) {
 				Area currentArea = nearbyAreasList.get(i);
 				if(i > 0 && i < nearbyAreasList.size() - 1) {
@@ -97,7 +92,7 @@ public class ActorPlayer extends Actor {
 				}
 				phrase.append(currentArea.getFormattedName());
 				if(!currentArea.getActors(this).isEmpty()) {
-					phrase.append(" (").append(currentArea.getActorList(this)).append(")");
+					phrase.append(" [").append(currentArea.getActorList(this)).append("]");
 				}
 				currentArea.setKnown();
 			}
