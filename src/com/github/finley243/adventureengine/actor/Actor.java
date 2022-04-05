@@ -218,7 +218,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	
 	@Override
 	public void setArea(Area area) {
+		if(this.area != null) {
+			this.area.removeActor(this);
+		}
 		this.area = area;
+		area.addActor(this);
 	}
 	
 	public boolean isEnabled() {
@@ -250,14 +254,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	
 	public Faction getFaction() {
 		return game().data().getFaction(stats.getFaction(game()));
-	}
-	
-	public void move(Area area) {
-		if(this.area != null) {
-			this.area.removeActor(this);
-		}
-		setArea(area);
-		area.addActor(this);
 	}
 	
 	public boolean canMove() {

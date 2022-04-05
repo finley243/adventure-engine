@@ -33,7 +33,7 @@ public class ActionMoveExit extends ActionMove {
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("moveThroughTo"), context, this, subject));
 		subject.game().eventBus().post(new AudioVisualEvent(area, Phrases.get("moveThroughTo"), context, this, subject));
 		exit.unlock();
-		subject.move(area);
+		subject.setArea(area);
 	}
 
 	@Override

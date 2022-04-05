@@ -42,7 +42,7 @@ public class ActionMoveElevator extends ActionMove {
 		}
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject));
 		subject.game().eventBus().post(new AudioVisualEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject));
-		subject.move(destination.getArea());
+		subject.setArea(destination.getArea());
 	}
 
 	@Override

@@ -39,10 +39,10 @@ public class ActorPlayer extends Actor {
 	}
 	
 	@Override
-	public void move(Area area) {
+	public void setArea(Area area) {
 		boolean shouldShowDescription = getArea() != null;
 		boolean newRoom = !getArea().getRoom().equals(area.getRoom());
-		super.move(area);
+		super.setArea(area);
 		game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
 		if(shouldShowDescription) {
 			this.updateAreaDescription();
