@@ -449,18 +449,11 @@ public class DataLoader {
         switch(effectType) {
             case "heal":
                 return new EffectHeal(duration, manualRemoval, amount);
-            case "attribute":
-                Actor.Attribute attribute = LoadUtils.singleTagEnum(effectElement, "attribute", Actor.Attribute.class, null);
-                return new EffectAttribute(duration, manualRemoval, attribute, amount);
-            case "skill":
-                Actor.Skill skill = LoadUtils.singleTagEnum(effectElement, "skill", Actor.Skill.class, null);
-                return new EffectSkill(duration, manualRemoval, skill, amount);
             case "dropEquipped":
                 return new EffectDropEquipped();
-            case "maxHP":
-                return new EffectMaxHealth(duration, manualRemoval, amount);
-            case "actionPoints":
-                return new EffectActionPoints(duration, manualRemoval, amount);
+            case "stat":
+                String stat = LoadUtils.singleTag(effectElement, "stat", null);
+                return new EffectStat(duration, manualRemoval, amount, stat);
             default:
                 return null;
         }

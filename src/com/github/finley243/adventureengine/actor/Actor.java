@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.Moddable;
+import com.github.finley243.adventureengine.ModdableStat;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
@@ -27,7 +29,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Actor extends GameInstanced implements Noun, Physical {
+public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 2;
@@ -78,18 +80,18 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	private boolean isKnown;
 	private final Area defaultArea;
 	private Area area;
-	private final ModableStat maxHP;
+	private final ModdableStat maxHP;
 	private int HP;
 	private final boolean startDisabled;
 	private boolean isEnabled;
 	private final boolean startDead;
 	private boolean isDead;
 	private boolean endTurn;
-	private final ModableStat actionPoints;
+	private final ModdableStat actionPoints;
 	private int actionPointsUsed;
 	private final Map<Action, Integer> blockedActions;
-	private final EnumMap<Attribute, ModableStat> attributes;
-	private final EnumMap<Skill, ModableStat> skills;
+	private final EnumMap<Attribute, ModdableStat> attributes;
+	private final EnumMap<Skill, ModdableStat> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final ApparelComponent apparelComponent;
@@ -117,10 +119,10 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		this.investigateTarget = new InvestigateTarget();
 		this.startDead = startDead;
 		this.isDead = startDead;
-		this.maxHP = new ModableStat(this, stats.getMaxHP(game()), 0, MAX_HP);
-		this.actionPoints = new ModableStat(this, ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
+		this.maxHP = new ModdableStat(this);
+		this.actionPoints = new ModdableStat(this);
 		if(!startDead) {
-			HP = this.maxHP.value();
+			HP = this.maxHP.value(stats.getMaxHP(game()), 0, MAX_HP);
 		}
 		this.inventory = new Inventory(this);
 		this.apparelComponent = new ApparelComponent(this);
@@ -132,11 +134,11 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new ModableStat(this, stats.getAttribute(game(), attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX));
+			this.attributes.put(attribute, new ModdableStat(this));
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for(Skill skill : Skill.values()) {
-			this.skills.put(skill, new ModableStat(this, stats.getSkill(game(), skill), SKILL_MIN, SKILL_MAX));
+			this.skills.put(skill, new ModdableStat(this));
 		}
 		this.effectComponent = new EffectComponent(this);
 		this.blockedActions = new HashMap<>();
@@ -234,12 +236,12 @@ public class Actor extends GameInstanced implements Noun, Physical {
 		}
 	}
 	
-	public ModableStat getAttribute(Attribute attribute) {
-		return attributes.get(attribute);
+	public int getAttribute(Attribute attribute) {
+		return attributes.get(attribute).value(stats.getAttribute(game(), attribute), SKILL_MIN, SKILL_MAX);
 	}
 
-	public ModableStat getSkill(Skill skill) {
-		return skills.get(skill);
+	public int getSkill(Skill skill) {
+		return skills.get(skill).value(stats.getSkill(game(), skill), SKILL_MIN, SKILL_MAX);
 	}
 	
 	public String getTopicID() {
@@ -303,27 +305,20 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	}
 
 	public float getHPProportion() {
-		return ((float) HP) / ((float) maxHP.value());
+		return ((float) HP) / ((float) getMaxHP());
 	}
 
-	public ModableStat getMaxHP() {
-		return maxHP;
+	public int getMaxHP() {
+		return maxHP.value(stats.getMaxHP(game()), 0, MAX_HP);
 	}
 
-	public ModableStat getActionPoints() {
-		return actionPoints;
-	}
-
-	public void onStatChange() {
-		// Recalculate state depending on ActorStat values
-		if(HP > maxHP.value()) {
-			HP = maxHP.value();
-		}
+	public int getActionPoints() {
+		return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
 	}
 	
 	public void heal(int amount) {
 		if(amount < 0) throw new IllegalArgumentException();
-		amount = Math.min(amount, maxHP.value() - HP);
+		amount = Math.min(amount, getMaxHP() - HP);
 		HP += amount;
 		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
 		if(SHOW_HP_CHANGES) {
@@ -572,7 +567,7 @@ public class Actor extends GameInstanced implements Noun, Physical {
 			investigateTarget.update(this);
 			List<Action> availableActions = availableActions();
 			for(Action action : availableActions) {
-				if(actionPoints.value() - actionPointsUsed < action.actionPoints(this)) {
+				if(getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
 					action.disable();
 				}
 			}
@@ -680,6 +675,61 @@ public class Actor extends GameInstanced implements Noun, Physical {
 	
 	public boolean canSee(Actor target) {
 		return this == target || getArea().getVisibleAreas(this).contains(target.getArea()) && (!target.isCrouching || !getArea().isBehindCover(target.getArea()));
+	}
+
+	@Override
+	public ModdableStat getStat(String name) {
+		switch(name) {
+			case "maxHP":
+				return maxHP;
+			case "actionPoints":
+				return actionPoints;
+			case "body":
+				return attributes.get(Attribute.BODY);
+			case "intelligence":
+				return attributes.get(Attribute.INTELLIGENCE);
+			case "charisma":
+				return attributes.get(Attribute.CHARISMA);
+			case "dexterity":
+				return attributes.get(Attribute.DEXTERITY);
+			case "agility":
+				return attributes.get(Attribute.AGILITY);
+			case "melee":
+				return skills.get(Skill.MELEE);
+			case "throwing":
+				return skills.get(Skill.THROWING);
+			case "software":
+				return skills.get(Skill.SOFTWARE);
+			case "hardware":
+				return skills.get(Skill.HARDWARE);
+			case "medicine":
+				return skills.get(Skill.MEDICINE);
+			case "barter":
+				return skills.get(Skill.BARTER);
+			case "persuasion":
+				return skills.get(Skill.PERSUASION);
+			case "deception":
+				return skills.get(Skill.DECEPTION);
+			case "handguns":
+				return skills.get(Skill.HANDGUNS);
+			case "longArms":
+				return skills.get(Skill.LONG_ARMS);
+			case "lockpick":
+				return skills.get(Skill.LOCKPICK);
+			case "stealth":
+				return skills.get(Skill.STEALTH);
+			case "evasion":
+				return skills.get(Skill.EVASION);
+			default:
+				return null;
+		}
+	}
+
+	@Override
+	public void onStatChange() {
+		if(HP > getMaxHP()) {
+			HP = getMaxHP();
+		}
 	}
 
 	public boolean triggerScript(String entryPoint) {

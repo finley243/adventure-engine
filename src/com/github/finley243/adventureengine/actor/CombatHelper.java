@@ -31,7 +31,7 @@ public class CombatHelper {
 	}
 	
 	public static float calculateHitChance(Actor attacker, Actor target, Limb limb, ItemWeapon weapon, boolean auto) {
-		float skill = (float) attacker.getSkill(weapon.getSkill()).value();
+		float skill = (float) attacker.getSkill(weapon.getSkill());
 		float chance = HIT_CHANCE_BASE_MIN + ((HIT_CHANCE_BASE_MAX - HIT_CHANCE_BASE_MIN) / (Actor.SKILL_MAX - Actor.SKILL_MIN)) * (skill - Actor.SKILL_MIN);
 		if(weapon.isRanged()) {
 			int distance = attacker.getArea().getDistanceTo(target.getArea().getID());
@@ -41,7 +41,7 @@ public class CombatHelper {
 				chance -= RANGE_PENALTY_FAR * (distance - weapon.getRangeMax());
 			}
 		} else {
-			float evasionSkill = (float) target.getSkill(Actor.Skill.EVASION).value();
+			float evasionSkill = (float) target.getSkill(Actor.Skill.EVASION);
 			float meleeEvasionMod = EVASION_PENALTY * evasionSkill;
 			chance -= meleeEvasionMod;
 		}
@@ -54,11 +54,7 @@ public class CombatHelper {
 		}
 		if(chance < HIT_CHANCE_MIN) {
 			return HIT_CHANCE_MIN;
-		} else if (chance > HIT_CHANCE_MAX) {
-			return HIT_CHANCE_MAX;
-		} else {
-			return chance;
-		}
+		} else return Math.min(chance, HIT_CHANCE_MAX);
 	}
 
 	public static String getHitPhrase(ItemWeapon weapon, Limb limb, boolean crit, boolean auto) {

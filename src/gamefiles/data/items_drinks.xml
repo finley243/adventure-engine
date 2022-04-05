@@ -15,10 +15,10 @@
         <price>10</price>
         <type>DRINK</type>
         <effects>
-            <effect type="skill">
-                <duration>3</duration>
-                <skill>HANDGUNS</skill>
+            <effect type="stat">
+                <stat>handguns</stat>
                 <amount>9</amount>
+                <duration>3</duration>
             </effect>
         </effects>
     </item>
