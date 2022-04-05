@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.Moddable;
+import com.github.finley243.adventureengine.ModdableStat;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.action.attack.*;
@@ -15,16 +17,28 @@ import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.template.WeaponTemplate;
 
-public class ItemWeapon extends ItemEquippable {
+public class ItemWeapon extends ItemEquippable implements Moddable {
 	
 	public static final float CRIT_CHANCE = 0.05f;
 	
 	private final WeaponTemplate stats;
+	private final ModdableStat damage;
+	private final ModdableStat rate;
+	private final ModdableStat critDamage;
+	private final ModdableStat rangeMin;
+	private final ModdableStat rangeMax;
+	private final ModdableStat clipSize;
 	private int ammo;
 	
 	public ItemWeapon(Game game, String ID, Area area, boolean isGenerated, WeaponTemplate stats) {
 		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
+		this.damage = new ModdableStat(this);
+		this.rate = new ModdableStat(this);
+		this.critDamage = new ModdableStat(this);
+		this.rangeMin = new ModdableStat(this);
+		this.rangeMax = new ModdableStat(this);
+		this.clipSize = new ModdableStat(this);
 		this.ammo = stats.getClipSize();
 	}
 
@@ -92,23 +106,23 @@ public class ItemWeapon extends ItemEquippable {
 	}
 	
 	public int getDamage() {
-		return stats.getDamage();
+		return damage.value(stats.getDamage(), 1, 1000);
 	}
 	
 	public int getRate() {
-		return stats.getRate();
+		return rate.value(stats.getRate(), 1, 50);
 	}
 	
 	public int getCritDamage() {
-		return stats.getCritDamage();
+		return critDamage.value(stats.getCritDamage(), 0, 1000);
 	}
 
 	public int getRangeMin() {
-		return stats.getRangeMin();
+		return rangeMin.value(stats.getRangeMin(), 0, 50);
 	}
 
 	public int getRangeMax() {
-		return stats.getRangeMax();
+		return rangeMax.value(stats.getRangeMax(), 0, 50);
 	}
 
 	public float getAccuracyBonus() {
@@ -116,7 +130,7 @@ public class ItemWeapon extends ItemEquippable {
 	}
 
 	public int getClipSize() {
-		return stats.getClipSize();
+		return clipSize.value(stats.getClipSize(), 0, 100);
 	}
 
 	public int getAmmoRemaining() {
@@ -195,6 +209,29 @@ public class ItemWeapon extends ItemEquippable {
 		}
 		return actions;
 	}
+
+	@Override
+	public ModdableStat getStat(String name) {
+		switch(name) {
+			case "damage":
+				return damage;
+			case "rate":
+				return rate;
+			case "critDamage":
+				return critDamage;
+			case "rangeMin":
+				return rangeMin;
+			case "rangeMax":
+				return rangeMax;
+			case "clipSize":
+				return clipSize;
+			default:
+				return null;
+		}
+	}
+
+	@Override
+	public void onStatChange() {}
 
 	@Override
 	public void loadState(SaveData saveData) {
