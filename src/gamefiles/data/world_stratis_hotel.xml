@@ -91,16 +91,6 @@
                     </text>
                 </object>
             </objects>
-            <actors>
-                <!--<actor id="enemy">
-                    <template>enemy</template>
-                    <descriptor>black-haired</descriptor>
-                </actor>-->
-                <!--<actor id="enemy2">
-                    <template>enemy</template>
-                    <descriptor>taller</descriptor>
-                </actor>-->
-            </actors>
         </area>
     </room>
     <room id="stratis_hotel_rooms_corridor">

@@ -116,16 +116,6 @@
         </inventory>
         <topic>nexus_bouncer_start</topic>
     </actor>
-    <actor id="lucas_simms" parent="default">
-        <name proper="true">Lucas Simms</name>
-        <pronoun>HE</pronoun>
-        <faction>nexus_staff</faction>
-        <hp>50</hp>
-        <inventory>
-            <entry table="true">nexus_bouncer</entry>
-        </inventory>
-        <topic>lucas_simms_start</topic>
-    </actor>
     <actor id="test_vendor" parent="default">
         <name proper="false">vendor</name>
         <pronoun>SHE</pronoun>
@@ -139,81 +129,5 @@
             <lootTable>weapon_ranged_3</lootTable>
             <buyTag>weapon_ranged</buyTag>
         </vendor>
-        <script trigger="on_player_visible_round">
-            <script select="true">
-                <script select="true">
-                    <condition type="equippedItem">
-                        <actor target="player"></actor>
-                        <tag>weapon</tag>
-                    </condition>
-                    <script>
-                        <condition type="var">
-                            <variable>test_vendor_weapon_warning</variable>
-                            <equality>EQUAL</equality>
-                            <value>0</value>
-                        </condition>
-                        <script type="bark">
-                            <line>"Hey, no open carry in here! Put that weapon away!" $subject yell$s</line>
-                        </script>
-                        <script type="varMod">
-                            <variable>test_vendor_weapon_warning</variable>
-                            <value>1</value>
-                        </script>
-                    </script>
-                    <script>
-                        <condition type="var">
-                            <variable>test_vendor_weapon_warning</variable>
-                            <equality>EQUAL</equality>
-                            <value>1</value>
-                        </condition>
-                        <script type="bark">
-                            <line>"Put that weapon away now! This is your final warning!" $subject yell$s</line>
-                        </script>
-                        <script type="varMod">
-                            <variable>test_vendor_weapon_warning</variable>
-                            <value>1</value>
-                        </script>
-                    </script>
-                    <script>
-                        <condition type="var">
-                            <variable>test_vendor_weapon_warning</variable>
-                            <equality>GREATER_EQUAL</equality>
-                            <value>2</value>
-                        </condition>
-                        <script type="bark">
-                            <line>"Alright, you asked for it!" $subject yell$s</line>
-                        </script>
-                        <script type="combat">
-                            <combatant target="player"></combatant>
-                        </script>
-                    </script>
-                </script>
-                <script>
-                    <condition type="equippedItem" invert="true">
-                        <actor target="player"></actor>
-                        <tag>weapon</tag>
-                    </condition>
-                    <script select="true">
-                        <condition>
-                            <condition type="var">
-                                <variable>test_vendor_weapon_warning</variable>
-                                <equality>GREATER</equality>
-                                <value>0</value>
-                            </condition>
-                            <condition type="inCombat" invert="true"></condition>
-                        </condition>
-                        <script>
-                            <script type="bark">
-                                <line>"Good. Now keep that weapon out of sight while you're in here," $subject say$s, glaring at you</line>
-                            </script>
-                            <script type="varSet">
-                                <variable>test_vendor_weapon_warning</variable>
-                                <value>0</value>
-                            </script>
-                        </script>
-                    </script>
-                </script>
-            </script>
-        </script>
     </actor>
 </data>

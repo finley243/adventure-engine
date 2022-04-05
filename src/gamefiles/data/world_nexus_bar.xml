@@ -18,12 +18,6 @@
                     </idle>
                     <preventMovement>true</preventMovement>
                 </actor>
-                <actor id="lucas_simms">
-                    <template>lucas_simms</template>
-                    <idle>
-                        <area>street_corner_nexus</area>
-                    </idle>
-                </actor>
             </actors>
         </area>
     </room>
