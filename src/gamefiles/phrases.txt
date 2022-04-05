@@ -34,6 +34,7 @@ sit:$subject sit$s in $object1
 stand:$subject stand$s up
 storeIn:$subject put$s $object1 in $object2
 takeCover:$subject take$s cover behind $object1
+leaveCover:$subject emerge$s from behind $object1
 takeElevatorDown:$subject take$s $object1 down
 takeElevatorUp:$subject take$s $object1 up
 takeFrom:$subject take$s $object1 from $object2
