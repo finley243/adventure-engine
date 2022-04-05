@@ -268,6 +268,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		return isCrouching;
 	}
 
+	public boolean isInCover() {
+		return isUsingObject() && getUsingObject().userInCover();
+	}
+
 	public void setCrouching(boolean state) {
 		isCrouching = state;
 	}
@@ -654,9 +658,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		Set<Actor> visibleActors = new HashSet<>();
 		Set<Area> visibleAreas = getArea().getVisibleAreas(this);
 		for(Area visibleArea : visibleAreas) {
-			boolean areaBehindCover = getArea().isBehindCover(visibleArea);
 			for(Actor actor : visibleArea.getActors()) {
-				if(actor != this && !(actor.isCrouching() && areaBehindCover)) {
+				if(actor != this && !actor.isInCover()) {
 					visibleActors.add(actor);
 				}
 			}
@@ -674,7 +677,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public boolean canSee(Actor target) {
-		return this == target || getArea().getVisibleAreas(this).contains(target.getArea()) && (!target.isCrouching || !getArea().isBehindCover(target.getArea()));
+		return this == target || getArea().getVisibleAreas(this).contains(target.getArea()) && !target.isInCover();
 	}
 
 	@Override

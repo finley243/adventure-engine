@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
@@ -21,6 +22,14 @@ public class ActionUseStart extends Action {
 		subject.startUsingObject(object);
 		Context context = new Context(subject, object);
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(object.getStartPhrase()), context, this, subject));
+	}
+
+	@Override
+	public float utility(Actor subject) {
+		if(object.userInCover()) {
+			return UtilityUtils.getCoverUtility(subject);
+		}
+		return 0.0f;
 	}
 	
 	@Override

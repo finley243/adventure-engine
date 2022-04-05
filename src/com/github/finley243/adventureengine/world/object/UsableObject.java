@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionUseStart;
+import com.github.finley243.adventureengine.action.ActionUseStop;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
@@ -46,9 +48,28 @@ public abstract class UsableObject extends WorldObject {
 	public void removeUser() {
 		this.user = null;
 	}
-	
+
+	public boolean userInCover() {
+		return false;
+	}
+
+	public boolean userHidden() {
+		return false;
+	}
+
+	@Override
+	public List<Action> localActions(Actor subject) {
+		List<Action> actions = super.localActions(subject);
+		if(isAvailableToUse() && !subject.isUsingObject()) {
+			actions.add(new ActionUseStart(this));
+		}
+		return actions;
+	}
+
 	public List<Action> usingActions() {
-		return new ArrayList<>();
+		List<Action> actions = new ArrayList<>();
+		actions.add(new ActionUseStop(this));
+		return actions;
 	}
 
 	public void loadState(SaveData saveData) {

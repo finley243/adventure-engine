@@ -36,21 +36,5 @@ public class ObjectChair extends UsableObject {
 	public String getStopPrompt() {
 		return "Stand";
 	}
-
-	@Override
-	public List<Action> localActions(Actor subject) {
-		List<Action> actions = super.localActions(subject);
-		if(isAvailableToUse() && !subject.isUsingObject()) {
-			actions.add(new ActionUseStart(this));
-		}
-		return actions;
-	}
-
-	@Override
-	public List<Action> usingActions() {
-		List<Action> actions = super.usingActions();
-		actions.add(new ActionUseStop(this));
-		return actions;
-	}
     
 }

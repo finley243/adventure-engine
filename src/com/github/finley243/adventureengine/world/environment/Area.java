@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.world.environment;
 
 import java.util.*;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
@@ -10,10 +9,8 @@ import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.world.object.ObjectCover;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 /**
@@ -200,32 +197,15 @@ public class Area extends GameInstanced implements Noun {
 	public Set<Area> getVisibleAreas(Actor subject) {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
-		Set<AreaLink.RelativeDirection> obstructedDirections = EnumSet.noneOf(AreaLink.RelativeDirection.class);
-		for(WorldObject object : getObjects()) {
-			if(object instanceof ObjectCover) {
-				obstructedDirections.addAll(Arrays.asList(((ObjectCover) object).getDirection().obstructsTo));
-			}
-		}
 		for(AreaLink link : linkedAreas.values()) {
 			if(link.getType().isVisible) {
-				if (!(subject.isCrouching() && obstructedDirections.contains(link.getDirection()))) {
+				if (!subject.isInCover()) {
 					Area area = game().data().getArea(link.getAreaID());
 					visibleAreas.add(area);
 				}
 			}
 		}
 		return visibleAreas;
-	}
-
-	public boolean isBehindCover(Area target) {
-		if (linkedAreas.containsKey(target.getID())) {
-			for (WorldObject object : target.getObjects()) {
-				if (object instanceof ObjectCover && ((ObjectCover) object).obstructsFrom(linkedAreas.get(target.getID()).getDirection())) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	public AreaLink.RelativeDirection getRelativeDirectionOf(Area other) {

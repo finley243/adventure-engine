@@ -17,7 +17,7 @@ public class ActionCrouchStop extends Action {
 
     @Override
     public float utility(Actor subject) {
-        return 0.1f;
+        return 0.0f;
     }
 
     @Override

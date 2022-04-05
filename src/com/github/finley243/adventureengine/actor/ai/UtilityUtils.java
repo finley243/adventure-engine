@@ -18,20 +18,20 @@ public class UtilityUtils {
 			return 0.0f;
 		}
 		float utility = 0.0f;
-		int contributers = 0;
+		int contributors = 0;
 		for(AreaTarget target : subject.getPursueTargets()) {
 			if(target.isActive() && (!throughExit || target.shouldUseExits())) {
 				if (target.shouldFlee() && target.getTargetAreas().contains(subject.getArea())) {
 					utility += target.getTargetUtility();
-					contributers++;
+					contributors++;
 				} else if (target.shouldFlee() ^ target.isOnPath(area)) { // XOR
 					// Temporary calculation, ignores distance
 					utility += target.getTargetUtility();
-					contributers++;
+					contributors++;
 				}
 			}
 		}
-		return utility / contributers;
+		return utility / contributors;
 	}
 
 	public static float getCoverUtility(Actor subject) {
@@ -39,7 +39,7 @@ public class UtilityUtils {
 		int totalTargets = 0;
 		for(Actor target : subject.targetingComponent().getCombatants()) {
 			Area lastKnownArea = subject.targetingComponent().getLastKnownArea(target);
-			if (target.equipmentComponent().hasRangedWeaponEquipped() && lastKnownArea != null && lastKnownArea.isBehindCover(subject.getArea())) {
+			if (target.equipmentComponent().hasRangedWeaponEquipped() && lastKnownArea != null && lastKnownArea != subject.getArea()) {
 				targetsBlocked++;
 			}
 			totalTargets++;

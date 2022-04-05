@@ -597,8 +597,7 @@ public class DataLoader {
             case "chair":
                 return new ObjectChair(game, objectID, area, objectName, objectDescription, objectScripts);
             case "cover":
-                ObjectCover.CoverDirection coverDirection = LoadUtils.singleTagEnum(objectElement, "direction", ObjectCover.CoverDirection.class, null);
-                return new ObjectCover(game, objectID, area, objectName, objectDescription, objectScripts, coverDirection);
+                return new ObjectCover(game, objectID, area, objectName, objectDescription, objectScripts);
             case "vendingMachine":
                 List<String> vendingItems = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "items"), "item");
                 return new ObjectVendingMachine(game, objectID, area, objectName, objectDescription, objectScripts, vendingItems);

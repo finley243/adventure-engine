@@ -18,7 +18,8 @@ public class ActionCrouch extends Action {
 
     @Override
     public float utility(Actor subject) {
-        return UtilityUtils.getCoverUtility(subject);
+        return 0.0f;
+        //return UtilityUtils.getCoverUtility(subject);
     }
 
     @Override
