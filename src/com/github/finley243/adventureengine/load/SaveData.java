@@ -16,7 +16,7 @@ import java.util.List;
 public class SaveData implements Serializable {
 
     public enum DataType {
-        AREA, ROOM, ACTOR, OBJECT, TOPIC, VARIABLE, SCENE, ITEM_STATS, ITEM_INSTANCE
+        AREA, ROOM, ACTOR, OBJECT, TOPIC, VARIABLE, SCENE, ITEM_STATS, ITEM_INSTANCE, TIME
     }
 
     private enum ValueType {
@@ -112,6 +112,9 @@ public class SaveData implements Serializable {
             case ITEM_STATS:
                 ItemTemplate itemTemplate = data.getItem(id);
                 itemTemplate.loadState(this);
+                break;
+            case TIME:
+                data.time().setTime(getValueInt());
                 break;
         }
     }

@@ -22,6 +22,10 @@ public class DateTimeController {
         minutes = (hoursComponent * 60) + minutesComponent;
     }
 
+    public void setTime(int minutes) {
+        this.minutes = minutes;
+    }
+
     // Requires use of 24-hour format
     public boolean isInRange(int hours1, int minutes1, int hours2, int minutes2) {
         boolean crossZero = hours1 > hours2;
