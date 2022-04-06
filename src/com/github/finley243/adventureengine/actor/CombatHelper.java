@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 public class CombatHelper {
 
-	private static final float HIT_CHANCE_MAX = 0.99f;
-	private static final float HIT_CHANCE_MIN = 0.01f;
+	public static final float HIT_CHANCE_MAX = 0.99f;
+	public static final float HIT_CHANCE_MIN = 0.01f;
 	private static final float HIT_CHANCE_BASE_MAX = 0.99f;
 	private static final float HIT_CHANCE_BASE_MIN = 0.10f;
 	private static final float RANGE_PENALTY_FAR = 0.10f;
@@ -46,15 +46,14 @@ public class CombatHelper {
 			chance -= meleeEvasionMod;
 		}
 		chance += HIT_CHANCE_ADD;
+		chance += weapon.getAccuracyBonus();
 		if(limb != null) {
 			chance *= limb.getHitChance();
 		}
 		if(auto) {
 			chance *= AUTOFIRE_HIT_CHANCE_MULT;
 		}
-		if(chance < HIT_CHANCE_MIN) {
-			return HIT_CHANCE_MIN;
-		} else return Math.min(chance, HIT_CHANCE_MAX);
+		return Math.max(Math.min(chance, HIT_CHANCE_MAX), HIT_CHANCE_MIN);
 	}
 
 	public static String getHitPhrase(ItemWeapon weapon, Limb limb, boolean crit, boolean auto) {

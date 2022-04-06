@@ -4,7 +4,8 @@
         <price>10</price>
         <type>DRINK</type>
         <effects>
-            <effect type="heal">
+            <effect type="stateInt">
+                <state>hp</state>
                 <amount>10</amount>
                 <duration>0</duration>
             </effect>

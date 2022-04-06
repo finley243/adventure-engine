@@ -6,11 +6,13 @@ import java.util.Set;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.Moddable;
+import com.github.finley243.adventureengine.ModdableStatFloat;
 import com.github.finley243.adventureengine.ModdableStatInt;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -27,6 +29,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatInt rangeMin;
 	private final ModdableStatInt rangeMax;
 	private final ModdableStatInt clipSize;
+	private final ModdableStatFloat accuracyBonus;
 	private int ammo;
 	
 	public ItemWeapon(Game game, String ID, Area area, boolean isGenerated, WeaponTemplate stats) {
@@ -38,6 +41,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.rangeMin = new ModdableStatInt(this);
 		this.rangeMax = new ModdableStatInt(this);
 		this.clipSize = new ModdableStatInt(this);
+		this.accuracyBonus = new ModdableStatFloat(this);
 		this.ammo = stats.getClipSize();
 	}
 
@@ -125,7 +129,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public float getAccuracyBonus() {
-		return stats.getAccuracyBonus();
+		return accuracyBonus.value(stats.getAccuracyBonus(), 0.0f, 1.0f);
 	}
 
 	public int getClipSize() {
@@ -224,6 +228,16 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 				return rangeMax;
 			case "clipSize":
 				return clipSize;
+			default:
+				return null;
+		}
+	}
+
+	@Override
+	public ModdableStatFloat getStatFloat(String name) {
+		switch(name) {
+			case "accuracyBonus":
+				return accuracyBonus;
 			default:
 				return null;
 		}

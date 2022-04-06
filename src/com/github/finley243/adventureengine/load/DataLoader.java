@@ -447,13 +447,20 @@ public class DataLoader {
         int duration = LoadUtils.singleTagInt(effectElement, "duration", 0);
         int amount = LoadUtils.singleTagInt(effectElement, "amount", 0);
         switch(effectType) {
-            case "heal":
-                return new EffectHeal(duration, manualRemoval, amount);
-            case "dropEquipped":
-                return new EffectDropEquipped();
-            case "stat":
-                String stat = LoadUtils.singleTag(effectElement, "stat", null);
-                return new EffectStat(duration, manualRemoval, amount, stat);
+            case "stateInt":
+                String stateInt = LoadUtils.singleTag(effectElement, "state", null);
+                return new EffectStateInt(duration, manualRemoval, amount, stateInt);
+            case "trigger":
+                String trigger = LoadUtils.singleTag(effectElement, "trigger", null);
+                return new EffectTrigger(duration, manualRemoval, trigger);
+            case "statInt":
+                String statInt = LoadUtils.singleTag(effectElement, "stat", null);
+                return new EffectStatInt(duration, manualRemoval, amount, statInt);
+            case "statFloat":
+                String statFloat = LoadUtils.singleTag(effectElement, "stat", null);
+                // TODO - Reorganize to allow using "amount" as tag name
+                float statFloatAmount = LoadUtils.singleTagFloat(effectElement, "amountFloat", 0.0f);
+                return new EffectStatFloat(duration, manualRemoval, statFloatAmount, statFloat);
             default:
                 return null;
         }

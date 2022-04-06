@@ -1,9 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.Moddable;
-import com.github.finley243.adventureengine.ModdableStatInt;
+import com.github.finley243.adventureengine.*;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
@@ -724,6 +721,14 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 				return skills.get(Skill.STEALTH);
 			case "evasion":
 				return skills.get(Skill.EVASION);
+			default:
+				return null;
+		}
+	}
+
+	@Override
+	public ModdableStatFloat getStatFloat(String name) {
+		switch(name) {
 			default:
 				return null;
 		}
