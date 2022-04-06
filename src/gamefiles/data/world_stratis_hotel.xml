@@ -8,6 +8,7 @@
             <objects>
                 <object type="exit" id="stratis_entry_door">
                     <name>entry door</name>
+                    <link>stratis_entrance_exterior</link>
                 </object>
             </objects>
             <links>

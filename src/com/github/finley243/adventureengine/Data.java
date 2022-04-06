@@ -27,6 +27,7 @@ public class Data {
 	private ActorPlayer player;
 
 	private final Game game;
+	private final DateTimeController time;
 	
 	private final Map<String, String> config = new HashMap<>();
 	
@@ -46,6 +47,11 @@ public class Data {
 
 	public Data(Game game) {
 		this.game = game;
+		this.time = new DateTimeController();
+	}
+
+	public DateTimeController time() {
+		return time;
 	}
 
 	public void newGame() throws ParserConfigurationException, IOException, SAXException {
@@ -62,6 +68,7 @@ public class Data {
 	}
 
 	public void reset() throws ParserConfigurationException, IOException, SAXException {
+		time.reset(this);
 		areas.clear();
 		rooms.clear();
 		actors.clear();

@@ -16,7 +16,7 @@ import com.github.finley243.adventureengine.Data;
 
 public class ConfigLoader {
 
-	private static final String[] CONFIG_LIST = new String[] {"playerStats", "playerID", "playerStartArea", "gameName"};
+	private static final String[] CONFIG_LIST = new String[] {"playerStats", "playerID", "playerStartArea", "gameName", "startTimeHours", "startTimeMinutes"};
 	
 	public static void loadConfig(Game game, File file) throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

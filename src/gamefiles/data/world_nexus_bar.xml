@@ -9,6 +9,10 @@
                     <link>nexus_entrance_interior</link>
                     <key>nexus_bouncer_key</key>
                 </object>
+                <object type="exit" id="stratis_entrance_exterior">
+                    <name>Stratis Hotel entrance</name>
+                    <link>stratis_entry_door</link>
+                </object>
             </objects>
             <actors>
                 <actor id="nexus_bouncer">

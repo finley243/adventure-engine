@@ -30,7 +30,9 @@ public class ActorPlayer extends Actor {
 	
 	@Override
 	public void onVisualEvent(AudioVisualEvent event) {
-		game().eventBus().post(new RenderTextEvent(event.getTextVisible()));
+		if(isActive()) {
+			game().eventBus().post(new RenderTextEvent(event.getTextVisible()));
+		}
 	}
 	
 	@Override

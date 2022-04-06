@@ -3,4 +3,6 @@
     <playerID>player</playerID>
     <playerStartArea>stratis_hotel_lobby_entry</playerStartArea>
     <gameName>AdventureEngine</gameName>
+    <startTimeHours>8</startTimeHours>
+    <startTimeMinutes>0</startTimeMinutes>
 </config>
