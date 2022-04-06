@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.Moddable;
-import com.github.finley243.adventureengine.ModdableStat;
+import com.github.finley243.adventureengine.ModdableStatInt;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
@@ -80,18 +80,18 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private boolean isKnown;
 	private final Area defaultArea;
 	private Area area;
-	private final ModdableStat maxHP;
+	private final ModdableStatInt maxHP;
 	private int HP;
 	private final boolean startDisabled;
 	private boolean isEnabled;
 	private final boolean startDead;
 	private boolean isDead;
 	private boolean endTurn;
-	private final ModdableStat actionPoints;
+	private final ModdableStatInt actionPoints;
 	private int actionPointsUsed;
 	private final Map<Action, Integer> blockedActions;
-	private final EnumMap<Attribute, ModdableStat> attributes;
-	private final EnumMap<Skill, ModdableStat> skills;
+	private final EnumMap<Attribute, ModdableStatInt> attributes;
+	private final EnumMap<Skill, ModdableStatInt> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final ApparelComponent apparelComponent;
@@ -119,8 +119,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		this.investigateTarget = new InvestigateTarget();
 		this.startDead = startDead;
 		this.isDead = startDead;
-		this.maxHP = new ModdableStat(this);
-		this.actionPoints = new ModdableStat(this);
+		this.maxHP = new ModdableStatInt(this);
+		this.actionPoints = new ModdableStatInt(this);
 		if(!startDead) {
 			HP = this.maxHP.value(stats.getMaxHP(game()), 0, MAX_HP);
 		}
@@ -134,11 +134,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new ModdableStat(this));
+			this.attributes.put(attribute, new ModdableStatInt(this));
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for(Skill skill : Skill.values()) {
-			this.skills.put(skill, new ModdableStat(this));
+			this.skills.put(skill, new ModdableStatInt(this));
 		}
 		this.effectComponent = new EffectComponent(this);
 		this.blockedActions = new HashMap<>();
@@ -682,7 +682,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 
 	@Override
-	public ModdableStat getStat(String name) {
+	public ModdableStatInt getStatInt(String name) {
 		switch(name) {
 			case "maxHP":
 				return maxHP;

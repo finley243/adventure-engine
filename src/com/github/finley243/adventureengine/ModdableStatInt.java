@@ -1,12 +1,12 @@
 package com.github.finley243.adventureengine;
 
-public class ModdableStat {
+public class ModdableStatInt {
 
     private final Moddable target;
     private int mod;
     private float mult;
 
-    public ModdableStat(Moddable target) {
+    public ModdableStatInt(Moddable target) {
         this.target = target;
     }
 

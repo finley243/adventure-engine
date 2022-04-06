@@ -1,13 +1,12 @@
 package com.github.finley243.adventureengine.world.item;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.Moddable;
-import com.github.finley243.adventureengine.ModdableStat;
+import com.github.finley243.adventureengine.ModdableStatInt;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.action.attack.*;
@@ -22,23 +21,23 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public static final float CRIT_CHANCE = 0.05f;
 	
 	private final WeaponTemplate stats;
-	private final ModdableStat damage;
-	private final ModdableStat rate;
-	private final ModdableStat critDamage;
-	private final ModdableStat rangeMin;
-	private final ModdableStat rangeMax;
-	private final ModdableStat clipSize;
+	private final ModdableStatInt damage;
+	private final ModdableStatInt rate;
+	private final ModdableStatInt critDamage;
+	private final ModdableStatInt rangeMin;
+	private final ModdableStatInt rangeMax;
+	private final ModdableStatInt clipSize;
 	private int ammo;
 	
 	public ItemWeapon(Game game, String ID, Area area, boolean isGenerated, WeaponTemplate stats) {
 		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
-		this.damage = new ModdableStat(this);
-		this.rate = new ModdableStat(this);
-		this.critDamage = new ModdableStat(this);
-		this.rangeMin = new ModdableStat(this);
-		this.rangeMax = new ModdableStat(this);
-		this.clipSize = new ModdableStat(this);
+		this.damage = new ModdableStatInt(this);
+		this.rate = new ModdableStatInt(this);
+		this.critDamage = new ModdableStatInt(this);
+		this.rangeMin = new ModdableStatInt(this);
+		this.rangeMax = new ModdableStatInt(this);
+		this.clipSize = new ModdableStatInt(this);
 		this.ammo = stats.getClipSize();
 	}
 
@@ -211,7 +210,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public ModdableStat getStat(String name) {
+	public ModdableStatInt getStatInt(String name) {
 		switch(name) {
 			case "damage":
 				return damage;

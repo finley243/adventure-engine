@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine;
 
 public interface Moddable {
 
-    ModdableStat getStat(String name);
+    ModdableStatInt getStatInt(String name);
 
     void onStatChange();
 

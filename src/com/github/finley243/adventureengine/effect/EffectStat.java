@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.ModdableStat;
+import com.github.finley243.adventureengine.ModdableStatInt;
 import com.github.finley243.adventureengine.actor.Actor;
 
 public class EffectStat extends Effect {
@@ -14,17 +14,17 @@ public class EffectStat extends Effect {
 
     @Override
     public void start(Actor target) {
-        ModdableStat moddableStat = target.getStat(stat);
-        if(moddableStat != null) {
-            moddableStat.addMod(amount);
+        ModdableStatInt moddableStatInt = target.getStatInt(stat);
+        if(moddableStatInt != null) {
+            moddableStatInt.addMod(amount);
         }
     }
 
     @Override
     public void end(Actor target) {
-        ModdableStat moddableStat = target.getStat(stat);
-        if(moddableStat != null) {
-            moddableStat.addMod(-amount);
+        ModdableStatInt moddableStatInt = target.getStatInt(stat);
+        if(moddableStatInt != null) {
+            moddableStatInt.addMod(-amount);
         }
     }
 
