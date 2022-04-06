@@ -26,4 +26,14 @@ public class EffectTrigger extends Effect {
         target.triggerSpecial(trigger);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && trigger.equals(((EffectTrigger) o).trigger);
+    }
+
+    @Override
+    public int hashCode() {
+        return (31 * super.hashCode()) + trigger.hashCode();
+    }
+
 }

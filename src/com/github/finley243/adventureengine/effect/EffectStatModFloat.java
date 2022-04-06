@@ -35,4 +35,14 @@ public class EffectStatModFloat extends Effect {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && stat.equals(((EffectStatModFloat) o).stat) && amount == ((EffectStatModFloat) o).amount;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * ((31 * super.hashCode()) + stat.hashCode()) + Float.hashCode(amount);
+    }
+
 }

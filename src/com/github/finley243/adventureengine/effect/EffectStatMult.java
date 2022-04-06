@@ -34,12 +34,12 @@ public class EffectStatMult extends Effect {
 
     @Override
     public void end(Actor target) {
-        if(statType.equals("int")) {
+        if(statType.equalsIgnoreCase("int")) {
             ModdableStatInt moddableStatInt = target.getStatInt(stat);
             if(moddableStatInt != null) {
                 moddableStatInt.addMult(-amount);
             }
-        } else if(statType.equals("float")) {
+        } else if(statType.equalsIgnoreCase("float")) {
             ModdableStatFloat moddableStatFloat = target.getStatFloat(stat);
             if(moddableStatFloat != null) {
                 moddableStatFloat.addMult(-amount);
@@ -50,6 +50,16 @@ public class EffectStatMult extends Effect {
     @Override
     public void eachTurn(Actor target) {
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && stat.equals(((EffectStatMult) o).stat) && statType.equals(((EffectStatMult) o).statType) && amount == ((EffectStatMult) o).amount;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * (31 * ((31 * super.hashCode()) + stat.hashCode()) + statType.hashCode()) + Float.hashCode(amount);
     }
 
 }

@@ -28,4 +28,14 @@ public class EffectStateInt extends Effect {
         target.modifyState(state, amount);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && state.equals(((EffectStateInt) o).state) && amount == ((EffectStateInt) o).amount;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * ((31 * super.hashCode()) + state.hashCode()) + amount;
+    }
+
 }

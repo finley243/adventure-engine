@@ -35,4 +35,14 @@ public class EffectStatModInt extends Effect {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && stat.equals(((EffectStatModInt) o).stat) && amount == ((EffectStatModInt) o).amount;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * ((31 * super.hashCode()) + stat.hashCode()) + amount;
+    }
+
 }
