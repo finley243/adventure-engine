@@ -6,4 +6,8 @@ public interface Moddable {
 
     void onStatChange();
 
+    void modifyState(String name, int amount);
+
+    void triggerSpecial(String name);
+
 }

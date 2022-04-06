@@ -231,7 +231,23 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public void onStatChange() {}
+	public void onStatChange() {
+		if(ammo > getClipSize()) {
+			ammo = getClipSize();
+		}
+	}
+
+	@Override
+	public void modifyState(String name, int amount) {
+		switch(name) {
+			case "ammo":
+				ammo = Math.min(getClipSize(), Math.max(0, ammo + amount));
+				break;
+		}
+	}
+
+	@Override
+	public void triggerSpecial(String name) {}
 
 	@Override
 	public void loadState(SaveData saveData) {

@@ -182,6 +182,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 	}
 
+	// TODO - Remove (replace with forwarding functions)
 	public ActorTemplate getStats() {
 		return stats;
 	}
@@ -241,7 +242,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public int getAttribute(Attribute attribute) {
-		return attributes.get(attribute).value(stats.getAttribute(game(), attribute), SKILL_MIN, SKILL_MAX);
+		return attributes.get(attribute).value(stats.getAttribute(game(), attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
 	}
 
 	public int getSkill(Skill skill) {
@@ -371,12 +372,16 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		isDead = true;
 		Context context = new Context(this);
 		game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("die"), context, null, null));
+		dropEquippedItem();
+	}
+
+	public void dropEquippedItem() {
 		if(equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
 			getArea().addObject(item);
 			item.setArea(getArea());
-			context = new Context(this, item);
+			Context context = new Context(this, item);
 			game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 		}
 	}
@@ -728,6 +733,28 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	public void onStatChange() {
 		if(HP > getMaxHP()) {
 			HP = getMaxHP();
+		}
+	}
+
+	@Override
+	public void modifyState(String name, int amount) {
+		switch(name) {
+			case "hp":
+				if(amount > 0) {
+					heal(amount);
+				} else if(amount < 0) {
+					damage(amount);
+				}
+				break;
+		}
+	}
+
+	@Override
+	public void triggerSpecial(String name) {
+		switch(name) {
+			case "dropEquipped":
+				dropEquippedItem();
+				break;
 		}
 	}
 
