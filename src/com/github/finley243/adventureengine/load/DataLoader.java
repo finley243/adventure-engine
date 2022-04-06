@@ -253,6 +253,12 @@ public class DataLoader {
                 return new ConditionActorVisible(invert, actorRef, visibleTargetRef);
             case "inCombat":
                 return new ConditionActorInCombat(invert, actorRef);
+            case "time":
+                int hours1 = LoadUtils.singleTagInt(conditionElement, "hours1", 0);
+                int minutes1 = LoadUtils.singleTagInt(conditionElement, "minutes1", 0);
+                int hours2 = LoadUtils.singleTagInt(conditionElement, "hours2", 0);
+                int minutes2 = LoadUtils.singleTagInt(conditionElement, "minutes2", 0);
+                return new ConditionTime(invert, hours1, minutes1, hours2, minutes2);
             case "compound":
             default:
                 List<Condition> subConditions = loadSubConditions(conditionElement);
