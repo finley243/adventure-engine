@@ -11,7 +11,7 @@
         <slot>HEAD</slot>
         <damageResistance>5</damageResistance>
         <effect type="stat">
-            <stat>maxHP</stat>
+            <stat type="int">maxHP</stat>
             <amount>10</amount>
         </effect>
     </item>

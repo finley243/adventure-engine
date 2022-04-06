@@ -5,10 +5,12 @@ import com.github.finley243.adventureengine.actor.Actor;
 public class EffectStateInt extends Effect {
 
     private final String state;
+    private final int amount;
 
-    public EffectStateInt(int duration, boolean manualRemoval, int amount, String state) {
-        super(duration, manualRemoval, amount);
+    public EffectStateInt(int duration, boolean manualRemoval, String state, int amount) {
+        super(duration, manualRemoval);
         this.state = state;
+        this.amount = amount;
     }
 
     @Override

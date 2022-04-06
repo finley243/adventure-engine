@@ -11,12 +11,10 @@ public abstract class Effect {
 
 	protected final boolean manualRemoval;
 	protected final int duration;
-	protected final int amount;
 
-	public Effect(int duration, boolean manualRemoval, int amount) {
+	public Effect(int duration, boolean manualRemoval) {
 		this.manualRemoval = manualRemoval;
 		this.duration = duration;
-		this.amount = amount;
 	}
 	
 	public abstract void start(Actor target);
@@ -43,12 +41,12 @@ public abstract class Effect {
 
 	@Override
 	public boolean equals(Object o) {
-		return getClass().equals(o.getClass()) && manualRemoval == ((Effect) o).manualRemoval && duration == ((Effect) o).duration && amount == ((Effect) o).amount;
+		return getClass().equals(o.getClass()) && manualRemoval == ((Effect) o).manualRemoval && duration == ((Effect) o).duration;
 	}
 
 	@Override
 	public int hashCode() {
-		return 31 * ((31 * duration) + Boolean.hashCode(manualRemoval)) + amount;
+		return (31 * duration) + Boolean.hashCode(manualRemoval);
 	}
 	
 }

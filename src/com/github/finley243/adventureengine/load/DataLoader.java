@@ -445,22 +445,29 @@ public class DataLoader {
         if(effectElement == null) return null;
         String effectType = effectElement.getAttribute("type");
         int duration = LoadUtils.singleTagInt(effectElement, "duration", 0);
-        int amount = LoadUtils.singleTagInt(effectElement, "amount", 0);
         switch(effectType) {
-            case "stateInt":
-                String stateInt = LoadUtils.singleTag(effectElement, "state", null);
-                return new EffectStateInt(duration, manualRemoval, amount, stateInt);
+            case "state":
+                String state = LoadUtils.singleTag(effectElement, "state", null);
+                int stateAmount = LoadUtils.singleTagInt(effectElement, "amount", 0);
+                return new EffectStateInt(duration, manualRemoval, state, stateAmount);
             case "trigger":
                 String trigger = LoadUtils.singleTag(effectElement, "trigger", null);
                 return new EffectTrigger(duration, manualRemoval, trigger);
-            case "statInt":
-                String statInt = LoadUtils.singleTag(effectElement, "stat", null);
-                return new EffectStatInt(duration, manualRemoval, amount, statInt);
-            case "statFloat":
-                String statFloat = LoadUtils.singleTag(effectElement, "stat", null);
-                // TODO - Reorganize to allow using "amount" as tag name
-                float statFloatAmount = LoadUtils.singleTagFloat(effectElement, "amountFloat", 0.0f);
-                return new EffectStatFloat(duration, manualRemoval, statFloatAmount, statFloat);
+            case "statMod":
+                String statMod = LoadUtils.singleTag(effectElement, "stat", null);
+                String statModType = LoadUtils.attribute(LoadUtils.singleChildWithName(effectElement, "stat"), "type", null);
+                if(statModType.equalsIgnoreCase("int")) {
+                    int statAmountInt = LoadUtils.singleTagInt(effectElement, "amount", 0);
+                    return new EffectStatModInt(duration, manualRemoval, statMod, statAmountInt);
+                } else if(statModType.equalsIgnoreCase("float")) {
+                    float statAmountFloat = LoadUtils.singleTagFloat(effectElement, "amount", 0.0f);
+                    return new EffectStatModFloat(duration, manualRemoval, statMod, statAmountFloat);
+                }
+            case "statMult":
+                String statMult = LoadUtils.singleTag(effectElement, "stat", null);
+                String statMultType = LoadUtils.attribute(LoadUtils.singleChildWithName(effectElement, "stat"), "type", null);
+                float statMultAmount = LoadUtils.singleTagFloat(effectElement, "amount", 0.0f);
+                return new EffectStatMult(duration, manualRemoval, statMult, statMultType, statMultAmount);
             default:
                 return null;
         }

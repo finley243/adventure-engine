@@ -42,15 +42,17 @@ public class EffectComponent {
         while(itr.hasNext()) {
             Effect effect = itr.next();
             effect.eachTurn(actor);
-            List<Integer> counters = effects.get(effect);
-            for(int i = 0; i < counters.size(); i++) {
-                int counterValue = counters.get(i) + 1;
-                counters.set(i, counterValue);
-                if(!effect.manualRemoval() && counterValue == effect.getDuration()) {
-                    effect.end(actor);
-                    counters.remove(0);
-                    if(counters.isEmpty()) {
-                        itr.remove();
+            if(!effect.manualRemoval()) {
+                List<Integer> counters = effects.get(effect);
+                for (int i = 0; i < counters.size(); i++) {
+                    int counterValue = counters.get(i) + 1;
+                    counters.set(i, counterValue);
+                    if (counterValue == effect.getDuration()) {
+                        effect.end(actor);
+                        counters.remove(0);
+                        if (counters.isEmpty()) {
+                            itr.remove();
+                        }
                     }
                 }
             }

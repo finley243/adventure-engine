@@ -3,15 +3,15 @@ package com.github.finley243.adventureengine.effect;
 import com.github.finley243.adventureengine.ModdableStatFloat;
 import com.github.finley243.adventureengine.actor.Actor;
 
-public class EffectStatFloat extends Effect {
+public class EffectStatModFloat extends Effect {
 
     private final String stat;
-    private final float amountFloat;
+    private final float amount;
 
-    public EffectStatFloat(int duration, boolean manualRemoval, float amount, String stat) {
-        super(duration, manualRemoval, 0);
+    public EffectStatModFloat(int duration, boolean manualRemoval, String stat, float amount) {
+        super(duration, manualRemoval);
         this.stat = stat;
-        this.amountFloat = amount;
+        this.amount = amount;
     }
 
     @Override

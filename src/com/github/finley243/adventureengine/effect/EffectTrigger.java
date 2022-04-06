@@ -7,7 +7,7 @@ public class EffectTrigger extends Effect {
     private final String trigger;
 
     public EffectTrigger(int duration, boolean manualRemoval, String trigger) {
-        super(duration, manualRemoval, 0);
+        super(duration, manualRemoval);
         this.trigger = trigger;
     }
 

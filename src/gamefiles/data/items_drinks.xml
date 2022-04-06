@@ -4,7 +4,7 @@
         <price>10</price>
         <type>DRINK</type>
         <effects>
-            <effect type="stateInt">
+            <effect type="state">
                 <state>hp</state>
                 <amount>10</amount>
                 <duration>0</duration>
@@ -17,7 +17,7 @@
         <type>DRINK</type>
         <effects>
             <effect type="stat">
-                <stat>handguns</stat>
+                <stat type="int">handguns</stat>
                 <amount>9</amount>
                 <duration>3</duration>
             </effect>

@@ -3,13 +3,15 @@ package com.github.finley243.adventureengine.effect;
 import com.github.finley243.adventureengine.ModdableStatInt;
 import com.github.finley243.adventureengine.actor.Actor;
 
-public class EffectStatInt extends Effect {
+public class EffectStatModInt extends Effect {
 
     private final String stat;
+    private final int amount;
 
-    public EffectStatInt(int duration, boolean manualRemoval, int amount, String stat) {
-        super(duration, manualRemoval, amount);
+    public EffectStatModInt(int duration, boolean manualRemoval, String stat, int amount) {
+        super(duration, manualRemoval);
         this.stat = stat;
+        this.amount = amount;
     }
 
     @Override
