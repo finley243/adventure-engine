@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine;
+package com.github.finley243.adventureengine.effect.moddable;
 
 import java.util.HashMap;
 import java.util.HashSet;

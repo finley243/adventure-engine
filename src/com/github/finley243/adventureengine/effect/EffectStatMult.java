@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.ModdableStatFloat;
-import com.github.finley243.adventureengine.ModdableStatInt;
+import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
+import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
 import com.github.finley243.adventureengine.actor.Actor;
 
 public class EffectStatMult extends Effect {

@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.Moddable;
-import com.github.finley243.adventureengine.ModdableStatFloat;
-import com.github.finley243.adventureengine.ModdableStatInt;
+import com.github.finley243.adventureengine.effect.moddable.Moddable;
+import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
+import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
