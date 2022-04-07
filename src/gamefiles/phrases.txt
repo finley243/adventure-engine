@@ -56,3 +56,5 @@ rangedAutoHitCrit:a spray of bullets hits $object1
 location:$subject $is $inLocation
 locationListNear:near $object1 $is $subject
 locationList:$inLocation to the $direction, there $is $subject
+getUp:$subject get$s up from $object1
+lieDown:$subject lie$s down in $object1

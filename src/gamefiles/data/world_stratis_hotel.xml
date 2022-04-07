@@ -10,6 +10,9 @@
                     <name>entry door</name>
                     <link>stratis_entrance_exterior</link>
                 </object>
+                <object type="bed" id="test_bed">
+                    <name>bed</name>
+                </object>
             </objects>
             <links>
                 <link>stratis_hotel_lobby_desk</link>

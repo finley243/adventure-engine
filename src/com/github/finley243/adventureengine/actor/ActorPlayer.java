@@ -79,6 +79,7 @@ public class ActorPlayer extends Actor {
 	}
 
 	public void describeSurroundings() {
+		if(!isActive() || !isEnabled()) return;
 		Context areaContext = new Context(this, getArea().getLandmark());
 		game().eventBus().post(new RenderTextEvent(TextGen.generate("$subject $is adjacent to $object1" + (getArea().getActors(this).isEmpty() ? "" : " [" + getArea().getActorList(this) + "]"), areaContext)));
 		Set<Area> nearbyAreas = getArea().getMovableAreas();

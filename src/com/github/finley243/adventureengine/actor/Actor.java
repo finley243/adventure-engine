@@ -86,6 +86,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private boolean isEnabled;
 	private final boolean startDead;
 	private boolean isDead;
+	private boolean isUnconscious;
 	private boolean endTurn;
 	private final ModdableStatInt actionPoints;
 	private int actionPointsUsed;
@@ -105,6 +106,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final InvestigateTarget investigateTarget;
 	private final BehaviorIdle behaviorIdle;
 	private final boolean preventMovement;
+	private int sleepCounter;
 
 	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead, boolean startDisabled) {
 		super(game);
@@ -408,18 +410,43 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	public boolean isDead() {
 		return isDead;
 	}
+
+	public boolean isUnconscious() {
+		return isUnconscious;
+	}
+
+	public void setUnconscious(boolean state) {
+		this.isUnconscious = state;
+	}
 	
 	public boolean isActive() {
-		return !isDead;
+		return !isDead() && !isUnconscious();
+	}
+
+	public void startSleep(int duration) {
+		this.sleepCounter = duration;
+		setUnconscious(true);
+	}
+
+	private void updateSleep() {
+		if(sleepCounter != 0) {
+			this.sleepCounter -= DateTimeController.MINUTES_PER_ROUND;
+			if (sleepCounter <= 0) {
+				setUnconscious(false);
+				this.sleepCounter = 0;
+			}
+		}
 	}
 	
 	public void onVisualEvent(AudioVisualEvent event) {
-		if(event.getAction() instanceof ActionMoveArea) {
-			targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveArea) event.getAction()).getArea());
-		} else if(event.getAction() instanceof ActionMoveExit) {
-			targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
-		} else if(event.getAction() instanceof ActionMoveElevator) {
-			targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveElevator) event.getAction()).getDestination().getArea());
+		if(isActive() && isEnabled()) {
+			if (event.getAction() instanceof ActionMoveArea) {
+				targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveArea) event.getAction()).getArea());
+			} else if (event.getAction() instanceof ActionMoveExit) {
+				targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
+			} else if (event.getAction() instanceof ActionMoveElevator) {
+				targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveElevator) event.getAction()).getDestination().getArea());
+			}
 		}
 	}
 	
@@ -558,7 +585,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public void takeTurn() {
-		if(!isActive() || !isEnabled()) return;
+		if(!isEnabled()) return;
+		if(!isActive()) {
+			updateSleep();
+			return;
+		};
 		effectComponent().onStartTurn();
 		targetingComponent.updateTurn();
 		investigateTarget.nextTurn(this);

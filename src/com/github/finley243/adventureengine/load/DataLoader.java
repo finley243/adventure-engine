@@ -615,6 +615,8 @@ public class DataLoader {
                 return new ObjectSign(game, objectID, area, objectName, objectDescription, objectScripts, signText);
             case "chair":
                 return new ObjectChair(game, objectID, area, objectName, objectDescription, objectScripts);
+            case "bed":
+                return new ObjectBed(game, objectID, area, objectName, objectDescription, objectScripts);
             case "cover":
                 return new ObjectCover(game, objectID, area, objectName, objectDescription, objectScripts);
             case "vendingMachine":

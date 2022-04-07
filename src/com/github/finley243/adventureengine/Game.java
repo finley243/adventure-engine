@@ -89,7 +89,9 @@ public class Game {
 		continueGameLoop = true;
 		while(continueGameLoop) {
 			nextRound();
-			sleep(800);
+			if(data().getPlayer().isActive()) {
+				sleep(800);
+			}
 		}
 	}
 	
