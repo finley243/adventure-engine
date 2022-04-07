@@ -46,7 +46,7 @@ public abstract class Effect {
 
 	@Override
 	public int hashCode() {
-		return (31 * duration) + Boolean.hashCode(manualRemoval);
+		return (31 * (31 * getClass().getSimpleName().hashCode() + duration)) + Boolean.hashCode(manualRemoval);
 	}
 	
 }
