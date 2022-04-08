@@ -1,6 +1,9 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.reaction.ActionReaction;
+import com.github.finley243.adventureengine.action.reaction.ActionReactionBlock;
+import com.github.finley243.adventureengine.action.reaction.ActionReactionNone;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.SoundEvent;
@@ -10,66 +13,35 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ActionRangedAttack extends ActionAttack {
 	
 	public ActionRangedAttack(ItemWeapon weapon, Actor target) {
-		super(weapon, target);
+		super(weapon, target, null);
 	}
 
 	@Override
-	public void onStart(Actor subject) {
-		getWeapon().consumeAmmo(1);
-		if(!getWeapon().isSilenced()) {
-			subject.game().eventBus().post(new SoundEvent(subject.getArea(), true));
-		}
-		getTarget().targetingComponent().addCombatant(subject);
-		Context attackContext = new Context(subject, getTarget(), getWeapon());
-		if(!CombatHelper.isRepeat(attackContext)) {
-			subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, false)), "you hear a gunshot", attackContext, AudioVisualEvent.ResponseType.HOSTILE, true, null, null));
-		}
+	public List<ActionReaction> getReactions(Actor subject) {
+		List<ActionReaction> reactions = new ArrayList<>();
+		return reactions;
 	}
 
 	@Override
-	public void onSuccess(Actor subject) {
-		int damage = weapon.getDamage();
-		boolean crit = false;
-		if(ThreadLocalRandom.current().nextFloat() < ItemWeapon.CRIT_CHANCE) {
-			damage += weapon.getCritDamage();
-			crit = true;
-		}
-		Context attackContext = new Context(subject, target, weapon);
-		String hitPhrase = CombatHelper.getHitPhrase(weapon, null, crit, false);
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
-		target.damage(damage);
+	public String getTelegraphPhrase() {
+		return "rangedTelegraph";
 	}
 
 	@Override
-	public void onFail(Actor subject) {
-		Context attackContext = new Context(subject, getTarget(), getWeapon());
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, false)), attackContext, this, subject));
+	public String getHitPhrase() {
+		return "rangedHit";
 	}
 
 	@Override
-	public float chance(Actor subject) {
-		return CombatHelper.calculateHitChance(subject, getTarget(), null, getWeapon(), false);
-	}
-
-	@Override
-	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && getWeapon().getAmmoRemaining() >= 1 && subject.canSee(getTarget());
-	}
-
-	@Override
-	public float utility(Actor subject) {
-		if (!subject.targetingComponent().isCombatant(getTarget())) return 0;
-		return 0.8f;
-	}
-
-	@Override
-	public int repeatCount(Actor subject) {
-		return weapon.getRate();
+	public String getMissPhrase() {
+		return "rangedMiss";
 	}
 
 	@Override
@@ -83,7 +55,7 @@ public class ActionRangedAttack extends ActionAttack {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Attack (" + (int) Math.ceil(chance(subject)*100) + "%)", canChoose(subject), new String[]{weapon.getName(), getTarget().getName()});
+		return new MenuData("Attack (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{getWeapon().getName(), getTarget().getName()});
 	}
 
 }

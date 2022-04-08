@@ -24,6 +24,8 @@ public class EffectComponent {
                 effects.put(effect, new ArrayList<>());
             }
             effects.get(effect).add(0);
+        } else {
+            effect.end(actor);
         }
     }
 

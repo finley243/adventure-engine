@@ -4,18 +4,30 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandom;
 import com.github.finley243.adventureengine.action.reaction.ActionReaction;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.CombatHelper;
+import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ActionAttack extends ActionRandom {
 
-    protected final Actor target;
-    protected final ItemWeapon weapon;
+    private final Actor target;
+    private final ItemWeapon weapon;
+    private final Limb limb;
+    private ActionReaction reaction;
+    private boolean reactionSuccess;
 
-    public ActionAttack(ItemWeapon weapon, Actor target) {
+    public ActionAttack(ItemWeapon weapon, Actor target, Limb limb) {
         this.weapon = weapon;
         this.target = target;
+        this.limb = limb;
     }
 
     public ItemWeapon getWeapon() {
@@ -26,11 +38,114 @@ public abstract class ActionAttack extends ActionRandom {
         return target;
     }
 
-    protected ActionReaction getReaction(Actor subject) {
-        //List<Action> reactions = getWeapon().reactionActions(getTarget());
-        //Action chosenAction = target.chooseAction(reactions);
-        //return chosenAction instanceof ActionReaction ? (ActionReaction) chosenAction : null;
-        return null;
+    public Limb getLimb() {
+        return limb;
+    }
+
+    public int damage() {
+        return weapon.getDamage();
+    }
+
+    public float hitChanceMult() {
+        return 0.0f;
+    }
+
+    @Override
+    public float chance(Actor subject) {
+        float chance = CombatHelper.calculateHitChance(subject, getTarget(), getLimb(), getWeapon(), hitChanceMult());
+        if(reaction != null) {
+            if(reactionSuccess) {
+                chance *= (1.0f + reaction.getHitChanceMultOnSuccess());
+            } else {
+                chance *= (1.0f + reaction.getHitChanceMultOnFail());
+            }
+        }
+        return chance;
+    }
+
+    @Override
+    public boolean onStart(Actor subject) {
+        getTarget().targetingComponent().addCombatant(subject);
+        if(getWeapon().getClipSize() > 0) {
+            getWeapon().consumeAmmo(ammoConsumed());
+        }
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), subject, getTarget(), getWeapon());
+        if(!CombatHelper.isRepeat(attackContext)) {
+            subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getTelegraphPhrase()), attackContext, this, subject));
+        }
+        chooseReaction(subject);
+        this.reactionSuccess = (reaction != null && reaction.computeSuccess(getTarget()));
+        if(reaction != null) {
+            if(reactionSuccess) {
+                reaction.onSuccess(getTarget());
+            } else {
+                reaction.onFail(getTarget());
+            }
+        }
+        return !(reactionSuccess && reaction.cancelsAttack());
+    }
+
+    @Override
+    public void onSuccess(Actor subject) {
+        int damage = damage();
+        if(ThreadLocalRandom.current().nextFloat() < ItemWeapon.CRIT_CHANCE) {
+            // No indication of critical hit to player, only damage increase
+            damage += getWeapon().getCritDamage();
+        }
+        if(reaction != null) {
+            if(reactionSuccess) {
+                damage *= (1.0f + reaction.getDamageMultOnSuccess());
+            } else {
+                damage *= (1.0f + reaction.getDamageMultOnFail());
+            }
+        }
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), subject, getTarget(), getWeapon());
+        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getHitPhrase()), attackContext, this, subject));
+        target.damage(damage, getLimb());
+    }
+
+    @Override
+    public void onFail(Actor subject) {
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), subject, getTarget(), getWeapon());
+        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getMissPhrase()), attackContext, this, subject));
+    }
+
+    public int ammoConsumed() {
+        return 1;
+    }
+
+    public abstract String getTelegraphPhrase();
+
+    public abstract String getHitPhrase();
+
+    public abstract String getMissPhrase();
+
+    private void chooseReaction(Actor subject) {
+        List<ActionReaction> reactions = getReactions(subject);
+        if(reactions != null && !reactions.isEmpty()) {
+            this.reaction = (ActionReaction) target.chooseAction(new ArrayList<>(reactions));
+        }
+    }
+
+    public abstract List<ActionReaction> getReactions(Actor subject);
+
+    @Override
+    public boolean canChoose(Actor subject) {
+        return super.canChoose(subject) &&
+                (getWeapon().isRanged() || subject.getArea() == getTarget().getArea()) &&
+                subject.canSee(getTarget()) &&
+                (getWeapon().getClipSize() == 0 || getWeapon().getAmmoRemaining() >= ammoConsumed());
+    }
+
+    @Override
+    public int repeatCount(Actor subject) {
+        return weapon.getRate();
+    }
+
+    @Override
+    public float utility(Actor subject) {
+        if (!subject.targetingComponent().isCombatant(getTarget())) return 0;
+        return 0.8f;
     }
 
     @Override

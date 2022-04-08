@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
@@ -16,7 +17,7 @@ public class CombatHelper {
 	private static final float EVASION_PENALTY = 0.02f;
 	private static final float HIT_CHANCE_ADD = 0.15f;
 
-	private static final float AUTOFIRE_HIT_CHANCE_MULT = 0.50f;
+	public static final float AUTOFIRE_HIT_CHANCE_MULT = -0.50f;
 
 	public static Context lastAttack;
 
@@ -30,9 +31,10 @@ public class CombatHelper {
 		return isRepeat;
 	}
 	
-	public static float calculateHitChance(Actor attacker, Actor target, Limb limb, ItemWeapon weapon, boolean auto) {
-		float skill = (float) attacker.getSkill(weapon.getSkill());
-		float chance = HIT_CHANCE_BASE_MIN + ((HIT_CHANCE_BASE_MAX - HIT_CHANCE_BASE_MIN) / (Actor.SKILL_MAX - Actor.SKILL_MIN)) * (skill - Actor.SKILL_MIN);
+	public static float calculateHitChance(Actor attacker, Actor target, Limb limb, ItemWeapon weapon, float hitChanceMult) {
+		int skill = attacker.getSkill(weapon.getSkill());
+		// TODO - Check results of chance function (minimal testing)
+		float chance = MathUtils.chanceLinear(skill, Actor.SKILL_MIN, Actor.SKILL_MAX, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
 		if(weapon.isRanged()) {
 			int distance = attacker.getArea().getDistanceTo(target.getArea().getID());
 			if(distance < weapon.getRangeMin()) {
@@ -42,7 +44,7 @@ public class CombatHelper {
 			}
 		} else {
 			float evasionSkill = (float) target.getSkill(Actor.Skill.EVASION);
-			float meleeEvasionMod = EVASION_PENALTY * evasionSkill;
+			float meleeEvasionMod = EVASION_PENALTY * (evasionSkill - Actor.SKILL_MIN);
 			chance -= meleeEvasionMod;
 		}
 		chance += HIT_CHANCE_ADD;
@@ -50,9 +52,7 @@ public class CombatHelper {
 		if(limb != null) {
 			chance *= limb.getHitChance();
 		}
-		if(auto) {
-			chance *= AUTOFIRE_HIT_CHANCE_MULT;
-		}
+		chance *= (hitChanceMult + 1.0f);
 		return Math.max(Math.min(chance, HIT_CHANCE_MAX), HIT_CHANCE_MIN);
 	}
 

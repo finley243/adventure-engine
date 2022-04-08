@@ -330,25 +330,32 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		game().eventBus().post(new AudioVisualEvent(getArea(), "$subject $is $condition", context, null, null));
 	}
 	
-	public void damage(int amount) {
+	public void damage(int amount, Limb limb) {
 		if(amount < 0) throw new IllegalArgumentException();
+		if(limb != null) {
+			damageLimb(amount, limb);
+		} else {
+			damageDirect(amount);
+		}
+	}
+
+	private void damageDirect(int amount) {
 		amount -= apparelComponent.getDamageResistance(ApparelComponent.ApparelSlot.TORSO);
 		HP -= amount;
-		if(HP <= 0) {
+		if (HP <= 0) {
 			HP = 0;
 			kill();
 		} else {
 			triggerScript("on_damaged");
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
-			if(SHOW_HP_CHANGES) {
+			if (SHOW_HP_CHANGES) {
 				game().eventBus().post(new AudioVisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
 			}
 			game().eventBus().post(new AudioVisualEvent(getArea(), "$subject $is $condition", context, null, null));
 		}
 	}
 
-	public void damageLimb(int amount, Limb limb) {
-		if(amount < 0) throw new IllegalArgumentException();
+	private void damageLimb(int amount, Limb limb) {
 		amount -= apparelComponent.getDamageResistance(limb.getApparelSlot());
 		if(amount < 0) amount = 0;
 		if(amount > 0) {
@@ -782,7 +789,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 				if(amount > 0) {
 					heal(amount);
 				} else if(amount < 0) {
-					damage(amount);
+					damage(amount, null);
 				}
 				break;
 		}

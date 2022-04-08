@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action.attack;
 
+import com.github.finley243.adventureengine.action.reaction.ActionReaction;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.SoundEvent;
@@ -9,6 +10,8 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ActionRangedAttackAuto extends ActionAttack {
@@ -17,57 +20,43 @@ public class ActionRangedAttackAuto extends ActionAttack {
 	private static final float AUTOFIRE_DAMAGE_MULT = 3.00f;
 
 	public ActionRangedAttackAuto(ItemWeapon weapon, Actor target) {
-		super(weapon, target);
+		super(weapon, target, null);
 	}
 
 	@Override
-	public void onStart(Actor subject) {
-		getWeapon().consumeAmmo(AMMO_USED);
-		if(!getWeapon().isSilenced()) {
-			subject.game().eventBus().post(new SoundEvent(subject.getArea(), true));
-		}
-		getTarget().targetingComponent().addCombatant(subject);
-		Context attackContext = new Context(subject, getTarget(), getWeapon());
-		if(!CombatHelper.isRepeat(attackContext)) {
-			subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(CombatHelper.getTelegraphPhrase(getWeapon(), null, true)), "you hear a spray of gunfire", attackContext, AudioVisualEvent.ResponseType.HOSTILE, true, null, null));
-		}
+	public List<ActionReaction> getReactions(Actor subject) {
+		List<ActionReaction> reactions = new ArrayList<>();
+		return reactions;
 	}
 
 	@Override
-	public void onSuccess(Actor subject) {
-		int damage = weapon.getDamage();
-		damage *= AUTOFIRE_DAMAGE_MULT;
-		boolean crit = false;
-		if(ThreadLocalRandom.current().nextFloat() < ItemWeapon.CRIT_CHANCE) {
-			damage += weapon.getCritDamage();
-			crit = true;
-		}
-		Context attackContext = new Context(subject, target, weapon);
-		String hitPhrase = CombatHelper.getHitPhrase(weapon, null, crit, true);
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(hitPhrase), attackContext, null, null));
-		target.damage(damage);
+	public int ammoConsumed() {
+		return AMMO_USED;
 	}
 
 	@Override
-	public void onFail(Actor subject) {
-		Context attackContext = new Context(subject, getTarget(), getWeapon());
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(CombatHelper.getMissPhrase(getWeapon(), null, true)), attackContext, this, subject));
+	public int damage() {
+		return (int) (getWeapon().getDamage() * AUTOFIRE_DAMAGE_MULT);
 	}
 
 	@Override
-	public float chance(Actor subject) {
-		return CombatHelper.calculateHitChance(subject, getTarget(), null, getWeapon(), true);
+	public String getTelegraphPhrase() {
+		return "rangedTelegraph";
 	}
 
 	@Override
-	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && getWeapon().getAmmoRemaining() >= AMMO_USED && subject.canSee(getTarget());
+	public String getHitPhrase() {
+		return "rangedAutoHit";
 	}
 
 	@Override
-	public float utility(Actor subject) {
-		if (!subject.targetingComponent().isCombatant(getTarget())) return 0;
-		return 0.8f;
+	public String getMissPhrase() {
+		return "rangedAutoMiss";
+	}
+
+	@Override
+	public float hitChanceMult() {
+		return CombatHelper.AUTOFIRE_HIT_CHANCE_MULT;
 	}
 
 	@Override
@@ -77,7 +66,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Autofire (" + (int) Math.ceil(chance(subject)*100) + "%)", canChoose(subject), new String[]{weapon.getName(), getTarget().getName()});
+		return new MenuData("Autofire (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{getWeapon().getName(), getTarget().getName()});
 	}
 
 }
