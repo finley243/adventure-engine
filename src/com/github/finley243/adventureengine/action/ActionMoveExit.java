@@ -30,8 +30,7 @@ public class ActionMoveExit extends ActionMove {
 	public void choose(Actor subject) {
 		Area area = exit.getLinkedArea();
 		Context context = new Context(subject, exit, area.getRoom());
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("moveThroughTo"), context, this, subject));
-		subject.game().eventBus().post(new AudioVisualEvent(area, Phrases.get("moveThroughTo"), context, this, subject));
+		subject.game().eventBus().post(new AudioVisualEvent(new Area[]{subject.getArea(), area}, Phrases.get("moveThroughTo"), context, this, subject));
 		exit.unlock();
 		subject.setArea(area);
 	}

@@ -25,7 +25,7 @@ public class ActionVendingMachineBuy extends Action {
 		subject.adjustMoney(-item.getPrice());
 		subject.inventory().addItem(item);
 		Context context = new Context(subject, item, vendingMachine);
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("buyFrom"), context, this, subject));
+		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("buy"), context, this, subject));
 	}
 
 	@Override
