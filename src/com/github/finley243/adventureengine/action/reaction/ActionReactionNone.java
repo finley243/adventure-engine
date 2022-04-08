@@ -11,14 +11,10 @@ public class ActionReactionNone extends ActionReaction {
     }
 
     @Override
-    public String successPhrase() {
-        return null;
-    }
+    public void onSuccess(Actor subject) {}
 
     @Override
-    public String failPhrase() {
-        return null;
-    }
+    public void onFail(Actor subject) {}
 
     @Override
     public MenuData getMenuData(Actor subject) {
@@ -28,6 +24,11 @@ public class ActionReactionNone extends ActionReaction {
     @Override
     public float chance(Actor subject) {
         return 1.0f;
+    }
+
+    @Override
+    public float utility(Actor subject) {
+        return 0.1f;
     }
 
 }

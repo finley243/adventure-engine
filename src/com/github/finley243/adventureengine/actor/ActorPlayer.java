@@ -48,7 +48,6 @@ public class ActorPlayer extends Actor {
 		game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
 		if(shouldShowDescription) {
 			this.updateAreaDescription();
-			this.describeSurroundings();
 		}
 		if(newRoom) {
 			getArea().getRoom().triggerScript("on_player_enter", this);

@@ -8,9 +8,9 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionReactionBlock extends ActionReaction {
+public class ActionReactionDodge extends ActionReaction {
 
-    public ActionReactionBlock(Actor attacker, ItemWeapon weapon) {
+    public ActionReactionDodge(Actor attacker, ItemWeapon weapon) {
         super(attacker, weapon);
     }
 
@@ -21,29 +21,24 @@ public class ActionReactionBlock extends ActionReaction {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Block (" + getChanceTag(subject) + ")", canChoose(subject));
-    }
-
-    @Override
-    public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && subject.equipmentComponent().hasMeleeWeaponEquipped();
+        return new MenuData("Dodge (" + getChanceTag(subject) + ")", canChoose(subject));
     }
 
     @Override
     public void onSuccess(Actor subject) {
         Context reactionContext = new Context(subject, attacker, weapon);
-        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("blockSuccess"), reactionContext, this, subject));
+        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("dodgeSuccess"), reactionContext, this, subject));
     }
 
     @Override
     public void onFail(Actor subject) {
         Context reactionContext = new Context(subject, attacker, weapon);
-        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("blockFail"), reactionContext, this, subject));
+        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("dodgeFail"), reactionContext, this, subject));
     }
 
     @Override
     public float chance(Actor subject) {
-        return MathUtils.chanceLinearSkill(subject, Actor.Skill.MELEE, 0.1f, 0.6f);
+        return MathUtils.chanceLinearAttribute(subject, Actor.Attribute.AGILITY, 0.02f, 0.6f);
     }
 
     @Override

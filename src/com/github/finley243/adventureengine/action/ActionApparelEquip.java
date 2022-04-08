@@ -1,7 +1,10 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
 
 public class ActionApparelEquip extends Action {
@@ -15,6 +18,8 @@ public class ActionApparelEquip extends Action {
     @Override
     public void choose(Actor subject) {
         subject.apparelComponent().equip(item);
+        Context context = new Context(subject, item);
+        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("equip"), context, this, subject));
     }
 
     @Override

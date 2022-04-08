@@ -44,7 +44,7 @@ public class BehaviorIdle {
 		} else {
 			currentTarget.setTargetUtility(IDLE_MOVEMENT_WEIGHT);
 		}
-		if(currentTarget.shouldRemove()) {
+		if(currentTarget.shouldRemove() && !subject.isInCombat()) {
 			if(stepTurnCounter <= 0) {
 				stepIndex++;
 				if(stepIndex >= steps.size()) {

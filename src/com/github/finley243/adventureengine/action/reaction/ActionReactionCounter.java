@@ -8,20 +8,15 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
-public class ActionReactionBlock extends ActionReaction {
+public class ActionReactionCounter extends ActionReaction {
 
-    public ActionReactionBlock(Actor attacker, ItemWeapon weapon) {
+    public ActionReactionCounter(Actor attacker, ItemWeapon weapon) {
         super(attacker, weapon);
     }
 
     @Override
-    public boolean cancelsAttack() {
-        return true;
-    }
-
-    @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Block (" + getChanceTag(subject) + ")", canChoose(subject));
+        return new MenuData("Counter (" + getChanceTag(subject) + ")", canChoose(subject));
     }
 
     @Override
@@ -32,18 +27,18 @@ public class ActionReactionBlock extends ActionReaction {
     @Override
     public void onSuccess(Actor subject) {
         Context reactionContext = new Context(subject, attacker, weapon);
-        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("blockSuccess"), reactionContext, this, subject));
+        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("counterSuccess"), reactionContext, this, subject));
     }
 
     @Override
     public void onFail(Actor subject) {
         Context reactionContext = new Context(subject, attacker, weapon);
-        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("blockFail"), reactionContext, this, subject));
+        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("counterFail"), reactionContext, this, subject));
     }
 
     @Override
     public float chance(Actor subject) {
-        return MathUtils.chanceLinearSkill(subject, Actor.Skill.MELEE, 0.1f, 0.6f);
+        return MathUtils.chanceLinearSkillContest(subject, Actor.Skill.MELEE, attacker, Actor.Skill.MELEE, 0.01f, 0.7f);
     }
 
     @Override

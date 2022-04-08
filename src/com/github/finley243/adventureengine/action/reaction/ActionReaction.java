@@ -42,23 +42,13 @@ public abstract class ActionReaction extends Action {
         return false;
     }
 
-    public abstract String successPhrase();
-
-    public abstract String failPhrase();
-
-    public void onSuccess(Actor subject) {
-        if(successPhrase() != null) {
-            Context reactionContext = new Context(subject, attacker, weapon);
-            subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(successPhrase()), reactionContext, this, subject));
-        }
+    public boolean guaranteedHitOnFail() {
+        return false;
     }
 
-    public void onFail(Actor subject) {
-        if(failPhrase() != null) {
-            Context reactionContext = new Context(subject, attacker, weapon);
-            subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(failPhrase()), reactionContext, this, subject));
-        }
-    }
+    public abstract void onSuccess(Actor subject);
+
+    public abstract void onFail(Actor subject);
 
     public boolean computeSuccess(Actor subject) {
         float chance = chance(subject);

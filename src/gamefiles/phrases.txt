@@ -42,8 +42,10 @@ unequip:$subject put$s away $object1
 unlock:$subject unlock$s $object1
 blockSuccess:$subject {manage$s to block $object2 just in time|block$s $object2 and push$es $object2 away}
 blockFail:$subject tr$ies to block $object2 but $is too {late|slow}
-dodgeSuccess:$subject manage$s to {dodge|move} {out of the way of|away from} $object2
-dodgeFail:$subject tr$ies to dodge $object2 but $is too {late|slow}
+dodgeSuccess:$subject {dodge$s|move$s} {out of the way of|away from} $object2
+dodgeFail:$subject tr$ies to dodge $object2, but $subject lose$s $subject's balance
+counterSuccess:$subject slip$s {under|past} $object2 and hit$s $object1
+counterFail:$subject {tr$ies|attempt$s} to hit $object1, but $subject {$doesn't make it past|$isn't fast enough to avoid} $object2
 meleeHitLimb:$object2 hits $object1 in the $limb
 rangedHitLimb:a bullet hits $object1 in the $limb
 meleeHitCritLimb:$object2 hits $object1 in the $limb

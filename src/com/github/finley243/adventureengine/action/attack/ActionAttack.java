@@ -52,6 +52,9 @@ public abstract class ActionAttack extends ActionRandom {
 
     @Override
     public float chance(Actor subject) {
+        if(reaction != null && !reactionSuccess && reaction.guaranteedHitOnFail()) {
+            return 1.0f;
+        }
         float chance = CombatHelper.calculateHitChance(subject, getTarget(), getLimb(), getWeapon(), hitChanceMult());
         if(reaction != null) {
             if(reactionSuccess) {

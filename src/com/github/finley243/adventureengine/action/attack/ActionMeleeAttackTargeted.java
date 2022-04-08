@@ -1,8 +1,6 @@
 package com.github.finley243.adventureengine.action.attack;
 
-import com.github.finley243.adventureengine.action.reaction.ActionReaction;
-import com.github.finley243.adventureengine.action.reaction.ActionReactionBlock;
-import com.github.finley243.adventureengine.action.reaction.ActionReactionNone;
+import com.github.finley243.adventureengine.action.reaction.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
@@ -29,6 +27,8 @@ public class ActionMeleeAttackTargeted extends ActionAttack {
 	public List<ActionReaction> getReactions(Actor subject) {
 		List<ActionReaction> reactions = new ArrayList<>();
 		reactions.add(new ActionReactionBlock(subject, getWeapon()));
+		reactions.add(new ActionReactionDodge(subject, getWeapon()));
+		reactions.add(new ActionReactionCounter(subject, getWeapon()));
 		reactions.add(new ActionReactionNone(subject, getWeapon()));
 		return reactions;
 	}
