@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
+import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
@@ -26,7 +27,9 @@ public class ActionUseStart extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(object.userInCover()) {
+		if(!subject.isInCombat() && subject.behaviorComponent().currentBehavior() != null && subject.behaviorComponent().currentBehavior().getType() == Behavior.BehaviorType.OBJECT) {
+			return 0.5f;
+		}else if(object.userInCover()) {
 			return UtilityUtils.getCoverUtility(subject);
 		}
 		return 0.0f;

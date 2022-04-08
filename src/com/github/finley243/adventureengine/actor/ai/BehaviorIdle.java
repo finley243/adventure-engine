@@ -9,24 +9,35 @@ import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class BehaviorIdle {
 
+	/*public enum BehaviorType {
+		PATROL, SLEEP
+	}
+
 	public static final float IDLE_MOVEMENT_WEIGHT = 0.4f;
 	public static final int TURNS_PER_STEP = 1;
-	
+
+	private final BehaviorType type;
 	// empty = wander within room, 1 = stationary, >1 = patrol path (uses the shortest path between points)
-	private final List<String> steps;
+	private final List<IdlePoint> steps;
 	
 	private int stepIndex;
 	private int stepTurnCounter;
 	
 	private AreaTarget currentTarget;
 	
-	public BehaviorIdle(List<String> steps) {
+	public BehaviorIdle(BehaviorType type, List<IdlePoint> steps) {
+		this.type = type;
 		this.steps = steps;
 		this.stepIndex = 0;
 		this.stepTurnCounter = 0;
+	}
+
+	public BehaviorType getType() {
+		return type;
 	}
 	
 	public void update(Actor subject) {
@@ -35,7 +46,7 @@ public class BehaviorIdle {
 		}
 		if(currentTarget == null) {
 			Set<Area> targetSet = new HashSet<>();
-			targetSet.add(subject.game().data().getArea(steps.get(0)));
+			targetSet.add(getAreaFromIdlePoint(steps.get(0), subject));
 			currentTarget = new AreaTarget(targetSet, IDLE_MOVEMENT_WEIGHT, steps.size() == 1, false, false);
 			subject.addPursueTarget(currentTarget);
 		}
@@ -51,7 +62,7 @@ public class BehaviorIdle {
 					stepIndex = 0;
 				}
 				Set<Area> targetSet = new HashSet<>();
-				targetSet.add(subject.game().data().getArea(steps.get(stepIndex)));
+				targetSet.add(getAreaFromIdlePoint(steps.get(stepIndex), subject));
 				currentTarget = new AreaTarget(targetSet, IDLE_MOVEMENT_WEIGHT, false, false, false);
 				subject.addPursueTarget(currentTarget);
 				stepTurnCounter = TURNS_PER_STEP;
@@ -64,13 +75,27 @@ public class BehaviorIdle {
 			}
 		}
 	}
+
+	public boolean isTarget(WorldObject object) {
+		if(steps == null || steps.isEmpty()) return false;
+		return steps.get(stepIndex).getObject().equals(object.getID());
+	}
+
+	private Area getAreaFromIdlePoint(IdlePoint idlePoint, Actor subject) {
+		if(idlePoint.getArea() != null) {
+			return subject.game().data().getArea(idlePoint.getArea());
+		} else if(idlePoint.getObject() != null){
+			return subject.game().data().getObject(idlePoint.getObject()).getArea();
+		}
+		return null;
+	}
 	
 	private Area getNextArea(Actor subject) {
 		if(stepIndex + 1 >= steps.size()) {
-			return subject.game().data().getArea(steps.get(0));
+			return getAreaFromIdlePoint(steps.get(0), subject);
 		} else {
-			return subject.game().data().getArea(steps.get(stepIndex + 1));
+			return getAreaFromIdlePoint(steps.get(stepIndex + 1), subject);
 		}
-	}
+	}*/
 
 }

@@ -18,7 +18,9 @@
                 <actor id="nexus_bouncer">
                     <template>nexus_bouncer</template>
                     <idle>
-                        <area>street_corner_nexus</area>
+                        <point>
+                            <area>street_corner_nexus</area>
+                        </point>
                     </idle>
                     <preventMovement>true</preventMovement>
                 </actor>

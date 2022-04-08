@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
+import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.dialogue.DialogueChoice;
@@ -653,17 +654,28 @@ public class DataLoader {
         String ID = actorElement.getAttribute("id");
         String template = LoadUtils.singleTag(actorElement, "template", null);
         String descriptor = LoadUtils.singleTag(actorElement, "descriptor", null);
-        List<String> idle;
-        Element idleElement = LoadUtils.singleChildWithName(actorElement, "idle");
-        if(idleElement != null) {
-            idle = LoadUtils.listOfTags(idleElement, "area");
-        } else {
-            idle = new ArrayList<>();
-        }
+        List<Behavior> behaviors = loadBehaviors(LoadUtils.singleChildWithName(actorElement, "behaviors"));
         boolean preventMovement = LoadUtils.singleTagBoolean(actorElement, "preventMovement", false);
         boolean startDead = LoadUtils.singleTagBoolean(actorElement, "startDead", false);
         boolean startDisabled = LoadUtils.singleTagBoolean(actorElement, "startDisabled", false);
-        return ActorFactory.create(game, ID, area, game.data().getActorTemplate(template), descriptor, idle, preventMovement, startDead, startDisabled);
+        return ActorFactory.create(game, ID, area, game.data().getActorTemplate(template), descriptor, behaviors, preventMovement, startDead, startDisabled);
+    }
+
+    private static List<Behavior> loadBehaviors(Element behaviorsElement) {
+        /*if(idleElement == null) return new ArrayList<>();
+        List<BehaviorTarget> behaviorTargets = new ArrayList<>();
+        for (Element idlePoint : LoadUtils.directChildrenWithName(idleElement, "point")) {
+            BehaviorTarget.IdleType type = LoadUtils.singleTagEnum(idlePoint, "type", BehaviorTarget.IdleType.class, BehaviorTarget.IdleType.DEFAULT);
+            String area = LoadUtils.singleTag(idlePoint, "area", null);
+            String object = LoadUtils.singleTag(idlePoint, "object", null);
+            int duration = LoadUtils.singleTagInt(idlePoint, "duration", 1);
+            String idlePhraseStart = LoadUtils.singleTag(idlePoint, "phraseStart", null);
+            String idlePhraseEnd = LoadUtils.singleTag(idlePoint, "phraseEnd", null);
+            behaviorTargets.add(new BehaviorTarget(type, area, object, duration, idlePhraseStart, idlePhraseEnd));
+        }
+        return behaviorTargets;*/
+        // TODO - Load behaviors (probably in actorTemplate rather than actor instance)
+        return new ArrayList<>();
     }
 
 }

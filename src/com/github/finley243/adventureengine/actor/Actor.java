@@ -2,9 +2,8 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.*;
 import com.github.finley243.adventureengine.action.*;
-import com.github.finley243.adventureengine.actor.ai.AreaTarget;
-import com.github.finley243.adventureengine.actor.ai.BehaviorIdle;
-import com.github.finley243.adventureengine.actor.ai.InvestigateTarget;
+import com.github.finley243.adventureengine.actor.ai.*;
+import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.effect.moddable.Moddable;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
@@ -101,13 +100,13 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private UsableObject usingObject;
 	private boolean isCrouching;
 	private final TargetingComponent targetingComponent;
+	private final BehaviorComponent behaviorComponent;
 	private final Set<AreaTarget> areaTargets;
 	private final InvestigateTarget investigateTarget;
-	private final BehaviorIdle behaviorIdle;
 	private final boolean preventMovement;
 	private int sleepCounter;
 
-	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<String> idle, boolean preventMovement, boolean startDead, boolean startDisabled) {
+	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean preventMovement, boolean startDead, boolean startDisabled) {
 		super(game);
 		this.ID = ID;
 		this.defaultArea = area;
@@ -142,8 +141,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			this.skills.put(skill, new ModdableStatInt(this));
 		}
 		this.effectComponent = new EffectComponent(this);
+		this.behaviorComponent = new BehaviorComponent(this, behaviors);
 		this.blockedActions = new HashMap<>();
-		this.behaviorIdle = new BehaviorIdle(idle);
 		this.startDisabled = startDisabled;
 		setEnabled(!startDisabled);
 	}
@@ -302,6 +301,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		return effectComponent;
 	}
 
+	public BehaviorComponent behaviorComponent() {
+		return behaviorComponent;
+	}
+
 	public int getHP() {
 		return HP;
 	}
@@ -427,6 +430,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	
 	public boolean isActive() {
 		return !isDead() && !isUnconscious();
+	}
+
+	public Behavior.BehaviorType getBehaviorType() {
+		return behaviorComponent().currentBehavior().getType();
 	}
 
 	public void startSleep(int duration) {
@@ -591,15 +598,15 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public void takeTurn() {
-		if(!isEnabled()) return;
-		if(!isActive()) {
+		if(!isEnabled() || isDead()) return;
+		if(isUnconscious()) {
 			updateSleep();
 			return;
 		}
 		effectComponent().onStartTurn();
 		targetingComponent.updateTurn();
 		investigateTarget.nextTurn(this);
-		behaviorIdle.update(this);
+		behaviorComponent().update();
 		this.actionPointsUsed = 0;
 		this.blockedActions.clear();
 		this.endTurn = false;
