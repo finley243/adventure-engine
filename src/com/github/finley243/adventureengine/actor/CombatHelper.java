@@ -1,11 +1,8 @@
 package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.MathUtils;
-import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
-
-import java.util.Arrays;
 
 public class CombatHelper {
 
@@ -14,7 +11,6 @@ public class CombatHelper {
 	private static final float HIT_CHANCE_BASE_MAX = 0.99f;
 	private static final float HIT_CHANCE_BASE_MIN = 0.10f;
 	private static final float RANGE_PENALTY_FAR = 0.10f;
-	private static final float EVASION_PENALTY = 0.02f;
 	private static final float HIT_CHANCE_ADD = 0.15f;
 
 	public static final float AUTOFIRE_HIT_CHANCE_MULT = -0.50f;
@@ -42,10 +38,6 @@ public class CombatHelper {
 			} else if(distance > weapon.getRangeMax()) {
 				chance -= RANGE_PENALTY_FAR * (distance - weapon.getRangeMax());
 			}
-		} else {
-			float evasionSkill = (float) target.getSkill(Actor.Skill.EVASION);
-			float meleeEvasionMod = EVASION_PENALTY * (evasionSkill - Actor.SKILL_MIN);
-			chance -= meleeEvasionMod;
 		}
 		chance += HIT_CHANCE_ADD;
 		chance += weapon.getAccuracyBonus();
@@ -54,50 +46,6 @@ public class CombatHelper {
 		}
 		chance *= (hitChanceMult + 1.0f);
 		return Math.max(Math.min(chance, HIT_CHANCE_MAX), HIT_CHANCE_MIN);
-	}
-
-	public static String getHitPhrase(ItemWeapon weapon, Limb limb, boolean crit, boolean auto) {
-		if(weapon.isRanged()) {
-			if(auto) {
-				return crit ? "rangedAutoHitCrit" : "rangedAutoHit";
-			} else if(limb != null) {
-				return crit ? "rangedHitCritLimb" : "rangedHitLimb";
-			} else {
-				return crit ? "rangedHitCrit" : "rangedHit";
-			}
-		} else {
-			if(limb != null) {
-				return crit ? "meleeHitCritLimb" : "meleeHitLimb";
-			} else {
-				return crit ? "meleeHitCrit" : "meleeHit";
-			}
-		}
-	}
-
-	public static String getTelegraphPhrase(ItemWeapon weapon, Limb limb, boolean auto) {
-		if(weapon.isRanged()) {
-			return "rangedTelegraph";
-		} else {
-			return "meleeTelegraph";
-		}
-	}
-
-	public static String getMissPhrase(ItemWeapon weapon, Limb limb, boolean auto) {
-		if(weapon.isRanged()) {
-			if(auto) {
-				return "rangedAutoMiss";
-			} else if(limb != null) {
-				return "rangedMissLimb";
-			} else {
-				return "rangedMiss";
-			}
-		} else {
-			if(limb != null) {
-				return "meleeMissLimb";
-			} else {
-				return "meleeMiss";
-			}
-		}
 	}
 
 }

@@ -27,10 +27,6 @@ public class Context {
 			this.thirdPersonVerb = thirdPersonVerb;
 		}
 	}
-	
-	public enum Benefitting{
-		SUBJECT, OBJECT
-	}
 
 	private final Noun subject;
 	private final Noun[] objects;

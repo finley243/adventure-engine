@@ -63,8 +63,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		LONG_ARMS(Attribute.DEXTERITY),
 		LOCKPICK(Attribute.DEXTERITY),
 		// AGILITY
-		STEALTH(Attribute.AGILITY),
-		EVASION(Attribute.AGILITY);
+		STEALTH(Attribute.AGILITY);
 
 		public final Attribute attribute;
 
@@ -378,10 +377,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	
 	public void kill() {
 		triggerScript("on_death");
-		isDead = true;
 		Context context = new Context(this);
 		game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("die"), context, null, null));
 		dropEquippedItem();
+		isDead = true;
 	}
 
 	public void dropEquippedItem() {
@@ -596,7 +595,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if(!isActive()) {
 			updateSleep();
 			return;
-		};
+		}
 		effectComponent().onStartTurn();
 		targetingComponent.updateTurn();
 		investigateTarget.nextTurn(this);
@@ -760,8 +759,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 				return skills.get(Skill.LOCKPICK);
 			case "stealth":
 				return skills.get(Skill.STEALTH);
-			case "evasion":
-				return skills.get(Skill.EVASION);
 			default:
 				return null;
 		}

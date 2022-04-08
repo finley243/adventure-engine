@@ -70,10 +70,10 @@ public abstract class ActionAttack extends ActionRandom {
             getWeapon().consumeAmmo(ammoConsumed());
         }
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), subject, getTarget(), getWeapon());
-        if(!CombatHelper.isRepeat(attackContext)) {
+        //if(!CombatHelper.isRepeat(attackContext)) {
             subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getTelegraphPhrase()), attackContext, this, subject));
-        }
-        chooseReaction(subject);
+        //}
+        this.reaction = chooseReaction(subject);
         this.reactionSuccess = (reaction != null && reaction.computeSuccess(getTarget()));
         if(reaction != null) {
             if(reactionSuccess) {
@@ -82,7 +82,7 @@ public abstract class ActionAttack extends ActionRandom {
                 reaction.onFail(getTarget());
             }
         }
-        return !(reactionSuccess && reaction.cancelsAttack());
+        return !(reaction != null && reactionSuccess && reaction.cancelsAttack());
     }
 
     @Override
@@ -120,11 +120,12 @@ public abstract class ActionAttack extends ActionRandom {
 
     public abstract String getMissPhrase();
 
-    private void chooseReaction(Actor subject) {
+    private ActionReaction chooseReaction(Actor subject) {
         List<ActionReaction> reactions = getReactions(subject);
         if(reactions != null && !reactions.isEmpty()) {
-            this.reaction = (ActionReaction) target.chooseAction(new ArrayList<>(reactions));
+            return (ActionReaction) target.chooseAction(new ArrayList<>(reactions));
         }
+        return null;
     }
 
     public abstract List<ActionReaction> getReactions(Actor subject);

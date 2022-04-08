@@ -22,7 +22,6 @@
             <skill key="LONG_ARMS">4</skill>
             <skill key="LOCKPICK">4</skill>
             <skill key="STEALTH">4</skill>
-            <skill key="EVASION">4</skill>
         </skills>
         <limbs>
             <limb>
