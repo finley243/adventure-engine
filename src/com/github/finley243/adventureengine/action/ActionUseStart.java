@@ -16,6 +16,10 @@ public class ActionUseStart extends Action {
 	public ActionUseStart(UsableObject object) {
 		this.object = object;
 	}
+
+	public UsableObject getObject() {
+		return object;
+	}
 	
 	@Override
 	public void choose(Actor subject) {
@@ -27,7 +31,7 @@ public class ActionUseStart extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(!subject.isInCombat() && subject.behaviorComponent().currentBehavior() != null && subject.behaviorComponent().currentBehavior().getType() == Behavior.BehaviorType.OBJECT) {
+		if(!subject.isInCombat() && subject.behaviorComponent().currentBehavior() != null && subject.behaviorComponent().currentBehavior().actionIsTarget(this)) {
 			return 0.5f;
 		}else if(object.userInCover()) {
 			return UtilityUtils.getCoverUtility(subject);
