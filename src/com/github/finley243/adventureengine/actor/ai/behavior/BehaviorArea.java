@@ -1,26 +1,24 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.ObjectBed;
 
 import java.util.List;
 
-public class BehaviorSandbox extends Behavior {
+public class BehaviorArea extends Behavior {
 
     private final String area;
 
-    public BehaviorSandbox(Condition startCondition, Condition endCondition, int duration, boolean requireCompleting, List<String> idleScenes, String area) {
+    public BehaviorArea(Condition startCondition, Condition endCondition, int duration, boolean requireCompleting, List<String> idleScenes, String area) {
         super(startCondition, endCondition, duration, requireCompleting, idleScenes);
         this.area = area;
     }
 
     @Override
     public boolean isInTargetState(Actor subject) {
-        return subject.getArea().getRoom().equals(subject.game().data().getArea(area).getRoom());
+        return !subject.isInCombat() && subject.getArea().getID().equals(area);
     }
 
     @Override
@@ -30,9 +28,6 @@ public class BehaviorSandbox extends Behavior {
 
     @Override
     public float actionUtilityOverride(Action action) {
-        if(action instanceof ActionUseStart && !(((ActionUseStart) action).getObject() instanceof ObjectBed)) {
-            return BEHAVIOR_ACTION_UTILITY;
-        }
         return -1.0f;
     }
 

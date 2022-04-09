@@ -15,6 +15,10 @@ public class ActionUseStop extends Action {
 	public ActionUseStop(UsableObject object) {
 		this.object = object;
 	}
+
+	public UsableObject getObject() {
+		return object;
+	}
 	
 	@Override
 	public void choose(Actor subject) {

@@ -84,7 +84,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private boolean isEnabled;
 	private final boolean startDead;
 	private boolean isDead;
-	private boolean isUnconscious;
+	private boolean isSleeping;
 	private boolean endTurn;
 	private final ModdableStatInt actionPoints;
 	private int actionPointsUsed;
@@ -420,32 +420,28 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		return isDead;
 	}
 
-	public boolean isUnconscious() {
-		return isUnconscious;
+	public boolean isSleeping() {
+		return isSleeping;
 	}
 
-	public void setUnconscious(boolean state) {
-		this.isUnconscious = state;
+	public void setSleeping(boolean state) {
+		this.isSleeping = state;
 	}
 	
 	public boolean isActive() {
-		return !isDead() && !isUnconscious();
-	}
-
-	public Behavior.BehaviorType getBehaviorType() {
-		return behaviorComponent().currentBehavior().getType();
+		return !isDead() && !isSleeping();
 	}
 
 	public void startSleep(int duration) {
 		this.sleepCounter = duration;
-		setUnconscious(true);
+		setSleeping(true);
 	}
 
 	private void updateSleep() {
 		if(sleepCounter != 0) {
 			this.sleepCounter -= DateTimeController.MINUTES_PER_ROUND;
 			if (sleepCounter <= 0) {
-				setUnconscious(false);
+				setSleeping(false);
 				this.sleepCounter = 0;
 			}
 		}
@@ -599,7 +595,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	
 	public void takeTurn() {
 		if(!isEnabled() || isDead()) return;
-		if(isUnconscious()) {
+		if(isSleeping()) {
 			updateSleep();
 			return;
 		}
@@ -655,6 +651,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		for(Action currentAction : actions) {
 			if(currentAction.canChoose(this)) {
 				float currentWeight = currentAction.utility(this);
+				float behaviorOverride = behaviorComponent().actionUtilityOverride(currentAction);
+				if(behaviorOverride >= 0.0f) {
+					currentWeight = behaviorOverride;
+				}
 				if(currentWeight != 0) {
 					for (int i = 0; i < chaos + 1; i++) {
 						if (currentWeight == maxWeights.get(i)) {

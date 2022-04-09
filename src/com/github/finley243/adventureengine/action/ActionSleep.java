@@ -18,9 +18,6 @@ public class ActionSleep extends Action {
 
     @Override
     public float utility(Actor subject) {
-        if(subject.behaviorComponent().currentBehavior() != null && subject.behaviorComponent().currentBehavior().getType() == Behavior.BehaviorType.SLEEP) {
-            return 1.0f;
-        }
         return 0.0f;
     }
 

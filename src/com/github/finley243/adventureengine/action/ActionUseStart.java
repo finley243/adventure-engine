@@ -31,9 +31,7 @@ public class ActionUseStart extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(!subject.isInCombat() && subject.behaviorComponent().currentBehavior() != null && subject.behaviorComponent().currentBehavior().actionIsTarget(this)) {
-			return 0.5f;
-		}else if(object.userInCover()) {
+		if(object.userInCover()) {
 			return UtilityUtils.getCoverUtility(subject);
 		}
 		return 0.0f;
