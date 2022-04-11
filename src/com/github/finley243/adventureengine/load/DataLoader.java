@@ -662,19 +662,6 @@ public class DataLoader {
     }
 
     private static List<Behavior> loadBehaviors(Element behaviorsElement) throws ParserConfigurationException, IOException, SAXException {
-        /*if(idleElement == null) return new ArrayList<>();
-        List<BehaviorTarget> behaviorTargets = new ArrayList<>();
-        for (Element idlePoint : LoadUtils.directChildrenWithName(idleElement, "point")) {
-            BehaviorTarget.IdleType type = LoadUtils.singleTagEnum(idlePoint, "type", BehaviorTarget.IdleType.class, BehaviorTarget.IdleType.DEFAULT);
-            String area = LoadUtils.singleTag(idlePoint, "area", null);
-            String object = LoadUtils.singleTag(idlePoint, "object", null);
-            int duration = LoadUtils.singleTagInt(idlePoint, "duration", 1);
-            String idlePhraseStart = LoadUtils.singleTag(idlePoint, "phraseStart", null);
-            String idlePhraseEnd = LoadUtils.singleTag(idlePoint, "phraseEnd", null);
-            behaviorTargets.add(new BehaviorTarget(type, area, object, duration, idlePhraseStart, idlePhraseEnd));
-        }
-        return behaviorTargets;*/
-        // TODO - Load behaviors (probably in actorTemplate rather than actor instance)
         if(behaviorsElement == null) return new ArrayList<>();
         List<Behavior> behaviors = new ArrayList<>();
         for(Element behaviorElement : LoadUtils.directChildrenWithName(behaviorsElement, "behavior")) {
@@ -683,7 +670,7 @@ public class DataLoader {
             Condition startCondition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "conditionStart"));
             Condition endCondition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "conditionEnd"));
             int duration = LoadUtils.singleTagInt(behaviorElement, "duration", 0);
-            boolean requireCompleting = LoadUtils.singleTagBoolean(behaviorElement, "requireCompleting", false);
+            boolean requireCompleting = LoadUtils.singleTagBoolean(behaviorElement, "mustComplete", true);
             List<String> idleScenes = LoadUtils.listOfTags(behaviorElement, "idleScene");
             switch(type) {
                 case "area":

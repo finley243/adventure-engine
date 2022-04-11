@@ -185,6 +185,11 @@
                             <area>stratis_hotel_security_main</area>
                         </point>
                     </idle>
+                    <behaviors>
+                        <behavior type="sleep">
+                            <bed>test_bed</bed>
+                        </behavior>
+                    </behaviors>
                 </actor>
             </actors>
         </area>

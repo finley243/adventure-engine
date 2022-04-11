@@ -519,7 +519,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			if(vendorComponent != null) {
 				action.addAll(vendorComponent.getActions(subject));
 			}
-		} else {
+		} else if(isDead()) {
 			action.addAll(inventory.getExternalActions(this, subject));
 		}
 		return action;

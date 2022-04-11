@@ -43,27 +43,33 @@ public class BehaviorComponent {
 
     public void update() {
         if(behaviors.isEmpty()) return;
-        if(currentBehavior() != null && currentBehavior().getTargetArea(actor) != null) {
+        Behavior currentBehavior = currentBehavior();
+        System.out.println("Current behavior (" + actor.getID() + "): " + currentBehavior);
+        if(currentBehavior != null && currentBehavior.getTargetArea(actor) != null) {
             if(areaTarget == null) {
-                areaTarget = new AreaTarget(Set.of(currentBehavior().getTargetArea(actor)), Behavior.BEHAVIOR_ACTION_UTILITY, false, false, false);
+                areaTarget = new AreaTarget(Set.of(currentBehavior.getTargetArea(actor)), Behavior.BEHAVIOR_ACTION_UTILITY, false, false, false);
                 actor.addPursueTarget(areaTarget);
             } else {
-                areaTarget.setTargetAreas(Set.of(currentBehavior().getTargetArea(actor)));
+                areaTarget.setTargetAreas(Set.of(currentBehavior.getTargetArea(actor)));
             }
         }
-        if(currentBehavior() != null) {
-            currentBehavior().update(actor);
+        if(currentBehavior != null) {
+            currentBehavior.update(actor);
         }
-        boolean shouldEnd = currentBehavior() != null && currentBehavior().shouldEnd(actor);
-        if(shouldEnd) {
+        if(currentBehavior != null && currentBehavior.shouldEnd(actor)) {
             currentIndex = -1;
+            currentBehavior = null;
         }
-        if(currentBehavior() == null || !currentBehavior().requireCompleting() || currentBehavior().hasCompleted(actor)) {
-            for (int i = 0; i < (shouldEnd ? behaviors.size() : currentIndex); i++) {
+        if(currentBehavior == null || !currentBehavior.requireCompleting() || currentBehavior.hasCompleted(actor)) {
+            for (int i = 0; i < (currentBehavior == null ? behaviors.size() : currentIndex); i++) {
                 if(behaviors.get(i).shouldStart(actor)) {
+                    System.out.println("Hit start statement");
                     currentIndex = i;
                     behaviors.get(i).onStart();
-                    areaTarget.markForRemoval();
+                    if(areaTarget != null) {
+                        areaTarget.markForRemoval();
+                        areaTarget = null;
+                    }
                     break;
                 }
             }

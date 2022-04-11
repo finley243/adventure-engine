@@ -186,7 +186,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
 		for(Actor target : subject.getVisibleActors()) {
-			if(target != subject && target.isActive()) {
+			if(target != subject && !target.isDead()) {
 				if(stats.getType().isRanged) { // Ranged
 					actions.add(new ActionRangedAttack(this, target));
 					for(Limb limb : target.getLimbs()) {

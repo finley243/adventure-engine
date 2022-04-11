@@ -48,3 +48,4 @@ rangedAutoMiss:a spray of bullets {{flies|whips} past|hits the ground near} $obj
 rangedAutoHit:a spray of bullets hits $object1
 getUp:$subject get$s up from $object1
 lieDown:$subject lie$s down in $object1
+sleep:after a brief moment, $subject fall$s asleep

@@ -15,7 +15,7 @@ public class BehaviorSleep extends Behavior {
     private final String bed;
 
     public BehaviorSleep(Condition startCondition, Condition endCondition, boolean requireCompleting, List<String> idleScenes, String bed) {
-        super(startCondition, endCondition, 1, requireCompleting, idleScenes);
+        super(startCondition, endCondition, 0, requireCompleting, idleScenes);
         this.bed = bed;
     }
 
@@ -32,8 +32,10 @@ public class BehaviorSleep extends Behavior {
     @Override
     public float actionUtilityOverride(Action action) {
         if(action instanceof ActionUseStart && ((ActionUseStart) action).getObject() instanceof ObjectBed && ((ActionUseStart) action).getObject().getID().equals(bed)) {
+            System.out.println("Check valid action - useObject");
             return BEHAVIOR_ACTION_UTILITY;
         } else if(action instanceof ActionSleep) {
+            System.out.println("Check valid action - sleep");
             return BEHAVIOR_ACTION_UTILITY;
         }
         return -1.0f;
