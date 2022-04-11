@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
-import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
+import com.github.finley243.adventureengine.actor.ai.behavior.*;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.dialogue.DialogueChoice;
@@ -649,7 +649,7 @@ public class DataLoader {
         return actions;
     }
 
-    private static Actor loadActorInstance(Game game, Element actorElement, Area area) {
+    private static Actor loadActorInstance(Game game, Element actorElement, Area area) throws ParserConfigurationException, IOException, SAXException {
         if(actorElement == null) return null;
         String ID = actorElement.getAttribute("id");
         String template = LoadUtils.singleTag(actorElement, "template", null);
@@ -661,7 +661,7 @@ public class DataLoader {
         return ActorFactory.create(game, ID, area, game.data().getActorTemplate(template), descriptor, behaviors, preventMovement, startDead, startDisabled);
     }
 
-    private static List<Behavior> loadBehaviors(Element behaviorsElement) {
+    private static List<Behavior> loadBehaviors(Element behaviorsElement) throws ParserConfigurationException, IOException, SAXException {
         /*if(idleElement == null) return new ArrayList<>();
         List<BehaviorTarget> behaviorTargets = new ArrayList<>();
         for (Element idlePoint : LoadUtils.directChildrenWithName(idleElement, "point")) {
@@ -675,7 +675,44 @@ public class DataLoader {
         }
         return behaviorTargets;*/
         // TODO - Load behaviors (probably in actorTemplate rather than actor instance)
-        return new ArrayList<>();
+        if(behaviorsElement == null) return new ArrayList<>();
+        List<Behavior> behaviors = new ArrayList<>();
+        for(Element behaviorElement : LoadUtils.directChildrenWithName(behaviorsElement, "behavior")) {
+            Behavior behavior;
+            String type = LoadUtils.attribute(behaviorElement, "type", null);
+            Condition startCondition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "conditionStart"));
+            Condition endCondition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "conditionEnd"));
+            int duration = LoadUtils.singleTagInt(behaviorElement, "duration", 0);
+            boolean requireCompleting = LoadUtils.singleTagBoolean(behaviorElement, "requireCompleting", false);
+            List<String> idleScenes = LoadUtils.listOfTags(behaviorElement, "idleScene");
+            switch(type) {
+                case "area":
+                    String areaTarget = LoadUtils.singleTag(behaviorElement, "area", null);
+                    behavior = new BehaviorArea(startCondition, endCondition, duration, requireCompleting, idleScenes, areaTarget);
+                    break;
+                case "object":
+                    String objectTarget = LoadUtils.singleTag(behaviorElement, "object", null);
+                    behavior = new BehaviorObject(startCondition, endCondition, duration, requireCompleting, idleScenes, objectTarget);
+                    break;
+                case "sandbox":
+                    String startArea = LoadUtils.singleTag(behaviorElement, "area", null);
+                    behavior = new BehaviorSandbox(startCondition, endCondition, duration, requireCompleting, idleScenes, startArea);
+                    break;
+                case "sleep":
+                    String bedTarget = LoadUtils.singleTag(behaviorElement, "bed", null);
+                    behavior = new BehaviorSleep(startCondition, endCondition, requireCompleting, idleScenes, bedTarget);
+                    break;
+                case "cycle":
+                    List<Behavior> cycleBehaviors = loadBehaviors(behaviorElement);
+                    behavior = new BehaviorCycle(startCondition, endCondition, cycleBehaviors);
+                    break;
+                default:
+                    behavior = null;
+                    break;
+            }
+            behaviors.add(behavior);
+        }
+        return behaviors;
     }
 
 }

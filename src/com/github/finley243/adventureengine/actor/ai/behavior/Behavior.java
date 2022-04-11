@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class Behavior {
 
-    public static final float BEHAVIOR_ACTION_UTILITY = 2.0f;
+    public static final float BEHAVIOR_ACTION_UTILITY = 1.0f;
 
     private final Condition startCondition;
     private final Condition endCondition;
