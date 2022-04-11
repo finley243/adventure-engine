@@ -44,20 +44,25 @@ public class BehaviorComponent {
     public void update() {
         if(behaviors.isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
-        if(currentBehavior != null && currentBehavior.getTargetArea(actor) != null) {
-            if(areaTarget == null) {
-                areaTarget = new AreaTarget(Set.of(currentBehavior.getTargetArea(actor)), Behavior.BEHAVIOR_ACTION_UTILITY, false, false, false);
-                actor.addPursueTarget(areaTarget);
-            } else {
-                areaTarget.setTargetAreas(Set.of(currentBehavior.getTargetArea(actor)));
-            }
-        }
         if(currentBehavior != null) {
+            if(areaTarget == null) {
+                if(currentBehavior.getTargetArea(actor) != null) {
+                    areaTarget = new AreaTarget(Set.of(currentBehavior.getTargetArea(actor)), Behavior.BEHAVIOR_ACTION_UTILITY, false, false, false);
+                    actor.addPursueTarget(areaTarget);
+                }
+            } else {
+                if(currentBehavior.getTargetArea(actor) != null) {
+                    areaTarget.setTargetAreas(Set.of(currentBehavior.getTargetArea(actor)));
+                } else {
+                    areaTarget.markForRemoval();
+                    areaTarget = null;
+                }
+            }
             currentBehavior.update(actor);
-        }
-        if(currentBehavior != null && currentBehavior.shouldEnd(actor)) {
-            currentIndex = -1;
-            currentBehavior = null;
+            if(currentBehavior.shouldEnd(actor)) {
+                currentIndex = -1;
+                currentBehavior = null;
+            }
         }
         if(currentBehavior == null || !currentBehavior.requireCompleting() || currentBehavior.hasCompleted(actor)) {
             for (int i = 0; i < (currentBehavior == null ? behaviors.size() : currentIndex); i++) {
