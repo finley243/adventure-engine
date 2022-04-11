@@ -44,7 +44,6 @@ public class BehaviorComponent {
     public void update() {
         if(behaviors.isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
-        System.out.println("Current behavior (" + actor.getID() + "): " + currentBehavior);
         if(currentBehavior != null && currentBehavior.getTargetArea(actor) != null) {
             if(areaTarget == null) {
                 areaTarget = new AreaTarget(Set.of(currentBehavior.getTargetArea(actor)), Behavior.BEHAVIOR_ACTION_UTILITY, false, false, false);
@@ -63,7 +62,6 @@ public class BehaviorComponent {
         if(currentBehavior == null || !currentBehavior.requireCompleting() || currentBehavior.hasCompleted(actor)) {
             for (int i = 0; i < (currentBehavior == null ? behaviors.size() : currentIndex); i++) {
                 if(behaviors.get(i).shouldStart(actor)) {
-                    System.out.println("Hit start statement");
                     currentIndex = i;
                     behaviors.get(i).onStart();
                     if(areaTarget != null) {
