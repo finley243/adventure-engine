@@ -98,7 +98,7 @@ public class Game {
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
 		eventBus.post(new TextClearEvent());
-		System.out.println("Time - " + data().time());
+		//System.out.println("Time - " + data().time());
 		TextGen.clearContext();
 		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer());
 		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer());

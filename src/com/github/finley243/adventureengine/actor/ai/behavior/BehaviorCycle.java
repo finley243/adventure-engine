@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.world.environment.Area;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BehaviorCycle extends Behavior {
@@ -16,6 +15,7 @@ public class BehaviorCycle extends Behavior {
     public BehaviorCycle(Condition startCondition, Condition endCondition, List<Behavior> stages) {
         super(startCondition, endCondition, 0, false, null);
         if(stages.isEmpty()) throw new IllegalArgumentException("BehaviorCycle stages cannot be empty");
+        if(stages.size() == 1) throw new IllegalArgumentException("BehaviorCycle cannot have 1 stage");
         for(Behavior behavior : stages) {
             if(behavior instanceof BehaviorCycle) throw new IllegalArgumentException("BehaviorCycle cannot contain another BehaviorCycle");
         }
@@ -29,13 +29,24 @@ public class BehaviorCycle extends Behavior {
 
     @Override
     public void update(Actor subject) {
-        super.update(subject);
-        if(stages.get(currentStage).shouldEnd(subject)) {
+        stages.get(currentStage).update(subject);
+        System.out.println("Check canEnd?");
+        if(stages.get(currentStage).canEnd(subject)) {
+            System.out.println("canEnd = true");
             currentStage += 1;
             if(currentStage >= stages.size()) {
                 currentStage = 0;
             }
+            stages.get(currentStage).onStart();
+            System.out.println("Set cycle stage: " + stages.get(currentStage));
         }
+    }
+
+    @Override
+    public void onStart() {
+        System.out.println("Starting cycle stage");
+        currentStage = 0;
+        stages.get(currentStage).onStart();
     }
 
     @Override

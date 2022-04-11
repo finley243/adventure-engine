@@ -186,8 +186,15 @@
                         </point>
                     </idle>
                     <behaviors>
-                        <behavior type="sleep">
-                            <bed>test_bed</bed>
+                        <behavior type="cycle">
+                            <behavior type="area">
+                                <area>stratis_hotel_lobby_entry</area>
+                                <duration>2</duration>
+                            </behavior>
+                            <behavior type="area">
+                                <area>stratis_hotel_security_main</area>
+                                <duration>2</duration>
+                            </behavior>
                         </behavior>
                     </behaviors>
                 </actor>

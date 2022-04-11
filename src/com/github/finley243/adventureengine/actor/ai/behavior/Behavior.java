@@ -28,13 +28,14 @@ public abstract class Behavior {
         this.duration = duration;
         this.requireCompleting = requireCompleting;
         this.idleScenes = idleScenes;
+        this.turnsRemaining = 0;
     }
 
     // Whether the turnsRemaining counter should be counted down
     public abstract boolean isInTargetState(Actor subject);
 
     public void update(Actor subject) {
-        if(duration > 0) {
+        if(duration > 0 && turnsRemaining > 0) {
             if(isInTargetState(subject)) {
                 turnsRemaining -= 1;
             } else {
@@ -46,6 +47,7 @@ public abstract class Behavior {
         if(isInTargetState(subject) && idleScenes != null) {
             SceneManager.trigger(subject.game(), idleScenes);
         }
+        System.out.println("Turns Remaining: " + turnsRemaining);
     }
 
     public void onStart() {
@@ -57,8 +59,9 @@ public abstract class Behavior {
     public boolean hasCompleted(Actor subject) {
         if(duration > 0) {
             return turnsRemaining == 0;
+        } else {
+            return isInTargetState(subject);
         }
-        return false;
     }
 
     public abstract float actionUtilityOverride(Action action);
@@ -67,15 +70,15 @@ public abstract class Behavior {
         return requireCompleting;
     }
 
-    public boolean shouldStart(Actor subject) {
+    public boolean canStart(Actor subject) {
         return startCondition == null || startCondition.isMet(subject);
     }
 
-    public boolean shouldEnd(Actor subject) {
+    public boolean canEnd(Actor subject) {
         if(requireCompleting && !hasCompleted(subject)) {
             return false;
         } else {
-            return hasCompleted(subject) || (duration > 0 && turnsRemaining == 0) || (endCondition != null && endCondition.isMet(subject));
+            return endCondition == null || endCondition.isMet(subject);
         }
     }
 

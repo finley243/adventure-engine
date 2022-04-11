@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.object.ObjectExit;
 
 public class ActionMoveExit extends ActionMove {
@@ -37,6 +38,15 @@ public class ActionMoveExit extends ActionMove {
 
 	@Override
 	public boolean canChoose(Actor subject) {
+		if(!subject.equals(subject.game().data().getPlayer())) {
+			if(!exit.isLocked()) return !disabled;
+			for(String key : exit.getKeyIDs()) {
+				if(subject.inventory().hasItemWithID(key)) {
+					return !disabled;
+				}
+			}
+			return false;
+		}
 		return !disabled && !exit.isLocked();
 	}
 
