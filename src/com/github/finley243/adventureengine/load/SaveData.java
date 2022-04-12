@@ -114,7 +114,7 @@ public class SaveData implements Serializable {
                 itemTemplate.loadState(this);
                 break;
             case TIME:
-                data.time().setTime(getValueInt());
+                data.time().loadState(this);
                 break;
         }
     }

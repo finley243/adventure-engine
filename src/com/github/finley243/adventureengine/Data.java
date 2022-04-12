@@ -112,7 +112,7 @@ public class Data {
 				state.add(new SaveData(SaveData.DataType.VARIABLE, variable, null, variables.get(variable)));
 			}
 		}
-		state.add(new SaveData(SaveData.DataType.TIME, null, "minutes", time().getTotalMinutes()));
+		state.addAll(time().saveState());
 		for(Scene scene : scenes.values()) {
 			state.addAll(scene.saveState());
 		}

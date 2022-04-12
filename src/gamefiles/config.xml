@@ -5,4 +5,8 @@
     <gameName>AdventureEngine</gameName>
     <startTimeHours>8</startTimeHours>
     <startTimeMinutes>0</startTimeMinutes>
+    <startDateYear>2054</startDateYear>
+    <startDateMonth>9</startDateMonth>
+    <startDateDay>15</startDateDay>
+    <startDateWeekday>friday</startDateWeekday>
 </config>
