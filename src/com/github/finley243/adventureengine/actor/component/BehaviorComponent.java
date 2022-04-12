@@ -60,7 +60,13 @@ public class BehaviorComponent {
             }
             currentBehavior.update(actor);
         }
-        if(currentBehavior == null || !currentBehavior.isValid(actor) || currentBehavior.hasCompleted(actor)) {
+        if(currentBehavior != null && !currentBehavior.isValid(actor)) {
+            currentBehavior = null;
+            currentIndex = -1;
+            areaTarget.markForRemoval();
+            areaTarget = null;
+        }
+        if(currentBehavior == null || currentBehavior.hasCompleted(actor)) {
             for (int i = 0; i < (currentBehavior == null ? behaviors.size() : currentIndex); i++) {
                 if(behaviors.get(i).isValid(actor)) {
                     currentIndex = i;
