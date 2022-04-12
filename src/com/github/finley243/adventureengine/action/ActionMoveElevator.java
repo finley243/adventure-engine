@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
@@ -33,7 +34,7 @@ public class ActionMoveElevator extends ActionMove {
 	
 	@Override
 	public void choose(Actor subject) {
-		Context context = new Context(subject, elevator);
+		Context context = new Context(new NounMapper().put("actor", subject).put("elevator", elevator).build());
 		String takeElevatorPhrase;
 		if(elevator.getFloorNumber() < destination.getFloorNumber()) {
 			takeElevatorPhrase = "takeElevatorUp";

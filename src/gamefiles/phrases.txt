@@ -1,51 +1,51 @@
-buy:$subject buy$s $object1
-consume:$subject consume$s $object1
-crouch:$subject crouch$es down
-crouchStop:$subject rise$s from crouching
-die:$subject fall$s over dead
-drink:$subject drink$s $object1
-drop:$subject drop$s $object1
-forceDrop:$subject drop$s $object1 on the ground
-eat:$subject eat$s $object1
-equip:$subject equip$s $object1
-exitElevator:$subject exit$s $object1
-meleeHit:$object2 hits $object1
-meleeMiss:$subject tr$ies to hit $object1 with $object2, but miss$es
-meleeTelegraph:$subject swing$s $object2 at $object1
-moveThrough:$subject go$es through $object1
-moveToward:$subject move$s toward $object1
-patrolTelegraph:$subject prepare$s to move to $object1
-pickUp:$subject grab$s $object1
-rangedHit:a bullet hits $object1
-rangedMiss:a bullet {whips|flies} past $object1
-rangedTelegraph:$subject fire$s $object2 at $object1
-reactionBlock:$subject block$s {$object2|$object1's attack}
-reactionDodge:$subject {jump$s back, avoiding|dodge$s} $object1's attack
-read:$subject read$s $object1
-reload:$subject reload$s $object1
-sell:$subject sell$s $object1
-sit:$subject sit$s in $object1
-stand:$subject stand$s up
-storeIn:$subject put$s $object1 in $object2
-takeCover:$subject take$s cover behind $object1
-leaveCover:$subject emerge$s from behind $object1
-takeElevatorDown:$subject take$s $object1 down
-takeElevatorUp:$subject take$s $object1 up
-takeFrom:$subject take$s $object1 from $object2
-unequip:$subject put$s away $object1
-unlock:$subject unlock$s $object1
-blockSuccess:$subject {manage$s to block $object2 just in time|block$s $object2 and push$es $object2 away}
-blockFail:$subject tr$ies to block $object2 but $is too {late|slow}
-dodgeSuccess:$subject {dodge$s|move$s} {out of the way of|away from} $object2
-dodgeFail:$subject tr$ies to dodge $object2, but $subject lose$s $subject's balance
-counterSuccess:$subject slip$s {under|past} $object2 and hit$s $object1
-counterFail:$subject {tr$ies|attempt$s} to hit $object1, but $subject {$doesn't make it past|$isn't fast enough to avoid} $object2
-meleeHitLimb:$object2 hits $object1 in the $limb
-rangedHitLimb:a bullet hits $object1 in the $limb
-meleeMissLimb:$object2 {{just|barely} misses|{swings|swipes} past} $object1's $limb
-rangedMissLimb:a bullet {flies|whips} past $object1's $limb
-rangedAutoMiss:a spray of bullets {{flies|whips} past|hits the ground near} $object1
-rangedAutoHit:a spray of bullets hits $object1
-getUp:$subject get$s up from $object1
-lieDown:$subject lie$s down in $object1
-sleep:after a brief moment, $subject fall$s asleep
+buy:$_actor buy$s_actor $item
+consume:$_actor consume$s_actor $item
+crouch:$_actor crouch$es_actor down
+crouchStop:$_actor rise$s_actor from crouching
+die:$_actor fall$s_actor over dead
+drink:$_actor drink$s_actor $item
+drop:$_actor drop$s_actor $item
+forceDrop:$_actor drop$s_actor $item on the ground
+eat:$_actor eat$s_actor $item
+equip:$_actor equip$s_actor $item
+exitElevator:$_actor exit$s_actor $elevator
+meleeHit:$weapon hits $target
+meleeMiss:$_actor tr$ies_actor to hit $target with $weapon, but miss$es_actor
+meleeTelegraph:$_actor swing$s_actor $weapon at $target
+moveThrough:$_actor go$es_actor through $exit
+moveToward:$_actor move$s_actor toward $object
+patrolTelegraph:$_actor prepare$s_actor to move to $area
+pickUp:$_actor grab$s_actor $item
+rangedHit:a bullet hits $target
+rangedMiss:a bullet {whips|flies} past $target
+rangedTelegraph:$_actor fire$s_actor $weapon at $target
+reactionBlock:$_actor block$s_actor {$weapon|$attacker's attack}
+reactionDodge:$_actor {jump$s_actor back, avoiding|dodge$s_actor} $attacker's attack
+read:$_actor read$s_actor $object
+reload:$_actor reload$s_actor $weapon
+sell:$_actor sell$s_actor $item
+sit:$_actor sit$s_actor in $object
+stand:$_actor stand$s_actor up
+storeIn:$_actor put$s_actor $item in $inventory
+takeCover:$_actor take$s_actor cover behind $object
+leaveCover:$_actor emerge$s_actor from behind $object
+takeElevatorDown:$_actor take$s_actor $elevator down
+takeElevatorUp:$_actor take$s_actor $elevator up
+takeFrom:$_actor take$s_actor $item from $inventory
+unequip:$_actor put$s_actor away $item
+unlock:$_actor unlock$s_actor $exit
+blockSuccess:$_actor {manage$s_actor to block $weapon just in time|block$s_actor $weapon and push$es_actor $weapon away}
+blockFail:$_actor tr$ies_actor to block $weapon but $is_actor too {late|slow}
+dodgeSuccess:$_actor {dodge$s_actor|move$s_actor} {out of the way of|away from} $weapon
+dodgeFail:$_actor tr$ies_actor to dodge $weapon, but $_actor lose$s_actor $actor's balance
+counterSuccess:$_actor slip$s_actor {under|past} $weapon and hit$s_actor $attacker
+counterFail:$_actor {tr$ies_actor|attempt$s_actor} to hit $attacker, but $_actor {$doesn't_actor make it past|$isn't_actor fast enough to avoid} $weapon
+meleeHitLimb:$weapon hits $target in the $limb
+rangedHitLimb:a bullet hits $target in the $limb
+meleeMissLimb:$weapon {{just|barely} misses|{swings|swipes} past} $target's $limb
+rangedMissLimb:a bullet {flies|whips} past $target's $limb
+rangedAutoMiss:a spray of bullets {{flies|whips} past|hits the ground near} $target
+rangedAutoHit:a spray of bullets hits $target
+getUp:$_actor get$s_actor up from $object
+lieDown:$_actor lie$s_actor down in $object
+sleep:after a brief moment, $_actor fall$s_actor asleep

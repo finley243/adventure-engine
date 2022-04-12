@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
@@ -25,7 +26,7 @@ public class ActionUseStart extends Action {
 	public void choose(Actor subject) {
 		object.setUser(subject);
 		subject.startUsingObject(object);
-		Context context = new Context(subject, object);
+		Context context = new Context(new NounMapper().put("actor", subject).put("object", object).build());
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(object.getStartPhrase()), context, this, subject));
 	}
 

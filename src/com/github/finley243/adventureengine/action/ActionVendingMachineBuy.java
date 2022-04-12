@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
@@ -24,7 +25,7 @@ public class ActionVendingMachineBuy extends Action {
 		Item item = ItemFactory.create(subject.game(), itemID, null);
 		subject.adjustMoney(-item.getPrice());
 		subject.inventory().addItem(item);
-		Context context = new Context(subject, item, vendingMachine);
+		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", vendingMachine).build());
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("buy"), context, this, subject));
 	}
 

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action.attack;
 
+import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandom;
 import com.github.finley243.adventureengine.action.reaction.ActionReaction;
@@ -72,7 +73,7 @@ public abstract class ActionAttack extends ActionRandom {
         if(getWeapon().getClipSize() > 0) {
             getWeapon().consumeAmmo(ammoConsumed());
         }
-        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), subject, getTarget(), getWeapon());
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
         //if(!CombatHelper.isRepeat(attackContext)) {
             subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getTelegraphPhrase()), attackContext, this, subject));
         //}
@@ -102,14 +103,14 @@ public abstract class ActionAttack extends ActionRandom {
                 damage *= (1.0f + reaction.getDamageMultOnFail());
             }
         }
-        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), subject, getTarget(), getWeapon());
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getHitPhrase()), attackContext, this, subject));
         target.damage(damage, getLimb());
     }
 
     @Override
     public void onFail(Actor subject) {
-        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), subject, getTarget(), getWeapon());
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getMissPhrase()), attackContext, this, subject));
     }
 

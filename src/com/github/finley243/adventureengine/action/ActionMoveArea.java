@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
@@ -26,7 +27,7 @@ public class ActionMoveArea extends ActionMove {
 	
 	@Override
 	public void choose(Actor subject) {
-		Context context = new Context(subject, area);
+		Context context = new Context(new NounMapper().put("actor", subject).put("area", area).build());
 		subject.game().eventBus().post(new AudioVisualEvent(new Area[]{subject.getArea(), area}, Phrases.get("moveToward"), context, this, subject));
 		subject.setArea(area);
 	}

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
@@ -18,7 +19,7 @@ public class ActionApparelEquip extends Action {
     @Override
     public void choose(Actor subject) {
         subject.apparelComponent().equip(item);
-        Context context = new Context(subject, item);
+        Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("equip"), context, this, subject));
     }
 

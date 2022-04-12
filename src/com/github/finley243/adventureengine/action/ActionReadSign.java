@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import java.util.List;
 
+import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
@@ -21,7 +22,7 @@ public class ActionReadSign extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		Context context = new Context(subject, sign);
+		Context context = new Context(new NounMapper().put("actor", subject).put("object", sign).build());
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("read"), context, this, subject));
 		if(subject instanceof ActorPlayer) {
 			List<String> text = sign.getText();

@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import java.util.*;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
@@ -79,8 +80,8 @@ public class ActorPlayer extends Actor {
 
 	public void describeSurroundings() {
 		if(!isActive() || !isEnabled()) return;
-		Context areaContext = new Context(this, getArea().getLandmark());
-		game().eventBus().post(new RenderTextEvent(TextGen.generate("$subject $is adjacent to $object1" + (getArea().getActors(this).isEmpty() ? "" : " [" + getArea().getActorList(this) + "]"), areaContext)));
+		Context areaContext = new Context(new NounMapper().put("actor", this).put("landmark", getArea().getLandmark()).build());
+		game().eventBus().post(new RenderTextEvent(TextGen.generate("$_actor $is_actor adjacent to $landmark" + (getArea().getActors(this).isEmpty() ? "" : " [" + getArea().getActorList(this) + "]"), areaContext)));
 		Set<Area> nearbyAreas = getArea().getMovableAreas();
 		if(!nearbyAreas.isEmpty()) {
 			List<Area> nearbyAreasList = new ArrayList<>(nearbyAreas);

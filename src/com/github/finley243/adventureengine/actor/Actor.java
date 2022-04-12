@@ -325,11 +325,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if(amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, getMaxHP() - HP);
 		HP += amount;
-		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
+		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 		if(SHOW_HP_CHANGES) {
-			game().eventBus().post(new AudioVisualEvent(getArea(), "$subject gain$s $amount HP", context, null, null));
+			game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null));
 		}
-		game().eventBus().post(new AudioVisualEvent(getArea(), "$subject $is $condition", context, null, null));
+		game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
 	}
 	
 	public void damage(int amount, Limb limb) {
@@ -349,11 +349,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			kill();
 		} else {
 			triggerScript("on_damaged");
-			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
+			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new AudioVisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
+				game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
 			}
-			game().eventBus().post(new AudioVisualEvent(getArea(), "$subject $is $condition", context, null, null));
+			game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
 		}
 	}
 
@@ -370,17 +370,17 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			kill();
 		} else {
 			triggerScript("on_damaged");
-			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), this);
+			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if(SHOW_HP_CHANGES) {
-				game().eventBus().post(new AudioVisualEvent(getArea(), "$subject lose$s $amount HP", context, null, null));
+				game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
 			}
-			game().eventBus().post(new AudioVisualEvent(getArea(), "$subject $is $condition", context, null, null));
+			game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
 		}
 	}
 	
 	public void kill() {
 		triggerScript("on_death");
-		Context context = new Context(this);
+		Context context = new Context(new NounMapper().put("actor", this).build());
 		game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("die"), context, null, null));
 		dropEquippedItem();
 		isDead = true;
@@ -392,7 +392,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			inventory.removeItem(item);
 			getArea().addObject(item);
 			item.setArea(getArea());
-			Context context = new Context(this, item);
+			Context context = new Context(new NounMapper().put("actor", this).put("item", item).build());
 			game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 		}
 	}

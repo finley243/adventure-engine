@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
@@ -35,7 +36,7 @@ public class ActionWeaponReload extends Action {
 		} else {
 			weapon.loadAmmo(weapon.reloadCapacity());
 		}
-		Context context = new Context(subject, weapon);
+		Context context = new Context(new NounMapper().put("actor", subject).put("weapon", weapon).build());
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("reload"), context, this, subject));
 	}
 

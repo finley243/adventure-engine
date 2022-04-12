@@ -24,7 +24,7 @@ public class ObjectChair extends UsableObject {
 
 	@Override
 	public String getStopPhrase() {
-		return "stand";
+		return "getUp";
 	}
 
 	@Override
