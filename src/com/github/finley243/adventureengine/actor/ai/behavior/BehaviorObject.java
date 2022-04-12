@@ -13,8 +13,8 @@ public class BehaviorObject extends Behavior {
 
     private final String object;
 
-    public BehaviorObject(Condition startCondition, Condition endCondition, int duration, boolean requireCompleting, List<String> idleScenes, String object) {
-        super(startCondition, endCondition, duration, requireCompleting, idleScenes);
+    public BehaviorObject(Condition condition, int duration, List<String> idleScenes, String object) {
+        super(condition, duration, idleScenes);
         this.object = object;
     }
 

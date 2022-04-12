@@ -12,21 +12,17 @@ public abstract class Behavior {
 
     public static final float BEHAVIOR_ACTION_UTILITY = 1.0f;
 
-    private final Condition startCondition;
-    private final Condition endCondition;
+    private final Condition condition;
     // If duration = 0, behavior will continue indefinitely until endCondition is met or until superseded by another behavior
     private final int duration;
-    private final boolean requireCompleting;
     private final List<String> idleScenes;
     //private final boolean allowCombatActions;
     //private final boolean allowItemActions;
     private int turnsRemaining;
 
-    public Behavior(Condition startCondition, Condition endCondition, int duration, boolean requireCompleting, List<String> idleScenes) {
-        this.startCondition = startCondition;
-        this.endCondition = endCondition;
+    public Behavior(Condition condition, int duration, List<String> idleScenes) {
+        this.condition = condition;
         this.duration = duration;
-        this.requireCompleting = requireCompleting;
         this.idleScenes = idleScenes;
         this.turnsRemaining = 0;
     }
@@ -43,11 +39,11 @@ public abstract class Behavior {
                 turnsRemaining = duration;
             }
         }
-        // May want to change how idle scenes are executed later
+        // TODO - Stop calling SceneManager directly from Behavior (could call from BehaviorComponent? from idle action?)
         if(isInTargetState(subject) && idleScenes != null) {
             SceneManager.trigger(subject.game(), idleScenes);
         }
-        System.out.println("Turns Remaining: " + turnsRemaining);
+        //System.out.println("Turns Remaining: " + turnsRemaining);
     }
 
     public void onStart() {
@@ -66,20 +62,8 @@ public abstract class Behavior {
 
     public abstract float actionUtilityOverride(Action action);
 
-    public boolean requireCompleting() {
-        return requireCompleting;
-    }
-
-    public boolean canStart(Actor subject) {
-        return startCondition == null || startCondition.isMet(subject);
-    }
-
-    public boolean canEnd(Actor subject) {
-        if(requireCompleting && !hasCompleted(subject)) {
-            return false;
-        } else {
-            return endCondition == null || endCondition.isMet(subject);
-        }
+    public boolean isValid(Actor subject) {
+        return condition == null || condition.isMet(subject);
     }
 
 }

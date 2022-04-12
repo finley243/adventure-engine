@@ -13,8 +13,8 @@ public class BehaviorSandbox extends Behavior {
 
     private final String area;
 
-    public BehaviorSandbox(Condition startCondition, Condition endCondition, int duration, boolean requireCompleting, List<String> idleScenes, String area) {
-        super(startCondition, endCondition, duration, requireCompleting, idleScenes);
+    public BehaviorSandbox(Condition condition, int duration, List<String> idleScenes, String area) {
+        super(condition, duration, idleScenes);
         this.area = area;
     }
 

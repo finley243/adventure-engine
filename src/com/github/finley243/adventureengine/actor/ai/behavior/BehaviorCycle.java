@@ -12,8 +12,8 @@ public class BehaviorCycle extends Behavior {
     private final List<Behavior> stages;
     private int currentStage;
 
-    public BehaviorCycle(Condition startCondition, Condition endCondition, List<Behavior> stages) {
-        super(startCondition, endCondition, 0, false, null);
+    public BehaviorCycle(Condition condition, List<Behavior> stages) {
+        super(condition, 0, null);
         if(stages.isEmpty()) throw new IllegalArgumentException("BehaviorCycle stages cannot be empty");
         if(stages.size() == 1) throw new IllegalArgumentException("BehaviorCycle cannot have 1 stage");
         for(Behavior behavior : stages) {
@@ -30,21 +30,17 @@ public class BehaviorCycle extends Behavior {
     @Override
     public void update(Actor subject) {
         stages.get(currentStage).update(subject);
-        System.out.println("Check canEnd?");
-        if(stages.get(currentStage).canEnd(subject)) {
-            System.out.println("canEnd = true");
+        if(stages.get(currentStage).hasCompleted(subject)) {
             currentStage += 1;
             if(currentStage >= stages.size()) {
                 currentStage = 0;
             }
             stages.get(currentStage).onStart();
-            System.out.println("Set cycle stage: " + stages.get(currentStage));
         }
     }
 
     @Override
     public void onStart() {
-        System.out.println("Starting cycle stage");
         currentStage = 0;
         stages.get(currentStage).onStart();
     }

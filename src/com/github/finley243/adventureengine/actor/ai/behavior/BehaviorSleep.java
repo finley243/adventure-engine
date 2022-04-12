@@ -14,8 +14,8 @@ public class BehaviorSleep extends Behavior {
 
     private final String bed;
 
-    public BehaviorSleep(Condition startCondition, Condition endCondition, boolean requireCompleting, List<String> idleScenes, String bed) {
-        super(startCondition, endCondition, 0, requireCompleting, idleScenes);
+    public BehaviorSleep(Condition condition, List<String> idleScenes, String bed) {
+        super(condition, 0, idleScenes);
         this.bed = bed;
     }
 

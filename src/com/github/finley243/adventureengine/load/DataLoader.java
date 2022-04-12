@@ -667,31 +667,29 @@ public class DataLoader {
         for(Element behaviorElement : LoadUtils.directChildrenWithName(behaviorsElement, "behavior")) {
             Behavior behavior;
             String type = LoadUtils.attribute(behaviorElement, "type", null);
-            Condition startCondition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "conditionStart"));
-            Condition endCondition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "conditionEnd"));
+            Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"));
             int duration = LoadUtils.singleTagInt(behaviorElement, "duration", 0);
-            boolean requireCompleting = LoadUtils.singleTagBoolean(behaviorElement, "mustComplete", true);
             List<String> idleScenes = LoadUtils.listOfTags(behaviorElement, "idleScene");
             switch(type) {
                 case "area":
                     String areaTarget = LoadUtils.singleTag(behaviorElement, "area", null);
-                    behavior = new BehaviorArea(startCondition, endCondition, duration, requireCompleting, idleScenes, areaTarget);
+                    behavior = new BehaviorArea(condition, duration, idleScenes, areaTarget);
                     break;
                 case "object":
                     String objectTarget = LoadUtils.singleTag(behaviorElement, "object", null);
-                    behavior = new BehaviorObject(startCondition, endCondition, duration, requireCompleting, idleScenes, objectTarget);
+                    behavior = new BehaviorObject(condition, duration, idleScenes, objectTarget);
                     break;
                 case "sandbox":
                     String startArea = LoadUtils.singleTag(behaviorElement, "area", null);
-                    behavior = new BehaviorSandbox(startCondition, endCondition, duration, requireCompleting, idleScenes, startArea);
+                    behavior = new BehaviorSandbox(condition, duration, idleScenes, startArea);
                     break;
                 case "sleep":
                     String bedTarget = LoadUtils.singleTag(behaviorElement, "bed", null);
-                    behavior = new BehaviorSleep(startCondition, endCondition, requireCompleting, idleScenes, bedTarget);
+                    behavior = new BehaviorSleep(condition, idleScenes, bedTarget);
                     break;
                 case "cycle":
                     List<Behavior> cycleBehaviors = loadBehaviors(behaviorElement);
-                    behavior = new BehaviorCycle(startCondition, endCondition, cycleBehaviors);
+                    behavior = new BehaviorCycle(condition, cycleBehaviors);
                     break;
                 default:
                     behavior = null;

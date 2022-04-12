@@ -12,7 +12,7 @@ exitElevator:$subject exit$s $object1
 meleeHit:$object2 hits $object1
 meleeMiss:$subject tr$ies to hit $object1 with $object2, but miss$es
 meleeTelegraph:$subject swing$s $object2 at $object1
-moveThroughTo:$subject go$es through $object1 to $object2
+moveThrough:$subject go$es through $object1
 moveToward:$subject move$s toward $object1
 patrolTelegraph:$subject prepare$s to move to $object1
 pickUp:$subject grab$s $object1
