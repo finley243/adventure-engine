@@ -94,9 +94,9 @@
         </inventory>
         <script trigger="on_combat_start" type="bark">
             <chance>0.8</chance>
-            <line>"Finally, some action!" $subject yell$s</line>
-            <line>"Can't wait to take you down!" $subject yell$s</line>
-            <line>"Get 'em!" $subject yell$s</line>
+            <line>"Finally, some action!" $_actor yell$s_actor</line>
+            <line>"Can't wait to take you down!" $_actor yell$s_actor</line>
+            <line>"Get 'em!" $_actor yell$s_actor</line>
         </script>
     </actor>
     <actor id="nexus_bouncer" parent="default">
