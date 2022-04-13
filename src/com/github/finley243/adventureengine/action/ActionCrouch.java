@@ -18,12 +18,6 @@ public class ActionCrouch extends Action {
     }
 
     @Override
-    public float utility(Actor subject) {
-        return 0.0f;
-        //return UtilityUtils.getCoverUtility(subject);
-    }
-
-    @Override
     public MenuData getMenuData(Actor subject) {
         return new MenuData("Crouch", canChoose(subject));
     }

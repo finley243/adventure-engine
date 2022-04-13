@@ -25,10 +25,10 @@ public class ActionItemUnequip extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(subject.isInCombat()) {
-			return 0;
+		if(!subject.isInCombat()) {
+			return 0.4f;
 		}
-		return 0.5f;
+		return 0.0f;
 	}
 	
 	@Override

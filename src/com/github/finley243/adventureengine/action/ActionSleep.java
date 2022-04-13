@@ -22,11 +22,6 @@ public class ActionSleep extends Action {
     }
 
     @Override
-    public float utility(Actor subject) {
-        return 0.0f;
-    }
-
-    @Override
     public MenuData getMenuData(Actor subject) {
         return new MenuData("Sleep", canChoose(subject));
     }

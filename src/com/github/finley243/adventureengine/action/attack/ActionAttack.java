@@ -149,8 +149,8 @@ public abstract class ActionAttack extends ActionRandom {
 
     @Override
     public float utility(Actor subject) {
-        if (!subject.targetingComponent().isCombatant(getTarget())) return 0;
-        return 0.8f;
+        if (subject.targetingComponent().isCombatant(getTarget())) return 0.8f;
+        return 0.0f;
     }
 
     @Override

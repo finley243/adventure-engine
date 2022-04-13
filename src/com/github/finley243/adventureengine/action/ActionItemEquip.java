@@ -11,8 +11,8 @@ import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 public class ActionItemEquip extends Action {
 
-	public static final float SUBOPTIMAL_WEAPON_UTILITY = 0.8f;
-	public static final float OPTIMAL_WEAPON_UTILITY = 1.0f;
+	public static final float SUBOPTIMAL_WEAPON_UTILITY = 0.4f;
+	public static final float OPTIMAL_WEAPON_UTILITY = 0.7f;
 
 	private final ItemEquippable item;
 	
