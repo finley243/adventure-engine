@@ -182,7 +182,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 	}
 
-	// TODO - Remove (replace with forwarding functions)
 	public ActorTemplate getStats() {
 		return stats;
 	}
@@ -599,16 +598,22 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			updateSleep();
 			return;
 		}
-		effectComponent().onStartTurn();
-		targetingComponent.updateTurn();
+		if(effectComponent() != null) {
+			effectComponent().onStartTurn();
+		}
+		if(targetingComponent() != null) {
+			targetingComponent().updateTurn();
+		}
 		investigateTarget.nextTurn(this);
-		behaviorComponent().update();
+		if(behaviorComponent() != null) {
+			behaviorComponent().update();
+		}
 		this.actionPointsUsed = 0;
 		this.blockedActions.clear();
 		this.endTurn = false;
 		while(!endTurn) {
 			updatePursueTargets();
-			targetingComponent.update();
+			targetingComponent().update();
 			investigateTarget.update(this);
 			List<Action> availableActions = availableActions();
 			for(Action action : availableActions) {

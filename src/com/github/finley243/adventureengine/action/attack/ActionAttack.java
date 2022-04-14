@@ -69,7 +69,9 @@ public abstract class ActionAttack extends ActionRandom {
 
     @Override
     public boolean onStart(Actor subject) {
-        getTarget().targetingComponent().addCombatant(subject);
+        if(getTarget().targetingComponent() != null) {
+            getTarget().targetingComponent().addCombatant(subject);
+        }
         if(getWeapon().getClipSize() > 0) {
             getWeapon().consumeAmmo(ammoConsumed());
         }
@@ -149,7 +151,7 @@ public abstract class ActionAttack extends ActionRandom {
 
     @Override
     public float utility(Actor subject) {
-        if (subject.targetingComponent().isCombatant(getTarget())) return 0.8f;
+        if (subject.targetingComponent() != null && subject.targetingComponent().isCombatant(getTarget())) return 0.8f;
         return 0.0f;
     }
 

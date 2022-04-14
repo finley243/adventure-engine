@@ -35,6 +35,7 @@ public class UtilityUtils {
 	}
 
 	public static float getCoverUtility(Actor subject) {
+		if(subject.targetingComponent() == null) return 0.0f;
 		int targetsBlocked = 0;
 		int totalTargets = 0;
 		for(Actor target : subject.targetingComponent().getCombatants()) {

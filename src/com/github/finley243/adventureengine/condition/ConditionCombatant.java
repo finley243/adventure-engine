@@ -16,6 +16,7 @@ public class ConditionCombatant extends Condition {
 
     @Override
     public boolean isMet(Actor subject) {
+        if(actor.getActor(subject).targetingComponent() == null) return invert;
         return actor.getActor(subject).targetingComponent().isCombatant(target.getActor(subject)) != invert;
     }
 
