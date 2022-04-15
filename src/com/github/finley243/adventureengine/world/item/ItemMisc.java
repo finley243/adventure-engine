@@ -2,10 +2,8 @@ package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.world.item.template.MiscTemplate;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class ItemMisc extends Item {
 
@@ -17,15 +15,13 @@ public class ItemMisc extends Item {
     }
 
     @Override
-    public Set<String> getTags() {
-        Set<String> tags = new HashSet<>();
-        tags.add("misc");
-        return tags;
+    public String getTemplateID() {
+        return stats.getID();
     }
 
     @Override
-    public String getTemplateID() {
-        return stats.getID();
+    public ItemTemplate getTemplate() {
+        return stats;
     }
 
 }

@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.item.template.WeaponTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +95,7 @@ public abstract class ActionAttack extends ActionRandom {
     @Override
     public void onSuccess(Actor subject) {
         int damage = damage();
-        if(ThreadLocalRandom.current().nextFloat() < ItemWeapon.CRIT_CHANCE) {
+        if(ThreadLocalRandom.current().nextFloat() < WeaponTemplate.CRIT_CHANCE) {
             // No indication of critical hit to player, only damage increase
             damage += getWeapon().getCritDamage();
         }

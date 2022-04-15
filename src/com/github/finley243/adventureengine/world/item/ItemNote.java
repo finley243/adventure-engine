@@ -5,11 +5,10 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionReadNote;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.world.item.template.NoteTemplate;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ItemNote extends Item {
 
@@ -30,10 +29,8 @@ public class ItemNote extends Item {
     }
 
     @Override
-    public Set<String> getTags() {
-        Set<String> tags = new HashSet<>();
-        tags.add("note");
-        return tags;
+    public ItemTemplate getTemplate() {
+        return stats;
     }
 
     @Override

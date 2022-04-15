@@ -2,13 +2,14 @@ package com.github.finley243.adventureengine.world.item.template;
 
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class ItemTemplate implements Noun {
 
@@ -83,6 +84,8 @@ public abstract class ItemTemplate implements Noun {
 	public int getPrice() {
 		return price;
 	}
+
+	public abstract Set<String> getTags();
 
 	public Map<String, Script> getScripts() {
 		return scripts;

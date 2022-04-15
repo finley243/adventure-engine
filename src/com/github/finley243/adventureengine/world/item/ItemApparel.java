@@ -7,11 +7,12 @@ import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.template.ApparelTemplate;
+import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemApparel extends Item {
 
@@ -20,13 +21,6 @@ public class ItemApparel extends Item {
 	public ItemApparel(Game game, String ID, Area area, boolean isGenerated, ApparelTemplate stats) {
 		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
-	}
-
-	@Override
-	public Set<String> getTags() {
-		Set<String> tags = new HashSet<>();
-		tags.add("apparel");
-		return tags;
 	}
 	
 	@Override
@@ -37,6 +31,11 @@ public class ItemApparel extends Item {
 	@Override
 	public String getTemplateID() {
 		return stats.getID();
+	}
+
+	@Override
+	public ItemTemplate getTemplate() {
+		return stats;
 	}
 
 	public ApparelComponent.ApparelSlot getApparelSlot() {

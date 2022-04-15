@@ -1,7 +1,9 @@
 package com.github.finley243.adventureengine.world.item.template;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.script.Script;
@@ -27,6 +29,13 @@ public class ConsumableTemplate extends ItemTemplate {
 	
 	public List<Effect> getEffects() {
 		return effects;
+	}
+
+	@Override
+	public Set<String> getTags() {
+		Set<String> tags = new HashSet<>();
+		tags.add("consumable");
+		return tags;
 	}
 	
 }

@@ -1,9 +1,5 @@
 package com.github.finley243.adventureengine.world.item;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
@@ -12,6 +8,9 @@ import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.template.ConsumableTemplate;
 import com.github.finley243.adventureengine.world.item.template.ConsumableTemplate.ConsumableType;
+import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
+
+import java.util.List;
 
 public class ItemConsumable extends Item {
 
@@ -20,13 +19,6 @@ public class ItemConsumable extends Item {
 	public ItemConsumable(Game game, String ID, Area area, boolean isGenerated, ConsumableTemplate stats) {
 		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
-	}
-
-	@Override
-	public Set<String> getTags() {
-		Set<String> tags = new HashSet<>();
-		tags.add("consumable");
-		return tags;
 	}
 	
 	@Override
@@ -37,6 +29,11 @@ public class ItemConsumable extends Item {
 	@Override
 	public String getTemplateID() {
 		return stats.getID();
+	}
+
+	@Override
+	public ItemTemplate getTemplate() {
+		return stats;
 	}
 	
 	public ConsumableType getConsumableType() {

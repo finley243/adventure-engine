@@ -2,8 +2,10 @@ package com.github.finley243.adventureengine.world.item.template;
 
 import com.github.finley243.adventureengine.script.Script;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class NoteTemplate extends ItemTemplate {
 
@@ -16,6 +18,13 @@ public class NoteTemplate extends ItemTemplate {
 
     public List<String> getText() {
         return text;
+    }
+
+    @Override
+    public Set<String> getTags() {
+        Set<String> tags = new HashSet<>();
+        tags.add("note");
+        return tags;
     }
 
 }

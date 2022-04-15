@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public abstract class Item extends WorldObject {
@@ -32,7 +33,11 @@ public abstract class Item extends WorldObject {
 
 	public abstract String getTemplateID();
 
-	public abstract Set<String> getTags();
+	public abstract ItemTemplate getTemplate();
+
+	public Set<String> getTags() {
+		return getTemplate().getTags();
+	}
 
 	@Override
 	public List<Action> localActions(Actor subject) {

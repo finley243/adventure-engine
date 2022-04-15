@@ -1,25 +1,24 @@
 package com.github.finley243.adventureengine.world.item;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.effect.moddable.Moddable;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
-import com.github.finley243.adventureengine.action.*;
+import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionInspect;
 import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
+import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.effect.moddable.Moddable;
+import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
+import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.world.item.template.WeaponTemplate;
 
+import java.util.List;
+
 public class ItemWeapon extends ItemEquippable implements Moddable {
-	
-	public static final float CRIT_CHANCE = 0.05f;
 	
 	private final WeaponTemplate stats;
 	private final ModdableStatInt damage;
@@ -43,55 +42,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.accuracyBonus = new ModdableStatFloat(this);
 		this.ammo = stats.getClipSize();
 	}
-
-	@Override
-	public Set<String> getTags() {
-		Set<String> tags = new HashSet<>();
-		tags.add("weapon");
-		if(stats.getType().isRanged) {
-			tags.add("weapon_ranged");
-		} else {
-			tags.add("weapon_melee");
-		}
-		switch(getSkill()) {
-			case HANDGUNS:
-				tags.add("weapon_handgun");
-				break;
-			case LONG_ARMS:
-				tags.add("weapon_long_arm");
-				break;
-		}
-		switch(stats.getType()) {
-			case PISTOL:
-				tags.add("weapon_pistol");
-				break;
-			case SMG:
-				tags.add("weapon_smg");
-				break;
-			case SHOTGUN:
-				tags.add("weapon_shotgun");
-				break;
-			case ASSAULT_RIFLE:
-				tags.add("weapon_assault_rifle");
-				break;
-			case SNIPER_RIFLE:
-				tags.add("weapon_sniper_rifle");
-				break;
-			case KNIFE:
-				tags.add("weapon_knife");
-				break;
-			case SWORD:
-				tags.add("weapon_sword");
-				break;
-			case CLUB:
-				tags.add("weapon_club");
-				break;
-			case AXE:
-				tags.add("weapon_axe");
-				break;
-		}
-		return tags;
-	}
 	
 	@Override
 	public int getPrice() {
@@ -101,6 +51,11 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	@Override
 	public String getTemplateID() {
 		return stats.getID();
+	}
+
+	@Override
+	public ItemTemplate getTemplate() {
+		return stats;
 	}
 	
 	public boolean isRanged() {
@@ -165,21 +120,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public Actor.Skill getSkill() {
-		switch(stats.getType()) {
-			case PISTOL:
-			case SMG:
-				return Actor.Skill.HANDGUNS;
-			case SHOTGUN:
-			case ASSAULT_RIFLE:
-			case SNIPER_RIFLE:
-				return Actor.Skill.LONG_ARMS;
-			case KNIFE:
-			case SWORD:
-			case CLUB:
-			case AXE:
-				return Actor.Skill.MELEE;
-		}
-		return null;
+		return stats.getSkill();
 	}
 
 	@Override

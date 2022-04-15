@@ -4,8 +4,10 @@ import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.script.Script;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ApparelTemplate extends ItemTemplate {
 	
@@ -30,6 +32,13 @@ public class ApparelTemplate extends ItemTemplate {
 
 	public List<Effect> getEffects() {
 		return effects;
+	}
+
+	@Override
+	public Set<String> getTags() {
+		Set<String> tags = new HashSet<>();
+		tags.add("apparel");
+		return tags;
 	}
 	
 }

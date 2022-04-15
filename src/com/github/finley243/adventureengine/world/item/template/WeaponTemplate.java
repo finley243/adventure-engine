@@ -1,12 +1,16 @@
 package com.github.finley243.adventureengine.world.item.template;
 
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.script.Script;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class WeaponTemplate extends ItemTemplate {
-	
+
+	public static final float CRIT_CHANCE = 0.05f;
+
 	public enum WeaponType {
 		PISTOL(true, false, Set.of()),
 		SMG(true, false, Set.of(AttackType.AUTO)),
@@ -96,6 +100,73 @@ public class WeaponTemplate extends ItemTemplate {
 
 	public String getAmmo() {
 		return ammo;
+	}
+
+	public Actor.Skill getSkill() {
+		switch(getType()) {
+			case PISTOL:
+			case SMG:
+				return Actor.Skill.HANDGUNS;
+			case SHOTGUN:
+			case ASSAULT_RIFLE:
+			case SNIPER_RIFLE:
+				return Actor.Skill.LONG_ARMS;
+			case KNIFE:
+			case SWORD:
+			case CLUB:
+			case AXE:
+				return Actor.Skill.MELEE;
+		}
+		return null;
+	}
+
+	@Override
+	public Set<String> getTags() {
+		Set<String> tags = new HashSet<>();
+		tags.add("weapon");
+		if(getType().isRanged) {
+			tags.add("weapon_ranged");
+		} else {
+			tags.add("weapon_melee");
+		}
+		switch(getSkill()) {
+			case HANDGUNS:
+				tags.add("weapon_handgun");
+				break;
+			case LONG_ARMS:
+				tags.add("weapon_long_arm");
+				break;
+		}
+		switch(getType()) {
+			case PISTOL:
+				tags.add("weapon_pistol");
+				break;
+			case SMG:
+				tags.add("weapon_smg");
+				break;
+			case SHOTGUN:
+				tags.add("weapon_shotgun");
+				break;
+			case ASSAULT_RIFLE:
+				tags.add("weapon_assault_rifle");
+				break;
+			case SNIPER_RIFLE:
+				tags.add("weapon_sniper_rifle");
+				break;
+			case KNIFE:
+				tags.add("weapon_knife");
+				break;
+			case SWORD:
+				tags.add("weapon_sword");
+				break;
+			case CLUB:
+				tags.add("weapon_club");
+				break;
+			case AXE:
+				tags.add("weapon_axe");
+				break;
+		}
+		return tags;
 	}
 	
 }
