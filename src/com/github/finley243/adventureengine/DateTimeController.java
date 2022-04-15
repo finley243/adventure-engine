@@ -59,11 +59,7 @@ public class DateTimeController {
         int totalMinutes2 = (hours2 * 60) + minutes2;
         if(!crossZero && minutes >= totalMinutes1 && minutes <= totalMinutes2) {
             return true;
-        } else if(crossZero && (minutes >= totalMinutes1 || minutes <= totalMinutes2)) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return crossZero && (minutes >= totalMinutes1 || minutes <= totalMinutes2);
     }
 
     public int getTotalMinutes() {

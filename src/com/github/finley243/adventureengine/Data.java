@@ -22,8 +22,6 @@ import java.util.*;
 
 public class Data {
 
-	private static final String PLAYER_ID_CONFIG = "playerID";
-
 	private ActorPlayer player;
 
 	private final Game game;

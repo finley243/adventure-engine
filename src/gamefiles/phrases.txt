@@ -1,7 +1,5 @@
 buy:$_actor buy$s_actor $item
 consume:$_actor consume$s_actor $item
-crouch:$_actor crouch$es_actor down
-crouchStop:$_actor rise$s_actor from crouching
 die:$_actor fall$s_actor over dead
 drink:$_actor drink$s_actor $item
 drop:$_actor drop$s_actor $item

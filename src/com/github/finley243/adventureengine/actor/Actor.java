@@ -33,7 +33,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 2;
 	public static final int MOVES_PER_TURN = 2;
-	public static final int MOVES_PER_TURN_CROUCHED = 1;
 	public static final int ATTRIBUTE_MIN = 1;
 	public static final int ATTRIBUTE_MAX = 10;
 	public static final int SKILL_MIN = 1;
@@ -98,7 +97,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final VendorComponent vendorComponent;
 	private int money;
 	private UsableObject usingObject;
-	private boolean isCrouching;
 	private final TargetingComponent targetingComponent;
 	private final BehaviorComponent behaviorComponent;
 	private final Set<AreaTarget> areaTargets;
@@ -260,16 +258,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		return !isUsingObject() && !preventMovement;
 	}
 
-	public boolean isCrouching() {
-		return isCrouching;
-	}
-
 	public boolean isInCover() {
 		return isUsingObject() && getUsingObject().userInCover();
-	}
-
-	public void setCrouching(boolean state) {
-		isCrouching = state;
 	}
 	
 	public Inventory inventory() {
@@ -571,11 +561,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		for(ItemApparel item : apparelComponent.getEquippedItems()) {
 			actions.addAll(item.equippedActions(this));
 		}
-		if(isCrouching()) {
-			actions.add(new ActionCrouchStop());
-		} else {
-			actions.add(new ActionCrouch());
-		}
 		for(Action currentAction : actions) {
 			boolean isBlocked = false;
 			for (Action blockedAction : blockedActions.keySet()) {
@@ -857,9 +842,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			case "usingObject":
 				startUsingObject((UsableObject) game().data().getObject(saveData.getValueString()));
 				break;
-			case "isCrouching":
-				this.isCrouching = saveData.getValueBoolean();
-				break;
 			case "actionPointsUsed":
 				this.actionPointsUsed = saveData.getValueInt();
 				break;
@@ -891,9 +873,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 		if(usingObject != null) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "usingObject", usingObject.getID()));
-		}
-		if(isCrouching) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isCrouching", isCrouching));
 		}
 		if(actionPointsUsed != 0) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "actionPointsUsed", actionPointsUsed));
