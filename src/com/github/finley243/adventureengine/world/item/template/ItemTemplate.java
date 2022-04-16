@@ -30,6 +30,8 @@ public abstract class ItemTemplate implements Noun {
 		this.generatedCount = 1;
 	}
 
+	public abstract boolean hasState();
+
 	public String generateInstanceID() {
 		String newID = ID + "_" + generatedCount;
 		generatedCount += 1;

@@ -21,6 +21,11 @@ public class ApparelTemplate extends ItemTemplate {
 		this.damageResistance = damageResistance;
 		this.effects = effects;
 	}
+
+	@Override
+	public boolean hasState() {
+		return false;
+	}
 	
 	public ApparelComponent.ApparelSlot getSlot() {
 		return slot;

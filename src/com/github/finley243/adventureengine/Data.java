@@ -204,6 +204,11 @@ public class Data {
 	public WorldObject getObject(String id) {
 		return objects.get(id);
 	}
+
+	public void removeObject(String id) {
+		if(!objects.containsKey(id)) throw new IllegalArgumentException("Cannot remove object because ID does not exist: " + id);
+		objects.remove(id);
+	}
 	
 	public void addItem(String id, ItemTemplate value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add item with blank ID");

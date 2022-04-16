@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.textgen.MultiNoun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,21 +19,23 @@ public class ActionInventoryTakeAll extends Action {
 
     private final Noun owner;
     private final Inventory inventory;
-    private final List<Item> items;
+    private final ItemTemplate item;
 
-    public ActionInventoryTakeAll(Noun owner, Inventory inventory, List<Item> items) {
+    public ActionInventoryTakeAll(Noun owner, Inventory inventory, ItemTemplate item) {
         this.owner = owner;
         this.inventory = inventory;
-        this.items = new ArrayList<>(items);
+        this.item = item;
     }
 
     @Override
     public void choose(Actor subject) {
-        for (Item item : items) {
+        int count = inventory.itemCount(item);
+        List<Item> removedItems = inventory.removeItems(item, count);
+        /*for (Item item : items) {
             inventory.removeItem(item);
             subject.inventory().addItem(item);
-        }
-        Context context = new Context(new NounMapper().put("actor", subject).put("item", new MultiNoun(items)).put("inventory", owner).build());
+        }*/
+        Context context = new Context(new NounMapper().put("actor", subject).put("item", new MultiNoun(removedItems)).put("inventory", owner).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
 
@@ -43,7 +46,7 @@ public class ActionInventoryTakeAll extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Take all", canChoose(subject), new String[]{owner.getName(), items.get(0).getName() + inventory.itemCountLabel(items.get(0).getTemplate().getID())});
+        return new MenuData("Take all", canChoose(subject), new String[]{owner.getName(), item.getName() + inventory.itemCountLabel(item)});
     }
 
     @Override
@@ -52,7 +55,7 @@ public class ActionInventoryTakeAll extends Action {
             return false;
         } else {
             ActionInventoryTakeAll other = (ActionInventoryTakeAll) o;
-            return other.owner == this.owner && other.items.equals(this.items) && other.inventory == this.inventory;
+            return other.owner == this.owner && other.item == this.item && other.inventory == this.inventory;
         }
     }
     

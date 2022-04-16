@@ -22,6 +22,11 @@ public class ConsumableTemplate extends ItemTemplate {
 		this.type = type;
 		this.effects = effects;
 	}
+
+	@Override
+	public boolean hasState() {
+		return false;
+	}
 	
 	public ConsumableType getType() {
 		return type;

@@ -13,6 +13,11 @@
                 <object type="bed" id="test_bed">
                     <name>bed</name>
                 </object>
+                <object type="container" id="test_container">
+                    <name>loot bag</name>
+                    <description>A bag full of random loot.</description>
+                    <lootTable>weapon_ranged_3</lootTable>
+                </object>
             </objects>
             <links>
                 <link>stratis_hotel_lobby_desk</link>

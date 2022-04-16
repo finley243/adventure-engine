@@ -122,7 +122,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if(!startDead) {
 			HP = this.maxHP.value(stats.getMaxHP(game()), 0, MAX_HP);
 		}
-		this.inventory = new Inventory(this);
+		this.inventory = new Inventory(game, this);
 		this.apparelComponent = new ApparelComponent(this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		if(stats.isVendor()) {

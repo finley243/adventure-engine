@@ -29,6 +29,7 @@ public class LootTableEntry {
 					items.addAll(table.generateItems(game));
 				}
 			} else {
+				// TODO - Add more efficient stacked item generation (for stateless items)
 				for(int i = 0; i < count; i++) {
 					items.add(ItemFactory.create(game, referenceID, null));
 				}

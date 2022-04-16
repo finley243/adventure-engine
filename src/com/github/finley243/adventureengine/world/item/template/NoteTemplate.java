@@ -16,6 +16,11 @@ public class NoteTemplate extends ItemTemplate {
         this.text = text;
     }
 
+    @Override
+    public boolean hasState() {
+        return false;
+    }
+
     public List<String> getText() {
         return text;
     }

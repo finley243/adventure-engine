@@ -61,6 +61,11 @@ public class WeaponTemplate extends ItemTemplate {
 		this.silenced = silenced;
 		this.ammo = ammo;
 	}
+
+	@Override
+	public boolean hasState() {
+		return true;
+	}
 	
 	public WeaponType getType() {
 		return type;

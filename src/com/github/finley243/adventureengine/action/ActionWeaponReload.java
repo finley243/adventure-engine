@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
@@ -24,14 +23,14 @@ public class ActionWeaponReload extends Action {
 	@Override
 	public void choose(Actor subject) {
 		if(subject == subject.game().data().getPlayer()) {
-			int ammoInInventory = subject.inventory().itemCountWithID(weapon.getAmmoType());
+			int ammoInInventory = subject.inventory().itemCount(subject.game().data().getItem(weapon.getAmmoType()));
 			int reloadCapacity = weapon.reloadCapacity();
 			if (ammoInInventory >= reloadCapacity) {
 				weapon.loadAmmo(reloadCapacity);
-				subject.inventory().removeItems(weapon.getAmmoType(), reloadCapacity);
+				subject.inventory().removeItems(subject.game().data().getItem(weapon.getAmmoType()), reloadCapacity);
 			} else {
 				weapon.loadAmmo(ammoInInventory);
-				subject.inventory().removeItems(weapon.getAmmoType(), ammoInInventory);
+				subject.inventory().removeItems(subject.game().data().getItem(weapon.getAmmoType()), ammoInInventory);
 			}
 		} else {
 			weapon.loadAmmo(weapon.reloadCapacity());
@@ -42,7 +41,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && weapon.getAmmoFraction() < 1.0f && (subject != subject.game().data().getPlayer() || subject.inventory().hasItemWithID(weapon.getAmmoType()));
+		return !disabled && weapon.getAmmoFraction() < 1.0f && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(subject.game().data().getItem(weapon.getAmmoType())));
 	}
 
 	@Override

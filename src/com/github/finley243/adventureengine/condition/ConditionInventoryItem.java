@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.condition;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
-import com.github.finley243.adventureengine.world.item.Item;
 
 public class ConditionInventoryItem extends Condition {
 
@@ -20,7 +19,7 @@ public class ConditionInventoryItem extends Condition {
 	@Override
 	public boolean isMet(Actor subject) {
 		if(itemID != null) {
-			return actor.getActor(subject).inventory().hasItemWithID(itemID) != invert;
+			return actor.getActor(subject).inventory().hasItem(subject.game().data().getItem(itemID)) != invert;
 		} else {
 			return actor.getActor(subject).inventory().hasItemWithTag(tag) != invert;
 		}

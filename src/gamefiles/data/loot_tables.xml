@@ -15,6 +15,7 @@
     </lootTable>
     <lootTable id="weapon_ranged_3" useAll="true">
         <entry table="true" count="3">weapon_ranged</entry>
+        <entry>coin</entry>
     </lootTable>
     <lootTable id="stratis_receptionist" useAll="true">
         <entry>pistol_light</entry>
@@ -27,5 +28,8 @@
     <lootTable id="nexus_bouncer" useAll="true">
         <entry table="true">weapon_melee</entry>
         <entry>nexus_bouncer_key</entry>
+    </lootTable>
+    <lootTable id="coins_5000">
+        <entry count="5000">coin</entry>
     </lootTable>
 </data>

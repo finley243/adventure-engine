@@ -28,7 +28,7 @@ public class ActionExitUnlock extends Action {
 		if(disabled || !exit.isLocked()) return false;
 		boolean hasKey = false;
 		for(String keyID : exit.getKeyIDs()) {
-			if(subject.inventory().hasItemWithID(keyID)) {
+			if(subject.inventory().hasItem(subject.game().data().getItem(keyID))) {
 				hasKey = true;
 				break;
 			}

@@ -55,7 +55,7 @@ public class ActionItemConsume extends Action {
 			prompt = "Use";
 			break;
 		}
-		return new MenuData(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getTemplate().getID())});
+		return new MenuData(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getTemplate())});
 	}
 
 	@Override
