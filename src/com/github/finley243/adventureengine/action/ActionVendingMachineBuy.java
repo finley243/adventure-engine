@@ -23,7 +23,7 @@ public class ActionVendingMachineBuy extends Action {
 	@Override
 	public void choose(Actor subject) {
 		Item item = ItemFactory.create(subject.game(), itemID, null);
-		subject.adjustMoney(-item.getPrice());
+		subject.adjustMoney(-item.getTemplate().getPrice());
 		subject.inventory().addItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", vendingMachine).build());
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("buy"), context, this, subject));

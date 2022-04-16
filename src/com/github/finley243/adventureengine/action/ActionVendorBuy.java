@@ -25,7 +25,7 @@ public class ActionVendorBuy extends Action {
     @Override
     public void choose(Actor subject) {
         vendorInventory.removeItem(item);
-        subject.adjustMoney(-item.getPrice());
+        subject.adjustMoney(-item.getTemplate().getPrice());
         subject.inventory().addItem(item);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", vendor).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("buy"), context, this, subject));
@@ -33,7 +33,7 @@ public class ActionVendorBuy extends Action {
 
     @Override
     public boolean canChoose(Actor subject) {
-        return !disabled && subject.getMoney() >= item.getPrice();
+        return !disabled && subject.getMoney() >= item.getTemplate().getPrice();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ActionVendorBuy extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData(LangUtils.titleCase(item.getName()) + " [" + item.getPrice() + "]", canChoose(subject), new String[]{vendor.getName(), "buy"});
+        return new MenuData(LangUtils.titleCase(item.getName()) + " [" + item.getTemplate().getPrice() + "]", canChoose(subject), new String[]{vendor.getName(), "buy"});
     }
 
 }

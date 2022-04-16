@@ -29,10 +29,10 @@ public class Inventory {
 	}
 	
 	public void addItem(Item item) {
-		if(!items.containsKey(item.getTemplateID())) {
-			items.put(item.getTemplateID(), new ArrayList<>());
+		if(!items.containsKey(item.getTemplate().getID())) {
+			items.put(item.getTemplate().getID(), new ArrayList<>());
 		}
-		items.get(item.getTemplateID()).add(item);
+		items.get(item.getTemplate().getID()).add(item);
 	}
 	
 	public void addItems(List<Item> itemList) {
@@ -47,7 +47,7 @@ public class Inventory {
 
 	public boolean hasItemWithTag(String tag) {
 		for(Item item : getUniqueItems()) {
-			if(item.getTags().contains(tag)) {
+			if(item.getTemplate().getTags().contains(tag)) {
 				return true;
 			}
 		}
@@ -68,8 +68,8 @@ public class Inventory {
 	}
 
 	public void removeItem(Item item) {
-		if(items.containsKey(item.getTemplateID())) {
-			List<Item> itemList = items.get(item.getTemplateID());
+		if(items.containsKey(item.getTemplate().getID())) {
+			List<Item> itemList = items.get(item.getTemplate().getID());
 			itemList.remove(item);
 			if(actor != null) {
 				if (item instanceof ItemEquippable && actor.equipmentComponent().getEquippedItem() == item) {
@@ -80,7 +80,7 @@ public class Inventory {
 				}
 			}
 			if(itemList.isEmpty()) {
-				items.remove(item.getTemplateID());
+				items.remove(item.getTemplate().getID());
 			}
 		}
 	}

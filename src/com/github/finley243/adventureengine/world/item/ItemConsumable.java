@@ -20,16 +20,6 @@ public class ItemConsumable extends Item {
 		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
 		this.stats = stats;
 	}
-	
-	@Override
-	public int getPrice() {
-		return stats.getPrice();
-	}
-	
-	@Override
-	public String getTemplateID() {
-		return stats.getID();
-	}
 
 	@Override
 	public ItemTemplate getTemplate() {

@@ -6,11 +6,7 @@ public abstract class ActionMove extends Action {
 
     @Override
     public int repeatCount(Actor subject) {
-        if(subject.isCrouching()) {
-            return Actor.MOVES_PER_TURN_CROUCHED;
-        } else {
-            return Actor.MOVES_PER_TURN;
-        }
+        return Actor.MOVES_PER_TURN;
     }
 
     @Override

@@ -23,9 +23,9 @@ public class ConditionEquippedItem extends Condition {
 		Item equippedItem = actor.getActor(subject).equipmentComponent().getEquippedItem();
 		if(equippedItem == null) return invert;
 		if(itemID != null) {
-			return equippedItem.getTemplateID().equals(itemID) != invert;
+			return equippedItem.getTemplate().getID().equals(itemID) != invert;
 		}
-		return (tag == null || equippedItem.getTags().contains(tag)) != invert;
+		return (tag == null || equippedItem.getTemplate().getTags().contains(tag)) != invert;
 	}
 
 	@Override

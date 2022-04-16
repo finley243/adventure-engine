@@ -25,7 +25,7 @@ public class ActionVendorSell extends Action {
     @Override
     public void choose(Actor subject) {
         subject.inventory().removeItem(item);
-        subject.adjustMoney(item.getPrice());
+        subject.adjustMoney(item.getTemplate().getPrice());
         vendorInventory.addItem(item);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", vendor).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("sell"), context, this, subject));
@@ -38,7 +38,7 @@ public class ActionVendorSell extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData(LangUtils.titleCase(item.getName()) + " [" + item.getPrice() + "]", canChoose(subject), new String[]{vendor.getName(), "sell"});
+        return new MenuData(LangUtils.titleCase(item.getName()) + " [" + item.getTemplate().getPrice() + "]", canChoose(subject), new String[]{vendor.getName(), "sell"});
     }
 
 }

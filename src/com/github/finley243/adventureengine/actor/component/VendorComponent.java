@@ -52,7 +52,7 @@ public class VendorComponent {
                 if(!canBuy) {
                     // TODO - Optimize checks?
                     for(String buyTag : buyTags) {
-                        if(item.getTags().contains(buyTag)) {
+                        if(item.getTemplate().getTags().contains(buyTag)) {
                             canBuy = true;
                             break;
                         }

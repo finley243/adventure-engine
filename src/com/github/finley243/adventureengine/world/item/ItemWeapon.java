@@ -42,16 +42,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.accuracyBonus = new ModdableStatFloat(this);
 		this.ammo = stats.getClipSize();
 	}
-	
-	@Override
-	public int getPrice() {
-		return stats.getPrice();
-	}
-	
-	@Override
-	public String getTemplateID() {
-		return stats.getID();
-	}
 
 	@Override
 	public ItemTemplate getTemplate() {

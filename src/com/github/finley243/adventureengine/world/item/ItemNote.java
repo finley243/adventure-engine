@@ -24,11 +24,6 @@ public class ItemNote extends Item {
     }
 
     @Override
-    public String getTemplateID() {
-        return stats.getID();
-    }
-
-    @Override
     public ItemTemplate getTemplate() {
         return stats;
     }
