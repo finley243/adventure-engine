@@ -3,10 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.item.ItemApparel;
-import com.github.finley243.adventureengine.world.item.ItemEquippable;
-import com.github.finley243.adventureengine.world.item.ItemFactory;
+import com.github.finley243.adventureengine.world.item.*;
 import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 
 import java.util.ArrayList;
@@ -22,12 +19,15 @@ public class Inventory {
 	// Keys are statsIDs, values are lists of items with the corresponding statsID
 	private final Map<String, List<Item>> items;
 	private final Map<String, Item> itemsStateless;
+
+	private final Map<String, ItemStack> itemStacks;
 	
 	public Inventory(Game game, Actor actor) {
 		this.game = game;
 		this.actor = actor;
 		this.items = new HashMap<>();
 		this.itemsStateless = new HashMap<>();
+		this.itemStacks = new HashMap<>();
 	}
 
 	public List<Item> getAllItems() {

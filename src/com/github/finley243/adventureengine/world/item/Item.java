@@ -21,24 +21,13 @@ public abstract class Item extends WorldObject {
 
 	// Determines whether a new version of this item needs to be created when loading a save file
 	private final boolean isGenerated;
-	// Used to allow "stacking" of items with no state (unused by items with state)
-	private int count;
 
 	public Item(Game game, boolean isGenerated, String ID, Area area, String name, String description, Map<String, Script> scripts) {
 		super(game, ID, area, name, description, scripts);
 		this.isGenerated = isGenerated;
-		this.count = 1;
 	}
 
 	public abstract ItemTemplate getTemplate();
-
-	public int getCount() {
-		return count;
-	}
-
-	public void addCount(int amount) {
-		count += amount;
-	}
 
 	@Override
 	public List<Action> localActions(Actor subject) {
@@ -59,9 +48,6 @@ public abstract class Item extends WorldObject {
 	@Override
 	public void loadState(SaveData saveData) {
 		switch(saveData.getParameter()) {
-			case "count":
-				this.count = saveData.getValueInt();
-				break;
 			default:
 				super.loadState(saveData);
 				break;
@@ -74,10 +60,12 @@ public abstract class Item extends WorldObject {
 		if(isGenerated) {
 			state.add(0, new SaveData(SaveData.DataType.ITEM_INSTANCE, this.getID(), null, this.getTemplate().getID()));
 		}
-		if(count > 1) {
-			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "count", count));
-		}
 		return state;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof Item && getTemplate() == ((Item) o).getTemplate();
 	}
 	
 }

@@ -213,4 +213,9 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		return state;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o) && o instanceof ItemWeapon && this.ammo == ((ItemWeapon) o).ammo;
+	}
+
 }
