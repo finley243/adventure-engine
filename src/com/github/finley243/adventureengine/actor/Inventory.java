@@ -200,9 +200,9 @@ public class Inventory {
 		List<Action> actions = new ArrayList<>();
 		for(List<Item> current : items.values()) {
 			actions.add(new ActionInventoryStore(owner, other, current.get(0)));
-			if(current.size() > 1) {
+			/*if(current.size() > 1) {
 				actions.add(new ActionInventoryStoreAll(owner, other, current));
-			}
+			}*/
 		}
 		// TODO - Add store actions for stacked items
 		return actions;
@@ -212,9 +212,9 @@ public class Inventory {
 		List<Action> actions = new ArrayList<>();
 		for(List<Item> current : items.values()) {
 			actions.add(new ActionInventoryTake(owner, this, current.get(0)));
-			if(current.size() > 1) {
+			/*if(current.size() > 1) {
 				actions.add(new ActionInventoryTakeAll(owner, this, current.get(0).getTemplate()));
-			}
+			}*/
 		}
 		for(Item current : itemsStateless.values()) {
 			actions.add(new ActionInventoryTake(owner, this, current));
