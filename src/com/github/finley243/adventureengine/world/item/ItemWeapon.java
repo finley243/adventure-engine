@@ -30,8 +30,8 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatFloat accuracyBonus;
 	private int ammo;
 	
-	public ItemWeapon(Game game, String ID, boolean isGenerated, WeaponTemplate stats) {
-		super(game, isGenerated, ID);
+	public ItemWeapon(Game game, String ID, WeaponTemplate stats) {
+		super(game, ID);
 		this.stats = stats;
 		this.damage = new ModdableStatInt(this);
 		this.rate = new ModdableStatInt(this);
@@ -136,9 +136,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		}
 		if(getClipSize() > 0) {
 			actions.add(new ActionWeaponReload(this));
-		}
-		if(this.getDescription() != null) {
-			actions.add(new ActionInspect(this, InspectType.EQUIPPED));
 		}
 		return actions;
 	}

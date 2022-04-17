@@ -22,7 +22,7 @@ public class ActionVendingMachineBuy extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		Item item = ItemFactory.create(subject.game(), itemID, null);
+		Item item = ItemFactory.create(subject.game(), itemID);
 		subject.adjustMoney(-item.getTemplate().getPrice());
 		subject.inventory().addItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", vendingMachine).build());

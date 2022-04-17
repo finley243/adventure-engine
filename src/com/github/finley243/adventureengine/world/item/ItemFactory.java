@@ -11,29 +11,30 @@ public class ItemFactory {
 	}
 	
 	public static Item create(Game game, ItemTemplate stats) {
-		return create(game, stats, true, stats.generateInstanceID());
+		String ID = null;
+		if (stats.hasState()) {
+			ID = stats.generateInstanceID();
+		}
+		return create(game, stats, ID);
 	}
 
 	public static Item create(Game game, String statsID, String ID) {
-		return create(game, game.data().getItem(statsID), false, ID);
+		return create(game, game.data().getItem(statsID), ID);
 	}
 
-	private static Item create(Game game, ItemTemplate stats, boolean isGenerated, String ID) {
+	private static Item create(Game game, ItemTemplate stats, String ID) {
 		Item item = null;
 		if(stats instanceof ConsumableTemplate) {
-			item = new ItemConsumable(game, ID, isGenerated, (ConsumableTemplate) stats);
+			item = new ItemConsumable(game, ID, (ConsumableTemplate) stats);
 		} else if(stats instanceof ApparelTemplate) {
-			item = new ItemApparel(game, ID, isGenerated, (ApparelTemplate) stats);
+			item = new ItemApparel(game, ID, (ApparelTemplate) stats);
 		} else if(stats instanceof WeaponTemplate) {
-			item = new ItemWeapon(game, ID, isGenerated, (WeaponTemplate) stats);
+			item = new ItemWeapon(game, ID, (WeaponTemplate) stats);
 		} else if(stats instanceof MiscTemplate) {
-			item = new ItemMisc(game, ID, isGenerated, (MiscTemplate) stats);
+			item = new ItemMisc(game, ID, (MiscTemplate) stats);
 		} else if(stats instanceof NoteTemplate) {
-			item = new ItemNote(game, ID, isGenerated, (NoteTemplate) stats);
+			item = new ItemNote(game, ID, (NoteTemplate) stats);
 		}
-		//if(item != null && isGenerated) {
-			//game.data().addObject(ID, item);
-		//}
 		if(item != null && stats.hasState()) {
 			game.data().addItemState(ID, item);
 		}

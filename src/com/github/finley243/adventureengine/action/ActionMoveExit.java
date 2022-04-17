@@ -40,7 +40,7 @@ public class ActionMoveExit extends ActionMove {
 		if(!subject.equals(subject.game().data().getPlayer())) {
 			if(!exit.isLocked()) return !disabled;
 			for(String key : exit.getKeyIDs()) {
-				if(subject.inventory().hasItem(subject.game().data().getItem(key))) {
+				if(subject.inventory().hasItem(key)) {
 					return !disabled;
 				}
 			}

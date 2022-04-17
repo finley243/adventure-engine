@@ -19,7 +19,7 @@ public class ScriptAddItem extends Script {
 	
 	@Override
 	public void executeSuccess(Actor subject) {
-		Item item = ItemFactory.create(subject.game(), subject.game().data().getItem(itemID), null);
+		Item item = ItemFactory.create(subject.game(), subject.game().data().getItem(itemID));
 		actor.getActor(subject).inventory().addItem(item);
 	}
 	

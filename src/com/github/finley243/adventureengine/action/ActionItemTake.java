@@ -8,27 +8,27 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.object.ObjectItem;
 
 public class ActionItemTake extends Action {
 
-	private final Item item;
+	private final ObjectItem objectItem;
 	
-	public ActionItemTake(Item item) {
-		this.item = item;
+	public ActionItemTake(ObjectItem objectItem) {
+		this.objectItem = objectItem;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		item.getArea().removeObject(item);
-		item.setArea(null);
+		Item item = Item.objectToItem(subject.game(), objectItem, 1);
 		subject.inventory().addItem(item);
-		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
+		Context context = new Context(new NounMapper().put("actor", subject).put("item", objectItem).build());
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("pickUp"), context, this, subject));
 	}
 
 	@Override
 	public float utility(Actor subject) {
-		if(item instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
+		if(objectItem.getItem() instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
 			return 0.7f;
 		} else {
 			return 0.0f;
@@ -42,7 +42,7 @@ public class ActionItemTake extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Take", canChoose(subject), new String[]{item.getName()});
+		return new MenuData("Take", canChoose(subject), new String[]{objectItem.getName()});
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class ActionItemTake extends Action {
             return false;
         } else {
             ActionItemTake other = (ActionItemTake) o;
-            return other.item == this.item;
+            return other.objectItem == this.objectItem;
         }
     }
 	

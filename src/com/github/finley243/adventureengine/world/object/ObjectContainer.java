@@ -40,9 +40,10 @@ public class ObjectContainer extends WorldObject {
 
 	public void loadState(SaveData saveData) {
 		switch(saveData.getParameter()) {
-			case "inventory":
+			// TODO - Handle item saving in the inventory itself
+			/*case "inventory":
 				inventory.addItem((Item) game().data().getObject(saveData.getValueString()));
-				break;
+				break;*/
 			default:
 				super.loadState(saveData);
 				break;
@@ -51,9 +52,9 @@ public class ObjectContainer extends WorldObject {
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = super.saveState();
-		for(Item item : inventory.getAllItems()) {
+		/*for(Item item : inventory.getAllItems()) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "inventory", item.getID()));
-		}
+		}*/
 		return state;
 	}
 

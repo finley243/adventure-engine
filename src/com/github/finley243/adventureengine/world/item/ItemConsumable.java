@@ -16,8 +16,8 @@ public class ItemConsumable extends Item {
 
 	private final ConsumableTemplate stats;
 	
-	public ItemConsumable(Game game, String ID, boolean isGenerated, ConsumableTemplate stats) {
-		super(game, isGenerated, ID);
+	public ItemConsumable(Game game, String ID, ConsumableTemplate stats) {
+		super(game, ID);
 		this.stats = stats;
 	}
 

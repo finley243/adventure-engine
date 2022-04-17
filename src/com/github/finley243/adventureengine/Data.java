@@ -225,6 +225,7 @@ public class Data {
 	public void addItemState(String id, Item value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add item state with blank ID");
 		if(itemStates.containsKey(id)) throw new IllegalArgumentException("Cannot add item state with existing ID: " + id);
+		if(!value.getTemplate().hasState()) throw new UnsupportedOperationException("Cannot add item state for stateless item: " + value.getTemplate().getID());
 		itemStates.put(id, value);
 	}
 

@@ -55,11 +55,11 @@ public class Game {
 		data().newGame();
 
 		data().getPlayer().adjustMoney(320);
-		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_vest", null));
-		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_helmet", null));
-		data().getPlayer().inventory().addItem(ItemFactory.create(this, "nitron_cola", null));
+		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_vest"));
+		data().getPlayer().inventory().addItem(ItemFactory.create(this, "tactical_helmet"));
+		data().getPlayer().inventory().addItem(ItemFactory.create(this, "nitron_cola"));
 
-		File saveFile = new File(GAMEFILES + "/save.aes");
+		/*File saveFile = new File(GAMEFILES + "/save.aes");
 		SaveLoader.saveGame(saveFile, data());
 		System.out.println("Saved Game");
 		try {
@@ -67,7 +67,7 @@ public class Game {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Loaded Game");
+		System.out.println("Loaded Game");*/
 
 		startGameLoop();
 	}

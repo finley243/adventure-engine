@@ -18,8 +18,8 @@ public class ItemApparel extends Item {
 
 	private final ApparelTemplate stats;
 
-	public ItemApparel(Game game, String ID, boolean isGenerated, ApparelTemplate stats) {
-		super(game, isGenerated, ID);
+	public ItemApparel(Game game, String ID, ApparelTemplate stats) {
+		super(game, ID);
 		this.stats = stats;
 	}
 

@@ -8,7 +8,9 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.world.object.ObjectItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +19,8 @@ public abstract class Item implements Noun {
 
 	// ID is null if the item is stateless
 	private final String ID;
-	// Determines whether a new version of this item needs to be created when loading a save file
-	private final boolean isGenerated;
 
-	public Item(Game game, boolean isGenerated, String ID) {
-		this.isGenerated = isGenerated;
+	public Item(Game game, String ID) {
 		this.ID = ID;
 	}
 
@@ -89,9 +88,9 @@ public abstract class Item implements Noun {
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		/*if(isGenerated) {
-			state.add(0, new SaveData(SaveData.DataType.ITEM_INSTANCE, this.getID(), null, this.getTemplate().getID()));
-		}*/
+		if(getTemplate().hasState()) {
+			state.add(new SaveData(SaveData.DataType.ITEM_INSTANCE, this.getID(), null, this.getTemplate().getID()));
+		}
 		return state;
 	}
 
@@ -107,6 +106,28 @@ public abstract class Item implements Noun {
 		} else {
 			return getTemplate().hashCode();
 		}
+	}
+
+	public static ObjectItem itemToObject(Game game, Item item, int count, Area area) {
+		String ID = item.getID();
+		if (ID == null) {
+			ID = item.getTemplate().generateInstanceID();
+		}
+		ObjectItem object = new ObjectItem(game, ID, area, item, count);
+		game.data().addObject(object.getID(), object);
+		return object;
+	}
+
+	public static Item objectToItem(Game game, ObjectItem objectItem, int count) {
+		Item item = objectItem.getItem();
+		int remainingCount = objectItem.getCount() - count;
+		if (remainingCount <= 0) {
+			objectItem.getArea().removeObject(objectItem);
+			game.data().removeObject(objectItem.getID());
+		} else {
+			objectItem.addCount(-count);
+		}
+		return item;
 	}
 	
 }

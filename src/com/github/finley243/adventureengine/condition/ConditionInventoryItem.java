@@ -19,7 +19,7 @@ public class ConditionInventoryItem extends Condition {
 	@Override
 	public boolean isMet(Actor subject) {
 		if(itemID != null) {
-			return actor.getActor(subject).inventory().hasItem(subject.game().data().getItem(itemID)) != invert;
+			return actor.getActor(subject).inventory().hasItem(itemID) != invert;
 		} else {
 			return actor.getActor(subject).inventory().hasItemWithTag(tag) != invert;
 		}

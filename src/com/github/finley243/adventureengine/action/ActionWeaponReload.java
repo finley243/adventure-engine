@@ -23,14 +23,14 @@ public class ActionWeaponReload extends Action {
 	@Override
 	public void choose(Actor subject) {
 		if(subject == subject.game().data().getPlayer()) {
-			int ammoInInventory = subject.inventory().itemCount(subject.game().data().getItem(weapon.getAmmoType()));
+			int ammoInInventory = subject.inventory().itemCount(weapon.getAmmoType());
 			int reloadCapacity = weapon.reloadCapacity();
 			if (ammoInInventory >= reloadCapacity) {
 				weapon.loadAmmo(reloadCapacity);
-				subject.inventory().removeItems(subject.game().data().getItem(weapon.getAmmoType()), reloadCapacity);
+				subject.inventory().removeItems(weapon.getAmmoType(), reloadCapacity);
 			} else {
 				weapon.loadAmmo(ammoInInventory);
-				subject.inventory().removeItems(subject.game().data().getItem(weapon.getAmmoType()), ammoInInventory);
+				subject.inventory().removeItems(weapon.getAmmoType(), ammoInInventory);
 			}
 		} else {
 			weapon.loadAmmo(weapon.reloadCapacity());
@@ -41,7 +41,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && weapon.getAmmoFraction() < 1.0f && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(subject.game().data().getItem(weapon.getAmmoType())));
+		return !disabled && weapon.getAmmoFraction() < 1.0f && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(weapon.getAmmoType()));
 	}
 
 	@Override

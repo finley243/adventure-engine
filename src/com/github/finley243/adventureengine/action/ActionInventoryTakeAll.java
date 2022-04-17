@@ -5,23 +5,20 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.MultiNoun;
-import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/*public class ActionInventoryTakeAll extends Action {
+public class ActionInventoryTakeAll extends Action {
 
     private final Noun owner;
     private final Inventory inventory;
-    private final ItemTemplate item;
+    private final Item item;
 
-    public ActionInventoryTakeAll(Noun owner, Inventory inventory, ItemTemplate item) {
+    public ActionInventoryTakeAll(Noun owner, Inventory inventory, Item item) {
         this.owner = owner;
         this.inventory = inventory;
         this.item = item;
@@ -30,12 +27,9 @@ import java.util.List;
     @Override
     public void choose(Actor subject) {
         int count = inventory.itemCount(item);
-        List<Item> removedItems = inventory.removeItems(item, count);
-        for (Item item : items) {
-            inventory.removeItem(item);
-            subject.inventory().addItem(item);
-        }
-        Context context = new Context(new NounMapper().put("actor", subject).put("item", new MultiNoun(removedItems)).put("inventory", owner).build());
+        inventory.removeItems(item, count);
+        subject.inventory().addItems(item, count);
+        Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
 
@@ -59,4 +53,4 @@ import java.util.List;
         }
     }
     
-}*/
+}

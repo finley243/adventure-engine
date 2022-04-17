@@ -625,7 +625,8 @@ public class DataLoader {
                 return new ObjectVendingMachine(game, objectID, area, objectName, objectDescription, objectScripts, vendingItems);
             case "item":
                 String itemID = LoadUtils.singleTag(objectElement, "item", null);
-                return ItemFactory.create(game, itemID, objectID, area);
+                int itemCount = LoadUtils.singleTagInt(objectElement, "count", 1);
+                return new ObjectItem(game, objectID, area, ItemFactory.create(game, itemID), itemCount);
             case "container":
                 String containerLootTable = LoadUtils.singleTag(objectElement, "lootTable", null);
                 return new ObjectContainer(game, objectID, area, objectName, objectDescription, objectScripts, containerLootTable);

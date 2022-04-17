@@ -379,8 +379,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if(equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
-			getArea().addObject(item);
-			item.setArea(getArea());
+			//getArea().addObject(item);
+			//item.setArea(getArea());
+			Item.itemToObject(game(), item, 1, getArea());
 			Context context = new Context(new NounMapper().put("actor", this).put("item", item).build());
 			game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 		}
@@ -830,12 +831,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			case "target":
 				this.targetingComponent.addCombatant(game().data().getActor(saveData.getValueString()));
 				break;
-			case "inventory":
-				//this.inventory.addItem((Item) game().data().getObject(saveData.getValueString()));
-				this.inventory.addItem(game().data().getItemState(saveData.getValueString()));
-				break;
-			case "inventory_stateless":
-				//this.inventory.addItem();
+			/*case "inventory":
+				this.inventory.addItem((Item) game().data().getObject(saveData.getValueString()));
+				break;*/
 			case "equippedItem":
 				this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
 				break;
@@ -865,9 +863,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if(area != defaultArea) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", (area == null ? null : area.getID())));
 		}
-		for(Item item : inventory.getAllItems()) {
+		// TODO - Handle item saving in the inventory itself
+		/*for(Item item : inventory.getAllItems()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "inventory", item.getID()));
-		}
+		}*/
 		if(equipmentComponent.hasEquippedItem()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedItem", equipmentComponent.getEquippedItem().getID()));
 		}

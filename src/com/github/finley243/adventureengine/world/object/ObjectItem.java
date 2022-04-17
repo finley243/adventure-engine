@@ -19,6 +19,18 @@ public class ObjectItem extends WorldObject {
         this.item = item;
     }
 
+    public Item getItem() {
+        return item;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void addCount(int amount) {
+        count += amount;
+    }
+
     @Override
     public List<Action> localActions(Actor subject) {
         List<Action> actions = super.localActions(subject);

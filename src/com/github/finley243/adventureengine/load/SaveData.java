@@ -107,7 +107,7 @@ public class SaveData implements Serializable {
                 scene.loadState(this);
                 break;
             case ITEM_INSTANCE:
-                data.addObject(id, ItemFactory.create(data.game(), valueString, id, null));
+                ItemFactory.create(data.game(), valueString, id);
                 break;
             case ITEM_STATS:
                 ItemTemplate itemTemplate = data.getItem(id);

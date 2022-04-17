@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
+import com.github.finley243.adventureengine.world.object.ObjectItem;
 
 public class ActionItemDrop extends Action {
 
@@ -20,8 +21,7 @@ public class ActionItemDrop extends Action {
 	@Override
 	public void choose(Actor subject) {
 		subject.inventory().removeItem(item);
-		subject.getArea().addObject(item);
-		item.setArea(subject.getArea());
+		Item.itemToObject(subject.game(), item, 1, subject.getArea());
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
 		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("drop"), context, this, subject));
 	}
@@ -33,7 +33,7 @@ public class ActionItemDrop extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Drop", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item.getTemplate())});
+		return new MenuData("Drop", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)});
 	}
 
 	@Override
