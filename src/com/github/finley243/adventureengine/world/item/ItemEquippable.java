@@ -13,8 +13,8 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public abstract class ItemEquippable extends Item {
 
-	public ItemEquippable(Game game, boolean isGenerated, String ID, Area area, String name, String description, Map<String, Script> scripts) {
-		super(game, isGenerated, ID, area, name, description, scripts);
+	public ItemEquippable(Game game, boolean isGenerated, String ID) {
+		super(game, isGenerated, ID);
 	}
 
 	@Override

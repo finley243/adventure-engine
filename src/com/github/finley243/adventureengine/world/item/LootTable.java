@@ -2,10 +2,7 @@ package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.Game;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class LootTable {
@@ -24,7 +21,7 @@ public class LootTable {
 		return ID;
 	}
 	
-	public List<Item> generateItems(Game game) {
+	/*public List<Item> generateItems(Game game) {
 		List<Item> generatedItems = new ArrayList<>();
 		if(useAll) {
 			for(LootTableEntry entry : entries) {
@@ -32,6 +29,26 @@ public class LootTable {
 			}
 		} else {
 			generatedItems.addAll(getRandomEntry().generateItems(game));
+		}
+		return generatedItems;
+	}*/
+
+	public Map<Item, Integer> generateItems(Game game) {
+		Map<Item, Integer> generatedItems = new HashMap<>();
+		if(useAll) {
+			for(LootTableEntry entry : entries) {
+				Map<Item, Integer> entryItems = entry.generateItems(game);
+				for (Item entryItem : entryItems.keySet()) {
+					if (generatedItems.containsKey(entryItem)) {
+						int currentCount = generatedItems.get(entryItem);
+						generatedItems.put(entryItem, currentCount + entryItems.get(entryItem));
+					} else {
+						generatedItems.put(entryItem, entryItems.get(entryItem));
+					}
+				}
+			}
+		} else {
+			generatedItems.putAll(getRandomEntry().generateItems(game));
 		}
 		return generatedItems;
 	}

@@ -18,11 +18,6 @@ public class MiscTemplate extends ItemTemplate {
     }
 
     @Override
-    public Map<String, Integer> getDefaultStateInt() {
-        return null;
-    }
-
-    @Override
     public Set<String> getTags() {
         Set<String> tags = new HashSet<>();
         tags.add("misc");

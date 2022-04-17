@@ -831,13 +831,16 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 				this.targetingComponent.addCombatant(game().data().getActor(saveData.getValueString()));
 				break;
 			case "inventory":
-				this.inventory.addItem((Item) game().data().getObject(saveData.getValueString()));
+				//this.inventory.addItem((Item) game().data().getObject(saveData.getValueString()));
+				this.inventory.addItem(game().data().getItemState(saveData.getValueString()));
 				break;
+			case "inventory_stateless":
+				//this.inventory.addItem();
 			case "equippedItem":
-				this.equipmentComponent.equip((ItemEquippable) game().data().getObject(saveData.getValueString()));
+				this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
 				break;
 			case "equippedApparel":
-				this.apparelComponent.equip((ItemApparel) game().data().getObject(saveData.getValueString()));
+				this.apparelComponent.equip((ItemApparel) game().data().getItemState(saveData.getValueString()));
 				break;
 			case "usingObject":
 				startUsingObject((UsableObject) game().data().getObject(saveData.getValueString()));

@@ -30,8 +30,8 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatFloat accuracyBonus;
 	private int ammo;
 	
-	public ItemWeapon(Game game, String ID, Area area, boolean isGenerated, WeaponTemplate stats) {
-		super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
+	public ItemWeapon(Game game, String ID, boolean isGenerated, WeaponTemplate stats) {
+		super(game, isGenerated, ID);
 		this.stats = stats;
 		this.damage = new ModdableStatInt(this);
 		this.rate = new ModdableStatInt(this);
@@ -211,11 +211,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammo", ammo));
 		}
 		return state;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		return super.equals(o) && o instanceof ItemWeapon && this.ammo == ((ItemWeapon) o).ammo;
 	}
 
 }

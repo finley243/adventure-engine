@@ -32,8 +32,6 @@ public abstract class ItemTemplate implements Noun {
 
 	public abstract boolean hasState();
 
-	public abstract Map<String, Integer> getDefaultStateInt();
-
 	public String generateInstanceID() {
 		String newID = ID + "_" + generatedCount;
 		generatedCount += 1;
@@ -116,6 +114,11 @@ public abstract class ItemTemplate implements Noun {
 		} else {
 			return o == this;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return ID.hashCode();
 	}
 	
 }

@@ -27,11 +27,6 @@ public class ApparelTemplate extends ItemTemplate {
 	public boolean hasState() {
 		return false;
 	}
-
-	@Override
-	public Map<String, Integer> getDefaultStateInt() {
-		return null;
-	}
 	
 	public ApparelComponent.ApparelSlot getSlot() {
 		return slot;

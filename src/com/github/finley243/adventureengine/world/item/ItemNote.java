@@ -14,8 +14,8 @@ public class ItemNote extends Item {
 
     private final NoteTemplate stats;
 
-    public ItemNote(Game game, String ID, Area area, boolean isGenerated, NoteTemplate stats) {
-        super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
+    public ItemNote(Game game, String ID, boolean isGenerated, NoteTemplate stats) {
+        super(game, isGenerated, ID);
         this.stats = stats;
     }
 

@@ -9,8 +9,8 @@ public class ItemMisc extends Item {
 
     private final MiscTemplate stats;
 
-    public ItemMisc(Game game, String ID, Area area, boolean isGenerated, MiscTemplate stats) {
-        super(game, isGenerated, ID, area, stats.getName(), stats.getDescription(), stats.getScripts());
+    public ItemMisc(Game game, String ID, boolean isGenerated, MiscTemplate stats) {
+        super(game, isGenerated, ID);
         this.stats = stats;
     }
 

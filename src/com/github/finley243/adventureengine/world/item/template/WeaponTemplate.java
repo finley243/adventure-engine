@@ -67,13 +67,6 @@ public class WeaponTemplate extends ItemTemplate {
 	public boolean hasState() {
 		return true;
 	}
-
-	@Override
-	public Map<String, Integer> getDefaultStateInt() {
-		Map<String, Integer> defaultState = new HashMap<>();
-		defaultState.put("ammo", 0); // Could change to use clip size
-		return defaultState;
-	}
 	
 	public WeaponType getType() {
 		return type;

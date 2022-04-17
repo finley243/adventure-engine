@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
+import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.LootTable;
 import com.github.finley243.adventureengine.world.object.ObjectContainer;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -35,6 +36,7 @@ public class Data {
 	private final Map<String, ActorTemplate> actorStats = new HashMap<>();
 	private final Map<String, WorldObject> objects = new HashMap<>();
 	private final Map<String, ItemTemplate> items = new HashMap<>();
+	private final Map<String, Item> itemStates = new HashMap<>();
 	private final Map<String, LootTable> lootTables = new HashMap<>();
 	private final Map<String, DialogueTopic> topics = new HashMap<>();
 	private final Map<String, Integer> variables = new HashMap<>();
@@ -218,6 +220,16 @@ public class Data {
 	
 	public ItemTemplate getItem(String id) {
 		return items.get(id);
+	}
+
+	public void addItemState(String id, Item value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add item state with blank ID");
+		if(itemStates.containsKey(id)) throw new IllegalArgumentException("Cannot add item state with existing ID: " + id);
+		itemStates.put(id, value);
+	}
+
+	public Item getItemState(String id) {
+		return itemStates.get(id);
 	}
 	
 	public void addLootTable(String id, LootTable value) {

@@ -17,17 +17,14 @@ public class Inventory {
 	// If inventory belongs to an object or secondary component (e.g. vendor inventory), actor will be null
 	private final Actor actor;
 	// Keys are statsIDs, values are lists of items with the corresponding statsID
-	//private final Map<String, List<Item>> items;
-	//private final Map<String, Item> itemsStateless;
+	private final Map<String, List<Item>> items;
+	private final Map<String, Integer> itemsStateless;
 
-	private final Map<ItemStack, ItemStack> itemStacks;
-	
 	public Inventory(Game game, Actor actor) {
 		this.game = game;
 		this.actor = actor;
-		//this.items = new HashMap<>();
-		//this.itemsStateless = new HashMap<>();
-		this.itemStacks = new HashMap<>();
+		this.items = new HashMap<>();
+		this.itemsStateless = new HashMap<>();
 	}
 
 	/*public List<Item> getAllItems() {
@@ -55,15 +52,27 @@ public class Inventory {
 		}
 	}*/
 
-	public void addItem(ItemTemplate item) {
+	public void addItem(Item item) {
+		if (item.getTemplate().hasState()) {
+			if (!items.containsKey(item.getTemplate().getID())) {
+				items.put(item.getTemplate().getID(), new ArrayList<>());
+			}
+			items.get(item.getTemplate().getID()).add(item);
+		} else {
+			int currentCount = itemsStateless.getOrDefault(item.getTemplate().getID(), 0);
+			itemsStateless.put(item.getTemplate().getID(), currentCount + 1);
+		}
+	}
+
+	/*public void addItem(ItemTemplate item) {
 		if (item.hasState()) {
 			addItem(new ItemStack(item, new ItemState(item)));
 		} else {
 			addItem(new ItemStack(item, 1));
 		}
-	}
+	}*/
 
-	public void addItem(ItemStack stack) {
+	/*public void addItem(ItemStack stack) {
 		if (!itemStacks.containsKey(stack)) {
 			if (stack.getItem().hasState()) {
 				ItemStack stackDuplicate = new ItemStack(stack.getItem(), stack.getState());
@@ -75,17 +84,38 @@ public class Inventory {
 		} else if (!stack.getItem().hasState()) {
 			itemStacks.get(stack).addCount(stack.getCount());
 		}
-	}
+	}*/
 	
-	public void addItems(List<ItemStack> stackList) {
+	/*public void addItems(List<ItemStack> stackList) {
 		for(ItemStack stack : stackList) {
 			addItem(stack);
+		}
+	}*/
+
+	public void addItems(Item item, int count) {
+		if (item.getTemplate().hasState()) throw new IllegalArgumentException("Cannot add multiple Items with state: " + item.getTemplate().getID());
+		if (count <= 0) throw new IllegalArgumentException("Cannot add non-positive number of Items: " + item.getTemplate().getID());
+		int currentCount = itemsStateless.getOrDefault(item.getTemplate().getID(), 0);
+		itemsStateless.put(item.getTemplate().getID(), currentCount + count);
+	}
+
+	public void addItems(Map<Item, Integer> itemMap) {
+		for (Item item : itemMap.keySet()) {
+			if (item.getTemplate().hasState()) {
+				addItem(item);
+			} else {
+				addItems(item, itemMap.get(item));
+			}
 		}
 	}
 
 	/*public boolean hasItem(String itemID) {
 		return hasItem(game.data().getItem(itemID));
 	}*/
+
+	public boolean hasItem(String itemID) {
+		return itemsStateless.containsKey(itemID) || items.containsKey(itemID);
+	}
 	
 	/*public boolean hasItem(ItemTemplate item) {
 		if (item.hasState()) {
@@ -108,6 +138,30 @@ public class Inventory {
 		return itemCount(game.data().getItem(itemID));
 	}*/
 
+	public int itemCount(Item item) {
+		if (item.getTemplate().hasState()) {
+			if (items.containsKey(item.getTemplate().getID()) && items.get(item.getTemplate().getID()).contains(item)) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			return itemsStateless.getOrDefault(item.getTemplate().getID(), 0);
+		}
+	}
+
+	public int itemCount(String itemID) {
+		if (game.data().getItem(itemID).hasState()) {
+			if (items.containsKey(itemID)) {
+				return items.get(itemID).size();
+			} else {
+				return 0;
+			}
+		} else {
+			return itemsStateless.getOrDefault(itemID, 0);
+		}
+	}
+
 	/*public int itemCount(ItemTemplate item) {
 		if(item.hasState()) {
 			if(!items.containsKey(item.getID())) return 0;
@@ -126,13 +180,29 @@ public class Inventory {
 		}
 	}*/
 
-	public int itemCount(ItemStack stack) {
+	/*public int itemCount(ItemStack stack) {
 		return itemStacks.get(stack).getCount();
-	}
+	}*/
 
-	public String itemCountLabel(ItemStack stack) {
+	/*public String itemCountLabel(ItemStack stack) {
 		if (itemCount(stack) > 1) {
 			return " (" + itemCount(stack) + ")";
+		} else {
+			return "";
+		}
+	}*/
+
+	public String itemCountLabel(Item item) {
+		if (itemCount(item) > 1) {
+			return " (" + itemCount(item) + ")";
+		} else {
+			return "";
+		}
+	}
+
+	public String itemCountLabel(String itemID) {
+		if (itemCount(itemID) > 1) {
+			return " (" + itemCount(itemID) + ")";
 		} else {
 			return "";
 		}
@@ -190,7 +260,7 @@ public class Inventory {
 		return null;
 	}*/
 
-	public void removeItem(ItemStack stack) {
+	/*public void removeItem(ItemStack stack) {
 		if(stack.getItem().hasState()) {
 			itemStacks.remove(stack);
 		} else {
@@ -200,9 +270,42 @@ public class Inventory {
 				itemStacks.remove(stack);
 			}
 		}
+	}*/
+
+	public void removeItem(Item item) {
+		if (item.getTemplate().hasState()) {
+			if (items.containsKey(item.getTemplate().getID())) {
+				items.get(item.getTemplate().getID()).remove(item);
+				if (items.get(item.getTemplate().getID()).isEmpty()) {
+					items.remove(item.getTemplate().getID());
+				}
+			}
+		} else {
+			if (itemsStateless.containsKey(item.getTemplate().getID())) {
+				int count = itemsStateless.get(item.getTemplate().getID());
+				int newCount = count - 1;
+				if (newCount <= 0) {
+					itemsStateless.remove(item.getTemplate().getID());
+				} else {
+					itemsStateless.put(item.getTemplate().getID(), newCount);
+				}
+			}
+		}
 	}
 
-
+	public void removeItems(Item item, int count) {
+		if (item.getTemplate().hasState()) throw new IllegalArgumentException("Cannot remove multiple items with state: " + item.getTemplate().getID());
+		if (count <= 0) throw new IllegalArgumentException("Cannot remove non-positive number of items: " + item.getTemplate().getID());
+		if (itemsStateless.containsKey(item.getTemplate().getID())) {
+			int currentCount = itemsStateless.get(item.getTemplate().getID());
+			int newCount = currentCount - count;
+			if (newCount <= 0) {
+				itemsStateless.remove(item.getTemplate().getID());
+			} else {
+				itemsStateless.put(item.getTemplate().getID(), newCount);
+			}
+		}
+	}
 
 	/*public List<Item> removeItems(ItemTemplate item, int count) {
 		List<Item> removedItems = new ArrayList<>();
@@ -231,14 +334,14 @@ public class Inventory {
 	
 	public void clear() {
 		// TODO - Find way to remove unreferenced items from Data (a "clean" cycle when saving or loading?)
-		//items.clear();
-		//itemsStateless.clear();
-		itemStacks.clear();
+		items.clear();
+		itemsStateless.clear();
+		//itemStacks.clear();
 	}
 
-	public List<ItemStack> getItems() {
+	/*public List<ItemStack> getItems() {
 		return new ArrayList<>(itemStacks.values());
-	}
+	}*/
 	
 	/*public List<Item> getUniqueItems() {
 		List<Item> uniqueItems = new ArrayList<>();
@@ -248,6 +351,18 @@ public class Inventory {
 		uniqueItems.addAll(itemsStateless.values());
 		return uniqueItems;
 	}*/
+
+	public List<Item> getUniqueItems() {
+		List<Item> uniqueItems = new ArrayList<>();
+		for (List<Item> current : items.values()) {
+			uniqueItems.addAll(current);
+		}
+		for (String current : itemsStateless.keySet()) {
+			Item item = ItemFactory.create(game, current);
+			uniqueItems.add(item);
+		}
+		return uniqueItems;
+	}
 
 	/*public List<Action> getStoreActions(Noun owner, Inventory other) {
 		List<Action> actions = new ArrayList<>();
@@ -261,7 +376,7 @@ public class Inventory {
 		return actions;
 	}*/
 
-	public List<Action> getStoreActions(Noun owner, Inventory other) {
+	/*public List<Action> getStoreActions(Noun owner, Inventory other) {
 		List<Action> actions = new ArrayList<>();
 		for (ItemStack current : itemStacks.values()) {
 			if (current.getItem().hasState()) {
@@ -274,7 +389,7 @@ public class Inventory {
 			}
 		}
 		return actions;
-	}
+	}*/
 
 	/*public List<Action> getExternalActions(Noun owner, Actor subject) {
 		List<Action> actions = new ArrayList<>();
@@ -294,7 +409,7 @@ public class Inventory {
 		return actions;
 	}*/
 
-	public List<Action> getExternalActions(Noun owner, Actor subject) {
+	/*public List<Action> getExternalActions(Noun owner, Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		for (ItemStack current : itemStacks.values()) {
 			if (current.getItem().hasState()) {
@@ -308,6 +423,6 @@ public class Inventory {
 		}
 		actions.addAll(subject.inventory().getStoreActions(owner, this));
 		return actions;
-	}
+	}*/
 	
 }

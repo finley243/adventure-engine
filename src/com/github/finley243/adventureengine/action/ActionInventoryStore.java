@@ -8,15 +8,15 @@ import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.item.ItemStack;
+import com.github.finley243.adventureengine.world.item.Item;
 
 public class ActionInventoryStore extends Action {
 
     private final Noun owner;
     private final Inventory inventory;
-    private final ItemStack item;
+    private final Item item;
 
-    public ActionInventoryStore(Noun owner, Inventory inventory, ItemStack item) {
+    public ActionInventoryStore(Noun owner, Inventory inventory, Item item) {
         this.owner = owner;
         this.inventory = inventory;
         this.item = item;
@@ -26,7 +26,7 @@ public class ActionInventoryStore extends Action {
     public void choose(Actor subject) {
         subject.inventory().removeItem(item);
         inventory.addItem(item);
-        Context context = new Context(new NounMapper().put("actor", subject).put("item", item.getItem()).put("inventory", owner).build());
+        Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("inventory", owner).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("storeIn"), context, this, subject));
     }
 
@@ -37,7 +37,7 @@ public class ActionInventoryStore extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Store", canChoose(subject), new String[]{owner.getName(), "transfer", item.getItem().getName() + subject.inventory().itemCountLabel(item)});
+        return new MenuData("Store", canChoose(subject), new String[]{owner.getName(), "transfer", item.getName() + subject.inventory().itemCountLabel(item)});
     }
 
     @Override
