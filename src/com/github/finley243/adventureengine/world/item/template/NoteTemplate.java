@@ -21,6 +21,11 @@ public class NoteTemplate extends ItemTemplate {
         return false;
     }
 
+    @Override
+    public Map<String, Integer> getDefaultStateInt() {
+        return null;
+    }
+
     public List<String> getText() {
         return text;
     }

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.item.template;
 
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.script.Script;
@@ -26,6 +27,11 @@ public class ApparelTemplate extends ItemTemplate {
 	public boolean hasState() {
 		return false;
 	}
+
+	@Override
+	public Map<String, Integer> getDefaultStateInt() {
+		return null;
+	}
 	
 	public ApparelComponent.ApparelSlot getSlot() {
 		return slot;
@@ -37,6 +43,18 @@ public class ApparelTemplate extends ItemTemplate {
 
 	public List<Effect> getEffects() {
 		return effects;
+	}
+
+	public void onEquip(Actor target) {
+		for(Effect effect : getEffects()) {
+			target.effectComponent().addEffect(effect);
+		}
+	}
+
+	public void onUnequip(Actor target) {
+		for(Effect effect : getEffects()) {
+			target.effectComponent().removeEffect(effect);
+		}
 	}
 
 	@Override

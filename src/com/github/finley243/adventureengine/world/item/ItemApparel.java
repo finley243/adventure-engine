@@ -36,18 +36,6 @@ public class ItemApparel extends Item {
 		return stats.getDamageResistance();
 	}
 
-	public void onEquip(Actor target) {
-		for(Effect effect : stats.getEffects()) {
-			target.effectComponent().addEffect(effect);
-		}
-	}
-
-	public void onUnequip(Actor target) {
-		for(Effect effect : stats.getEffects()) {
-			target.effectComponent().removeEffect(effect);
-		}
-	}
-
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = super.inventoryActions(subject);

@@ -14,7 +14,7 @@ import com.github.finley243.adventureengine.world.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionInventoryStoreAll extends Action {
+/*public class ActionInventoryStoreAll extends Action {
 
     private final Noun owner;
     private final Inventory inventory;
@@ -56,4 +56,4 @@ public class ActionInventoryStoreAll extends Action {
         }
     }
 
-}
+}*/

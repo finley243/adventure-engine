@@ -15,7 +15,7 @@ import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionInventoryTakeAll extends Action {
+/*public class ActionInventoryTakeAll extends Action {
 
     private final Noun owner;
     private final Inventory inventory;
@@ -31,10 +31,10 @@ public class ActionInventoryTakeAll extends Action {
     public void choose(Actor subject) {
         int count = inventory.itemCount(item);
         List<Item> removedItems = inventory.removeItems(item, count);
-        /*for (Item item : items) {
+        for (Item item : items) {
             inventory.removeItem(item);
             subject.inventory().addItem(item);
-        }*/
+        }
         Context context = new Context(new NounMapper().put("actor", subject).put("item", new MultiNoun(removedItems)).put("inventory", owner).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
     }
@@ -59,4 +59,4 @@ public class ActionInventoryTakeAll extends Action {
         }
     }
     
-}
+}*/

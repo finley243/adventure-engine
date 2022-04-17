@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
+import com.github.finley243.adventureengine.world.item.template.ApparelTemplate;
 
 import java.util.*;
 
@@ -35,14 +36,14 @@ public class ApparelComponent {
     public void equip(ItemApparel item) {
         ItemApparel lastEquipped = equipped.get(item.getApparelSlot());
         if(lastEquipped != null) {
-            lastEquipped.onUnequip(actor);
+            ((ApparelTemplate) lastEquipped.getTemplate()).onUnequip(actor);
         }
         equipped.put(item.getApparelSlot(), item);
-        item.onEquip(actor);
+        ((ApparelTemplate) item.getTemplate()).onEquip(actor);
     }
 
     public void unequip(ItemApparel item) {
-        item.onUnequip(actor);
+        ((ApparelTemplate) item.getTemplate()).onUnequip(actor);
         equipped.put(item.getApparelSlot(), null);
     }
 

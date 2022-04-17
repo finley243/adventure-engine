@@ -27,6 +27,11 @@ public class ConsumableTemplate extends ItemTemplate {
 	public boolean hasState() {
 		return false;
 	}
+
+	@Override
+	public Map<String, Integer> getDefaultStateInt() {
+		return null;
+	}
 	
 	public ConsumableType getType() {
 		return type;

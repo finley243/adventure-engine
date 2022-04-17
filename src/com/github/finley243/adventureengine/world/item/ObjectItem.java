@@ -13,14 +13,17 @@ public class ObjectItem extends WorldObject {
     private final ItemStack item;
 
     public ObjectItem(Game game, String ID, Area area, ItemStack item) {
-        super(game, ID, area, item.getItem().getName(), item.getItem().getDescription(), item.getItem().getTemplate().getScripts());
+        super(game, ID, area, item.getItem().getName(), item.getItem().getDescription(), item.getItem().getScripts());
         this.item = item;
     }
 
     @Override
     public List<Action> localActions(Actor subject) {
         List<Action> actions = super.localActions(subject);
-        //actions.add(new ActionItemTake(this));
+        // Take
+        if(item.getCount() > 1) {
+            // Take all
+        }
         return actions;
     }
 
