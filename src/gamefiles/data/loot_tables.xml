@@ -15,7 +15,7 @@
     </lootTable>
     <lootTable id="weapon_ranged_3" useAll="true">
         <entry table="true" count="3">weapon_ranged</entry>
-        <entry>coin</entry>
+        <entry table="true">coins_5000</entry>
     </lootTable>
     <lootTable id="stratis_receptionist" useAll="true">
         <entry>pistol_light</entry>

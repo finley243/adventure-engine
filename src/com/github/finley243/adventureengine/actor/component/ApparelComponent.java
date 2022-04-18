@@ -43,8 +43,10 @@ public class ApparelComponent {
     }
 
     public void unequip(ItemApparel item) {
-        ((ApparelTemplate) item.getTemplate()).onUnequip(actor);
-        equipped.put(item.getApparelSlot(), null);
+        if (getEquippedItems().contains(item)) {
+            ((ApparelTemplate) item.getTemplate()).onUnequip(actor);
+            equipped.put(item.getApparelSlot(), null);
+        }
     }
 
     public Set<ItemApparel> getEquippedItems() {

@@ -7,6 +7,7 @@ public class MenuData implements Comparable<MenuData> {
     private int index;
     private final String prompt;
     private final boolean enabled;
+    // TODO - Find way to store unique IDs alongside display names for category, to allow displaying multiple items with the same name
     private final String[] category;
 
     public MenuData(String prompt, boolean enabled, String[] category) {

@@ -21,6 +21,7 @@ public class PerceptionHandler {
 		for(Actor actor : roomActors) {
 			if(e.getSubject() != null) {
 				// TODO - Fix "transitional" actions (e.g. moving through a door, actors in the destination cannot "see" the transition)
+				// Separately check that the subject is in a visible area and that the subject is otherwise visible (e.g. not behind cover)
 				if(actor.canSee(e.getSubject())) {
 					actor.onVisualEvent(e);
 				}

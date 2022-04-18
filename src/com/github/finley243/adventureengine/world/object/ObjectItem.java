@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.world.object;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionItemTake;
+import com.github.finley243.adventureengine.action.ActionItemTakeAll;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
@@ -17,6 +19,12 @@ public class ObjectItem extends WorldObject {
     public ObjectItem(Game game, String ID, Area area, Item item, int count) {
         super(game, ID, area, item.getName(), item.getDescription(), item.getTemplate().getScripts());
         this.item = item;
+        this.count = count;
+    }
+
+    @Override
+    public boolean isKnown() {
+        return false;
     }
 
     public Item getItem() {
@@ -34,9 +42,9 @@ public class ObjectItem extends WorldObject {
     @Override
     public List<Action> localActions(Actor subject) {
         List<Action> actions = super.localActions(subject);
-        // Take
+        actions.add(new ActionItemTake(this));
         if(count > 1) {
-            // Take all
+            actions.add(new ActionItemTakeAll(this));
         }
         return actions;
     }

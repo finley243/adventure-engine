@@ -4,6 +4,8 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.ItemApparel;
+import com.github.finley243.adventureengine.world.item.ItemEquippable;
 import com.github.finley243.adventureengine.world.item.ItemFactory;
 
 import java.util.ArrayList;
@@ -126,9 +128,17 @@ public class Inventory {
 	public void removeItem(Item item) {
 		if (item.getTemplate().hasState()) {
 			if (items.containsKey(item.getTemplate().getID())) {
-				items.get(item.getTemplate().getID()).remove(item);
+				boolean wasRemoved = items.get(item.getTemplate().getID()).remove(item);
 				if (items.get(item.getTemplate().getID()).isEmpty()) {
 					items.remove(item.getTemplate().getID());
+				}
+				if (wasRemoved && actor != null) {
+					if (item instanceof ItemApparel) {
+						actor.apparelComponent().unequip((ItemApparel) item);
+					}
+					if (item instanceof ItemEquippable) {
+						actor.equipmentComponent().unequip((ItemEquippable) item);
+					}
 				}
 			}
 		} else {
@@ -137,6 +147,14 @@ public class Inventory {
 				int newCount = count - 1;
 				if (newCount <= 0) {
 					itemsStateless.remove(item.getTemplate().getID());
+					if (actor != null) {
+						if (item instanceof ItemApparel) {
+							actor.apparelComponent().unequip((ItemApparel) item);
+						}
+						if (item instanceof ItemEquippable) {
+							actor.equipmentComponent().unequip((ItemEquippable) item);
+						}
+					}
 				} else {
 					itemsStateless.put(item.getTemplate().getID(), newCount);
 				}
@@ -152,6 +170,14 @@ public class Inventory {
 			int newCount = currentCount - count;
 			if (newCount <= 0) {
 				itemsStateless.remove(item.getTemplate().getID());
+				if (actor != null) {
+					if (item instanceof ItemApparel) {
+						actor.apparelComponent().unequip((ItemApparel) item);
+					}
+					if (item instanceof ItemEquippable) {
+						actor.equipmentComponent().unequip((ItemEquippable) item);
+					}
+				}
 			} else {
 				itemsStateless.put(item.getTemplate().getID(), newCount);
 			}
