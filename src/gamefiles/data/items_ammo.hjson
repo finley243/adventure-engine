@@ -1,0 +1,15 @@
+{
+    plugin: "items_ammo"
+    items: [
+        {
+            id: "ammo_pistol"
+            type: misc
+            name: "pistol round"
+        }
+        {
+            id: "ammo_rifle"
+            type: misc
+            name: "rifle round"
+        }
+    ]
+}

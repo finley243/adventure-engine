@@ -32,5 +32,10 @@
   		<artifactId>guava</artifactId>
   		<version>30.1-jre</version>
   	</dependency>
+    <dependency>
+        <groupId>org.hjson</groupId>
+        <artifactId>hjson</artifactId>
+        <version>3.0.0</version>
+    </dependency>
   </dependencies>
 </project>
