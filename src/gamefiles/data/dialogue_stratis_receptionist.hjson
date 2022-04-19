@@ -1,114 +1,114 @@
 {
-    plugin: "dialogue_stratis_receptionist"
-    topics: [
+  plugin: "dialogue_stratis_receptionist"
+  topics: [
+    {
+      id: "stratis_receptionist_start"
+      type: sel
+      lines: [
         {
-            id: "stratis_receptionist_start"
-            type: sel
-            lines: [
-                {
-                    redirect: "stratis_receptionist_main"
-                    once: true
-                    text: "\"Hello, welcome to the Stratis Hotel. How can I be of assistance?\""
-                }
-                {
-                    redirect: "stratis_receptionist_main"
-                    text: "\"Welcome back. How can I be of assistance?\""
-                }
-            ]
+          redirect: "stratis_receptionist_main"
+          once: true
+          text: "\"Hello, welcome to the Stratis Hotel. How can I be of assistance?\""
         }
         {
-            id: "stratis_receptionist_main_return"
-            lines: [
-                {
-                    redirect: "stratis_receptionist_main"
-                    text: "\"Very well. Anything else I can do for you?\""
-                }
-            ]
+          redirect: "stratis_receptionist_main"
+          text: "\"Welcome back. How can I be of assistance?\""
+        }
+      ]
+    }
+    {
+      id: "stratis_receptionist_main_return"
+      lines: [
+        {
+          redirect: "stratis_receptionist_main"
+          text: "\"Very well. Anything else I can do for you?\""
+        }
+      ]
+    }
+    {
+      id: "stratis_receptionist_main"
+      choices: [
+        {
+          link: "stratis_receptionist_request_room"
+          prompt: "Do you have any rooms available?"
+          condition: {
+            type: var
+            variable: "purchased_stratis_room"
+            equality: EQUAL
+            value: 0
+          }
         }
         {
-            id: "stratis_receptionist_main"
-            choices: [
-                {
-                    link: "stratis_receptionist_request_room"
-                    prompt: "Do you have any rooms available?"
-                    condition: {
-                        type: var
-                        variable: "purchased_stratis_room"
-                        equality: EQUAL
-                        value: 0
-                    }
-                }
-                {
-                    link: "stratis_receptionist_info"
-                    prompt: "I have some questions."
-                }
-                {
-                    link: "stratis_receptionist_end"
-                    prompt: "That will be all."
-                }
-            ]
+          link: "stratis_receptionist_info"
+          prompt: "I have some questions."
         }
         {
-            id: "stratis_receptionist_request_room"
-            lines: [
-                {
-                    text:
-                        '''
-                        He taps the screen in front of him and quickly scans its contents.
-                        "Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."
-                        '''
-                }
-            ]
-            choices: [
-                {
-                    link: "stratis_receptionist_purchase_room"
-                    prompt: "I'll take the room."
-                    condition: {
-                        type: money
-                        actor: {target: player}
-                        value: 300
-                    }
-                }
-                {
-                    link: "stratis_receptionist_main_return"
-                    prompt: "Not right now."
-                }
-            ]
+          link: "stratis_receptionist_end"
+          prompt: "That will be all."
+        }
+      ]
+    }
+    {
+      id: "stratis_receptionist_request_room"
+      lines: [
+        {
+          text:
+            '''
+            He taps the screen in front of him and quickly scans its contents.
+            "Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."
+            '''
+        }
+      ]
+      choices: [
+        {
+          link: "stratis_receptionist_purchase_room"
+          prompt: "I'll take the room."
+          condition: {
+            type: money
+            actor: {target: player}
+            value: 300
+          }
         }
         {
-            id: "stratis_receptionist_purchase_room"
-            lines: [
-                {
-                    text:
-                        '''
-                        "Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."
-                        He hands you a white keycard with the Stratis Hotel logo.
-                        '''
-                    script: {
-                        scripts: [
-                            {
-                                type: addItem
-                                actor: {target: player}
-                                item: "stratis_room_key"
-                            }
-                            {
-                                type: money
-                                actor: {target: player}
-                                value: -300
-                            }
-                            {
-                                type: varSet
-                                variable: "purchased_stratis_room"
-                                value: 1
-                            }
-                        ]
-                    }
-                }
-                {
-                    redirect: "stratis_receptionist_main"
-                    text: "\"Enjoy your stay. Is there anything else I can do for you?\""
-                }
-            ]
+          link: "stratis_receptionist_main_return"
+          prompt: "Not right now."
         }
-    ]
+      ]
+    }
+    {
+      id: "stratis_receptionist_purchase_room"
+      lines: [
+        {
+          text:
+            '''
+            "Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."
+            He hands you a white keycard with the Stratis Hotel logo.
+            '''
+          script: {
+            scripts: [
+              {
+                type: addItem
+                actor: {target: player}
+                item: "stratis_room_key"
+              }
+              {
+                type: money
+                actor: {target: player}
+                value: -300
+              }
+              {
+                type: varSet
+                variable: "purchased_stratis_room"
+                value: 1
+              }
+            ]
+          }
+        }
+        {
+          redirect: "stratis_receptionist_main"
+          text: "\"Enjoy your stay. Is there anything else I can do for you?\""
+        }
+      ]
+    }
+  ]
 }

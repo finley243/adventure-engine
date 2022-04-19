@@ -37,5 +37,10 @@
         <artifactId>hjson</artifactId>
         <version>3.0.0</version>
     </dependency>
+    <dependency>
+        <groupId>org.snakeyaml</groupId>
+        <artifactId>snakeyaml-engine</artifactId>
+        <version>1.0</version>
+    </dependency>
   </dependencies>
 </project>
