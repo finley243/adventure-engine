@@ -100,11 +100,11 @@ public class DataLoader {
         Context.Pronoun pronoun = LoadUtils.attributeEnum(nameElement, "pronoun", Context.Pronoun.class, Context.Pronoun.THEY);
         String faction = LoadUtils.singleTag(actorElement, "faction", "default");
         int hp = LoadUtils.attributeInt(actorElement, "hp", 0);
-        List<Limb> limbs = loadLimbs(LoadUtils.singleChildWithName(actorElement, "limbs"));
+        List<Limb> limbs = loadLimbs(actorElement);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
         String topic = LoadUtils.attribute(actorElement, "topic", null);
-        Map<Actor.Attribute, Integer> attributes = loadAttributes(LoadUtils.singleChildWithName(actorElement, "attributes"));
-        Map<Actor.Skill, Integer> skills = loadSkills(LoadUtils.singleChildWithName(actorElement, "skills"));
+        Map<Actor.Attribute, Integer> attributes = loadAttributes(actorElement);
+        Map<Actor.Skill, Integer> skills = loadSkills(actorElement);
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
         Element vendorElement = LoadUtils.singleChildWithName(actorElement, "vendor");
         boolean isVendor = vendorElement != null;
@@ -159,10 +159,10 @@ public class DataLoader {
         String topicID = topicElement.getAttribute("id");
         DialogueTopic.TopicType type;
         switch(topicElement.getAttribute("type")) {
-            case "sel":
+            case "select":
                 type = DialogueTopic.TopicType.SELECTOR;
                 break;
-            case "seq":
+            case "all":
             default:
                 type = DialogueTopic.TopicType.SEQUENTIAL;
                 break;
@@ -262,11 +262,13 @@ public class DataLoader {
                 int hours2 = LoadUtils.attributeInt(timeEndElement, "hours", 0);
                 int minutes2 = LoadUtils.attributeInt(timeEndElement, "minutes", 0);
                 return new ConditionTime(invert, hours1, minutes1, hours2, minutes2);
-            case "compound":
+            case "any":
+                List<Condition> subConditionsAny = loadSubConditions(conditionElement);
+                return new ConditionCompound(invert, subConditionsAny, true);
+            case "all":
             default:
-                List<Condition> subConditions = loadSubConditions(conditionElement);
-                boolean useOr = LoadUtils.attribute(conditionElement, "logic", "and").equalsIgnoreCase("or");
-                return new ConditionCompound(invert, subConditions, useOr);
+                List<Condition> subConditionsAll = loadSubConditions(conditionElement);
+                return new ConditionCompound(invert, subConditionsAll, false);
         }
     }
 
@@ -352,11 +354,13 @@ public class DataLoader {
             case "nearestActorScript":
                 String nearestTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
                 return new ScriptNearestActorWithScript(condition, nearestTrigger);
-            case "compound":
+            case "select":
+                List<Script> subScriptsSelect = loadSubScripts(scriptElement);
+                return new ScriptCompound(condition, subScriptsSelect, true);
+            case "all":
             default:
-                List<Script> subScripts = loadSubScripts(scriptElement);
-                boolean compoundSelect = LoadUtils.attributeBool(scriptElement, "select", false);
-                return new ScriptCompound(condition, subScripts, compoundSelect);
+                List<Script> subScriptsSequence = loadSubScripts(scriptElement);
+                return new ScriptCompound(condition, subScriptsSequence, false);
         }
     }
 

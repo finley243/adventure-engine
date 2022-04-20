@@ -1,5 +1,5 @@
 <data>
-    <topic id="stratis_receptionist_start" type="sel">
+    <topic id="stratis_receptionist_start" type="select">
         <line redirect="stratis_receptionist_main" once="true">
             <text>"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</text>
         </line>
@@ -31,7 +31,7 @@
         <line>
             <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
             <text>He hands you a white keycard with the Stratis Hotel logo.</text>
-            <script>
+            <script type="all">
                 <script type="addItem" actor="PLAYER" item="stratis_room_key"/>
                 <script type="money" actor="PLAYER" value="-300"/>
                 <script type="varSet" variable="purchased_stratis_room" value="1"/>

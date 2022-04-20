@@ -22,7 +22,7 @@ public abstract class ActionRandom extends Action {
         return ((int) Math.ceil(chance(subject)*100)) + "%";
     }
 
-    // If onStart returns false, the action will not process random success (onSuccess/onFail will be skipped)
+    /** If onStart returns false, the action will not process random success (onSuccess/onFail will be skipped) */
     public abstract boolean onStart(Actor subject);
 
     public abstract void onSuccess(Actor subject);

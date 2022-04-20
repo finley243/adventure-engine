@@ -10,6 +10,6 @@ public interface Moddable {
 
     void modifyState(String name, int amount);
 
-    void triggerSpecial(String name);
+    void triggerEffect(String name);
 
 }

@@ -24,6 +24,9 @@ public class ActionUseStart extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
+		if (object.userInCover()) {
+			subject.triggerScript("on_take_cover");
+		}
 		object.setUser(subject);
 		subject.startUsingObject(object);
 		Context context = new Context(new NounMapper().put("actor", subject).put("object", object).build());

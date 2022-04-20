@@ -187,7 +187,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public void triggerSpecial(String name) {}
+	public void triggerEffect(String name) {}
 
 	@Override
 	public void loadState(SaveData saveData) {

@@ -1,42 +1,36 @@
 <data>
     <actor id="default">
         <name proper="false" pronoun="THEY">DEFAULT</name>
-        <attributes>
-            <attribute key="BODY" value="4"/>
-            <attribute key="INTELLIGENCE" value="4"/>
-            <attribute key="CHARISMA" value="4"/>
-            <attribute key="DEXTERITY" value="4"/>
-            <attribute key="AGILITY" value="4"/>
-        </attributes>
-        <skills>
-            <skill key="MELEE" value="4"/>
-            <skill key="THROWING" value="4"/>
-            <skill key="SOFTWARE" value="4"/>
-            <skill key="HARDWARE" value="4"/>
-            <skill key="MEDICINE" value="4"/>
-            <skill key="BARTER" value="4"/>
-            <skill key="PERSUASION" value="4"/>
-            <skill key="DECEPTION" value="4"/>
-            <skill key="HANDGUNS" value="4"/>
-            <skill key="LONG_ARMS" value="4"/>
-            <skill key="LOCKPICK" value="4"/>
-            <skill key="STEALTH" value="4"/>
-        </skills>
-        <limbs>
-            <limb hitChance="0.7" damageMult="2.0" apparelSlot="HEAD">
-                <name>head</name>
-            </limb>
-            <limb hitChance="0.8" damageMult="1.0" apparelSlot="TORSO">
-                <name>arm</name>
-            </limb>
-            <limb hitChance="0.7" damageMult="1.0" apparelSlot="TORSO">
-                <name>hand</name>
-                <effect type="trigger" trigger="dropEquipped"/>
-            </limb>
-            <limb hitChance="0.85" damageMult="1.0" apparelSlot="LEGS">
-                <name>leg</name>
-            </limb>
-        </limbs>
+        <attribute key="BODY" value="4"/>
+        <attribute key="INTELLIGENCE" value="4"/>
+        <attribute key="CHARISMA" value="4"/>
+        <attribute key="DEXTERITY" value="4"/>
+        <attribute key="AGILITY" value="4"/>
+        <skill key="MELEE" value="4"/>
+        <skill key="THROWING" value="4"/>
+        <skill key="SOFTWARE" value="4"/>
+        <skill key="HARDWARE" value="4"/>
+        <skill key="MEDICINE" value="4"/>
+        <skill key="BARTER" value="4"/>
+        <skill key="PERSUASION" value="4"/>
+        <skill key="DECEPTION" value="4"/>
+        <skill key="HANDGUNS" value="4"/>
+        <skill key="LONG_ARMS" value="4"/>
+        <skill key="LOCKPICK" value="4"/>
+        <skill key="STEALTH" value="4"/>
+        <limb hitChance="0.7" damageMult="2.0" apparelSlot="HEAD">
+            <name>head</name>
+        </limb>
+        <limb hitChance="0.8" damageMult="1.0" apparelSlot="TORSO">
+            <name>arm</name>
+        </limb>
+        <limb hitChance="0.7" damageMult="1.0" apparelSlot="TORSO">
+            <name>hand</name>
+            <effect type="trigger" trigger="dropEquipped"/>
+        </limb>
+        <limb hitChance="0.85" damageMult="1.0" apparelSlot="LEGS">
+            <name>leg</name>
+        </limb>
     </actor>
     <actor id="player" parent="default" hp="50" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>

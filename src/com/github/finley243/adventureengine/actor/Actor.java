@@ -792,7 +792,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 
 	@Override
-	public void triggerSpecial(String name) {
+	public void triggerEffect(String name) {
 		switch(name) {
 			case "dropEquipped":
 				dropEquippedItem();

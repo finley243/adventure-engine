@@ -21,7 +21,7 @@ public class ActionTalk extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && !target.isInCombat();
+		return !disabled && !target.isInCombat() && subject.game().data().getTopic(target.getTopicID()).canChoose(target);
 	}
 	
 	@Override

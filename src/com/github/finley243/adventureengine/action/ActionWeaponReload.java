@@ -22,6 +22,7 @@ public class ActionWeaponReload extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
+		subject.triggerScript("on_reload");
 		if(subject == subject.game().data().getPlayer()) {
 			int ammoInInventory = subject.inventory().itemCount(weapon.getAmmoType());
 			int reloadCapacity = weapon.reloadCapacity();

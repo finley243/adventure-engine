@@ -13,7 +13,7 @@ public class EffectTrigger extends Effect {
 
     @Override
     public void start(Actor target) {
-        target.triggerSpecial(trigger);
+        target.triggerEffect(trigger);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class EffectTrigger extends Effect {
 
     @Override
     public void eachTurn(Actor target) {
-        target.triggerSpecial(trigger);
+        target.triggerEffect(trigger);
     }
 
     @Override

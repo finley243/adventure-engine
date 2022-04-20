@@ -70,6 +70,7 @@ public abstract class ActionAttack extends ActionRandom {
 
     @Override
     public boolean onStart(Actor subject) {
+        subject.triggerScript("on_attack");
         if(getTarget().targetingComponent() != null) {
             getTarget().targetingComponent().addCombatant(subject);
         }
@@ -109,12 +110,14 @@ public abstract class ActionAttack extends ActionRandom {
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getHitPhrase()), attackContext, this, subject));
         target.damage(damage, getLimb());
+        subject.triggerEffect("on_attack_success");
     }
 
     @Override
     public void onFail(Actor subject) {
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
         subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getMissPhrase()), attackContext, this, subject));
+        subject.triggerEffect("on_attack_failure");
     }
 
     public int ammoConsumed() {

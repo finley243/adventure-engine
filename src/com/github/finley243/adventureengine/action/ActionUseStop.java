@@ -23,6 +23,9 @@ public class ActionUseStop extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
+		if (object.userInCover()) {
+			subject.triggerScript("on_leave_cover");
+		}
 		object.removeUser();
 		subject.stopUsingObject();
 		Context context = new Context(new NounMapper().put("actor", subject).put("object", object).build());

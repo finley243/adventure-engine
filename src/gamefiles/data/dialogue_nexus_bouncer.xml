@@ -1,5 +1,5 @@
 <data>
-    <topic id="nexus_bouncer_start" type="sel">
+    <topic id="nexus_bouncer_start" type="select">
         <line once="true">
             <text>The bouncer glances at you and frowns.</text>
             <text>"This club is for VIPs only. I don't know you, so you're not gettin' in."</text>
