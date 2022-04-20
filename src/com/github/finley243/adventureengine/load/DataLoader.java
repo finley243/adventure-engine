@@ -255,10 +255,12 @@ public class DataLoader {
             case "inCombat":
                 return new ConditionActorInCombat(invert, actorRef);
             case "time":
-                int hours1 = LoadUtils.attributeInt(conditionElement, "hours1", 0);
-                int minutes1 = LoadUtils.attributeInt(conditionElement, "minutes1", 0);
-                int hours2 = LoadUtils.attributeInt(conditionElement, "hours2", 0);
-                int minutes2 = LoadUtils.attributeInt(conditionElement, "minutes2", 0);
+                Element timeStartElement = LoadUtils.singleChildWithName(conditionElement, "start");
+                Element timeEndElement = LoadUtils.singleChildWithName(conditionElement, "end");
+                int hours1 = LoadUtils.attributeInt(timeStartElement, "hours", 0);
+                int minutes1 = LoadUtils.attributeInt(timeStartElement, "minutes", 0);
+                int hours2 = LoadUtils.attributeInt(timeEndElement, "hours", 0);
+                int minutes2 = LoadUtils.attributeInt(timeEndElement, "minutes", 0);
                 return new ConditionTime(invert, hours1, minutes1, hours2, minutes2);
             case "compound":
             default:

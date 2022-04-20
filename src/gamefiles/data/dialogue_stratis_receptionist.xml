@@ -23,7 +23,7 @@
             <text>He taps the screen in front of him and quickly scans its contents.</text>
             <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."</text>
         </line>
-        <choice link="stratis_receptionist_purchase_room" once="true">I'll take the room.</choice>
+        <choice link="stratis_receptionist_purchase_room">I'll take the room.</choice>
         <choice link="stratis_receptionist_main_return">Not right now.</choice>
     </topic>
     <topic id="stratis_receptionist_purchase_room">
