@@ -3,23 +3,12 @@
         <name>Nitron Cola</name>
         <price>10</price>
         <type>DRINK</type>
-        <effects>
-            <effect type="state">
-                <state>hp</state>
-                <amount>10</amount>
-            </effect>
-        </effects>
+        <effect type="state" state="hp" amount="10"/>
     </item>
     <item type="consumable" id="nitron_diet">
         <name>Nitron Sharpshooter</name>
         <price>10</price>
         <type>DRINK</type>
-        <effects>
-            <effect type="statMod">
-                <stat type="int">handguns</stat>
-                <amount>9</amount>
-                <duration>3</duration>
-            </effect>
-        </effects>
+        <effect type="statMod" duration="3" statType="int" stat="handguns" amount="9"/>
     </item>
 </data>

@@ -1,125 +1,85 @@
 <data>
     <actor id="default">
-        <name proper="false">DEFAULT</name>
-        <pronoun>THEY</pronoun>
+        <name proper="false" pronoun="THEY">DEFAULT</name>
         <attributes>
-            <attribute key="BODY">4</attribute>
-            <attribute key="INTELLIGENCE">4</attribute>
-            <attribute key="CHARISMA">4</attribute>
-            <attribute key="DEXTERITY">4</attribute>
-            <attribute key="AGILITY">4</attribute>
+            <attribute key="BODY" value="4"/>
+            <attribute key="INTELLIGENCE" value="4"/>
+            <attribute key="CHARISMA" value="4"/>
+            <attribute key="DEXTERITY" value="4"/>
+            <attribute key="AGILITY" value="4"/>
         </attributes>
         <skills>
-            <skill key="MELEE">4</skill>
-            <skill key="THROWING">4</skill>
-            <skill key="SOFTWARE">4</skill>
-            <skill key="HARDWARE">4</skill>
-            <skill key="MEDICINE">4</skill>
-            <skill key="BARTER">4</skill>
-            <skill key="PERSUASION">4</skill>
-            <skill key="DECEPTION">4</skill>
-            <skill key="HANDGUNS">4</skill>
-            <skill key="LONG_ARMS">4</skill>
-            <skill key="LOCKPICK">4</skill>
-            <skill key="STEALTH">4</skill>
+            <skill key="MELEE" value="4"/>
+            <skill key="THROWING" value="4"/>
+            <skill key="SOFTWARE" value="4"/>
+            <skill key="HARDWARE" value="4"/>
+            <skill key="MEDICINE" value="4"/>
+            <skill key="BARTER" value="4"/>
+            <skill key="PERSUASION" value="4"/>
+            <skill key="DECEPTION" value="4"/>
+            <skill key="HANDGUNS" value="4"/>
+            <skill key="LONG_ARMS" value="4"/>
+            <skill key="LOCKPICK" value="4"/>
+            <skill key="STEALTH" value="4"/>
         </skills>
         <limbs>
-            <limb>
+            <limb hitChance="0.7" damageMult="2.0" apparelSlot="HEAD">
                 <name>head</name>
-                <hitChance>0.70</hitChance>
-                <damageMult>2.00</damageMult>
-                <apparelSlot>HEAD</apparelSlot>
             </limb>
-            <limb>
+            <limb hitChance="0.8" damageMult="1.0" apparelSlot="TORSO">
                 <name>arm</name>
-                <hitChance>0.80</hitChance>
-                <damageMult>1.00</damageMult>
-                <apparelSlot>TORSO</apparelSlot>
             </limb>
-            <limb>
+            <limb hitChance="0.7" damageMult="1.0" apparelSlot="TORSO">
                 <name>hand</name>
-                <hitChance>0.70</hitChance>
-                <damageMult>1.00</damageMult>
-                <apparelSlot>TORSO</apparelSlot>
-                <effects>
-                    <effect type="trigger">
-                        <trigger>dropEquipped</trigger>
-                    </effect>
-                </effects>
+                <effect type="trigger" trigger="dropEquipped"/>
             </limb>
-            <limb>
+            <limb hitChance="0.85" damageMult="1.0" apparelSlot="LEGS">
                 <name>leg</name>
-                <hitChance>0.85</hitChance>
-                <damageMult>1.00</damageMult>
-                <apparelSlot>LEGS</apparelSlot>
             </limb>
         </limbs>
     </actor>
-    <actor id="player" parent="default">
-        <name proper="true">PLAYER</name>
-        <pronoun>YOU</pronoun>
-        <faction>player</faction>
-        <hp>50</hp>
+    <actor id="player" parent="default" hp="50" faction="player">
+        <name proper="true" pronoun="YOU">PLAYER</name>
         <inventory>
-            <entry table="true">player</entry>
+            <table>player</table>
         </inventory>
     </actor>
-    <actor id="stratis_receptionist" parent="default">
-        <name proper="false">receptionist</name>
-        <pronoun>HE</pronoun>
-        <faction>stratis_hotel_staff</faction>
-        <hp>40</hp>
+    <actor id="stratis_receptionist" parent="default" hp="40" faction="stratis_hotel_staff" topic="stratis_receptionist_start">
+        <name proper="false" pronoun="HE">receptionist</name>
         <inventory>
-            <entry table="true">stratis_receptionist</entry>
-        </inventory>
-        <topic>stratis_receptionist_start</topic>
-    </actor>
-    <actor id="stratis_guard" parent="default">
-        <name proper="false">guard</name>
-        <pronoun>HE</pronoun>
-        <faction>stratis_hotel_staff</faction>
-        <hp>70</hp>
-        <inventory>
-            <!--<entry table="true">stratis_guard</entry>-->
-            <entry>katana</entry>
+            <table>stratis_receptionist</table>
         </inventory>
     </actor>
-    <actor id="enemy" parent="default">
-        <name proper="false">ganger</name>
-        <pronoun>HE</pronoun>
-        <faction>enemy</faction>
-        <hp>40</hp>
+    <actor id="stratis_guard" parent="default" hp="70" faction="stratis_hotel_staff">
+        <name proper="false" pronoun="HE">guard</name>
         <inventory>
-            <entry table="true">weapon_ranged</entry>
+            <!--<table>stratis_guard</table>-->
+            <item>katana</item>
         </inventory>
-        <script trigger="on_combat_start" type="bark">
-            <chance>0.8</chance>
+    </actor>
+    <actor id="enemy" parent="default" hp="40" faction="enemy">
+        <name proper="false" pronoun="HE">ganger</name>
+        <inventory>
+            <table>weapon_ranged</table>
+        </inventory>
+        <script trigger="on_combat_start" type="bark" chance="0.8">
             <line>"Finally, some action!" $_actor yell$s_actor</line>
             <line>"Can't wait to take you down!" $_actor yell$s_actor</line>
             <line>"Get 'em!" $_actor yell$s_actor</line>
         </script>
     </actor>
-    <actor id="nexus_bouncer" parent="default">
-        <name proper="false">bouncer</name>
-        <pronoun>HE</pronoun>
-        <faction>nexus_staff</faction>
-        <hp>70</hp>
+    <actor id="nexus_bouncer" parent="default" hp="70" faction="nexus_staff" topic="nexus_bouncer_start">
+        <name proper="false" pronoun="HE">bouncer</name>
         <inventory>
-            <entry table="true">nexus_bouncer</entry>
+            <table>nexus_bouncer</table>
         </inventory>
-        <topic>nexus_bouncer_start</topic>
     </actor>
-    <actor id="test_vendor" parent="default">
-        <name proper="false">vendor</name>
-        <pronoun>SHE</pronoun>
-        <faction>nexus_staff</faction>
-        <hp>40</hp>
+    <actor id="test_vendor" parent="default" hp="40" faction="nexus_staff" topic="stratis_receptionist_start">
+        <name proper="false" pronoun="SHE">vendor</name>
         <inventory>
-            <entry table="true">stratis_receptionist</entry>
+            <table>stratis_receptionist</table>
         </inventory>
-        <topic>stratis_receptionist_start</topic>
-        <vendor>
-            <lootTable>weapon_ranged_3</lootTable>
+        <vendor lootTable="weapon_ranged_3">
             <buyTag>weapon_ranged</buyTag>
         </vendor>
     </actor>

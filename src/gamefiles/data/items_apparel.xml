@@ -10,9 +10,6 @@
         <price>30</price>
         <slot>HEAD</slot>
         <damageResistance>5</damageResistance>
-        <effect type="statMod">
-            <stat type="int">maxHP</stat>
-            <amount>10</amount>
-        </effect>
+        <effect type="statMod" statType="int" stat="maxHP" amount="10"/>
     </item>
 </data>

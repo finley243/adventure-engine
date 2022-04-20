@@ -1,35 +1,38 @@
 <data>
     <lootTable id="player" useAll="true">
-        <entry>pistol_heavy</entry>
-        <entry>baseball_bat</entry>
-        <entry count="20">ammo_pistol</entry>
+        <item>pistol_heavy</item>
+        <item>baseball_bat</item>
+        <item>tactical_vest</item>
+        <item>tactical_helmet</item>
+        <item>nitron_cola</item>
+        <item count="20">ammo_pistol</item>
     </lootTable>
     <lootTable id="weapon_melee" useAll="false">
-        <entry>baseball_bat</entry>
-        <entry>katana</entry>
+        <item>baseball_bat</item>
+        <item>katana</item>
     </lootTable>
     <lootTable id="weapon_ranged" useAll="false">
-        <entry>pistol_light</entry>
-        <entry>pistol_heavy</entry>
-        <entry>rifle_auto</entry>
+        <item>pistol_light</item>
+        <item>pistol_heavy</item>
+        <item>rifle_auto</item>
     </lootTable>
     <lootTable id="weapon_ranged_3" useAll="true">
-        <entry table="true" count="3">weapon_ranged</entry>
-        <entry table="true">coins_5000</entry>
+        <table count="3">weapon_ranged</table>
+        <table>coins_5000</table>
     </lootTable>
     <lootTable id="stratis_receptionist" useAll="true">
-        <entry>pistol_light</entry>
-        <entry>stratis_master_key</entry>
+        <item>pistol_light</item>
+        <item>stratis_master_key</item>
     </lootTable>
     <lootTable id="stratis_guard" useAll="true">
-        <entry>rifle_auto</entry>
-        <entry>stratis_security_key</entry>
+        <item>rifle_auto</item>
+        <item>stratis_security_key</item>
     </lootTable>
     <lootTable id="nexus_bouncer" useAll="true">
-        <entry table="true">weapon_melee</entry>
-        <entry>nexus_bouncer_key</entry>
+        <table>weapon_melee</table>
+        <item>nexus_bouncer_key</item>
     </lootTable>
     <lootTable id="coins_5000">
-        <entry count="5000">coin</entry>
+        <item count="5000">coin</item>
     </lootTable>
 </data>

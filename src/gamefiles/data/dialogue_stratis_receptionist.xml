@@ -18,11 +18,7 @@
         <choice link="stratis_receptionist_end">That will be all.</choice>
     </topic>
     <topic id="stratis_receptionist_request_room">
-        <condition type="var">
-            <variable>purchased_stratis_room</variable>
-            <equality>EQUAL</equality>
-            <value>0</value>
-        </condition>
+        <condition type="var" variable="purchased_stratis_room" equality="EQUAL" value="0"/>
         <line>
             <text>He taps the screen in front of him and quickly scans its contents.</text>
             <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."</text>
@@ -31,26 +27,14 @@
         <choice link="stratis_receptionist_main_return">Not right now.</choice>
     </topic>
     <topic id="stratis_receptionist_purchase_room">
-        <condition type="money">
-            <actor target="player"/>
-            <value>300</value>
-        </condition>
+        <condition type="money" actor="PLAYER" value="300"/>
         <line>
             <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
             <text>He hands you a white keycard with the Stratis Hotel logo.</text>
-            <script type="compound">
-                <script type="addItem">
-                    <actor target="player"/>
-                    <item>stratis_room_key</item>
-                </script>
-                <script type="money">
-                    <actor target="player"/>
-                    <value>-300</value>
-                </script>
-                <script type="varSet">
-                    <variable>purchased_stratis_room</variable>
-                    <value>1</value>
-                </script>
+            <script>
+                <script type="addItem" actor="PLAYER" item="stratis_room_key"/>
+                <script type="money" actor="PLAYER" value="-300"/>
+                <script type="varSet" variable="purchased_stratis_room" value="1"/>
             </script>
         </line>
         <line redirect="stratis_receptionist_main">
@@ -68,32 +52,27 @@
         <choice link="stratis_receptionist_main_return">That's all.</choice>
     </topic>
     <topic id="stratis_receptionist_info_amenities">
-        <line redirect="stratis_receptionist_main">
+        <line redirect="stratis_receptionist_info">
             <text>The receptionist grins slightly.</text>
-            <text>"Everything you could need. Five-star restaurant, rooftop pool."</text>
-            <text>"We also provide the fastest network access of any hotel in the area, included with every room."</text>
+            <text>"Everything you could need. Five-star restaurant, rooftop pool. We also provide the fastest network access of any hotel in the area, included with every room."</text>
         </line>
     </topic>
     <topic id="stratis_receptionist_info_guests">
-        <line redirect="stratis_receptionist_main">
+        <line redirect="stratis_receptionist_info">
             <text>"Why yes, of course. The Stratis is the best, and most secure, hotel in the area."</text>
         </line>
     </topic>
     <topic id="stratis_receptionist_info_rees">
-        <line redirect="stratis_receptionist_main">
+        <line redirect="stratis_receptionist_info">
             <text>The receptionist narrows his eyes.</text>
-            <text>"We can't disclose the identity of our guests to the public."</text>
-            <text>"As you can imagine, that would be bad for business."</text>
+            <text>"We can't disclose the identity of our guests to the public. As you can imagine, that would be bad for business."</text>
         </line>
     </topic>
     <topic id="stratis_receptionist_combat">
         <line exit="true">
-            <text>The receptionist grits his teeth.</text>
-            <text>"I don't give up that easily."</text>
-            <script type="combat">
-                <actor target="subject"/>
-                <combatant target="player"/>
-            </script>
+            <text>The receptionist smirks.</text>
+            <text>"You think you're the first to try that here?"</text>
+            <script type="combat" combatant="PLAYER"/>
         </line>
     </topic>
     <topic id="stratis_receptionist_end">

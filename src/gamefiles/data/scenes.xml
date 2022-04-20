@@ -1,22 +1,10 @@
 <data>
-    <scene id="stratis_lobby_intro" isRepeatable="true" playImmediately="false">
-        <chance>1.0</chance>
-        <cooldown>7</cooldown>
-        <condition type="compound" logic="and">
-            <condition type="actorAvailableForScene">
-                <actor target="reference">stratis_receptionist</actor>
-            </condition>
-            <condition type="actorAvailableForScene">
-                <actor target="reference">stratis_guard_lobby</actor>
-            </condition>
-            <condition type="actorLocation">
-                <actor target="reference">stratis_receptionist</actor>
-                <area>stratis_hotel_lobby_desk</area>
-            </condition>
-            <condition type="actorLocation">
-                <actor target="reference">stratis_guard_lobby</actor>
-                <area>stratis_hotel_lobby_seating</area>
-            </condition>
+    <scene id="stratis_lobby_intro" isRepeatable="true" playImmediately="false" chance="1.0" cooldown="7">
+        <condition>
+            <condition type="actorAvailableForScene" actor="stratis_receptionist"/>
+            <condition type="actorAvailableForScene" actor="stratis_guard_lobby"/>
+            <condition type="actorLocation" actor="stratis_receptionist" area="stratis_hotel_lobby_desk"/>
+            <condition type="actorLocation" actor="stratis_guard_lobby" area="stratis_hotel_lobby_seating"/>
         </condition>
         <line>
             <text>The receptionist leans on the desk and sighs. He looks up from the computer, towards the security guard standing near the seating area.</text>
@@ -26,28 +14,17 @@
             <text>As he turns back to the computer, he notices you and clears his throat.</text>
         </line>
     </scene>
-    <scene id="test_weapon_bark">
-        <chance>1.0</chance>
-        <cooldown>0</cooldown>
+    <scene id="test_weapon_bark" chance="1.0" cooldown="0">
         <line>
-            <condition type="equippedItem">
-                <actor target="player"></actor>
-                <tag>weapon_handgun</tag>
-            </condition>
+            <condition type="equippedItem" actor="PLAYER" tag="weapon_handgun"/>
             <text>"Hey, holster that firearm! No open carry allowed here."</text>
         </line>
         <line>
-            <condition type="equippedItem">
-                <actor target="player"></actor>
-                <tag>weapon_long_arm</tag>
-            </condition>
+            <condition type="equippedItem" actor="PLAYER" tag="weapon_long_arm"/>
             <text>"Hey, put away that rifle! No open carry allowed here."</text>
         </line>
         <line>
-            <condition type="equippedItem">
-                <actor target="player"></actor>
-                <tag>weapon_melee</tag>
-            </condition>
+            <condition type="equippedItem" actor="PLAYER" tag="weapon_melee"/>
             <text>"Hey, put that away! No open carry allowed here. And that applies to ALL weapons, not just guns."</text>
         </line>
     </scene>

@@ -97,19 +97,18 @@ public class DataLoader {
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
         String name = nameElement != null ? nameElement.getTextContent() : null;
         boolean nameIsProper = nameElement != null && LoadUtils.attributeBool(nameElement, "proper", false);
-        Context.Pronoun pronoun = LoadUtils.singleTagEnum(actorElement, "pronoun", Context.Pronoun.class, Context.Pronoun.THEY);
+        Context.Pronoun pronoun = LoadUtils.attributeEnum(nameElement, "pronoun", Context.Pronoun.class, Context.Pronoun.THEY);
         String faction = LoadUtils.singleTag(actorElement, "faction", "default");
-        int hp = LoadUtils.singleTagInt(actorElement, "hp", 0);
+        int hp = LoadUtils.attributeInt(actorElement, "hp", 0);
         List<Limb> limbs = loadLimbs(LoadUtils.singleChildWithName(actorElement, "limbs"));
-        //String lootTable = LoadUtils.singleTag(actorElement, "lootTable", null);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
-        String topic = LoadUtils.singleTag(actorElement, "topic", null);
+        String topic = LoadUtils.attribute(actorElement, "topic", null);
         Map<Actor.Attribute, Integer> attributes = loadAttributes(LoadUtils.singleChildWithName(actorElement, "attributes"));
         Map<Actor.Skill, Integer> skills = loadSkills(LoadUtils.singleChildWithName(actorElement, "skills"));
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
         Element vendorElement = LoadUtils.singleChildWithName(actorElement, "vendor");
         boolean isVendor = vendorElement != null;
-        String vendorLootTable = LoadUtils.singleTag(vendorElement, "lootTable", null);
+        String vendorLootTable = LoadUtils.attribute(vendorElement, "lootTable", null);
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
         boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
         boolean vendorStartDisabled = LoadUtils.singleTagBoolean(vendorElement, "startDisabled", false);
@@ -127,10 +126,10 @@ public class DataLoader {
 
     private static Limb loadLimb(Element element) {
         String name = LoadUtils.singleTag(element, "name", null);
-        float hitChance = LoadUtils.singleTagFloat(element, "hitChance", 1.0f);
-        float damageMult = LoadUtils.singleTagFloat(element, "damageMult", 1.0f);
-        ApparelComponent.ApparelSlot apparelSlot = LoadUtils.singleTagEnum(element, "apparelSlot", ApparelComponent.ApparelSlot.class, ApparelComponent.ApparelSlot.TORSO);
-        List<Effect> crippledEffects = loadEffects(LoadUtils.singleChildWithName(element, "effects"), false);
+        float hitChance = LoadUtils.attributeFloat(element, "hitChance", 1.0f);
+        float damageMult = LoadUtils.attributeFloat(element, "damageMult", 1.0f);
+        ApparelComponent.ApparelSlot apparelSlot = LoadUtils.attributeEnum(element, "apparelSlot", ApparelComponent.ApparelSlot.class, ApparelComponent.ApparelSlot.TORSO);
+        List<Effect> crippledEffects = loadEffects(element, false);
         return new Limb(name, hitChance, damageMult, apparelSlot, crippledEffects);
     }
 
@@ -139,7 +138,7 @@ public class DataLoader {
         if(element == null) return attributes;
         for(Element attributeElement : LoadUtils.directChildrenWithName(element, "attribute")) {
             Actor.Attribute attribute = LoadUtils.attributeEnum(attributeElement, "key", Actor.Attribute.class, null);
-            int value = Integer.parseInt(attributeElement.getTextContent());
+            int value = LoadUtils.attributeInt(attributeElement, "value", 0);
             attributes.put(attribute, value);
         }
         return attributes;
@@ -150,7 +149,7 @@ public class DataLoader {
         if(element == null) return skills;
         for(Element skillElement : LoadUtils.directChildrenWithName(element, "skill")) {
             Actor.Skill skill = LoadUtils.attributeEnum(skillElement, "key", Actor.Skill.class, null);
-            int value = Integer.parseInt(skillElement.getTextContent());
+            int value = LoadUtils.attributeInt(skillElement, "value", 0);
             skills.put(skill, value);
         }
         return skills;
@@ -211,24 +210,24 @@ public class DataLoader {
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch(type) {
             case "money":
-                int moneyAmount = LoadUtils.singleTagInt(conditionElement, "value", 0);
+                int moneyAmount = LoadUtils.attributeInt(conditionElement, "value", 0);
                 return new ConditionMoney(invert, actorRef, moneyAmount);
             case "var":
-                String varID = LoadUtils.singleTag(conditionElement, "variable", null);
-                Condition.Equality varEquality = LoadUtils.singleTagEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
-                int varValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
+                String varID = LoadUtils.attribute(conditionElement, "variable", null);
+                Condition.Equality varEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
+                int varValue = LoadUtils.attributeInt(conditionElement, "value", 0);
                 return new ConditionVariable(invert, varID, varEquality, varValue);
             case "attribute":
-                Actor.Attribute attribute = LoadUtils.singleTagEnum(conditionElement, "attribute", Actor.Attribute.class, null);
-                int attributeValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
+                Actor.Attribute attribute = LoadUtils.attributeEnum(conditionElement, "attribute", Actor.Attribute.class, null);
+                int attributeValue = LoadUtils.attributeInt(conditionElement, "value", 0);
                 return new ConditionAttribute(invert, actorRef, attribute, attributeValue);
             case "skill":
-                Actor.Skill skill = LoadUtils.singleTagEnum(conditionElement, "skill", Actor.Skill.class, null);
-                int skillValue = LoadUtils.singleTagInt(conditionElement, "value", 0);
+                Actor.Skill skill = LoadUtils.attributeEnum(conditionElement, "skill", Actor.Skill.class, null);
+                int skillValue = LoadUtils.attributeInt(conditionElement, "value", 0);
                 return new ConditionSkill(invert, actorRef, skill, skillValue);
             case "actorLocation":
-                String actorArea = LoadUtils.singleTag(conditionElement, "area", null);
-                String actorRoom = LoadUtils.singleTag(conditionElement, "room", null);
+                String actorArea = LoadUtils.attribute(conditionElement, "area", null);
+                String actorRoom = LoadUtils.attribute(conditionElement, "room", null);
                 boolean useRoom = actorArea == null;
                 return new ConditionActorLocation(invert, actorRef, (useRoom ? actorRoom : actorArea), useRoom);
             case "actorAvailableForScene":
@@ -236,19 +235,19 @@ public class DataLoader {
             case "actorDead":
                 return new ConditionActorDead(invert, actorRef);
             case "actorHP":
-                Condition.Equality hpEquality = LoadUtils.singleTagEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
-                float hpValue = LoadUtils.singleTagFloat(conditionElement, "value", 0);
+                Condition.Equality hpEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
+                float hpValue = LoadUtils.attributeFloat(conditionElement, "value", 0);
                 return new ConditionActorHP(invert, actorRef, hpEquality, hpValue);
             case "combatant":
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatant(invert, actorRef, targetRef);
             case "equippedItem":
-                String itemEquipTag = LoadUtils.singleTag(conditionElement, "tag", null);
-                String itemEquipExact = LoadUtils.singleTag(conditionElement, "exact", null);
+                String itemEquipTag = LoadUtils.attribute(conditionElement, "tag", null);
+                String itemEquipExact = LoadUtils.attribute(conditionElement, "exact", null);
                 return new ConditionEquippedItem(invert, actorRef, itemEquipTag, itemEquipExact);
             case "inventoryItem":
-                String itemInvTag = LoadUtils.singleTag(conditionElement, "tag", null);
-                String itemInvExact = LoadUtils.singleTag(conditionElement, "exact", null);
+                String itemInvTag = LoadUtils.attribute(conditionElement, "tag", null);
+                String itemInvExact = LoadUtils.attribute(conditionElement, "exact", null);
                 return new ConditionInventoryItem(invert, actorRef, itemInvTag, itemInvExact);
             case "actorVisible":
                 ActorReference visibleTargetRef = loadActorReference(conditionElement, "target");
@@ -256,10 +255,10 @@ public class DataLoader {
             case "inCombat":
                 return new ConditionActorInCombat(invert, actorRef);
             case "time":
-                int hours1 = LoadUtils.singleTagInt(conditionElement, "hours1", 0);
-                int minutes1 = LoadUtils.singleTagInt(conditionElement, "minutes1", 0);
-                int hours2 = LoadUtils.singleTagInt(conditionElement, "hours2", 0);
-                int minutes2 = LoadUtils.singleTagInt(conditionElement, "minutes2", 0);
+                int hours1 = LoadUtils.attributeInt(conditionElement, "hours1", 0);
+                int minutes1 = LoadUtils.attributeInt(conditionElement, "minutes1", 0);
+                int hours2 = LoadUtils.attributeInt(conditionElement, "hours2", 0);
+                int minutes2 = LoadUtils.attributeInt(conditionElement, "minutes2", 0);
                 return new ConditionTime(invert, hours1, minutes1, hours2, minutes2);
             case "compound":
             default:
@@ -308,48 +307,48 @@ public class DataLoader {
         ActorReference actorRef = loadActorReference(scriptElement, "actor");
         switch(type) {
             case "external":
-                String scriptID = LoadUtils.singleTag(scriptElement, "scriptID", null);
+                String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
                 return new ScriptExternal(condition, scriptID);
             case "money":
-                int moneyValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
+                int moneyValue = LoadUtils.attributeInt(scriptElement, "value", 0);
                 return new ScriptMoney(condition, actorRef, moneyValue);
             case "addItem":
-                String addItemID = LoadUtils.singleTag(scriptElement, "item", null);
+                String addItemID = LoadUtils.attribute(scriptElement, "item", null);
                 return new ScriptAddItem(condition, actorRef, addItemID);
             case "scene":
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
                 return new ScriptScene(condition, scenes);
             case "varSet":
-                String varSetID = LoadUtils.singleTag(scriptElement, "variable", null);
-                int varSetValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
+                String varSetID = LoadUtils.attribute(scriptElement, "variable", null);
+                int varSetValue = LoadUtils.attributeInt(scriptElement, "value", 0);
                 return new ScriptVariableSet(condition, varSetID, varSetValue);
             case "varMod":
-                String varModID = LoadUtils.singleTag(scriptElement, "variable", null);
-                int varModValue = LoadUtils.singleTagInt(scriptElement, "value", 0);
+                String varModID = LoadUtils.attribute(scriptElement, "variable", null);
+                int varModValue = LoadUtils.attributeInt(scriptElement, "value", 0);
                 return new ScriptVariableMod(condition, varModID, varModValue);
             case "dialogue":
-                String topic = LoadUtils.singleTag(scriptElement, "topic", null);
+                String topic = LoadUtils.attribute(scriptElement, "topic", null);
                 return new ScriptDialogue(condition, actorRef, topic);
             case "combat":
                 ActorReference combatantRef = loadActorReference(scriptElement, "combatant");
                 return new ScriptCombat(condition, actorRef, combatantRef);
             case "factionRelation":
-                String targetFaction = LoadUtils.singleTag(scriptElement, "targetFaction", null);
-                String relationFaction = LoadUtils.singleTag(scriptElement, "relationFaction", null);
-                Faction.FactionRelation relation = LoadUtils.singleTagEnum(scriptElement, "relation", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
+                String targetFaction = LoadUtils.attribute(scriptElement, "targetFaction", null);
+                String relationFaction = LoadUtils.attribute(scriptElement, "relationFaction", null);
+                Faction.FactionRelation relation = LoadUtils.attributeEnum(scriptElement, "relation", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
                 return new ScriptFactionRelation(condition, targetFaction, relationFaction, relation);
             case "moveActor":
-                String moveActorArea = LoadUtils.singleTag(scriptElement, "area", null);
+                String moveActorArea = LoadUtils.attribute(scriptElement, "area", null);
                 return new ScriptMoveActor(condition, actorRef, moveActorArea);
             case "actorState":
-                boolean actorEnabled = LoadUtils.singleTagBoolean(scriptElement, "enabled", true);
+                boolean actorEnabled = LoadUtils.attributeBool(scriptElement, "enabled", true);
                 return new ScriptActorState(condition, actorRef, actorEnabled);
             case "bark":
                 List<String> barkLines = LoadUtils.listOfTags(scriptElement, "line");
-                float barkChance = LoadUtils.singleTagFloat(scriptElement, "chance", 1.0f);
+                float barkChance = LoadUtils.attributeFloat(scriptElement, "chance", 1.0f);
                 return new ScriptBark(condition, actorRef, barkLines, barkChance);
             case "nearestActorScript":
-                String nearestTrigger = LoadUtils.singleTag(scriptElement, "trigger", null);
+                String nearestTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
                 return new ScriptNearestActorWithScript(condition, nearestTrigger);
             case "compound":
             default:
@@ -359,25 +358,17 @@ public class DataLoader {
         }
     }
 
-    private static ActorReference loadActorReference(Element parentElement, String name) {
-        Element refElement = LoadUtils.singleChildWithName(parentElement, name);
-        if(refElement == null) return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
-        String targetTypeString = refElement.getAttribute("target");
-        ActorReference.ReferenceType targetType;
-        switch(targetTypeString) {
-            case "player":
-                targetType = ActorReference.ReferenceType.PLAYER;
-                break;
-            case "reference":
-                targetType = ActorReference.ReferenceType.REFERENCE;
-                break;
-            case "subject":
+    private static ActorReference loadActorReference(Element element, String name) {
+        if(element == null || !element.hasAttribute(name)) return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
+        String targetRef = element.getAttribute(name);
+        switch (targetRef) {
+            case "PLAYER":
+                return new ActorReference(ActorReference.ReferenceType.PLAYER, null);
+            case "SUBJECT":
+                return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
             default:
-                targetType = ActorReference.ReferenceType.SUBJECT;
-                break;
+                return new ActorReference(ActorReference.ReferenceType.REFERENCE, targetRef);
         }
-        String targetRef = refElement.getTextContent();
-        return new ActorReference(targetType, targetRef);
     }
 
     private static Faction loadFaction(Element factionElement) {
@@ -416,7 +407,7 @@ public class DataLoader {
                 return new ApparelTemplate(id, name, description, scripts, price, apparelSlot, damageResistance, apparelEffects);
             case "consumable":
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.singleTagEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
-                List<Effect> consumableEffects = loadEffects(LoadUtils.singleChildWithName(itemElement, "effects"), false);
+                List<Effect> consumableEffects = loadEffects(itemElement, false);
                 return new ConsumableTemplate(id, name, description, scripts, price, consumableType, consumableEffects);
             case "weapon":
                 WeaponTemplate.WeaponType weaponType = LoadUtils.singleTagEnum(itemElement, "type", WeaponTemplate.WeaponType.class, null);
@@ -452,29 +443,29 @@ public class DataLoader {
     private static Effect loadEffect(Element effectElement, boolean manualRemoval) {
         if(effectElement == null) return null;
         String effectType = effectElement.getAttribute("type");
-        int duration = LoadUtils.singleTagInt(effectElement, "duration", 0);
+        int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
         switch(effectType) {
             case "state":
-                String state = LoadUtils.singleTag(effectElement, "state", null);
-                int stateAmount = LoadUtils.singleTagInt(effectElement, "amount", 0);
+                String state = LoadUtils.attribute(effectElement, "state", null);
+                int stateAmount = LoadUtils.attributeInt(effectElement, "amount", 0);
                 return new EffectStateInt(duration, manualRemoval, state, stateAmount);
             case "trigger":
-                String trigger = LoadUtils.singleTag(effectElement, "trigger", null);
+                String trigger = LoadUtils.attribute(effectElement, "trigger", null);
                 return new EffectTrigger(duration, manualRemoval, trigger);
             case "statMod":
-                String statMod = LoadUtils.singleTag(effectElement, "stat", null);
-                String statModType = LoadUtils.attribute(LoadUtils.singleChildWithName(effectElement, "stat"), "type", null);
+                String statMod = LoadUtils.attribute(effectElement, "stat", null);
+                String statModType = LoadUtils.attribute(effectElement, "statType", null);
                 if(statModType.equalsIgnoreCase("int")) {
-                    int statAmountInt = LoadUtils.singleTagInt(effectElement, "amount", 0);
+                    int statAmountInt = LoadUtils.attributeInt(effectElement, "amount", 0);
                     return new EffectStatModInt(duration, manualRemoval, statMod, statAmountInt);
                 } else if(statModType.equalsIgnoreCase("float")) {
-                    float statAmountFloat = LoadUtils.singleTagFloat(effectElement, "amount", 0.0f);
+                    float statAmountFloat = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
                     return new EffectStatModFloat(duration, manualRemoval, statMod, statAmountFloat);
                 }
             case "statMult":
-                String statMult = LoadUtils.singleTag(effectElement, "stat", null);
-                String statMultType = LoadUtils.attribute(LoadUtils.singleChildWithName(effectElement, "stat"), "type", null);
-                float statMultAmount = LoadUtils.singleTagFloat(effectElement, "amount", 0.0f);
+                String statMult = LoadUtils.attribute(effectElement, "stat", null);
+                String statMultType = LoadUtils.attribute(effectElement, "statType", null);
+                float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
                 return new EffectStatMult(duration, manualRemoval, statMult, statMultType, statMultAmount);
             default:
                 return null;
@@ -485,22 +476,26 @@ public class DataLoader {
         if(tableElement == null) return null;
         String tableID = tableElement.getAttribute("id");
         boolean useAll = LoadUtils.attributeBool(tableElement, "useAll", useAllDefault);
-        List<Element> entryElements = LoadUtils.directChildrenWithName(tableElement, "entry");
+        List<Element> entryItems = LoadUtils.directChildrenWithName(tableElement, "item");
+        List<Element> entryTables = LoadUtils.directChildrenWithName(tableElement, "table");
         List<LootTableEntry> entries = new ArrayList<>();
-        for(Element entryElement : entryElements) {
-            LootTableEntry entry = loadLootTableEntry(entryElement);
+        for (Element entryItem : entryItems) {
+            LootTableEntry entry = loadLootTableEntry(entryItem, false);
+            entries.add(entry);
+        }
+        for (Element entryTable : entryTables) {
+            LootTableEntry entry = loadLootTableEntry(entryTable, true);
             entries.add(entry);
         }
         return new LootTable(tableID, useAll, entries);
     }
 
-    private static LootTableEntry loadLootTableEntry(Element entryElement) {
+    private static LootTableEntry loadLootTableEntry(Element entryElement, boolean isTable) {
         if(entryElement == null) return null;
         String referenceID = entryElement.getTextContent();
-        boolean isLootTable = LoadUtils.attributeBool(entryElement, "table", false);
         float chance = LoadUtils.attributeFloat(entryElement, "chance", 1.0f);
         int count = LoadUtils.attributeInt(entryElement, "count", 1);
-        return new LootTableEntry(referenceID, isLootTable, chance, count);
+        return new LootTableEntry(referenceID, isTable, chance, count);
     }
 
     private static Scene loadScene(Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
@@ -516,8 +511,8 @@ public class DataLoader {
             SceneLine line = loadSceneLine(lineElement);
             lines.add(line);
         }
-        float chance = LoadUtils.singleTagFloat(sceneElement, "chance", 1.0f);
-        int cooldown = LoadUtils.singleTagInt(sceneElement, "cooldown", 0);
+        float chance = LoadUtils.attributeFloat(sceneElement, "chance", 1.0f);
+        int cooldown = LoadUtils.attributeInt(sceneElement, "cooldown", 0);
         return new Scene(sceneID, condition, lines, isRepeatable, playImmediately, chance, cooldown);
     }
 
