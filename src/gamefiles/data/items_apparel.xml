@@ -1,13 +1,11 @@
 <data>
-    <item type="apparel" id="tactical_vest">
+    <item type="apparel" id="tactical_vest" price="40">
         <name>tactical vest</name>
-        <price>40</price>
         <slot>TORSO</slot>
         <damageResistance>5</damageResistance>
     </item>
-    <item type="apparel" id="tactical_helmet">
+    <item type="apparel" id="tactical_helmet" price="30">
         <name>tactical helmet</name>
-        <price>30</price>
         <slot>HEAD</slot>
         <damageResistance>5</damageResistance>
         <effect type="statMod" statType="int" stat="maxHP" amount="10"/>

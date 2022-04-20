@@ -1,54 +1,36 @@
 <data>
-    <item type="weapon" id="baseball_bat">
+    <item type="weapon" id="baseball_bat" price="15" weaponType="CLUB">
         <name>baseball bat</name>
-        <price>15</price>
-        <type>CLUB</type>
-        <damage>10</damage>
-        <critDamage>5</critDamage>
+        <damage base="10" crit="5"/>
         <rate>2</rate>
     </item>
-    <item type="weapon" id="katana">
+    <item type="weapon" id="katana" price="60" weaponType="SWORD">
         <name>katana</name>
-        <price>60</price>
-        <type>SWORD</type>
-        <damage>20</damage>
-        <critDamage>10</critDamage>
+        <damage base="20" crit="10"/>
         <rate>2</rate>
     </item>
-    <item type="weapon" id="pistol_light">
+    <item type="weapon" id="pistol_light" price="30" weaponType="PISTOL">
         <name>light pistol</name>
-        <price>30</price>
-        <type>PISTOL</type>
-        <damage>10</damage>
-        <critDamage>5</critDamage>
+        <damage base="10" crit="5"/>
         <rate>2</rate>
-        <rangeMin>0</rangeMin>
-        <rangeMax>2</rangeMax>
+        <range min="0" max="2"/>
         <clipSize>12</clipSize>
         <ammo>ammo_pistol</ammo>
     </item>
-    <item type="weapon" id="pistol_heavy">
+    <item type="weapon" id="pistol_heavy" price="50" weaponType="PISTOL">
         <name>heavy pistol</name>
-        <price>50</price>
-        <type>PISTOL</type>
-        <damage>14</damage>
-        <critDamage>6</critDamage>
+        <damage base="14" crit="6"/>
         <rate>2</rate>
-        <rangeMin>0</rangeMin>
-        <rangeMax>2</rangeMax>
+        <range min="0" max="2"/>
         <clipSize>6</clipSize>
         <ammo>ammo_pistol</ammo>
     </item>
-    <item type="weapon" id="rifle_auto">
+    <item type="weapon" id="rifle_auto" price="90" weaponType="ASSAULT_RIFLE">
         <name>auto rifle</name>
         <description>A full-auto assault rifle.</description>
-        <price>90</price>
-        <type>ASSAULT_RIFLE</type>
-        <damage>15</damage>
-        <critDamage>4</critDamage>
+        <damage base="15" crit="4"/>
         <rate>2</rate>
-        <rangeMin>2</rangeMin>
-        <rangeMax>3</rangeMax>
+        <range min="2" max="3"/>
         <clipSize>16</clipSize>
         <ammo>ammo_rifle</ammo>
     </item>

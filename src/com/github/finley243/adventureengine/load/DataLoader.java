@@ -404,7 +404,7 @@ public class DataLoader {
         String name = LoadUtils.singleTag(itemElement, "name", null);
         String description = LoadUtils.singleTag(itemElement, "description", null);
         Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
-        int price = LoadUtils.singleTagInt(itemElement, "price", 0);
+        int price = LoadUtils.attributeInt(itemElement, "price", 0);
         switch(type) {
             case "apparel":
                 ApparelComponent.ApparelSlot apparelSlot = LoadUtils.singleTagEnum(itemElement, "slot", ApparelComponent.ApparelSlot.class, ApparelComponent.ApparelSlot.TORSO);
@@ -412,19 +412,21 @@ public class DataLoader {
                 List<Effect> apparelEffects = loadEffects(itemElement, true);
                 return new ApparelTemplate(id, name, description, scripts, price, apparelSlot, damageResistance, apparelEffects);
             case "consumable":
-                ConsumableTemplate.ConsumableType consumableType = LoadUtils.singleTagEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
+                ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<Effect> consumableEffects = loadEffects(itemElement, false);
                 return new ConsumableTemplate(id, name, description, scripts, price, consumableType, consumableEffects);
             case "weapon":
-                WeaponTemplate.WeaponType weaponType = LoadUtils.singleTagEnum(itemElement, "type", WeaponTemplate.WeaponType.class, null);
-                int weaponDamage = LoadUtils.singleTagInt(itemElement, "damage", 0);
+                WeaponTemplate.WeaponType weaponType = LoadUtils.attributeEnum(itemElement, "type", WeaponTemplate.WeaponType.class, null);
                 int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
-                int critDamage = LoadUtils.singleTagInt(itemElement, "critDamage", 0);
-                int weaponRangeMin = LoadUtils.singleTagInt(itemElement, "rangeMin", 0);
-                int weaponRangeMax = LoadUtils.singleTagInt(itemElement, "rangeMax", 0);
-                int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
+                Element damageElement = LoadUtils.singleChildWithName(itemElement, "damage");
+                int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
+                int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
+                Element rangeElement = LoadUtils.singleChildWithName(itemElement, "range");
+                int weaponRangeMin = LoadUtils.attributeInt(rangeElement, "min", 0);
+                int weaponRangeMax = LoadUtils.attributeInt(rangeElement, "max", 0);
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
+                int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 String weaponAmmoType = LoadUtils.singleTag(itemElement, "ammo", null);
                 return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced, weaponAmmoType);
             case "note":

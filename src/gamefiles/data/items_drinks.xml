@@ -1,14 +1,10 @@
 <data>
-    <item type="consumable" id="nitron_cola">
+    <item type="consumable" id="nitron_cola" price="10" consumableType="DRINK">
         <name>Nitron Cola</name>
-        <price>10</price>
-        <type>DRINK</type>
         <effect type="state" state="hp" amount="10"/>
     </item>
-    <item type="consumable" id="nitron_diet">
+    <item type="consumable" id="nitron_diet" price="10" consumableType="DRINK">
         <name>Nitron Sharpshooter</name>
-        <price>10</price>
-        <type>DRINK</type>
         <effect type="statMod" duration="3" statType="int" stat="handguns" amount="9"/>
     </item>
 </data>
