@@ -674,23 +674,23 @@ public class DataLoader {
             Behavior behavior;
             String type = LoadUtils.attribute(behaviorElement, "type", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"));
-            int duration = LoadUtils.singleTagInt(behaviorElement, "duration", 0);
+            int duration = LoadUtils.attributeInt(behaviorElement, "duration", 0);
             List<String> idleScenes = LoadUtils.listOfTags(behaviorElement, "idleScene");
             switch(type) {
                 case "area":
-                    String areaTarget = LoadUtils.singleTag(behaviorElement, "area", null);
+                    String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
                     behavior = new BehaviorArea(condition, duration, idleScenes, areaTarget);
                     break;
                 case "object":
-                    String objectTarget = LoadUtils.singleTag(behaviorElement, "object", null);
+                    String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
                     behavior = new BehaviorObject(condition, duration, idleScenes, objectTarget);
                     break;
                 case "sandbox":
-                    String startArea = LoadUtils.singleTag(behaviorElement, "area", null);
+                    String startArea = LoadUtils.attribute(behaviorElement, "area", null);
                     behavior = new BehaviorSandbox(condition, duration, idleScenes, startArea);
                     break;
                 case "sleep":
-                    String bedTarget = LoadUtils.singleTag(behaviorElement, "bed", null);
+                    String bedTarget = LoadUtils.attribute(behaviorElement, "bed", null);
                     behavior = new BehaviorSleep(condition, idleScenes, bedTarget);
                     break;
                 case "cycle":

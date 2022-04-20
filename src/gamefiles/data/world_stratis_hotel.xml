@@ -41,11 +41,9 @@
             <actors>
                 <actor id="stratis_receptionist">
                     <template>stratis_receptionist</template>
-                    <idle>
-                        <point>
-                            <area>stratis_hotel_lobby_desk</area>
-                        </point>
-                    </idle>
+                    <behaviors>
+                        <behavior type="area" area="stratis_hotel_lobby_desk"/>
+                    </behaviors>
                 </actor>
             </actors>
         </area>
@@ -70,14 +68,12 @@
                 <actor id="stratis_guard_lobby">
                     <template>stratis_guard</template>
                     <descriptor>lobby</descriptor>
-                    <idle>
-                        <point>
-                            <area>stratis_hotel_lobby_seating</area>
-                        </point>
-                        <point>
-                            <area>stratis_hotel_lobby_elevators</area>
-                        </point>
-                    </idle>
+                    <behaviors>
+                        <behavior type="cycle">
+                            <behavior type="area" duration="2" area="stratis_hotel_lobby_seating"/>
+                            <behavior type="area" duration="2" area="stratis_hotel_lobby_elevators"/>
+                        </behavior>
+                    </behaviors>
                 </actor>
             </actors>
         </area>
@@ -185,22 +181,8 @@
                 <actor id="stratis_guard_office">
                     <template>stratis_guard</template>
                     <descriptor>office</descriptor>
-                    <idle>
-                        <point>
-                            <area>stratis_hotel_security_main</area>
-                        </point>
-                    </idle>
                     <behaviors>
-                        <behavior type="cycle">
-                            <behavior type="area">
-                                <area>stratis_hotel_lobby_entry</area>
-                                <duration>2</duration>
-                            </behavior>
-                            <behavior type="area">
-                                <area>stratis_hotel_security_main</area>
-                                <duration>2</duration>
-                            </behavior>
-                        </behavior>
+                        <behavior type="area" area="stratis_hotel_security_main"/>
                     </behaviors>
                 </actor>
             </actors>
