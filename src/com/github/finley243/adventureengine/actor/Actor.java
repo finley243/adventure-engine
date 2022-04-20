@@ -228,6 +228,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public void setEnabled(boolean enable) {
+		if (area == null) throw new UnsupportedOperationException("Attempt to enable in null area: " + this.getID());
 		if(isEnabled != enable) {
 			isEnabled = enable;
 			if(enable) {

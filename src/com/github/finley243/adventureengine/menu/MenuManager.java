@@ -37,7 +37,7 @@ public class MenuManager {
 		boolean dialogueLoop = true;
 		DialogueTopic currentTopic = subject.game().data().getTopic(startTopic);
 		while(dialogueLoop) {
-			currentTopic.setVisited();
+			currentTopic.setVisited(subject);
 			for(DialogueLine line : currentTopic.getLines()) {
 				if(line.shouldShow(subject)) {
 					for(String text : line.getTextList()) {
@@ -60,14 +60,13 @@ public class MenuManager {
 			if(dialogueLoop) {
 				List<DialogueChoice> validChoices = new ArrayList<>();
 				for(DialogueChoice choice : currentTopic.getChoices()) {
-					if(choice.shouldShow(subject)) {
+					if(subject.game().data().getTopic(choice.getLinkedId()).canChoose(subject)) {
 						validChoices.add(choice);
 					}
 				}
 				subject.game().eventBus().post(new RenderTextEvent(""));
 				if(validChoices.size() > 0) {
 					DialogueChoice selectedChoice = dialogueMenuInput(subject.game(), validChoices);
-					selectedChoice.trigger(subject);
 					currentTopic = subject.game().data().getTopic(selectedChoice.getLinkedId());
 					subject.game().eventBus().post(new RenderTextEvent(selectedChoice.getPrompt()));
 					subject.game().eventBus().post(new RenderTextEvent(""));

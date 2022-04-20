@@ -40,50 +40,52 @@ public class DataLoader {
             File[] files = dir.listFiles();
             assert files != null;
             for(File file : files) {
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                Document document = builder.parse(file);
-                Element rootElement = document.getDocumentElement();
-                List<Element> factions = LoadUtils.directChildrenWithName(rootElement, "faction");
-                for (Element factionElement : factions) {
-                    Faction faction = loadFaction(factionElement);
-                    game.data().addFaction(faction.getID(), faction);
-                }
-                List<Element> topics = LoadUtils.directChildrenWithName(rootElement, "topic");
-                for (Element topicElement : topics) {
-                    DialogueTopic topic = loadTopic(topicElement);
-                    game.data().addTopic(topic.getID(), topic);
-                }
-                List<Element> actors = LoadUtils.directChildrenWithName(rootElement, "actor");
-                for (Element actorElement : actors) {
-                    ActorTemplate actor = loadActor(actorElement);
-                    game.data().addActorTemplate(actor.getID(), actor);
-                }
-                List<Element> items = LoadUtils.directChildrenWithName(rootElement, "item");
-                for (Element itemElement : items) {
-                    ItemTemplate item = loadItem(itemElement);
-                    game.data().addItem(item.getID(), item);
-                }
-                List<Element> tables = LoadUtils.directChildrenWithName(rootElement, "lootTable");
-                for (Element tableElement : tables) {
-                    LootTable table = loadLootTable(tableElement, false);
-                    game.data().addLootTable(table.getID(), table);
-                }
-                List<Element> scenes = LoadUtils.directChildrenWithName(rootElement, "scene");
-                for (Element sceneElement : scenes) {
-                    Scene scene = loadScene(sceneElement);
-                    game.data().addScene(scene.getID(), scene);
-                }
-                List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
-                for (Element roomElement : rooms) {
-                    Room room = loadRoom(game, roomElement);
-                    game.data().addRoom(room.getID(), room);
-                }
-                List<Element> scripts = LoadUtils.directChildrenWithName(rootElement, "script");
-                for (Element scriptElement : scripts) {
-                    String scriptID = LoadUtils.attribute(scriptElement, "id", null);
-                    Script script = loadScript(scriptElement);
-                    game.data().addScript(scriptID, script);
+                if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase("xml")) {
+                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder builder = factory.newDocumentBuilder();
+                    Document document = builder.parse(file);
+                    Element rootElement = document.getDocumentElement();
+                    List<Element> factions = LoadUtils.directChildrenWithName(rootElement, "faction");
+                    for (Element factionElement : factions) {
+                        Faction faction = loadFaction(factionElement);
+                        game.data().addFaction(faction.getID(), faction);
+                    }
+                    List<Element> topics = LoadUtils.directChildrenWithName(rootElement, "topic");
+                    for (Element topicElement : topics) {
+                        DialogueTopic topic = loadTopic(topicElement);
+                        game.data().addTopic(topic.getID(), topic);
+                    }
+                    List<Element> actors = LoadUtils.directChildrenWithName(rootElement, "actor");
+                    for (Element actorElement : actors) {
+                        ActorTemplate actor = loadActor(actorElement);
+                        game.data().addActorTemplate(actor.getID(), actor);
+                    }
+                    List<Element> items = LoadUtils.directChildrenWithName(rootElement, "item");
+                    for (Element itemElement : items) {
+                        ItemTemplate item = loadItem(itemElement);
+                        game.data().addItem(item.getID(), item);
+                    }
+                    List<Element> tables = LoadUtils.directChildrenWithName(rootElement, "lootTable");
+                    for (Element tableElement : tables) {
+                        LootTable table = loadLootTable(tableElement, false);
+                        game.data().addLootTable(table.getID(), table);
+                    }
+                    List<Element> scenes = LoadUtils.directChildrenWithName(rootElement, "scene");
+                    for (Element sceneElement : scenes) {
+                        Scene scene = loadScene(sceneElement);
+                        game.data().addScene(scene.getID(), scene);
+                    }
+                    List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
+                    for (Element roomElement : rooms) {
+                        Room room = loadRoom(game, roomElement);
+                        game.data().addRoom(room.getID(), room);
+                    }
+                    List<Element> scripts = LoadUtils.directChildrenWithName(rootElement, "script");
+                    for (Element scriptElement : scripts) {
+                        String scriptID = LoadUtils.attribute(scriptElement, "id", null);
+                        Script script = loadScript(scriptElement);
+                        game.data().addScript(scriptID, script);
+                    }
                 }
             }
         }
@@ -166,6 +168,8 @@ public class DataLoader {
                 type = DialogueTopic.TopicType.SEQUENTIAL;
                 break;
         }
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(topicElement, "condition"));
+        boolean once = LoadUtils.attributeBool(topicElement, "once", false);
         List<Element> lineElements = LoadUtils.directChildrenWithName(topicElement, "line");
         List<DialogueLine> lines = new ArrayList<>();
         for(Element lineElement : lineElements) {
@@ -178,7 +182,7 @@ public class DataLoader {
             DialogueChoice choice = loadChoice(choiceElement);
             choices.add(choice);
         }
-        return new DialogueTopic(topicID, lines, choices, type);
+        return new DialogueTopic(topicID, condition, once, lines, choices, type);
     }
 
     private static DialogueLine loadLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
@@ -194,13 +198,10 @@ public class DataLoader {
         return new DialogueLine(texts, condition, script, once, exit, redirect);
     }
 
-    private static DialogueChoice loadChoice(Element choiceElement) throws ParserConfigurationException, SAXException, IOException {
-        boolean once = LoadUtils.attributeBool(choiceElement, "once", false);
+    private static DialogueChoice loadChoice(Element choiceElement) {
         String link = choiceElement.getAttribute("link");
-        String prompt = LoadUtils.singleTag(choiceElement, "prompt", null);
-        Element conditionElement = LoadUtils.singleChildWithName(choiceElement, "condition");
-        Condition condition = loadCondition(conditionElement);
-        return new DialogueChoice(link, prompt, condition, once);
+        String prompt = choiceElement.getTextContent();
+        return new DialogueChoice(link, prompt);
     }
 
     private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
@@ -382,7 +383,7 @@ public class DataLoader {
     private static Faction loadFaction(Element factionElement) {
         if(factionElement == null) return null;
         String id = factionElement.getAttribute("id");
-        Faction.FactionRelation defaultRelation = LoadUtils.singleTagEnum(factionElement, "default", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
+        Faction.FactionRelation defaultRelation = LoadUtils.attributeEnum(factionElement, "default", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
         Map<String, Faction.FactionRelation> relations = loadFactionRelations(factionElement);
         return new Faction(id, defaultRelation, relations);
     }
@@ -392,9 +393,9 @@ public class DataLoader {
         Map<String, Faction.FactionRelation> relations = new HashMap<>();
         List<Element> relationElements = LoadUtils.directChildrenWithName(factionElement, "relation");
         for(Element relationElement : relationElements) {
-            String id = LoadUtils.singleTag(relationElement, "id", null);
-            Faction.FactionRelation type = LoadUtils.singleTagEnum(relationElement, "type", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
-            relations.put(id, type);
+            String factionID = LoadUtils.attribute(relationElement, "faction", null);
+            Faction.FactionRelation type = LoadUtils.attributeEnum(relationElement, "type", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
+            relations.put(factionID, type);
         }
         return relations;
     }

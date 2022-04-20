@@ -1,25 +1,11 @@
 <data>
-    <faction id="default">
-        <default>NEUTRAL</default>
+    <faction id="default" default="NEUTRAL"/>
+    <faction id="player" default="NEUTRAL"/>
+    <faction id="stratis_hotel_staff" default="NEUTRAL">
+        <relation faction="enemy" type="HOSTILE"/>
     </faction>
-    <faction id="player">
-        <default>NEUTRAL</default>
+    <faction id="enemy" default="HOSTILE">
+        <relation faction="stratis_hotel_staff" type="HOSTILE"/>
     </faction>
-    <faction id="stratis_hotel_staff">
-        <default>NEUTRAL</default>
-        <relation>
-            <id>enemy</id>
-            <type>HOSTILE</type>
-        </relation>
-    </faction>
-    <faction id="enemy">
-        <default>HOSTILE</default>
-        <relation>
-            <id>stratis_hotel_staff</id>
-            <type>HOSTILE</type>
-        </relation>
-    </faction>
-    <faction id="nexus_staff">
-        <default>NEUTRAL</default>
-    </faction>
+    <faction id="nexus_staff" default="NEUTRAL"/>
 </data>

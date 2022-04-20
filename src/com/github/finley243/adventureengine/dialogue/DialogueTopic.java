@@ -1,9 +1,13 @@
 package com.github.finley243.adventureengine.dialogue;
 
+import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.SaveData;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DialogueTopic {
 
@@ -12,23 +16,32 @@ public class DialogueTopic {
 	}
 
 	private final String ID;
-	
+
+	private final Condition condition;
+	private final boolean once;
 	private final List<DialogueLine> lines;
 	private final List<DialogueChoice> choices;
 
 	private final TopicType type;
 
-	private boolean hasVisited;
+	private final Set<String> hasTriggered;
 	
-	public DialogueTopic(String ID, List<DialogueLine> lines, List<DialogueChoice> choices, TopicType type) {
+	public DialogueTopic(String ID, Condition condition, boolean once, List<DialogueLine> lines, List<DialogueChoice> choices, TopicType type) {
 		this.ID = ID;
+		this.condition = condition;
+		this.once = once;
 		this.lines = lines;
 		this.choices = choices;
 		this.type = type;
+		this.hasTriggered = new HashSet<>();
 	}
 	
 	public String getID() {
 		return ID;
+	}
+
+	public boolean canChoose(Actor subject) {
+		return (condition == null || condition.isMet(subject)) && (!once || !hasTriggered.contains(subject.getID()));
 	}
 	
 	public List<DialogueLine> getLines() {
@@ -43,27 +56,27 @@ public class DialogueTopic {
 		return type;
 	}
 
-	public void setVisited() {
-		hasVisited = true;
+	public void setVisited(Actor subject) {
+		hasTriggered.add(subject.getID());
 	}
 
 	public boolean hasVisited() {
-		return hasVisited;
+		return !hasTriggered.isEmpty();
 	}
 
 	public void loadState(SaveData saveData) {
 		switch(saveData.getParameter()) {
-			case "hasVisited":
+			/*case "hasVisited":
 				this.hasVisited = saveData.getValueBoolean();
-				break;
+				break;*/
 		}
 	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		if(hasVisited) {
+		/*if(hasVisited) {
 			state.add(new SaveData(SaveData.DataType.TOPIC, this.getID(), "hasVisited", hasVisited));
-		}
+		}*/
 		return state;
 	}
 	

@@ -11,7 +11,7 @@ meleeHit:$weapon hits $target
 meleeMiss:$_actor tr$ies_actor to hit $target with $weapon, but miss$es_actor
 meleeTelegraph:$_actor swing$s_actor $weapon at $target
 moveThrough:$_actor go$es_actor through $exit
-moveToward:$_actor move$s_actor toward $object
+moveToward:$_actor move$s_actor toward $area
 patrolTelegraph:$_actor prepare$s_actor to move to $area
 pickUp:$_actor grab$s_actor $item
 rangedHit:a bullet hits $target

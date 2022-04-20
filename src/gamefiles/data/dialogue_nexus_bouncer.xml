@@ -7,12 +7,8 @@
         <line>
             <text>The bouncer looks up at you. "Didn't I tell you to leave? VIPs only."</text>
         </line>
-        <choice link="nexus_bouncer_end">
-            <prompt>I have business with your boss.</prompt>
-        </choice>
-        <choice link="nexus_bouncer_end">
-            <prompt>Sorry, my mistake.</prompt>
-        </choice>
+        <choice link="nexus_bouncer_end">I have business with your boss.</choice>
+        <choice link="nexus_bouncer_end">Sorry, my mistake.</choice>
     </topic>
     <topic id="nexus_bouncer_end">
         <line exit="true">
