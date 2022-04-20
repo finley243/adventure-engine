@@ -7,42 +7,42 @@ import com.github.finley243.adventureengine.actor.Actor;
 public class EffectStatMult extends Effect {
 
     private final String stat;
-    private final String statType;
+    private final boolean isFloat;
     private final float amount;
 
-    public EffectStatMult(int duration, boolean manualRemoval, String stat, String statType, float amount) {
+    public EffectStatMult(int duration, boolean manualRemoval, String stat, boolean isFloat, float amount) {
         super(duration, manualRemoval);
         this.stat = stat;
-        this.statType = statType;
+        this.isFloat = isFloat;
         this.amount = amount;
     }
 
     @Override
     public void start(Actor target) {
-        if(statType.equalsIgnoreCase("int")) {
-            ModdableStatInt moddableStatInt = target.getStatInt(stat);
-            if(moddableStatInt != null) {
-                moddableStatInt.addMult(amount);
-            }
-        } else if(statType.equalsIgnoreCase("float")) {
+        if(isFloat) {
             ModdableStatFloat moddableStatFloat = target.getStatFloat(stat);
             if(moddableStatFloat != null) {
                 moddableStatFloat.addMult(amount);
+            }
+        } else {
+            ModdableStatInt moddableStatInt = target.getStatInt(stat);
+            if(moddableStatInt != null) {
+                moddableStatInt.addMult(amount);
             }
         }
     }
 
     @Override
     public void end(Actor target) {
-        if(statType.equalsIgnoreCase("int")) {
-            ModdableStatInt moddableStatInt = target.getStatInt(stat);
-            if(moddableStatInt != null) {
-                moddableStatInt.addMult(-amount);
-            }
-        } else if(statType.equalsIgnoreCase("float")) {
+        if(isFloat) {
             ModdableStatFloat moddableStatFloat = target.getStatFloat(stat);
             if(moddableStatFloat != null) {
                 moddableStatFloat.addMult(-amount);
+            }
+        } else {
+            ModdableStatInt moddableStatInt = target.getStatInt(stat);
+            if(moddableStatInt != null) {
+                moddableStatInt.addMult(-amount);
             }
         }
     }
@@ -54,12 +54,12 @@ public class EffectStatMult extends Effect {
 
     @Override
     public boolean equals(Object o) {
-        return super.equals(o) && stat.equals(((EffectStatMult) o).stat) && statType.equals(((EffectStatMult) o).statType) && amount == ((EffectStatMult) o).amount;
+        return super.equals(o) && stat.equals(((EffectStatMult) o).stat) && isFloat == (((EffectStatMult) o).isFloat) && amount == ((EffectStatMult) o).amount;
     }
 
     @Override
     public int hashCode() {
-        return 31 * (31 * ((31 * super.hashCode()) + stat.hashCode()) + statType.hashCode()) + Float.hashCode(amount);
+        return 31 * (31 * ((31 * super.hashCode()) + stat.hashCode()) + Boolean.hashCode(isFloat)) + Float.hashCode(amount);
     }
 
 }
