@@ -32,8 +32,7 @@
             <object type="container" id="stratis_reception_desk">
                 <name>reception desk</name>
             </object>
-            <actor id="stratis_receptionist">
-                <template>stratis_receptionist</template>
+            <actor id="stratis_receptionist" template="stratis_receptionist">
                 <behaviors>
                     <behavior type="area" area="stratis_hotel_lobby_desk"/>
                 </behaviors>
@@ -53,8 +52,7 @@
                 <link>stratis_hotel_security_door</link>
                 <key>stratis_security_key</key>
             </object>
-            <actor id="stratis_guard_lobby">
-                <template>stratis_guard</template>
+            <actor id="stratis_guard_lobby" template="stratis_guard">
                 <descriptor>lobby</descriptor>
                 <behaviors>
                     <behavior type="cycle">
@@ -141,8 +139,7 @@
             <object type="item" id="stratis_hotel_security_rifle">
                 <item>rifle_auto</item>
             </object>
-            <actor id="stratis_guard_office">
-                <template>stratis_guard</template>
+            <actor id="stratis_guard_office" template="stratis_guard">
                 <descriptor>office</descriptor>
                 <behaviors>
                     <behavior type="area" area="stratis_hotel_security_main"/>

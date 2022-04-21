@@ -5,6 +5,6 @@
     </item>
     <item type="consumable" id="nitron_diet" price="10" consumableType="DRINK">
         <name>Nitron Sharpshooter</name>
-        <effect type="statModInt" duration="3" stat="handguns" amount="9"/>
+        <effect type="mod" duration="3" stat="handguns" amount="9"/>
     </item>
 </data>

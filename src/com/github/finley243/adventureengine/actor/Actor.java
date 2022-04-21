@@ -101,17 +101,15 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final BehaviorComponent behaviorComponent;
 	private final Set<AreaTarget> areaTargets;
 	private final InvestigateTarget investigateTarget;
-	private final boolean preventMovement;
 	private int sleepCounter;
 
-	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean preventMovement, boolean startDead, boolean startDisabled) {
+	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean startDead, boolean startDisabled) {
 		super(game);
 		this.ID = ID;
 		this.defaultArea = area;
 		this.area = area;
 		this.stats = stats;
 		this.descriptor = descriptor;
-		this.preventMovement = preventMovement;
 		this.targetingComponent = new TargetingComponent(this);
 		this.areaTargets = new HashSet<>();
 		this.investigateTarget = new InvestigateTarget();
@@ -180,7 +178,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 	}
 
-	public ActorTemplate getStats() {
+	public ActorTemplate getTemplate() {
 		return stats;
 	}
 
@@ -256,7 +254,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public boolean canMove() {
-		return !isUsingObject() && !preventMovement;
+		return !isUsingObject();
 	}
 
 	public boolean isInCover() {
@@ -380,8 +378,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if(equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
-			//getArea().addObject(item);
-			//item.setArea(getArea());
 			Item.itemToObject(game(), item, 1, getArea());
 			Context context = new Context(new NounMapper().put("actor", this).put("item", item).build());
 			game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));

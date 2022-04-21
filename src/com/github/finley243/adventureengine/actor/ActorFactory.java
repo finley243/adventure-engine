@@ -8,8 +8,8 @@ import java.util.List;
 
 public class ActorFactory {
 	
-	public static Actor create(Game gameInstance, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean preventMovement, boolean startDead, boolean startDisabled) {
-		Actor actor = new Actor(gameInstance, ID, area, stats, descriptor, behaviors, preventMovement, startDead, startDisabled);
+	public static Actor create(Game gameInstance, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean startDead, boolean startDisabled) {
+		Actor actor = new Actor(gameInstance, ID, area, stats, descriptor, behaviors, startDead, startDisabled);
 		return actor;
 	}
 	

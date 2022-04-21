@@ -11,12 +11,10 @@
                 <name>Stratis Hotel entrance</name>
                 <link>stratis_entry_door</link>
             </object>
-            <actor id="nexus_bouncer">
-                <template>nexus_bouncer</template>
+            <actor id="nexus_bouncer" template="nexus_bouncer">
                 <behaviors>
                     <behavior type="area" area="street_corner_nexus"/>
                 </behaviors>
-                <preventMovement>true</preventMovement>
             </actor>
         </area>
     </room>

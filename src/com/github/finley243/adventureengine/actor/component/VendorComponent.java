@@ -25,10 +25,10 @@ public class VendorComponent {
     public VendorComponent(Actor vendor) {
         this.vendorInventory = new Inventory(vendor.game(), null);
         this.vendor = vendor;
-        this.lootTable = vendor.getStats().getVendorLootTable();
-        this.buyTags = vendor.getStats().vendorBuyTags();
-        this.buyAll = vendor.getStats().vendorBuyAll();
-        this.enabled = !vendor.getStats().vendorStartDisabled();
+        this.lootTable = vendor.getTemplate().getVendorLootTable();
+        this.buyTags = vendor.getTemplate().vendorBuyTags();
+        this.buyAll = vendor.getTemplate().vendorBuyAll();
+        this.enabled = !vendor.getTemplate().vendorStartDisabled();
     }
 
     public void generateInventory() {

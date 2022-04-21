@@ -460,22 +460,21 @@ public class DataLoader {
             case "trigger":
                 String trigger = LoadUtils.attribute(effectElement, "trigger", null);
                 return new EffectTrigger(duration, manualRemoval, trigger);
-            case "statModInt":
-                String statModInt = LoadUtils.attribute(effectElement, "stat", null);
-                int statAmountInt = LoadUtils.attributeInt(effectElement, "amount", 0);
-                return new EffectStatModInt(duration, manualRemoval, statModInt, statAmountInt);
-            case"statModFloat":
-                String statModFloat = LoadUtils.attribute(effectElement, "stat", null);
-                float statAmountFloat = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
-                return new EffectStatModFloat(duration, manualRemoval, statModFloat, statAmountFloat);
-            case "statMultInt":
-                String statMultInt = LoadUtils.attribute(effectElement, "stat", null);
-                float statMultAmountInt = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
-                return new EffectStatMult(duration, manualRemoval, statMultInt, false, statMultAmountInt);
-            case "statMultFloat":
-                String statMultFloat = LoadUtils.attribute(effectElement, "stat", null);
-                float statMultAmountFloat = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
-                return new EffectStatMult(duration, manualRemoval, statMultFloat, true, statMultAmountFloat);
+            case "mod":
+                String statMod = LoadUtils.attribute(effectElement, "stat", null);
+                String statModValue = LoadUtils.attribute(effectElement, "amount", "0");
+                boolean statModIsFloat = statModValue.contains(".");
+                if (statModIsFloat) {
+                    float statModValueFloat = Float.parseFloat(statModValue);
+                    return new EffectStatModFloat(duration, manualRemoval, statMod, statModValueFloat);
+                } else {
+                    int statModValueInt = Integer.parseInt(statModValue);
+                    return new EffectStatModInt(duration, manualRemoval, statMod, statModValueInt);
+                }
+            case "mult":
+                String statMult = LoadUtils.attribute(effectElement, "stat", null);
+                float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
+                return new EffectStatMult(duration, manualRemoval, statMult, statMultAmount);
             default:
                 return null;
         }
@@ -654,13 +653,12 @@ public class DataLoader {
     private static Actor loadActorInstance(Game game, Element actorElement, Area area) throws ParserConfigurationException, IOException, SAXException {
         if(actorElement == null) return null;
         String ID = actorElement.getAttribute("id");
-        String template = LoadUtils.singleTag(actorElement, "template", null);
+        String template = LoadUtils.attribute(actorElement, "template", null);
         String descriptor = LoadUtils.singleTag(actorElement, "descriptor", null);
         List<Behavior> behaviors = loadBehaviors(LoadUtils.singleChildWithName(actorElement, "behaviors"));
-        boolean preventMovement = LoadUtils.singleTagBoolean(actorElement, "preventMovement", false);
         boolean startDead = LoadUtils.singleTagBoolean(actorElement, "startDead", false);
         boolean startDisabled = LoadUtils.singleTagBoolean(actorElement, "startDisabled", false);
-        return ActorFactory.create(game, ID, area, game.data().getActorTemplate(template), descriptor, behaviors, preventMovement, startDead, startDisabled);
+        return ActorFactory.create(game, ID, area, game.data().getActorTemplate(template), descriptor, behaviors, startDead, startDisabled);
     }
 
     private static List<Behavior> loadBehaviors(Element behaviorsElement) throws ParserConfigurationException, IOException, SAXException {
