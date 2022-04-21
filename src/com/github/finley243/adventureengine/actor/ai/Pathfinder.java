@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
-import com.github.finley243.adventureengine.world.object.ObjectExit;
+import com.github.finley243.adventureengine.world.object.ObjectDoor;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class Pathfinder {
@@ -46,8 +46,8 @@ public class Pathfinder {
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
 			//if(pathEnd.getRoom() != targetArea.getRoom()) {
 				for(WorldObject object : pathEnd.getObjects()) {
-					if(object instanceof ObjectExit) {
-						linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
+					if(object instanceof ObjectDoor) {
+						linkedAreasGlobal.add(((ObjectDoor) object).getLinkedArea());
 					} else if(object instanceof ObjectElevator) {
 						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
 					}
@@ -81,8 +81,8 @@ public class Pathfinder {
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
 			if(throughExits) {
 				for (WorldObject object : pathEnd.getObjects()) {
-					if (object instanceof ObjectExit) {
-						linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
+					if (object instanceof ObjectDoor) {
+						linkedAreasGlobal.add(((ObjectDoor) object).getLinkedArea());
 					} else if (object instanceof ObjectElevator) {
 						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
 					}
@@ -117,8 +117,8 @@ public class Pathfinder {
 			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas());
 			if(throughExits) {
 				for (WorldObject object : currentArea.getObjects()) {
-					if (object instanceof ObjectExit) {
-						linkedAreasGlobal.add(((ObjectExit) object).getLinkedArea());
+					if (object instanceof ObjectDoor) {
+						linkedAreasGlobal.add(((ObjectDoor) object).getLinkedArea());
 					} else if (object instanceof ObjectElevator) {
 						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
 					}

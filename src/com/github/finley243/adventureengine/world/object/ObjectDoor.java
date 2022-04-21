@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionExitListen;
@@ -15,26 +14,26 @@ import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 
-public class ObjectExit extends WorldObject {
+public class ObjectDoor extends WorldObject {
 
-	private final String linkedExitID;
+	private final String linkedDoorID;
 	private boolean isLocked;
 	private final Set<String> keyIDs;
 	
-	public ObjectExit(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, String linkedExitID, Set<String> keyIDs) {
+	public ObjectDoor(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, String linkedDoorID, Set<String> keyIDs) {
 		super(game, ID, area, name, description, scripts);
-		this.linkedExitID = linkedExitID;
+		this.linkedDoorID = linkedDoorID;
 		this.keyIDs = keyIDs;
 		this.isLocked = !keyIDs.isEmpty();
 	}
 	
 	public Area getLinkedArea() {
-		return game().data().getObject(linkedExitID).getArea();
+		return game().data().getObject(linkedDoorID).getArea();
 	}
 	
 	public void unlock() {
 		this.isLocked = false;
-		((ObjectExit) game().data().getObject(linkedExitID)).isLocked = false;
+		((ObjectDoor) game().data().getObject(linkedDoorID)).isLocked = false;
 	}
 
 	public boolean isLocked() {

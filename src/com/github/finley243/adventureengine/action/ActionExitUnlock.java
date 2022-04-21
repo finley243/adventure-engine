@@ -6,13 +6,13 @@ import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.object.ObjectExit;
+import com.github.finley243.adventureengine.world.object.ObjectDoor;
 
 public class ActionExitUnlock extends Action {
 
-	private final ObjectExit exit;
+	private final ObjectDoor exit;
 	
-	public ActionExitUnlock(ObjectExit exit) {
+	public ActionExitUnlock(ObjectDoor exit) {
 		this.exit = exit;
 	}
 	

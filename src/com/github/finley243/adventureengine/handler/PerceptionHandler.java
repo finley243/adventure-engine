@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SoundEvent;
 import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.ObjectExit;
+import com.github.finley243.adventureengine.world.object.ObjectDoor;
 import com.google.common.eventbus.Subscribe;
 
 public class PerceptionHandler {
@@ -41,8 +41,8 @@ public class PerceptionHandler {
 		Set<Actor> audibleActors = e.getOrigin().getRoom().getActors();
 		if(e.isLoud()) {
 			for(Object areaObject : e.getOrigin().getRoom().getObjects()) {
-				if(areaObject instanceof ObjectExit) {
-					audibleActors.addAll(((ObjectExit) areaObject).getLinkedArea().getRoom().getActors());
+				if(areaObject instanceof ObjectDoor) {
+					audibleActors.addAll(((ObjectDoor) areaObject).getLinkedArea().getRoom().getActors());
 				}
 			}
 		}

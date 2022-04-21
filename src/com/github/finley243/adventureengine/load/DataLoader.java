@@ -541,7 +541,7 @@ public class DataLoader {
         String roomName = roomNameElement.getTextContent();
         boolean roomNameIsProper = LoadUtils.attributeBool(roomNameElement, "proper", false);
         String roomDescription = LoadUtils.singleTag(roomElement, "roomDescription", null);
-        String roomOwnerFaction = LoadUtils.singleTag(roomElement, "ownerFaction", null);
+        String roomOwnerFaction = LoadUtils.attribute(roomElement, "faction", null);
         Map<String, Script> roomScripts = loadScriptsWithTriggers(roomElement);
 
         List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
@@ -557,14 +557,11 @@ public class DataLoader {
     private static Area loadArea(Game game, Element areaElement, String roomID) throws ParserConfigurationException, IOException, SAXException {
         if(areaElement == null) return null;
         String areaID = areaElement.getAttribute("id");
-        String landmarkID = LoadUtils.singleTag(areaElement, "landmark", null);
-        String description = LoadUtils.singleTag(areaElement, "areaDescription", null);
-        String areaOwnerFaction = LoadUtils.singleTag(areaElement, "ownerFaction", null);
-        Element areaOwnerElement = LoadUtils.singleChildWithName(areaElement, "ownerFaction");
-        boolean areaIsPrivate = false;
-        if(areaOwnerElement != null) {
-            areaIsPrivate = LoadUtils.attributeBool(areaOwnerElement, "private", false);
-        }
+        String landmarkID = LoadUtils.attribute(areaElement, "landmark", null);
+        String description = LoadUtils.singleTag(areaElement, "description", null);
+        Element areaOwnerElement = LoadUtils.singleChildWithName(areaElement, "owner");
+        String areaOwnerFaction = (areaOwnerElement != null ? areaOwnerElement.getTextContent() : null);
+        boolean areaIsPrivate = LoadUtils.attributeBool(areaOwnerElement, "private", false);
 
         Element linksElement = LoadUtils.singleChildWithName(areaElement, "links");
         List<Element> linkElements = LoadUtils.directChildrenWithName(linksElement, "link");
@@ -581,8 +578,7 @@ public class DataLoader {
 
         Area area = new Area(game, areaID, landmarkID, description, roomID, areaOwnerFaction, areaIsPrivate, linkSet, areaScripts);
 
-        Element objectsElement = LoadUtils.singleChildWithName(areaElement, "objects");
-        List<Element> objectElements = LoadUtils.directChildrenWithName(objectsElement, "object");
+        List<Element> objectElements = LoadUtils.directChildrenWithName(areaElement, "object");
         for(Element objectElement : objectElements) {
             WorldObject object = loadObject(game, objectElement, area);
             game.data().addObject(object.getID(), object);
@@ -606,10 +602,10 @@ public class DataLoader {
         String objectDescription = LoadUtils.singleTag(objectElement, "description", null);
         Map<String, Script> objectScripts = loadScriptsWithTriggers(objectElement);
         switch(objectType) {
-            case "exit":
-                String exitLink = LoadUtils.singleTag(objectElement, "link", null);
-                Set<String> exitKeys = LoadUtils.setOfTags(objectElement, "key");
-                return new ObjectExit(game, objectID, area, objectName, objectDescription, objectScripts, exitLink, exitKeys);
+            case "door":
+                String doorLink = LoadUtils.singleTag(objectElement, "link", null);
+                Set<String> doorKeys = LoadUtils.setOfTags(objectElement, "key");
+                return new ObjectDoor(game, objectID, area, objectName, objectDescription, objectScripts, doorLink, doorKeys);
             case "elevator":
                 int floorNumber = LoadUtils.singleTagInt(objectElement, "floorNumber", 1);
                 String floorName = LoadUtils.singleTag(objectElement, "floorName", null);

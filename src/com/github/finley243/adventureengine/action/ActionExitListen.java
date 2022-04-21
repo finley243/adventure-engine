@@ -3,13 +3,13 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
-import com.github.finley243.adventureengine.world.object.ObjectExit;
+import com.github.finley243.adventureengine.world.object.ObjectDoor;
 
 public class ActionExitListen extends Action {
 
-	private final ObjectExit exit;
+	private final ObjectDoor exit;
 	
-	public ActionExitListen(ObjectExit exit) {
+	public ActionExitListen(ObjectDoor exit) {
 		this.exit = exit;
 	}
 

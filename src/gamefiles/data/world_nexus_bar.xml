@@ -1,42 +1,32 @@
 <data>
     <room id="street_corner">
         <name proper="false">street corner</name>
-        <area id="street_corner_nexus">
-            <landmark>nexus_entrance_exterior</landmark>
-            <objects>
-                <object type="exit" id="nexus_entrance_exterior">
-                    <name>Nexus front door</name>
-                    <link>nexus_entrance_interior</link>
-                    <key>nexus_bouncer_key</key>
-                </object>
-                <object type="exit" id="stratis_entrance_exterior">
-                    <name>Stratis Hotel entrance</name>
-                    <link>stratis_entry_door</link>
-                </object>
-            </objects>
-            <actors>
-                <actor id="nexus_bouncer">
-                    <template>nexus_bouncer</template>
-                    <idle>
-                        <point>
-                            <area>street_corner_nexus</area>
-                        </point>
-                    </idle>
-                    <preventMovement>true</preventMovement>
-                </actor>
-            </actors>
+        <area id="street_corner_nexus" landmark="nexus_entrance_exterior">
+            <object type="door" id="nexus_entrance_exterior">
+                <name>Nexus front entrance</name>
+                <link>nexus_entrance_interior</link>
+                <key>nexus_bouncer_key</key>
+            </object>
+            <object type="door" id="stratis_entrance_exterior">
+                <name>Stratis Hotel entrance</name>
+                <link>stratis_entry_door</link>
+            </object>
+            <actor id="nexus_bouncer">
+                <template>nexus_bouncer</template>
+                <behaviors>
+                    <behavior type="area" area="street_corner_nexus"/>
+                </behaviors>
+                <preventMovement>true</preventMovement>
+            </actor>
         </area>
     </room>
     <room id="nexus">
         <name proper="false">Nexus</name>
-        <area id="nexus_entry">
-            <landmark>nexus_entrance_interior</landmark>
-            <objects>
-                <object type="exit" id="nexus_entrance_interior">
-                    <name>front door</name>
-                    <link>nexus_entrance_exterior</link>
-                </object>
-            </objects>
+        <area id="nexus_entry" landmark="nexus_entrance_interior">
+            <object type="door" id="nexus_entrance_interior">
+                <name>front door</name>
+                <link>nexus_entrance_exterior</link>
+            </object>
         </area>
     </room>
 </data>

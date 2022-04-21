@@ -1,9 +1,8 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.world.object.ObjectExit;
+import com.github.finley243.adventureengine.world.object.ObjectDoor;
 
 public class ScriptUnlock extends Script {
 
@@ -16,7 +15,7 @@ public class ScriptUnlock extends Script {
 
 	@Override
 	public void executeSuccess(Actor subject) {
-		((ObjectExit) subject.game().data().getObject(object)).unlock();
+		((ObjectDoor) subject.game().data().getObject(object)).unlock();
 	}
 
 }

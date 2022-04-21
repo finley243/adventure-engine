@@ -2,190 +2,160 @@
     <room id="stratis_hotel_lobby">
         <name proper="false">lobby</name>
         <roomDescription>The lobby is large and airy. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</roomDescription>
-        <area id="stratis_hotel_lobby_entry">
-            <landmark>stratis_entry_door</landmark>
-            <areaDescription>The entryway is clean and relatively empty.</areaDescription>
-            <objects>
-                <object type="exit" id="stratis_entry_door">
-                    <name>entry door</name>
-                    <link>stratis_entrance_exterior</link>
-                </object>
-                <object type="bed" id="test_bed">
-                    <name>bed</name>
-                </object>
-                <object type="container" id="test_container">
-                    <name>loot bag</name>
-                    <description>A bag full of random loot.</description>
-                    <lootTable>weapon_ranged_3</lootTable>
-                </object>
-            </objects>
+        <area id="stratis_hotel_lobby_entry" landmark="stratis_entry_door">
+            <description>The entryway is clean and relatively empty.</description>
+            <object type="door" id="stratis_entry_door">
+                <name>entry door</name>
+                <link>stratis_entrance_exterior</link>
+            </object>
+            <object type="bed" id="test_bed">
+                <name>bed</name>
+            </object>
+            <object type="container" id="test_container">
+                <name>loot bag</name>
+                <description>A bag full of random loot.</description>
+                <lootTable>weapon_ranged_3</lootTable>
+            </object>
             <links>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_seating</link>
                 <link>stratis_hotel_lobby_elevators</link>
             </links>
         </area>
-        <area id="stratis_hotel_lobby_desk">
-            <landmark>stratis_reception_desk</landmark>
-            <areaDescription>The white marble desk stretches several meters across. Behind it, large chrome lettering spells out "Stratis".</areaDescription>
+        <area id="stratis_hotel_lobby_desk" landmark="stratis_reception_desk">
+            <description>The white marble desk stretches several meters across. Behind it, large chrome lettering spells out "Stratis".</description>
             <links>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_seating</link>
                 <link>stratis_hotel_lobby_elevators</link>
             </links>
-            <objects>
-                <object type="container" id="stratis_reception_desk">
-                    <name>reception desk</name>
-                </object>
-            </objects>
-            <actors>
-                <actor id="stratis_receptionist">
-                    <template>stratis_receptionist</template>
-                    <behaviors>
-                        <behavior type="area" area="stratis_hotel_lobby_desk"/>
-                    </behaviors>
-                </actor>
-            </actors>
+            <object type="container" id="stratis_reception_desk">
+                <name>reception desk</name>
+            </object>
+            <actor id="stratis_receptionist">
+                <template>stratis_receptionist</template>
+                <behaviors>
+                    <behavior type="area" area="stratis_hotel_lobby_desk"/>
+                </behaviors>
+            </actor>
         </area>
-        <area id="stratis_hotel_lobby_seating">
-            <landmark>stratis_hotel_lobby_security_door</landmark>
+        <area id="stratis_hotel_lobby_seating" landmark="stratis_hotel_lobby_security_door">
             <links>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_elevators</link>
             </links>
-            <objects>
-                <object type="chair" id="stratis_hotel_lobby_chair">
-                    <name>lounge chair</name>
-                </object>
-                <object type="exit" id="stratis_hotel_lobby_security_door">
-                    <name>security office door</name>
-                    <link>stratis_hotel_security_door</link>
-                    <key>stratis_security_key</key>
-                </object>
-            </objects>
-            <actors>
-                <actor id="stratis_guard_lobby">
-                    <template>stratis_guard</template>
-                    <descriptor>lobby</descriptor>
-                    <behaviors>
-                        <behavior type="cycle">
-                            <behavior type="area" duration="2" area="stratis_hotel_lobby_seating"/>
-                            <behavior type="area" duration="2" area="stratis_hotel_lobby_elevators"/>
-                        </behavior>
-                    </behaviors>
-                </actor>
-            </actors>
+            <object type="chair" id="stratis_hotel_lobby_chair">
+                <name>lounge chair</name>
+            </object>
+            <object type="door" id="stratis_hotel_lobby_security_door">
+                <name>security office door</name>
+                <link>stratis_hotel_security_door</link>
+                <key>stratis_security_key</key>
+            </object>
+            <actor id="stratis_guard_lobby">
+                <template>stratis_guard</template>
+                <descriptor>lobby</descriptor>
+                <behaviors>
+                    <behavior type="cycle">
+                        <behavior type="area" duration="2" area="stratis_hotel_lobby_seating"/>
+                        <behavior type="area" duration="2" area="stratis_hotel_lobby_elevators"/>
+                    </behavior>
+                </behaviors>
+            </actor>
         </area>
-        <area id="stratis_hotel_lobby_elevators">
-            <landmark>stratis_hotel_elevator_lobby</landmark>
+        <area id="stratis_hotel_lobby_elevators" landmark="stratis_hotel_elevator_lobby">
             <links>
                 <link>stratis_hotel_lobby_desk</link>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_seating</link>
             </links>
-            <objects>
-                <object type="elevator" id="stratis_hotel_elevator_lobby">
-                    <name>elevator</name>
-                    <floorName>Lobby</floorName>
-                    <floorNumber>1</floorNumber>
-                    <links>
-                        <link>stratis_hotel_elevator_corridor</link>
-                    </links>
-                </object>
-                <object type="sign" id="stratis_hotel_lobby_sign_navigation">
-                    <name>navigation sign</name>
-                    <text>
-                        <line>FLOOR 1: Lobby</line>
-                        <line>FLOOR 2-9: Guest Rooms</line>
-                        <line>FLOOR 10: Restaurant</line>
-                    </text>
-                </object>
-            </objects>
+            <object type="elevator" id="stratis_hotel_elevator_lobby">
+                <name>elevator</name>
+                <floorName>Lobby</floorName>
+                <floorNumber>1</floorNumber>
+                <links>
+                    <link>stratis_hotel_elevator_corridor</link>
+                </links>
+            </object>
+            <object type="sign" id="stratis_hotel_lobby_sign_navigation">
+                <name>navigation sign</name>
+                <text>
+                    <line>FLOOR 1: Lobby</line>
+                    <line>FLOOR 2-9: Guest Rooms</line>
+                    <line>FLOOR 10: Restaurant</line>
+                </text>
+            </object>
         </area>
     </room>
     <room id="stratis_hotel_rooms_corridor">
         <name proper="false">guest room corridor</name>
-        <areaDescription>You enter a dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</areaDescription>
-        <area id="stratis_hotel_corridor_elevators">
-            <landmark>stratis_hotel_elevator_corridor</landmark>
+        <description>You enter a dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</description>
+        <area id="stratis_hotel_corridor_elevators" landmark="stratis_hotel_elevator_corridor">
             <description>The space outside the elevators is dimly lit, with a row of doors on the opposite wall.</description>
             <links>
                 <link>stratis_hotel_corridor_main</link>
             </links>
-            <objects>
-                <object type="elevator" id="stratis_hotel_elevator_corridor">
-                    <name>elevator</name>
-                    <floorName>Guest Rooms</floorName>
-                    <floorNumber>5</floorNumber>
-                    <links>
-                        <link>stratis_hotel_elevator_lobby</link>
-                    </links>
-                </object>
-                <object type="vendingMachine" id="stratis_hotel_vending_machine">
-                    <name>vending machine</name>
-                    <items>
-                        <item>nitron_cola</item>
-                        <item>nitron_diet</item>
-                    </items>
-                </object>
-            </objects>
+            <object type="elevator" id="stratis_hotel_elevator_corridor">
+                <name>elevator</name>
+                <floorName>Guest Rooms</floorName>
+                <floorNumber>5</floorNumber>
+                <links>
+                    <link>stratis_hotel_elevator_lobby</link>
+                </links>
+            </object>
+            <object type="vendingMachine" id="stratis_hotel_vending_machine">
+                <name>vending machine</name>
+                <items>
+                    <item>nitron_cola</item>
+                    <item>nitron_diet</item>
+                </items>
+            </object>
         </area>
-        <area id="stratis_hotel_corridor_main">
-            <landmark>stratis_hotel_corridor_room_door</landmark>
+        <area id="stratis_hotel_corridor_main" landmark="stratis_hotel_corridor_room_door">
             <links>
                 <link>stratis_hotel_corridor_elevators</link>
             </links>
-            <objects>
-                <object type="exit" id="stratis_hotel_corridor_room_door">
-                    <name>door</name>
-                    <description>The door is made from an elegant dark-stained wood. There is a key card reader above the handle. To the right of the door, a sign reads "508".</description>
-                    <link>stratis_hotel_room_door</link>
-                    <key>stratis_room_key</key>
-                    <key>stratis_master_key</key>
-                </object>
-            </objects>
+            <object type="door" id="stratis_hotel_corridor_room_door">
+                <name>door</name>
+                <description>The door is made from an elegant dark-stained wood. There is a key card reader above the handle. To the right of the door, a sign reads "508".</description>
+                <link>stratis_hotel_room_door</link>
+                <key>stratis_room_key</key>
+                <key>stratis_master_key</key>
+            </object>
         </area>
     </room>
     <room id="stratis_hotel_room">
         <name proper="true">room 508</name>
         <description>The lights come on as you enter, casting a warm glow over the white linen on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</description>
-        <area id="stratis_hotel_room_main">
-            <landmark>stratis_hotel_room_door</landmark>
-            <objects>
-                <object type="exit" id="stratis_hotel_room_door">
-                    <name>door</name>
-                    <link>stratis_hotel_corridor_room_door</link>
-                </object>
-                <object type="item" id="stratis_hotel_room_baseball_bat">
-                    <item>baseball_bat</item>
-                </object>
-            </objects>
+        <area id="stratis_hotel_room_main" landmark="stratis_hotel_room_door">
+            <object type="door" id="stratis_hotel_room_door">
+                <name>door</name>
+                <link>stratis_hotel_corridor_room_door</link>
+            </object>
+            <object type="item" id="stratis_hotel_room_baseball_bat">
+                <item>baseball_bat</item>
+            </object>
         </area>
     </room>
     <room id="stratis_hotel_security">
         <name proper="false">security office</name>
-        <ownerFaction>stratis_hotel_staff</ownerFaction>
-        <area id="stratis_hotel_security_main">
-            <landmark>stratis_hotel_security_door</landmark>
-            <objects>
-                <object type="exit" id="stratis_hotel_security_door">
-                    <name>door</name>
-                    <link>stratis_hotel_lobby_security_door</link>
-                </object>
-                <object type="item" id="stratis_hotel_security_rifle">
-                    <item>rifle_auto</item>
-                </object>
-            </objects>
-            <actors>
-                <actor id="stratis_guard_office">
-                    <template>stratis_guard</template>
-                    <descriptor>office</descriptor>
-                    <behaviors>
-                        <behavior type="area" area="stratis_hotel_security_main"/>
-                    </behaviors>
-                </actor>
-            </actors>
+        <owner private="true">stratis_hotel_staff</owner>
+        <area id="stratis_hotel_security_main" landmark="stratis_hotel_security_door">
+            <object type="door" id="stratis_hotel_security_door">
+                <name>door</name>
+                <link>stratis_hotel_lobby_security_door</link>
+            </object>
+            <object type="item" id="stratis_hotel_security_rifle">
+                <item>rifle_auto</item>
+            </object>
+            <actor id="stratis_guard_office">
+                <template>stratis_guard</template>
+                <descriptor>office</descriptor>
+                <behaviors>
+                    <behavior type="area" area="stratis_hotel_security_main"/>
+                </behaviors>
+            </actor>
         </area>
     </room>
 </data>

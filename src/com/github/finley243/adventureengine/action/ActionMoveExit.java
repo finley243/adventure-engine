@@ -8,13 +8,13 @@ import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.ObjectExit;
+import com.github.finley243.adventureengine.world.object.ObjectDoor;
 
 public class ActionMoveExit extends ActionMove {
 
-	private final ObjectExit exit;
+	private final ObjectDoor exit;
 	
-	public ActionMoveExit(ObjectExit exit) {
+	public ActionMoveExit(ObjectDoor exit) {
 		this.exit = exit;
 	}
 	
@@ -22,7 +22,7 @@ public class ActionMoveExit extends ActionMove {
 		return exit.getLinkedArea();
 	}
 
-	public ObjectExit getExit() {
+	public ObjectDoor getExit() {
 		return exit;
 	}
 	
