@@ -72,11 +72,8 @@
             </links>
             <object type="elevator" id="stratis_hotel_elevator_lobby">
                 <name>elevator</name>
-                <floorName>Lobby</floorName>
-                <floorNumber>1</floorNumber>
-                <links>
-                    <link>stratis_hotel_elevator_corridor</link>
-                </links>
+                <floor number="1">Lobby</floor>
+                <link>stratis_hotel_elevator_corridor</link>
             </object>
             <object type="sign" id="stratis_hotel_lobby_sign_navigation">
                 <name>navigation sign</name>
@@ -98,18 +95,13 @@
             </links>
             <object type="elevator" id="stratis_hotel_elevator_corridor">
                 <name>elevator</name>
-                <floorName>Guest Rooms</floorName>
-                <floorNumber>5</floorNumber>
-                <links>
-                    <link>stratis_hotel_elevator_lobby</link>
-                </links>
+                <floor number="5">Guest Rooms</floor>
+                <link>stratis_hotel_elevator_lobby</link>
             </object>
             <object type="vendingMachine" id="stratis_hotel_vending_machine">
                 <name>vending machine</name>
-                <items>
-                    <item>nitron_cola</item>
-                    <item>nitron_diet</item>
-                </items>
+                <item>nitron_cola</item>
+                <item>nitron_diet</item>
             </object>
         </area>
         <area id="stratis_hotel_corridor_main" landmark="stratis_hotel_corridor_room_door">

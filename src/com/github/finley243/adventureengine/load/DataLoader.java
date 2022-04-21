@@ -606,10 +606,11 @@ public class DataLoader {
                 Set<String> doorKeys = LoadUtils.setOfTags(objectElement, "key");
                 return new ObjectDoor(game, objectID, area, objectName, objectDescription, objectScripts, doorLink, doorKeys);
             case "elevator":
-                int floorNumber = LoadUtils.singleTagInt(objectElement, "floorNumber", 1);
-                String floorName = LoadUtils.singleTag(objectElement, "floorName", null);
+                Element floorElement = LoadUtils.singleChildWithName(objectElement, "floor");
+                int floorNumber = LoadUtils.singleTagInt(floorElement, "number", 1);
+                String floorName = floorElement.getTextContent();
                 boolean elevatorStartLocked = LoadUtils.singleTagBoolean(objectElement, "startLocked", false);
-                Set<String> linkedElevatorIDs = LoadUtils.setOfTags(LoadUtils.singleChildWithName(objectElement, "links"), "link");
+                Set<String> linkedElevatorIDs = LoadUtils.setOfTags(objectElement, "link");
                 return new ObjectElevator(game, objectID, area, objectName, objectDescription, objectScripts, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
             case "sign":
                 List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "text"), "line");
@@ -621,7 +622,7 @@ public class DataLoader {
             case "cover":
                 return new ObjectCover(game, objectID, area, objectName, objectDescription, objectScripts);
             case "vendingMachine":
-                List<String> vendingItems = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "items"), "item");
+                List<String> vendingItems = LoadUtils.listOfTags(objectElement, "item");
                 return new ObjectVendingMachine(game, objectID, area, objectName, objectDescription, objectScripts, vendingItems);
             case "item":
                 String itemID = LoadUtils.singleTag(objectElement, "item", null);
