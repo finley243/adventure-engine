@@ -584,8 +584,7 @@ public class DataLoader {
             game.data().addObject(object.getID(), object);
         }
 
-        Element actorsElement = LoadUtils.singleChildWithName(areaElement, "actors");
-        List<Element> actorElements = LoadUtils.directChildrenWithName(actorsElement, "actor");
+        List<Element> actorElements = LoadUtils.directChildrenWithName(areaElement, "actor");
         for(Element actorElement : actorElements) {
             Actor actor = loadActorInstance(game, actorElement, area);
             game.data().addActor(actor.getID(), actor);
