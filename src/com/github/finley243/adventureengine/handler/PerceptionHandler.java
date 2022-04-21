@@ -37,6 +37,7 @@ public class PerceptionHandler {
 					break;
 				}
 			}
+			// TODO - Test non-visible event functionality
 			actor.onSensoryEvent(e, actorCanSeeEvent);
 		}
 	}
