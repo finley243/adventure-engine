@@ -35,11 +35,11 @@ public class LangUtils {
 		for(int i = 0; i < words.length; i++) {
 			words[i] = capitalize(words[i]);
 		}
-		String newLine = "";
+		StringBuilder newLine = new StringBuilder();
 		for(String word : words) {
-			newLine += word + " ";
+			newLine.append(word).append(" ");
 		}
-		return newLine.trim();
+		return newLine.toString().trim();
 	}
 	
 	public static String possessive(String noun, boolean plural) {

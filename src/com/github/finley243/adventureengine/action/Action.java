@@ -42,8 +42,4 @@ public abstract class Action {
 		return false;
 	}
 
-	public boolean isIllegal() {
-		return false;
-	}
-
 }

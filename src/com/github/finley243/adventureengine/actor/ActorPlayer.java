@@ -8,8 +8,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.event.SoundEvent;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -19,7 +18,7 @@ public class ActorPlayer extends Actor {
 	private final MenuManager menuManager;
 	
 	public ActorPlayer(Game gameInstance, String ID, Area area, ActorTemplate stats) {
-		super(gameInstance, ID, area, stats, null, null, false, false, false);
+		super(gameInstance, ID, area, stats, null, null, false, false);
 		this.menuManager = new MenuManager();
 		game().eventBus().register(menuManager);
 	}
@@ -30,15 +29,14 @@ public class ActorPlayer extends Actor {
 	}
 	
 	@Override
-	public void onVisualEvent(AudioVisualEvent event) {
+	public void onSensoryEvent(SensoryEvent event, boolean visible) {
 		if(isActive()) {
-			game().eventBus().post(new RenderTextEvent(event.getTextVisible()));
+			if (visible) {
+				game().eventBus().post(new RenderTextEvent(event.getTextVisible()));
+			} else {
+				game().eventBus().post(new RenderTextEvent(event.getTextAudible()));
+			}
 		}
-	}
-	
-	@Override
-	public void onSoundEvent(SoundEvent event) {
-		
 	}
 	
 	@Override

@@ -1,9 +1,5 @@
 package com.github.finley243.adventureengine.world.object;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionUseStart;
@@ -12,7 +8,10 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.item.Item;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An object that can have a single "user" (e.g. a chair)
@@ -73,13 +72,10 @@ public abstract class UsableObject extends WorldObject {
 	}
 
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
-			case "user":
-				user = game().data().getActor(saveData.getValueString());
-				break;
-			default:
-				super.loadState(saveData);
-				break;
+		if ("user".equals(saveData.getParameter())) {
+			user = game().data().getActor(saveData.getValueString());
+		} else {
+			super.loadState(saveData);
 		}
 	}
 

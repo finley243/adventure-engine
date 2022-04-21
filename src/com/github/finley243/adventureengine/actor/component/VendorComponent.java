@@ -43,11 +43,11 @@ public class VendorComponent {
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         if(!enabled) return actions;
-        for(Item item : vendorInventory.getUniqueItems()) {
+        for(Item item : vendorInventory.getItems()) {
             actions.add(new ActionVendorBuy(vendor, vendorInventory, item));
         }
         if(!buyTags.isEmpty() || buyAll) {
-            for (Item item : subject.inventory().getUniqueItems()) {
+            for (Item item : subject.inventory().getItems()) {
                 boolean canBuy = buyAll;
                 if(!canBuy) {
                     // TODO - Optimize checks?

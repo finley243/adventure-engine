@@ -2,20 +2,13 @@ package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.action.reaction.ActionReaction;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.event.SoundEvent;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
-import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ActionRangedAttackTargeted extends ActionAttack {
 
@@ -25,8 +18,7 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 
 	@Override
 	public List<ActionReaction> getReactions(Actor subject) {
-		List<ActionReaction> reactions = new ArrayList<>();
-		return reactions;
+		return new ArrayList<>();
 	}
 
 	@Override

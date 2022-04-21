@@ -6,8 +6,6 @@ import com.github.finley243.adventureengine.action.ActionApparelEquip;
 import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
-import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.template.ApparelTemplate;
 import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 

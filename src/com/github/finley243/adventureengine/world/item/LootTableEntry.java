@@ -1,12 +1,10 @@
 package com.github.finley243.adventureengine.world.item;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-
 import com.github.finley243.adventureengine.Game;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LootTableEntry {
 
@@ -21,24 +19,6 @@ public class LootTableEntry {
 		this.chance = chance;
 		this.count = count;
 	}
-	
-	/*public Set<Item> generateItems(Game game) {
-		Set<Item> items = new HashSet<>();
-		if(ThreadLocalRandom.current().nextFloat() < chance) {
-			if(isLootTable) {
-				LootTable table = game.data().getLootTable(referenceID);
-				for(int i = 0; i < count; i++) {
-					items.addAll(table.generateItems(game));
-				}
-			} else {
-				// TODO - Add more efficient stacked item generation (for stateless items)
-				for(int i = 0; i < count; i++) {
-					items.add(ItemFactory.create(game, referenceID, null));
-				}
-			}
-		}
-		return items;
-	}*/
 
 	public Map<Item, Integer> generateItems(Game game) {
 		Map<Item, Integer> items = new HashMap<>();

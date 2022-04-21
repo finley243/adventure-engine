@@ -292,10 +292,6 @@ public class Data {
 	public Scene getScene(String id) {
 		return scenes.get(id);
 	}
-	
-	public Collection<Scene> getScenes() {
-		return scenes.values();
-	}
 
 	public void addNetwork(String id, Network value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add network with blank ID");

@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.action.reaction.ActionReaction;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
@@ -79,7 +79,7 @@ public abstract class ActionAttack extends ActionRandom {
         }
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
         //if(!CombatHelper.isRepeat(attackContext)) {
-            subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getTelegraphPhrase()), attackContext, this, subject));
+            subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getTelegraphPhrase()), attackContext, this, subject));
         //}
         this.reaction = chooseReaction(subject);
         this.reactionSuccess = (reaction != null && reaction.computeSuccess(getTarget()));
@@ -108,7 +108,7 @@ public abstract class ActionAttack extends ActionRandom {
             }
         }
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
-        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getHitPhrase()), attackContext, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase()), attackContext, this, subject));
         target.damage(damage, getLimb());
         subject.triggerEffect("on_attack_success");
     }
@@ -116,7 +116,7 @@ public abstract class ActionAttack extends ActionRandom {
     @Override
     public void onFail(Actor subject) {
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
-        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(getMissPhrase()), attackContext, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase()), attackContext, this, subject));
         subject.triggerEffect("on_attack_failure");
     }
 

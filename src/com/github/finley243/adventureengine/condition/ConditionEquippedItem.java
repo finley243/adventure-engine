@@ -28,9 +28,4 @@ public class ConditionEquippedItem extends Condition {
 		return (tag == null || equippedItem.getTemplate().getTags().contains(tag)) != invert;
 	}
 
-	@Override
-	public String getChoiceTag() {
-		return null;
-	}
-
 }

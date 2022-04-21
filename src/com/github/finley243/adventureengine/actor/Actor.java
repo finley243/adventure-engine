@@ -8,8 +8,7 @@ import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.effect.moddable.Moddable;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
-import com.github.finley243.adventureengine.event.SoundEvent;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
@@ -315,9 +314,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		HP += amount;
 		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 		if(SHOW_HP_CHANGES) {
-			game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null));
 		}
-		game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
+		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
 	}
 	
 	public void damage(int amount, Limb limb) {
@@ -339,9 +338,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			triggerScript("on_damaged");
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
 			}
-			game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
 		}
 	}
 
@@ -360,16 +359,16 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			triggerScript("on_damaged");
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if(SHOW_HP_CHANGES) {
-				game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
 			}
-			game().eventBus().post(new AudioVisualEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
 		}
 	}
 	
 	public void kill() {
 		triggerScript("on_death");
 		Context context = new Context(new NounMapper().put("actor", this).build());
-		game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("die"), context, null, null));
+		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null));
 		dropEquippedItem();
 		isDead = true;
 	}
@@ -380,7 +379,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			inventory.removeItem(item);
 			Item.itemToObject(game(), item, 1, getArea());
 			Context context = new Context(new NounMapper().put("actor", this).put("item", item).build());
-			game().eventBus().post(new AudioVisualEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 		}
 	}
 
@@ -434,21 +433,23 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 	}
 	
-	public void onVisualEvent(AudioVisualEvent event) {
+	public void onSensoryEvent(SensoryEvent event, boolean visible) {
 		if(isActive() && isEnabled()) {
-			if (event.getAction() instanceof ActionMoveArea) {
-				targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveArea) event.getAction()).getArea());
-			} else if (event.getAction() instanceof ActionMoveExit) {
-				targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
-			} else if (event.getAction() instanceof ActionMoveElevator) {
-				targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveElevator) event.getAction()).getDestination().getArea());
+			if (visible) {
+				if (event.getAction() instanceof ActionMoveArea) {
+					targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveArea) event.getAction()).getArea());
+				} else if (event.getAction() instanceof ActionMoveExit) {
+					targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveExit) event.getAction()).getExit().getLinkedArea());
+				} else if (event.getAction() instanceof ActionMoveElevator) {
+					targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveElevator) event.getAction()).getDestination().getArea());
+				}
+			} else {
+				if (event.getResponseType() == SensoryEvent.ResponseType.INVESTIGATE) {
+					investigateTarget.setTargetArea(event.getOrigins()[ThreadLocalRandom.current().nextInt(event.getOrigins().length)]);
+					triggerScript("on_investigate_start");
+				}
 			}
 		}
-	}
-	
-	public void onSoundEvent(SoundEvent event) {
-		investigateTarget.setTargetArea(event.getOrigin());
-		triggerScript("on_investigate_start");
 	}
 	
 	public void startUsingObject(UsableObject object) {
@@ -476,7 +477,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 
 	public boolean hasWeapon() {
-		for(Item item : inventory.getUniqueItems()) {
+		for(Item item : inventory.getItems()) {
 			if(item instanceof ItemWeapon) {
 				return true;
 			}
@@ -553,7 +554,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if(canMove()) {
 			actions.addAll(getArea().getMoveActions());
 		}
-		for(Item item : inventory.getUniqueItems()) {
+		for(Item item : inventory.getItems()) {
 			actions.addAll(item.inventoryActions(this));
 		}
 		for(ItemApparel item : apparelComponent.getEquippedItems()) {
@@ -761,10 +762,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	@Override
 	public ModdableStatFloat getStatFloat(String name) {
-		switch(name) {
-			default:
-				return null;
-		}
+		return null;
 	}
 
 	@Override
@@ -776,23 +774,19 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	@Override
 	public void modifyState(String name, int amount) {
-		switch(name) {
-			case "hp":
-				if(amount > 0) {
-					heal(amount);
-				} else if(amount < 0) {
-					damage(amount, null);
-				}
-				break;
+		if ("hp".equals(name)) {
+			if (amount > 0) {
+				heal(amount);
+			} else if (amount < 0) {
+				damage(amount, null);
+			}
 		}
 	}
 
 	@Override
 	public void triggerEffect(String name) {
-		switch(name) {
-			case "dropEquipped":
-				dropEquippedItem();
-				break;
+		if ("dropEquipped".equals(name)) {
+			dropEquippedItem();
 		}
 	}
 
@@ -828,9 +822,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			case "target":
 				this.targetingComponent.addCombatant(game().data().getActor(saveData.getValueString()));
 				break;
-			/*case "inventory":
-				this.inventory.addItem((Item) game().data().getObject(saveData.getValueString()));
-				break;*/
 			case "equippedItem":
 				this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
 				break;
@@ -861,9 +852,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", (area == null ? null : area.getID())));
 		}
 		// TODO - Handle item saving in the inventory itself
-		/*for(Item item : inventory.getAllItems()) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "inventory", item.getID()));
-		}*/
 		if(equipmentComponent.hasEquippedItem()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedItem", equipmentComponent.getEquippedItem().getID()));
 		}

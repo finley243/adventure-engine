@@ -25,9 +25,4 @@ public class ConditionInventoryItem extends Condition {
 		}
 	}
 
-	@Override
-	public String getChoiceTag() {
-		return null;
-	}
-
 }

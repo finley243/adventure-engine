@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;

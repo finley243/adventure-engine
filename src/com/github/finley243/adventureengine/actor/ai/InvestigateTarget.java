@@ -38,9 +38,7 @@ public class InvestigateTarget {
 
     public void update(Actor subject) {
         if(areaTarget == null && targetArea != null) {
-            Set<Area> targetSet = new HashSet<>();
-            targetSet.add(targetArea);
-            areaTarget = new AreaTarget(targetSet, UtilityUtils.INVESTIGATE_NOISE_UTILITY, true, false, false);
+            areaTarget = new AreaTarget(targetArea, UtilityUtils.INVESTIGATE_NOISE_UTILITY, true, false, false);
             subject.addPursueTarget(areaTarget);
         }
         if(subject.getArea() == targetArea) {

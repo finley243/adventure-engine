@@ -65,18 +65,16 @@ public class DialogueTopic {
 	}
 
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
-			/*case "hasVisited":
-				this.hasVisited = saveData.getValueBoolean();
-				break;*/
+		if ("hasTriggered".equals(saveData.getParameter())) {
+			this.hasTriggered.add(saveData.getValueString());
 		}
 	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		/*if(hasVisited) {
-			state.add(new SaveData(SaveData.DataType.TOPIC, this.getID(), "hasVisited", hasVisited));
-		}*/
+		for (String hasTriggeredActor : hasTriggered) {
+			state.add(new SaveData(SaveData.DataType.TOPIC, this.getID(), "hasTriggered", hasTriggeredActor));
+		}
 		return state;
 	}
 	

@@ -1,9 +1,8 @@
 package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionInspect;
-import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -12,7 +11,6 @@ import com.github.finley243.adventureengine.effect.moddable.Moddable;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.world.item.template.WeaponTemplate;
 
@@ -162,12 +160,10 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	@Override
 	public ModdableStatFloat getStatFloat(String name) {
-		switch(name) {
-			case "accuracyBonus":
-				return accuracyBonus;
-			default:
-				return null;
+		if ("accuracyBonus".equals(name)) {
+			return accuracyBonus;
 		}
+		return null;
 	}
 
 	@Override
@@ -179,10 +175,8 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	@Override
 	public void modifyState(String name, int amount) {
-		switch(name) {
-			case "ammo":
-				ammo = Math.min(getClipSize(), Math.max(0, ammo + amount));
-				break;
+		if ("ammo".equals(name)) {
+			ammo = MathUtils.bound(ammo + amount, 0, getClipSize());
 		}
 	}
 
@@ -191,13 +185,10 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	@Override
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
-			case "ammo":
-				this.ammo = saveData.getValueInt();
-				break;
-			default:
-				super.loadState(saveData);
-				break;
+		if ("ammo".equals(saveData.getParameter())) {
+			this.ammo = saveData.getValueInt();
+		} else {
+			super.loadState(saveData);
 		}
 	}
 

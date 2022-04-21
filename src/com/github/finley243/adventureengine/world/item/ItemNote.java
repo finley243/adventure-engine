@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionReadNote;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.world.item.template.NoteTemplate;
 

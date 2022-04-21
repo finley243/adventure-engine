@@ -2,13 +2,11 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.item.ItemApparel;
-import com.github.finley243.adventureengine.world.object.ObjectItem;
 
 public class ActionItemDrop extends Action {
 
@@ -23,7 +21,7 @@ public class ActionItemDrop extends Action {
 		subject.inventory().removeItem(item);
 		Item.itemToObject(subject.game(), item, 1, subject.getArea());
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("drop"), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, subject));
 	}
 
 	@Override

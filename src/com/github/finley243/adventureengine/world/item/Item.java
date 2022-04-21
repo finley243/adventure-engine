@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemDrop;
 import com.github.finley243.adventureengine.action.ActionItemDropAll;
@@ -16,12 +17,13 @@ import com.github.finley243.adventureengine.world.object.ObjectItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Item implements Noun {
+public abstract class Item extends GameInstanced implements Noun {
 
 	// ID is null if the item is stateless
 	private final String ID;
 
 	public Item(Game game, String ID) {
+		super(game);
 		this.ID = ID;
 	}
 
@@ -112,14 +114,13 @@ public abstract class Item implements Noun {
 		}
 	}
 
-	public static ObjectItem itemToObject(Game game, Item item, int count, Area area) {
+	public static void itemToObject(Game game, Item item, int count, Area area) {
 		String ID = item.getID();
 		if (ID == null) {
 			ID = item.getTemplate().generateInstanceID();
 		}
 		ObjectItem object = new ObjectItem(game, ID, area, item, count);
 		game.data().addObject(object.getID(), object);
-		return object;
 	}
 
 	public static Item objectToItem(Game game, ObjectItem objectItem, int count) {

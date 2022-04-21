@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
 
 public class ConditionTopicVisited extends Condition {

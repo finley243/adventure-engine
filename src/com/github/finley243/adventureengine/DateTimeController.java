@@ -62,10 +62,6 @@ public class DateTimeController {
         } else return crossZero && (minutes >= totalMinutes1 || minutes <= totalMinutes2);
     }
 
-    public int getTotalMinutes() {
-        return minutes;
-    }
-
     public int getMinutesComponent() {
         return minutes % 60;
     }

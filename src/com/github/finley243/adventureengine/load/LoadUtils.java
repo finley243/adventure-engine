@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.world.environment.Area;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -99,7 +98,7 @@ public class LoadUtils {
 		if(parent == null) return matches;
 		Node currentChild = parent.getFirstChild();
 		while(currentChild != null) {
-			if(currentChild.getNodeType() == Node.ELEMENT_NODE && ((Element) currentChild).getNodeName().equals(name)) {
+			if(currentChild.getNodeType() == Node.ELEMENT_NODE && currentChild.getNodeName().equals(name)) {
 				matches.add((Element) currentChild);
 			}
 			currentChild = currentChild.getNextSibling();
@@ -111,7 +110,7 @@ public class LoadUtils {
 		if(parent == null) return null;
 		Node currentChild = parent.getFirstChild();
 		while(currentChild != null) {
-			if(currentChild.getNodeType() == Node.ELEMENT_NODE && ((Element) currentChild).getNodeName().equals(name)) {
+			if(currentChild.getNodeType() == Node.ELEMENT_NODE && currentChild.getNodeName().equals(name)) {
 				return (Element) currentChild;
 			}
 			currentChild = currentChild.getNextSibling();

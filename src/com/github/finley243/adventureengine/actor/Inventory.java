@@ -29,15 +29,6 @@ public class Inventory {
 		this.itemsStateless = new HashMap<>();
 	}
 
-	/*public List<Item> getAllItems() {
-		List<Item> allItems = new ArrayList<>();
-		for(List<Item> itemList : items.values()) {
-			allItems.addAll(itemList);
-		}
-		allItems.addAll(itemsStateless.values());
-		return allItems;
-	}*/
-
 	public void addItem(Item item) {
 		if (item.getTemplate().hasState()) {
 			if (!items.containsKey(item.getTemplate().getID())) {
@@ -112,14 +103,6 @@ public class Inventory {
 	public String itemCountLabel(Item item) {
 		if (itemCount(item) > 1) {
 			return " (" + itemCount(item) + ")";
-		} else {
-			return "";
-		}
-	}
-
-	public String itemCountLabel(String itemID) {
-		if (itemCount(itemID) > 1) {
-			return " (" + itemCount(itemID) + ")";
 		} else {
 			return "";
 		}
@@ -202,10 +185,9 @@ public class Inventory {
 		// TODO - Find way to remove unreferenced items from Data (a "clean" cycle when saving or loading?)
 		items.clear();
 		itemsStateless.clear();
-		//itemStacks.clear();
 	}
 
-	public List<Item> getUniqueItems() {
+	public List<Item> getItems() {
 		List<Item> uniqueItems = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			uniqueItems.addAll(current);

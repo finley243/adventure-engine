@@ -31,7 +31,7 @@ public class ActionItemInspect extends Action {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionInspect)) {
+        if(!(o instanceof ActionItemInspect)) {
             return false;
         } else {
             ActionItemInspect other = (ActionItemInspect) o;

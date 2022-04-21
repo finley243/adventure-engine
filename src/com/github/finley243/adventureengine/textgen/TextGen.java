@@ -52,34 +52,33 @@ public class TextGen {
 	}
 
 	private static String determineContext(String line, Context context) {
-		boolean useSubjectPronoun = false;
-		boolean[] useObjectPronouns = new boolean[context.getObjects().size()];
+		boolean[] usePronouns = new boolean[context.getObjects().size()];
 		if(lastContext != null) {
 			List<Noun> objectList = new ArrayList<>(context.getObjects().values());
 			List<Noun> lastObjectList = new ArrayList<>(lastContext.getObjects().values());
 			for(int i = 0; i < objectList.size(); i++) {
 				Noun object = objectList.get(i);
-				if(lastObjectList.size() > 0) {
+				if(!lastObjectList.isEmpty()) {
 					if (lastObjectList.size() <= i && object == lastObjectList.get(lastObjectList.size() - 1)
-							|| lastObjectList.size() < i && object == lastObjectList.get(i)) {
-						if (!matchesAnyPronounsUpToObjectIndex(lastContext, object.getPronoun(), i, useSubjectPronoun, useObjectPronouns)) {
-							useObjectPronouns[i] = true;
+							|| lastObjectList.size() > i && object == lastObjectList.get(i)) {
+						if (!matchesAnyPronounsUpToObjectIndex(lastContext, object.getPronoun(), i, usePronouns)) {
+							usePronouns[i] = true;
 						}
 					}
 				}
 			}
 		}
 		List<String> objectTagList = new ArrayList<>(context.getObjects().keySet());
-		Map<String, Boolean> useObjectPronounsMap = new LinkedHashMap<>();
+		Map<String, Boolean> usePronounsMap = new LinkedHashMap<>();
 		for(int i = 0; i < objectTagList.size(); i++) {
-			useObjectPronounsMap.put(objectTagList.get(i), useObjectPronouns[i]);
+			usePronounsMap.put(objectTagList.get(i), usePronouns[i]);
 		}
 		for(String objectTag : context.getObjects().keySet()) {
 			if(context.getObjects().get(objectTag).forcePronoun()) {
-				useObjectPronounsMap.put(objectTag, true);
+				usePronounsMap.put(objectTag, true);
 			}
 		}
-		return populateFromContext(line, context, useSubjectPronoun, useObjectPronounsMap);
+		return populateFromContext(line, context, usePronounsMap);
 	}
 
 	private static String chooseRandoms(String line) {
@@ -131,8 +130,7 @@ public class TextGen {
 		return parts;
 	}
 
-	private static String populateFromContext(String line, Context context, boolean useSubjectPronoun,
-											  Map<String, Boolean> useObjectPronouns) {
+	private static String populateFromContext(String line, Context context, Map<String, Boolean> usePronouns) {
 		Map<String, Noun> objects = context.getObjects();
 
 		List<String> objectTags = new ArrayList<>(objects.keySet());
@@ -141,10 +139,10 @@ public class TextGen {
 
 		for(String objectTag : objectTags) {
 			// Object
-			line = populatePronoun(line, useObjectPronouns.get(objectTag), objects.get(objectTag).getFormattedName(), objects.get(objectTag).getPronoun().object
+			line = populatePronoun(line, usePronouns.get(objectTag), objects.get(objectTag).getFormattedName(), objects.get(objectTag).getPronoun().object
 					, objects.get(objectTag).getPronoun().possessive, "$" + objectTag, "$" + objectTag + "'s");
 			// Subject
-			line = populatePronoun(line, useObjectPronouns.get(objectTag), objects.get(objectTag).getFormattedName(), objects.get(objectTag).getPronoun().subject
+			line = populatePronoun(line, usePronouns.get(objectTag), objects.get(objectTag).getFormattedName(), objects.get(objectTag).getPronoun().subject
 					, objects.get(objectTag).getPronoun().possessive, "$_" + objectTag, "$" + objectTag + "'s");
 			// Reflexive
 			line = line.replace("$" + objectTag + "_self", objects.get(objectTag).getPronoun().reflexive);
@@ -158,16 +156,16 @@ public class TextGen {
 		}
 
 		for(String objectTag : objectTags) {
-			line = line.replace(VERB_S + "_" + objectTag, (!useObjectPronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "s" : ""));
-			line = line.replace(VERB_ES + "_" + objectTag, (!useObjectPronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "es" : ""));
-			line = line.replace(VERB_IES + "_" + objectTag, (!useObjectPronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "ies" : "y"));
+			line = line.replace(VERB_S + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "s" : ""));
+			line = line.replace(VERB_ES + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "es" : ""));
+			line = line.replace(VERB_IES + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "ies" : "y"));
 			line = line.replace(VERB_DO_NOT + "_" + objectTag,
-					(!useObjectPronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "doesn't" : "don't"));
-			line = line.replace(VERB_BE_NOT + "_" + objectTag, (!useObjectPronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "isn't"
+					(!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "doesn't" : "don't"));
+			line = line.replace(VERB_BE_NOT + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "isn't"
 					: (objects.get(objectTag).getPronoun() == Pronoun.I ? "am not" : "aren't")));
-			line = line.replace(VERB_BE + "_" + objectTag, (!useObjectPronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "is"
+			line = line.replace(VERB_BE + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "is"
 					: (objects.get(objectTag).getPronoun() == Pronoun.I ? "am" : "are")));
-			line = line.replace(VERB_HAVE + "_" + objectTag, (!useObjectPronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "has" : "have"));
+			line = line.replace(VERB_HAVE + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "has" : "have"));
 		}
 		return line;
 	}
@@ -176,7 +174,6 @@ public class TextGen {
 			String possessive, String pronounKey, String possessiveKey) {
 		if (usePronoun) {
 			line = line.replace(possessiveKey, possessive);
-			line = line.replace(pronounKey, pronoun);
 		} else {
 			int indexOf = line.indexOf(pronounKey);
 			int indexOfPossessive = line.indexOf(possessiveKey);
@@ -188,18 +185,17 @@ public class TextGen {
 			if (!possessiveFirst) {
 				line = line.replaceFirst("\\" + pronounKey, formattedName);
 			}
-			line = line.replace(pronounKey, pronoun);
 		}
+		line = line.replace(pronounKey, pronoun);
 		return line;
 	}
 
 	// Returns whether there is a matching (and used) pronoun in context that is below the given index
-	private static boolean matchesAnyPronounsUpToObjectIndex(Context context, Pronoun pronoun, int index, boolean useSubjectPronoun, boolean[] useObjectPronouns) {
-		// May not work properly for new subject/object system
+	private static boolean matchesAnyPronounsUpToObjectIndex(Context context, Pronoun pronoun, int index, boolean[] usePronouns) {
 		List<Noun> objectsList = new ArrayList<>(context.getObjects().values());
 		for(int i = 0; i < Math.min(objectsList.size(), index - 1); i++) {
 			Pronoun objectPronoun = objectsList.get(i).getPronoun();
-			if(useObjectPronouns[i] && objectPronoun == pronoun) return true;
+			if(usePronouns[i] && objectPronoun == pronoun) return true;
 		}
 		return false;
 	}

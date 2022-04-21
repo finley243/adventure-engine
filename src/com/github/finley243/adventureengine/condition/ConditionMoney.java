@@ -18,13 +18,5 @@ public class ConditionMoney extends Condition {
 	public boolean isMet(Actor subject) {
 		return (actor.getActor(subject).getMoney() >= value) != invert;
 	}
-	
-	@Override
-	public String getChoiceTag() {
-		if(actor.isPlayer()) {
-			return value + " credits";
-		}
-		return null;
-	}
 
 }

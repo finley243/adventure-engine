@@ -40,4 +40,12 @@ public class MathUtils {
         return chanceLinearContest(subject1.getAttribute(attribute), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, subject2.getSkill(skill), Actor.SKILL_MIN, Actor.SKILL_MAX, chanceMin, chanceMax);
     }
 
+    public static int bound(int value, int min, int max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    public static float bound(float value, float min, float max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
 }

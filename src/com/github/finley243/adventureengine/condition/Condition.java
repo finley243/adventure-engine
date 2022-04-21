@@ -18,10 +18,6 @@ public abstract class Condition {
 	}
 	
 	public abstract boolean isMet(Actor subject);
-	
-	public String getChoiceTag() {
-		return null;
-	}
 
 	public static boolean equalityCheckInt(int value1, int value2, Equality equality, boolean invert) {
 		switch(equality) {

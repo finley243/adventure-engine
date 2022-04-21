@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -34,7 +34,7 @@ public class ActionItemConsume extends Action {
 				phrase = "consume";
 				break;
 		}
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(phrase), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, subject));
 		for(Effect effect : item.getEffects()) {
 			subject.effectComponent().addEffect(effect);
 		}

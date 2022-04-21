@@ -20,18 +20,6 @@ public class LootTable {
 	public String getID() {
 		return ID;
 	}
-	
-	/*public List<Item> generateItems(Game game) {
-		List<Item> generatedItems = new ArrayList<>();
-		if(useAll) {
-			for(LootTableEntry entry : entries) {
-				generatedItems.addAll(entry.generateItems(game));
-			}
-		} else {
-			generatedItems.addAll(getRandomEntry().generateItems(game));
-		}
-		return generatedItems;
-	}*/
 
 	public Map<Item, Integer> generateItems(Game game) {
 		Map<Item, Integer> generatedItems = new HashMap<>();

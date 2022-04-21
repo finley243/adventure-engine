@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.ui;
 
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.ui.*;
 import com.github.finley243.adventureengine.menu.MenuData;
@@ -9,8 +8,9 @@ import com.google.common.eventbus.Subscribe;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GraphicalInterfaceNested implements UserInterface {
 
@@ -124,12 +124,12 @@ public class GraphicalInterfaceNested implements UserInterface {
 							parentElement.setName(current.getCategory()[1]);
 							categories.get(current.getCategory()[0]).add(parentElement);
 						}
-						JMenu lastParent = null;
+						JMenu lastParent;
 						for(int i = 2; i < current.getCategory().length; i++) {
 							lastParent = parentElement;
 							parentElement = null;
 							for (Component subComponent : lastParent.getMenuComponents()) {
-								if (subComponent instanceof JMenu && ((JMenu) subComponent).getName().equalsIgnoreCase(current.getCategory()[i])) {
+								if (subComponent instanceof JMenu && subComponent.getName().equalsIgnoreCase(current.getCategory()[i])) {
 									parentElement = (JMenu) subComponent;
 									break;
 								}

@@ -6,18 +6,18 @@ import com.github.finley243.adventureengine.actor.Actor;
 
 public class ConditionCompound extends Condition {
 	
-	private final List<Condition> subconditions;
+	private final List<Condition> conditions;
 	private final boolean useOr;
 	
-	public ConditionCompound(boolean invert, List<Condition> subconditions, boolean useOr) {
+	public ConditionCompound(boolean invert, List<Condition> conditions, boolean useOr) {
 		super(invert);
-		this.subconditions = subconditions;
+		this.conditions = conditions;
 		this.useOr = useOr;
 	}
 	
 	@Override
 	public boolean isMet(Actor subject) {
-		for(Condition condition : subconditions) {
+		for(Condition condition : conditions) {
 			if(condition.isMet(subject) == useOr) {
 				return useOr != invert;
 			}

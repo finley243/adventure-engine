@@ -9,13 +9,11 @@ import java.util.List;
 public class ActorFactory {
 	
 	public static Actor create(Game gameInstance, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean startDead, boolean startDisabled) {
-		Actor actor = new Actor(gameInstance, ID, area, stats, descriptor, behaviors, startDead, startDisabled);
-		return actor;
+		return new Actor(gameInstance, ID, area, stats, descriptor, behaviors, startDead, startDisabled);
 	}
 	
 	public static ActorPlayer createPlayer(Game gameInstance, String ID, Area area, ActorTemplate stats) {
-		ActorPlayer actor = new ActorPlayer(gameInstance, ID, area, stats);
-		return actor;
+		return new ActorPlayer(gameInstance, ID, area, stats);
 	}
 	
 }

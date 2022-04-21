@@ -22,9 +22,4 @@ public class ConditionAttribute extends Condition {
 		return (actor.getActor(subject).getAttribute(attribute) >= value) != invert;
 	}
 
-	@Override
-	public String getChoiceTag() {
-		return value + " " + attribute.toString();
-	}
-
 }

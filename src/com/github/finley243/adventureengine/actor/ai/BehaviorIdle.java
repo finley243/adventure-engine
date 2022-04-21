@@ -1,16 +1,5 @@
 package com.github.finley243.adventureengine.actor.ai;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.WorldObject;
-
 public class BehaviorIdle {
 
 	/*public enum BehaviorType {

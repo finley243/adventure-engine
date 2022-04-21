@@ -54,13 +54,10 @@ public class ObjectDoor extends WorldObject {
 	}
 
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
-			case "isLocked":
-				isLocked = saveData.getValueBoolean();
-				break;
-			default:
-				super.loadState(saveData);
-				break;
+		if ("isLocked".equals(saveData.getParameter())) {
+			isLocked = saveData.getValueBoolean();
+		} else {
+			super.loadState(saveData);
 		}
 	}
 

@@ -1,11 +1,5 @@
 package com.github.finley243.adventureengine.world.object;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveElevator;
@@ -13,6 +7,11 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ObjectElevator extends WorldObject {
 
@@ -45,7 +44,7 @@ public class ObjectElevator extends WorldObject {
 	
 	public Set<Area> getLinkedAreas() {
 		Set<Area> areas = new HashSet<>();
-		for(String elevatorID : linkedElevatorIDs) {
+		for (String elevatorID : linkedElevatorIDs) {
 			areas.add(game().data().getObject(elevatorID).getArea());
 		}
 		return areas;
@@ -54,9 +53,7 @@ public class ObjectElevator extends WorldObject {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
-		if(isLocked) {
-			// Hack?
-		} else {
+		if (!isLocked) {
 			for(String elevatorID : linkedElevatorIDs) {
 				actions.add(new ActionMoveElevator(this, (ObjectElevator) game().data().getObject(elevatorID)));
 			}
@@ -65,13 +62,10 @@ public class ObjectElevator extends WorldObject {
 	}
 
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
-			case "isLocked":
-				isLocked = saveData.getValueBoolean();
-				break;
-			default:
-				super.loadState(saveData);
-				break;
+		if ("isLocked".equals(saveData.getParameter())) {
+			isLocked = saveData.getValueBoolean();
+		} else {
+			super.loadState(saveData);
 		}
 	}
 

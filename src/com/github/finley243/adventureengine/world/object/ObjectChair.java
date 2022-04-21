@@ -1,15 +1,10 @@
 package com.github.finley243.adventureengine.world.object;
 
-import java.util.List;
-import java.util.Map;
-
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionUseStart;
-import com.github.finley243.adventureengine.action.ActionUseStop;
-import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
+
+import java.util.Map;
 
 public class ObjectChair extends UsableObject {
 

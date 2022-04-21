@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.world.item;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.template.*;
 
 public class ItemFactory {
@@ -18,8 +17,8 @@ public class ItemFactory {
 		return create(game, stats, ID);
 	}
 
-	public static Item create(Game game, String statsID, String ID) {
-		return create(game, game.data().getItem(statsID), ID);
+	public static void load(Game game, String statsID, String ID) {
+		create(game, game.data().getItem(statsID), ID);
 	}
 
 	private static Item create(Game game, ItemTemplate stats, String ID) {

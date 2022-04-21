@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.world.item.template;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.script.Script;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;

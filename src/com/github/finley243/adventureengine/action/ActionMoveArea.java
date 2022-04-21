@@ -3,13 +3,12 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 public class ActionMoveArea extends ActionMove {
 	
@@ -28,7 +27,7 @@ public class ActionMoveArea extends ActionMove {
 	@Override
 	public void choose(Actor subject) {
 		Context context = new Context(new NounMapper().put("actor", subject).put("area", area).build());
-		subject.game().eventBus().post(new AudioVisualEvent(new Area[]{subject.getArea(), area}, Phrases.get("moveToward"), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(new Area[]{subject.getArea(), area}, Phrases.get("moveToward"), context, this, subject));
 		subject.setArea(area);
 	}
 	

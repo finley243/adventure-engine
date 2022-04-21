@@ -16,16 +16,20 @@ public class AreaTarget {
 	private boolean markForRemoval;
 	private boolean isActive;
 	private boolean shouldFlee;
-	private boolean fleeThroughExits;
+	private boolean fleeThroughDoors;
 	
-	public AreaTarget(Set<Area> targetAreas, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughExits) {
+	public AreaTarget(Set<Area> targetAreas, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughDoors) {
 		this.targetAreas = targetAreas;
 		this.targetUtility = targetUtility;
 		this.manualRemoval = manualRemoval;
 		this.shouldFlee = shouldFlee;
-		this.fleeThroughExits = fleeThroughExits;
+		this.fleeThroughDoors = fleeThroughDoors;
 		markForRemoval = false;
 		isActive = true;
+	}
+
+	public AreaTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughDoors) {
+		this(Set.of(targetArea), targetUtility, manualRemoval, shouldFlee, fleeThroughDoors);
 	}
 	
 	public void update(Actor subject) {
@@ -33,7 +37,7 @@ public class AreaTarget {
 			path = Pathfinder.findPath(subject.getArea(), targetAreas);
 			pathIndex = 0;
 		}
-		if(path.get(pathIndex) != subject.getArea()) {
+		if(path != null && path.get(pathIndex) != subject.getArea()) {
 			int currentIndex = getCurrentIndex(subject);
 			if(currentIndex == -1) {
 				path = Pathfinder.findPath(subject.getArea(), targetAreas);
@@ -50,6 +54,10 @@ public class AreaTarget {
 	
 	public void setTargetAreas(Set<Area> areas) {
 		targetAreas = areas;
+	}
+
+	public void setTargetArea(Area area) {
+		targetAreas = Set.of(area);
 	}
 	
 	public float getTargetUtility() {
@@ -84,12 +92,12 @@ public class AreaTarget {
 		this.shouldFlee = shouldFlee;
 	}
 
-	public boolean shouldUseExits() {
-		return !shouldFlee || fleeThroughExits;
+	public boolean shouldUseDoors() {
+		return !shouldFlee || fleeThroughDoors;
 	}
 
-	public void setFleeThroughExits(boolean fleeThroughExits) {
-		this.fleeThroughExits = fleeThroughExits;
+	public void setFleeThroughDoors(boolean fleeThroughDoors) {
+		this.fleeThroughDoors = fleeThroughDoors;
 	}
 	
 	public boolean isOnPath(Area area) {
@@ -98,11 +106,12 @@ public class AreaTarget {
 		return path.get(pathIndex + 1) == area;
 	}
 	
-	public int getDistance() {
+	public int getDistance(Actor subject) {
 		if(path == null) {
-
+			path = Pathfinder.findPath(subject.getArea(), targetAreas);
+			pathIndex = 0;
 		}
-		return path.size() - (pathIndex + 1);
+		return (path == null ? -1 : path.size() - (pathIndex + 1));
 	}
 	
 	private int getCurrentIndex(Actor subject) {

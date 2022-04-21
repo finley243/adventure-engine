@@ -3,13 +3,10 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.world.item.Item;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ActionInventoryStoreAll extends Action {
 
@@ -29,7 +26,7 @@ public class ActionInventoryStoreAll extends Action {
         subject.inventory().removeItems(item, count);
         inventory.addItems(item, count);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
-        subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get("storeIn"), context, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("storeIn"), context, this, subject));
     }
 
     @Override

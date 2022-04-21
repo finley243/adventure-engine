@@ -13,14 +13,14 @@ public class UtilityUtils {
 	public static final float FLEE_TARGET_UTILITY = 0.5f;
 	public static final float INVESTIGATE_NOISE_UTILITY = 0.5f;
 	
-	public static float getMovementUtility(Actor subject, Area area, boolean throughExit) {
+	public static float getMovementUtility(Actor subject, Area area, boolean throughDoors) {
 		if(subject.getPursueTargets().isEmpty()) {
 			return 0.0f;
 		}
 		float utility = 0.0f;
 		int contributors = 0;
 		for(AreaTarget target : subject.getPursueTargets()) {
-			if(target.isActive() && (!throughExit || target.shouldUseExits())) {
+			if(target.isActive() && (!throughDoors || target.shouldUseDoors())) {
 				if (target.shouldFlee() && target.getTargetAreas().contains(subject.getArea())) {
 					utility += target.getTargetUtility();
 					contributors++;

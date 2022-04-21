@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine;
 import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class NounMapper {
 

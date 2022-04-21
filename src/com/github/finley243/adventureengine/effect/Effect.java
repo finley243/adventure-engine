@@ -2,8 +2,6 @@ package com.github.finley243.adventureengine.effect;
 
 import com.github.finley243.adventureengine.actor.Actor;
 
-import java.util.UUID;
-
 /**
  * An effect that modifies an actor
  */

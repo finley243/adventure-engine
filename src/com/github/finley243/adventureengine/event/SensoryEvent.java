@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 
-public class AudioVisualEvent {
+public class SensoryEvent {
 
 	public enum ResponseType {
 		HOSTILE, INVESTIGATE, NONE
@@ -21,19 +21,19 @@ public class AudioVisualEvent {
 	private final boolean isLoud;
 	private final ResponseType responseType;
 
-	public AudioVisualEvent(Area origin, String lineVisible, Context context, Action action, Actor subject) {
+	public SensoryEvent(Area origin, String lineVisible, Context context, Action action, Actor subject) {
 		this(new Area[]{origin}, lineVisible, null, context, ResponseType.NONE, false, action, subject);
 	}
 
-	public AudioVisualEvent(Area[] origins, String lineVisible, Context context, Action action, Actor subject) {
+	public SensoryEvent(Area[] origins, String lineVisible, Context context, Action action, Actor subject) {
 		this(origins, lineVisible, null, context, ResponseType.NONE, false, action, subject);
 	}
 
-	public AudioVisualEvent(Area origin, String lineVisible, String lineAudible, Context context, ResponseType responseType, boolean isLoud, Action action, Actor subject) {
+	public SensoryEvent(Area origin, String lineVisible, String lineAudible, Context context, ResponseType responseType, boolean isLoud, Action action, Actor subject) {
 		this(new Area[]{origin}, lineVisible, lineAudible, context, responseType, isLoud, action, subject);
 	}
 
-	public AudioVisualEvent(Area[] origins, String lineVisible, String lineAudible, Context context, ResponseType responseType, boolean isLoud, Action action, Actor subject) {
+	public SensoryEvent(Area[] origins, String lineVisible, String lineAudible, Context context, ResponseType responseType, boolean isLoud, Action action, Actor subject) {
 		this.origins = origins;
 		this.lineVisible = lineVisible;
 		this.lineAudible = lineAudible;

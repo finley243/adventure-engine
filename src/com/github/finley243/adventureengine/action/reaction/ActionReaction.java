@@ -2,9 +2,6 @@ package com.github.finley243.adventureengine.action.reaction;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 import java.util.concurrent.ThreadLocalRandom;

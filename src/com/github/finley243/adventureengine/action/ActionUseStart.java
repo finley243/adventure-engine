@@ -3,8 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -30,7 +29,7 @@ public class ActionUseStart extends Action {
 		object.setUser(subject);
 		subject.startUsingObject(object);
 		Context context = new Context(new NounMapper().put("actor", subject).put("object", object).build());
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(object.getStartPhrase()), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(object.getStartPhrase()), context, this, subject));
 	}
 
 	@Override

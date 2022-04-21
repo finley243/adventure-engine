@@ -354,6 +354,9 @@ public class DataLoader {
             case "nearestActorScript":
                 String nearestTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
                 return new ScriptNearestActorWithScript(condition, nearestTrigger);
+            case "unlock":
+                String unlockObject = LoadUtils.attribute(scriptElement, "object", null);
+                return new ScriptUnlock(condition, unlockObject);
             case "select":
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSelect, true);

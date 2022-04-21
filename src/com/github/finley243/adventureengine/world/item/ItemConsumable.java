@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.template.ConsumableTemplate;
 import com.github.finley243.adventureengine.world.item.template.ConsumableTemplate.ConsumableType;
 import com.github.finley243.adventureengine.world.item.template.ItemTemplate;

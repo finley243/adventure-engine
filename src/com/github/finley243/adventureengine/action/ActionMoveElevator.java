@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.event.AudioVisualEvent;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -41,8 +41,8 @@ public class ActionMoveElevator extends ActionMove {
 		} else {
 			takeElevatorPhrase = "takeElevatorDown";
 		}
-		subject.game().eventBus().post(new AudioVisualEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject));
-		subject.game().eventBus().post(new AudioVisualEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject));
 		subject.setArea(destination.getArea());
 	}
 

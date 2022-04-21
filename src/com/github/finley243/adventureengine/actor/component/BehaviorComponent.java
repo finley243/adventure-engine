@@ -47,12 +47,12 @@ public class BehaviorComponent {
         if(currentBehavior != null) {
             if(areaTarget == null) {
                 if(currentBehavior.getTargetArea(actor) != null) {
-                    areaTarget = new AreaTarget(Set.of(currentBehavior.getTargetArea(actor)), Behavior.BEHAVIOR_ACTION_UTILITY, true, false, false);
+                    areaTarget = new AreaTarget(currentBehavior.getTargetArea(actor), Behavior.BEHAVIOR_ACTION_UTILITY, true, false, false);
                     actor.addPursueTarget(areaTarget);
                 }
             } else {
                 if(currentBehavior.getTargetArea(actor) != null) {
-                    areaTarget.setTargetAreas(Set.of(currentBehavior.getTargetArea(actor)));
+                    areaTarget.setTargetArea(currentBehavior.getTargetArea(actor));
                 } else {
                     areaTarget.markForRemoval();
                     areaTarget = null;
@@ -73,7 +73,7 @@ public class BehaviorComponent {
                     behaviors.get(i).onStart();
                     if(areaTarget != null) {
                         if(behaviors.get(i).getTargetArea(actor) != null) {
-                            areaTarget.setTargetAreas(Set.of(behaviors.get(i).getTargetArea(actor)));
+                            areaTarget.setTargetArea(behaviors.get(i).getTargetArea(actor));
                         } else {
                             areaTarget.markForRemoval();
                             areaTarget = null;

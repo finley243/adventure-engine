@@ -21,9 +21,4 @@ public class ConditionSkill extends Condition {
 		return (actor.getActor(subject).getSkill(skill) >= value) != invert;
 	}
 
-	@Override
-	public String getChoiceTag() {
-		return value + " " + skill.toString();
-	}
-
 }

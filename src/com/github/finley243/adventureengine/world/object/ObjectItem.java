@@ -7,7 +7,6 @@ import com.github.finley243.adventureengine.action.ActionItemTakeAll;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 

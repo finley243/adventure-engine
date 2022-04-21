@@ -1,11 +1,10 @@
 package com.github.finley243.adventureengine.scene;
 
+import com.github.finley243.adventureengine.Game;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
-import com.github.finley243.adventureengine.Data;
-import com.github.finley243.adventureengine.Game;
 
 public class SceneManager {
 	

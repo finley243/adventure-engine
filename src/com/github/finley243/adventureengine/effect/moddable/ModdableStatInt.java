@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.effect.moddable;
 
+import com.github.finley243.adventureengine.MathUtils;
+
 public class ModdableStatInt {
 
     private final Moddable target;
@@ -12,7 +14,7 @@ public class ModdableStatInt {
 
     public int value(int base, int min, int max) {
         int computedValue = Math.round(base * (mult + 1.0f)) + mod;
-        return Math.min(Math.max(computedValue, min), max);
+        return MathUtils.bound(computedValue, min, max);
     }
 
     public void addMod(int value) {
