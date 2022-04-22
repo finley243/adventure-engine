@@ -17,9 +17,6 @@ public class ObjectCustom extends WorldObject {
     public ObjectCustom(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, List<ActionCustom> objectActions) {
         super(game, ID, area, name, description, scripts);
         this.objectActions = objectActions;
-        for(ActionCustom action : objectActions) {
-            action.setObject(this);
-        }
     }
 
     @Override
