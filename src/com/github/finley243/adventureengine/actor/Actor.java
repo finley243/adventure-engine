@@ -819,8 +819,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 					this.area = game().data().getArea(saveData.getValueString());
 				}
 				break;
-			case "target":
-				this.targetingComponent.addCombatant(game().data().getActor(saveData.getValueString()));
+			case "targeting":
+				if(targetingComponent != null) targetingComponent.loadState(saveData);
+			case "inventory":
+				if (inventory != null) inventory.loadState(saveData);
 				break;
 			case "equippedItem":
 				this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
@@ -851,7 +853,12 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if(area != defaultArea) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", (area == null ? null : area.getID())));
 		}
-		// TODO - Handle item saving in the inventory itself
+		if(inventory != null) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "inventory", inventory.saveState()));
+		}
+		if (targetingComponent != null) {
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "targeting", targetingComponent.saveState()));
+		}
 		if(equipmentComponent.hasEquippedItem()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedItem", equipmentComponent.getEquippedItem().getID()));
 		}
@@ -863,10 +870,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 		if(actionPointsUsed != 0) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "actionPointsUsed", actionPointsUsed));
-		}
-		// TODO - Save target search cooldowns (requires multi-value save data)
-		for(Actor combatant : targetingComponent.getCombatants()) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "target", combatant.getID()));
 		}
 		return state;
 	}

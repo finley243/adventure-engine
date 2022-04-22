@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.item.Item;
 import com.github.finley243.adventureengine.world.item.ItemApparel;
@@ -232,6 +233,34 @@ public class Inventory {
 			}
 		}
 		return actions;
+	}
+
+	public void loadState(SaveData data) {
+		if (data.getParameter().equals("inventory")) {
+			for (SaveData subData : data.getValueMulti()) {
+				switch (subData.getParameter()) {
+					case "item":
+						addItem(game.data().getItemState(subData.getValueString()));
+						break;
+					case "itemStateless":
+						addItems(ItemFactory.create(game, subData.getValueString()), subData.getValueInt());
+						break;
+				}
+			}
+		}
+	}
+
+	public List<SaveData> saveState() {
+		List<SaveData> state = new ArrayList<>();
+		for (String itemType : items.keySet()) {
+			for (Item item : items.get(itemType)) {
+				state.add(new SaveData(null, null, "item", item.getID()));
+			}
+		}
+		for (String itemType : itemsStateless.keySet()) {
+			state.add(new SaveData(null, null, "itemStateless", itemType, itemsStateless.get(itemType)));
+		}
+		return state;
 	}
 	
 }

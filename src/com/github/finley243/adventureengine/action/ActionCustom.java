@@ -9,22 +9,18 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionCustom extends Action {
 
-    private WorldObject object;
+    private final String object;
     private final String prompt;
     private final String description;
     private final Condition condition;
     private final Script script;
 
-    public ActionCustom(String prompt, String description, Condition condition, Script script) {
+    public ActionCustom(String prompt, String description, String object, Condition condition, Script script) {
         this.prompt = prompt;
         this.description = description;
+        this.object = object;
         this.condition = condition;
         this.script = script;
-    }
-
-    public void setObject(WorldObject object) {
-        //TODO - Find a better way to get object (ideally keeping it final)
-        this.object = object;
     }
 
     @Override
@@ -42,7 +38,7 @@ public class ActionCustom extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData(prompt, canChoose(subject), new String[] {object.getName()});
+        return new MenuData(prompt, canChoose(subject), new String[] {subject.game().data().getObject(object).getName()});
     }
 
 }

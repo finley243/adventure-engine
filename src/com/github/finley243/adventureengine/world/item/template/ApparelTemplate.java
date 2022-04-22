@@ -25,7 +25,7 @@ public class ApparelTemplate extends ItemTemplate {
 
 	@Override
 	public boolean hasState() {
-		return false;
+		return true;
 	}
 	
 	public ApparelComponent.ApparelSlot getSlot() {

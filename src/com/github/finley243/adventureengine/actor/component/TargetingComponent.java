@@ -4,7 +4,10 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.world.item.ItemFactory;
 import com.github.finley243.adventureengine.world.item.ItemWeapon;
 
 import java.util.*;
@@ -176,6 +179,53 @@ public class TargetingComponent {
             idealAreas.addAll(origin.visibleAreasInRange(idealDistanceMax, idealDistanceMax));
         }
         return idealAreas;
+    }
+
+    public void loadState(SaveData data) {
+        if (data.getParameter().equals("targeting")) {
+            for (SaveData subData : data.getValueMulti()) {
+                switch (subData.getParameter()) {
+                    case "detected":
+                        detected.put(subject.game().data().getActor(subData.getValueString()), subData.getValueInt());
+                        break;
+                    case "combatant":
+                        Actor actor = null;
+                        Combatant combatant = new Combatant(null);
+                        for (SaveData combatantData : subData.getValueMulti()) {
+                            switch (combatantData.getParameter()) {
+                                case "actor":
+                                    actor = subject.game().data().getActor(combatantData.getValueString());
+                                    break;
+                                case "lastKnownArea":
+                                    combatant.lastKnownArea = subject.game().data().getArea(combatantData.getValueString());
+                                    break;
+                                case "turnsUntilRemove":
+                                    combatant.turnsUntilRemove = combatantData.getValueInt();
+                            }
+                        }
+                        if (actor != null) {
+                            combatants.put(actor, combatant);
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    public List<SaveData> saveState() {
+        List<SaveData> state = new ArrayList<>();
+        for (Actor actor : detected.keySet()) {
+            state.add(new SaveData(null, null, "detected", actor.getID(), detected.get(actor)));
+        }
+        for (Actor actor : combatants.keySet()) {
+            Combatant combatant = combatants.get(actor);
+            List<SaveData> combatantData = new ArrayList<>();
+            combatantData.add(new SaveData(null, null, "actor", actor.getID()));
+            combatantData.add(new SaveData(null, null, "lastKnownArea", combatant.lastKnownArea.getID()));
+            combatantData.add(new SaveData(null, null, "turnsUntilRemove", combatant.turnsUntilRemove));
+            state.add(new SaveData(null, null, "combatant", combatantData));
+        }
+        return state;
     }
 
     private static class Combatant {

@@ -111,7 +111,7 @@ public class DataLoader {
         String vendorLootTable = LoadUtils.attribute(vendorElement, "lootTable", null);
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
         boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
-        boolean vendorStartDisabled = LoadUtils.singleTagBoolean(vendorElement, "startDisabled", false);
+        boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
         return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, topic, scripts, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
@@ -634,13 +634,13 @@ public class DataLoader {
                 String containerLootTable = LoadUtils.singleTag(objectElement, "lootTable", null);
                 return new ObjectContainer(game, objectID, area, objectName, objectDescription, objectScripts, containerLootTable);
             case "custom":
-                List<ActionCustom> objectActions = loadCustomActions(objectElement);
+                List<ActionCustom> objectActions = loadCustomActions(objectElement, objectID);
                 return new ObjectCustom(game, objectID, area, objectName, objectDescription, objectScripts, objectActions);
         }
         return null;
     }
 
-    private static List<ActionCustom> loadCustomActions(Element objectElement) throws ParserConfigurationException, IOException, SAXException {
+    private static List<ActionCustom> loadCustomActions(Element objectElement, String objectID) throws ParserConfigurationException, IOException, SAXException {
         if(objectElement == null) return new ArrayList<>();
         List<ActionCustom> actions = new ArrayList<>();
         for (Element actionElement : LoadUtils.directChildrenWithName(objectElement, "action")) {
@@ -648,7 +648,7 @@ public class DataLoader {
             String description = LoadUtils.singleTag(actionElement, "description", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
             Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
-            actions.add(new ActionCustom(prompt, description, condition, script));
+            actions.add(new ActionCustom(prompt, description, objectID, condition, script));
         }
         return actions;
     }

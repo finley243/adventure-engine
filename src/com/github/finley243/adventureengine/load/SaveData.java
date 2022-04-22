@@ -19,15 +19,10 @@ public class SaveData implements Serializable {
         AREA, ROOM, ACTOR, OBJECT, TOPIC, VARIABLE, SCENE, ITEM_STATS, ITEM_INSTANCE, TIME
     }
 
-    private enum ValueType {
-        STRING, INT, BOOL, MULTI
-    }
-
     private final DataType type;
     private final String id;
     private final String parameter;
 
-    private final ValueType valueType;
     private final String valueString;
     private final int valueInt;
     private final boolean valueBoolean;
@@ -37,7 +32,6 @@ public class SaveData implements Serializable {
         this.type = type;
         this.id = id;
         this.parameter = parameter;
-        this.valueType = ValueType.STRING;
         this.valueString = valueString;
         this.valueInt = 0;
         this.valueBoolean = false;
@@ -48,8 +42,17 @@ public class SaveData implements Serializable {
         this.type = type;
         this.id = id;
         this.parameter = parameter;
-        this.valueType = ValueType.INT;
         this.valueString = null;
+        this.valueInt = valueInt;
+        this.valueBoolean = false;
+        this.valueMulti = null;
+    }
+
+    public SaveData(DataType type, String id, String parameter, String valueString, int valueInt) {
+        this.type = type;
+        this.id = id;
+        this.parameter = parameter;
+        this.valueString = valueString;
         this.valueInt = valueInt;
         this.valueBoolean = false;
         this.valueMulti = null;
@@ -59,7 +62,6 @@ public class SaveData implements Serializable {
         this.type = type;
         this.id = id;
         this.parameter = parameter;
-        this.valueType = ValueType.BOOL;
         this.valueString = null;
         this.valueInt = 0;
         this.valueBoolean = valueBoolean;
@@ -70,7 +72,6 @@ public class SaveData implements Serializable {
         this.type = type;
         this.id = id;
         this.parameter = parameter;
-        this.valueType = ValueType.MULTI;
         this.valueString = null;
         this.valueInt = 0;
         this.valueBoolean = false;
@@ -128,22 +129,18 @@ public class SaveData implements Serializable {
     }
 
     public String getValueString() {
-        if(valueType != ValueType.STRING) throw new UnsupportedOperationException("Cannot get String value from non-String SaveData.");
         return valueString;
     }
 
     public int getValueInt() {
-        if(valueType != ValueType.INT) throw new UnsupportedOperationException("Cannot get integer value from non-integer SaveData.");
         return valueInt;
     }
 
     public boolean getValueBoolean() {
-        if(valueType != ValueType.BOOL) throw new UnsupportedOperationException("Cannot get boolean value from non-boolean SaveData.");
         return valueBoolean;
     }
 
     public List<SaveData> getValueMulti() {
-        if(valueType != ValueType.MULTI) throw new UnsupportedOperationException("Cannot get multi value from non-multi SaveData.");
         return valueMulti;
     }
 
