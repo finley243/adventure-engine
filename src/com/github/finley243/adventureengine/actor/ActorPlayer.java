@@ -100,7 +100,7 @@ public class ActorPlayer extends Actor {
 			phrase.append(".");
 			game().eventBus().post(new RenderTextEvent(phrase.toString()));
 		}
-		// TODO - Add distant area descriptions based on closest nearby area
+		// TODO - Add distant area descriptions based on closest nearby area (BFS)
 		game().eventBus().post(new RenderTextEvent(""));
 		TextGen.clearContext();
 	}

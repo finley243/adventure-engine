@@ -36,12 +36,19 @@ public class ObjectContainer extends WorldObject {
 	}
 
 	public void loadState(SaveData saveData) {
-		// TODO - Handle item saving in the inventory itself
-		super.loadState(saveData);
+		if (saveData.getParameter().equals("inventory")) {
+			if (inventory != null) inventory.loadState(saveData);
+		} else {
+			super.loadState(saveData);
+		}
 	}
 
 	public List<SaveData> saveState() {
-		return super.saveState();
+		List<SaveData> state = super.saveState();
+		if (inventory != null) {
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "inventory", inventory.saveState()));
+		}
+		return state;
 	}
 
 }

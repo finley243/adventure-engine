@@ -29,7 +29,6 @@ public class CombatHelper {
 	
 	public static float calculateHitChance(Actor attacker, Actor target, Limb limb, ItemWeapon weapon, float hitChanceMult) {
 		int skill = attacker.getSkill(weapon.getSkill());
-		// TODO - Check results of chance function (minimal testing)
 		float chance = MathUtils.chanceLinear(skill, Actor.SKILL_MIN, Actor.SKILL_MAX, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
 		if(weapon.isRanged()) {
 			int distance = attacker.getArea().getDistanceTo(target.getArea().getID());
