@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.item.ItemConsumable;
+import com.github.finley243.adventureengine.item.ItemConsumable;
 
 public class ActionItemConsume extends Action {
 

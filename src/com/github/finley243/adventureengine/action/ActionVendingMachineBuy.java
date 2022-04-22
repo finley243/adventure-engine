@@ -6,9 +6,9 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.world.object.ObjectVendingMachine;
-import com.github.finley243.adventureengine.world.item.ItemFactory;
+import com.github.finley243.adventureengine.item.ItemFactory;
 
 public class ActionVendingMachineBuy extends Action {
 

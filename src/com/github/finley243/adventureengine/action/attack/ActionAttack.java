@@ -10,8 +10,8 @@ import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.item.ItemWeapon;
-import com.github.finley243.adventureengine.world.item.template.WeaponTemplate;
+import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 
 import java.util.ArrayList;
 import java.util.List;

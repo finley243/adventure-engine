@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.*;
-import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.item.Item;
 
 public class ActionInventoryTakeAll extends Action {
 

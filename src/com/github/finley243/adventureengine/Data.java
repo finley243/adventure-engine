@@ -9,11 +9,11 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
-import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.item.LootTable;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.world.object.ObjectContainer;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -75,6 +75,7 @@ public class Data {
 		actorStats.clear();
 		objects.clear();
 		items.clear();
+		itemStates.clear();
 		lootTables.clear();
 		topics.clear();
 		variables.clear();

@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.world.item.ItemApparel;
-import com.github.finley243.adventureengine.world.item.template.ApparelTemplate;
+import com.github.finley243.adventureengine.item.ItemApparel;
+import com.github.finley243.adventureengine.item.template.ApparelTemplate;
 
 import java.util.*;
 

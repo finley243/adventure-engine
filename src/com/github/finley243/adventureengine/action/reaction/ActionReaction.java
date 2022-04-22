@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.action.reaction;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.ItemWeapon;
 
 import java.util.concurrent.ThreadLocalRandom;
 

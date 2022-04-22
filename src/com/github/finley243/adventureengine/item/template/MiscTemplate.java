@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.item.template;
+package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.script.Script;
 

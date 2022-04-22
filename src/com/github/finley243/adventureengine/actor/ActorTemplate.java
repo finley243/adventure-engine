@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
-import com.github.finley243.adventureengine.world.item.LootTable;
+import com.github.finley243.adventureengine.item.LootTable;
 
 import java.util.List;
 import java.util.Map;

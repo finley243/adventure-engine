@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.reaction.ActionReaction;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuData;
-import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.ItemWeapon;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.item;
+package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
@@ -11,8 +11,8 @@ import com.github.finley243.adventureengine.effect.moddable.Moddable;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.world.item.template.WeaponTemplate;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 
 import java.util.List;
 

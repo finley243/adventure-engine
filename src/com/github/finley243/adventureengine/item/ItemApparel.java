@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.item;
+package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
@@ -6,8 +6,8 @@ import com.github.finley243.adventureengine.action.ActionApparelEquip;
 import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
-import com.github.finley243.adventureengine.world.item.template.ApparelTemplate;
-import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.ApparelTemplate;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 import java.util.ArrayList;
 import java.util.List;

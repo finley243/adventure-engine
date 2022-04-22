@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.item;
+package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 

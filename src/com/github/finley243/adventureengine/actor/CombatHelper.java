@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.ItemWeapon;
 
 public class CombatHelper {
 

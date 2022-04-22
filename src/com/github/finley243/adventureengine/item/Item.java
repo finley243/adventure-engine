@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.item;
+package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.world.object.ObjectItem;
 
 import java.util.ArrayList;

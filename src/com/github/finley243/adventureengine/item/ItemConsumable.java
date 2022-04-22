@@ -1,13 +1,13 @@
-package com.github.finley243.adventureengine.world.item;
+package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.world.item.template.ConsumableTemplate;
-import com.github.finley243.adventureengine.world.item.template.ConsumableTemplate.ConsumableType;
-import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.ConsumableTemplate;
+import com.github.finley243.adventureengine.item.template.ConsumableTemplate.ConsumableType;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 import java.util.List;
 

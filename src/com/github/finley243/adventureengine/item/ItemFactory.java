@@ -1,7 +1,7 @@
-package com.github.finley243.adventureengine.world.item;
+package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.world.item.template.*;
+import com.github.finley243.adventureengine.item.template.*;
 
 public class ItemFactory {
 

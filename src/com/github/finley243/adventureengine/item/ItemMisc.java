@@ -1,8 +1,8 @@
-package com.github.finley243.adventureengine.world.item;
+package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.world.item.template.MiscTemplate;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.MiscTemplate;
 
 public class ItemMisc extends Item {
 

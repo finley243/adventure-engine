@@ -1,11 +1,11 @@
-package com.github.finley243.adventureengine.world.item;
+package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionReadNote;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.world.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.world.item.template.NoteTemplate;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.NoteTemplate;
 
 import java.util.List;
 

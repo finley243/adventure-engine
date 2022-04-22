@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.condition;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
-import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.item.Item;
 
 public class ConditionEquippedItem extends Condition {
 

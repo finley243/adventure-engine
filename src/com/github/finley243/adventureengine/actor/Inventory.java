@@ -4,10 +4,10 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.item.ItemApparel;
-import com.github.finley243.adventureengine.world.item.ItemEquippable;
-import com.github.finley243.adventureengine.world.item.ItemFactory;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.ItemApparel;
+import com.github.finley243.adventureengine.item.ItemEquippable;
+import com.github.finley243.adventureengine.item.ItemFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

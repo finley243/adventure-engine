@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.action.ActionVendorBuy;
 import com.github.finley243.adventureengine.action.ActionVendorSell;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.world.item.Item;
+import com.github.finley243.adventureengine.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;

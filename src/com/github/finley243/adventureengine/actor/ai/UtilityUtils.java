@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.actor.ai;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.ItemWeapon;
 
 public class UtilityUtils {
 

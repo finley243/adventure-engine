@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.item.ItemNote;
+import com.github.finley243.adventureengine.item.ItemNote;
 
 import java.util.List;
 

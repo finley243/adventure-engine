@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.world.item.template;
+package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
@@ -102,7 +102,7 @@ public abstract class ItemTemplate implements Noun {
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
 		if(generatedCount > 0) {
-			state.add(new SaveData(SaveData.DataType.ITEM_STATS, this.getID(), "generatedCount", generatedCount));
+			state.add(new SaveData(SaveData.DataType.ITEM_TEMPLATE, this.getID(), "generatedCount", generatedCount));
 		}
 		return state;
 	}

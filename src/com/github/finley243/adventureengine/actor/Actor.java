@@ -17,10 +17,10 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.item.Item;
-import com.github.finley243.adventureengine.world.item.ItemApparel;
-import com.github.finley243.adventureengine.world.item.ItemEquippable;
-import com.github.finley243.adventureengine.world.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.ItemApparel;
+import com.github.finley243.adventureengine.item.ItemEquippable;
+import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
