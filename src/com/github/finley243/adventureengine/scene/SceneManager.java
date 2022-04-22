@@ -18,13 +18,16 @@ public class SceneManager {
 	
 	private static Scene selectScene(Game game, List<String> scenes) {
 		List<Scene> validScenes = new ArrayList<>();
+		int maxPriority = 0;
 		for(String sceneID : scenes) {
 			Scene scene = game.data().getScene(sceneID);
 			if(scene.canPlay(game)) {
-				if(scene.playImmediately()) {
-					return scene;
+				if (scene.getPriority() > maxPriority) {
+					validScenes.clear();
+					validScenes.add(scene);
+				} else if (scene.getPriority() == maxPriority) {
+					validScenes.add(scene);
 				}
-				validScenes.add(scene);
 			}
 		}
 		if(validScenes.isEmpty()) {

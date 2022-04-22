@@ -1,5 +1,5 @@
 <data>
-    <scene id="stratis_lobby_intro" isRepeatable="true" playImmediately="false" chance="1.0" cooldown="7">
+    <scene id="stratis_lobby_intro" isRepeatable="true" priority="1" cooldown="7">
         <condition type="all">
             <condition type="actorAvailableForScene" actor="stratis_receptionist"/>
             <condition type="actorAvailableForScene" actor="stratis_guard_lobby"/>

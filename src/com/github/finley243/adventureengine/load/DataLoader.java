@@ -306,8 +306,7 @@ public class DataLoader {
     private static Script loadScript(Element scriptElement) throws ParserConfigurationException, IOException, SAXException {
         if(scriptElement == null) return null;
         String type = scriptElement.getAttribute("type");
-        Element conditionElement = LoadUtils.singleChildWithName(scriptElement, "condition");
-        Condition condition = loadCondition(conditionElement);
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(scriptElement, "condition"));
         ActorReference actorRef = loadActorReference(scriptElement, "actor");
         switch(type) {
             case "external":
@@ -512,25 +511,21 @@ public class DataLoader {
     private static Scene loadScene(Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
         if(sceneElement == null) return null;
         boolean isRepeatable = LoadUtils.attributeBool(sceneElement, "isRepeatable", true);
-        boolean playImmediately = LoadUtils.attributeBool(sceneElement, "playImmediately", false);
+        int priority = LoadUtils.attributeInt(sceneElement, "priority", 1);
         String sceneID = sceneElement.getAttribute("id");
-        Element conditionElement = LoadUtils.singleChildWithName(sceneElement, "condition");
-        Condition condition = loadCondition(conditionElement);
-        List<Element> lineElements = LoadUtils.directChildrenWithName(sceneElement, "line");
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(sceneElement, "condition"));
         List<SceneLine> lines = new ArrayList<>();
-        for(Element lineElement : lineElements) {
+        for(Element lineElement : LoadUtils.directChildrenWithName(sceneElement, "line")) {
             SceneLine line = loadSceneLine(lineElement);
             lines.add(line);
         }
-        float chance = LoadUtils.attributeFloat(sceneElement, "chance", 1.0f);
         int cooldown = LoadUtils.attributeInt(sceneElement, "cooldown", 0);
-        return new Scene(sceneID, condition, lines, isRepeatable, playImmediately, chance, cooldown);
+        return new Scene(sceneID, condition, lines, isRepeatable, priority, cooldown);
     }
 
     private static SceneLine loadSceneLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
         if(lineElement == null) return null;
-        Element conditionElement = LoadUtils.singleChildWithName(lineElement, "condition");
-        Condition condition = loadCondition(conditionElement);
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
         List<String> text = LoadUtils.listOfTags(lineElement, "text");
         Script script = loadScript(LoadUtils.singleChildWithName(lineElement, "script"));
         return new SceneLine(condition, text, script);

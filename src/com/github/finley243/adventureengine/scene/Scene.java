@@ -17,23 +17,20 @@ public class Scene {
 	// These lines are printed when the scene is played
 	private final List<SceneLine> lines;
 	
-	private final float chance;
 	// As soon as it is possible to play it, skip the random selection and play this one
-	// TODO - Replace with priority system
-	private final boolean playImmediately;
+	private final int priority;
 	private final boolean isRepeatable;
 	private final int cooldown;
 	private int cooldownCounter;
 	private boolean hasPlayed;
 	
-	public Scene(String ID, Condition condition, List<SceneLine> lines, boolean isRepeatable, boolean playImmediately, float chance, int cooldown) {
+	public Scene(String ID, Condition condition, List<SceneLine> lines, boolean isRepeatable, int priority, int cooldown) {
 		this.ID = ID;
 		this.condition = condition;
 		this.lines = lines;
 		this.isRepeatable = isRepeatable;
+		this.priority = priority;
 		this.hasPlayed = false;
-		this.playImmediately = playImmediately;
-		this.chance = chance;
 		this.cooldown = cooldown;
 		this.cooldownCounter = 0;
 	}
@@ -48,15 +45,12 @@ public class Scene {
 		} else if(cooldownCounter > 0) {
 			return false;
 		} else {
-			if(ThreadLocalRandom.current().nextFloat() >= chance) {
-				return false;
-			}
 			return condition == null || condition.isMet(game.data().getPlayer());
 		}
 	}
 	
-	public boolean playImmediately() {
-		return playImmediately;
+	public int getPriority() {
+		return priority;
 	}
 	
 	public void updateCooldown(Game game) {
