@@ -39,7 +39,7 @@ public class ActionReactionCounter extends ActionReaction {
 
     @Override
     public float chance(Actor subject) {
-        return MathUtils.chanceLinearSkillContest(subject, Actor.Skill.MELEE, attacker, Actor.Skill.MELEE, 0.01f, 0.7f);
+        return MathUtils.chanceLinearSkillContest(subject, Actor.Skill.MELEE, attacker, Actor.Skill.MELEE, 1.0f, 0.01f, 0.7f);
     }
 
     @Override

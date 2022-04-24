@@ -626,7 +626,7 @@ public class DataLoader {
                 int itemCount = LoadUtils.singleTagInt(objectElement, "count", 1);
                 return new ObjectItem(game, objectID, area, ItemFactory.create(game, itemID), itemCount);
             case "container":
-                String containerLootTable = LoadUtils.singleTag(objectElement, "lootTable", null);
+                LootTable containerLootTable = loadLootTable(LoadUtils.singleChildWithName(objectElement, "inventory"), true);
                 return new ObjectContainer(game, objectID, area, objectName, objectDescription, objectScripts, containerLootTable);
             case "custom":
                 List<ActionCustom> objectActions = loadCustomActions(objectElement, objectID);
