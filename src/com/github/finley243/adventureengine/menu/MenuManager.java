@@ -14,6 +14,7 @@ import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MenuManager {
 
@@ -39,6 +40,10 @@ public class MenuManager {
 		while(dialogueLoop) {
 			currentTopic.setVisited(subject);
 			for(DialogueLine line : currentTopic.getLines()) {
+				if (currentTopic.getType() == TopicType.RANDOM) {
+					// TODO - Improve efficiency (filter available lines once, then only select from this subset)
+					line = currentTopic.getLines().get(ThreadLocalRandom.current().nextInt(currentTopic.getLines().size()));
+				}
 				if(line.shouldShow(subject, (lastTopic == null ? null : lastTopic.getID()))) {
 					for(String text : line.getTextList()) {
 						subject.game().eventBus().post(new RenderTextEvent(text));

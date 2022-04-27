@@ -12,7 +12,7 @@ import java.util.Set;
 public class DialogueTopic {
 
 	public enum TopicType {
-		SEQUENTIAL, SELECTOR
+		SEQUENTIAL, SELECTOR, RANDOM
 	}
 
 	private final String ID;

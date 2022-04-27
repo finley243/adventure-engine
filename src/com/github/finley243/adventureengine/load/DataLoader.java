@@ -159,6 +159,9 @@ public class DataLoader {
         String topicID = topicElement.getAttribute("id");
         DialogueTopic.TopicType type;
         switch(topicElement.getAttribute("type")) {
+            case "random":
+                type = DialogueTopic.TopicType.RANDOM;
+                break;
             case "select":
                 type = DialogueTopic.TopicType.SELECTOR;
                 break;
