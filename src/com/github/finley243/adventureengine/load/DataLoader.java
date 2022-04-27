@@ -319,6 +319,10 @@ public class DataLoader {
             case "addItem":
                 String addItemID = LoadUtils.attribute(scriptElement, "item", null);
                 return new ScriptAddItem(condition, actorRef, addItemID);
+            case "transferItem":
+                ActorReference transferTargetRef = loadActorReference(scriptElement, "target");
+                String transferItemID = LoadUtils.attribute(scriptElement, "item", null);
+                return new ScriptTransferItem(condition, actorRef, transferTargetRef, transferItemID);
             case "scene":
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
                 return new ScriptScene(condition, scenes);
