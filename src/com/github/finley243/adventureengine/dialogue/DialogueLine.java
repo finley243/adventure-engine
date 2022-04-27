@@ -19,15 +19,18 @@ public class DialogueLine {
     private final boolean once;
     private final boolean exit;
     // If non-null, redirect to this topic after line is spoken
-    private final String redirectTopicId;
+    private final String redirectTopicID;
+    // If non-null, will only play if the previous topic matches this ID
+    private final String fromTopicID;
 
-    public DialogueLine(List<String> textList, Condition condition, Script script, boolean once, boolean exit, String redirectTopicId) {
+    public DialogueLine(List<String> textList, Condition condition, Script script, boolean once, boolean exit, String redirectTopicID, String fromTopicID) {
         this.textList = textList;
         this.condition = condition;
         this.script = script;
         this.once = once;
         this.exit = exit;
-        this.redirectTopicId = redirectTopicId;
+        this.redirectTopicID = redirectTopicID;
+        this.fromTopicID = fromTopicID;
         this.hasTriggered = new HashSet<>();
     }
     
@@ -35,8 +38,10 @@ public class DialogueLine {
     	return textList;
     }
     
-    public boolean shouldShow(Actor subject) {
-    	return (condition == null || condition.isMet(subject)) && (!once || !hasTriggered.contains(subject.getID()));
+    public boolean shouldShow(Actor subject, String lastTopicID) {
+    	return (condition == null || condition.isMet(subject))
+                && (!once || !hasTriggered.contains(subject.getID()))
+                && (fromTopicID == null || fromTopicID.equals(lastTopicID));
     }
     
     public void trigger(Actor subject) {
@@ -51,11 +56,11 @@ public class DialogueLine {
     }
     
     public boolean hasRedirect() {
-    	return redirectTopicId != null;
+    	return redirectTopicID != null;
     }
     
-    public String getRedirectTopicId() {
-    	return redirectTopicId;
+    public String getRedirectTopicID() {
+    	return redirectTopicID;
     }
     
 }

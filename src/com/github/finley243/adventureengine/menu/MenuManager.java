@@ -34,17 +34,19 @@ public class MenuManager {
 	
 	public void dialogueMenu(Actor subject, String startTopic) {
 		boolean dialogueLoop = true;
+		DialogueTopic lastTopic = null;
 		DialogueTopic currentTopic = subject.game().data().getTopic(startTopic);
 		while(dialogueLoop) {
 			currentTopic.setVisited(subject);
 			for(DialogueLine line : currentTopic.getLines()) {
-				if(line.shouldShow(subject)) {
+				if(line.shouldShow(subject, (lastTopic == null ? null : lastTopic.getID()))) {
 					for(String text : line.getTextList()) {
 						subject.game().eventBus().post(new RenderTextEvent(text));
 					}
 					line.trigger(subject);
 					if(line.hasRedirect()) {
-						currentTopic = subject.game().data().getTopic(line.getRedirectTopicId());
+						lastTopic = currentTopic;
+						currentTopic = subject.game().data().getTopic(line.getRedirectTopicID());
 						break;
 					}
 					if(line.shouldExit()) {
@@ -66,6 +68,7 @@ public class MenuManager {
 				subject.game().eventBus().post(new RenderTextEvent(""));
 				if(validChoices.size() > 0) {
 					DialogueChoice selectedChoice = dialogueMenuInput(subject.game(), validChoices);
+					lastTopic = currentTopic;
 					currentTopic = subject.game().data().getTopic(selectedChoice.getLinkedId());
 					subject.game().eventBus().post(new RenderTextEvent(selectedChoice.getPrompt()));
 					subject.game().eventBus().post(new RenderTextEvent(""));

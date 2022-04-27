@@ -187,14 +187,12 @@ public class DataLoader {
     private static DialogueLine loadLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
         boolean once = LoadUtils.attributeBool(lineElement, "once", false);
         boolean exit = LoadUtils.attributeBool(lineElement, "exit", false);
-        String redirect = lineElement.getAttribute("redirect");
-        if(redirect.isEmpty()) {
-            redirect = null;
-        }
+        String redirect = LoadUtils.attribute(lineElement, "redirect", null);
+        String from = LoadUtils.attribute(lineElement, "from", null);
         List<String> texts = LoadUtils.listOfTags(lineElement, "text");
         Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
         Script script = loadScript(LoadUtils.singleChildWithName(lineElement, "script"));
-        return new DialogueLine(texts, condition, script, once, exit, redirect);
+        return new DialogueLine(texts, condition, script, once, exit, redirect, from);
     }
 
     private static DialogueChoice loadChoice(Element choiceElement) {
