@@ -8,14 +8,14 @@
                 <name>entry door</name>
                 <link>stratis_entrance_exterior</link>
             </object>
-            <object type="bed" id="test_bed">
-                <name>bed</name>
-            </object>
-            <object type="container" id="test_container">
-                <name>loot bag</name>
-                <description>A bag full of random loot.</description>
+            <object type="container" id="stratis_lobby_garbage">
+                <name>garbage can</name>
+                <description>A gleaming silver garbage can, keeping the filth out of sight and out of mind.</description>
                 <inventory>
-                    <table>weapon_ranged_3</table>
+                    <table chance="0.45">ammo_random</table>
+                    <table count="2">junk_random</table>
+                    <table count="2" chance="0.4">junk_random</table>
+                    <table count="1" chance="0.6">junk_random</table>
                 </inventory>
             </object>
             <links>
