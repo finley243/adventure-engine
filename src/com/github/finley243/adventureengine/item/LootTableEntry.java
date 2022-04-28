@@ -11,17 +11,20 @@ public class LootTableEntry {
 	private final String referenceID;
 	private final boolean isLootTable;
 	private final float chance;
-	private final int count;
+	private final int countMin;
+	private final int countMax;
 	
-	public LootTableEntry(String referenceID, boolean isLootTable, float chance, int count) {
+	public LootTableEntry(String referenceID, boolean isLootTable, float chance, int countMin, int countMax) {
 		this.referenceID = referenceID;
 		this.isLootTable = isLootTable;
 		this.chance = chance;
-		this.count = count;
+		this.countMin = countMin;
+		this.countMax = countMax;
 	}
 
 	public Map<Item, Integer> generateItems(Game game) {
 		Map<Item, Integer> items = new HashMap<>();
+		int count = ThreadLocalRandom.current().nextInt(countMin, countMax + 1);
 		if (ThreadLocalRandom.current().nextFloat() < chance) {
 			if (isLootTable) {
 				LootTable table = game.data().getLootTable(referenceID);

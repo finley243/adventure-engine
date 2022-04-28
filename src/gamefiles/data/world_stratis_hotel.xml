@@ -12,10 +12,8 @@
                 <name>garbage can</name>
                 <description>A gleaming silver garbage can, keeping the filth out of sight and out of mind.</description>
                 <inventory>
-                    <table chance="0.45">ammo_random</table>
-                    <table count="2">junk_random</table>
-                    <table count="2" chance="0.4">junk_random</table>
-                    <table count="1" chance="0.6">junk_random</table>
+                    <table chance="0.5">ammo_random</table>
+                    <table countMin="2" countMax="5">junk_random</table>
                 </inventory>
             </object>
             <links>

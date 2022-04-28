@@ -29,20 +29,8 @@
         <item>nexus_bouncer_key</item>
     </lootTable>
     <lootTable id="ammo_random">
-        <table>ammo_pistol_5_20</table>
-        <table>ammo_rifle_5_20</table>
-    </lootTable>
-    <lootTable id="ammo_pistol_5_20" useAll="true">
-        <item count="5">ammo_pistol</item>
-        <item count="5" chance="0.5">ammo_pistol</item>
-        <item count="5" chance="0.5">ammo_pistol</item>
-        <item count="5" chance="0.5">ammo_pistol</item>
-    </lootTable>
-    <lootTable id="ammo_rifle_5_20" useAll="true">
-        <item count="5">ammo_rifle</item>
-        <item count="5" chance="0.5">ammo_rifle</item>
-        <item count="5" chance="0.5">ammo_rifle</item>
-        <item count="5" chance="0.5">ammo_rifle</item>
+        <item countMin="5" countMax="20">ammo_pistol</item>
+        <item countMin="5" countMax="20">ammo_rifle</item>
     </lootTable>
     <lootTable id="junk_random">
         <item>can_soda</item>
