@@ -188,6 +188,19 @@ public class Inventory {
 		itemsStateless.clear();
 	}
 
+	public Map<Item, Integer> getItemMap() {
+		Map<Item, Integer> itemMap = new HashMap<>();
+		for (List<Item> itemList : items.values()) {
+			for (Item item : itemList) {
+				itemMap.put(item, 1);
+			}
+		}
+		for (String itemID : itemsStateless.keySet()) {
+			itemMap.put(ItemFactory.create(game, itemID), itemsStateless.get(itemID));
+		}
+		return itemMap;
+	}
+
 	public List<Item> getItems() {
 		List<Item> uniqueItems = new ArrayList<>();
 		for (List<Item> current : items.values()) {
