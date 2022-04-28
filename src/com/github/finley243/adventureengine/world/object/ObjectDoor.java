@@ -47,9 +47,11 @@ public class ObjectDoor extends WorldObject {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
-		actions.add(new ActionExitListen(this));
-		actions.add(new ActionExitUnlock(this));
-		actions.add(new ActionMoveExit(this));
+		if (!this.isGuarded()) {
+			actions.add(new ActionExitListen(this));
+			actions.add(new ActionExitUnlock(this));
+			actions.add(new ActionMoveExit(this));
+		}
 		return actions;
 	}
 

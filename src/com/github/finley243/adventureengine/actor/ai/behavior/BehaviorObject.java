@@ -32,9 +32,9 @@ public class BehaviorObject extends Behavior {
     public float actionUtilityOverride(Action action) {
         if(action instanceof ActionUseStart && ((ActionUseStart) action).getObject().getID().equals(object)) {
             return BEHAVIOR_ACTION_UTILITY;
-        } else if(action instanceof ActionUseStop && ((ActionUseStop) action).getObject().getID().equals(object)) {
+        }/* else if(action instanceof ActionUseStop && ((ActionUseStop) action).getObject().getID().equals(object)) {
             return 0.0f;
-        }
+        }*/
         return -1.0f;
     }
 

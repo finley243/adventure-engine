@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
@@ -61,6 +62,10 @@ public abstract class Behavior {
     }
 
     public abstract float actionUtilityOverride(Action action);
+
+    public boolean isGuarding(Actor subject, WorldObject object) {
+        return false;
+    }
 
     public boolean isValid(Actor subject) {
         return condition == null || condition.isMet(subject);

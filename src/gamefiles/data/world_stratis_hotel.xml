@@ -58,7 +58,8 @@
                 <descriptor>lobby</descriptor>
                 <behaviors>
                     <behavior type="cycle">
-                        <behavior type="area" duration="2" area="stratis_hotel_lobby_seating"/>
+                        <behavior type="guard" duration="2" object="stratis_hotel_lobby_security_door"/>
+                        <!--<behavior type="area" duration="2" area="stratis_hotel_lobby_seating"/>-->
                         <behavior type="area" duration="2" area="stratis_hotel_lobby_elevators"/>
                     </behavior>
                 </behaviors>

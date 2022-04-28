@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.object;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
@@ -123,6 +124,15 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 	@Override
 	public List<Action> adjacentActions(Actor subject) {
 		return new ArrayList<>();
+	}
+
+	public boolean isGuarded() {
+		for (Actor actor : getArea().getActors()) {
+			if (actor.behaviorComponent().isGuarding(this)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void triggerScript(String entryPoint, Actor subject) {

@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
@@ -53,6 +54,11 @@ public class BehaviorCycle extends Behavior {
     @Override
     public float actionUtilityOverride(Action action) {
         return stages.get(currentStage).actionUtilityOverride(action);
+    }
+
+    @Override
+    public boolean isGuarding(Actor subject, WorldObject object) {
+        return stages.get(currentStage).isGuarding(subject, object);
     }
 
 }

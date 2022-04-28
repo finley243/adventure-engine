@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,11 @@ public class BehaviorComponent {
         } else {
             return current.actionUtilityOverride(action);
         }
+    }
+
+    public boolean isGuarding(WorldObject object) {
+        Behavior currentBehavior = currentBehavior();
+        return currentBehavior != null && currentBehavior.isGuarding(actor, object);
     }
 
     public void update() {

@@ -684,6 +684,10 @@ public class DataLoader {
                     String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
                     behavior = new BehaviorObject(condition, duration, idleScenes, objectTarget);
                     break;
+                case "guard":
+                    String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
+                    behavior = new BehaviorGuard(condition, duration, idleScenes, guardTarget);
+                    break;
                 case "sandbox":
                     String startArea = LoadUtils.attribute(behaviorElement, "area", null);
                     behavior = new BehaviorSandbox(condition, duration, idleScenes, startArea);
