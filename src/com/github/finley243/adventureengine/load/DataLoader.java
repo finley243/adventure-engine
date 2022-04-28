@@ -680,7 +680,12 @@ public class DataLoader {
             String type = LoadUtils.attribute(behaviorElement, "type", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"));
             int duration = LoadUtils.attributeInt(behaviorElement, "duration", 0);
-            List<String> idleScenes = LoadUtils.listOfTags(behaviorElement, "idleScene");
+            List<Scene> idleScenes = new ArrayList<>();
+            List<Element> sceneElements = LoadUtils.directChildrenWithName(behaviorElement, "idleScene");
+            for (Element sceneElement : sceneElements) {
+                Scene scene = loadScene(sceneElement);
+                idleScenes.add(scene);
+            }
             switch(type) {
                 case "area":
                     String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);

@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectBed;
 
@@ -13,7 +14,7 @@ public class BehaviorSandbox extends Behavior {
 
     private final String area;
 
-    public BehaviorSandbox(Condition condition, int duration, List<String> idleScenes, String area) {
+    public BehaviorSandbox(Condition condition, int duration, List<Scene> idleScenes, String area) {
         super(condition, duration, idleScenes);
         this.area = area;
     }

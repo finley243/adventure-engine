@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.ai.behavior;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -16,12 +17,12 @@ public abstract class Behavior {
     private final Condition condition;
     // If duration = 0, behavior will continue indefinitely until endCondition is met or until superseded by another behavior
     private final int duration;
-    private final List<String> idleScenes;
+    private final List<Scene> idleScenes;
     //private final boolean allowCombatActions;
     //private final boolean allowItemActions;
     private int turnsRemaining;
 
-    public Behavior(Condition condition, int duration, List<String> idleScenes) {
+    public Behavior(Condition condition, int duration, List<Scene> idleScenes) {
         this.condition = condition;
         this.duration = duration;
         this.idleScenes = idleScenes;

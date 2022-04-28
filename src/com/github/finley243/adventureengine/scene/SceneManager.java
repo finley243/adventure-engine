@@ -7,20 +7,27 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class SceneManager {
-	
-	public static void trigger(Game game, List<String> scenes) {
-		updateCooldowns(game, scenes);
+
+	public static void trigger(Game game, List<Scene> scenes) {
+		SceneManager.updateCooldowns(game, scenes);
 		Scene scene = selectScene(game, scenes);
 		if(scene != null) {
 			scene.play(game);
 		}
 	}
+
+	public static void triggerFromIDs(Game game, List<String> sceneIDs) {
+		List<Scene> scenes = new ArrayList<>();
+		for (String sceneID : sceneIDs) {
+			scenes.add(game.data().getScene(sceneID));
+		}
+		trigger(game, scenes);
+	}
 	
-	private static Scene selectScene(Game game, List<String> scenes) {
+	private static Scene selectScene(Game game, List<Scene> scenes) {
 		List<Scene> validScenes = new ArrayList<>();
 		int maxPriority = 0;
-		for(String sceneID : scenes) {
-			Scene scene = game.data().getScene(sceneID);
+		for(Scene scene : scenes) {
 			if(scene.canPlay(game)) {
 				if (scene.getPriority() > maxPriority) {
 					validScenes.clear();
@@ -36,9 +43,9 @@ public class SceneManager {
 		return validScenes.get(ThreadLocalRandom.current().nextInt(validScenes.size()));
 	}
 
-	private static void updateCooldowns(Game game, List<String> scenes) {
-		for(String scene : scenes) {
-			game.data().getScene(scene).updateCooldown(game);
+	private static void updateCooldowns(Game game, List<Scene> scenes) {
+		for (Scene scene : scenes) {
+			scene.updateCooldown(game);
 		}
 	}
 

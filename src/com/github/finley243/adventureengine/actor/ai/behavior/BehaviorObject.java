@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.action.ActionUseStart;
 import com.github.finley243.adventureengine.action.ActionUseStop;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class BehaviorObject extends Behavior {
 
     private final String object;
 
-    public BehaviorObject(Condition condition, int duration, List<String> idleScenes, String object) {
+    public BehaviorObject(Condition condition, int duration, List<Scene> idleScenes, String object) {
         super(condition, duration, idleScenes);
         this.object = object;
     }

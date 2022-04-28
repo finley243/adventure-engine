@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.action.ActionSleep;
 import com.github.finley243.adventureengine.action.ActionUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectBed;
 
@@ -14,7 +15,7 @@ public class BehaviorSleep extends Behavior {
 
     private final String bed;
 
-    public BehaviorSleep(Condition condition, List<String> idleScenes, String bed) {
+    public BehaviorSleep(Condition condition, List<Scene> idleScenes, String bed) {
         super(condition, 0, idleScenes);
         this.bed = bed;
     }
