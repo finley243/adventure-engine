@@ -8,18 +8,18 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.List;
 
-public class BehaviorArea extends Behavior {
+public class BehaviorVendor extends Behavior {
 
     private final String area;
 
-    public BehaviorArea(Condition condition, int duration, List<Scene> idleScenes, String area) {
+    public BehaviorVendor(Condition condition, int duration, List<Scene> idleScenes, String area) {
         super(condition, duration, idleScenes);
         this.area = area;
     }
 
     @Override
     public boolean isInTargetState(Actor subject) {
-        return !subject.isInCombat() && subject.getArea().getID().equals(area);
+        return subject.getArea().getID().equals(area);
     }
 
     @Override
@@ -27,4 +27,13 @@ public class BehaviorArea extends Behavior {
         return subject.game().data().getArea(area);
     }
 
+    @Override
+    public float actionUtilityOverride(Action action) {
+        return -1.0f;
+    }
+
+    @Override
+    public boolean isVendingEnabled(Actor subject) {
+        return subject.getArea().getID().equals(area);
+    }
 }

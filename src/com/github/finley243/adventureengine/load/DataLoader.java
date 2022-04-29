@@ -707,6 +707,10 @@ public class DataLoader {
                     String bedTarget = LoadUtils.attribute(behaviorElement, "bed", null);
                     behavior = new BehaviorSleep(condition, idleScenes, bedTarget);
                     break;
+                case "vendor":
+                    String vendorArea = LoadUtils.attribute(behaviorElement, "area", null);
+                    behavior = new BehaviorVendor(condition, duration, idleScenes, vendorArea);
+                    break;
                 case "cycle":
                     List<Behavior> cycleBehaviors = loadBehaviors(behaviorElement);
                     behavior = new BehaviorCycle(condition, cycleBehaviors);

@@ -504,7 +504,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			if(stats.getTopic(game()) != null) {
 				action.add(new ActionTalk(this));
 			}
-			if(vendorComponent != null) {
+			if(vendorComponent != null && behaviorComponent != null && behaviorComponent.isVendingEnabled()) {
 				action.addAll(vendorComponent.getActions(subject));
 			}
 		} else if(isDead()) {
@@ -520,7 +520,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			if(stats.getTopic(game()) != null) {
 				action.add(new ActionTalk(this));
 			}
-			if(vendorComponent != null) {
+			if(vendorComponent != null && behaviorComponent != null && behaviorComponent.isVendingEnabled()) {
 				action.addAll(vendorComponent.getActions(subject));
 			}
 		}

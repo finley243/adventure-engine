@@ -47,6 +47,11 @@ public class BehaviorComponent {
         return currentBehavior != null && currentBehavior.isGuarding(actor, object);
     }
 
+    public boolean isVendingEnabled() {
+        Behavior currentBehavior = currentBehavior();
+        return currentBehavior != null && currentBehavior.isVendingEnabled(actor);
+    }
+
     public void update() {
         if(behaviors.isEmpty()) return;
         Behavior currentBehavior = currentBehavior();

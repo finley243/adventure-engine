@@ -62,9 +62,15 @@ public abstract class Behavior {
         }
     }
 
-    public abstract float actionUtilityOverride(Action action);
+    public float actionUtilityOverride(Action action) {
+        return -1.0f;
+    }
 
     public boolean isGuarding(Actor subject, WorldObject object) {
+        return false;
+    }
+
+    public boolean isVendingEnabled(Actor subject) {
         return false;
     }
 

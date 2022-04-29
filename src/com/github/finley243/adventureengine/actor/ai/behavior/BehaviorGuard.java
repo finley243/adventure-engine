@@ -30,11 +30,6 @@ public class BehaviorGuard extends Behavior {
     }
 
     @Override
-    public float actionUtilityOverride(Action action) {
-        return -1.0f;
-    }
-
-    @Override
     public boolean isGuarding(Actor subject, WorldObject object) {
         return object.getArea().equals(subject.getArea()) && object.getID().equals(guardTarget);
     }
