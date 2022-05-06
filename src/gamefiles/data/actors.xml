@@ -24,9 +24,9 @@
         <limb hitChance="0.8" damageMult="1.0" apparelSlot="TORSO">
             <name>arm</name>
         </limb>
-        <limb hitChance="0.7" damageMult="1.0" apparelSlot="TORSO">
+        <limb hitChance="0.7" damageMult="0.75" apparelSlot="TORSO">
             <name>hand</name>
-            <effect type="trigger" trigger="dropEquipped"/>
+            <effect type="trigger" trigger="dropEquippedForce"/>
         </limb>
         <limb hitChance="0.85" damageMult="1.0" apparelSlot="LEGS">
             <name>leg</name>

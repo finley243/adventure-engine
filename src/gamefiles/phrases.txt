@@ -3,7 +3,7 @@ consume:$_actor consume$s_actor $item
 die:$_actor fall$s_actor over dead
 drink:$_actor drink$s_actor $item
 drop:$_actor drop$s_actor $item
-forceDrop:$_actor drop$s_actor $item on the ground
+forceDrop:$_actor drop$s_actor $item and $item lands near $area
 eat:$_actor eat$s_actor $item
 equip:$_actor equip$s_actor $item
 exitElevator:$_actor exit$s_actor $elevator
@@ -12,7 +12,6 @@ meleeMiss:$_actor tr$ies_actor to hit $target with $weapon, but miss$es_actor
 meleeTelegraph:$_actor swing$s_actor $weapon at $target
 moveThrough:$_actor go$es_actor through $exit
 moveToward:$_actor move$s_actor toward $area
-patrolTelegraph:$_actor prepare$s_actor to move to $area
 pickUp:$_actor grab$s_actor $item
 rangedHit:a bullet hits $target
 rangedMiss:a bullet {whips|flies} past $target

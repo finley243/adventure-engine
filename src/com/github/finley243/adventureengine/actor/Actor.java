@@ -379,6 +379,17 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			inventory.removeItem(item);
 			Item.itemToObject(game(), item, 1, getArea());
 			Context context = new Context(new NounMapper().put("actor", this).put("item", item).build());
+			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("drop"), context, null, null));
+		}
+	}
+
+	public void dropEquippedItemForce() {
+		if(equipmentComponent.hasEquippedItem()) {
+			Item item = equipmentComponent.getEquippedItem();
+			inventory.removeItem(item);
+			Area landingArea = MathUtils.selectRandomFromSet(getArea().getMovableAreas());
+			Item.itemToObject(game(), item, 1, landingArea);
+			Context context = new Context(new NounMapper().put("actor", this).put("item", item).put("area", landingArea).build());
 			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 		}
 	}
@@ -774,7 +785,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	@Override
 	public void modifyState(String name, int amount) {
-		if ("hp".equals(name)) {
+		if (name.equals("hp")) {
 			if (amount > 0) {
 				heal(amount);
 			} else if (amount < 0) {
@@ -785,8 +796,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	@Override
 	public void triggerEffect(String name) {
-		if ("dropEquipped".equals(name)) {
+		if (name.equals("dropEquipped")) {
 			dropEquippedItem();
+		} else if (name.equals("dropEquippedForce")) {
+			dropEquippedItemForce();
 		}
 	}
 

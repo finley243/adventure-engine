@@ -2,6 +2,11 @@ package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class MathUtils {
 
     public static float chanceLinear(int value, int valueMin, int valueMax, float chanceMin, float chanceMax) {
@@ -64,6 +69,14 @@ public class MathUtils {
         } else {
             return 0;
         }
+    }
+
+    public static <T> T selectRandomFromSet(Set<T> set) {
+        return selectRandomFromList(new ArrayList<>(set));
+    }
+
+    public static <T> T selectRandomFromList(List<T> list) {
+        return list.get(ThreadLocalRandom.current().nextInt(list.size()));
     }
 
 }
