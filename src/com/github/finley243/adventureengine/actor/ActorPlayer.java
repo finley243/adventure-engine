@@ -33,7 +33,7 @@ public class ActorPlayer extends Actor {
 		if(isActive()) {
 			if (visible) {
 				game().eventBus().post(new RenderTextEvent(event.getTextVisible()));
-			} else {
+			} else if(event.getTextAudible() != null) {
 				game().eventBus().post(new RenderTextEvent(event.getTextAudible()));
 			}
 		}
