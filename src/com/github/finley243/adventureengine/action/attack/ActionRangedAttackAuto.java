@@ -2,9 +2,8 @@ package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.action.reaction.ActionReaction;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.CombatHelper;
-import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.menu.MenuData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 
 	private static final int AMMO_USED = 6;
 	private static final float AUTOFIRE_DAMAGE_MULT = 3.00f;
+	private static final float AUTOFIRE_HIT_CHANCE_MULT = -0.50f;
 
 	public ActionRangedAttackAuto(ItemWeapon weapon, Actor target) {
 		super(weapon, target, null);
@@ -50,7 +50,7 @@ public class ActionRangedAttackAuto extends ActionAttack {
 
 	@Override
 	public float hitChanceMult() {
-		return CombatHelper.AUTOFIRE_HIT_CHANCE_MULT;
+		return AUTOFIRE_HIT_CHANCE_MULT;
 	}
 
 	@Override

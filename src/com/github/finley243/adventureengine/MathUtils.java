@@ -9,6 +9,7 @@ public class MathUtils {
     }
 
     // Chance is higher if value1 is higher than value2
+    // Ratio greater than 1.0 places greater weight on value1, lower than 1.0 places greater weight on value2
     public static float chanceLinearContest(int value1, int value1Min, int value1Max, int value2, int value2Min, int value2Max, float ratio, float chanceMin, float chanceMax) {
         int difference = (int) (value1*ratio - value2);
         int differenceMin = (int) (value1Min*ratio - value2Max);
@@ -46,6 +47,23 @@ public class MathUtils {
 
     public static float bound(float value, float min, float max) {
         return Math.min(Math.max(value, min), max);
+    }
+
+    /**
+     * Returns by how much a value extends beyond a range (in either direction)
+     * @param value Value to compare
+     * @param min Lower bound of range (inclusive)
+     * @param max Upper bound of range (inclusive)
+     * @return Amount above or below the range (0 if value is contained in range)
+     */
+    public static int differenceFromRange(int value, int min, int max) {
+        if (value > max) {
+            return value - max;
+        } else if (value < min) {
+            return min - value;
+        } else {
+            return 0;
+        }
     }
 
 }

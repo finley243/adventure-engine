@@ -425,7 +425,7 @@ public class DataLoader {
                 List<Effect> consumableEffects = loadEffects(itemElement, false);
                 return new ConsumableTemplate(id, name, description, scripts, price, consumableType, consumableEffects);
             case "weapon":
-                WeaponTemplate.WeaponType weaponType = LoadUtils.attributeEnum(itemElement, "type", WeaponTemplate.WeaponType.class, null);
+                WeaponTemplate.WeaponType weaponType = LoadUtils.attributeEnum(itemElement, "weaponType", WeaponTemplate.WeaponType.class, null);
                 int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
                 Element damageElement = LoadUtils.singleChildWithName(itemElement, "damage");
                 int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);

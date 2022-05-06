@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
-import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
@@ -93,7 +92,6 @@ public class Game {
 	/** Executes a single round of the game (every actor takes a turn) */
 	private void nextRound() {
 		eventBus.post(new TextClearEvent());
-		//System.out.println("Time - " + data().time());
 		TextGen.clearContext();
 		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer());
 		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer());
@@ -103,11 +101,9 @@ public class Game {
 		}
 		for(Actor actor : data().getActors()) {
 			if(!(actor instanceof ActorPlayer)) {
-				CombatHelper.newTurn();
 				actor.takeTurn();
 			}
 		}
-		CombatHelper.newTurn();
 		data().getPlayer().describeSurroundings();
 		data().getPlayer().takeTurn();
 		data().time().onNextRound();
@@ -123,7 +119,7 @@ public class Game {
 	
 	/** Ends the game loop, triggered when the player dies */
 	@Subscribe
-	private void endGameLoop(PlayerDeathEvent e) {
+	private void onPlayerDeath(PlayerDeathEvent e) {
 		continueGameLoop = false;
 	}
 	
