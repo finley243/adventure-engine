@@ -56,6 +56,10 @@ public abstract class UsableObject extends WorldObject {
 		return false;
 	}
 
+	public boolean userCanSeeOtherAreas() {
+		return true;
+	}
+
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);

@@ -18,6 +18,11 @@ public class ObjectCover extends UsableObject {
     }
 
     @Override
+    public boolean userCanSeeOtherAreas() {
+        return false;
+    }
+
+    @Override
     public String getStartPhrase() {
         return "takeCover";
     }
