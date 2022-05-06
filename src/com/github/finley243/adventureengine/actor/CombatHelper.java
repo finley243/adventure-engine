@@ -15,13 +15,14 @@ public class CombatHelper {
 	public static final float RANGE_PENALTY = 0.10f;
 	
 	public static float calculateHitChance(Actor attacker, Actor target, Limb limb, ItemWeapon weapon, float hitChanceMult) {
-		float chance = MathUtils.chanceLinearSkillAttributeContest(attacker, weapon.getSkill(), target, Actor.Attribute.AGILITY, 2.0f, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
-		if(weapon.isRanged()) {
+		float skillToAgilityWeight = (weapon.isRanged() ? 4.0f : 2.0f);
+		float chance = MathUtils.chanceLinearSkillAttributeContest(attacker, weapon.getSkill(), target, Actor.Attribute.AGILITY, skillToAgilityWeight, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
+		if (weapon.isRanged()) {
 			int distanceFromRange = MathUtils.differenceFromRange(attacker.getArea().getDistanceTo(target.getArea().getID()), weapon.getRangeMin(), weapon.getRangeMax());
 			chance -= RANGE_PENALTY * distanceFromRange;
 		}
 		chance += weapon.getAccuracyBonus();
-		if(limb != null) {
+		if (limb != null) {
 			chance *= limb.getHitChance();
 		}
 		chance *= (hitChanceMult + 1.0f);

@@ -21,7 +21,7 @@ public class ActionMeleeAttackTargeted extends ActionAttack {
 	public List<ActionReaction> getReactions(Actor subject) {
 		List<ActionReaction> reactions = new ArrayList<>();
 		reactions.add(new ActionReactionBlock(subject, getWeapon()));
-		reactions.add(new ActionReactionDodge(subject, getWeapon()));
+		//reactions.add(new ActionReactionDodge(subject, getWeapon()));
 		reactions.add(new ActionReactionCounter(subject, getWeapon()));
 		reactions.add(new ActionReactionNone(subject, getWeapon()));
 		return reactions;

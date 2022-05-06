@@ -27,6 +27,7 @@ public class ActionReactionCounter extends ActionReaction {
 
     @Override
     public void onSuccess(Actor subject) {
+        // TODO - Actually implement the counter-attack damage
         Context reactionContext = new Context(new NounMapper().put("actor", subject).put("attacker", attacker).put("weapon", weapon).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("counterSuccess"), reactionContext, this, subject));
     }
