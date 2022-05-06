@@ -9,17 +9,19 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_MAX = 0.99f;
 	public static final float HIT_CHANCE_MIN = 0.01f;
 	// Range of hit chance based on skill/attribute levels (before any modifiers)
-	public static final float HIT_CHANCE_BASE_MAX = 0.95f;
-	public static final float HIT_CHANCE_BASE_MIN = 0.20f;
+	public static final float HIT_CHANCE_BASE_MAX = 0.99f;
+	public static final float HIT_CHANCE_BASE_MIN = 0.25f;
 	// Amount of hit chance to subtract per unit of distance outside of weapon range
 	public static final float RANGE_PENALTY = 0.10f;
 	
 	public static float calculateHitChance(Actor attacker, Actor target, Limb limb, ItemWeapon weapon, float hitChanceMult) {
-		float skillToAgilityWeight = (weapon.isRanged() ? 4.0f : 2.0f);
-		float chance = MathUtils.chanceLinearSkillAttributeContest(attacker, weapon.getSkill(), target, Actor.Attribute.AGILITY, skillToAgilityWeight, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
+		float chance;
 		if (weapon.isRanged()) {
+			chance = MathUtils.chanceLinearSkill(attacker, weapon.getSkill(), HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
 			int distanceFromRange = MathUtils.differenceFromRange(attacker.getArea().getDistanceTo(target.getArea().getID()), weapon.getRangeMin(), weapon.getRangeMax());
 			chance -= RANGE_PENALTY * distanceFromRange;
+		} else {
+			chance = MathUtils.chanceLinearSkillAttributeContest(attacker, weapon.getSkill(), target, Actor.Attribute.AGILITY, 1.0f, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
 		}
 		chance += weapon.getAccuracyBonus();
 		if (limb != null) {

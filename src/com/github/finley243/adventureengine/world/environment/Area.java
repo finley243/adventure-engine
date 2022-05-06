@@ -197,7 +197,7 @@ public class Area extends GameInstanced implements Noun {
 	public Set<Area> getVisibleAreas(Actor subject) {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
-		if (subject.isUsingObject() && subject.getUsingObject().userCanSeeOtherAreas()) {
+		if (!subject.isUsingObject() || subject.getUsingObject().userCanSeeOtherAreas()) {
 			for (AreaLink link : linkedAreas.values()) {
 				if (link.getType().isVisible) {
 					if (!subject.isInCover()) {

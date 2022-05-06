@@ -34,7 +34,6 @@
     </actor>
     <actor id="player" parent="default" hp="50" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>
-        <skill key="HANDGUNS" value="5"/>
         <inventory>
             <table>player</table>
         </inventory>
