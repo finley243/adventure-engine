@@ -19,9 +19,6 @@ public class MathUtils {
         int difference = (int) (value1*ratio - value2);
         int differenceMin = (int) (value1Min*ratio - value2Max);
         int differenceMax = (int) (value1Max*ratio - value2Min);
-        System.out.println("Difference: " + difference);
-        System.out.println("Difference MIN: " + differenceMin);
-        System.out.println("Difference MAX: " + differenceMax);
         return chanceLinear(difference, differenceMin, differenceMax, chanceMin, chanceMax);
     }
 
