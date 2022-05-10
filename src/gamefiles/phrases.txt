@@ -30,7 +30,9 @@ takeElevatorDown:$_actor take$s_actor $elevator down
 takeElevatorUp:$_actor take$s_actor $elevator up
 takeFrom:$_actor take$s_actor $item from $inventory
 unequip:$_actor put$s_actor away $item
-unlock:$_actor unlock$s_actor $exit
+unlock:$_actor unlock$s_actor $object
+pickLock:$_actor pick$s_actor the lock on $object
+hotwireLock:$_actor hotwire$s_actor the lock on $object
 blockSuccess:$_actor {manage$s_actor to block $weapon just in time|block$s_actor $weapon and push$es_actor $weapon away}
 blockFail:$_actor tr$ies_actor to block $weapon but $is_actor too {late|slow}
 dodgeSuccess:$_actor {dodge$s_actor|move$s_actor} {out of the way of|away from} $weapon

@@ -2,14 +2,14 @@
     <room id="street_corner">
         <name proper="false">street corner</name>
         <area id="street_corner_nexus" landmark="nexus_entrance_exterior">
-            <object type="door" id="nexus_entrance_exterior">
+            <object type="door" id="nexus_entrance_exterior" link="nexus_entrance_interior">
                 <name>Nexus front entrance</name>
-                <link>nexus_entrance_interior</link>
-                <key>nexus_bouncer_key</key>
+                <lock>
+                    <key>nexus_bouncer_key</key>
+                </lock>
             </object>
-            <object type="door" id="stratis_entrance_exterior">
+            <object type="door" id="stratis_entrance_exterior" link="stratis_entry_door">
                 <name>Stratis Hotel entrance</name>
-                <link>stratis_entry_door</link>
             </object>
             <actor id="nexus_bouncer" template="nexus_bouncer">
                 <behaviors>
@@ -21,9 +21,8 @@
     <room id="nexus">
         <name proper="false">Nexus</name>
         <area id="nexus_entry" landmark="nexus_entrance_interior">
-            <object type="door" id="nexus_entrance_interior">
+            <object type="door" id="nexus_entrance_interior" link="nexus_entrance_exterior">
                 <name>front door</name>
-                <link>nexus_entrance_exterior</link>
             </object>
         </area>
     </room>

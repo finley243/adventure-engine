@@ -10,62 +10,53 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectDoor;
 
-public class ActionMoveExit extends ActionMove {
+public class ActionMoveDoor extends ActionMove {
 
-	private final ObjectDoor exit;
+	private final ObjectDoor door;
 	
-	public ActionMoveExit(ObjectDoor exit) {
-		this.exit = exit;
+	public ActionMoveDoor(ObjectDoor door) {
+		this.door = door;
 	}
 	
 	public Area getArea() {
-		return exit.getLinkedArea();
+		return door.getLinkedArea();
 	}
 
-	public ObjectDoor getExit() {
-		return exit;
+	public ObjectDoor getDoor() {
+		return door;
 	}
 	
 	@Override
 	public void choose(Actor subject) {
-		Area area = exit.getLinkedArea();
-		Context context = new Context(new NounMapper().put("actor", subject).put("exit", exit).put("room", area.getRoom()).build());
+		Area area = door.getLinkedArea();
+		Context context = new Context(new NounMapper().put("actor", subject).put("exit", door).put("room", area.getRoom()).build());
 		subject.game().eventBus().post(new SensoryEvent(new Area[]{subject.getArea(), area}, Phrases.get("moveThrough"), context, this, subject));
-		exit.unlock();
+		door.getLinkedDoor().getLock().setLocked(false);
 		subject.setArea(area);
 	}
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		if(!subject.equals(subject.game().data().getPlayer())) {
-			if(!exit.isLocked()) return !disabled;
-			for(String key : exit.getKeyIDs()) {
-				if(subject.inventory().hasItem(key)) {
-					return !disabled;
-				}
-			}
-			return false;
-		}
-		return !disabled && !exit.isLocked();
+		return super.canChoose(subject) && !door.isLocked();
 	}
 
 	@Override
 	public float utility(Actor subject) {
-		return UtilityUtils.getMovementUtility(subject, exit.getLinkedArea(), true) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
+		return UtilityUtils.getMovementUtility(subject, door.getLinkedArea(), true) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Enter", canChoose(subject), new String[]{exit.getName()});
+		return new MenuData("Enter", canChoose(subject), new String[]{door.getName()});
 	}
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionMoveExit)) {
+        if(!(o instanceof ActionMoveDoor)) {
             return false;
         } else {
-            ActionMoveExit other = (ActionMoveExit) o;
-            return other.exit == this.exit;
+            ActionMoveDoor other = (ActionMoveDoor) o;
+            return other.door == this.door;
         }
     }
 

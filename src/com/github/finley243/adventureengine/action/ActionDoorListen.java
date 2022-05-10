@@ -5,11 +5,11 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.world.object.ObjectDoor;
 
-public class ActionExitListen extends Action {
+public class ActionDoorListen extends Action {
 
 	private final ObjectDoor exit;
 	
-	public ActionExitListen(ObjectDoor exit) {
+	public ActionDoorListen(ObjectDoor exit) {
 		this.exit = exit;
 	}
 

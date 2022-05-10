@@ -14,6 +14,7 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -612,9 +613,9 @@ public class DataLoader {
         Map<String, Script> objectScripts = loadScriptsWithTriggers(objectElement);
         switch(objectType) {
             case "door":
-                String doorLink = LoadUtils.singleTag(objectElement, "link", null);
-                Set<String> doorKeys = LoadUtils.setOfTags(objectElement, "key");
-                return new ObjectDoor(game, objectID, area, objectName, objectDescription, objectScripts, doorLink, doorKeys);
+                String doorLink = LoadUtils.attribute(objectElement, "link", null);
+                Lock doorLock = loadLock(objectElement, objectID);
+                return new ObjectDoor(game, objectID, area, objectName, objectDescription, objectScripts, doorLink, doorLock);
             case "elevator":
                 Element floorElement = LoadUtils.singleChildWithName(objectElement, "floor");
                 int floorNumber = LoadUtils.singleTagInt(floorElement, "number", 1);
@@ -646,6 +647,15 @@ public class DataLoader {
                 return new ObjectCustom(game, objectID, area, objectName, objectDescription, objectScripts, objectActions);
         }
         return null;
+    }
+
+    private static Lock loadLock(Element objectElement, String objectID) {
+        Element lockElement = LoadUtils.singleChildWithName(objectElement, "lock");
+        boolean startLocked = LoadUtils.attributeBool(lockElement, "startLocked", true);
+        int lockpickLevel = LoadUtils.attributeInt(lockElement, "lockpick", 0);
+        int hotwireLevel = LoadUtils.attributeInt(lockElement, "hotwire", 0);
+        Set<String> keys = LoadUtils.setOfTags(lockElement, "key");
+        return new Lock(objectID, startLocked, keys, lockpickLevel, hotwireLevel);
     }
 
     private static List<ActionCustom> loadCustomActions(Element objectElement, String objectID) throws ParserConfigurationException, IOException, SAXException {

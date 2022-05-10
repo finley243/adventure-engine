@@ -4,9 +4,8 @@
         <roomDescription>The lobby is large and airy. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</roomDescription>
         <area id="stratis_hotel_lobby_entry" landmark="stratis_entry_door">
             <description>The entryway is clean and relatively empty.</description>
-            <object type="door" id="stratis_entry_door">
+            <object type="door" id="stratis_entry_door" link="stratis_entrance_exterior">
                 <name>entry door</name>
-                <link>stratis_entrance_exterior</link>
             </object>
             <object type="container" id="stratis_lobby_garbage">
                 <name>garbage can</name>
@@ -47,10 +46,11 @@
             <object type="chair" id="stratis_hotel_lobby_chair">
                 <name>lounge chair</name>
             </object>
-            <object type="door" id="stratis_hotel_lobby_security_door">
+            <object type="door" id="stratis_hotel_lobby_security_door" link="stratis_hotel_security_door">
                 <name>security office door</name>
-                <link>stratis_hotel_security_door</link>
-                <key>stratis_security_key</key>
+                <lock>
+                    <key>stratis_security_key</key>
+                </lock>
             </object>
             <actor id="stratis_guard_lobby" template="stratis_guard">
                 <descriptor>lobby</descriptor>
@@ -107,12 +107,13 @@
             <links>
                 <link>stratis_hotel_corridor_elevators</link>
             </links>
-            <object type="door" id="stratis_hotel_corridor_room_door">
+            <object type="door" id="stratis_hotel_corridor_room_door" link="stratis_hotel_room_door">
                 <name>door</name>
                 <description>The door is made from an elegant dark-stained wood. There is a key card reader above the handle. To the right of the door, a sign reads "508".</description>
-                <link>stratis_hotel_room_door</link>
-                <key>stratis_room_key</key>
-                <key>stratis_master_key</key>
+                <lock>
+                    <key>stratis_room_key</key>
+                    <key>stratis_master_key</key>
+                </lock>
             </object>
         </area>
     </room>
@@ -120,9 +121,8 @@
         <name proper="true">room 508</name>
         <description>The lights come on as you enter, casting a warm glow over the white linen on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</description>
         <area id="stratis_hotel_room_main" landmark="stratis_hotel_room_door">
-            <object type="door" id="stratis_hotel_room_door">
+            <object type="door" id="stratis_hotel_room_door" link="stratis_hotel_corridor_room_door">
                 <name>door</name>
-                <link>stratis_hotel_corridor_room_door</link>
             </object>
             <object type="item" id="stratis_hotel_room_baseball_bat">
                 <item>baseball_bat</item>
@@ -133,9 +133,8 @@
         <name proper="false">security office</name>
         <owner private="true">stratis_hotel_staff</owner>
         <area id="stratis_hotel_security_main" landmark="stratis_hotel_security_door">
-            <object type="door" id="stratis_hotel_security_door">
+            <object type="door" id="stratis_hotel_security_door" link="stratis_hotel_lobby_security_door">
                 <name>door</name>
-                <link>stratis_hotel_lobby_security_door</link>
             </object>
             <object type="item" id="stratis_hotel_security_rifle">
                 <item>rifle_auto</item>
