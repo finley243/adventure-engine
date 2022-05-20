@@ -5,9 +5,11 @@ import java.util.*;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionAreaInspect;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -24,7 +26,7 @@ public class Area extends GameInstanced implements Noun {
 	// The room containing this area
 	private final String roomID;
 	
-	private final String description;
+	private final Scene description;
 
 	private final String ownerFaction;
 	// Whether members and allies of ownerFaction should react negatively to non-allies in area
@@ -40,7 +42,7 @@ public class Area extends GameInstanced implements Noun {
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(Game game, String ID, String landmarkID, String description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
+	public Area(Game game, String ID, String landmarkID, Scene description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game);
 		if(landmarkID == null) throw new IllegalArgumentException("Landmark cannot be null: " + ID);
 		this.ID = ID;
@@ -69,7 +71,7 @@ public class Area extends GameInstanced implements Noun {
 		//return getFormattedName();
 	}
 	
-	public String getDescription() {
+	public Scene getDescription() {
 		return description;
 	}
 
@@ -130,7 +132,9 @@ public class Area extends GameInstanced implements Noun {
 
 	public Set<Actor> getActors(Actor exclude) {
 		Set<Actor> actorsExclude = new HashSet<>(actors);
-		actorsExclude.remove(exclude);
+		if (exclude != null) {
+			actorsExclude.remove(exclude);
+		}
 		return actorsExclude;
 	}
 
@@ -250,6 +254,12 @@ public class Area extends GameInstanced implements Noun {
 	
 	public Room getRoom() {
 		return game().data().getRoom(roomID);
+	}
+
+	public List<Action> getAreaActions(Actor subject) {
+		List<Action> actions = new ArrayList<>();
+		actions.add(new ActionAreaInspect(this));
+		return actions;
 	}
 
 	public void triggerScript(String entryPoint, Actor subject) {

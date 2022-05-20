@@ -21,7 +21,7 @@ public class CombatHelper {
 			int distanceFromRange = MathUtils.differenceFromRange(attacker.getArea().getDistanceTo(target.getArea().getID()), weapon.getRangeMin(), weapon.getRangeMax());
 			chance -= RANGE_PENALTY * distanceFromRange;
 		} else {
-			chance = MathUtils.chanceLinearSkillAttributeContest(attacker, weapon.getSkill(), target, Actor.Attribute.AGILITY, 1.0f, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
+			chance = MathUtils.chanceLinearSkillContest(attacker, weapon.getSkill(), target, Actor.Skill.DODGE, 1.0f, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
 		}
 		chance += weapon.getAccuracyBonus();
 		if (limb != null) {

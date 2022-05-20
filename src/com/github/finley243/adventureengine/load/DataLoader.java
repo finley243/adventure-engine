@@ -551,7 +551,7 @@ public class DataLoader {
         Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
         String roomName = roomNameElement.getTextContent();
         boolean roomNameIsProper = LoadUtils.attributeBool(roomNameElement, "proper", false);
-        String roomDescription = LoadUtils.singleTag(roomElement, "roomDescription", null);
+        Scene roomDescription = loadScene(LoadUtils.singleChildWithName(roomElement, "description"));
         String roomOwnerFaction = LoadUtils.attribute(roomElement, "faction", null);
         Map<String, Script> roomScripts = loadScriptsWithTriggers(roomElement);
 
@@ -569,7 +569,7 @@ public class DataLoader {
         if(areaElement == null) return null;
         String areaID = areaElement.getAttribute("id");
         String landmarkID = LoadUtils.attribute(areaElement, "landmark", null);
-        String description = LoadUtils.singleTag(areaElement, "description", null);
+        Scene description = loadScene(LoadUtils.singleChildWithName(areaElement, "description"));
         Element areaOwnerElement = LoadUtils.singleChildWithName(areaElement, "owner");
         String areaOwnerFaction = (areaOwnerElement != null ? areaOwnerElement.getTextContent() : null);
         boolean areaIsPrivate = LoadUtils.attributeBool(areaOwnerElement, "private", false);

@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -21,7 +22,7 @@ public class Room extends GameInstanced implements Noun {
 	private final String name;
 	private final boolean isProperName;
 	private boolean isKnown;
-	private final String description;
+	private final Scene description;
 	private final String ownerFaction;
 	private final Set<Area> areas;
 
@@ -29,7 +30,7 @@ public class Room extends GameInstanced implements Noun {
 
 	private boolean hasVisited;
 
-	public Room(Game game, String ID, String name, boolean isProperName, String description, String ownerFaction, Set<Area> areas, Map<String, Script> scripts) {
+	public Room(Game game, String ID, String name, boolean isProperName, Scene description, String ownerFaction, Set<Area> areas, Map<String, Script> scripts) {
 		super(game);
 		this.ID = ID;
 		this.name = name;
@@ -49,7 +50,7 @@ public class Room extends GameInstanced implements Noun {
 		return areas;
 	}
 	
-	public String getDescription() {
+	public Scene getDescription() {
 		return description;
 	}
 	

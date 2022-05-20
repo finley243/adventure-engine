@@ -1,9 +1,17 @@
 <data>
     <room id="stratis_hotel_lobby">
         <name proper="false">lobby</name>
-        <roomDescription>The lobby is large and airy. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</roomDescription>
+        <description>
+            <line>
+                <text>The lobby is large and airy. An elegant chandelier catches your eye, a brushed silver ribbon spiralled around itself, its underside glowing with a clean white light. A large desk is positioned opposite the door.</text>
+            </line>
+        </description>
         <area id="stratis_hotel_lobby_entry" landmark="stratis_entry_door">
-            <description>The entryway is clean and relatively empty.</description>
+            <description>
+                <line>
+                    <text>The entryway is clean and relatively empty.</text>
+                </line>
+            </description>
             <object type="door" id="stratis_entry_door" link="stratis_entrance_exterior">
                 <name>entry door</name>
             </object>
@@ -22,7 +30,11 @@
             </links>
         </area>
         <area id="stratis_hotel_lobby_desk" landmark="stratis_reception_desk">
-            <description>The white marble desk stretches several meters across. Behind it, large chrome lettering spells out "Stratis".</description>
+            <description>
+                <line>
+                    <text>The white marble desk stretches several meters across. Behind it, large chrome lettering spells out "Stratis".</text>
+                </line>
+            </description>
             <links>
                 <link>stratis_hotel_lobby_entry</link>
                 <link>stratis_hotel_lobby_seating</link>
@@ -86,9 +98,17 @@
     </room>
     <room id="stratis_hotel_rooms_corridor">
         <name proper="false">guest room corridor</name>
-        <description>You enter a dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</description>
+        <description>
+            <line>
+                <text>A dimly-lit corridor with rows of doors on either side. The dark stone floor looks impeccably clean, almost untouched. A set of vending machines glows invitingly near the elevators.</text>
+            </line>
+        </description>
         <area id="stratis_hotel_corridor_elevators" landmark="stratis_hotel_elevator_corridor">
-            <description>The space outside the elevators is dimly lit, with a row of doors on the opposite wall.</description>
+            <description>
+                <line>
+                    <text>The space outside the elevators is dimly lit, with a row of doors on the opposite wall.</text>
+                </line>
+            </description>
             <links>
                 <link>stratis_hotel_corridor_main</link>
             </links>
@@ -119,7 +139,11 @@
     </room>
     <room id="stratis_hotel_room">
         <name proper="true">room 508</name>
-        <description>The lights come on as you enter, casting a warm glow over the white linen on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</description>
+        <description>
+            <line>
+                <text>The lights cast a warm glow over the white linen on the bed. The room is small but comfortable, much of the space being taken up by the bed itself.</text>
+            </line>
+        </description>
         <area id="stratis_hotel_room_main" landmark="stratis_hotel_room_door">
             <object type="door" id="stratis_hotel_room_door" link="stratis_hotel_corridor_room_door">
                 <name>door</name>

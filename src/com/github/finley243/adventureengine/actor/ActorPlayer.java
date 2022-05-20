@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuManager;
+import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -71,8 +72,9 @@ public class ActorPlayer extends Actor {
 
 	public void updateAreaDescription() {
 		if(this.getArea().getDescription() != null) {
-			game().eventBus().post(new RenderTextEvent(this.getArea().getDescription()));
-			game().eventBus().post(new RenderTextEvent(""));
+			//game().eventBus().post(new RenderTextEvent(this.getArea().getDescription()));
+			//game().eventBus().post(new RenderTextEvent(""));
+			SceneManager.trigger(game(), List.of(this.getArea().getDescription()));
 		}
 	}
 

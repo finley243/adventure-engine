@@ -60,7 +60,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		LONG_ARMS(Attribute.DEXTERITY),
 		LOCKPICK(Attribute.DEXTERITY),
 		// AGILITY
-		STEALTH(Attribute.AGILITY);
+		STEALTH(Attribute.AGILITY),
+		DODGE(Attribute.AGILITY);
 
 		public final Attribute attribute;
 
@@ -565,6 +566,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if(canMove()) {
 			actions.addAll(getArea().getMoveActions());
 		}
+		actions.addAll(getArea().getAreaActions(this));
 		for(Item item : inventory.getItems()) {
 			actions.addAll(item.inventoryActions(this));
 		}
