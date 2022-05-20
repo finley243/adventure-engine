@@ -321,16 +321,16 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public void damage(Damage damage, Limb limb) {
-		if(damage.getAmount() < 0) throw new IllegalArgumentException();
 		if(limb != null) {
-			damageLimb(damage.getAmount(), limb);
+			damageLimb(damage, limb);
 		} else {
-			damageDirect(damage.getAmount());
+			damageDirect(damage);
 		}
 	}
 
-	private void damageDirect(int amount) {
-		amount -= apparelComponent.getDamageResistance(ApparelComponent.ApparelSlot.TORSO);
+	private void damageDirect(Damage damage) {
+		int amount = damage.getAmount();
+		amount -= apparelComponent.getDamageResistance(ApparelComponent.ApparelSlot.TORSO) * damage.getArmorMult();
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;
@@ -345,8 +345,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 	}
 
-	private void damageLimb(int amount, Limb limb) {
-		amount -= apparelComponent.getDamageResistance(limb.getApparelSlot());
+	private void damageLimb(Damage damage, Limb limb) {
+		int amount = damage.getAmount();
+		amount -= apparelComponent.getDamageResistance(limb.getApparelSlot()) * damage.getArmorMult();
 		if(amount < 0) amount = 0;
 		if(amount > 0) {
 			limb.applyEffects(this);
@@ -791,7 +792,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			if (amount > 0) {
 				heal(amount);
 			} else if (amount < 0) {
-				damageDirect(-amount);
+				damageDirect(new Damage(Damage.DamageType.PHYSICAL, -amount, 0.0f));
 			}
 		}
 	}
