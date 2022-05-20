@@ -319,12 +319,12 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
 	}
 	
-	public void damage(int amount, Limb limb) {
-		if(amount < 0) throw new IllegalArgumentException();
+	public void damage(Damage damage, Limb limb) {
+		if(damage.getAmount() < 0) throw new IllegalArgumentException();
 		if(limb != null) {
-			damageLimb(amount, limb);
+			damageLimb(damage.getAmount(), limb);
 		} else {
-			damageDirect(amount);
+			damageDirect(damage.getAmount());
 		}
 	}
 
@@ -789,7 +789,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			if (amount > 0) {
 				heal(amount);
 			} else if (amount < 0) {
-				damage(amount, null);
+				damageDirect(-amount);
 			}
 		}
 	}

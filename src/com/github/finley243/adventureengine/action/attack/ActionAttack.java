@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action.attack;
 
+import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandom;
@@ -109,7 +110,8 @@ public abstract class ActionAttack extends ActionRandom {
         }
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase()), attackContext, this, subject));
-        target.damage(damage, getLimb());
+        Damage damageData = new Damage(Damage.DamageType.PHYSICAL, damage, 0.0f);
+        target.damage(damageData, getLimb());
         subject.triggerEffect("on_attack_success");
     }
 
