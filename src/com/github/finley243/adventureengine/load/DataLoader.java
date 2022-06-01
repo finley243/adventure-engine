@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
+import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.dialogue.DialogueChoice;
 import com.github.finley243.adventureengine.dialogue.DialogueLine;
@@ -364,6 +365,9 @@ public class DataLoader {
             case "unlock":
                 String unlockObject = LoadUtils.attribute(scriptElement, "object", null);
                 return new ScriptUnlock(condition, unlockObject);
+            case "alertState":
+                TargetingComponent.AlertState alertState = LoadUtils.attributeEnum(scriptElement, "state", TargetingComponent.AlertState.class, TargetingComponent.AlertState.AWARE);
+                return new ScriptAlertState(condition, actorRef, alertState);
             case "select":
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSelect, true);
