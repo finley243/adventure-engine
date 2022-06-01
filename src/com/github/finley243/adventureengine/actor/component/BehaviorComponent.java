@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 public class BehaviorComponent {
 
@@ -19,11 +19,7 @@ public class BehaviorComponent {
 
     public BehaviorComponent(Actor actor, List<Behavior> behaviors) {
         this.actor = actor;
-        if(behaviors == null) {
-            this.behaviors = new ArrayList<>();
-        } else {
-            this.behaviors = behaviors;
-        }
+        this.behaviors = Objects.requireNonNullElseGet(behaviors, ArrayList::new);
         this.currentIndex = -1;
     }
 

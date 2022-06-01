@@ -12,21 +12,37 @@ import java.util.*;
 
 public class TargetingComponent {
 
-    private static final int TURNS_DETECTED_UNTIL_COMBAT = 2;
     private static final int TURNS_UNTIL_END_COMBAT = 4;
+    private static final AlertState DEFAULT_ALERT_STATE = AlertState.AWARE;
+
+    public enum AlertState {
+        DISTRACTED(4),
+        AWARE(2),
+        ALERT(1);
+
+        public final int turnsToDetect;
+        AlertState(int turnsToDetect) {
+            this.turnsToDetect = turnsToDetect;
+        }
+    }
 
     private final Actor subject;
     // Value is number of turns the actor has been detected
     private final Map<Actor, Integer> detected;
-
     private final Map<Actor, Combatant> combatants;
 
     private Actor followTarget;
+    private AlertState alertState;
 
     public TargetingComponent(Actor subject) {
         this.subject = subject;
         detected = new HashMap<>();
         combatants = new HashMap<>();
+        this.alertState = DEFAULT_ALERT_STATE;
+    }
+
+    public void setAlertState(AlertState state) {
+        this.alertState = state;
     }
 
     public void clear() {
@@ -49,7 +65,7 @@ public class TargetingComponent {
             if(!combatants.containsKey(actor)) {
                 if (detected.containsKey(actor)) {
                     int newValue = detected.get(actor) + 1;
-                    if (newValue == TURNS_DETECTED_UNTIL_COMBAT) {
+                    if (newValue >= alertState.turnsToDetect) {
                         subject.triggerScript("on_detect_target");
                         addCombatant(actor);
                     } else {
