@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class ObjectContainer extends WorldObject {
 
 	private final Inventory inventory;
 	private final LootTable lootTable;
+	private final Lock lock;
 	private boolean hasSearched;
 
-	public ObjectContainer(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, LootTable lootTable) {
+	public ObjectContainer(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, LootTable lootTable, Lock lock) {
 		super(game, ID, area, name, description, scripts, customActions);
 		this.inventory = new Inventory(game, null);
 		this.lootTable = lootTable;
+		this.lock = lock;
 		this.hasSearched = false;
 	}
 
@@ -37,14 +40,21 @@ public class ObjectContainer extends WorldObject {
 	public void search() {
 		hasSearched = true;
 	}
+
+	public boolean isLocked() {
+		return lock != null && lock.isLocked();
+	}
 	
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
-		if (hasSearched) {
+		if ((!subject.isPlayer() || hasSearched) && !isLocked()) {
 			actions.addAll(inventory.getExternalActions(this, subject));
 		} else {
 			actions.add(new ActionContainerSearch(this));
+		}
+		if (lock != null) {
+			actions.addAll(lock.getActions(subject));
 		}
 		return actions;
 	}

@@ -25,6 +25,11 @@ public class ActorPlayer extends Actor {
 	}
 
 	@Override
+	public boolean isPlayer() {
+		return true;
+	}
+
+	@Override
 	public boolean forcePronoun() {
 		return true;
 	}

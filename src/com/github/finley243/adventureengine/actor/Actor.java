@@ -148,6 +148,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			vendorComponent.generateInventory();
 		}
 	}
+
+	public boolean isPlayer() {
+		return false;
+	}
 	
 	public String getID() {
 		return ID;

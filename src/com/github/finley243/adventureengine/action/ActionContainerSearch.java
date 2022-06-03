@@ -24,6 +24,11 @@ public class ActionContainerSearch extends Action {
     }
 
     @Override
+    public boolean canChoose(Actor subject) {
+        return super.canChoose(subject) && !container.isLocked();
+    }
+
+    @Override
     public MenuData getMenuData(Actor subject) {
         return new MenuData("Search", canChoose(subject), new String[]{container.getName()});
     }

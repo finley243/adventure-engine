@@ -647,7 +647,8 @@ public class DataLoader {
                 return new ObjectItem(game, id, area, ItemFactory.create(game, itemID), itemCount);
             case "container":
                 LootTable containerLootTable = loadLootTable(LoadUtils.singleChildWithName(objectElement, "inventory"), true);
-                return new ObjectContainer(game, id, area, name, description, scripts, customActions, containerLootTable);
+                Lock containerLock = loadLock(objectElement, id);
+                return new ObjectContainer(game, id, area, name, description, scripts, customActions, containerLootTable, containerLock);
             case "basic":
                 return new ObjectBasic(game, id, area, name, description, scripts, customActions);
         }
