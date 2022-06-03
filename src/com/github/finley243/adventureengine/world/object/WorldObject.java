@@ -3,15 +3,16 @@ package com.github.finley243.adventureengine.world.object;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionInspect;
-import com.github.finley243.adventureengine.action.ActionInspect.InspectType;
+import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.ActionInspectObject;
+import com.github.finley243.adventureengine.action.ActionInspectObject.InspectType;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -30,10 +31,11 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 	private boolean isEnabled;
 	private final Area defaultArea;
 	private Area area;
-	private final String description;
+	private final Scene description;
 	private final Map<String, Script> scripts;
+	private final List<ActionCustom> customActions;
 	
-	public WorldObject(Game gameInstance, String ID, Area area, String name, String description, Map<String, Script> scripts) {
+	public WorldObject(Game gameInstance, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions) {
 		super(gameInstance);
 		this.ID = ID;
 		this.defaultArea = area;
@@ -41,6 +43,7 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 		this.name = name;
 		this.description = description;
 		this.scripts = scripts;
+		this.customActions = customActions;
 		setEnabled(true);
 	}
 
@@ -53,7 +56,7 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 		return name;
 	}
 	
-	public String getDescription() {
+	public Scene getDescription() {
 		return description;
 	}
 
@@ -116,14 +119,10 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		if(description != null) {
-			actions.add(new ActionInspect(this, InspectType.WORLD));
+			actions.add(new ActionInspectObject(this));
 		}
+		actions.addAll(customActions);
 		return actions;
-	}
-
-	@Override
-	public List<Action> adjacentActions(Actor subject) {
-		return new ArrayList<>();
 	}
 
 	public boolean isGuarded() {

@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.action.reaction;
 
 import com.github.finley243.adventureengine.MathUtils;
-import com.github.finley243.adventureengine.NounMapper;
+import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;

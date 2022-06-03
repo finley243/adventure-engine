@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.item.template;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
 import java.util.HashSet;
@@ -16,7 +17,7 @@ public class ApparelTemplate extends ItemTemplate {
 	private final int damageResistance;
 	private final List<Effect> effects;
 	
-	public ApparelTemplate(String ID, String name, String description, Map<String, Script> scripts, int price, ApparelComponent.ApparelSlot slot, int damageResistance, List<Effect> effects) {
+	public ApparelTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, ApparelComponent.ApparelSlot slot, int damageResistance, List<Effect> effects) {
 		super(ID, name, description, scripts, price);
 		this.slot = slot;
 		this.damageResistance = damageResistance;

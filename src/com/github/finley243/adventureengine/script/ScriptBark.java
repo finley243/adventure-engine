@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.NounMapper;
+import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;

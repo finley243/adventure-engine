@@ -17,8 +17,5 @@ public interface Physical {
 	
 	// Actions that can be performed within the same area
 	List<Action> localActions(Actor subject);
-
-	// Actions that can be performed across near-linked areas
-	List<Action> adjacentActions(Actor subject);
 	
 }

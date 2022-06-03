@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -17,11 +18,11 @@ public abstract class ItemTemplate implements Noun {
 
 	private final String ID;
 	private final String name;
-	private final String description;
+	private final Scene description;
 	private final int price;
 	private final Map<String, Script> scripts;
 	
-	public ItemTemplate(String ID, String name, String description, Map<String, Script> scripts, int price) {
+	public ItemTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
@@ -79,7 +80,7 @@ public abstract class ItemTemplate implements Noun {
 		return false;
 	}
 	
-	public String getDescription() {
+	public Scene getDescription() {
 		return description;
 	}
 	

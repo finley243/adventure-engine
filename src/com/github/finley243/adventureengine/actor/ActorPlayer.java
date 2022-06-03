@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import java.util.*;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.NounMapper;
+import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;

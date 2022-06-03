@@ -27,7 +27,11 @@
     </item>
     <item type="weapon" id="rifle_auto" price="90" weaponType="ASSAULT_RIFLE">
         <name>auto rifle</name>
-        <description>A full-auto assault rifle.</description>
+        <description>
+            <line>
+                <text>A full-auto assault rifle.</text>
+            </line>
+        </description>
         <damage base="15" crit="4"/>
         <rate>2</rate>
         <range min="2" max="3"/>

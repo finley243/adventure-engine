@@ -1,21 +1,21 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.scene.SceneManager;
 
-public class ActionItemInspect extends Action {
+public class ActionInspectItem extends Action {
 
     private final Item item;
 
-    public ActionItemInspect(Item item) {
+    public ActionInspectItem(Item item) {
         this.item = item;
     }
 
     @Override
     public void choose(Actor subject) {
-        subject.game().eventBus().post(new RenderTextEvent(item.getDescription()));
+        SceneManager.trigger(subject.game(), item.getDescription());
         item.triggerScript("on_inspect", subject);
     }
 
@@ -31,10 +31,10 @@ public class ActionItemInspect extends Action {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionItemInspect)) {
+        if(!(o instanceof ActionInspectItem)) {
             return false;
         } else {
-            ActionItemInspect other = (ActionItemInspect) o;
+            ActionInspectItem other = (ActionInspectItem) o;
             return other.item == this.item;
         }
     }

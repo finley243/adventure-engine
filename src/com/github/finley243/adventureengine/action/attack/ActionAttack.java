@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Damage;
-import com.github.finley243.adventureengine.NounMapper;
+import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandom;
 import com.github.finley243.adventureengine.action.reaction.ActionReaction;

@@ -5,7 +5,7 @@ import java.util.*;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionAreaInspect;
+import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -258,7 +258,7 @@ public class Area extends GameInstanced implements Noun {
 
 	public List<Action> getAreaActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
-		actions.add(new ActionAreaInspect(this));
+		actions.add(new ActionInspectArea(this));
 		return actions;
 	}
 

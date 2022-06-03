@@ -2,9 +2,11 @@ package com.github.finley243.adventureengine.world.object;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionMoveElevator;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -21,8 +23,8 @@ public class ObjectElevator extends WorldObject {
 	private final boolean startLocked;
 	private boolean isLocked;
 	
-	public ObjectElevator(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, int floorNumber, String floorName, Set<String> linkedElevatorIDs, boolean startLocked) {
-		super(game, ID, area, name, description, scripts);
+	public ObjectElevator(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, int floorNumber, String floorName, Set<String> linkedElevatorIDs, boolean startLocked) {
+		super(game, ID, area, name, description, scripts, customActions);
 		this.floorNumber = floorNumber;
 		this.floorName = floorName;
 		this.linkedElevatorIDs = linkedElevatorIDs;

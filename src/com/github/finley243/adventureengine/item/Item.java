@@ -5,9 +5,10 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemDrop;
 import com.github.finley243.adventureengine.action.ActionItemDropAll;
-import com.github.finley243.adventureengine.action.ActionItemInspect;
+import com.github.finley243.adventureengine.action.ActionInspectItem;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -66,7 +67,7 @@ public abstract class Item extends GameInstanced implements Noun {
 		return getTemplate().forcePronoun();
 	}
 
-	public String getDescription() {
+	public Scene getDescription() {
 		return getTemplate().getDescription();
 	}
 
@@ -85,7 +86,7 @@ public abstract class Item extends GameInstanced implements Noun {
 			actions.add(new ActionItemDropAll(this));
 		}
 		if(this.getDescription() != null) {
-			actions.add(new ActionItemInspect(this));
+			actions.add(new ActionInspectItem(this));
 		}
 		return actions;
 	}

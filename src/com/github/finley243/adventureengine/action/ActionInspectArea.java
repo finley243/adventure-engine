@@ -5,19 +5,17 @@ import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.world.environment.Area;
 
-import java.util.List;
-
-public class ActionAreaInspect extends Action {
+public class ActionInspectArea extends Action {
 
     private final Area area;
 
-    public ActionAreaInspect(Area area) {
+    public ActionInspectArea(Area area) {
         this.area = area;
     }
 
     @Override
     public void choose(Actor subject) {
-        SceneManager.trigger(subject.game(), List.of(area.getDescription()));
+        SceneManager.trigger(subject.game(), area.getDescription());
         area.triggerScript("on_inspect", subject);
     }
 

@@ -2,8 +2,10 @@ package com.github.finley243.adventureengine.world.object;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionVendingMachineBuy;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -14,8 +16,8 @@ public class ObjectVendingMachine extends WorldObject {
 
 	private final List<String> vendingItems;
 	
-	public ObjectVendingMachine(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, List<String> vendingItems) {
-		super(game, ID, area, name, description, scripts);
+	public ObjectVendingMachine(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, List<String> vendingItems) {
+		super(game, ID, area, name, description, scripts, customActions);
 		this.vendingItems = vendingItems;
 	}
 

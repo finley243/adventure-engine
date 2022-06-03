@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.item.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectItem extends WorldObject {
@@ -16,7 +17,7 @@ public class ObjectItem extends WorldObject {
     private int count;
 
     public ObjectItem(Game game, String ID, Area area, Item item, int count) {
-        super(game, ID, area, item.getName(), item.getDescription(), item.getTemplate().getScripts());
+        super(game, ID, area, item.getName(), item.getDescription(), item.getTemplate().getScripts(), new ArrayList<>());
         this.item = item;
         this.count = count;
     }

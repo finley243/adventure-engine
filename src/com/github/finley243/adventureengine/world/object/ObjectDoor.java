@@ -5,10 +5,12 @@ import java.util.Map;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionDoorListen;
 import com.github.finley243.adventureengine.action.ActionMoveDoor;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -18,8 +20,8 @@ public class ObjectDoor extends WorldObject {
 	private final String linkedDoorID;
 	private final Lock lock;
 	
-	public ObjectDoor(Game game, String ID, Area area, String name, String description, Map<String, Script> scripts, String linkedDoorID, Lock lock) {
-		super(game, ID, area, name, description, scripts);
+	public ObjectDoor(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, String linkedDoorID, Lock lock) {
+		super(game, ID, area, name, description, scripts, customActions);
 		this.linkedDoorID = linkedDoorID;
 		this.lock = lock;
 	}

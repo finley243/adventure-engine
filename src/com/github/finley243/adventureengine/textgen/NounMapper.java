@@ -1,6 +1,4 @@
-package com.github.finley243.adventureengine;
-
-import com.github.finley243.adventureengine.textgen.Noun;
+package com.github.finley243.adventureengine.textgen;
 
 import java.util.LinkedHashMap;
 

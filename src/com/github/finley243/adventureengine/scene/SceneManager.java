@@ -16,6 +16,10 @@ public class SceneManager {
 		}
 	}
 
+	public static void trigger(Game game, Scene scene) {
+		trigger(game, List.of(scene));
+	}
+
 	public static void triggerFromIDs(Game game, List<String> sceneIDs) {
 		List<Scene> scenes = new ArrayList<>();
 		for (String sceneID : sceneIDs) {

@@ -10,11 +10,8 @@ import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
-import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.item.Item;
@@ -526,20 +523,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		return action;
 	}
 
-	@Override
-	public List<Action> adjacentActions(Actor subject) {
-		List<Action> action = new ArrayList<>();
-		if(isActive()) {
-			if(stats.getTopic(game()) != null) {
-				action.add(new ActionTalk(this));
-			}
-			if(vendorComponent != null && behaviorComponent != null && behaviorComponent.isVendingEnabled()) {
-				action.addAll(vendorComponent.getActions(subject));
-			}
-		}
-		return action;
-	}
-
 	public List<Action> availableActions(){
 		List<Action> actions = new ArrayList<>();
 		if(equipmentComponent.hasEquippedItem()) {
@@ -548,18 +531,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		for(Actor actor : getArea().getActors()) {
 			actions.addAll(actor.localActions(this));
 		}
-		for(Area nearArea : getArea().getNearAreas()) {
-			for(Actor actor : nearArea.getActors()) {
-				actions.addAll(actor.adjacentActions(this));
-			}
-		}
 		for(WorldObject object : getArea().getObjects()) {
 			actions.addAll(object.localActions(this));
-		}
-		for(Area nearArea : getArea().getNearAreas()) {
-			for(WorldObject object : nearArea.getObjects()) {
-				actions.addAll(object.adjacentActions(this));
-			}
 		}
 		if(isUsingObject()) {
 			actions.addAll(getUsingObject().usingActions());

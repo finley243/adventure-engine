@@ -17,7 +17,11 @@
             </object>
             <object type="container" id="stratis_lobby_garbage">
                 <name>garbage can</name>
-                <description>A gleaming silver garbage can, keeping the filth out of sight and out of mind.</description>
+                <description>
+                    <line>
+                        <text>A gleaming silver garbage can, keeping the filth out of sight and out of mind.</text>
+                    </line>
+                </description>
                 <inventory>
                     <table chance="0.5">ammo_random</table>
                     <table countMin="2" countMax="5">junk_random</table>
@@ -129,7 +133,11 @@
             </links>
             <object type="door" id="stratis_hotel_corridor_room_door" link="stratis_hotel_room_door">
                 <name>door</name>
-                <description>The door is made from an elegant dark-stained wood. There is a key card reader above the handle. To the right of the door, a sign reads "508".</description>
+                <description>
+                    <line>
+                        <text>The door is made from an elegant dark-stained wood. There is a key card reader above the handle. To the right of the door, a sign reads "508".</text>
+                    </line>
+                </description>
                 <lock>
                     <key>stratis_room_key</key>
                     <key>stratis_master_key</key>

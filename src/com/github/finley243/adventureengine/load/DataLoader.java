@@ -416,7 +416,7 @@ public class DataLoader {
         String type = itemElement.getAttribute("type");
         String id = itemElement.getAttribute("id");
         String name = LoadUtils.singleTag(itemElement, "name", null);
-        String description = LoadUtils.singleTag(itemElement, "description", null);
+        Scene description = loadScene(LoadUtils.singleChildWithName(itemElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
         switch(type) {
@@ -610,45 +610,46 @@ public class DataLoader {
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) throws ParserConfigurationException, IOException, SAXException {
         if(objectElement == null) return null;
-        String objectType = objectElement.getAttribute("type");
-        String objectName = LoadUtils.singleTag(objectElement, "name", null);
-        String objectID = objectElement.getAttribute("id");
-        String objectDescription = LoadUtils.singleTag(objectElement, "description", null);
-        Map<String, Script> objectScripts = loadScriptsWithTriggers(objectElement);
-        switch(objectType) {
+        String type = objectElement.getAttribute("type");
+        String name = LoadUtils.singleTag(objectElement, "name", null);
+        String id = objectElement.getAttribute("id");
+        Scene description = loadScene(LoadUtils.singleChildWithName(objectElement, "description"));
+        Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
+        List<ActionCustom> customActions = loadCustomActions(objectElement, id, "action");
+        List<ActionCustom> customUsingActions = loadCustomActions(objectElement, id, "actionUsing");
+        switch(type) {
             case "door":
                 String doorLink = LoadUtils.attribute(objectElement, "link", null);
-                Lock doorLock = loadLock(objectElement, objectID);
-                return new ObjectDoor(game, objectID, area, objectName, objectDescription, objectScripts, doorLink, doorLock);
+                Lock doorLock = loadLock(objectElement, id);
+                return new ObjectDoor(game, id, area, name, description, scripts, customActions, doorLink, doorLock);
             case "elevator":
                 Element floorElement = LoadUtils.singleChildWithName(objectElement, "floor");
                 int floorNumber = LoadUtils.singleTagInt(floorElement, "number", 1);
                 String floorName = floorElement.getTextContent();
                 boolean elevatorStartLocked = LoadUtils.singleTagBoolean(objectElement, "startLocked", false);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(objectElement, "link");
-                return new ObjectElevator(game, objectID, area, objectName, objectDescription, objectScripts, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
+                return new ObjectElevator(game, id, area, name, description, scripts, customActions, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
             case "sign":
                 List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "text"), "line");
-                return new ObjectSign(game, objectID, area, objectName, objectDescription, objectScripts, signText);
+                return new ObjectSign(game, id, area, name, description, scripts, customActions, signText);
             case "chair":
-                return new ObjectChair(game, objectID, area, objectName, objectDescription, objectScripts);
+                return new ObjectChair(game, id, area, name, description, scripts, customActions, customUsingActions);
             case "bed":
-                return new ObjectBed(game, objectID, area, objectName, objectDescription, objectScripts);
+                return new ObjectBed(game, id, area, name, description, scripts, customActions, customUsingActions);
             case "cover":
-                return new ObjectCover(game, objectID, area, objectName, objectDescription, objectScripts);
+                return new ObjectCover(game, id, area, name, description, scripts, customActions, customUsingActions);
             case "vendingMachine":
                 List<String> vendingItems = LoadUtils.listOfTags(objectElement, "item");
-                return new ObjectVendingMachine(game, objectID, area, objectName, objectDescription, objectScripts, vendingItems);
+                return new ObjectVendingMachine(game, id, area, name, description, scripts, customActions, vendingItems);
             case "item":
                 String itemID = LoadUtils.singleTag(objectElement, "item", null);
                 int itemCount = LoadUtils.singleTagInt(objectElement, "count", 1);
-                return new ObjectItem(game, objectID, area, ItemFactory.create(game, itemID), itemCount);
+                return new ObjectItem(game, id, area, ItemFactory.create(game, itemID), itemCount);
             case "container":
                 LootTable containerLootTable = loadLootTable(LoadUtils.singleChildWithName(objectElement, "inventory"), true);
-                return new ObjectContainer(game, objectID, area, objectName, objectDescription, objectScripts, containerLootTable);
-            case "custom":
-                List<ActionCustom> objectActions = loadCustomActions(objectElement, objectID);
-                return new ObjectCustom(game, objectID, area, objectName, objectDescription, objectScripts, objectActions);
+                return new ObjectContainer(game, id, area, name, description, scripts, customActions, containerLootTable);
+            case "basic":
+                return new ObjectBasic(game, id, area, name, description, scripts, customActions);
         }
         return null;
     }
@@ -662,10 +663,10 @@ public class DataLoader {
         return new Lock(objectID, startLocked, keys, lockpickLevel, hotwireLevel);
     }
 
-    private static List<ActionCustom> loadCustomActions(Element objectElement, String objectID) throws ParserConfigurationException, IOException, SAXException {
+    private static List<ActionCustom> loadCustomActions(Element objectElement, String objectID, String elementName) throws ParserConfigurationException, IOException, SAXException {
         if(objectElement == null) return new ArrayList<>();
         List<ActionCustom> actions = new ArrayList<>();
-        for (Element actionElement : LoadUtils.directChildrenWithName(objectElement, "action")) {
+        for (Element actionElement : LoadUtils.directChildrenWithName(objectElement, elementName)) {
             String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
             String description = LoadUtils.singleTag(actionElement, "description", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));

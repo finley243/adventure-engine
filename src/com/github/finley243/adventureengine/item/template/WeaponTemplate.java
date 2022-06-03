@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
 import java.util.HashSet;
@@ -47,7 +48,7 @@ public class WeaponTemplate extends ItemTemplate {
 	private final boolean silenced;
 	private final String ammo;
 	
-	public WeaponTemplate(String ID, String name, String description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, int rangeMin, int rangeMax, int clipSize, float accuracyBonus, boolean silenced, String ammo) {
+	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, int rangeMin, int rangeMax, int clipSize, float accuracyBonus, boolean silenced, String ammo) {
 		super(ID, name, description, scripts, price);
 		if(clipSize > 0 && ammo == null || clipSize == 0 && ammo != null) throw new IllegalArgumentException("Weapon clip size and ammo type conflict: " + ID);
 		if(type == null) throw new IllegalArgumentException("Weapon type cannot be null: " + ID);

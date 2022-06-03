@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
 public class ConsumableTemplate extends ItemTemplate {
@@ -17,7 +18,7 @@ public class ConsumableTemplate extends ItemTemplate {
 	private final ConsumableType type;
 	private final List<Effect> effects;
 	
-	public ConsumableTemplate(String ID, String name, String description, Map<String, Script> scripts, int price, ConsumableType type, List<Effect> effects) {
+	public ConsumableTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, ConsumableType type, List<Effect> effects) {
 		super(ID, name, description, scripts, price);
 		this.type = type;
 		this.effects = effects;

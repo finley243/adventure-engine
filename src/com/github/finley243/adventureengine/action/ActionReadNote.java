@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.NounMapper;
+import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.SensoryEvent;
