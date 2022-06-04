@@ -20,6 +20,8 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
  */
 public class Area extends GameInstanced implements Noun {
 
+	private static final boolean FULL_VISIBILITY_IN_ROOM = true;
+
 	private final String ID;
 
 	private final String landmarkID;
@@ -199,6 +201,9 @@ public class Area extends GameInstanced implements Noun {
 	}
 
 	public Set<Area> getVisibleAreas(Actor subject) {
+		if (FULL_VISIBILITY_IN_ROOM) {
+			return new HashSet<>(this.getRoom().getAreas());
+		}
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
 		if (!subject.isUsingObject() || subject.getUsingObject().userCanSeeOtherAreas()) {

@@ -578,8 +578,7 @@ public class DataLoader {
         String areaOwnerFaction = (areaOwnerElement != null ? areaOwnerElement.getTextContent() : null);
         boolean areaIsPrivate = LoadUtils.attributeBool(areaOwnerElement, "private", false);
 
-        Element linksElement = LoadUtils.singleChildWithName(areaElement, "links");
-        List<Element> linkElements = LoadUtils.directChildrenWithName(linksElement, "link");
+        List<Element> linkElements = LoadUtils.directChildrenWithName(areaElement, "link");
         Map<String, AreaLink> linkSet = new HashMap<>();
         for(Element linkElement : linkElements) {
             String linkAreaID = linkElement.getTextContent();

@@ -27,11 +27,9 @@
                     <table countMin="2" countMax="5">junk_random</table>
                 </inventory>
             </object>
-            <links>
-                <link>stratis_hotel_lobby_desk</link>
-                <link>stratis_hotel_lobby_seating</link>
-                <link>stratis_hotel_lobby_elevators</link>
-            </links>
+            <link>stratis_hotel_lobby_desk</link>
+            <link>stratis_hotel_lobby_seating</link>
+            <link>stratis_hotel_lobby_elevators</link>
         </area>
         <area id="stratis_hotel_lobby_desk" landmark="stratis_reception_desk">
             <description>
@@ -39,11 +37,9 @@
                     <text>The white marble desk stretches several meters across. Behind it, large chrome lettering spells out "Stratis".</text>
                 </line>
             </description>
-            <links>
-                <link>stratis_hotel_lobby_entry</link>
-                <link>stratis_hotel_lobby_seating</link>
-                <link>stratis_hotel_lobby_elevators</link>
-            </links>
+            <link>stratis_hotel_lobby_entry</link>
+            <link>stratis_hotel_lobby_seating</link>
+            <link>stratis_hotel_lobby_elevators</link>
             <object type="container" id="stratis_reception_desk">
                 <name>reception desk</name>
             </object>
@@ -54,11 +50,9 @@
             </actor>
         </area>
         <area id="stratis_hotel_lobby_seating" landmark="stratis_hotel_lobby_security_door">
-            <links>
-                <link>stratis_hotel_lobby_entry</link>
-                <link>stratis_hotel_lobby_desk</link>
-                <link>stratis_hotel_lobby_elevators</link>
-            </links>
+            <link>stratis_hotel_lobby_entry</link>
+            <link>stratis_hotel_lobby_desk</link>
+            <link>stratis_hotel_lobby_elevators</link>
             <object type="chair" id="stratis_hotel_lobby_chair">
                 <name>lounge chair</name>
             </object>
@@ -80,11 +74,9 @@
             </actor>
         </area>
         <area id="stratis_hotel_lobby_elevators" landmark="stratis_hotel_elevator_lobby">
-            <links>
-                <link>stratis_hotel_lobby_desk</link>
-                <link>stratis_hotel_lobby_entry</link>
-                <link>stratis_hotel_lobby_seating</link>
-            </links>
+            <link>stratis_hotel_lobby_desk</link>
+            <link>stratis_hotel_lobby_entry</link>
+            <link>stratis_hotel_lobby_seating</link>
             <object type="elevator" id="stratis_hotel_elevator_lobby">
                 <name>elevator</name>
                 <floor number="1">Lobby</floor>
@@ -113,9 +105,7 @@
                     <text>The space outside the elevators is dimly lit, with a row of doors on the opposite wall.</text>
                 </line>
             </description>
-            <links>
-                <link>stratis_hotel_corridor_main</link>
-            </links>
+            <link>stratis_hotel_corridor_main</link>
             <object type="elevator" id="stratis_hotel_elevator_corridor">
                 <name>elevator</name>
                 <floor number="5">Guest Rooms</floor>
@@ -128,9 +118,7 @@
             </object>
         </area>
         <area id="stratis_hotel_corridor_main" landmark="stratis_hotel_corridor_room_door">
-            <links>
-                <link>stratis_hotel_corridor_elevators</link>
-            </links>
+            <link>stratis_hotel_corridor_elevators</link>
             <object type="door" id="stratis_hotel_corridor_room_door" link="stratis_hotel_room_door">
                 <name>door</name>
                 <description>
@@ -155,6 +143,9 @@
         <area id="stratis_hotel_room_main" landmark="stratis_hotel_room_door">
             <object type="door" id="stratis_hotel_room_door" link="stratis_hotel_corridor_room_door">
                 <name>door</name>
+            </object>
+            <object type="bed" id="stratis_hotel_room_bed">
+                <name>bed</name>
             </object>
             <object type="item" id="stratis_hotel_room_baseball_bat">
                 <item>baseball_bat</item>
