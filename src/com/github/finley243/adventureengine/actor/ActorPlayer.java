@@ -86,7 +86,8 @@ public class ActorPlayer extends Actor {
 	public void describeSurroundings() {
 		if(!isActive() || !isEnabled()) return;
 		Context areaContext = new Context(new NounMapper().put("actor", this).put("landmark", getArea().getLandmark()).build());
-		game().eventBus().post(new RenderTextEvent(TextGen.generate("$_actor $is_actor adjacent to $landmark" + (getArea().getActors(this).isEmpty() ? "" : " [" + getArea().getActorList(this) + "]"), areaContext)));
+		game().eventBus().post(new RenderTextEvent(TextGen.generate("$_actor $is_actor next to $landmark" + (getArea().getActors(this).isEmpty() ? "" : " [" + getArea().getActorList(this) + "]"), areaContext)));
+		// TODO - Use only movable areas that are visible (no seeing around corners)
 		Set<Area> nearbyAreas = getArea().getMovableAreas();
 		if(!nearbyAreas.isEmpty()) {
 			List<Area> nearbyAreasList = new ArrayList<>(nearbyAreas);
@@ -98,11 +99,16 @@ public class ActorPlayer extends Actor {
 				} else if(i != 0 && i == nearbyAreasList.size() - 1) {
 					phrase.append(", and ");
 				}
-				phrase.append(currentArea.getFormattedName());
+				if (!currentArea.getRoom().equals(getArea().getRoom())) {
+					phrase.append(currentArea.getRoom().getFormattedName());
+					currentArea.getRoom().setKnown();
+				} else {
+					phrase.append(currentArea.getFormattedName());
+					currentArea.setKnown();
+				}
 				if(!currentArea.getActors(this).isEmpty()) {
 					phrase.append(" [").append(currentArea.getActorList(this)).append("]");
 				}
-				currentArea.setKnown();
 			}
 			phrase.append(".");
 			game().eventBus().post(new RenderTextEvent(phrase.toString()));

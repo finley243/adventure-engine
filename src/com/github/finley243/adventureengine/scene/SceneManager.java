@@ -17,7 +17,9 @@ public class SceneManager {
 	}
 
 	public static void trigger(Game game, Scene scene) {
-		trigger(game, List.of(scene));
+		if (scene != null) {
+			trigger(game, List.of(scene));
+		}
 	}
 
 	public static void triggerFromIDs(Game game, List<String> sceneIDs) {

@@ -58,8 +58,14 @@ public class AreaLink {
         return distance;
     }
 
-    public String getMoveNameOverride() {
-        return moveNameOverride;
+    public String getMoveName(Area currentArea) {
+        if (moveNameOverride != null) {
+            return moveNameOverride;
+        } else if (!currentArea.getRoom().equals(currentArea.game().data().getArea(areaID).getRoom())) {
+            return currentArea.game().data().getArea(areaID).getRoom().getName();
+        } else {
+            return currentArea.game().data().getArea(areaID).getName();
+        }
     }
 
     public int heightChange() {

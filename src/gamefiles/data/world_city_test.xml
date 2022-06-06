@@ -41,7 +41,7 @@
         </area>
     </room>
     <room id="street_first_between_sinclair_archer">
-        <name proper="true">1st Ave</name>
+        <name proper="true">First Ave</name>
         <area id="first_corner_store_door" landmark="first_corner_store_exterior_door">
             <link type="corner" area="archer_corner_store_window"/>
             <object type="basic" id="first_corner_store_exterior_door">
@@ -50,7 +50,7 @@
         </area>
     </room>
     <room id="street_second_between_sinclair_archer">
-        <name proper="true">2nd Ave</name>
+        <name proper="true">Second Ave</name>
         <area id="second_burger_restaurant_window" landmark="second_burger_restaurant_exterior_window">
             <link area="archer_burger_restaurant_door"/>
             <object type="basic" id="second_burger_restaurant_exterior_window">

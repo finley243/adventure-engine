@@ -1,23 +1,23 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 public class ActionMoveArea extends ActionMove {
 	
 	public static final float MOVE_UTILITY_MULTIPLIER = 0.7f;
 
 	private final Area area;
+	private final AreaLink link;
 
-	public ActionMoveArea(Area area) {
+	public ActionMoveArea(Area area, AreaLink link) {
 		this.area = area;
+		this.link = link;
 	}
 	
 	public Area getArea() {
@@ -26,7 +26,13 @@ public class ActionMoveArea extends ActionMove {
 	
 	@Override
 	public void choose(Actor subject) {
-		Context context = new Context(new NounMapper().put("actor", subject).put("area", area).build());
+		Noun moveLocation;
+		if (!area.getRoom().equals(subject.getArea().getRoom())) {
+			moveLocation = area.getRoom();
+		} else {
+			moveLocation = area;
+		}
+		Context context = new Context(new NounMapper().put("actor", subject).put("area", moveLocation).build());
 		subject.game().eventBus().post(new SensoryEvent(new Area[]{subject.getArea(), area}, Phrases.get("moveToward"), context, this, subject));
 		subject.setArea(area);
 	}
@@ -38,7 +44,7 @@ public class ActionMoveArea extends ActionMove {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(LangUtils.titleCase(area.getName()), canChoose(subject), new String[]{"move"});
+		return new MenuData(LangUtils.titleCase(link.getMoveName(subject.getArea())), canChoose(subject), new String[]{"move"});
 	}
 
 	@Override

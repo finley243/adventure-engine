@@ -183,7 +183,7 @@ public class Area extends GameInstanced implements Noun {
 		for(AreaLink link : linkedAreas.values()) {
 			if(link.getType().isMovable) {
 				if(link.heightChange() == 0) {
-					moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID())));
+					moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
 				}
 			}
 		}
