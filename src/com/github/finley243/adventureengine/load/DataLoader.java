@@ -658,6 +658,7 @@ public class DataLoader {
 
     private static Lock loadLock(Element objectElement, String objectID) {
         Element lockElement = LoadUtils.singleChildWithName(objectElement, "lock");
+        if (lockElement == null) return null;
         boolean startLocked = LoadUtils.attributeBool(lockElement, "startLocked", true);
         int lockpickLevel = LoadUtils.attributeInt(lockElement, "lockpick", 0);
         int hotwireLevel = LoadUtils.attributeInt(lockElement, "hotwire", 0);
