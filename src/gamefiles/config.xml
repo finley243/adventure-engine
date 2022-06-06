@@ -1,7 +1,7 @@
 <config>
     <playerStats>player</playerStats>
     <playerID>player</playerID>
-    <playerStartArea>stratis_hotel_lobby_entry</playerStartArea>
+    <playerStartArea>archer_apartments_door</playerStartArea>
     <gameName>AdventureEngine</gameName>
     <startTimeHours>8</startTimeHours>
     <startTimeMinutes>0</startTimeMinutes>

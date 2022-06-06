@@ -32,12 +32,14 @@ public class AreaLink {
     private final RelativeHeight height;
     private final AreaLinkType type;
     private final int distance;
+    private final String moveNameOverride;
 
-    public AreaLink(String areaID, RelativeHeight height, AreaLinkType type, int distance) {
+    public AreaLink(String areaID, RelativeHeight height, AreaLinkType type, int distance, String moveNameOverride) {
         this.areaID = areaID;
         this.height = height;
         this.type = type;
         this.distance = distance;
+        this.moveNameOverride = moveNameOverride;
     }
 
     public String getAreaID() {
@@ -54,6 +56,10 @@ public class AreaLink {
 
     public int getDistance() {
         return distance;
+    }
+
+    public String getMoveNameOverride() {
+        return moveNameOverride;
     }
 
     public int heightChange() {

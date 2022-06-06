@@ -95,7 +95,7 @@ public class ActorPlayer extends Actor {
 				Area currentArea = nearbyAreasList.get(i);
 				if(i > 0 && i < nearbyAreasList.size() - 1) {
 					phrase.append(", ");
-				} else if(i == nearbyAreasList.size() - 1) {
+				} else if(i != 0 && i == nearbyAreasList.size() - 1) {
 					phrase.append(", and ");
 				}
 				phrase.append(currentArea.getFormattedName());

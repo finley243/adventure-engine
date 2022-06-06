@@ -581,11 +581,13 @@ public class DataLoader {
         List<Element> linkElements = LoadUtils.directChildrenWithName(areaElement, "link");
         Map<String, AreaLink> linkSet = new HashMap<>();
         for(Element linkElement : linkElements) {
-            String linkAreaID = linkElement.getTextContent();
+            String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
             AreaLink.RelativeHeight linkHeight = LoadUtils.attributeEnum(linkElement, "height", AreaLink.RelativeHeight.class, AreaLink.RelativeHeight.EQUAL);
             AreaLink.AreaLinkType linkType = LoadUtils.attributeEnum(linkElement, "type", AreaLink.AreaLinkType.class, AreaLink.AreaLinkType.DIRECT);
             int linkDistance = LoadUtils.attributeInt(linkElement, "dist", 1);
-            linkSet.put(linkAreaID, new AreaLink(linkAreaID, linkHeight, linkType, linkDistance));
+            String moveNameOverride = LoadUtils.singleTag(linkElement, "moveName", null);
+            AreaLink link = new AreaLink(linkAreaID, linkHeight, linkType, linkDistance, moveNameOverride);
+            linkSet.put(linkAreaID, link);
         }
 
         Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
