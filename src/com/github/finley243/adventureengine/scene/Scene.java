@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -62,13 +63,13 @@ public class Scene {
 		}
 	}
 	
-	public void play(Game game) {
+	public void play(Game game, Actor subject) {
 		for(SceneLine line : lines) {
 			if(line.shouldShow(game)) {
 				for(String text : line.getText()) {
 					game.eventBus().post(new RenderTextEvent(text));
 				}
-				line.executeScript(null);
+				line.executeScript(subject);
 			}
 		}
 		hasPlayed = true;

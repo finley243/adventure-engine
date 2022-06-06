@@ -64,6 +64,19 @@
             <link type="corner" area="archer_burger_restaurant_door"/>
             <object type="container" id="second_burger_restaurant_dumpster">
                 <name>dumpster</name>
+                <description>
+                    <line>
+                        <text>The dumpster is old and caked with grease. There is a hazard sign on the side, though at this point the text cannot be made out.</text>
+                        <text>While inspecting the sign, you notice a backpack wedged between the dumpster and the wall of the restaurant.</text>
+                        <script type="revealObject" object="second_burger_restaurant_dumpster_backpack"/>
+                    </line>
+                </description>
+            </object>
+            <object type="container" id="second_burger_restaurant_dumpster_backpack" startHidden="true">
+                <name>hidden backpack</name>
+                <inventory>
+                    <table>weapon_ranged</table>
+                </inventory>
             </object>
         </area>
     </room>

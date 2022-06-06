@@ -43,7 +43,7 @@ public abstract class Behavior {
         }
         // TODO - Stop calling SceneManager directly from Behavior (could call from BehaviorComponent? from idle action?)
         if(isInTargetState(subject) && idleScenes != null) {
-            SceneManager.trigger(subject.game(), idleScenes);
+            SceneManager.trigger(subject.game(), subject, idleScenes);
         }
         //System.out.println("Turns Remaining: " + turnsRemaining);
     }

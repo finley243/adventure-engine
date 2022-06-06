@@ -15,7 +15,7 @@ public class ActionInspectObject extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		SceneManager.trigger(subject.game(), object.getDescription());
+		SceneManager.trigger(subject.game(), subject, object.getDescription());
 		object.triggerScript("on_inspect", subject);
 	}
 
