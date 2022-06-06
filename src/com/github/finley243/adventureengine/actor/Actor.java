@@ -536,7 +536,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			actions.addAll(actor.localActions(this));
 		}
 		for(WorldObject object : getArea().getObjects()) {
-			actions.addAll(object.localActions(this));
+			if (!object.isHidden()) {
+				actions.addAll(object.localActions(this));
+			}
 		}
 		if(isUsingObject()) {
 			actions.addAll(getUsingObject().usingActions());
@@ -695,8 +697,12 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	public Set<WorldObject> getVisibleObjects() {
 		Set<WorldObject> visibleObjects = new HashSet<>();
 		Set<Area> visibleAreas = getArea().getVisibleAreas(this);
-		for(Area visibleArea : visibleAreas) {
-			visibleObjects.addAll(visibleArea.getObjects());
+		for (Area visibleArea : visibleAreas) {
+			for (WorldObject object : visibleArea.getObjects()) {
+				if (!object.isHidden()) {
+					visibleObjects.add(object);
+				}
+			}
 		}
 		return visibleObjects;
 	}

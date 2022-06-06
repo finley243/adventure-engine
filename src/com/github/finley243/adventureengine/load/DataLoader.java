@@ -368,6 +368,9 @@ public class DataLoader {
             case "alertState":
                 TargetingComponent.AlertState alertState = LoadUtils.attributeEnum(scriptElement, "state", TargetingComponent.AlertState.class, TargetingComponent.AlertState.AWARE);
                 return new ScriptAlertState(condition, actorRef, alertState);
+            case "revealObject":
+                String revealObject = LoadUtils.attribute(scriptElement, "object", null);
+                return new ScriptRevealObject(condition, revealObject);
             case "select":
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSelect, true);
@@ -611,10 +614,12 @@ public class DataLoader {
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) throws ParserConfigurationException, IOException, SAXException {
         if(objectElement == null) return null;
-        String type = objectElement.getAttribute("type");
+        String type = LoadUtils.attribute(objectElement, "type", null);
         String name = LoadUtils.singleTag(objectElement, "name", null);
         String id = objectElement.getAttribute("id");
         Scene description = loadScene(LoadUtils.singleChildWithName(objectElement, "description"));
+        boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
+        boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         List<ActionCustom> customActions = loadCustomActions(objectElement, id, "action");
         List<ActionCustom> customUsingActions = loadCustomActions(objectElement, id, "actionUsing");
@@ -622,26 +627,26 @@ public class DataLoader {
             case "door":
                 String doorLink = LoadUtils.attribute(objectElement, "link", null);
                 Lock doorLock = loadLock(objectElement, id);
-                return new ObjectDoor(game, id, area, name, description, scripts, customActions, doorLink, doorLock);
+                return new ObjectDoor(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, doorLink, doorLock);
             case "elevator":
                 Element floorElement = LoadUtils.singleChildWithName(objectElement, "floor");
                 int floorNumber = LoadUtils.singleTagInt(floorElement, "number", 1);
                 String floorName = floorElement.getTextContent();
                 boolean elevatorStartLocked = LoadUtils.singleTagBoolean(objectElement, "startLocked", false);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(objectElement, "link");
-                return new ObjectElevator(game, id, area, name, description, scripts, customActions, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
+                return new ObjectElevator(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
             case "sign":
                 List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "text"), "line");
-                return new ObjectSign(game, id, area, name, description, scripts, customActions, signText);
+                return new ObjectSign(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, signText);
             case "chair":
-                return new ObjectChair(game, id, area, name, description, scripts, customActions, customUsingActions);
+                return new ObjectChair(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, customUsingActions);
             case "bed":
-                return new ObjectBed(game, id, area, name, description, scripts, customActions, customUsingActions);
+                return new ObjectBed(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, customUsingActions);
             case "cover":
-                return new ObjectCover(game, id, area, name, description, scripts, customActions, customUsingActions);
+                return new ObjectCover(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, customUsingActions);
             case "vendingMachine":
                 List<String> vendingItems = LoadUtils.listOfTags(objectElement, "item");
-                return new ObjectVendingMachine(game, id, area, name, description, scripts, customActions, vendingItems);
+                return new ObjectVendingMachine(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, vendingItems);
             case "item":
                 String itemID = LoadUtils.singleTag(objectElement, "item", null);
                 int itemCount = LoadUtils.singleTagInt(objectElement, "count", 1);
@@ -649,9 +654,9 @@ public class DataLoader {
             case "container":
                 LootTable containerLootTable = loadLootTable(LoadUtils.singleChildWithName(objectElement, "inventory"), true);
                 Lock containerLock = loadLock(objectElement, id);
-                return new ObjectContainer(game, id, area, name, description, scripts, customActions, containerLootTable, containerLock);
+                return new ObjectContainer(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, containerLootTable, containerLock);
             case "basic":
-                return new ObjectBasic(game, id, area, name, description, scripts, customActions);
+                return new ObjectBasic(game, id, area, name, description, startDisabled, startHidden, scripts, customActions);
         }
         return null;
     }

@@ -28,13 +28,14 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 	private final String name;
 	private boolean isKnown;
 	private boolean isEnabled;
+	private boolean isHidden;
 	private final Area defaultArea;
 	private Area area;
 	private final Scene description;
 	private final Map<String, Script> scripts;
 	private final List<ActionCustom> customActions;
 	
-	public WorldObject(Game gameInstance, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions) {
+	public WorldObject(Game gameInstance, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions) {
 		super(gameInstance);
 		this.ID = ID;
 		this.defaultArea = area;
@@ -43,7 +44,8 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 		this.description = description;
 		this.scripts = scripts;
 		this.customActions = customActions;
-		setEnabled(true);
+		this.isHidden = startHidden;
+		setEnabled(!startDisabled);
 	}
 
 	public String getID() {
@@ -112,6 +114,14 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 				area.removeObject(this);
 			}
 		}
+	}
+
+	public void setHidden(boolean hidden) {
+		this.isHidden = hidden;
+	}
+
+	public boolean isHidden() {
+		return isHidden;
 	}
 
 	@Override

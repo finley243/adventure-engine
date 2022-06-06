@@ -23,8 +23,8 @@ public class ObjectContainer extends WorldObject {
 	private final Lock lock;
 	private boolean hasSearched;
 
-	public ObjectContainer(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, LootTable lootTable, Lock lock) {
-		super(game, ID, area, name, description, scripts, customActions);
+	public ObjectContainer(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, LootTable lootTable, Lock lock) {
+		super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions);
 		this.inventory = new Inventory(game, null);
 		this.lootTable = lootTable;
 		this.lock = lock;

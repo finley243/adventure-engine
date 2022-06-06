@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class ObjectBasic extends WorldObject {
 
-    public ObjectBasic(Game gameInstance, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions) {
-        super(gameInstance, ID, area, name, description, scripts, customActions);
+    public ObjectBasic(Game gameInstance, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions) {
+        super(gameInstance, ID, area, name, description, startDisabled, startHidden, scripts, customActions);
     }
 
 }

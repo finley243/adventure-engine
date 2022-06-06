@@ -20,8 +20,8 @@ public class ObjectDoor extends WorldObject {
 	private final String linkedDoorID;
 	private final Lock lock;
 	
-	public ObjectDoor(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, String linkedDoorID, Lock lock) {
-		super(game, ID, area, name, description, scripts, customActions);
+	public ObjectDoor(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, String linkedDoorID, Lock lock) {
+		super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions);
 		this.linkedDoorID = linkedDoorID;
 		this.lock = lock;
 	}

@@ -17,7 +17,8 @@ public class ObjectItem extends WorldObject {
     private int count;
 
     public ObjectItem(Game game, String ID, Area area, Item item, int count) {
-        super(game, ID, area, item.getName(), item.getDescription(), item.getTemplate().getScripts(), new ArrayList<>());
+        // TODO - Add startDisabled and startHidden functionality
+        super(game, ID, area, item.getName(), item.getDescription(), false, false, item.getTemplate().getScripts(), new ArrayList<>());
         this.item = item;
         this.count = count;
     }

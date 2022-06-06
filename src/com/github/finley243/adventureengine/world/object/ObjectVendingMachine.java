@@ -16,8 +16,8 @@ public class ObjectVendingMachine extends WorldObject {
 
 	private final List<String> vendingItems;
 	
-	public ObjectVendingMachine(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, List<String> vendingItems) {
-		super(game, ID, area, name, description, scripts, customActions);
+	public ObjectVendingMachine(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, List<String> vendingItems) {
+		super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions);
 		this.vendingItems = vendingItems;
 	}
 

@@ -16,8 +16,8 @@ public class ObjectSign extends WorldObject {
 
 	private final List<String> text;
 	
-	public ObjectSign(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, List<String> text) {
-		super(game, ID, area, name, description, scripts, customActions);
+	public ObjectSign(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, List<String> text) {
+		super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions);
 		this.text = text;
 	}
 

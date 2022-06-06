@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class ObjectBed extends UsableObject {
 
-    public ObjectBed(Game game, String ID, Area area, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, List<ActionCustom> customUsingActions) {
-        super(game, ID, area, name, description, scripts, customActions, customUsingActions);
+    public ObjectBed(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, List<ActionCustom> customUsingActions) {
+        super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions, customUsingActions);
     }
 
     @Override
