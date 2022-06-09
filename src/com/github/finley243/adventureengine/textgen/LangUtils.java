@@ -15,15 +15,17 @@ public class LangUtils {
 	}
 	
 	public static String capitalize(String word) {
-		if(word.length() < 1) {
+		if (word.length() < 1) {
 			return word;
 		}
-		for(int i = 0; i < word.length(); i++) {
-			if(Character.isAlphabetic(word.charAt(i))) {
+		for (int i = 0; i < word.length(); i++) {
+			if (Character.isAlphabetic(word.charAt(i))) {
 				String preCap = word.substring(0, i);
 				String cap = word.substring(i, i + 1);
 				String postCap = word.substring(i + 1);
 				return preCap + cap.toUpperCase() + postCap;
+			} else if (Character.isDigit(word.charAt(i))) {
+				return word;
 			}
 		}
 		// If no alphabetic characters, return the unmodified string
