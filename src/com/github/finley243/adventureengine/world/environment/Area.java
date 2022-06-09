@@ -12,7 +12,9 @@ import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 /**
@@ -20,11 +22,19 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
  */
 public class Area extends GameInstanced implements Noun {
 
+	public enum AreaNameType {
+		IN, ON, NEAR
+	}
+
 	private static final boolean FULL_VISIBILITY_IN_ROOM = true;
 
 	private final String ID;
 
 	private final String landmarkID;
+	private final String name;
+	private final AreaNameType nameType;
+	private boolean isKnown;
+
 	// The room containing this area
 	private final String roomID;
 	
@@ -44,11 +54,13 @@ public class Area extends GameInstanced implements Noun {
 	// All actors in this area
 	private final Set<Actor> actors;
 	
-	public Area(Game game, String ID, String landmarkID, Scene description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
+	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game);
 		if(landmarkID == null) throw new IllegalArgumentException("Landmark cannot be null: " + ID);
 		this.ID = ID;
 		this.landmarkID = landmarkID;
+		this.name = name;
+		this.nameType = nameType;
 		this.description = description;
 		this.roomID = roomID;
 		this.ownerFaction = ownerFaction;
@@ -69,8 +81,11 @@ public class Area extends GameInstanced implements Noun {
 
 	@Override
 	public String getName() {
-		return getLandmark().getName();
-		//return getFormattedName();
+		if (landmarkID != null) {
+			return getLandmark().getName();
+		} else {
+			return name;
+		}
 	}
 	
 	public Scene getDescription() {
@@ -88,20 +103,61 @@ public class Area extends GameInstanced implements Noun {
 	
 	@Override
 	public String getFormattedName() {
-		return getLandmark().getFormattedName();
+		if (landmarkID != null) {
+			return getLandmark().getFormattedName();
+		} else {
+			return LangUtils.addArticle(name, !isKnown);
+		}
 	}
 
 	public void setKnown() {
-		getLandmark().setKnown();
+		if (landmarkID != null) {
+			getLandmark().setKnown();
+		} else {
+			isKnown = true;
+		}
 	}
 
 	@Override
 	public boolean isKnown() {
-		return getLandmark().isKnown();
+		if (landmarkID != null) {
+			return getLandmark().isKnown();
+		} else {
+			return isKnown;
+		}
 	}
 
 	public String getRelativeName() {
-		return "near " + getLandmark().getFormattedName();
+		if (landmarkID != null) {
+			return "near " + getLandmark().getFormattedName();
+		} else {
+			switch (nameType) {
+				case IN:
+					return "in " + getFormattedName();
+				case ON:
+					return "on " + getFormattedName();
+				case NEAR:
+					return "near " + getFormattedName();
+				default:
+					return null;
+			}
+		}
+	}
+
+	public String getMovePhrase() {
+		if (landmarkID != null) {
+			return Phrases.get("moveToward");
+		} else {
+			switch (nameType) {
+				case IN:
+					return Phrases.get("moveTo");
+				case ON:
+					return Phrases.get("moveOnto");
+				case NEAR:
+				default:
+					return Phrases.get("moveToward");
+			}
+		}
 	}
 	
 	public Set<WorldObject> getObjects(){

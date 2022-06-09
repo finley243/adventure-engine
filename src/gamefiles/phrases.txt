@@ -12,6 +12,9 @@ meleeMiss:$_actor tr$ies_actor to hit $target with $weapon, but miss$es_actor
 meleeTelegraph:$_actor swing$s_actor $weapon at $target
 moveThrough:$_actor go$es_actor through $exit
 moveToward:$_actor move$s_actor toward $area
+moveTo:$_actor move$s_actor to $area
+moveOnto:$_actor move$s_actor onto $area
+moveCorner:$_actor turn$s_actor around the corner
 pickUp:$_actor grab$s_actor $item
 rangedHit:a bullet hits $target
 rangedMiss:a bullet {whips|flies} past $target

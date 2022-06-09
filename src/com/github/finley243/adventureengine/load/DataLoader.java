@@ -576,6 +576,9 @@ public class DataLoader {
         if(areaElement == null) return null;
         String areaID = areaElement.getAttribute("id");
         String landmarkID = LoadUtils.attribute(areaElement, "landmark", null);
+        Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
+        String name = (nameElement == null ? null : nameElement.getTextContent());
+        Area.AreaNameType nameType = LoadUtils.attributeEnum(nameElement, "type", Area.AreaNameType.class, Area.AreaNameType.IN);
         Scene description = loadScene(LoadUtils.singleChildWithName(areaElement, "description"));
         Element areaOwnerElement = LoadUtils.singleChildWithName(areaElement, "owner");
         String areaOwnerFaction = (areaOwnerElement != null ? areaOwnerElement.getTextContent() : null);
@@ -589,13 +592,14 @@ public class DataLoader {
             AreaLink.AreaLinkType linkType = LoadUtils.attributeEnum(linkElement, "type", AreaLink.AreaLinkType.class, AreaLink.AreaLinkType.DIRECT);
             int linkDistance = LoadUtils.attributeInt(linkElement, "dist", 1);
             String moveNameOverride = LoadUtils.singleTag(linkElement, "moveName", null);
-            AreaLink link = new AreaLink(linkAreaID, linkHeight, linkType, linkDistance, moveNameOverride);
+            String movePhraseOverride = LoadUtils.singleTag(linkElement, "movePhrase", null);
+            AreaLink link = new AreaLink(linkAreaID, linkHeight, linkType, linkDistance, moveNameOverride, movePhraseOverride);
             linkSet.put(linkAreaID, link);
         }
 
         Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
 
-        Area area = new Area(game, areaID, landmarkID, description, roomID, areaOwnerFaction, areaIsPrivate, linkSet, areaScripts);
+        Area area = new Area(game, areaID, landmarkID, name, nameType, description, roomID, areaOwnerFaction, areaIsPrivate, linkSet, areaScripts);
 
         List<Element> objectElements = LoadUtils.directChildrenWithName(areaElement, "object");
         for(Element objectElement : objectElements) {

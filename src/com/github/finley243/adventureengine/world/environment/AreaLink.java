@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.world.environment;
 
+import com.github.finley243.adventureengine.textgen.Phrases;
+
 public class AreaLink {
 
     // ABOVE/BELOW = can climb up and jump down (e.g. raised front step)
@@ -33,13 +35,15 @@ public class AreaLink {
     private final AreaLinkType type;
     private final int distance;
     private final String moveNameOverride;
+    private final String movePhraseOverride;
 
-    public AreaLink(String areaID, RelativeHeight height, AreaLinkType type, int distance, String moveNameOverride) {
+    public AreaLink(String areaID, RelativeHeight height, AreaLinkType type, int distance, String moveNameOverride, String movePhraseOverride) {
         this.areaID = areaID;
         this.height = height;
         this.type = type;
         this.distance = distance;
         this.moveNameOverride = moveNameOverride;
+        this.movePhraseOverride = movePhraseOverride;
     }
 
     public String getAreaID() {
@@ -61,10 +65,22 @@ public class AreaLink {
     public String getMoveName(Area currentArea) {
         if (moveNameOverride != null) {
             return moveNameOverride;
+        } else if (type == AreaLinkType.CORNER) {
+            return "around the corner";
         } else if (!currentArea.getRoom().equals(currentArea.game().data().getArea(areaID).getRoom())) {
             return currentArea.game().data().getArea(areaID).getRoom().getName();
         } else {
             return currentArea.game().data().getArea(areaID).getName();
+        }
+    }
+
+    public String getMovePhrase(Area currentArea) {
+        if (movePhraseOverride != null) {
+            return movePhraseOverride;
+        } else if (type == AreaLinkType.CORNER) {
+            return Phrases.get("moveCorner");
+        } else {
+            return currentArea.game().data().getArea(areaID).getMovePhrase();
         }
     }
 
