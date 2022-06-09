@@ -1,5 +1,5 @@
 <data>
-    <room id="street_sinclair_between_first_second">
+    <room id="street_sinclair_between_fifth_sixth">
         <name proper="true">Sinclair St</name>
         <area id="sinclair_tech_store_door" landmark="sinclair_tech_store_exterior_door">
             <link area="sinclair_tech_store_window"/>
@@ -13,11 +13,11 @@
             </object>
         </area>
     </room>
-    <room id="street_archer_between_first_second">
+    <room id="street_archer_between_fifth_sixth">
         <name proper="true">Archer St</name>
         <area id="archer_corner_store_window" landmark="archer_corner_store_exterior_window">
             <link area="archer_apartments_door"/>
-            <link type="corner" area="first_corner_store_door"/>
+            <link type="corner" area="fifth_corner_store_door"/>
             <object type="basic" id="archer_corner_store_exterior_window">
                 <name>corner store window</name>
             </object>
@@ -30,7 +30,7 @@
         </area>
         <area id="archer_burger_restaurant_door" landmark="archer_burger_restaurant_exterior_door">
             <link area="archer_apartments_door"/>
-            <link area="second_burger_restaurant_window"/>
+            <link area="sixth_burger_restaurant_window"/>
             <link type="corner" area="alley_sinclair_archer_dumpster"/>
             <object type="basic" id="archer_burger_restaurant_exterior_door">
                 <name>BigBurger entrance</name>
@@ -40,39 +40,39 @@
             </object>
         </area>
     </room>
-    <room id="street_first_between_sinclair_archer">
-        <name proper="true">First Ave</name>
-        <area id="first_corner_store_door" landmark="first_corner_store_exterior_door">
+    <room id="street_fifth_between_sinclair_archer">
+        <name proper="true">5th Ave</name>
+        <area id="fifth_corner_store_door" landmark="fifth_corner_store_exterior_door">
             <link type="corner" area="archer_corner_store_window"/>
-            <object type="basic" id="first_corner_store_exterior_door">
+            <object type="basic" id="fifth_corner_store_exterior_door">
                 <name>corner store entrance</name>
             </object>
         </area>
     </room>
-    <room id="street_second_between_sinclair_archer">
-        <name proper="true">Second Ave</name>
-        <area id="second_burger_restaurant_window" landmark="second_burger_restaurant_exterior_window">
+    <room id="street_sixth_between_sinclair_archer">
+        <name proper="true">6th Ave</name>
+        <area id="sixth_burger_restaurant_window" landmark="sixth_burger_restaurant_exterior_window">
             <link area="archer_burger_restaurant_door"/>
-            <object type="basic" id="second_burger_restaurant_exterior_window">
+            <object type="basic" id="sixth_burger_restaurant_exterior_window">
                 <name>BigBurger window</name>
             </object>
         </area>
     </room>
     <room id="alley_sinclair_archer">
         <name>alley</name>
-        <area id="alley_sinclair_archer_dumpster" landmark="second_burger_restaurant_dumpster">
+        <area id="alley_sinclair_archer_dumpster" landmark="sixth_burger_restaurant_dumpster">
             <link type="corner" area="archer_burger_restaurant_door"/>
-            <object type="container" id="second_burger_restaurant_dumpster">
+            <object type="container" id="sixth_burger_restaurant_dumpster">
                 <name>dumpster</name>
                 <description>
                     <line>
                         <text>The dumpster is old and caked with grease. There is a hazard sign on the side, though at this point the text cannot be made out.</text>
                         <text>While inspecting the sign, you notice a backpack wedged between the dumpster and the wall of the restaurant.</text>
-                        <script type="revealObject" object="second_burger_restaurant_dumpster_backpack"/>
+                        <script type="revealObject" object="sixth_burger_restaurant_dumpster_backpack"/>
                     </line>
                 </description>
             </object>
-            <object type="container" id="second_burger_restaurant_dumpster_backpack" startHidden="true">
+            <object type="container" id="sixth_burger_restaurant_dumpster_backpack" startHidden="true">
                 <name>hidden backpack</name>
                 <inventory>
                     <table>weapon_ranged</table>
