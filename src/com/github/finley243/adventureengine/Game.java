@@ -104,7 +104,7 @@ public class Game {
 				actor.takeTurn();
 			}
 		}
-		data().getPlayer().describeSurroundings();
+		//data().getPlayer().describeSurroundings();
 		data().getPlayer().takeTurn();
 		data().time().onNextRound();
 	}

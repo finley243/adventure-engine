@@ -20,6 +20,11 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
+    public boolean canChoose(Actor subject) {
+        return super.canChoose(subject) && area.getDescription() != null;
+    }
+
+    @Override
     public MenuData getMenuData(Actor subject) {
         return new MenuData("Look around", canChoose(subject));
     }

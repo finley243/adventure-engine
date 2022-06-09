@@ -1,7 +1,7 @@
 <config>
     <playerStats>player</playerStats>
     <playerID>player</playerID>
-    <playerStartArea>archer_apartments_door</playerStartArea>
+    <playerStartArea>archer_apartments_exterior</playerStartArea>
     <gameName>AdventureEngine</gameName>
     <startTimeHours>8</startTimeHours>
     <startTimeMinutes>0</startTimeMinutes>

@@ -1,13 +1,14 @@
 <data>
     <room id="sinclair_tech_store">
-
+        <name>Argon Electronics</name>
     </room>
     <room id="fifth_corner_store">
+        <name>corner store</name>
         <area id="fifth_corner_store_entrance" landmark="fifth_corner_store_door_exit">
             <link area="fifth_corner_store_counter"/>
             <link area="fifth_corner_store_aisle"/>
             <object type="door" id="fifth_corner_store_door_exit" link="fifth_corner_store_exterior_door">
-                <name>exit</name>
+                <name>store entrance</name>
             </object>
         </area>
         <area id="fifth_corner_store_counter" landmark="fifth_corner_store_counter">
@@ -24,12 +25,12 @@
         </area>
     </room>
     <room id="archer_burger_restaurant">
-
+        <name>BigBurger</name>
     </room>
     <room id="archer_apartments">
-
+        <name>apartments</name>
     </room>
     <room id="archer_apartments_23">
-
+        <name>apartment 23</name>
     </room>
 </data>

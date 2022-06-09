@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ScriptRevealObject extends Script {
 
@@ -14,6 +15,8 @@ public class ScriptRevealObject extends Script {
 
     @Override
     protected void executeSuccess(Actor subject) {
-        subject.game().data().getObject(objectID).setHidden(false);
+        WorldObject object = subject.game().data().getObject(objectID);
+        object.setHidden(false);
+        object.setKnown();
     }
 }

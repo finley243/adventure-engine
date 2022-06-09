@@ -66,7 +66,7 @@ public class AreaLink {
         if (moveNameOverride != null) {
             return moveNameOverride;
         } else if (type == AreaLinkType.CORNER) {
-            return "around the corner";
+            return "turn corner";
         } else if (!currentArea.getRoom().equals(currentArea.game().data().getArea(areaID).getRoom())) {
             return currentArea.game().data().getArea(areaID).getRoom().getName();
         } else {

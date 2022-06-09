@@ -56,7 +56,7 @@ public class Area extends GameInstanced implements Noun {
 	
 	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game);
-		if(landmarkID == null) throw new IllegalArgumentException("Landmark cannot be null: " + ID);
+		if(landmarkID == null && name == null) throw new IllegalArgumentException("Landmark and name cannot both be null: " + ID);
 		this.ID = ID;
 		this.landmarkID = landmarkID;
 		this.name = name;
