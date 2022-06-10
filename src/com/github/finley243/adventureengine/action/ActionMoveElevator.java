@@ -19,8 +19,9 @@ public class ActionMoveElevator extends ActionMove {
 		this.elevator = elevator;
 		this.destination = destination;
 	}
-	
-	public Area getArea() {
+
+	@Override
+	public Area getDestinationArea() {
 		return destination.getArea();
 	}
 

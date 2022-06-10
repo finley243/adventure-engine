@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.world.environment.Area;
 
 public abstract class ActionMove extends Action {
 
@@ -18,5 +19,7 @@ public abstract class ActionMove extends Action {
     public boolean isBlockedMatch(Action action) {
         return action instanceof ActionMove;
     }
+
+    public abstract Area getDestinationArea();
 
 }

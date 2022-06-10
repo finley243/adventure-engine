@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
@@ -20,8 +19,9 @@ public class ActionMoveArea extends ActionMove {
 		this.area = area;
 		this.link = link;
 	}
-	
-	public Area getArea() {
+
+	@Override
+	public Area getDestinationArea() {
 		return area;
 	}
 	

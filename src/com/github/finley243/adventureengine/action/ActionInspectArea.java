@@ -15,13 +15,19 @@ public class ActionInspectArea extends Action {
 
     @Override
     public void choose(Actor subject) {
-        SceneManager.trigger(subject.game(), subject, area.getDescription());
+        if (area.getRoom().getDescription() != null) {
+            SceneManager.trigger(subject.game(), subject, area.getRoom().getDescription());
+        }
+        if (area.getDescription() != null) {
+            SceneManager.trigger(subject.game(), subject, area.getDescription());
+        }
+        area.getRoom().triggerScript("on_inspect", subject);
         area.triggerScript("on_inspect", subject);
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && area.getDescription() != null;
+        return super.canChoose(subject) && (area.getDescription() != null || area.getRoom().getDescription() != null);
     }
 
     @Override

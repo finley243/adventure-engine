@@ -17,8 +17,9 @@ public class ActionMoveDoor extends ActionMove {
 	public ActionMoveDoor(ObjectDoor door) {
 		this.door = door;
 	}
-	
-	public Area getArea() {
+
+	@Override
+	public Area getDestinationArea() {
 		return door.getLinkedArea();
 	}
 
