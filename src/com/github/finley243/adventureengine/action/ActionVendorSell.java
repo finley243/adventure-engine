@@ -15,17 +15,19 @@ public class ActionVendorSell extends Action {
     private final Actor vendor;
     private final Inventory vendorInventory;
     private final Item item;
+    private final int price;
 
-    public ActionVendorSell(Actor vendor, Inventory vendorInventory, Item item) {
+    public ActionVendorSell(Actor vendor, Inventory vendorInventory, Item item, int price) {
         this.vendor = vendor;
         this.vendorInventory = vendorInventory;
         this.item = item;
+        this.price = price;
     }
 
     @Override
     public void choose(Actor subject) {
         subject.inventory().removeItem(item);
-        subject.adjustMoney(item.getTemplate().getPrice());
+        subject.adjustMoney(price);
         vendorInventory.addItem(item);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", vendor).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("sell"), context, this, subject));

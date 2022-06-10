@@ -13,6 +13,8 @@ import java.util.Set;
 
 public class VendorComponent {
 
+    private static final float SELL_PRICE_MULTIPLIER = 0.8f;
+
     private final Actor vendor;
     private final Inventory vendorInventory;
     private final String lootTable;
@@ -44,7 +46,7 @@ public class VendorComponent {
         List<Action> actions = new ArrayList<>();
         if(!enabled) return actions;
         for(Item item : vendorInventory.getItems()) {
-            actions.add(new ActionVendorBuy(vendor, vendorInventory, item));
+            actions.add(new ActionVendorBuy(vendor, vendorInventory, item, item.getTemplate().getPrice()));
         }
         if(!buyTags.isEmpty() || buyAll) {
             for (Item item : subject.inventory().getItems()) {
@@ -59,7 +61,7 @@ public class VendorComponent {
                     }
                 }
                 if(canBuy) {
-                    actions.add(new ActionVendorSell(vendor, vendorInventory, item));
+                    actions.add(new ActionVendorSell(vendor, vendorInventory, item, (int) ( item.getTemplate().getPrice() * SELL_PRICE_MULTIPLIER)));
                 }
             }
         }
