@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
@@ -26,6 +27,7 @@ public class ActionMoveArea extends ActionMove {
 	
 	@Override
 	public void choose(Actor subject) {
+		Area lastArea = subject.getArea();
 		Noun moveLocation;
 		if (!area.getRoom().equals(subject.getArea().getRoom())) {
 			moveLocation = area.getRoom();
@@ -35,6 +37,7 @@ public class ActionMoveArea extends ActionMove {
 		Context context = new Context(new NounMapper().put("actor", subject).put("area", moveLocation).build());
 		subject.game().eventBus().post(new SensoryEvent(new Area[]{subject.getArea(), area}, link.getMovePhrase(subject.getArea()), context, this, subject));
 		subject.setArea(area);
+		subject.onMove(lastArea);
 	}
 	
 	@Override

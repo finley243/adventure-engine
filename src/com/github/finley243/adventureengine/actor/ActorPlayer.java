@@ -47,17 +47,25 @@ public class ActorPlayer extends Actor {
 	
 	@Override
 	public void setArea(Area area) {
-		boolean shouldShowDescription = getArea() != null;
-		boolean newRoom = !getArea().getRoom().equals(area.getRoom());
+		boolean newRoom = getArea() == null || !getArea().getRoom().equals(area.getRoom());
 		super.setArea(area);
 		game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
-		if(shouldShowDescription) {
-			this.updateAreaDescription();
-		}
 		if(newRoom) {
 			getArea().getRoom().triggerScript("on_player_enter", this);
 		}
 		getArea().triggerScript("on_player_enter", this);
+	}
+
+	@Override
+	public void onMove(Area lastArea) {
+		boolean isRoomChange = !lastArea.getRoom().equals(getArea().getRoom());
+		boolean isAreaChange = isRoomChange || !lastArea.equals(getArea());
+		if(isRoomChange && getArea().getRoom().getDescription() != null) {
+			SceneManager.trigger(game(), this, getArea().getRoom().getDescription());
+		}
+		if(isAreaChange && getArea().getDescription() != null) {
+			SceneManager.trigger(game(), this, getArea().getDescription());
+		}
 	}
 	
 	@Override
@@ -73,14 +81,6 @@ public class ActorPlayer extends Actor {
 	
 	public void startDialogue(Actor subject, String startTopic) {
 		menuManager.dialogueMenu(subject, startTopic);
-	}
-
-	public void updateAreaDescription() {
-		if(this.getArea().getDescription() != null) {
-			//game().eventBus().post(new RenderTextEvent(this.getArea().getDescription()));
-			//game().eventBus().post(new RenderTextEvent(""));
-			SceneManager.trigger(game(), this, List.of(this.getArea().getDescription()));
-		}
 	}
 
 	public void describeSurroundings() {

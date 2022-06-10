@@ -9,6 +9,7 @@ public class Context {
 	public enum Pronoun{
 		HE("he", "him", "his", "himself", true),
 		SHE("she", "her", "her", "herself", true),
+		// TODO - Add two variants of THEY pronoun for singular and plural referents (singular uses third person verb when using the name but not the pronoun)
 		THEY("they", "them", "their", "themselves", false),
 		IT("it", "it", "its", "itself", true),
 		I("I", "me", "my", "myself", false),

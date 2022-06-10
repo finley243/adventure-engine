@@ -34,6 +34,7 @@ public class ActionMoveElevator extends ActionMove {
 	
 	@Override
 	public void choose(Actor subject) {
+		Area lastArea = subject.getArea();
 		Context context = new Context(new NounMapper().put("actor", subject).put("elevator", elevator).build());
 		String takeElevatorPhrase;
 		if(elevator.getFloorNumber() < destination.getFloorNumber()) {
@@ -44,6 +45,7 @@ public class ActionMoveElevator extends ActionMove {
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject));
 		subject.game().eventBus().post(new SensoryEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject));
 		subject.setArea(destination.getArea());
+		subject.onMove(lastArea);
 	}
 
 	@Override

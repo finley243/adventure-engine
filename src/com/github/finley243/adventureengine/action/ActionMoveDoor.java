@@ -28,6 +28,7 @@ public class ActionMoveDoor extends ActionMove {
 	
 	@Override
 	public void choose(Actor subject) {
+		Area lastArea = subject.getArea();
 		Area area = door.getLinkedArea();
 		Context context = new Context(new NounMapper().put("actor", subject).put("exit", door).put("room", area.getRoom()).build());
 		subject.game().eventBus().post(new SensoryEvent(new Area[]{subject.getArea(), area}, Phrases.get("moveThrough"), context, this, subject));
@@ -35,6 +36,7 @@ public class ActionMoveDoor extends ActionMove {
 			door.getLinkedDoor().getLock().setLocked(false);
 		}
 		subject.setArea(area);
+		subject.onMove(lastArea);
 	}
 
 	@Override

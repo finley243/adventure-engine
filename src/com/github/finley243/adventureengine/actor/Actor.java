@@ -92,10 +92,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final ApparelComponent apparelComponent;
 	private final EquipmentComponent equipmentComponent;
 	private final VendorComponent vendorComponent;
-	private int money;
-	private UsableObject usingObject;
 	private final TargetingComponent targetingComponent;
 	private final BehaviorComponent behaviorComponent;
+	private int money;
+	private UsableObject usingObject;
 	private final Set<AreaTarget> areaTargets;
 	private final InvestigateTarget investigateTarget;
 	private int sleepCounter;
@@ -221,6 +221,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		this.area = area;
 		area.addActor(this);
 	}
+
+	public void onMove(Area lastArea) {}
 	
 	public boolean isEnabled() {
 		return isEnabled;
