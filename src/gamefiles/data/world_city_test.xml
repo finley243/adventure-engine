@@ -78,6 +78,11 @@
                     <table>weapon_ranged</table>
                 </inventory>
             </object>
+            <actor id="alley_ganger" template="enemy_melee">
+                <behaviors>
+                    <behavior type="area" area="alley_sinclair_archer_dumpster"/>
+                </behaviors>
+            </actor>
         </area>
     </room>
 </data>

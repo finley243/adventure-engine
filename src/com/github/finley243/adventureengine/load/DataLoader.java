@@ -100,7 +100,7 @@ public class DataLoader {
         String name = nameElement != null ? nameElement.getTextContent() : null;
         boolean nameIsProper = nameElement != null && LoadUtils.attributeBool(nameElement, "proper", false);
         Context.Pronoun pronoun = LoadUtils.attributeEnum(nameElement, "pronoun", Context.Pronoun.class, Context.Pronoun.THEY);
-        String faction = LoadUtils.singleTag(actorElement, "faction", "default");
+        String faction = LoadUtils.attribute(actorElement, "faction", "default");
         int hp = LoadUtils.attributeInt(actorElement, "hp", 0);
         List<Limb> limbs = loadLimbs(actorElement);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);

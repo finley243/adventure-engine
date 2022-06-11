@@ -3,7 +3,7 @@ consume:$_actor consume$s_actor $item
 die:$_actor fall$s_actor over dead
 drink:$_actor drink$s_actor $item
 drop:$_actor drop$s_actor $item
-forceDrop:$_actor drop$s_actor $item and $item lands near $area
+forceDrop:$_actor drop$s_actor $item and $item lands $area
 eat:$_actor eat$s_actor $item
 equip:$_actor equip$s_actor $item
 exitElevator:$_actor exit$s_actor $elevator

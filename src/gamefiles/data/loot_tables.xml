@@ -1,12 +1,4 @@
 <data>
-    <lootTable id="player" useAll="true">
-        <item>pistol_heavy</item>
-        <item>baseball_bat</item>
-        <item>tactical_vest</item>
-        <item>tactical_helmet</item>
-        <item>nitron_cola</item>
-        <item count="20">ammo_pistol</item>
-    </lootTable>
     <lootTable id="weapon_melee" useAll="false">
         <item>baseball_bat</item>
         <item>katana</item>
@@ -15,18 +7,6 @@
         <item>pistol_light</item>
         <item>pistol_heavy</item>
         <item>rifle_auto</item>
-    </lootTable>
-    <lootTable id="stratis_receptionist" useAll="true">
-        <item>pistol_light</item>
-        <item>stratis_master_key</item>
-    </lootTable>
-    <lootTable id="stratis_guard" useAll="true">
-        <item>rifle_auto</item>
-        <item>stratis_security_key</item>
-    </lootTable>
-    <lootTable id="nexus_bouncer" useAll="true">
-        <table>weapon_melee</table>
-        <item>nexus_bouncer_key</item>
     </lootTable>
     <lootTable id="ammo_random">
         <item countMin="5" countMax="20">ammo_pistol</item>

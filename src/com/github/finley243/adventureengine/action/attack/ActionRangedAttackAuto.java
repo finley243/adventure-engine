@@ -19,11 +19,6 @@ public class ActionRangedAttackAuto extends ActionAttack {
 	}
 
 	@Override
-	public List<ActionReaction> getReactions(Actor subject) {
-		return new ArrayList<>();
-	}
-
-	@Override
 	public int ammoConsumed() {
 		return AMMO_USED;
 	}

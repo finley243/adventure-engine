@@ -17,9 +17,14 @@ public class ActionInspectArea extends Action {
     public void choose(Actor subject) {
         if (area.getRoom().getDescription() != null) {
             SceneManager.trigger(subject.game(), subject, area.getRoom().getDescription());
+            area.getRoom().setKnown();
+            for (Area area : area.getRoom().getAreas()) {
+                area.setKnown();
+            }
         }
         if (area.getDescription() != null) {
             SceneManager.trigger(subject.game(), subject, area.getDescription());
+            area.setKnown();
         }
         area.getRoom().triggerScript("on_inspect", subject);
         area.triggerScript("on_inspect", subject);

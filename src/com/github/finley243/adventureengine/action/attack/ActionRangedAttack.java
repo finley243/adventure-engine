@@ -16,11 +16,6 @@ public class ActionRangedAttack extends ActionAttack {
 	}
 
 	@Override
-	public List<ActionReaction> getReactions(Actor subject) {
-		return new ArrayList<>();
-	}
-
-	@Override
 	public String getTelegraphPhrase() {
 		return "rangedTelegraph";
 	}

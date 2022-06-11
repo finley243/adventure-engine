@@ -394,7 +394,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			inventory.removeItem(item);
 			Area landingArea = MathUtils.selectRandomFromSet(getArea().getMovableAreas());
 			Item.itemToObject(game(), item, 1, landingArea);
-			Context context = new Context(new NounMapper().put("actor", this).put("item", item).put("area", landingArea).build());
+			Context context = new Context(Map.of("area", landingArea.getRelativeName(getArea())), new NounMapper().put("actor", this).put("item", item).build());
 			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
 		}
 	}
@@ -452,12 +452,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	public void onSensoryEvent(SensoryEvent event, boolean visible) {
 		if(isActive() && isEnabled()) {
 			if (visible) {
-				if (event.getAction() instanceof ActionMoveArea) {
-					targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveArea) event.getAction()).getDestinationArea());
-				} else if (event.getAction() instanceof ActionMoveDoor) {
-					targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveDoor) event.getAction()).getDoor().getLinkedArea());
-				} else if (event.getAction() instanceof ActionMoveElevator) {
-					targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMoveElevator) event.getAction()).getDestination().getArea());
+				if (event.getAction() instanceof ActionMove) {
+					targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMove) event.getAction()).getDestinationArea());
 				}
 			} else {
 				if (event.getResponseType() == SensoryEvent.ResponseType.INVESTIGATE) {

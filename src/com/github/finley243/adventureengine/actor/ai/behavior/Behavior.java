@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class Behavior {
 
-    public static final float BEHAVIOR_ACTION_UTILITY = 1.0f;
+    public static final float BEHAVIOR_ACTION_UTILITY = 0.7f;
 
     private final Condition condition;
     // If duration = 0, behavior will continue indefinitely until endCondition is met or until superseded by another behavior

@@ -96,6 +96,10 @@ public class Room extends GameInstanced implements Noun {
 		}
 	}
 
+	public String getRelativeName() {
+		return "in " + getFormattedName();
+	}
+
 	@Override
 	public void setKnown() {
 		isKnown = true;

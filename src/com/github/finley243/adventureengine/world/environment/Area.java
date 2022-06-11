@@ -127,17 +127,23 @@ public class Area extends GameInstanced implements Noun {
 		}
 	}
 
-	public String getRelativeName() {
+	public String getRelativeName(Area origin) {
+		String roomPhrase;
+		if (!origin.getRoom().equals(this.getRoom())) {
+			roomPhrase = this.getRoom().getRelativeName() + ", ";
+		} else {
+			roomPhrase = "";
+		}
 		if (landmarkID != null) {
-			return "near " + getLandmark().getFormattedName();
+			return roomPhrase + "near " + getLandmark().getFormattedName();
 		} else {
 			switch (nameType) {
 				case IN:
-					return "in " + getFormattedName();
+					return roomPhrase + "in " + getFormattedName();
 				case ON:
-					return "on " + getFormattedName();
+					return roomPhrase + "on " + getFormattedName();
 				case NEAR:
-					return "near " + getFormattedName();
+					return roomPhrase + "near " + getFormattedName();
 				default:
 					return null;
 			}

@@ -62,9 +62,14 @@ public class ActorPlayer extends Actor {
 		boolean isAreaChange = isRoomChange || !lastArea.equals(getArea());
 		if(isRoomChange && getArea().getRoom().getDescription() != null) {
 			SceneManager.trigger(game(), this, getArea().getRoom().getDescription());
+			getArea().getRoom().setKnown();
+			for (Area area : getArea().getRoom().getAreas()) {
+				area.setKnown();
+			}
 		}
 		if(isAreaChange && getArea().getDescription() != null) {
 			SceneManager.trigger(game(), this, getArea().getDescription());
+			getArea().setKnown();
 		}
 	}
 	

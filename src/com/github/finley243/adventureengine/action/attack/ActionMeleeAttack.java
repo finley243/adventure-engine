@@ -18,9 +18,9 @@ public class ActionMeleeAttack extends ActionAttack {
 	@Override
 	public List<ActionReaction> getReactions(Actor subject) {
 		List<ActionReaction> reactions = new ArrayList<>();
-		reactions.add(new ActionReactionBlock(subject, getWeapon()));
-		reactions.add(new ActionReactionCounter(subject, getWeapon()));
-		reactions.add(new ActionReactionNone(subject, getWeapon()));
+		//reactions.add(new ActionReactionBlock(subject, getWeapon()));
+		//reactions.add(new ActionReactionCounter(subject, getWeapon()));
+		//reactions.add(new ActionReactionNone(subject, getWeapon()));
 		return reactions;
 	}
 

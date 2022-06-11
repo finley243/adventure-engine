@@ -140,7 +140,9 @@ public abstract class ActionAttack extends ActionRandom {
         return null;
     }
 
-    public abstract List<ActionReaction> getReactions(Actor subject);
+    public List<ActionReaction> getReactions(Actor subject) {
+        return new ArrayList<>();
+    }
 
     @Override
     public boolean canChoose(Actor subject) {

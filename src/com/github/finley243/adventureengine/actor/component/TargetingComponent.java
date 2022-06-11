@@ -79,7 +79,7 @@ public class TargetingComponent {
                                 (subject.getArea().getOwnerFaction() != null && subject.game().data().getFaction(subject.getArea().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
                             subject.triggerScript("on_notice_target_trespassing");
                             detected.put(actor, 0);
-                        } else if((subject.getFaction().getRelationTo(actor.getFaction().getID())) == Faction.FactionRelation.HOSTILE) {
+                        } else if(subject.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
                             subject.triggerScript("on_notice_target_faction");
                             detected.put(actor, 0);
                         }

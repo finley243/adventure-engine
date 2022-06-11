@@ -18,6 +18,7 @@
         <skill key="LONG_ARMS" value="4"/>
         <skill key="LOCKPICK" value="4"/>
         <skill key="STEALTH" value="4"/>
+        <skill key="DODGE" value="4"/>
         <limb hitChance="0.7" damageMult="2.0" apparelSlot="HEAD">
             <name>head</name>
         </limb>
@@ -35,20 +36,26 @@
     <actor id="player" parent="default" hp="50" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>
         <inventory>
-            <table>player</table>
+            <item>pistol_heavy</item>
+            <item>katana</item>
+            <!--<item>tactical_vest</item>-->
+            <!--<item>tactical_helmet</item>-->
+            <item>nitron_cola</item>
+            <item count="20">ammo_pistol</item>
         </inventory>
     </actor>
     <actor id="stratis_receptionist" parent="default" hp="40" faction="stratis_hotel_staff" topic="stratis_receptionist_start">
         <name proper="false" pronoun="HE">receptionist</name>
         <inventory>
-            <table>stratis_receptionist</table>
+            <item>pistol_light</item>
+            <item>stratis_master_key</item>
         </inventory>
     </actor>
     <actor id="stratis_guard" parent="default" hp="70" faction="stratis_hotel_staff">
         <name proper="false" pronoun="HE">guard</name>
         <inventory>
-            <!--<table>stratis_guard</table>-->
-            <item>katana</item>
+            <item>rifle_auto</item>
+            <item>stratis_security_key</item>
         </inventory>
     </actor>
     <actor id="enemy" parent="default" hp="40" faction="enemy">
@@ -62,16 +69,28 @@
             <line>"Get 'em!" $_actor yell$s_actor</line>
         </script>
     </actor>
+    <actor id="enemy_melee" parent="default" hp="40" faction="enemy">
+        <name proper="false" pronoun="HE">ganger</name>
+        <inventory>
+            <table>weapon_melee</table>
+        </inventory>
+        <script trigger="on_combat_start" type="bark" chance="0.8">
+            <line>"Finally, some action!" $_actor yell$s_actor</line>
+            <line>"Can't wait to take you down!" $_actor yell$s_actor</line>
+            <line>"Get 'em!" $_actor yell$s_actor</line>
+        </script>
+    </actor>
     <actor id="nexus_bouncer" parent="default" hp="70" faction="nexus_staff" topic="nexus_bouncer_start">
         <name proper="false" pronoun="HE">bouncer</name>
         <inventory>
-            <table>nexus_bouncer</table>
+            <table>weapon_melee</table>
+            <item>nexus_bouncer_key</item>
         </inventory>
     </actor>
     <actor id="test_vendor" parent="default" hp="40" faction="nexus_staff" topic="stratis_receptionist_start">
         <name proper="false" pronoun="SHE">vendor</name>
         <inventory>
-            <table>stratis_receptionist</table>
+            <item>pistol_light</item>
         </inventory>
         <vendor lootTable="weapon_ranged_3">
             <buyTag>weapon_ranged</buyTag>
