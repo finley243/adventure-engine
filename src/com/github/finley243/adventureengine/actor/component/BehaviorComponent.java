@@ -34,7 +34,7 @@ public class BehaviorComponent {
         if(current == null) {
             return -1.0f;
         } else {
-            return current.actionUtilityOverride(action);
+            return current.actionUtilityOverride(actor, action);
         }
     }
 

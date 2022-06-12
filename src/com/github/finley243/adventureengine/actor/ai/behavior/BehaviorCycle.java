@@ -52,8 +52,8 @@ public class BehaviorCycle extends Behavior {
     }
 
     @Override
-    public float actionUtilityOverride(Action action) {
-        return stages.get(currentStage).actionUtilityOverride(action);
+    public float actionUtilityOverride(Actor subject, Action action) {
+        return stages.get(currentStage).actionUtilityOverride(subject, action);
     }
 
     @Override

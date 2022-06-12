@@ -12,7 +12,9 @@ import java.util.List;
 
 public abstract class Behavior {
 
-    public static final float BEHAVIOR_ACTION_UTILITY = 0.7f;
+    public static final float BEHAVIOR_ACTION_UTILITY = 0.8f;
+    // To avoid conflicts, behaviors are ignored (0 utility) during combat
+    public static final float BEHAVIOR_ACTION_UTILITY_COMBAT = 0.0f;
 
     private final Condition condition;
     // If duration = 0, behavior will continue indefinitely until endCondition is met or until superseded by another behavior
@@ -62,7 +64,7 @@ public abstract class Behavior {
         }
     }
 
-    public float actionUtilityOverride(Action action) {
+    public float actionUtilityOverride(Actor subject, Action action) {
         return -1.0f;
     }
 

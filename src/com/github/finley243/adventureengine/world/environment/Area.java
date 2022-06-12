@@ -263,9 +263,6 @@ public class Area extends GameInstanced implements Noun {
 	}
 
 	public Set<Area> getVisibleAreas(Actor subject) {
-		if (FULL_VISIBILITY_IN_ROOM) {
-			return new HashSet<>(this.getRoom().getAreas());
-		}
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
 		if (!subject.isUsingObject() || subject.getUsingObject().userCanSeeOtherAreas()) {
@@ -275,6 +272,13 @@ public class Area extends GameInstanced implements Noun {
 						Area area = game().data().getArea(link.getAreaID());
 						visibleAreas.add(area);
 					}
+				}
+			}
+		}
+		if (FULL_VISIBILITY_IN_ROOM) {
+			for (Area area : getRoom().getAreas()) {
+				if (!linkedAreas.containsKey(area.getID()) && !subject.isInCover()) {
+					visibleAreas.add(area);
 				}
 			}
 		}

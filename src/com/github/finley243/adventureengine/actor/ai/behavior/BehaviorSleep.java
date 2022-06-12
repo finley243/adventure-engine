@@ -31,13 +31,11 @@ public class BehaviorSleep extends Behavior {
     }
 
     @Override
-    public float actionUtilityOverride(Action action) {
+    public float actionUtilityOverride(Actor subject, Action action) {
         if(action instanceof ActionUseStart && ((ActionUseStart) action).getObject() instanceof ObjectBed && ((ActionUseStart) action).getObject().getID().equals(bed)) {
-            System.out.println("Check valid action - useObject");
-            return BEHAVIOR_ACTION_UTILITY;
+            return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         } else if(action instanceof ActionSleep) {
-            System.out.println("Check valid action - sleep");
-            return BEHAVIOR_ACTION_UTILITY;
+            return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         }
         return -1.0f;
     }

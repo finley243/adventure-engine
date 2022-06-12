@@ -30,9 +30,10 @@ public class BehaviorSandbox extends Behavior {
     }
 
     @Override
-    public float actionUtilityOverride(Action action) {
+    public float actionUtilityOverride(Actor subject, Action action) {
+        // TODO - Create more robust system for determining which actions can be performed during sandbox
         if(action instanceof ActionUseStart && !(((ActionUseStart) action).getObject() instanceof ObjectBed)) {
-            return BEHAVIOR_ACTION_UTILITY;
+            return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         }
         return -1.0f;
     }

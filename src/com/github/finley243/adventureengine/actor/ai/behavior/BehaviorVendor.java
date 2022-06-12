@@ -28,11 +28,6 @@ public class BehaviorVendor extends Behavior {
     }
 
     @Override
-    public float actionUtilityOverride(Action action) {
-        return -1.0f;
-    }
-
-    @Override
     public boolean isVendingEnabled(Actor subject) {
         return subject.getArea().getID().equals(area);
     }

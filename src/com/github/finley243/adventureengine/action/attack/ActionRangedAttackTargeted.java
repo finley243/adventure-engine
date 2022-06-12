@@ -39,7 +39,7 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		return new MenuData(LangUtils.titleCase(getLimb().getName()) + " (" + getChanceTag(subject) + ")",
-				canChoose(subject), new String[]{getWeapon().getName(), getTarget().getName(), "Targeted Attack)"});
+				canChoose(subject), new String[]{getWeapon().getName(), getTarget().getName(), "Targeted Attack"});
 	}
 
 }
