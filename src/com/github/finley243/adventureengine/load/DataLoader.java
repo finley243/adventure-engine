@@ -469,29 +469,30 @@ public class DataLoader {
         if(effectElement == null) return null;
         String effectType = effectElement.getAttribute("type");
         int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
+        boolean stackable = LoadUtils.attributeBool(effectElement, "stack", true);
         switch(effectType) {
             case "state":
                 String state = LoadUtils.attribute(effectElement, "state", null);
                 int stateAmount = LoadUtils.attributeInt(effectElement, "amount", 0);
-                return new EffectStateInt(duration, manualRemoval, state, stateAmount);
+                return new EffectStateInt(duration, manualRemoval, stackable, state, stateAmount);
             case "trigger":
                 String trigger = LoadUtils.attribute(effectElement, "trigger", null);
-                return new EffectTrigger(duration, manualRemoval, trigger);
+                return new EffectTrigger(duration, manualRemoval, stackable, trigger);
             case "mod":
                 String statMod = LoadUtils.attribute(effectElement, "stat", null);
                 String statModValue = LoadUtils.attribute(effectElement, "amount", "0");
                 boolean statModIsFloat = statModValue.contains(".");
                 if (statModIsFloat) {
                     float statModValueFloat = Float.parseFloat(statModValue);
-                    return new EffectStatModFloat(duration, manualRemoval, statMod, statModValueFloat);
+                    return new EffectStatModFloat(duration, manualRemoval, stackable, statMod, statModValueFloat);
                 } else {
                     int statModValueInt = Integer.parseInt(statModValue);
-                    return new EffectStatModInt(duration, manualRemoval, statMod, statModValueInt);
+                    return new EffectStatModInt(duration, manualRemoval, stackable, statMod, statModValueInt);
                 }
             case "mult":
                 String statMult = LoadUtils.attribute(effectElement, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
-                return new EffectStatMult(duration, manualRemoval, statMult, statMultAmount);
+                return new EffectStatMult(duration, manualRemoval, stackable, statMult, statMultAmount);
             default:
                 return null;
         }

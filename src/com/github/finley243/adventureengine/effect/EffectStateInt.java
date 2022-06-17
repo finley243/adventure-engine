@@ -7,8 +7,8 @@ public class EffectStateInt extends Effect {
     private final String state;
     private final int amount;
 
-    public EffectStateInt(int duration, boolean manualRemoval, String state, int amount) {
-        super(duration, manualRemoval);
+    public EffectStateInt(int duration, boolean manualRemoval, boolean stackable, String state, int amount) {
+        super(duration, manualRemoval, stackable);
         this.state = state;
         this.amount = amount;
     }

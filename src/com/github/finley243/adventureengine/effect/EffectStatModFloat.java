@@ -8,8 +8,8 @@ public class EffectStatModFloat extends Effect {
     private final String stat;
     private final float amount;
 
-    public EffectStatModFloat(int duration, boolean manualRemoval, String stat, float amount) {
-        super(duration, manualRemoval);
+    public EffectStatModFloat(int duration, boolean manualRemoval, boolean stackable, String stat, float amount) {
+        super(duration, manualRemoval, stackable);
         this.stat = stat;
         this.amount = amount;
     }

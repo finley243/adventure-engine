@@ -9,10 +9,12 @@ public abstract class Effect {
 
 	protected final boolean manualRemoval;
 	protected final int duration;
+	private final boolean stackable;
 
-	public Effect(int duration, boolean manualRemoval) {
+	public Effect(int duration, boolean manualRemoval, boolean stackable) {
 		this.manualRemoval = manualRemoval;
 		this.duration = duration;
+		this.stackable = stackable;
 	}
 	
 	public abstract void start(Actor target);
@@ -27,6 +29,10 @@ public abstract class Effect {
 
 	public int getDuration() {
 		return duration;
+	}
+
+	public boolean isStackable() {
+		return stackable;
 	}
 
 	public boolean isInstant() {

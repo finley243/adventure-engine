@@ -18,14 +18,19 @@ public class EffectComponent {
     }
 
     public void addEffect(Effect effect) {
-        effect.start(actor);
-        if(!effect.isInstant()) {
-            if(!effects.containsKey(effect)) {
+        if (effect.isInstant()) {
+            effect.start(actor);
+            effect.end(actor);
+        } else {
+            if (!effects.containsKey(effect)) {
                 effects.put(effect, new ArrayList<>());
             }
-            effects.get(effect).add(0);
-        } else {
-            effect.end(actor);
+            if (effect.isStackable() || !effects.get(effect).isEmpty()) {
+                effects.get(effect).add(0);
+                effect.start(actor);
+            } else {
+                effects.get(effect).set(0, 0);
+            }
         }
     }
 
