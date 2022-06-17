@@ -19,13 +19,13 @@
         <skill key="LOCKPICK" value="4"/>
         <skill key="STEALTH" value="4"/>
         <skill key="DODGE" value="4"/>
-        <limb hitChance="0.7" damageMult="2.0" apparelSlot="HEAD">
+        <limb hitChance="0.6" damageMult="2.0" apparelSlot="HEAD">
             <name>head</name>
         </limb>
         <limb hitChance="0.8" damageMult="1.0" apparelSlot="TORSO">
             <name>arm</name>
         </limb>
-        <limb hitChance="0.7" damageMult="0.75" apparelSlot="TORSO">
+        <limb hitChance="0.6" damageMult="0.75" apparelSlot="TORSO">
             <name>hand</name>
             <effect type="trigger" trigger="dropEquippedForce"/>
         </limb>
@@ -35,6 +35,7 @@
     </actor>
     <actor id="player" parent="default" hp="50" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>
+        <skill key="HANDGUNS" value="5"/>
         <inventory>
             <item>pistol_heavy</item>
             <item>katana</item>

@@ -18,8 +18,8 @@ public class CombatHelper {
 		float chance;
 		if (weapon.isRanged()) {
 			chance = MathUtils.chanceLinearSkill(attacker, weapon.getSkill(), HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
-			int distanceFromRange = MathUtils.differenceFromRange(attacker.getArea().getDistanceTo(target.getArea().getID()), weapon.getRangeMin(), weapon.getRangeMax());
-			chance -= RANGE_PENALTY * distanceFromRange;
+			/*int distanceFromRange = MathUtils.differenceFromRange(attacker.getArea().getDistanceTo(target.getArea().getID()), weapon.getRangeMin(), weapon.getRangeMax());
+			chance -= RANGE_PENALTY * distanceFromRange;*/
 		} else {
 			chance = MathUtils.chanceLinearSkillContest(attacker, weapon.getSkill(), target, Actor.Skill.DODGE, 1.0f, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
 		}
