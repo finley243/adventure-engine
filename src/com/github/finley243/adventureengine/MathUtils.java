@@ -71,6 +71,10 @@ public class MathUtils {
         }
     }
 
+    public static boolean isInRange(int value, int min, int max) {
+        return value >= min && value <= max;
+    }
+
     public static <T> T selectRandomFromSet(Set<T> set) {
         return selectRandomFromList(new ArrayList<>(set));
     }

@@ -13,22 +13,25 @@ public class WeaponTemplate extends ItemTemplate {
 	public static final float CRIT_CHANCE = 0.05f;
 
 	public enum WeaponType {
-		PISTOL(true, false, Set.of()),
-		SMG(true, false, Set.of(AttackType.AUTO)),
-		SHOTGUN(true, true, Set.of()),
-		ASSAULT_RIFLE(true, true, Set.of(AttackType.AUTO)),
-		SNIPER_RIFLE(true, true, Set.of()),
-		KNIFE(false, false, Set.of()),
-		SWORD(false, true, Set.of(AttackType.THRUST)),
-		CLUB(false, true, Set.of()),
-		AXE(false, true, Set.of(AttackType.SWEEP));
+		PISTOL(true, false, 0, 3, Set.of()),
+		SMG(true, false, 0, 2, Set.of(AttackType.AUTO)),
+		SHOTGUN(true, true, 1, 2, Set.of()),
+		ASSAULT_RIFLE(true, true, 1, 4, Set.of(AttackType.AUTO)),
+		SNIPER_RIFLE(true, true, 4, 15, Set.of()),
+		KNIFE(false, false, 0, 0, Set.of()),
+		SWORD(false, true, 0, 0, Set.of(AttackType.THRUST)),
+		CLUB(false, true, 0, 0, Set.of()),
+		AXE(false, true, 0, 0, Set.of(AttackType.SWEEP));
 		
 		public final boolean isRanged, isTwoHanded;
+		public final int rangeMin, rangeMax;
 		public final Set<AttackType> attacks;
 		
-		WeaponType(boolean isRanged, boolean isTwoHanded, Set<AttackType> attacks) {
+		WeaponType(boolean isRanged, boolean isTwoHanded, int rangeMin, int rangeMax, Set<AttackType> attacks) {
 			this.isRanged = isRanged;
 			this.isTwoHanded = isTwoHanded;
+			this.rangeMin = rangeMin;
+			this.rangeMax = rangeMax;
 			this.attacks = attacks;
 		}
 	}

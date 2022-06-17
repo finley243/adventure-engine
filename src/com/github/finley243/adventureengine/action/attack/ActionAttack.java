@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Damage;
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandom;
@@ -132,6 +133,14 @@ public abstract class ActionAttack extends ActionRandom {
 
     public abstract String getMissPhrase();
 
+    public int getRangeMin() {
+        return getWeapon().getRangeMin();
+    }
+
+    public int getRangeMax() {
+        return getWeapon().getRangeMax();
+    }
+
     private ActionReaction chooseReaction(Actor subject) {
         List<ActionReaction> reactions = getReactions(subject);
         if(reactions != null && !reactions.isEmpty()) {
@@ -147,7 +156,7 @@ public abstract class ActionAttack extends ActionRandom {
     @Override
     public boolean canChoose(Actor subject) {
         return super.canChoose(subject) &&
-                (getWeapon().isRanged() || subject.getArea() == getTarget().getArea()) &&
+                MathUtils.isInRange(subject.getArea().getDistanceTo(getTarget().getArea().getID()), getRangeMin(), getRangeMax()) &&
                 subject.canSee(getTarget()) &&
                 (getWeapon().getClipSize() == 0 || getWeapon().getAmmoRemaining() >= ammoConsumed());
     }

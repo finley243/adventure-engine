@@ -294,7 +294,8 @@ public class Area extends GameInstanced implements Noun {
 	}
 
 	public int getDistanceTo(String areaID) {
-		if(!linkedAreas.containsKey(areaID)) return -1;
+		if (this.getID().equals(areaID)) return 0;
+		if (!linkedAreas.containsKey(areaID)) return -1;
 		return linkedAreas.get(areaID).getDistance();
 	}
 
