@@ -17,11 +17,6 @@ public class ActionRangedAttackTargeted extends ActionAttack {
 	}
 
 	@Override
-	public String getTelegraphPhrase() {
-		return "rangedTelegraph";
-	}
-
-	@Override
 	public String getHitPhrase() {
 		return "rangedHitLimb";
 	}

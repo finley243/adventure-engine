@@ -16,6 +16,7 @@ public abstract class ActionRandom extends Action {
                 onFail(subject);
             }
         }
+        onEnd(subject);
     }
 
     public String getChanceTag(Actor subject) {
@@ -23,7 +24,11 @@ public abstract class ActionRandom extends Action {
     }
 
     /** If onStart returns false, the action will not process random success (onSuccess/onFail will be skipped) */
-    public abstract boolean onStart(Actor subject);
+    public boolean onStart(Actor subject) {
+        return true;
+    }
+
+    public void onEnd(Actor subject) {}
 
     public abstract void onSuccess(Actor subject);
 

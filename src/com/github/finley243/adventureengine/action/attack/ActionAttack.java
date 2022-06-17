@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,16 +74,9 @@ public abstract class ActionAttack extends ActionRandom {
     @Override
     public boolean onStart(Actor subject) {
         subject.triggerScript("on_attack");
-        if(getTarget().targetingComponent() != null) {
-            getTarget().targetingComponent().addCombatant(subject);
-        }
         if(getWeapon().getClipSize() > 0) {
             getWeapon().consumeAmmo(ammoConsumed());
         }
-        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
-        //if(!CombatHelper.isRepeat(attackContext)) {
-            subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getTelegraphPhrase()), attackContext, this, subject));
-        //}
         this.reaction = chooseReaction(subject);
         this.reactionSuccess = (reaction != null && reaction.computeSuccess(getTarget()));
         if(reaction != null) {
@@ -93,6 +87,13 @@ public abstract class ActionAttack extends ActionRandom {
             }
         }
         return !(reaction != null && reactionSuccess && reaction.cancelsAttack());
+    }
+
+    @Override
+    public void onEnd(Actor subject) {
+        if(getTarget().targetingComponent() != null) {
+            getTarget().targetingComponent().addCombatant(subject);
+        }
     }
 
     @Override
@@ -126,8 +127,6 @@ public abstract class ActionAttack extends ActionRandom {
     public int ammoConsumed() {
         return 1;
     }
-
-    public abstract String getTelegraphPhrase();
 
     public abstract String getHitPhrase();
 

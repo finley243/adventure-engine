@@ -29,11 +29,6 @@ public class ActionRangedAttackAuto extends ActionAttack {
 	}
 
 	@Override
-	public String getTelegraphPhrase() {
-		return "rangedTelegraph";
-	}
-
-	@Override
 	public String getHitPhrase() {
 		return "rangedAutoHit";
 	}

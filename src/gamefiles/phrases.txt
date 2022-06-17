@@ -7,18 +7,16 @@ forceDrop:$_actor drop$s_actor $item and $item lands $area
 eat:$_actor eat$s_actor $item
 equip:$_actor equip$s_actor $item
 exitElevator:$_actor exit$s_actor $elevator
-meleeHit:$weapon hits $target
+meleeHit:$_actor swing$s_actor $weapon at $target and $weapon hit$s_weapon
 meleeMiss:$_actor tr$ies_actor to hit $target with $weapon, but miss$es_actor
-meleeTelegraph:$_actor swing$s_actor $weapon at $target
 moveThrough:$_actor go$es_actor through $exit
 moveToward:$_actor move$s_actor toward $area
 moveTo:$_actor move$s_actor to $area
 moveOnto:$_actor move$s_actor onto $area
 moveCorner:$_actor turn$s_actor around the corner
 pickUp:$_actor grab$s_actor $item
-rangedHit:a bullet hits $target
-rangedMiss:a bullet {whips|flies} past $target
-rangedTelegraph:$_actor fire$s_actor $weapon at $target
+rangedHit:$_actor fire$s_actor $weapon at $target and the bullet hits
+rangedMiss:$_actor fire$s_actor $weapon at $target, but the bullet {whips|flies} past
 reactionBlock:$_actor block$s_actor {$weapon|$attacker's attack}
 reactionDodge:$_actor {jump$s_actor back, avoiding|dodge$s_actor} $attacker's attack
 read:$_actor read$s_actor $object
@@ -42,12 +40,12 @@ dodgeSuccess:$_actor {dodge$s_actor|move$s_actor} {out of the way of|away from} 
 dodgeFail:$_actor tr$ies_actor to dodge $weapon, but $_actor lose$s_actor $actor's balance
 counterSuccess:$_actor slip$s_actor {under|past} $weapon and hit$s_actor $attacker
 counterFail:$_actor {tr$ies_actor|attempt$s_actor} to hit $attacker, but $_actor {$doesn't_actor make it past|$isn't_actor fast enough to avoid} $weapon
-meleeHitLimb:$weapon hits $target in the $limb
-rangedHitLimb:a bullet hits $target in the $limb
-meleeMissLimb:$weapon {{just|barely} misses|{swings|swipes} past} $target's $limb
-rangedMissLimb:a bullet {flies|whips} past $target's $limb
-rangedAutoMiss:a spray of bullets {{flies|whips} past|hits the ground near} $target
-rangedAutoHit:a spray of bullets hits $target
+meleeHitLimb:$_actor swing$s_actor $weapon at $target's $limb and $weapon hit$s_weapon
+rangedHitLimb:$_actor fire$s_actor $weapon at $target's $limb and the bullet hits
+meleeMissLimb:$_actor swing$s_actor $weapon at $target's $limb, but $weapon {{just|barely} misses|{swings|swipes} past}
+rangedMissLimb:$_actor fire$s_actor $weapon at $target's $limb, but the bullet {flies|whips} past
+rangedAutoMiss:$_actor fire$s_actor $weapon at $target but misses, but the spray of bullets {flies|whips} past
+rangedAutoHit:$_actor fire$s_actor $weapon at $target, and the spray of bullets hits
 getUp:$_actor get$s_actor up from $object
 lieDown:$_actor lie$s_actor down in $object
 sleep:after a brief moment, $_actor fall$s_actor asleep
