@@ -159,6 +159,10 @@ public class Data {
 	public Area getArea(String id) {
 		return areas.get(id);
 	}
+
+	public Collection<Area> getAreas() {
+		return areas.values();
+	}
 	
 	public void addRoom(String id, Room value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add room with blank ID");

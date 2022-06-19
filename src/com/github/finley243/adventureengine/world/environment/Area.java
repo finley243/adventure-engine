@@ -8,6 +8,8 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.effect.AreaEffect;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -53,6 +55,8 @@ public class Area extends GameInstanced implements Noun {
 	private final Set<WorldObject> objects;
 	// All actors in this area
 	private final Set<Actor> actors;
+
+	private final Map<AreaEffect, List<Integer>> areaEffects;
 	
 	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game);
@@ -69,6 +73,7 @@ public class Area extends GameInstanced implements Noun {
 		this.objects = new HashSet<>();
 		this.actors = new HashSet<>();
 		this.scripts = scripts;
+		this.areaEffects = new HashMap<>();
 	}
 	
 	public String getID() {
@@ -285,7 +290,7 @@ public class Area extends GameInstanced implements Noun {
 		return visibleAreas;
 	}
 
-	public boolean isVisible(String areaID) {
+	public boolean isVisible(Actor subject, String areaID) {
 		if(!linkedAreas.containsKey(areaID)) {
 			return false;
 		}
@@ -299,14 +304,43 @@ public class Area extends GameInstanced implements Noun {
 		return linkedAreas.get(areaID).getDistance();
 	}
 
-	public Set<Area> visibleAreasInRange(int rangeMin, int rangeMax) {
+	public Set<Area> visibleAreasInRange(Actor subject, int rangeMin, int rangeMax) {
 		Set<Area> areas = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
-			if(isVisible(link.getAreaID()) && getDistanceTo(link.getAreaID()) >= rangeMin && getDistanceTo(link.getAreaID()) <= rangeMax) {
+			if(isVisible(subject, link.getAreaID()) && getDistanceTo(link.getAreaID()) >= rangeMin && getDistanceTo(link.getAreaID()) <= rangeMax) {
 				areas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
 		return areas;
+	}
+
+	public void addAreaEffect(AreaEffect effect) {
+		if (!areaEffects.containsKey(effect)) {
+			areaEffects.put(effect, new ArrayList<>());
+		}
+		areaEffects.get(effect).add(0);
+		// TODO - Start non-actor effects
+		// TODO - Add effect to actors
+	}
+
+	public void updateRound() {
+		Iterator<AreaEffect> itr = areaEffects.keySet().iterator();
+		while (itr.hasNext()) {
+			AreaEffect effect = itr.next();
+			// TODO - Add effect to actors
+			List<Integer> counters = areaEffects.get(effect);
+			for (int i = 0; i < counters.size(); i++) {
+				int counterValue = counters.get(i) + 1;
+				counters.set(i, counterValue);
+				if (counterValue == effect.getDuration()) {
+					// TODO - End non-actor effects
+					counters.remove(0);
+					if (counters.isEmpty()) {
+						itr.remove();
+					}
+				}
+			}
+		}
 	}
 
 	@Override

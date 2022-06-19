@@ -66,6 +66,31 @@ public class Pathfinder {
 		return null;
 	}
 
+	public static Set<Area> areasInRange(Area origin, int range) {
+		Queue<List<Area>> paths = new LinkedList<>();
+		List<Area> startPath = new ArrayList<>();
+		Set<Area> areasInRange = new HashSet<>();
+		startPath.add(origin);
+		paths.add(startPath);
+		areasInRange.add(origin);
+		while(!paths.isEmpty()) {
+			List<Area> currentPath = paths.remove();
+			Area pathEnd = currentPath.get(currentPath.size() - 1);
+			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
+			for(Area linkedArea : linkedAreasGlobal) {
+				if(!areasInRange.contains(linkedArea)) {
+					if(currentPath.size() - 1 < range) {
+						List<Area> linkedPath = new ArrayList<>(currentPath);
+						linkedPath.add(linkedArea);
+						paths.add(linkedPath);
+						areasInRange.add(linkedArea);
+					}
+				}
+			}
+		}
+		return areasInRange;
+	}
+
 	public static Set<Actor> actorsInRange(Area origin, int range, boolean throughExits) {
 		Set<Area> visited = new HashSet<>();
 		Queue<List<Area>> paths = new LinkedList<>();
@@ -88,7 +113,6 @@ public class Pathfinder {
 					}
 				}
 			}
-			Collections.shuffle(linkedAreasGlobal);
 			for(Area linkedArea : linkedAreasGlobal) {
 				if(!visited.contains(linkedArea)) {
 					if(currentPath.size() - 1 < range) {

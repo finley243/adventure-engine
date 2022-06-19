@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.xml.sax.SAXException;
@@ -81,9 +82,9 @@ public class Game {
 	/** Simple game loop that runs nextRound until continueGameLoop is false */
 	private void startGameLoop() {
 		continueGameLoop = true;
-		while(continueGameLoop) {
+		while (continueGameLoop) {
 			nextRound();
-			if(data().getPlayer().isActive()) {
+			if (data().getPlayer().isActive()) {
 				sleep(800);
 			}
 		}
@@ -93,14 +94,17 @@ public class Game {
 	private void nextRound() {
 		eventBus.post(new TextClearEvent());
 		TextGen.clearContext();
+		for (Area area : data().getAreas()) {
+			area.updateRound();
+		}
 		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer());
 		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer());
 		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
-		for(Actor visibleActor : data().getPlayer().getVisibleActors()) {
+		for (Actor visibleActor : data().getPlayer().getVisibleActors()) {
 			visibleActor.triggerScript("on_player_visible_round");
 		}
-		for(Actor actor : data().getActors()) {
-			if(!(actor instanceof ActorPlayer)) {
+		for (Actor actor : data().getActors()) {
+			if (!(actor instanceof ActorPlayer)) {
 				actor.takeTurn();
 			}
 		}

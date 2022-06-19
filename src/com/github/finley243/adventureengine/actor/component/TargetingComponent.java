@@ -26,7 +26,7 @@ public class TargetingComponent {
         }
     }
 
-    private final Actor subject;
+    private final Actor actor;
     // Value is number of turns the actor has been detected
     private final Map<Actor, Integer> detected;
     private final Map<Actor, Combatant> combatants;
@@ -34,8 +34,8 @@ public class TargetingComponent {
     private Actor followTarget;
     private AlertState alertState;
 
-    public TargetingComponent(Actor subject) {
-        this.subject = subject;
+    public TargetingComponent(Actor actor) {
+        this.actor = actor;
         detected = new HashMap<>();
         combatants = new HashMap<>();
         this.alertState = DEFAULT_ALERT_STATE;
@@ -52,7 +52,7 @@ public class TargetingComponent {
 
     // Executed at the beginning of subject's turn
     public void updateTurn() {
-        Set<Actor> visibleActors = subject.getVisibleActors();
+        Set<Actor> visibleActors = actor.getVisibleActors();
         // Remove non-visible actors from detected
         for(Actor actor : detected.keySet()) {
             if(!visibleActors.contains(actor)) {
@@ -66,7 +66,7 @@ public class TargetingComponent {
                 if (detected.containsKey(actor)) {
                     int newValue = detected.get(actor) + 1;
                     if (newValue >= alertState.turnsToDetect) {
-                        subject.triggerScript("on_detect_target");
+                        this.actor.triggerScript("on_detect_target");
                         addCombatant(actor);
                     } else {
                         if(!actor.isDead()) {
@@ -75,12 +75,12 @@ public class TargetingComponent {
                     }
                 } else {
                     if(!actor.isDead()) {
-                        if((subject.getArea().getRoom().getOwnerFaction() != null && subject.game().data().getFaction(subject.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
-                                (subject.getArea().getOwnerFaction() != null && subject.game().data().getFaction(subject.getArea().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
-                            subject.triggerScript("on_notice_target_trespassing");
+                        if((this.actor.getArea().getRoom().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
+                                (this.actor.getArea().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
+                            this.actor.triggerScript("on_notice_target_trespassing");
                             detected.put(actor, 0);
-                        } else if(subject.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
-                            subject.triggerScript("on_notice_target_faction");
+                        } else if(this.actor.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
+                            this.actor.triggerScript("on_notice_target_faction");
                             detected.put(actor, 0);
                         }
                     }
@@ -100,15 +100,15 @@ public class TargetingComponent {
             Combatant combatant = combatants.get(actor);
             if (combatant.areaTarget == null) {
                 combatant.areaTarget = new AreaTarget(idealAreas(combatant.lastKnownArea), 0.0f, true, false, false);
-                subject.addPursueTarget(combatant.areaTarget);
+                this.actor.addPursueTarget(combatant.areaTarget);
             }
-            if (subject.canSee(actor)) {
+            if (this.actor.canSee(actor)) {
                 combatant.lastKnownArea = actor.getArea();
                 combatant.turnsUntilRemove = TURNS_UNTIL_END_COMBAT;
                 combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
-                combatant.areaTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(subject, actor));
-                combatant.areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(subject, actor));
-                combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(subject, actor));
+                combatant.areaTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(this.actor, actor));
+                combatant.areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(this.actor, actor));
+                combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(this.actor, actor));
             } else {
                 combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
                 combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
@@ -119,7 +119,7 @@ public class TargetingComponent {
             }
         }
         if(!startEmpty && combatants.isEmpty()) {
-            subject.triggerScript("on_combat_end");
+            actor.triggerScript("on_combat_end");
         }
     }
 
@@ -131,7 +131,7 @@ public class TargetingComponent {
 
     public void addCombatant(Actor actor) {
         if(combatants.isEmpty()) {
-            subject.triggerScript("on_combat_start");
+            this.actor.triggerScript("on_combat_start");
         }
         detected.remove(actor);
         if(!combatants.containsKey(actor)) {
@@ -161,7 +161,7 @@ public class TargetingComponent {
     }
 
     public Area getLastKnownArea(Actor target) {
-        if(subject.canSee(target)) {
+        if(actor.canSee(target)) {
             return target.getArea();
         } else if(combatants.containsKey(target)) {
             return combatants.get(target).lastKnownArea;
@@ -173,8 +173,8 @@ public class TargetingComponent {
     private Set<Area> idealAreas(Area origin) {
         int idealDistanceMin = 0;
         int idealDistanceMax = 0;
-        if(subject.equipmentComponent().hasEquippedItem()) {
-            ItemWeapon weapon = (ItemWeapon) subject.equipmentComponent().getEquippedItem();
+        if(actor.equipmentComponent().hasEquippedItem()) {
+            ItemWeapon weapon = (ItemWeapon) actor.equipmentComponent().getEquippedItem();
             idealDistanceMin = weapon.getRangeMin();
             idealDistanceMax = weapon.getRangeMax();
         }
@@ -183,14 +183,14 @@ public class TargetingComponent {
             idealAreas.add(origin);
             return idealAreas;
         }
-        Set<Area> idealAreas = origin.visibleAreasInRange(idealDistanceMin, idealDistanceMax);
+        Set<Area> idealAreas = origin.visibleAreasInRange(actor, idealDistanceMin, idealDistanceMax);
         while(idealAreas.isEmpty()) {
             if(idealDistanceMin >= 0) {
                 idealDistanceMin -= 1;
             }
             idealDistanceMax += 1;
-            idealAreas.addAll(origin.visibleAreasInRange(idealDistanceMin, idealDistanceMin));
-            idealAreas.addAll(origin.visibleAreasInRange(idealDistanceMax, idealDistanceMax));
+            idealAreas.addAll(origin.visibleAreasInRange(actor, idealDistanceMin, idealDistanceMin));
+            idealAreas.addAll(origin.visibleAreasInRange(actor, idealDistanceMax, idealDistanceMax));
         }
         return idealAreas;
     }
@@ -200,7 +200,7 @@ public class TargetingComponent {
             for (SaveData subData : data.getValueMulti()) {
                 switch (subData.getParameter()) {
                     case "detected":
-                        detected.put(subject.game().data().getActor(subData.getValueString()), subData.getValueInt());
+                        detected.put(actor.game().data().getActor(subData.getValueString()), subData.getValueInt());
                         break;
                     case "combatant":
                         Actor actor = null;
@@ -208,10 +208,10 @@ public class TargetingComponent {
                         for (SaveData combatantData : subData.getValueMulti()) {
                             switch (combatantData.getParameter()) {
                                 case "actor":
-                                    actor = subject.game().data().getActor(combatantData.getValueString());
+                                    actor = this.actor.game().data().getActor(combatantData.getValueString());
                                     break;
                                 case "lastKnownArea":
-                                    combatant.lastKnownArea = subject.game().data().getArea(combatantData.getValueString());
+                                    combatant.lastKnownArea = this.actor.game().data().getArea(combatantData.getValueString());
                                     break;
                                 case "turnsUntilRemove":
                                     combatant.turnsUntilRemove = combatantData.getValueInt();
