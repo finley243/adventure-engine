@@ -314,25 +314,37 @@ public class Area extends GameInstanced implements Noun {
 		return areas;
 	}
 
-	public void addAreaEffect(AreaEffect effect) {
-		if (!areaEffects.containsKey(effect)) {
-			areaEffects.put(effect, new ArrayList<>());
+	public void addAreaEffect(AreaEffect areaEffect) {
+		if (!areaEffects.containsKey(areaEffect)) {
+			areaEffects.put(areaEffect, new ArrayList<>());
 		}
-		areaEffects.get(effect).add(0);
+		areaEffects.get(areaEffect).add(0);
 		// TODO - Start non-actor effects
-		// TODO - Add effect to actors
+		for (Actor actor : getActors()) {
+			if (actor.effectComponent() != null) {
+				for (Effect effect : areaEffect.getEffects()) {
+					actor.effectComponent().addEffect(effect);
+				}
+			}
+		}
 	}
 
 	public void updateRound() {
 		Iterator<AreaEffect> itr = areaEffects.keySet().iterator();
 		while (itr.hasNext()) {
-			AreaEffect effect = itr.next();
-			// TODO - Add effect to actors
-			List<Integer> counters = areaEffects.get(effect);
+			AreaEffect areaEffect = itr.next();
+			for (Actor actor : getActors()) {
+				if (actor.effectComponent() != null) {
+					for (Effect effect : areaEffect.getEffects()) {
+						actor.effectComponent().addEffect(effect);
+					}
+				}
+			}
+			List<Integer> counters = areaEffects.get(areaEffect);
 			for (int i = 0; i < counters.size(); i++) {
 				int counterValue = counters.get(i) + 1;
 				counters.set(i, counterValue);
-				if (counterValue == effect.getDuration()) {
+				if (counterValue == areaEffect.getDuration()) {
 					// TODO - End non-actor effects
 					counters.remove(0);
 					if (counters.isEmpty()) {

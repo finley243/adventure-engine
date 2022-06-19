@@ -16,4 +16,8 @@ public class AreaEffect {
         return duration;
     }
 
+    public List<Effect> getEffects() {
+        return effects;
+    }
+
 }
