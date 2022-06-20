@@ -7,12 +7,14 @@ import java.util.Set;
 
 public class ModdableStringSet {
 
+    private final Moddable target;
     private final Map<String, Integer> additional;
     private final Map<String, Integer> cancellation;
 
-    public ModdableStringSet() {
-        additional = new HashMap<>();
-        cancellation = new HashMap<>();
+    public ModdableStringSet(Moddable target) {
+        this.target = target;
+        this.additional = new HashMap<>();
+        this.cancellation = new HashMap<>();
     }
 
     public Set<String> value(Set<String> base) {
@@ -31,6 +33,7 @@ public class ModdableStringSet {
                 additional.put(value, count + 1);
             }
         }
+        target.onStatChange();
     }
 
     public void removeAdditional(Set<String> values) {
@@ -44,6 +47,7 @@ public class ModdableStringSet {
                 }
             }
         }
+        target.onStatChange();
     }
 
     public void addCancellation(Set<String> values) {
@@ -55,6 +59,7 @@ public class ModdableStringSet {
                 cancellation.put(value, count + 1);
             }
         }
+        target.onStatChange();
     }
 
     public void removeCancellation(Set<String> values) {
@@ -68,6 +73,7 @@ public class ModdableStringSet {
                 }
             }
         }
+        target.onStatChange();
     }
 
 }
