@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.effect.moddable.Moddable;
 
 public class EffectTrigger extends Effect {
 
@@ -12,17 +12,17 @@ public class EffectTrigger extends Effect {
     }
 
     @Override
-    public void start(Actor target) {
+    public void start(Moddable target) {
         target.triggerEffect(trigger);
     }
 
     @Override
-    public void end(Actor target) {
+    public void end(Moddable target) {
 
     }
 
     @Override
-    public void eachTurn(Actor target) {
+    public void eachTurn(Moddable target) {
         target.triggerEffect(trigger);
     }
 
