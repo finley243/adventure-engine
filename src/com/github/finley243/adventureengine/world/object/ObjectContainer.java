@@ -21,13 +21,15 @@ public class ObjectContainer extends WorldObject {
 	private final Inventory inventory;
 	private final LootTable lootTable;
 	private final Lock lock;
+	private final boolean isOpen;
 	private boolean hasSearched;
 
-	public ObjectContainer(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, LootTable lootTable, Lock lock) {
+	public ObjectContainer(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, LootTable lootTable, Lock lock, boolean isOpen) {
 		super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions);
 		this.inventory = new Inventory(game, null);
 		this.lootTable = lootTable;
 		this.lock = lock;
+		this.isOpen = isOpen;
 		this.hasSearched = false;
 	}
 
@@ -48,7 +50,7 @@ public class ObjectContainer extends WorldObject {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
-		if ((!subject.isPlayer() || hasSearched) && !isLocked()) {
+		if ((!subject.isPlayer() || isOpen || hasSearched) && !isLocked()) {
 			actions.addAll(inventory.getExternalActions(this, subject));
 		} else {
 			actions.add(new ActionContainerSearch(this));

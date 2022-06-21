@@ -147,9 +147,7 @@
             <object type="bed" id="stratis_hotel_room_bed">
                 <name>bed</name>
             </object>
-            <object type="item" id="stratis_hotel_room_baseball_bat">
-                <item>baseball_bat</item>
-            </object>
+            <object type="item" id="stratis_hotel_room_baseball_bat" item="baseball_bat"/>
         </area>
     </room>
     <room id="stratis_hotel_security">

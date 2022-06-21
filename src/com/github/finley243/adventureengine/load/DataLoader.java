@@ -635,9 +635,9 @@ public class DataLoader {
                 return new ObjectDoor(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, doorLink, doorLock);
             case "elevator":
                 Element floorElement = LoadUtils.singleChildWithName(objectElement, "floor");
-                int floorNumber = LoadUtils.singleTagInt(floorElement, "number", 1);
+                int floorNumber = LoadUtils.attributeInt(floorElement, "number", 1);
                 String floorName = floorElement.getTextContent();
-                boolean elevatorStartLocked = LoadUtils.singleTagBoolean(objectElement, "startLocked", false);
+                boolean elevatorStartLocked = LoadUtils.attributeBool(objectElement, "startLocked", false);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(objectElement, "link");
                 return new ObjectElevator(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
             case "sign":
@@ -653,13 +653,14 @@ public class DataLoader {
                 List<String> vendingItems = LoadUtils.listOfTags(objectElement, "item");
                 return new ObjectVendingMachine(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, vendingItems);
             case "item":
-                String itemID = LoadUtils.singleTag(objectElement, "item", null);
-                int itemCount = LoadUtils.singleTagInt(objectElement, "count", 1);
+                String itemID = LoadUtils.attribute(objectElement, "item", null);
+                int itemCount = LoadUtils.attributeInt(objectElement, "count", 1);
                 return new ObjectItem(game, id, area, ItemFactory.create(game, itemID), itemCount);
             case "container":
                 LootTable containerLootTable = loadLootTable(LoadUtils.singleChildWithName(objectElement, "inventory"), true);
                 Lock containerLock = loadLock(objectElement, id);
-                return new ObjectContainer(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, containerLootTable, containerLock);
+                boolean containerIsOpen = LoadUtils.attributeBool(objectElement, "open", false);
+                return new ObjectContainer(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, containerLootTable, containerLock, containerIsOpen);
             case "basic":
                 return new ObjectBasic(game, id, area, name, description, startDisabled, startHidden, scripts, customActions);
         }
