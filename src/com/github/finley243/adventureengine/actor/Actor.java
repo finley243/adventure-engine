@@ -769,12 +769,16 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	@Override
 	public void modifyState(String name, int amount) {
-		if (name.equals("hp")) {
-			if (amount > 0) {
+		switch (name) {
+			case "heal":
 				heal(amount);
-			} else if (amount < 0) {
-				damageDirect(new Damage(Damage.DamageType.PHYSICAL, -amount, 0.0f));
-			}
+				break;
+			case "damage":
+				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, 1.0f));
+				break;
+			case "damageIgnoreArmor":
+				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, 0.0f));
+				break;
 		}
 	}
 

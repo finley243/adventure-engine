@@ -1,7 +1,7 @@
 <data>
     <item type="consumable" id="nitron_cola" price="10" consumableType="DRINK">
         <name>Nitron Cola</name>
-        <effect type="state" state="hp" amount="10"/>
+        <effect type="state" state="heal" amount="10"/>
     </item>
     <item type="consumable" id="nitron_diet" price="10" consumableType="DRINK">
         <name>Nitron Sharpshooter</name>
