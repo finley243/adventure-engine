@@ -9,7 +9,7 @@ import java.util.List;
 public class ActorFactory {
 	
 	public static Actor create(Game gameInstance, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean startDead, boolean startDisabled) {
-		return new Actor(gameInstance, ID, area, stats, descriptor, behaviors, startDead, startDisabled);
+		return new Actor(gameInstance, ID, area, stats, descriptor, behaviors, startDead, startDisabled, false);
 	}
 	
 	public static ActorPlayer createPlayer(Game gameInstance, String ID, Area area, ActorTemplate stats) {

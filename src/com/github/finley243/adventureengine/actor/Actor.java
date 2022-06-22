@@ -87,6 +87,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final Map<Action, Integer> blockedActions;
 	private final EnumMap<Attribute, ModdableStatInt> attributes;
 	private final EnumMap<Skill, ModdableStatInt> skills;
+	private ActionComponent actionComponent;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final ApparelComponent apparelComponent;
@@ -100,7 +101,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final InvestigateTarget investigateTarget;
 	private int sleepCounter;
 
-	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean startDead, boolean startDisabled) {
+	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControl) {
 		super(game);
 		this.ID = ID;
 		this.defaultArea = area;
@@ -138,6 +139,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		this.blockedActions = new HashMap<>();
 		this.startDisabled = startDisabled;
 		setEnabled(!startDisabled);
+		if (playerControl) {
+			this.actionComponent = new ActionComponentPlayer(this);
+		} else {
+			this.actionComponent = new ActionComponentUtility(this);
+		}
 	}
 
 	public void newGameInit() {
@@ -621,51 +627,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public Action chooseAction(List<Action> actions) {
-		int chaos = 1;
-		List<List<Action>> bestActions = new ArrayList<>(chaos + 1);
-		List<Float> maxWeights = new ArrayList<>(chaos + 1);
-		for(int i = 0; i < chaos + 1; i++) {
-			bestActions.add(new ArrayList<>());
-			maxWeights.add(0.0f);
-		}
-		for(Action currentAction : actions) {
-			if(currentAction.canChoose(this)) {
-				float currentWeight = currentAction.utility(this);
-				float behaviorOverride = behaviorComponent().actionUtilityOverride(currentAction);
-				if(behaviorOverride >= 0.0f) {
-					currentWeight = behaviorOverride;
-				}
-				if(currentWeight != 0) {
-					for (int i = 0; i < chaos + 1; i++) {
-						if (currentWeight == maxWeights.get(i)) {
-							bestActions.get(i).add(currentAction);
-							break;
-						} else if (currentWeight > maxWeights.get(i)) {
-							maxWeights.remove(maxWeights.size() - 1);
-							maxWeights.add(i, currentWeight);
-							bestActions.remove(bestActions.size() - 1);
-							bestActions.add(i, new ArrayList<>());
-							bestActions.get(i).add(currentAction);
-							break;
-						}
-					}
-				}
-			}
-		}
-		float weightSum = 0.0f;
-		for(float weight : maxWeights) {
-			weightSum += weight;
-		}
-		float partialWeightSum = 0.0f;
-		float random = ThreadLocalRandom.current().nextFloat();
-		for(int i = 0; i < chaos + 1; i++) {
-			if(random < partialWeightSum + (maxWeights.get(i) / weightSum)) {
-				return bestActions.get(i).get(ThreadLocalRandom.current().nextInt(bestActions.get(i).size()));
-			} else {
-				partialWeightSum += (maxWeights.get(i) / weightSum);
-			}
-		}
-		return null;
+		return actionComponent.chooseAction(actions);
 	}
 	
 	private void updatePursueTargets() {

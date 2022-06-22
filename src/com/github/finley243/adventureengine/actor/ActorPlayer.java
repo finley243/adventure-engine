@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import java.util.*;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.actor.component.ActionComponent;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
@@ -16,12 +17,8 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActorPlayer extends Actor {
 
-	private final MenuManager menuManager;
-	
 	public ActorPlayer(Game gameInstance, String ID, Area area, ActorTemplate stats) {
-		super(gameInstance, ID, area, stats, null, null, false, false);
-		this.menuManager = new MenuManager();
-		game().eventBus().register(menuManager);
+		super(gameInstance, ID, area, stats, null, null, false, false, true);
 	}
 
 	@Override
@@ -77,11 +74,6 @@ public class ActorPlayer extends Actor {
 	public void kill() {
 		super.kill();
 		game().eventBus().post(new PlayerDeathEvent());
-	}
-	
-	@Override
-	public Action chooseAction(List<Action> actions) {
-		return menuManager.actionMenu(actions, this);
 	}
 	
 	public void startDialogue(Actor subject, String startTopic) {
