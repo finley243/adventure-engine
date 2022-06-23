@@ -60,7 +60,8 @@ public class ActorTemplate {
 	public String getID() {
 		return ID;
 	}
-	
+
+	// TODO - Find a better way to inherit values from parent
 	public String getName(Game game) {
 		return name != null ? name : game.data().getActorTemplate(parentID).getName(game);
 	}

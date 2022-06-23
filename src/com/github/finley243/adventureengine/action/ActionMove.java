@@ -6,6 +6,11 @@ import com.github.finley243.adventureengine.world.environment.Area;
 public abstract class ActionMove extends Action {
 
     @Override
+    public boolean canChoose(Actor subject) {
+        return super.canChoose(subject) && subject.canMove();
+    }
+
+    @Override
     public int repeatCount(Actor subject) {
         return Actor.MOVES_PER_TURN;
     }
