@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.item;
 
+import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionApparelEquip;
@@ -30,8 +31,8 @@ public class ItemApparel extends Item {
 		return stats.getSlot();
 	}
 
-	public int getDamageResistance() {
-		return stats.getDamageResistance();
+	public int getDamageResistance(Damage.DamageType type) {
+		return stats.getDamageResistance(type);
 	}
 
 	@Override

@@ -2,12 +2,12 @@
     <item type="apparel" id="tactical_vest" price="40">
         <name>tactical vest</name>
         <slot>TORSO</slot>
-        <damageResistance>5</damageResistance>
+        <damageResist type="physical" amount="5"/>
     </item>
     <item type="apparel" id="tactical_helmet" price="30">
         <name>tactical helmet</name>
         <slot>HEAD</slot>
-        <damageResistance>5</damageResistance>
+        <damageResist type="physical" amount="5"/>
         <effect type="mod" stat="maxHP" amount="10"/>
     </item>
 </data>

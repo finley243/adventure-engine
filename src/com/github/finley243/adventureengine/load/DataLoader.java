@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
@@ -425,7 +426,12 @@ public class DataLoader {
         switch(type) {
             case "apparel":
                 ApparelComponent.ApparelSlot apparelSlot = LoadUtils.singleTagEnum(itemElement, "slot", ApparelComponent.ApparelSlot.class, ApparelComponent.ApparelSlot.TORSO);
-                int damageResistance = LoadUtils.singleTagInt(itemElement, "damageResistance", 0);
+                Map<Damage.DamageType, Integer> damageResistance = new HashMap<>();
+                for (Element damageResistElement : LoadUtils.directChildrenWithName(itemElement, "damageResist")) {
+                    Damage.DamageType damageResistType = LoadUtils.attributeEnum(damageResistElement, "type", Damage.DamageType.class, Damage.DamageType.PHYSICAL);
+                    int amount = LoadUtils.attributeInt(damageResistElement, "amount", 0);
+                    damageResistance.putIfAbsent(damageResistType, amount);
+                }
                 List<Effect> apparelEffects = loadEffects(itemElement, true);
                 return new ApparelTemplate(id, name, description, scripts, price, apparelSlot, damageResistance, apparelEffects);
             case "consumable":

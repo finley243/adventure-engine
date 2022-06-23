@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.item.template;
 
+import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.effect.Effect;
@@ -14,10 +15,10 @@ import java.util.Set;
 public class ApparelTemplate extends ItemTemplate {
 	
 	private final ApparelComponent.ApparelSlot slot;
-	private final int damageResistance;
+	private final Map<Damage.DamageType, Integer> damageResistance;
 	private final List<Effect> effects;
 	
-	public ApparelTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, ApparelComponent.ApparelSlot slot, int damageResistance, List<Effect> effects) {
+	public ApparelTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, ApparelComponent.ApparelSlot slot, Map<Damage.DamageType, Integer> damageResistance, List<Effect> effects) {
 		super(ID, name, description, scripts, price);
 		this.slot = slot;
 		this.damageResistance = damageResistance;
@@ -33,8 +34,8 @@ public class ApparelTemplate extends ItemTemplate {
 		return slot;
 	}
 
-	public int getDamageResistance() {
-		return damageResistance;
+	public int getDamageResistance(Damage.DamageType type) {
+		return damageResistance.getOrDefault(type, 0);
 	}
 
 	public List<Effect> getEffects() {

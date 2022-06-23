@@ -361,7 +361,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	private void damageDirect(Damage damage) {
 		int amount = damage.getAmount();
-		amount -= apparelComponent.getDamageResistance(ApparelComponent.ApparelSlot.TORSO) * damage.getArmorMult();
+		amount -= apparelComponent.getDamageResistance(ApparelComponent.ApparelSlot.TORSO, damage.getType()) * damage.getArmorMult();
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;
@@ -378,7 +378,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	private void damageLimb(Damage damage, Limb limb) {
 		int amount = damage.getAmount();
-		amount -= apparelComponent.getDamageResistance(limb.getApparelSlot()) * damage.getArmorMult();
+		amount -= apparelComponent.getDamageResistance(limb.getApparelSlot(), damage.getType()) * damage.getArmorMult();
 		if(amount < 0) amount = 0;
 		if(amount > 0) {
 			limb.applyEffects(this);

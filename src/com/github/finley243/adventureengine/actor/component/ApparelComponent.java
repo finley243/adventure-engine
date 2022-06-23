@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.component;
 
+import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.ItemApparel;
 import com.github.finley243.adventureengine.item.template.ApparelTemplate;
@@ -20,9 +21,9 @@ public class ApparelComponent {
         this.actor = actor;
     }
 
-    public int getDamageResistance(ApparelSlot slot) {
+    public int getDamageResistance(ApparelSlot slot, Damage.DamageType type) {
         if(isSlotEmpty(slot)) return 0;
-        return equipped.get(slot).getDamageResistance();
+        return equipped.get(slot).getDamageResistance(type);
     }
 
     public boolean isSlotEmpty(ApparelSlot slot) {

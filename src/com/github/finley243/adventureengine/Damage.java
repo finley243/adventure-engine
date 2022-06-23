@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine;
 public class Damage {
 
     public enum DamageType {
-        PHYSICAL, THERMAL, CHEMICAL
+        PHYSICAL, THERMAL, CHEMICAL, EXPLOSIVE
     }
 
     private final DamageType type;
