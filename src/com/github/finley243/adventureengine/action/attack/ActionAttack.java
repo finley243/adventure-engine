@@ -191,6 +191,11 @@ public abstract class ActionAttack extends ActionRandom {
     }
 
     @Override
+    public boolean isRepeatMatch(Action action) {
+        return action instanceof ActionAttack && action.getClass().equals(this.getClass()) && ((ActionAttack) action).getWeapon() == this.getWeapon();
+    }
+
+    @Override
     public float utility(Actor subject) {
         if (subject.targetingComponent() != null && subject.targetingComponent().isCombatant(getTarget())) return 0.8f;
         return 0.0f;
