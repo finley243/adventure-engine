@@ -73,7 +73,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	private final ActorTemplate template;
 	private final String ID;
-	private final String descriptor;
 	// If isKnown = true, use definite article, else use indefinite article
 	private boolean isKnown;
 	private final Area defaultArea;
@@ -105,13 +104,12 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private int sleepCounter;
 	private boolean playerControlled;
 
-	public Actor(Game game, String ID, Area area, ActorTemplate template, String descriptor, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControlled) {
+	public Actor(Game game, String ID, Area area, ActorTemplate template, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControlled) {
 		super(game);
 		this.ID = ID;
 		this.defaultArea = area;
 		this.area = area;
 		this.template = template;
-		this.descriptor = descriptor;
 		this.targetingComponent = new TargetingComponent(this);
 		this.areaTargets = new HashSet<>();
 		this.investigateTarget = new InvestigateTarget();
@@ -165,7 +163,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	
 	@Override
 	public String getName() {
-		return (descriptor != null ? descriptor + " " : "") + template.getName(game());
+		return template.getName(game());
 	}
 
 	@Override

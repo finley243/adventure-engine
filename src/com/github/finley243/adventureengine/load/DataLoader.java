@@ -694,11 +694,10 @@ public class DataLoader {
         if(actorElement == null) return null;
         String ID = actorElement.getAttribute("id");
         String template = LoadUtils.attribute(actorElement, "template", null);
-        String descriptor = LoadUtils.singleTag(actorElement, "descriptor", null);
         List<Behavior> behaviors = loadBehaviors(LoadUtils.singleChildWithName(actorElement, "behaviors"));
         boolean startDead = LoadUtils.attributeBool(actorElement, "startDead", false);
         boolean startDisabled = LoadUtils.attributeBool(actorElement, "startDisabled", false);
-        return ActorFactory.create(game, ID, area, game.data().getActorTemplate(template), descriptor, behaviors, startDead, startDisabled);
+        return ActorFactory.create(game, ID, area, game.data().getActorTemplate(template), behaviors, startDead, startDisabled);
     }
 
     private static List<Behavior> loadBehaviors(Element behaviorsElement) throws ParserConfigurationException, IOException, SAXException {
