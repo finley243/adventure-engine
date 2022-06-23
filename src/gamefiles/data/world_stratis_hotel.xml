@@ -78,7 +78,7 @@
             <link area="stratis_hotel_lobby_seating"/>
             <object type="elevator" id="stratis_hotel_elevator_lobby">
                 <name>elevator</name>
-                <floor>Lobby</floor>
+                <floor number="1">Lobby</floor>
                 <link>stratis_hotel_elevator_corridor</link>
             </object>
             <object type="basic" id="stratis_hotel_lobby_sign_navigation">
@@ -109,7 +109,7 @@
             <link area="stratis_hotel_corridor_main"/>
             <object type="elevator" id="stratis_hotel_elevator_corridor">
                 <name>elevator</name>
-                <floor>Guest Rooms</floor>
+                <floor number="5">Guest Rooms</floor>
                 <link>stratis_hotel_elevator_lobby</link>
             </object>
             <object type="vendingMachine" id="stratis_hotel_vending_machine">
