@@ -21,7 +21,7 @@ public class ActionVendingMachineBuy extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		Item item = ItemFactory.create(subject.game(), itemID);
 		subject.adjustMoney(-item.getTemplate().getPrice());
 		subject.inventory().addItem(item);
@@ -31,7 +31,7 @@ public class ActionVendingMachineBuy extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && subject.getMoney() >= subject.game().data().getItem(itemID).getPrice();
+		return super.canChoose(subject) && subject.getMoney() >= subject.game().data().getItem(itemID).getPrice();
 	}
 	
 	@Override

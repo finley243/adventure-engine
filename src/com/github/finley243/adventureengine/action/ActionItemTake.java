@@ -19,7 +19,7 @@ public class ActionItemTake extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		Item item = Item.objectToItem(subject.game(), objectItem, 1);
 		subject.inventory().addItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", objectItem).build());

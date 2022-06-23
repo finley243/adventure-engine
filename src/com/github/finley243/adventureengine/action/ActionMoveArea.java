@@ -26,7 +26,7 @@ public class ActionMoveArea extends ActionMove {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		Area lastArea = subject.getArea();
 		Noun moveLocation;
 		if (!area.getRoom().equals(subject.getArea().getRoom())) {

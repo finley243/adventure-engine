@@ -21,7 +21,7 @@ public class ActionWeaponReload extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.triggerScript("on_reload");
 		if(subject == subject.game().data().getPlayer()) {
 			int ammoInInventory = subject.inventory().itemCount(weapon.getAmmoType());
@@ -42,7 +42,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && weapon.getAmmoFraction() < 1.0f && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(weapon.getAmmoType()));
+		return super.canChoose(subject) && weapon.getAmmoFraction() < 1.0f && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(weapon.getAmmoType()));
 	}
 
 	@Override

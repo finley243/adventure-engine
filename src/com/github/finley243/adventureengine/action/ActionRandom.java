@@ -7,16 +7,16 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class ActionRandom extends Action {
 
     @Override
-    public void choose(Actor subject) {
-        boolean continueAfterStart = onStart(subject);
+    public void choose(Actor subject, int repeatActionCount) {
+        boolean continueAfterStart = onStart(subject, repeatActionCount);
         if(continueAfterStart) {
             if (ThreadLocalRandom.current().nextFloat() < chance(subject)) {
-                onSuccess(subject);
+                onSuccess(subject, repeatActionCount);
             } else {
-                onFail(subject);
+                onFail(subject, repeatActionCount);
             }
         }
-        onEnd(subject);
+        onEnd(subject, repeatActionCount);
     }
 
     public String getChanceTag(Actor subject) {
@@ -24,15 +24,15 @@ public abstract class ActionRandom extends Action {
     }
 
     /** If onStart returns false, the action will not process random success (onSuccess/onFail will be skipped) */
-    public boolean onStart(Actor subject) {
+    public boolean onStart(Actor subject, int repeatActionCount) {
         return true;
     }
 
-    public void onEnd(Actor subject) {}
+    public void onEnd(Actor subject, int repeatActionCount) {}
 
-    public abstract void onSuccess(Actor subject);
+    public abstract void onSuccess(Actor subject, int repeatActionCount);
 
-    public abstract void onFail(Actor subject);
+    public abstract void onFail(Actor subject, int repeatActionCount);
 
     public abstract float chance(Actor subject);
 

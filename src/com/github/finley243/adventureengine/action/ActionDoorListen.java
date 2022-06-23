@@ -14,7 +14,7 @@ public class ActionDoorListen extends Action {
 	}
 
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		String text = "";
 		int actorCount = 0;
 		for (Actor actor : exit.getLinkedArea().getRoom().getActors()) {

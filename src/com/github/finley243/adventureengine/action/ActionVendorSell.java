@@ -25,7 +25,7 @@ public class ActionVendorSell extends Action {
     }
 
     @Override
-    public void choose(Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         subject.inventory().removeItem(item);
         subject.adjustMoney(price);
         vendorInventory.addItem(item);

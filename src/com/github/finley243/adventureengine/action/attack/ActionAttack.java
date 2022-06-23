@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.MathUtils;
-import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandom;
@@ -90,7 +89,8 @@ public abstract class ActionAttack extends ActionRandom {
     }
 
     @Override
-    public boolean onStart(Actor subject) {
+    public boolean onStart(Actor subject, int repeatActionCount) {
+        System.out.println("Attack action - repeat count: " + repeatActionCount);
         subject.triggerScript("on_attack");
         if(getWeapon().getClipSize() > 0) {
             getWeapon().consumeAmmo(ammoConsumed());
@@ -108,14 +108,14 @@ public abstract class ActionAttack extends ActionRandom {
     }
 
     @Override
-    public void onEnd(Actor subject) {
+    public void onEnd(Actor subject, int repeatActionCount) {
         if(getTarget().targetingComponent() != null) {
             getTarget().targetingComponent().addCombatant(subject);
         }
     }
 
     @Override
-    public void onSuccess(Actor subject) {
+    public void onSuccess(Actor subject, int repeatActionCount) {
         int damage = damage();
         if(ThreadLocalRandom.current().nextFloat() < WeaponTemplate.CRIT_CHANCE) {
             // No indication of critical hit to player, only damage increase
@@ -136,7 +136,7 @@ public abstract class ActionAttack extends ActionRandom {
     }
 
     @Override
-    public void onFail(Actor subject) {
+    public void onFail(Actor subject, int repeatActionCount) {
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase()), attackContext, this, subject));
         subject.triggerEffect("on_attack_failure");

@@ -17,7 +17,7 @@ public class ActionContainerSearch extends Action {
     }
 
     @Override
-    public void choose(Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         container.search();
         Context context = new Context(new NounMapper().put("actor", subject).put("container", container).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("searchContainer"), context, this, subject));

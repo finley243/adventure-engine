@@ -34,7 +34,7 @@ public class ActionMoveElevator extends ActionMove {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		Area lastArea = subject.getArea();
 		Context context = new Context(new NounMapper().put("actor", subject).put("elevator", elevator).build());
 		String takeElevatorPhrase;

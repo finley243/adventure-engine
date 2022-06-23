@@ -25,7 +25,7 @@ public class ActionVendorBuy extends Action {
     }
 
     @Override
-    public void choose(Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         vendorInventory.removeItem(item);
         subject.adjustMoney(-price);
         subject.inventory().addItem(item);
@@ -35,7 +35,7 @@ public class ActionVendorBuy extends Action {
 
     @Override
     public boolean canChoose(Actor subject) {
-        return !disabled && subject.getMoney() >= item.getTemplate().getPrice();
+        return super.canChoose(subject) && subject.getMoney() >= item.getTemplate().getPrice();
     }
 
     @Override

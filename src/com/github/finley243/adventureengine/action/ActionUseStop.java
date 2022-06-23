@@ -21,7 +21,7 @@ public class ActionUseStop extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		if (object.userInCover()) {
 			subject.triggerScript("on_leave_cover");
 		}

@@ -12,13 +12,13 @@ public class ActionTalk extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.game().menuManager().dialogueMenu(target, target.getTopicID());
 	}
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && subject.isPlayer() && !target.isInCombat() && subject.game().data().getTopic(target.getTopicID()).canChoose(target);
+		return super.canChoose(subject) && subject.isPlayer() && !target.isInCombat() && subject.game().data().getTopic(target.getTopicID()).canChoose(target);
 	}
 	
 	@Override

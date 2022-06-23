@@ -17,7 +17,7 @@ public abstract class ActionReaction extends Action {
     }
 
     @Override
-    public void choose(Actor subject) {}
+    public void choose(Actor subject, int repeatActionCount) {}
 
     public float getDamageMultOnSuccess() {
         return 0.0f;

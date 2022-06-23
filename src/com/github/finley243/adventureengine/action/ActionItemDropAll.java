@@ -18,7 +18,7 @@ public class ActionItemDropAll extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		int count = subject.inventory().itemCount(item);
 		subject.inventory().removeItems(item, count);
 		Item.itemToObject(subject.game(), item, count, subject.getArea());

@@ -14,7 +14,7 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public void choose(Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         if (area.getRoom().getDescription() != null) {
             SceneManager.trigger(subject.game(), subject, area.getRoom().getDescription());
             area.getRoom().setKnown();

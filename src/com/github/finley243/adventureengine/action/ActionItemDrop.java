@@ -17,7 +17,7 @@ public class ActionItemDrop extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.inventory().removeItem(item);
 		Item.itemToObject(subject.game(), item, 1, subject.getArea());
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());

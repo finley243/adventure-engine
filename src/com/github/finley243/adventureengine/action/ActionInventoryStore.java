@@ -23,7 +23,7 @@ public class ActionInventoryStore extends Action {
     }
 
     @Override
-    public void choose(Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         subject.inventory().removeItem(item);
         inventory.addItem(item);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("inventory", owner).build());

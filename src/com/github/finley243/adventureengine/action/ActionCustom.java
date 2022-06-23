@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionCustom extends Action {
 
@@ -24,7 +23,7 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public void choose(Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         subject.game().eventBus().post(new RenderTextEvent(description));
         if(script != null) {
             script.execute(subject);

@@ -88,7 +88,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final ModdableStatInt actionPoints;
 	private int actionPointsUsed;
 	private final Map<Action, Integer> blockedActions;
-	private Action lastAction;
 	private final EnumMap<Attribute, ModdableStatInt> attributes;
 	private final EnumMap<Skill, ModdableStatInt> skills;
 	private final EffectComponent effectComponent;
@@ -608,56 +607,63 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public void takeTurn() {
-		if(!isEnabled() || isDead()) return;
-		if(isSleeping()) {
+		if (!isEnabled() || isDead()) return;
+		if (isSleeping()) {
 			updateSleep();
 			return;
 		}
-		if(effectComponent() != null) {
+		if (effectComponent() != null) {
 			effectComponent().onStartTurn();
 		}
-		if(targetingComponent() != null) {
+		if (targetingComponent() != null) {
 			targetingComponent().updateTurn();
 		}
 		investigateTarget.nextTurn(this);
-		if(behaviorComponent() != null) {
+		if (behaviorComponent() != null) {
 			behaviorComponent().update();
 		}
 		this.actionPointsUsed = 0;
 		this.blockedActions.clear();
 		this.endTurn = false;
-		while(!endTurn) {
+		Action lastAction = null;
+		int repeatActionCount = 0;
+		while (!endTurn) {
 			updatePursueTargets();
 			targetingComponent().update();
 			investigateTarget.update(this);
 			List<Action> availableActions = availableActions();
-			for(Action action : availableActions) {
-				if(getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
+			for (Action action : availableActions) {
+				if (getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
 					action.disable();
 				}
 			}
 			Action chosenAction = chooseAction(availableActions);
 			actionPointsUsed += chosenAction.actionPoints(this);
 			boolean actionIsBlocked = false;
-			for(Action repeatAction : blockedActions.keySet()) {
-				if(repeatAction.isRepeatMatch(chosenAction)) {
+			for (Action repeatAction : blockedActions.keySet()) {
+				if (repeatAction.isRepeatMatch(chosenAction)) {
 					int countRemaining = blockedActions.get(repeatAction) - 1;
 					blockedActions.put(repeatAction, countRemaining);
 					actionIsBlocked = true;
 					break;
 				}
 			}
-			if(!actionIsBlocked && chosenAction.repeatCount(this) > 0) {
+			if (!actionIsBlocked && chosenAction.repeatCount(this) > 0) {
 				blockedActions.put(chosenAction, chosenAction.repeatCount(this) - 1);
 			}
-			chosenAction.choose(this);
+			if (lastAction != null && chosenAction.isRepeatMatch(lastAction)) {
+				repeatActionCount += 1;
+			} else {
+				repeatActionCount = 0;
+			}
+			chosenAction.choose(this, repeatActionCount);
+			lastAction = chosenAction;
 		}
 	}
 	
 	public void endTurn() {
 		// May cause issues
 		actionPointsUsed = 0;
-		lastAction = null;
 		endTurn = true;
 	}
 	

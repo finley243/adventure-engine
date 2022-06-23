@@ -28,7 +28,7 @@ public class ActionMoveDoor extends ActionMove {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		Area lastArea = subject.getArea();
 		Area area = door.getLinkedArea();
 		Context context = new Context(new NounMapper().put("actor", subject).put("exit", door).put("room", area.getRoom()).build());

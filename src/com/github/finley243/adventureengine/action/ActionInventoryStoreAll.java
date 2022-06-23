@@ -21,7 +21,7 @@ public class ActionInventoryStoreAll extends Action {
     }
 
     @Override
-    public void choose(Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         int count = subject.inventory().itemCount(item);
         subject.inventory().removeItems(item, count);
         inventory.addItems(item, count);

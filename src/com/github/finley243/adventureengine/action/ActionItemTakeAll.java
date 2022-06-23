@@ -20,7 +20,7 @@ public class ActionItemTakeAll extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		int count = objectItem.getCount();
 		Item item = Item.objectToItem(subject.game(), objectItem, count);
 		subject.inventory().addItems(item, count);

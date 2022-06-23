@@ -18,7 +18,7 @@ public class ActionItemConsume extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.inventory().removeItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
 		String phrase;

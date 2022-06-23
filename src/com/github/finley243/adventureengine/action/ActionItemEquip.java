@@ -21,7 +21,7 @@ public class ActionItemEquip extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.equipmentComponent().equip(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, this, subject));
@@ -29,7 +29,7 @@ public class ActionItemEquip extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && !subject.equipmentComponent().hasEquippedItem();
+		return super.canChoose(subject) && !subject.equipmentComponent().hasEquippedItem();
 	}
 
 	@Override

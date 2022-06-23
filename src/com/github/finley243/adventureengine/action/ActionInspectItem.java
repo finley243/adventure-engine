@@ -14,7 +14,7 @@ public class ActionInspectItem extends Action {
     }
 
     @Override
-    public void choose(Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         SceneManager.trigger(subject.game(), subject, item.getDescription());
         item.triggerScript("on_inspect", subject);
     }

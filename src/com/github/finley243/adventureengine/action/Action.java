@@ -8,9 +8,9 @@ import com.github.finley243.adventureengine.menu.MenuData;
  */
 public abstract class Action {
 
-	protected boolean disabled;
+	private boolean disabled;
 
-	public abstract void choose(Actor subject);
+	public abstract void choose(Actor subject, int repeatActionCount);
 
 	public abstract MenuData getMenuData(Actor subject);
 
