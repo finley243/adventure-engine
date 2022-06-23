@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.MathUtils;
+import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandom;
@@ -15,7 +16,6 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,13 +26,31 @@ public abstract class ActionAttack extends ActionRandom {
     private final Actor target;
     private final ItemWeapon weapon;
     private final Limb limb;
+    private final String prompt;
+    private final String hitPhrase;
+    private final String missPhrase;
+    private final int ammoConsumed;
+    private final boolean overrideWeaponRate;
+    private final float damageMult;
+    private final float hitChanceMult;
     private ActionReaction reaction;
     private boolean reactionSuccess;
 
-    public ActionAttack(ItemWeapon weapon, Actor target, Limb limb) {
+    public ActionAttack(ItemWeapon weapon, Actor target, Limb limb, String prompt, String hitPhrase, String missPhrase, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
         this.weapon = weapon;
         this.target = target;
         this.limb = limb;
+        this.prompt = prompt;
+        this.hitPhrase = hitPhrase;
+        this.missPhrase = missPhrase;
+        this.ammoConsumed = ammoConsumed;
+        this.overrideWeaponRate = overrideWeaponRate;
+        this.damageMult = damageMult;
+        this.hitChanceMult = hitChanceMult;
+    }
+
+    public String getPrompt() {
+        return prompt;
     }
 
     public ItemWeapon getWeapon() {
@@ -48,11 +66,11 @@ public abstract class ActionAttack extends ActionRandom {
     }
 
     public int damage() {
-        return weapon.getDamage();
+        return (int) (getWeapon().getDamage() * damageMult);
     }
 
     public float hitChanceMult() {
-        return 0.0f;
+        return hitChanceMult;
     }
 
     @Override
@@ -125,12 +143,16 @@ public abstract class ActionAttack extends ActionRandom {
     }
 
     public int ammoConsumed() {
-        return 1;
+        return ammoConsumed;
     }
 
-    public abstract String getHitPhrase();
+    public String getHitPhrase() {
+        return hitPhrase;
+    }
 
-    public abstract String getMissPhrase();
+    public String getMissPhrase() {
+        return missPhrase;
+    }
 
     public int getRangeMin() {
         return getWeapon().getRangeMin();
@@ -162,6 +184,9 @@ public abstract class ActionAttack extends ActionRandom {
 
     @Override
     public int repeatCount(Actor subject) {
+        if (overrideWeaponRate) {
+            return 1;
+        }
         return weapon.getRate();
     }
 

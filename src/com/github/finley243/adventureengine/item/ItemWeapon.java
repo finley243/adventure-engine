@@ -117,17 +117,18 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		for(Actor target : subject.getVisibleActors()) {
 			if(target != subject && !target.isDead()) {
 				if(stats.getType().isRanged) { // Ranged
-					actions.add(new ActionRangedAttack(this, target));
+					actions.add(new ActionAttackBasic(this, target, "Attack", "rangedHit", "rangedMiss", 1, false, 1.0f, 0.0f));
 					for(Limb limb : target.getLimbs()) {
-						actions.add(new ActionRangedAttackTargeted(this, target, limb));
+						actions.add(new ActionAttackLimb(this, target, limb, "Targeted Attack", "rangedHitLimb", "rangedMissLimb", 1, true, 1.0f, 0.0f));
 					}
 					if(stats.getType().attacks.contains(WeaponTemplate.AttackType.AUTO)) {
-						actions.add(new ActionRangedAttackAuto(this, target));
+						//actions.add(new ActionAttackAuto(this, target));
+						actions.add(new ActionAttackBasic(this, target, "Autofire", "rangedAutoHit", "rangedAutoMiss", 6, true, 3.0f, -0.5f));
 					}
 				} else { // Melee
-					actions.add(new ActionMeleeAttack(this, target));
+					actions.add(new ActionAttackBasic(this, target, "Attack", "meleeHit", "meleeMiss", 1, false, 1.0f, 0.0f));
 					for(Limb limb : target.getLimbs()) {
-						actions.add(new ActionMeleeAttackTargeted(this, target, limb));
+						actions.add(new ActionAttackLimb(this, target, limb, "Targeted Attack", "meleeHitLimb", "meleeMissLimb", 1, true, 1.0f, 0.0f));
 					}
 				}
 			}
