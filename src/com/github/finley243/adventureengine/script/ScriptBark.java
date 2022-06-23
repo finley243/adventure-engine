@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
@@ -30,7 +31,9 @@ public class ScriptBark extends Script {
     protected void executeSuccess(Actor subject) {
         if(ThreadLocalRandom.current().nextFloat() < chance) {
             String selectedLine = lines.get(ThreadLocalRandom.current().nextInt(lines.size()));
-            subject.game().eventBus().post(new RenderTextEvent(TextGen.generate(selectedLine, new Context(new NounMapper().put("actor", actor.getActor(subject)).build()))));
+            Actor speaker = actor.getActor(subject);
+            Context context = new Context(new NounMapper().put("actor", speaker).build());
+            subject.game().eventBus().post(new SensoryEvent(speaker.getArea(), selectedLine, selectedLine, context, SensoryEvent.ResponseType.NONE, false, null, speaker));
         }
     }
 

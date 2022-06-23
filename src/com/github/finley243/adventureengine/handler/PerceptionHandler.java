@@ -16,6 +16,7 @@ public class PerceptionHandler {
 	public void onSensoryEvent(SensoryEvent e) {
 		Set<Actor> actors = new HashSet<>();
 		Set<Room> visitedRooms = new HashSet<>();
+		// TODO - Adjust to account for direct links between areas in different rooms
 		for (Area origin : e.getOrigins()) {
 			if (!visitedRooms.contains(origin.getRoom())) {
 				actors.addAll(origin.getRoom().getActors());
@@ -37,7 +38,6 @@ public class PerceptionHandler {
 					break;
 				}
 			}
-			// TODO - Test non-visible event functionality
 			actor.onSensoryEvent(e, actorCanSeeEvent);
 		}
 	}

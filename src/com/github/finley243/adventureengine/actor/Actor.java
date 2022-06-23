@@ -88,6 +88,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final ModdableStatInt actionPoints;
 	private int actionPointsUsed;
 	private final Map<Action, Integer> blockedActions;
+	private Action lastAction;
 	private final EnumMap<Attribute, ModdableStatInt> attributes;
 	private final EnumMap<Skill, ModdableStatInt> skills;
 	private final EffectComponent effectComponent;
@@ -656,6 +657,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	public void endTurn() {
 		// May cause issues
 		actionPointsUsed = 0;
+		lastAction = null;
 		endTurn = true;
 	}
 	
