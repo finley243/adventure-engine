@@ -87,7 +87,6 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final Map<Action, Integer> blockedActions;
 	private final EnumMap<Attribute, ModdableStatInt> attributes;
 	private final EnumMap<Skill, ModdableStatInt> skills;
-	private ActionComponent actionComponent;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final ApparelComponent apparelComponent;
@@ -100,8 +99,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	private final Set<AreaTarget> areaTargets;
 	private final InvestigateTarget investigateTarget;
 	private int sleepCounter;
+	private boolean playerControlled;
 
-	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControl) {
+	public Actor(Game game, String ID, Area area, ActorTemplate stats, String descriptor, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControlled) {
 		super(game);
 		this.ID = ID;
 		this.defaultArea = area;
@@ -138,12 +138,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
 		this.blockedActions = new HashMap<>();
 		this.startDisabled = startDisabled;
+		this.playerControlled = playerControlled;
 		setEnabled(!startDisabled);
-		if (playerControl) {
-			this.actionComponent = new ActionComponentPlayer(this);
-		} else {
-			this.actionComponent = new ActionComponentUtility(this);
-		}
 	}
 
 	public void newGameInit() {
@@ -627,7 +623,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public Action chooseAction(List<Action> actions) {
-		return actionComponent.chooseAction(actions);
+		if (playerControlled) {
+			return game().menuManager().actionMenu(actions, this);
+		} else {
+			return UtilityUtils.selectActionByUtility(this, actions, 1);
+		}
 	}
 	
 	private void updatePursueTargets() {

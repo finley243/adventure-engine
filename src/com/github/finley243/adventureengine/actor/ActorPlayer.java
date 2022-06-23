@@ -3,14 +3,11 @@ package com.github.finley243.adventureengine.actor;
 import java.util.*;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.actor.component.ActionComponent;
 import com.github.finley243.adventureengine.textgen.NounMapper;
-import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -77,7 +74,7 @@ public class ActorPlayer extends Actor {
 	}
 	
 	public void startDialogue(Actor subject, String startTopic) {
-		menuManager.dialogueMenu(subject, startTopic);
+		game().menuManager().dialogueMenu(subject, startTopic);
 	}
 
 	public void describeSurroundings() {
