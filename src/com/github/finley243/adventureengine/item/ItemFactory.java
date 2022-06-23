@@ -31,8 +31,6 @@ public class ItemFactory {
 			item = new ItemWeapon(game, ID, (WeaponTemplate) stats);
 		} else if(stats instanceof MiscTemplate) {
 			item = new ItemMisc(game, ID, (MiscTemplate) stats);
-		} else if(stats instanceof NoteTemplate) {
-			item = new ItemNote(game, ID, (NoteTemplate) stats);
 		}
 		if(item != null && stats.hasState()) {
 			game.data().addItemState(ID, item);

@@ -446,9 +446,6 @@ public class DataLoader {
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 String weaponAmmoType = LoadUtils.singleTag(itemElement, "ammo", null);
                 return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced, weaponAmmoType);
-            case "note":
-                List<String> noteText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(itemElement, "text"), "line");
-                return new NoteTemplate(id, name, description, scripts, price, noteText);
             case "misc":
             default:
                 return new MiscTemplate(id, name, description, scripts, price);
@@ -640,9 +637,6 @@ public class DataLoader {
                 boolean elevatorStartLocked = LoadUtils.attributeBool(objectElement, "startLocked", false);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(objectElement, "link");
                 return new ObjectElevator(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
-            case "sign":
-                List<String> signText = LoadUtils.listOfTags(LoadUtils.singleChildWithName(objectElement, "text"), "line");
-                return new ObjectSign(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, signText);
             case "chair":
                 return new ObjectChair(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, customUsingActions);
             case "bed":
@@ -662,9 +656,9 @@ public class DataLoader {
                 boolean containerIsOpen = LoadUtils.attributeBool(objectElement, "open", false);
                 return new ObjectContainer(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, containerLootTable, containerLock, containerIsOpen);
             case "basic":
+            default:
                 return new ObjectBasic(game, id, area, name, description, startDisabled, startHidden, scripts, customActions);
         }
-        return null;
     }
 
     private static Lock loadLock(Element objectElement, String objectID) {

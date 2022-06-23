@@ -36,6 +36,7 @@ public class UtilityUtils {
 				}
 			}
 		}
+		// TODO - Switch to summative utility rather than average
 		return utility / contributors;
 	}
 
