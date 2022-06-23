@@ -14,14 +14,12 @@ public class ActionTalk extends Action {
 	
 	@Override
 	public void choose(Actor subject) {
-		if(subject instanceof ActorPlayer) {
-			((ActorPlayer) subject).startDialogue(target, target.getTopicID());
-		}
+		subject.game().menuManager().dialogueMenu(target, target.getTopicID());
 	}
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return !disabled && !target.isInCombat() && subject.game().data().getTopic(target.getTopicID()).canChoose(target);
+		return !disabled && subject.isPlayer() && !target.isInCombat() && subject.game().data().getTopic(target.getTopicID()).canChoose(target);
 	}
 	
 	@Override

@@ -8,8 +8,12 @@ import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.effect.moddable.Moddable;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
 import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
+import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.Physical;
@@ -207,7 +211,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	@Override
 	public boolean forcePronoun() {
-		return false;
+		return isPlayer();
 	}
 	
 	@Override
@@ -217,14 +221,38 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	
 	@Override
 	public void setArea(Area area) {
+		boolean newRoom = getArea() == null || !getArea().getRoom().equals(area.getRoom());
 		if(this.area != null) {
 			this.area.removeActor(this);
 		}
 		this.area = area;
 		area.addActor(this);
+		if (isPlayer()) {
+			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
+			if(newRoom) {
+				getArea().getRoom().triggerScript("on_player_enter", this);
+			}
+			getArea().triggerScript("on_player_enter", this);
+		}
 	}
 
-	public void onMove(Area lastArea) {}
+	public void onMove(Area lastArea) {
+		if (isPlayer()) {
+			boolean isRoomChange = !lastArea.getRoom().equals(getArea().getRoom());
+			boolean isAreaChange = isRoomChange || !lastArea.equals(getArea());
+			if(isRoomChange && getArea().getRoom().getDescription() != null) {
+				SceneManager.trigger(game(), this, getArea().getRoom().getDescription());
+				getArea().getRoom().setKnown();
+				for (Area area : getArea().getRoom().getAreas()) {
+					area.setKnown();
+				}
+			}
+			if(isAreaChange && getArea().getDescription() != null) {
+				SceneManager.trigger(game(), this, getArea().getDescription());
+				getArea().setKnown();
+			}
+		}
+	}
 	
 	public boolean isEnabled() {
 		return isEnabled;
@@ -378,6 +406,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null));
 		dropEquippedItem();
 		isDead = true;
+		if (isPlayer()) {
+			game().eventBus().post(new PlayerDeathEvent());
+		}
 	}
 
 	public void dropEquippedItem() {
@@ -453,14 +484,22 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	
 	public void onSensoryEvent(SensoryEvent event, boolean visible) {
 		if(isActive() && isEnabled()) {
-			if (visible) {
-				if (event.getAction() instanceof ActionMove) {
-					targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMove) event.getAction()).getDestinationArea());
+			if (isPlayer()) {
+				if (visible) {
+					game().eventBus().post(new RenderTextEvent(event.getTextVisible()));
+				} else if(event.getTextAudible() != null) {
+					game().eventBus().post(new RenderTextEvent(event.getTextAudible()));
 				}
 			} else {
-				if (event.getResponseType() == SensoryEvent.ResponseType.INVESTIGATE) {
-					investigateTarget.setTargetArea(event.getOrigins()[ThreadLocalRandom.current().nextInt(event.getOrigins().length)]);
-					triggerScript("on_investigate_start");
+				if (visible) {
+					if (event.getAction() instanceof ActionMove) {
+						targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMove) event.getAction()).getDestinationArea());
+					}
+				} else {
+					if (event.getResponseType() == SensoryEvent.ResponseType.INVESTIGATE) {
+						investigateTarget.setTargetArea(event.getOrigins()[ThreadLocalRandom.current().nextInt(event.getOrigins().length)]);
+						triggerScript("on_investigate_start");
+					}
 				}
 			}
 		}
