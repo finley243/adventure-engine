@@ -156,7 +156,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 
 	public boolean isPlayer() {
-		return false;
+		return this.equals(game().data().getPlayer());
 	}
 	
 	public String getID() {

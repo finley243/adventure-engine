@@ -23,7 +23,7 @@ import java.util.*;
 
 public class Data {
 
-	private ActorPlayer player;
+	private Actor player;
 
 	private final Game game;
 	private final DateTimeController time;
@@ -188,7 +188,7 @@ public class Data {
 		return actors.values();
 	}
 	
-	public ActorPlayer getPlayer() {
+	public Actor getPlayer() {
 		return player;
 	}
 	

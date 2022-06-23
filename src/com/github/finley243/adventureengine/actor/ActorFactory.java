@@ -12,8 +12,8 @@ public class ActorFactory {
 		return new Actor(gameInstance, ID, area, stats, descriptor, behaviors, startDead, startDisabled, false);
 	}
 	
-	public static ActorPlayer createPlayer(Game gameInstance, String ID, Area area, ActorTemplate stats) {
-		return new ActorPlayer(gameInstance, ID, area, stats);
+	public static Actor createPlayer(Game gameInstance, String ID, Area area, ActorTemplate stats) {
+		return new Actor(gameInstance, ID, area, stats, null, null, false, false, true);
 	}
 	
 }

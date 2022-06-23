@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorPlayer;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
@@ -112,7 +111,7 @@ public class Game {
 			visibleActor.triggerScript("on_player_visible_round");
 		}
 		for (Actor actor : data().getActors()) {
-			if (!(actor instanceof ActorPlayer)) {
+			if (!actor.isPlayer()) {
 				actor.takeTurn();
 			}
 		}
