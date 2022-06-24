@@ -68,6 +68,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		return rangeMax.value(stats.getRangeMax(), 0, 50);
 	}
 
+	// TODO - Change to accuracy multiplier?
 	public float getAccuracyBonus() {
 		return accuracyBonus.value(stats.getAccuracyBonus(), 0.0f, 1.0f);
 	}

@@ -9,8 +9,8 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_MAX = 0.99f;
 	public static final float HIT_CHANCE_MIN = 0.01f;
 	// Range of hit chance based on skill/attribute levels (before any modifiers)
-	public static final float HIT_CHANCE_BASE_MAX = 0.99f;
-	public static final float HIT_CHANCE_BASE_MIN = 0.25f;
+	public static final float HIT_CHANCE_BASE_MAX = 1.10f;
+	public static final float HIT_CHANCE_BASE_MIN = 0.05f;
 	// Amount of hit chance to subtract per unit of distance outside of weapon range
 	public static final float RANGE_PENALTY = 0.10f;
 	
