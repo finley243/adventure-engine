@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -22,6 +23,7 @@ public abstract class Item extends GameInstanced implements Noun {
 
 	// ID is null if the item is stateless
 	private final String ID;
+	private boolean isKnown;
 
 	public Item(Game game, String ID) {
 		super(game);
@@ -39,17 +41,23 @@ public abstract class Item extends GameInstanced implements Noun {
 
 	@Override
 	public String getFormattedName() {
-		return getTemplate().getFormattedName();
+		if(!isProperName()) {
+			return LangUtils.addArticle(getName(), !isKnown());
+		} else {
+			return getName();
+		}
 	}
 
 	@Override
 	public void setKnown() {
-
+		if (getTemplate().hasState()) {
+			isKnown = true;
+		}
 	}
 
 	@Override
 	public boolean isKnown() {
-		return false;
+		return getTemplate().hasState() && isKnown;
 	}
 
 	@Override

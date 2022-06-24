@@ -122,7 +122,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 						actions.add(new ActionAttackLimb(this, target, limb, "Targeted Attack", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat", 1, true, 1.0f, 0.0f));
 					}
 					if(stats.getType().attacks.contains(WeaponTemplate.AttackType.AUTO)) {
-						//actions.add(new ActionAttackAuto(this, target));
 						actions.add(new ActionAttackBasic(this, target, "Autofire", "rangedAutoHit", "rangedAutoHit", "rangedAutoMiss", "rangedAutoMiss", 6, true, 3.0f, -0.5f));
 					}
 				} else { // Melee

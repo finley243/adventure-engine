@@ -169,7 +169,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	@Override
 	public String getFormattedName() {
 		if(!isProperName()) {
-			return LangUtils.addArticle(getNameState() + getName(), !isKnown);
+			return LangUtils.addArticle(getNameState() + getName(), !isKnown());
 		} else {
 			return getNameState() + getName();
 		}

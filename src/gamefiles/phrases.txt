@@ -18,7 +18,7 @@ moveOnto:$_actor move$s_actor onto $area
 moveCorner:$_actor turn$s_actor around the corner
 pickUp:$_actor grab$s_actor $item
 rangedHit:$_actor fire$s_actor a shot with $weapon and it hits $target
-rangedHitRepeat:$_actor fire$s_actor a shot with $weapon and it hits $target
+rangedHitRepeat:$_actor fire$s_actor another shot and it hits $target
 rangedMiss:$_actor fire$s_actor a shot with $weapon at $target, but it misses
 rangedMissRepeat:$_actor fire$s_actor another shot at $target, but it misses
 reactionBlock:$_actor block$s_actor {$weapon|$attacker's attack}
@@ -34,7 +34,7 @@ leaveCover:$_actor emerge$s_actor from behind $object
 takeElevatorDown:$_actor take$s_actor $elevator down
 takeElevatorUp:$_actor take$s_actor $elevator up
 takeFrom:$_actor take$s_actor $item from $inventory
-unequip:$_actor put$s_actor away $item
+unequip:$_actor put$s_actor $item away
 unlock:$_actor unlock$s_actor $object
 pickLock:$_actor pick$s_actor the lock on $object
 hotwireLock:$_actor hotwire$s_actor the lock on $object

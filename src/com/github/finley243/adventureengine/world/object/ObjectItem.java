@@ -25,7 +25,12 @@ public class ObjectItem extends WorldObject {
 
     @Override
     public boolean isKnown() {
-        return false;
+        return item.isKnown();
+    }
+
+    @Override
+    public void setKnown() {
+        item.setKnown();
     }
 
     public Item getItem() {
