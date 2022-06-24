@@ -496,6 +496,14 @@ public class DataLoader {
                 String statMult = LoadUtils.attribute(effectElement, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
                 return new EffectStatMult(duration, manualRemoval, stackable, statMult, statMultAmount);
+            case "boolean":
+                String statBoolean = LoadUtils.attribute(effectElement, "stat", null);
+                boolean statBooleanValue = LoadUtils.attributeBool(effectElement, "value", true);
+                return new EffectStatBoolean(duration, manualRemoval, stackable, statBoolean, statBooleanValue);
+            case "addEffects":
+                String statEffects = LoadUtils.attribute(effectElement, "stat", null);
+                List<Effect> addedEffects = loadEffects(effectElement, false);
+                return new EffectAddEffects(duration, manualRemoval, stackable, statEffects, addedEffects);
             default:
                 return null;
         }

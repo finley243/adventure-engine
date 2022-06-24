@@ -5,9 +5,7 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.*;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
-import com.github.finley243.adventureengine.effect.moddable.Moddable;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
+import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
@@ -764,6 +762,16 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 
 	@Override
 	public ModdableStatFloat getStatFloat(String name) {
+		return null;
+	}
+
+	@Override
+	public ModdableStatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public ModdableEffectList getStatEffects(String name) {
 		return null;
 	}
 

@@ -6,6 +6,10 @@ public interface Moddable {
 
     ModdableStatFloat getStatFloat(String name);
 
+    ModdableStatBoolean getStatBoolean(String name);
+
+    ModdableEffectList getStatEffects(String name);
+
     void onStatChange();
 
     void modifyState(String name, int amount);

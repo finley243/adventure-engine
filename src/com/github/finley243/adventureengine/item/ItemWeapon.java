@@ -7,9 +7,7 @@ import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.action.attack.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.effect.moddable.Moddable;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
+import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
@@ -163,6 +161,16 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		if ("accuracyBonus".equals(name)) {
 			return accuracyBonus;
 		}
+		return null;
+	}
+
+	@Override
+	public ModdableStatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public ModdableEffectList getStatEffects(String name) {
 		return null;
 	}
 
