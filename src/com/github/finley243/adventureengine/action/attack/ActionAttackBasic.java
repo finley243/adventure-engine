@@ -7,8 +7,8 @@ import com.github.finley243.adventureengine.item.ItemWeapon;
 
 public class ActionAttackBasic extends ActionAttack {
 
-	public ActionAttackBasic(ItemWeapon weapon, Actor target, String prompt, String hitPhrase, String missPhrase, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
-		super(weapon, target, null, prompt, hitPhrase, missPhrase, ammoConsumed, overrideWeaponRate, damageMult, hitChanceMult);
+	public ActionAttackBasic(ItemWeapon weapon, Actor target, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
+		super(weapon, target, null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, overrideWeaponRate, damageMult, hitChanceMult);
 	}
 	
 	@Override

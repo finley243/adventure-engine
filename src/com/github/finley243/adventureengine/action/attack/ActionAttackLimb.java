@@ -9,8 +9,8 @@ import com.github.finley243.adventureengine.item.ItemWeapon;
 public class ActionAttackLimb extends ActionAttack {
 
 
-	public ActionAttackLimb(ItemWeapon weapon, Actor target, Limb limb, String prompt, String hitPhrase, String missPhrase, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
-		super(weapon, target, limb, prompt, hitPhrase, missPhrase, ammoConsumed, overrideWeaponRate, damageMult, hitChanceMult);
+	public ActionAttackLimb(ItemWeapon weapon, Actor target, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
+		super(weapon, target, limb, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, overrideWeaponRate, damageMult, hitChanceMult);
 	}
 	
 	@Override

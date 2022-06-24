@@ -27,7 +27,9 @@ public abstract class ActionAttack extends ActionRandom {
     private final Limb limb;
     private final String prompt;
     private final String hitPhrase;
+    private final String hitPhraseRepeat;
     private final String missPhrase;
+    private final String missPhraseRepeat;
     private final int ammoConsumed;
     private final boolean overrideWeaponRate;
     private final float damageMult;
@@ -35,13 +37,15 @@ public abstract class ActionAttack extends ActionRandom {
     private ActionReaction reaction;
     private boolean reactionSuccess;
 
-    public ActionAttack(ItemWeapon weapon, Actor target, Limb limb, String prompt, String hitPhrase, String missPhrase, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
+    public ActionAttack(ItemWeapon weapon, Actor target, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
         this.weapon = weapon;
         this.target = target;
         this.limb = limb;
         this.prompt = prompt;
         this.hitPhrase = hitPhrase;
+        this.hitPhraseRepeat = hitPhraseRepeat;
         this.missPhrase = missPhrase;
+        this.missPhraseRepeat = missPhraseRepeat;
         this.ammoConsumed = ammoConsumed;
         this.overrideWeaponRate = overrideWeaponRate;
         this.damageMult = damageMult;
@@ -90,7 +94,6 @@ public abstract class ActionAttack extends ActionRandom {
 
     @Override
     public boolean onStart(Actor subject, int repeatActionCount) {
-        System.out.println("Attack action - repeat count: " + repeatActionCount);
         subject.triggerScript("on_attack");
         if(getWeapon().getClipSize() > 0) {
             getWeapon().consumeAmmo(ammoConsumed());
@@ -129,7 +132,7 @@ public abstract class ActionAttack extends ActionRandom {
             }
         }
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase()), attackContext, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), attackContext, this, subject));
         Damage damageData = new Damage(Damage.DamageType.PHYSICAL, damage, 1.0f);
         target.damage(damageData, getLimb());
         subject.triggerEffect("on_attack_success");
@@ -138,7 +141,7 @@ public abstract class ActionAttack extends ActionRandom {
     @Override
     public void onFail(Actor subject, int repeatActionCount) {
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase()), attackContext, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), attackContext, this, subject));
         subject.triggerEffect("on_attack_failure");
     }
 
@@ -146,12 +149,12 @@ public abstract class ActionAttack extends ActionRandom {
         return ammoConsumed;
     }
 
-    public String getHitPhrase() {
-        return hitPhrase;
+    public String getHitPhrase(int repeatActionCount) {
+        return repeatActionCount > 0 ? hitPhraseRepeat : hitPhrase;
     }
 
-    public String getMissPhrase() {
-        return missPhrase;
+    public String getMissPhrase(int repeatActionCount) {
+        return repeatActionCount > 0 ? missPhraseRepeat : missPhrase;
     }
 
     public int getRangeMin() {
