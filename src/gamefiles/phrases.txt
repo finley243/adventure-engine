@@ -7,9 +7,9 @@ forceDrop:$_actor drop$s_actor $item and $item lands $area
 eat:$_actor eat$s_actor $item
 equip:$_actor equip$s_actor $item
 exitElevator:$_actor exit$s_actor $elevator
-meleeHit:$_actor swing$s_actor $weapon at $target and $weapon hit$s_weapon $target
+meleeHit:$_actor swing$s_actor $actor's $weapon_name at $target and $weapon hit$s_weapon $target
 meleeHitRepeat:$_actor take$s_actor another swing at $target and $weapon hit$s_weapon $target
-meleeMiss:$_actor tr$ies_actor to hit $target with $weapon, but $_actor miss$es_actor
+meleeMiss:$_actor tr$ies_actor to hit $target with $actor's $weapon_name, but $_actor miss$es_actor
 meleeRepeat:$_actor tr$ies_actor to hit $target again, but $_actor miss$es_actor
 moveThrough:$_actor go$es_actor through $exit
 moveToward:$_actor move$s_actor toward $area
@@ -17,9 +17,9 @@ moveTo:$_actor move$s_actor to $area
 moveOnto:$_actor move$s_actor onto $area
 moveCorner:$_actor turn$s_actor around the corner
 pickUp:$_actor grab$s_actor $item
-rangedHit:$_actor fire$s_actor a shot with $weapon and it hits $target
+rangedHit:$_actor fire$s_actor a shot with $actor's $weapon_name and it hits $target
 rangedHitRepeat:$_actor fire$s_actor another shot and it hits $target
-rangedMiss:$_actor fire$s_actor a shot with $weapon at $target, but it misses
+rangedMiss:$_actor fire$s_actor a shot with $actor's $weapon_name at $target, but it misses
 rangedMissRepeat:$_actor fire$s_actor another shot at $target, but it misses
 reactionBlock:$_actor block$s_actor {$weapon|$attacker's attack}
 reactionDodge:$_actor {jump$s_actor back, avoiding|dodge$s_actor} $attacker's attack
@@ -44,17 +44,17 @@ dodgeSuccess:$_actor {dodge$s_actor|move$s_actor} {out of the way of|away from} 
 dodgeFail:$_actor tr$ies_actor to dodge $weapon, but $_actor lose$s_actor $actor's balance
 counterSuccess:$_actor slip$s_actor {under|past} $weapon and hit$s_actor $attacker
 counterFail:$_actor {tr$ies_actor|attempt$s_actor} to hit $attacker, but $_actor {$doesn't_actor make it past|$isn't_actor fast enough to avoid} $weapon
-meleeHitLimb:$_actor swing$s_actor $weapon at $target's $limb and $weapon hit$s_weapon
-meleeHitLimbRepeat:$_actor take$s_actor another swing at $target's $limb and $weapon hit$s_weapon $target
-rangedHitLimb:$_actor fire$s_actor $weapon at $target's $limb and the bullet hits $target
+meleeHitLimb:$_actor swing$s_actor $actor's $weapon_name at $target's $limb and $weapon hit$s_weapon
+meleeHitLimbRepeat:$_actor take$s_actor another swing at $target's $limb and $actor's $weapon_name hit$s_weapon $target
+rangedHitLimb:$_actor fire$s_actor $actor's $weapon_name at $target's $limb and the bullet hits $target
 rangedHitLimbRepeat:$_actor fire$s_actor another shot at $target's $limb and the bullet hits $target
-meleeMissLimb:$_actor swing$s_actor $weapon at $target's $limb, but $weapon {{just|barely} misses|{swings|swipes} past} $target
+meleeMissLimb:$_actor swing$s_actor $actor's $weapon_name at $target's $limb, but $weapon {{just|barely} misses|{swings|swipes} past} $target
 meleeMissLimbRepeat:$_actor take$s_actor another swing at $target's $limb, but $weapon {{just|barely} misses|{swings|swipes} past} $target
-rangedMissLimb:$_actor fire$s_actor $weapon at $target's $limb, but the bullet {flies|whips} past $target
+rangedMissLimb:$_actor fire$s_actor $actor's $weapon_name at $target's $limb, but the bullet {flies|whips} past $target
 rangedMissLimbRepeat:$_actor fire$s_actor another shot at $target's $limb, but the bullet {flies|whips} past $target
-rangedAutoHit:$_actor fire$s_actor a spray of bullets from $weapon at $target, and they hit $target
+rangedAutoHit:$_actor fire$s_actor a spray of bullets from $actor's $weapon_name at $target, and they hit $target
 rangedAutoHitRepeat:$_actor fire$s_actor another spray at $target, and they hit $target
-rangedAutoMiss:$_actor fire$s_actor a spray of bullets from $weapon at $target, but {they {fly|whip} past $target|$_actor miss$es_actor $actor's target}
+rangedAutoMiss:$_actor fire$s_actor a spray of bullets from $actor's $weapon_name at $target, but {they {fly|whip} past $target|$_actor miss$es_actor $actor's target}
 rangedAutoMissRepeat:$_actor fire$s_actor another spray at $target, but {they {fly|whip} past $target|$_actor miss$es_actor $actor's target}
 getUp:$_actor get$s_actor up from $object
 lieDown:$_actor lie$s_actor down in $object
