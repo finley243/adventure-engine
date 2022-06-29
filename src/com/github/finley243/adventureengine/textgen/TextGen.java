@@ -11,10 +11,6 @@ public class TextGen {
 	private static final char RANDOM_CLOSE = '}';
 	private static final char RANDOM_SEPARATOR = '|';
 
-	private static final String SUBJECT = "$subject";
-	private static final String SUBJECT_POSSESSIVE = "$subject's";
-	private static final String SUBJECT_REFLEXIVE = "$subjectSelf";
-
 	// e.g. jumps
 	private static final String VERB_S = "$s";
 	// e.g. goes/does
@@ -138,14 +134,16 @@ public class TextGen {
 		Collections.reverse(objectTags);
 
 		for(String objectTag : objectTags) {
+			// Reflexive
+			line = line.replace("$" + objectTag + "_self", objects.get(objectTag).getPronoun().reflexive);
+			// Object name (no articles/pronouns)
+			line = line.replace("$" + objectTag + "_name", objects.get(objectTag).getName());
 			// Object
 			line = populatePronoun(line, usePronouns.get(objectTag), objects.get(objectTag).getFormattedName(), objects.get(objectTag).getPronoun().object
 					, objects.get(objectTag).getPronoun().possessive, "$" + objectTag, "$" + objectTag + "'s");
 			// Subject
 			line = populatePronoun(line, usePronouns.get(objectTag), objects.get(objectTag).getFormattedName(), objects.get(objectTag).getPronoun().subject
 					, objects.get(objectTag).getPronoun().possessive, "$_" + objectTag, "$" + objectTag + "'s");
-			// Reflexive
-			line = line.replace("$" + objectTag + "_self", objects.get(objectTag).getPronoun().reflexive);
 		}
 
 		List<String> varTags = new ArrayList<>(context.getVars().keySet());
