@@ -63,35 +63,6 @@ public class TargetingComponent {
                 detectionCounters.remove(actor);
             }
         }
-        // Add remaining visible actors to detected and increment existing actors
-        // TODO - Add allied target adding? (only for active combatants, not detected targets)
-        for(Actor actor : visibleActors) {
-            if(!combatants.containsKey(actor) && !nonCombatants.contains(actor)) {
-                if (detectionCounters.containsKey(actor)) {
-                    int newValue = detectionCounters.get(actor) + 1;
-                    if (newValue >= alertState.turnsToDetect) {
-                        if((this.actor.getArea().getRoom().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
-                                (this.actor.getArea().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
-                            this.actor.triggerScript("on_detect_target_trespassing");
-                            addCombatant(actor);
-                        } else if(this.actor.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
-                            this.actor.triggerScript("on_detect_target_faction");
-                            addCombatant(actor);
-                        } else {
-                            addNonCombatant(actor);
-                        }
-                    } else {
-                        if(!actor.isDead()) {
-                            detectionCounters.put(actor, newValue);
-                        }
-                    }
-                } else {
-                    if(!actor.isDead()) {
-                        detectionCounters.put(actor, 0);
-                    }
-                }
-            }
-        }
         for(Combatant combatant : combatants.values()) {
             combatant.turnsUntilRemove -= 1;
         }
@@ -105,9 +76,9 @@ public class TargetingComponent {
             Combatant combatant = combatants.get(actor);
             if (combatant.areaTarget == null) {
                 combatant.areaTarget = new AreaTarget(idealAreas(combatant.lastKnownArea), 0.0f, true, false, false);
-                this.actor.addPursueTarget(combatant.areaTarget);
+                actor.addPursueTarget(combatant.areaTarget);
             }
-            if (this.actor.canSee(actor)) {
+            if (actor.canSee(actor)) {
                 combatant.lastKnownArea = actor.getArea();
                 combatant.turnsUntilRemove = TURNS_UNTIL_END_COMBAT;
                 combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
@@ -145,12 +116,33 @@ public class TargetingComponent {
             } else {
                 detectionCounters.put(subject, 1);
             }
+            if (detectionCounters.get(subject) >= detectionThreshold()) {
+                onDetected(subject);
+            }
+        }
+    }
+
+    private int detectionThreshold() {
+        return alertState.turnsToDetect;
+    }
+
+    private void onDetected(Actor subject) {
+        // TODO - Add allied target adding? (only for active combatants, not detected targets)
+        if((this.actor.getArea().getRoom().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
+                (this.actor.getArea().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
+            this.actor.triggerScript("on_detect_target_trespassing");
+            addCombatant(actor);
+        } else if(this.actor.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
+            this.actor.triggerScript("on_detect_target_faction");
+            addCombatant(actor);
+        } else {
+            addNonCombatant(actor);
         }
     }
 
     public void addCombatant(Actor actor) {
         if (combatants.isEmpty()) {
-            this.actor.triggerScript("on_combat_start");
+            actor.triggerScript("on_combat_start");
         }
         detectionCounters.remove(actor);
         if (!combatants.containsKey(actor)) {
@@ -158,7 +150,7 @@ public class TargetingComponent {
         }
     }
 
-    public void addNonCombatant(Actor actor) {
+    private void addNonCombatant(Actor actor) {
         detectionCounters.remove(actor);
         nonCombatants.add(actor);
     }

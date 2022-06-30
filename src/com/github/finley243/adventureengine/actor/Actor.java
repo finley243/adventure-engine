@@ -488,6 +488,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 				}
 			} else {
 				if (visible) {
+					if (event.getAction() != null && event.getSubject() != null) {
+						targetingComponent.onVisibleAction(event.getAction(), event.getSubject());
+					}
 					if (event.getAction() instanceof ActionMove) {
 						targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMove) event.getAction()).getDestinationArea());
 					}
