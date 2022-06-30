@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.actor.component;
 
+import com.github.finley243.adventureengine.MathUtils;
+import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
@@ -28,16 +30,18 @@ public class TargetingComponent {
 
     private final Actor actor;
     // Value is number of turns the actor has been detected
-    private final Map<Actor, Integer> detected;
+    private final Map<Actor, Integer> detectionCounters;
     private final Map<Actor, Combatant> combatants;
+    private final Set<Actor> nonCombatants;
 
     private Actor followTarget;
     private AlertState alertState;
 
     public TargetingComponent(Actor actor) {
         this.actor = actor;
-        detected = new HashMap<>();
+        detectionCounters = new HashMap<>();
         combatants = new HashMap<>();
+        nonCombatants = new HashSet<>();
         this.alertState = DEFAULT_ALERT_STATE;
     }
 
@@ -46,7 +50,7 @@ public class TargetingComponent {
     }
 
     public void clear() {
-        detected.clear();
+        detectionCounters.clear();
         combatants.clear();
     }
 
@@ -54,35 +58,36 @@ public class TargetingComponent {
     public void updateTurn() {
         Set<Actor> visibleActors = actor.getVisibleActors();
         // Remove non-visible actors from detected
-        for(Actor actor : detected.keySet()) {
+        for(Actor actor : detectionCounters.keySet()) {
             if(!visibleActors.contains(actor)) {
-                detected.remove(actor);
+                detectionCounters.remove(actor);
             }
         }
         // Add remaining visible actors to detected and increment existing actors
         // TODO - Add allied target adding? (only for active combatants, not detected targets)
         for(Actor actor : visibleActors) {
-            if(!combatants.containsKey(actor)) {
-                if (detected.containsKey(actor)) {
-                    int newValue = detected.get(actor) + 1;
+            if(!combatants.containsKey(actor) && !nonCombatants.contains(actor)) {
+                if (detectionCounters.containsKey(actor)) {
+                    int newValue = detectionCounters.get(actor) + 1;
                     if (newValue >= alertState.turnsToDetect) {
-                        this.actor.triggerScript("on_detect_target");
-                        addCombatant(actor);
+                        if((this.actor.getArea().getRoom().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
+                                (this.actor.getArea().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
+                            this.actor.triggerScript("on_detect_target_trespassing");
+                            addCombatant(actor);
+                        } else if(this.actor.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
+                            this.actor.triggerScript("on_detect_target_faction");
+                            addCombatant(actor);
+                        } else {
+                            addNonCombatant(actor);
+                        }
                     } else {
                         if(!actor.isDead()) {
-                            detected.put(actor, newValue);
+                            detectionCounters.put(actor, newValue);
                         }
                     }
                 } else {
                     if(!actor.isDead()) {
-                        if((this.actor.getArea().getRoom().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
-                                (this.actor.getArea().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
-                            this.actor.triggerScript("on_notice_target_trespassing");
-                            detected.put(actor, 0);
-                        } else if(this.actor.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
-                            this.actor.triggerScript("on_notice_target_faction");
-                            detected.put(actor, 0);
-                        }
+                        detectionCounters.put(actor, 0);
                     }
                 }
             }
@@ -130,17 +135,30 @@ public class TargetingComponent {
     }
 
     public void addCombatant(Actor actor) {
-        if(combatants.isEmpty()) {
+        if (combatants.isEmpty()) {
             this.actor.triggerScript("on_combat_start");
         }
-        detected.remove(actor);
-        if(!combatants.containsKey(actor)) {
+        detectionCounters.remove(actor);
+        if (!combatants.containsKey(actor)) {
             combatants.put(actor, new Combatant(actor.getArea()));
         }
     }
 
+    public void addNonCombatant(Actor actor) {
+        detectionCounters.remove(actor);
+        nonCombatants.add(actor);
+    }
+
     public boolean isCombatant(Actor actor){
         return combatants.containsKey(actor);
+    }
+
+    public boolean isNonCombatant(Actor actor) {
+        return nonCombatants.contains(actor);
+    }
+
+    public boolean isDetected(Actor actor) {
+        return isCombatant(actor) || isNonCombatant(actor);
     }
 
     public boolean hasCombatants() {
@@ -161,12 +179,22 @@ public class TargetingComponent {
     }
 
     public Area getLastKnownArea(Actor target) {
-        if(actor.canSee(target)) {
-            return target.getArea();
-        } else if(combatants.containsKey(target)) {
+        if(combatants.containsKey(target)) {
             return combatants.get(target).lastKnownArea;
         } else {
             return null;
+        }
+    }
+
+    public float getActionDetectionChance(Action action, Actor subject) {
+        switch (action.detectionChance()){
+            case LOW:
+                return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.50f);
+            case HIGH:
+                return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.05f, 0.80f);
+            case NONE:
+            default:
+                return 0.0f;
         }
     }
 
@@ -200,7 +228,7 @@ public class TargetingComponent {
             for (SaveData subData : data.getValueMulti()) {
                 switch (subData.getParameter()) {
                     case "detected":
-                        detected.put(actor.game().data().getActor(subData.getValueString()), subData.getValueInt());
+                        detectionCounters.put(actor.game().data().getActor(subData.getValueString()), subData.getValueInt());
                         break;
                     case "combatant":
                         Actor actor = null;
@@ -228,8 +256,8 @@ public class TargetingComponent {
 
     public List<SaveData> saveState() {
         List<SaveData> state = new ArrayList<>();
-        for (Actor actor : detected.keySet()) {
-            state.add(new SaveData(null, null, "detected", actor.getID(), detected.get(actor)));
+        for (Actor actor : detectionCounters.keySet()) {
+            state.add(new SaveData(null, null, "detected", actor.getID(), detectionCounters.get(actor)));
         }
         for (Actor actor : combatants.keySet()) {
             Combatant combatant = combatants.get(actor);

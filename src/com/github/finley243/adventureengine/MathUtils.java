@@ -26,6 +26,10 @@ public class MathUtils {
         return chanceLinear(subject.getSkill(skill), Actor.SKILL_MIN, Actor.SKILL_MAX, chanceMin, chanceMax);
     }
 
+    public static float chanceLinearSkillInverted(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax) {
+        return chanceMax + chanceMin - chanceLinearSkill(subject, skill, chanceMin, chanceMax);
+    }
+
     public static float chanceLinearAttribute(Actor subject, Actor.Attribute attribute, float chanceMin, float chanceMax) {
         return chanceLinear(subject.getAttribute(attribute), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, chanceMin, chanceMax);
     }
