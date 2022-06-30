@@ -13,6 +13,7 @@ public class ActionApparelEquip extends Action {
     private final ItemApparel item;
 
     public ActionApparelEquip(ItemApparel item) {
+        super(ActionDetectionChance.LOW);
         this.item = item;
     }
 

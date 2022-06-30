@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.menu.MenuData;
 public class ActionEnd extends Action {
 
 	public ActionEnd() {
-
+		super(ActionDetectionChance.LOW);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ public class ActionInspectItem extends Action {
     private final Item item;
 
     public ActionInspectItem(Item item) {
+        super(ActionDetectionChance.NONE);
         this.item = item;
     }
 

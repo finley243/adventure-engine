@@ -14,6 +14,7 @@ public class ActionItemConsume extends Action {
 	private final ItemConsumable item;
 	
 	public ActionItemConsume(ItemConsumable item) {
+		super(ActionDetectionChance.NONE);
 		this.item = item;
 	}
 	

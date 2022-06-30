@@ -10,6 +10,7 @@ public class ActionDoorListen extends Action {
 	private final ObjectDoor exit;
 	
 	public ActionDoorListen(ObjectDoor exit) {
+		super(ActionDetectionChance.NONE);
 		this.exit = exit;
 	}
 

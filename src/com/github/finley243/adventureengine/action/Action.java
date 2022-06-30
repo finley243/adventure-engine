@@ -8,7 +8,16 @@ import com.github.finley243.adventureengine.menu.MenuData;
  */
 public abstract class Action {
 
+	public enum ActionDetectionChance {
+		HIGH, LOW, NONE
+	}
+
 	private boolean disabled;
+	private final ActionDetectionChance detectionChance;
+
+	public Action(ActionDetectionChance detectionChance) {
+		this.detectionChance = detectionChance;
+	}
 
 	public abstract void choose(Actor subject, int repeatActionCount);
 
@@ -40,6 +49,10 @@ public abstract class Action {
 
 	public boolean isBlockedMatch(Action action) {
 		return false;
+	}
+
+	public ActionDetectionChance detectionChance() {
+		return detectionChance;
 	}
 
 }

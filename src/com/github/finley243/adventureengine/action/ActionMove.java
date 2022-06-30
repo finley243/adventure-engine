@@ -5,6 +5,10 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public abstract class ActionMove extends Action {
 
+    public ActionMove() {
+        super(ActionDetectionChance.HIGH);
+    }
+
     @Override
     public boolean canChoose(Actor subject) {
         return super.canChoose(subject) && subject.canMove();

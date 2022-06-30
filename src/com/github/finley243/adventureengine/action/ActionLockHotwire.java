@@ -16,6 +16,7 @@ public class ActionLockHotwire extends Action {
     private final int difficulty;
 
     public ActionLockHotwire(Lock lock, WorldObject object, int difficulty) {
+        super(ActionDetectionChance.LOW);
         this.lock = lock;
         this.object = object;
         this.difficulty = difficulty;

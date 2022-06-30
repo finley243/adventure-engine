@@ -13,6 +13,7 @@ public class ActionContainerSearch extends Action {
     private final ObjectContainer container;
 
     public ActionContainerSearch(ObjectContainer container) {
+        super(ActionDetectionChance.LOW);
         this.container = container;
     }
 

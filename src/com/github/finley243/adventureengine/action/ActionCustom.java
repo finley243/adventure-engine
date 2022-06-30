@@ -15,6 +15,7 @@ public class ActionCustom extends Action {
     private final Script script;
 
     public ActionCustom(String prompt, String description, String object, Condition condition, Script script) {
+        super(ActionDetectionChance.LOW);
         this.prompt = prompt;
         this.description = description;
         this.object = object;

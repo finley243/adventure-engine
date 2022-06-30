@@ -13,6 +13,7 @@ public class ActionItemUnequip extends Action {
 	private final ItemEquippable item;
 	
 	public ActionItemUnequip(ItemEquippable item) {
+		super(ActionDetectionChance.NONE);
 		this.item = item;
 	}
 	

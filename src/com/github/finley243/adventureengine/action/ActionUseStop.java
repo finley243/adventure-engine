@@ -13,6 +13,7 @@ public class ActionUseStop extends Action {
 	private final UsableObject object;
 	
 	public ActionUseStop(UsableObject object) {
+		super(ActionDetectionChance.LOW);
 		this.object = object;
 	}
 

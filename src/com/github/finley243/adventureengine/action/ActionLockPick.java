@@ -16,6 +16,7 @@ public class ActionLockPick extends Action {
     private final int difficulty;
 
     public ActionLockPick(Lock lock, WorldObject object, int difficulty) {
+        super(ActionDetectionChance.LOW);
         this.lock = lock;
         this.object = object;
         this.difficulty = difficulty;

@@ -15,6 +15,7 @@ public class ActionItemTake extends Action {
 	private final ObjectItem objectItem;
 	
 	public ActionItemTake(ObjectItem objectItem) {
+		super(ActionDetectionChance.LOW);
 		this.objectItem = objectItem;
 	}
 	

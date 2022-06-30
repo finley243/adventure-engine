@@ -10,6 +10,7 @@ public class ActionInspectArea extends Action {
     private final Area area;
 
     public ActionInspectArea(Area area) {
+        super(ActionDetectionChance.NONE);
         this.area = area;
     }
 

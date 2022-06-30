@@ -13,6 +13,7 @@ public class ActionItemDrop extends Action {
 	private final Item item;
 
 	public ActionItemDrop(Item item) {
+		super(ActionDetectionChance.LOW);
 		this.item = item;
 	}
 	

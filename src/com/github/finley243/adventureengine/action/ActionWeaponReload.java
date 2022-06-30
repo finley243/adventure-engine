@@ -17,6 +17,7 @@ public class ActionWeaponReload extends Action {
 	private final ItemWeapon weapon;
 	
 	public ActionWeaponReload(ItemWeapon weapon) {
+		super(ActionDetectionChance.NONE);
 		this.weapon = weapon;
 	}
 	

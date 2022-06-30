@@ -13,6 +13,7 @@ public class ActionApparelUnequip extends Action {
     private final ItemApparel item;
 
     public ActionApparelUnequip(ItemApparel item) {
+        super(ActionDetectionChance.LOW);
         this.item = item;
     }
 

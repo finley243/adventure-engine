@@ -16,6 +16,7 @@ public class ActionVendingMachineBuy extends Action {
 	private final String itemID;
 	
 	public ActionVendingMachineBuy(ObjectVendingMachine vendingMachine, String itemID) {
+		super(ActionDetectionChance.LOW);
 		this.vendingMachine = vendingMachine;
 		this.itemID = itemID;
 	}

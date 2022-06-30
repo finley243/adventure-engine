@@ -18,6 +18,7 @@ public class ActionVendorBuy extends Action {
     private final int price;
 
     public ActionVendorBuy(Actor vendor, Inventory vendorInventory, Item item, int price) {
+        super(ActionDetectionChance.HIGH);
         this.vendor = vendor;
         this.vendorInventory = vendorInventory;
         this.item = item;

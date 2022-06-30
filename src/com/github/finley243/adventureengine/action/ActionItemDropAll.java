@@ -14,6 +14,7 @@ public class ActionItemDropAll extends Action {
 	private final Item item;
 
 	public ActionItemDropAll(Item item) {
+		super(ActionDetectionChance.LOW);
 		this.item = item;
 	}
 	

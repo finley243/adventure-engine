@@ -38,6 +38,7 @@ public abstract class ActionAttack extends ActionRandom {
     private boolean reactionSuccess;
 
     public ActionAttack(ItemWeapon weapon, Actor target, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
+        super(ActionDetectionChance.HIGH);
         this.weapon = weapon;
         this.target = target;
         this.limb = limb;

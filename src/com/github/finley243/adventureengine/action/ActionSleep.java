@@ -11,7 +11,9 @@ public class ActionSleep extends Action {
 
     public static final int SLEEP_DURATION = 480;
 
-    public ActionSleep() {}
+    public ActionSleep() {
+        super(ActionDetectionChance.NONE);
+    }
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {

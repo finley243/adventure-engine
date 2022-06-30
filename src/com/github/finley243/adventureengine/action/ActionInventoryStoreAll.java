@@ -15,6 +15,7 @@ public class ActionInventoryStoreAll extends Action {
     private final Item item;
 
     public ActionInventoryStoreAll(Noun owner, Inventory inventory, Item item) {
+        super(ActionDetectionChance.LOW);
         this.owner = owner;
         this.inventory = inventory;
         this.item = item;

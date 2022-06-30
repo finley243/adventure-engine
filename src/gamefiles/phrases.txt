@@ -50,12 +50,12 @@ rangedHitLimb:$_actor fire$s_actor $actor's $weapon_name at $target's $limb and 
 rangedHitLimbRepeat:$_actor fire$s_actor another shot at $target's $limb and the bullet hits $target
 meleeMissLimb:$_actor swing$s_actor $actor's $weapon_name at $target's $limb, but $weapon {{just|barely} misses|{swings|swipes} past} $target
 meleeMissLimbRepeat:$_actor take$s_actor another swing at $target's $limb, but $weapon {{just|barely} misses|{swings|swipes} past} $target
-rangedMissLimb:$_actor fire$s_actor $actor's $weapon_name at $target's $limb, but the bullet {flies|whips} past $target
-rangedMissLimbRepeat:$_actor fire$s_actor another shot at $target's $limb, but the bullet {flies|whips} past $target
+rangedMissLimb:$_actor fire$s_actor $actor's $weapon_name at $target's $limb, but $_actor miss$es_actor
+rangedMissLimbRepeat:$_actor fire$s_actor another shot at $target's $limb, but $_actor miss$es_actor
 rangedAutoHit:$_actor fire$s_actor a spray of bullets from $actor's $weapon_name at $target, and they hit $target
 rangedAutoHitRepeat:$_actor fire$s_actor another spray at $target, and they hit $target
-rangedAutoMiss:$_actor fire$s_actor a spray of bullets from $actor's $weapon_name at $target, but {they {fly|whip} past $target|$_actor miss$es_actor $actor's target}
-rangedAutoMissRepeat:$_actor fire$s_actor another spray at $target, but {they {fly|whip} past $target|$_actor miss$es_actor $actor's target}
+rangedAutoMiss:$_actor fire$s_actor a spray of bullets from $actor's $weapon_name at $target, but $_actor miss$es_actor
+rangedAutoMissRepeat:$_actor fire$s_actor another spray at $target, but $_actor miss$es_actor
 getUp:$_actor get$s_actor up from $object
 lieDown:$_actor lie$s_actor down in $object
 sleep:after a brief moment, $_actor fall$s_actor asleep

@@ -12,6 +12,7 @@ public abstract class ActionReaction extends Action {
     protected final ItemWeapon weapon;
 
     public ActionReaction(Actor attacker, ItemWeapon weapon) {
+        super(ActionDetectionChance.HIGH);
         this.attacker = attacker;
         this.weapon = weapon;
     }

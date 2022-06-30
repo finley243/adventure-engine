@@ -18,6 +18,7 @@ public class ActionLockKey extends Action {
     private final Set<String> keys;
 
     public ActionLockKey(Lock lock, WorldObject object, Set<String> keys) {
+        super(ActionDetectionChance.NONE);
         this.lock = lock;
         this.object = object;
         this.keys = keys;

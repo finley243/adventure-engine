@@ -14,6 +14,7 @@ public class ActionUseStart extends Action {
 	private final UsableObject object;
 	
 	public ActionUseStart(UsableObject object) {
+		super(ActionDetectionChance.LOW);
 		this.object = object;
 	}
 
