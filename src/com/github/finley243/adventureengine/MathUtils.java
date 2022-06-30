@@ -50,6 +50,10 @@ public class MathUtils {
         return chanceLinearContest(subject1.getAttribute(attribute), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, subject2.getSkill(skill), Actor.SKILL_MIN, Actor.SKILL_MAX, ratio, chanceMin, chanceMax);
     }
 
+    public static boolean randomCheck(float chance) {
+        return ThreadLocalRandom.current().nextFloat() < chance;
+    }
+
     public static int bound(int value, int min, int max) {
         return Math.min(Math.max(value, min), max);
     }

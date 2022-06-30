@@ -134,6 +134,20 @@ public class TargetingComponent {
         }
     }
 
+    public void onVisibleAction(Action action, Actor subject) {
+        float detectionChance = getActionDetectionChance(action, subject);
+        boolean detected = MathUtils.randomCheck(detectionChance);
+        if (detected) {
+            // TODO - Trigger onDetection function in actor (display updates for player-controlled actors)
+            if (detectionCounters.containsKey(subject)) {
+                int currentCount = detectionCounters.get(subject);
+                detectionCounters.put(subject, currentCount + 1);
+            } else {
+                detectionCounters.put(subject, 1);
+            }
+        }
+    }
+
     public void addCombatant(Actor actor) {
         if (combatants.isEmpty()) {
             this.actor.triggerScript("on_combat_start");
