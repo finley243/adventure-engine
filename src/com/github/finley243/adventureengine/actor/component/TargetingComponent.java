@@ -33,8 +33,6 @@ public class TargetingComponent {
     private final Map<Actor, Integer> detectionCounters;
     private final Map<Actor, Combatant> combatants;
     private final Set<Actor> nonCombatants;
-
-    private Actor followTarget;
     private AlertState alertState;
 
     public TargetingComponent(Actor actor) {
@@ -57,12 +55,13 @@ public class TargetingComponent {
     // Executed at the beginning of subject's turn
     public void updateTurn() {
         Set<Actor> visibleActors = actor.getVisibleActors();
+        // TODO - Implement new system for lowering/removing detection counters when actors are not seen for a period of time
         // Remove non-visible actors from detected
-        for(Actor actor : detectionCounters.keySet()) {
+        /*for(Actor actor : detectionCounters.keySet()) {
             if(!visibleActors.contains(actor)) {
                 detectionCounters.remove(actor);
             }
-        }
+        }*/
         for(Combatant combatant : combatants.values()) {
             combatant.turnsUntilRemove -= 1;
         }
@@ -109,13 +108,13 @@ public class TargetingComponent {
         float detectionChance = getActionDetectionChance(action, subject);
         boolean detected = MathUtils.randomCheck(detectionChance);
         if (detected) {
-            // TODO - Trigger onDetection function in actor (display updates for player-controlled actors)
             if (detectionCounters.containsKey(subject)) {
                 int currentCount = detectionCounters.get(subject);
                 detectionCounters.put(subject, currentCount + 1);
             } else {
                 detectionCounters.put(subject, 1);
             }
+            subject.onDetectionUpdate(actor, detectionCounters.get(subject), detectionThreshold());
             if (detectionCounters.get(subject) >= detectionThreshold()) {
                 onDetected(subject);
             }
@@ -127,13 +126,13 @@ public class TargetingComponent {
     }
 
     private void onDetected(Actor subject) {
-        // TODO - Add allied target adding? (only for active combatants, not detected targets)
-        if((this.actor.getArea().getRoom().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getRoom().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
-                (this.actor.getArea().getOwnerFaction() != null && this.actor.game().data().getFaction(this.actor.getArea().getOwnerFaction()).getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
-            this.actor.triggerScript("on_detect_target_trespassing");
+        // TODO - Add allied target adding? Handle with bark communication? (only for active combatants, not detected targets)
+        if ((actor.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getRoom().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
+                (actor.getArea().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
+            actor.triggerScript("on_detect_target_trespassing");
             addCombatant(actor);
-        } else if(this.actor.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
-            this.actor.triggerScript("on_detect_target_faction");
+        } else if (actor.getFaction().getRelationTo(subject.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
+            actor.triggerScript("on_detect_target_faction");
             addCombatant(actor);
         } else {
             addNonCombatant(actor);
@@ -197,7 +196,7 @@ public class TargetingComponent {
             case LOW:
                 return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.50f);
             case HIGH:
-                return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.05f, 0.80f);
+                return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.10f, 0.95f);
             case NONE:
             default:
                 return 0.0f;
