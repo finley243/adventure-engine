@@ -1,18 +1,21 @@
 package com.github.finley243.adventureengine;
 
-import com.github.finley243.adventureengine.actor.*;
-import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ActorFactory;
+import com.github.finley243.adventureengine.actor.ActorTemplate;
+import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.LootTable;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.DataLoader;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.network.Network;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
-import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.world.object.ObjectContainer;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

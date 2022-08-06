@@ -1,10 +1,9 @@
 package com.github.finley243.adventureengine;
 
-import java.io.IOException;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
+import java.io.IOException;
 
 public class Main {
 

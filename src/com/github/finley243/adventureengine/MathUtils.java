@@ -84,10 +84,12 @@ public class MathUtils {
     }
 
     public static <T> T selectRandomFromSet(Set<T> set) {
+        if (set.isEmpty()) return null;
         return selectRandomFromList(new ArrayList<>(set));
     }
 
     public static <T> T selectRandomFromList(List<T> list) {
+        if (list.isEmpty()) return null;
         return list.get(ThreadLocalRandom.current().nextInt(list.size()));
     }
 

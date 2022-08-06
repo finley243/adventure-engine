@@ -10,7 +10,7 @@ import com.github.finley243.adventureengine.script.Script;
 
 public class SceneLine {
     
-	private final Set<String> hasTriggered;
+	private boolean hasTriggered;
 
     private final List<String> textList;
     private final Condition condition;
@@ -31,7 +31,7 @@ public class SceneLine {
         this.exit = exit;
         this.redirectID = redirectID;
         this.fromSceneID = fromSceneID;
-        this.hasTriggered = new HashSet<>();
+        this.hasTriggered = false;
     }
     
     public List<String> getTextList() {
@@ -40,12 +40,12 @@ public class SceneLine {
     
     public boolean shouldShow(Actor subject, String lastTopicID) {
     	return (condition == null || condition.isMet(subject))
-                && (!once || !hasTriggered.contains(subject.getID()))
-                && (fromSceneID == null || fromSceneID.equals(lastTopicID));
+                && !(once && hasTriggered)
+                && !(fromSceneID != null && !fromSceneID.equals(lastTopicID));
     }
     
     public void trigger(Actor subject) {
-    	hasTriggered.add(subject.getID());
+    	hasTriggered = true;
         if(script != null) {
             script.execute(subject);
         }
