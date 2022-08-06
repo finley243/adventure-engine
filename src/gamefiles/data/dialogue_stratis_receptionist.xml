@@ -1,23 +1,23 @@
 <data>
-    <topic id="stratis_receptionist_start" type="select">
+    <scene id="stratis_receptionist_start" type="select">
         <line redirect="stratis_receptionist_main" once="true">
             <text>"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</text>
         </line>
         <line redirect="stratis_receptionist_main">
             <text>"Welcome back. How can I be of assistance?"</text>
         </line>
-    </topic>
-    <topic id="stratis_receptionist_main_return">
+    </scene>
+    <scene id="stratis_receptionist_main_return">
         <line redirect="stratis_receptionist_main">
             <text>"Very well. Anything else I can do for you?"</text>
         </line>
-    </topic>
-    <topic id="stratis_receptionist_main">
+    </scene>
+    <scene id="stratis_receptionist_main">
         <choice link="stratis_receptionist_request_room">Do you have any rooms available?</choice>
         <choice link="stratis_receptionist_info">I have some questions.</choice>
         <choice link="stratis_receptionist_end">That will be all.</choice>
-    </topic>
-    <topic id="stratis_receptionist_request_room">
+    </scene>
+    <scene id="stratis_receptionist_request_room">
         <condition type="var" variable="purchased_stratis_room" equality="EQUAL" value="0"/>
         <line>
             <text>He taps the screen in front of him and quickly scans its contents.</text>
@@ -25,8 +25,8 @@
         </line>
         <choice link="stratis_receptionist_purchase_room">I'll take the room.</choice>
         <choice link="stratis_receptionist_main_return">Not right now.</choice>
-    </topic>
-    <topic id="stratis_receptionist_purchase_room">
+    </scene>
+    <scene id="stratis_receptionist_purchase_room">
         <condition type="money" actor="PLAYER" value="300"/>
         <line>
             <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
@@ -40,8 +40,8 @@
         <line redirect="stratis_receptionist_main">
             <text>"Enjoy your stay. Is there anything else I can do for you?"</text>
         </line>
-    </topic>
-    <topic id="stratis_receptionist_info">
+    </scene>
+    <scene id="stratis_receptionist_info">
         <line>
             <text>"Of course."</text>
         </line>
@@ -50,34 +50,34 @@
         <choice link="stratis_receptionist_info_rees">Is there someone staying here by the name of Abel Rees?</choice>
         <choice link="stratis_receptionist_combat">[Attack] Any last words?</choice>
         <choice link="stratis_receptionist_main_return">That's all.</choice>
-    </topic>
-    <topic id="stratis_receptionist_info_amenities">
+    </scene>
+    <scene id="stratis_receptionist_info_amenities">
         <line redirect="stratis_receptionist_info">
             <text>The receptionist grins slightly.</text>
             <text>"Everything you could need. Five-star restaurant, rooftop pool. We also provide the fastest network access of any hotel in the area, included with every room."</text>
         </line>
-    </topic>
-    <topic id="stratis_receptionist_info_guests">
+    </scene>
+    <scene id="stratis_receptionist_info_guests">
         <line redirect="stratis_receptionist_info">
             <text>"Why yes, of course. The Stratis is the best, and most secure, hotel in the area."</text>
         </line>
-    </topic>
-    <topic id="stratis_receptionist_info_rees">
+    </scene>
+    <scene id="stratis_receptionist_info_rees">
         <line redirect="stratis_receptionist_info">
             <text>The receptionist narrows his eyes.</text>
             <text>"We can't disclose the identity of our guests to the public. As you can imagine, that would be bad for business."</text>
         </line>
-    </topic>
-    <topic id="stratis_receptionist_combat">
+    </scene>
+    <scene id="stratis_receptionist_combat">
         <line exit="true">
             <text>The receptionist smirks.</text>
             <text>"You think you're the first to try that here?"</text>
             <script type="combat" combatant="PLAYER"/>
         </line>
-    </topic>
-    <topic id="stratis_receptionist_end">
+    </scene>
+    <scene id="stratis_receptionist_end">
         <line exit="true">
             <text>"Very well. Have a lovely day."</text>
         </line>
-    </topic>
+    </scene>
 </data>

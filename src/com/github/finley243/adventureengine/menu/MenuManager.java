@@ -3,13 +3,13 @@ package com.github.finley243.adventureengine.menu;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.dialogue.DialogueChoice;
-import com.github.finley243.adventureengine.dialogue.DialogueLine;
-import com.github.finley243.adventureengine.dialogue.DialogueTopic;
-import com.github.finley243.adventureengine.dialogue.DialogueTopic.TopicType;
 import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
+import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.scene.Scene.SceneType;
+import com.github.finley243.adventureengine.scene.SceneChoice;
+import com.github.finley243.adventureengine.scene.SceneLine;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -32,63 +32,71 @@ public class MenuManager {
 		int actionIndex = getMenuInput(subject.game(), menuData);
 		return actions.get(actionIndex);
 	}
-	
-	public void dialogueMenu(Actor subject, String startTopic) {
-		boolean dialogueLoop = true;
-		DialogueTopic lastTopic = null;
-		DialogueTopic currentTopic = subject.game().data().getTopic(startTopic);
-		while(dialogueLoop) {
-			currentTopic.setVisited(subject);
-			for(DialogueLine line : currentTopic.getLines()) {
-				if (currentTopic.getType() == TopicType.RANDOM) {
+
+	// TODO - Consider replacing the while-loop structure with a recursive structure (each time it would loop, instead call the function again)
+	public void sceneMenu(Actor subject, Scene startScene) {
+		boolean loop = true;
+		boolean redirected;
+		Scene lastScene = null;
+		Scene currentScene = startScene;
+		while (loop) {
+			redirected = false;
+			currentScene.setVisited();
+			for (SceneLine line : currentScene.getLines()) {
+				if (currentScene.getType() == SceneType.RANDOM) {
 					// TODO - Improve efficiency (filter available lines once, then only select from this subset)
-					line = currentTopic.getLines().get(ThreadLocalRandom.current().nextInt(currentTopic.getLines().size()));
+					line = currentScene.getLines().get(ThreadLocalRandom.current().nextInt(currentScene.getLines().size()));
 				}
-				if(line.shouldShow(subject, (lastTopic == null ? null : lastTopic.getID()))) {
-					for(String text : line.getTextList()) {
+				if (line.shouldShow(subject, (lastScene == null ? null : lastScene.getID()))) {
+					for (String text : line.getTextList()) {
 						subject.game().eventBus().post(new RenderTextEvent(text));
 					}
 					line.trigger(subject);
-					if(line.hasRedirect()) {
-						lastTopic = currentTopic;
-						currentTopic = subject.game().data().getTopic(line.getRedirectTopicID());
+					if (line.hasRedirect()) {
+						redirected = true;
+						lastScene = currentScene;
+						currentScene = subject.game().data().getScene(line.getRedirectID());
 						break;
 					}
-					if(line.shouldExit()) {
-						dialogueLoop = false;
+					if (line.shouldExit()) {
+						loop = false;
 						break;
 					}
-					if(currentTopic.getType() == TopicType.SELECTOR) {
+					if (currentScene.getType() == SceneType.SELECTOR) {
 						break;
 					}
 				}
 			}
-			if(dialogueLoop) {
-				List<DialogueChoice> validChoices = new ArrayList<>();
-				for(DialogueChoice choice : currentTopic.getChoices()) {
-					if(subject.game().data().getTopic(choice.getLinkedId()).canChoose(subject)) {
-						validChoices.add(choice);
+			if (!redirected) {
+				if (currentScene.getChoices().isEmpty()) {
+					loop = false;
+				} else if (loop) {
+					List<SceneChoice> validChoices = new ArrayList<>();
+					for (SceneChoice choice : currentScene.getChoices()) {
+						if (subject.game().data().getScene(choice.getLinkedId()).canChoose(subject)) {
+							validChoices.add(choice);
+						}
 					}
-				}
-				subject.game().eventBus().post(new RenderTextEvent(""));
-				if(validChoices.size() > 0) {
-					DialogueChoice selectedChoice = dialogueMenuInput(subject.game(), validChoices);
-					lastTopic = currentTopic;
-					currentTopic = subject.game().data().getTopic(selectedChoice.getLinkedId());
-					subject.game().eventBus().post(new RenderTextEvent(selectedChoice.getPrompt()));
 					subject.game().eventBus().post(new RenderTextEvent(""));
+					if (validChoices.size() > 0) {
+						SceneChoice selectedChoice = sceneMenuInput(subject.game(), validChoices);
+						lastScene = currentScene;
+						currentScene = subject.game().data().getScene(selectedChoice.getLinkedId());
+						subject.game().eventBus().post(new RenderTextEvent(selectedChoice.getPrompt()));
+						subject.game().eventBus().post(new RenderTextEvent(""));
+					}
 				}
 			}
 		}
 	}
 	
-	private DialogueChoice dialogueMenuInput(Game game, List<DialogueChoice> choices) {
+	private SceneChoice sceneMenuInput(Game game, List<SceneChoice> choices) {
 		List<MenuData> menuData = new ArrayList<>();
-		for(DialogueChoice choice : choices) {
+		for(SceneChoice choice : choices) {
 			menuData.add(new MenuData(choice.getPrompt(), true));
 		}
-		int dialogueIndex = getMenuInput(game, menuData);
-		return choices.get(dialogueIndex);
+		int selectionIndex = getMenuInput(game, menuData);
+		return choices.get(selectionIndex);
 	}
 
 	private synchronized int getMenuInput(Game game, List<MenuData> menuData) {

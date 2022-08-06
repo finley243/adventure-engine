@@ -9,7 +9,48 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class SceneManager {
 
-	public static void trigger(Game game, Actor subject, List<Scene> scenes) {
+    public static void trigger(Game game, Actor subject, List<Scene> scenes) {
+        Scene scene = selectScene(subject, scenes);
+        if(scene != null) {
+            game.menuManager().sceneMenu(subject, scene);
+            //scene.play(game, subject);
+        }
+    }
+
+    public static void trigger(Game game, Actor subject, Scene scene) {
+        if (scene != null) {
+            trigger(game, subject, List.of(scene));
+        }
+    }
+
+    public static void triggerFromIDs(Game game, Actor subject, List<String> sceneIDs) {
+        List<Scene> scenes = new ArrayList<>();
+        for (String sceneID : sceneIDs) {
+            scenes.add(game.data().getScene(sceneID));
+        }
+        trigger(game, subject, scenes);
+    }
+
+    private static Scene selectScene(Actor subject, List<Scene> scenes) {
+        List<Scene> validScenes = new ArrayList<>();
+        int maxPriority = 0;
+        for(Scene scene : scenes) {
+            if(scene.canChoose(subject)) {
+                if (scene.getPriority() > maxPriority) {
+                    validScenes.clear();
+                    validScenes.add(scene);
+                } else if (scene.getPriority() == maxPriority) {
+                    validScenes.add(scene);
+                }
+            }
+        }
+        if(validScenes.isEmpty()) {
+            return null;
+        }
+        return validScenes.get(ThreadLocalRandom.current().nextInt(validScenes.size()));
+    }
+
+	/*public static void trigger(Game game, Actor subject, List<Scene> scenes) {
 		SceneManager.updateCooldowns(game, scenes);
 		Scene scene = selectScene(game, scenes);
 		if(scene != null) {
@@ -54,6 +95,6 @@ public class SceneManager {
 		for (Scene scene : scenes) {
 			scene.updateCooldown(game);
 		}
-	}
+	}*/
 
 }

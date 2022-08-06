@@ -1,11 +1,10 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.*;
-import com.github.finley243.adventureengine.dialogue.DialogueTopic;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.load.DataLoader;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.network.Network;
-import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -38,11 +37,10 @@ public class Data {
 	private final Map<String, ItemTemplate> items = new HashMap<>();
 	private final Map<String, Item> itemStates = new HashMap<>();
 	private final Map<String, LootTable> lootTables = new HashMap<>();
-	private final Map<String, DialogueTopic> topics = new HashMap<>();
+	private final Map<String, Scene> scenes = new HashMap<>();
 	private final Map<String, Integer> variables = new HashMap<>();
 	private final Map<String, Script> scripts = new HashMap<>();
 	private final Map<String, Faction> factions = new HashMap<>();
-	private final Map<String, Scene> scenes = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
 
 	public Data(Game game) {
@@ -77,11 +75,10 @@ public class Data {
 		items.clear();
 		itemStates.clear();
 		lootTables.clear();
-		topics.clear();
+		scenes.clear();
 		variables.clear();
 		scripts.clear();
 		factions.clear();
-		scenes.clear();
 		networks.clear();
 		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
 		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getActorTemplate(getConfig("playerStats")));
@@ -105,7 +102,7 @@ public class Data {
 		for(ItemTemplate itemTemplate : items.values()) {
 			state.addAll(itemTemplate.saveState());
 		}
-		for(DialogueTopic topic : topics.values()) {
+		for(Scene topic : scenes.values()) {
 			state.addAll(topic.saveState());
 		}
 		for(String variable : variables.keySet()) {
@@ -114,9 +111,6 @@ public class Data {
 			}
 		}
 		state.addAll(time().saveState());
-		for(Scene scene : scenes.values()) {
-			state.addAll(scene.saveState());
-		}
 		return state;
 	}
 
@@ -248,14 +242,14 @@ public class Data {
 		return lootTables.get(id);
 	}
 	
-	public void addTopic(String id, DialogueTopic value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add topic with blank ID");
-		if(topics.containsKey(id)) throw new IllegalArgumentException("Cannot add topic with existing ID: " + id);
-		topics.put(id, value);
+	public void addScene(String id, Scene value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add scene with blank ID");
+		if(scenes.containsKey(id)) throw new IllegalArgumentException("Cannot add scene with existing ID: " + id);
+		scenes.put(id, value);
 	}
 	
-	public DialogueTopic getTopic(String id) {
-		return topics.get(id);
+	public Scene getScene(String id) {
+		return scenes.get(id);
 	}
 
 	public void setVariable(String id, int value) {
@@ -286,16 +280,6 @@ public class Data {
 	
 	public Faction getFaction(String id) {
 		return factions.get(id);
-	}
-	
-	public void addScene(String id, Scene value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add scene with blank ID");
-		if(scenes.containsKey(id)) throw new IllegalArgumentException("Cannot add scene with existing ID: " + id);
-		scenes.put(id, value);
-	}
-
-	public Scene getScene(String id) {
-		return scenes.get(id);
 	}
 
 	public void addNetwork(String id, Network value) {

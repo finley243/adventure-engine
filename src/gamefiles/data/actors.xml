@@ -46,7 +46,7 @@
             <item count="20">ammo_pistol</item>
         </inventory>
     </actor>
-    <actor id="stratis_receptionist" parent="default" hp="40" faction="stratis_hotel_staff" topic="stratis_receptionist_start">
+    <actor id="stratis_receptionist" parent="default" hp="40" faction="stratis_hotel_staff" dialogueStart="stratis_receptionist_start">
         <name proper="false" pronoun="HE">receptionist</name>
         <inventory>
             <item>pistol_light</item>
@@ -82,14 +82,14 @@
             <line>"Get 'em!" $_actor yell$s_actor</line>
         </script>
     </actor>
-    <actor id="nexus_bouncer" parent="default" hp="70" faction="nexus_staff" topic="nexus_bouncer_start">
+    <actor id="nexus_bouncer" parent="default" hp="70" faction="nexus_staff" dialogueStart="nexus_bouncer_start">
         <name proper="false" pronoun="HE">bouncer</name>
         <inventory>
             <table>weapon_melee</table>
             <item>nexus_bouncer_key</item>
         </inventory>
     </actor>
-    <actor id="test_vendor" parent="default" hp="40" faction="nexus_staff" topic="stratis_receptionist_start">
+    <actor id="test_vendor" parent="default" hp="40" faction="nexus_staff" dialogueStart="stratis_receptionist_start">
         <name proper="false" pronoun="SHE">vendor</name>
         <inventory>
             <item>pistol_light</item>

@@ -1,101 +1,85 @@
 package com.github.finley243.adventureengine.scene;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.load.SaveData;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Scene {
+
+	public enum SceneType {
+		SEQUENTIAL, SELECTOR, RANDOM
+	}
 
 	private final String ID;
 
 	private final Condition condition;
-	// These lines are printed when the scene is played
-	private final List<SceneLine> lines;
-	
-	// As soon as it is possible to play it, skip the random selection and play this one
+	private final boolean once;
 	private final int priority;
-	private final boolean isRepeatable;
-	private final int cooldown;
-	private int cooldownCounter;
-	private boolean hasPlayed;
+	private final List<SceneLine> lines;
+	private final List<SceneChoice> choices;
+
+	private final SceneType type;
+
+	private boolean hasTriggered;
 	
-	public Scene(String ID, Condition condition, List<SceneLine> lines, boolean isRepeatable, int priority, int cooldown) {
+	public Scene(String ID, Condition condition, boolean once, int priority, List<SceneLine> lines, List<SceneChoice> choices, SceneType type) {
 		this.ID = ID;
 		this.condition = condition;
-		this.lines = lines;
-		this.isRepeatable = isRepeatable;
+		this.once = once;
 		this.priority = priority;
-		this.hasPlayed = false;
-		this.cooldown = cooldown;
-		this.cooldownCounter = 0;
+		this.lines = lines;
+		this.choices = choices;
+		this.type = type;
+		this.hasTriggered = false;
 	}
-
+	
 	public String getID() {
 		return ID;
 	}
-	
-	public boolean canPlay(Game game) {
-		if(!isRepeatable && hasPlayed) {
-			return false;
-		} else if(cooldownCounter > 0) {
-			return false;
-		} else {
-			return condition == null || condition.isMet(game.data().getPlayer());
-		}
+
+	public boolean canChoose(Actor subject) {
+		return (condition == null || condition.isMet(subject)) && !(once && hasTriggered);
 	}
 	
+	public List<SceneLine> getLines() {
+		return lines;
+	}
+
+	public List<SceneChoice> getChoices() {
+		return choices;
+	}
+
+	public SceneType getType() {
+		return type;
+	}
+
 	public int getPriority() {
 		return priority;
 	}
-	
-	public void updateCooldown(Game game) {
-		if(condition != null && !condition.isMet(game.data().getPlayer())) {
-			return;
-		}
-		if(cooldownCounter > 0) {
-			cooldownCounter--;
-		}
+
+	public void setVisited() {
+		hasTriggered = true;
 	}
-	
-	public void play(Game game, Actor subject) {
-		for(SceneLine line : lines) {
-			if(line.shouldShow(game)) {
-				for(String text : line.getText()) {
-					game.eventBus().post(new RenderTextEvent(text));
-				}
-				line.executeScript(subject);
-			}
-		}
-		hasPlayed = true;
-		cooldownCounter = cooldown;
+
+	public boolean hasVisited() {
+		return hasTriggered;
 	}
 
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
-			case "cooldownCounter":
-				this.cooldownCounter = saveData.getValueInt();
-				break;
-			case "hasPlayed":
-				this.hasPlayed = saveData.getValueBoolean();
-				break;
+		if ("hasTriggered".equals(saveData.getParameter())) {
+			this.hasTriggered = saveData.getValueBoolean();
 		}
 	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		if(cooldownCounter != 0) {
-			state.add(new SaveData(SaveData.DataType.SCENE, this.getID(), "cooldownCounter", cooldownCounter));
-		}
-		if(hasPlayed) {
-			state.add(new SaveData(SaveData.DataType.SCENE, this.getID(), "hasPlayed", hasPlayed));
+		if (hasTriggered) {
+			state.add(new SaveData(SaveData.DataType.SCENE, this.getID(), "hasTriggered", hasTriggered));
 		}
 		return state;
 	}
-
+	
 }

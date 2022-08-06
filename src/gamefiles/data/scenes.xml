@@ -1,5 +1,5 @@
 <data>
-    <scene id="stratis_lobby_intro" isRepeatable="true" priority="1" cooldown="7">
+    <scene id="stratis_lobby_intro">
         <condition type="all">
             <condition type="actorAvailableForScene" actor="stratis_receptionist"/>
             <condition type="actorAvailableForScene" actor="stratis_guard_lobby"/>
@@ -14,7 +14,7 @@
             <text>As he turns back to the computer, he notices you and clears his throat.</text>
         </line>
     </scene>
-    <scene id="test_weapon_bark" chance="1.0" cooldown="0">
+    <scene id="test_weapon_bark">
         <line>
             <condition type="equippedItem" actor="PLAYER" tag="weapon_handgun"/>
             <text>"Hey, holster that firearm! No open carry allowed here."</text>

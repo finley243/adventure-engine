@@ -1,11 +1,11 @@
-package com.github.finley243.adventureengine.dialogue;
+package com.github.finley243.adventureengine.scene;
 
-public class DialogueChoice {
+public class SceneChoice {
 
     private final String linkedTopicId;
     private final String prompt;
 
-    public DialogueChoice(String linkedTopicId, String prompt) {
+    public SceneChoice(String linkedTopicId, String prompt) {
         this.linkedTopicId = linkedTopicId;
         this.prompt = prompt;
     }

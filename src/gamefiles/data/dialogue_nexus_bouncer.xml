@@ -1,5 +1,5 @@
 <data>
-    <topic id="nexus_bouncer_start" type="select">
+    <scene id="nexus_bouncer_start" type="select">
         <line once="true">
             <text>The bouncer glances at you and frowns.</text>
             <text>"This club is for VIPs only. I don't know you, so you're not gettin' in."</text>
@@ -9,10 +9,10 @@
         </line>
         <choice link="nexus_bouncer_end">I have business with your boss.</choice>
         <choice link="nexus_bouncer_end">Sorry, my mistake.</choice>
-    </topic>
-    <topic id="nexus_bouncer_end">
+    </scene>
+    <scene id="nexus_bouncer_end">
         <line exit="true">
             <text>He turns away.</text>
         </line>
-    </topic>
+    </scene>
 </data>

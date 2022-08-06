@@ -1,23 +1,23 @@
 package com.github.finley243.adventureengine.world.environment;
 
-import java.util.*;
-
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.effect.AreaEffect;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+
+import java.util.*;
 
 /**
  * Represents a section of a room that can contain objects and actors

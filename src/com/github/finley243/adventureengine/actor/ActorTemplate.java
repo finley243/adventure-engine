@@ -26,7 +26,7 @@ public class ActorTemplate {
 	private final Map<Actor.Skill, Integer> skills;
 	
 	private final LootTable lootTable;
-	private final String topic;
+	private final String dialogueStart;
 
 	private final boolean isVendor;
 	private final String vendorLootTable;
@@ -36,7 +36,7 @@ public class ActorTemplate {
 
 	private final Map<String, Script> scripts;
 	
-	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String topic, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
+	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
@@ -48,7 +48,7 @@ public class ActorTemplate {
 		this.attributes = attributes;
 		this.skills = skills;
 		this.lootTable = lootTable;
-		this.topic = topic;
+		this.dialogueStart = dialogueStart;
 		this.scripts = scripts;
 		this.isVendor = isVendor;
 		this.vendorLootTable = vendorLootTable;
@@ -99,9 +99,9 @@ public class ActorTemplate {
 		return lootTable != null ? lootTable : game.data().getActorTemplate(parentID).getLootTable(game);
 	}
 
-	public String getTopic(Game game) {
-		if(topic == null && parentID.isEmpty()) return null;
-		return topic != null ? topic : game.data().getActorTemplate(parentID).getTopic(game);
+	public String getDialogueStart(Game game) {
+		if(dialogueStart == null && parentID.isEmpty()) return null;
+		return dialogueStart != null ? dialogueStart : game.data().getActorTemplate(parentID).getDialogueStart(game);
 	}
 
 	public Map<String, Script> getScripts() {

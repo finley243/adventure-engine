@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.Data;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -16,7 +15,7 @@ import java.util.List;
 public class SaveData implements Serializable {
 
     public enum DataType {
-        AREA, ROOM, ACTOR, OBJECT, TOPIC, VARIABLE, SCENE, ITEM_TEMPLATE, ITEM_INSTANCE, TIME
+        AREA, ROOM, ACTOR, OBJECT, SCENE, VARIABLE, ITEM_TEMPLATE, ITEM_INSTANCE, TIME
     }
 
     private final DataType type;
@@ -96,16 +95,12 @@ public class SaveData implements Serializable {
                 WorldObject object = data.getObject(id);
                 object.loadState(this);
                 break;
-            case TOPIC:
-                DialogueTopic topic = data.getTopic(id);
+            case SCENE:
+                Scene topic = data.getScene(id);
                 topic.loadState(this);
                 break;
             case VARIABLE:
                 data.setVariable(id, valueInt);
-                break;
-            case SCENE:
-                Scene scene = data.getScene(id);
-                scene.loadState(this);
                 break;
             case ITEM_INSTANCE:
                 ItemFactory.load(data.game(), valueString, id);

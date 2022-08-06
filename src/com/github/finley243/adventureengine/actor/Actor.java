@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.*;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -274,8 +275,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		return skills.get(skill).value(template.getSkill(game(), skill), SKILL_MIN, SKILL_MAX);
 	}
 	
-	public String getTopicID() {
-		return template.getTopic(game());
+	public Scene getDialogueStart() {
+		return game().data().getScene(template.getDialogueStart(game()));
 	}
 	
 	public Faction getFaction() {
@@ -560,7 +561,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	public List<Action> localActions(Actor subject) {
 		List<Action> action = new ArrayList<>();
 		if(isActive()) {
-			if(template.getTopic(game()) != null) {
+			if(template.getDialogueStart(game()) != null) {
 				action.add(new ActionTalk(this));
 			}
 			if(vendorComponent != null && behaviorComponent != null && behaviorComponent.isVendingEnabled()) {

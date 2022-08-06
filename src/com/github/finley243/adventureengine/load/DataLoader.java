@@ -8,11 +8,13 @@ import com.github.finley243.adventureengine.actor.ai.behavior.*;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.condition.*;
-import com.github.finley243.adventureengine.dialogue.DialogueChoice;
-import com.github.finley243.adventureengine.dialogue.DialogueLine;
-import com.github.finley243.adventureengine.dialogue.DialogueTopic;
 import com.github.finley243.adventureengine.effect.*;
+import com.github.finley243.adventureengine.item.ItemFactory;
+import com.github.finley243.adventureengine.item.LootTable;
+import com.github.finley243.adventureengine.item.LootTableEntry;
+import com.github.finley243.adventureengine.item.template.*;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.textgen.Context;
@@ -20,10 +22,6 @@ import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
-import com.github.finley243.adventureengine.item.ItemFactory;
-import com.github.finley243.adventureengine.item.LootTable;
-import com.github.finley243.adventureengine.item.LootTableEntry;
-import com.github.finley243.adventureengine.item.template.*;
 import com.github.finley243.adventureengine.world.object.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -53,10 +51,10 @@ public class DataLoader {
                         Faction faction = loadFaction(factionElement);
                         game.data().addFaction(faction.getID(), faction);
                     }
-                    List<Element> topics = LoadUtils.directChildrenWithName(rootElement, "topic");
-                    for (Element topicElement : topics) {
-                        DialogueTopic topic = loadTopic(topicElement);
-                        game.data().addTopic(topic.getID(), topic);
+                    List<Element> scenes = LoadUtils.directChildrenWithName(rootElement, "scene");
+                    for (Element sceneElement : scenes) {
+                        Scene scene = loadScene(sceneElement);
+                        game.data().addScene(scene.getID(), scene);
                     }
                     List<Element> actors = LoadUtils.directChildrenWithName(rootElement, "actor");
                     for (Element actorElement : actors) {
@@ -72,11 +70,6 @@ public class DataLoader {
                     for (Element tableElement : tables) {
                         LootTable table = loadLootTable(tableElement, false);
                         game.data().addLootTable(table.getID(), table);
-                    }
-                    List<Element> scenes = LoadUtils.directChildrenWithName(rootElement, "scene");
-                    for (Element sceneElement : scenes) {
-                        Scene scene = loadScene(sceneElement);
-                        game.data().addScene(scene.getID(), scene);
                     }
                     List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
                     for (Element roomElement : rooms) {
@@ -105,7 +98,7 @@ public class DataLoader {
         int hp = LoadUtils.attributeInt(actorElement, "hp", 0);
         List<Limb> limbs = loadLimbs(actorElement);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
-        String topic = LoadUtils.attribute(actorElement, "topic", null);
+        String dialogueStart = LoadUtils.attribute(actorElement, "dialogueStart", null);
         Map<Actor.Attribute, Integer> attributes = loadAttributes(actorElement);
         Map<Actor.Skill, Integer> skills = loadSkills(actorElement);
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
@@ -115,7 +108,7 @@ public class DataLoader {
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
         boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
         boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
-        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, topic, scripts, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
+        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, dialogueStart, scripts, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -158,39 +151,41 @@ public class DataLoader {
         return skills;
     }
 
-    private static DialogueTopic loadTopic(Element topicElement) throws ParserConfigurationException, SAXException, IOException {
-        String topicID = topicElement.getAttribute("id");
-        DialogueTopic.TopicType type;
-        switch(topicElement.getAttribute("type")) {
+    private static Scene loadScene(Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
+        if (sceneElement == null) return null;
+        String sceneID = sceneElement.getAttribute("id");
+        Scene.SceneType type;
+        switch(sceneElement.getAttribute("type")) {
             case "random":
-                type = DialogueTopic.TopicType.RANDOM;
+                type = Scene.SceneType.RANDOM;
                 break;
             case "select":
-                type = DialogueTopic.TopicType.SELECTOR;
+                type = Scene.SceneType.SELECTOR;
                 break;
             case "all":
             default:
-                type = DialogueTopic.TopicType.SEQUENTIAL;
+                type = Scene.SceneType.SEQUENTIAL;
                 break;
         }
-        Condition condition = loadCondition(LoadUtils.singleChildWithName(topicElement, "condition"));
-        boolean once = LoadUtils.attributeBool(topicElement, "once", false);
-        List<Element> lineElements = LoadUtils.directChildrenWithName(topicElement, "line");
-        List<DialogueLine> lines = new ArrayList<>();
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(sceneElement, "condition"));
+        boolean once = LoadUtils.attributeBool(sceneElement, "once", false);
+        int priority = LoadUtils.attributeInt(sceneElement, "priority", 1);
+        List<Element> lineElements = LoadUtils.directChildrenWithName(sceneElement, "line");
+        List<SceneLine> lines = new ArrayList<>();
         for(Element lineElement : lineElements) {
-            DialogueLine line = loadLine(lineElement);
+            SceneLine line = loadSceneLine(lineElement);
             lines.add(line);
         }
-        List<Element> choiceElements = LoadUtils.directChildrenWithName(topicElement, "choice");
-        List<DialogueChoice> choices = new ArrayList<>();
+        List<Element> choiceElements = LoadUtils.directChildrenWithName(sceneElement, "choice");
+        List<SceneChoice> choices = new ArrayList<>();
         for(Element choiceElement : choiceElements) {
-            DialogueChoice choice = loadChoice(choiceElement);
+            SceneChoice choice = loadSceneChoice(choiceElement);
             choices.add(choice);
         }
-        return new DialogueTopic(topicID, condition, once, lines, choices, type);
+        return new Scene(sceneID, condition, once, priority, lines, choices, type);
     }
 
-    private static DialogueLine loadLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
+    private static SceneLine loadSceneLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
         boolean once = LoadUtils.attributeBool(lineElement, "once", false);
         boolean exit = LoadUtils.attributeBool(lineElement, "exit", false);
         String redirect = LoadUtils.attribute(lineElement, "redirect", null);
@@ -198,13 +193,13 @@ public class DataLoader {
         List<String> texts = LoadUtils.listOfTags(lineElement, "text");
         Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
         Script script = loadScript(LoadUtils.singleChildWithName(lineElement, "script"));
-        return new DialogueLine(texts, condition, script, once, exit, redirect, from);
+        return new SceneLine(texts, condition, script, once, exit, redirect, from);
     }
 
-    private static DialogueChoice loadChoice(Element choiceElement) {
+    private static SceneChoice loadSceneChoice(Element choiceElement) {
         String link = choiceElement.getAttribute("link");
         String prompt = choiceElement.getTextContent();
-        return new DialogueChoice(link, prompt);
+        return new SceneChoice(link, prompt);
     }
 
     private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
@@ -330,7 +325,7 @@ public class DataLoader {
                 return new ScriptTransferItem(condition, actorRef, transferTargetRef, transferItemID, transferItemSelect, transferItemCount);
             case "scene":
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
-                return new ScriptScene(condition, scenes);
+                return new ScriptScene(condition, actorRef, scenes);
             case "varSet":
                 String varSetID = LoadUtils.attribute(scriptElement, "variable", null);
                 int varSetValue = LoadUtils.attributeInt(scriptElement, "value", 0);
@@ -339,9 +334,6 @@ public class DataLoader {
                 String varModID = LoadUtils.attribute(scriptElement, "variable", null);
                 int varModValue = LoadUtils.attributeInt(scriptElement, "value", 0);
                 return new ScriptVariableMod(condition, varModID, varModValue);
-            case "dialogue":
-                String topic = LoadUtils.attribute(scriptElement, "topic", null);
-                return new ScriptDialogue(condition, actorRef, topic);
             case "combat":
                 ActorReference combatantRef = loadActorReference(scriptElement, "combatant");
                 return new ScriptCombat(condition, actorRef, combatantRef);
@@ -539,29 +531,6 @@ public class DataLoader {
         } else {
             return new LootTableEntry(referenceID, isTable, chance, countMin, countMax);
         }
-    }
-
-    private static Scene loadScene(Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
-        if(sceneElement == null) return null;
-        boolean isRepeatable = LoadUtils.attributeBool(sceneElement, "isRepeatable", true);
-        int priority = LoadUtils.attributeInt(sceneElement, "priority", 1);
-        String sceneID = sceneElement.getAttribute("id");
-        Condition condition = loadCondition(LoadUtils.singleChildWithName(sceneElement, "condition"));
-        List<SceneLine> lines = new ArrayList<>();
-        for(Element lineElement : LoadUtils.directChildrenWithName(sceneElement, "line")) {
-            SceneLine line = loadSceneLine(lineElement);
-            lines.add(line);
-        }
-        int cooldown = LoadUtils.attributeInt(sceneElement, "cooldown", 0);
-        return new Scene(sceneID, condition, lines, isRepeatable, priority, cooldown);
-    }
-
-    private static SceneLine loadSceneLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
-        if(lineElement == null) return null;
-        Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
-        List<String> text = LoadUtils.listOfTags(lineElement, "text");
-        Script script = loadScript(LoadUtils.singleChildWithName(lineElement, "script"));
-        return new SceneLine(condition, text, script);
     }
 
     private static Room loadRoom(Game game, Element roomElement) throws ParserConfigurationException, IOException, SAXException {

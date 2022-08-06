@@ -1,13 +1,13 @@
 package com.github.finley243.adventureengine.item.template;
 
+import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.script.Script;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.script.Script;
 
 public class ConsumableTemplate extends ItemTemplate {
 

@@ -6,6 +6,11 @@
     </item>
     <item type="weapon" id="katana" price="60" weaponType="SWORD">
         <name>katana</name>
+        <description>
+            <line>
+                <text>A razor-sharp sword of fine craftsmanship.</text>
+            </line>
+        </description>
         <damage base="20" crit="10"/>
         <rate>2</rate>
     </item>
