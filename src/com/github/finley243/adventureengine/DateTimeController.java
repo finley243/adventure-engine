@@ -172,6 +172,14 @@ public class DateTimeController {
         }
     }
 
+    public static int minutesToRounds(int minutes) {
+        return minutes / MINUTES_PER_ROUND;
+    }
+
+    public static int roundsToMinutes(int rounds) {
+        return rounds * MINUTES_PER_ROUND;
+    }
+
     public List<SaveData> saveState() {
         List<SaveData> state = new ArrayList<>();
         state.add(new SaveData(SaveData.DataType.TIME, null, "minutes", minutes));

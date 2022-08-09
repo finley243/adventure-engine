@@ -464,17 +464,17 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		return !isDead() && !isSleeping();
 	}
 
-	public void startSleep(int duration) {
-		this.sleepCounter = duration;
+	public void startSleep(int minutes) {
+		sleepCounter = DateTimeController.minutesToRounds(minutes);
 		setSleeping(true);
 	}
 
 	private void updateSleep() {
 		if(sleepCounter != 0) {
-			this.sleepCounter -= DateTimeController.MINUTES_PER_ROUND;
+			sleepCounter -= 1;
 			if (sleepCounter <= 0) {
 				setSleeping(false);
-				this.sleepCounter = 0;
+				sleepCounter = 0;
 			}
 		}
 	}
