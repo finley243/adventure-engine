@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -12,8 +13,8 @@ public class BehaviorGuard extends Behavior {
 
     private final String guardTarget;
 
-    public BehaviorGuard(Condition condition, int duration, List<Scene> idleScenes, String guardTarget) {
-        super(condition, duration, idleScenes);
+    public BehaviorGuard(Condition condition, int duration, List<Idle> idles, String guardTarget) {
+        super(condition, duration, idles);
         this.guardTarget = guardTarget;
     }
 

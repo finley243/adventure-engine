@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.ai.behavior;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -13,8 +14,8 @@ public class BehaviorObject extends Behavior {
 
     private final String object;
 
-    public BehaviorObject(Condition condition, int duration, List<Scene> idleScenes, String object) {
-        super(condition, duration, idleScenes);
+    public BehaviorObject(Condition condition, int duration, List<Idle> idles, String object) {
+        super(condition, duration, idles);
         this.object = object;
     }
 

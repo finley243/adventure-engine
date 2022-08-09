@@ -674,6 +674,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		// May cause issues
 		actionPointsUsed = 0;
 		endTurn = true;
+		if (!playerControlled) {
+			playIdle();
+		}
 	}
 	
 	public Action chooseAction(List<Action> actions) {
@@ -681,6 +684,15 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			return game().menuManager().actionMenu(actions, this);
 		} else {
 			return UtilityUtils.selectActionByUtility(this, actions, 1);
+		}
+	}
+
+	public void playIdle() {
+		if (behaviorComponent() != null) {
+			Idle idle = behaviorComponent().getIdle();
+			if (idle != null) {
+				idle.trigger(this);
+			}
 		}
 	}
 	

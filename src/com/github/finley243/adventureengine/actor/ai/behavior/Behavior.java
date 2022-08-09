@@ -1,13 +1,17 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.scene.SceneManager;
+import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Behavior {
@@ -19,15 +23,17 @@ public abstract class Behavior {
     private final Condition condition;
     // If duration = 0, behavior will continue indefinitely until endCondition is met or until superseded by another behavior
     private final int duration;
-    private final List<Scene> idleScenes;
+    //private final List<Scene> idleScenes;
+    private final List<Idle> idles;
     //private final boolean allowCombatActions;
     //private final boolean allowItemActions;
     private int turnsRemaining;
 
-    public Behavior(Condition condition, int duration, List<Scene> idleScenes) {
+    public Behavior(Condition condition, int duration, List<Idle> idles) {
         this.condition = condition;
         this.duration = duration;
-        this.idleScenes = idleScenes;
+        //this.idleScenes = idleScenes;
+        this.idles = idles;
         this.turnsRemaining = 0;
     }
 
@@ -44,9 +50,10 @@ public abstract class Behavior {
             }
         }
         // TODO - Stop calling SceneManager directly from Behavior (could call from BehaviorComponent? from idle action?)
-        if(isInTargetState(subject) && idleScenes != null) {
-            SceneManager.trigger(subject.game(), subject, idleScenes);
-        }
+        /*if(isInTargetState(subject) && idles != null) {
+            //SceneManager.trigger(subject.game(), subject, idleScenes);
+            triggerIdle(subject);
+        }*/
         //System.out.println("Turns Remaining: " + turnsRemaining);
     }
 
@@ -78,6 +85,16 @@ public abstract class Behavior {
 
     public boolean isValid(Actor subject) {
         return condition == null || condition.isMet(subject);
+    }
+
+    public Idle getIdle(Actor subject) {
+        List<Idle> validIdles = new ArrayList<>();
+        for (Idle idle : idles) {
+            if (idle.canPlay(subject)) {
+                validIdles.add(idle);
+            }
+        }
+        return MathUtils.selectRandomFromList(validIdles);
     }
 
 }

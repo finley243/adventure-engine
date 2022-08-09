@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -11,8 +12,8 @@ public class BehaviorArea extends Behavior {
 
     private final String area;
 
-    public BehaviorArea(Condition condition, int duration, List<Scene> idleScenes, String area) {
-        super(condition, duration, idleScenes);
+    public BehaviorArea(Condition condition, int duration, List<Idle> idles, String area) {
+        super(condition, duration, idles);
         this.area = area;
     }
 

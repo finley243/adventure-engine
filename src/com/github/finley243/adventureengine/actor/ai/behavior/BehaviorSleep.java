@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionSleep;
 import com.github.finley243.adventureengine.action.ActionUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -15,8 +16,8 @@ public class BehaviorSleep extends Behavior {
 
     private final String bed;
 
-    public BehaviorSleep(Condition condition, List<Scene> idleScenes, String bed) {
-        super(condition, 0, idleScenes);
+    public BehaviorSleep(Condition condition, List<Idle> idles, String bed) {
+        super(condition, 0, idles);
         this.bed = bed;
     }
 

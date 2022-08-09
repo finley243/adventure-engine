@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.component;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
+import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -26,6 +27,15 @@ public class BehaviorComponent {
     private Behavior currentBehavior() {
         if(behaviors.isEmpty() || currentIndex == -1 || currentIndex >= behaviors.size()) return null;
         return behaviors.get(currentIndex);
+    }
+
+    public Idle getIdle() {
+        Behavior current = currentBehavior();
+        if (current == null) {
+            return null;
+        } else {
+            return current.getIdle(actor);
+        }
     }
 
     // A return value of -1.0f indicates no override for given action

@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
+import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
@@ -685,36 +686,41 @@ public class DataLoader {
             String type = LoadUtils.attribute(behaviorElement, "type", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"));
             int duration = LoadUtils.attributeInt(behaviorElement, "duration", 0);
-            List<Scene> idleScenes = new ArrayList<>();
-            List<Element> sceneElements = LoadUtils.directChildrenWithName(behaviorElement, "idleScene");
+            List<Idle> idles = new ArrayList<>();
+            List<Element> idleElements = LoadUtils.directChildrenWithName(behaviorElement, "idle");
+            for (Element idleElement : idleElements) {
+                Idle idle = loadIdle(idleElement);
+                idles.add(idle);
+            }
+            /*List<Element> sceneElements = LoadUtils.directChildrenWithName(behaviorElement, "idleScene");
             for (Element sceneElement : sceneElements) {
                 Scene scene = loadScene(sceneElement);
                 idleScenes.add(scene);
-            }
+            }*/
             switch(type) {
                 case "area":
                     String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
-                    behavior = new BehaviorArea(condition, duration, idleScenes, areaTarget);
+                    behavior = new BehaviorArea(condition, duration, idles, areaTarget);
                     break;
                 case "object":
                     String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
-                    behavior = new BehaviorObject(condition, duration, idleScenes, objectTarget);
+                    behavior = new BehaviorObject(condition, duration, idles, objectTarget);
                     break;
                 case "guard":
                     String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
-                    behavior = new BehaviorGuard(condition, duration, idleScenes, guardTarget);
+                    behavior = new BehaviorGuard(condition, duration, idles, guardTarget);
                     break;
                 case "sandbox":
                     String startArea = LoadUtils.attribute(behaviorElement, "area", null);
-                    behavior = new BehaviorSandbox(condition, duration, idleScenes, startArea);
+                    behavior = new BehaviorSandbox(condition, duration, idles, startArea);
                     break;
                 case "sleep":
                     String bedTarget = LoadUtils.attribute(behaviorElement, "bed", null);
-                    behavior = new BehaviorSleep(condition, idleScenes, bedTarget);
+                    behavior = new BehaviorSleep(condition, idles, bedTarget);
                     break;
                 case "vendor":
                     String vendorArea = LoadUtils.attribute(behaviorElement, "area", null);
-                    behavior = new BehaviorVendor(condition, duration, idleScenes, vendorArea);
+                    behavior = new BehaviorVendor(condition, duration, idles, vendorArea);
                     break;
                 case "cycle":
                     List<Behavior> cycleBehaviors = loadBehaviors(behaviorElement);
@@ -727,6 +733,12 @@ public class DataLoader {
             behaviors.add(behavior);
         }
         return behaviors;
+    }
+
+    private static Idle loadIdle(Element idleElement) throws ParserConfigurationException, IOException, SAXException {
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"));
+        String phrase = LoadUtils.singleTag(idleElement, "phrase", null);
+        return new Idle(condition, phrase);
     }
 
 }
