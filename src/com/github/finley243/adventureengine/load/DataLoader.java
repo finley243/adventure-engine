@@ -662,8 +662,9 @@ public class DataLoader {
             String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
             String description = LoadUtils.singleTag(actionElement, "description", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
+            Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
             Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
-            actions.add(new ActionCustom(prompt, description, objectID, condition, script));
+            actions.add(new ActionCustom(prompt, description, objectID, condition, conditionShow, script));
         }
         return actions;
     }

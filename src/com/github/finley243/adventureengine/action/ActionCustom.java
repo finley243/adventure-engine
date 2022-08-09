@@ -11,15 +11,19 @@ public class ActionCustom extends Action {
     private final String object;
     private final String prompt;
     private final String description;
+    // The condition under which the action can be selected
     private final Condition condition;
+    // The condition under which the action will be added to the list of possible actions
+    private final Condition conditionShow;
     private final Script script;
 
-    public ActionCustom(String prompt, String description, String object, Condition condition, Script script) {
+    public ActionCustom(String prompt, String description, String object, Condition condition, Condition conditionShow, Script script) {
         super(ActionDetectionChance.LOW);
         this.prompt = prompt;
         this.description = description;
         this.object = object;
         this.condition = condition;
+        this.conditionShow = conditionShow;
         this.script = script;
     }
 
@@ -39,6 +43,10 @@ public class ActionCustom extends Action {
     @Override
     public MenuData getMenuData(Actor subject) {
         return new MenuData(prompt, canChoose(subject), new String[] {subject.game().data().getObject(object).getName()});
+    }
+
+    public boolean canShow(Actor subject) {
+        return conditionShow == null || conditionShow.isMet(subject);
     }
 
 }

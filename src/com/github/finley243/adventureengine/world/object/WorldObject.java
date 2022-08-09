@@ -130,7 +130,11 @@ public abstract class WorldObject extends GameInstanced implements Noun, Physica
 		if(description != null) {
 			actions.add(new ActionInspectObject(this));
 		}
-		actions.addAll(customActions);
+		for (ActionCustom customAction : customActions) {
+			if (customAction.canShow(subject)) {
+				actions.add(customAction);
+			}
+		}
 		return actions;
 	}
 
