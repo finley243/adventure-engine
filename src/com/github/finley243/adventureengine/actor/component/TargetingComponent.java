@@ -110,8 +110,8 @@ public class TargetingComponent {
         }
     }
 
-    // TODO - Stop this from triggering on actors that are already known combatants or non-combatants
     public void onVisibleAction(Action action, Actor subject) {
+        if (isDetected(subject)) return;
         float detectionChance = getActionDetectionChance(action, subject);
         boolean detected = MathUtils.randomCheck(detectionChance);
         if (detected) {
