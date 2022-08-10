@@ -38,6 +38,7 @@ public class MenuManager {
 	}
 
 	private void sceneMenu(Actor subject, Scene scene, String lastSceneID) {
+		scene.setVisited();
 		List<SceneLine> lines = selectValidLines(subject, scene, lastSceneID);
 		boolean showChoices = true;
 		String redirect = null;

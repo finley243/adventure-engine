@@ -18,7 +18,7 @@ public class EquipmentComponent {
     }
 
     public void unequip(ItemEquippable item) {
-        if (equippedItem.equals(item)) {
+        if (equippedItem != null && equippedItem.equals(item)) {
             this.equippedItem = null;
         }
     }

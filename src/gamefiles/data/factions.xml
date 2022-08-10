@@ -8,4 +8,5 @@
         <relation faction="stratis_hotel_staff" type="HOSTILE"/>
     </faction>
     <faction id="nexus_staff" default="NEUTRAL"/>
+    <faction id="cornerstore_staff" default="NEUTRAL"/>
 </data>

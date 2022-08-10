@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai;
 
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -13,31 +14,26 @@ public class UtilityUtils {
 
 	public static final float PURSUE_TARGET_UTILITY_MELEE = 0.7f;
 	public static final float PURSUE_TARGET_UTILITY_RANGED = 0.0f;
-	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.6f;
+	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.7f;
 	public static final float PURSUE_TARGET_UTILITY_NOWEAPON = 0.0f;
 	public static final float FLEE_TARGET_UTILITY = 0.5f;
 	public static final float INVESTIGATE_NOISE_UTILITY = 0.5f;
 	
 	public static float getMovementUtility(Actor subject, Area area, boolean throughDoors) {
-		if(subject.getPursueTargets().isEmpty()) {
-			return 0.0f;
-		}
+		if (subject.getPursueTargets().isEmpty()) return 0.0f;
 		float utility = 0.0f;
 		int contributors = 0;
-		for(AreaTarget target : subject.getPursueTargets()) {
-			if(target.isActive() && (!throughDoors || target.shouldUseDoors())) {
+		for (AreaTarget target : subject.getPursueTargets()) {
+			if (target.isActive() && !(throughDoors && !target.shouldUseDoors())) {
 				if (target.shouldFlee() && target.getTargetAreas().contains(subject.getArea())) {
 					utility += target.getTargetUtility();
-					contributors++;
-				} else if (target.shouldFlee() ^ target.isOnPath(area)) { // XOR
+				} else if (target.shouldFlee() != target.isOnPath(area)) { // XOR
 					// Temporary calculation, ignores distance
 					utility += target.getTargetUtility();
-					contributors++;
 				}
 			}
 		}
-		// TODO - Switch to summative utility rather than average
-		return utility / contributors;
+		return MathUtils.bound(utility, 0.0f, 1.0f);
 	}
 
 	public static float getCoverUtility(Actor subject) {
@@ -72,7 +68,7 @@ public class UtilityUtils {
 
 	// Returns true if subject needs to move to get into ideal range for attacking target (false if already in ideal range)
 	public static boolean shouldActivatePursueTarget(Actor subject, Actor target) {
-		if(subject.equipmentComponent().hasEquippedItem() && subject.equipmentComponent().getEquippedItem() instanceof ItemWeapon) {
+		if (subject.equipmentComponent() != null && subject.equipmentComponent().hasEquippedItem() && subject.equipmentComponent().getEquippedItem() instanceof ItemWeapon) {
 			ItemWeapon weapon = (ItemWeapon) subject.equipmentComponent().getEquippedItem();
 			//int targetDistance = target.getTargetDistance();
 			int targetDistance = subject.getArea().getDistanceTo(target.getArea().getID());

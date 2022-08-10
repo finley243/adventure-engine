@@ -64,12 +64,13 @@ public class BehaviorComponent {
         if(currentBehavior != null) {
             if(areaTarget == null) {
                 if(currentBehavior.getTargetArea(actor) != null) {
-                    areaTarget = new AreaTarget(currentBehavior.getTargetArea(actor), Behavior.BEHAVIOR_ACTION_UTILITY, true, false, false);
+                    areaTarget = new AreaTarget(currentBehavior.getTargetArea(actor), actor.isInCombat() ? Behavior.BEHAVIOR_MOVEMENT_UTILITY_COMBAT : Behavior.BEHAVIOR_MOVEMENT_UTILITY, true, false, false);
                     actor.addPursueTarget(areaTarget);
                 }
             } else {
                 if(currentBehavior.getTargetArea(actor) != null) {
                     areaTarget.setTargetArea(currentBehavior.getTargetArea(actor));
+                    areaTarget.setTargetUtility(actor.isInCombat() ? Behavior.BEHAVIOR_MOVEMENT_UTILITY_COMBAT : Behavior.BEHAVIOR_MOVEMENT_UTILITY);
                 } else {
                     areaTarget.markForRemoval();
                     areaTarget = null;

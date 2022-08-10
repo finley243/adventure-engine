@@ -17,6 +17,15 @@
             <object type="basic" id="fifth_corner_store_counter">
                 <name>counter</name>
             </object>
+            <actor id="cornerstore_shopkeeper" template="cornerstore_shopkeeper">
+                <behaviors>
+                    <behavior type="area" area="fifth_corner_store_counter">
+                        <idle>
+                            <phrase>$_actor {yawn$s_actor|stretch$es_actor|tap$s_actor $actor's fingers on the counter}</phrase>
+                        </idle>
+                    </behavior>
+                </behaviors>
+            </actor>
         </area>
         <area id="fifth_corner_store_aisle">
             <name type="in">aisle</name>

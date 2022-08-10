@@ -98,4 +98,11 @@
             <buyTag>weapon_ranged</buyTag>
         </vendor>
     </actor>
+    <actor id="cornerstore_shopkeeper" parent="default" hp="50" faction="cornerstore_staff" dialogueStart="cornerstore_shopkeeper_start">
+        <name proper="false" pronoun="HE">shopkeeper</name>
+        <inventory>
+            <item>pistol_heavy</item>
+        </inventory>
+        <vendor lootTable="vendor_cornerstore"/>
+    </actor>
 </data>

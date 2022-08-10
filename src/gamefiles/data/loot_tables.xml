@@ -22,4 +22,7 @@
         <item>cup_paper</item>
         <item>can_spray_paint</item>
     </lootTable>
+    <lootTable id="vendor_cornerstore">
+        <table count="5">junk_random</table>
+    </lootTable>
 </data>

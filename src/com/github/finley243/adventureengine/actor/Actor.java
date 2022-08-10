@@ -674,7 +674,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		// May cause issues
 		actionPointsUsed = 0;
 		endTurn = true;
-		if (!playerControlled) {
+		if (!playerControlled && shouldIdle()) {
 			playIdle();
 		}
 	}
@@ -687,13 +687,17 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 	}
 
-	public void playIdle() {
+	private void playIdle() {
 		if (behaviorComponent() != null) {
 			Idle idle = behaviorComponent().getIdle();
 			if (idle != null) {
 				idle.trigger(this);
 			}
 		}
+	}
+
+	private boolean shouldIdle() {
+		return !isInCombat();
 	}
 	
 	private void updatePursueTargets() {

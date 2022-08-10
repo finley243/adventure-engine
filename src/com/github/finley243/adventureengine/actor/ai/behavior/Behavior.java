@@ -16,9 +16,11 @@ import java.util.List;
 
 public abstract class Behavior {
 
-    public static final float BEHAVIOR_ACTION_UTILITY = 0.8f;
-    // To avoid conflicts, behaviors are ignored (0 utility) during combat
-    public static final float BEHAVIOR_ACTION_UTILITY_COMBAT = 0.0f;
+    public static final float BEHAVIOR_ACTION_UTILITY = 0.7f;
+    // To avoid conflicts, behaviors are ignored (-1.0f prevents overriding) during combat
+    public static final float BEHAVIOR_ACTION_UTILITY_COMBAT = -1.0f;
+    public static final float BEHAVIOR_MOVEMENT_UTILITY = 0.7f;
+    public static final float BEHAVIOR_MOVEMENT_UTILITY_COMBAT = 0.0f;
 
     private final Condition condition;
     // If duration = 0, behavior will continue indefinitely until endCondition is met or until superseded by another behavior
@@ -88,6 +90,7 @@ public abstract class Behavior {
     }
 
     public Idle getIdle(Actor subject) {
+        if (idles == null) return null;
         List<Idle> validIdles = new ArrayList<>();
         for (Idle idle : idles) {
             if (idle.canPlay(subject)) {

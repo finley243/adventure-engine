@@ -14,7 +14,7 @@ import java.util.*;
 
 public class TargetingComponent {
 
-    private static final int TURNS_UNTIL_END_COMBAT = 4;
+    private static final int TURNS_UNTIL_END_COMBAT = 8;
     private static final AlertState DEFAULT_ALERT_STATE = AlertState.AWARE;
 
     public enum AlertState {
@@ -71,24 +71,26 @@ public class TargetingComponent {
     public void update() {
         boolean startEmpty = combatants.isEmpty();
         for(Iterator<Actor> itr = combatants.keySet().iterator(); itr.hasNext();) {
-            Actor actor = itr.next();
-            Combatant combatant = combatants.get(actor);
+            Actor target = itr.next();
+            Combatant combatant = combatants.get(target);
             if (combatant.areaTarget == null) {
                 combatant.areaTarget = new AreaTarget(idealAreas(combatant.lastKnownArea), 0.0f, true, false, false);
                 actor.addPursueTarget(combatant.areaTarget);
             }
-            if (actor.canSee(actor)) {
-                combatant.lastKnownArea = actor.getArea();
+            if (actor.canSee(target)) {
+                combatant.lastKnownArea = target.getArea();
                 combatant.turnsUntilRemove = TURNS_UNTIL_END_COMBAT;
                 combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
-                combatant.areaTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(this.actor, actor));
-                combatant.areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(this.actor, actor));
-                combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(this.actor, actor));
+                combatant.areaTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(actor, target));
+                // TODO - Rework "target distance" system so that area targets can maintain their own distance
+                //combatant.areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(actor, target));
+                combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, target));
             } else {
                 combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
+                //combatant.areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(actor, target));
                 combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
             }
-            if(actor.isDead() || combatant.turnsUntilRemove <= 0) {
+            if(target.isDead() || combatant.turnsUntilRemove <= 0) {
                 combatant.areaTarget.markForRemoval();
                 itr.remove();
             }
@@ -98,12 +100,17 @@ public class TargetingComponent {
         }
     }
 
-    public void updateCombatantArea(Actor actor, Area area) {
-        if(combatants.containsKey(actor)) {
-            combatants.get(actor).lastKnownArea = area;
+    public void updateCombatantArea(Actor target, Area area) {
+        if(combatants.containsKey(target)) {
+            Combatant combatant = combatants.get(target);
+            combatant.lastKnownArea = area;
+            if (combatant.areaTarget != null) {
+                combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
+            }
         }
     }
 
+    // TODO - Stop this from triggering on actors that are already known combatants or non-combatants
     public void onVisibleAction(Action action, Actor subject) {
         float detectionChance = getActionDetectionChance(action, subject);
         boolean detected = MathUtils.randomCheck(detectionChance);
@@ -139,31 +146,32 @@ public class TargetingComponent {
         }
     }
 
-    public void addCombatant(Actor actor) {
+    // TODO - Needs to account for adding a combatant that is already in the non-combatant set
+    public void addCombatant(Actor target) {
         if (combatants.isEmpty()) {
             actor.triggerScript("on_combat_start");
         }
-        detectionCounters.remove(actor);
-        if (!combatants.containsKey(actor)) {
-            combatants.put(actor, new Combatant(actor.getArea()));
+        detectionCounters.remove(target);
+        if (!combatants.containsKey(target)) {
+            combatants.put(target, new Combatant(target.getArea()));
         }
     }
 
-    private void addNonCombatant(Actor actor) {
-        detectionCounters.remove(actor);
-        nonCombatants.add(actor);
+    private void addNonCombatant(Actor target) {
+        detectionCounters.remove(target);
+        nonCombatants.add(target);
     }
 
-    public boolean isCombatant(Actor actor){
-        return combatants.containsKey(actor);
+    public boolean isCombatant(Actor target){
+        return combatants.containsKey(target);
     }
 
-    public boolean isNonCombatant(Actor actor) {
-        return nonCombatants.contains(actor);
+    public boolean isNonCombatant(Actor target) {
+        return nonCombatants.contains(target);
     }
 
-    public boolean isDetected(Actor actor) {
-        return isCombatant(actor) || isNonCombatant(actor);
+    public boolean isDetected(Actor target) {
+        return isCombatant(target) || isNonCombatant(target);
     }
 
     public boolean hasCombatants() {
@@ -206,22 +214,23 @@ public class TargetingComponent {
     private Set<Area> idealAreas(Area origin) {
         int idealDistanceMin = 0;
         int idealDistanceMax = 0;
-        if(actor.equipmentComponent().hasEquippedItem()) {
+        if (actor.equipmentComponent().hasEquippedItem()) {
             ItemWeapon weapon = (ItemWeapon) actor.equipmentComponent().getEquippedItem();
             idealDistanceMin = weapon.getRangeMin();
             idealDistanceMax = weapon.getRangeMax();
         }
-        if(idealDistanceMax == 0) {
+        if (idealDistanceMax == 0) {
             Set<Area> idealAreas = new HashSet<>();
             idealAreas.add(origin);
             return idealAreas;
         }
         Set<Area> idealAreas = origin.visibleAreasInRange(actor, idealDistanceMin, idealDistanceMax);
-        while(idealAreas.isEmpty()) {
+        while (idealAreas.isEmpty()) {
             if(idealDistanceMin >= 0) {
                 idealDistanceMin -= 1;
             }
             idealDistanceMax += 1;
+            //System.out.println("(Adjusted) Ideal distance: " + idealDistanceMin + "-" + idealDistanceMax);
             idealAreas.addAll(origin.visibleAreasInRange(actor, idealDistanceMin, idealDistanceMin));
             idealAreas.addAll(origin.visibleAreasInRange(actor, idealDistanceMax, idealDistanceMax));
         }
