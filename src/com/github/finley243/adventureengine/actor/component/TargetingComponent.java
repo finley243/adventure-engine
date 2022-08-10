@@ -204,14 +204,25 @@ public class TargetingComponent {
         }
     }
 
-    private Set<Area> idealAreas(Area origin) {
+    private int idealDistanceMin() {
         int idealDistanceMin = 0;
-        int idealDistanceMax = 0;
-        if (actor.equipmentComponent().hasEquippedItem()) {
-            ItemWeapon weapon = (ItemWeapon) actor.equipmentComponent().getEquippedItem();
-            idealDistanceMin = weapon.getRangeMin();
-            idealDistanceMax = weapon.getRangeMax();
+        if (actor.equipmentComponent() != null && actor.equipmentComponent().hasEquippedItem() && actor.equipmentComponent().getEquippedItem() instanceof ItemWeapon) {
+            idealDistanceMin = ((ItemWeapon) actor.equipmentComponent().getEquippedItem()).getRangeMin();
         }
+        return idealDistanceMin;
+    }
+
+    private int idealDistanceMax() {
+        int idealDistanceMax = 0;
+        if (actor.equipmentComponent() != null && actor.equipmentComponent().hasEquippedItem() && actor.equipmentComponent().getEquippedItem() instanceof ItemWeapon) {
+            idealDistanceMax = ((ItemWeapon) actor.equipmentComponent().getEquippedItem()).getRangeMax();
+        }
+        return idealDistanceMax;
+    }
+
+    private Set<Area> idealAreas(Area origin) {
+        int idealDistanceMin = idealDistanceMin();
+        int idealDistanceMax = idealDistanceMax();
         if (idealDistanceMax == 0) {
             Set<Area> idealAreas = new HashSet<>();
             idealAreas.add(origin);
@@ -223,7 +234,6 @@ public class TargetingComponent {
                 idealDistanceMin -= 1;
             }
             idealDistanceMax += 1;
-            //System.out.println("(Adjusted) Ideal distance: " + idealDistanceMin + "-" + idealDistanceMax);
             idealAreas.addAll(origin.visibleAreasInRange(actor, idealDistanceMin, idealDistanceMin));
             idealAreas.addAll(origin.visibleAreasInRange(actor, idealDistanceMax, idealDistanceMax));
         }

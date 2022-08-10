@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.world.environment;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
@@ -301,7 +302,6 @@ public class Area extends GameInstanced implements Noun {
 
 	public int getDistanceTo(String areaID) {
 		if (this.getID().equals(areaID)) return 0;
-		//if (!linkedAreas.containsKey(areaID)) return -1;
 		if (!linkedAreas.containsKey(areaID)) {
 			if (FULL_VISIBILITY_IN_ROOM) {
 				return Pathfinder.findPath(this, game().data().getArea(areaID)).size() - 1;
@@ -318,14 +318,13 @@ public class Area extends GameInstanced implements Noun {
 			areas.add(this);
 		}
 		for (AreaLink link : linkedAreas.values()) {
-			if (isVisible(subject, link.getAreaID()) && getDistanceTo(link.getAreaID()) >= rangeMin && getDistanceTo(link.getAreaID()) <= rangeMax) {
+			if (isVisible(subject, link.getAreaID()) && MathUtils.isInRange(getDistanceTo(link.getAreaID()), rangeMin, rangeMax)) {
 				areas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
 		if (FULL_VISIBILITY_IN_ROOM) {
 			for (Area roomArea : getRoom().getAreas()) {
-				int distance = getDistanceTo(roomArea.getID());
-				if (isVisible(subject, roomArea.getID()) && distance >= rangeMin && distance <= rangeMax) {
+				if (isVisible(subject, roomArea.getID()) && MathUtils.isInRange(getDistanceTo(roomArea.getID()), rangeMin, rangeMax)) {
 					areas.add(roomArea);
 				}
 			}

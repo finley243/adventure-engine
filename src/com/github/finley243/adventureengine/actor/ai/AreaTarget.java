@@ -87,6 +87,11 @@ public class AreaTarget {
 		}
 		return (path == null ? -1 : path.size() - (pathIndex + 1));
 	}
+
+	public Area getCurrentTarget() {
+		if (path == null) return null;
+		return path.get(path.size() - 1);
+	}
 	
 	private int getCurrentIndex(Actor subject) {
 		for(int i = 0; i < path.size(); i++) {
