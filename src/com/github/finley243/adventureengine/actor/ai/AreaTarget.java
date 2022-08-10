@@ -14,22 +14,16 @@ public class AreaTarget {
 	private int pathIndex;
 	private final boolean manualRemoval;
 	private boolean markForRemoval;
-	private boolean isActive;
-	private boolean shouldFlee;
-	private boolean fleeThroughDoors;
-	
-	public AreaTarget(Set<Area> targetAreas, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughDoors) {
+
+	public AreaTarget(Set<Area> targetAreas, float targetUtility, boolean manualRemoval) {
 		this.targetAreas = targetAreas;
 		this.targetUtility = targetUtility;
 		this.manualRemoval = manualRemoval;
-		this.shouldFlee = shouldFlee;
-		this.fleeThroughDoors = fleeThroughDoors;
 		markForRemoval = false;
-		isActive = true;
 	}
 
-	public AreaTarget(Area targetArea, float targetUtility, boolean manualRemoval, boolean shouldFlee, boolean fleeThroughDoors) {
-		this(Set.of(targetArea), targetUtility, manualRemoval, shouldFlee, fleeThroughDoors);
+	public AreaTarget(Area targetArea, float targetUtility, boolean manualRemoval) {
+		this(Set.of(targetArea), targetUtility, manualRemoval);
 	}
 	
 	public void update(Actor subject) {
@@ -76,30 +70,10 @@ public class AreaTarget {
 		return markForRemoval || (!manualRemoval && path != null && pathIndex == path.size() - 1);
 	}
 
-	public boolean isActive() {
-		return isActive;
-	}
-
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public boolean shouldFlee() {
-		return shouldFlee;
-	}
-	
-	public void setShouldFlee(boolean shouldFlee) {
-		this.shouldFlee = shouldFlee;
-	}
-
 	public boolean shouldUseDoors() {
-		return !shouldFlee || fleeThroughDoors;
+		return true;
 	}
 
-	public void setFleeThroughDoors(boolean fleeThroughDoors) {
-		this.fleeThroughDoors = fleeThroughDoors;
-	}
-	
 	public boolean isOnPath(Area area) {
 		if(path == null) return false;
 		if(pathIndex + 1 >= path.size()) return false;

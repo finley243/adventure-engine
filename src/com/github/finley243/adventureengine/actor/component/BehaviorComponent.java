@@ -64,7 +64,7 @@ public class BehaviorComponent {
         if(currentBehavior != null) {
             if(areaTarget == null) {
                 if(currentBehavior.getTargetArea(actor) != null) {
-                    areaTarget = new AreaTarget(currentBehavior.getTargetArea(actor), actor.isInCombat() ? Behavior.BEHAVIOR_MOVEMENT_UTILITY_COMBAT : Behavior.BEHAVIOR_MOVEMENT_UTILITY, true, false, false);
+                    areaTarget = new AreaTarget(currentBehavior.getTargetArea(actor), actor.isInCombat() ? Behavior.BEHAVIOR_MOVEMENT_UTILITY_COMBAT : Behavior.BEHAVIOR_MOVEMENT_UTILITY, true);
                     actor.addPursueTarget(areaTarget);
                 }
             } else {

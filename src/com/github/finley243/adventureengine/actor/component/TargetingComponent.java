@@ -74,22 +74,15 @@ public class TargetingComponent {
             Actor target = itr.next();
             Combatant combatant = combatants.get(target);
             if (combatant.areaTarget == null) {
-                combatant.areaTarget = new AreaTarget(idealAreas(combatant.lastKnownArea), 0.0f, true, false, false);
+                combatant.areaTarget = new AreaTarget(idealAreas(combatant.lastKnownArea), 0.0f, true);
                 actor.addPursueTarget(combatant.areaTarget);
             }
             if (actor.canSee(target)) {
                 combatant.lastKnownArea = target.getArea();
                 combatant.turnsUntilRemove = TURNS_UNTIL_END_COMBAT;
-                combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
-                combatant.areaTarget.setShouldFlee(UtilityUtils.shouldMoveAwayFrom(actor, target));
-                // TODO - Rework "target distance" system so that area targets can maintain their own distance
-                //combatant.areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(actor, target));
-                combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, target));
-            } else {
-                combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
-                //combatant.areaTarget.setIsActive(UtilityUtils.shouldActivatePursueTarget(actor, target));
-                combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueInvisibleTargetUtility());
             }
+            combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
+            combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, target));
             if(target.isDead() || combatant.turnsUntilRemove <= 0) {
                 combatant.areaTarget.markForRemoval();
                 itr.remove();

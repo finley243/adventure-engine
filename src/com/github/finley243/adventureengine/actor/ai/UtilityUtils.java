@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.item.ItemWeapon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,22 +14,14 @@ public class UtilityUtils {
 	public static final float PURSUE_TARGET_UTILITY_MELEE = 0.7f;
 	public static final float PURSUE_TARGET_UTILITY_RANGED = 0.0f;
 	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.7f;
-	public static final float PURSUE_TARGET_UTILITY_NOWEAPON = 0.0f;
-	public static final float FLEE_TARGET_UTILITY = 0.5f;
+	public static final float PURSUE_TARGET_UTILITY_UNARMED = 0.0f;
 	public static final float INVESTIGATE_NOISE_UTILITY = 0.5f;
 	
-	public static float getMovementUtility(Actor subject, Area area, boolean throughDoors) {
-		if (subject.getPursueTargets().isEmpty()) return 0.0f;
+	public static float getMovementUtility(Actor subject, Area area, boolean isDoor) {
 		float utility = 0.0f;
-		int contributors = 0;
 		for (AreaTarget target : subject.getPursueTargets()) {
-			if (target.isActive() && !(throughDoors && !target.shouldUseDoors())) {
-				if (target.shouldFlee() && target.getTargetAreas().contains(subject.getArea())) {
-					utility += target.getTargetUtility();
-				} else if (target.shouldFlee() != target.isOnPath(area)) { // XOR
-					// Temporary calculation, ignores distance
-					utility += target.getTargetUtility();
-				}
+			if (!(isDoor && !target.shouldUseDoors()) && target.isOnPath(area)) {
+				utility += target.getTargetUtility();
 			}
 		}
 		return MathUtils.bound(utility, 0.0f, 1.0f);
@@ -51,49 +42,15 @@ public class UtilityUtils {
 	}
 	
 	public static float getPursueTargetUtility(Actor subject, Actor target) {
-		if(shouldFleeFrom(subject, target)) {
-			return FLEE_TARGET_UTILITY;
-		} else if(subject.equipmentComponent().hasRangedWeaponEquipped()) {
+		if (subject.canSee(target)) {
+			return PURSUE_TARGET_UTILITY_INVISIBLE;
+		} else if (subject.equipmentComponent().hasRangedWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_RANGED;
 		} else if(subject.equipmentComponent().hasMeleeWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_MELEE;
 		} else {
-			return PURSUE_TARGET_UTILITY_NOWEAPON;
+			return PURSUE_TARGET_UTILITY_UNARMED;
 		}
-	}
-
-	public static boolean shouldFleeFrom(Actor subject, Actor target) {
-		return !subject.equipmentComponent().hasMeleeWeaponEquipped() && target.equipmentComponent().hasMeleeWeaponEquipped();
-	}
-
-	// Returns true if subject needs to move to get into ideal range for attacking target (false if already in ideal range)
-	public static boolean shouldActivatePursueTarget(Actor subject, Actor target) {
-		if (subject.equipmentComponent() != null && subject.equipmentComponent().hasEquippedItem() && subject.equipmentComponent().getEquippedItem() instanceof ItemWeapon) {
-			ItemWeapon weapon = (ItemWeapon) subject.equipmentComponent().getEquippedItem();
-			//int targetDistance = target.getTargetDistance();
-			int targetDistance = subject.getArea().getDistanceTo(target.getArea().getID());
-			return targetDistance == -1 || targetDistance < weapon.getRangeMin() || targetDistance > weapon.getRangeMax();
-		} else {
-			return true;
-		}
-	}
-
-	public static boolean shouldMoveAwayFrom(Actor subject, Actor target) {
-		if(subject.equipmentComponent().hasRangedWeaponEquipped()) {
-			int rangeMin = ((ItemWeapon) subject.equipmentComponent().getEquippedItem()).getRangeMin();
-			//return target.getTargetDistance() < rangeMin;
-			int distance = subject.getArea().getDistanceTo(target.getArea().getID());
-			if(distance == -1) {
-				return false;
-			}
-			return distance < rangeMin;
-		} else {
-			return !subject.equipmentComponent().hasMeleeWeaponEquipped();
-		}
-	}
-	
-	public static float getPursueInvisibleTargetUtility() {
-		return PURSUE_TARGET_UTILITY_INVISIBLE;
 	}
 
 	public static Action selectActionByUtility(Actor actor, List<Action> actions, int chaos) {
