@@ -32,7 +32,9 @@ public class TargetingComponent {
     // Value is number of turns the actor has been detected
     private final Map<Actor, Integer> detectionCounters;
     private final Map<Actor, Combatant> combatants;
+    // TODO - Add system for removing non-combatants after they are not visible for several turns, just like combatants
     private final Set<Actor> nonCombatants;
+    private final Set<Actor> deadActors;
     private AlertState alertState;
 
     public TargetingComponent(Actor actor) {
@@ -40,6 +42,7 @@ public class TargetingComponent {
         detectionCounters = new HashMap<>();
         combatants = new HashMap<>();
         nonCombatants = new HashSet<>();
+        deadActors = new HashSet<>();
         this.alertState = DEFAULT_ALERT_STATE;
     }
 
@@ -50,19 +53,20 @@ public class TargetingComponent {
     public void clear() {
         detectionCounters.clear();
         combatants.clear();
+        nonCombatants.clear();
+        deadActors.clear();
     }
 
     // Executed at the beginning of subject's turn
     public void updateTurn() {
-        Set<Actor> visibleActors = actor.getVisibleActors();
         // TODO - Implement new system for lowering/removing detection counters when actors are not seen for a period of time
-        // Remove non-visible actors from detected
-        /*for(Actor actor : detectionCounters.keySet()) {
+        /*Set<Actor> visibleActors = actor.getVisibleActors();
+        for(Actor actor : detectionCounters.keySet()) {
             if(!visibleActors.contains(actor)) {
                 detectionCounters.remove(actor);
             }
         }*/
-        for(Combatant combatant : combatants.values()) {
+        for (Combatant combatant : combatants.values()) {
             combatant.turnsUntilRemove -= 1;
         }
     }
@@ -130,6 +134,7 @@ public class TargetingComponent {
         if ((actor.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getRoom().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
                 (actor.getArea().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
             actor.triggerScript("on_detect_target_trespassing");
+            // TODO - Make trespassing cause a warning first (actor follows trespasser?), become hostile after a couple turns
             addCombatant(actor);
         } else if (actor.getFaction().getRelationTo(subject.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
             actor.triggerScript("on_detect_target_faction");
