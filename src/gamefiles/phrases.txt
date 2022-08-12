@@ -15,6 +15,9 @@ moveThrough:$_actor go$es_actor through $exit
 moveToward:$_actor move$s_actor toward $area
 moveTo:$_actor move$s_actor to $area
 moveOnto:$_actor move$s_actor onto $area
+moveFront:$_actor move$s_actor in front of $area
+moveBehind:$_actor move$s_actor behind $area
+moveBeside:$_actor move$s_actor beside $area
 moveCorner:$_actor turn$s_actor around the corner
 pickUp:$_actor grab$s_actor $item
 rangedHit:$_actor fire$s_actor a shot with $actor's $weapon_name and it hits $target

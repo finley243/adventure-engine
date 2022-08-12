@@ -27,7 +27,7 @@ import java.util.*;
 public class Area extends GameInstanced implements Noun {
 
 	public enum AreaNameType {
-		IN, ON, NEAR
+		IN, ON, NEAR, FRONT, BESIDE, BEHIND
 	}
 
 	private static final boolean FULL_VISIBILITY_IN_ROOM = true;
@@ -151,12 +151,19 @@ public class Area extends GameInstanced implements Noun {
 					return roomPhrase + "on " + getFormattedName();
 				case NEAR:
 					return roomPhrase + "near " + getFormattedName();
+				case FRONT:
+					return roomPhrase + "in front of " + getFormattedName();
+				case BESIDE:
+					return roomPhrase + "beside " + getFormattedName();
+				case BEHIND:
+					return roomPhrase + "behind " + getFormattedName();
 				default:
 					return null;
 			}
 		}
 	}
 
+	// TODO - Find way to add corner move phrase that is specific to moving across corner links (may require separate corner phrases for each type)
 	public String getMovePhrase() {
 		if (landmarkID != null) {
 			return Phrases.get("moveToward");
@@ -166,6 +173,12 @@ public class Area extends GameInstanced implements Noun {
 					return Phrases.get("moveTo");
 				case ON:
 					return Phrases.get("moveOnto");
+				case FRONT:
+					return Phrases.get("moveFront");
+				case BEHIND:
+					return Phrases.get("moveBehind");
+				case BESIDE:
+					return Phrases.get("moveBeside");
 				case NEAR:
 				default:
 					return Phrases.get("moveToward");
