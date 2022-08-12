@@ -43,7 +43,7 @@ public class MenuManager {
 		boolean showChoices = true;
 		String redirect = null;
 		for (SceneLine line : lines) {
-			if (line.shouldShow(subject, lastSceneID)) {
+			if (scene.getType() != SceneType.SEQUENTIAL || line.shouldShow(subject, lastSceneID)) {
 				executeLine(subject, line);
 				if (line.shouldExit()) {
 					showChoices = false;

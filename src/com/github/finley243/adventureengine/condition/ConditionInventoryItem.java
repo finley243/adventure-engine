@@ -17,11 +17,11 @@ public class ConditionInventoryItem extends Condition {
 	}
 
 	@Override
-	public boolean isMet(Actor subject) {
+	public boolean isMetInternal(Actor subject) {
 		if(itemID != null) {
-			return actor.getActor(subject).inventory().hasItem(itemID) != invert;
+			return actor.getActor(subject).inventory().hasItem(itemID);
 		} else {
-			return actor.getActor(subject).inventory().hasItemWithTag(tag) != invert;
+			return actor.getActor(subject).inventory().hasItemWithTag(tag);
 		}
 	}
 

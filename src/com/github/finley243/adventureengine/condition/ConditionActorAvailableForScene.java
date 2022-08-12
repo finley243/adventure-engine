@@ -14,8 +14,8 @@ public class ConditionActorAvailableForScene extends Condition {
 	}
 
 	@Override
-	public boolean isMet(Actor subject) {
-		return (actor.getActor(subject).isActive() && !actor.getActor(subject).isInCombat() && subject.game().data().getPlayer().canSee(actor.getActor(subject))) != invert;
+	public boolean isMetInternal(Actor subject) {
+		return (actor.getActor(subject).isActive() && !actor.getActor(subject).isInCombat() && subject.game().data().getPlayer().canSee(actor.getActor(subject)));
 	}
 
 }

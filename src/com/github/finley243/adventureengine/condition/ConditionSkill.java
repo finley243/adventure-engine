@@ -17,8 +17,8 @@ public class ConditionSkill extends Condition {
 	}
 
 	@Override
-	public boolean isMet(Actor subject) {
-		return (actor.getActor(subject).getSkill(skill) >= value) != invert;
+	public boolean isMetInternal(Actor subject) {
+		return (actor.getActor(subject).getSkill(skill) >= value);
 	}
 
 }

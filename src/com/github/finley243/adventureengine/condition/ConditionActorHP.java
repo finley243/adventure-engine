@@ -17,9 +17,9 @@ public class ConditionActorHP extends Condition {
     }
 
     @Override
-    public boolean isMet(Actor subject) {
+    public boolean isMetInternal(Actor subject) {
         float healthProportion = actor.getActor(subject).getHPProportion();
-        return Condition.equalityCheckFloat(healthProportion, value, equality, invert);
+        return Condition.equalityCheckFloat(healthProportion, value, equality);
     }
 
 }

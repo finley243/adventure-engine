@@ -15,8 +15,8 @@ public class ConditionMoney extends Condition {
 	}
 
 	@Override
-	public boolean isMet(Actor subject) {
-		return (actor.getActor(subject).getMoney() >= value) != invert;
+	public boolean isMetInternal(Actor subject) {
+		return (actor.getActor(subject).getMoney() >= value);
 	}
 
 }

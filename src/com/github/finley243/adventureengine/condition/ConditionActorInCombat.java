@@ -13,8 +13,8 @@ public class ConditionActorInCombat extends Condition {
     }
 
     @Override
-    public boolean isMet(Actor subject) {
-        return actor.getActor(subject).isInCombat() != invert;
+    public boolean isMetInternal(Actor subject) {
+        return actor.getActor(subject).isInCombat();
     }
 
 }

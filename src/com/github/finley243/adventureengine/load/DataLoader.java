@@ -262,6 +262,9 @@ public class DataLoader {
                 int hours2 = LoadUtils.attributeInt(timeEndElement, "hours", 0);
                 int minutes2 = LoadUtils.attributeInt(timeEndElement, "minutes", 0);
                 return new ConditionTime(invert, hours1, minutes1, hours2, minutes2);
+            case "random":
+                float randomChance = LoadUtils.attributeFloat(conditionElement, "chance", 0.0f);
+                return new ConditionRandom(invert, randomChance);
             case "any":
                 List<Condition> subConditionsAny = loadSubConditions(conditionElement);
                 return new ConditionCompound(invert, subConditionsAny, true);

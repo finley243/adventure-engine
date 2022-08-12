@@ -13,8 +13,8 @@ public class ConditionActorDead extends Condition {
 	}
 
 	@Override
-	public boolean isMet(Actor subject) {
-		return actor.getActor(subject).isDead() != invert;
+	public boolean isMetInternal(Actor subject) {
+		return actor.getActor(subject).isDead();
 	}
 
 }
