@@ -10,7 +10,7 @@
     <room id="street_archer_between_fifth_sixth">
         <name proper="true">Archer St</name>
         <area id="archer_corner_store_side">
-            <name type="near">corner store</name>
+            <name type="beside">corner store</name>
             <link type="corner" area="fifth_corner_store_front"/>
             <link area="archer_apartments_exterior"/>
         </area>
@@ -22,7 +22,7 @@
             </object>
         </area>
         <area id="archer_alley_exit">
-            <name type="near">alley</name>
+            <name type="front">alley</name>
             <link area="alley_sinclair_archer_dumpster">
                 <moveName>enter alley</moveName>
                 <movePhrase>$_actor enter$s_actor $area</movePhrase>
@@ -31,7 +31,7 @@
             <link area="archer_burger_restaurant_front"/>
         </area>
         <area id="archer_burger_restaurant_front">
-            <name type="near">BigBurger</name>
+            <name type="front">BigBurger</name>
             <link area="archer_alley_exit"/>
             <link type="corner" area="sixth_burger_restaurant_side"/>
             <object type="basic" id="archer_burger_restaurant_exterior_door">
@@ -54,7 +54,7 @@
     <room id="street_sixth_between_sinclair_archer">
         <name proper="true">6th Ave</name>
         <area id="sixth_burger_restaurant_side">
-            <name type="near">BigBurger</name>
+            <name type="beside">BigBurger</name>
             <link area="archer_burger_restaurant_front"/>
         </area>
     </room>
