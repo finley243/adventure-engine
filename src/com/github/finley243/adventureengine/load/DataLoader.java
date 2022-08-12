@@ -574,11 +574,12 @@ public class DataLoader {
         for(Element linkElement : linkElements) {
             String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
             AreaLink.RelativeHeight linkHeight = LoadUtils.attributeEnum(linkElement, "height", AreaLink.RelativeHeight.class, AreaLink.RelativeHeight.EQUAL);
+            AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
             AreaLink.AreaLinkType linkType = LoadUtils.attributeEnum(linkElement, "type", AreaLink.AreaLinkType.class, AreaLink.AreaLinkType.DIRECT);
             int linkDistance = LoadUtils.attributeInt(linkElement, "dist", 1);
             String moveNameOverride = LoadUtils.singleTag(linkElement, "moveName", null);
             String movePhraseOverride = LoadUtils.singleTag(linkElement, "movePhrase", null);
-            AreaLink link = new AreaLink(linkAreaID, linkHeight, linkType, linkDistance, moveNameOverride, movePhraseOverride);
+            AreaLink link = new AreaLink(linkAreaID, linkHeight, linkDirection, linkType, linkDistance, moveNameOverride, movePhraseOverride);
             linkSet.put(linkAreaID, link);
         }
 
@@ -696,11 +697,6 @@ public class DataLoader {
                 Idle idle = loadIdle(idleElement);
                 idles.add(idle);
             }
-            /*List<Element> sceneElements = LoadUtils.directChildrenWithName(behaviorElement, "idleScene");
-            for (Element sceneElement : sceneElements) {
-                Scene scene = loadScene(sceneElement);
-                idleScenes.add(scene);
-            }*/
             switch(type) {
                 case "area":
                     String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);

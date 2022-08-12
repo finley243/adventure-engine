@@ -11,29 +11,29 @@
         <name proper="true">Archer St</name>
         <area id="archer_corner_store_side">
             <name type="beside">corner store</name>
-            <link type="corner" area="fifth_corner_store_front"/>
-            <link area="archer_apartments_exterior"/>
+            <link type="corner" dir="NW" area="fifth_corner_store_front"/>
+            <link dir="E" area="archer_apartments_exterior"/>
         </area>
         <area id="archer_apartments_exterior" landmark="archer_apartments_exterior_door">
-            <link area="archer_corner_store_side"/>
-            <link area="archer_alley_exit"/>
+            <link dir="W" area="archer_corner_store_side"/>
+            <link dir="E" area="archer_alley_exit"/>
             <object type="basic" id="archer_apartments_exterior_door">
                 <name>apartment entrance</name>
             </object>
         </area>
         <area id="archer_alley_exit">
             <name type="front">alley</name>
-            <link area="alley_sinclair_archer_dumpster">
+            <link dir="N" area="alley_sinclair_archer_dumpster">
                 <moveName>enter alley</moveName>
                 <movePhrase>$_actor enter$s_actor $area</movePhrase>
             </link>
-            <link area="archer_apartments_exterior"/>
-            <link area="archer_burger_restaurant_front"/>
+            <link dir="W" area="archer_apartments_exterior"/>
+            <link dir="E" area="archer_burger_restaurant_front"/>
         </area>
         <area id="archer_burger_restaurant_front">
             <name type="front">BigBurger</name>
-            <link area="archer_alley_exit"/>
-            <link type="corner" area="sixth_burger_restaurant_side"/>
+            <link dir="W" area="archer_alley_exit"/>
+            <link type="corner" dir="NE" area="sixth_burger_restaurant_side"/>
             <object type="basic" id="archer_burger_restaurant_exterior_door">
                 <name>BigBurger entrance</name>
             </object>
@@ -45,7 +45,7 @@
     <room id="street_fifth_between_sinclair_archer">
         <name proper="true">5th Ave</name>
         <area id="fifth_corner_store_front" landmark="fifth_corner_store_exterior_door">
-            <link type="corner" area="archer_corner_store_side"/>
+            <link type="corner" dir="SE" area="archer_corner_store_side"/>
             <object type="door" id="fifth_corner_store_exterior_door" link="fifth_corner_store_door_exit">
                 <name>corner store entrance</name>
             </object>
@@ -55,13 +55,13 @@
         <name proper="true">6th Ave</name>
         <area id="sixth_burger_restaurant_side">
             <name type="beside">BigBurger</name>
-            <link area="archer_burger_restaurant_front"/>
+            <link type="corner" dir="SW" area="archer_burger_restaurant_front"/>
         </area>
     </room>
     <room id="alley_sinclair_archer">
         <name>alley</name>
         <area id="alley_sinclair_archer_dumpster" landmark="archer_burger_restaurant_dumpster">
-            <link area="archer_alley_exit"/>
+            <link dir="S" area="archer_alley_exit"/>
             <object type="container" id="archer_burger_restaurant_dumpster">
                 <name>dumpster</name>
                 <description>

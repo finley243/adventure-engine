@@ -5,15 +5,15 @@
     <room id="fifth_corner_store">
         <name>corner store</name>
         <area id="fifth_corner_store_entrance" landmark="fifth_corner_store_door_exit">
-            <link area="fifth_corner_store_counter"/>
-            <link area="fifth_corner_store_aisle"/>
+            <link dir="E" area="fifth_corner_store_counter"/>
+            <link dir="NE" area="fifth_corner_store_aisle"/>
             <object type="door" id="fifth_corner_store_door_exit" link="fifth_corner_store_exterior_door">
                 <name>store entrance</name>
             </object>
         </area>
         <area id="fifth_corner_store_counter" landmark="fifth_corner_store_counter">
-            <link area="fifth_corner_store_entrance"/>
-            <link area="fifth_corner_store_aisle"/>
+            <link dir="W" area="fifth_corner_store_entrance"/>
+            <link dir="NW" area="fifth_corner_store_aisle"/>
             <object type="basic" id="fifth_corner_store_counter">
                 <name>counter</name>
             </object>
@@ -29,8 +29,8 @@
         </area>
         <area id="fifth_corner_store_aisle">
             <name type="in">aisle</name>
-            <link area="fifth_corner_store_entrance"/>
-            <link area="fifth_corner_store_counter"/>
+            <link dir="SW" area="fifth_corner_store_entrance"/>
+            <link dir="SE" area="fifth_corner_store_counter"/>
         </area>
     </room>
     <room id="archer_burger_restaurant">

@@ -17,6 +17,7 @@ import java.util.Map;
 
 public class ObjectDoor extends WorldObject {
 
+	// TODO - Add compass direction to doors
 	private final String linkedDoorID;
 	private final Lock lock;
 	

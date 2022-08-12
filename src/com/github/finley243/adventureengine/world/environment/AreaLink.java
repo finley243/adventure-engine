@@ -29,17 +29,29 @@ public class AreaLink {
         }
     }
 
+    public enum CompassDirection {
+        N("north"), S("south"), W("west"), E("east"), NW("northwest"), NE("northeast"), SW("southwest"), SE("southeast");
+
+        public final String name;
+
+        CompassDirection(String name) {
+            this.name = name;
+        }
+    }
+
     private final String areaID;
     // 1 = north, -1 = south, 0 = equal
     private final RelativeHeight height;
     private final AreaLinkType type;
+    private final CompassDirection direction;
     private final int distance;
     private final String moveNameOverride;
     private final String movePhraseOverride;
 
-    public AreaLink(String areaID, RelativeHeight height, AreaLinkType type, int distance, String moveNameOverride, String movePhraseOverride) {
+    public AreaLink(String areaID, RelativeHeight height, CompassDirection direction, AreaLinkType type, int distance, String moveNameOverride, String movePhraseOverride) {
         this.areaID = areaID;
         this.height = height;
+        this.direction = direction;
         this.type = type;
         this.distance = distance;
         this.moveNameOverride = moveNameOverride;
@@ -54,6 +66,10 @@ public class AreaLink {
         return height;
     }
 
+    public CompassDirection getDirection() {
+        return direction;
+    }
+
     public AreaLinkType getType() {
         return type;
     }
@@ -64,13 +80,13 @@ public class AreaLink {
 
     public String getMoveName(Area currentArea) {
         if (moveNameOverride != null) {
-            return moveNameOverride;
+            return "(" + getDirection() + ") " + moveNameOverride;
         } else if (type == AreaLinkType.CORNER) {
-            return "turn corner";
+            return "(" + getDirection() + ") " + "turn corner";
         } else if (!currentArea.getRoom().equals(currentArea.game().data().getArea(areaID).getRoom())) {
-            return currentArea.game().data().getArea(areaID).getRoom().getName();
+            return "(" + getDirection() + ") " + currentArea.game().data().getArea(areaID).getRoom().getName();
         } else {
-            return currentArea.game().data().getArea(areaID).getName();
+            return "(" + getDirection() + ") " + currentArea.game().data().getArea(areaID).getName();
         }
     }
 
