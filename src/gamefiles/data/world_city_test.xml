@@ -46,7 +46,7 @@
         <name proper="true">5th Ave</name>
         <area id="fifth_corner_store_front" landmark="fifth_corner_store_exterior_door">
             <link type="corner" dir="SE" area="archer_corner_store_side"/>
-            <object type="door" id="fifth_corner_store_exterior_door" link="fifth_corner_store_door_exit">
+            <object type="door" id="fifth_corner_store_exterior_door" link="fifth_corner_store_door_exit" dir="E">
                 <name>corner store entrance</name>
             </object>
         </area>

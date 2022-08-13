@@ -52,7 +52,7 @@ public class ActionMoveDoor extends ActionMove {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Enter", canChoose(subject), new String[]{door.getName()});
+		return new MenuData("(" + door.getDirection() + ") " + "Enter", canChoose(subject), new String[]{door.getName()});
 	}
 
 	@Override

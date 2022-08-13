@@ -164,9 +164,11 @@ public class Area extends GameInstanced implements Noun {
 	}
 
 	// TODO - Find way to add corner move phrase that is specific to moving across corner links (may require separate corner phrases for each type)
-	public String getMovePhrase() {
+	public String getMovePhrase(Area origin) {
 		if (landmarkID != null) {
 			return Phrases.get("moveToward");
+		} else if (!origin.getRoom().equals(this.getRoom())) {
+			return Phrases.get("moveTo");
 		} else {
 			switch (nameType) {
 				case IN:

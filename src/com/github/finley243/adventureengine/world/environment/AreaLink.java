@@ -96,7 +96,7 @@ public class AreaLink {
         } else if (type == AreaLinkType.CORNER) {
             return Phrases.get("moveCorner");
         } else {
-            return currentArea.game().data().getArea(areaID).getMovePhrase();
+            return currentArea.game().data().getArea(areaID).getMovePhrase(currentArea);
         }
     }
 

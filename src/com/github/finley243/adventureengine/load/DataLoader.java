@@ -616,8 +616,9 @@ public class DataLoader {
         switch(type) {
             case "door":
                 String doorLink = LoadUtils.attribute(objectElement, "link", null);
+                AreaLink.CompassDirection doorDirection = LoadUtils.attributeEnum(objectElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
                 Lock doorLock = loadLock(objectElement, id);
-                return new ObjectDoor(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, doorLink, doorLock);
+                return new ObjectDoor(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, doorLink, doorDirection, doorLock);
             case "elevator":
                 Element floorElement = LoadUtils.singleChildWithName(objectElement, "floor");
                 int floorNumber = LoadUtils.attributeInt(floorElement, "number", 1);
