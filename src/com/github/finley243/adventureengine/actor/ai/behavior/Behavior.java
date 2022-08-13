@@ -80,7 +80,7 @@ public abstract class Behavior {
     }
 
     public boolean isValid(Actor subject) {
-        return condition == null || condition.isMet(subject);
+        return condition == null || condition.isMet(subject, subject);
     }
 
     public Idle getIdle(Actor subject) {

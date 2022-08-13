@@ -19,9 +19,9 @@ public abstract class Script {
 	 * @param subject The contextual subject actor
 	 * @return Whether the script was executed
 	 */
-	public boolean execute(Actor subject) {
-		if(canExecute(subject)) {
-			executeSuccess(subject);
+	public boolean execute(Actor subject, Actor target) {
+		if(canExecute(subject, target)) {
+			executeSuccess(subject, target);
 			return true;
 		} else {
 			return false;
@@ -30,12 +30,14 @@ public abstract class Script {
 
 	/**
 	 * Executed if all conditions are met when calling Script::execute
+	 *
 	 * @param subject The contextual subject actor
+	 * @param target The contextual target actor
 	 */
-	protected abstract void executeSuccess(Actor subject);
+	protected abstract void executeSuccess(Actor subject, Actor target);
 
-	private boolean canExecute(Actor subject) {
-		return condition == null || condition.isMet(subject);
+	private boolean canExecute(Actor subject, Actor target) {
+		return condition == null || condition.isMet(subject, target);
 	}
 
 }

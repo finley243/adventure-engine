@@ -79,9 +79,9 @@ public abstract class Item extends GameInstanced implements Noun {
 		return getTemplate().getDescription();
 	}
 
-	public void triggerScript(String entryPoint, Actor subject) {
+	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if(getTemplate().getScripts().containsKey(entryPoint)) {
-			getTemplate().getScripts().get(entryPoint).execute(subject);
+			getTemplate().getScripts().get(entryPoint).execute(subject, target);
 		}
 	}
 

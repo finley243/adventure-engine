@@ -227,9 +227,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
 			if(newRoom) {
-				getArea().getRoom().triggerScript("on_player_enter", this);
+				getArea().getRoom().triggerScript("on_player_enter", this, this);
 			}
-			getArea().triggerScript("on_player_enter", this);
+			getArea().triggerScript("on_player_enter", this, this);
 		}
 	}
 
@@ -238,14 +238,14 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			boolean isRoomChange = !lastArea.getRoom().equals(getArea().getRoom());
 			boolean isAreaChange = isRoomChange || !lastArea.equals(getArea());
 			if(isRoomChange && getArea().getRoom().getDescription() != null) {
-				SceneManager.trigger(game(), this, getArea().getRoom().getDescription());
+				SceneManager.trigger(game(), this, this, getArea().getRoom().getDescription());
 				getArea().getRoom().setKnown();
 				for (Area area : getArea().getRoom().getAreas()) {
 					area.setKnown();
 				}
 			}
 			if(isAreaChange && getArea().getDescription() != null) {
-				SceneManager.trigger(game(), this, getArea().getDescription());
+				SceneManager.trigger(game(), this, this, getArea().getDescription());
 				getArea().setKnown();
 			}
 		}
@@ -366,7 +366,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			HP = 0;
 			kill();
 		} else {
-			triggerScript("on_damaged");
+			triggerScript("on_damaged", this);
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
@@ -388,7 +388,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 			HP = 0;
 			kill();
 		} else {
-			triggerScript("on_damaged");
+			triggerScript("on_damaged", this);
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if(SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
@@ -398,7 +398,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 	}
 	
 	public void kill() {
-		triggerScript("on_death");
+		triggerScript("on_death", this);
 		Context context = new Context(new NounMapper().put("actor", this).build());
 		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null));
 		dropEquippedItem();
@@ -498,7 +498,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 				} else {
 					if (event.getResponseType() == SensoryEvent.ResponseType.INVESTIGATE) {
 						investigateTarget.setTargetArea(event.getOrigins()[ThreadLocalRandom.current().nextInt(event.getOrigins().length)]);
-						triggerScript("on_investigate_start");
+						triggerScript("on_investigate_start", event.getSubject());
 					}
 				}
 			}
@@ -833,9 +833,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		}
 	}
 
-	public boolean triggerScript(String entryPoint) {
+	public boolean triggerScript(String entryPoint, Actor target) {
 		if(template.getScripts().containsKey(entryPoint)) {
-			template.getScripts().get(entryPoint).execute(this);
+			template.getScripts().get(entryPoint).execute(this, target);
 			return true;
 		} else {
 			return false;

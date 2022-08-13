@@ -18,7 +18,7 @@ public class Idle {
     }
 
     public boolean canPlay(Actor subject) {
-        return condition == null || condition.isMet(subject);
+        return condition == null || condition.isMet(subject, subject);
     }
 
     public void trigger(Actor subject) {

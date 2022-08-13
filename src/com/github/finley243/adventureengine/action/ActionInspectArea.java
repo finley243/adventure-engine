@@ -17,18 +17,18 @@ public class ActionInspectArea extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         if (area.getRoom().getDescription() != null) {
-            SceneManager.trigger(subject.game(), subject, area.getRoom().getDescription());
+            SceneManager.trigger(subject.game(), subject, subject, area.getRoom().getDescription());
             area.getRoom().setKnown();
             for (Area area : area.getRoom().getAreas()) {
                 area.setKnown();
             }
         }
         if (area.getDescription() != null) {
-            SceneManager.trigger(subject.game(), subject, area.getDescription());
+            SceneManager.trigger(subject.game(), subject, subject, area.getDescription());
             area.setKnown();
         }
-        area.getRoom().triggerScript("on_inspect", subject);
-        area.triggerScript("on_inspect", subject);
+        area.getRoom().triggerScript("on_inspect", subject, subject);
+        area.triggerScript("on_inspect", subject, subject);
     }
 
     @Override

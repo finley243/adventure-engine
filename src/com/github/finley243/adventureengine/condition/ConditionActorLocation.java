@@ -17,11 +17,11 @@ public class ConditionActorLocation extends Condition {
 	}
 
 	@Override
-	public boolean isMetInternal(Actor subject) {
+	public boolean isMetInternal(Actor subject, Actor target) {
 		if(isRoom) {
-			return (actor.getActor(subject).getArea().getRoom() == subject.game().data().getRoom(location));
+			return (actor.getActor(subject, target).getArea().getRoom() == subject.game().data().getRoom(location));
 		} else {
-			return (actor.getActor(subject).getArea() == subject.game().data().getArea(location));
+			return (actor.getActor(subject, target).getArea() == subject.game().data().getArea(location));
 		}
 	}
 

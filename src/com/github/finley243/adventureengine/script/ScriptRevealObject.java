@@ -14,7 +14,7 @@ public class ScriptRevealObject extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject) {
+    protected void executeSuccess(Actor subject, Actor target) {
         WorldObject object = subject.game().data().getObject(objectID);
         object.setHidden(false);
         object.setKnown();

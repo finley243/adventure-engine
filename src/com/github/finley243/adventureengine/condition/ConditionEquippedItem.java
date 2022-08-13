@@ -19,8 +19,8 @@ public class ConditionEquippedItem extends Condition {
 	}
 
 	@Override
-	public boolean isMetInternal(Actor subject) {
-		Item equippedItem = actor.getActor(subject).equipmentComponent().getEquippedItem();
+	public boolean isMetInternal(Actor subject, Actor target) {
+		Item equippedItem = actor.getActor(subject, target).equipmentComponent().getEquippedItem();
 		if(equippedItem == null) return false;
 		if(itemID != null) {
 			return equippedItem.getTemplate().getID().equals(itemID);

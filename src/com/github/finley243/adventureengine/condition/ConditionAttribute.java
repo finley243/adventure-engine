@@ -18,8 +18,8 @@ public class ConditionAttribute extends Condition {
 	}
 
 	@Override
-	public boolean isMetInternal(Actor subject) {
-		return (actor.getActor(subject).getAttribute(attribute) >= value);
+	public boolean isMetInternal(Actor subject, Actor target) {
+		return (actor.getActor(subject, target).getAttribute(attribute) >= value);
 	}
 
 }

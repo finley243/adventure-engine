@@ -33,18 +33,18 @@ public class MenuManager {
 		return actions.get(actionIndex);
 	}
 
-	public void sceneMenu(Actor subject, Scene scene) {
-		sceneMenu(subject, scene, null);
+	public void sceneMenu(Actor subject, Actor target, Scene scene) {
+		sceneMenu(subject, target, scene, null);
 	}
 
-	private void sceneMenu(Actor subject, Scene scene, String lastSceneID) {
+	private void sceneMenu(Actor subject, Actor target, Scene scene, String lastSceneID) {
 		scene.setVisited();
-		List<SceneLine> lines = selectValidLines(subject, scene, lastSceneID);
+		List<SceneLine> lines = selectValidLines(subject, target, scene, lastSceneID);
 		boolean showChoices = true;
 		String redirect = null;
 		for (SceneLine line : lines) {
-			if (scene.getType() != SceneType.SEQUENTIAL || line.shouldShow(subject, lastSceneID)) {
-				executeLine(subject, line);
+			if (scene.getType() != SceneType.SEQUENTIAL || line.shouldShow(subject, target, lastSceneID)) {
+				executeLine(subject, target, line);
 				if (line.shouldExit()) {
 					showChoices = false;
 					break;
@@ -55,28 +55,28 @@ public class MenuManager {
 			}
 		}
 		if (redirect != null) {
-			sceneMenu(subject, subject.game().data().getScene(redirect), scene.getID());
+			sceneMenu(subject, target, subject.game().data().getScene(redirect), scene.getID());
 		} else if (showChoices) {
-			SceneChoice selectedChoice = executeChoice(subject, scene.getChoices());
+			SceneChoice selectedChoice = executeChoice(subject, target, scene.getChoices());
 			if (selectedChoice != null) {
-				sceneMenu(subject, subject.game().data().getScene(selectedChoice.getLinkedId()), scene.getID());
+				sceneMenu(subject, target, subject.game().data().getScene(selectedChoice.getLinkedId()), scene.getID());
 			}
 		}
 	}
 
-	private List<SceneLine> selectValidLines(Actor subject, Scene scene, String lastSceneID) {
+	private List<SceneLine> selectValidLines(Actor subject, Actor target, Scene scene, String lastSceneID) {
 		List<SceneLine> lines = new ArrayList<>();
 		if (scene.getType() == SceneType.RANDOM) {
 			List<SceneLine> validLines = new ArrayList<>();
 			for (SceneLine line : scene.getLines()) {
-				if (line.shouldShow(subject, lastSceneID)) {
+				if (line.shouldShow(subject, target, lastSceneID)) {
 					validLines.add(line);
 				}
 			}
 			lines.add(MathUtils.selectRandomFromList(validLines));
 		} else if (scene.getType() == SceneType.SELECTOR) {
 			for (SceneLine line : scene.getLines()) {
-				if (line.shouldShow(subject, lastSceneID)) {
+				if (line.shouldShow(subject, target, lastSceneID)) {
 					lines.add(line);
 					break;
 				}
@@ -87,17 +87,17 @@ public class MenuManager {
 		return lines;
 	}
 
-	private void executeLine(Actor subject, SceneLine line) {
+	private void executeLine(Actor subject, Actor target, SceneLine line) {
 		for (String text : line.getTextList()) {
 			subject.game().eventBus().post(new RenderTextEvent(text));
 		}
-		line.trigger(subject);
+		line.trigger(subject, target);
 	}
 
-	private SceneChoice executeChoice(Actor subject, List<SceneChoice> choices) {
+	private SceneChoice executeChoice(Actor subject, Actor target, List<SceneChoice> choices) {
 		List<SceneChoice> validChoices = new ArrayList<>();
 		for (SceneChoice choice : choices) {
-			if (subject.game().data().getScene(choice.getLinkedId()).canChoose(subject)) {
+			if (subject.game().data().getScene(choice.getLinkedId()).canChoose(subject, target)) {
 				validChoices.add(choice);
 			}
 		}

@@ -38,16 +38,16 @@ public class SceneLine {
     	return textList;
     }
     
-    public boolean shouldShow(Actor subject, String lastTopicID) {
-    	return (condition == null || condition.isMet(subject))
+    public boolean shouldShow(Actor subject, Actor target, String lastTopicID) {
+    	return (condition == null || condition.isMet(subject, target))
                 && !(once && hasTriggered)
                 && !(fromSceneID != null && !fromSceneID.equals(lastTopicID));
     }
     
-    public void trigger(Actor subject) {
+    public void trigger(Actor subject, Actor target) {
     	hasTriggered = true;
         if(script != null) {
-            script.execute(subject);
+            script.execute(subject, target);
         }
     }
     

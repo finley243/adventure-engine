@@ -16,8 +16,8 @@ public class ScriptActorState extends Script {
 	}
 	
 	@Override
-	public void executeSuccess(Actor subject) {
-		actor.getActor(subject).setEnabled(enabled);
+	public void executeSuccess(Actor subject, Actor target) {
+		actor.getActor(subject, target).setEnabled(enabled);
 	}
 	
 }

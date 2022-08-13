@@ -16,9 +16,9 @@ public class ConditionCompound extends Condition {
 	}
 	
 	@Override
-	public boolean isMetInternal(Actor subject) {
+	public boolean isMetInternal(Actor subject, Actor target) {
 		for(Condition condition : conditions) {
-			if(condition.isMet(subject) == useOr) {
+			if(condition.isMet(subject, target) == useOr) {
 				return useOr;
 			}
 		}

@@ -18,15 +18,15 @@ public class ScriptCompound extends Script {
     }
 
     @Override
-    public void executeSuccess(Actor subject) {
+    public void executeSuccess(Actor subject, Actor target) {
         for(Script current : subScripts) {
             if(select) {
-                boolean wasExecuted = current.execute(subject);
+                boolean wasExecuted = current.execute(subject, target);
                 if(wasExecuted) {
                     break;
                 }
             } else {
-                current.execute(subject);
+                current.execute(subject, target);
             }
         }
     }

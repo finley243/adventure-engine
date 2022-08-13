@@ -95,7 +95,7 @@ public abstract class ActionAttack extends ActionRandom {
 
     @Override
     public boolean onStart(Actor subject, int repeatActionCount) {
-        subject.triggerScript("on_attack");
+        subject.triggerScript("on_attack", target);
         if(getWeapon().getClipSize() > 0) {
             getWeapon().consumeAmmo(ammoConsumed());
         }

@@ -12,7 +12,7 @@ public class ConditionSceneVisited extends Condition {
     }
 
     @Override
-    public boolean isMetInternal(Actor subject) {
+    public boolean isMetInternal(Actor subject, Actor target) {
         return subject.game().data().getScene(topicID).hasVisited();
     }
 

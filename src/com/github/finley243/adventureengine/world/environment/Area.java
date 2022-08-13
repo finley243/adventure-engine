@@ -413,9 +413,9 @@ public class Area extends GameInstanced implements Noun {
 		return actions;
 	}
 
-	public void triggerScript(String entryPoint, Actor subject) {
+	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if(scripts.containsKey(entryPoint)) {
-			scripts.get(entryPoint).execute(subject);
+			scripts.get(entryPoint).execute(subject, target);
 		}
 	}
 

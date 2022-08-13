@@ -18,7 +18,7 @@ public class ConditionTime extends Condition {
     }
 
     @Override
-    public boolean isMetInternal(Actor subject) {
+    public boolean isMetInternal(Actor subject, Actor target) {
         return subject.game().data().time().isInRange(hours1, minutes1, hours2, minutes2);
     }
 

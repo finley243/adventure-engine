@@ -15,7 +15,7 @@ public class ConditionActorVisible extends Condition {
     }
 
     @Override
-    public boolean isMetInternal(Actor subject) {
-        return actor.getActor(subject).canSee(target.getActor(subject));
+    public boolean isMetInternal(Actor subject, Actor target) {
+        return actor.getActor(subject, target).canSee(this.target.getActor(subject, target));
     }
 }

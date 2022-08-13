@@ -26,28 +26,28 @@ public class ScriptTransferItem extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject) {
+    protected void executeSuccess(Actor subject, Actor target) {
         Item itemPlaceholder = ItemFactory.create(subject.game(), item);
         switch (type) {
             case "one":
-                actor.getActor(subject).inventory().removeItem(itemPlaceholder);
-                target.getActor(subject).inventory().addItem(itemPlaceholder);
+                actor.getActor(subject, target).inventory().removeItem(itemPlaceholder);
+                this.target.getActor(subject, target).inventory().addItem(itemPlaceholder);
                 break;
             case "all":
                 if (item == null) { // All items in inventory
-                    Map<Item, Integer> items = actor.getActor(subject).inventory().getItemMap();
-                    actor.getActor(subject).inventory().clear();
-                    target.getActor(subject).inventory().addItems(items);
+                    Map<Item, Integer> items = actor.getActor(subject, target).inventory().getItemMap();
+                    actor.getActor(subject, target).inventory().clear();
+                    this.target.getActor(subject, target).inventory().addItems(items);
                 } else { // All items of type
-                    int inventoryCount = actor.getActor(subject).inventory().itemCount(itemPlaceholder);
-                    actor.getActor(subject).inventory().removeItems(itemPlaceholder, inventoryCount);
-                    target.getActor(subject).inventory().addItems(itemPlaceholder, inventoryCount);
+                    int inventoryCount = actor.getActor(subject, target).inventory().itemCount(itemPlaceholder);
+                    actor.getActor(subject, target).inventory().removeItems(itemPlaceholder, inventoryCount);
+                    this.target.getActor(subject, target).inventory().addItems(itemPlaceholder, inventoryCount);
                 }
                 break;
             case "count":
             default:
-                actor.getActor(subject).inventory().removeItems(itemPlaceholder, count);
-                target.getActor(subject).inventory().addItems(itemPlaceholder, count);
+                actor.getActor(subject, target).inventory().removeItems(itemPlaceholder, count);
+                this.target.getActor(subject, target).inventory().addItems(itemPlaceholder, count);
                 break;
         }
     }

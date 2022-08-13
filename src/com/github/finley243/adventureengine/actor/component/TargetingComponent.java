@@ -93,7 +93,7 @@ public class TargetingComponent {
             }
         }
         if(!startEmpty && combatants.isEmpty()) {
-            actor.triggerScript("on_combat_end");
+            actor.triggerScript("on_combat_end", actor);
         }
     }
 
@@ -133,11 +133,11 @@ public class TargetingComponent {
         // TODO - Add allied target adding? Handle with bark communication? (only for active combatants, not detected targets)
         if ((actor.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getRoom().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
                 (actor.getArea().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
-            actor.triggerScript("on_detect_target_trespassing");
+            actor.triggerScript("on_detect_target_trespassing", subject);
             // TODO - Make trespassing cause a warning first (actor follows trespasser?), become hostile after a couple turns
             addCombatant(actor);
         } else if (actor.getFaction().getRelationTo(subject.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
-            actor.triggerScript("on_detect_target_faction");
+            actor.triggerScript("on_detect_target_faction", subject);
             addCombatant(actor);
         } else {
             addNonCombatant(actor);
@@ -147,7 +147,7 @@ public class TargetingComponent {
     // TODO - Needs to account for adding a combatant that is already in the non-combatant set
     public void addCombatant(Actor target) {
         if (combatants.isEmpty()) {
-            actor.triggerScript("on_combat_start");
+            actor.triggerScript("on_combat_start", target);
         }
         detectionCounters.remove(target);
         if (!combatants.containsKey(target)) {

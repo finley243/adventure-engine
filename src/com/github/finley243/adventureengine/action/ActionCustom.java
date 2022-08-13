@@ -31,13 +31,13 @@ public class ActionCustom extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.game().eventBus().post(new RenderTextEvent(description));
         if(script != null) {
-            script.execute(subject);
+            script.execute(subject, subject);
         }
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && (condition == null || condition.isMet(subject));
+        return super.canChoose(subject) && (condition == null || condition.isMet(subject, subject));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ActionCustom extends Action {
     }
 
     public boolean canShow(Actor subject) {
-        return conditionShow == null || conditionShow.isMet(subject);
+        return conditionShow == null || conditionShow.isMet(subject, subject);
     }
 
 }

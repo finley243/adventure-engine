@@ -5,9 +5,7 @@ import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.TextGen;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -28,10 +26,10 @@ public class ScriptBark extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject) {
+    protected void executeSuccess(Actor subject, Actor target) {
         if(ThreadLocalRandom.current().nextFloat() < chance) {
             String selectedLine = lines.get(ThreadLocalRandom.current().nextInt(lines.size()));
-            Actor speaker = actor.getActor(subject);
+            Actor speaker = actor.getActor(subject, target);
             Context context = new Context(new NounMapper().put("actor", speaker).build());
             subject.game().eventBus().post(new SensoryEvent(speaker.getArea(), selectedLine, selectedLine, context, SensoryEvent.ResponseType.NONE, false, null, speaker));
         }

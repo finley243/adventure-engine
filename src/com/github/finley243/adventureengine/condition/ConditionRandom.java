@@ -13,7 +13,7 @@ public class ConditionRandom extends Condition {
     }
 
     @Override
-    public boolean isMetInternal(Actor subject) {
+    public boolean isMetInternal(Actor subject, Actor target) {
         return MathUtils.randomCheck(chance);
     }
 

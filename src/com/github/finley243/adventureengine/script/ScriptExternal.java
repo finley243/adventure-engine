@@ -13,7 +13,7 @@ public class ScriptExternal extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject) {
-        subject.game().data().getScript(scriptID).execute(subject);
+    protected void executeSuccess(Actor subject, Actor target) {
+        subject.game().data().getScript(scriptID).execute(subject, target);
     }
 }

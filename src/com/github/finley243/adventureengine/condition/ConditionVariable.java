@@ -16,7 +16,7 @@ public class ConditionVariable extends Condition {
     }
 
     @Override
-    public boolean isMetInternal(Actor subject) {
+    public boolean isMetInternal(Actor subject, Actor target) {
         int varValue = subject.game().data().getVariable(variableID);
         return Condition.equalityCheckInt(varValue, value, equality);
     }

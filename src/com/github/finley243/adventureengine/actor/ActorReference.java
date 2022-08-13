@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.actor;
 public class ActorReference {
 
 	public enum ReferenceType {
-		PLAYER, SUBJECT, REFERENCE
+		PLAYER, SUBJECT, TARGET, REFERENCE
 	}
 	
 	private final ReferenceType type;
@@ -14,12 +14,14 @@ public class ActorReference {
 		this.reference = reference;
 	}
 	
-	public Actor getActor(Actor subject) {
+	public Actor getActor(Actor subject, Actor target) {
 		switch(type) {
 		case PLAYER:
 			return subject.game().data().getPlayer();
 		case REFERENCE:
 			return subject.game().data().getActor(reference);
+		case TARGET:
+			return target;
 		case SUBJECT:
 		default:
 			return subject;

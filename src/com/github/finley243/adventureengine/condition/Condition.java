@@ -17,11 +17,11 @@ public abstract class Condition {
 		this.invert = invert;
 	}
 	
-	public boolean isMet(Actor subject) {
-		return isMetInternal(subject) != invert;
+	public boolean isMet(Actor subject, Actor target) {
+		return isMetInternal(subject, target) != invert;
 	}
 
-	protected abstract boolean isMetInternal(Actor subject);
+	protected abstract boolean isMetInternal(Actor subject, Actor target);
 
 	public static boolean equalityCheckInt(int value1, int value2, Equality equality) {
 		switch(equality) {

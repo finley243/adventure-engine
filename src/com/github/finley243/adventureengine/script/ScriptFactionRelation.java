@@ -18,7 +18,7 @@ public class ScriptFactionRelation extends Script {
 	}
 
 	@Override
-	public void executeSuccess(Actor subject) {
+	public void executeSuccess(Actor subject, Actor target) {
 		subject.game().data().getFaction(targetFaction).setRelation(relationFaction, relation);
 	}
 

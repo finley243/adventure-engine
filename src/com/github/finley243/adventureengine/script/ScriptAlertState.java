@@ -17,9 +17,9 @@ public class ScriptAlertState extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject) {
-        if (actor.getActor(subject).targetingComponent() != null) {
-            actor.getActor(subject).targetingComponent().setAlertState(alertState);
+    protected void executeSuccess(Actor subject, Actor target) {
+        if (actor.getActor(subject, target).targetingComponent() != null) {
+            actor.getActor(subject, target).targetingComponent().setAlertState(alertState);
         }
     }
 

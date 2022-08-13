@@ -19,8 +19,8 @@ public class ScriptScene extends Script {
     }
 
     @Override
-    public void executeSuccess(Actor subject) {
-        SceneManager.triggerFromIDs(subject.game(), actor.getActor(subject), scenes);
+    public void executeSuccess(Actor subject, Actor target) {
+        SceneManager.triggerFromIDs(subject.game(), actor.getActor(subject, target), actor.getActor(subject, target), scenes);
     }
 
 }

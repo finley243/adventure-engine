@@ -16,7 +16,7 @@ public class ScriptNearestActorWithScript extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject) {
+    protected void executeSuccess(Actor subject, Actor target) {
         // TODO - Improve efficiency of nearest actor check
         List<Actor> nearestActor = new ArrayList<>();
         List<Integer> nearestActorDist = new ArrayList<>();
@@ -33,7 +33,7 @@ public class ScriptNearestActorWithScript extends Script {
             nearestActorDist.add(addAtIndex, distance);
         }
         for(Actor nearActor : nearestActor) {
-            boolean executed = nearActor.triggerScript(trigger);
+            boolean executed = nearActor.triggerScript(trigger, target);
             if(executed) {
                 break;
             }

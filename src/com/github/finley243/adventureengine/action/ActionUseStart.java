@@ -25,7 +25,7 @@ public class ActionUseStart extends Action {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		if (object.userInCover()) {
-			subject.triggerScript("on_take_cover");
+			subject.triggerScript("on_take_cover", subject);
 		}
 		object.setUser(subject);
 		subject.startUsingObject(object);

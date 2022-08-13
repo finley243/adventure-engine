@@ -40,8 +40,8 @@ public class Scene {
 		return ID;
 	}
 
-	public boolean canChoose(Actor subject) {
-		return (condition == null || condition.isMet(subject)) && !(once && hasTriggered);
+	public boolean canChoose(Actor subject, Actor target) {
+		return (condition == null || condition.isMet(subject, target)) && !(once && hasTriggered);
 	}
 	
 	public List<SceneLine> getLines() {

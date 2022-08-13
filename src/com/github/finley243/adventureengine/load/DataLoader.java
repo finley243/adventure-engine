@@ -386,6 +386,8 @@ public class DataLoader {
                 return new ActorReference(ActorReference.ReferenceType.PLAYER, null);
             case "SUBJECT":
                 return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
+            case "TARGET":
+                return new ActorReference(ActorReference.ReferenceType.TARGET, null);
             default:
                 return new ActorReference(ActorReference.ReferenceType.REFERENCE, targetRef);
         }

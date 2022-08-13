@@ -31,7 +31,7 @@ public class InvestigateTarget {
                 areaTarget.markForRemoval();
                 areaTarget = null;
                 targetArea = null;
-                subject.triggerScript("on_investigate_end");
+                subject.triggerScript("on_investigate_end", subject);
             }
         }
     }

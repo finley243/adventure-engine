@@ -104,11 +104,11 @@ public class Game {
 		for (Area area : data().getAreas()) {
 			area.updateRound();
 		}
-		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer());
-		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer());
+		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
+		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
 		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
 		for (Actor visibleActor : data().getPlayer().getVisibleActors()) {
-			visibleActor.triggerScript("on_player_visible_round");
+			visibleActor.triggerScript("on_player_visible_round", data().getPlayer());
 		}
 		for (Actor actor : data().getActors()) {
 			if (!actor.isPlayer()) {

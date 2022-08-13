@@ -15,9 +15,9 @@ public class ConditionCombatant extends Condition {
     }
 
     @Override
-    public boolean isMetInternal(Actor subject) {
-        if(actor.getActor(subject).targetingComponent() == null) return false;
-        return actor.getActor(subject).targetingComponent().isCombatant(target.getActor(subject));
+    public boolean isMetInternal(Actor subject, Actor target) {
+        if(actor.getActor(subject, target).targetingComponent() == null) return false;
+        return actor.getActor(subject, target).targetingComponent().isCombatant(this.target.getActor(subject, target));
     }
 
 }
