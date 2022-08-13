@@ -8,7 +8,7 @@
             <link dir="E" area="fifth_corner_store_counter"/>
             <link dir="NE" area="fifth_corner_store_aisle"/>
             <object type="door" id="fifth_corner_store_door_exit" link="fifth_corner_store_exterior_door" dir="W">
-                <name>store entrance</name>
+                <name>door</name>
             </object>
         </area>
         <area id="fifth_corner_store_counter" landmark="fifth_corner_store_counter">

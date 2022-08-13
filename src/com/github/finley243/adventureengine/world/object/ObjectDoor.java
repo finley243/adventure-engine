@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -27,6 +28,32 @@ public class ObjectDoor extends WorldObject {
 		this.linkedDoorID = linkedDoorID;
 		this.direction = direction;
 		this.lock = lock;
+	}
+
+	@Override
+	public String getName() {
+		String destinationName;
+		if (!getLinkedArea().getRoom().equals(this.getArea().getRoom()) || this.equals(getLinkedArea().getLandmark())) {
+			destinationName = getLinkedArea().getRoom().getName();
+		} else {
+			destinationName = getLinkedArea().getName();
+		}
+		return super.getName() + " to " + destinationName;
+	}
+
+	@Override
+	public String getFormattedName() {
+		String destinationName;
+		if (!getLinkedArea().getRoom().equals(this.getArea().getRoom()) || this.equals(getLinkedArea().getLandmark())) {
+			destinationName = getLinkedArea().getRoom().getFormattedName();
+		} else {
+			destinationName = getLinkedArea().getFormattedName();
+		}
+		if (!isProperName()) {
+			return LangUtils.addArticle(super.getName(), !isKnown()) + " to " + destinationName;
+		} else {
+			return super.getName() + " to " + destinationName;
+		}
 	}
 	
 	public Area getLinkedArea() {
