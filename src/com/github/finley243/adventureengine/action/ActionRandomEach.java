@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 
 import java.util.Collection;
@@ -18,12 +19,16 @@ public abstract class ActionRandomEach<T> extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         boolean continueAfterStart = onStart(subject, repeatActionCount);
         if(continueAfterStart) {
-            for (T target : collection) {
-                if (ThreadLocalRandom.current().nextFloat() < chance(subject, target)) {
-                    onSuccess(subject, target, repeatActionCount);
-                } else {
-                    onFail(subject, target, repeatActionCount);
+            if (MathUtils.randomCheck(chanceOverall(subject))) {
+                for (T target : collection) {
+                    if (MathUtils.randomCheck(chance(subject, target))) {
+                        onSuccess(subject, target, repeatActionCount);
+                    } else {
+                        onFail(subject, target, repeatActionCount);
+                    }
                 }
+            } else {
+                onFailOverall(subject, repeatActionCount);
             }
         }
         onEnd(subject, repeatActionCount);
@@ -59,6 +64,10 @@ public abstract class ActionRandomEach<T> extends Action {
 
     public abstract void onFail(Actor subject, T target, int repeatActionCount);
 
+    public abstract void onFailOverall(Actor subject, int repeatActionCount);
+
     public abstract float chance(Actor subject, T target);
+
+    public abstract float chanceOverall(Actor subject);
 
 }

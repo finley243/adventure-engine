@@ -84,6 +84,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
+    public float chanceOverall(Actor subject) {
+        return 1.0f;
+    }
+
+    @Override
     public boolean onStart(Actor subject, int repeatActionCount) {
         for (AttackTarget target : targets) {
             if (target instanceof Actor) {
@@ -126,6 +131,9 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), attackContext, this, subject));
         subject.triggerEffect("on_attack_failure");
     }
+
+    @Override
+    public void onFailOverall(Actor subject, int repeatActionCount) {}
 
     public int ammoConsumed() {
         return ammoConsumed;
