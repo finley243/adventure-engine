@@ -12,6 +12,7 @@ public abstract class ActionRandomEach<T> extends Action {
 
     public ActionRandomEach(ActionDetectionChance detectionChance, Collection<T> collection) {
         super(detectionChance);
+        if (collection.isEmpty()) throw new IllegalArgumentException("ActionRandomEach collection cannot be empty");
         this.collection = collection;
     }
 
