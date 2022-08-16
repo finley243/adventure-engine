@@ -17,6 +17,7 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.*;
@@ -250,6 +251,16 @@ public class Area extends GameInstanced implements Noun {
 		if(!didRemove) {
 			System.out.println("Area " + ID + " does not contain actor " + actor + ".");
 		}
+	}
+
+	public Set<AttackTarget> getAttackTargets() {
+		Set<AttackTarget> targets = new HashSet<>(getActors());
+		for (WorldObject object : getObjects()) {
+			if (object instanceof AttackTarget) {
+				targets.add((AttackTarget) object);
+			}
+		}
+		return targets;
 	}
 
 	public Set<Area> getNearAreas() {
