@@ -2,10 +2,11 @@ package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.MathUtils;
+import com.github.finley243.adventureengine.action.ActionRandomEach;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandom;
-import com.github.finley243.adventureengine.action.reaction.ActionReaction;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
@@ -14,15 +15,15 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
+import com.github.finley243.adventureengine.world.AttackTarget;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-public abstract class ActionAttack extends ActionRandom {
+public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
-    private final Actor target;
+    private final Set<AttackTarget> targets;
     private final ItemWeapon weapon;
     private final Limb limb;
     private final String prompt;
@@ -34,13 +35,12 @@ public abstract class ActionAttack extends ActionRandom {
     private final boolean overrideWeaponRate;
     private final float damageMult;
     private final float hitChanceMult;
-    private ActionReaction reaction;
-    private boolean reactionSuccess;
+    private final boolean canDodge;
 
-    public ActionAttack(ItemWeapon weapon, Actor target, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
-        super(ActionDetectionChance.HIGH);
+    public ActionAttack(ItemWeapon weapon, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult, boolean canDodge) {
+        super(ActionDetectionChance.HIGH, targets);
         this.weapon = weapon;
-        this.target = target;
+        this.targets = targets;
         this.limb = limb;
         this.prompt = prompt;
         this.hitPhrase = hitPhrase;
@@ -51,6 +51,7 @@ public abstract class ActionAttack extends ActionRandom {
         this.overrideWeaponRate = overrideWeaponRate;
         this.damageMult = damageMult;
         this.hitChanceMult = hitChanceMult;
+        this.canDodge = canDodge;
     }
 
     public String getPrompt() {
@@ -61,8 +62,8 @@ public abstract class ActionAttack extends ActionRandom {
         return weapon;
     }
 
-    public Actor getTarget() {
-        return target;
+    public Set<AttackTarget> getTargets() {
+        return targets;
     }
 
     public Limb getLimb() {
@@ -78,70 +79,50 @@ public abstract class ActionAttack extends ActionRandom {
     }
 
     @Override
-    public float chance(Actor subject) {
-        if(reaction != null && !reactionSuccess && reaction.guaranteedHitOnFail()) {
-            return 1.0f;
-        }
-        float chance = CombatHelper.calculateHitChance(subject, getTarget(), getLimb(), getWeapon(), hitChanceMult());
-        if(reaction != null) {
-            if(reactionSuccess) {
-                chance *= (1.0f + reaction.getHitChanceMultOnSuccess());
-            } else {
-                chance *= (1.0f + reaction.getHitChanceMultOnFail());
-            }
-        }
-        return chance;
+    public float chance(Actor subject, AttackTarget target) {
+        return CombatHelper.calculateHitChance(subject, target, getLimb(), getWeapon(), canDodge, hitChanceMult());
     }
 
     @Override
     public boolean onStart(Actor subject, int repeatActionCount) {
-        subject.triggerScript("on_attack", target);
+        for (AttackTarget target : targets) {
+            if (target instanceof Actor) {
+                subject.triggerScript("on_attack", (Actor) target);
+            } else {
+                subject.triggerScript("on_attack", subject);
+            }
+        }
         if(getWeapon().getClipSize() > 0) {
             getWeapon().consumeAmmo(ammoConsumed());
         }
-        this.reaction = chooseReaction(subject);
-        this.reactionSuccess = (reaction != null && reaction.computeSuccess(getTarget()));
-        if(reaction != null) {
-            if(reactionSuccess) {
-                reaction.onSuccess(getTarget());
-            } else {
-                reaction.onFail(getTarget());
-            }
-        }
-        return !(reaction != null && reactionSuccess && reaction.cancelsAttack());
+        return true;
     }
 
     @Override
     public void onEnd(Actor subject, int repeatActionCount) {
-        if(getTarget().targetingComponent() != null) {
+        // TODO - Use illegal action system to add targets if detected
+        /*if(getTarget().targetingComponent() != null) {
             getTarget().targetingComponent().addCombatant(subject);
-        }
+        }*/
     }
 
     @Override
-    public void onSuccess(Actor subject, int repeatActionCount) {
+    public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
         int damage = damage();
         if(ThreadLocalRandom.current().nextFloat() < WeaponTemplate.CRIT_CHANCE) {
             // No indication of critical hit to player, only damage increase
             damage += getWeapon().getCritDamage();
         }
-        if(reaction != null) {
-            if(reactionSuccess) {
-                damage *= (1.0f + reaction.getDamageMultOnSuccess());
-            } else {
-                damage *= (1.0f + reaction.getDamageMultOnFail());
-            }
-        }
-        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), attackContext, this, subject));
-        Damage damageData = new Damage(Damage.DamageType.PHYSICAL, damage, 1.0f);
-        target.damage(damageData, getLimb());
+        Damage damageData = new Damage(Damage.DamageType.PHYSICAL, damage, getLimb(), 1.0f);
+        target.damage(damageData);
         subject.triggerEffect("on_attack_success");
     }
 
     @Override
-    public void onFail(Actor subject, int repeatActionCount) {
-        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", getTarget()).put("weapon", getWeapon()).build());
+    public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), attackContext, this, subject));
         subject.triggerEffect("on_attack_failure");
     }
@@ -166,23 +147,11 @@ public abstract class ActionAttack extends ActionRandom {
         return getWeapon().getRangeMax();
     }
 
-    private ActionReaction chooseReaction(Actor subject) {
-        List<ActionReaction> reactions = getReactions(subject);
-        if(reactions != null && !reactions.isEmpty()) {
-            return (ActionReaction) target.chooseAction(new ArrayList<>(reactions));
-        }
-        return null;
-    }
-
-    public List<ActionReaction> getReactions(Actor subject) {
-        return new ArrayList<>();
-    }
-
     @Override
     public boolean canChoose(Actor subject) {
         return super.canChoose(subject) &&
-                MathUtils.isInRange(subject.getArea().getDistanceTo(getTarget().getArea().getID()), getRangeMin(), getRangeMax()) &&
-                subject.canSee(getTarget()) &&
+                //MathUtils.isInRange(subject.getArea().getDistanceTo(getTarget().getArea().getID()), getRangeMin(), getRangeMax()) &&
+                //subject.canSee(getTarget()) &&
                 (getWeapon().getClipSize() == 0 || getWeapon().getAmmoRemaining() >= ammoConsumed());
     }
 
@@ -201,7 +170,12 @@ public abstract class ActionAttack extends ActionRandom {
 
     @Override
     public float utility(Actor subject) {
-        if (subject.targetingComponent() != null && subject.targetingComponent().isCombatant(getTarget())) return 0.8f;
+        if (subject.targetingComponent() == null) return 0.0f;
+        for (AttackTarget target : targets) {
+            if (target instanceof Actor && subject.targetingComponent().isCombatant((Actor) target)) {
+                return 0.8f;
+            }
+        }
         return 0.0f;
     }
 

@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine;
 
+import com.github.finley243.adventureengine.actor.Limb;
+
 public class Damage {
 
     public enum DamageType {
@@ -8,13 +10,15 @@ public class Damage {
 
     private final DamageType type;
     private final int amount;
+    private final Limb limb;
     // Multiplier for armor value of target (1.0f = unchanged, 0.0f = ignores armor)
     private final float armorMult;
 
-    public Damage(DamageType type, int amount, float armorMult) {
+    public Damage(DamageType type, int amount, Limb limb, float armorMult) {
         if (amount < 0) throw new IllegalArgumentException("Damage amount cannot be less than 0");
         this.type = type;
         this.amount = amount;
+        this.limb = limb;
         this.armorMult = armorMult;
     }
 
@@ -24,6 +28,10 @@ public class Damage {
 
     public int getAmount() {
         return amount;
+    }
+
+    public Limb getLimb() {
+        return limb;
     }
 
     public float getArmorMult() {

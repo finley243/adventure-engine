@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.AttackTarget;
 
 public class CombatHelper {
 
@@ -14,14 +15,12 @@ public class CombatHelper {
 	// Amount of hit chance to subtract per unit of distance outside of weapon range
 	public static final float RANGE_PENALTY = 0.10f;
 	
-	public static float calculateHitChance(Actor attacker, Actor target, Limb limb, ItemWeapon weapon, float hitChanceMult) {
+	public static float calculateHitChance(Actor attacker, AttackTarget target, Limb limb, ItemWeapon weapon, boolean canBeDodged, float hitChanceMult) {
 		float chance;
-		if (weapon.isRanged()) {
-			chance = MathUtils.chanceLinearSkill(attacker, weapon.getSkill(), HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
-			/*int distanceFromRange = MathUtils.differenceFromRange(attacker.getArea().getDistanceTo(target.getArea().getID()), weapon.getRangeMin(), weapon.getRangeMax());
-			chance -= RANGE_PENALTY * distanceFromRange;*/
+		if (canBeDodged && target instanceof Actor) {
+			chance = MathUtils.chanceLinearSkillContest(attacker, weapon.getSkill(), (Actor) target, Actor.Skill.DODGE, 1.0f, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
 		} else {
-			chance = MathUtils.chanceLinearSkillContest(attacker, weapon.getSkill(), target, Actor.Skill.DODGE, 1.0f, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
+			chance = MathUtils.chanceLinearSkill(attacker, weapon.getSkill(), HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
 		}
 		chance += weapon.getAccuracyBonus();
 		if (limb != null) {

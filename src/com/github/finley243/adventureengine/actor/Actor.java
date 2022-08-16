@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.item.Item;
@@ -27,7 +28,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Actor extends GameInstanced implements Noun, Physical, Moddable {
+public class Actor extends GameInstanced implements Noun, Physical, Moddable, AttackTarget {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 2;
@@ -350,9 +351,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
 	}
 	
-	public void damage(Damage damage, Limb limb) {
-		if(limb != null) {
-			damageLimb(damage, limb);
+	public void damage(Damage damage) {
+		if(damage.getLimb() != null) {
+			damageLimb(damage, damage.getLimb());
 		} else {
 			damageDirect(damage);
 		}
@@ -816,10 +817,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable {
 				heal(amount);
 				break;
 			case "damage":
-				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, 1.0f));
+				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 1.0f));
 				break;
 			case "damageIgnoreArmor":
-				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, 0.0f));
+				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 0.0f));
 				break;
 		}
 	}
