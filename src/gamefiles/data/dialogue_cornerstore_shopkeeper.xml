@@ -16,19 +16,25 @@
             <text>"'Till next time."</text>
         </line>
     </scene>
-    <scene id="cornerstore_shopkeeper_andre">
+    <scene id="cornerstore_shopkeeper_andre" type="select">
         <line once="true">
             <text>The shopkeeper looks down his glasses at you.</text>
             <text>"I see a lot of people. This 'Andre', who are you to him?"</text>
         </line>
+        <line>
+            <text>"I'll ask you one more time. Who are you?"</text>
+        </line>
         <choice link="cornerstore_shopkeeper_truth">Nobody. I've been hired to investigate his disappearance.</choice>
-        <choice link="cornerstore_shopkeeper_lie">A friend.</choice>
+        <choice link="cornerstore_shopkeeper_lie">I'm a friend.</choice>
         <choice link="cornerstore_shopkeeper_evasive">Does it matter?</choice>
+        <choice link="">Actually, nevermind.</choice>
     </scene>
     <scene id="cornerstore_shopkeeper_truth">
-        <line>
+        <line redirect="cornerstore_shopkeeper_andre_questions">
             <text>The shopkeeper sighs. His gaze softens.</text>
             <text>"It's about time. Been worried something happened to him."</text>
+            <text>He straightens his glasses.</text>
+            <text>"I'll help if I can. Afraid I don't know much."</text>
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_lie" once="true">
@@ -37,9 +43,15 @@
             <text>"Funny. I've met Andre's friends. Lovely people, mostly. But I don't know you. Who are you, really?"</text>
         </line>
     </scene>
-    <scene id="cornerstore_shopkeeper_evasive">
-        <line>
+    <scene id="cornerstore_shopkeeper_evasive" once="true">
+        <line redirect="cornerstore_shopkeeper_andre">
             <text>"No no, that's none of my business. Unless you wanted information from me, in which case I would suggest you answer my questions truthfully."</text>
         </line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_questions">
+        <choice link="">When did you last see Andre?</choice>
+        <choice link="">Why are you worried about him?</choice>
+        <choice link="">How do you know Andre?</choice>
+        <choice link="">That's all.</choice>
     </scene>
 </data>
