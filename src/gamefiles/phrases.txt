@@ -12,13 +12,14 @@ meleeHitRepeat:$_actor take$s_actor another swing at $target and $weapon hit$s_w
 meleeMiss:$_actor tr$ies_actor to hit $target with $actor's $weapon_name, but $_actor miss$es_actor
 meleeRepeat:$_actor tr$ies_actor to hit $target again, but $_actor miss$es_actor
 moveThrough:$_actor go$es_actor through $exit
+moveThroughReverse:$_actor come$s_actor through $exit
 moveToward:$_actor move$s_actor toward $area
 moveTo:$_actor move$s_actor to $area
 moveOnto:$_actor move$s_actor onto $area
 moveFront:$_actor move$s_actor in front of $area
 moveBehind:$_actor move$s_actor behind $area
 moveBeside:$_actor move$s_actor beside $area
-moveCorner:$_actor turn$s_actor around the corner
+moveCorner:$_actor turn$s_actor around the corner to $area
 pickUp:$_actor grab$s_actor $item
 rangedHit:$_actor fire$s_actor a shot with $actor's $weapon_name and it hits $target
 rangedHitRepeat:$_actor fire$s_actor another shot and it hits $target

@@ -16,6 +16,7 @@ public class ActionDoorListen extends Action {
 
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
+		// TODO - Switch to using textgen
 		String text = "";
 		int actorCount = 0;
 		for (Actor actor : exit.getLinkedArea().getRoom().getActors()) {
@@ -34,6 +35,7 @@ public class ActionDoorListen extends Action {
 		}
 		text += " through " + exit.getFormattedName() + ".";
 		subject.game().eventBus().post(new RenderTextEvent(text));
+		exit.setKnown();
 	}
 
 	@Override

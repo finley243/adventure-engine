@@ -12,18 +12,21 @@ import java.util.concurrent.ThreadLocalRandom;
 public class UtilityUtils {
 
 	public static final float PURSUE_TARGET_UTILITY_MELEE = 0.7f;
-	public static final float PURSUE_TARGET_UTILITY_RANGED = 0.0f;
+	public static final float PURSUE_TARGET_UTILITY_RANGED = 0.6f;
 	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.7f;
 	public static final float PURSUE_TARGET_UTILITY_UNARMED = 0.0f;
 	public static final float INVESTIGATE_NOISE_UTILITY = 0.5f;
 	
 	public static float getMovementUtility(Actor subject, Area area, boolean isDoor) {
+		if (subject.getID().equals("cornerstore_shopkeeper")) System.out.println("Area utility: " + area.getID() + ", through door? " + isDoor);
 		float utility = 0.0f;
 		for (AreaTarget target : subject.getPursueTargets()) {
 			if (!(isDoor && !target.shouldUseDoors()) && target.isOnPath(area)) {
 				utility += target.getTargetUtility();
+				if (subject.getID().equals("cornerstore_shopkeeper")) System.out.println("+UTIL");
 			}
 		}
+		if (subject.getID().equals("cornerstore_shopkeeper")) System.out.println("Utility (" + area.getID() + "): " + MathUtils.bound(utility, 0.0f, 1.0f));
 		return MathUtils.bound(utility, 0.0f, 1.0f);
 	}
 

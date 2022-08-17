@@ -2,24 +2,22 @@ package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.MathUtils;
-import com.github.finley243.adventureengine.action.ActionRandomEach;
-import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionRandom;
+import com.github.finley243.adventureengine.action.ActionRandomEach;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
+import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
@@ -106,15 +104,17 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onEnd(Actor subject, int repeatActionCount) {
         // TODO - Use illegal action system to add targets if detected
-        /*if(getTarget().targetingComponent() != null) {
-            getTarget().targetingComponent().addCombatant(subject);
-        }*/
+        for (AttackTarget target : targets) {
+            if (target instanceof Actor && ((Actor) target).targetingComponent() != null) {
+                ((Actor) target).targetingComponent().addCombatant(subject);
+            }
+        }
     }
 
     @Override
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
         int damage = damage();
-        if(ThreadLocalRandom.current().nextFloat() < WeaponTemplate.CRIT_CHANCE) {
+        if(MathUtils.randomCheck(WeaponTemplate.CRIT_CHANCE)) {
             // No indication of critical hit to player, only damage increase
             damage += getWeapon().getCritDamage();
         }
