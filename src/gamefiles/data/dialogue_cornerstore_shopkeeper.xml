@@ -8,7 +8,8 @@
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_main">
-        <choice link="cornerstore_shopkeeper_andre" once="true">I'm looking for Andre Wallace. You seen him?</choice>
+        <choice link="cornerstore_shopkeeper_andre">I'm looking for Andre Wallace. You seen him?</choice>
+        <choice link="cornerstore_shopkeeper_andre_questions_repeat">I've got some more questions about Andre.</choice>
         <choice link="cornerstore_shopkeeper_end">Goodbye.</choice>
     </scene>
     <scene id="cornerstore_shopkeeper_end">
@@ -16,18 +17,20 @@
             <text>"'Till next time."</text>
         </line>
     </scene>
+    <scene id="cornerstore_shopkeeper_andre_questions_repeat">
+        <condition type="sceneVisited" scene="cornerstore_shopkeeper_andre_questions"/>
+        <line redirect="cornerstore_shopkeeper_andre_questions">
+            <text>"Go right ahead."</text>
+        </line>
+    </scene>
     <scene id="cornerstore_shopkeeper_andre" type="select">
-        <line once="true">
-            <text>The shopkeeper looks down his glasses at you.</text>
-            <text>"I see a lot of people. This 'Andre', who are you to him?"</text>
-        </line>
         <line>
-            <text>"I'll ask you one more time. Who are you?"</text>
+            <text>The shopkeeper looks down his glasses at you.</text>
+            <text>"I see a lot of people. This 'Andre', why are you looking for him?"</text>
         </line>
-        <choice link="cornerstore_shopkeeper_truth">Nobody. I've been hired to investigate his disappearance.</choice>
-        <choice link="cornerstore_shopkeeper_lie">I'm a friend.</choice>
-        <choice link="cornerstore_shopkeeper_evasive">Does it matter?</choice>
-        <choice link="">Actually, nevermind.</choice>
+        <choice link="cornerstore_shopkeeper_truth">I've been hired to investigate his disappearance.</choice>
+        <choice link="cornerstore_shopkeeper_lie"></choice>
+        <choice link="cornerstore_shopkeeper_evasive">Look, have you seen him or not?</choice>
     </scene>
     <scene id="cornerstore_shopkeeper_truth">
         <line redirect="cornerstore_shopkeeper_andre_questions">
@@ -38,14 +41,14 @@
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_lie" once="true">
-        <line redirect="cornerstore_shopkeeper_andre">
+        <line>
             <text>The shopkeeper's gaze briefly shifts to the window, then back to you. He chuckles, but his eyes remain cold.</text>
             <text>"Funny. I've met Andre's friends. Lovely people, mostly. But I don't know you. Who are you, really?"</text>
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_evasive" once="true">
-        <line redirect="cornerstore_shopkeeper_andre">
-            <text>"No no, that's none of my business. Unless you wanted information from me, in which case I would suggest you answer my questions truthfully."</text>
+        <line>
+            <text>""</text>
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_questions">
