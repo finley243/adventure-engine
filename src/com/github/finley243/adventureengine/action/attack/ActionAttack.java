@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.Map;
 import java.util.Set;
@@ -147,20 +148,13 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return repeatActionCount > 0 ? missPhraseRepeat : missPhrase;
     }
 
-    public int getRangeMin() {
-        return getWeapon().getRangeMin();
-    }
-
-    public int getRangeMax() {
-        return getWeapon().getRangeMax();
+    public AreaLink.DistanceCategory getRange() {
+        return getWeapon().getRange();
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) &&
-                //MathUtils.isInRange(subject.getArea().getDistanceTo(getTarget().getArea().getID()), getRangeMin(), getRangeMax()) &&
-                //subject.canSee(getTarget()) &&
-                (getWeapon().getClipSize() == 0 || getWeapon().getAmmoRemaining() >= ammoConsumed());
+        return super.canChoose(subject) && (getWeapon().getClipSize() == 0 || getWeapon().getAmmoRemaining() >= ammoConsumed());
     }
 
     @Override

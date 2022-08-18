@@ -17,6 +17,11 @@ public class AreaLink {
         }
     }
 
+    // TODO - Merge link type system into distances (only close and corner are movable, only corner is non-visible)
+    public enum DistanceCategory {
+        NEAR, CLOSE, FAR, DISTANT
+    }
+
     public enum AreaLinkType {
         DIRECT(true, true), CORNER(false, true), FAR(true, false);
 
@@ -44,11 +49,11 @@ public class AreaLink {
     private final RelativeHeight height;
     private final AreaLinkType type;
     private final CompassDirection direction;
-    private final int distance;
+    private final DistanceCategory distance;
     private final String moveNameOverride;
     private final String movePhraseOverride;
 
-    public AreaLink(String areaID, RelativeHeight height, CompassDirection direction, AreaLinkType type, int distance, String moveNameOverride, String movePhraseOverride) {
+    public AreaLink(String areaID, RelativeHeight height, CompassDirection direction, AreaLinkType type, DistanceCategory distance, String moveNameOverride, String movePhraseOverride) {
         this.areaID = areaID;
         this.height = height;
         this.direction = direction;
@@ -74,7 +79,7 @@ public class AreaLink {
         return type;
     }
 
-    public int getDistance() {
+    public DistanceCategory getDistance() {
         return distance;
     }
 

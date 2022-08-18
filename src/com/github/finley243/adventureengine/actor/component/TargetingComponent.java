@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.*;
 
@@ -209,40 +210,22 @@ public class TargetingComponent {
         }
     }
 
-    private int idealDistanceMin() {
-        int idealDistanceMin = 0;
+    private AreaLink.DistanceCategory idealDistance() {
         if (actor.equipmentComponent() != null && actor.equipmentComponent().hasEquippedItem() && actor.equipmentComponent().getEquippedItem() instanceof ItemWeapon) {
-            idealDistanceMin = ((ItemWeapon) actor.equipmentComponent().getEquippedItem()).getRangeMin();
+            return ((ItemWeapon) actor.equipmentComponent().getEquippedItem()).getRange();
+        } else {
+            return AreaLink.DistanceCategory.NEAR;
         }
-        return idealDistanceMin;
-    }
-
-    private int idealDistanceMax() {
-        int idealDistanceMax = 0;
-        if (actor.equipmentComponent() != null && actor.equipmentComponent().hasEquippedItem() && actor.equipmentComponent().getEquippedItem() instanceof ItemWeapon) {
-            idealDistanceMax = ((ItemWeapon) actor.equipmentComponent().getEquippedItem()).getRangeMax();
-        }
-        return idealDistanceMax;
     }
 
     private Set<Area> idealAreas(Area origin) {
-        int idealDistanceMin = idealDistanceMin();
-        int idealDistanceMax = idealDistanceMax();
-        if (idealDistanceMax == 0) {
+        AreaLink.DistanceCategory idealDistance = idealDistance();
+        if (idealDistance == AreaLink.DistanceCategory.NEAR) {
             Set<Area> idealAreas = new HashSet<>();
             idealAreas.add(origin);
             return idealAreas;
         }
-        Set<Area> idealAreas = origin.visibleAreasInRange(actor, idealDistanceMin, idealDistanceMax);
-        while (idealAreas.isEmpty()) {
-            if(idealDistanceMin >= 0) {
-                idealDistanceMin -= 1;
-            }
-            idealDistanceMax += 1;
-            idealAreas.addAll(origin.visibleAreasInRange(actor, idealDistanceMin, idealDistanceMin));
-            idealAreas.addAll(origin.visibleAreasInRange(actor, idealDistanceMax, idealDistanceMax));
-        }
-        return idealAreas;
+        return origin.visibleAreasInRange(actor, idealDistance);
     }
 
     public void loadState(SaveData data) {

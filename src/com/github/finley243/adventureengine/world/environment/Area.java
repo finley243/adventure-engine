@@ -31,6 +31,7 @@ public class Area extends GameInstanced implements Noun {
 		IN, ON, NEAR, FRONT, BESIDE, BEHIND
 	}
 
+	// TODO - Get rid of this, it will not work with the new abstract distance system
 	private static final boolean FULL_VISIBILITY_IN_ROOM = true;
 
 	private final String ID;
@@ -262,16 +263,6 @@ public class Area extends GameInstanced implements Noun {
 		return targets;
 	}
 
-	public Set<Area> getNearAreas() {
-		Set<Area> nearAreas = new HashSet<>();
-		for(AreaLink link : linkedAreas.values()) {
-			if(link.getDistance() == 0) {
-				nearAreas.add(game().data().getArea(link.getAreaID()));
-			}
-		}
-		return nearAreas;
-	}
-
 	public List<Action> getMoveActions() {
 		List<Action> moveActions = new ArrayList<>();
 		for(AreaLink link : linkedAreas.values()) {
@@ -325,19 +316,13 @@ public class Area extends GameInstanced implements Noun {
 		return link.getType().isVisible;
 	}
 
-	public int getDistanceTo(String areaID) {
-		if (this.getID().equals(areaID)) return 0;
-		if (!linkedAreas.containsKey(areaID)) {
-			if (FULL_VISIBILITY_IN_ROOM) {
-				return Pathfinder.findPath(this, game().data().getArea(areaID)).size() - 1;
-			} else {
-				return -1;
-			}
-		}
+	public AreaLink.DistanceCategory getDistanceTo(String areaID) {
+		if (this.getID().equals(areaID)) return AreaLink.DistanceCategory.NEAR;
+		if (!linkedAreas.containsKey(areaID)) return null;
 		return linkedAreas.get(areaID).getDistance();
 	}
 
-	public Set<Area> visibleAreasInRange(Actor subject, int rangeMin, int rangeMax) {
+	/*public Set<Area> visibleAreasInRange(Actor subject, int rangeMin, int rangeMax) {
 		Set<Area> areas = new HashSet<>();
 		if (rangeMin == 0) {
 			areas.add(this);
@@ -352,6 +337,20 @@ public class Area extends GameInstanced implements Noun {
 				if (isVisible(subject, roomArea.getID()) && MathUtils.isInRange(getDistanceTo(roomArea.getID()), rangeMin, rangeMax)) {
 					areas.add(roomArea);
 				}
+			}
+		}
+		return areas;
+	}*/
+
+	public Set<Area> visibleAreasInRange(Actor subject, AreaLink.DistanceCategory range) {
+		Set<Area> areas = new HashSet<>();
+		if (range == AreaLink.DistanceCategory.NEAR) {
+			areas.add(this);
+			return areas;
+		}
+		for (AreaLink link : linkedAreas.values()) {
+			if (isVisible(subject, link.getAreaID()) && range == link.getDistance()) {
+				areas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
 		return areas;

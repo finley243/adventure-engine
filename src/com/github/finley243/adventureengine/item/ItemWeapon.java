@@ -11,8 +11,10 @@ import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.List;
+import java.util.Set;
 
 public class ItemWeapon extends ItemEquippable implements Moddable {
 	
@@ -20,8 +22,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatInt damage;
 	private final ModdableStatInt rate;
 	private final ModdableStatInt critDamage;
-	private final ModdableStatInt rangeMin;
-	private final ModdableStatInt rangeMax;
+	private final ModdableStatEnum<AreaLink.DistanceCategory> range;
 	private final ModdableStatInt clipSize;
 	private final ModdableStatFloat accuracyBonus;
 	private int ammo;
@@ -32,8 +33,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.damage = new ModdableStatInt(this);
 		this.rate = new ModdableStatInt(this);
 		this.critDamage = new ModdableStatInt(this);
-		this.rangeMin = new ModdableStatInt(this);
-		this.rangeMax = new ModdableStatInt(this);
+		this.range = new ModdableStatEnum<>(this, AreaLink.DistanceCategory.class);
 		this.clipSize = new ModdableStatInt(this);
 		this.accuracyBonus = new ModdableStatFloat(this);
 		this.ammo = stats.getClipSize();
@@ -60,12 +60,8 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		return critDamage.value(stats.getCritDamage(), 0, 1000);
 	}
 
-	public int getRangeMin() {
-		return rangeMin.value(stats.getRangeMin(), 0, 50);
-	}
-
-	public int getRangeMax() {
-		return rangeMax.value(stats.getRangeMax(), 0, 50);
+	public AreaLink.DistanceCategory getRange() {
+		return range.value(stats.getRange());
 	}
 
 	// TODO - Change to accuracy multiplier?
@@ -146,10 +142,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 				return rate;
 			case "critDamage":
 				return critDamage;
-			case "rangeMin":
-				return rangeMin;
-			case "rangeMax":
-				return rangeMax;
 			case "clipSize":
 				return clipSize;
 			default:

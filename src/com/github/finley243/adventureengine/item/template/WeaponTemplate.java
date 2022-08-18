@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.item.template;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -44,14 +45,13 @@ public class WeaponTemplate extends ItemTemplate {
 	private final int damage;
 	private final int rate;
 	private final int critDamage;
-	private final int rangeMin;
-	private final int rangeMax;
+	private final AreaLink.DistanceCategory range;
 	private final int clipSize;
 	private final float accuracyBonus;
 	private final boolean silenced;
 	private final String ammo;
 	
-	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, int rangeMin, int rangeMax, int clipSize, float accuracyBonus, boolean silenced, String ammo) {
+	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, AreaLink.DistanceCategory range, int clipSize, float accuracyBonus, boolean silenced, String ammo) {
 		super(ID, name, description, scripts, price);
 		if(clipSize > 0 && ammo == null || clipSize == 0 && ammo != null) throw new IllegalArgumentException("Weapon clip size and ammo type conflict: " + ID);
 		if(type == null) throw new IllegalArgumentException("Weapon type cannot be null: " + ID);
@@ -59,8 +59,7 @@ public class WeaponTemplate extends ItemTemplate {
 		this.damage = damage;
 		this.rate = rate;
 		this.critDamage = critDamage;
-		this.rangeMin = rangeMin;
-		this.rangeMax = rangeMax;
+		this.range = range;
 		this.clipSize = clipSize;
 		this.accuracyBonus = accuracyBonus;
 		this.silenced = silenced;
@@ -88,12 +87,8 @@ public class WeaponTemplate extends ItemTemplate {
 		return critDamage;
 	}
 
-	public int getRangeMin() {
-		return rangeMin;
-	}
-
-	public int getRangeMax() {
-		return rangeMax;
+	public AreaLink.DistanceCategory getRange() {
+		return range;
 	}
 	
 	public int getClipSize() {

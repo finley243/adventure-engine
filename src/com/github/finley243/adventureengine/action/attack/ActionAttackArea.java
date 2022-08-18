@@ -15,6 +15,11 @@ public class ActionAttackArea extends ActionAttack {
     }
 
     @Override
+    public boolean canChoose(Actor subject) {
+        return super.canChoose(subject) && subject.getArea().getDistanceTo(area.getID()) == getWeapon().getRange() && subject.getArea().isVisible(subject, area.getID());
+    }
+
+    @Override
     public MenuData getMenuData(Actor subject) {
         return new MenuData(getPrompt() + " (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{getWeapon().getName(), area.getName()});
     }

@@ -5,15 +5,15 @@
     <room id="fifth_corner_store">
         <name>corner store</name>
         <area id="fifth_corner_store_entrance" landmark="fifth_corner_store_door_exit">
-            <link dir="E" area="fifth_corner_store_counter"/>
-            <link dir="NE" area="fifth_corner_store_aisle"/>
+            <link dist="CLOSE" dir="E" area="fifth_corner_store_counter"/>
+            <link type="FAR" dist="FAR" dir="E" area="fifth_corner_store_aisle"/>
             <object type="door" id="fifth_corner_store_door_exit" link="fifth_corner_store_exterior_door" dir="W">
                 <name>door</name>
             </object>
         </area>
         <area id="fifth_corner_store_counter" landmark="fifth_corner_store_counter">
-            <link dir="W" area="fifth_corner_store_entrance"/>
-            <link dir="NW" area="fifth_corner_store_aisle"/>
+            <link dist="CLOSE" dir="W" area="fifth_corner_store_entrance"/>
+            <link dist="CLOSE" dir="E" area="fifth_corner_store_aisle"/>
             <object type="basic" id="fifth_corner_store_counter">
                 <name>counter</name>
             </object>
@@ -21,7 +21,7 @@
                 <behaviors>
                     <behavior type="area" area="fifth_corner_store_counter">
                         <idle>
-                            <phrase>$_actor {yawn$s_actor|stretch$es_actor|tap$s_actor $actor's fingers on the counter}</phrase>
+                            <phrase>$_actor {yawn$s_actor|stretch$es_actor|tap$s_actor $actor's fingers rhythmically on the counter}</phrase>
                         </idle>
                     </behavior>
                 </behaviors>
@@ -29,8 +29,8 @@
         </area>
         <area id="fifth_corner_store_aisle">
             <name type="in">aisle</name>
-            <link dir="SW" area="fifth_corner_store_entrance"/>
-            <link dir="SE" area="fifth_corner_store_counter"/>
+            <link type="FAR" dist="FAR" dir="W" area="fifth_corner_store_entrance"/>
+            <link dist="CLOSE" dir="W" area="fifth_corner_store_counter"/>
         </area>
     </room>
     <room id="archer_burger_restaurant">

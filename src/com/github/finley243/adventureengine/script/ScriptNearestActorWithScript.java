@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.ArrayList;
@@ -21,7 +22,9 @@ public class ScriptNearestActorWithScript extends Script {
         List<Actor> nearestActor = new ArrayList<>();
         List<Integer> nearestActorDist = new ArrayList<>();
         for(Actor visibleActor : subject.game().data().getPlayer().getVisibleActors()) {
-            int distance = visibleActor.getArea().getDistanceTo(subject.game().data().getPlayer().getArea().getID());
+            // TODO - Replace with dedicated pathfinding function
+            //int distance = visibleActor.getArea().getDistanceTo(subject.game().data().getPlayer().getArea().getID());
+            int distance = Pathfinder.findPath(visibleActor.getArea(), subject.game().data().getPlayer().getArea()).size() - 1;
             int addAtIndex = nearestActor.size();
             for(int i = 0; i < nearestActor.size(); i++) {
                 if(distance <= nearestActorDist.get(i)) {

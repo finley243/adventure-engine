@@ -10,8 +10,16 @@ import java.util.Set;
 
 public class ActionAttackBasic extends ActionAttack {
 
+	private final Actor target;
+
 	public ActionAttackBasic(ItemWeapon weapon, Actor target, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult) {
 		super(weapon, Set.of(target), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, overrideWeaponRate, damageMult, hitChanceMult, !weapon.isRanged());
+		this.target = target;
+	}
+
+	@Override
+	public boolean canChoose(Actor subject) {
+		return super.canChoose(subject) && subject.getArea().getDistanceTo(target.getArea().getID()) == getWeapon().getRange() && subject.canSee(target);
 	}
 	
 	@Override

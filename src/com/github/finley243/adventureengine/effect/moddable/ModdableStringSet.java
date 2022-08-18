@@ -7,6 +7,8 @@ import java.util.Set;
 
 public class ModdableStringSet {
 
+    // TODO - Make generic (parameterized type, not specific to strings)
+
     private final Moddable target;
     private final Map<String, Integer> additional;
     private final Map<String, Integer> cancellation;

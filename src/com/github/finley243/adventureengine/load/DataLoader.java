@@ -445,14 +445,12 @@ public class DataLoader {
                 Element damageElement = LoadUtils.singleChildWithName(itemElement, "damage");
                 int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
                 int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
-                Element rangeElement = LoadUtils.singleChildWithName(itemElement, "range");
-                int weaponRangeMin = LoadUtils.attributeInt(rangeElement, "min", 0);
-                int weaponRangeMax = LoadUtils.attributeInt(rangeElement, "max", 0);
+                AreaLink.DistanceCategory weaponRange = LoadUtils.attributeEnum(itemElement, "range", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.NEAR);
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 String weaponAmmoType = LoadUtils.singleTag(itemElement, "ammo", null);
-                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRangeMin, weaponRangeMax, weaponClipSize, weaponAccuracyBonus, weaponSilenced, weaponAmmoType);
+                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRange, weaponClipSize, weaponAccuracyBonus, weaponSilenced, weaponAmmoType);
             case "misc":
             default:
                 return new MiscTemplate(id, name, description, scripts, price);
@@ -581,7 +579,7 @@ public class DataLoader {
             AreaLink.RelativeHeight linkHeight = LoadUtils.attributeEnum(linkElement, "height", AreaLink.RelativeHeight.class, AreaLink.RelativeHeight.EQUAL);
             AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
             AreaLink.AreaLinkType linkType = LoadUtils.attributeEnum(linkElement, "type", AreaLink.AreaLinkType.class, AreaLink.AreaLinkType.DIRECT);
-            int linkDistance = LoadUtils.attributeInt(linkElement, "dist", 1);
+            AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
             String moveNameOverride = LoadUtils.singleTag(linkElement, "moveName", null);
             String movePhraseOverride = LoadUtils.singleTag(linkElement, "movePhrase", null);
             AreaLink link = new AreaLink(linkAreaID, linkHeight, linkDirection, linkType, linkDistance, moveNameOverride, movePhraseOverride);

@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.effect.moddable;
 
 public interface Moddable {
 
+    // TODO - Add function to get moddable enum stats
+
     ModdableStatInt getStatInt(String name);
 
     ModdableStatFloat getStatFloat(String name);
