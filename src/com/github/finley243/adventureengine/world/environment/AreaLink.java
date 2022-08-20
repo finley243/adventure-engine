@@ -17,18 +17,17 @@ public class AreaLink {
         }
     }
 
-    // TODO - Merge link type system into distances (only close and corner are movable, only corner is non-visible)
     public enum DistanceCategory {
-        NEAR, CLOSE, FAR, DISTANT
-    }
-
-    public enum AreaLinkType {
-        DIRECT(true, true), CORNER(false, true), FAR(true, false);
+        NEAR(true, true),
+        CLOSE(true, true),
+        FAR(true, false),
+        DISTANT(true, false),
+        CORNER(false, true);
 
         public final boolean isVisible;
         public final boolean isMovable;
 
-        AreaLinkType(boolean isVisible, boolean isMovable) {
+        DistanceCategory(boolean isVisible, boolean isMovable) {
             this.isVisible = isVisible;
             this.isMovable = isMovable;
         }
@@ -47,17 +46,15 @@ public class AreaLink {
     private final String areaID;
     // 1 = north, -1 = south, 0 = equal
     private final RelativeHeight height;
-    private final AreaLinkType type;
     private final CompassDirection direction;
     private final DistanceCategory distance;
     private final String moveNameOverride;
     private final String movePhraseOverride;
 
-    public AreaLink(String areaID, RelativeHeight height, CompassDirection direction, AreaLinkType type, DistanceCategory distance, String moveNameOverride, String movePhraseOverride) {
+    public AreaLink(String areaID, RelativeHeight height, CompassDirection direction, DistanceCategory distance, String moveNameOverride, String movePhraseOverride) {
         this.areaID = areaID;
         this.height = height;
         this.direction = direction;
-        this.type = type;
         this.distance = distance;
         this.moveNameOverride = moveNameOverride;
         this.movePhraseOverride = movePhraseOverride;
@@ -75,10 +72,6 @@ public class AreaLink {
         return direction;
     }
 
-    public AreaLinkType getType() {
-        return type;
-    }
-
     public DistanceCategory getDistance() {
         return distance;
     }
@@ -86,7 +79,7 @@ public class AreaLink {
     public String getMoveName(Area currentArea) {
         if (moveNameOverride != null) {
             return "(" + getDirection() + ") " + moveNameOverride;
-        } else if (type == AreaLinkType.CORNER) {
+        } else if (distance == DistanceCategory.CORNER) {
             return "(" + getDirection() + ") " + "turn corner";
         } else if (!currentArea.getRoom().equals(currentArea.game().data().getArea(areaID).getRoom())) {
             return "(" + getDirection() + ") " + currentArea.game().data().getArea(areaID).getRoom().getName();
@@ -98,30 +91,10 @@ public class AreaLink {
     public String getMovePhrase(Area currentArea) {
         if (movePhraseOverride != null) {
             return movePhraseOverride;
-        } else if (type == AreaLinkType.CORNER) {
+        } else if (distance == DistanceCategory.CORNER) {
             return Phrases.get("moveCorner");
         } else {
             return currentArea.game().data().getArea(areaID).getMovePhrase(currentArea);
-        }
-    }
-
-    public int heightChange() {
-        switch(height) {
-            case ABOVE:
-                return 1;
-            case ABOVE_HIGH:
-                return 2;
-            case ABOVE_EXTREME:
-                return 3;
-            case BELOW:
-                return -1;
-            case BELOW_HIGH:
-                return -2;
-            case BELOW_EXTREME:
-                return -3;
-            case EQUAL:
-            default:
-                return 0;
         }
     }
 

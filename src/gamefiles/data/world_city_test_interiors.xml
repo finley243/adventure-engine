@@ -6,7 +6,7 @@
         <name>corner store</name>
         <area id="fifth_corner_store_entrance" landmark="fifth_corner_store_door_exit">
             <link dist="CLOSE" dir="E" area="fifth_corner_store_counter"/>
-            <link type="FAR" dist="FAR" dir="E" area="fifth_corner_store_aisle"/>
+            <link dist="FAR" dir="E" area="fifth_corner_store_aisle"/>
             <object type="door" id="fifth_corner_store_door_exit" link="fifth_corner_store_exterior_door" dir="W">
                 <name>door</name>
             </object>
@@ -29,7 +29,7 @@
         </area>
         <area id="fifth_corner_store_aisle">
             <name type="in">aisle</name>
-            <link type="FAR" dist="FAR" dir="W" area="fifth_corner_store_entrance"/>
+            <link dist="FAR" dir="W" area="fifth_corner_store_entrance"/>
             <link dist="CLOSE" dir="W" area="fifth_corner_store_counter"/>
         </area>
     </room>

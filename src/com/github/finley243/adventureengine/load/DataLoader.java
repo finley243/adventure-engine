@@ -578,11 +578,10 @@ public class DataLoader {
             String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
             AreaLink.RelativeHeight linkHeight = LoadUtils.attributeEnum(linkElement, "height", AreaLink.RelativeHeight.class, AreaLink.RelativeHeight.EQUAL);
             AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
-            AreaLink.AreaLinkType linkType = LoadUtils.attributeEnum(linkElement, "type", AreaLink.AreaLinkType.class, AreaLink.AreaLinkType.DIRECT);
             AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
             String moveNameOverride = LoadUtils.singleTag(linkElement, "moveName", null);
             String movePhraseOverride = LoadUtils.singleTag(linkElement, "movePhrase", null);
-            AreaLink link = new AreaLink(linkAreaID, linkHeight, linkDirection, linkType, linkDistance, moveNameOverride, movePhraseOverride);
+            AreaLink link = new AreaLink(linkAreaID, linkHeight, linkDirection, linkDistance, moveNameOverride, movePhraseOverride);
             linkSet.put(linkAreaID, link);
         }
 

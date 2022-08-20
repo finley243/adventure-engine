@@ -266,10 +266,8 @@ public class Area extends GameInstanced implements Noun {
 	public List<Action> getMoveActions() {
 		List<Action> moveActions = new ArrayList<>();
 		for(AreaLink link : linkedAreas.values()) {
-			if(link.getType().isMovable) {
-				if(link.heightChange() == 0) {
-					moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
-				}
+			if(link.getDistance().isMovable) {
+				moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
 			}
 		}
 		return moveActions;
@@ -278,7 +276,7 @@ public class Area extends GameInstanced implements Noun {
 	public Set<Area> getMovableAreas() {
 		Set<Area> movableAreas = new HashSet<>();
 		for(AreaLink link : linkedAreas.values()) {
-			if((link.getType().isMovable) && link.heightChange() == 0) {
+			if((link.getDistance().isMovable)) {
 				movableAreas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
@@ -290,7 +288,7 @@ public class Area extends GameInstanced implements Noun {
 		visibleAreas.add(this);
 		if (!subject.isUsingObject() || subject.getUsingObject().userCanSeeOtherAreas()) {
 			for (AreaLink link : linkedAreas.values()) {
-				if (link.getType().isVisible) {
+				if (link.getDistance().isVisible) {
 					if (!subject.isInCover()) {
 						Area area = game().data().getArea(link.getAreaID());
 						visibleAreas.add(area);
@@ -313,7 +311,7 @@ public class Area extends GameInstanced implements Noun {
 			return false;
 		}
 		AreaLink link = linkedAreas.get(areaID);
-		return link.getType().isVisible;
+		return link.getDistance().isVisible;
 	}
 
 	public AreaLink.DistanceCategory getDistanceTo(String areaID) {
@@ -321,26 +319,6 @@ public class Area extends GameInstanced implements Noun {
 		if (!linkedAreas.containsKey(areaID)) return null;
 		return linkedAreas.get(areaID).getDistance();
 	}
-
-	/*public Set<Area> visibleAreasInRange(Actor subject, int rangeMin, int rangeMax) {
-		Set<Area> areas = new HashSet<>();
-		if (rangeMin == 0) {
-			areas.add(this);
-		}
-		for (AreaLink link : linkedAreas.values()) {
-			if (isVisible(subject, link.getAreaID()) && MathUtils.isInRange(getDistanceTo(link.getAreaID()), rangeMin, rangeMax)) {
-				areas.add(game().data().getArea(link.getAreaID()));
-			}
-		}
-		if (FULL_VISIBILITY_IN_ROOM) {
-			for (Area roomArea : getRoom().getAreas()) {
-				if (isVisible(subject, roomArea.getID()) && MathUtils.isInRange(getDistanceTo(roomArea.getID()), rangeMin, rangeMax)) {
-					areas.add(roomArea);
-				}
-			}
-		}
-		return areas;
-	}*/
 
 	public Set<Area> visibleAreasInRange(Actor subject, AreaLink.DistanceCategory range) {
 		Set<Area> areas = new HashSet<>();
