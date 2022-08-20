@@ -576,12 +576,12 @@ public class DataLoader {
         Map<String, AreaLink> linkSet = new HashMap<>();
         for(Element linkElement : linkElements) {
             String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
-            AreaLink.RelativeHeight linkHeight = LoadUtils.attributeEnum(linkElement, "height", AreaLink.RelativeHeight.class, AreaLink.RelativeHeight.EQUAL);
+            AreaLink.AreaLinkType linkType = LoadUtils.attributeEnum(linkElement, "type", AreaLink.AreaLinkType.class, AreaLink.AreaLinkType.BASIC);
             AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
             AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
             String moveNameOverride = LoadUtils.singleTag(linkElement, "moveName", null);
             String movePhraseOverride = LoadUtils.singleTag(linkElement, "movePhrase", null);
-            AreaLink link = new AreaLink(linkAreaID, linkHeight, linkDirection, linkDistance, moveNameOverride, movePhraseOverride);
+            AreaLink link = new AreaLink(linkAreaID, linkType, linkDirection, linkDistance, moveNameOverride, movePhraseOverride);
             linkSet.put(linkAreaID, link);
         }
 

@@ -2,16 +2,14 @@ package com.github.finley243.adventureengine.world.environment;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.effect.AreaEffect;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -30,9 +28,6 @@ public class Area extends GameInstanced implements Noun {
 	public enum AreaNameType {
 		IN, ON, NEAR, FRONT, BESIDE, BEHIND
 	}
-
-	// TODO - Get rid of this, it will not work with the new abstract distance system
-	private static final boolean FULL_VISIBILITY_IN_ROOM = true;
 
 	private final String ID;
 
@@ -288,18 +283,11 @@ public class Area extends GameInstanced implements Noun {
 		visibleAreas.add(this);
 		if (!subject.isUsingObject() || subject.getUsingObject().userCanSeeOtherAreas()) {
 			for (AreaLink link : linkedAreas.values()) {
-				if (link.getDistance().isVisible) {
+				if (link.isVisible()) {
 					if (!subject.isInCover()) {
 						Area area = game().data().getArea(link.getAreaID());
 						visibleAreas.add(area);
 					}
-				}
-			}
-		}
-		if (FULL_VISIBILITY_IN_ROOM) {
-			for (Area area : getRoom().getAreas()) {
-				if (!linkedAreas.containsKey(area.getID()) && !subject.isInCover()) {
-					visibleAreas.add(area);
 				}
 			}
 		}
@@ -311,7 +299,7 @@ public class Area extends GameInstanced implements Noun {
 			return false;
 		}
 		AreaLink link = linkedAreas.get(areaID);
-		return link.getDistance().isVisible;
+		return link.isVisible();
 	}
 
 	public AreaLink.DistanceCategory getDistanceTo(String areaID) {

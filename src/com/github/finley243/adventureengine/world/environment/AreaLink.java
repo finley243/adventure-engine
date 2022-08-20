@@ -4,31 +4,25 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class AreaLink {
 
-    // ABOVE/BELOW = can climb up and jump down (e.g. raised front step)
-    // ABOVE_HIGH/BELOW_HIGH = cannot climb, jumping down will cause injury (e.g. second story balcony, maintenance catwalk)
-    // ABOVE_EXTREME/BELOW_EXTREME = cannot climb, jumping down will cause death (e.g. rooftop of tall building)
-    public enum RelativeHeight {
-        EQUAL(null), ABOVE("above"), BELOW("below"), ABOVE_HIGH("above"), BELOW_HIGH("below"), ABOVE_EXTREME("far above"), BELOW_EXTREME("far below");
+    public enum AreaLinkType {
+        BASIC(true), CORNER(false);
 
-        public final String description;
+        public final boolean isVisible;
 
-        RelativeHeight(String description) {
-            this.description = description;
+        AreaLinkType(boolean isVisible) {
+            this.isVisible = isVisible;
         }
     }
 
     public enum DistanceCategory {
-        NEAR(true, true),
-        CLOSE(true, true),
-        FAR(true, false),
-        DISTANT(true, false),
-        CORNER(false, true);
+        NEAR(true),
+        CLOSE(true),
+        FAR(true),
+        DISTANT(true);
 
-        public final boolean isVisible;
         public final boolean isMovable;
 
-        DistanceCategory(boolean isVisible, boolean isMovable) {
-            this.isVisible = isVisible;
+        DistanceCategory(boolean isMovable) {
             this.isMovable = isMovable;
         }
     }
@@ -44,16 +38,15 @@ public class AreaLink {
     }
 
     private final String areaID;
-    // 1 = north, -1 = south, 0 = equal
-    private final RelativeHeight height;
+    private final AreaLinkType type;
     private final CompassDirection direction;
     private final DistanceCategory distance;
     private final String moveNameOverride;
     private final String movePhraseOverride;
 
-    public AreaLink(String areaID, RelativeHeight height, CompassDirection direction, DistanceCategory distance, String moveNameOverride, String movePhraseOverride) {
+    public AreaLink(String areaID, AreaLinkType type, CompassDirection direction, DistanceCategory distance, String moveNameOverride, String movePhraseOverride) {
         this.areaID = areaID;
-        this.height = height;
+        this.type = type;
         this.direction = direction;
         this.distance = distance;
         this.moveNameOverride = moveNameOverride;
@@ -64,8 +57,12 @@ public class AreaLink {
         return areaID;
     }
 
-    public RelativeHeight getHeight() {
-        return height;
+    public AreaLinkType getType() {
+        return type;
+    }
+
+    public boolean isVisible() {
+        return type.isVisible;
     }
 
     public CompassDirection getDirection() {
@@ -79,7 +76,7 @@ public class AreaLink {
     public String getMoveName(Area currentArea) {
         if (moveNameOverride != null) {
             return "(" + getDirection() + ") " + moveNameOverride;
-        } else if (distance == DistanceCategory.CORNER) {
+        } else if (type == AreaLinkType.CORNER) {
             return "(" + getDirection() + ") " + "turn corner";
         } else if (!currentArea.getRoom().equals(currentArea.game().data().getArea(areaID).getRoom())) {
             return "(" + getDirection() + ") " + currentArea.game().data().getArea(areaID).getRoom().getName();
@@ -91,7 +88,7 @@ public class AreaLink {
     public String getMovePhrase(Area currentArea) {
         if (movePhraseOverride != null) {
             return movePhraseOverride;
-        } else if (distance == DistanceCategory.CORNER) {
+        } else if (type == AreaLinkType.CORNER) {
             return Phrases.get("moveCorner");
         } else {
             return currentArea.game().data().getArea(areaID).getMovePhrase(currentArea);
