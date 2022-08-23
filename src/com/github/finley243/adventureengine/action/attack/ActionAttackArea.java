@@ -1,8 +1,10 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionAttackArea extends ActionAttack {
@@ -12,6 +14,11 @@ public class ActionAttackArea extends ActionAttack {
     public ActionAttackArea(ItemWeapon weapon, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult, boolean canDodge) {
         super(weapon, area.getAttackTargets(), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, overrideWeaponRate, damageMult, hitChanceMult, canDodge);
         this.area = area;
+    }
+
+    @Override
+    public float chance(Actor subject, AttackTarget target) {
+        return CombatHelper.calculateHitChance(subject, target, getLimb(), getWeapon(), getWeapon().getBaseHitChanceMin(), getWeapon().getBaseHitChanceMax(), false, hitChanceMult());
     }
 
     @Override

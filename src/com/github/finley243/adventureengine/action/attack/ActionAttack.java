@@ -34,7 +34,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final boolean overrideWeaponRate;
     private final float damageMult;
     private final float hitChanceMult;
-    private final boolean canDodge;
 
     public ActionAttack(ItemWeapon weapon, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult, boolean canDodge) {
         super(ActionDetectionChance.HIGH, targets);
@@ -50,7 +49,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.overrideWeaponRate = overrideWeaponRate;
         this.damageMult = damageMult;
         this.hitChanceMult = hitChanceMult;
-        this.canDodge = canDodge;
     }
 
     public String getPrompt() {
@@ -77,10 +75,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return hitChanceMult;
     }
 
-    @Override
-    public float chance(Actor subject, AttackTarget target) {
-        return CombatHelper.calculateHitChance(subject, target, getLimb(), getWeapon(), canDodge, hitChanceMult());
-    }
+    public abstract float chance(Actor subject, AttackTarget target);
 
     @Override
     public float chanceOverall(Actor subject) {

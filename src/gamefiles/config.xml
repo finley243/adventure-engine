@@ -1,7 +1,7 @@
 <config>
     <playerStats>player</playerStats>
     <playerID>player</playerID>
-    <playerStartArea>fifth_corner_store_front</playerStartArea>
+    <playerStartArea>fifth_corner_store_counter</playerStartArea>
     <gameName>AdventureEngine</gameName>
     <startTimeHours>8</startTimeHours>
     <startTimeMinutes>0</startTimeMinutes>

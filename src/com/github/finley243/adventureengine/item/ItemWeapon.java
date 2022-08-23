@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.Set;
 
 public class ItemWeapon extends ItemEquippable implements Moddable {
+
+	public static final float HIT_CHANCE_BASE_MELEE_MIN = 0.10f;
+	public static final float HIT_CHANCE_BASE_MELEE_MAX = 0.80f;
+	public static final float HIT_CHANCE_BASE_RANGED_MIN = 0.10f;
+	public static final float HIT_CHANCE_BASE_RANGED_MAX = 0.90f;
 	
 	private final WeaponTemplate stats;
 	private final ModdableStatInt damage;
@@ -54,6 +59,14 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	
 	public int getRate() {
 		return rate.value(stats.getRate(), 1, 50);
+	}
+
+	public float getBaseHitChanceMin() {
+		return isRanged() ? HIT_CHANCE_BASE_RANGED_MIN : HIT_CHANCE_BASE_MELEE_MIN;
+	}
+
+	public float getBaseHitChanceMax() {
+		return isRanged() ? HIT_CHANCE_BASE_RANGED_MAX : HIT_CHANCE_BASE_MELEE_MAX;
 	}
 	
 	public int getCritDamage() {

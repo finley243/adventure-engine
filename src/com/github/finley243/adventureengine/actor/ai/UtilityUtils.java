@@ -24,6 +24,7 @@ public class UtilityUtils {
 				utility += target.getTargetUtility();
 			}
 		}
+		// TODO - Add utility for possible actions in that area (cover, weapons, etc.)
 		return MathUtils.bound(utility, 0.0f, 1.0f);
 	}
 

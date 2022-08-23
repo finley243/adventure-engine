@@ -10,19 +10,20 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_MAX = 0.99f;
 	public static final float HIT_CHANCE_MIN = 0.01f;
 	// Range of hit chance based on skill/attribute levels (before any modifiers)
-	public static final float HIT_CHANCE_BASE_MAX = 1.10f;
-	public static final float HIT_CHANCE_BASE_MIN = 0.05f;
-	// Amount of hit chance to subtract per unit of distance outside of weapon range
-	public static final float RANGE_PENALTY = 0.10f;
+	public static final float HIT_CHANCE_BASE_MAX = 0.90f;
+	public static final float HIT_CHANCE_BASE_MIN = 0.20f;
 	
-	public static float calculateHitChance(Actor attacker, AttackTarget target, Limb limb, ItemWeapon weapon, boolean canBeDodged, float hitChanceMult) {
-		float chance;
-		if (canBeDodged && target instanceof Actor) {
-			chance = MathUtils.chanceLinearSkillContest(attacker, weapon.getSkill(), (Actor) target, Actor.Skill.DODGE, 1.0f, HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
-		} else {
-			chance = MathUtils.chanceLinearSkill(attacker, weapon.getSkill(), HIT_CHANCE_BASE_MIN, HIT_CHANCE_BASE_MAX);
-		}
+	public static float calculateHitChance(Actor attacker, AttackTarget target, Limb limb, ItemWeapon weapon, float hitChanceBaseMin, float hitChanceBaseMax, boolean canBeDodged, float hitChanceMult) {
+		float chance = MathUtils.chanceLinearSkill(attacker, weapon.getSkill(), hitChanceBaseMin, hitChanceBaseMax);
 		chance += weapon.getAccuracyBonus();
+		if (canBeDodged && target instanceof Actor) {
+			int weaponSkill = attacker.getSkill(weapon.getSkill());
+			int dodgeSkill = ((Actor) target).getSkill(Actor.Skill.DODGE);
+			if (dodgeSkill >= weaponSkill) {
+				int penaltyMult = dodgeSkill - weaponSkill + 1;
+				chance -= penaltyMult * 0.05f;
+			}
+		}
 		if (limb != null) {
 			chance *= limb.getHitChance();
 		}
