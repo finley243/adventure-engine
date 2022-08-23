@@ -1,0 +1,18 @@
+<data>
+    <item type="consumable" id="burger" price="10" consumableType="FOOD">
+        <name>hamburger</name>
+        <effect type="state" state="heal" amount="10"/>
+    </item>
+    <item type="consumable" id="burger_cheese" price="10" consumableType="FOOD">
+        <name>cheeseburger</name>
+        <effect type="state" state="heal" amount="10"/>
+    </item>
+    <item type="consumable" id="burger_deluxe" price="10" consumableType="FOOD">
+        <name>deluxe hamburger</name>
+        <effect type="state" state="heal" amount="10"/>
+    </item>
+    <item type="consumable" id="french_fries" price="10" consumableType="FOOD">
+        <name>french fries</name>
+        <effect type="state" state="heal" amount="10"/>
+    </item>
+</data>

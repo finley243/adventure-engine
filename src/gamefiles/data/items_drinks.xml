@@ -4,7 +4,7 @@
         <effect type="state" state="heal" amount="10"/>
     </item>
     <item type="consumable" id="nitron_diet" price="10" consumableType="DRINK">
-        <name>Nitron Sharpshooter</name>
-        <effect type="mod" duration="3" stat="handguns" amount="9"/>
+        <name>Nitron Diet</name>
+        <effect type="state" state="heal" amount="10"/>
     </item>
 </data>
