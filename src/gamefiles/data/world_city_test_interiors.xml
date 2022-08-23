@@ -6,14 +6,16 @@
         <name>corner store</name>
         <area id="fifth_corner_store_entrance" landmark="fifth_corner_store_door_exit">
             <link dist="CLOSE" dir="E" area="fifth_corner_store_counter"/>
-            <link dist="FAR" dir="E" area="fifth_corner_store_aisle"/>
+            <link dist="CLOSE" dir="N" area="fifth_corner_store_aisle"/>
+            <link dist="FAR" dir="NE" area="fifth_corner_store_aisle_2"/>
             <object type="door" id="fifth_corner_store_door_exit" link="fifth_corner_store_exterior_door" dir="W">
                 <name>door</name>
             </object>
         </area>
         <area id="fifth_corner_store_counter" landmark="fifth_corner_store_counter">
             <link dist="CLOSE" dir="W" area="fifth_corner_store_entrance"/>
-            <link dist="CLOSE" dir="E" area="fifth_corner_store_aisle"/>
+            <link dist="CLOSE" dir="N" area="fifth_corner_store_aisle_2"/>
+            <link dist="FAR" dir="NW" area="fifth_corner_store_aisle"/>
             <object type="basic" id="fifth_corner_store_counter">
                 <name>counter</name>
             </object>
@@ -29,8 +31,15 @@
         </area>
         <area id="fifth_corner_store_aisle">
             <name type="in">aisle</name>
-            <link dist="FAR" dir="W" area="fifth_corner_store_entrance"/>
-            <link dist="CLOSE" dir="W" area="fifth_corner_store_counter"/>
+            <link dist="CLOSE" dir="S" area="fifth_corner_store_entrance"/>
+            <link dist="CLOSE" dir="E" area="fifth_corner_store_aisle_2"/>
+            <link dist="FAR" dir="SE" area="fifth_corner_store_counter"/>
+        </area>
+        <area id="fifth_corner_store_aisle_2">
+            <name type="in">aisle</name>
+            <link dist="FAR" dir="SW" area="fifth_corner_store_entrance"/>
+            <link dist="CLOSE" dir="W" area="fifth_corner_store_aisle"/>
+            <link dist="CLOSE" dir="S" area="fifth_corner_store_counter"/>
         </area>
     </room>
     <room id="archer_burger_restaurant">
