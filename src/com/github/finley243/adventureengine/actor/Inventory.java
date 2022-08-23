@@ -217,7 +217,7 @@ public class Inventory {
 		return uniqueItems;
 	}
 
-	public List<Action> getExternalActions(Noun owner, Actor subject) {
+	public List<Action> getExternalActions(Noun owner, Actor subject, boolean isOpen) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
@@ -231,22 +231,22 @@ public class Inventory {
 				actions.add(new ActionInventoryTakeAll(owner, this, item));
 			}
 		}
-		actions.addAll(subject.inventory().getStoreActions(owner, this));
+		actions.addAll(subject.inventory().getStoreActions(owner, this, isOpen));
 		return actions;
 	}
 
-	private List<Action> getStoreActions(Noun owner, Inventory other) {
+	private List<Action> getStoreActions(Noun owner, Inventory other, boolean isOpen) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryStore(owner, other, item));
+				actions.add(new ActionInventoryStore(owner, other, item, isOpen));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = ItemFactory.create(game, current);
-			actions.add(new ActionInventoryStore(owner, other, item));
+			actions.add(new ActionInventoryStore(owner, other, item, isOpen));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryStoreAll(owner, other, item));
+				actions.add(new ActionInventoryStoreAll(owner, other, item, isOpen));
 			}
 		}
 		return actions;

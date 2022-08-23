@@ -51,7 +51,7 @@ public class ObjectContainer extends WorldObject {
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
 		if ((!subject.isPlayer() || isOpen || hasSearched) && !isLocked()) {
-			actions.addAll(inventory.getExternalActions(this, subject));
+			actions.addAll(inventory.getExternalActions(this, subject, isOpen));
 		} else {
 			actions.add(new ActionContainerSearch(this));
 		}
