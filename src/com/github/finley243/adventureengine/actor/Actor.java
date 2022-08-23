@@ -48,6 +48,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 		// BODY
 		MELEE(Attribute.BODY),
 		THROWING(Attribute.BODY),
+		INTIMIDATION(Attribute.BODY),
 		// INTELLIGENCE
 		SOFTWARE(Attribute.INTELLIGENCE),
 		HARDWARE(Attribute.INTELLIGENCE),

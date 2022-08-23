@@ -1,10 +1,10 @@
 <data>
     <scene id="cornerstore_shopkeeper_start">
         <line once="true" redirect="cornerstore_shopkeeper_main">
-            <text>"Welcome, welcome! We've got everything you need here, all under one admittedly rickety roof. What can I help you with?"</text>
+            <text>"Welcome, welcome! We've got everything you need here, all at a good price. What can I help you with?"</text>
         </line>
         <line redirect="cornerstore_shopkeeper_main">
-            <text>"Hey there, good to see you again! So, what do you need?"</text>
+            <text>"Hello again! What can I help you with?"</text>
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_main">
@@ -20,41 +20,54 @@
     <scene id="cornerstore_shopkeeper_andre_questions_repeat">
         <condition type="sceneVisited" scene="cornerstore_shopkeeper_andre_questions"/>
         <line redirect="cornerstore_shopkeeper_andre_questions">
-            <text>"Go right ahead."</text>
+            <text>"Go ahead."</text>
         </line>
     </scene>
-    <scene id="cornerstore_shopkeeper_andre" type="select">
+    <scene id="cornerstore_shopkeeper_andre">
         <line>
             <text>The shopkeeper looks down his glasses at you.</text>
-            <text>"I see a lot of people. This 'Andre', why are you looking for him?"</text>
+            <text>"I see a lot of people. This 'Andre', what makes you think I know anything?"</text>
         </line>
-        <choice link="cornerstore_shopkeeper_truth">I've been hired to investigate his disappearance.</choice>
-        <choice link="cornerstore_shopkeeper_lie"></choice>
-        <choice link="cornerstore_shopkeeper_evasive">Look, have you seen him or not?</choice>
+        <choice link="cornerstore_shopkeeper_andre_truth">He lives in this building. Figured he might have dropped by once or twice.</choice>
+        <choice link="cornerstore_shopkeeper_andre_intimidate">[Intimidate] I'm growing impatient. Just tell me what you know and I'll be on my way.</choice>
+        <choice link="cornerstore_shopkeeper_andre_bribe">[200 credits] Just a hunch. This might refresh your memory.</choice>
+        <choice link="cornerstore_shopkeeper_andre_dismiss">You know what, you probably don't know anything anyway.</choice>
     </scene>
-    <scene id="cornerstore_shopkeeper_truth">
+    <scene id="cornerstore_shopkeeper_andre_truth">
+        <line>
+            <text>The shopkeeper narrows his eyes.</text>
+            <text>"He might have. Can't say I'm inclined to tell you. Information is a commodity, and commodities do not come free."</text>
+        </line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_intimidate" type="select">
         <line redirect="cornerstore_shopkeeper_andre_questions">
-            <text>The shopkeeper sighs. His gaze softens.</text>
-            <text>"It's about time. Been worried something happened to him."</text>
-            <text>He straightens his glasses.</text>
-            <text>"I'll help if I can. Afraid I don't know much."</text>
+            <condition type="skill" skill="INTIMIDATION" value="6"/>
+            <text>The shopkeeper puts up his hands.</text>
+            <text>"Okay, okay. Fine. Ask your damn questions."</text>
+        </line>
+        <line>
+            <text>The shopkeeper shakes his head.</text>
+            <text>"If you think you can threaten me in my own store, you're wrong. There are much, much larger threats than yourself, and I'm very much prepared to defend myself and my property."</text>
         </line>
     </scene>
-    <scene id="cornerstore_shopkeeper_lie" once="true">
-        <line>
-            <text>The shopkeeper's gaze briefly shifts to the window, then back to you. He chuckles, but his eyes remain cold.</text>
-            <text>"Funny. I've met Andre's friends. Lovely people, mostly. But I don't know you. Who are you, really?"</text>
+    <scene id="cornerstore_shopkeeper_andre_bribe">
+        <condition type="money" actor="PLAYER" value="200"/>
+        <line redirect="cornerstore_shopkeeper_andre_questions">
+            <script type="money" actor="PLAYER" value="-200"/>
+            <text>A smirk comes across the shopkeepers face. He straightens his glasses.</text>
+            <text>"See, I like people who know how to conduct business. You've got questions, ask away."</text>
         </line>
     </scene>
-    <scene id="cornerstore_shopkeeper_evasive" once="true">
+    <scene id="cornerstore_shopkeeper_andre_dismiss">
         <line>
-            <text>""</text>
+            <text>The shopkeeper sighs.</text>
+            <text>"Right, back to business then?"</text>
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_questions">
         <choice link="">When did you last see Andre?</choice>
-        <choice link="">Why are you worried about him?</choice>
-        <choice link="">How do you know Andre?</choice>
+        <choice link="">Is Andre a regular here?</choice>
+        <choice link="">Was Andre acting strange when you last saw him?</choice>
         <choice link="">That's all.</choice>
     </scene>
 </data>

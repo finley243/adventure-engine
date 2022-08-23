@@ -8,6 +8,7 @@
         <attribute key="AGILITY" value="4"/>
         <skill key="MELEE" value="4"/>
         <skill key="THROWING" value="4"/>
+        <skill key="INTIMIDATION" value="4"/>
         <skill key="SOFTWARE" value="4"/>
         <skill key="HARDWARE" value="4"/>
         <skill key="MEDICINE" value="4"/>
