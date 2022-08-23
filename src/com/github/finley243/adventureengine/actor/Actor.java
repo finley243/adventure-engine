@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Actor extends GameInstanced implements Noun, Physical, Moddable, AttackTarget {
 
 	public static final boolean SHOW_HP_CHANGES = true;
-	public static final int ACTIONS_PER_TURN = 2;
+	public static final int ACTIONS_PER_TURN = 3;
 	public static final int MOVES_PER_TURN = 2;
 	public static final int ATTRIBUTE_MIN = 1;
 	public static final int ATTRIBUTE_MAX = 10;

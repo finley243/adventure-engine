@@ -102,8 +102,12 @@ public class Inventory {
 	}
 
 	public String itemCountLabel(Item item) {
-		if (itemCount(item) > 1) {
-			return " (" + itemCount(item) + ")";
+		int itemCount = itemCount(item);
+		if (itemCount > 1) {
+			return " (" + itemCount + ")";
+		} else if(item.getTemplate().hasState() && items.get(item.getTemplate().getID()).size() > 1) {
+			int itemIndex = items.get(item.getTemplate().getID()).indexOf(item);
+			return " " + (itemIndex + 1);
 		} else {
 			return "";
 		}

@@ -10,7 +10,7 @@ exitElevator:$_actor exit$s_actor $elevator
 meleeHit:$_actor swing$s_actor $actor's $weapon_name at $target and $weapon hit$s_weapon $target
 meleeHitRepeat:$_actor take$s_actor another swing at $target and $weapon hit$s_weapon $target
 meleeMiss:$_actor tr$ies_actor to hit $target with $actor's $weapon_name, but $_actor miss$es_actor
-meleeRepeat:$_actor tr$ies_actor to hit $target again, but $_actor miss$es_actor
+meleeMissRepeat:$_actor tr$ies_actor to hit $target again, but $_actor miss$es_actor
 moveThrough:$_actor go$es_actor through $exit
 moveThroughReverse:$_actor come$s_actor through $exit
 moveToward:$_actor move$s_actor toward $area

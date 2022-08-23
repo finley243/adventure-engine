@@ -31,6 +31,7 @@ public class TextGen {
 	 */
 
 	public static String generate(String line, Context context) {
+		if (line == null) return null;
 		String sentence = "";
 		line = chooseRandoms(line);
 		line = determineContext(line, context);
