@@ -25,12 +25,13 @@ public class Room extends GameInstanced implements Noun {
 	private final Scene description;
 	private final String ownerFaction;
 	private final Set<Area> areas;
+	private final Map<String, RoomLink> linkedRooms;
 
 	private final Map<String, Script> scripts;
 
 	private boolean hasVisited;
 
-	public Room(Game game, String ID, String name, boolean isProperName, Scene description, String ownerFaction, Set<Area> areas, Map<String, Script> scripts) {
+	public Room(Game game, String ID, String name, boolean isProperName, Scene description, String ownerFaction, Set<Area> areas, Map<String, RoomLink> linkedRooms, Map<String, Script> scripts) {
 		super(game);
 		this.ID = ID;
 		this.name = name;
@@ -38,6 +39,7 @@ public class Room extends GameInstanced implements Noun {
 		this.description = description;
 		this.ownerFaction = ownerFaction;
 		this.areas = areas;
+		this.linkedRooms = linkedRooms;
 		this.hasVisited = false;
 		this.scripts = scripts;
 	}
@@ -48,6 +50,10 @@ public class Room extends GameInstanced implements Noun {
 	
 	public Set<Area> getAreas(){
 		return areas;
+	}
+
+	public Map<String, RoomLink> getLinkedRooms() {
+		return linkedRooms;
 	}
 	
 	public Scene getDescription() {

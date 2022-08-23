@@ -17,8 +17,8 @@ public class AreaLink {
     public enum DistanceCategory {
         NEAR(true),
         CLOSE(true),
-        FAR(true),
-        DISTANT(true);
+        FAR(false),
+        DISTANT(false);
 
         public final boolean isMovable;
 

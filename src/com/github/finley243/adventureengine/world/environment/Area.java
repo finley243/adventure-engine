@@ -290,16 +290,20 @@ public class Area extends GameInstanced implements Noun {
 					}
 				}
 			}
+			for (RoomLink roomLink : getRoom().getLinkedRooms().values()) {
+				visibleAreas.addAll(game().data().getRoom(roomLink.getRoomID()).getAreas());
+			}
 		}
 		return visibleAreas;
 	}
 
 	public boolean isVisible(Actor subject, String areaID) {
-		if(!linkedAreas.containsKey(areaID)) {
-			return false;
+		if (linkedAreas.containsKey(areaID)) {
+			AreaLink link = linkedAreas.get(areaID);
+			return link.isVisible();
+		} else {
+			return getRoom().getLinkedRooms().containsKey(game().data().getArea(areaID).getRoom().getID());
 		}
-		AreaLink link = linkedAreas.get(areaID);
-		return link.isVisible();
 	}
 
 	public AreaLink.DistanceCategory getDistanceTo(String areaID) {
@@ -317,6 +321,11 @@ public class Area extends GameInstanced implements Noun {
 		for (AreaLink link : linkedAreas.values()) {
 			if (isVisible(subject, link.getAreaID()) && range == link.getDistance()) {
 				areas.add(game().data().getArea(link.getAreaID()));
+			}
+		}
+		for (RoomLink roomLink : getRoom().getLinkedRooms().values()) {
+			if (range == roomLink.getDistance()) {
+				areas.addAll(game().data().getRoom(roomLink.getRoomID()).getAreas());
 			}
 		}
 		return areas;

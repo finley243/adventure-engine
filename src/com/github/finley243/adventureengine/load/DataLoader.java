@@ -23,6 +23,7 @@ import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
+import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -557,7 +558,18 @@ public class DataLoader {
             areas.add(area);
             game.data().addArea(area.getID(), area);
         }
-        return new Room(game, roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, areas, roomScripts);
+
+        Map<String, RoomLink> linkedRooms = new HashMap<>();
+        List<Element> linkElements = LoadUtils.directChildrenWithName(roomElement, "roomLink");
+        for (Element linkElement : linkElements) {
+            String linkRoomID = LoadUtils.attribute(linkElement, "room", null);
+            AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
+            AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.FAR);
+            RoomLink link = new RoomLink(linkRoomID, linkDirection, linkDistance);
+            linkedRooms.put(linkRoomID, link);
+        }
+
+        return new Room(game, roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, areas, linkedRooms, roomScripts);
     }
 
     private static Area loadArea(Game game, Element areaElement, String roomID) throws ParserConfigurationException, IOException, SAXException {
@@ -574,7 +586,7 @@ public class DataLoader {
 
         List<Element> linkElements = LoadUtils.directChildrenWithName(areaElement, "link");
         Map<String, AreaLink> linkSet = new HashMap<>();
-        for(Element linkElement : linkElements) {
+        for (Element linkElement : linkElements) {
             String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
             AreaLink.AreaLinkType linkType = LoadUtils.attributeEnum(linkElement, "type", AreaLink.AreaLinkType.class, AreaLink.AreaLinkType.BASIC);
             AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
