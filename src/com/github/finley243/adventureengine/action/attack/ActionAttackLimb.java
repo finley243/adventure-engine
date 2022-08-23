@@ -34,7 +34,7 @@ public class ActionAttackLimb extends ActionAttack {
 	@Override
 	public MenuData getMenuData(Actor subject) {
 		return new MenuData(LangUtils.titleCase(getLimb().getName()) + " (" + getChanceTag(subject) + ")",
-				canChoose(subject), new String[]{getWeapon().getName(), ((Noun) Iterables.getOnlyElement(getTargets())).getName(), getPrompt()});
+				canChoose(subject), new String[]{"attack", getWeapon().getName(), ((Noun) Iterables.getOnlyElement(getTargets())).getName(), getPrompt()});
 	}
 
 }

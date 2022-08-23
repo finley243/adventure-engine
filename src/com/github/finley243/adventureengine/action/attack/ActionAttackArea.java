@@ -28,7 +28,7 @@ public class ActionAttackArea extends ActionAttack {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData(getPrompt() + " (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{getWeapon().getName(), area.getName()});
+        return new MenuData(getPrompt() + " (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", getWeapon().getName(), area.getName()});
     }
 
 }

@@ -31,7 +31,7 @@ public class ActionAttackBasic extends ActionAttack {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(getPrompt() + " (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{getWeapon().getName(), ((Noun) Iterables.getOnlyElement(getTargets())).getName()});
+		return new MenuData(getPrompt() + " (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", getWeapon().getName(), ((Noun) Iterables.getOnlyElement(getTargets())).getName()});
 	}
 
 }
