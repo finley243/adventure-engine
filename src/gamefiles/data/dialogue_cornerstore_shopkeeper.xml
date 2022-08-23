@@ -26,10 +26,10 @@
     <scene id="cornerstore_shopkeeper_andre">
         <line>
             <text>The shopkeeper looks down his glasses at you.</text>
-            <text>"I see a lot of people. This 'Andre', what makes you think I know anything?"</text>
+            <text>"I see a lot of people. What makes you think I know anything about this 'Andre'?"</text>
         </line>
         <choice link="cornerstore_shopkeeper_andre_truth">He lives in this building. Figured he might have dropped by once or twice.</choice>
-        <choice link="cornerstore_shopkeeper_andre_intimidate">[Intimidate] I'm growing impatient. Just tell me what you know and I'll be on my way.</choice>
+        <choice link="cornerstore_shopkeeper_andre_intimidate">[Intimidate] I'm growing impatient. Tell me what you know or this gets messy.</choice>
         <choice link="cornerstore_shopkeeper_andre_bribe">[200 credits] Just a hunch. This might refresh your memory.</choice>
         <choice link="cornerstore_shopkeeper_andre_dismiss">You know what, you probably don't know anything anyway.</choice>
     </scene>

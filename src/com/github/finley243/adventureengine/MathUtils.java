@@ -10,7 +10,16 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MathUtils {
 
     public static float chanceLinear(int value, int valueMin, int valueMax, float chanceMin, float chanceMax) {
-        return chanceMin + ((chanceMax - chanceMin) / (valueMax - valueMin)) * (value - valueMin);
+        return ((float) (value - valueMin) / (float) (valueMax - valueMin)) * (chanceMax - chanceMin) + chanceMin;
+    }
+
+    public static float chanceLog(int value, int valueMin, int valueMax, float chanceMin, float chanceMax) {
+        return linearToLog(value, valueMin, valueMax, chanceMin, chanceMax);
+    }
+
+    public static float linearToLog(float linValue, float linMin, float linMax, float logMin, float logMax) {
+        //return (float) Math.exp(((linValue - linMin)/(linMax - linMin)) * (Math.log(logMax) - Math.log(logMin)) + Math.log(logMin));
+        return (float) (((Math.log(linValue) - Math.log(linMin))/(Math.log(linMax) - Math.log(linMin))) * (logMax - logMin) + logMin);
     }
 
     // Chance is higher if value1 is higher than value2
@@ -24,6 +33,10 @@ public class MathUtils {
 
     public static float chanceLinearSkill(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax) {
         return chanceLinear(subject.getSkill(skill), Actor.SKILL_MIN, Actor.SKILL_MAX, chanceMin, chanceMax);
+    }
+
+    public static float chanceLogSkill(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax) {
+        return chanceLog(subject.getSkill(skill), Actor.SKILL_MIN, Actor.SKILL_MAX, chanceMin, chanceMax);
     }
 
     public static float chanceLinearSkillInverted(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax) {

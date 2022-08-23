@@ -14,7 +14,7 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_BASE_MIN = 0.20f;
 	
 	public static float calculateHitChance(Actor attacker, AttackTarget target, Limb limb, ItemWeapon weapon, float hitChanceBaseMin, float hitChanceBaseMax, boolean canBeDodged, float hitChanceMult) {
-		float chance = MathUtils.chanceLinearSkill(attacker, weapon.getSkill(), hitChanceBaseMin, hitChanceBaseMax);
+		float chance = MathUtils.chanceLogSkill(attacker, weapon.getSkill(), hitChanceBaseMin, hitChanceBaseMax);
 		chance += weapon.getAccuracyBonus();
 		if (canBeDodged && target instanceof Actor) {
 			int weaponSkill = attacker.getSkill(weapon.getSkill());
