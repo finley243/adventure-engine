@@ -19,6 +19,7 @@ public class ActorTemplate {
 	private final Pronoun pronoun;
 	
 	private final String faction;
+	private final boolean isEnforcer;
 
 	private final int maxHP;
 	private final List<Limb> limbs;
@@ -37,13 +38,14 @@ public class ActorTemplate {
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
+	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, boolean isEnforcer, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
 		this.isProperName = isProperName;
 		this.pronoun = pronoun;
 		this.faction = faction;
+		this.isEnforcer = isEnforcer;
 		this.maxHP = maxHP;
 		this.limbs = limbs;
 		this.attributes = attributes;
@@ -78,6 +80,16 @@ public class ActorTemplate {
 	
 	public String getFaction(Game game) {
 		return faction != null ? faction : game.data().getActorTemplate(parentID).getFaction(game);
+	}
+
+	public boolean isEnforcer(Game game) {
+		if (isEnforcer) {
+			return true;
+		} else if (parentID != null) {
+			return game.data().getActorTemplate(parentID).isEnforcer(game);
+		} else {
+			return false;
+		}
 	}
 	
 	public int getMaxHP(Game game) {

@@ -97,7 +97,9 @@ public class DataLoader {
         String name = nameElement != null ? nameElement.getTextContent() : null;
         boolean nameIsProper = nameElement != null && LoadUtils.attributeBool(nameElement, "proper", false);
         Context.Pronoun pronoun = LoadUtils.attributeEnum(nameElement, "pronoun", Context.Pronoun.class, Context.Pronoun.THEY);
-        String faction = LoadUtils.attribute(actorElement, "faction", "default");
+        String faction = LoadUtils.attribute(actorElement, "faction", null);
+        boolean isEnforcer = LoadUtils.attributeBool(actorElement, "isEnforcer", false);
+
         int hp = LoadUtils.attributeInt(actorElement, "hp", 0);
         List<Limb> limbs = loadLimbs(actorElement);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
@@ -122,7 +124,7 @@ public class DataLoader {
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
         boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
         boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
-        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
+        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, limbs, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
     private static List<Limb> loadLimbs(Element element) {
