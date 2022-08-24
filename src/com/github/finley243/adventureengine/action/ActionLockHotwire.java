@@ -39,4 +39,9 @@ public class ActionLockHotwire extends Action {
         return new MenuData("Hotwire lock", canChoose(subject), new String[]{object.getName()});
     }
 
+    @Override
+    public boolean isIllegal() {
+        return true;
+    }
+
 }

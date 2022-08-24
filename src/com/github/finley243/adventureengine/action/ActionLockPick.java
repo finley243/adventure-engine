@@ -39,4 +39,9 @@ public class ActionLockPick extends Action {
         return new MenuData("Pick lock", canChoose(subject), new String[]{object.getName()});
     }
 
+    @Override
+    public boolean isIllegal() {
+        return true;
+    }
+
 }

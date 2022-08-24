@@ -663,7 +663,8 @@ public class DataLoader {
             case "item":
                 String itemID = LoadUtils.attribute(objectElement, "item", null);
                 int itemCount = LoadUtils.attributeInt(objectElement, "count", 1);
-                return new ObjectItem(game, id, area, ItemFactory.create(game, itemID), itemCount);
+                boolean itemIsStealing = LoadUtils.attributeBool(objectElement, "isStealing", false);
+                return new ObjectItem(game, id, area, ItemFactory.create(game, itemID), itemCount, itemIsStealing);
             case "container":
                 LootTable containerLootTable = loadLootTable(LoadUtils.singleChildWithName(objectElement, "inventory"), true);
                 Lock containerLock = loadLock(objectElement, id);

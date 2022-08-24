@@ -14,12 +14,14 @@ import java.util.List;
 public class ObjectItem extends WorldObject {
 
     private final Item item;
+    private final boolean isStealing;
     private int count;
 
-    public ObjectItem(Game game, String ID, Area area, Item item, int count) {
+    public ObjectItem(Game game, String ID, Area area, Item item, int count, boolean isStealing) {
         // TODO - Add startDisabled and startHidden functionality
         super(game, ID, area, item.getName(), item.getDescription(), false, false, item.getTemplate().getScripts(), new ArrayList<>());
         this.item = item;
+        this.isStealing = isStealing;
         this.count = count;
     }
 
@@ -35,6 +37,10 @@ public class ObjectItem extends WorldObject {
 
     public Item getItem() {
         return item;
+    }
+
+    public boolean isStealing() {
+        return isStealing;
     }
 
     public int getCount() {

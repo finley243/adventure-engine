@@ -128,7 +128,7 @@ public abstract class Item extends GameInstanced implements Noun {
 		if (ID == null) {
 			ID = item.getTemplate().generateInstanceID();
 		}
-		ObjectItem object = new ObjectItem(game, ID, area, item, count);
+		ObjectItem object = new ObjectItem(game, ID, area, item, count, false);
 		game.data().addObject(object.getID(), object);
 	}
 

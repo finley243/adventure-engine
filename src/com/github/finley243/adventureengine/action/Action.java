@@ -55,4 +55,8 @@ public abstract class Action {
 		return detectionChance;
 	}
 
+	public boolean isIllegal() {
+		return false;
+	}
+
 }

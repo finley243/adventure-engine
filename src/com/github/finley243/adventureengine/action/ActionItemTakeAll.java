@@ -50,6 +50,11 @@ public class ActionItemTakeAll extends Action {
 	}
 
 	@Override
+	public boolean isIllegal() {
+		return objectItem.isStealing();
+	}
+
+	@Override
     public boolean equals(Object o) {
         if(!(o instanceof ActionItemTakeAll)) {
             return false;
