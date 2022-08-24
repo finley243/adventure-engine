@@ -26,7 +26,7 @@ public class ActionItemTakeAll extends Action {
 		Item item = Item.objectToItem(subject.game(), objectItem, count);
 		subject.inventory().addItems(item, count);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(objectItem, count)).build());
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, this, subject, null));
 	}
 
 	@Override

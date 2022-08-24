@@ -13,6 +13,7 @@ import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.SceneManager;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -347,9 +348,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 		HP += amount;
 		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 		if(SHOW_HP_CHANGES) {
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null, null));
 		}
-		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
+		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, null));
 	}
 	
 	public void damage(Damage damage) {
@@ -371,9 +372,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 			triggerScript("on_damaged", this);
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, null));
 		}
 	}
 
@@ -393,16 +394,16 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 			triggerScript("on_damaged", this);
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if(SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, null));
 		}
 	}
 	
 	public void kill() {
 		triggerScript("on_death", this);
 		Context context = new Context(new NounMapper().put("actor", this).build());
-		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null));
+		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, null));
 		dropEquippedItem();
 		isDead = true;
 		if (isPlayer()) {
@@ -416,7 +417,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 			inventory.removeItem(item);
 			Item.itemToObject(game(), item, 1, getArea());
 			Context context = new Context(new NounMapper().put("actor", this).put("item", item).build());
-			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("drop"), context, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("drop"), context, null, null, null));
 		}
 	}
 
@@ -427,7 +428,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 			Area landingArea = MathUtils.selectRandomFromSet(getArea().getMovableAreas());
 			Item.itemToObject(game(), item, 1, landingArea);
 			Context context = new Context(Map.of("area", landingArea.getRelativeName(getArea())), new NounMapper().put("actor", this).put("item", item).build());
-			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null, null));
 		}
 	}
 
@@ -835,13 +836,19 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 		}
 	}
 
-	public boolean triggerScript(String entryPoint, Actor target) {
-		if(template.getScripts().containsKey(entryPoint)) {
-			template.getScripts().get(entryPoint).execute(this, target);
+	public boolean triggerScript(String trigger, Actor target) {
+		Script script = template.getScript(game(), trigger);
+		if (script != null) {
+			script.execute(this, target);
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	public void triggerBark(String trigger, Actor target) {
+		Bark bark = template.getBark(game(), trigger);
+		bark.trigger(this, target);
 	}
 
 	public void loadState(SaveData saveData) {

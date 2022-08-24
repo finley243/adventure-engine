@@ -24,7 +24,7 @@ public class ActionItemTake extends Action {
 		Item item = Item.objectToItem(subject.game(), objectItem, 1);
 		subject.inventory().addItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", objectItem).build());
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, this, subject, null));
 	}
 
 	@Override

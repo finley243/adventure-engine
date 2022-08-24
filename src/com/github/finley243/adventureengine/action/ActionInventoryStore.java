@@ -31,7 +31,7 @@ public class ActionInventoryStore extends Action {
         subject.inventory().removeItem(item);
         inventory.addItem(item);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("inventory", owner).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((containerIsOpen ? "placeOn" : "storeIn")), context, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((containerIsOpen ? "placeOn" : "storeIn")), context, this, subject, null));
     }
 
     @Override

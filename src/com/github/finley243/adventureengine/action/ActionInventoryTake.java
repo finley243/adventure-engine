@@ -28,7 +28,7 @@ public class ActionInventoryTake extends Action {
         inventory.removeItem(item);
         subject.inventory().addItem(item);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("inventory", owner).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, subject, null));
     }
 
     @Override

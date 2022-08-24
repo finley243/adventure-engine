@@ -18,7 +18,7 @@ public class ActionSleep extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         Context context = new Context(new NounMapper().put("actor", subject).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("sleep"), context, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("sleep"), context, this, subject, null));
         subject.startSleep(SLEEP_DURATION);
         subject.endTurn();
     }

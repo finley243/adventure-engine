@@ -22,7 +22,7 @@ public class ActionItemDrop extends Action {
 		subject.inventory().removeItem(item);
 		Item.itemToObject(subject.game(), item, 1, subject.getArea());
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, subject, null));
 	}
 
 	@Override

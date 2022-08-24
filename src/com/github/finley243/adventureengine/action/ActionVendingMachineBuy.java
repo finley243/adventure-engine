@@ -27,7 +27,7 @@ public class ActionVendingMachineBuy extends Action {
 		subject.adjustMoney(-item.getTemplate().getPrice());
 		subject.inventory().addItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", vendingMachine).build());
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("buy"), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("buy"), context, this, subject, null));
 	}
 
 	@Override

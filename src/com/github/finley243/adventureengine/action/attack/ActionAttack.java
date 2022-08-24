@@ -115,7 +115,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
             damage += getWeapon().getCritDamage();
         }
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), attackContext, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), attackContext, this, subject, null));
         Damage damageData = new Damage(Damage.DamageType.PHYSICAL, damage, getLimb(), 1.0f);
         target.damage(damageData);
         subject.triggerEffect("on_attack_success");
@@ -124,7 +124,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), attackContext, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), attackContext, this, subject, null));
         subject.triggerEffect("on_attack_failure");
     }
 

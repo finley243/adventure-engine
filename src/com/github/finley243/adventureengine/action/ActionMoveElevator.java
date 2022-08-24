@@ -43,8 +43,8 @@ public class ActionMoveElevator extends ActionMove {
 		} else {
 			takeElevatorPhrase = "takeElevatorDown";
 		}
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject));
-		subject.game().eventBus().post(new SensoryEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(takeElevatorPhrase), context, this, subject, null));
+		subject.game().eventBus().post(new SensoryEvent(destination.getArea(), Phrases.get("exitElevator"), context, this, subject, null));
 		subject.setArea(destination.getArea());
 		subject.onMove(lastArea);
 	}

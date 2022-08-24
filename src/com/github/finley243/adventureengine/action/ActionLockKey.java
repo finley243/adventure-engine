@@ -28,7 +28,7 @@ public class ActionLockKey extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         lock.setLocked(false);
         Context context = new Context(new NounMapper().put("actor", subject).put("object", object).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("unlock"), context, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("unlock"), context, this, subject, null));
     }
 
     @Override

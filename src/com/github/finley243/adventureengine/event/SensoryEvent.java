@@ -18,28 +18,30 @@ public class SensoryEvent {
 	private final Context context;
 	private final Action action;
 	private final Actor subject;
+	private final Actor target;
 	private final boolean isLoud;
 	private final ResponseType responseType;
 
-	public SensoryEvent(Area origin, String lineVisible, Context context, Action action, Actor subject) {
-		this(new Area[]{origin}, lineVisible, null, context, ResponseType.NONE, false, action, subject);
+	public SensoryEvent(Area origin, String lineVisible, Context context, Action action, Actor subject, Actor target) {
+		this(new Area[]{origin}, lineVisible, null, context, ResponseType.NONE, false, action, subject, target);
 	}
 
-	public SensoryEvent(Area[] origins, String lineVisible, Context context, Action action, Actor subject) {
-		this(origins, lineVisible, null, context, ResponseType.NONE, false, action, subject);
+	public SensoryEvent(Area[] origins, String lineVisible, Context context, Action action, Actor subject, Actor target) {
+		this(origins, lineVisible, null, context, ResponseType.NONE, false, action, subject, target);
 	}
 
-	public SensoryEvent(Area origin, String lineVisible, String lineAudible, Context context, ResponseType responseType, boolean isLoud, Action action, Actor subject) {
-		this(new Area[]{origin}, lineVisible, lineAudible, context, responseType, isLoud, action, subject);
+	public SensoryEvent(Area origin, String lineVisible, String lineAudible, Context context, ResponseType responseType, boolean isLoud, Action action, Actor subject, Actor target) {
+		this(new Area[]{origin}, lineVisible, lineAudible, context, responseType, isLoud, action, subject, target);
 	}
 
-	public SensoryEvent(Area[] origins, String lineVisible, String lineAudible, Context context, ResponseType responseType, boolean isLoud, Action action, Actor subject) {
+	public SensoryEvent(Area[] origins, String lineVisible, String lineAudible, Context context, ResponseType responseType, boolean isLoud, Action action, Actor subject, Actor target) {
 		this.origins = origins;
 		this.lineVisible = lineVisible;
 		this.lineAudible = lineAudible;
 		this.context = context;
 		this.action = action;
 		this.subject = subject;
+		this.target = target;
 		this.responseType = responseType;
 		this.isLoud = isLoud;
 	}
@@ -63,6 +65,10 @@ public class SensoryEvent {
 
 	public Actor getSubject() {
 		return subject;
+	}
+
+	public Actor getTarget() {
+		return target;
 	}
 
 	public ResponseType getResponseType() {

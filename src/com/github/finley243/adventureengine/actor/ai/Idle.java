@@ -23,7 +23,7 @@ public class Idle {
 
     public void trigger(Actor subject) {
         Context context = new Context(new NounMapper().put("actor", subject).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), phrase, context, null, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), phrase, context, null, subject, null));
     }
 
 }

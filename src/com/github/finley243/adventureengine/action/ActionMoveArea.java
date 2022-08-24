@@ -35,7 +35,7 @@ public class ActionMoveArea extends ActionMove {
 			moveLocation = area;
 		}
 		Context context = new Context(new NounMapper().put("actor", subject).put("area", moveLocation).build());
-		subject.game().eventBus().post(new SensoryEvent(new Area[]{subject.getArea(), area}, link.getMovePhrase(subject.getArea()), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(new Area[]{subject.getArea(), area}, link.getMovePhrase(subject.getArea()), context, this, subject, null));
 		subject.setArea(area);
 		subject.onMove(lastArea);
 	}

@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.effect.*;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.LootTableEntry;
@@ -104,13 +105,24 @@ public class DataLoader {
         Map<Actor.Attribute, Integer> attributes = loadAttributes(actorElement);
         Map<Actor.Skill, Integer> skills = loadSkills(actorElement);
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
+
+        Map<String, Bark> barks = new HashMap<>();
+        List<Element> barkElements = LoadUtils.directChildrenWithName(actorElement, "bark");
+        for (Element barkElement : barkElements) {
+            String barkTrigger = LoadUtils.attribute(barkElement, "trigger", null);
+            SensoryEvent.ResponseType responseType = LoadUtils.attributeEnum(barkElement, "response", SensoryEvent.ResponseType.class, SensoryEvent.ResponseType.NONE);
+            List<String> visiblePhrases = LoadUtils.listOfTags(barkElement, "visible");
+            List<String> nonVisiblePhrases = LoadUtils.listOfTags(barkElement, "nonVisible");
+            barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
+        }
+
         Element vendorElement = LoadUtils.singleChildWithName(actorElement, "vendor");
         boolean isVendor = vendorElement != null;
         String vendorLootTable = LoadUtils.attribute(vendorElement, "lootTable", null);
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
         boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
         boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
-        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, dialogueStart, scripts, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
+        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, hp, limbs, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -357,9 +369,8 @@ public class DataLoader {
                 boolean actorEnabled = LoadUtils.attributeBool(scriptElement, "enabled", true);
                 return new ScriptActorState(condition, actorRef, actorEnabled);
             case "bark":
-                List<String> barkLines = LoadUtils.listOfTags(scriptElement, "line");
-                float barkChance = LoadUtils.attributeFloat(scriptElement, "chance", 1.0f);
-                return new ScriptBark(condition, actorRef, barkLines, barkChance);
+                String barkTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
+                return new ScriptBark(condition, actorRef, barkTrigger);
             case "nearestActorScript":
                 String nearestTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
                 return new ScriptNearestActorWithScript(condition, nearestTrigger);

@@ -38,7 +38,7 @@ public class ActionWeaponReload extends Action {
 			weapon.loadAmmo(weapon.reloadCapacity());
 		}
 		Context context = new Context(new NounMapper().put("actor", subject).put("weapon", weapon).build());
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, this, subject));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, this, subject, null));
 	}
 
 	@Override

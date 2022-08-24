@@ -31,7 +31,7 @@ public class ActionVendorBuy extends Action {
         subject.adjustMoney(-price);
         subject.inventory().addItem(item);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", vendor).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("buy"), context, this, subject));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("buy"), context, this, subject, null));
     }
 
     @Override

@@ -35,8 +35,9 @@ public class ActorTemplate {
 	private final boolean vendorStartDisabled;
 
 	private final Map<String, Script> scripts;
+	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
+	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
@@ -50,6 +51,7 @@ public class ActorTemplate {
 		this.lootTable = lootTable;
 		this.dialogueStart = dialogueStart;
 		this.scripts = scripts;
+		this.barks = barks;
 		this.isVendor = isVendor;
 		this.vendorLootTable = vendorLootTable;
 		this.vendorBuyTags = vendorBuyTags;
@@ -104,8 +106,24 @@ public class ActorTemplate {
 		return dialogueStart != null ? dialogueStart : game.data().getActorTemplate(parentID).getDialogueStart(game);
 	}
 
-	public Map<String, Script> getScripts() {
-		return scripts;
+	public Script getScript(Game game, String trigger) {
+		if (scripts.containsKey(trigger)) {
+			return scripts.get(trigger);
+		} else if (parentID != null) {
+			return game.data().getActorTemplate(parentID).getScript(game, trigger);
+		} else {
+			return null;
+		}
+	}
+
+	public Bark getBark(Game game, String trigger) {
+		if (barks.containsKey(trigger)) {
+			return barks.get(trigger);
+		} else if (parentID != null) {
+			return game.data().getActorTemplate(parentID).getBark(game, trigger);
+		} else {
+			return null;
+		}
 	}
 
 	public boolean isVendor() {
