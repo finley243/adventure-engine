@@ -91,8 +91,8 @@ public class DataLoader {
     }
 
     private static ActorTemplate loadActor(Element actorElement) throws ParserConfigurationException, IOException, SAXException {
-        String id = actorElement.getAttribute("id");
-        String parentID = actorElement.getAttribute("parent");
+        String id = LoadUtils.attribute(actorElement, "id", null);
+        String parentID = LoadUtils.attribute(actorElement, "parent", null);
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
         String name = nameElement != null ? nameElement.getTextContent() : null;
         boolean nameIsProper = nameElement != null && LoadUtils.attributeBool(nameElement, "proper", false);

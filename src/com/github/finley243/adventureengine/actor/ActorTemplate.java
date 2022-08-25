@@ -109,12 +109,12 @@ public class ActorTemplate {
 	}
 	
 	public LootTable getLootTable(Game game) {
-		if(lootTable == null && parentID.isEmpty()) return null;
+		if(lootTable == null && parentID == null) return null;
 		return lootTable != null ? lootTable : game.data().getActorTemplate(parentID).getLootTable(game);
 	}
 
 	public String getDialogueStart(Game game) {
-		if(dialogueStart == null && parentID.isEmpty()) return null;
+		if(dialogueStart == null && parentID == null) return null;
 		return dialogueStart != null ? dialogueStart : game.data().getActorTemplate(parentID).getDialogueStart(game);
 	}
 
@@ -122,6 +122,9 @@ public class ActorTemplate {
 		if (scripts.containsKey(trigger)) {
 			return scripts.get(trigger);
 		} else if (parentID != null) {
+			if (game.data().getActorTemplate(parentID) == null) {
+				System.out.println("NULL ALERT: " + parentID);
+			}
 			return game.data().getActorTemplate(parentID).getScript(game, trigger);
 		} else {
 			return null;

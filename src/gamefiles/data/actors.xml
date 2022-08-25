@@ -66,22 +66,22 @@
         <inventory>
             <table>weapon_ranged</table>
         </inventory>
-        <script trigger="on_combat_start" type="bark" chance="0.8">
-            <line>"Finally, some action!" $_actor yell$s_actor</line>
-            <line>"Can't wait to take you down!" $_actor yell$s_actor</line>
-            <line>"Get 'em!" $_actor yell$s_actor</line>
-        </script>
+        <bark trigger="on_combat_start">
+            <visible>"Finally, some action!" $_actor yell$s_actor</visible>
+            <visible>"Can't wait to take you down!" $_actor yell$s_actor</visible>
+            <visible>"Get 'em!" $_actor yell$s_actor</visible>
+        </bark>
     </actor>
     <actor id="enemy_melee" parent="default" hp="40" faction="enemy">
         <name proper="false" pronoun="HE">ganger</name>
         <inventory>
             <table>weapon_melee</table>
         </inventory>
-        <script trigger="on_combat_start" type="bark" chance="0.8">
-            <line>"Finally, some action!" $_actor yell$s_actor</line>
-            <line>"Can't wait to take you down!" $_actor yell$s_actor</line>
-            <line>"Get 'em!" $_actor yell$s_actor</line>
-        </script>
+        <bark trigger="on_combat_start">
+            <visible>"Finally, some action!" $_actor yell$s_actor</visible>
+            <visible>"Can't wait to take you down!" $_actor yell$s_actor</visible>
+            <visible>"Get 'em!" $_actor yell$s_actor</visible>
+        </bark>
     </actor>
     <actor id="nexus_bouncer" parent="default" hp="70" faction="nexus_staff" dialogueStart="nexus_bouncer_start">
         <name proper="false" pronoun="HE">bouncer</name>

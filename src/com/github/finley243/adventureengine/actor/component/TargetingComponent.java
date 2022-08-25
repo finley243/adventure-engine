@@ -95,6 +95,7 @@ public class TargetingComponent {
         }
         if(!startEmpty && combatants.isEmpty()) {
             actor.triggerScript("on_combat_end", actor);
+            actor.triggerBark("on_combat_end", actor);
         }
     }
 
@@ -136,10 +137,12 @@ public class TargetingComponent {
         if ((actor.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getRoom().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
                 (actor.getArea().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
             actor.triggerScript("on_detect_target_trespassing", subject);
+            actor.triggerBark("on_detect_target_trespassing", subject);
             // TODO - Make trespassing cause a warning first (actor follows trespasser?), become hostile after a couple turns
             addCombatant(actor);
         } else if (actor.getFaction().getRelationTo(subject.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
             actor.triggerScript("on_detect_target_faction", subject);
+            actor.triggerBark("on_detect_target_faction", subject);
             addCombatant(actor);
         } else {
             addNonCombatant(actor);
@@ -150,6 +153,7 @@ public class TargetingComponent {
     public void addCombatant(Actor target) {
         if (combatants.isEmpty()) {
             actor.triggerScript("on_combat_start", target);
+            actor.triggerBark("on_combat_start", target);
         }
         detectionCounters.remove(target);
         if (!combatants.containsKey(target)) {
