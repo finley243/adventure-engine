@@ -531,7 +531,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 					if (event.isBark()) {
 						switch(event.getBark().responseType()) {
 							case HOSTILE:
-								targetingComponent.addCombatant(event.getTarget());
+								if (template.isEnforcer(game())) {
+									targetingComponent.addCombatant(event.getTarget());
+								}
 								break;
 							case NONE:
 							default:
