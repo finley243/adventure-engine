@@ -112,7 +112,7 @@ public class DataLoader {
         List<Element> barkElements = LoadUtils.directChildrenWithName(actorElement, "bark");
         for (Element barkElement : barkElements) {
             String barkTrigger = LoadUtils.attribute(barkElement, "trigger", null);
-            SensoryEvent.ResponseType responseType = LoadUtils.attributeEnum(barkElement, "response", SensoryEvent.ResponseType.class, SensoryEvent.ResponseType.NONE);
+            Bark.BarkResponseType responseType = LoadUtils.attributeEnum(barkElement, "response", Bark.BarkResponseType.class, Bark.BarkResponseType.NONE);
             List<String> visiblePhrases = LoadUtils.listOfTags(barkElement, "visible");
             List<String> nonVisiblePhrases = LoadUtils.listOfTags(barkElement, "nonVisible");
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
@@ -465,6 +465,8 @@ public class DataLoader {
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 String weaponAmmoType = LoadUtils.singleTag(itemElement, "ammo", null);
                 return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRange, weaponClipSize, weaponAccuracyBonus, weaponSilenced, weaponAmmoType);
+            case "ammo":
+                return new AmmoTemplate(id, name, description, scripts, price);
             case "misc":
             default:
                 return new MiscTemplate(id, name, description, scripts, price);

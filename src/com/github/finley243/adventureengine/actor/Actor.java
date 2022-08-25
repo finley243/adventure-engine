@@ -1,17 +1,27 @@
 package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.*;
-import com.github.finley243.adventureengine.action.*;
-import com.github.finley243.adventureengine.actor.ai.*;
+import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionEnd;
+import com.github.finley243.adventureengine.action.ActionMove;
+import com.github.finley243.adventureengine.action.ActionTalk;
+import com.github.finley243.adventureengine.actor.ai.AreaTarget;
+import com.github.finley243.adventureengine.actor.ai.Idle;
+import com.github.finley243.adventureengine.actor.ai.InvestigateTarget;
+import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
-import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.ItemApparel;
+import com.github.finley243.adventureengine.item.ItemEquippable;
+import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.*;
@@ -19,15 +29,10 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemApparel;
-import com.github.finley243.adventureengine.item.ItemEquippable;
-import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Actor extends GameInstanced implements Noun, Physical, Moddable, AttackTarget {
 
@@ -348,9 +353,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 		HP += amount;
 		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 		if(SHOW_HP_CHANGES) {
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null, this, null));
 		}
-		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, null));
+		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, this, null));
 	}
 	
 	public void damage(Damage damage) {
@@ -372,9 +377,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 			triggerScript("on_damaged", this);
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, this, null));
 		}
 	}
 
@@ -394,16 +399,16 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 			triggerScript("on_damaged", this);
 			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
 			if(SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, this, null));
 		}
 	}
 	
 	public void kill() {
 		triggerScript("on_death", this);
 		Context context = new Context(new NounMapper().put("actor", this).build());
-		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, null));
+		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
 		dropEquippedItem();
 		isDead = true;
 		if (isPlayer()) {
@@ -417,7 +422,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 			inventory.removeItem(item);
 			Item.itemToObject(game(), item, 1, getArea());
 			Context context = new Context(new NounMapper().put("actor", this).put("item", item).build());
-			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("drop"), context, null, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("drop"), context, null, null, this, null));
 		}
 	}
 
@@ -428,7 +433,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 			Area landingArea = MathUtils.selectRandomFromSet(getArea().getMovableAreas());
 			Item.itemToObject(game(), item, 1, landingArea);
 			Context context = new Context(Map.of("area", landingArea.getRelativeName(getArea())), new NounMapper().put("actor", this).put("item", item).build());
-			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null, null));
+			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null, this, null));
 		}
 	}
 
@@ -492,16 +497,45 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 				}
 			} else {
 				if (visible) {
-					if (event.getAction() != null && event.getSubject() != null) {
+					if (event.isAction()) {
 						targetingComponent.onVisibleAction(event.getAction(), event.getSubject());
+						switch(event.getAction().responseType()) {
+							case STEAL:
+								triggerBark("alert_steal", event.getSubject());
+								targetingComponent.addCombatant(event.getSubject());
+								break;
+							case ATTACK:
+								triggerBark("alert_attack", event.getSubject());
+								targetingComponent.addCombatant(event.getSubject());
+								break;
+							case BREAK_LOCK:
+								triggerBark("alert_break_lock", event.getSubject());
+								targetingComponent.addCombatant(event.getSubject());
+								break;
+							case NONE:
+							default:
+						}
+					} else if (event.isBark()) {
+						switch(event.getBark().responseType()) {
+							case HOSTILE:
+								targetingComponent.addCombatant(event.getTarget());
+								break;
+							case NONE:
+							default:
+						}
 					}
 					if (event.getAction() instanceof ActionMove) {
 						targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMove) event.getAction()).getDestinationArea());
 					}
 				} else {
-					if (event.getResponseType() == SensoryEvent.ResponseType.INVESTIGATE) {
-						investigateTarget.setTargetArea(event.getOrigins()[ThreadLocalRandom.current().nextInt(event.getOrigins().length)]);
-						triggerScript("on_investigate_start", event.getSubject());
+					if (event.isBark()) {
+						switch(event.getBark().responseType()) {
+							case HOSTILE:
+								targetingComponent.addCombatant(event.getTarget());
+								break;
+							case NONE:
+							default:
+						}
 					}
 				}
 			}

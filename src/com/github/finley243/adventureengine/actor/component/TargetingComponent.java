@@ -109,19 +109,20 @@ public class TargetingComponent {
     }
 
     public void onVisibleAction(Action action, Actor subject) {
-        if (isDetected(subject)) return;
-        float detectionChance = getActionDetectionChance(action, subject);
-        boolean detected = MathUtils.randomCheck(detectionChance);
-        if (detected) {
-            if (detectionCounters.containsKey(subject)) {
-                int currentCount = detectionCounters.get(subject);
-                detectionCounters.put(subject, currentCount + 1);
-            } else {
-                detectionCounters.put(subject, 1);
-            }
-            subject.onDetectionUpdate(actor, detectionCounters.get(subject), detectionThreshold());
-            if (detectionCounters.get(subject) >= detectionThreshold()) {
-                onDetected(subject);
+        if (!isDetected(subject)) {
+            float detectionChance = getActionDetectionChance(action, subject);
+            boolean detected = MathUtils.randomCheck(detectionChance);
+            if (detected) {
+                if (detectionCounters.containsKey(subject)) {
+                    int currentCount = detectionCounters.get(subject);
+                    detectionCounters.put(subject, currentCount + 1);
+                } else {
+                    detectionCounters.put(subject, 1);
+                }
+                subject.onDetectionUpdate(actor, detectionCounters.get(subject), detectionThreshold());
+                if (detectionCounters.get(subject) >= detectionThreshold()) {
+                    onDetected(subject);
+                }
             }
         }
     }

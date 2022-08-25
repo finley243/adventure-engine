@@ -29,6 +29,8 @@ public class ItemFactory {
 			item = new ItemApparel(game, ID, (ApparelTemplate) stats);
 		} else if(stats instanceof WeaponTemplate) {
 			item = new ItemWeapon(game, ID, (WeaponTemplate) stats);
+		} else if(stats instanceof AmmoTemplate) {
+			item = new ItemAmmo(game, ID, (AmmoTemplate) stats);
 		} else if(stats instanceof MiscTemplate) {
 			item = new ItemMisc(game, ID, (MiscTemplate) stats);
 		}

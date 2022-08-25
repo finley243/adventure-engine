@@ -24,7 +24,7 @@ public class ActionItemDropAll extends Action {
 		subject.inventory().removeItems(item, count);
 		Item.itemToObject(subject.game(), item, count, subject.getArea());
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(item, count)).build());
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, subject, null));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, null, subject, null));
 	}
 
 	@Override

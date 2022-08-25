@@ -12,6 +12,10 @@ public abstract class Action {
 		HIGH, LOW, NONE
 	}
 
+	public enum ActionResponseType {
+		NONE, STEAL, ATTACK, BREAK_LOCK
+	}
+
 	private boolean disabled;
 	private final ActionDetectionChance detectionChance;
 
@@ -55,8 +59,8 @@ public abstract class Action {
 		return detectionChance;
 	}
 
-	public boolean isIllegal() {
-		return false;
+	public ActionResponseType responseType() {
+		return ActionResponseType.NONE;
 	}
 
 }

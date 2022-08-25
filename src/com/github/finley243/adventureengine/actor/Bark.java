@@ -9,11 +9,15 @@ import java.util.List;
 
 public class Bark {
 
-    private final SensoryEvent.ResponseType responseType;
+    public enum BarkResponseType {
+        NONE, HOSTILE
+    }
+
+    private final BarkResponseType responseType;
     private final List<String> visiblePhrases;
     private final List<String> nonVisiblePhrases;
 
-    public Bark(SensoryEvent.ResponseType responseType, List<String> visiblePhrases, List<String> nonVisiblePhrases) {
+    public Bark(BarkResponseType responseType, List<String> visiblePhrases, List<String> nonVisiblePhrases) {
         this.responseType = responseType;
         this.visiblePhrases = visiblePhrases;
         this.nonVisiblePhrases = nonVisiblePhrases;
@@ -23,7 +27,11 @@ public class Bark {
         String visiblePhrase = MathUtils.selectRandomFromList(visiblePhrases);
         String nonVisiblePhrase = MathUtils.selectRandomFromList(nonVisiblePhrases);
         Context context = new Context(new NounMapper().put("actor", subject).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), visiblePhrase, nonVisiblePhrase, context, responseType, false, null, subject, target));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), visiblePhrase, nonVisiblePhrase, context, false, null, this, subject, target));
+    }
+
+    public BarkResponseType responseType() {
+        return responseType;
     }
 
 }
