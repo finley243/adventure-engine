@@ -116,7 +116,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         }
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), attackContext, this, null, subject, null));
-        Damage damageData = new Damage(Damage.DamageType.PHYSICAL, damage, getLimb(), 1.0f);
+        Damage damageData = new Damage(getWeapon().getDamageType(), damage, getLimb(), 1.0f);
         target.damage(damageData);
         subject.triggerEffect("on_attack_success");
     }

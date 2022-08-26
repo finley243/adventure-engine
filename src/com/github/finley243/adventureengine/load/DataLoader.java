@@ -10,7 +10,6 @@ import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.effect.*;
-import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.LootTableEntry;
@@ -459,14 +458,15 @@ public class DataLoader {
                 Element damageElement = LoadUtils.singleChildWithName(itemElement, "damage");
                 int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
                 int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
-                AreaLink.DistanceCategory weaponRange = LoadUtils.attributeEnum(itemElement, "range", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.NEAR);
+                Damage.DamageType weaponDamageType = LoadUtils.attributeEnum(damageElement, "type", Damage.DamageType.class, Damage.DamageType.PHYSICAL);
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 String weaponAmmoType = LoadUtils.singleTag(itemElement, "ammo", null);
-                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponRange, weaponClipSize, weaponAccuracyBonus, weaponSilenced, weaponAmmoType);
+                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponSilenced, weaponDamageType, weaponAmmoType);
             case "ammo":
-                return new AmmoTemplate(id, name, description, scripts, price);
+                List<Effect> ammoEffects = loadEffects(itemElement, true);
+                return new AmmoTemplate(id, name, description, scripts, price, ammoEffects);
             case "misc":
             default:
                 return new MiscTemplate(id, name, description, scripts, price);

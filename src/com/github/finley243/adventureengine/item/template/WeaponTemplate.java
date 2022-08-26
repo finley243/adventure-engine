@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.item.template;
 
+import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -14,25 +15,24 @@ public class WeaponTemplate extends ItemTemplate {
 	public static final float CRIT_CHANCE = 0.05f;
 
 	public enum WeaponType {
-		PISTOL(true, false, 0, 3, Set.of()),
-		SMG(true, false, 0, 2, Set.of(AttackType.AUTO)),
-		SHOTGUN(true, true, 1, 2, Set.of()),
-		ASSAULT_RIFLE(true, true, 1, 4, Set.of(AttackType.AUTO)),
-		SNIPER_RIFLE(true, true, 4, 15, Set.of()),
-		KNIFE(false, false, 0, 0, Set.of()),
-		SWORD(false, true, 0, 0, Set.of(AttackType.THRUST)),
-		CLUB(false, true, 0, 0, Set.of()),
-		AXE(false, true, 0, 0, Set.of(AttackType.SWEEP));
+		PISTOL(true, false, AreaLink.DistanceCategory.CLOSE, Set.of()),
+		SMG(true, false, AreaLink.DistanceCategory.CLOSE, Set.of(AttackType.AUTO)),
+		SHOTGUN(true, true, AreaLink.DistanceCategory.FAR, Set.of()),
+		ASSAULT_RIFLE(true, true, AreaLink.DistanceCategory.FAR, Set.of(AttackType.AUTO)),
+		SNIPER_RIFLE(true, true, AreaLink.DistanceCategory.DISTANT, Set.of()),
+		KNIFE(false, false, AreaLink.DistanceCategory.NEAR, Set.of()),
+		SWORD(false, true, AreaLink.DistanceCategory.NEAR, Set.of(AttackType.THRUST)),
+		CLUB(false, true, AreaLink.DistanceCategory.NEAR, Set.of()),
+		AXE(false, true, AreaLink.DistanceCategory.NEAR, Set.of(AttackType.SWEEP));
 		
 		public final boolean isRanged, isTwoHanded;
-		public final int rangeMin, rangeMax;
+		public final AreaLink.DistanceCategory range;
 		public final Set<AttackType> attacks;
 		
-		WeaponType(boolean isRanged, boolean isTwoHanded, int rangeMin, int rangeMax, Set<AttackType> attacks) {
+		WeaponType(boolean isRanged, boolean isTwoHanded, AreaLink.DistanceCategory range, Set<AttackType> attacks) {
 			this.isRanged = isRanged;
 			this.isTwoHanded = isTwoHanded;
-			this.rangeMin = rangeMin;
-			this.rangeMax = rangeMax;
+			this.range = range;
 			this.attacks = attacks;
 		}
 	}
@@ -45,13 +45,13 @@ public class WeaponTemplate extends ItemTemplate {
 	private final int damage;
 	private final int rate;
 	private final int critDamage;
-	private final AreaLink.DistanceCategory range;
 	private final int clipSize;
 	private final float accuracyBonus;
 	private final boolean silenced;
+	private final Damage.DamageType damageType;
 	private final String ammo;
 	
-	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, AreaLink.DistanceCategory range, int clipSize, float accuracyBonus, boolean silenced, String ammo) {
+	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, int clipSize, float accuracyBonus, boolean silenced, Damage.DamageType damageType, String ammo) {
 		super(ID, name, description, scripts, price);
 		if(clipSize > 0 && ammo == null || clipSize == 0 && ammo != null) throw new IllegalArgumentException("Weapon clip size and ammo type conflict: " + ID);
 		if(type == null) throw new IllegalArgumentException("Weapon type cannot be null: " + ID);
@@ -59,10 +59,10 @@ public class WeaponTemplate extends ItemTemplate {
 		this.damage = damage;
 		this.rate = rate;
 		this.critDamage = critDamage;
-		this.range = range;
 		this.clipSize = clipSize;
 		this.accuracyBonus = accuracyBonus;
 		this.silenced = silenced;
+		this.damageType = damageType;
 		this.ammo = ammo;
 	}
 
@@ -88,7 +88,7 @@ public class WeaponTemplate extends ItemTemplate {
 	}
 
 	public AreaLink.DistanceCategory getRange() {
-		return range;
+		return type.range;
 	}
 	
 	public int getClipSize() {
@@ -101,6 +101,10 @@ public class WeaponTemplate extends ItemTemplate {
 
 	public boolean isSilenced() {
 		return silenced;
+	}
+
+	public Damage.DamageType getDamageType() {
+		return damageType;
 	}
 
 	public String getAmmo() {

@@ -1,20 +1,21 @@
 package com.github.finley243.adventureengine.item;
 
+import com.github.finley243.adventureengine.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
-import com.github.finley243.adventureengine.action.attack.*;
+import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
+import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.effect.moddable.*;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
+import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.List;
-import java.util.Set;
 
 public class ItemWeapon extends ItemEquippable implements Moddable {
 
@@ -30,6 +31,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatEnum<AreaLink.DistanceCategory> range;
 	private final ModdableStatInt clipSize;
 	private final ModdableStatFloat accuracyBonus;
+	private final ModdableStatEnum<Damage.DamageType> damageType;
 	private int ammo;
 	
 	public ItemWeapon(Game game, String ID, WeaponTemplate stats) {
@@ -41,6 +43,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.range = new ModdableStatEnum<>(this, AreaLink.DistanceCategory.class);
 		this.clipSize = new ModdableStatInt(this);
 		this.accuracyBonus = new ModdableStatFloat(this);
+		this.damageType = new ModdableStatEnum<>(this, Damage.DamageType.class);
 		this.ammo = stats.getClipSize();
 	}
 
@@ -84,6 +87,10 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	public int getClipSize() {
 		return clipSize.value(stats.getClipSize(), 0, 100);
+	}
+
+	public Damage.DamageType getDamageType() {
+		return damageType.value(stats.getDamageType());
 	}
 
 	public int getAmmoRemaining() {
