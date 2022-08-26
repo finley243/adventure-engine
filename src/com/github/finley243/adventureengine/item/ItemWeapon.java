@@ -34,6 +34,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatFloat accuracyBonus;
 	private final ModdableStatFloat armorMult;
 	private final ModdableStatEnum<Damage.DamageType> damageType;
+	private final ModdableStatBoolean isSilenced;
 	private ItemAmmo ammoType;
 	private int ammoCount;
 
@@ -50,6 +51,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.accuracyBonus = new ModdableStatFloat(this);
 		this.armorMult = new ModdableStatFloat(this);
 		this.damageType = new ModdableStatEnum<>(this, Damage.DamageType.class);
+		this.isSilenced = new ModdableStatBoolean(this, false);
 		this.ammoType = null;
 		this.ammoCount = 0;
 		this.effects = new HashMap<>();
@@ -150,7 +152,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public boolean isSilenced() {
-		return stats.isSilenced();
+		return isSilenced.value(stats.isSilenced());
 	}
 
 	public Set<String> getAmmoTypes() {
@@ -212,17 +214,32 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public ModdableStatFloat getStatFloat(String name) {
 		if ("accuracyBonus".equals(name)) {
 			return accuracyBonus;
+		} else if ("armorMult".equals(name)) {
+			return armorMult;
 		}
 		return null;
 	}
 
 	@Override
 	public ModdableStatBoolean getStatBoolean(String name) {
+		if ("isSilenced".equals(name)) {
+			return isSilenced;
+		}
 		return null;
 	}
 
 	@Override
 	public ModdableEffectList getStatEffects(String name) {
+		return null;
+	}
+
+	@Override
+	public ModdableStringSet getStatStrings(String name) {
+		return null;
+	}
+
+	@Override
+	public <E extends Enum<E>> ModdableStatEnum<E> getStatEnum(String name) {
 		return null;
 	}
 
@@ -272,7 +289,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	@Override
 	public void loadState(SaveData saveData) {
-		if ("ammo".equals(saveData.getParameter())) {
+		if ("ammoCount".equals(saveData.getParameter())) {
 			this.ammoCount = saveData.getValueInt();
 		} else {
 			super.loadState(saveData);
@@ -283,7 +300,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public List<SaveData> saveState() {
 		List<SaveData> state = super.saveState();
 		if(ammoCount != stats.getClipSize()) {
-			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammo", ammoCount));
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammoCount", ammoCount));
 		}
 		return state;
 	}

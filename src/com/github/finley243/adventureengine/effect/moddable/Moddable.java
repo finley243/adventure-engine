@@ -12,6 +12,11 @@ public interface Moddable {
 
     ModdableEffectList getStatEffects(String name);
 
+    ModdableStringSet getStatStrings(String name);
+
+    // TODO - Find a way to allow modifying an enum of any type without actually specifying its type
+    <E extends Enum<E>> ModdableStatEnum<E> getStatEnum(String name);
+
     void onStatChange();
 
     void modifyState(String name, int amount);

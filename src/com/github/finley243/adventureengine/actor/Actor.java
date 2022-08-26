@@ -842,6 +842,16 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	}
 
 	@Override
+	public ModdableStringSet getStatStrings(String name) {
+		return null;
+	}
+
+	@Override
+	public <E extends Enum<E>> ModdableStatEnum<E> getStatEnum(String name) {
+		return null;
+	}
+
+	@Override
 	public void onStatChange() {
 		if(HP > getMaxHP()) {
 			HP = getMaxHP();
