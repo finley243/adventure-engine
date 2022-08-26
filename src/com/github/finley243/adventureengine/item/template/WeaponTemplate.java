@@ -47,13 +47,14 @@ public class WeaponTemplate extends ItemTemplate {
 	private final int critDamage;
 	private final int clipSize;
 	private final float accuracyBonus;
+	private final float armorMult;
 	private final boolean silenced;
 	private final Damage.DamageType damageType;
-	private final String ammo;
-	
-	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, int clipSize, float accuracyBonus, boolean silenced, Damage.DamageType damageType, String ammo) {
+	private final Set<String> ammoTypes;
+
+	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, WeaponType type, int damage, int rate, int critDamage, int clipSize, float accuracyBonus, float armorMult, boolean silenced, Damage.DamageType damageType, Set<String> ammoTypes) {
 		super(ID, name, description, scripts, price);
-		if(clipSize > 0 && ammo == null || clipSize == 0 && ammo != null) throw new IllegalArgumentException("Weapon clip size and ammo type conflict: " + ID);
+		if(clipSize > 0 && ammoTypes.isEmpty() || clipSize == 0 && !ammoTypes.isEmpty()) throw new IllegalArgumentException("Weapon clip size and ammo type conflict: " + ID);
 		if(type == null) throw new IllegalArgumentException("Weapon type cannot be null: " + ID);
 		this.type = type;
 		this.damage = damage;
@@ -61,9 +62,10 @@ public class WeaponTemplate extends ItemTemplate {
 		this.critDamage = critDamage;
 		this.clipSize = clipSize;
 		this.accuracyBonus = accuracyBonus;
+		this.armorMult = armorMult;
 		this.silenced = silenced;
 		this.damageType = damageType;
-		this.ammo = ammo;
+		this.ammoTypes = ammoTypes;
 	}
 
 	@Override
@@ -99,6 +101,10 @@ public class WeaponTemplate extends ItemTemplate {
 		return accuracyBonus;
 	}
 
+	public float getArmorMult() {
+		return armorMult;
+	}
+
 	public boolean isSilenced() {
 		return silenced;
 	}
@@ -107,8 +113,8 @@ public class WeaponTemplate extends ItemTemplate {
 		return damageType;
 	}
 
-	public String getAmmo() {
-		return ammo;
+	public Set<String> getAmmoTypes() {
+		return ammoTypes;
 	}
 
 	public Actor.Skill getSkill() {

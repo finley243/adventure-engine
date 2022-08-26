@@ -9,18 +9,19 @@ import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
-import java.util.List;
+import java.util.*;
 
 public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	public static final float HIT_CHANCE_BASE_MELEE_MIN = 0.10f;
-	public static final float HIT_CHANCE_BASE_MELEE_MAX = 0.80f;
+	public static final float HIT_CHANCE_BASE_MELEE_MAX = 0.90f;
 	public static final float HIT_CHANCE_BASE_RANGED_MIN = 0.10f;
 	public static final float HIT_CHANCE_BASE_RANGED_MAX = 0.90f;
 	
@@ -31,8 +32,12 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatEnum<AreaLink.DistanceCategory> range;
 	private final ModdableStatInt clipSize;
 	private final ModdableStatFloat accuracyBonus;
+	private final ModdableStatFloat armorMult;
 	private final ModdableStatEnum<Damage.DamageType> damageType;
-	private int ammo;
+	private ItemAmmo ammoType;
+	private int ammoCount;
+
+	private final Map<Effect, List<Integer>> effects;
 	
 	public ItemWeapon(Game game, String ID, WeaponTemplate stats) {
 		super(game, ID);
@@ -43,8 +48,11 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.range = new ModdableStatEnum<>(this, AreaLink.DistanceCategory.class);
 		this.clipSize = new ModdableStatInt(this);
 		this.accuracyBonus = new ModdableStatFloat(this);
+		this.armorMult = new ModdableStatFloat(this);
 		this.damageType = new ModdableStatEnum<>(this, Damage.DamageType.class);
-		this.ammo = stats.getClipSize();
+		this.ammoType = null;
+		this.ammoCount = 0;
+		this.effects = new HashMap<>();
 	}
 
 	@Override
@@ -85,6 +93,10 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		return accuracyBonus.value(stats.getAccuracyBonus(), 0.0f, 1.0f);
 	}
 
+	public float getArmorMult() {
+		return armorMult.value(stats.getArmorMult(), 0.0f, 2.0f);
+	}
+
 	public int getClipSize() {
 		return clipSize.value(stats.getClipSize(), 0, 100);
 	}
@@ -94,32 +106,55 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public int getAmmoRemaining() {
-		return ammo;
+		return ammoCount;
 	}
 
 	public float getAmmoFraction() {
 		if(stats.getClipSize() == 0) return 1.0f;
-		return ((float) ammo) / ((float) stats.getClipSize());
+		return ((float) ammoCount) / ((float) stats.getClipSize());
 	}
 
 	public int reloadCapacity() {
 		return getClipSize() - getAmmoRemaining();
 	}
 
+	public void setLoadedAmmoType(ItemAmmo type) {
+		if (ammoType != null) {
+			ammoType.onUnload(this);
+		}
+		this.ammoType = type;
+		if (type != null) {
+			type.onLoad(this);
+		}
+	}
+
+	public ItemAmmo getLoadedAmmoType() {
+		return ammoType;
+	}
+
 	public void loadAmmo(int amount) {
-		ammo += amount;
+		ammoCount += amount;
 	}
 	
 	public void consumeAmmo(int amount) {
-		ammo -= amount;
+		ammoCount -= amount;
+		if (ammoCount <= 0) {
+			ammoCount = 0;
+			setLoadedAmmoType(null);
+		}
+	}
+
+	public void emptyAmmo() {
+		ammoCount = 0;
+		setLoadedAmmoType(null);
 	}
 
 	public boolean isSilenced() {
 		return stats.isSilenced();
 	}
 
-	public String getAmmoType() {
-		return stats.getAmmo();
+	public Set<String> getAmmoTypes() {
+		return stats.getAmmoTypes();
 	}
 
 	public Actor.Skill getSkill() {
@@ -129,9 +164,9 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
-		for(Actor target : subject.getVisibleActors()) {
-			if(target != subject && !target.isDead()) {
-				if(stats.getType().isRanged) { // Ranged
+		for (Actor target : subject.getVisibleActors()) {
+			if (target != subject && !target.isDead()) {
+				if (stats.getType().isRanged) { // Ranged
 					actions.add(new ActionAttackBasic(this, target, "Attack", "rangedHit", "rangedHitRepeat", "rangedMiss", "rangedMissRepeat", 1, false, 1.0f, 0.0f));
 					for(Limb limb : target.getLimbs()) {
 						actions.add(new ActionAttackLimb(this, target, limb, "Targeted Attack", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat", 1, true, 1.0f, 0.0f));
@@ -147,8 +182,12 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 				}
 			}
 		}
-		if(getClipSize() > 0) {
-			actions.add(new ActionWeaponReload(this));
+		if (getClipSize() > 0) {
+			for (String current : stats.getAmmoTypes()) {
+				if (subject.inventory().hasItem(current)) {
+					actions.add(new ActionWeaponReload(this, (ItemAmmo) ItemFactory.create(game(), current)));
+				}
+			}
 		}
 		return actions;
 	}
@@ -189,25 +228,52 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	@Override
 	public void onStatChange() {
-		if(ammo > getClipSize()) {
-			ammo = getClipSize();
+		if(ammoCount > getClipSize()) {
+			ammoCount = getClipSize();
 		}
 	}
 
 	@Override
 	public void modifyState(String name, int amount) {
 		if ("ammo".equals(name)) {
-			ammo = MathUtils.bound(ammo + amount, 0, getClipSize());
+			ammoCount = MathUtils.bound(ammoCount + amount, 0, getClipSize());
 		}
 	}
 
 	@Override
 	public void triggerEffect(String name) {}
 
+	public void addEffect(Effect effect) {
+		if (effect.isInstant()) {
+			effect.start(this);
+			effect.end(this);
+		} else {
+			if (!effects.containsKey(effect)) {
+				effects.put(effect, new ArrayList<>());
+			}
+			if (effect.isStackable() || !effects.get(effect).isEmpty()) {
+				effects.get(effect).add(0);
+				effect.start(this);
+			} else {
+				effects.get(effect).set(0, 0);
+			}
+		}
+	}
+
+	public void removeEffect(Effect effect) {
+		if(effects.containsKey(effect)) {
+			effect.end(this);
+			effects.get(effect).remove(0);
+			if(effects.get(effect).isEmpty()) {
+				effects.remove(effect);
+			}
+		}
+	}
+
 	@Override
 	public void loadState(SaveData saveData) {
 		if ("ammo".equals(saveData.getParameter())) {
-			this.ammo = saveData.getValueInt();
+			this.ammoCount = saveData.getValueInt();
 		} else {
 			super.loadState(saveData);
 		}
@@ -216,8 +282,8 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	@Override
 	public List<SaveData> saveState() {
 		List<SaveData> state = super.saveState();
-		if(ammo != stats.getClipSize()) {
-			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammo", ammo));
+		if(ammoCount != stats.getClipSize()) {
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammo", ammoCount));
 		}
 		return state;
 	}

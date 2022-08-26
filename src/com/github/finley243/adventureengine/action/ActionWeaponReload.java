@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.item.ItemAmmo;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -15,25 +17,28 @@ public class ActionWeaponReload extends Action {
 	public static final float RELOAD_UTILITY_COMBAT_EMPTY = 0.8f;
 
 	private final ItemWeapon weapon;
+	private final ItemAmmo ammoType;
 	
-	public ActionWeaponReload(ItemWeapon weapon) {
+	public ActionWeaponReload(ItemWeapon weapon, ItemAmmo ammoType) {
 		super(ActionDetectionChance.NONE);
 		this.weapon = weapon;
+		this.ammoType = ammoType;
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.triggerScript("on_reload", subject);
-		if(subject == subject.game().data().getPlayer()) {
-			int ammoInInventory = subject.inventory().itemCount(weapon.getAmmoType());
-			int reloadCapacity = weapon.reloadCapacity();
-			if (ammoInInventory >= reloadCapacity) {
-				weapon.loadAmmo(reloadCapacity);
-				subject.inventory().removeItems(weapon.getAmmoType(), reloadCapacity);
-			} else {
-				weapon.loadAmmo(ammoInInventory);
-				subject.inventory().removeItems(weapon.getAmmoType(), ammoInInventory);
+		if (subject == subject.game().data().getPlayer()) {
+			if (!ammoType.equals(weapon.getLoadedAmmoType()) && weapon.getAmmoRemaining() > 0) {
+				subject.inventory().addItems(ammoType, weapon.getAmmoRemaining());
+				weapon.emptyAmmo();
 			}
+			int ammoInInventory = subject.inventory().itemCount(ammoType);
+			int reloadAmount = Math.min(weapon.reloadCapacity(), ammoInInventory);
+			weapon.loadAmmo(reloadAmount);
+			weapon.setLoadedAmmoType(ammoType);
+			ammoType.onLoad(weapon);
+			subject.inventory().removeItems(ammoType, reloadAmount);
 		} else {
 			weapon.loadAmmo(weapon.reloadCapacity());
 		}
@@ -43,7 +48,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && weapon.getAmmoFraction() < 1.0f && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(weapon.getAmmoType()));
+		return super.canChoose(subject) && (weapon.getAmmoFraction() < 1.0f || !ammoType.getTemplate().getID().equals(weapon.getLoadedAmmoType())) && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(ammoType.getTemplate().getID()));
 	}
 
 	@Override
@@ -61,7 +66,7 @@ public class ActionWeaponReload extends Action {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Reload (" + weapon.getAmmoRemaining() + "/" + weapon.getClipSize() + ")", canChoose(subject), new String[]{"attack", weapon.getName()});
+		return new MenuData(LangUtils.titleCase(ammoType.getName()), canChoose(subject), new String[]{"attack", weapon.getName(), "reload (" + weapon.getAmmoRemaining() + "/" + weapon.getClipSize() + ")"});
 	}
 
 	@Override

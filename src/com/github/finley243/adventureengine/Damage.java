@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Limb;
 public class Damage {
 
     public enum DamageType {
-        PHYSICAL, THERMAL, CHEMICAL, EXPLOSIVE
+        PHYSICAL, THERMAL, CHEMICAL, EXPLOSIVE, ELECTRIC
     }
 
     private final DamageType type;

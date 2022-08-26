@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.template.AmmoTemplate;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
@@ -16,6 +17,18 @@ public class ItemAmmo extends Item {
     @Override
     public ItemTemplate getTemplate() {
         return stats;
+    }
+
+    public void onLoad(ItemWeapon weapon) {
+        for (Effect effect : stats.getEffects()) {
+            weapon.addEffect(effect);
+        }
+    }
+
+    public void onUnload(ItemWeapon weapon) {
+        for (Effect effect : stats.getEffects()) {
+            weapon.removeEffect(effect);
+        }
     }
 
 }

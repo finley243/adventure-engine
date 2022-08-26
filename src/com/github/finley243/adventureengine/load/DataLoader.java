@@ -460,10 +460,11 @@ public class DataLoader {
                 int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
                 Damage.DamageType weaponDamageType = LoadUtils.attributeEnum(damageElement, "type", Damage.DamageType.class, Damage.DamageType.PHYSICAL);
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
+                float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
-                String weaponAmmoType = LoadUtils.singleTag(itemElement, "ammo", null);
-                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponSilenced, weaponDamageType, weaponAmmoType);
+                Set<String> weaponAmmoTypes = LoadUtils.setOfTags(itemElement, "ammo");
+                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponAmmoTypes);
             case "ammo":
                 List<Effect> ammoEffects = loadEffects(itemElement, true);
                 return new AmmoTemplate(id, name, description, scripts, price, ammoEffects);
