@@ -1,5 +1,5 @@
 <data>
-    <room id="street_sinclair_between_fifth_sixth">
+    <room id="street_sinclair_fifth_sixth">
         <name proper="true">Sinclair St</name>
         <area id="sinclair_tech_store_front" landmark="sinclair_tech_store_exterior_door">
             <object type="basic" id="sinclair_tech_store_exterior_door">
@@ -7,7 +7,7 @@
             </object>
         </area>
     </room>
-    <room id="street_archer_between_fifth_sixth">
+    <room id="street_archer_fifth_sixth">
         <name proper="true">Archer St</name>
         <area id="archer_corner_store_side">
             <name type="beside">corner store</name>
@@ -33,7 +33,7 @@
             </object>
         </area>
     </room>
-    <room id="street_fifth_between_sinclair_archer">
+    <room id="street_fifth_sinclair_archer">
         <name proper="true">5th Ave</name>
         <area id="fifth_corner_store_front" landmark="fifth_corner_store_exterior_door">
             <link type="CORNER" dist="CLOSE" dir="SE" area="archer_corner_store_side"/>
@@ -42,7 +42,7 @@
             </object>
         </area>
     </room>
-    <room id="street_sixth_between_sinclair_archer">
+    <room id="street_sixth_sinclair_archer">
         <name proper="true">6th Ave</name>
         <area id="sixth_burger_restaurant_side">
             <name type="beside">BigBurger</name>
