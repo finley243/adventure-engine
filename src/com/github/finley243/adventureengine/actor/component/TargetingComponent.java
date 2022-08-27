@@ -17,6 +17,7 @@ public class TargetingComponent {
 
     private static final int TURNS_UNTIL_END_COMBAT = 8;
     private static final AlertState DEFAULT_ALERT_STATE = AlertState.AWARE;
+    private static final int TRESPASSING_TURNS_UNTIL_HOSTILE = 2;
 
     public enum AlertState {
         DISTRACTED(4),
@@ -32,6 +33,7 @@ public class TargetingComponent {
     private final Actor actor;
     // Value is number of turns the actor has been detected
     private final Map<Actor, Integer> detectionCounters;
+    private final Map<Actor, Integer> trespassingCounters;
     private final Map<Actor, Combatant> combatants;
     // TODO - Add system for removing non-combatants after they are not visible for several turns, just like combatants
     private final Set<Actor> nonCombatants;
@@ -41,6 +43,7 @@ public class TargetingComponent {
     public TargetingComponent(Actor actor) {
         this.actor = actor;
         detectionCounters = new HashMap<>();
+        trespassingCounters = new HashMap<>();
         combatants = new HashMap<>();
         nonCombatants = new HashSet<>();
         deadActors = new HashSet<>();
@@ -67,6 +70,17 @@ public class TargetingComponent {
                 detectionCounters.remove(actor);
             }
         }*/
+        for (Actor trespasser : trespassingCounters.keySet()) {
+            int newCounter = trespassingCounters.get(trespasser) + 1;
+            if (newCounter >= TRESPASSING_TURNS_UNTIL_HOSTILE) {
+                trespassingCounters.remove(trespasser);
+                addCombatant(trespasser);
+            } else {
+                trespassingCounters.put(trespasser, newCounter);
+                actor.triggerScript("trespassing_warning", trespasser);
+                actor.triggerBark("trespassing_warning", trespasser);
+            }
+        }
         for (Combatant combatant : combatants.values()) {
             combatant.turnsUntilRemove -= 1;
         }
@@ -75,7 +89,7 @@ public class TargetingComponent {
     // Executed before each action during subject's turn
     public void update() {
         boolean startEmpty = combatants.isEmpty();
-        for(Iterator<Actor> itr = combatants.keySet().iterator(); itr.hasNext();) {
+        for (Iterator<Actor> itr = combatants.keySet().iterator(); itr.hasNext();) {
             Actor target = itr.next();
             Combatant combatant = combatants.get(target);
             if (combatant.areaTarget == null) {
@@ -88,12 +102,12 @@ public class TargetingComponent {
             }
             combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
             combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, target));
-            if(target.isDead() || combatant.turnsUntilRemove <= 0) {
+            if (target.isDead() || combatant.turnsUntilRemove <= 0) {
                 combatant.areaTarget.markForRemoval();
                 itr.remove();
             }
         }
-        if(!startEmpty && combatants.isEmpty()) {
+        if (!startEmpty && combatants.isEmpty()) {
             actor.triggerScript("on_combat_end", actor);
             actor.triggerBark("on_combat_end", actor);
         }
@@ -139,7 +153,8 @@ public class TargetingComponent {
             actor.triggerScript("on_detect_target_trespassing", subject);
             actor.triggerBark("on_detect_target_trespassing", subject);
             // TODO - Make trespassing cause a warning first (actor follows trespasser?), become hostile after a couple turns
-            addCombatant(actor);
+            //addCombatant(actor);
+            addTrespasser(actor);
         } else if (actor.getFaction().getRelationTo(subject.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
             actor.triggerScript("on_detect_target_faction", subject);
             actor.triggerBark("on_detect_target_faction", subject);
@@ -166,6 +181,13 @@ public class TargetingComponent {
         nonCombatants.add(target);
     }
 
+    private void addTrespasser(Actor target) {
+        detectionCounters.remove(target);
+        if (!trespassingCounters.containsKey(target)) {
+            trespassingCounters.put(target, 0);
+        }
+    }
+
     public boolean isCombatant(Actor target){
         return combatants.containsKey(target);
     }
@@ -174,8 +196,12 @@ public class TargetingComponent {
         return nonCombatants.contains(target);
     }
 
+    public boolean isTrespasser(Actor target) {
+        return trespassingCounters.containsKey(target);
+    }
+
     public boolean isDetected(Actor target) {
-        return isCombatant(target) || isNonCombatant(target);
+        return isCombatant(target) || isNonCombatant(target) || isTrespasser(target);
     }
 
     public boolean hasCombatants() {
