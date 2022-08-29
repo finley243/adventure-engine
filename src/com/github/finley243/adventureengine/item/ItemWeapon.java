@@ -29,11 +29,11 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatInt damage;
 	private final ModdableStatInt rate;
 	private final ModdableStatInt critDamage;
-	private final ModdableStatEnum<AreaLink.DistanceCategory> range;
+	private final ModdableStatString range;
 	private final ModdableStatInt clipSize;
 	private final ModdableStatFloat accuracyBonus;
 	private final ModdableStatFloat armorMult;
-	private final ModdableStatEnum<Damage.DamageType> damageType;
+	private final ModdableStatString damageType;
 	private final ModdableStatBoolean isSilenced;
 	private ItemAmmo ammoType;
 	private int ammoCount;
@@ -46,11 +46,11 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.damage = new ModdableStatInt(this);
 		this.rate = new ModdableStatInt(this);
 		this.critDamage = new ModdableStatInt(this);
-		this.range = new ModdableStatEnum<>(this, AreaLink.DistanceCategory.class);
+		this.range = new ModdableStatString(this);
 		this.clipSize = new ModdableStatInt(this);
 		this.accuracyBonus = new ModdableStatFloat(this);
 		this.armorMult = new ModdableStatFloat(this);
-		this.damageType = new ModdableStatEnum<>(this, Damage.DamageType.class);
+		this.damageType = new ModdableStatString(this);
 		this.isSilenced = new ModdableStatBoolean(this, false);
 		this.ammoType = null;
 		this.ammoCount = 0;
@@ -87,7 +87,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public AreaLink.DistanceCategory getRange() {
-		return range.value(stats.getRange());
+		return range.valueEnum(stats.getRange(), AreaLink.DistanceCategory.class);
 	}
 
 	// TODO - Change to accuracy multiplier?
@@ -104,7 +104,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public Damage.DamageType getDamageType() {
-		return damageType.value(stats.getDamageType());
+		return damageType.valueEnum(stats.getDamageType(), Damage.DamageType.class);
 	}
 
 	public int getAmmoRemaining() {
@@ -151,6 +151,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		setLoadedAmmoType(null);
 	}
 
+	// TODO - Use isSilenced value to determine isLoud parameter of attack events
 	public boolean isSilenced() {
 		return isSilenced.value(stats.isSilenced());
 	}
@@ -234,12 +235,17 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public ModdableStringSet getStatStrings(String name) {
+	public ModdableStatString getStatString(String name) {
+		if ("range".equals(name)) {
+			return range;
+		} else if ("damageType".equals(name)) {
+			return damageType;
+		}
 		return null;
 	}
 
 	@Override
-	public <E extends Enum<E>> ModdableStatEnum<E> getStatEnum(String name) {
+	public ModdableStringSet getStatStrings(String name) {
 		return null;
 	}
 

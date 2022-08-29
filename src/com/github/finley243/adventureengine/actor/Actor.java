@@ -842,12 +842,12 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	}
 
 	@Override
-	public ModdableStringSet getStatStrings(String name) {
+	public ModdableStatString getStatString(String name) {
 		return null;
 	}
 
 	@Override
-	public <E extends Enum<E>> ModdableStatEnum<E> getStatEnum(String name) {
+	public ModdableStringSet getStatStrings(String name) {
 		return null;
 	}
 
