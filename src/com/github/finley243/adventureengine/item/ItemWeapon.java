@@ -187,9 +187,9 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		}
 		if (getClipSize() > 0) {
 			for (String current : stats.getAmmoTypes()) {
-				if (subject.inventory().hasItem(current)) {
+				//if (subject.inventory().hasItem(current)) {
 					actions.add(new ActionWeaponReload(this, (ItemAmmo) ItemFactory.create(game(), current)));
-				}
+				//}
 			}
 		}
 		return actions;
@@ -252,7 +252,9 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	@Override
 	public void onStatChange() {
 		if(ammoCount > getClipSize()) {
+			int difference = ammoCount - getClipSize();
 			ammoCount = getClipSize();
+			// TODO - Return ammo items to actor
 		}
 	}
 
