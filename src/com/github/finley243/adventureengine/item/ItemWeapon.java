@@ -6,7 +6,9 @@ import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
+import com.github.finley243.adventureengine.action.attack.ActionAttackBasicWeapon;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
+import com.github.finley243.adventureengine.action.attack.ActionAttackLimbWeapon;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.effect.Effect;
@@ -170,17 +172,17 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		for (Actor target : subject.getVisibleActors()) {
 			if (target != subject && !target.isDead()) {
 				if (stats.getType().isRanged) { // Ranged
-					actions.add(new ActionAttackBasic(this, target, "Attack", "rangedHit", "rangedHitRepeat", "rangedMiss", "rangedMissRepeat", 1, false, 1.0f, 0.0f));
+					actions.add(new ActionAttackBasicWeapon(this, target, "Attack", "rangedHit", "rangedHitRepeat", "rangedMiss", "rangedMissRepeat"));
 					for(Limb limb : target.getLimbs()) {
-						actions.add(new ActionAttackLimb(this, target, limb, "Targeted Attack", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat", 1, true, 1.0f, 0.0f));
+						actions.add(new ActionAttackLimbWeapon(this, target, limb, "Targeted Attack", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat"));
 					}
 					if(stats.getType().attacks.contains(WeaponTemplate.AttackType.AUTO)) {
-						actions.add(new ActionAttackBasic(this, target, "Autofire", "rangedAutoHit", "rangedAutoHitRepeat", "rangedAutoMiss", "rangedAutoMissRepeat", 6, true, 3.0f, -0.5f));
+						actions.add(new ActionAttackBasic(this, target, "Autofire", "rangedAutoHit", "rangedAutoHitRepeat", "rangedAutoMiss", "rangedAutoMissRepeat", 6, this.getRange(), this.getRate(), (int) (this.getDamage() * 3.0f), this.getDamageType(), this.getArmorMult(), -0.5f, false));
 					}
 				} else { // Melee
-					actions.add(new ActionAttackBasic(this, target, "Attack", "meleeHit", "meleeHitRepeat", "meleeMiss", "meleeMissRepeat", 1, false, 1.0f, 0.0f));
+					actions.add(new ActionAttackBasicWeapon(this, target, "Attack", "meleeHit", "meleeHitRepeat", "meleeMiss", "meleeMissRepeat"));
 					for(Limb limb : target.getLimbs()) {
-						actions.add(new ActionAttackLimb(this, target, limb, "Targeted Attack", "meleeHitLimb", "meleeHitLimbRepeat", "meleeMissLimb", "meleeMissLimbRepeat", 1, true, 1.0f, 0.0f));
+						actions.add(new ActionAttackLimbWeapon(this, target, limb, "Targeted Attack", "meleeHitLimb", "meleeHitLimbRepeat", "meleeMissLimb", "meleeMissLimbRepeat"));
 					}
 				}
 			}

@@ -1,15 +1,11 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Damage;
-import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandomEach;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.CombatHelper;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.item.ItemWeapon;
-import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.NounMapper;
@@ -23,7 +19,7 @@ import java.util.Set;
 public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     private final Set<AttackTarget> targets;
-    private final ItemWeapon weapon;
+    private final Noun weaponNoun;
     private final Limb limb;
     private final String prompt;
     private final String hitPhrase;
@@ -31,13 +27,17 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final String missPhrase;
     private final String missPhraseRepeat;
     private final int ammoConsumed;
-    private final boolean overrideWeaponRate;
-    private final float damageMult;
+    private final AreaLink.DistanceCategory range;
+    private final int rate;
+    private final int damage;
+    private final Damage.DamageType damageType;
+    private final float armorMult;
     private final float hitChanceMult;
+    private final boolean canDodge;
 
-    public ActionAttack(ItemWeapon weapon, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, boolean overrideWeaponRate, float damageMult, float hitChanceMult, boolean canDodge) {
+    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
         super(ActionDetectionChance.HIGH, targets);
-        this.weapon = weapon;
+        this.weaponNoun = weaponNoun;
         this.targets = targets;
         this.limb = limb;
         this.prompt = prompt;
@@ -46,21 +46,25 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.missPhrase = missPhrase;
         this.missPhraseRepeat = missPhraseRepeat;
         this.ammoConsumed = ammoConsumed;
-        this.overrideWeaponRate = overrideWeaponRate;
-        this.damageMult = damageMult;
+        this.range = range;
+        this.rate = rate;
+        this.damage = damage;
+        this.damageType = damageType;
+        this.armorMult = armorMult;
         this.hitChanceMult = hitChanceMult;
+        this.canDodge = canDodge;
     }
 
     public String getPrompt() {
         return prompt;
     }
 
-    public ItemWeapon getWeapon() {
-        return weapon;
-    }
-
     public Set<AttackTarget> getTargets() {
         return targets;
+    }
+
+    public Noun getWeaponNoun() {
+        return weaponNoun;
     }
 
     public Limb getLimb() {
@@ -68,14 +72,20 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     public int damage() {
-        return (int) (getWeapon().getDamage() * damageMult);
+        return damage;
     }
 
     public float hitChanceMult() {
         return hitChanceMult;
     }
 
+    public boolean canDodge() {
+        return canDodge;
+    }
+
     public abstract float chance(Actor subject, AttackTarget target);
+
+    public abstract void consumeAmmo();
 
     @Override
     public float chanceOverall(Actor subject) {
@@ -91,9 +101,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
                 subject.triggerScript("on_attack", subject);
             }
         }
-        if(getWeapon().getClipSize() > 0) {
-            getWeapon().consumeAmmo(ammoConsumed());
-        }
+        consumeAmmo();
         return true;
     }
 
@@ -110,20 +118,16 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
         int damage = damage();
-        if(MathUtils.randomCheck(WeaponTemplate.CRIT_CHANCE)) {
-            // No indication of critical hit to player, only damage increase
-            damage += getWeapon().getCritDamage();
-        }
-        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).build());
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), attackContext, this, null, subject, null));
-        Damage damageData = new Damage(getWeapon().getDamageType(), damage, getLimb(), getWeapon().getArmorMult());
+        Damage damageData = new Damage(damageType, damage, getLimb(), armorMult);
         target.damage(damageData);
         subject.triggerEffect("on_attack_success");
     }
 
     @Override
     public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
-        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).build());
+        Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), attackContext, this, null, subject, null));
         subject.triggerEffect("on_attack_failure");
     }
@@ -131,7 +135,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onFailOverall(Actor subject, int repeatActionCount) {}
 
-    public int ammoConsumed() {
+    public int getAmmoConsumed() {
         return ammoConsumed;
     }
 
@@ -144,25 +148,17 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     public AreaLink.DistanceCategory getRange() {
-        return getWeapon().getRange();
-    }
-
-    @Override
-    public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && (getWeapon().getClipSize() == 0 || getWeapon().getAmmoRemaining() >= ammoConsumed());
+        return range;
     }
 
     @Override
     public int repeatCount(Actor subject) {
-        if (overrideWeaponRate) {
-            return 1;
-        }
-        return weapon.getRate();
+        return rate;
     }
 
     @Override
     public boolean isRepeatMatch(Action action) {
-        return action instanceof ActionAttack && action.getClass().equals(this.getClass()) && ((ActionAttack) action).getWeapon() == this.getWeapon();
+        return action instanceof ActionAttack && action.getClass().equals(this.getClass()) && ((ActionAttack) action).getWeaponNoun() == this.getWeaponNoun();
     }
 
     @Override
@@ -179,7 +175,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public boolean isBlockedMatch(Action action) {
         if(action instanceof ActionAttack) {
-            return ((ActionAttack) action).getWeapon() == this.getWeapon();
+            return ((ActionAttack) action).getWeaponNoun() == this.getWeaponNoun();
         } else {
             return false;
         }
