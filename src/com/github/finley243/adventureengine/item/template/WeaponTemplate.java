@@ -15,25 +15,41 @@ public class WeaponTemplate extends ItemTemplate {
 	public static final float CRIT_CHANCE = 0.05f;
 
 	public enum WeaponType {
-		PISTOL(true, false, AreaLink.DistanceCategory.CLOSE, Set.of()),
-		SMG(true, false, AreaLink.DistanceCategory.CLOSE, Set.of(AttackType.AUTO)),
-		SHOTGUN(true, true, AreaLink.DistanceCategory.FAR, Set.of()),
-		ASSAULT_RIFLE(true, true, AreaLink.DistanceCategory.FAR, Set.of(AttackType.AUTO)),
-		SNIPER_RIFLE(true, true, AreaLink.DistanceCategory.DISTANT, Set.of()),
-		KNIFE(false, false, AreaLink.DistanceCategory.NEAR, Set.of()),
-		SWORD(false, true, AreaLink.DistanceCategory.NEAR, Set.of(AttackType.THRUST)),
-		CLUB(false, true, AreaLink.DistanceCategory.NEAR, Set.of()),
-		AXE(false, true, AreaLink.DistanceCategory.NEAR, Set.of(AttackType.SWEEP));
+		PISTOL(true, false, AreaLink.DistanceCategory.CLOSE, Set.of(), "rangedHit", "rangedHitRepeat", "rangedMiss", "rangedMissRepeat", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat"),
+		SMG(true, false, AreaLink.DistanceCategory.CLOSE, Set.of(AttackType.AUTO), "rangedHit", "rangedHitRepeat", "rangedMiss", "rangedMissRepeat", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat"),
+		SHOTGUN(true, true, AreaLink.DistanceCategory.FAR, Set.of(), "rangedHit", "rangedHitRepeat", "rangedMiss", "rangedMissRepeat", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat"),
+		ASSAULT_RIFLE(true, true, AreaLink.DistanceCategory.FAR, Set.of(AttackType.AUTO), "rangedHit", "rangedHitRepeat", "rangedMiss", "rangedMissRepeat", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat"),
+		SNIPER_RIFLE(true, true, AreaLink.DistanceCategory.DISTANT, Set.of(), "rangedHit", "rangedHitRepeat", "rangedMiss", "rangedMissRepeat", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat"),
+		KNIFE(false, false, AreaLink.DistanceCategory.NEAR, Set.of(), "meleeHit", "meleeHitRepeat", "meleeMiss", "meleeMissRepeat", "meleeHitLimb", "meleeHitLimbRepeat", "meleeMissLimb", "meleeMissLimbRepeat"),
+		SWORD(false, true, AreaLink.DistanceCategory.NEAR, Set.of(AttackType.THRUST), "meleeHit", "meleeHitRepeat", "meleeMiss", "meleeMissRepeat", "meleeHitLimb", "meleeHitLimbRepeat", "meleeMissLimb", "meleeMissLimbRepeat"),
+		CLUB(false, true, AreaLink.DistanceCategory.NEAR, Set.of(), "meleeHit", "meleeHitRepeat", "meleeMiss", "meleeMissRepeat", "meleeHitLimb", "meleeHitLimbRepeat", "meleeMissLimb", "meleeMissLimbRepeat"),
+		AXE(false, true, AreaLink.DistanceCategory.NEAR, Set.of(AttackType.SWEEP), "meleeHit", "meleeHitRepeat", "meleeMiss", "meleeMissRepeat", "meleeHitLimb", "meleeHitLimbRepeat", "meleeMissLimb", "meleeMissLimbRepeat");
 		
 		public final boolean isRanged, isTwoHanded;
-		public final AreaLink.DistanceCategory range;
+		public final AreaLink.DistanceCategory primaryRange;
 		public final Set<AttackType> attacks;
+		public final String hitPhrase;
+		public final String hitPhraseRepeat;
+		public final String missPhrase;
+		public final String missPhraseRepeat;
+		public final String limbHitPhrase;
+		public final String limbHitPhraseRepeat;
+		public final String limbMissPhrase;
+		public final String limbMissPhraseRepeat;
 		
-		WeaponType(boolean isRanged, boolean isTwoHanded, AreaLink.DistanceCategory range, Set<AttackType> attacks) {
+		WeaponType(boolean isRanged, boolean isTwoHanded, AreaLink.DistanceCategory primaryRange, Set<AttackType> attacks, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, String limbHitPhrase, String limbHitPhraseRepeat, String limbMissPhrase, String limbMissPhraseRepeat) {
 			this.isRanged = isRanged;
 			this.isTwoHanded = isTwoHanded;
-			this.range = range;
+			this.primaryRange = primaryRange;
 			this.attacks = attacks;
+			this.hitPhrase = hitPhrase;
+			this.hitPhraseRepeat = hitPhraseRepeat;
+			this.missPhrase = missPhrase;
+			this.missPhraseRepeat = missPhraseRepeat;
+			this.limbHitPhrase = limbHitPhrase;
+			this.limbHitPhraseRepeat = limbHitPhraseRepeat;
+			this.limbMissPhrase = limbMissPhrase;
+			this.limbMissPhraseRepeat = limbMissPhraseRepeat;
 		}
 	}
 
@@ -89,8 +105,40 @@ public class WeaponTemplate extends ItemTemplate {
 		return critDamage;
 	}
 
-	public AreaLink.DistanceCategory getRange() {
-		return type.range;
+	public AreaLink.DistanceCategory getPrimaryRange() {
+		return type.primaryRange;
+	}
+
+	public String getHitPhrase() {
+		return type.hitPhrase;
+	}
+
+	public String getHitRepeatPhrase() {
+		return type.hitPhraseRepeat;
+	}
+
+	public String getMissPhrase() {
+		return type.missPhrase;
+	}
+
+	public String getMissRepeatPhrase() {
+		return type.missPhraseRepeat;
+	}
+
+	public String getLimbHitPhrase() {
+		return type.limbHitPhrase;
+	}
+
+	public String getLimbHitRepeatPhrase() {
+		return type.limbHitPhraseRepeat;
+	}
+
+	public String getLimbMissPhrase() {
+		return type.limbMissPhrase;
+	}
+
+	public String getLimbMissRepeatPhrase() {
+		return type.limbMissPhraseRepeat;
 	}
 	
 	public int getClipSize() {

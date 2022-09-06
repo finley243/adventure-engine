@@ -5,9 +5,9 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
+import com.github.finley243.adventureengine.action.attack.ActionAttackAreaWeapon;
 import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackBasicWeapon;
-import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimbWeapon;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
@@ -16,7 +16,10 @@ import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.world.AttackTarget;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.*;
 
@@ -37,6 +40,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatFloat armorMult;
 	private final ModdableStatString damageType;
 	private final ModdableStatBoolean isSilenced;
+	private final ModdableStatBoolean isPrimarySpread;
 	private ItemAmmo ammoType;
 	private int ammoCount;
 
@@ -54,6 +58,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.armorMult = new ModdableStatFloat(this);
 		this.damageType = new ModdableStatString(this);
 		this.isSilenced = new ModdableStatBoolean(this, false);
+		this.isPrimarySpread = new ModdableStatBoolean(this, true);
 		this.ammoType = null;
 		this.ammoCount = 0;
 		this.effects = new HashMap<>();
@@ -89,7 +94,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public AreaLink.DistanceCategory getRange() {
-		return range.valueEnum(stats.getRange(), AreaLink.DistanceCategory.class);
+		return range.valueEnum(stats.getPrimaryRange(), AreaLink.DistanceCategory.class);
 	}
 
 	// TODO - Change to accuracy multiplier?
@@ -166,25 +171,66 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		return stats.getSkill();
 	}
 
+	public String getHitPhrase() {
+		return stats.getHitPhrase();
+	}
+
+	public String getHitRepeatPhrase() {
+		return stats.getHitRepeatPhrase();
+	}
+
+	public String getMissPhrase() {
+		return stats.getMissPhrase();
+	}
+
+	public String getMissRepeatPhrase() {
+		return stats.getMissRepeatPhrase();
+	}
+
+	public String getLimbHitPhrase() {
+		return stats.getLimbHitPhrase();
+	}
+
+	public String getLimbHitRepeatPhrase() {
+		return stats.getLimbHitRepeatPhrase();
+	}
+
+	public String getLimbMissPhrase() {
+		return stats.getLimbMissPhrase();
+	}
+
+	public String getLimbMissRepeatPhrase() {
+		return stats.getLimbMissRepeatPhrase();
+	}
+
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
 		for (Actor target : subject.getVisibleActors()) {
 			if (target != subject && !target.isDead()) {
-				if (stats.getType().isRanged) { // Ranged
-					actions.add(new ActionAttackBasicWeapon(this, target, "Attack", "rangedHit", "rangedHitRepeat", "rangedMiss", "rangedMissRepeat"));
-					for(Limb limb : target.getLimbs()) {
-						actions.add(new ActionAttackLimbWeapon(this, target, limb, "Targeted Attack", "rangedHitLimb", "rangedHitLimbRepeat", "rangedMissLimb", "rangedMissLimbRepeat"));
-					}
-					if(stats.getType().attacks.contains(WeaponTemplate.AttackType.AUTO)) {
-						actions.add(new ActionAttackBasic(this, target, "Autofire", "rangedAutoHit", "rangedAutoHitRepeat", "rangedAutoMiss", "rangedAutoMissRepeat", 6, this.getRange(), this.getRate(), (int) (this.getDamage() * 3.0f), this.getDamageType(), this.getArmorMult(), -0.5f, false));
-					}
-				} else { // Melee
-					actions.add(new ActionAttackBasicWeapon(this, target, "Attack", "meleeHit", "meleeHitRepeat", "meleeMiss", "meleeMissRepeat"));
-					for(Limb limb : target.getLimbs()) {
-						actions.add(new ActionAttackLimbWeapon(this, target, limb, "Targeted Attack", "meleeHitLimb", "meleeHitLimbRepeat", "meleeMissLimb", "meleeMissLimbRepeat"));
+				if (!isPrimarySpread.value(false)) {
+					actions.add(new ActionAttackBasicWeapon(this, target, "Attack"));
+					for (Limb limb : target.getLimbs()) {
+						actions.add(new ActionAttackLimbWeapon(this, target, limb, "Targeted Attack"));
 					}
 				}
+				if (stats.getType().attacks.contains(WeaponTemplate.AttackType.AUTO)) {
+					actions.add(new ActionAttackBasic(this, target, "Autofire", "rangedAutoHit", "rangedAutoHitRepeat", "rangedAutoMiss", "rangedAutoMissRepeat", 6, this.getRange(), this.getRate(), (int) (this.getDamage() * 3.0f), this.getDamageType(), this.getArmorMult(), -0.5f, false));
+				}
+			}
+		}
+		for (WorldObject objectTarget : subject.getVisibleObjects()) {
+			if (objectTarget instanceof AttackTarget) {
+				if (!isPrimarySpread.value(false)) {
+					// TODO - Add object attacks
+					//actions.add(new ActionAttackBasicWeapon(this, objectTarget, "Attack"));
+				}
+			}
+		}
+		for (Area targetArea : subject.getArea().getVisibleAreas(subject)) {
+			if (isPrimarySpread.value(false)) {
+				// TODO - Add area attack phrases
+				actions.add(new ActionAttackAreaWeapon(this, targetArea, "Spread Attack", "", "", "", ""));
 			}
 		}
 		if (getClipSize() > 0) {

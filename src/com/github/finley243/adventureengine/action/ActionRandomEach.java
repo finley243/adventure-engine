@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 
 import java.util.Collection;
-import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ActionRandomEach<T> extends Action {
 
