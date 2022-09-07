@@ -866,7 +866,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	}
 
 	@Override
-	public ModdableStringSet getStatStrings(String name) {
+	public ModdableStringSet getStatStringSet(String name) {
 		return null;
 	}
 

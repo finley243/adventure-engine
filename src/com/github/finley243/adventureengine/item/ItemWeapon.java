@@ -294,9 +294,11 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public ModdableStringSet getStatStrings(String name) {
+	public ModdableStringSet getStatStringSet(String name) {
 		if ("ranges".equals(name)) {
 			return ranges;
+		} else if ("attackTypes".equals(name)) {
+			return attackTypes;
 		}
 		return null;
 	}
@@ -306,7 +308,9 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		if(ammoCount > getClipSize()) {
 			int difference = ammoCount - getClipSize();
 			ammoCount = getClipSize();
-			// TODO - Return ammo items to actor
+			if (getEquippedActor() != null) {
+				getEquippedActor().inventory().addItems(ammoType, difference);
+			}
 		}
 	}
 

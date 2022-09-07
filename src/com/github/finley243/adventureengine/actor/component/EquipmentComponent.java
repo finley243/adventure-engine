@@ -15,10 +15,12 @@ public class EquipmentComponent {
 
     public void equip(ItemEquippable item) {
         equippedItem = item;
+        equippedItem.setEquippedActor(actor);
     }
 
     public void unequip(ItemEquippable item) {
         if (equippedItem != null && equippedItem.equals(item)) {
+            equippedItem.setEquippedActor(null);
             this.equippedItem = null;
         }
     }

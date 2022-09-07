@@ -20,14 +20,14 @@ public class EffectStringSet extends Effect {
 
     @Override
     public void start(Moddable target) {
-        ModdableStringSet moddableSet = target.getStatStrings(stat);
+        ModdableStringSet moddableSet = target.getStatStringSet(stat);
         moddableSet.addAdditional(valuesAdd);
         moddableSet.addCancellation(valuesRemove);
     }
 
     @Override
     public void end(Moddable target) {
-        ModdableStringSet moddableSet = target.getStatStrings(stat);
+        ModdableStringSet moddableSet = target.getStatStringSet(stat);
         moddableSet.removeAdditional(valuesAdd);
         moddableSet.removeCancellation(valuesRemove);
     }

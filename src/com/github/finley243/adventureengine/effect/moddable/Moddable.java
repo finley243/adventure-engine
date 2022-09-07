@@ -14,7 +14,7 @@ public interface Moddable {
 
     ModdableStatString getStatString(String name);
 
-    ModdableStringSet getStatStrings(String name);
+    ModdableStringSet getStatStringSet(String name);
 
     void onStatChange();
 

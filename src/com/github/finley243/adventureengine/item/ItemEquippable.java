@@ -11,8 +11,18 @@ import java.util.List;
 
 public abstract class ItemEquippable extends Item {
 
+	private Actor equippedActor;
+
 	public ItemEquippable(Game game, String ID) {
 		super(game, ID);
+	}
+
+	public Actor getEquippedActor() {
+		return equippedActor;
+	}
+
+	public void setEquippedActor(Actor actor) {
+		this.equippedActor = actor;
 	}
 
 	@Override
