@@ -12,17 +12,17 @@ public class LoadUtils {
 		return element.getAttribute(name);
 	}
 
-	public static boolean attributeBool(Element element, String name, boolean defaultValue) {
+	public static Boolean attributeBool(Element element, String name, Boolean defaultValue) {
 		if(element == null || !element.hasAttribute(name)) return defaultValue;
 		return element.getAttribute(name).equalsIgnoreCase("true") || element.getAttribute(name).equalsIgnoreCase("t");
 	}
 
-	public static int attributeInt(Element element, String name, int defaultValue) {
+	public static Integer attributeInt(Element element, String name, Integer defaultValue) {
 		if(element == null || !element.hasAttribute(name)) return defaultValue;
 		return Integer.parseInt(element.getAttribute(name));
 	}
 
-	public static float attributeFloat(Element element, String name, float defaultValue) {
+	public static Float attributeFloat(Element element, String name, Float defaultValue) {
 		if(element == null || !element.hasAttribute(name)) return defaultValue;
 		return Float.parseFloat(element.getAttribute(name));
 	}
@@ -44,19 +44,19 @@ public class LoadUtils {
 		return element.getTextContent();
 	}
 	
-	public static int singleTagInt(Element parent, String name, int defaultValue) {
+	public static Integer singleTagInt(Element parent, String name, Integer defaultValue) {
 		String stringValue = LoadUtils.singleTag(parent, name, null);
 		if(stringValue == null) return defaultValue;
 		return Integer.parseInt(stringValue);
 	}
 	
-	public static float singleTagFloat(Element parent, String name, float defaultValue) {
+	public static Float singleTagFloat(Element parent, String name, Float defaultValue) {
 		String stringValue = LoadUtils.singleTag(parent, name, null);
 		if(stringValue == null) return defaultValue;
 		return Float.parseFloat(stringValue);
 	}
 	
-	public static boolean singleTagBoolean(Element parent, String name, boolean defaultValue) {
+	public static Boolean singleTagBoolean(Element parent, String name, Boolean defaultValue) {
 		String stringValue = LoadUtils.singleTag(parent, name, null);
 		if(stringValue == null) return defaultValue;
 		return stringValue.equalsIgnoreCase("true") || stringValue.equalsIgnoreCase("t");

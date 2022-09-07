@@ -255,7 +255,7 @@ public class DataLoader {
                 return new ConditionActorDead(invert, actorRef);
             case "actorHP":
                 Condition.Equality hpEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
-                float hpValue = LoadUtils.attributeFloat(conditionElement, "value", 0);
+                float hpValue = LoadUtils.attributeFloat(conditionElement, "value", 0.0f);
                 return new ConditionActorHP(invert, actorRef, hpEquality, hpValue);
             case "combatant":
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
