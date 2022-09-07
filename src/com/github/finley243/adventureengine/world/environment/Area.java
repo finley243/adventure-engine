@@ -160,6 +160,13 @@ public class Area extends GameInstanced implements Noun {
 		}
 	}
 
+	public AreaLink.CompassDirection getRelativeDirection(Area origin) {
+		if (origin.linkedAreas.containsKey(this.getID())) {
+			return origin.linkedAreas.get(this.getID()).getDirection();
+		}
+		return null;
+	}
+
 	public String getMovePhrase(Area origin) {
 		if (landmarkID != null) {
 			return Phrases.get("moveToward");
