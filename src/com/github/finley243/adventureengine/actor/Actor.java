@@ -775,9 +775,28 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 		}
 		return visibleObjects;
 	}
+
+	public Set<AttackTarget> getVisibleAttackTargets() {
+		Set<AttackTarget> attackTargets = new HashSet<>(getVisibleActors());
+		attackTargets.remove(this);
+		for (WorldObject visibleObject : getVisibleObjects()) {
+			if (visibleObject instanceof AttackTarget) {
+				attackTargets.add((AttackTarget) visibleObject);
+			}
+		}
+		return attackTargets;
+	}
 	
 	public boolean canSee(Actor target) {
-		return this == target || getArea().getVisibleAreas(this).contains(target.getArea()) && !target.isInCover();
+		return this.equals(target) || getArea().getVisibleAreas(this).contains(target.getArea()) && !target.isInCover();
+	}
+
+	public boolean canSee(AttackTarget target) {
+		if (target instanceof Actor) {
+			return canSee((Actor) target);
+		} else {
+			return getArea().getVisibleAreas(this).contains(target.getArea());
+		}
 	}
 
 	@Override

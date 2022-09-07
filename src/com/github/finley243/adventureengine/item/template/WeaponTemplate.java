@@ -11,10 +11,6 @@ import java.util.Set;
 public class WeaponTemplate extends ItemTemplate {
 
 	public static final float CRIT_CHANCE = 0.05f;
-
-	public enum AttackType {
-		AUTO, SWEEP, THRUST
-	}
 	
 	private final String weaponClass;
 	private final int damage;

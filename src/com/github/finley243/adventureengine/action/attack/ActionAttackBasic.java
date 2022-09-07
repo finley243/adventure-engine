@@ -8,16 +8,15 @@ import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
-import com.google.common.collect.Iterables;
 
 import java.util.Set;
 
 public class ActionAttackBasic extends ActionAttack {
 
-	private final Actor target;
+	private final AttackTarget target;
 	private final ItemWeapon weapon;
 
-	public ActionAttackBasic(ItemWeapon weapon, Actor target, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
+	public ActionAttackBasic(ItemWeapon weapon, AttackTarget target, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
 		super(weapon, Set.of(target), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, range, rate, damage, damageType, armorMult, hitChanceMult, canDodge);
 		this.target = target;
 		this.weapon = weapon;
@@ -45,7 +44,7 @@ public class ActionAttackBasic extends ActionAttack {
 	
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuData(getPrompt() + " (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", weapon.getName(), ((Noun) Iterables.getOnlyElement(getTargets())).getName()});
+		return new MenuData(getPrompt() + " (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", weapon.getName(), ((Noun) target).getName()});
 	}
 
 }

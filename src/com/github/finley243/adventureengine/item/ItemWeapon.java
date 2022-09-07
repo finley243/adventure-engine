@@ -211,32 +211,22 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
-		for (Actor target : subject.getVisibleActors()) {
-			if (target != subject && !target.isDead()) {
-				if (!isPrimarySpread.value(false)) {
-					actions.add(new ActionAttackBasicWeapon(this, target, "Attack"));
-					for (Limb limb : target.getLimbs()) {
-						actions.add(new ActionAttackLimbWeapon(this, target, limb, "Targeted Attack"));
+		if (isPrimarySpread.value(false)) {
+			for (Area targetArea : subject.getArea().getVisibleAreas(subject)) {
+				actions.add(new ActionAttackAreaWeapon(this, targetArea, "Attack"));
+			}
+		} else {
+			for (AttackTarget target : subject.getVisibleAttackTargets()) {
+				if (target instanceof Actor){
+					if (!target.equals(subject) && !((Actor) target).isDead()) {
+						actions.add(new ActionAttackBasicWeapon(this, target, "Attack"));
+						for (Limb limb : ((Actor) target).getLimbs()) {
+							actions.add(new ActionAttackLimbWeapon(this, target, limb, "Targeted Attack"));
+						}
 					}
+				} else {
+					actions.add(new ActionAttackBasicWeapon(this, target, "Attack"));
 				}
-				// TODO - Rewrite using WeaponAttackType system
-				/*if (stats.getType().attacks.contains(WeaponTemplate.AttackType.AUTO)) {
-					actions.add(new ActionAttackBasic(this, target, "Autofire", "rangedAutoHit", "rangedAutoHitRepeat", "rangedAutoMiss", "rangedAutoMissRepeat", 6, this.getRange(), this.getRate(), (int) (this.getDamage() * 3.0f), this.getDamageType(), this.getArmorMult(), -0.5f, false));
-				}*/
-			}
-		}
-		for (WorldObject objectTarget : subject.getVisibleObjects()) {
-			if (objectTarget instanceof AttackTarget) {
-				if (!isPrimarySpread.value(false)) {
-					// TODO - Add object attacks
-					//actions.add(new ActionAttackBasicWeapon(this, objectTarget, "Attack"));
-				}
-			}
-		}
-		for (Area targetArea : subject.getArea().getVisibleAreas(subject)) {
-			if (isPrimarySpread.value(false)) {
-				// TODO - Add area attack phrases
-				actions.add(new ActionAttackAreaWeapon(this, targetArea, "Spread Attack", "", "", "", ""));
 			}
 		}
 		for (WeaponAttackType secondaryAttack : getWeaponClass().getAttackTypes()) {
