@@ -13,11 +13,11 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_BASE_MAX = 0.90f;
 	public static final float HIT_CHANCE_BASE_MIN = 0.20f;
 	
-	public static float calculateHitChance(Actor attacker, AttackTarget target, Limb limb, ItemWeapon weapon, float hitChanceBaseMin, float hitChanceBaseMax, boolean canBeDodged, float hitChanceMult) {
-		float chance = MathUtils.chanceLogSkill(attacker, weapon.getSkill(), hitChanceBaseMin, hitChanceBaseMax);
-		chance += weapon.getAccuracyBonus();
+	public static float calculateHitChance(Actor attacker, AttackTarget target, Limb limb, Actor.Skill skill, float hitChanceBaseMin, float hitChanceBaseMax, float accuracyBonus, boolean canBeDodged, float hitChanceMult) {
+		float chance = MathUtils.chanceLogSkill(attacker, skill, hitChanceBaseMin, hitChanceBaseMax);
+		chance += accuracyBonus;
 		if (canBeDodged && target instanceof Actor) {
-			int weaponSkill = attacker.getSkill(weapon.getSkill());
+			int weaponSkill = attacker.getSkill(skill);
 			int dodgeSkill = ((Actor) target).getSkill(Actor.Skill.DODGE);
 			if (dodgeSkill >= weaponSkill) {
 				int penaltyMult = dodgeSkill - weaponSkill + 1;

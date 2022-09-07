@@ -20,7 +20,6 @@ import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
-import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.*;
 
@@ -104,7 +103,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	// TODO - Change to accuracy multiplier?
 	public float getAccuracyBonus() {
-		return accuracyBonus.value(stats.getAccuracyBonus(), 0.0f, 1.0f);
+		return accuracyBonus.value(stats.getAccuracyBonus(), -1.0f, 1.0f);
 	}
 
 	public float getArmorMult() {
@@ -270,6 +269,8 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public ModdableStatBoolean getStatBoolean(String name) {
 		if ("isSilenced".equals(name)) {
 			return isSilenced;
+		} else if ("isPrimarySpread".equals(name)) {
+			return isPrimarySpread;
 		}
 		return null;
 	}

@@ -26,6 +26,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final String hitPhraseRepeat;
     private final String missPhrase;
     private final String missPhraseRepeat;
+    private final Actor.Skill skill;
     private final int ammoConsumed;
     private final AreaLink.DistanceCategory range;
     private final int rate;
@@ -35,7 +36,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final float hitChanceMult;
     private final boolean canDodge;
 
-    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
+    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
         super(ActionDetectionChance.HIGH, targets);
         this.weaponNoun = weaponNoun;
         this.targets = targets;
@@ -45,6 +46,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.hitPhraseRepeat = hitPhraseRepeat;
         this.missPhrase = missPhrase;
         this.missPhraseRepeat = missPhraseRepeat;
+        this.skill = skill;
         this.ammoConsumed = ammoConsumed;
         this.range = range;
         this.rate = rate;
@@ -145,6 +147,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     public String getMissPhrase(int repeatActionCount) {
         return repeatActionCount > 0 ? missPhraseRepeat : missPhrase;
+    }
+
+    public Actor.Skill getSkill() {
+        return skill;
     }
 
     public AreaLink.DistanceCategory getRange() {

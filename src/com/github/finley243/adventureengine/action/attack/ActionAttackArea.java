@@ -14,15 +14,15 @@ public class ActionAttackArea extends ActionAttack {
     private final Area area;
     private final ItemWeapon weapon;
 
-    public ActionAttackArea(ItemWeapon weapon, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
-        super(weapon, area.getAttackTargets(), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, range, rate, damage, damageType, armorMult, hitChanceMult, canDodge);
+    public ActionAttackArea(ItemWeapon weapon, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
+        super(weapon, area.getAttackTargets(), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, skill, ammoConsumed, range, rate, damage, damageType, armorMult, hitChanceMult, canDodge);
         this.area = area;
         this.weapon = weapon;
     }
 
     @Override
     public float chance(Actor subject, AttackTarget target) {
-        return CombatHelper.calculateHitChance(subject, target, getLimb(), weapon, weapon.getBaseHitChanceMin(), weapon.getBaseHitChanceMax(), canDodge(), hitChanceMult());
+        return CombatHelper.calculateHitChance(subject, target, getLimb(), getSkill(), weapon.getBaseHitChanceMin(), weapon.getBaseHitChanceMax(), weapon.getAccuracyBonus(), canDodge(), hitChanceMult());
     }
 
     @Override

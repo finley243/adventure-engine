@@ -812,12 +812,13 @@ public class DataLoader {
         String missPhrase = LoadUtils.singleTag(attackTypeElement, "missPhrase", null);
         String missPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "missPhraseRepeat", null);
         int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
+        Actor.Skill skillOverride = LoadUtils.attributeEnum(attackTypeElement, "skill", Actor.Skill.class, null);
         AreaLink.DistanceCategory rangeOverride = LoadUtils.attributeEnum(attackTypeElement, "range", AreaLink.DistanceCategory.class, null);
         int rate = LoadUtils.attributeInt(attackTypeElement, "rate", 1);
         float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
-        return new WeaponAttackType(category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
+        return new WeaponAttackType(category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, skillOverride, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
     }
 
 }
