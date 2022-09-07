@@ -524,6 +524,11 @@ public class DataLoader {
                 String statString = LoadUtils.attribute(effectElement, "stat", null);
                 String statStringValue = LoadUtils.attribute(effectElement, "value", null);
                 return new EffectStatString(duration, manualRemoval, stackable, statString, statStringValue);
+            case "stringSet":
+                String statStringSet = LoadUtils.attribute(effectElement, "stat", null);
+                Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
+                Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
+                return new EffectStringSet(duration, manualRemoval, stackable, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
             case "addEffects":
                 String statEffects = LoadUtils.attribute(effectElement, "stat", null);
                 List<Effect> addedEffects = loadEffects(effectElement, false);
@@ -787,7 +792,7 @@ public class DataLoader {
         boolean isRanged = LoadUtils.attributeBool(weaponClassElement, "isRanged", false);
         boolean isTwoHanded = LoadUtils.attributeBool(weaponClassElement, "isTwoHanded", false);
         Actor.Skill skill = LoadUtils.attributeEnum(weaponClassElement, "skill", Actor.Skill.class, Actor.Skill.MELEE);
-        AreaLink.DistanceCategory primaryRange = LoadUtils.attributeEnum(weaponClassElement, "primaryRange", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.NEAR);
+        Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(weaponClassElement, "range", AreaLink.DistanceCategory.class);
         Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
         Set<WeaponAttackType> attackTypes = new HashSet<>();
         for (Element attackTypeElement : LoadUtils.directChildrenWithName(weaponClassElement, "attackType")) {
@@ -801,7 +806,7 @@ public class DataLoader {
         String limbHitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbHitPhraseRepeat", null);
         String limbMissPhrase = LoadUtils.singleTag(weaponClassElement, "limbMissPhrase", null);
         String limbMissPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbMissPhraseRepeat", null);
-        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRange, ammoTypes, attackTypes, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, limbHitPhrase, limbHitPhraseRepeat, limbMissPhrase, limbMissPhraseRepeat);
+        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRanges, ammoTypes, attackTypes, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, limbHitPhrase, limbHitPhraseRepeat, limbMissPhrase, limbMissPhraseRepeat);
     }
 
     private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) {
@@ -813,12 +818,13 @@ public class DataLoader {
         String missPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "missPhraseRepeat", null);
         int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
         Actor.Skill skillOverride = LoadUtils.attributeEnum(attackTypeElement, "skill", Actor.Skill.class, null);
-        AreaLink.DistanceCategory rangeOverride = LoadUtils.attributeEnum(attackTypeElement, "range", AreaLink.DistanceCategory.class, null);
+        boolean useNonIdealRange = LoadUtils.attributeBool(attackTypeElement, "nonIdealRange", false);
+        Set<AreaLink.DistanceCategory> rangeOverride = LoadUtils.setOfEnumTags(attackTypeElement, "range", AreaLink.DistanceCategory.class);
         int rate = LoadUtils.attributeInt(attackTypeElement, "rate", 1);
         float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
-        return new WeaponAttackType(category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, skillOverride, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
+        return new WeaponAttackType(category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, skillOverride, useNonIdealRange, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
     }
 
 }

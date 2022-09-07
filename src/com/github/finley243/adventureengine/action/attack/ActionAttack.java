@@ -28,7 +28,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final String missPhraseRepeat;
     private final Actor.Skill skill;
     private final int ammoConsumed;
-    private final AreaLink.DistanceCategory range;
+    private final Set<AreaLink.DistanceCategory> ranges;
     private final int rate;
     private final int damage;
     private final Damage.DamageType damageType;
@@ -36,7 +36,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final float hitChanceMult;
     private final boolean canDodge;
 
-    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
+    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
         super(ActionDetectionChance.HIGH, targets);
         this.weaponNoun = weaponNoun;
         this.targets = targets;
@@ -48,7 +48,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.missPhraseRepeat = missPhraseRepeat;
         this.skill = skill;
         this.ammoConsumed = ammoConsumed;
-        this.range = range;
+        this.ranges = ranges;
         this.rate = rate;
         this.damage = damage;
         this.damageType = damageType;
@@ -153,8 +153,8 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return skill;
     }
 
-    public AreaLink.DistanceCategory getRange() {
-        return range;
+    public Set<AreaLink.DistanceCategory> getRanges() {
+        return ranges;
     }
 
     @Override

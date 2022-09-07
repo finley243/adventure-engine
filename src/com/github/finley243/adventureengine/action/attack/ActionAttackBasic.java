@@ -16,8 +16,8 @@ public class ActionAttackBasic extends ActionAttack {
 	private final AttackTarget target;
 	private final ItemWeapon weapon;
 
-	public ActionAttackBasic(ItemWeapon weapon, AttackTarget target, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
-		super(weapon, Set.of(target), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, skill, ammoConsumed, range, rate, damage, damageType, armorMult, hitChanceMult, canDodge);
+	public ActionAttackBasic(ItemWeapon weapon, AttackTarget target, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
+		super(weapon, Set.of(target), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, skill, ammoConsumed, ranges, rate, damage, damageType, armorMult, hitChanceMult, canDodge);
 		this.target = target;
 		this.weapon = weapon;
 	}
@@ -38,7 +38,7 @@ public class ActionAttackBasic extends ActionAttack {
 	public boolean canChoose(Actor subject) {
 		return super.canChoose(subject)
 				&& (weapon.getClipSize() == 0 || weapon.getAmmoRemaining() >= getAmmoConsumed())
-				&& subject.getArea().getDistanceTo(target.getArea().getID()) == getRange()
+				&& getRanges().contains(subject.getArea().getDistanceTo(target.getArea().getID()))
 				&& subject.canSee(target);
 	}
 	

@@ -26,6 +26,21 @@ public class ModdableStringSet {
         return outputSet;
     }
 
+    public <T extends Enum<T>> Set<T> valueEnum(Set<T> base, Class<T> enumClass) {
+        Set<T> outputSet = new HashSet<>(base);
+        Set<T> additionalEnum = new HashSet<>();
+        Set<T> cancellationEnum = new HashSet<>();
+        for (String additionalString : additional.keySet()) {
+            additionalEnum.add(enumValue(additionalString, enumClass));
+        }
+        for (String cancellationString : cancellation.keySet()) {
+            cancellationEnum.add(enumValue(cancellationString, enumClass));
+        }
+        outputSet.addAll(additionalEnum);
+        outputSet.removeAll(cancellationEnum);
+        return outputSet;
+    }
+
     public void addAdditional(Set<String> values) {
         for(String value : values) {
             if(!additional.containsKey(value)) {
@@ -76,6 +91,14 @@ public class ModdableStringSet {
             }
         }
         target.onStatChange();
+    }
+
+    private <T extends Enum<T>> T enumValue(String string, Class<T> enumClass) {
+        try {
+            return Enum.valueOf(enumClass, string.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
 }

@@ -82,6 +82,20 @@ public class LoadUtils {
 		}
 		return output;
 	}
+
+	public static <T extends Enum<T>> Set<T> setOfEnumTags(Element parent, String name, Class<T> enumClass) {
+		Set<T> enumSet = new HashSet<>();
+		Set<String> stringSet = setOfTags(parent, name);
+		for(T current : EnumSet.allOf(enumClass)) {
+			for (String tag : stringSet) {
+				if (tag.equalsIgnoreCase(current.toString())) {
+					enumSet.add(current);
+					break;
+				}
+			}
+		}
+		return enumSet;
+	}
 	
 	public static List<String> listOfTags(Element parent, String name) {
 		if(parent == null) return new ArrayList<>();

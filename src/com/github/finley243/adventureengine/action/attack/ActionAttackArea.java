@@ -9,13 +9,15 @@ import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
+import java.util.Set;
+
 public class ActionAttackArea extends ActionAttack {
 
     private final Area area;
     private final ItemWeapon weapon;
 
-    public ActionAttackArea(ItemWeapon weapon, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, AreaLink.DistanceCategory range, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
-        super(weapon, area.getAttackTargets(), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, skill, ammoConsumed, range, rate, damage, damageType, armorMult, hitChanceMult, canDodge);
+    public ActionAttackArea(ItemWeapon weapon, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
+        super(weapon, area.getAttackTargets(), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, skill, ammoConsumed, ranges, rate, damage, damageType, armorMult, hitChanceMult, canDodge);
         this.area = area;
         this.weapon = weapon;
     }
@@ -36,7 +38,7 @@ public class ActionAttackArea extends ActionAttack {
     public boolean canChoose(Actor subject) {
         return super.canChoose(subject)
                 && (weapon.getClipSize() == 0 || weapon.getAmmoRemaining() >= getAmmoConsumed())
-                && subject.getArea().getDistanceTo(area.getID()) == getRange() && subject.getArea().isVisible(subject, area.getID());
+                && getRanges().contains(subject.getArea().getDistanceTo(area.getID())) && subject.getArea().isVisible(subject, area.getID());
     }
 
     @Override

@@ -10,9 +10,7 @@ import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class WeaponAttackType {
 
@@ -28,13 +26,14 @@ public class WeaponAttackType {
     private final String missPhraseRepeat;
     private final int ammoConsumed;
     private final Actor.Skill skillOverride;
-    private final AreaLink.DistanceCategory rangeOverride;
+    private final boolean useNonIdealRange;
+    private final Set<AreaLink.DistanceCategory> rangeOverride;
     private final int rate;
     private final float damageMult;
     private final float hitChanceMult;
     private final boolean canDodge;
 
-    public WeaponAttackType(AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, Actor.Skill skillOverride, AreaLink.DistanceCategory rangeOverride, int rate, float damageMult, float hitChanceMult, boolean canDodge) {
+    public WeaponAttackType(AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, Actor.Skill skillOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, int rate, float damageMult, float hitChanceMult, boolean canDodge) {
         this.category = category;
         this.prompt = prompt;
         this.hitPhrase = hitPhrase;
@@ -43,6 +42,7 @@ public class WeaponAttackType {
         this.missPhraseRepeat = missPhraseRepeat;
         this.ammoConsumed = ammoConsumed;
         this.skillOverride = skillOverride;
+        this.useNonIdealRange = useNonIdealRange;
         this.rangeOverride = rangeOverride;
         this.rate = rate;
         this.damageMult = damageMult;
@@ -55,20 +55,20 @@ public class WeaponAttackType {
         if (category == AttackCategory.SINGLE) {
             for (Actor target : subject.getVisibleActors()) {
                 if (!target.equals(subject) && !target.isDead()) {
-                    actions.add(new ActionAttackBasic(weapon, target, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, Objects.requireNonNullElse(skillOverride, weapon.getSkill()), ammoConsumed, Objects.requireNonNullElse(rangeOverride, weapon.getRange()), rate, (int) (weapon.getDamage() * (damageMult + 1.0f)), weapon.getDamageType(), weapon.getArmorMult(), hitChanceMult, canDodge));
+                    actions.add(new ActionAttackBasic(weapon, target, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, Objects.requireNonNullElse(skillOverride, weapon.getSkill()), ammoConsumed, (rangeOverride.isEmpty() ? (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getRanges())) : weapon.getRanges()) : rangeOverride), rate, (int) (weapon.getDamage() * (damageMult + 1.0f)), weapon.getDamageType(), weapon.getArmorMult(), hitChanceMult, canDodge));
                 }
             }
         } else if (category == AttackCategory.TARGETED) {
             for (Actor target : subject.getVisibleActors()) {
                 if (!target.equals(subject) && !target.isDead()) {
                     for (Limb limb : target.getLimbs()) {
-                        actions.add(new ActionAttackLimb(weapon, target, limb, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, Objects.requireNonNullElse(skillOverride, weapon.getSkill()), ammoConsumed, Objects.requireNonNullElse(rangeOverride, weapon.getRange()), rate, (int) (weapon.getDamage() * (damageMult + 1.0f)), weapon.getDamageType(), weapon.getArmorMult(), hitChanceMult, canDodge));
+                        actions.add(new ActionAttackLimb(weapon, target, limb, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, Objects.requireNonNullElse(skillOverride, weapon.getSkill()), ammoConsumed, (rangeOverride.isEmpty() ? (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getRanges())) : weapon.getRanges()) : rangeOverride), rate, (int) (weapon.getDamage() * (damageMult + 1.0f)), weapon.getDamageType(), weapon.getArmorMult(), hitChanceMult, canDodge));
                     }
                 }
             }
         } else if (category == AttackCategory.SPREAD) {
             for (Area target : subject.getArea().getVisibleAreas(subject)) {
-                actions.add(new ActionAttackArea(weapon, target, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, Objects.requireNonNullElse(skillOverride, weapon.getSkill()), ammoConsumed, Objects.requireNonNullElse(rangeOverride, weapon.getRange()), rate, (int) (weapon.getDamage() * (damageMult + 1.0f)), weapon.getDamageType(), weapon.getArmorMult(), hitChanceMult, canDodge));
+                actions.add(new ActionAttackArea(weapon, target, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, Objects.requireNonNullElse(skillOverride, weapon.getSkill()), ammoConsumed, (rangeOverride.isEmpty() ? (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getRanges())) : weapon.getRanges()) : rangeOverride), rate, (int) (weapon.getDamage() * (damageMult + 1.0f)), weapon.getDamageType(), weapon.getArmorMult(), hitChanceMult, canDodge));
             }
         }
         return actions;

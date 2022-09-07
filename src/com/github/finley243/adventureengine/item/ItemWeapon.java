@@ -34,7 +34,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatInt damage;
 	private final ModdableStatInt rate;
 	private final ModdableStatInt critDamage;
-	private final ModdableStatString range;
+	private final ModdableStringSet ranges;
 	private final ModdableStatInt clipSize;
 	private final ModdableStatFloat accuracyBonus;
 	private final ModdableStatFloat armorMult;
@@ -52,7 +52,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.damage = new ModdableStatInt(this);
 		this.rate = new ModdableStatInt(this);
 		this.critDamage = new ModdableStatInt(this);
-		this.range = new ModdableStatString(this);
+		this.ranges = new ModdableStringSet(this);
 		this.clipSize = new ModdableStatInt(this);
 		this.accuracyBonus = new ModdableStatFloat(this);
 		this.armorMult = new ModdableStatFloat(this);
@@ -97,8 +97,8 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		return critDamage.value(stats.getCritDamage(), 0, 1000);
 	}
 
-	public AreaLink.DistanceCategory getRange() {
-		return range.valueEnum(getWeaponClass().getPrimaryRange(), AreaLink.DistanceCategory.class);
+	public Set<AreaLink.DistanceCategory> getRanges() {
+		return ranges.valueEnum(getWeaponClass().getPrimaryRanges(), AreaLink.DistanceCategory.class);
 	}
 
 	// TODO - Change to accuracy multiplier?
@@ -282,9 +282,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	@Override
 	public ModdableStatString getStatString(String name) {
-		if ("range".equals(name)) {
-			return range;
-		} else if ("damageType".equals(name)) {
+		if ("damageType".equals(name)) {
 			return damageType;
 		}
 		return null;
@@ -292,6 +290,9 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	@Override
 	public ModdableStringSet getStatStrings(String name) {
+		if ("ranges".equals(name)) {
+			return ranges;
+		}
 		return null;
 	}
 

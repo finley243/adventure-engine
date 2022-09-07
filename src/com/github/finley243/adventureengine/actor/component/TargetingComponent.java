@@ -241,22 +241,22 @@ public class TargetingComponent {
         }
     }
 
-    private AreaLink.DistanceCategory idealDistance() {
+    private Set<AreaLink.DistanceCategory> idealDistances() {
         if (actor.equipmentComponent() != null && actor.equipmentComponent().hasEquippedItem() && actor.equipmentComponent().getEquippedItem() instanceof ItemWeapon) {
-            return ((ItemWeapon) actor.equipmentComponent().getEquippedItem()).getRange();
+            return ((ItemWeapon) actor.equipmentComponent().getEquippedItem()).getRanges();
         } else {
-            return AreaLink.DistanceCategory.NEAR;
+            return Set.of(AreaLink.DistanceCategory.NEAR);
         }
     }
 
     private Set<Area> idealAreas(Area origin) {
-        AreaLink.DistanceCategory idealDistance = idealDistance();
-        if (idealDistance == AreaLink.DistanceCategory.NEAR) {
+        Set<AreaLink.DistanceCategory> idealDistances = idealDistances();
+        if (idealDistances.size() == 1 && idealDistances.contains(AreaLink.DistanceCategory.NEAR)) {
             Set<Area> idealAreas = new HashSet<>();
             idealAreas.add(origin);
             return idealAreas;
         }
-        return origin.visibleAreasInRange(actor, idealDistance);
+        return origin.visibleAreasInRange(actor, idealDistances);
     }
 
     public void loadState(SaveData data) {

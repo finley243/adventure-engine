@@ -312,19 +312,21 @@ public class Area extends GameInstanced implements Noun {
 		return linkedAreas.get(areaID).getDistance();
 	}
 
-	public Set<Area> visibleAreasInRange(Actor subject, AreaLink.DistanceCategory range) {
+	public Set<Area> visibleAreasInRange(Actor subject, Set<AreaLink.DistanceCategory> ranges) {
 		Set<Area> areas = new HashSet<>();
-		if (range == AreaLink.DistanceCategory.NEAR) {
+		if (ranges.contains(AreaLink.DistanceCategory.NEAR)) {
 			areas.add(this);
-			return areas;
+			if (ranges.size() == 1) {
+				return areas;
+			}
 		}
 		for (AreaLink link : linkedAreas.values()) {
-			if (isVisible(subject, link.getAreaID()) && range == link.getDistance()) {
+			if (isVisible(subject, link.getAreaID()) && ranges.contains(link.getDistance())) {
 				areas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
 		for (RoomLink roomLink : getRoom().getLinkedRooms().values()) {
-			if (range == roomLink.getDistance()) {
+			if (ranges.contains(roomLink.getDistance())) {
 				areas.addAll(game().data().getRoom(roomLink.getRoomID()).getAreas());
 			}
 		}
