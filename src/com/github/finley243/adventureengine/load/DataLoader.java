@@ -73,6 +73,11 @@ public class DataLoader {
                         LootTable table = loadLootTable(tableElement, false);
                         game.data().addLootTable(table.getID(), table);
                     }
+                    List<Element> weaponClasses = LoadUtils.directChildrenWithName(rootElement, "weaponClass");
+                    for (Element weaponClassElement : weaponClasses) {
+                        WeaponClass weaponClass = loadWeaponClass(weaponClassElement);
+                        game.data().addWeaponClass(weaponClass.getID(), weaponClass);
+                    }
                     List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
                     for (Element roomElement : rooms) {
                         Room room = loadRoom(game, roomElement);
@@ -453,7 +458,7 @@ public class DataLoader {
                 List<Effect> consumableEffects = loadEffects(itemElement, false);
                 return new ConsumableTemplate(id, name, description, scripts, price, consumableType, consumableEffects);
             case "weapon":
-                WeaponTemplate.WeaponType weaponType = LoadUtils.attributeEnum(itemElement, "weaponType", WeaponTemplate.WeaponType.class, null);
+                String weaponClass = LoadUtils.attribute(itemElement, "class", null);
                 int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
                 Element damageElement = LoadUtils.singleChildWithName(itemElement, "damage");
                 int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
@@ -464,7 +469,7 @@ public class DataLoader {
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 Set<String> weaponAmmoTypes = LoadUtils.setOfTags(itemElement, "ammo");
-                return new WeaponTemplate(id, name, description, scripts, price, weaponType, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponAmmoTypes);
+                return new WeaponTemplate(id, name, description, scripts, price, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponAmmoTypes);
             case "ammo":
                 List<Effect> ammoEffects = loadEffects(itemElement, true);
                 return new AmmoTemplate(id, name, description, scripts, price, ammoEffects);
@@ -775,6 +780,24 @@ public class DataLoader {
         Condition condition = loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"));
         String phrase = LoadUtils.singleTag(idleElement, "phrase", null);
         return new Idle(condition, phrase);
+    }
+
+    private static WeaponClass loadWeaponClass(Element weaponClassElement) {
+        String ID = LoadUtils.attribute(weaponClassElement, "id", null);
+        String name = LoadUtils.singleTag(weaponClassElement, "name", null);
+        boolean isRanged = LoadUtils.attributeBool(weaponClassElement, "isRanged", false);
+        boolean isTwoHanded = LoadUtils.attributeBool(weaponClassElement, "isTwoHanded", false);
+        Actor.Skill skill = LoadUtils.attributeEnum(weaponClassElement, "skill", Actor.Skill.class, Actor.Skill.MELEE);
+        AreaLink.DistanceCategory primaryRange = LoadUtils.attributeEnum(weaponClassElement, "primaryRange", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.NEAR);
+        String hitPhrase = LoadUtils.singleTag(weaponClassElement, "hitPhrase", null);
+        String hitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "hitPhraseRepeat", null);
+        String missPhrase = LoadUtils.singleTag(weaponClassElement, "missPhrase", null);
+        String missPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "missPhraseRepeat", null);
+        String limbHitPhrase = LoadUtils.singleTag(weaponClassElement, "limbHitPhrase", null);
+        String limbHitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbHitPhraseRepeat", null);
+        String limbMissPhrase = LoadUtils.singleTag(weaponClassElement, "limbMissPhrase", null);
+        String limbMissPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbMissPhraseRepeat", null);
+        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRange, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, limbHitPhrase, limbHitPhraseRepeat, limbMissPhrase, limbMissPhraseRepeat);
     }
 
 }

@@ -14,6 +14,7 @@ import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.WeaponClass;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -68,9 +69,13 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public ItemTemplate getTemplate() {
 		return stats;
 	}
+
+	public WeaponClass getWeaponClass() {
+		return game().data().getWeaponClass(stats.getWeaponClass());
+	}
 	
 	public boolean isRanged() {
-		return stats.getType().isRanged;
+		return getWeaponClass().isRanged();
 	}
 	
 	public int getDamage() {
@@ -94,7 +99,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public AreaLink.DistanceCategory getRange() {
-		return range.valueEnum(stats.getPrimaryRange(), AreaLink.DistanceCategory.class);
+		return range.valueEnum(getWeaponClass().getPrimaryRange(), AreaLink.DistanceCategory.class);
 	}
 
 	// TODO - Change to accuracy multiplier?
@@ -168,39 +173,39 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public Actor.Skill getSkill() {
-		return stats.getSkill();
+		return getWeaponClass().getSkill();
 	}
 
 	public String getHitPhrase() {
-		return stats.getHitPhrase();
+		return getWeaponClass().getHitPhrase();
 	}
 
 	public String getHitRepeatPhrase() {
-		return stats.getHitRepeatPhrase();
+		return getWeaponClass().getHitPhraseRepeat();
 	}
 
 	public String getMissPhrase() {
-		return stats.getMissPhrase();
+		return getWeaponClass().getMissPhrase();
 	}
 
 	public String getMissRepeatPhrase() {
-		return stats.getMissRepeatPhrase();
+		return getWeaponClass().getMissPhraseRepeat();
 	}
 
 	public String getLimbHitPhrase() {
-		return stats.getLimbHitPhrase();
+		return getWeaponClass().getLimbHitPhrase();
 	}
 
 	public String getLimbHitRepeatPhrase() {
-		return stats.getLimbHitRepeatPhrase();
+		return getWeaponClass().getLimbHitPhraseRepeat();
 	}
 
 	public String getLimbMissPhrase() {
-		return stats.getLimbMissPhrase();
+		return getWeaponClass().getLimbMissPhrase();
 	}
 
 	public String getLimbMissRepeatPhrase() {
-		return stats.getLimbMissRepeatPhrase();
+		return getWeaponClass().getLimbMissPhraseRepeat();
 	}
 
 	@Override
@@ -214,9 +219,10 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 						actions.add(new ActionAttackLimbWeapon(this, target, limb, "Targeted Attack"));
 					}
 				}
-				if (stats.getType().attacks.contains(WeaponTemplate.AttackType.AUTO)) {
+				// TODO - Rewrite using WeaponAttackType system
+				/*if (stats.getType().attacks.contains(WeaponTemplate.AttackType.AUTO)) {
 					actions.add(new ActionAttackBasic(this, target, "Autofire", "rangedAutoHit", "rangedAutoHitRepeat", "rangedAutoMiss", "rangedAutoMissRepeat", 6, this.getRange(), this.getRate(), (int) (this.getDamage() * 3.0f), this.getDamageType(), this.getArmorMult(), -0.5f, false));
-				}
+				}*/
 			}
 		}
 		for (WorldObject objectTarget : subject.getVisibleObjects()) {
