@@ -1,0 +1,9 @@
+<data>
+    <attackType id="autofire" category="SINGLE" ammoConsumed="6" rate="1" damageMult="2.0" hitChanceMult="-0.5" canDodge="false">
+        <prompt>Autofire</prompt>
+        <hitPhrase>rangedAutoHit</hitPhrase>
+        <hitPhraseRepeat>rangedAutoHitRepeat</hitPhraseRepeat>
+        <missPhrase>rangedAutoMiss</missPhrase>
+        <missPhraseRepeat>rangedAutoMissRepeat</missPhraseRepeat>
+    </attackType>
+</data>

@@ -78,6 +78,11 @@ public class DataLoader {
                         WeaponClass weaponClass = loadWeaponClass(weaponClassElement);
                         game.data().addWeaponClass(weaponClass.getID(), weaponClass);
                     }
+                    List<Element> attackTypes = LoadUtils.directChildrenWithName(rootElement, "attackType");
+                    for (Element attackTypeElement : attackTypes) {
+                        WeaponAttackType attackType = loadWeaponAttackType(attackTypeElement);
+                        game.data().addAttackType(attackType.getID(), attackType);
+                    }
                     List<Element> rooms = LoadUtils.directChildrenWithName(rootElement, "room");
                     for (Element roomElement : rooms) {
                         Room room = loadRoom(game, roomElement);
@@ -794,10 +799,7 @@ public class DataLoader {
         Actor.Skill skill = LoadUtils.attributeEnum(weaponClassElement, "skill", Actor.Skill.class, Actor.Skill.MELEE);
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(weaponClassElement, "range", AreaLink.DistanceCategory.class);
         Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
-        Set<WeaponAttackType> attackTypes = new HashSet<>();
-        for (Element attackTypeElement : LoadUtils.directChildrenWithName(weaponClassElement, "attackType")) {
-            attackTypes.add(loadWeaponAttackType(attackTypeElement));
-        }
+        Set<String> attackTypes = LoadUtils.setOfTags(weaponClassElement, "attackType");
         String hitPhrase = LoadUtils.singleTag(weaponClassElement, "hitPhrase", null);
         String hitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "hitPhraseRepeat", null);
         String missPhrase = LoadUtils.singleTag(weaponClassElement, "missPhrase", null);
@@ -810,6 +812,7 @@ public class DataLoader {
     }
 
     private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) {
+        String ID = LoadUtils.attribute(attackTypeElement, "id", null);
         WeaponAttackType.AttackCategory category = LoadUtils.attributeEnum(attackTypeElement, "category", WeaponAttackType.AttackCategory.class, WeaponAttackType.AttackCategory.SINGLE);
         String prompt = LoadUtils.singleTag(attackTypeElement, "prompt", null);
         String hitPhrase = LoadUtils.singleTag(attackTypeElement, "hitPhrase", null);
@@ -824,7 +827,7 @@ public class DataLoader {
         float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
-        return new WeaponAttackType(category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, skillOverride, useNonIdealRange, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
+        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, skillOverride, useNonIdealRange, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
     }
 
 }

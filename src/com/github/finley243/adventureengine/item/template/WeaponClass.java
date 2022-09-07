@@ -14,7 +14,7 @@ public class WeaponClass {
     private final Actor.Skill skill;
     private final Set<AreaLink.DistanceCategory> primaryRanges;
     private final Set<String> ammoTypes;
-    private final Set<WeaponAttackType> attackTypes;
+    private final Set<String> attackTypes;
     private final String hitPhrase;
     private final String hitPhraseRepeat;
     private final String missPhrase;
@@ -24,7 +24,7 @@ public class WeaponClass {
     private final String limbMissPhrase;
     private final String limbMissPhraseRepeat;
 
-    public WeaponClass(String ID, String name, boolean isRanged, boolean isTwoHanded, Actor.Skill skill, Set<AreaLink.DistanceCategory> primaryRanges, Set<String> ammoTypes, Set<WeaponAttackType> attackTypes, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, String limbHitPhrase, String limbHitPhraseRepeat, String limbMissPhrase, String limbMissPhraseRepeat) {
+    public WeaponClass(String ID, String name, boolean isRanged, boolean isTwoHanded, Actor.Skill skill, Set<AreaLink.DistanceCategory> primaryRanges, Set<String> ammoTypes, Set<String> attackTypes, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, String limbHitPhrase, String limbHitPhraseRepeat, String limbMissPhrase, String limbMissPhraseRepeat) {
         this.ID = ID;
         this.name = name;
         this.isRanged = isRanged;
@@ -71,7 +71,7 @@ public class WeaponClass {
         return ammoTypes;
     }
 
-    public Set<WeaponAttackType> getAttackTypes() {
+    public Set<String> getAttackTypes() {
         return attackTypes;
     }
 

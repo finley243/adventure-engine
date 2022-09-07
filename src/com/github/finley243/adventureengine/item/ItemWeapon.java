@@ -13,7 +13,6 @@ import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.item.template.WeaponAttackType;
 import com.github.finley243.adventureengine.item.template.WeaponClass;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -31,6 +30,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public static final float HIT_CHANCE_BASE_RANGED_MAX = 0.90f;
 	
 	private final WeaponTemplate stats;
+	private final ModdableStringSet attackTypes;
 	private final ModdableStatInt damage;
 	private final ModdableStatInt rate;
 	private final ModdableStatInt critDamage;
@@ -49,6 +49,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public ItemWeapon(Game game, String ID, WeaponTemplate stats) {
 		super(game, ID);
 		this.stats = stats;
+		this.attackTypes = new ModdableStringSet(this);
 		this.damage = new ModdableStatInt(this);
 		this.rate = new ModdableStatInt(this);
 		this.critDamage = new ModdableStatInt(this);
@@ -207,6 +208,10 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		return getWeaponClass().getLimbMissPhraseRepeat();
 	}
 
+	public Set<String> getAttackTypes() {
+		return attackTypes.value(getWeaponClass().getAttackTypes());
+	}
+
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
@@ -228,8 +233,8 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 				}
 			}
 		}
-		for (WeaponAttackType secondaryAttack : getWeaponClass().getAttackTypes()) {
-			actions.addAll(secondaryAttack.generateActions(subject, this));
+		for (String secondaryAttack : getAttackTypes()) {
+			actions.addAll(game().data().getAttackType(secondaryAttack).generateActions(subject, this));
 		}
 		if (getClipSize() > 0) {
 			for (String current : getWeaponClass().getAmmoTypes()) {

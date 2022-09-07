@@ -18,6 +18,7 @@ public class WeaponAttackType {
         SINGLE, TARGETED, SPREAD
     }
 
+    private final String ID;
     private final AttackCategory category;
     private final String prompt;
     private final String hitPhrase;
@@ -33,7 +34,8 @@ public class WeaponAttackType {
     private final float hitChanceMult;
     private final boolean canDodge;
 
-    public WeaponAttackType(AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, Actor.Skill skillOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, int rate, float damageMult, float hitChanceMult, boolean canDodge) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, int ammoConsumed, Actor.Skill skillOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, int rate, float damageMult, float hitChanceMult, boolean canDodge) {
+        this.ID = ID;
         this.category = category;
         this.prompt = prompt;
         this.hitPhrase = hitPhrase;
@@ -48,6 +50,10 @@ public class WeaponAttackType {
         this.damageMult = damageMult;
         this.hitChanceMult = hitChanceMult;
         this.canDodge = canDodge;
+    }
+
+    public String getID() {
+        return ID;
     }
 
     public List<Action> generateActions(Actor subject, ItemWeapon weapon) {

@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.WeaponAttackType;
 import com.github.finley243.adventureengine.item.template.WeaponClass;
 import com.github.finley243.adventureengine.load.DataLoader;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -42,6 +43,7 @@ public class Data {
 	private final Map<String, Item> itemStates = new HashMap<>();
 	private final Map<String, LootTable> lootTables = new HashMap<>();
 	private final Map<String, WeaponClass> weaponClasses = new HashMap<>();
+	private final Map<String, WeaponAttackType> attackTypes = new HashMap<>();
 	private final Map<String, Scene> scenes = new HashMap<>();
 	private final Map<String, Integer> variables = new HashMap<>();
 	private final Map<String, Script> scripts = new HashMap<>();
@@ -255,6 +257,16 @@ public class Data {
 
 	public WeaponClass getWeaponClass(String id) {
 		return weaponClasses.get(id);
+	}
+
+	public void addAttackType(String id, WeaponAttackType attackType) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add attack type with blank ID");
+		if(weaponClasses.containsKey(id)) throw new IllegalArgumentException("Cannot add attack type with existing ID: " + id);
+		attackTypes.put(id, attackType);
+	}
+
+	public WeaponAttackType getAttackType(String id) {
+		return attackTypes.get(id);
 	}
 	
 	public void addScene(String id, Scene value) {
