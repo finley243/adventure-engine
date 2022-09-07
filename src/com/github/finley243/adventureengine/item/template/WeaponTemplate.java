@@ -1,10 +1,8 @@
 package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Damage;
-import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -27,11 +25,9 @@ public class WeaponTemplate extends ItemTemplate {
 	private final float armorMult;
 	private final boolean silenced;
 	private final Damage.DamageType damageType;
-	private final Set<String> ammoTypes;
 
-	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String weaponClass, int damage, int rate, int critDamage, int clipSize, float accuracyBonus, float armorMult, boolean silenced, Damage.DamageType damageType, Set<String> ammoTypes) {
+	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String weaponClass, int damage, int rate, int critDamage, int clipSize, float accuracyBonus, float armorMult, boolean silenced, Damage.DamageType damageType) {
 		super(ID, name, description, scripts, price);
-		if(clipSize > 0 && ammoTypes.isEmpty() || clipSize == 0 && !ammoTypes.isEmpty()) throw new IllegalArgumentException("Weapon clip size and ammo type conflict: " + ID);
 		if(weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null: " + ID);
 		this.weaponClass = weaponClass;
 		this.damage = damage;
@@ -42,7 +38,6 @@ public class WeaponTemplate extends ItemTemplate {
 		this.armorMult = armorMult;
 		this.silenced = silenced;
 		this.damageType = damageType;
-		this.ammoTypes = ammoTypes;
 	}
 
 	@Override
@@ -84,10 +79,6 @@ public class WeaponTemplate extends ItemTemplate {
 
 	public Damage.DamageType getDamageType() {
 		return damageType;
-	}
-
-	public Set<String> getAmmoTypes() {
-		return ammoTypes;
 	}
 
 	@Override

@@ -1,10 +1,10 @@
 <data>
-    <item type="weapon" id="baseball_bat" price="15" weaponType="CLUB">
+    <item type="weapon" id="baseball_bat" price="15" class="club">
         <name>baseball bat</name>
         <damage base="10" crit="5"/>
         <rate>2</rate>
     </item>
-    <item type="weapon" id="katana" price="60" weaponType="SWORD">
+    <item type="weapon" id="katana" price="60" class="sword">
         <name>katana</name>
         <description>
             <line>
@@ -14,23 +14,21 @@
         <damage base="20" crit="10"/>
         <rate>2</rate>
     </item>
-    <item type="weapon" id="pistol_light" price="30" weaponType="PISTOL">
+    <item type="weapon" id="pistol_light" price="30" class="pistol">
         <name>light pistol</name>
         <damage base="10" crit="5"/>
         <rate>2</rate>
         <range min="0" max="2"/>
         <clipSize>12</clipSize>
-        <ammo>ammo_pistol</ammo>
     </item>
-    <item type="weapon" id="pistol_heavy" price="50" weaponType="PISTOL">
+    <item type="weapon" id="pistol_heavy" price="50" class="pistol">
         <name>heavy pistol</name>
         <damage base="14" crit="6"/>
         <rate>2</rate>
         <range min="0" max="2"/>
         <clipSize>6</clipSize>
-        <ammo>ammo_pistol</ammo>
     </item>
-    <item type="weapon" id="rifle_auto" price="90" weaponType="ASSAULT_RIFLE">
+    <item type="weapon" id="rifle_auto" price="90" class="assault_rifle">
         <name>auto rifle</name>
         <description>
             <line>
@@ -41,6 +39,5 @@
         <rate>2</rate>
         <range min="2" max="3"/>
         <clipSize>16</clipSize>
-        <ammo>ammo_rifle</ammo>
     </item>
 </data>

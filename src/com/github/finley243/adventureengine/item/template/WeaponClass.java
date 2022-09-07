@@ -3,6 +3,8 @@ package com.github.finley243.adventureengine.item.template;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
+import java.util.Set;
+
 public class WeaponClass {
 
     private final String ID;
@@ -11,6 +13,7 @@ public class WeaponClass {
     private final boolean isTwoHanded;
     private final Actor.Skill skill;
     private final AreaLink.DistanceCategory primaryRange;
+    private final Set<String> ammoTypes;
     private final String hitPhrase;
     private final String hitPhraseRepeat;
     private final String missPhrase;
@@ -20,13 +23,14 @@ public class WeaponClass {
     private final String limbMissPhrase;
     private final String limbMissPhraseRepeat;
 
-    public WeaponClass(String ID, String name, boolean isRanged, boolean isTwoHanded, Actor.Skill skill, AreaLink.DistanceCategory primaryRange, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, String limbHitPhrase, String limbHitPhraseRepeat, String limbMissPhrase, String limbMissPhraseRepeat) {
+    public WeaponClass(String ID, String name, boolean isRanged, boolean isTwoHanded, Actor.Skill skill, AreaLink.DistanceCategory primaryRange, Set<String> ammoTypes, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, String limbHitPhrase, String limbHitPhraseRepeat, String limbMissPhrase, String limbMissPhraseRepeat) {
         this.ID = ID;
         this.name = name;
         this.isRanged = isRanged;
         this.isTwoHanded = isTwoHanded;
         this.skill = skill;
         this.primaryRange = primaryRange;
+        this.ammoTypes = ammoTypes;
         this.hitPhrase = hitPhrase;
         this.hitPhraseRepeat = hitPhraseRepeat;
         this.missPhrase = missPhrase;
@@ -59,6 +63,10 @@ public class WeaponClass {
 
     public AreaLink.DistanceCategory getPrimaryRange() {
         return primaryRange;
+    }
+
+    public Set<String> getAmmoTypes() {
+        return ammoTypes;
     }
 
     public String getHitPhrase() {

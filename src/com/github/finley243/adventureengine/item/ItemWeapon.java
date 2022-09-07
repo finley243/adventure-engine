@@ -169,7 +169,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	public Set<String> getAmmoTypes() {
-		return stats.getAmmoTypes();
+		return getWeaponClass().getAmmoTypes();
 	}
 
 	public Actor.Skill getSkill() {
@@ -240,7 +240,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 			}
 		}
 		if (getClipSize() > 0) {
-			for (String current : stats.getAmmoTypes()) {
+			for (String current : getWeaponClass().getAmmoTypes()) {
 				//if (subject.inventory().hasItem(current)) {
 					actions.add(new ActionWeaponReload(this, (ItemAmmo) ItemFactory.create(game(), current)));
 				//}

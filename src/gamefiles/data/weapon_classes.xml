@@ -1,6 +1,7 @@
 <data>
     <weaponClass id="pistol" isRanged="true" isTwoHanded="false" skill="HANDGUNS" primaryRange="CLOSE">
         <name>pistol</name>
+        <ammo>ammo_pistol</ammo>
         <hitPhrase>rangedHit</hitPhrase>
         <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedMiss</missPhrase>
@@ -12,6 +13,7 @@
     </weaponClass>
     <weaponClass id="smg" isRanged="true" isTwoHanded="false" skill="HANDGUNS" primaryRange="CLOSE">
         <name>SMG</name>
+        <ammo>ammo_pistol</ammo>
         <hitPhrase>rangedHit</hitPhrase>
         <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedMiss</missPhrase>
@@ -23,6 +25,7 @@
     </weaponClass>
     <weaponClass id="shotgun" isRanged="true" isTwoHanded="true" skill="LONG_ARMS" primaryRange="FAR">
         <name>shotgun</name>
+        <ammo>ammo_rifle</ammo>
         <hitPhrase>rangedHit</hitPhrase>
         <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedMiss</missPhrase>
@@ -34,6 +37,7 @@
     </weaponClass>
     <weaponClass id="assault_rifle" isRanged="true" isTwoHanded="true" skill="LONG_ARMS" primaryRange="FAR">
         <name>assault rifle</name>
+        <ammo>ammo_rifle</ammo>
         <hitPhrase>rangedHit</hitPhrase>
         <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedMiss</missPhrase>
@@ -45,6 +49,7 @@
     </weaponClass>
     <weaponClass id="sniper_rifle" isRanged="true" isTwoHanded="true" skill="LONG_ARMS" primaryRange="DISTANT">
         <name>sniper rifle</name>
+        <ammo>ammo_rifle</ammo>
         <hitPhrase>rangedHit</hitPhrase>
         <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedMiss</missPhrase>

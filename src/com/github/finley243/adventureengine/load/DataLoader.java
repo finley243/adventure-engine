@@ -468,8 +468,7 @@ public class DataLoader {
                 float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
-                Set<String> weaponAmmoTypes = LoadUtils.setOfTags(itemElement, "ammo");
-                return new WeaponTemplate(id, name, description, scripts, price, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponAmmoTypes);
+                return new WeaponTemplate(id, name, description, scripts, price, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
             case "ammo":
                 List<Effect> ammoEffects = loadEffects(itemElement, true);
                 return new AmmoTemplate(id, name, description, scripts, price, ammoEffects);
@@ -789,6 +788,7 @@ public class DataLoader {
         boolean isTwoHanded = LoadUtils.attributeBool(weaponClassElement, "isTwoHanded", false);
         Actor.Skill skill = LoadUtils.attributeEnum(weaponClassElement, "skill", Actor.Skill.class, Actor.Skill.MELEE);
         AreaLink.DistanceCategory primaryRange = LoadUtils.attributeEnum(weaponClassElement, "primaryRange", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.NEAR);
+        Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
         String hitPhrase = LoadUtils.singleTag(weaponClassElement, "hitPhrase", null);
         String hitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "hitPhraseRepeat", null);
         String missPhrase = LoadUtils.singleTag(weaponClassElement, "missPhrase", null);
@@ -797,7 +797,7 @@ public class DataLoader {
         String limbHitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbHitPhraseRepeat", null);
         String limbMissPhrase = LoadUtils.singleTag(weaponClassElement, "limbMissPhrase", null);
         String limbMissPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbMissPhraseRepeat", null);
-        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRange, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, limbHitPhrase, limbHitPhraseRepeat, limbMissPhrase, limbMissPhraseRepeat);
+        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRange, ammoTypes, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, limbHitPhrase, limbHitPhraseRepeat, limbMissPhrase, limbMissPhraseRepeat);
     }
 
 }
