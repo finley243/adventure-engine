@@ -789,6 +789,10 @@ public class DataLoader {
         Actor.Skill skill = LoadUtils.attributeEnum(weaponClassElement, "skill", Actor.Skill.class, Actor.Skill.MELEE);
         AreaLink.DistanceCategory primaryRange = LoadUtils.attributeEnum(weaponClassElement, "primaryRange", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.NEAR);
         Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
+        Set<WeaponAttackType> attackTypes = new HashSet<>();
+        for (Element attackTypeElement : LoadUtils.directChildrenWithName(weaponClassElement, "attackType")) {
+            attackTypes.add(loadWeaponAttackType(attackTypeElement));
+        }
         String hitPhrase = LoadUtils.singleTag(weaponClassElement, "hitPhrase", null);
         String hitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "hitPhraseRepeat", null);
         String missPhrase = LoadUtils.singleTag(weaponClassElement, "missPhrase", null);
@@ -797,7 +801,23 @@ public class DataLoader {
         String limbHitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbHitPhraseRepeat", null);
         String limbMissPhrase = LoadUtils.singleTag(weaponClassElement, "limbMissPhrase", null);
         String limbMissPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbMissPhraseRepeat", null);
-        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRange, ammoTypes, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, limbHitPhrase, limbHitPhraseRepeat, limbMissPhrase, limbMissPhraseRepeat);
+        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRange, ammoTypes, attackTypes, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, limbHitPhrase, limbHitPhraseRepeat, limbMissPhrase, limbMissPhraseRepeat);
+    }
+
+    private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) {
+        WeaponAttackType.AttackCategory category = LoadUtils.attributeEnum(attackTypeElement, "category", WeaponAttackType.AttackCategory.class, WeaponAttackType.AttackCategory.SINGLE);
+        String prompt = LoadUtils.singleTag(attackTypeElement, "prompt", null);
+        String hitPhrase = LoadUtils.singleTag(attackTypeElement, "hitPhrase", null);
+        String hitPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "hitPhraseRepeat", null);
+        String missPhrase = LoadUtils.singleTag(attackTypeElement, "missPhrase", null);
+        String missPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "missPhraseRepeat", null);
+        int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
+        AreaLink.DistanceCategory rangeOverride = LoadUtils.attributeEnum(attackTypeElement, "range", AreaLink.DistanceCategory.class, null);
+        int rate = LoadUtils.attributeInt(attackTypeElement, "rate", 1);
+        float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
+        float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
+        boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
+        return new WeaponAttackType(category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
     }
 
 }

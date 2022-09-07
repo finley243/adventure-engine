@@ -14,6 +14,13 @@
     <weaponClass id="smg" isRanged="true" isTwoHanded="false" skill="HANDGUNS" primaryRange="CLOSE">
         <name>SMG</name>
         <ammo>ammo_pistol</ammo>
+        <attackType category="SINGLE" ammoConsumed="6" rate="1" damageMult="2.0" hitChanceMult="-0.5" canDodge="false">
+            <prompt>Autofire</prompt>
+            <hitPhrase>rangedAutoHit</hitPhrase>
+            <hitPhraseRepeat>rangedAutoHitRepeat</hitPhraseRepeat>
+            <missPhrase>rangedAutoMiss</missPhrase>
+            <missPhraseRepeat>rangedAutoMissRepeat</missPhraseRepeat>
+        </attackType>
         <hitPhrase>rangedHit</hitPhrase>
         <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedMiss</missPhrase>
@@ -38,6 +45,13 @@
     <weaponClass id="assault_rifle" isRanged="true" isTwoHanded="true" skill="LONG_ARMS" primaryRange="FAR">
         <name>assault rifle</name>
         <ammo>ammo_rifle</ammo>
+        <attackType category="SINGLE" ammoConsumed="6" rate="1" damageMult="2.0" hitChanceMult="-0.5" canDodge="false">
+            <prompt>Autofire</prompt>
+            <hitPhrase>rangedAutoHit</hitPhrase>
+            <hitPhraseRepeat>rangedAutoHitRepeat</hitPhraseRepeat>
+            <missPhrase>rangedAutoMiss</missPhrase>
+            <missPhraseRepeat>rangedAutoMissRepeat</missPhraseRepeat>
+        </attackType>
         <hitPhrase>rangedHit</hitPhrase>
         <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedMiss</missPhrase>

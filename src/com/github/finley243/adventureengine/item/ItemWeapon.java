@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.action.attack.ActionAttackAreaWeapon;
-import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackBasicWeapon;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimbWeapon;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -14,6 +13,7 @@ import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.item.template.WeaponAttackType;
 import com.github.finley243.adventureengine.item.template.WeaponClass;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -239,11 +239,12 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 				actions.add(new ActionAttackAreaWeapon(this, targetArea, "Spread Attack", "", "", "", ""));
 			}
 		}
+		for (WeaponAttackType secondaryAttack : getWeaponClass().getAttackTypes()) {
+			actions.addAll(secondaryAttack.generateActions(subject, this));
+		}
 		if (getClipSize() > 0) {
 			for (String current : getWeaponClass().getAmmoTypes()) {
-				//if (subject.inventory().hasItem(current)) {
-					actions.add(new ActionWeaponReload(this, (ItemAmmo) ItemFactory.create(game(), current)));
-				//}
+				actions.add(new ActionWeaponReload(this, (ItemAmmo) ItemFactory.create(game(), current)));
 			}
 		}
 		return actions;

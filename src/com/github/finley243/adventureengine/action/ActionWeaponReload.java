@@ -48,7 +48,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && (weapon.getAmmoFraction() < 1.0f || !ammoType.getTemplate().getID().equals(weapon.getLoadedAmmoType())) && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(ammoType.getTemplate().getID()));
+		return super.canChoose(subject) && (weapon.getAmmoFraction() < 1.0f || weapon.getLoadedAmmoType() == null || !weapon.getLoadedAmmoType().getTemplate().equals(ammoType.getTemplate())) && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(ammoType.getTemplate().getID()));
 	}
 
 	@Override

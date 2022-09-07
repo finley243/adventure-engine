@@ -113,7 +113,7 @@ public abstract class ItemTemplate implements Noun {
 		if(!(o instanceof ItemTemplate)) {
 			return false;
 		} else {
-			return o == this;
+			return this.ID.equals(((ItemTemplate) o).ID);
 		}
 	}
 
