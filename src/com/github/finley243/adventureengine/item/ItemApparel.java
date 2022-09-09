@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.item;
 
-import com.github.finley243.adventureengine.Damage;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionApparelEquip;

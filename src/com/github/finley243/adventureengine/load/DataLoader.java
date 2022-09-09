@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.Damage;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.*;
@@ -8,6 +8,8 @@ import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;
 import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
+import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.effect.*;
 import com.github.finley243.adventureengine.item.ItemFactory;
@@ -475,8 +477,16 @@ public class DataLoader {
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 return new WeaponTemplate(id, name, description, scripts, price, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
             case "ammo":
-                List<Effect> ammoEffects = loadEffects(itemElement, true);
-                return new AmmoTemplate(id, name, description, scripts, price, ammoEffects);
+                List<Effect> ammoWeaponEffects = loadEffects(itemElement, true);
+                boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
+                boolean ammoIsThrowable = LoadUtils.attributeBool(itemElement, "isThrowable", false);
+                boolean ammoIsAreaTargeted = LoadUtils.attributeBool(itemElement, "isAreaTargeted", false);
+                int ammoDamage = LoadUtils.attributeInt(itemElement, "damage", 0);
+                Damage.DamageType ammoDamageType = LoadUtils.attributeEnum(itemElement, "damageType", Damage.DamageType.class, Damage.DamageType.PHYSICAL);
+                float ammoArmorMult = LoadUtils.attributeFloat(itemElement, "armorMult", 1.0f);
+                List<Effect> ammoTargetEffects = loadEffects(itemElement, false);
+                // TODO - Load area effect (separate function)
+                return new AmmoTemplate(id, name, description, scripts, price, ammoWeaponEffects, ammoIsReusable, ammoIsThrowable, ammoIsAreaTargeted, ammoDamage, ammoDamageType, ammoArmorMult, ammoTargetEffects, null);
             case "misc":
             default:
                 return new MiscTemplate(id, name, description, scripts, price);
@@ -813,6 +823,7 @@ public class DataLoader {
 
     private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) {
         String ID = LoadUtils.attribute(attackTypeElement, "id", null);
+        boolean useAmmoDamage = LoadUtils.attributeBool(attackTypeElement, "useAmmoDamage", false);
         WeaponAttackType.AttackCategory category = LoadUtils.attributeEnum(attackTypeElement, "category", WeaponAttackType.AttackCategory.class, WeaponAttackType.AttackCategory.SINGLE);
         String prompt = LoadUtils.singleTag(attackTypeElement, "prompt", null);
         String hitPhrase = LoadUtils.singleTag(attackTypeElement, "hitPhrase", null);
@@ -827,7 +838,7 @@ public class DataLoader {
         float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
-        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, skillOverride, useNonIdealRange, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
+        return new WeaponAttackType(ID, useAmmoDamage, category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, skillOverride, useNonIdealRange, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
     }
 
 }

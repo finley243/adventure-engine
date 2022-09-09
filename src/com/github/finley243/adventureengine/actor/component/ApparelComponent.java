@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.actor.component;
 
-import com.github.finley243.adventureengine.Damage;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.ItemApparel;
 import com.github.finley243.adventureengine.item.template.ApparelTemplate;

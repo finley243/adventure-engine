@@ -1,10 +1,11 @@
 package com.github.finley243.adventureengine.action.attack;
 
-import com.github.finley243.adventureengine.Damage;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandomEach;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -13,6 +14,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,10 +35,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final int damage;
     private final Damage.DamageType damageType;
     private final float armorMult;
+    private final List<Effect> targetEffects;
     private final float hitChanceMult;
     private final boolean canDodge;
 
-    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, float hitChanceMult, boolean canDodge) {
+    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<Effect> targetEffects, float hitChanceMult, boolean canDodge) {
         super(ActionDetectionChance.HIGH, targets);
         this.weaponNoun = weaponNoun;
         this.targets = targets;
@@ -53,6 +56,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.damage = damage;
         this.damageType = damageType;
         this.armorMult = armorMult;
+        this.targetEffects = targetEffects;
         this.hitChanceMult = hitChanceMult;
         this.canDodge = canDodge;
     }
@@ -122,7 +126,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         int damage = damage();
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), attackContext, this, null, subject, null));
-        Damage damageData = new Damage(damageType, damage, getLimb(), armorMult);
+        Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
         target.damage(damageData);
         subject.triggerEffect("on_attack_success");
     }

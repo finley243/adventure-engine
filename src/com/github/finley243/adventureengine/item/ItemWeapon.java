@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.item;
 
-import com.github.finley243.adventureengine.Damage;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
@@ -13,7 +13,7 @@ import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.item.template.WeaponClass;
+import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -109,6 +109,11 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 
 	public float getArmorMult() {
 		return armorMult.value(stats.getArmorMult(), 0.0f, 2.0f);
+	}
+
+	// TODO - Add target effects to weapons
+	public List<Effect> getTargetEffects() {
+		return new ArrayList<>();
 	}
 
 	public int getClipSize() {

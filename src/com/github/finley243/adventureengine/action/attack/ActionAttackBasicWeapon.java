@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.world.AttackTarget;
 public class ActionAttackBasicWeapon extends ActionAttackBasic {
 
     public ActionAttackBasicWeapon(ItemWeapon weapon, AttackTarget target, String prompt) {
-        super(weapon, target, prompt, weapon.getHitPhrase(), weapon.getHitRepeatPhrase(), weapon.getMissPhrase(), weapon.getMissRepeatPhrase(), weapon.getSkill(), 1, weapon.getRanges(), weapon.getRate(), weapon.getDamage(), weapon.getDamageType(), weapon.getArmorMult(), 0.0f, !weapon.isRanged());
+        super(weapon, target, prompt, weapon.getHitPhrase(), weapon.getHitRepeatPhrase(), weapon.getMissPhrase(), weapon.getMissRepeatPhrase(), weapon.getSkill(), 1, weapon.getRanges(), weapon.getRate(), weapon.getDamage(), weapon.getDamageType(), weapon.getArmorMult(), weapon.getTargetEffects(), 0.0f, !weapon.isRanged());
     }
 
 }

@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.actor.ai.InvestigateTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -884,10 +885,10 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 				heal(amount);
 				break;
 			case "damage":
-				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 1.0f));
+				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 1.0f, new ArrayList<>()));
 				break;
 			case "damageIgnoreArmor":
-				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 0.0f));
+				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 0.0f, new ArrayList<>()));
 				break;
 		}
 	}

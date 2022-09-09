@@ -1,6 +1,8 @@
-package com.github.finley243.adventureengine.actor;
+package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.MathUtils;
+import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.AttackTarget;
 

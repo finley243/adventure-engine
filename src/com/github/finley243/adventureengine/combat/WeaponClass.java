@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.item.template;
+package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
