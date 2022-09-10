@@ -479,14 +479,7 @@ public class DataLoader {
             case "ammo":
                 List<Effect> ammoWeaponEffects = loadEffects(itemElement, true);
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
-                boolean ammoIsThrowable = LoadUtils.attributeBool(itemElement, "isThrowable", false);
-                boolean ammoIsAreaTargeted = LoadUtils.attributeBool(itemElement, "isAreaTargeted", false);
-                int ammoDamage = LoadUtils.attributeInt(itemElement, "damage", 0);
-                Damage.DamageType ammoDamageType = LoadUtils.attributeEnum(itemElement, "damageType", Damage.DamageType.class, Damage.DamageType.PHYSICAL);
-                float ammoArmorMult = LoadUtils.attributeFloat(itemElement, "armorMult", 1.0f);
-                List<Effect> ammoTargetEffects = loadEffects(itemElement, false);
-                // TODO - Load area effect (separate function)
-                return new AmmoTemplate(id, name, description, scripts, price, ammoWeaponEffects, ammoIsReusable, ammoIsThrowable, ammoIsAreaTargeted, ammoDamage, ammoDamageType, ammoArmorMult, ammoTargetEffects, null);
+                return new AmmoTemplate(id, name, description, scripts, price, ammoWeaponEffects, ammoIsReusable);
             case "misc":
             default:
                 return new MiscTemplate(id, name, description, scripts, price);
@@ -810,35 +803,36 @@ public class DataLoader {
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(weaponClassElement, "range", AreaLink.DistanceCategory.class);
         Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
         Set<String> attackTypes = LoadUtils.setOfTags(weaponClassElement, "attackType");
-        String hitPhrase = LoadUtils.singleTag(weaponClassElement, "hitPhrase", null);
-        String hitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "hitPhraseRepeat", null);
-        String missPhrase = LoadUtils.singleTag(weaponClassElement, "missPhrase", null);
-        String missPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "missPhraseRepeat", null);
-        String limbHitPhrase = LoadUtils.singleTag(weaponClassElement, "limbHitPhrase", null);
-        String limbHitPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbHitPhraseRepeat", null);
-        String limbMissPhrase = LoadUtils.singleTag(weaponClassElement, "limbMissPhrase", null);
-        String limbMissPhraseRepeat = LoadUtils.singleTag(weaponClassElement, "limbMissPhraseRepeat", null);
-        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRanges, ammoTypes, attackTypes, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, limbHitPhrase, limbHitPhraseRepeat, limbMissPhrase, limbMissPhraseRepeat);
+        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRanges, ammoTypes, attackTypes);
     }
 
     private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) {
         String ID = LoadUtils.attribute(attackTypeElement, "id", null);
-        boolean useAmmoDamage = LoadUtils.attributeBool(attackTypeElement, "useAmmoDamage", false);
         WeaponAttackType.AttackCategory category = LoadUtils.attributeEnum(attackTypeElement, "category", WeaponAttackType.AttackCategory.class, WeaponAttackType.AttackCategory.SINGLE);
         String prompt = LoadUtils.singleTag(attackTypeElement, "prompt", null);
         String hitPhrase = LoadUtils.singleTag(attackTypeElement, "hitPhrase", null);
         String hitPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "hitPhraseRepeat", null);
+        String hitOverallPhrase = LoadUtils.singleTag(attackTypeElement, "hitOverallPhrase", null);
+        String hitOverallPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "hitOverallPhraseRepeat", null);
         String missPhrase = LoadUtils.singleTag(attackTypeElement, "missPhrase", null);
         String missPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "missPhraseRepeat", null);
+        String missOverallPhrase = LoadUtils.singleTag(attackTypeElement, "missOverallPhrase", null);
+        String missOverallPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "missOverallPhraseRepeat", null);
         int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
         Actor.Skill skillOverride = LoadUtils.attributeEnum(attackTypeElement, "skill", Actor.Skill.class, null);
+        Float baseHitChanceMin = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMin", null);
+        Float baseHitChanceMax = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMax", null);
         boolean useNonIdealRange = LoadUtils.attributeBool(attackTypeElement, "nonIdealRange", false);
         Set<AreaLink.DistanceCategory> rangeOverride = LoadUtils.setOfEnumTags(attackTypeElement, "range", AreaLink.DistanceCategory.class);
-        int rate = LoadUtils.attributeInt(attackTypeElement, "rate", 1);
+        Integer rateOverride = LoadUtils.attributeInt(attackTypeElement, "rate", null);
+        Integer damageOverride = LoadUtils.attributeInt(attackTypeElement, "damage", null);
         float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
+        Damage.DamageType damageTypeOverride = LoadUtils.attributeEnum(attackTypeElement, "damageType", Damage.DamageType.class, null);
+        Float armorMultOverride = LoadUtils.attributeFloat(attackTypeElement, "armorMult", null);
+        List<Effect> targetEffects = loadEffects(attackTypeElement, false);
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
-        return new WeaponAttackType(ID, useAmmoDamage, category, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, ammoConsumed, skillOverride, useNonIdealRange, rangeOverride, rate, damageMult, hitChanceMult, canDodge);
+        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, ammoConsumed, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, hitChanceMult, canDodge);
     }
 
 }

@@ -1,4 +1,46 @@
 <data>
+    <attackType id="basic_ranged" category="SINGLE" ammoConsumed="1" canDodge="false">
+        <prompt>Attack</prompt>
+        <hitPhrase>rangedHit</hitPhrase>
+        <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
+        <missPhrase>rangedMiss</missPhrase>
+        <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
+    </attackType>
+    <attackType id="basic_melee" category="SINGLE" ammoConsumed="1" canDodge="true">
+        <prompt>Attack</prompt>
+        <hitPhrase>meleeHit</hitPhrase>
+        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
+        <missPhrase>meleeMiss</missPhrase>
+        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
+    </attackType>
+    <attackType id="targeted_ranged" category="TARGETED" ammoConsumed="1" canDodge="false">
+        <prompt>Targeted Attack</prompt>
+        <hitPhrase>rangedHitLimb</hitPhrase>
+        <hitPhraseRepeat>rangedHitLimbRepeat</hitPhraseRepeat>
+        <missPhrase>rangedMissLimb</missPhrase>
+        <missPhraseRepeat>rangedMissLimbRepeat</missPhraseRepeat>
+    </attackType>
+    <attackType id="targeted_melee" category="TARGETED" ammoConsumed="1" canDodge="true">
+        <prompt>Targeted Attack</prompt>
+        <hitPhrase>meleeHitLimb</hitPhrase>
+        <hitPhraseRepeat>meleeHitLimbRepeat</hitPhraseRepeat>
+        <missPhrase>meleeMissLimb</missPhrase>
+        <missPhraseRepeat>meleeMissLimbRepeat</missPhraseRepeat>
+    </attackType>
+    <attackType id="spread_ranged" category="SPREAD" ammoConsumed="1" canDodge="false">
+        <prompt>Spread Attack</prompt>
+        <hitPhrase>rangedHit</hitPhrase>
+        <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
+        <missPhrase>rangedMiss</missPhrase>
+        <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
+    </attackType>
+    <attackType id="spread_melee" category="SPREAD" ammoConsumed="1" canDodge="true">
+        <prompt>Spread Attack</prompt>
+        <hitPhrase>meleeHit</hitPhrase>
+        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
+        <missPhrase>meleeMiss</missPhrase>
+        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
+    </attackType>
     <attackType id="autofire" category="SINGLE" ammoConsumed="3" rate="1" damageMult="2.0" hitChanceMult="-0.4" canDodge="false">
         <prompt>Autofire</prompt>
         <hitPhrase>rangedAutoHit</hitPhrase>

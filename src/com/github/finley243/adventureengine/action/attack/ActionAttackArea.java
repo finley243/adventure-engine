@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.CombatHelper;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuData;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -16,23 +17,22 @@ import java.util.Set;
 
 public class ActionAttackArea extends ActionAttack {
 
+    // TODO - Find way to add area to attack phrase context
     private final Area area;
     private final ItemWeapon weapon;
 
-    public ActionAttackArea(ItemWeapon weapon, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String missPhrase, String missPhraseRepeat, Actor.Skill skill, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<Effect> targetEffects, float hitChanceMult, boolean canDodge) {
-        super(weapon, area.getAttackTargets(), null, prompt, hitPhrase, hitPhraseRepeat, missPhrase, missPhraseRepeat, skill, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceMult, canDodge);
+    public ActionAttackArea(ItemWeapon weapon, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill skill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<Effect> targetEffects, float hitChanceMult, boolean canDodge) {
+        super(weapon, area.getAttackTargets(), null, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, baseHitChanceMin, baseHitChanceMax, hitChanceBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceMult, canDodge);
         this.area = area;
         this.weapon = weapon;
     }
 
     @Override
-    public float chance(Actor subject, AttackTarget target) {
-        return CombatHelper.calculateHitChance(subject, target, getLimb(), getSkill(), weapon.getBaseHitChanceMin(), weapon.getBaseHitChanceMax(), weapon.getAccuracyBonus(), canDodge(), hitChanceMult());
-    }
-
-    @Override
     public void consumeAmmo() {
-        if(weapon.getClipSize() > 0) {
+        if (weapon != null && weapon.getClipSize() > 0) {
+            if (weapon.getLoadedAmmoType().isReusable()) {
+                Item.itemToObject(weapon.game(), weapon.getLoadedAmmoType(), getAmmoConsumed(), area);
+            }
             weapon.consumeAmmo(getAmmoConsumed());
         }
     }
@@ -40,7 +40,7 @@ public class ActionAttackArea extends ActionAttack {
     @Override
     public boolean canChoose(Actor subject) {
         return super.canChoose(subject)
-                && (weapon.getClipSize() == 0 || weapon.getAmmoRemaining() >= getAmmoConsumed())
+                && (weapon == null || weapon.getClipSize() == 0 || weapon.getAmmoRemaining() >= getAmmoConsumed())
                 && getRanges().contains(subject.getArea().getDistanceTo(area.getID())) && subject.getArea().isVisible(subject, area.getID());
     }
 

@@ -3,115 +3,61 @@
         <name>pistol</name>
         <range>CLOSE</range>
         <ammo>ammo_pistol</ammo>
-        <hitPhrase>rangedHit</hitPhrase>
-        <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
-        <missPhrase>rangedMiss</missPhrase>
-        <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
-        <limbHitPhrase>rangedHitLimb</limbHitPhrase>
-        <limbHitPhraseRepeat>rangedHitLimbRepeat</limbHitPhraseRepeat>
-        <limbMissPhrase>rangedMissLimb</limbMissPhrase>
-        <limbMissPhraseRepeat>rangedMissLimbRepeat</limbMissPhraseRepeat>
+        <attackType>basic_ranged</attackType>
+        <attackType>targeted_ranged</attackType>
     </weaponClass>
     <weaponClass id="smg" isRanged="true" isTwoHanded="false" skill="HANDGUNS">
         <name>SMG</name>
         <range>CLOSE</range>
         <ammo>ammo_pistol</ammo>
+        <attackType>basic_ranged</attackType>
+        <attackType>targeted_ranged</attackType>
         <attackType>autofire</attackType>
-        <hitPhrase>rangedHit</hitPhrase>
-        <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
-        <missPhrase>rangedMiss</missPhrase>
-        <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
-        <limbHitPhrase>rangedHitLimb</limbHitPhrase>
-        <limbHitPhraseRepeat>rangedHitLimbRepeat</limbHitPhraseRepeat>
-        <limbMissPhrase>rangedMissLimb</limbMissPhrase>
-        <limbMissPhraseRepeat>rangedMissLimbRepeat</limbMissPhraseRepeat>
     </weaponClass>
     <weaponClass id="shotgun" isRanged="true" isTwoHanded="true" skill="LONG_ARMS">
         <name>shotgun</name>
         <range>FAR</range>
         <ammo>ammo_rifle</ammo>
-        <hitPhrase>rangedHit</hitPhrase>
-        <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
-        <missPhrase>rangedMiss</missPhrase>
-        <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
-        <limbHitPhrase>rangedHitLimb</limbHitPhrase>
-        <limbHitPhraseRepeat>rangedHitLimbRepeat</limbHitPhraseRepeat>
-        <limbMissPhrase>rangedMissLimb</limbMissPhrase>
-        <limbMissPhraseRepeat>rangedMissLimbRepeat</limbMissPhraseRepeat>
+        <attackType>basic_ranged</attackType>
+        <attackType>targeted_ranged</attackType>
     </weaponClass>
     <weaponClass id="assault_rifle" isRanged="true" isTwoHanded="true" skill="LONG_ARMS">
         <name>assault rifle</name>
         <range>FAR</range>
         <ammo>ammo_rifle</ammo>
+        <attackType>basic_ranged</attackType>
+        <attackType>targeted_ranged</attackType>
         <attackType>autofire</attackType>
-        <hitPhrase>rangedHit</hitPhrase>
-        <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
-        <missPhrase>rangedMiss</missPhrase>
-        <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
-        <limbHitPhrase>rangedHitLimb</limbHitPhrase>
-        <limbHitPhraseRepeat>rangedHitLimbRepeat</limbHitPhraseRepeat>
-        <limbMissPhrase>rangedMissLimb</limbMissPhrase>
-        <limbMissPhraseRepeat>rangedMissLimbRepeat</limbMissPhraseRepeat>
     </weaponClass>
     <weaponClass id="sniper_rifle" isRanged="true" isTwoHanded="true" skill="LONG_ARMS">
         <name>sniper rifle</name>
         <range>DISTANT</range>
         <ammo>ammo_rifle</ammo>
-        <hitPhrase>rangedHit</hitPhrase>
-        <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
-        <missPhrase>rangedMiss</missPhrase>
-        <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
-        <limbHitPhrase>rangedHitLimb</limbHitPhrase>
-        <limbHitPhraseRepeat>rangedHitLimbRepeat</limbHitPhraseRepeat>
-        <limbMissPhrase>rangedMissLimb</limbMissPhrase>
-        <limbMissPhraseRepeat>rangedMissLimbRepeat</limbMissPhraseRepeat>
+        <attackType>basic_ranged</attackType>
+        <attackType>targeted_ranged</attackType>
     </weaponClass>
     <weaponClass id="knife" isRanged="false" isTwoHanded="false" skill="MELEE">
         <name>knife</name>
         <range>NEAR</range>
-        <hitPhrase>meleeHit</hitPhrase>
-        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
-        <missPhrase>meleeMiss</missPhrase>
-        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
-        <limbHitPhrase>meleeHitLimb</limbHitPhrase>
-        <limbHitPhraseRepeat>meleeHitLimbRepeat</limbHitPhraseRepeat>
-        <limbMissPhrase>meleeMissLimb</limbMissPhrase>
-        <limbMissPhraseRepeat>meleeMissLimbRepeat</limbMissPhraseRepeat>
+        <attackType>basic_melee</attackType>
+        <attackType>targeted_melee</attackType>
     </weaponClass>
     <weaponClass id="sword" isRanged="false" isTwoHanded="true" skill="MELEE">
         <name>sword</name>
         <range>NEAR</range>
-        <hitPhrase>meleeHit</hitPhrase>
-        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
-        <missPhrase>meleeMiss</missPhrase>
-        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
-        <limbHitPhrase>meleeHitLimb</limbHitPhrase>
-        <limbHitPhraseRepeat>meleeHitLimbRepeat</limbHitPhraseRepeat>
-        <limbMissPhrase>meleeMissLimb</limbMissPhrase>
-        <limbMissPhraseRepeat>meleeMissLimbRepeat</limbMissPhraseRepeat>
+        <attackType>basic_melee</attackType>
+        <attackType>targeted_melee</attackType>
     </weaponClass>
     <weaponClass id="club" isRanged="false" isTwoHanded="true" skill="MELEE">
         <name>club</name>
         <range>NEAR</range>
-        <hitPhrase>meleeHit</hitPhrase>
-        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
-        <missPhrase>meleeMiss</missPhrase>
-        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
-        <limbHitPhrase>meleeHitLimb</limbHitPhrase>
-        <limbHitPhraseRepeat>meleeHitLimbRepeat</limbHitPhraseRepeat>
-        <limbMissPhrase>meleeMissLimb</limbMissPhrase>
-        <limbMissPhraseRepeat>meleeMissLimbRepeat</limbMissPhraseRepeat>
+        <attackType>basic_melee</attackType>
+        <attackType>targeted_melee</attackType>
     </weaponClass>
     <weaponClass id="axe" isRanged="false" isTwoHanded="true" skill="MELEE">
         <name>axe</name>
         <range>NEAR</range>
-        <hitPhrase>meleeHit</hitPhrase>
-        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
-        <missPhrase>meleeMiss</missPhrase>
-        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
-        <limbHitPhrase>meleeHitLimb</limbHitPhrase>
-        <limbHitPhraseRepeat>meleeHitLimbRepeat</limbHitPhraseRepeat>
-        <limbMissPhrase>meleeMissLimb</limbMissPhrase>
-        <limbMissPhraseRepeat>meleeMissLimbRepeat</limbMissPhraseRepeat>
+        <attackType>basic_melee</attackType>
+        <attackType>targeted_melee</attackType>
     </weaponClass>
 </data>

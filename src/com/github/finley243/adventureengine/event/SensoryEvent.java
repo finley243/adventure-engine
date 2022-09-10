@@ -48,11 +48,12 @@ public class SensoryEvent {
 	}
 	
 	public String getTextVisible() {
+		if (lineVisible == null) return null;
 		return TextGen.generate(lineVisible, context);
 	}
 
 	public String getTextAudible() {
-		if(lineAudible == null) return null;
+		if (lineAudible == null) return null;
 		return TextGen.generate(lineAudible, context);
 	}
 

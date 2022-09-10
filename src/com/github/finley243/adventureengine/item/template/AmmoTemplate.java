@@ -15,25 +15,11 @@ public class AmmoTemplate extends ItemTemplate {
 
     private final List<Effect> weaponEffects;
     private final boolean isReusable;
-    private final boolean isThrowable;
-    private final boolean isAreaTargeted;
-    private final int damage;
-    private final Damage.DamageType damageType;
-    private final float armorMult;
-    private final List<Effect> targetEffects;
-    private final AreaEffect areaEffect;
 
-    public AmmoTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, List<Effect> weaponEffects, boolean isReusable, boolean isThrowable, boolean isAreaTargeted, int damage, Damage.DamageType damageType, float armorMult, List<Effect> targetEffects, AreaEffect areaEffect) {
+    public AmmoTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, List<Effect> weaponEffects, boolean isReusable) {
         super(ID, name, description, scripts, price);
         this.weaponEffects = weaponEffects;
         this.isReusable = isReusable;
-        this.isThrowable = isThrowable;
-        this.isAreaTargeted = isAreaTargeted;
-        this.damage = damage;
-        this.damageType = damageType;
-        this.armorMult = armorMult;
-        this.targetEffects = targetEffects;
-        this.areaEffect = areaEffect;
     }
 
     @Override
@@ -47,34 +33,6 @@ public class AmmoTemplate extends ItemTemplate {
 
     public boolean isReusable() {
         return isReusable;
-    }
-
-    public boolean isThrowable() {
-        return isThrowable;
-    }
-
-    public boolean isAreaTargeted() {
-        return isAreaTargeted;
-    }
-
-    public int getDamage() {
-        return damage;
-    }
-
-    public Damage.DamageType getDamageType() {
-        return damageType;
-    }
-
-    public float getArmorMult() {
-        return armorMult;
-    }
-
-    public List<Effect> getTargetEffects() {
-        return targetEffects;
-    }
-
-    public AreaEffect getAreaEffect() {
-        return areaEffect;
     }
 
     @Override

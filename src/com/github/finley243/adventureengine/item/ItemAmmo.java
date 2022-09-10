@@ -29,26 +29,6 @@ public class ItemAmmo extends Item {
         return stats.isReusable();
     }
 
-    public int getDamage() {
-        return stats.getDamage();
-    }
-
-    public Damage.DamageType getDamageType() {
-        return stats.getDamageType();
-    }
-
-    public float getArmorMult() {
-        return stats.getArmorMult();
-    }
-
-    public List<Effect> getTargetEffects() {
-        return stats.getTargetEffects();
-    }
-
-    public AreaEffect getAreaEffect() {
-        return stats.getAreaEffect();
-    }
-
     public void onLoad(ItemWeapon weapon) {
         for (Effect effect : stats.getWeaponEffects()) {
             weapon.addEffect(effect);
@@ -59,20 +39,6 @@ public class ItemAmmo extends Item {
         for (Effect effect : stats.getWeaponEffects()) {
             weapon.removeEffect(effect);
         }
-    }
-
-    @Override
-    public List<Action> inventoryActions(Actor subject) {
-        List<Action> actions = super.inventoryActions(subject);
-        if (stats.isThrowable()) {
-            // TODO - Add throwing actions
-            if (stats.isAreaTargeted()) {
-
-            } else {
-
-            }
-        }
-        return actions;
     }
 
 }

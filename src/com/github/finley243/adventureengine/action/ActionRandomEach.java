@@ -20,6 +20,7 @@ public abstract class ActionRandomEach<T> extends Action {
         boolean continueAfterStart = onStart(subject, repeatActionCount);
         if(continueAfterStart) {
             if (MathUtils.randomCheck(chanceOverall(subject))) {
+                onSuccessOverall(subject, repeatActionCount);
                 for (T target : collection) {
                     if (MathUtils.randomCheck(chance(subject, target))) {
                         onSuccess(subject, target, repeatActionCount);
@@ -63,6 +64,8 @@ public abstract class ActionRandomEach<T> extends Action {
     public abstract void onSuccess(Actor subject, T target, int repeatActionCount);
 
     public abstract void onFail(Actor subject, T target, int repeatActionCount);
+
+    public abstract void onSuccessOverall(Actor subject, int repeatActionCount);
 
     public abstract void onFailOverall(Actor subject, int repeatActionCount);
 

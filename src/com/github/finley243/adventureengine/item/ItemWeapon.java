@@ -1,23 +1,17 @@
 package com.github.finley243.adventureengine.item;
 
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
-import com.github.finley243.adventureengine.action.attack.ActionAttackAreaWeapon;
-import com.github.finley243.adventureengine.action.attack.ActionAttackBasicWeapon;
-import com.github.finley243.adventureengine.action.attack.ActionAttackLimbWeapon;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.combat.Damage;
+import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.world.AttackTarget;
-import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.*;
@@ -40,7 +34,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	private final ModdableStatFloat armorMult;
 	private final ModdableStatString damageType;
 	private final ModdableStatBoolean isSilenced;
-	private final ModdableStatBoolean isPrimarySpread;
 	private ItemAmmo ammoType;
 	private int ammoCount;
 
@@ -59,7 +52,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		this.armorMult = new ModdableStatFloat(this);
 		this.damageType = new ModdableStatString(this);
 		this.isSilenced = new ModdableStatBoolean(this, false);
-		this.isPrimarySpread = new ModdableStatBoolean(this, true);
 		this.ammoType = null;
 		this.ammoCount = 0;
 		this.effects = new HashMap<>();
@@ -181,38 +173,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 		return getWeaponClass().getSkill();
 	}
 
-	public String getHitPhrase() {
-		return getWeaponClass().getHitPhrase();
-	}
-
-	public String getHitRepeatPhrase() {
-		return getWeaponClass().getHitPhraseRepeat();
-	}
-
-	public String getMissPhrase() {
-		return getWeaponClass().getMissPhrase();
-	}
-
-	public String getMissRepeatPhrase() {
-		return getWeaponClass().getMissPhraseRepeat();
-	}
-
-	public String getLimbHitPhrase() {
-		return getWeaponClass().getLimbHitPhrase();
-	}
-
-	public String getLimbHitRepeatPhrase() {
-		return getWeaponClass().getLimbHitPhraseRepeat();
-	}
-
-	public String getLimbMissPhrase() {
-		return getWeaponClass().getLimbMissPhrase();
-	}
-
-	public String getLimbMissRepeatPhrase() {
-		return getWeaponClass().getLimbMissPhraseRepeat();
-	}
-
 	public Set<String> getAttackTypes() {
 		return attackTypes.value(getWeaponClass().getAttackTypes());
 	}
@@ -220,26 +180,8 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
-		if (isPrimarySpread.value(false)) {
-			for (Area targetArea : subject.getArea().getVisibleAreas(subject)) {
-				actions.add(new ActionAttackAreaWeapon(this, targetArea, "Attack"));
-			}
-		} else {
-			for (AttackTarget target : subject.getVisibleAttackTargets()) {
-				if (target instanceof Actor){
-					if (!target.equals(subject) && !((Actor) target).isDead()) {
-						actions.add(new ActionAttackBasicWeapon(this, target, "Attack"));
-						for (Limb limb : ((Actor) target).getLimbs()) {
-							actions.add(new ActionAttackLimbWeapon(this, target, limb, "Targeted Attack"));
-						}
-					}
-				} else {
-					actions.add(new ActionAttackBasicWeapon(this, target, "Attack"));
-				}
-			}
-		}
-		for (String secondaryAttack : getAttackTypes()) {
-			actions.addAll(game().data().getAttackType(secondaryAttack).generateActions(subject, this));
+		for (String attackType : getAttackTypes()) {
+			actions.addAll(game().data().getAttackType(attackType).generateActions(subject, this));
 		}
 		if (getClipSize() > 0) {
 			for (String current : getWeaponClass().getAmmoTypes()) {
@@ -279,8 +221,6 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public ModdableStatBoolean getStatBoolean(String name) {
 		if ("isSilenced".equals(name)) {
 			return isSilenced;
-		} else if ("isPrimarySpread".equals(name)) {
-			return isPrimarySpread;
 		}
 		return null;
 	}

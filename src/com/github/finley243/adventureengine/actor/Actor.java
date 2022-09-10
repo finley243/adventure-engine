@@ -492,9 +492,15 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 		if(isActive() && isEnabled()) {
 			if (isPlayer()) {
 				if (visible) {
-					game().eventBus().post(new RenderTextEvent(event.getTextVisible()));
+					String text = event.getTextVisible();
+					if (text != null) {
+						game().eventBus().post(new RenderTextEvent(text));
+					}
 				} else if(event.getTextAudible() != null) {
-					game().eventBus().post(new RenderTextEvent(event.getTextAudible()));
+					String text = event.getTextAudible();
+					if (text != null) {
+						game().eventBus().post(new RenderTextEvent(text));
+					}
 				}
 			} else {
 				if (visible) {
