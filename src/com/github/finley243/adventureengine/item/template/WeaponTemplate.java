@@ -22,8 +22,8 @@ public class WeaponTemplate extends ItemTemplate {
 	private final boolean silenced;
 	private final Damage.DamageType damageType;
 
-	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String weaponClass, int damage, int rate, int critDamage, int clipSize, float accuracyBonus, float armorMult, boolean silenced, Damage.DamageType damageType) {
-		super(ID, name, description, scripts, price);
+	public WeaponTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, String weaponClass, int damage, int rate, int critDamage, int clipSize, float accuracyBonus, float armorMult, boolean silenced, Damage.DamageType damageType) {
+		super(ID, name, description, scripts, price, attackType);
 		if(weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null: " + ID);
 		this.weaponClass = weaponClass;
 		this.damage = damage;

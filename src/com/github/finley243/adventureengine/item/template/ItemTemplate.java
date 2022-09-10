@@ -20,14 +20,16 @@ public abstract class ItemTemplate implements Noun {
 	private final String name;
 	private final Scene description;
 	private final int price;
+	private final String attackType;
 	private final Map<String, Script> scripts;
-	
-	public ItemTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price) {
+
+	public ItemTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType) {
 		this.ID = ID;
 		this.name = name;
 		this.description = description;
 		this.scripts = scripts;
 		this.price = price;
+		this.attackType = attackType;
 		this.generatedCount = 1;
 	}
 
@@ -86,6 +88,10 @@ public abstract class ItemTemplate implements Noun {
 	
 	public int getPrice() {
 		return price;
+	}
+
+	public String getAttackType() {
+		return attackType;
 	}
 
 	public abstract Set<String> getTags();

@@ -18,8 +18,8 @@ public class ApparelTemplate extends ItemTemplate {
 	private final Map<Damage.DamageType, Integer> damageResistance;
 	private final List<Effect> effects;
 	
-	public ApparelTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, ApparelComponent.ApparelSlot slot, Map<Damage.DamageType, Integer> damageResistance, List<Effect> effects) {
-		super(ID, name, description, scripts, price);
+	public ApparelTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, ApparelComponent.ApparelSlot slot, Map<Damage.DamageType, Integer> damageResistance, List<Effect> effects) {
+		super(ID, name, description, scripts, price, attackType);
 		this.slot = slot;
 		this.damageResistance = damageResistance;
 		this.effects = effects;

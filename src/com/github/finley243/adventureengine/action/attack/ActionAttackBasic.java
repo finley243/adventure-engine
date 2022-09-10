@@ -1,8 +1,7 @@
 package com.github.finley243.adventureengine.action.attack;
 
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.combat.CombatHelper;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
@@ -18,28 +17,34 @@ import java.util.Set;
 public class ActionAttackBasic extends ActionAttack {
 
 	private final AttackTarget target;
-	private final ItemWeapon weapon;
+	private final Item weapon;
 
-	public ActionAttackBasic(ItemWeapon weapon, AttackTarget target, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill skill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<Effect> targetEffects, float hitChanceMult, boolean canDodge) {
+	public ActionAttackBasic(Item weapon, AttackTarget target, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill skill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<Effect> targetEffects, float hitChanceMult, boolean canDodge) {
 		super(weapon, Set.of(target), null, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, baseHitChanceMin, baseHitChanceMax, hitChanceBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceMult, canDodge);
 		this.target = target;
 		this.weapon = weapon;
 	}
 
 	@Override
-	public void consumeAmmo() {
-		if (weapon != null && weapon.getClipSize() > 0) {
-			if (weapon.getLoadedAmmoType().isReusable()) {
-				Item.itemToObject(weapon.game(), weapon.getLoadedAmmoType(), getAmmoConsumed(), target.getArea());
+	public void consumeAmmo(Actor subject) {
+		if (weapon instanceof ItemWeapon) {
+			if (((ItemWeapon) weapon).getClipSize() > 0) {
+				if (((ItemWeapon) weapon).getLoadedAmmoType().isReusable() && ((ItemWeapon) weapon).getLoadedAmmoType() != null) {
+					Item.itemToObject(weapon.game(), ((ItemWeapon) weapon).getLoadedAmmoType(), getAmmoConsumed(), target.getArea());
+				}
+				((ItemWeapon) weapon).consumeAmmo(getAmmoConsumed());
 			}
-			weapon.consumeAmmo(getAmmoConsumed());
+		} else {
+			subject.inventory().removeItems(weapon, getAmmoConsumed());
+			// TODO - Make this optional (e.g. do not place a grenade object after using a grenade)
+			Item.itemToObject(weapon.game(), weapon, getAmmoConsumed(), target.getArea());
 		}
 	}
 
 	@Override
 	public boolean canChoose(Actor subject) {
 		return super.canChoose(subject)
-				&& (weapon == null || weapon.getClipSize() == 0 || weapon.getAmmoRemaining() >= getAmmoConsumed())
+				&& (!(weapon instanceof ItemWeapon) || ((ItemWeapon) weapon).getClipSize() == 0 || ((ItemWeapon) weapon).getAmmoRemaining() >= getAmmoConsumed())
 				&& getRanges().contains(subject.getArea().getDistanceTo(target.getArea().getID()))
 				&& subject.canSee(target);
 	}

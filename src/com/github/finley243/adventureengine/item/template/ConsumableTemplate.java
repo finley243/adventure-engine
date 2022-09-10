@@ -18,8 +18,8 @@ public class ConsumableTemplate extends ItemTemplate {
 	private final ConsumableType type;
 	private final List<Effect> effects;
 	
-	public ConsumableTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, ConsumableType type, List<Effect> effects) {
-		super(ID, name, description, scripts, price);
+	public ConsumableTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, ConsumableType type, List<Effect> effects) {
+		super(ID, name, description, scripts, price, attackType);
 		this.type = type;
 		this.effects = effects;
 	}

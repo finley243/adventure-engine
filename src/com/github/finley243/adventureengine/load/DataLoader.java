@@ -449,6 +449,7 @@ public class DataLoader {
         Scene description = loadScene(LoadUtils.singleChildWithName(itemElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
+        String attackType = LoadUtils.attribute(itemElement, "attackType", null);
         switch(type) {
             case "apparel":
                 ApparelComponent.ApparelSlot apparelSlot = LoadUtils.singleTagEnum(itemElement, "slot", ApparelComponent.ApparelSlot.class, ApparelComponent.ApparelSlot.TORSO);
@@ -459,11 +460,11 @@ public class DataLoader {
                     damageResistance.putIfAbsent(damageResistType, amount);
                 }
                 List<Effect> apparelEffects = loadEffects(itemElement, true);
-                return new ApparelTemplate(id, name, description, scripts, price, apparelSlot, damageResistance, apparelEffects);
+                return new ApparelTemplate(id, name, description, scripts, price, attackType, apparelSlot, damageResistance, apparelEffects);
             case "consumable":
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<Effect> consumableEffects = loadEffects(itemElement, false);
-                return new ConsumableTemplate(id, name, description, scripts, price, consumableType, consumableEffects);
+                return new ConsumableTemplate(id, name, description, scripts, price, attackType, consumableType, consumableEffects);
             case "weapon":
                 String weaponClass = LoadUtils.attribute(itemElement, "class", null);
                 int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
@@ -475,14 +476,14 @@ public class DataLoader {
                 float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
-                return new WeaponTemplate(id, name, description, scripts, price, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
+                return new WeaponTemplate(id, name, description, scripts, price, attackType, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
             case "ammo":
                 List<Effect> ammoWeaponEffects = loadEffects(itemElement, true);
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
-                return new AmmoTemplate(id, name, description, scripts, price, ammoWeaponEffects, ammoIsReusable);
+                return new AmmoTemplate(id, name, description, scripts, price, attackType, ammoWeaponEffects, ammoIsReusable);
             case "misc":
             default:
-                return new MiscTemplate(id, name, description, scripts, price);
+                return new MiscTemplate(id, name, description, scripts, price, attackType);
         }
     }
 

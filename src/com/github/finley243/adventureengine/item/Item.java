@@ -90,11 +90,14 @@ public abstract class Item extends GameInstanced implements Noun {
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionItemDrop(this));
-		if(subject.inventory().itemCount(this) > 1) {
+		if (subject.inventory().itemCount(this) > 1) {
 			actions.add(new ActionItemDropAll(this));
 		}
-		if(this.getDescription() != null) {
+		if (this.getDescription() != null) {
 			actions.add(new ActionInspectItem(this));
+		}
+		if (getTemplate().getAttackType() != null) {
+			actions.addAll(game().data().getAttackType(getTemplate().getAttackType()).generateActions(subject, null, this));
 		}
 		return actions;
 	}

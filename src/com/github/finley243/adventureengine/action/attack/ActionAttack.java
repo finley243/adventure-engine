@@ -109,7 +109,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return CombatHelper.calculateHitChance(subject, target, getLimb(), getSkill(), baseHitChanceMin, baseHitChanceMax, hitChanceBonus, canDodge(), hitChanceMult());
     }
 
-    public abstract void consumeAmmo();
+    public abstract void consumeAmmo(Actor subject);
 
     @Override
     public float chanceOverall(Actor subject) {
@@ -125,7 +125,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
                 subject.triggerScript("on_attack", subject);
             }
         }
-        consumeAmmo();
+        consumeAmmo(subject);
         return true;
     }
 

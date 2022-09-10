@@ -9,8 +9,8 @@ import java.util.Set;
 
 public class MiscTemplate extends ItemTemplate {
 
-    public MiscTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price) {
-        super(ID, name, description, scripts, price);
+    public MiscTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType) {
+        super(ID, name, description, scripts, price, attackType);
     }
 
     @Override

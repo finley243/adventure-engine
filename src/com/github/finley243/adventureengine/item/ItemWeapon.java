@@ -181,7 +181,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
 		for (String attackType : getAttackTypes()) {
-			actions.addAll(game().data().getAttackType(attackType).generateActions(subject, this));
+			actions.addAll(game().data().getAttackType(attackType).generateActions(subject, this, this));
 		}
 		if (getClipSize() > 0) {
 			for (String current : getWeaponClass().getAmmoTypes()) {

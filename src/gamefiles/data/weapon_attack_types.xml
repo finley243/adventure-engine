@@ -1,4 +1,13 @@
 <data>
+    <attackType id="throw_item" category="SINGLE" ammoConsumed="1" skill="THROWING" hitChanceMin="0.25" hitChanceMax="0.95" canDodge="true" damage="2" damageType="PHYSICAL" armorMult="1.0" rate="1">
+        <range>NEAR</range>
+        <range>CLOSE</range>
+        <prompt>Throw</prompt>
+        <hitPhrase>meleeHit</hitPhrase>
+        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
+        <missPhrase>meleeMiss</missPhrase>
+        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
+    </attackType>
     <attackType id="basic_ranged" category="SINGLE" ammoConsumed="1" canDodge="false">
         <prompt>Attack</prompt>
         <hitPhrase>rangedHit</hitPhrase>
