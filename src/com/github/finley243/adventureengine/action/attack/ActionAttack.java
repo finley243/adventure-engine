@@ -1,11 +1,11 @@
 package com.github.finley243.adventureengine.action.attack;
 
-import com.github.finley243.adventureengine.combat.CombatHelper;
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandomEach;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.combat.CombatHelper;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.textgen.Context;
@@ -21,6 +21,10 @@ import java.util.Set;
 
 public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
+    public enum AttackHitChanceType {
+        INDEPENDENT, JOINT
+    }
+
     private final Set<AttackTarget> targets;
     private final Noun weaponNoun;
     private final Limb limb;
@@ -33,7 +37,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final String missPhraseRepeat;
     private final String missOverallPhrase;
     private final String missOverallPhraseRepeat;
-    private final Actor.Skill skill;
+    private final Actor.Skill attackSkill;
     private final float baseHitChanceMin;
     private final float baseHitChanceMax;
     private final float hitChanceBonus;
@@ -46,8 +50,9 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final List<Effect> targetEffects;
     private final float hitChanceMult;
     private final boolean canDodge;
+    private final AttackHitChanceType hitChanceType;
 
-    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill skill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<Effect> targetEffects, float hitChanceMult, boolean canDodge) {
+    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill attackSkill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<Effect> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType) {
         super(ActionDetectionChance.HIGH, targets);
         this.weaponNoun = weaponNoun;
         this.targets = targets;
@@ -61,7 +66,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.missPhraseRepeat = missPhraseRepeat;
         this.missOverallPhrase = missOverallPhrase;
         this.missOverallPhraseRepeat = missOverallPhraseRepeat;
-        this.skill = skill;
+        this.attackSkill = attackSkill;
         this.baseHitChanceMin = baseHitChanceMin;
         this.baseHitChanceMax = baseHitChanceMax;
         this.hitChanceBonus = hitChanceBonus;
@@ -74,7 +79,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.targetEffects = targetEffects;
         this.hitChanceMult = hitChanceMult;
         this.canDodge = canDodge;
+        this.hitChanceType = hitChanceType;
     }
+
+    public abstract void consumeAmmo(Actor subject);
 
     public String getPrompt() {
         return prompt;
@@ -104,16 +112,38 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return canDodge;
     }
 
-    @Override
-    public float chance(Actor subject, AttackTarget target) {
-        return CombatHelper.calculateHitChance(subject, target, getLimb(), getSkill(), baseHitChanceMin, baseHitChanceMax, hitChanceBonus, canDodge(), hitChanceMult());
+    public int getAmmoConsumed() {
+        return ammoConsumed;
     }
 
-    public abstract void consumeAmmo(Actor subject);
+    public Actor.Skill getAttackSkill() {
+        return attackSkill;
+    }
+
+    public Set<AreaLink.DistanceCategory> getRanges() {
+        return ranges;
+    }
+
+    @Override
+    public float chance(Actor subject, AttackTarget target) {
+        if (hitChanceType == AttackHitChanceType.INDEPENDENT) {
+            return CombatHelper.calculateHitChance(subject, target, getLimb(), getAttackSkill(), Actor.Skill.DODGE, baseHitChanceMin, baseHitChanceMax, hitChanceBonus, canDodge(), hitChanceMult());
+        } else {
+            if (canDodge()) {
+                return CombatHelper.calculateHitChanceDodgeOnly(subject, target, getAttackSkill(), Actor.Skill.DODGE);
+            } else {
+                return 1.0f;
+            }
+        }
+    }
 
     @Override
     public float chanceOverall(Actor subject) {
-        return 1.0f;
+        if (hitChanceType == AttackHitChanceType.INDEPENDENT) {
+            return 1.0f;
+        } else {
+            return CombatHelper.calculateHitChanceNoTarget(subject, getLimb(), getAttackSkill(), baseHitChanceMin, baseHitChanceMax, hitChanceBonus, hitChanceMult());
+        }
     }
 
     @Override
@@ -166,18 +196,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     public void onFailOverall(Actor subject, int repeatActionCount) {
         Context attackContext = new Context(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new NounMapper().put("actor", subject).put("weapon", getWeaponNoun()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissOverallPhrase(repeatActionCount)), attackContext, this, null, subject, null));
-    }
-
-    public int getAmmoConsumed() {
-        return ammoConsumed;
-    }
-
-    public Actor.Skill getSkill() {
-        return skill;
-    }
-
-    public Set<AreaLink.DistanceCategory> getRanges() {
-        return ranges;
     }
 
     @Override

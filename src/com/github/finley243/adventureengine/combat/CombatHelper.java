@@ -15,14 +15,14 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_BASE_MAX = 0.90f;
 	public static final float HIT_CHANCE_BASE_MIN = 0.20f;
 	
-	public static float calculateHitChance(Actor attacker, AttackTarget target, Limb limb, Actor.Skill skill, float hitChanceBaseMin, float hitChanceBaseMax, float accuracyBonus, boolean canBeDodged, float hitChanceMult) {
-		float chance = MathUtils.chanceLogSkill(attacker, skill, hitChanceBaseMin, hitChanceBaseMax);
+	public static float calculateHitChance(Actor attacker, AttackTarget target, Limb limb, Actor.Skill attackSkill, Actor.Skill dodgeSkill, float hitChanceBaseMin, float hitChanceBaseMax, float accuracyBonus, boolean canBeDodged, float hitChanceMult) {
+		float chance = MathUtils.chanceLogSkill(attacker, attackSkill, hitChanceBaseMin, hitChanceBaseMax);
 		chance += accuracyBonus;
 		if (canBeDodged && target instanceof Actor) {
-			int weaponSkill = attacker.getSkill(skill);
-			int dodgeSkill = ((Actor) target).getSkill(Actor.Skill.DODGE);
-			if (dodgeSkill >= weaponSkill) {
-				int penaltyMult = dodgeSkill - weaponSkill + 1;
+			int attackerSkill = attacker.getSkill(attackSkill);
+			int targetSkill = ((Actor) target).getSkill(dodgeSkill);
+			if (targetSkill >= attackerSkill) {
+				int penaltyMult = targetSkill - attackerSkill + 1;
 				chance -= penaltyMult * 0.05f;
 			}
 		}
@@ -31,6 +31,31 @@ public class CombatHelper {
 		}
 		chance *= (hitChanceMult + 1.0f);
 		return MathUtils.bound(chance, HIT_CHANCE_MIN, HIT_CHANCE_MAX);
+	}
+
+	public static float calculateHitChanceNoTarget(Actor attacker, Limb limb, Actor.Skill attackSkill, float hitChanceBaseMin, float hitChanceBaseMax, float accuracyBonus, float hitChanceMult) {
+		float chance = MathUtils.chanceLogSkill(attacker, attackSkill, hitChanceBaseMin, hitChanceBaseMax);
+		chance += accuracyBonus;
+		if (limb != null) {
+			chance *= limb.getHitChance();
+		}
+		chance *= (hitChanceMult + 1.0f);
+		return MathUtils.bound(chance, HIT_CHANCE_MIN, HIT_CHANCE_MAX);
+	}
+
+	public static float calculateHitChanceDodgeOnly(Actor attacker, AttackTarget target, Actor.Skill attackSkill, Actor.Skill dodgeSkill) {
+		if (target instanceof Actor) {
+			int attackerSkill = attacker.getSkill(attackSkill);
+			int targetSkill = ((Actor) target).getSkill(dodgeSkill);
+			if (targetSkill >= attackerSkill) {
+				int penaltyMult = targetSkill - attackerSkill + 1;
+				return 1.0f - (penaltyMult * 0.05f);
+			} else {
+				return 1.0f;
+			}
+		} else {
+			return 1.0f;
+		}
 	}
 
 }

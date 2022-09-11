@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
@@ -833,7 +834,8 @@ public class DataLoader {
         List<Effect> targetEffects = loadEffects(attackTypeElement, false);
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
-        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, ammoConsumed, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, hitChanceMult, canDodge);
+        ActionAttack.AttackHitChanceType hitChanceType = LoadUtils.attributeEnum(attackTypeElement, "hitChanceType", ActionAttack.AttackHitChanceType.class, ActionAttack.AttackHitChanceType.INDEPENDENT);
+        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, ammoConsumed, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, hitChanceMult, canDodge, hitChanceType);
     }
 
 }

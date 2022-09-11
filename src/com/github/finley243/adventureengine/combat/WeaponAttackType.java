@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.action.attack.ActionAttackArea;
 import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
@@ -12,7 +13,10 @@ import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 
 public class WeaponAttackType {
 
@@ -45,8 +49,9 @@ public class WeaponAttackType {
     private final List<Effect> targetEffects;
     private final float hitChanceMult;
     private final boolean canDodge;
+    private final ActionAttack.AttackHitChanceType hitChanceType;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, int ammoConsumed, Actor.Skill skillOverride, Float baseHitChanceMin, Float baseHitChanceMax, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, Damage.DamageType damageTypeOverride, Float armorMultOverride, List<Effect> targetEffects, float hitChanceMult, boolean canDodge) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, int ammoConsumed, Actor.Skill skillOverride, Float baseHitChanceMin, Float baseHitChanceMax, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, Damage.DamageType damageTypeOverride, Float armorMultOverride, List<Effect> targetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType) {
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
@@ -72,6 +77,7 @@ public class WeaponAttackType {
         this.targetEffects = targetEffects;
         this.hitChanceMult = hitChanceMult;
         this.canDodge = canDodge;
+        this.hitChanceType = hitChanceType;
     }
 
     public String getID() {
@@ -99,20 +105,20 @@ public class WeaponAttackType {
         if (category == AttackCategory.SINGLE) {
             for (Actor target : subject.getVisibleActors()) {
                 if (!target.equals(subject) && !target.isDead()) {
-                    actions.add(new ActionAttackBasic(item, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge));
+                    actions.add(new ActionAttackBasic(item, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType));
                 }
             }
         } else if (category == AttackCategory.TARGETED) {
             for (Actor target : subject.getVisibleActors()) {
                 if (!target.equals(subject) && !target.isDead()) {
                     for (Limb limb : target.getLimbs()) {
-                        actions.add(new ActionAttackLimb(item, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge));
+                        actions.add(new ActionAttackLimb(item, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType));
                     }
                 }
             }
         } else if (category == AttackCategory.SPREAD) {
             for (Area target : subject.getArea().getVisibleAreas(subject)) {
-                actions.add(new ActionAttackArea(item, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge));
+                actions.add(new ActionAttackArea(item, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType));
             }
         }
         return actions;
