@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.combat.Damage;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -368,6 +369,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	}
 
 	private void damageDirect(Damage damage) {
+		for (Effect effect : damage.getTargetEffects()) {
+			effectComponent.addEffect(effect);
+		}
 		int amount = damage.getAmount();
 		amount -= apparelComponent.getDamageResistance(ApparelComponent.ApparelSlot.TORSO, damage.getType()) * damage.getArmorMult();
 		HP -= amount;
@@ -385,6 +389,9 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	}
 
 	private void damageLimb(Damage damage, Limb limb) {
+		for (Effect effect : damage.getTargetEffects()) {
+			effectComponent.addEffect(effect);
+		}
 		int amount = damage.getAmount();
 		amount -= apparelComponent.getDamageResistance(limb.getApparelSlot(), damage.getType()) * damage.getArmorMult();
 		if(amount < 0) amount = 0;
