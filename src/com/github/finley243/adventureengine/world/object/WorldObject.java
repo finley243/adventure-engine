@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * An object that can exist in the game world
  */
-public abstract class WorldObject extends GameInstanced implements Noun, Physical {
+public class WorldObject extends GameInstanced implements Noun, Physical {
 
 	private final String ID;
 	private final String name;

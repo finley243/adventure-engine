@@ -700,7 +700,7 @@ public class DataLoader {
                 return new ObjectContainer(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, containerLootTable, containerLock, containerIsOpen);
             case "basic":
             default:
-                return new ObjectBasic(game, id, area, name, description, startDisabled, startHidden, scripts, customActions);
+                return new WorldObject(game, id, area, name, description, startDisabled, startHidden, scripts, customActions);
         }
     }
 
