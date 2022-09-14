@@ -926,9 +926,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	}
 
 	public void triggerBark(String trigger, Actor target) {
-		Bark bark = template.getBark(game(), trigger);
-		if (bark != null) {
-			bark.trigger(this, target);
+		if (isActive()) {
+			Bark bark = template.getBark(game(), trigger);
+			if (bark != null) {
+				bark.trigger(this, target);
+			}
 		}
 	}
 
