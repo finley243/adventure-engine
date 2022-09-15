@@ -6,12 +6,12 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionApparelEquip;
 import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.item.template.ApparelTemplate;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ItemApparel extends Item {
 
@@ -27,12 +27,20 @@ public class ItemApparel extends Item {
 		return stats;
 	}
 
-	public ApparelComponent.ApparelSlot getApparelSlot() {
-		return stats.getSlot();
+	public Set<String> getApparelSlots() {
+		return stats.getSlots();
 	}
 
 	public int getDamageResistance(Damage.DamageType type) {
 		return stats.getDamageResistance(type);
+	}
+
+	public void onEquip(Actor subject) {
+		stats.onEquip(subject);
+	}
+
+	public void onUnequip(Actor subject) {
+		stats.onUnequip(subject);
 	}
 
 	@Override

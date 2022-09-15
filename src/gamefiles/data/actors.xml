@@ -20,17 +20,17 @@
         <skill key="LOCKPICK" value="4"/>
         <skill key="STEALTH" value="4"/>
         <skill key="DODGE" value="4"/>
-        <limb hitChance="0.5" damageMult="2.0" apparelSlot="HEAD">
+        <limb hitChance="0.5" damageMult="2.0" apparelSlot="head">
             <name>head</name>
         </limb>
-        <limb hitChance="0.7" damageMult="1.0" apparelSlot="TORSO">
+        <limb hitChance="0.7" damageMult="1.0" apparelSlot="torso">
             <name>arm</name>
         </limb>
-        <limb hitChance="0.5" damageMult="0.75" apparelSlot="TORSO">
+        <limb hitChance="0.5" damageMult="0.75" apparelSlot="torso">
             <name>hand</name>
             <effect type="trigger" trigger="dropEquippedForce"/>
         </limb>
-        <limb hitChance="0.8" damageMult="1.0" apparelSlot="LEGS">
+        <limb hitChance="0.8" damageMult="1.0" apparelSlot="legs">
             <name>leg</name>
         </limb>
     </actor>

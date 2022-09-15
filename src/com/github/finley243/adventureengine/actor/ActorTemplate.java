@@ -23,6 +23,7 @@ public class ActorTemplate {
 
 	private final int maxHP;
 	private final List<Limb> limbs;
+	private String defaultApparelSlot;
 	private final Map<Actor.Attribute, Integer> attributes;
 	private final Map<Actor.Skill, Integer> skills;
 	
@@ -38,7 +39,7 @@ public class ActorTemplate {
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, boolean isEnforcer, int maxHP, List<Limb> limbs, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
+	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, boolean isEnforcer, int maxHP, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
@@ -48,6 +49,7 @@ public class ActorTemplate {
 		this.isEnforcer = isEnforcer;
 		this.maxHP = maxHP;
 		this.limbs = limbs;
+		this.defaultApparelSlot = defaultApparelSlot;
 		this.attributes = attributes;
 		this.skills = skills;
 		this.lootTable = lootTable;
@@ -98,6 +100,10 @@ public class ActorTemplate {
 
 	public List<Limb> getLimbs(Game game) {
 		return !limbs.isEmpty() ? limbs : game.data().getActorTemplate(parentID).getLimbs(game);
+	}
+
+	public String getDefaultApparelSlot(Game game) {
+		return defaultApparelSlot != null ? defaultApparelSlot : game.data().getActorTemplate(parentID).getDefaultApparelSlot(game);
 	}
 
 	public int getAttribute(Game game, Actor.Attribute attribute) {

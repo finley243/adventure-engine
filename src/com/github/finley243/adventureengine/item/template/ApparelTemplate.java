@@ -14,13 +14,13 @@ import java.util.Set;
 
 public class ApparelTemplate extends ItemTemplate {
 	
-	private final ApparelComponent.ApparelSlot slot;
+	private final Set<String> slots;
 	private final Map<Damage.DamageType, Integer> damageResistance;
 	private final List<Effect> effects;
 	
-	public ApparelTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, ApparelComponent.ApparelSlot slot, Map<Damage.DamageType, Integer> damageResistance, List<Effect> effects) {
+	public ApparelTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, Set<String> slots, Map<Damage.DamageType, Integer> damageResistance, List<Effect> effects) {
 		super(ID, name, description, scripts, price, attackType);
-		this.slot = slot;
+		this.slots = slots;
 		this.damageResistance = damageResistance;
 		this.effects = effects;
 	}
@@ -30,8 +30,8 @@ public class ApparelTemplate extends ItemTemplate {
 		return true;
 	}
 	
-	public ApparelComponent.ApparelSlot getSlot() {
-		return slot;
+	public Set<String> getSlots() {
+		return slots;
 	}
 
 	public int getDamageResistance(Damage.DamageType type) {

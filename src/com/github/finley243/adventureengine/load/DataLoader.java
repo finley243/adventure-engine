@@ -1,14 +1,13 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.action.attack.ActionAttack;
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;
-import com.github.finley243.adventureengine.actor.component.ApparelComponent;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.condition.*;
@@ -114,6 +113,7 @@ public class DataLoader {
 
         int hp = LoadUtils.attributeInt(actorElement, "hp", 0);
         List<Limb> limbs = loadLimbs(actorElement);
+        String defaultApparelSlot = LoadUtils.attribute(actorElement, "defaultApparelSlot", null);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
         String dialogueStart = LoadUtils.attribute(actorElement, "dialogueStart", null);
         Map<Actor.Attribute, Integer> attributes = loadAttributes(actorElement);
@@ -136,7 +136,7 @@ public class DataLoader {
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
         boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
         boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
-        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, limbs, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
+        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -152,7 +152,7 @@ public class DataLoader {
         String name = LoadUtils.singleTag(element, "name", null);
         float hitChance = LoadUtils.attributeFloat(element, "hitChance", 1.0f);
         float damageMult = LoadUtils.attributeFloat(element, "damageMult", 1.0f);
-        ApparelComponent.ApparelSlot apparelSlot = LoadUtils.attributeEnum(element, "apparelSlot", ApparelComponent.ApparelSlot.class, ApparelComponent.ApparelSlot.TORSO);
+        String apparelSlot = LoadUtils.attribute(element, "apparelSlot", null);
         List<Effect> crippledEffects = loadEffects(element, false);
         return new Limb(name, hitChance, damageMult, apparelSlot, crippledEffects);
     }
@@ -453,7 +453,7 @@ public class DataLoader {
         String attackType = LoadUtils.attribute(itemElement, "attackType", null);
         switch(type) {
             case "apparel":
-                ApparelComponent.ApparelSlot apparelSlot = LoadUtils.singleTagEnum(itemElement, "slot", ApparelComponent.ApparelSlot.class, ApparelComponent.ApparelSlot.TORSO);
+                Set<String> apparelSlots = LoadUtils.setOfTags(itemElement, "slot");
                 Map<Damage.DamageType, Integer> damageResistance = new HashMap<>();
                 for (Element damageResistElement : LoadUtils.directChildrenWithName(itemElement, "damageResist")) {
                     Damage.DamageType damageResistType = LoadUtils.attributeEnum(damageResistElement, "type", Damage.DamageType.class, Damage.DamageType.PHYSICAL);
@@ -461,7 +461,7 @@ public class DataLoader {
                     damageResistance.putIfAbsent(damageResistType, amount);
                 }
                 List<Effect> apparelEffects = loadEffects(itemElement, true);
-                return new ApparelTemplate(id, name, description, scripts, price, attackType, apparelSlot, damageResistance, apparelEffects);
+                return new ApparelTemplate(id, name, description, scripts, price, attackType, apparelSlots, damageResistance, apparelEffects);
             case "consumable":
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<Effect> consumableEffects = loadEffects(itemElement, false);
