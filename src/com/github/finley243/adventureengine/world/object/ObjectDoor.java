@@ -1,10 +1,7 @@
 package com.github.finley243.adventureengine.world.object;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.action.ActionDoorListen;
-import com.github.finley243.adventureengine.action.ActionMoveDoor;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -22,6 +19,8 @@ public class ObjectDoor extends WorldObject {
 	private final String linkedDoorID;
 	private final AreaLink.CompassDirection direction;
 	private final Lock lock;
+
+	private boolean isOpen;
 	
 	public ObjectDoor(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, String linkedDoorID, AreaLink.CompassDirection direction, Lock lock) {
 		super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions);
@@ -75,6 +74,14 @@ public class ObjectDoor extends WorldObject {
 	public boolean isLocked() {
 		return lock != null && lock.isLocked();
 	}
+
+	public void setOpen(boolean value) {
+		this.isOpen = value;
+	}
+
+	public boolean isOpen() {
+		return isOpen;
+	}
 	
 	@Override
 	public List<Action> localActions(Actor subject) {
@@ -82,6 +89,11 @@ public class ObjectDoor extends WorldObject {
 		if (!this.isGuarded()) {
 			actions.add(new ActionDoorListen(this));
 			actions.add(new ActionMoveDoor(this));
+			if (isOpen()) {
+				actions.add(new ActionDoorClose(this));
+			} else {
+				actions.add(new ActionDoorOpen(this));
+			}
 			if (lock != null) {
 				actions.addAll(lock.getActions(subject));
 			}

@@ -1,6 +1,8 @@
 buy:$_actor buy$s_actor $item
 consume:$_actor consume$s_actor $item
 die:$_actor fall$s_actor over dead
+doorClose:$_actor close$s_actor $door
+doorOpen:$_actor open$s_actor $door
 drink:$_actor drink$s_actor $item
 drop:$_actor drop$s_actor $item
 forceDrop:$_actor drop$s_actor $item and $item lands $area
@@ -11,8 +13,8 @@ meleeHit:$_actor swing$s_actor $actor's $weapon_name at $target and $weapon hit$
 meleeHitRepeat:$_actor take$s_actor another swing at $target and $weapon hit$s_weapon $target
 meleeMiss:$_actor tr$ies_actor to hit $target with $actor's $weapon_name, but $_actor miss$es_actor
 meleeMissRepeat:$_actor tr$ies_actor to hit $target again, but $_actor miss$es_actor
-moveThrough:$_actor go$es_actor through $exit
-moveThroughReverse:$_actor come$s_actor through $exit
+moveThrough:$_actor go$es_actor through $door
+moveThroughReverse:$_actor come$s_actor through $door
 moveToward:$_actor move$s_actor toward $area
 moveTo:$_actor move$s_actor to $area
 moveOnto:$_actor move$s_actor onto $area

@@ -31,7 +31,7 @@ public class ActionMoveDoor extends ActionMove {
 	public void choose(Actor subject, int repeatActionCount) {
 		Area lastArea = subject.getArea();
 		Area area = door.getLinkedArea();
-		Context context = new Context(new NounMapper().put("actor", subject).put("exit", door).put("room", area.getRoom()).build());
+		Context context = new Context(new NounMapper().put("actor", subject).put("door", door).put("room", area.getRoom()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("moveThrough"), context, this, null, subject, null));
 		subject.game().eventBus().post(new SensoryEvent(area, Phrases.get("moveThroughReverse"), context, this, null, subject, null));
 		if (door.getLinkedDoor().isLocked()) {
@@ -43,7 +43,7 @@ public class ActionMoveDoor extends ActionMove {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && !door.isLocked();
+		return super.canChoose(subject) && door.isOpen();
 	}
 
 	@Override
