@@ -16,7 +16,6 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
-import com.github.finley243.adventureengine.world.object.ObjectContainer;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import org.xml.sax.SAXException;
 
@@ -66,9 +65,7 @@ public class Data {
 		}
 		// Using ArrayList to avoid Concurrent Modification Exception
 		for(WorldObject object : new ArrayList<>(objects.values())) {
-			if (object instanceof ObjectContainer) {
-				((ObjectContainer) object).newGameInit();
-			}
+			object.newGameInit();
 		}
 	}
 
@@ -211,6 +208,10 @@ public class Data {
 	
 	public WorldObject getObject(String id) {
 		return objects.get(id);
+	}
+
+	public Collection<WorldObject> getObjects() {
+		return objects.values();
 	}
 
 	public void removeObject(String id) {

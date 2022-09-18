@@ -124,6 +124,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 		return isHidden;
 	}
 
+	public void newGameInit() {}
+
+	public void onStartRound() {}
+
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();

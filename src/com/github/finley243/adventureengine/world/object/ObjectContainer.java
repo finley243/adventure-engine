@@ -33,6 +33,7 @@ public class ObjectContainer extends WorldObject {
 		this.hasSearched = false;
 	}
 
+	@Override
 	public void newGameInit() {
 		if(lootTable != null) {
 			inventory.addItems(lootTable.generateItems(game()));

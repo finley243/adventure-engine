@@ -355,7 +355,7 @@ public class Area extends GameInstanced implements Noun {
 		}
 	}
 
-	public void updateRound() {
+	public void onStartRound() {
 		Iterator<AreaEffect> itr = areaEffects.keySet().iterator();
 		while (itr.hasNext()) {
 			AreaEffect areaEffect = itr.next();

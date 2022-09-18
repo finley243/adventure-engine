@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.xml.sax.SAXException;
@@ -102,7 +103,10 @@ public class Game {
 		eventBus.post(new TextClearEvent());
 		TextGen.clearContext();
 		for (Area area : data().getAreas()) {
-			area.updateRound();
+			area.onStartRound();
+		}
+		for (WorldObject object : data().getObjects()) {
+			object.onStartRound();
 		}
 		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
 		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
@@ -115,7 +119,6 @@ public class Game {
 				actor.takeTurn();
 			}
 		}
-		//data().getPlayer().describeSurroundings();
 		data().getPlayer().takeTurn();
 		data().time().onNextRound();
 	}
