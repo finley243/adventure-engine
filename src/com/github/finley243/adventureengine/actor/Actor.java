@@ -373,7 +373,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 			effectComponent.addEffect(effect);
 		}
 		int amount = damage.getAmount();
-		amount -= apparelComponent.getDamageResistance(ApparelComponent.ApparelSlot.TORSO, damage.getType()) * damage.getArmorMult();
+		amount -= apparelComponent.getDamageResistance(template.getDefaultApparelSlot(game()), damage.getType()) * damage.getArmorMult();
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;

@@ -1,62 +1,65 @@
 package com.github.finley243.adventureengine.actor.component;
 
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.item.ItemApparel;
-import com.github.finley243.adventureengine.item.template.ApparelTemplate;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ApparelComponent {
 
-    public enum ApparelSlot {
-        HEAD, TORSO, LEGS
-    }
-
-    private final Map<ApparelSlot, ItemApparel> equipped;
     private final Actor actor;
+    private final Map<String, ItemApparel> equipped;
 
     public ApparelComponent(Actor actor) {
-        equipped = new EnumMap<>(ApparelSlot.class);
         this.actor = actor;
+        this.equipped = new HashMap<>();
     }
 
-    public int getDamageResistance(ApparelSlot slot, Damage.DamageType type) {
+    public int getDamageResistance(String slot, Damage.DamageType type) {
         if(isSlotEmpty(slot)) return 0;
         return equipped.get(slot).getDamageResistance(type);
     }
 
-    public boolean isSlotEmpty(ApparelSlot slot) {
+    public boolean isSlotEmpty(String slot) {
         return equipped.get(slot) == null;
     }
 
     public boolean isSlotEmpty(ItemApparel item) {
-        return isSlotEmpty(item.getApparelSlot());
+        for (String slot : item.getApparelSlots()) {
+            if (!isSlotEmpty(slot)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void equip(ItemApparel item) {
-        ItemApparel lastEquipped = equipped.get(item.getApparelSlot());
-        if(lastEquipped != null) {
-            ((ApparelTemplate) lastEquipped.getTemplate()).onUnequip(actor);
+        for (String slot : item.getApparelSlots()) {
+            ItemApparel lastEquipped = equipped.get(slot);
+            if (lastEquipped != null) {
+                unequip(lastEquipped);
+            }
+            equipped.put(slot, item);
         }
-        equipped.put(item.getApparelSlot(), item);
-        ((ApparelTemplate) item.getTemplate()).onEquip(actor);
+        item.onEquip(actor);
     }
 
     public void unequip(ItemApparel item) {
         if (getEquippedItems().contains(item)) {
-            ((ApparelTemplate) item.getTemplate()).onUnequip(actor);
-            equipped.put(item.getApparelSlot(), null);
+            for (String slot : item.getApparelSlots()) {
+                equipped.put(slot, null);
+            }
+            item.onUnequip(actor);
         }
     }
 
     public Set<ItemApparel> getEquippedItems() {
-        Set<ItemApparel> items = new HashSet<>();
-        for(ItemApparel item : equipped.values()) {
-            if(item != null) {
-                items.add(item);
-            }
-        }
+        Set<ItemApparel> items = new HashSet<>(equipped.values());
+        items.remove(null);
         return items;
     }
 

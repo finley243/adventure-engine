@@ -10,10 +10,10 @@ public class Limb {
     private final String name;
     private final float hitChance;
     private final float damageMult;
-    private final ApparelComponent.ApparelSlot apparelSlot;
+    private final String apparelSlot;
     private final List<Effect> hitEffects;
 
-    public Limb(String name, float hitChance, float damageMult, ApparelComponent.ApparelSlot apparelSlot, List<Effect> hitEffects) {
+    public Limb(String name, float hitChance, float damageMult, String apparelSlot, List<Effect> hitEffects) {
         this.name = name;
         this.hitChance = hitChance;
         this.damageMult = damageMult;
@@ -33,7 +33,7 @@ public class Limb {
         return damageMult;
     }
 
-    public ApparelComponent.ApparelSlot getApparelSlot() {
+    public String getApparelSlot() {
         return apparelSlot;
     }
 
