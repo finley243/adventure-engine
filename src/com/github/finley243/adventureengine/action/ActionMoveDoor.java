@@ -43,7 +43,7 @@ public class ActionMoveDoor extends ActionMove {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && door.isOpen();
+		return super.canChoose(subject) && !door.isLocked();
 	}
 
 	@Override
