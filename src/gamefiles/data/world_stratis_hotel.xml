@@ -40,7 +40,7 @@
             <link area="stratis_hotel_lobby_entry"/>
             <link area="stratis_hotel_lobby_seating"/>
             <link area="stratis_hotel_lobby_elevators"/>
-            <object type="container" id="stratis_reception_desk">
+            <object type="container" id="stratis_reception_desk" exposed="true">
                 <name>reception desk</name>
             </object>
             <actor id="stratis_receptionist" template="stratis_receptionist">

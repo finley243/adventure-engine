@@ -696,8 +696,8 @@ public class DataLoader {
             case "container":
                 LootTable containerLootTable = loadLootTable(LoadUtils.singleChildWithName(objectElement, "inventory"), true);
                 Lock containerLock = loadLock(objectElement, id);
-                boolean containerIsOpen = LoadUtils.attributeBool(objectElement, "open", false);
-                return new ObjectContainer(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, containerLootTable, containerLock, containerIsOpen);
+                boolean containerIsExposed = LoadUtils.attributeBool(objectElement, "exposed", false);
+                return new ObjectContainer(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, containerLootTable, containerLock, containerIsExposed);
             case "basic":
             default:
                 return new WorldObject(game, id, area, name, description, startDisabled, startHidden, scripts, customActions);
