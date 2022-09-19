@@ -295,6 +295,9 @@ public class DataLoader {
             case "random":
                 float randomChance = LoadUtils.attributeFloat(conditionElement, "chance", 0.0f);
                 return new ConditionRandom(invert, randomChance);
+            case "timerActive":
+                String timerID = LoadUtils.attribute(conditionElement, "timerID", null);
+                return new ConditionTimerActive(invert, timerID);
             case "any":
                 List<Condition> subConditionsAny = loadSubConditions(conditionElement);
                 return new ConditionCompound(invert, subConditionsAny, true);
@@ -397,6 +400,11 @@ public class DataLoader {
             case "revealObject":
                 String revealObject = LoadUtils.attribute(scriptElement, "object", null);
                 return new ScriptRevealObject(condition, revealObject);
+            case "timerStart":
+                String timerID = LoadUtils.attribute(scriptElement, "timerID", null);
+                int timerDuration = LoadUtils.attributeInt(scriptElement, "duration", 1);
+                Script timerExpireScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "expireScript"));
+                return new ScriptTimerStart(condition, timerID, timerDuration, timerExpireScript);
             case "select":
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSelect, true);

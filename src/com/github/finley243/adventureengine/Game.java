@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Game {
@@ -102,6 +103,12 @@ public class Game {
 	private void nextRound() {
 		eventBus.post(new TextClearEvent());
 		TextGen.clearContext();
+		for (Timer timer : data().getTimers()) {
+			timer.update();
+			if (timer.shouldRemove()) {
+				data().removeTimer(timer.getID());
+			}
+		}
 		for (Area area : data().getAreas()) {
 			area.onStartRound();
 		}

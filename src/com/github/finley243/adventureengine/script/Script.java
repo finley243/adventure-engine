@@ -17,6 +17,7 @@ public abstract class Script {
 	/**
 	 * Execute the script if the conditions are met
 	 * @param subject The contextual subject actor
+	 * @param target The contextual target actor
 	 * @return Whether the script was executed
 	 */
 	public boolean execute(Actor subject, Actor target) {

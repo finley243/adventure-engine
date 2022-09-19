@@ -48,6 +48,7 @@ public class Data {
 	private final Map<String, Script> scripts = new HashMap<>();
 	private final Map<String, Faction> factions = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
+	private final Map<String, Timer> timers = new HashMap<>();
 
 	public Data(Game game) {
 		this.game = game;
@@ -79,11 +80,14 @@ public class Data {
 		items.clear();
 		itemStates.clear();
 		lootTables.clear();
+		weaponClasses.clear();
+		attackTypes.clear();
 		scenes.clear();
 		variables.clear();
 		scripts.clear();
 		factions.clear();
 		networks.clear();
+		timers.clear();
 		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
 		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getActorTemplate(getConfig("playerStats")));
 		addActor(player.getID(), player);
@@ -318,6 +322,28 @@ public class Data {
 
 	public Network getNetwork(String id) {
 		return networks.get(id);
+	}
+
+	public void addTimer(String id, Timer value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add timer with blank ID");
+		//if(networks.containsKey(id)) throw new IllegalArgumentException("Cannot add timer with existing ID: " + id);
+		timers.put(id, value);
+	}
+
+	public void removeTimer(String id) {
+		timers.remove(id);
+	}
+
+	public Timer getTimer(String id) {
+		return timers.get(id);
+	}
+
+	public Collection<Timer> getTimers() {
+		return timers.values();
+	}
+
+	public boolean isTimerActive(String id) {
+		return timers.containsKey(id);
 	}
 	
 }
