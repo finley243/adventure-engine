@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.world.object;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.action.ActionDoorListen;
 import com.github.finley243.adventureengine.action.ActionMoveDoor;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -75,12 +74,15 @@ public class ObjectDoor extends WorldObject {
 	public boolean isLocked() {
 		return lock != null && lock.isLocked();
 	}
+
+	public boolean canEnter() {
+		return !isLocked();
+	}
 	
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
 		if (!this.isGuarded()) {
-			actions.add(new ActionDoorListen(this));
 			actions.add(new ActionMoveDoor(this));
 			if (lock != null) {
 				actions.addAll(lock.getActions(subject));
