@@ -217,36 +217,36 @@ public class Inventory {
 		return uniqueItems;
 	}
 
-	public List<Action> getExternalActions(Noun owner, Actor subject, boolean isOpen) {
+	public List<Action> getExternalActions(Noun owner, String name, Actor subject, boolean isOpen) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryTake(owner, this, item));
+				actions.add(new ActionInventoryTake(owner, name, this, item));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = ItemFactory.create(game, current);
-			actions.add(new ActionInventoryTake(owner, this, item));
+			actions.add(new ActionInventoryTake(owner, name, this, item));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryTakeAll(owner, this, item));
+				actions.add(new ActionInventoryTakeAll(owner, name, this, item));
 			}
 		}
-		actions.addAll(subject.inventory().getStoreActions(owner, this, isOpen));
+		actions.addAll(subject.inventory().getStoreActions(owner, name, this, isOpen));
 		return actions;
 	}
 
-	private List<Action> getStoreActions(Noun owner, Inventory other, boolean isOpen) {
+	private List<Action> getStoreActions(Noun owner, String name, Inventory other, boolean isOpen) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryStore(owner, other, item, isOpen));
+				actions.add(new ActionInventoryStore(owner, name, other, item, isOpen));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = ItemFactory.create(game, current);
-			actions.add(new ActionInventoryStore(owner, other, item, isOpen));
+			actions.add(new ActionInventoryStore(owner, name, other, item, isOpen));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryStoreAll(owner, other, item, isOpen));
+				actions.add(new ActionInventoryStoreAll(owner, name, other, item, isOpen));
 			}
 		}
 		return actions;

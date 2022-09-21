@@ -15,17 +15,19 @@
             <object type="door" id="stratis_entry_door" link="stratis_entrance_exterior">
                 <name>entry door</name>
             </object>
-            <object type="container" id="stratis_lobby_garbage">
+            <object type="basic" id="stratis_lobby_garbage">
                 <name>garbage can</name>
                 <description>
                     <line>
                         <text>A gleaming silver garbage can, keeping the filth out of sight and out of mind.</text>
                     </line>
                 </description>
-                <inventory>
-                    <table chance="0.5">ammo_random</table>
-                    <table countMin="2" countMax="5">junk_random</table>
-                </inventory>
+                <component type="inventory" id="inventory">
+                    <inventory>
+                        <table chance="0.5">ammo_random</table>
+                        <table countMin="2" countMax="5">junk_random</table>
+                    </inventory>
+                </component>
             </object>
             <link area="stratis_hotel_lobby_desk"/>
             <link area="stratis_hotel_lobby_seating"/>
@@ -40,8 +42,9 @@
             <link area="stratis_hotel_lobby_entry"/>
             <link area="stratis_hotel_lobby_seating"/>
             <link area="stratis_hotel_lobby_elevators"/>
-            <object type="container" id="stratis_reception_desk" exposed="true">
+            <object type="basic" id="stratis_reception_desk" exposed="true">
                 <name>reception desk</name>
+                <component type="inventory" id="inventory" isExposed="true"/>
             </object>
             <actor id="stratis_receptionist" template="stratis_receptionist">
                 <behaviors>

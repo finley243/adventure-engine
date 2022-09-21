@@ -14,8 +14,10 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +36,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 	private final Scene description;
 	private final Map<String, Script> scripts;
 	private final List<ActionCustom> customActions;
+	private final Map<String, ObjectComponent> components;
 	
 	public WorldObject(Game gameInstance, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions) {
 		super(gameInstance);
@@ -45,6 +48,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 		this.scripts = scripts;
 		this.customActions = customActions;
 		this.isHidden = startHidden;
+		this.components = new HashMap<>();
 		setEnabled(!startDisabled);
 	}
 
@@ -63,7 +67,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 
 	@Override
 	public String getFormattedName() {
-		if(!isProperName()) {
+		if (!isProperName()) {
 			return LangUtils.addArticle(getName(), !isKnown());
 		} else {
 			return getName();
@@ -106,9 +110,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 	}
 
 	public void setEnabled(boolean enable) {
-		if(area != null && isEnabled != enable) {
+		if (area != null && isEnabled != enable) {
 			isEnabled = enable;
-			if(enable) {
+			if (enable) {
 				area.addObject(this);
 			} else {
 				area.removeObject(this);
@@ -124,15 +128,22 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 		return isHidden;
 	}
 
-	public void newGameInit() {}
+	public void newGameInit() {
+		for (ObjectComponent component : components.values()) {
+			component.newGameInit();
+		}
+	}
 
 	public void onStartRound() {}
 
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
-		if(description != null) {
+		if (description != null) {
 			actions.add(new ActionInspectObject(this));
+		}
+		for (ObjectComponent component : components.values()) {
+			actions.addAll(component.getActions(subject));
 		}
 		for (ActionCustom customAction : customActions) {
 			if (customAction.canShow(subject)) {
@@ -151,14 +162,22 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 		return false;
 	}
 
+	public void addComponent(String componentID, ObjectComponent component) {
+		components.put(componentID, component);
+	}
+
+	public ObjectComponent getComponent(String componentID) {
+		return components.get(componentID);
+	}
+
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
-		if(scripts.containsKey(entryPoint)) {
+		if (scripts.containsKey(entryPoint)) {
 			scripts.get(entryPoint).execute(subject, target);
 		}
 	}
 
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
+		switch (saveData.getParameter()) {
 			case "isKnown":
 				this.isKnown = saveData.getValueBoolean();
 				break;
@@ -173,13 +192,13 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		if(isKnown) {
+		if (isKnown) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "isKnown", isKnown));
 		}
-		if(!isEnabled) {
+		if (!isEnabled) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "isEnabled", isEnabled));
 		}
-		if(area != defaultArea) {
+		if (area != defaultArea) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "area", area.getID()));
 		}
 		return state;

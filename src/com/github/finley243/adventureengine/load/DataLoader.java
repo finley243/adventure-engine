@@ -27,6 +27,8 @@ import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentInventory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -183,7 +185,7 @@ public class DataLoader {
         if (sceneElement == null) return null;
         String sceneID = sceneElement.getAttribute("id");
         Scene.SceneType type;
-        switch(sceneElement.getAttribute("type")) {
+        switch (sceneElement.getAttribute("type")) {
             case "random":
                 type = Scene.SceneType.RANDOM;
                 break;
@@ -235,7 +237,7 @@ public class DataLoader {
         String type = LoadUtils.attribute(conditionElement, "type", "compound");
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
-        switch(type) {
+        switch (type) {
             case "money":
                 int moneyAmount = LoadUtils.attributeInt(conditionElement, "value", 0);
                 return new ConditionMoney(invert, actorRef, moneyAmount);
@@ -344,7 +346,7 @@ public class DataLoader {
         String type = scriptElement.getAttribute("type");
         Condition condition = loadCondition(LoadUtils.singleChildWithName(scriptElement, "condition"));
         ActorReference actorRef = loadActorReference(scriptElement, "actor");
-        switch(type) {
+        switch (type) {
             case "external":
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
                 return new ScriptExternal(condition, scriptID);
@@ -459,7 +461,7 @@ public class DataLoader {
         Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
         String attackType = LoadUtils.attribute(itemElement, "attackType", null);
-        switch(type) {
+        switch (type) {
             case "apparel":
                 Set<String> apparelSlots = LoadUtils.setOfTags(itemElement, "slot");
                 Map<Damage.DamageType, Integer> damageResistance = new HashMap<>();
@@ -511,7 +513,7 @@ public class DataLoader {
         String effectType = effectElement.getAttribute("type");
         int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
         boolean stackable = LoadUtils.attributeBool(effectElement, "stack", true);
-        switch(effectType) {
+        switch (effectType) {
             case "state":
                 String state = LoadUtils.attribute(effectElement, "state", null);
                 int stateAmount = LoadUtils.attributeInt(effectElement, "amount", 0);
@@ -651,6 +653,7 @@ public class DataLoader {
         List<Element> objectElements = LoadUtils.directChildrenWithName(areaElement, "object");
         for(Element objectElement : objectElements) {
             WorldObject object = loadObject(game, objectElement, area);
+            loadObjectComponents(objectElement, object);
             game.data().addObject(object.getID(), object);
         }
 
@@ -674,7 +677,7 @@ public class DataLoader {
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         List<ActionCustom> customActions = loadCustomActions(objectElement, id, "action");
         List<ActionCustom> customUsingActions = loadCustomActions(objectElement, id, "actionUsing");
-        switch(type) {
+        switch (type) {
             case "door":
                 String doorLink = LoadUtils.attribute(objectElement, "link", null);
                 AreaLink.CompassDirection doorDirection = LoadUtils.attributeEnum(objectElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
@@ -701,14 +704,31 @@ public class DataLoader {
                 int itemCount = LoadUtils.attributeInt(objectElement, "count", 1);
                 boolean itemIsStealing = LoadUtils.attributeBool(objectElement, "isStealing", false);
                 return new ObjectItem(game, id, area, ItemFactory.create(game, itemID), itemCount, itemIsStealing);
-            case "container":
-                LootTable containerLootTable = loadLootTable(LoadUtils.singleChildWithName(objectElement, "inventory"), true);
-                Lock containerLock = loadLock(objectElement, id);
-                boolean containerIsExposed = LoadUtils.attributeBool(objectElement, "exposed", false);
-                return new ObjectContainer(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, containerLootTable, containerLock, containerIsExposed);
             case "basic":
             default:
                 return new WorldObject(game, id, area, name, description, startDisabled, startHidden, scripts, customActions);
+        }
+    }
+
+    private static void loadObjectComponents(Element objectElement, WorldObject object) {
+        for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
+            ObjectComponent component = loadObjectComponent(componentElement, object);
+            object.addComponent(component.getID(), component);
+        }
+    }
+
+    private static ObjectComponent loadObjectComponent(Element componentElement, WorldObject object) {
+        String type = LoadUtils.attribute(componentElement, "type", null);
+        String ID = LoadUtils.attribute(componentElement, "id", null);
+        boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
+        switch (type) {
+            case "inventory":
+                String inventoryName = LoadUtils.singleTag(componentElement, "name", null);
+                LootTable inventoryLootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
+                boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "isExposed", false);
+                return new ObjectComponentInventory(ID, object, startEnabled, inventoryName, inventoryLootTable, inventoryIsExposed);
+            default:
+                return null;
         }
     }
 
@@ -760,7 +780,7 @@ public class DataLoader {
                 Idle idle = loadIdle(idleElement);
                 idles.add(idle);
             }
-            switch(type) {
+            switch (type) {
                 case "area":
                     String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
                     behavior = new BehaviorArea(condition, duration, idles, areaTarget);

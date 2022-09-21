@@ -11,12 +11,14 @@ import com.github.finley243.adventureengine.item.Item;
 public class ActionInventoryTakeAll extends Action {
 
     private final Noun owner;
+    private final String name;
     private final Inventory inventory;
     private final Item item;
 
-    public ActionInventoryTakeAll(Noun owner, Inventory inventory, Item item) {
+    public ActionInventoryTakeAll(Noun owner, String name, Inventory inventory, Item item) {
         super(ActionDetectionChance.LOW);
         this.owner = owner;
+        this.name = name;
         this.inventory = inventory;
         this.item = item;
     }
@@ -37,7 +39,13 @@ public class ActionInventoryTakeAll extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Take all", canChoose(subject), new String[]{owner.getName(), item.getName() + inventory.itemCountLabel(item)});
+        String[] menuPath;
+        if (name == null) {
+            menuPath = new String[]{owner.getName(), item.getName() + subject.inventory().itemCountLabel(item)};
+        } else {
+            menuPath = new String[]{owner.getName(), name, item.getName() + subject.inventory().itemCountLabel(item)};
+        }
+        return new MenuData("Take all", canChoose(subject), menuPath);
     }
 
     @Override

@@ -9,18 +9,19 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.world.object.ObjectContainer;
 
 public class ActionInventoryStore extends Action {
 
     private final Noun owner;
+    private final String name;
     private final Inventory inventory;
     private final Item item;
     private final boolean containerIsOpen;
 
-    public ActionInventoryStore(Noun owner, Inventory inventory, Item item, boolean containerIsOpen) {
+    public ActionInventoryStore(Noun owner, String name, Inventory inventory, Item item, boolean containerIsOpen) {
         super(ActionDetectionChance.LOW);
         this.owner = owner;
+        this.name = name;
         this.inventory = inventory;
         this.item = item;
         this.containerIsOpen = containerIsOpen;
@@ -41,7 +42,13 @@ public class ActionInventoryStore extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData((containerIsOpen ? "Place" : "Store"), canChoose(subject), new String[]{owner.getName(), "transfer", item.getName() + subject.inventory().itemCountLabel(item)});
+        String[] menuPath;
+        if (name == null) {
+            menuPath = new String[]{owner.getName(), "transfer", item.getName() + subject.inventory().itemCountLabel(item)};
+        } else {
+            menuPath = new String[]{owner.getName(), name, "transfer", item.getName() + subject.inventory().itemCountLabel(item)};
+        }
+        return new MenuData((containerIsOpen ? "Place" : "Store"), canChoose(subject), menuPath);
     }
 
     @Override
