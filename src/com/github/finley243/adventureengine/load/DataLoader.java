@@ -407,6 +407,11 @@ public class DataLoader {
                 int timerDuration = LoadUtils.attributeInt(scriptElement, "duration", 1);
                 Script timerExpireScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "expireScript"));
                 return new ScriptTimerStart(condition, timerID, timerDuration, timerExpireScript);
+            case "componentState":
+                String componentStateObjectID = LoadUtils.attribute(scriptElement, "objectID", null);
+                String componentStateComponentID = LoadUtils.attribute(scriptElement, "componentID", null);
+                boolean componentStateEnabled = LoadUtils.attributeBool(scriptElement, "enabled", true);
+                return new ScriptComponentState(condition, componentStateObjectID, componentStateComponentID, componentStateEnabled);
             case "select":
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSelect, true);
