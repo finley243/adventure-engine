@@ -34,9 +34,6 @@ public class ActionMoveDoor extends ActionMove {
 		Context context = new Context(new NounMapper().put("actor", subject).put("door", door).put("room", area.getRoom()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("moveThrough"), context, this, null, subject, null));
 		subject.game().eventBus().post(new SensoryEvent(area, Phrases.get("moveThroughReverse"), context, this, null, subject, null));
-		if (door.getLinkedDoor().isLocked()) {
-			door.getLinkedDoor().getLock().setLocked(false);
-		}
 		subject.setArea(area);
 		subject.onMove(lastArea);
 	}

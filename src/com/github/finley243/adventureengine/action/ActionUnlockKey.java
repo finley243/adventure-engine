@@ -9,39 +9,48 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
-public class ActionLockHotwire extends Action {
+import java.util.Set;
+
+public class ActionUnlockKey extends Action {
 
     private final Lock lock;
+    private final Lock linkedLock;
     private final WorldObject object;
-    private final int difficulty;
+    private final Set<String> keys;
 
-    public ActionLockHotwire(Lock lock, WorldObject object, int difficulty) {
-        super(ActionDetectionChance.LOW);
+    public ActionUnlockKey(Lock lock, Lock linkedLock, WorldObject object, Set<String> keys) {
+        super(ActionDetectionChance.NONE);
         this.lock = lock;
+        this.linkedLock = linkedLock;
         this.object = object;
-        this.difficulty = difficulty;
+        this.keys = keys;
     }
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         lock.setLocked(false);
+        if (linkedLock != null) {
+            linkedLock.setLocked(false);
+        }
         Context context = new Context(new NounMapper().put("actor", subject).put("object", object).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("hotwireLock"), context, this, null, subject, null));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("unlock"), context, this, null, subject, null));
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && subject.getSkill(Actor.Skill.HARDWARE) >= difficulty;
+        boolean hasKey = false;
+        for(String keyID : keys) {
+            if(subject.inventory().hasItem(keyID)) {
+                hasKey = true;
+                break;
+            }
+        }
+        return super.canChoose(subject) && hasKey;
     }
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuData("Hotwire lock", canChoose(subject), new String[]{object.getName()});
-    }
-
-    @Override
-    public ActionResponseType responseType() {
-        return ActionResponseType.BREAK_LOCK;
+        return new MenuData("Use key", canChoose(subject), new String[]{object.getName()});
     }
 
 }

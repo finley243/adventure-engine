@@ -85,7 +85,7 @@ public class ObjectDoor extends WorldObject {
 		if (!this.isGuarded()) {
 			actions.add(new ActionMoveDoor(this));
 			if (lock != null) {
-				actions.addAll(lock.getActions(subject));
+				actions.addAll(lock.getActions(subject, getLinkedDoor().getLock()));
 			}
 		}
 		return actions;

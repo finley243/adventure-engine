@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine.world;
 
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionLockHotwire;
-import com.github.finley243.adventureengine.action.ActionLockKey;
-import com.github.finley243.adventureengine.action.ActionLockPick;
+import com.github.finley243.adventureengine.action.ActionUnlockHotwire;
+import com.github.finley243.adventureengine.action.ActionUnlockKey;
+import com.github.finley243.adventureengine.action.ActionUnlockPick;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -37,18 +37,18 @@ public class Lock {
         return isLocked;
     }
 
-    public List<Action> getActions(Actor subject) {
+    public List<Action> getActions(Actor subject, Lock linkedLock) {
         List<Action> actions = new ArrayList<>();
         if (isLocked) {
             WorldObject object = subject.game().data().getObject(objectID);
             if (!keyItems.isEmpty()) {
-                actions.add(new ActionLockKey(this, object, keyItems));
+                actions.add(new ActionUnlockKey(this, linkedLock, object, keyItems));
             }
             if (lockpickLevel != 0) {
-                actions.add(new ActionLockPick(this, object, lockpickLevel));
+                actions.add(new ActionUnlockPick(this, linkedLock, object, lockpickLevel));
             }
             if (hotwireLevel != 0) {
-                actions.add(new ActionLockHotwire(this, object, hotwireLevel));
+                actions.add(new ActionUnlockHotwire(this, linkedLock, object, hotwireLevel));
             }
         }
         return actions;
