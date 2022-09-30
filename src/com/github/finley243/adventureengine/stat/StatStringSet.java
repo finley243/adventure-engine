@@ -1,19 +1,19 @@
-package com.github.finley243.adventureengine.effect.moddable;
+package com.github.finley243.adventureengine.stat;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ModdableStringSet {
+public class StatStringSet {
 
     // TODO - Make generic (parameterized type, not specific to strings)
 
-    private final Moddable target;
+    private final StatHolder target;
     private final Map<String, Integer> additional;
     private final Map<String, Integer> cancellation;
 
-    public ModdableStringSet(Moddable target) {
+    public StatStringSet(StatHolder target) {
         this.target = target;
         this.additional = new HashMap<>();
         this.cancellation = new HashMap<>();

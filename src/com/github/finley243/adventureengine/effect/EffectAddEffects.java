@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.effect.moddable.Moddable;
+import com.github.finley243.adventureengine.stat.StatHolder;
 
 import java.util.List;
 
@@ -16,17 +16,17 @@ public class EffectAddEffects extends Effect {
     }
 
     @Override
-    public void start(Moddable target) {
+    public void start(StatHolder target) {
         target.getStatEffects(stat).addAdditional(effects);
     }
 
     @Override
-    public void end(Moddable target) {
+    public void end(StatHolder target) {
         target.getStatEffects(stat).removeAdditional(effects);
     }
 
     @Override
-    public void eachTurn(Moddable target) {
+    public void eachTurn(StatHolder target) {
 
     }
 

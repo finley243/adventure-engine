@@ -1,14 +1,14 @@
-package com.github.finley243.adventureengine.effect.moddable;
+package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.MathUtils;
 
-public class ModdableStatInt {
+public class StatInt {
 
-    private final Moddable target;
+    private final StatHolder target;
     private int mod;
     private float mult;
 
-    public ModdableStatInt(Moddable target) {
+    public StatInt(StatHolder target) {
         this.target = target;
     }
 

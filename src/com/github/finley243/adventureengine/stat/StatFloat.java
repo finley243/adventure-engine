@@ -1,12 +1,12 @@
-package com.github.finley243.adventureengine.effect.moddable;
+package com.github.finley243.adventureengine.stat;
 
-public class ModdableStatFloat {
+public class StatFloat {
 
-    private final Moddable target;
+    private final StatHolder target;
     private float mod;
     private float mult;
 
-    public ModdableStatFloat(Moddable target) {
+    public StatFloat(StatHolder target) {
         this.target = target;
     }
 

@@ -12,11 +12,12 @@ import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.*;
 
-public class ItemWeapon extends ItemEquippable implements Moddable {
+public class ItemWeapon extends ItemEquippable implements StatHolder {
 
 	public static final float HIT_CHANCE_BASE_MELEE_MIN = 0.10f;
 	public static final float HIT_CHANCE_BASE_MELEE_MAX = 0.90f;
@@ -24,16 +25,16 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public static final float HIT_CHANCE_BASE_RANGED_MAX = 0.90f;
 	
 	private final WeaponTemplate stats;
-	private final ModdableStringSet attackTypes;
-	private final ModdableStatInt damage;
-	private final ModdableStatInt rate;
-	private final ModdableStatInt critDamage;
-	private final ModdableStringSet ranges;
-	private final ModdableStatInt clipSize;
-	private final ModdableStatFloat accuracyBonus;
-	private final ModdableStatFloat armorMult;
-	private final ModdableStatString damageType;
-	private final ModdableStatBoolean isSilenced;
+	private final StatStringSet attackTypes;
+	private final StatInt damage;
+	private final StatInt rate;
+	private final StatInt critDamage;
+	private final StatStringSet ranges;
+	private final StatInt clipSize;
+	private final StatFloat accuracyBonus;
+	private final StatFloat armorMult;
+	private final StatString damageType;
+	private final StatBoolean isSilenced;
 	private ItemAmmo ammoType;
 	private int ammoCount;
 
@@ -42,16 +43,16 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	public ItemWeapon(Game game, String ID, WeaponTemplate stats) {
 		super(game, ID);
 		this.stats = stats;
-		this.attackTypes = new ModdableStringSet(this);
-		this.damage = new ModdableStatInt(this);
-		this.rate = new ModdableStatInt(this);
-		this.critDamage = new ModdableStatInt(this);
-		this.ranges = new ModdableStringSet(this);
-		this.clipSize = new ModdableStatInt(this);
-		this.accuracyBonus = new ModdableStatFloat(this);
-		this.armorMult = new ModdableStatFloat(this);
-		this.damageType = new ModdableStatString(this);
-		this.isSilenced = new ModdableStatBoolean(this, false);
+		this.attackTypes = new StatStringSet(this);
+		this.damage = new StatInt(this);
+		this.rate = new StatInt(this);
+		this.critDamage = new StatInt(this);
+		this.ranges = new StatStringSet(this);
+		this.clipSize = new StatInt(this);
+		this.accuracyBonus = new StatFloat(this);
+		this.armorMult = new StatFloat(this);
+		this.damageType = new StatString(this);
+		this.isSilenced = new StatBoolean(this, false);
 		this.ammoType = null;
 		this.ammoCount = 0;
 		this.effects = new HashMap<>();
@@ -192,7 +193,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public ModdableStatInt getStatInt(String name) {
+	public StatInt getStatInt(String name) {
 		switch(name) {
 			case "damage":
 				return damage;
@@ -208,7 +209,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public ModdableStatFloat getStatFloat(String name) {
+	public StatFloat getStatFloat(String name) {
 		if ("accuracyBonus".equals(name)) {
 			return accuracyBonus;
 		} else if ("armorMult".equals(name)) {
@@ -218,7 +219,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public ModdableStatBoolean getStatBoolean(String name) {
+	public StatBoolean getStatBoolean(String name) {
 		if ("isSilenced".equals(name)) {
 			return isSilenced;
 		}
@@ -226,12 +227,12 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public ModdableEffectList getStatEffects(String name) {
+	public StatEffectList getStatEffects(String name) {
 		return null;
 	}
 
 	@Override
-	public ModdableStatString getStatString(String name) {
+	public StatString getStatString(String name) {
 		if ("damageType".equals(name)) {
 			return damageType;
 		}
@@ -239,7 +240,7 @@ public class ItemWeapon extends ItemEquippable implements Moddable {
 	}
 
 	@Override
-	public ModdableStringSet getStatStringSet(String name) {
+	public StatStringSet getStatStringSet(String name) {
 		if ("ranges".equals(name)) {
 			return ranges;
 		} else if ("attackTypes".equals(name)) {

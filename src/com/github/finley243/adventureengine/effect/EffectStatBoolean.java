@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.effect.moddable.Moddable;
+import com.github.finley243.adventureengine.stat.StatHolder;
 
 public class EffectStatBoolean extends Effect {
 
@@ -14,19 +14,19 @@ public class EffectStatBoolean extends Effect {
     }
 
     @Override
-    public void start(Moddable target) {
+    public void start(StatHolder target) {
         target.getStatBoolean(stat).addMod(value);
         target.onStatChange();
     }
 
     @Override
-    public void end(Moddable target) {
+    public void end(StatHolder target) {
         target.getStatBoolean(stat).removeMod(value);
         target.onStatChange();
     }
 
     @Override
-    public void eachTurn(Moddable target) {
+    public void eachTurn(StatHolder target) {
 
     }
 

@@ -26,6 +26,7 @@ import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -36,7 +37,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.*;
 
-public class Actor extends GameInstanced implements Noun, Physical, Moddable, AttackTarget {
+public class Actor extends GameInstanced implements Noun, Physical, StatHolder, AttackTarget {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 3;
@@ -86,7 +87,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	private boolean isKnown;
 	private final Area defaultArea;
 	private Area area;
-	private final ModdableStatInt maxHP;
+	private final StatInt maxHP;
 	private int HP;
 	private final boolean startDisabled;
 	private boolean isEnabled;
@@ -94,11 +95,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	private boolean isDead;
 	private boolean isSleeping;
 	private boolean endTurn;
-	private final ModdableStatInt actionPoints;
+	private final StatInt actionPoints;
 	private int actionPointsUsed;
 	private final Map<Action, Integer> blockedActions;
-	private final EnumMap<Attribute, ModdableStatInt> attributes;
-	private final EnumMap<Skill, ModdableStatInt> skills;
+	private final EnumMap<Attribute, StatInt> attributes;
+	private final EnumMap<Skill, StatInt> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final ApparelComponent apparelComponent;
@@ -124,8 +125,8 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 		this.investigateTarget = new InvestigateTarget();
 		this.startDead = startDead;
 		this.isDead = startDead;
-		this.maxHP = new ModdableStatInt(this);
-		this.actionPoints = new ModdableStatInt(this);
+		this.maxHP = new StatInt(this);
+		this.actionPoints = new StatInt(this);
 		if(!startDead) {
 			HP = this.maxHP.value(template.getMaxHP(game()), 0, MAX_HP);
 		}
@@ -139,11 +140,11 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 		}
 		this.attributes = new EnumMap<>(Attribute.class);
 		for(Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new ModdableStatInt(this));
+			this.attributes.put(attribute, new StatInt(this));
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for(Skill skill : Skill.values()) {
-			this.skills.put(skill, new ModdableStatInt(this));
+			this.skills.put(skill, new StatInt(this));
 		}
 		this.effectComponent = new EffectComponent(this);
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
@@ -814,7 +815,7 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	}
 
 	@Override
-	public ModdableStatInt getStatInt(String name) {
+	public StatInt getStatInt(String name) {
 		switch(name) {
 			case "maxHP":
 				return maxHP;
@@ -860,27 +861,27 @@ public class Actor extends GameInstanced implements Noun, Physical, Moddable, At
 	}
 
 	@Override
-	public ModdableStatFloat getStatFloat(String name) {
+	public StatFloat getStatFloat(String name) {
 		return null;
 	}
 
 	@Override
-	public ModdableStatBoolean getStatBoolean(String name) {
+	public StatBoolean getStatBoolean(String name) {
 		return null;
 	}
 
 	@Override
-	public ModdableEffectList getStatEffects(String name) {
+	public StatEffectList getStatEffects(String name) {
 		return null;
 	}
 
 	@Override
-	public ModdableStatString getStatString(String name) {
+	public StatString getStatString(String name) {
 		return null;
 	}
 
 	@Override
-	public ModdableStringSet getStatStringSet(String name) {
+	public StatStringSet getStatStringSet(String name) {
 		return null;
 	}
 

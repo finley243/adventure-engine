@@ -1,14 +1,14 @@
-package com.github.finley243.adventureengine.effect.moddable;
+package com.github.finley243.adventureengine.stat;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class ModdableStatString {
+public class StatString {
 
-    private final Moddable target;
+    private final StatHolder target;
     private final Deque<String> stringStack;
 
-    public ModdableStatString(Moddable target) {
+    public StatString(StatHolder target) {
         this.target = target;
         this.stringStack = new ArrayDeque<>();
     }

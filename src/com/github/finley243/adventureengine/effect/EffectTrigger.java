@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.effect.moddable.Moddable;
+import com.github.finley243.adventureengine.stat.StatHolder;
 
 public class EffectTrigger extends Effect {
 
@@ -12,17 +12,17 @@ public class EffectTrigger extends Effect {
     }
 
     @Override
-    public void start(Moddable target) {
+    public void start(StatHolder target) {
         target.triggerEffect(trigger);
     }
 
     @Override
-    public void end(Moddable target) {
+    public void end(StatHolder target) {
 
     }
 
     @Override
-    public void eachTurn(Moddable target) {
+    public void eachTurn(StatHolder target) {
         target.triggerEffect(trigger);
     }
 

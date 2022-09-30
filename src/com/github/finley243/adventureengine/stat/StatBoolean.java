@@ -1,14 +1,14 @@
-package com.github.finley243.adventureengine.effect.moddable;
+package com.github.finley243.adventureengine.stat;
 
-public class ModdableStatBoolean {
+public class StatBoolean {
 
-    private final Moddable target;
+    private final StatHolder target;
     // If there are both true and false modifiers, the priority value will be used
     private final boolean priorityValue;
     private int countTrue;
     private int countFalse;
 
-    public ModdableStatBoolean(Moddable target, boolean priorityValue) {
+    public StatBoolean(StatHolder target, boolean priorityValue) {
         this.target = target;
         this.priorityValue = priorityValue;
     }

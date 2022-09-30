@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.effect.moddable.Moddable;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
+import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.StatInt;
 
 public class EffectStatModInt extends Effect {
 
@@ -15,23 +15,23 @@ public class EffectStatModInt extends Effect {
     }
 
     @Override
-    public void start(Moddable target) {
-        ModdableStatInt moddableStatInt = target.getStatInt(stat);
-        if(moddableStatInt != null) {
-            moddableStatInt.addMod(amount);
+    public void start(StatHolder target) {
+        StatInt statInt = target.getStatInt(stat);
+        if(statInt != null) {
+            statInt.addMod(amount);
         }
     }
 
     @Override
-    public void end(Moddable target) {
-        ModdableStatInt moddableStatInt = target.getStatInt(stat);
-        if(moddableStatInt != null) {
-            moddableStatInt.addMod(-amount);
+    public void end(StatHolder target) {
+        StatInt statInt = target.getStatInt(stat);
+        if(statInt != null) {
+            statInt.addMod(-amount);
         }
     }
 
     @Override
-    public void eachTurn(Moddable target) {
+    public void eachTurn(StatHolder target) {
 
     }
 

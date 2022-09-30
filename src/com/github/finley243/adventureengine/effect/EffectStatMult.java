@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.effect.moddable.Moddable;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStatFloat;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStatInt;
+import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.StatFloat;
+import com.github.finley243.adventureengine.stat.StatInt;
 
 public class EffectStatMult extends Effect {
 
@@ -16,33 +16,33 @@ public class EffectStatMult extends Effect {
     }
 
     @Override
-    public void start(Moddable target) {
-        ModdableStatInt moddableStatInt = target.getStatInt(stat);
-        if(moddableStatInt != null) {
-            moddableStatInt.addMult(amount);
+    public void start(StatHolder target) {
+        StatInt statInt = target.getStatInt(stat);
+        if(statInt != null) {
+            statInt.addMult(amount);
         } else {
-            ModdableStatFloat moddableStatFloat = target.getStatFloat(stat);
-            if(moddableStatFloat != null) {
-                moddableStatFloat.addMult(amount);
+            StatFloat statFloat = target.getStatFloat(stat);
+            if(statFloat != null) {
+                statFloat.addMult(amount);
             }
         }
     }
 
     @Override
-    public void end(Moddable target) {
-        ModdableStatInt moddableStatInt = target.getStatInt(stat);
-        if(moddableStatInt != null) {
-            moddableStatInt.addMult(-amount);
+    public void end(StatHolder target) {
+        StatInt statInt = target.getStatInt(stat);
+        if(statInt != null) {
+            statInt.addMult(-amount);
         } else {
-            ModdableStatFloat moddableStatFloat = target.getStatFloat(stat);
-            if(moddableStatFloat != null) {
-                moddableStatFloat.addMult(-amount);
+            StatFloat statFloat = target.getStatFloat(stat);
+            if(statFloat != null) {
+                statFloat.addMult(-amount);
             }
         }
     }
 
     @Override
-    public void eachTurn(Moddable target) {
+    public void eachTurn(StatHolder target) {
 
     }
 

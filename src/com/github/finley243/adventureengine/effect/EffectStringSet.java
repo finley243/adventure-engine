@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.effect.moddable.Moddable;
-import com.github.finley243.adventureengine.effect.moddable.ModdableStringSet;
+import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.StatStringSet;
 
 import java.util.Set;
 
@@ -19,20 +19,20 @@ public class EffectStringSet extends Effect {
     }
 
     @Override
-    public void start(Moddable target) {
-        ModdableStringSet moddableSet = target.getStatStringSet(stat);
+    public void start(StatHolder target) {
+        StatStringSet moddableSet = target.getStatStringSet(stat);
         moddableSet.addAdditional(valuesAdd);
         moddableSet.addCancellation(valuesRemove);
     }
 
     @Override
-    public void end(Moddable target) {
-        ModdableStringSet moddableSet = target.getStatStringSet(stat);
+    public void end(StatHolder target) {
+        StatStringSet moddableSet = target.getStatStringSet(stat);
         moddableSet.removeAdditional(valuesAdd);
         moddableSet.removeCancellation(valuesRemove);
     }
 
     @Override
-    public void eachTurn(Moddable target) {}
+    public void eachTurn(StatHolder target) {}
 
 }

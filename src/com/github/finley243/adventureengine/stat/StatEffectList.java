@@ -1,16 +1,16 @@
-package com.github.finley243.adventureengine.effect.moddable;
+package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.effect.Effect;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModdableEffectList {
+public class StatEffectList {
 
-    private final Moddable target;
+    private final StatHolder target;
     private final List<Effect> additional;
 
-    public ModdableEffectList(Moddable target) {
+    public StatEffectList(StatHolder target) {
         this.target = target;
         this.additional = new ArrayList<>();
     }
