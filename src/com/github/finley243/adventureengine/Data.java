@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorFactory;
 import com.github.finley243.adventureengine.actor.ActorTemplate;
 import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -49,6 +50,7 @@ public class Data {
 	private final Map<String, Faction> factions = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
 	private final Map<String, Timer> timers = new HashMap<>();
+	private final Map<String, Effect> effects = new HashMap<>();
 
 	public Data(Game game) {
 		this.game = game;
@@ -326,7 +328,6 @@ public class Data {
 
 	public void addTimer(String id, Timer value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add timer with blank ID");
-		//if(networks.containsKey(id)) throw new IllegalArgumentException("Cannot add timer with existing ID: " + id);
 		timers.put(id, value);
 	}
 
@@ -344,6 +345,16 @@ public class Data {
 
 	public boolean isTimerActive(String id) {
 		return timers.containsKey(id);
+	}
+
+	public void addEffect(String id, Effect value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add effect with blank ID");
+		if(effects.containsKey(id)) throw new IllegalArgumentException("Cannot add effect with existing ID: " + id);
+		effects.put(id, value);
+	}
+
+	public Effect getEffect(String id) {
+		return effects.get(id);
 	}
 	
 }

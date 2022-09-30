@@ -98,6 +98,12 @@ public class DataLoader {
                         Script script = loadScript(scriptElement);
                         game.data().addScript(scriptID, script);
                     }
+                    List<Element> effects = LoadUtils.directChildrenWithName(rootElement, "effect");
+                    for (Element effectElement : effects) {
+                        String effectID = LoadUtils.attribute(effectElement, "id", null);
+                        Effect effect = loadEffect(effectElement);
+                        game.data().addEffect(effectID, effect);
+                    }
                 }
             }
         }
@@ -155,7 +161,7 @@ public class DataLoader {
         float hitChance = LoadUtils.attributeFloat(element, "hitChance", 1.0f);
         float damageMult = LoadUtils.attributeFloat(element, "damageMult", 1.0f);
         String apparelSlot = LoadUtils.attribute(element, "apparelSlot", null);
-        List<Effect> crippledEffects = loadEffects(element, false);
+        List<Effect> crippledEffects = loadEffects(element);
         return new Limb(name, hitChance, damageMult, apparelSlot, crippledEffects);
     }
 
@@ -475,11 +481,11 @@ public class DataLoader {
                     int amount = LoadUtils.attributeInt(damageResistElement, "amount", 0);
                     damageResistance.putIfAbsent(damageResistType, amount);
                 }
-                List<Effect> apparelEffects = loadEffects(itemElement, true);
+                List<Effect> apparelEffects = loadEffects(itemElement);
                 return new ApparelTemplate(id, name, description, scripts, price, attackType, apparelSlots, damageResistance, apparelEffects);
             case "consumable":
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
-                List<Effect> consumableEffects = loadEffects(itemElement, false);
+                List<Effect> consumableEffects = loadEffects(itemElement);
                 return new ConsumableTemplate(id, name, description, scripts, price, attackType, consumableType, consumableEffects);
             case "weapon":
                 String weaponClass = LoadUtils.attribute(itemElement, "class", null);
@@ -494,7 +500,7 @@ public class DataLoader {
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 return new WeaponTemplate(id, name, description, scripts, price, attackType, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
             case "ammo":
-                List<Effect> ammoWeaponEffects = loadEffects(itemElement, true);
+                List<Effect> ammoWeaponEffects = loadEffects(itemElement);
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
                 return new AmmoTemplate(id, name, description, scripts, price, attackType, ammoWeaponEffects, ammoIsReusable);
             case "misc":
@@ -503,19 +509,20 @@ public class DataLoader {
         }
     }
 
-    private static List<Effect> loadEffects(Element effectsElement, boolean manualRemoval) {
+    private static List<Effect> loadEffects(Element effectsElement) {
         if(effectsElement == null) return new ArrayList<>();
         List<Element> effectElements = LoadUtils.directChildrenWithName(effectsElement, "effect");
         List<Effect> effects = new ArrayList<>();
         for(Element effectElement : effectElements) {
-            effects.add(loadEffect(effectElement, manualRemoval));
+            effects.add(loadEffect(effectElement));
         }
         return effects;
     }
 
-    private static Effect loadEffect(Element effectElement, boolean manualRemoval) {
+    private static Effect loadEffect(Element effectElement) {
         if(effectElement == null) return null;
-        String effectType = effectElement.getAttribute("type");
+        boolean manualRemoval = LoadUtils.attributeBool(effectElement, "isPermanent", false);
+        String effectType = LoadUtils.attribute(effectElement, "type", null);
         int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
         boolean stackable = LoadUtils.attributeBool(effectElement, "stack", true);
         switch (effectType) {
@@ -556,7 +563,7 @@ public class DataLoader {
                 return new EffectStringSet(duration, manualRemoval, stackable, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
             case "addEffects":
                 String statEffects = LoadUtils.attribute(effectElement, "stat", null);
-                List<Effect> addedEffects = loadEffects(effectElement, false);
+                List<Effect> addedEffects = loadEffects(effectElement);
                 return new EffectAddEffects(duration, manualRemoval, stackable, statEffects, addedEffects);
             default:
                 return null;
@@ -864,7 +871,7 @@ public class DataLoader {
         float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
         Damage.DamageType damageTypeOverride = LoadUtils.attributeEnum(attackTypeElement, "damageType", Damage.DamageType.class, null);
         Float armorMultOverride = LoadUtils.attributeFloat(attackTypeElement, "armorMult", null);
-        List<Effect> targetEffects = loadEffects(attackTypeElement, false);
+        List<Effect> targetEffects = loadEffects(attackTypeElement);
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
         ActionAttack.AttackHitChanceType hitChanceType = LoadUtils.attributeEnum(attackTypeElement, "hitChanceType", ActionAttack.AttackHitChanceType.class, ActionAttack.AttackHitChanceType.INDEPENDENT);
