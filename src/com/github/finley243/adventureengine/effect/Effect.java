@@ -21,7 +21,7 @@ public abstract class Effect {
 	
 	public abstract void end(StatHolder target);
 	
-	public abstract void eachTurn(StatHolder target);
+	public abstract void eachRound(StatHolder target);
 
 	public boolean manualRemoval() {
 		return manualRemoval;

@@ -24,7 +24,7 @@ public class EffectStateInt extends Effect {
     }
 
     @Override
-    public void eachTurn(StatHolder target) {
+    public void eachRound(StatHolder target) {
         target.modifyState(state, amount);
     }
 

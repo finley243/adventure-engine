@@ -22,7 +22,7 @@ public class EffectTrigger extends Effect {
     }
 
     @Override
-    public void eachTurn(StatHolder target) {
+    public void eachRound(StatHolder target) {
         target.triggerEffect(trigger);
     }
 

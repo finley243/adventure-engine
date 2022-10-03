@@ -565,6 +565,9 @@ public class DataLoader {
                 String statEffects = LoadUtils.attribute(effectElement, "stat", null);
                 List<Effect> addedEffects = loadEffects(effectElement);
                 return new EffectAddEffects(duration, manualRemoval, stackable, statEffects, addedEffects);
+            case "compound":
+                List<Effect> compoundEffects = loadEffects(effectElement);
+                return new EffectCompound(duration, manualRemoval, stackable, compoundEffects);
             default:
                 return null;
         }

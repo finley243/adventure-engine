@@ -48,7 +48,7 @@ public class EffectComponent {
         Iterator<Effect> itr = effects.keySet().iterator();
         while(itr.hasNext()) {
             Effect effect = itr.next();
-            effect.eachTurn(actor);
+            effect.eachRound(actor);
             if(!effect.manualRemoval()) {
                 List<Integer> counters = effects.get(effect);
                 for (int i = 0; i < counters.size(); i++) {
