@@ -10,8 +10,6 @@ public interface StatHolder {
 
     StatBoolean getStatBoolean(String name);
 
-    StatEffectList getStatEffects(String name);
-
     StatString getStatString(String name);
 
     StatStringSet getStatStringSet(String name);

@@ -1,10 +1,8 @@
 package com.github.finley243.adventureengine.item.template;
 
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.component.ApparelComponent;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.script.Script;
 
 import java.util.HashSet;
@@ -16,9 +14,9 @@ public class ApparelTemplate extends ItemTemplate {
 	
 	private final Set<String> slots;
 	private final Map<Damage.DamageType, Integer> damageResistance;
-	private final List<Effect> effects;
+	private final List<String> effects;
 	
-	public ApparelTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, Set<String> slots, Map<Damage.DamageType, Integer> damageResistance, List<Effect> effects) {
+	public ApparelTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, Set<String> slots, Map<Damage.DamageType, Integer> damageResistance, List<String> effects) {
 		super(ID, name, description, scripts, price, attackType);
 		this.slots = slots;
 		this.damageResistance = damageResistance;
@@ -38,19 +36,19 @@ public class ApparelTemplate extends ItemTemplate {
 		return damageResistance.getOrDefault(type, 0);
 	}
 
-	public List<Effect> getEffects() {
+	public List<String> getEffects() {
 		return effects;
 	}
 
 	public void onEquip(Actor target) {
-		for(Effect effect : getEffects()) {
-			target.effectComponent().addEffect(effect);
+		for(String effect : getEffects()) {
+			target.effectComponent().addEffect(target.game().data().getEffect(effect));
 		}
 	}
 
 	public void onUnequip(Actor target) {
-		for(Effect effect : getEffects()) {
-			target.effectComponent().removeEffect(effect);
+		for(String effect : getEffects()) {
+			target.effectComponent().removeEffect(target.game().data().getEffect(effect));
 		}
 	}
 

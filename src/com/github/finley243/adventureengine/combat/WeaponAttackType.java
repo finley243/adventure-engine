@@ -7,7 +7,6 @@ import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -46,12 +45,12 @@ public class WeaponAttackType {
     private final float damageMult;
     private final Damage.DamageType damageTypeOverride;
     private final Float armorMultOverride;
-    private final List<Effect> targetEffects;
+    private final List<String> targetEffects;
     private final float hitChanceMult;
     private final boolean canDodge;
     private final ActionAttack.AttackHitChanceType hitChanceType;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, int ammoConsumed, Actor.Skill skillOverride, Float baseHitChanceMin, Float baseHitChanceMax, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, Damage.DamageType damageTypeOverride, Float armorMultOverride, List<Effect> targetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, int ammoConsumed, Actor.Skill skillOverride, Float baseHitChanceMin, Float baseHitChanceMax, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, Damage.DamageType damageTypeOverride, Float armorMultOverride, List<String> targetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType) {
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
@@ -98,7 +97,7 @@ public class WeaponAttackType {
         int damage = weapon == null ? damageOverride : (int) (weapon.getDamage() * (damageMult + 1.0f));
         Damage.DamageType damageType = weapon == null ? damageTypeOverride : weapon.getDamageType();
         float armorMult = weapon == null ? armorMultOverride : weapon.getArmorMult();
-        List<Effect> targetEffectsCombined = new ArrayList<>(targetEffects);
+        List<String> targetEffectsCombined = new ArrayList<>(targetEffects);
         if (weapon != null) {
             targetEffectsCombined.addAll(weapon.getTargetEffects());
         }

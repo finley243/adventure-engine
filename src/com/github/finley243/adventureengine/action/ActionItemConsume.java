@@ -36,8 +36,8 @@ public class ActionItemConsume extends Action {
 				break;
 		}
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
-		for(Effect effect : item.getEffects()) {
-			subject.effectComponent().addEffect(effect);
+		for(String effect : item.getEffects()) {
+			subject.effectComponent().addEffect(subject.game().data().getEffect(effect));
 		}
 	}
 	

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.effect.Effect;
 
 import java.util.List;
 
@@ -16,9 +15,9 @@ public class Damage {
     private final Limb limb;
     // Multiplier for armor value of target (1.0f = unchanged, 0.0f = ignores armor)
     private final float armorMult;
-    private final List<Effect> targetEffects;
+    private final List<String> targetEffects;
 
-    public Damage(DamageType type, int amount, Limb limb, float armorMult, List<Effect> targetEffects) {
+    public Damage(DamageType type, int amount, Limb limb, float armorMult, List<String> targetEffects) {
         if (amount < 0) throw new IllegalArgumentException("Damage amount cannot be less than 0");
         this.type = type;
         this.amount = amount;
@@ -43,7 +42,7 @@ public class Damage {
         return armorMult;
     }
 
-    public List<Effect> getTargetEffects() {
+    public List<String> getTargetEffects() {
         return targetEffects;
     }
 

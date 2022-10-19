@@ -1,6 +1,9 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.*;
+import com.github.finley243.adventureengine.DateTimeController;
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionEnd;
 import com.github.finley243.adventureengine.action.ActionMove;
@@ -12,8 +15,6 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.combat.Damage;
-import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
@@ -370,8 +371,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	private void damageDirect(Damage damage) {
-		for (Effect effect : damage.getTargetEffects()) {
-			effectComponent.addEffect(effect);
+		for (String effectID : damage.getTargetEffects()) {
+			effectComponent.addEffect(game().data().getEffect(effectID));
 		}
 		int amount = damage.getAmount();
 		amount -= apparelComponent.getDamageResistance(template.getDefaultApparelSlot(game()), damage.getType()) * damage.getArmorMult();
@@ -390,8 +391,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	private void damageLimb(Damage damage, Limb limb) {
-		for (Effect effect : damage.getTargetEffects()) {
-			effectComponent.addEffect(effect);
+		for (String effectID : damage.getTargetEffects()) {
+			effectComponent.addEffect(game().data().getEffect(effectID));
 		}
 		int amount = damage.getAmount();
 		amount -= apparelComponent.getDamageResistance(limb.getApparelSlot(), damage.getType()) * damage.getArmorMult();
@@ -867,11 +868,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public StatBoolean getStatBoolean(String name) {
-		return null;
-	}
-
-	@Override
-	public StatEffectList getStatEffects(String name) {
 		return null;
 	}
 

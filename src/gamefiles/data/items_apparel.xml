@@ -8,6 +8,5 @@
         <name>tactical helmet</name>
         <slot>head</slot>
         <damageResist type="physical" amount="5"/>
-        <effect type="mod" stat="maxHP" amount="10"/>
     </item>
 </data>

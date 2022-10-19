@@ -161,8 +161,8 @@ public class DataLoader {
         float hitChance = LoadUtils.attributeFloat(element, "hitChance", 1.0f);
         float damageMult = LoadUtils.attributeFloat(element, "damageMult", 1.0f);
         String apparelSlot = LoadUtils.attribute(element, "apparelSlot", null);
-        List<Effect> crippledEffects = loadEffects(element);
-        return new Limb(name, hitChance, damageMult, apparelSlot, crippledEffects);
+        List<String> hitEffects = LoadUtils.listOfTags(element, "hitEffect");
+        return new Limb(name, hitChance, damageMult, apparelSlot, hitEffects);
     }
 
     private static Map<Actor.Attribute, Integer> loadAttributes(Element element) {
@@ -481,11 +481,11 @@ public class DataLoader {
                     int amount = LoadUtils.attributeInt(damageResistElement, "amount", 0);
                     damageResistance.putIfAbsent(damageResistType, amount);
                 }
-                List<Effect> apparelEffects = loadEffects(itemElement);
+                List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
                 return new ApparelTemplate(id, name, description, scripts, price, attackType, apparelSlots, damageResistance, apparelEffects);
             case "consumable":
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
-                List<Effect> consumableEffects = loadEffects(itemElement);
+                List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");
                 return new ConsumableTemplate(id, name, description, scripts, price, attackType, consumableType, consumableEffects);
             case "weapon":
                 String weaponClass = LoadUtils.attribute(itemElement, "class", null);
@@ -500,7 +500,7 @@ public class DataLoader {
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 return new WeaponTemplate(id, name, description, scripts, price, attackType, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
             case "ammo":
-                List<Effect> ammoWeaponEffects = loadEffects(itemElement);
+                List<String> ammoWeaponEffects = LoadUtils.listOfTags(itemElement, "weaponEffect");
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
                 return new AmmoTemplate(id, name, description, scripts, price, attackType, ammoWeaponEffects, ammoIsReusable);
             case "misc":
@@ -561,10 +561,6 @@ public class DataLoader {
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
                 return new EffectStringSet(duration, manualRemoval, stackable, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
-            case "addEffects":
-                String statEffects = LoadUtils.attribute(effectElement, "stat", null);
-                List<Effect> addedEffects = loadEffects(effectElement);
-                return new EffectAddEffects(duration, manualRemoval, stackable, statEffects, addedEffects);
             case "compound":
                 List<Effect> compoundEffects = loadEffects(effectElement);
                 return new EffectCompound(duration, manualRemoval, stackable, compoundEffects);
@@ -874,7 +870,7 @@ public class DataLoader {
         float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
         Damage.DamageType damageTypeOverride = LoadUtils.attributeEnum(attackTypeElement, "damageType", Damage.DamageType.class, null);
         Float armorMultOverride = LoadUtils.attributeFloat(attackTypeElement, "armorMult", null);
-        List<Effect> targetEffects = loadEffects(attackTypeElement);
+        List<String> targetEffects = LoadUtils.listOfTags(attackTypeElement, "targetEffect");
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
         ActionAttack.AttackHitChanceType hitChanceType = LoadUtils.attributeEnum(attackTypeElement, "hitChanceType", ActionAttack.AttackHitChanceType.class, ActionAttack.AttackHitChanceType.INDEPENDENT);

@@ -1,10 +1,10 @@
 <data>
     <item type="consumable" id="nitron_cola" price="10" consumableType="DRINK" attackType="throw_item">
         <name>Nitron Cola</name>
-        <effect type="state" state="heal" amount="10"/>
+        <effect>foodBasic</effect>
     </item>
     <item type="consumable" id="nitron_diet" price="10" consumableType="DRINK">
         <name>Nitron Diet</name>
-        <effect type="state" state="heal" amount="10"/>
+        <effect>foodBasic</effect>
     </item>
 </data>

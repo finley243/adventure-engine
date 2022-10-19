@@ -11,9 +11,9 @@ public class Limb {
     private final float hitChance;
     private final float damageMult;
     private final String apparelSlot;
-    private final List<Effect> hitEffects;
+    private final List<String> hitEffects;
 
-    public Limb(String name, float hitChance, float damageMult, String apparelSlot, List<Effect> hitEffects) {
+    public Limb(String name, float hitChance, float damageMult, String apparelSlot, List<String> hitEffects) {
         this.name = name;
         this.hitChance = hitChance;
         this.damageMult = damageMult;
@@ -38,8 +38,8 @@ public class Limb {
     }
 
     public void applyEffects(Actor target) {
-        for(Effect effect : hitEffects) {
-            target.effectComponent().addEffect(effect);
+        for(String effectID : hitEffects) {
+            target.effectComponent().addEffect(target.game().data().getEffect(effectID));
         }
     }
 

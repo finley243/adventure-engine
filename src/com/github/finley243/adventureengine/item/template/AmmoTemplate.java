@@ -11,10 +11,10 @@ import java.util.Set;
 
 public class AmmoTemplate extends ItemTemplate {
 
-    private final List<Effect> weaponEffects;
+    private final List<String> weaponEffects;
     private final boolean isReusable;
 
-    public AmmoTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, List<Effect> weaponEffects, boolean isReusable) {
+    public AmmoTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, List<String> weaponEffects, boolean isReusable) {
         super(ID, name, description, scripts, price, attackType);
         this.weaponEffects = weaponEffects;
         this.isReusable = isReusable;
@@ -25,7 +25,7 @@ public class AmmoTemplate extends ItemTemplate {
         return false;
     }
 
-    public List<Effect> getWeaponEffects() {
+    public List<String> getWeaponEffects() {
         return weaponEffects;
     }
 

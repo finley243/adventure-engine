@@ -8,7 +8,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.effect.moddable.*;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -105,7 +104,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	// TODO - Add target effects to weapons
-	public List<Effect> getTargetEffects() {
+	public List<String> getTargetEffects() {
 		return new ArrayList<>();
 	}
 
@@ -223,11 +222,6 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 		if ("isSilenced".equals(name)) {
 			return isSilenced;
 		}
-		return null;
-	}
-
-	@Override
-	public StatEffectList getStatEffects(String name) {
 		return null;
 	}
 

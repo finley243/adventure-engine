@@ -29,7 +29,7 @@ public class ItemConsumable extends Item {
 		return stats.getType();
 	}
 	
-	public List<Effect> getEffects() {
+	public List<String> getEffects() {
 		return stats.getEffects();
 	}
 	
