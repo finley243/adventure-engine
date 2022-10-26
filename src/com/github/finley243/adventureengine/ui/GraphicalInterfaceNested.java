@@ -98,45 +98,45 @@ public class GraphicalInterfaceNested implements UserInterface {
 			List<MenuChoice> menuData = e.getMenuChoices();
 			Map<String, JPopupMenu> categories = new HashMap<>();
 			for(MenuChoice current : menuData) {
-				if(current.getCategory().length == 0) {
+				if(current.getPath().length == 0) {
 					JButton button = new JButton(current.getPrompt());
 					button.addActionListener(new ChoiceButtonListener(game, current.getIndex()));
 					button.setEnabled(current.isEnabled());
 					choicePanel.add(button);
 				} else {
-					if (!categories.containsKey(current.getCategory()[0])) {
-						JButton categoryButton = new JButton(LangUtils.titleCase(current.getCategory()[0]));
+					if (!categories.containsKey(current.getPath()[0])) {
+						JButton categoryButton = new JButton(LangUtils.titleCase(current.getPath()[0]));
 						choicePanel.add(categoryButton);
-						JPopupMenu menuCategory = new JPopupMenu(current.getCategory()[0]);
+						JPopupMenu menuCategory = new JPopupMenu(current.getPath()[0]);
 						categoryButton.addActionListener(eAction -> menuCategory.show(categoryButton, categoryButton.getWidth(), 0));
-						categories.put(current.getCategory()[0], menuCategory);
+						categories.put(current.getPath()[0], menuCategory);
 					}
-					if(current.getCategory().length > 1) {
+					if(current.getPath().length > 1) {
 						JMenu parentElement = null;
-						for (MenuElement subElement : categories.get(current.getCategory()[0]).getSubElements()) {
-							if (subElement.getComponent().getName() != null && subElement.getComponent().getName().equalsIgnoreCase(current.getCategory()[1])) {
+						for (MenuElement subElement : categories.get(current.getPath()[0]).getSubElements()) {
+							if (subElement.getComponent().getName() != null && subElement.getComponent().getName().equalsIgnoreCase(current.getPath()[1])) {
 								parentElement = (JMenu) subElement.getComponent();
 								break;
 							}
 						}
 						if (parentElement == null) {
-							parentElement = new JMenu(LangUtils.titleCase(current.getCategory()[1]));
-							parentElement.setName(current.getCategory()[1]);
-							categories.get(current.getCategory()[0]).add(parentElement);
+							parentElement = new JMenu(LangUtils.titleCase(current.getPath()[1]));
+							parentElement.setName(current.getPath()[1]);
+							categories.get(current.getPath()[0]).add(parentElement);
 						}
 						JMenu lastParent;
-						for(int i = 2; i < current.getCategory().length; i++) {
+						for(int i = 2; i < current.getPath().length; i++) {
 							lastParent = parentElement;
 							parentElement = null;
 							for (Component subComponent : lastParent.getMenuComponents()) {
-								if (subComponent instanceof JMenu && subComponent.getName().equalsIgnoreCase(current.getCategory()[i])) {
+								if (subComponent instanceof JMenu && subComponent.getName().equalsIgnoreCase(current.getPath()[i])) {
 									parentElement = (JMenu) subComponent;
 									break;
 								}
 							}
 							if (parentElement == null) {
-								parentElement = new JMenu(LangUtils.titleCase(current.getCategory()[i]));
-								parentElement.setName(current.getCategory()[i]);
+								parentElement = new JMenu(LangUtils.titleCase(current.getPath()[i]));
+								parentElement.setName(current.getPath()[i]);
 								lastParent.add(parentElement);
 							}
 						}
@@ -148,7 +148,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 						JMenuItem menuItem = new JMenuItem(current.getPrompt());
 						menuItem.addActionListener(new ChoiceButtonListener(game, current.getIndex()));
 						menuItem.setEnabled(current.isEnabled());
-						categories.get(current.getCategory()[0]).add(menuItem);
+						categories.get(current.getPath()[0]).add(menuItem);
 					}
 				}
 			}

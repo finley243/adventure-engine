@@ -8,12 +8,12 @@ public class MenuChoice implements Comparable<MenuChoice> {
     private final String prompt;
     private final boolean enabled;
     // TODO - Find way to store unique IDs alongside display names for category, to allow displaying multiple items with the same name
-    private final String[] category;
+    private final String[] path;
 
-    public MenuChoice(String prompt, boolean enabled, String[] category) {
+    public MenuChoice(String prompt, boolean enabled, String[] path) {
         this.prompt = prompt;
         this.enabled = enabled;
-        this.category = category;
+        this.path = path;
     }
 
     public MenuChoice(String prompt, boolean enabled) {
@@ -34,7 +34,7 @@ public class MenuChoice implements Comparable<MenuChoice> {
 
     public String getFullPrompt() {
         StringBuilder fullPrompt = new StringBuilder();
-        for(String current : category) {
+        for(String current : path) {
             fullPrompt.append(LangUtils.titleCase(current)).append(" - ");
         }
         fullPrompt.append(prompt);
@@ -45,13 +45,13 @@ public class MenuChoice implements Comparable<MenuChoice> {
         return enabled;
     }
 
-    public String[] getCategory() {
-        return category;
+    public String[] getPath() {
+        return path;
     }
 
     private String sortingString() {
         StringBuilder builder = new StringBuilder();
-        for(String current : category) {
+        for(String current : path) {
             builder.append(current);
         }
         builder.append(prompt);

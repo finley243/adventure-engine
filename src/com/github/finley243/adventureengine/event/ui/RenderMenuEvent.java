@@ -10,7 +10,7 @@ public class RenderMenuEvent {
 	
 	public RenderMenuEvent(List<MenuChoice> menuChoices) {
 		this.menuChoices = menuChoices;
-		for(int i = 0; i < menuChoices.size(); i++) {
+		for (int i = 0; i < menuChoices.size(); i++) {
 			menuChoices.get(i).setIndex(i);
 		}
 	}
