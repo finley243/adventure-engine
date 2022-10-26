@@ -6,37 +6,46 @@ import com.github.finley243.adventureengine.actor.Actor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubNetwork {
+public abstract class NetworkNode {
 
+    private final String ID;
     private final String name;
-    private final List<String> connected;
     private final int securityLevel;
-    private final List<SubNetwork> subNets;
 
     private boolean isBreached;
 
-    public SubNetwork(String name, int securityLevel, List<String> connected, List<SubNetwork> subNets) {
+    public NetworkNode(String ID, String name, int securityLevel) {
+        this.ID = ID;
         this.name = name;
-        this.connected = connected;
         this.securityLevel = securityLevel;
-        this.subNets = subNets;
+    }
+
+    public String getID() {
+        return ID;
     }
 
     public String getName() {
         return name;
     }
 
+    public int getSecurityLevel() {
+        return securityLevel;
+    }
+
     public boolean isBreached() {
         return isBreached;
     }
 
-    public List<Action> networkActions(Actor subject) {
+    public List<Action> actions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-
-        for(SubNetwork subNet : subNets) {
-            actions.addAll(subNet.networkActions(subject));
+        if (isBreached()) {
+            actions.addAll(breachedActions(subject));
+        } else {
+            // TODO - Node breach action
         }
         return actions;
     }
+
+    protected abstract List<Action> breachedActions(Actor subject);
 
 }

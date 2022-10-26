@@ -628,7 +628,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		return action;
 	}
 
-	public List<Action> availableActions(){
+	public List<Action> availableActions() {
 		List<Action> actions = new ArrayList<>();
 		if(equipmentComponent.hasEquippedItem()) {
 			actions.addAll(equipmentComponent.getEquippedItem().equippedActions(this));
