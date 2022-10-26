@@ -16,6 +16,7 @@ import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.LootTableEntry;
 import com.github.finley243.adventureengine.item.template.*;
+import com.github.finley243.adventureengine.network.*;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
@@ -103,6 +104,11 @@ public class DataLoader {
                         String effectID = LoadUtils.attribute(effectElement, "id", null);
                         Effect effect = loadEffect(effectElement);
                         game.data().addEffect(effectID, effect);
+                    }
+                    List<Element> networks = LoadUtils.directChildrenWithName(rootElement, "network");
+                    for (Element networkElement : networks) {
+                        Network network = loadNetwork(networkElement);
+                        game.data().addNetwork(network.getID(), network);
                     }
                 }
             }
@@ -875,6 +881,36 @@ public class DataLoader {
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
         ActionAttack.AttackHitChanceType hitChanceType = LoadUtils.attributeEnum(attackTypeElement, "hitChanceType", ActionAttack.AttackHitChanceType.class, ActionAttack.AttackHitChanceType.INDEPENDENT);
         return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, ammoConsumed, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, hitChanceMult, canDodge, hitChanceType);
+    }
+
+    private static Network loadNetwork(Element networkElement) {
+        String ID = LoadUtils.attribute(networkElement, "id", null);
+        String name = LoadUtils.attribute(networkElement, "name", null);
+        NetworkNode topNode = loadNetworkNode(LoadUtils.singleChildWithName(networkElement, "node"));
+        return new Network(ID, name, topNode);
+    }
+
+    private static NetworkNode loadNetworkNode(Element nodeElement) {
+        String type = LoadUtils.attribute(nodeElement, "type", null);
+        String ID = LoadUtils.attribute(nodeElement, "id", null);
+        String name = LoadUtils.singleTag(nodeElement, "name", null);
+        int securityLevel = LoadUtils.attributeInt(nodeElement, "securityLevel", 0);
+        switch (type) {
+            case "data":
+                String dataSceneID = LoadUtils.attribute(nodeElement, "scene", null);
+                return new NetworkNodeData(ID, name, securityLevel, dataSceneID);
+            case "control":
+                String controlObjectID = LoadUtils.attribute(nodeElement, "object", null);
+                return new NetworkNodeControl(ID, name, securityLevel, controlObjectID);
+            case "group":
+            default:
+                Set<NetworkNode> groupNodes = new HashSet<>();
+                for (Element childNodeElement : LoadUtils.directChildrenWithName(nodeElement, "node")) {
+                    NetworkNode childNode = loadNetworkNode(childNodeElement);
+                    groupNodes.add(childNode);
+                }
+                return new NetworkNodeGroup(ID, name, securityLevel, groupNodes);
+        }
     }
 
 }

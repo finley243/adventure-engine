@@ -10,10 +10,12 @@ public class Network {
 
     private final String ID;
     private final String name;
+    private final NetworkNode topNode;
 
-    public Network(String ID, String name) {
+    public Network(String ID, String name, NetworkNode topNode) {
         this.ID = ID;
         this.name = name;
+        this.topNode = topNode;
     }
 
     public String getID() {
@@ -26,7 +28,7 @@ public class Network {
 
     public List<Action> networkActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-
+        actions.addAll(topNode.actions(subject));
         return actions;
     }
 

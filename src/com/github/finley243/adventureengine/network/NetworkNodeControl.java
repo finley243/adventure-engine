@@ -8,8 +8,11 @@ import java.util.List;
 
 public class NetworkNodeControl extends NetworkNode {
 
-    public NetworkNodeControl(String ID, String name, int securityLevel) {
+    private final String objectID;
+
+    public NetworkNodeControl(String ID, String name, int securityLevel, String objectID) {
         super(ID, name, securityLevel);
+        this.objectID = objectID;
     }
 
     @Override

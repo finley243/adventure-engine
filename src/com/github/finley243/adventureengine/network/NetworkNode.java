@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.network;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.network.ActionNetworkBreach;
 import com.github.finley243.adventureengine.actor.Actor;
 
 import java.util.ArrayList;
@@ -36,16 +37,30 @@ public abstract class NetworkNode {
         return isBreached;
     }
 
+    public void setBreached(boolean state) {
+        this.isBreached = state;
+    }
+
     public List<Action> actions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         if (isBreached()) {
             actions.addAll(breachedActions(subject));
         } else {
-            // TODO - Node breach action
+            actions.add(new ActionNetworkBreach(this));
         }
         return actions;
     }
 
     protected abstract List<Action> breachedActions(Actor subject);
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof NetworkNode && ((NetworkNode) o).getID().equals(this.getID());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getID().hashCode();
+    }
 
 }
