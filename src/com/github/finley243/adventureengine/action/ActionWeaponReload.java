@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.ItemWeapon;
@@ -65,8 +65,8 @@ public class ActionWeaponReload extends Action {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
-		return new MenuData(LangUtils.titleCase(ammoType.getName()), canChoose(subject), new String[]{"attack", weapon.getName(), "reload (" + weapon.getAmmoRemaining() + "/" + weapon.getClipSize() + ")"});
+	public MenuChoice getMenuChoices(Actor subject) {
+		return new MenuChoice(LangUtils.titleCase(ammoType.getName()), canChoose(subject), new String[]{"attack", weapon.getName(), "reload (" + weapon.getAmmoRemaining() + "/" + weapon.getClipSize() + ")"});
 	}
 
 	@Override

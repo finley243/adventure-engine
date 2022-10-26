@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -39,14 +39,14 @@ public class ActionInventoryTake extends Action {
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuChoice getMenuChoices(Actor subject) {
         String[] menuPath;
         if (name == null) {
             menuPath = new String[]{owner.getName(), item.getName() + subject.inventory().itemCountLabel(item)};
         } else {
             menuPath = new String[]{owner.getName(), name, item.getName() + subject.inventory().itemCountLabel(item)};
         }
-        return new MenuData("Take", canChoose(subject), menuPath);
+        return new MenuChoice("Take", canChoose(subject), menuPath);
     }
 
     @Override

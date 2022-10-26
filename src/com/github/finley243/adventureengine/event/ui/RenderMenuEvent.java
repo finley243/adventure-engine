@@ -1,22 +1,22 @@
 package com.github.finley243.adventureengine.event.ui;
 
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 
 import java.util.List;
 
 public class RenderMenuEvent {
 
-	private final List<MenuData> menuData;
+	private final List<MenuChoice> menuChoices;
 	
-	public RenderMenuEvent(List<MenuData> menuData) {
-		this.menuData = menuData;
-		for(int i = 0; i < menuData.size(); i++) {
-			menuData.get(i).setIndex(i);
+	public RenderMenuEvent(List<MenuChoice> menuChoices) {
+		this.menuChoices = menuChoices;
+		for(int i = 0; i < menuChoices.size(); i++) {
+			menuChoices.get(i).setIndex(i);
 		}
 	}
 
-	public List<MenuData> getMenuData() {
-		return menuData;
+	public List<MenuChoice> getMenuChoices() {
+		return menuChoices;
 	}
 	
 }

@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 
 public class ActionEnd extends Action {
 
@@ -25,8 +25,8 @@ public class ActionEnd extends Action {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
-		return new MenuData("End turn", canChoose(subject));
+	public MenuChoice getMenuChoices(Actor subject) {
+		return new MenuChoice("End turn", canChoose(subject));
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.ui;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.ui.*;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.google.common.eventbus.Subscribe;
 
@@ -95,9 +95,9 @@ public class GraphicalInterfaceNested implements UserInterface {
 	public void onMenuEvent(RenderMenuEvent e) {
 		SwingUtilities.invokeLater(() -> {
 			choicePanel.removeAll();
-			List<MenuData> menuData = e.getMenuData();
+			List<MenuChoice> menuData = e.getMenuChoices();
 			Map<String, JPopupMenu> categories = new HashMap<>();
-			for(MenuData current : menuData) {
+			for(MenuChoice current : menuData) {
 				if(current.getCategory().length == 0) {
 					JButton button = new JButton(current.getPrompt());
 					button.addActionListener(new ChoiceButtonListener(game, current.getIndex()));

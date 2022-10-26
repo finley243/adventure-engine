@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -55,8 +55,8 @@ public class ActionMoveElevator extends ActionMove {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), new String[]{elevator.getName()});
+	public MenuChoice getMenuChoices(Actor subject) {
+		return new MenuChoice("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), new String[]{elevator.getName()});
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.ItemApparel;
@@ -30,7 +30,7 @@ public class ActionApparelEquip extends Action {
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
-        return new MenuData("Equip", canChoose(subject), new String[]{"inventory", item.getName()});
+    public MenuChoice getMenuChoices(Actor subject) {
+        return new MenuChoice("Equip", canChoose(subject), new String[]{"inventory", item.getName()});
     }
 }

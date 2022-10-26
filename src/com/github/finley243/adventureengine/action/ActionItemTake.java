@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.Item;
@@ -42,9 +42,9 @@ public class ActionItemTake extends Action {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuChoice getMenuChoices(Actor subject) {
 		int count = objectItem.getCount();
-		return new MenuData("Take", canChoose(subject), new String[]{objectItem.getName() + (count > 1 ? " (" + count + ")" : "")});
+		return new MenuChoice("Take", canChoose(subject), new String[]{objectItem.getName() + (count > 1 ? " (" + count + ")" : "")});
 	}
 
 	@Override

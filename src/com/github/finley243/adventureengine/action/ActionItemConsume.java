@@ -2,9 +2,8 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.ItemConsumable;
@@ -42,7 +41,7 @@ public class ActionItemConsume extends Action {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuChoice getMenuChoices(Actor subject) {
 		String prompt;
 		switch(item.getConsumableType()) {
 		case DRINK:
@@ -56,7 +55,7 @@ public class ActionItemConsume extends Action {
 			prompt = "Use";
 			break;
 		}
-		return new MenuData(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)});
+		return new MenuChoice(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)});
 	}
 
 	@Override

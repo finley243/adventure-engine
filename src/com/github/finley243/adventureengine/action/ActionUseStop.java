@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.UsableObject;
@@ -41,8 +41,8 @@ public class ActionUseStop extends Action {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
-		return new MenuData(object.getStopPrompt(), canChoose(subject), new String[]{object.getName()});
+	public MenuChoice getMenuChoices(Actor subject) {
+		return new MenuChoice(object.getStopPrompt(), canChoose(subject), new String[]{object.getName()});
 	}
 
 	@Override

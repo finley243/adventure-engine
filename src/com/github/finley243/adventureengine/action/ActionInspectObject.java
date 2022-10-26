@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -26,8 +26,8 @@ public class ActionInspectObject extends Action {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Inspect", canChoose(subject), new String[]{object.getName()});
+	public MenuChoice getMenuChoices(Actor subject) {
+		return new MenuChoice("Inspect", canChoose(subject), new String[]{object.getName()});
 	}
 
 	@Override

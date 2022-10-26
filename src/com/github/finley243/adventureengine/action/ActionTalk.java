@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 
 public class ActionTalk extends Action {
 
@@ -23,8 +23,8 @@ public class ActionTalk extends Action {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
-		return new MenuData("Talk", canChoose(subject), new String[]{target.getName()});
+	public MenuChoice getMenuChoices(Actor subject) {
+		return new MenuChoice("Talk", canChoose(subject), new String[]{target.getName()});
 	}
 
 	@Override

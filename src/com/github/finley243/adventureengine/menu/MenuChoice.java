@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.menu;
 
 import com.github.finley243.adventureengine.textgen.LangUtils;
 
-public class MenuData implements Comparable<MenuData> {
+public class MenuChoice implements Comparable<MenuChoice> {
 
     private int index;
     private final String prompt;
@@ -10,13 +10,13 @@ public class MenuData implements Comparable<MenuData> {
     // TODO - Find way to store unique IDs alongside display names for category, to allow displaying multiple items with the same name
     private final String[] category;
 
-    public MenuData(String prompt, boolean enabled, String[] category) {
+    public MenuChoice(String prompt, boolean enabled, String[] category) {
         this.prompt = prompt;
         this.enabled = enabled;
         this.category = category;
     }
 
-    public MenuData(String prompt, boolean enabled) {
+    public MenuChoice(String prompt, boolean enabled) {
         this(prompt, enabled, new String[0]);
     }
 
@@ -59,7 +59,7 @@ public class MenuData implements Comparable<MenuData> {
     }
 
     @Override
-    public int compareTo(MenuData other) {
+    public int compareTo(MenuChoice other) {
         return this.sortingString().compareTo(other.sortingString());
     }
 

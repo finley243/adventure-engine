@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.script.Script;
 
 public class ActionCustom extends Action {
@@ -41,8 +41,8 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
-        return new MenuData(prompt, canChoose(subject), new String[] {subject.game().data().getObject(object).getName()});
+    public MenuChoice getMenuChoices(Actor subject) {
+        return new MenuChoice(prompt, canChoose(subject), new String[] {subject.game().data().getObject(object).getName()});
     }
 
     public boolean canShow(Actor subject) {

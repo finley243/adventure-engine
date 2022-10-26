@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.ConsoleUtils;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -28,8 +28,8 @@ public class ConsoleInterface implements UserInterface {
 	@Override
 	@Subscribe
 	public void onMenuEvent(RenderMenuEvent e) {
-		List<MenuData> validChoices = new ArrayList<>();
-		for(MenuData choice : e.getMenuData()) {
+		List<MenuChoice> validChoices = new ArrayList<>();
+		for(MenuChoice choice : e.getMenuChoices()) {
 			if(choice.isEnabled()) {
 				validChoices.add(choice);
 			}

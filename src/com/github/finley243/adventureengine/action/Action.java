@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 
 /**
  * An action that an actor can take
@@ -25,7 +25,7 @@ public abstract class Action {
 
 	public abstract void choose(Actor subject, int repeatActionCount);
 
-	public abstract MenuData getMenuData(Actor subject);
+	public abstract MenuChoice getMenuChoices(Actor subject);
 
 	public boolean canChoose(Actor subject) {
 		return !disabled;

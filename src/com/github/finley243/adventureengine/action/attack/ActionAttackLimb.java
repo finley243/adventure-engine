@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -50,8 +50,8 @@ public class ActionAttackLimb extends ActionAttack {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
-		return new MenuData(LangUtils.titleCase(getLimb().getName()) + " (" + getChanceTag(subject) + ")",
+	public MenuChoice getMenuChoices(Actor subject) {
+		return new MenuChoice(LangUtils.titleCase(getLimb().getName()) + " (" + getChanceTag(subject) + ")",
 				canChoose(subject), new String[]{"attack", weapon.getName(), getPrompt(), ((Noun) target).getName()});
 	}
 

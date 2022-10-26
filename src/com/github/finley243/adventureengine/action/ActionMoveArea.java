@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuData;
+import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -46,8 +46,8 @@ public class ActionMoveArea extends ActionMove {
 	}
 	
 	@Override
-	public MenuData getMenuData(Actor subject) {
-		return new MenuData(LangUtils.titleCase(link.getMoveName(subject.getArea())), canChoose(subject), new String[]{"move"});
+	public MenuChoice getMenuChoices(Actor subject) {
+		return new MenuChoice(LangUtils.titleCase(link.getMoveName(subject.getArea())), canChoose(subject), new String[]{"move"});
 	}
 
 	@Override
