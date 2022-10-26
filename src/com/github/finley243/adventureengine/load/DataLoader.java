@@ -30,6 +30,7 @@ import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentInventory;
+import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -67,6 +68,11 @@ public class DataLoader {
                     for (Element actorElement : actors) {
                         ActorTemplate actor = loadActor(actorElement);
                         game.data().addActorTemplate(actor.getID(), actor);
+                    }
+                    List<Element> objects = LoadUtils.directChildrenWithName(rootElement, "object");
+                    for (Element objectElement : objects) {
+                        ObjectTemplate object = loadObjectTemplate(objectElement);
+                        game.data().addObjectTemplate(object.getID(), object);
                     }
                     List<Element> items = LoadUtils.directChildrenWithName(rootElement, "item");
                     for (Element itemElement : items) {
@@ -683,11 +689,21 @@ public class DataLoader {
         return area;
     }
 
+    private static ObjectTemplate loadObjectTemplate(Element objectElement) throws ParserConfigurationException, IOException, SAXException {
+        String ID = LoadUtils.attribute(objectElement, "id", null);
+        String name = LoadUtils.singleTag(objectElement, "name", null);
+        Scene description = loadScene(LoadUtils.singleChildWithName(objectElement, "description"));
+        Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
+        // TODO - Find way to load object ID for custom actions (needs to be the instance ID, not the template ID)
+        List<ActionCustom> customActions = loadCustomActions(objectElement, null, "action");
+        return new ObjectTemplate(ID, name, description, scripts, customActions);
+    }
+
     private static WorldObject loadObject(Game game, Element objectElement, Area area) throws ParserConfigurationException, IOException, SAXException {
         if(objectElement == null) return null;
         String type = LoadUtils.attribute(objectElement, "type", null);
         String name = LoadUtils.singleTag(objectElement, "name", null);
-        String id = objectElement.getAttribute("id");
+        String id = LoadUtils.attribute(objectElement, "id", null);
         Scene description = loadScene(LoadUtils.singleChildWithName(objectElement, "description"));
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
         boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);

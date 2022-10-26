@@ -18,6 +18,7 @@ import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -38,6 +39,7 @@ public class Data {
 	private final Map<String, Room> rooms = new HashMap<>();
 	private final Map<String, Actor> actors = new HashMap<>();
 	private final Map<String, ActorTemplate> actorStats = new HashMap<>();
+	private final Map<String, ObjectTemplate> objectTemplates = new HashMap<>();
 	private final Map<String, WorldObject> objects = new HashMap<>();
 	private final Map<String, ItemTemplate> items = new HashMap<>();
 	private final Map<String, Item> itemStates = new HashMap<>();
@@ -78,6 +80,7 @@ public class Data {
 		rooms.clear();
 		actors.clear();
 		actorStats.clear();
+		objectTemplates.clear();
 		objects.clear();
 		items.clear();
 		itemStates.clear();
@@ -205,7 +208,17 @@ public class Data {
 	public ActorTemplate getActorTemplate(String id) {
 		return actorStats.get(id);
 	}
-	
+
+	public void addObjectTemplate(String id, ObjectTemplate value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add object template with blank ID");
+		if(objectTemplates.containsKey(id)) throw new IllegalArgumentException("Cannot add object template with existing ID: " + id);
+		objectTemplates.put(id, value);
+	}
+
+	public ObjectTemplate getObjectTemplate(String id) {
+		return objectTemplates.get(id);
+	}
+
 	public void addObject(String id, WorldObject value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add object with blank ID");
 		if(objects.containsKey(id)) throw new IllegalArgumentException("Cannot add object with existing ID: " + id);
