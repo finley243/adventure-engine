@@ -14,13 +14,15 @@ public class ObjectTemplate {
     private final Scene description;
     private final Map<String, Script> scripts;
     private final List<ActionCustom> customActions;
+    private final List<ObjectComponentTemplate> components;
 
-    public ObjectTemplate(String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions) {
+    public ObjectTemplate(String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, List<ObjectComponentTemplate> components) {
         this.ID = ID;
         this.name = name;
         this.description = description;
         this.scripts = scripts;
         this.customActions = customActions;
+        this.components = components;
     }
 
     public String getID() {
@@ -41,6 +43,10 @@ public class ObjectTemplate {
 
     public List<ActionCustom> getCustomActions() {
         return customActions;
+    }
+
+    public List<ObjectComponentTemplate> getComponents() {
+        return components;
     }
 
 }

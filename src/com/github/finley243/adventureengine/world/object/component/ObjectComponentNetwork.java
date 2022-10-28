@@ -4,23 +4,24 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.network.Network;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectComponentNetwork extends ObjectComponent {
 
-    private final String networkID;
+    private final ObjectComponentTemplateNetwork template;
 
-    public ObjectComponentNetwork(String ID, WorldObject object, boolean startEnabled, String networkID) {
+    public ObjectComponentNetwork(String ID, WorldObject object, boolean startEnabled, ObjectComponentTemplateNetwork template) {
         super(ID, object, startEnabled);
-        this.networkID = networkID;
+        this.template = template;
     }
 
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-        Network network = subject.game().data().getNetwork(networkID);
+        Network network = subject.game().data().getNetwork(template.getNetworkID());
         actions.addAll(network.networkActions(subject));
         return actions;
     }

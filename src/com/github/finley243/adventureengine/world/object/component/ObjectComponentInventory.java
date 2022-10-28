@@ -5,30 +5,27 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateInventory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectComponentInventory extends ObjectComponent {
 
+    private final ObjectComponentTemplateInventory template;
     // TODO - Add lock functionality
     private final Inventory inventory;
-    private final String name;
-    private final LootTable lootTable;
-    private final boolean isExposed;
 
-    public ObjectComponentInventory(String ID, WorldObject object, boolean startEnabled, String name, LootTable lootTable, boolean isExposed) {
+    public ObjectComponentInventory(String ID, WorldObject object, boolean startEnabled, ObjectComponentTemplateInventory template) {
         super(ID, object, startEnabled);
         this.inventory = new Inventory(object.game(), null);
-        this.name = name;
-        this.lootTable = lootTable;
-        this.isExposed = isExposed;
+        this.template = template;
     }
 
     @Override
     public List<Action> getActions(Actor subject) {
         if (isEnabled()) {
-            return new ArrayList<>(inventory.getExternalActions(getObject(), name, subject, isExposed));
+            return new ArrayList<>(inventory.getExternalActions(getObject(), template.getName(), subject, template.isExposed()));
         } else {
             return new ArrayList<>();
         }
@@ -36,8 +33,8 @@ public class ObjectComponentInventory extends ObjectComponent {
 
     @Override
     public void newGameInit() {
-        if (lootTable != null) {
-            inventory.addItems(lootTable.generateItems(getObject().game()));
+        if (template.getLootTable() != null) {
+            inventory.addItems(template.getLootTable().generateItems(getObject().game()));
         }
     }
 
