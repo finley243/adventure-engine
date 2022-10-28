@@ -18,6 +18,7 @@ import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 import org.xml.sax.SAXException;
 
@@ -40,6 +41,7 @@ public class Data {
 	private final Map<String, Actor> actors = new HashMap<>();
 	private final Map<String, ActorTemplate> actorStats = new HashMap<>();
 	private final Map<String, ObjectTemplate> objectTemplates = new HashMap<>();
+	private final Map<String, ObjectComponentTemplate> objectComponentTemplates = new HashMap<>();
 	private final Map<String, WorldObject> objects = new HashMap<>();
 	private final Map<String, ItemTemplate> items = new HashMap<>();
 	private final Map<String, Item> itemStates = new HashMap<>();
@@ -81,6 +83,7 @@ public class Data {
 		actors.clear();
 		actorStats.clear();
 		objectTemplates.clear();
+		objectComponentTemplates.clear();
 		objects.clear();
 		items.clear();
 		itemStates.clear();
@@ -217,6 +220,16 @@ public class Data {
 
 	public ObjectTemplate getObjectTemplate(String id) {
 		return objectTemplates.get(id);
+	}
+
+	public void addObjectComponentTemplate(String id, ObjectComponentTemplate value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add object component template with blank ID");
+		if(objectComponentTemplates.containsKey(id)) throw new IllegalArgumentException("Cannot add object component template with existing ID: " + id);
+		objectComponentTemplates.put(id, value);
+	}
+
+	public ObjectComponentTemplate getObjectComponentTemplate(String id) {
+		return objectComponentTemplates.get(id);
 	}
 
 	public void addObject(String id, WorldObject value) {

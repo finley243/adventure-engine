@@ -13,8 +13,8 @@ public class ObjectComponentNetwork extends ObjectComponent {
 
     private final ObjectComponentTemplateNetwork template;
 
-    public ObjectComponentNetwork(String ID, WorldObject object, boolean startEnabled, ObjectComponentTemplateNetwork template) {
-        super(ID, object, startEnabled);
+    public ObjectComponentNetwork(String ID, WorldObject object, ObjectComponentTemplateNetwork template) {
+        super(ID, object, template.startEnabled());
         this.template = template;
     }
 

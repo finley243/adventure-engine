@@ -16,8 +16,8 @@ public class ObjectComponentInventory extends ObjectComponent {
     // TODO - Add lock functionality
     private final Inventory inventory;
 
-    public ObjectComponentInventory(String ID, WorldObject object, boolean startEnabled, ObjectComponentTemplateInventory template) {
-        super(ID, object, startEnabled);
+    public ObjectComponentInventory(String ID, WorldObject object, ObjectComponentTemplateInventory template) {
+        super(ID, object, template.startEnabled());
         this.inventory = new Inventory(object.game(), null);
         this.template = template;
     }

@@ -8,7 +8,8 @@ public class ObjectComponentTemplateInventory extends ObjectComponentTemplate {
     private final LootTable lootTable;
     private final boolean isExposed;
 
-    public ObjectComponentTemplateInventory(String name, LootTable lootTable, boolean isExposed) {
+    public ObjectComponentTemplateInventory(String ID, boolean startEnabled, String name, LootTable lootTable, boolean isExposed) {
+        super(ID, startEnabled);
         this.name = name;
         this.lootTable = lootTable;
         this.isExposed = isExposed;

@@ -14,9 +14,9 @@ public class ObjectTemplate {
     private final Scene description;
     private final Map<String, Script> scripts;
     private final List<ActionCustom> customActions;
-    private final List<ObjectComponentTemplate> components;
+    private final Map<String, String> components;
 
-    public ObjectTemplate(String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, List<ObjectComponentTemplate> components) {
+    public ObjectTemplate(String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> components) {
         this.ID = ID;
         this.name = name;
         this.description = description;
@@ -45,7 +45,7 @@ public class ObjectTemplate {
         return customActions;
     }
 
-    public List<ObjectComponentTemplate> getComponents() {
+    public Map<String, String> getComponents() {
         return components;
     }
 

@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
+import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;

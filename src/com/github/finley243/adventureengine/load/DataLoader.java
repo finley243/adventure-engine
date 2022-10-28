@@ -30,6 +30,9 @@ import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentInventory;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateInventory;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateNetwork;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -68,6 +71,11 @@ public class DataLoader {
                     for (Element actorElement : actors) {
                         ActorTemplate actor = loadActor(actorElement);
                         game.data().addActorTemplate(actor.getID(), actor);
+                    }
+                    List<Element> objectComponents = LoadUtils.directChildrenWithName(rootElement, "objectComponent");
+                    for (Element objectComponentElement : objectComponents) {
+                        ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(objectComponentElement);
+                        game.data().addObjectComponentTemplate(componentTemplate.getID(), componentTemplate);
                     }
                     List<Element> objects = LoadUtils.directChildrenWithName(rootElement, "object");
                     for (Element objectElement : objects) {
@@ -676,7 +684,7 @@ public class DataLoader {
         List<Element> objectElements = LoadUtils.directChildrenWithName(areaElement, "object");
         for(Element objectElement : objectElements) {
             WorldObject object = loadObject(game, objectElement, area);
-            loadObjectComponents(objectElement, object);
+            //loadObjectComponents(objectElement, object);
             game.data().addObject(object.getID(), object);
         }
 
@@ -696,11 +704,19 @@ public class DataLoader {
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         // TODO - Find way to load object ID for custom actions (needs to be the instance ID, not the template ID)
         List<ActionCustom> customActions = loadCustomActions(objectElement, null, "action");
-        return new ObjectTemplate(ID, name, description, scripts, customActions);
+        Map<String, String> components = new HashMap<>();
+        List<Element> componentElements = LoadUtils.directChildrenWithName(objectElement, "component");
+        for (Element componentElement : componentElements) {
+            String componentID = LoadUtils.attribute(componentElement, "id", null);
+            String componentReference = LoadUtils.attribute(componentElement, "reference", null);
+            components.put(componentID, componentReference);
+        }
+        return new ObjectTemplate(ID, name, description, scripts, customActions, components);
     }
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) throws ParserConfigurationException, IOException, SAXException {
         if(objectElement == null) return null;
+        String template = LoadUtils.attribute(objectElement, "template", null);
         String type = LoadUtils.attribute(objectElement, "type", null);
         String name = LoadUtils.singleTag(objectElement, "name", null);
         String id = LoadUtils.attribute(objectElement, "id", null);
@@ -743,14 +759,32 @@ public class DataLoader {
         }
     }
 
-    private static void loadObjectComponents(Element objectElement, WorldObject object) {
+    /*private static void loadObjectComponents(Element objectElement, WorldObject object) {
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
             ObjectComponent component = loadObjectComponent(componentElement, object);
             object.addComponent(component.getID(), component);
         }
+    }*/
+
+    private static ObjectComponentTemplate loadObjectComponentTemplate(Element componentElement) {
+        String ID = LoadUtils.attribute(componentElement, "id", null);
+        String type = LoadUtils.attribute(componentElement, "type", null);
+        boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
+        switch (type) {
+            case "inventory":
+                String inventoryName = LoadUtils.singleTag(componentElement, "name", null);
+                LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
+                boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "exposed", false);
+                return new ObjectComponentTemplateInventory(ID, startEnabled, inventoryName, lootTable, inventoryIsExposed);
+            case "network":
+                String networkID = LoadUtils.attribute(componentElement, "network", null);
+                return new ObjectComponentTemplateNetwork(ID, startEnabled, networkID);
+            default:
+                return null;
+        }
     }
 
-    private static ObjectComponent loadObjectComponent(Element componentElement, WorldObject object) {
+    /*private static ObjectComponent loadObjectComponent(Element componentElement, WorldObject object) {
         String type = LoadUtils.attribute(componentElement, "type", null);
         String ID = LoadUtils.attribute(componentElement, "id", null);
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
@@ -763,7 +797,7 @@ public class DataLoader {
             default:
                 return null;
         }
-    }
+    }*/
 
     private static Lock loadLock(Element objectElement, String objectID) {
         Element lockElement = LoadUtils.singleChildWithName(objectElement, "lock");
