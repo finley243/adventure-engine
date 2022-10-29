@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.ObjectDoor;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
 
 public class Pathfinder {
 
@@ -50,6 +51,10 @@ public class Pathfinder {
 						linkedAreasGlobal.add(((ObjectDoor) object).getLinkedArea());
 					} else if(object instanceof ObjectElevator) {
 						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
+					} else if(object.getLinkComponents().isEmpty()) {
+						for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
+							linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
+						}
 					}
 				}
 			//}

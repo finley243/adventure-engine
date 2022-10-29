@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
 import java.util.ArrayList;
@@ -38,8 +39,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 	private final Map<String, Script> scripts;
 	private final List<ActionCustom> customActions;
 	private final Map<String, ObjectComponent> components;
+	// Key: component ID, Value: linked object ID
+	private final Map<String, String> linkedObjects;
 	
-	public WorldObject(Game gameInstance, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions) {
+	public WorldObject(Game gameInstance, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> linkedObjects) {
 		super(gameInstance);
 		this.ID = ID;
 		this.defaultArea = area;
@@ -50,6 +53,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 		this.customActions = customActions;
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
+		this.linkedObjects = linkedObjects;
 		setEnabled(!startDisabled);
 	}
 
@@ -169,6 +173,24 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 
 	public ObjectComponent getComponent(String componentID) {
 		return components.get(componentID);
+	}
+
+	public String getLinkedObjectID(String componentID) {
+		if (linkedObjects != null) {
+			return linkedObjects.get(componentID);
+		}
+		return null;
+	}
+
+	// TODO - This may need to be optimized (possibly store a separate set of link components?)
+	public List<ObjectComponentLink> getLinkComponents() {
+		List<ObjectComponentLink> linkComponents = new ArrayList<>();
+		for (ObjectComponent component : components.values()) {
+			if (component instanceof ObjectComponentLink) {
+				linkComponents.add((ObjectComponentLink) component);
+			}
+		}
+		return linkComponents;
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {

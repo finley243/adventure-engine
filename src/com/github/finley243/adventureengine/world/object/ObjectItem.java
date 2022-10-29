@@ -19,7 +19,7 @@ public class ObjectItem extends WorldObject {
 
     public ObjectItem(Game game, String ID, Area area, Item item, int count, boolean isStealing) {
         // TODO - Add startDisabled and startHidden functionality
-        super(game, ID, area, item.getName(), item.getDescription(), false, false, item.getTemplate().getScripts(), new ArrayList<>());
+        super(game, ID, area, item.getName(), item.getDescription(), false, false, item.getTemplate().getScripts(), new ArrayList<>(), null);
         this.item = item;
         this.isStealing = isStealing;
         this.count = count;

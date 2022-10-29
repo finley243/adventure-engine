@@ -30,10 +30,7 @@ import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentInventory;
-import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
-import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateInventory;
-import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateNetwork;
-import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
+import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -149,8 +146,7 @@ public class DataLoader {
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
 
         Map<String, Bark> barks = new HashMap<>();
-        List<Element> barkElements = LoadUtils.directChildrenWithName(actorElement, "bark");
-        for (Element barkElement : barkElements) {
+        for (Element barkElement : LoadUtils.directChildrenWithName(actorElement, "bark")) {
             String barkTrigger = LoadUtils.attribute(barkElement, "trigger", null);
             Bark.BarkResponseType responseType = LoadUtils.attributeEnum(barkElement, "response", Bark.BarkResponseType.class, Bark.BarkResponseType.NONE);
             List<String> visiblePhrases = LoadUtils.listOfTags(barkElement, "visible");
@@ -358,8 +354,7 @@ public class DataLoader {
 
     private static Map<String, Script> loadScriptsWithTriggers(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
         Map<String, Script> scripts = new HashMap<>();
-        List<Element> scriptElements = LoadUtils.directChildrenWithName(parentElement, "script");
-        for(Element scriptElement : scriptElements) {
+        for(Element scriptElement : LoadUtils.directChildrenWithName(parentElement, "script")) {
             String trigger = scriptElement.getAttribute("trigger");
             Script script = loadScript(scriptElement);
             scripts.put(trigger, script);
@@ -705,8 +700,7 @@ public class DataLoader {
         // TODO - Find way to load object ID for custom actions (needs to be the instance ID, not the template ID)
         List<ActionCustom> customActions = loadCustomActions(objectElement, null, "action");
         Map<String, String> components = new HashMap<>();
-        List<Element> componentElements = LoadUtils.directChildrenWithName(objectElement, "component");
-        for (Element componentElement : componentElements) {
+        for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
             String componentID = LoadUtils.attribute(componentElement, "id", null);
             String componentReference = LoadUtils.attribute(componentElement, "reference", null);
             components.put(componentID, componentReference);
@@ -726,28 +720,34 @@ public class DataLoader {
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         List<ActionCustom> customActions = loadCustomActions(objectElement, id, "action");
         List<ActionCustom> customUsingActions = loadCustomActions(objectElement, id, "actionUsing");
+        Map<String, String> linkedObjects = new HashMap<>();
+        for (Element linkedObjectElement : LoadUtils.directChildrenWithName(objectElement, "link")) {
+            String componentID = LoadUtils.attribute(linkedObjectElement, "component", null);
+            String linkedObjectID = LoadUtils.attribute(linkedObjectElement, "object", null);
+            linkedObjects.put(componentID, linkedObjectID);
+        }
         switch (type) {
             case "door":
                 String doorLink = LoadUtils.attribute(objectElement, "link", null);
                 AreaLink.CompassDirection doorDirection = LoadUtils.attributeEnum(objectElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
                 Lock doorLock = loadLock(objectElement, id);
-                return new ObjectDoor(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, doorLink, doorDirection, doorLock);
+                return new ObjectDoor(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects, doorLink, doorDirection, doorLock);
             case "elevator":
                 Element floorElement = LoadUtils.singleChildWithName(objectElement, "floor");
                 int floorNumber = LoadUtils.attributeInt(floorElement, "number", 1);
                 String floorName = floorElement.getTextContent();
                 boolean elevatorStartLocked = LoadUtils.attributeBool(objectElement, "startLocked", false);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(objectElement, "link");
-                return new ObjectElevator(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
+                return new ObjectElevator(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
             case "chair":
-                return new ObjectChair(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, customUsingActions);
+                return new ObjectChair(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects, customUsingActions);
             case "bed":
-                return new ObjectBed(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, customUsingActions);
+                return new ObjectBed(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects, customUsingActions);
             case "cover":
-                return new ObjectCover(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, customUsingActions);
+                return new ObjectCover(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects, customUsingActions);
             case "vendingMachine":
                 List<String> vendingItems = LoadUtils.listOfTags(objectElement, "item");
-                return new ObjectVendingMachine(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, vendingItems);
+                return new ObjectVendingMachine(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects, vendingItems);
             case "item":
                 String itemID = LoadUtils.attribute(objectElement, "item", null);
                 int itemCount = LoadUtils.attributeInt(objectElement, "count", 1);
@@ -755,7 +755,7 @@ public class DataLoader {
                 return new ObjectItem(game, id, area, ItemFactory.create(game, itemID), itemCount, itemIsStealing);
             case "basic":
             default:
-                return new WorldObject(game, id, area, name, description, startDisabled, startHidden, scripts, customActions);
+                return new WorldObject(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects);
         }
     }
 
@@ -779,6 +779,11 @@ public class DataLoader {
             case "network":
                 String networkID = LoadUtils.attribute(componentElement, "network", null);
                 return new ObjectComponentTemplateNetwork(ID, startEnabled, networkID);
+            case "link":
+                boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
+                boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
+                AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(componentElement, "direction", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
+                return new ObjectComponentTemplateLink(ID, startEnabled, linkIsMovable, linkIsVisible, linkDirection);
             default:
                 return null;
         }

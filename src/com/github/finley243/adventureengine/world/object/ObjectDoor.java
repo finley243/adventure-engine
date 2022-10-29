@@ -22,8 +22,8 @@ public class ObjectDoor extends WorldObject {
 	private final AreaLink.CompassDirection direction;
 	private final Lock lock;
 
-	public ObjectDoor(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, String linkedDoorID, AreaLink.CompassDirection direction, Lock lock) {
-		super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions);
+	public ObjectDoor(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> linkedObjects, String linkedDoorID, AreaLink.CompassDirection direction, Lock lock) {
+		super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects);
 		this.linkedDoorID = linkedDoorID;
 		this.direction = direction;
 		this.lock = lock;
