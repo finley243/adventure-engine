@@ -67,11 +67,14 @@ public class Data {
 
 	public void newGame() throws ParserConfigurationException, IOException, SAXException {
 		reset();
-		for(Actor actor : actors.values()) {
+		for (Area area : areas.values()) {
+			area.onNewGameInit();
+		}
+		for (Actor actor : actors.values()) {
 			actor.onNewGameInit();
 		}
 		// Using ArrayList to avoid Concurrent Modification Exception
-		for(WorldObject object : new ArrayList<>(objects.values())) {
+		for (WorldObject object : new ArrayList<>(objects.values())) {
 			object.onNewGameInit();
 		}
 	}

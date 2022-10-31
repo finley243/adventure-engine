@@ -190,6 +190,10 @@ public class Area extends GameInstanced implements Noun {
 			}
 		}
 	}
+
+	public void onNewGameInit() {
+
+	}
 	
 	public Set<WorldObject> getObjects(){
 		return objects;
