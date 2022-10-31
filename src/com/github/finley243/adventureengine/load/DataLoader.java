@@ -839,7 +839,7 @@ public class DataLoader {
         List<Behavior> behaviors = loadBehaviors(LoadUtils.singleChildWithName(actorElement, "behaviors"));
         boolean startDead = LoadUtils.attributeBool(actorElement, "startDead", false);
         boolean startDisabled = LoadUtils.attributeBool(actorElement, "startDisabled", false);
-        return ActorFactory.create(game, ID, area, game.data().getActorTemplate(template), behaviors, startDead, startDisabled);
+        return ActorFactory.create(game, ID, area, template, behaviors, startDead, startDisabled);
     }
 
     private static List<Behavior> loadBehaviors(Element behaviorsElement) throws ParserConfigurationException, IOException, SAXException {

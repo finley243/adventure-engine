@@ -100,7 +100,7 @@ public class Data {
 		networks.clear();
 		timers.clear();
 		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
-		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getActorTemplate(getConfig("playerStats")));
+		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getConfig("playerStats"));
 		addActor(player.getID(), player);
 	}
 
