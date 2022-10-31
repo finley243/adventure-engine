@@ -50,7 +50,7 @@ public class ActionItemTakeAll extends Action {
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
 		int count = area.getInventory().itemCount(item);
-		return new MenuChoice("Take all", canChoose(subject), new String[]{item.getName() + (count > 1 ? " (" + count + ")" : "")});
+		return new MenuChoice("Take all", canChoose(subject), new String[]{"ground", item.getName() + (count > 1 ? " (" + count + ")" : "")});
 	}
 
 	@Override
