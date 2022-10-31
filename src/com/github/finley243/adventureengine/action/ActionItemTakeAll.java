@@ -1,37 +1,41 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.PluralNoun;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
-import com.github.finley243.adventureengine.world.object.ObjectItem;
+import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.PluralNoun;
+import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionItemTakeAll extends Action {
 
-	private final ObjectItem objectItem;
+	private final Area area;
+	private final Item item;
 
-	public ActionItemTakeAll(ObjectItem objectItem) {
+	public ActionItemTakeAll(Area area, Item item) {
 		super(ActionDetectionChance.LOW);
-		this.objectItem = objectItem;
+		this.area = area;
+		this.item = item;
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		int count = objectItem.getCount();
-		Item item = Item.objectToItem(subject.game(), objectItem, count);
+		//int count = objectItem.getCount();
+		//Item item = Item.objectToItem(subject.game(), objectItem, count);
+		int count = area.getInventory().itemCount(item);
+		area.getInventory().removeItems(item, count);
 		subject.inventory().addItems(item, count);
-		Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(objectItem, count)).build());
+		Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(item, count)).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, this, null, subject, null));
 	}
 
 	@Override
 	public float utility(Actor subject) {
-		if(objectItem.getItem() instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
+		if(item instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
 			return 0.7f;
 		} else {
 			return 0.0f;
@@ -45,15 +49,15 @@ public class ActionItemTakeAll extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		int count = objectItem.getCount();
-		return new MenuChoice("Take all", canChoose(subject), new String[]{objectItem.getName() + (count > 1 ? " (" + count + ")" : "")});
+		int count = area.getInventory().itemCount(item);
+		return new MenuChoice("Take all", canChoose(subject), new String[]{item.getName() + (count > 1 ? " (" + count + ")" : "")});
 	}
 
 	@Override
 	public ActionResponseType responseType() {
-		if (objectItem.isStealing()) {
+		/*if (objectItem.isStealing()) {
 			return ActionResponseType.STEAL;
-		}
+		}*/
 		return ActionResponseType.NONE;
 	}
 
@@ -63,7 +67,7 @@ public class ActionItemTakeAll extends Action {
             return false;
         } else {
             ActionItemTakeAll other = (ActionItemTakeAll) o;
-            return other.objectItem == this.objectItem;
+            return other.item == this.item;
         }
     }
 	

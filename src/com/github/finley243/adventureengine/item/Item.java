@@ -3,18 +3,16 @@ package com.github.finley243.adventureengine.item;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionInspectItem;
 import com.github.finley243.adventureengine.action.ActionItemDrop;
 import com.github.finley243.adventureengine.action.ActionItemDropAll;
-import com.github.finley243.adventureengine.action.ActionInspectItem;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.world.object.ObjectItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,27 +122,6 @@ public abstract class Item extends GameInstanced implements Noun {
 		} else {
 			return getTemplate().hashCode();
 		}
-	}
-
-	public static void itemToObject(Game game, Item item, int count, Area area) {
-		String ID = item.getID();
-		if (ID == null) {
-			ID = item.getTemplate().generateInstanceID();
-		}
-		ObjectItem object = new ObjectItem(game, ID, area, item, count, false);
-		game.data().addObject(object.getID(), object);
-	}
-
-	public static Item objectToItem(Game game, ObjectItem objectItem, int count) {
-		Item item = objectItem.getItem();
-		int remainingCount = objectItem.getCount() - count;
-		if (remainingCount <= 0) {
-			objectItem.getArea().removeObject(objectItem);
-			game.data().removeObject(objectItem.getID());
-		} else {
-			objectItem.addCount(-count);
-		}
-		return item;
 	}
 	
 }

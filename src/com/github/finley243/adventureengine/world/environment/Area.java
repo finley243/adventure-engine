@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.effect.AreaEffect;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -54,6 +55,8 @@ public class Area extends GameInstanced implements Noun {
 	private final Set<WorldObject> objects;
 	// All actors in this area
 	private final Set<Actor> actors;
+	// Inventory containing all items in the area (that are not in object or actor inventories)
+	private final Inventory itemInventory;
 
 	private final Map<AreaEffect, List<Integer>> areaEffects;
 	
@@ -71,6 +74,7 @@ public class Area extends GameInstanced implements Noun {
 		this.linkedAreas = linkedAreas;
 		this.objects = new HashSet<>();
 		this.actors = new HashSet<>();
+		this.itemInventory = new Inventory(game, null);
 		this.scripts = scripts;
 		this.areaEffects = new HashMap<>();
 	}
@@ -267,6 +271,14 @@ public class Area extends GameInstanced implements Noun {
 			}
 		}
 		return targets;
+	}
+
+	public Inventory getInventory() {
+		return itemInventory;
+	}
+
+	public List<Action> getItemActions() {
+		return itemInventory.getAreaActions(this);
 	}
 
 	public List<Action> getMoveActions() {

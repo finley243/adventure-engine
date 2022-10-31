@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemApparel;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.item.ItemFactory;
+import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -217,7 +218,24 @@ public class Inventory {
 		return uniqueItems;
 	}
 
-	public List<Action> getExternalActions(Noun owner, String name, Actor subject, boolean isOpen) {
+	public List<Action> getAreaActions(Area area) {
+		List<Action> actions = new ArrayList<>();
+		for (List<Item> current : items.values()) {
+			for (Item item : current) {
+				actions.add(new ActionItemTake(area, item));
+			}
+		}
+		for (String current : itemsStateless.keySet()) {
+			Item item = ItemFactory.create(game, current);
+			actions.add(new ActionItemTake(area, item));
+			if (itemCount(current) > 1) {
+				actions.add(new ActionItemTakeAll(area, item));
+			}
+		}
+		return actions;
+	}
+
+	public List<Action> getExternalActions(Noun owner, String name, Actor subject, boolean isExposed) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
@@ -231,22 +249,24 @@ public class Inventory {
 				actions.add(new ActionInventoryTakeAll(owner, name, this, item));
 			}
 		}
-		actions.addAll(subject.inventory().getStoreActions(owner, name, this, isOpen));
+		if (subject != null) {
+			actions.addAll(subject.inventory().getStoreActions(owner, name, this, isExposed));
+		}
 		return actions;
 	}
 
-	private List<Action> getStoreActions(Noun owner, String name, Inventory other, boolean isOpen) {
+	private List<Action> getStoreActions(Noun owner, String name, Inventory other, boolean isExposed) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryStore(owner, name, other, item, isOpen));
+				actions.add(new ActionInventoryStore(owner, name, other, item, isExposed));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = ItemFactory.create(game, current);
-			actions.add(new ActionInventoryStore(owner, name, other, item, isOpen));
+			actions.add(new ActionInventoryStore(owner, name, other, item, isExposed));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryStoreAll(owner, name, other, item, isOpen));
+				actions.add(new ActionInventoryStoreAll(owner, name, other, item, isExposed));
 			}
 		}
 		return actions;

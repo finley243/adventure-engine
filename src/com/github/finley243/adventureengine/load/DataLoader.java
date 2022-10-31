@@ -747,11 +747,12 @@ public class DataLoader {
             case "vendingMachine":
                 List<String> vendingItems = LoadUtils.listOfTags(objectElement, "item");
                 return new ObjectVendingMachine(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects, vendingItems);
-            case "item":
+            // TODO - Add item loading functions for areas
+            /*case "item":
                 String itemID = LoadUtils.attribute(objectElement, "item", null);
                 int itemCount = LoadUtils.attributeInt(objectElement, "count", 1);
                 boolean itemIsStealing = LoadUtils.attributeBool(objectElement, "isStealing", false);
-                return new ObjectItem(game, id, area, ItemFactory.create(game, itemID), itemCount, itemIsStealing);
+                return new ObjectItem(game, id, area, ItemFactory.create(game, itemID), itemCount, itemIsStealing);*/
             case "basic":
             default:
                 return new WorldObject(game, id, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects);

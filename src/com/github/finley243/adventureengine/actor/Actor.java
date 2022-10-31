@@ -430,7 +430,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		if(equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
-			Item.itemToObject(game(), item, 1, getArea());
+			//Item.itemToObject(game(), item, 1, getArea());
+			getArea().getInventory().addItem(item);
 			Context context = new Context(new NounMapper().put("actor", this).put("item", item).build());
 			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("drop"), context, null, null, this, null));
 		}
@@ -441,7 +442,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
 			Area landingArea = MathUtils.selectRandomFromSet(getArea().getMovableAreas());
-			Item.itemToObject(game(), item, 1, landingArea);
+			//Item.itemToObject(game(), item, 1, landingArea);
+			landingArea.getInventory().addItem(item);
 			Context context = new Context(Map.of("area", landingArea.getRelativeName(getArea())), new NounMapper().put("actor", this).put("item", item).build());
 			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null, this, null));
 		}
@@ -636,6 +638,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		for(Actor actor : getArea().getActors()) {
 			actions.addAll(actor.localActions(this));
 		}
+		actions.addAll(getArea().getItemActions());
 		for(WorldObject object : getArea().getObjects()) {
 			if (!object.isHidden()) {
 				actions.addAll(object.localActions(this));

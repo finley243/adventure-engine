@@ -29,14 +29,16 @@ public class ActionAttackArea extends ActionAttack {
         if (weapon instanceof ItemWeapon) {
             if (((ItemWeapon) weapon).getClipSize() > 0) {
                 if (((ItemWeapon) weapon).getLoadedAmmoType().isReusable() && ((ItemWeapon) weapon).getLoadedAmmoType() != null) {
-                    Item.itemToObject(weapon.game(), ((ItemWeapon) weapon).getLoadedAmmoType(), getAmmoConsumed(), area);
+                    //Item.itemToObject(weapon.game(), ((ItemWeapon) weapon).getLoadedAmmoType(), getAmmoConsumed(), area);
+                    area.getInventory().addItems(((ItemWeapon) weapon).getLoadedAmmoType(), getAmmoConsumed());
                 }
                 ((ItemWeapon) weapon).consumeAmmo(getAmmoConsumed());
             }
         } else {
             subject.inventory().removeItems(weapon, getAmmoConsumed());
             // TODO - Make this optional (e.g. do not place a grenade object after using a grenade)
-            Item.itemToObject(weapon.game(), weapon, getAmmoConsumed(), area);
+            //Item.itemToObject(weapon.game(), weapon, getAmmoConsumed(), area);
+            area.getInventory().addItems(weapon, getAmmoConsumed());
         }
     }
 

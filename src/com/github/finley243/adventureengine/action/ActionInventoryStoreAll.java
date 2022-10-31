@@ -14,15 +14,15 @@ public class ActionInventoryStoreAll extends Action {
     private final String name;
     private final Inventory inventory;
     private final Item item;
-    private final boolean containerIsOpen;
+    private final boolean isExposed;
 
-    public ActionInventoryStoreAll(Noun owner, String name, Inventory inventory, Item item, boolean containerIsOpen) {
+    public ActionInventoryStoreAll(Noun owner, String name, Inventory inventory, Item item, boolean isExposed) {
         super(ActionDetectionChance.LOW);
         this.owner = owner;
         this.name = name;
         this.inventory = inventory;
         this.item = item;
-        this.containerIsOpen = containerIsOpen;
+        this.isExposed = isExposed;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ActionInventoryStoreAll extends Action {
         subject.inventory().removeItems(item, count);
         inventory.addItems(item, count);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((containerIsOpen ? "placeOn" : "storeIn")), context, this, null, subject, null));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((isExposed ? "placeOn" : "storeIn")), context, this, null, subject, null));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ActionInventoryStoreAll extends Action {
         } else {
             menuPath = new String[]{owner.getName(), name, "transfer", item.getName() + subject.inventory().itemCountLabel(item)};
         }
-        return new MenuChoice((containerIsOpen ? "Place all" : "Store all"), canChoose(subject), menuPath);
+        return new MenuChoice((isExposed ? "Place all" : "Store all"), canChoose(subject), menuPath);
     }
 
     @Override
