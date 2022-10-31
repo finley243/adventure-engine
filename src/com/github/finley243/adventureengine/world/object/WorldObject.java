@@ -16,7 +16,6 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
-import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,7 +132,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 		return isHidden;
 	}
 
-	public void newGameInit() {
+	public void onNewGameInit() {
 		for (ObjectComponent component : components.values()) {
 			component.newGameInit();
 		}

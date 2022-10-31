@@ -155,7 +155,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		setEnabled(!startDisabled);
 	}
 
-	public void newGameInit() {
+	public void onNewGameInit() {
 		if(template.getLootTable(game()) != null) {
 			inventory.addItems(template.getLootTable(game()).generateItems(game()));
 		}

@@ -69,11 +69,11 @@ public class DataLoader {
                         ActorTemplate actor = loadActor(actorElement);
                         game.data().addActorTemplate(actor.getID(), actor);
                     }
-                    List<Element> objectComponents = LoadUtils.directChildrenWithName(rootElement, "objectComponent");
+                    /*List<Element> objectComponents = LoadUtils.directChildrenWithName(rootElement, "objectComponent");
                     for (Element objectComponentElement : objectComponents) {
                         ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(objectComponentElement);
                         game.data().addObjectComponentTemplate(componentTemplate.getID(), componentTemplate);
-                    }
+                    }*/
                     List<Element> objects = LoadUtils.directChildrenWithName(rootElement, "object");
                     for (Element objectElement : objects) {
                         ObjectTemplate object = loadObjectTemplate(objectElement);
@@ -699,11 +699,10 @@ public class DataLoader {
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         // TODO - Find way to load object ID for custom actions (needs to be the instance ID, not the template ID)
         List<ActionCustom> customActions = loadCustomActions(objectElement, null, "action");
-        Map<String, String> components = new HashMap<>();
+        Map<String, ObjectComponentTemplate> components = new HashMap<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
-            String componentID = LoadUtils.attribute(componentElement, "id", null);
-            String componentReference = LoadUtils.attribute(componentElement, "reference", null);
-            components.put(componentID, componentReference);
+            ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(componentElement);
+            components.put(componentTemplate.getID(), componentTemplate);
         }
         return new ObjectTemplate(ID, name, description, scripts, customActions, components);
     }
@@ -782,8 +781,11 @@ public class DataLoader {
             case "link":
                 boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
                 boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
+                // TODO - Find a way to load the direction from the object instance, just like the linked object ID
                 AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(componentElement, "direction", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
                 return new ObjectComponentTemplateLink(ID, startEnabled, linkIsMovable, linkIsVisible, linkDirection);
+            case "usable":
+                return new ObjectComponentTemplateUsable(ID, startEnabled);
             default:
                 return null;
         }
@@ -828,6 +830,7 @@ public class DataLoader {
         return actions;
     }
 
+    // TODO - Delay creation of instances until all data has been loaded (could attempt to load instance before template is loaded)
     private static Actor loadActorInstance(Game game, Element actorElement, Area area) throws ParserConfigurationException, IOException, SAXException {
         if(actorElement == null) return null;
         String ID = actorElement.getAttribute("id");

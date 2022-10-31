@@ -1,0 +1,6 @@
+<data>
+    <object id="door_basic">
+        <name>door</name>
+        <component id="door_link" type="link" movable="true" visible="false" direction="N"/>
+    </object>
+</data>
