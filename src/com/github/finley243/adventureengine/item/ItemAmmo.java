@@ -6,30 +6,34 @@ import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 public class ItemAmmo extends Item {
 
-    private final AmmoTemplate stats;
+    private final String templateID;
 
-    public ItemAmmo(Game game, String ID, AmmoTemplate stats) {
+    public ItemAmmo(Game game, String ID, String templateID) {
         super(game, ID);
-        this.stats = stats;
+        this.templateID = templateID;
     }
 
     @Override
     public ItemTemplate getTemplate() {
-        return stats;
+        return getAmmoTemplate();
+    }
+
+    public AmmoTemplate getAmmoTemplate() {
+        return (AmmoTemplate) game().data().getItem(templateID);
     }
 
     public boolean isReusable() {
-        return stats.isReusable();
+        return getAmmoTemplate().isReusable();
     }
 
     public void onLoad(ItemWeapon weapon) {
-        for (String effectID : stats.getWeaponEffects()) {
+        for (String effectID : getAmmoTemplate().getWeaponEffects()) {
             weapon.addEffect(game().data().getEffect(effectID));
         }
     }
 
     public void onUnload(ItemWeapon weapon) {
-        for (String effectID : stats.getWeaponEffects()) {
+        for (String effectID : getAmmoTemplate().getWeaponEffects()) {
             weapon.removeEffect(game().data().getEffect(effectID));
         }
     }

@@ -6,16 +6,20 @@ import com.github.finley243.adventureengine.item.template.MiscTemplate;
 
 public class ItemMisc extends Item {
 
-    private final MiscTemplate stats;
+    private final String templateID;
 
-    public ItemMisc(Game game, String ID, MiscTemplate stats) {
+    public ItemMisc(Game game, String ID, String templateID) {
         super(game, ID);
-        this.stats = stats;
+        this.templateID = templateID;
     }
 
     @Override
     public ItemTemplate getTemplate() {
-        return stats;
+        return getMiscTemplate();
+    }
+
+    public MiscTemplate getMiscTemplate() {
+        return (MiscTemplate) game().data().getItem(templateID);
     }
 
 }

@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.template.ConsumableTemplate;
 import com.github.finley243.adventureengine.item.template.ConsumableTemplate.ConsumableType;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -13,24 +12,28 @@ import java.util.List;
 
 public class ItemConsumable extends Item {
 
-	private final ConsumableTemplate stats;
+	private final String templateID;
 	
-	public ItemConsumable(Game game, String ID, ConsumableTemplate stats) {
+	public ItemConsumable(Game game, String ID, String templateID) {
 		super(game, ID);
-		this.stats = stats;
+		this.templateID = templateID;
 	}
 
 	@Override
 	public ItemTemplate getTemplate() {
-		return stats;
+		return getConsumableTemplate();
+	}
+
+	public ConsumableTemplate getConsumableTemplate() {
+		return (ConsumableTemplate) game().data().getItem(templateID);
 	}
 	
 	public ConsumableType getConsumableType() {
-		return stats.getType();
+		return getConsumableTemplate().getType();
 	}
 	
 	public List<String> getEffects() {
-		return stats.getEffects();
+		return getConsumableTemplate().getEffects();
 	}
 	
 	@Override

@@ -23,7 +23,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	public static final float HIT_CHANCE_BASE_RANGED_MIN = 0.10f;
 	public static final float HIT_CHANCE_BASE_RANGED_MAX = 0.90f;
 	
-	private final WeaponTemplate stats;
+	private final String templateID;
 	private final StatStringSet attackTypes;
 	private final StatInt damage;
 	private final StatInt rate;
@@ -39,9 +39,9 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 
 	private final Map<Effect, List<Integer>> effects;
 	
-	public ItemWeapon(Game game, String ID, WeaponTemplate stats) {
+	public ItemWeapon(Game game, String ID, String templateID) {
 		super(game, ID);
-		this.stats = stats;
+		this.templateID = templateID;
 		this.attackTypes = new StatStringSet(this);
 		this.damage = new StatInt(this);
 		this.rate = new StatInt(this);
@@ -59,11 +59,15 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 
 	@Override
 	public ItemTemplate getTemplate() {
-		return stats;
+		return getWeaponTemplate();
+	}
+
+	public WeaponTemplate getWeaponTemplate() {
+		return (WeaponTemplate) game().data().getItem(templateID);
 	}
 
 	public WeaponClass getWeaponClass() {
-		return game().data().getWeaponClass(stats.getWeaponClass());
+		return game().data().getWeaponClass(getWeaponTemplate().getWeaponClass());
 	}
 	
 	public boolean isRanged() {
@@ -71,11 +75,11 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 	
 	public int getDamage() {
-		return damage.value(stats.getDamage(), 1, 1000);
+		return damage.value(getWeaponTemplate().getDamage(), 1, 1000);
 	}
 	
 	public int getRate() {
-		return rate.value(stats.getRate(), 1, 50);
+		return rate.value(getWeaponTemplate().getRate(), 1, 50);
 	}
 
 	public float getBaseHitChanceMin() {
@@ -87,7 +91,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 	
 	public int getCritDamage() {
-		return critDamage.value(stats.getCritDamage(), 0, 1000);
+		return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
 	}
 
 	public Set<AreaLink.DistanceCategory> getRanges() {
@@ -96,11 +100,11 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 
 	// TODO - Change to accuracy multiplier?
 	public float getAccuracyBonus() {
-		return accuracyBonus.value(stats.getAccuracyBonus(), -1.0f, 1.0f);
+		return accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f);
 	}
 
 	public float getArmorMult() {
-		return armorMult.value(stats.getArmorMult(), 0.0f, 2.0f);
+		return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
 	}
 
 	// TODO - Add target effects to weapons
@@ -109,11 +113,11 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	public int getClipSize() {
-		return clipSize.value(stats.getClipSize(), 0, 100);
+		return clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
 	}
 
 	public Damage.DamageType getDamageType() {
-		return damageType.valueEnum(stats.getDamageType(), Damage.DamageType.class);
+		return damageType.valueEnum(getWeaponTemplate().getDamageType(), Damage.DamageType.class);
 	}
 
 	public int getAmmoRemaining() {
@@ -121,8 +125,8 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	public float getAmmoFraction() {
-		if(stats.getClipSize() == 0) return 1.0f;
-		return ((float) ammoCount) / ((float) stats.getClipSize());
+		if(getWeaponTemplate().getClipSize() == 0) return 1.0f;
+		return ((float) ammoCount) / ((float) getWeaponTemplate().getClipSize());
 	}
 
 	public int reloadCapacity() {
@@ -162,7 +166,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 
 	// TODO - Use isSilenced value to determine isLoud parameter of attack events
 	public boolean isSilenced() {
-		return isSilenced.value(stats.isSilenced());
+		return isSilenced.value(getWeaponTemplate().isSilenced());
 	}
 
 	public Set<String> getAmmoTypes() {
@@ -303,7 +307,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	@Override
 	public List<SaveData> saveState() {
 		List<SaveData> state = super.saveState();
-		if(ammoCount != stats.getClipSize()) {
+		if(ammoCount != getWeaponTemplate().getClipSize()) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammoCount", ammoCount));
 		}
 		return state;
