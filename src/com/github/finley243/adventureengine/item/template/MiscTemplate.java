@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.item.template;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
@@ -9,8 +10,8 @@ import java.util.Set;
 
 public class MiscTemplate extends ItemTemplate {
 
-    public MiscTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType) {
-        super(ID, name, description, scripts, price, attackType);
+    public MiscTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType) {
+        super(game, ID, name, description, scripts, price, attackType);
     }
 
     @Override

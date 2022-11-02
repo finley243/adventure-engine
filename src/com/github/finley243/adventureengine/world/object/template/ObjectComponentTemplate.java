@@ -1,11 +1,15 @@
 package com.github.finley243.adventureengine.world.object.template;
 
-public abstract class ObjectComponentTemplate {
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
+
+public abstract class ObjectComponentTemplate extends GameInstanced {
 
     private final String ID;
     private final boolean startEnabled;
 
-    public ObjectComponentTemplate(String ID, boolean startEnabled) {
+    public ObjectComponentTemplate(Game game, String ID, boolean startEnabled) {
+        super(game);
         this.ID = ID;
         this.startEnabled = startEnabled;
     }

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.object.template;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.item.LootTable;
 
 public class ObjectComponentTemplateInventory extends ObjectComponentTemplate {
@@ -8,8 +9,8 @@ public class ObjectComponentTemplateInventory extends ObjectComponentTemplate {
     private final LootTable lootTable;
     private final boolean isExposed;
 
-    public ObjectComponentTemplateInventory(String ID, boolean startEnabled, String name, LootTable lootTable, boolean isExposed) {
-        super(ID, startEnabled);
+    public ObjectComponentTemplateInventory(Game game, String ID, boolean startEnabled, String name, LootTable lootTable, boolean isExposed) {
+        super(game, ID, startEnabled);
         this.name = name;
         this.lootTable = lootTable;
         this.isExposed = isExposed;

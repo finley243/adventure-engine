@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.world.object.template;
 
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -7,7 +9,7 @@ import com.github.finley243.adventureengine.script.Script;
 import java.util.List;
 import java.util.Map;
 
-public class ObjectTemplate {
+public class ObjectTemplate extends GameInstanced {
 
     private final String ID;
     private final String name;
@@ -16,7 +18,8 @@ public class ObjectTemplate {
     private final List<ActionCustom> customActions;
     private final Map<String, ObjectComponentTemplate> components;
 
-    public ObjectTemplate(String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, ObjectComponentTemplate> components) {
+    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, ObjectComponentTemplate> components) {
+        super(game);
         this.ID = ID;
         this.name = name;
         this.description = description;

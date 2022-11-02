@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.item.template;
 
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class ItemTemplate implements Noun {
+public abstract class ItemTemplate extends GameInstanced implements Noun {
 
 	private int generatedCount;
 
@@ -23,7 +25,8 @@ public abstract class ItemTemplate implements Noun {
 	private final String attackType;
 	private final Map<String, Script> scripts;
 
-	public ItemTemplate(String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType) {
+	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType) {
+		super(game);
 		this.ID = ID;
 		this.name = name;
 		this.description = description;

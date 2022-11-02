@@ -84,7 +84,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	private final String templateID;
 	private final String ID;
-	// If isKnown = true, use definite article, else use indefinite article
 	private boolean isKnown;
 	private final Area defaultArea;
 	private Area area;
@@ -149,10 +148,10 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	public void onNewGameInit() {
 		if (!startDead) {
-			HP = this.maxHP.value(getTemplate().getMaxHP(game()), 0, MAX_HP);
+			HP = this.maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
 		}
-		if (getTemplate().getLootTable(game()) != null) {
-			inventory.addItems(getTemplate().getLootTable(game()).generateItems(game()));
+		if (getTemplate().getLootTable() != null) {
+			inventory.addItems(getTemplate().getLootTable().generateItems(game()));
 		}
 		if (getTemplate().isVendor()) {
 			this.vendorComponent = new VendorComponent(this);
@@ -174,7 +173,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	
 	@Override
 	public String getName() {
-		return getTemplate().getName(game());
+		return getTemplate().getName();
 	}
 
 	@Override
@@ -210,12 +209,12 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	
 	@Override
 	public boolean isProperName() {
-		return getTemplate().isProperName(game());
+		return getTemplate().isProperName();
 	}
 	
 	@Override
 	public Pronoun getPronoun() {
-		return getTemplate().getPronoun(game());
+		return getTemplate().getPronoun();
 	}
 
 	@Override
@@ -280,19 +279,19 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 	
 	public int getAttribute(Attribute attribute) {
-		return attributes.get(attribute).value(getTemplate().getAttribute(game(), attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+		return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
 	}
 
 	public int getSkill(Skill skill) {
-		return skills.get(skill).value(getTemplate().getSkill(game(), skill), SKILL_MIN, SKILL_MAX);
+		return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX);
 	}
 	
 	public Scene getDialogueStart() {
-		return game().data().getScene(getTemplate().getDialogueStart(game()));
+		return game().data().getScene(getTemplate().getDialogueStart());
 	}
 	
 	public Faction getFaction() {
-		return game().data().getFaction(getTemplate().getFaction(game()));
+		return game().data().getFaction(getTemplate().getFaction());
 	}
 	
 	public boolean canMove() {
@@ -312,7 +311,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	public List<Limb> getLimbs() {
-		return getTemplate().getLimbs(game());
+		return getTemplate().getLimbs();
 	}
 	
 	public EquipmentComponent equipmentComponent() {
@@ -344,7 +343,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	public int getMaxHP() {
-		return maxHP.value(getTemplate().getMaxHP(game()), 0, MAX_HP);
+		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
 	}
 
 	public int getActionPoints() {
@@ -375,7 +374,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			effectComponent.addEffect(game().data().getEffect(effectID));
 		}
 		int amount = damage.getAmount();
-		amount -= apparelComponent.getDamageResistance(getTemplate().getDefaultApparelSlot(game()), damage.getType()) * damage.getArmorMult();
+		amount -= apparelComponent.getDamageResistance(getTemplate().getDefaultApparelSlot(), damage.getType()) * damage.getArmorMult();
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;
@@ -547,7 +546,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 					if (event.isBark()) {
 						switch(event.getBark().responseType()) {
 							case HOSTILE:
-								if (getTemplate().isEnforcer(game())) {
+								if (getTemplate().isEnforcer()) {
 									targetingComponent.addCombatant(event.getTarget());
 								}
 								break;
@@ -616,7 +615,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	public List<Action> localActions(Actor subject) {
 		List<Action> action = new ArrayList<>();
 		if(isActive()) {
-			if(getTemplate().getDialogueStart(game()) != null) {
+			if(getTemplate().getDialogueStart() != null) {
 				action.add(new ActionTalk(this));
 			}
 			if(vendorComponent != null && behaviorComponent != null && behaviorComponent.isVendingEnabled()) {
@@ -914,7 +913,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	public boolean triggerScript(String trigger, Actor target) {
-		Script script = getTemplate().getScript(game(), trigger);
+		Script script = getTemplate().getScript(trigger);
 		if (script != null) {
 			script.execute(this, target);
 			return true;
@@ -925,7 +924,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	public void triggerBark(String trigger, Actor target) {
 		if (isActive()) {
-			Bark bark = getTemplate().getBark(game(), trigger);
+			Bark bark = getTemplate().getBark(trigger);
 			if (bark != null) {
 				bark.trigger(this, target);
 			}

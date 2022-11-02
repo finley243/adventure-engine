@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.item.LootTable;
@@ -10,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class ActorTemplate {
+public class ActorTemplate extends GameInstanced {
 	
 	private final String ID;
 	private final String parentID;
@@ -40,7 +41,8 @@ public class ActorTemplate {
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, Boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, Boolean vendorBuyAll, Boolean vendorStartDisabled) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, Boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, Boolean vendorBuyAll, Boolean vendorStartDisabled) {
+		super(game);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: name");
 			if (isProperName == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: isProperName");
@@ -90,71 +92,71 @@ public class ActorTemplate {
 	}
 
 	// TODO - Find a better way to inherit values from parent
-	public String getName(Game game) {
-		return Objects.requireNonNullElse(name, game.data().getActorTemplate(parentID).getName(game));
+	public String getName() {
+		return Objects.requireNonNullElse(name, game().data().getActorTemplate(parentID).getName());
 	}
 	
-	public boolean isProperName(Game game) {
-		return Objects.requireNonNullElse(isProperName, game.data().getActorTemplate(parentID).isProperName(game));
+	public boolean isProperName() {
+		return Objects.requireNonNullElse(isProperName, game().data().getActorTemplate(parentID).isProperName());
 	}
 	
-	public Pronoun getPronoun(Game game) {
-		return Objects.requireNonNullElse(pronoun, game.data().getActorTemplate(parentID).getPronoun(game));
+	public Pronoun getPronoun() {
+		return Objects.requireNonNullElse(pronoun, game().data().getActorTemplate(parentID).getPronoun());
 	}
 	
-	public String getFaction(Game game) {
-		return Objects.requireNonNullElse(faction, game.data().getActorTemplate(parentID).getFaction(game));
+	public String getFaction() {
+		return Objects.requireNonNullElse(faction, game().data().getActorTemplate(parentID).getFaction());
 	}
 
-	public boolean isEnforcer(Game game) {
-		return Objects.requireNonNullElse(isEnforcer, game.data().getActorTemplate(parentID).isEnforcer(game));
+	public boolean isEnforcer() {
+		return Objects.requireNonNullElse(isEnforcer, game().data().getActorTemplate(parentID).isEnforcer());
 	}
 	
-	public int getMaxHP(Game game) {
-		return Objects.requireNonNullElse(maxHP, game.data().getActorTemplate(parentID).getMaxHP(game));
+	public int getMaxHP() {
+		return Objects.requireNonNullElse(maxHP, game().data().getActorTemplate(parentID).getMaxHP());
 	}
 
-	public List<Limb> getLimbs(Game game) {
-		return !limbs.isEmpty() ? limbs : game.data().getActorTemplate(parentID).getLimbs(game);
+	public List<Limb> getLimbs() {
+		return !limbs.isEmpty() ? limbs : game().data().getActorTemplate(parentID).getLimbs();
 	}
 
-	public String getDefaultApparelSlot(Game game) {
-		return Objects.requireNonNullElse(defaultApparelSlot, game.data().getActorTemplate(parentID).getDefaultApparelSlot(game));
+	public String getDefaultApparelSlot() {
+		return Objects.requireNonNullElse(defaultApparelSlot, game().data().getActorTemplate(parentID).getDefaultApparelSlot());
 	}
 
-	public int getAttribute(Game game, Actor.Attribute attribute) {
-		return attributes.containsKey(attribute) ? attributes.get(attribute) : game.data().getActorTemplate(parentID).getAttribute(game, attribute);
+	public int getAttribute(Actor.Attribute attribute) {
+		return attributes.containsKey(attribute) ? attributes.get(attribute) : game().data().getActorTemplate(parentID).getAttribute(attribute);
 	}
 
-	public int getSkill(Game game, Actor.Skill skill) {
-		return skills.containsKey(skill) ? skills.get(skill) : game.data().getActorTemplate(parentID).getSkill(game, skill);
+	public int getSkill(Actor.Skill skill) {
+		return skills.containsKey(skill) ? skills.get(skill) : game().data().getActorTemplate(parentID).getSkill(skill);
 	}
 	
-	public LootTable getLootTable(Game game) {
+	public LootTable getLootTable() {
 		if(lootTable == null && parentID == null) return null;
-		return Objects.requireNonNullElse(lootTable, game.data().getActorTemplate(parentID).getLootTable(game));
+		return Objects.requireNonNullElse(lootTable, game().data().getActorTemplate(parentID).getLootTable());
 	}
 
-	public String getDialogueStart(Game game) {
+	public String getDialogueStart() {
 		if(dialogueStart == null && parentID == null) return null;
-		return Objects.requireNonNullElse(dialogueStart, game.data().getActorTemplate(parentID).getDialogueStart(game));
+		return Objects.requireNonNullElse(dialogueStart, game().data().getActorTemplate(parentID).getDialogueStart());
 	}
 
-	public Script getScript(Game game, String trigger) {
+	public Script getScript(String trigger) {
 		if (scripts.containsKey(trigger)) {
 			return scripts.get(trigger);
 		} else if (parentID != null) {
-			return game.data().getActorTemplate(parentID).getScript(game, trigger);
+			return game().data().getActorTemplate(parentID).getScript(trigger);
 		} else {
 			return null;
 		}
 	}
 
-	public Bark getBark(Game game, String trigger) {
+	public Bark getBark(String trigger) {
 		if (barks.containsKey(trigger)) {
 			return barks.get(trigger);
 		} else if (parentID != null) {
-			return game.data().getActorTemplate(parentID).getBark(game, trigger);
+			return game().data().getActorTemplate(parentID).getBark(trigger);
 		} else {
 			return null;
 		}

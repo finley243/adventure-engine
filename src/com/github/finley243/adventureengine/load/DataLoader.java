@@ -12,7 +12,6 @@ import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.effect.*;
-import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.LootTableEntry;
 import com.github.finley243.adventureengine.item.template.*;
@@ -28,8 +27,6 @@ import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentInventory;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -66,7 +63,7 @@ public class DataLoader {
                     }
                     List<Element> actors = LoadUtils.directChildrenWithName(rootElement, "actor");
                     for (Element actorElement : actors) {
-                        ActorTemplate actor = loadActor(actorElement);
+                        ActorTemplate actor = loadActor(game, actorElement);
                         game.data().addActorTemplate(actor.getID(), actor);
                     }
                     /*List<Element> objectComponents = LoadUtils.directChildrenWithName(rootElement, "objectComponent");
@@ -76,12 +73,12 @@ public class DataLoader {
                     }*/
                     List<Element> objects = LoadUtils.directChildrenWithName(rootElement, "object");
                     for (Element objectElement : objects) {
-                        ObjectTemplate object = loadObjectTemplate(objectElement);
+                        ObjectTemplate object = loadObjectTemplate(game, objectElement);
                         game.data().addObjectTemplate(object.getID(), object);
                     }
                     List<Element> items = LoadUtils.directChildrenWithName(rootElement, "item");
                     for (Element itemElement : items) {
-                        ItemTemplate item = loadItem(itemElement);
+                        ItemTemplate item = loadItem(game, itemElement);
                         game.data().addItem(item.getID(), item);
                     }
                     List<Element> tables = LoadUtils.directChildrenWithName(rootElement, "lootTable");
@@ -126,7 +123,7 @@ public class DataLoader {
         }
     }
 
-    private static ActorTemplate loadActor(Element actorElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ActorTemplate loadActor(Game game, Element actorElement) throws ParserConfigurationException, IOException, SAXException {
         String id = LoadUtils.attribute(actorElement, "id", null);
         String parentID = LoadUtils.attribute(actorElement, "parent", null);
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
@@ -160,7 +157,7 @@ public class DataLoader {
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
         Boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", null);
         Boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", null);
-        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -478,7 +475,7 @@ public class DataLoader {
         return relations;
     }
 
-    private static ItemTemplate loadItem(Element itemElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ItemTemplate loadItem(Game game, Element itemElement) throws ParserConfigurationException, IOException, SAXException {
         if(itemElement == null) return null;
         String type = itemElement.getAttribute("type");
         String id = itemElement.getAttribute("id");
@@ -497,11 +494,11 @@ public class DataLoader {
                     damageResistance.putIfAbsent(damageResistType, amount);
                 }
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ApparelTemplate(id, name, description, scripts, price, attackType, apparelSlots, damageResistance, apparelEffects);
+                return new ApparelTemplate(game, id, name, description, scripts, price, attackType, apparelSlots, damageResistance, apparelEffects);
             case "consumable":
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ConsumableTemplate(id, name, description, scripts, price, attackType, consumableType, consumableEffects);
+                return new ConsumableTemplate(game, id, name, description, scripts, price, attackType, consumableType, consumableEffects);
             case "weapon":
                 String weaponClass = LoadUtils.attribute(itemElement, "class", null);
                 int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
@@ -513,14 +510,14 @@ public class DataLoader {
                 float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
-                return new WeaponTemplate(id, name, description, scripts, price, attackType, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
+                return new WeaponTemplate(game, id, name, description, scripts, price, attackType, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
             case "ammo":
                 List<String> ammoWeaponEffects = LoadUtils.listOfTags(itemElement, "weaponEffect");
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
-                return new AmmoTemplate(id, name, description, scripts, price, attackType, ammoWeaponEffects, ammoIsReusable);
+                return new AmmoTemplate(game, id, name, description, scripts, price, attackType, ammoWeaponEffects, ammoIsReusable);
             case "misc":
             default:
-                return new MiscTemplate(id, name, description, scripts, price, attackType);
+                return new MiscTemplate(game, id, name, description, scripts, price, attackType);
         }
     }
 
@@ -692,7 +689,7 @@ public class DataLoader {
         return area;
     }
 
-    private static ObjectTemplate loadObjectTemplate(Element objectElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ObjectTemplate loadObjectTemplate(Game game, Element objectElement) throws ParserConfigurationException, IOException, SAXException {
         String ID = LoadUtils.attribute(objectElement, "id", null);
         String name = LoadUtils.singleTag(objectElement, "name", null);
         Scene description = loadScene(LoadUtils.singleChildWithName(objectElement, "description"));
@@ -701,10 +698,10 @@ public class DataLoader {
         List<ActionCustom> customActions = loadCustomActions(objectElement, null, "action");
         Map<String, ObjectComponentTemplate> components = new HashMap<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
-            ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(componentElement);
+            ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(game, componentElement);
             components.put(componentTemplate.getID(), componentTemplate);
         }
-        return new ObjectTemplate(ID, name, description, scripts, customActions, components);
+        return new ObjectTemplate(game, ID, name, description, scripts, customActions, components);
     }
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) throws ParserConfigurationException, IOException, SAXException {
@@ -766,7 +763,7 @@ public class DataLoader {
         }
     }*/
 
-    private static ObjectComponentTemplate loadObjectComponentTemplate(Element componentElement) {
+    private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) {
         String ID = LoadUtils.attribute(componentElement, "id", null);
         String type = LoadUtils.attribute(componentElement, "type", null);
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
@@ -775,18 +772,18 @@ public class DataLoader {
                 String inventoryName = LoadUtils.singleTag(componentElement, "name", null);
                 LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
                 boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "exposed", false);
-                return new ObjectComponentTemplateInventory(ID, startEnabled, inventoryName, lootTable, inventoryIsExposed);
+                return new ObjectComponentTemplateInventory(game, ID, startEnabled, inventoryName, lootTable, inventoryIsExposed);
             case "network":
                 String networkID = LoadUtils.attribute(componentElement, "network", null);
-                return new ObjectComponentTemplateNetwork(ID, startEnabled, networkID);
+                return new ObjectComponentTemplateNetwork(game, ID, startEnabled, networkID);
             case "link":
                 boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
                 boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
                 // TODO - Find a way to load the direction from the object instance, just like the linked object ID
                 AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(componentElement, "direction", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
-                return new ObjectComponentTemplateLink(ID, startEnabled, linkIsMovable, linkIsVisible, linkDirection);
+                return new ObjectComponentTemplateLink(game, ID, startEnabled, linkIsMovable, linkIsVisible, linkDirection);
             case "usable":
-                return new ObjectComponentTemplateUsable(ID, startEnabled);
+                return new ObjectComponentTemplateUsable(game, ID, startEnabled);
             default:
                 return null;
         }
