@@ -2,12 +2,9 @@ package com.github.finley243.adventureengine.world.object;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionMoveDoor;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -22,8 +19,8 @@ public class ObjectDoor extends WorldObject {
 	private final AreaLink.CompassDirection direction;
 	private final Lock lock;
 
-	public ObjectDoor(Game game, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> linkedObjects, String linkedDoorID, AreaLink.CompassDirection direction, Lock lock) {
-		super(game, ID, area, name, description, startDisabled, startHidden, scripts, customActions, linkedObjects);
+	public ObjectDoor(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, String> linkedObjects, String linkedDoorID, AreaLink.CompassDirection direction, Lock lock) {
+		super(game, ID, templateID, area, startDisabled, startHidden, linkedObjects);
 		this.linkedDoorID = linkedDoorID;
 		this.direction = direction;
 		this.lock = lock;

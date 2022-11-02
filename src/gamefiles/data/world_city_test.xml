@@ -2,9 +2,7 @@
     <room id="street_sinclair_fifth_sixth">
         <name proper="true">Sinclair St</name>
         <area id="sinclair_tech_store_front" landmark="sinclair_tech_store_exterior_door">
-            <object type="basic" id="sinclair_tech_store_exterior_door">
-                <name>Argon Electronics entrance</name>
-            </object>
+            <object type="basic" id="sinclair_tech_store_exterior_door" template="door_basic"/>
         </area>
     </room>
     <room id="street_archer_fifth_sixth">
@@ -17,28 +15,22 @@
         <area id="archer_apartments_exterior" landmark="archer_apartments_exterior_door">
             <link dist="CLOSE" dir="W" area="archer_corner_store_side"/>
             <link dist="CLOSE" dir="E" area="archer_burger_restaurant_front"/>
-            <object type="basic" id="archer_apartments_exterior_door">
-                <name>apartment entrance</name>
-            </object>
+            <object type="basic" id="archer_apartments_exterior_door" template="door_basic"/>
         </area>
         <area id="archer_burger_restaurant_front">
             <name type="front">BigBurger</name>
             <link dist="CLOSE" dir="W" area="archer_apartments_exterior"/>
             <link type="CORNER" dist="CLOSE" dir="NE" area="sixth_burger_restaurant_side"/>
-            <object type="basic" id="archer_burger_restaurant_exterior_door">
-                <name>BigBurger entrance</name>
-            </object>
-            <object type="chair" id="archer_burger_restaurant_exterior_chair">
-                <name>plastic chair</name>
-            </object>
+            <object type="basic" id="archer_burger_restaurant_exterior_door" template="door_basic"/>
+            <object type="chair" id="archer_burger_restaurant_exterior_chair" template="chair_plastic"/>
         </area>
     </room>
     <room id="street_fifth_sinclair_archer">
         <name proper="true">5th Ave</name>
         <area id="fifth_corner_store_front" landmark="fifth_corner_store_exterior_door">
             <link type="CORNER" dist="CLOSE" dir="SE" area="archer_corner_store_side"/>
-            <object type="door" id="fifth_corner_store_exterior_door" link="fifth_corner_store_door_exit" dir="E">
-                <name>door</name>
+            <object type="basic" id="fifth_corner_store_exterior_door" template="door_basic" link="fifth_corner_store_door_exit" dir="E">
+                <link component="door_link" object="fifth_corner_store_door_exit"/>
             </object>
         </area>
     </room>

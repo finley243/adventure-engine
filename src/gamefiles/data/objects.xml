@@ -3,4 +3,10 @@
         <name>door</name>
         <component id="door_link" type="link" movable="true" visible="false" direction="N"/>
     </object>
+    <object id="chair_plastic">
+        <name>plastic chair</name>
+    </object>
+    <object id="counter">
+        <name>counter</name>
+    </object>
 </data>

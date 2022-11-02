@@ -8,17 +8,15 @@
             <link dist="CLOSE" dir="E" area="fifth_corner_store_counter"/>
             <link dist="CLOSE" dir="N" area="fifth_corner_store_aisle"/>
             <link dist="FAR" dir="NE" area="fifth_corner_store_aisle_2"/>
-            <object type="door" id="fifth_corner_store_door_exit" link="fifth_corner_store_exterior_door" dir="W">
-                <name>door</name>
+            <object type="basic" id="fifth_corner_store_door_exit" template="door_basic" link="fifth_corner_store_exterior_door" dir="W">
+                <link component="door_link" object="fifth_corner_store_exterior_door"/>
             </object>
         </area>
         <area id="fifth_corner_store_counter" landmark="fifth_corner_store_counter">
             <link dist="CLOSE" dir="W" area="fifth_corner_store_entrance"/>
             <link dist="CLOSE" dir="N" area="fifth_corner_store_aisle_2"/>
             <link dist="FAR" dir="NW" area="fifth_corner_store_aisle"/>
-            <object type="basic" id="fifth_corner_store_counter">
-                <name>counter</name>
-            </object>
+            <object type="basic" id="fifth_corner_store_counter" template="counter"/>
             <actor id="cornerstore_shopkeeper" template="cornerstore_shopkeeper">
                 <behaviors>
                     <behavior type="area" area="fifth_corner_store_counter">

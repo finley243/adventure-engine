@@ -6,16 +6,18 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentFactory;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
+import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,28 +30,23 @@ import java.util.Map;
 public class WorldObject extends GameInstanced implements Noun, Physical {
 
 	private final String ID;
-	private final String name;
+	private final String templateID;
 	private boolean isKnown;
 	private boolean isEnabled;
 	private boolean isHidden;
 	private final Area defaultArea;
 	private Area area;
-	private final Scene description;
-	private final Map<String, Script> scripts;
-	private final List<ActionCustom> customActions;
 	private final Map<String, ObjectComponent> components;
 	// Key: component ID, Value: linked object ID
 	private final Map<String, String> linkedObjects;
 	
-	public WorldObject(Game gameInstance, String ID, Area area, String name, Scene description, boolean startDisabled, boolean startHidden, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> linkedObjects) {
+	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, String> linkedObjects) {
 		super(gameInstance);
+		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
 		this.ID = ID;
+		this.templateID = templateID;
 		this.defaultArea = area;
 		this.area = area;
-		this.name = name;
-		this.description = description;
-		this.scripts = scripts;
-		this.customActions = customActions;
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
 		this.linkedObjects = linkedObjects;
@@ -59,14 +56,18 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 	public String getID() {
 		return ID;
 	}
+
+	public ObjectTemplate getTemplate() {
+		return game().data().getObjectTemplate(templateID);
+	}
 	
 	@Override
 	public String getName() {
-		return name;
+		return getTemplate().getName();
 	}
 	
 	public Scene getDescription() {
-		return description;
+		return getTemplate().getDescription();
 	}
 
 	@Override
@@ -133,8 +134,11 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 	}
 
 	public void onNewGameInit() {
-		for (ObjectComponent component : components.values()) {
-			component.newGameInit();
+		for (String componentID : getTemplate().getComponents().keySet()) {
+			ObjectComponentTemplate componentTemplate = getTemplate().getComponents().get(componentID);
+			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, componentID, this);
+			addComponent(componentID, component);
+			component.onNewGameInit();
 		}
 	}
 
@@ -143,13 +147,13 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
-		if (description != null) {
+		if (getDescription() != null) {
 			actions.add(new ActionInspectObject(this));
 		}
 		for (ObjectComponent component : components.values()) {
 			actions.addAll(component.getActions(subject));
 		}
-		for (ActionCustom customAction : customActions) {
+		for (ActionCustom customAction : getTemplate().getCustomActions()) {
 			if (customAction.canShow(subject)) {
 				actions.add(customAction);
 			}
@@ -193,8 +197,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
-		if (scripts.containsKey(entryPoint)) {
-			scripts.get(entryPoint).execute(subject, target);
+		if (getTemplate().getScripts().containsKey(entryPoint)) {
+			getTemplate().getScripts().get(entryPoint).execute(subject, target);
 		}
 	}
 

@@ -38,6 +38,6 @@ public abstract class ObjectComponent {
         return isEnabled;
     }
 
-    public void newGameInit() {}
+    public void onNewGameInit() {}
 
 }

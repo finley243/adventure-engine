@@ -32,7 +32,7 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
-    public void newGameInit() {
+    public void onNewGameInit() {
         if (template.getLootTable() != null) {
             inventory.addItems(template.getLootTable().generateItems(getObject().game()));
         }
