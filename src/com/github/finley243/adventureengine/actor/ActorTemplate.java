@@ -44,25 +44,20 @@ public class ActorTemplate extends GameInstanced {
 	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, Boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, Boolean vendorBuyAll, Boolean vendorStartDisabled) {
 		super(game);
 		if (parentID == null) {
-			if (name == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: name");
-			if (isProperName == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: isProperName");
-			if (pronoun == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: pronoun");
-			if (faction == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: faction");
-			if (isEnforcer == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: isEnforcer");
-			if (maxHP == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: maxHP");
-			if (defaultApparelSlot == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: defaultApparelSlot");
+			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
+			if (isProperName == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: isProperName");
+			if (pronoun == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: pronoun");
+			if (faction == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: faction");
+			if (isEnforcer == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: isEnforcer");
+			if (maxHP == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: maxHP");
+			if (defaultApparelSlot == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: defaultApparelSlot");
 			for (Actor.Attribute attribute : Actor.Attribute.values()) {
-				if (!attributes.containsKey(attribute)) throw new IllegalArgumentException("Must specify parameters for non-parented template: attribute - " + attribute);
+				if (!attributes.containsKey(attribute)) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: attribute - " + attribute);
 			}
 			for (Actor.Skill skill : Actor.Skill.values()) {
-				if (!skills.containsKey(skill)) throw new IllegalArgumentException("Must specify parameters for non-parented template: skill - " + skill);
+				if (!skills.containsKey(skill)) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: skill - " + skill);
 			}
-			if (lootTable == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: lootTable");
-			if (isVendor == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: isVendor");
-			if (vendorLootTable == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: vendorLootTable");
-			if (vendorBuyTags == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: vendorBuyTags");
-			if (vendorBuyAll == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: vendorBuyAll");
-			if (vendorStartDisabled == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: vendorStartDisabled");
+			if (lootTable == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: lootTable");
 		}
 		this.ID = ID;
 		this.parentID = parentID;
@@ -93,27 +88,27 @@ public class ActorTemplate extends GameInstanced {
 
 	// TODO - Find a better way to inherit values from parent
 	public String getName() {
-		return Objects.requireNonNullElse(name, game().data().getActorTemplate(parentID).getName());
+		return name != null ? name : game().data().getActorTemplate(parentID).getName();
 	}
 	
 	public boolean isProperName() {
-		return Objects.requireNonNullElse(isProperName, game().data().getActorTemplate(parentID).isProperName());
+		return isProperName != null ? isProperName : game().data().getActorTemplate(parentID).isProperName();
 	}
 	
 	public Pronoun getPronoun() {
-		return Objects.requireNonNullElse(pronoun, game().data().getActorTemplate(parentID).getPronoun());
+		return pronoun != null ? pronoun : game().data().getActorTemplate(parentID).getPronoun();
 	}
 	
 	public String getFaction() {
-		return Objects.requireNonNullElse(faction, game().data().getActorTemplate(parentID).getFaction());
+		return faction != null ? faction : game().data().getActorTemplate(parentID).getFaction();
 	}
 
 	public boolean isEnforcer() {
-		return Objects.requireNonNullElse(isEnforcer, game().data().getActorTemplate(parentID).isEnforcer());
+		return isEnforcer != null ? isEnforcer : game().data().getActorTemplate(parentID).isEnforcer();
 	}
 	
 	public int getMaxHP() {
-		return Objects.requireNonNullElse(maxHP, game().data().getActorTemplate(parentID).getMaxHP());
+		return maxHP != null ? maxHP : game().data().getActorTemplate(parentID).getMaxHP();
 	}
 
 	public List<Limb> getLimbs() {
@@ -121,7 +116,7 @@ public class ActorTemplate extends GameInstanced {
 	}
 
 	public String getDefaultApparelSlot() {
-		return Objects.requireNonNullElse(defaultApparelSlot, game().data().getActorTemplate(parentID).getDefaultApparelSlot());
+		return defaultApparelSlot != null ? defaultApparelSlot : game().data().getActorTemplate(parentID).getDefaultApparelSlot();
 	}
 
 	public int getAttribute(Actor.Attribute attribute) {
@@ -134,12 +129,12 @@ public class ActorTemplate extends GameInstanced {
 	
 	public LootTable getLootTable() {
 		if(lootTable == null && parentID == null) return null;
-		return Objects.requireNonNullElse(lootTable, game().data().getActorTemplate(parentID).getLootTable());
+		return lootTable != null ? lootTable : game().data().getActorTemplate(parentID).getLootTable();
 	}
 
 	public String getDialogueStart() {
 		if(dialogueStart == null && parentID == null) return null;
-		return Objects.requireNonNullElse(dialogueStart, game().data().getActorTemplate(parentID).getDialogueStart());
+		return dialogueStart != null ? dialogueStart : game().data().getActorTemplate(parentID).getDialogueStart();
 	}
 
 	public Script getScript(String trigger) {

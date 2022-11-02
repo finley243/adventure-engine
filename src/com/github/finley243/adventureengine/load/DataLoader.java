@@ -155,8 +155,8 @@ public class DataLoader {
         Boolean isVendor = vendorElement != null;
         String vendorLootTable = LoadUtils.attribute(vendorElement, "lootTable", null);
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
-        Boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", null);
-        Boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", null);
+        Boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
+        Boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
         return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 

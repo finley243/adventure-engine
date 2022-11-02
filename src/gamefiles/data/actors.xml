@@ -1,5 +1,5 @@
 <data>
-    <actor id="default">
+    <actor id="default" faction="default" isEnforcer="false" hp="30" defaultApparelSlot="TORSO">
         <name proper="false" pronoun="THEY">DEFAULT</name>
         <attribute key="BODY" value="4"/>
         <attribute key="INTELLIGENCE" value="4"/>
@@ -33,6 +33,7 @@
         <limb hitChance="0.8" damageMult="1.0" apparelSlot="legs">
             <name>leg</name>
         </limb>
+        <inventory/>
     </actor>
     <actor id="player" parent="default" hp="50" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>
