@@ -13,6 +13,7 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.component.ComponentLink;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentFactory;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
@@ -37,10 +38,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 	private final Area defaultArea;
 	private Area area;
 	private final Map<String, ObjectComponent> components;
-	// Key: component ID, Value: linked object ID
-	private final Map<String, String> linkedObjects;
+	// Key: component ID, Value: linked object and parameters
+	private final Map<String, ComponentLink> linkedObjects;
 	
-	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, String> linkedObjects) {
+	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentLink> linkedObjects) {
 		super(gameInstance);
 		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
 		this.ID = ID;
@@ -178,7 +179,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 		return components.get(componentID);
 	}
 
-	public String getLinkedObjectID(String componentID) {
+	public ComponentLink getComponentLink(String componentID) {
 		if (linkedObjects != null) {
 			return linkedObjects.get(componentID);
 		}

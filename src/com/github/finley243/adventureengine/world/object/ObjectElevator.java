@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.action.ActionMoveElevator;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.component.ComponentLink;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,7 @@ public class ObjectElevator extends WorldObject {
 	private final boolean startLocked;
 	private boolean isLocked;
 	
-	public ObjectElevator(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, String> linkedObjects, int floorNumber, String floorName, Set<String> linkedElevatorIDs, boolean startLocked) {
+	public ObjectElevator(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentLink> linkedObjects, int floorNumber, String floorName, Set<String> linkedElevatorIDs, boolean startLocked) {
 		super(game, ID, templateID, area, startDisabled, startHidden, linkedObjects);
 		this.floorNumber = floorNumber;
 		this.floorName = floorName;

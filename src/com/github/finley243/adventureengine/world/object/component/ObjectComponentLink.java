@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.world.object.component;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveLink;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateLink;
@@ -21,18 +20,17 @@ public class ObjectComponentLink extends ObjectComponent {
     }
 
     public WorldObject getLinkedObject() {
-        return getObject().game().data().getObject(getObject().getLinkedObjectID(getID()));
+        return getObject().game().data().getObject(getObject().getComponentLink(getID()).getObject());
     }
 
     public AreaLink.CompassDirection getDirection() {
-        return template.getDirection();
+        return getObject().getComponentLink(getID()).getDirection();
     }
 
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         if (template.isMovable()) {
-            Area destination = subject.game().data().getObject(getObject().getLinkedObjectID(getID())).getArea();
             actions.add(new ActionMoveLink(this));
         }
         return actions;

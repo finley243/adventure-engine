@@ -29,6 +29,7 @@ import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
+import com.github.finley243.adventureengine.world.object.component.ComponentLink;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -68,11 +69,6 @@ public class DataLoader {
                         ActorTemplate actor = loadActor(game, actorElement);
                         game.data().addActorTemplate(actor.getID(), actor);
                     }
-                    /*List<Element> objectComponents = LoadUtils.directChildrenWithName(rootElement, "objectComponent");
-                    for (Element objectComponentElement : objectComponents) {
-                        ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(objectComponentElement);
-                        game.data().addObjectComponentTemplate(componentTemplate.getID(), componentTemplate);
-                    }*/
                     List<Element> objectElements = LoadUtils.directChildrenWithName(rootElement, "object");
                     for (Element objectElement : objectElements) {
                         ObjectTemplate object = loadObjectTemplate(game, objectElement);
@@ -721,19 +717,17 @@ public class DataLoader {
         if(objectElement == null) return null;
         String template = LoadUtils.attribute(objectElement, "template", null);
         String type = LoadUtils.attribute(objectElement, "type", null);
-        //String name = LoadUtils.singleTag(objectElement, "name", null);
         String id = LoadUtils.attribute(objectElement, "id", null);
-        //Scene description = loadScene(LoadUtils.singleChildWithName(objectElement, "description"));
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
         boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);
-        //Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
-        //List<ActionCustom> customActions = loadCustomActions(objectElement, id, "action");
         List<ActionCustom> customUsingActions = loadCustomActions(objectElement, id, "actionUsing");
-        Map<String, String> linkedObjects = new HashMap<>();
+        Map<String, ComponentLink> linkedObjects = new HashMap<>();
         for (Element linkedObjectElement : LoadUtils.directChildrenWithName(objectElement, "link")) {
             String componentID = LoadUtils.attribute(linkedObjectElement, "component", null);
             String linkedObjectID = LoadUtils.attribute(linkedObjectElement, "object", null);
-            linkedObjects.put(componentID, linkedObjectID);
+            AreaLink.CompassDirection linkedObjectDirection = LoadUtils.attributeEnum(linkedObjectElement, "direction", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
+            ComponentLink componentLink = new ComponentLink(linkedObjectID, linkedObjectDirection);
+            linkedObjects.put(componentID, componentLink);
         }
         switch (type) {
             case "door":
@@ -763,13 +757,6 @@ public class DataLoader {
         }
     }
 
-    /*private static void loadObjectComponents(Element objectElement, WorldObject object) {
-        for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
-            ObjectComponent component = loadObjectComponent(componentElement, object);
-            object.addComponent(component.getID(), component);
-        }
-    }*/
-
     private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) {
         String ID = LoadUtils.attribute(componentElement, "id", null);
         String type = LoadUtils.attribute(componentElement, "type", null);
@@ -795,21 +782,6 @@ public class DataLoader {
                 return null;
         }
     }
-
-    /*private static ObjectComponent loadObjectComponent(Element componentElement, WorldObject object) {
-        String type = LoadUtils.attribute(componentElement, "type", null);
-        String ID = LoadUtils.attribute(componentElement, "id", null);
-        boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
-        switch (type) {
-            case "inventory":
-                String inventoryName = LoadUtils.singleTag(componentElement, "name", null);
-                LootTable inventoryLootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
-                boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "isExposed", false);
-                return new ObjectComponentInventory(ID, object, startEnabled, inventoryName, inventoryLootTable, inventoryIsExposed);
-            default:
-                return null;
-        }
-    }*/
 
     private static Lock loadLock(Element objectElement, String objectID) {
         Element lockElement = LoadUtils.singleChildWithName(objectElement, "lock");
