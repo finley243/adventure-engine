@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.item.LootTable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class ActorTemplate {
@@ -15,31 +16,52 @@ public class ActorTemplate {
 	private final String parentID;
 	
 	private final String name;
-	private final boolean isProperName;
+	private final Boolean isProperName;
 	private final Pronoun pronoun;
 	
 	private final String faction;
-	private final boolean isEnforcer;
+	private final Boolean isEnforcer;
 
-	private final int maxHP;
+	private final Integer maxHP;
 	private final List<Limb> limbs;
-	private String defaultApparelSlot;
+	private final String defaultApparelSlot;
 	private final Map<Actor.Attribute, Integer> attributes;
 	private final Map<Actor.Skill, Integer> skills;
 	
 	private final LootTable lootTable;
 	private final String dialogueStart;
 
-	private final boolean isVendor;
+	private final Boolean isVendor;
 	private final String vendorLootTable;
 	private final Set<String> vendorBuyTags;
-	private final boolean vendorBuyAll;
-	private final boolean vendorStartDisabled;
+	private final Boolean vendorBuyAll;
+	private final Boolean vendorStartDisabled;
 
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(String ID, String parentID, String name, boolean isProperName, Pronoun pronoun, String faction, boolean isEnforcer, int maxHP, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, boolean vendorBuyAll, boolean vendorStartDisabled) {
+	public ActorTemplate(String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, Boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, Boolean vendorBuyAll, Boolean vendorStartDisabled) {
+		if (parentID == null) {
+			if (name == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: name");
+			if (isProperName == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: isProperName");
+			if (pronoun == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: pronoun");
+			if (faction == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: faction");
+			if (isEnforcer == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: isEnforcer");
+			if (maxHP == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: maxHP");
+			if (defaultApparelSlot == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: defaultApparelSlot");
+			for (Actor.Attribute attribute : Actor.Attribute.values()) {
+				if (!attributes.containsKey(attribute)) throw new IllegalArgumentException("Must specify parameters for non-parented template: attribute - " + attribute);
+			}
+			for (Actor.Skill skill : Actor.Skill.values()) {
+				if (!skills.containsKey(skill)) throw new IllegalArgumentException("Must specify parameters for non-parented template: skill - " + skill);
+			}
+			if (lootTable == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: lootTable");
+			if (isVendor == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: isVendor");
+			if (vendorLootTable == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: vendorLootTable");
+			if (vendorBuyTags == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: vendorBuyTags");
+			if (vendorBuyAll == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: vendorBuyAll");
+			if (vendorStartDisabled == null) throw new IllegalArgumentException("Must specify parameters for non-parented template: vendorStartDisabled");
+		}
 		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
@@ -69,33 +91,27 @@ public class ActorTemplate {
 
 	// TODO - Find a better way to inherit values from parent
 	public String getName(Game game) {
-		return name != null ? name : game.data().getActorTemplate(parentID).getName(game);
+		return Objects.requireNonNullElse(name, game.data().getActorTemplate(parentID).getName(game));
 	}
 	
 	public boolean isProperName(Game game) {
-		return name != null ? isProperName : game.data().getActorTemplate(parentID).isProperName(game);
+		return Objects.requireNonNullElse(isProperName, game.data().getActorTemplate(parentID).isProperName(game));
 	}
 	
 	public Pronoun getPronoun(Game game) {
-		return pronoun != null ? pronoun : game.data().getActorTemplate(parentID).getPronoun(game);
+		return Objects.requireNonNullElse(pronoun, game.data().getActorTemplate(parentID).getPronoun(game));
 	}
 	
 	public String getFaction(Game game) {
-		return faction != null ? faction : game.data().getActorTemplate(parentID).getFaction(game);
+		return Objects.requireNonNullElse(faction, game.data().getActorTemplate(parentID).getFaction(game));
 	}
 
 	public boolean isEnforcer(Game game) {
-		if (isEnforcer) {
-			return true;
-		} else if (parentID != null) {
-			return game.data().getActorTemplate(parentID).isEnforcer(game);
-		} else {
-			return false;
-		}
+		return Objects.requireNonNullElse(isEnforcer, game.data().getActorTemplate(parentID).isEnforcer(game));
 	}
 	
 	public int getMaxHP(Game game) {
-		return maxHP > 0 ? maxHP : game.data().getActorTemplate(parentID).getMaxHP(game);
+		return Objects.requireNonNullElse(maxHP, game.data().getActorTemplate(parentID).getMaxHP(game));
 	}
 
 	public List<Limb> getLimbs(Game game) {
@@ -103,7 +119,7 @@ public class ActorTemplate {
 	}
 
 	public String getDefaultApparelSlot(Game game) {
-		return defaultApparelSlot != null ? defaultApparelSlot : game.data().getActorTemplate(parentID).getDefaultApparelSlot(game);
+		return Objects.requireNonNullElse(defaultApparelSlot, game.data().getActorTemplate(parentID).getDefaultApparelSlot(game));
 	}
 
 	public int getAttribute(Game game, Actor.Attribute attribute) {
@@ -116,21 +132,18 @@ public class ActorTemplate {
 	
 	public LootTable getLootTable(Game game) {
 		if(lootTable == null && parentID == null) return null;
-		return lootTable != null ? lootTable : game.data().getActorTemplate(parentID).getLootTable(game);
+		return Objects.requireNonNullElse(lootTable, game.data().getActorTemplate(parentID).getLootTable(game));
 	}
 
 	public String getDialogueStart(Game game) {
 		if(dialogueStart == null && parentID == null) return null;
-		return dialogueStart != null ? dialogueStart : game.data().getActorTemplate(parentID).getDialogueStart(game);
+		return Objects.requireNonNullElse(dialogueStart, game.data().getActorTemplate(parentID).getDialogueStart(game));
 	}
 
 	public Script getScript(Game game, String trigger) {
 		if (scripts.containsKey(trigger)) {
 			return scripts.get(trigger);
 		} else if (parentID != null) {
-			if (game.data().getActorTemplate(parentID) == null) {
-				System.out.println("NULL ALERT: " + parentID);
-			}
 			return game.data().getActorTemplate(parentID).getScript(game, trigger);
 		} else {
 			return null;

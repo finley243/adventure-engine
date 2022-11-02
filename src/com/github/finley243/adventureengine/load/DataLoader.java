@@ -131,12 +131,12 @@ public class DataLoader {
         String parentID = LoadUtils.attribute(actorElement, "parent", null);
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
         String name = nameElement != null ? nameElement.getTextContent() : null;
-        boolean nameIsProper = nameElement != null && LoadUtils.attributeBool(nameElement, "proper", false);
+        Boolean nameIsProper = nameElement != null && LoadUtils.attributeBool(nameElement, "proper", false);
         Context.Pronoun pronoun = LoadUtils.attributeEnum(nameElement, "pronoun", Context.Pronoun.class, Context.Pronoun.THEY);
         String faction = LoadUtils.attribute(actorElement, "faction", null);
-        boolean isEnforcer = LoadUtils.attributeBool(actorElement, "isEnforcer", false);
+        Boolean isEnforcer = LoadUtils.attributeBool(actorElement, "isEnforcer", null);
 
-        int hp = LoadUtils.attributeInt(actorElement, "hp", 0);
+        Integer hp = LoadUtils.attributeInt(actorElement, "hp", null);
         List<Limb> limbs = loadLimbs(actorElement);
         String defaultApparelSlot = LoadUtils.attribute(actorElement, "defaultApparelSlot", null);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
@@ -155,11 +155,11 @@ public class DataLoader {
         }
 
         Element vendorElement = LoadUtils.singleChildWithName(actorElement, "vendor");
-        boolean isVendor = vendorElement != null;
+        Boolean isVendor = vendorElement != null;
         String vendorLootTable = LoadUtils.attribute(vendorElement, "lootTable", null);
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
-        boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
-        boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
+        Boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", null);
+        Boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", null);
         return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
