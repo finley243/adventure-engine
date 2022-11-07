@@ -248,6 +248,59 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	@Override
+	public int getStatValueInt(String name) {
+		switch (name) {
+			case "damage":
+				return damage.value(getWeaponTemplate().getDamage(), 1, 1000);
+			case "rate":
+				return rate.value(getWeaponTemplate().getRate(), 1, 50);
+			case "critDamage":
+				return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
+			case "clipSize":
+				return clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
+		}
+		return 0;
+	}
+
+	@Override
+	public float getStatValueFloat(String name) {
+		switch (name) {
+			case "accuracyBonus":
+
+			case "armorMult":
+
+		}
+		return 0;
+	}
+
+	@Override
+	public boolean getStatValueBoolean(String name) {
+		if (name.equals("isSilenced")) {
+			return isSilenced.value(getWeaponTemplate().isSilenced());
+		}
+		return false;
+	}
+
+	@Override
+	public String getStatValueString(String name) {
+		if (name.equals("damageType")) {
+			return damageType.value(getWeaponTemplate().getDamageType().toString().toLowerCase());
+		}
+		return null;
+	}
+
+	@Override
+	public Set<String> getStatValueStringSet(String name) {
+		switch (name) {
+			case "attackTypes":
+				return attackTypes.value(getWeaponClass().getAttackTypes());
+			case "ranges":
+				return ranges.valueFromEnum(getWeaponClass().getPrimaryRanges());
+		}
+		return null;
+	}
+
+	@Override
 	public void onStatChange() {
 		if(ammoCount > getClipSize()) {
 			int difference = ammoCount - getClipSize();

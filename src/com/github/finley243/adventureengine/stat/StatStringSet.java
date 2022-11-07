@@ -26,6 +26,14 @@ public class StatStringSet {
         return outputSet;
     }
 
+    public <T extends Enum<T>> Set<String> valueFromEnum(Set<T> base) {
+        Set<String> enumStrings = new HashSet<>();
+        for (T enumValue : base) {
+            enumStrings.add(enumValue.toString().toLowerCase());
+        }
+        return value(enumStrings);
+    }
+
     public <T extends Enum<T>> Set<T> valueEnum(Set<T> base, Class<T> enumClass) {
         Set<T> outputSet = new HashSet<>(base);
         Set<T> additionalEnum = new HashSet<>();

@@ -817,7 +817,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public StatInt getStatInt(String name) {
-		switch(name) {
+		switch (name) {
 			case "maxHP":
 				return maxHP;
 			case "actionPoints":
@@ -878,6 +878,71 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public StatStringSet getStatStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public int getStatValueInt(String name) {
+		switch (name) {
+			case "maxHP":
+				return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
+			case "actionPoints":
+				return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
+			case "body":
+				return attributes.get(Attribute.BODY).value(getTemplate().getAttribute(Attribute.BODY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "intelligence":
+				return attributes.get(Attribute.INTELLIGENCE).value(getTemplate().getAttribute(Attribute.INTELLIGENCE), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "charisma":
+				return attributes.get(Attribute.CHARISMA).value(getTemplate().getAttribute(Attribute.CHARISMA), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "dexterity":
+				return attributes.get(Attribute.DEXTERITY).value(getTemplate().getAttribute(Attribute.DEXTERITY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "agility":
+				return attributes.get(Attribute.AGILITY).value(getTemplate().getAttribute(Attribute.AGILITY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "melee":
+				return skills.get(Skill.MELEE).value(getTemplate().getSkill(Skill.MELEE), SKILL_MIN, SKILL_MAX);
+			case "throwing":
+				return skills.get(Skill.THROWING).value(getTemplate().getSkill(Skill.THROWING), SKILL_MIN, SKILL_MAX);
+			case "software":
+				return skills.get(Skill.SOFTWARE).value(getTemplate().getSkill(Skill.SOFTWARE), SKILL_MIN, SKILL_MAX);
+			case "hardware":
+				return skills.get(Skill.HARDWARE).value(getTemplate().getSkill(Skill.HARDWARE), SKILL_MIN, SKILL_MAX);
+			case "medicine":
+				return skills.get(Skill.MEDICINE).value(getTemplate().getSkill(Skill.MEDICINE), SKILL_MIN, SKILL_MAX);
+			case "barter":
+				return skills.get(Skill.BARTER).value(getTemplate().getSkill(Skill.BARTER), SKILL_MIN, SKILL_MAX);
+			case "persuasion":
+				return skills.get(Skill.PERSUASION).value(getTemplate().getSkill(Skill.PERSUASION), SKILL_MIN, SKILL_MAX);
+			case "deception":
+				return skills.get(Skill.DECEPTION).value(getTemplate().getSkill(Skill.DECEPTION), SKILL_MIN, SKILL_MAX);
+			case "handguns":
+				return skills.get(Skill.HANDGUNS).value(getTemplate().getSkill(Skill.HANDGUNS), SKILL_MIN, SKILL_MAX);
+			case "longArms":
+				return skills.get(Skill.LONG_ARMS).value(getTemplate().getSkill(Skill.LONG_ARMS), SKILL_MIN, SKILL_MAX);
+			case "lockpick":
+				return skills.get(Skill.LOCKPICK).value(getTemplate().getSkill(Skill.LOCKPICK), SKILL_MIN, SKILL_MAX);
+			case "stealth":
+				return skills.get(Skill.STEALTH).value(getTemplate().getSkill(Skill.STEALTH), SKILL_MIN, SKILL_MAX);
+		}
+		return 0;
+	}
+
+	@Override
+	public float getStatValueFloat(String name) {
+		return 0;
+	}
+
+	@Override
+	public boolean getStatValueBoolean(String name) {
+		return false;
+	}
+
+	@Override
+	public String getStatValueString(String name) {
+		return null;
+	}
+
+	@Override
+	public Set<String> getStatValueStringSet(String name) {
 		return null;
 	}
 
