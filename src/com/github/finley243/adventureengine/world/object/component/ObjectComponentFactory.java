@@ -16,6 +16,8 @@ public class ObjectComponentFactory {
             return new ObjectComponentLink(ID, object, (ObjectComponentTemplateLink) template);
         } else if (template instanceof ObjectComponentTemplateUsable) {
             return new ObjectComponentUsable(ID, object, (ObjectComponentTemplateUsable) template);
+        } else if (template instanceof ObjectComponentTemplateLock) {
+            return new ObjectComponentLock(ID, object, (ObjectComponentTemplateLock) template);
         }
         return null;
     }
