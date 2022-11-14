@@ -778,11 +778,6 @@ public class DataLoader {
                 return new ObjectComponentTemplateLink(game, ID, startEnabled, linkIsMovable, linkIsVisible, linkDirection);
             case "usable":
                 return new ObjectComponentTemplateUsable(game, ID, startEnabled);
-            case "lock":
-                Set<String> lockKeyItems = LoadUtils.setOfTags(componentElement, "key");
-                Integer lockLockpickLevel = LoadUtils.attributeInt(componentElement, "lockpick", null);
-                Integer lockHotwireLevel = LoadUtils.attributeInt(componentElement, "hotwire", null);
-                return new ObjectComponentTemplateLock(game, ID, startEnabled, lockKeyItems, lockLockpickLevel, lockHotwireLevel);
             default:
                 return null;
         }
