@@ -10,14 +10,16 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-public abstract class Item extends GameInstanced implements Noun {
+public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	// ID is null if the item is stateless
 	private final String ID;
@@ -98,6 +100,71 @@ public abstract class Item extends GameInstanced implements Noun {
 			actions.addAll(game().data().getAttackType(getTemplate().getAttackType()).generateActions(subject, null, this));
 		}
 		return actions;
+	}
+
+	@Override
+	public StatInt getStatInt(String name) {
+		return null;
+	}
+
+	@Override
+	public StatFloat getStatFloat(String name) {
+		return null;
+	}
+
+	@Override
+	public StatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public StatString getStatString(String name) {
+		return null;
+	}
+
+	@Override
+	public StatStringSet getStatStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public int getStatValueInt(String name) {
+		return 0;
+	}
+
+	@Override
+	public float getStatValueFloat(String name) {
+		return 0;
+	}
+
+	@Override
+	public boolean getStatValueBoolean(String name) {
+		return false;
+	}
+
+	@Override
+	public String getStatValueString(String name) {
+		return null;
+	}
+
+	@Override
+	public Set<String> getStatValueStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public void onStatChange() {
+
+	}
+
+	@Override
+	public void modifyState(String name, int amount) {
+
+	}
+
+	@Override
+	public void triggerEffect(String name) {
+
 	}
 
 	public void loadState(SaveData saveData) {}

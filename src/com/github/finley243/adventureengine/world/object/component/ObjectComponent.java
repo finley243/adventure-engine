@@ -2,11 +2,13 @@ package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
+import java.util.Set;
 
-public abstract class ObjectComponent {
+public abstract class ObjectComponent implements StatHolder {
 
     private boolean isEnabled;
     private final String ID;
@@ -39,5 +41,70 @@ public abstract class ObjectComponent {
     }
 
     public void onNewGameInit() {}
+
+    @Override
+    public StatInt getStatInt(String name) {
+        return null;
+    }
+
+    @Override
+    public StatFloat getStatFloat(String name) {
+        return null;
+    }
+
+    @Override
+    public StatBoolean getStatBoolean(String name) {
+        return null;
+    }
+
+    @Override
+    public StatString getStatString(String name) {
+        return null;
+    }
+
+    @Override
+    public StatStringSet getStatStringSet(String name) {
+        return null;
+    }
+
+    @Override
+    public int getStatValueInt(String name) {
+        return 0;
+    }
+
+    @Override
+    public float getStatValueFloat(String name) {
+        return 0;
+    }
+
+    @Override
+    public boolean getStatValueBoolean(String name) {
+        return false;
+    }
+
+    @Override
+    public String getStatValueString(String name) {
+        return null;
+    }
+
+    @Override
+    public Set<String> getStatValueStringSet(String name) {
+        return null;
+    }
+
+    @Override
+    public void onStatChange() {
+
+    }
+
+    @Override
+    public void modifyState(String name, int amount) {
+
+    }
+
+    @Override
+    public void triggerEffect(String name) {
+
+    }
 
 }

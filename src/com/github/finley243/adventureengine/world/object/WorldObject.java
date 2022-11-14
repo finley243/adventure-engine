@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -20,15 +21,12 @@ import com.github.finley243.adventureengine.world.object.component.ObjectCompone
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * An object that can exist in the game world
  */
-public class WorldObject extends GameInstanced implements Noun, Physical {
+public class WorldObject extends GameInstanced implements Noun, Physical, StatHolder {
 
 	private final String ID;
 	private final String templateID;
@@ -201,6 +199,71 @@ public class WorldObject extends GameInstanced implements Noun, Physical {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			getTemplate().getScripts().get(entryPoint).execute(subject, target);
 		}
+	}
+
+	@Override
+	public StatInt getStatInt(String name) {
+		return null;
+	}
+
+	@Override
+	public StatFloat getStatFloat(String name) {
+		return null;
+	}
+
+	@Override
+	public StatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public StatString getStatString(String name) {
+		return null;
+	}
+
+	@Override
+	public StatStringSet getStatStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public int getStatValueInt(String name) {
+		return 0;
+	}
+
+	@Override
+	public float getStatValueFloat(String name) {
+		return 0;
+	}
+
+	@Override
+	public boolean getStatValueBoolean(String name) {
+		return false;
+	}
+
+	@Override
+	public String getStatValueString(String name) {
+		return null;
+	}
+
+	@Override
+	public Set<String> getStatValueStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public void onStatChange() {
+
+	}
+
+	@Override
+	public void modifyState(String name, int amount) {
+
+	}
+
+	@Override
+	public void triggerEffect(String name) {
+
 	}
 
 	public void loadState(SaveData saveData) {
