@@ -39,6 +39,7 @@
         <name proper="true" pronoun="YOU">PLAYER</name>
         <skill key="HANDGUNS" value="5"/>
         <skill key="MELEE" value="5"/>
+        <skill key="INTIMIDATION" value="6"/>
         <inventory>
             <item>pistol_heavy</item>
             <item>katana</item>

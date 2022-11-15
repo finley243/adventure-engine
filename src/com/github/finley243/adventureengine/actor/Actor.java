@@ -836,6 +836,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 				return skills.get(Skill.MELEE);
 			case "throwing":
 				return skills.get(Skill.THROWING);
+			case "intimidation":
+				return skills.get(Skill.INTIMIDATION);
 			case "software":
 				return skills.get(Skill.SOFTWARE);
 			case "hardware":
@@ -886,8 +888,12 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		switch (name) {
 			case "maxHP":
 				return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
+			case "HP":
+				return HP;
 			case "actionPoints":
 				return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
+			case "money":
+				return money;
 			case "body":
 				return attributes.get(Attribute.BODY).value(getTemplate().getAttribute(Attribute.BODY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
 			case "intelligence":
@@ -902,6 +908,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 				return skills.get(Skill.MELEE).value(getTemplate().getSkill(Skill.MELEE), SKILL_MIN, SKILL_MAX);
 			case "throwing":
 				return skills.get(Skill.THROWING).value(getTemplate().getSkill(Skill.THROWING), SKILL_MIN, SKILL_MAX);
+			case "intimidation":
+				return skills.get(Skill.INTIMIDATION).value(getTemplate().getSkill(Skill.INTIMIDATION), SKILL_MIN, SKILL_MAX);
 			case "software":
 				return skills.get(Skill.SOFTWARE).value(getTemplate().getSkill(Skill.SOFTWARE), SKILL_MIN, SKILL_MAX);
 			case "hardware":
@@ -928,6 +936,9 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public float getStatValueFloat(String name) {
+		if ("hpProportion".equals(name)) {
+			return ((float) HP) / ((float) getMaxHP());
+		}
 		return 0;
 	}
 

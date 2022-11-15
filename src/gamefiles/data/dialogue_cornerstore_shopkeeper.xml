@@ -41,7 +41,10 @@
     </scene>
     <scene id="cornerstore_shopkeeper_andre_intimidate" type="select">
         <line redirect="cornerstore_shopkeeper_andre_questions">
-            <condition type="skill" skill="INTIMIDATION" value="6"/>
+            <condition type="compare">
+                <var1 type="stat" dataType="int" stat="intimidation" holder="player"/>
+                <var2 dataType="int" value="6"/>
+            </condition>
             <text>The shopkeeper puts up his hands.</text>
             <text>"Okay, okay. Fine. Ask your damn questions."</text>
         </line>
@@ -51,7 +54,10 @@
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_bribe">
-        <condition type="money" actor="PLAYER" value="200"/>
+        <condition type="compare">
+            <var1 type="stat" dataType="int" stat="money" holder="player"/>
+            <var2 dataType="int" value="200"/>
+        </condition>
         <line redirect="cornerstore_shopkeeper_andre_questions">
             <script type="money" actor="PLAYER" value="-200"/>
             <text>A smirk comes across the shopkeepers face. He straightens his glasses.</text>
@@ -65,9 +71,9 @@
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_questions">
-        <choice link="">When did you last see Andre?</choice>
-        <choice link="">Is Andre a regular here?</choice>
-        <choice link="">Was Andre acting strange when you last saw him?</choice>
-        <choice link="">That's all.</choice>
+        <choice link="cornerstore_shopkeeper_andre_questions">When did you last see Andre?</choice>
+        <choice link="cornerstore_shopkeeper_andre_questions">Is Andre a regular here?</choice>
+        <choice link="cornerstore_shopkeeper_andre_questions">Was Andre acting strange when you last saw him?</choice>
+        <choice link="cornerstore_shopkeeper_andre_questions">That's all.</choice>
     </scene>
 </data>

@@ -18,7 +18,10 @@
         <choice link="stratis_receptionist_end">That will be all.</choice>
     </scene>
     <scene id="stratis_receptionist_request_room">
-        <condition type="var" variable="purchased_stratis_room" equality="EQUAL" value="0"/>
+        <condition type="compare" equality="EQUAL">
+            <var1 type="global" id="purchased_stratis_room"/>
+            <var2 dataType="int" value="0"/>
+        </condition>
         <line>
             <text>He taps the screen in front of him and quickly scans its contents.</text>
             <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."</text>
@@ -27,7 +30,10 @@
         <choice link="stratis_receptionist_main_return">Not right now.</choice>
     </scene>
     <scene id="stratis_receptionist_purchase_room">
-        <condition type="money" actor="PLAYER" value="300"/>
+        <condition type="compare">
+            <var1 type="stat" dataType="int" stat="money" holder="player"/>
+            <var2 dataType="int" value="300"/>
+        </condition>
         <line>
             <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
             <text>He hands you a white keycard with the Stratis Hotel logo.</text>

@@ -260,22 +260,6 @@ public class DataLoader {
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch (type) {
-            case "money":
-                int moneyAmount = LoadUtils.attributeInt(conditionElement, "value", 0);
-                return new ConditionMoney(invert, actorRef, moneyAmount);
-            case "var":
-                String varID = LoadUtils.attribute(conditionElement, "variable", null);
-                Condition.Equality varEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
-                int varValue = LoadUtils.attributeInt(conditionElement, "value", 0);
-                return new ConditionVariable(invert, varID, varEquality, varValue);
-            case "attribute":
-                Actor.Attribute attribute = LoadUtils.attributeEnum(conditionElement, "attribute", Actor.Attribute.class, null);
-                int attributeValue = LoadUtils.attributeInt(conditionElement, "value", 0);
-                return new ConditionAttribute(invert, actorRef, attribute, attributeValue);
-            case "skill":
-                Actor.Skill skill = LoadUtils.attributeEnum(conditionElement, "skill", Actor.Skill.class, null);
-                int skillValue = LoadUtils.attributeInt(conditionElement, "value", 0);
-                return new ConditionSkill(invert, actorRef, skill, skillValue);
             case "actorLocation":
                 String actorArea = LoadUtils.attribute(conditionElement, "area", null);
                 String actorRoom = LoadUtils.attribute(conditionElement, "room", null);
@@ -285,10 +269,6 @@ public class DataLoader {
                 return new ConditionActorAvailableForScene(invert, actorRef);
             case "actorDead":
                 return new ConditionActorDead(invert, actorRef);
-            case "actorHP":
-                Condition.Equality hpEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
-                float hpValue = LoadUtils.attributeFloat(conditionElement, "value", 0.0f);
-                return new ConditionActorHP(invert, actorRef, hpEquality, hpValue);
             case "combatant":
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatant(invert, actorRef, targetRef);
@@ -323,16 +303,16 @@ public class DataLoader {
                 String timerID = LoadUtils.attribute(conditionElement, "timerID", null);
                 return new ConditionTimerActive(invert, timerID);
             case "boolean":
-                Variable booleanVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variable"));
+                Variable booleanVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var"));
                 return new ConditionBoolean(invert, booleanVariable);
             case "contains":
-                Variable containsSetVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variableSet"));
-                Variable containsValueVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variableValue"));
+                Variable containsSetVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varSet"));
+                Variable containsValueVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varValue"));
                 return new ConditionSetContains(invert, containsSetVariable, containsValueVariable);
             case "compare":
-                Variable compareVariable1 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variable1"));
-                Variable compareVariable2 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variable2"));
-                Condition.Equality compareEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.EQUAL);
+                Variable compareVariable1 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var1"));
+                Variable compareVariable2 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var2"));
+                Condition.Equality compareEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
                 return new ConditionCompare(invert, compareVariable1, compareVariable2, compareEquality);
             case "any":
                 List<Condition> subConditionsAny = loadSubConditions(conditionElement);
@@ -355,11 +335,11 @@ public class DataLoader {
     }
 
     private static Variable loadVariable(Element variableElement) {
-        String type = LoadUtils.attribute(variableElement, "type", null);
+        String type = LoadUtils.attribute(variableElement, "type", "literal");
         String dataType = LoadUtils.attribute(variableElement, "dataType", null);
         switch (type) {
             case "stat":
-                StatHolderReference statHolderReference = loadStatHolderReference(LoadUtils.singleChildWithName(variableElement, "statHolder"));
+                StatHolderReference statHolderReference = loadStatHolderReference(variableElement);
                 String statName = LoadUtils.attribute(variableElement, "stat", null);
                 return new VariableStat(statHolderReference, dataType, statName);
             case "global":
@@ -369,7 +349,7 @@ public class DataLoader {
                 if ("boolean".equals(dataType)) {
                     boolean literalBoolean = LoadUtils.attributeBool(variableElement, "value", true);
                     return new VariableLiteral(dataType, literalBoolean);
-                } else if ("integer".equals(dataType)) {
+                } else if ("int".equals(dataType)) {
                     int literalInteger = LoadUtils.attributeInt(variableElement, "value", 0);
                     return new VariableLiteral(dataType, literalInteger);
                 } else if ("float".equals(dataType)) {
@@ -387,9 +367,9 @@ public class DataLoader {
     }
 
     private static StatHolderReference loadStatHolderReference(Element statHolderElement) {
-        String holderType = LoadUtils.attribute(statHolderElement, "type", null);
-        String holderID = LoadUtils.attribute(statHolderElement, "id", null);
-        String holderLocalID = LoadUtils.attribute(statHolderElement, "localID", null);
+        String holderType = LoadUtils.attribute(statHolderElement, "holder", "subject");
+        String holderID = LoadUtils.attribute(statHolderElement, "holderID", null);
+        String holderLocalID = LoadUtils.attribute(statHolderElement, "holderLocalID", null);
         return new StatHolderReference(holderType, holderID, holderLocalID);
     }
 
