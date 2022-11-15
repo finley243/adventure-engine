@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.variable;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 import java.util.Set;
@@ -36,33 +37,33 @@ public class VariableStat extends Variable {
     }
 
     @Override
-    public boolean getValueBoolean(Game game) {
+    public boolean getValueBoolean(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
-        return holder.getHolder(game).getStatValueBoolean(stat);
+        return holder.getHolder(game, subject, target).getStatValueBoolean(stat);
     }
 
     @Override
-    public int getValueInteger(Game game) {
+    public int getValueInteger(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
-        return holder.getHolder(game).getStatValueInt(stat);
+        return holder.getHolder(game, subject, target).getStatValueInt(stat);
     }
 
     @Override
-    public float getValueFloat(Game game) {
+    public float getValueFloat(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
-        return holder.getHolder(game).getStatValueFloat(stat);
+        return holder.getHolder(game, subject, target).getStatValueFloat(stat);
     }
 
     @Override
-    public String getValueString(Game game) {
+    public String getValueString(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
-        return holder.getHolder(game).getStatValueString(stat);
+        return holder.getHolder(game, subject, target).getStatValueString(stat);
     }
 
     @Override
-    public Set<String> getValueStringSet(Game game) {
+    public Set<String> getValueStringSet(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
-        return holder.getHolder(game).getStatValueStringSet(stat);
+        return holder.getHolder(game, subject, target).getStatValueStringSet(stat);
     }
 
 }

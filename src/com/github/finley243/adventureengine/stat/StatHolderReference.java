@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.actor.Actor;
 
 public class StatHolderReference {
 
@@ -15,7 +16,7 @@ public class StatHolderReference {
         this.holderLocalID = holderLocalID;
     }
 
-    public StatHolder getHolder(Game game) {
+    public StatHolder getHolder(Game game, Actor subject, Actor target) {
         switch (holderType) {
             case "actor":
                 return game.data().getActor(holderID);
@@ -25,8 +26,11 @@ public class StatHolderReference {
                 return game.data().getObject(holderID).getComponent(holderLocalID);
             case "item":
                 return game.data().getItemState(holderID);
+            case "target":
+                return target;
+            case "subject":
             default:
-                return null;
+                return subject;
         }
     }
 

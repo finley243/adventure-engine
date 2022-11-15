@@ -19,7 +19,7 @@ public class ConditionSetContains extends Condition {
 
     @Override
     protected boolean isMetInternal(Actor subject, Actor target) {
-        return variableSet.getValueStringSet(subject.game()).contains(variableString.getValueString(subject.game()));
+        return variableSet.getValueStringSet(subject.game(), subject, target).contains(variableString.getValueString(subject.game(), subject, target));
     }
 
 }

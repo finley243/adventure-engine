@@ -16,7 +16,7 @@ public class ConditionBoolean extends Condition {
 
     @Override
     protected boolean isMetInternal(Actor subject, Actor target) {
-        return variable.getValueBoolean(subject.game());
+        return variable.getValueBoolean(subject.game(), subject, target);
     }
 
 }

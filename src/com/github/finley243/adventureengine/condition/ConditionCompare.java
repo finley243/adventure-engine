@@ -29,22 +29,22 @@ public class ConditionCompare extends Condition {
             float value1;
             float value2;
             if (variable1.getDataType() == Variable.DataType.INTEGER) {
-                value1 = variable1.getValueInteger(subject.game());
+                value1 = variable1.getValueInteger(subject.game(), subject, target);
             } else {
-                value1 = variable1.getValueFloat(subject.game());
+                value1 = variable1.getValueFloat(subject.game(), subject, target);
             }
             if (variable2.getDataType() == Variable.DataType.INTEGER) {
-                value2 = variable2.getValueInteger(subject.game());
+                value2 = variable2.getValueInteger(subject.game(), subject, target);
             } else {
-                value2 = variable2.getValueFloat(subject.game());
+                value2 = variable2.getValueFloat(subject.game(), subject, target);
             }
             return Condition.equalityCheckFloat(value1, value2, equality);
         } else if (variable1.getDataType() == Variable.DataType.BOOLEAN) {
-            return variable1.getValueBoolean(subject.game()) == variable2.getValueBoolean(subject.game());
+            return variable1.getValueBoolean(subject.game(), subject, target) == variable2.getValueBoolean(subject.game(), subject, target);
         } else if (variable1.getDataType() == Variable.DataType.STRING) {
-            return variable1.getValueString(subject.game()).equals(variable2.getValueString(subject.game()));
+            return variable1.getValueString(subject.game(), subject, target).equals(variable2.getValueString(subject.game(), subject, target));
         } else if (variable1.getDataType() == Variable.DataType.STRING_SET) {
-            return variable1.getValueStringSet(subject.game()).equals(variable2.getValueStringSet(subject.game()));
+            return variable1.getValueStringSet(subject.game(), subject, target).equals(variable2.getValueStringSet(subject.game(), subject, target));
         }
         return false;
     }
