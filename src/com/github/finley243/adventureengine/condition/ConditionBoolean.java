@@ -9,6 +9,7 @@ public class ConditionBoolean extends Condition {
 
     public ConditionBoolean(boolean invert, Variable variable) {
         super(invert);
+        if (variable == null) throw new IllegalArgumentException("Variable is null");
         if (variable.getDataType() != Variable.DataType.BOOLEAN) throw new IllegalArgumentException("Variable is non-boolean");
         this.variable = variable;
     }

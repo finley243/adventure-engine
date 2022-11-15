@@ -10,6 +10,7 @@ public class ConditionSetContains extends Condition {
 
     public ConditionSetContains(boolean invert, Variable variableSet, Variable variableString) {
         super(invert);
+        if (variableSet == null || variableString == null) throw new IllegalArgumentException("One or more variables is null");
         if (variableSet.getDataType() != Variable.DataType.STRING_SET) throw new IllegalArgumentException("Variable is not a string set");
         if (variableString.getDataType() != Variable.DataType.STRING) throw new IllegalArgumentException("Variable is not a string");
         this.variableSet = variableSet;

@@ -22,7 +22,12 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
+import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.variable.VariableGlobal;
+import com.github.finley243.adventureengine.variable.VariableLiteral;
+import com.github.finley243.adventureengine.variable.VariableStat;
 import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -317,6 +322,18 @@ public class DataLoader {
             case "timerActive":
                 String timerID = LoadUtils.attribute(conditionElement, "timerID", null);
                 return new ConditionTimerActive(invert, timerID);
+            case "boolean":
+                Variable booleanVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variable"));
+                return new ConditionBoolean(invert, booleanVariable);
+            case "contains":
+                Variable containsSetVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variableSet"));
+                Variable containsValueVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variableValue"));
+                return new ConditionSetContains(invert, containsSetVariable, containsValueVariable);
+            case "compare":
+                Variable compareVariable1 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variable1"));
+                Variable compareVariable2 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "variable2"));
+                Condition.Equality compareEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.EQUAL);
+                return new ConditionCompare(invert, compareVariable1, compareVariable2, compareEquality);
             case "any":
                 List<Condition> subConditionsAny = loadSubConditions(conditionElement);
                 return new ConditionCompound(invert, subConditionsAny, true);
@@ -335,6 +352,45 @@ public class DataLoader {
             subConditions.add(subCondition);
         }
         return subConditions;
+    }
+
+    private static Variable loadVariable(Element variableElement) {
+        String type = LoadUtils.attribute(variableElement, "type", null);
+        String dataType = LoadUtils.attribute(variableElement, "dataType", null);
+        switch (type) {
+            case "stat":
+                StatHolderReference statHolderReference = loadStatHolderReference(LoadUtils.singleChildWithName(variableElement, "statHolder"));
+                String statName = LoadUtils.attribute(variableElement, "stat", null);
+                return new VariableStat(statHolderReference, dataType, statName);
+            case "global":
+                String globalVariableID = LoadUtils.attribute(variableElement, "id", null);
+                return new VariableGlobal(globalVariableID);
+            case "literal":
+                if ("boolean".equals(dataType)) {
+                    boolean literalBoolean = LoadUtils.attributeBool(variableElement, "value", true);
+                    return new VariableLiteral(dataType, literalBoolean);
+                } else if ("integer".equals(dataType)) {
+                    int literalInteger = LoadUtils.attributeInt(variableElement, "value", 0);
+                    return new VariableLiteral(dataType, literalInteger);
+                } else if ("float".equals(dataType)) {
+                    float literalFloat = LoadUtils.attributeFloat(variableElement, "value", 0.0f);
+                    return new VariableLiteral(dataType, literalFloat);
+                } else if ("string".equals(dataType)) {
+                    String literalString = LoadUtils.attribute(variableElement, "value", null);
+                    return new VariableLiteral(dataType, literalString);
+                } else if ("stringSet".equals(dataType)) {
+                    Set<String> literalStringSet = LoadUtils.setOfTags(variableElement, "value");
+                    return new VariableLiteral(dataType, literalStringSet);
+                }
+        }
+        return null;
+    }
+
+    private static StatHolderReference loadStatHolderReference(Element statHolderElement) {
+        String holderType = LoadUtils.attribute(statHolderElement, "type", null);
+        String holderID = LoadUtils.attribute(statHolderElement, "id", null);
+        String holderLocalID = LoadUtils.attribute(statHolderElement, "localID", null);
+        return new StatHolderReference(holderType, holderID, holderLocalID);
     }
 
     private static List<Script> loadSubScripts(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
