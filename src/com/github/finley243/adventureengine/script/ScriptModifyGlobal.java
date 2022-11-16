@@ -19,11 +19,15 @@ public class ScriptModifyGlobal extends Script {
     protected void executeSuccess(Actor subject, Actor target) {
         switch (variable.getDataType()) {
             case INTEGER:
-                int oldValueInt = subject.game().data().getVariable(globalID);
-                subject.game().data().setVariable(globalID, oldValueInt + variable.getValueInteger(subject.game(), subject, target));
+                int oldValueInt = subject.game().data().getGlobalInteger(globalID);
+                subject.game().data().setGlobalInteger(globalID, oldValueInt + variable.getValueInteger(subject.game(), subject, target));
+                break;
+            case FLOAT:
+                float oldValueFloat = subject.game().data().getGlobalFloat(globalID);
+                subject.game().data().setGlobalFloat(globalID, oldValueFloat + variable.getValueFloat(subject.game(), subject, target));
                 break;
             default:
-                throw new UnsupportedOperationException("No globals for provided data type: " + variable.getDataType());
+                throw new UnsupportedOperationException("No modify functions for provided data type: " + variable.getDataType());
         }
     }
 

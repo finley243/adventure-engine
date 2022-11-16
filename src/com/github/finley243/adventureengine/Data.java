@@ -49,12 +49,17 @@ public class Data {
 	private final Map<String, WeaponClass> weaponClasses = new HashMap<>();
 	private final Map<String, WeaponAttackType> attackTypes = new HashMap<>();
 	private final Map<String, Scene> scenes = new HashMap<>();
-	private final Map<String, Integer> variables = new HashMap<>();
 	private final Map<String, Script> scripts = new HashMap<>();
 	private final Map<String, Faction> factions = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
 	private final Map<String, Timer> timers = new HashMap<>();
 	private final Map<String, Effect> effects = new HashMap<>();
+
+	private final Map<String, Boolean> globalBooleans = new HashMap<>();
+	private final Map<String, Integer> globalIntegers = new HashMap<>();
+	private final Map<String, Float> globalFloats = new HashMap<>();
+	private final Map<String, String> globalStrings = new HashMap<>();
+	private final Map<String, Set<String>> globalStringSets = new HashMap<>();
 
 	public Data(Game game) {
 		this.game = game;
@@ -94,11 +99,12 @@ public class Data {
 		weaponClasses.clear();
 		attackTypes.clear();
 		scenes.clear();
-		variables.clear();
 		scripts.clear();
 		factions.clear();
 		networks.clear();
 		timers.clear();
+		effects.clear();
+		globalIntegers.clear();
 		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
 		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getConfig("playerStats"));
 		addActor(player.getID(), player);
@@ -124,9 +130,9 @@ public class Data {
 		for(Scene topic : scenes.values()) {
 			state.addAll(topic.saveState());
 		}
-		for(String variable : variables.keySet()) {
-			if(variables.get(variable) != 0) {
-				state.add(new SaveData(SaveData.DataType.VARIABLE, variable, null, variables.get(variable)));
+		for(String variable : globalIntegers.keySet()) {
+			if(globalIntegers.get(variable) != 0) {
+				state.add(new SaveData(SaveData.DataType.VARIABLE, variable, null, globalIntegers.get(variable)));
 			}
 		}
 		state.addAll(time().saveState());
@@ -315,16 +321,6 @@ public class Data {
 		return scenes.get(id);
 	}
 
-	public void setVariable(String id, int value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set variable with blank ID");
-		variables.put(id, value);
-	}
-
-	public int getVariable(String id) {
-		if(!variables.containsKey(id)) return 0;
-		return variables.get(id);
-	}
-
 	public void addScript(String id, Script script) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add script with blank ID");
 		if(scripts.containsKey(id)) throw new IllegalArgumentException("Cannot add script with existing ID: " + id);
@@ -384,6 +380,56 @@ public class Data {
 
 	public Effect getEffect(String id) {
 		return effects.get(id);
+	}
+
+	public void setGlobalBoolean(String id, boolean value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
+		globalBooleans.put(id, value);
+	}
+
+	public boolean getGlobalBoolean(String id) {
+		if(!globalBooleans.containsKey(id)) return false;
+		return globalBooleans.get(id);
+	}
+
+	public void setGlobalInteger(String id, int value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
+		globalIntegers.put(id, value);
+	}
+
+	public int getGlobalInteger(String id) {
+		if(!globalIntegers.containsKey(id)) return 0;
+		return globalIntegers.get(id);
+	}
+
+	public void setGlobalFloat(String id, float value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
+		globalFloats.put(id, value);
+	}
+
+	public float getGlobalFloat(String id) {
+		if(!globalFloats.containsKey(id)) return 0.0f;
+		return globalFloats.get(id);
+	}
+
+	public void setGlobalString(String id, String value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
+		globalStrings.put(id, value);
+	}
+
+	public String getGlobalString(String id) {
+		if(!globalStrings.containsKey(id)) return null;
+		return globalStrings.get(id);
+	}
+
+	public void setGlobalStringSet(String id, Set<String> value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
+		globalStringSets.put(id, value);
+	}
+
+	public Set<String> getGlobalStringSet(String id) {
+		if(!globalStringSets.containsKey(id)) return null;
+		return globalStringSets.get(id);
 	}
 	
 }
