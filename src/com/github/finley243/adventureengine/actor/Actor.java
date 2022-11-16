@@ -881,7 +881,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	@Override
-	public int getStatValueInt(String name) {
+	public int getValueInt(String name) {
 		switch (name) {
 			case "maxHP":
 				return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
@@ -932,7 +932,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	@Override
-	public float getStatValueFloat(String name) {
+	public float getValueFloat(String name) {
 		if ("hpProportion".equals(name)) {
 			return ((float) HP) / ((float) getMaxHP());
 		}
@@ -940,7 +940,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	@Override
-	public boolean getStatValueBoolean(String name) {
+	public boolean getValueBoolean(String name) {
 		switch (name) {
 			case "enabled":
 				return isEnabled;
@@ -959,7 +959,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	@Override
-	public String getStatValueString(String name) {
+	public String getValueString(String name) {
 		switch (name) {
 			case "id":
 				return getID();
@@ -972,7 +972,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	@Override
-	public Set<String> getStatValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name) {
 		return null;
 	}
 
@@ -1032,7 +1032,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	@Override
-	public void modifyStateInteger(String name, int amount) {
+	public void modStateInteger(String name, int amount) {
 		switch (name) {
 			case "heal":
 				heal(amount);
@@ -1050,7 +1050,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	@Override
-	public void modifyStateFloat(String name, float amount) {
+	public void modStateFloat(String name, float amount) {
 
 	}
 

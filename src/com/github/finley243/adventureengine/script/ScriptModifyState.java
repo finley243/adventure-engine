@@ -22,10 +22,10 @@ public class ScriptModifyState extends Script {
     protected void executeSuccess(Actor subject, Actor target) {
         switch (variable.getDataType()) {
             case INTEGER:
-                holder.getHolder(subject.game(), subject, target).modifyStateInteger(state, variable.getValueInteger(subject.game(), subject, target));
+                holder.getHolder(subject.game(), subject, target).modStateInteger(state, variable.getValueInteger(subject.game(), subject, target));
                 break;
             case FLOAT:
-                holder.getHolder(subject.game(), subject, target).modifyStateFloat(state, variable.getValueFloat(subject.game(), subject, target));
+                holder.getHolder(subject.game(), subject, target).modStateFloat(state, variable.getValueFloat(subject.game(), subject, target));
                 break;
             default:
                 throw new UnsupportedOperationException("No modify functions for provided data type: " + variable.getDataType());

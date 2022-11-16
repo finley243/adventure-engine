@@ -39,31 +39,31 @@ public class VariableStat extends Variable {
     @Override
     public boolean getValueBoolean(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getStatValueBoolean(stat);
+        return holder.getHolder(game, subject, target).getValueBoolean(stat);
     }
 
     @Override
     public int getValueInteger(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getStatValueInt(stat);
+        return holder.getHolder(game, subject, target).getValueInt(stat);
     }
 
     @Override
     public float getValueFloat(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getStatValueFloat(stat);
+        return holder.getHolder(game, subject, target).getValueFloat(stat);
     }
 
     @Override
     public String getValueString(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getStatValueString(stat);
+        return holder.getHolder(game, subject, target).getValueString(stat);
     }
 
     @Override
     public Set<String> getValueStringSet(Game game, Actor subject, Actor target) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getStatValueStringSet(stat);
+        return holder.getHolder(game, subject, target).getValueStringSet(stat);
     }
 
 }

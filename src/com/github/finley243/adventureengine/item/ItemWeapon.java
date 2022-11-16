@@ -248,7 +248,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	@Override
-	public int getStatValueInt(String name) {
+	public int getValueInt(String name) {
 		switch (name) {
 			case "damage":
 				return damage.value(getWeaponTemplate().getDamage(), 1, 1000);
@@ -263,7 +263,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	@Override
-	public float getStatValueFloat(String name) {
+	public float getValueFloat(String name) {
 		switch (name) {
 			case "accuracyBonus":
 
@@ -274,7 +274,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	@Override
-	public boolean getStatValueBoolean(String name) {
+	public boolean getValueBoolean(String name) {
 		if (name.equals("isSilenced")) {
 			return isSilenced.value(getWeaponTemplate().isSilenced());
 		}
@@ -282,7 +282,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	@Override
-	public String getStatValueString(String name) {
+	public String getValueString(String name) {
 		if (name.equals("damageType")) {
 			return damageType.value(getWeaponTemplate().getDamageType().toString().toLowerCase());
 		}
@@ -290,7 +290,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	@Override
-	public Set<String> getStatValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name) {
 		switch (name) {
 			case "attackTypes":
 				return attackTypes.value(getWeaponClass().getAttackTypes());
@@ -312,7 +312,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	@Override
-	public void modifyStateInteger(String name, int amount) {
+	public void modStateInteger(String name, int amount) {
 		if ("ammo".equals(name)) {
 			ammoCount = MathUtils.bound(ammoCount + amount, 0, getClipSize());
 		}

@@ -4,8 +4,6 @@ import java.util.Set;
 
 public interface StatHolder {
 
-    // TODO - Add function to get moddable enum stats
-
     StatInt getStatInt(String name);
 
     StatFloat getStatFloat(String name);
@@ -16,17 +14,17 @@ public interface StatHolder {
 
     StatStringSet getStatStringSet(String name);
 
-    int getStatValueInt(String name);
-
-    float getStatValueFloat(String name);
-
-    boolean getStatValueBoolean(String name);
-
-    String getStatValueString(String name);
-
-    Set<String> getStatValueStringSet(String name);
-
     void onStatChange();
+
+    int getValueInt(String name);
+
+    float getValueFloat(String name);
+
+    boolean getValueBoolean(String name);
+
+    String getValueString(String name);
+
+    Set<String> getValueStringSet(String name);
 
     void setStateBoolean(String name, boolean value);
 
@@ -38,9 +36,9 @@ public interface StatHolder {
 
     void setStateStringSet(String name, Set<String> value);
 
-    void modifyStateInteger(String name, int amount);
+    void modStateInteger(String name, int amount);
 
-    void modifyStateFloat(String name, float amount);
+    void modStateFloat(String name, float amount);
 
     void triggerEffect(String name);
 

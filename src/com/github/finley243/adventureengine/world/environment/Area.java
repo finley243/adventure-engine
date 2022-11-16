@@ -463,17 +463,17 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public int getStatValueInt(String name) {
+	public int getValueInt(String name) {
 		return 0;
 	}
 
 	@Override
-	public float getStatValueFloat(String name) {
+	public float getValueFloat(String name) {
 		return 0;
 	}
 
 	@Override
-	public boolean getStatValueBoolean(String name) {
+	public boolean getValueBoolean(String name) {
 		switch (name) {
 			case "known":
 				return isKnown;
@@ -482,7 +482,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public String getStatValueString(String name) {
+	public String getValueString(String name) {
 		switch (name) {
 			case "id":
 				return ID;
@@ -493,7 +493,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Set<String> getStatValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name) {
 		switch (name) {
 			case "visibleAreas":
 				return getVisibleAreaIDs();
@@ -536,12 +536,12 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public void modifyStateInteger(String name, int amount) {
+	public void modStateInteger(String name, int amount) {
 
 	}
 
 	@Override
-	public void modifyStateFloat(String name, float amount) {
+	public void modStateFloat(String name, float amount) {
 
 	}
 
