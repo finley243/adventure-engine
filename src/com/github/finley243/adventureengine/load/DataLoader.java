@@ -37,6 +37,7 @@ import com.github.finley243.adventureengine.world.object.component.ComponentLink
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -58,67 +59,63 @@ public class DataLoader {
                     DocumentBuilder builder = factory.newDocumentBuilder();
                     Document document = builder.parse(file);
                     Element rootElement = document.getDocumentElement();
-                    List<Element> factionElements = LoadUtils.directChildrenWithName(rootElement, "faction");
-                    for (Element factionElement : factionElements) {
-                        Faction faction = loadFaction(factionElement);
-                        game.data().addFaction(faction.getID(), faction);
-                    }
-                    List<Element> sceneElements = LoadUtils.directChildrenWithName(rootElement, "scene");
-                    for (Element sceneElement : sceneElements) {
-                        Scene scene = loadScene(sceneElement);
-                        game.data().addScene(scene.getID(), scene);
-                    }
-                    List<Element> actorElements = LoadUtils.directChildrenWithName(rootElement, "actor");
-                    for (Element actorElement : actorElements) {
-                        ActorTemplate actor = loadActor(game, actorElement);
-                        game.data().addActorTemplate(actor.getID(), actor);
-                    }
-                    List<Element> objectElements = LoadUtils.directChildrenWithName(rootElement, "object");
-                    for (Element objectElement : objectElements) {
-                        ObjectTemplate object = loadObjectTemplate(game, objectElement);
-                        game.data().addObjectTemplate(object.getID(), object);
-                    }
-                    List<Element> itemElements = LoadUtils.directChildrenWithName(rootElement, "item");
-                    for (Element itemElement : itemElements) {
-                        ItemTemplate item = loadItemTemplate(game, itemElement);
-                        game.data().addItem(item.getID(), item);
-                    }
-                    List<Element> tableElements = LoadUtils.directChildrenWithName(rootElement, "lootTable");
-                    for (Element tableElement : tableElements) {
-                        LootTable table = loadLootTable(tableElement, false);
-                        game.data().addLootTable(table.getID(), table);
-                    }
-                    List<Element> weaponClassElements = LoadUtils.directChildrenWithName(rootElement, "weaponClass");
-                    for (Element weaponClassElement : weaponClassElements) {
-                        WeaponClass weaponClass = loadWeaponClass(weaponClassElement);
-                        game.data().addWeaponClass(weaponClass.getID(), weaponClass);
-                    }
-                    List<Element> attackTypeElements = LoadUtils.directChildrenWithName(rootElement, "attackType");
-                    for (Element attackTypeElement : attackTypeElements) {
-                        WeaponAttackType attackType = loadWeaponAttackType(attackTypeElement);
-                        game.data().addAttackType(attackType.getID(), attackType);
-                    }
-                    List<Element> roomElements = LoadUtils.directChildrenWithName(rootElement, "room");
-                    for (Element roomElement : roomElements) {
-                        Room room = loadRoom(game, roomElement);
-                        game.data().addRoom(room.getID(), room);
-                    }
-                    List<Element> scriptElements = LoadUtils.directChildrenWithName(rootElement, "script");
-                    for (Element scriptElement : scriptElements) {
-                        String scriptID = LoadUtils.attribute(scriptElement, "id", null);
-                        Script script = loadScript(scriptElement);
-                        game.data().addScript(scriptID, script);
-                    }
-                    List<Element> effectElements = LoadUtils.directChildrenWithName(rootElement, "effect");
-                    for (Element effectElement : effectElements) {
-                        String effectID = LoadUtils.attribute(effectElement, "id", null);
-                        Effect effect = loadEffect(effectElement);
-                        game.data().addEffect(effectID, effect);
-                    }
-                    List<Element> networkElements = LoadUtils.directChildrenWithName(rootElement, "network");
-                    for (Element networkElement : networkElements) {
-                        Network network = loadNetwork(networkElement);
-                        game.data().addNetwork(network.getID(), network);
+                    Node currentChild = rootElement.getFirstChild();
+                    while (currentChild != null) {
+                        if (currentChild.getNodeType() == Node.ELEMENT_NODE) {
+                            switch (currentChild.getNodeName()) {
+                                case "faction":
+                                    Faction faction = loadFaction((Element) currentChild);
+                                    game.data().addFaction(faction.getID(), faction);
+                                    break;
+                                case "scene":
+                                    Scene scene = loadScene((Element) currentChild);
+                                    game.data().addScene(scene.getID(), scene);
+                                    break;
+                                case "actor":
+                                    ActorTemplate actor = loadActor(game, (Element) currentChild);
+                                    game.data().addActorTemplate(actor.getID(), actor);
+                                    break;
+                                case "object":
+                                    ObjectTemplate object = loadObjectTemplate(game, (Element) currentChild);
+                                    game.data().addObjectTemplate(object.getID(), object);
+                                    break;
+                                case "item":
+                                    ItemTemplate item = loadItemTemplate(game, (Element) currentChild);
+                                    game.data().addItem(item.getID(), item);
+                                    break;
+                                case "lootTable":
+                                    LootTable table = loadLootTable((Element) currentChild, false);
+                                    game.data().addLootTable(table.getID(), table);
+                                    break;
+                                case "weaponClass":
+                                    WeaponClass weaponClass = loadWeaponClass((Element) currentChild);
+                                    game.data().addWeaponClass(weaponClass.getID(), weaponClass);
+                                    break;
+                                case "attackType":
+                                    WeaponAttackType attackType = loadWeaponAttackType((Element) currentChild);
+                                    game.data().addAttackType(attackType.getID(), attackType);
+                                    break;
+                                case "room":
+                                    Room room = loadRoom(game, (Element) currentChild);
+                                    game.data().addRoom(room.getID(), room);
+                                    break;
+                                case "script":
+                                    String scriptID = LoadUtils.attribute((Element) currentChild, "id", null);
+                                    Script script = loadScript((Element) currentChild);
+                                    game.data().addScript(scriptID, script);
+                                    break;
+                                case "effect":
+                                    String effectID = LoadUtils.attribute((Element) currentChild, "id", null);
+                                    Effect effect = loadEffect((Element) currentChild);
+                                    game.data().addEffect(effectID, effect);
+                                    break;
+                                case "network":
+                                    Network network = loadNetwork((Element) currentChild);
+                                    game.data().addNetwork(network.getID(), network);
+                                    break;
+                            }
+                        }
+                        currentChild = currentChild.getNextSibling();
                     }
                 }
             }

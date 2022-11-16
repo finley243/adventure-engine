@@ -19,7 +19,7 @@
     </scene>
     <scene id="stratis_receptionist_request_room">
         <condition type="compare" equality="EQUAL">
-            <var1 type="global" id="purchased_stratis_room"/>
+            <var1 type="global" dataType="int" id="purchased_stratis_room"/>
             <var2 dataType="int" value="0"/>
         </condition>
         <line>
