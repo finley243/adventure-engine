@@ -792,7 +792,7 @@ public class DataLoader {
             case "usable":
                 return new ObjectComponentTemplateUsable(game, ID, startEnabled);
             default:
-                return null;
+                throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
         }
     }
 

@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -16,7 +17,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 /**
  * Represents a self-contained space (e.g. an actual room) that contains smaller areas
  */
-public class Room extends GameInstanced implements Noun {
+public class Room extends GameInstanced implements Noun, StatHolder {
 
 	private final String ID;
 	private final String name;
@@ -50,6 +51,14 @@ public class Room extends GameInstanced implements Noun {
 	
 	public Set<Area> getAreas(){
 		return areas;
+	}
+
+	public Set<String> getAreaIDs() {
+		Set<String> areaIDs = new HashSet<>();
+		for (Area area : areas) {
+			areaIDs.add(area.getID());
+		}
+		return areaIDs;
 	}
 
 	public Map<String, RoomLink> getLinkedRooms() {
@@ -129,6 +138,120 @@ public class Room extends GameInstanced implements Noun {
 	@Override
 	public boolean forcePronoun() {
 		return false;
+	}
+
+	@Override
+	public StatInt getStatInt(String name) {
+		return null;
+	}
+
+	@Override
+	public StatFloat getStatFloat(String name) {
+		return null;
+	}
+
+	@Override
+	public StatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public StatString getStatString(String name) {
+		return null;
+	}
+
+	@Override
+	public StatStringSet getStatStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public int getStatValueInt(String name) {
+		return 0;
+	}
+
+	@Override
+	public float getStatValueFloat(String name) {
+		return 0;
+	}
+
+	@Override
+	public boolean getStatValueBoolean(String name) {
+		switch (name) {
+			case "known":
+				return isKnown();
+			case "visited":
+				return hasVisited();
+		}
+		return false;
+	}
+
+	@Override
+	public String getStatValueString(String name) {
+		switch (name) {
+			case "id":
+				return ID;
+			case "ownerFaction":
+				return ownerFaction;
+		}
+		return null;
+	}
+
+	@Override
+	public Set<String> getStatValueStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public void onStatChange() {
+
+	}
+
+	@Override
+	public void setStateBoolean(String name, boolean value) {
+		switch (name) {
+			case "known":
+				isKnown = value;
+				break;
+			case "visited":
+				hasVisited = value;
+				break;
+		}
+	}
+
+	@Override
+	public void setStateInteger(String name, int value) {
+
+	}
+
+	@Override
+	public void setStateFloat(String name, float value) {
+
+	}
+
+	@Override
+	public void setStateString(String name, String value) {
+
+	}
+
+	@Override
+	public void setStateStringSet(String name, Set<String> value) {
+
+	}
+
+	@Override
+	public void modifyStateInteger(String name, int amount) {
+
+	}
+
+	@Override
+	public void modifyStateFloat(String name, float amount) {
+
+	}
+
+	@Override
+	public void triggerEffect(String name) {
+
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {

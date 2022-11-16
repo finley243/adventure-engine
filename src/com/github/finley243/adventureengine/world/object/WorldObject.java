@@ -277,14 +277,14 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public void setStateBoolean(String name, boolean value) {
 		switch (name) {
-			case "known": // Possibly move to triggerEffect?
-				setKnown();
+			case "known":
+				isKnown = value;
 				break;
 			case "enabled":
 				setEnabled(value);
 				break;
 			case "hidden":
-				setHidden(value);
+				isHidden = value;
 				break;
 		}
 	}

@@ -26,6 +26,12 @@ public class StatHolderReference {
                 return game.data().getObject(holderID).getComponent(holderLocalID);
             case "item":
                 return game.data().getItemState(holderID);
+            case "area":
+                return game.data().getArea(holderID);
+            case "room":
+                return game.data().getRoom(holderID);
+            case "scene":
+                return game.data().getScene(holderID);
             case "player":
                 return game.data().getPlayer();
             case "target":

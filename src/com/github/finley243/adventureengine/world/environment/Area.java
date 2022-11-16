@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -24,7 +25,7 @@ import java.util.*;
 /**
  * Represents a section of a room that can contain objects and actors
  */
-public class Area extends GameInstanced implements Noun {
+public class Area extends GameInstanced implements Noun, StatHolder {
 
 	public enum AreaNameType {
 		IN, ON, NEAR, FRONT, BESIDE, BEHIND
@@ -320,6 +321,20 @@ public class Area extends GameInstanced implements Noun {
 		return visibleAreas;
 	}
 
+	public Set<String> getVisibleAreaIDs() {
+		Set<String> visibleAreaIDs = new HashSet<>();
+		visibleAreaIDs.add(this.getID());
+		for (AreaLink link : linkedAreas.values()) {
+			if (link.isVisible()) {
+				visibleAreaIDs.add(link.getAreaID());
+			}
+		}
+		for (RoomLink roomLink : getRoom().getLinkedRooms().values()) {
+			visibleAreaIDs.addAll(game().data().getRoom(roomLink.getRoomID()).getAreaIDs());
+		}
+		return visibleAreaIDs;
+	}
+
 	public boolean isVisible(Actor subject, String areaID) {
 		if (linkedAreas.containsKey(areaID)) {
 			AreaLink link = linkedAreas.get(areaID);
@@ -420,6 +435,119 @@ public class Area extends GameInstanced implements Noun {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionInspectArea(this));
 		return actions;
+	}
+
+	@Override
+	public StatInt getStatInt(String name) {
+		return null;
+	}
+
+	@Override
+	public StatFloat getStatFloat(String name) {
+		return null;
+	}
+
+	@Override
+	public StatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public StatString getStatString(String name) {
+		return null;
+	}
+
+	@Override
+	public StatStringSet getStatStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public int getStatValueInt(String name) {
+		return 0;
+	}
+
+	@Override
+	public float getStatValueFloat(String name) {
+		return 0;
+	}
+
+	@Override
+	public boolean getStatValueBoolean(String name) {
+		switch (name) {
+			case "known":
+				return isKnown;
+		}
+		return false;
+	}
+
+	@Override
+	public String getStatValueString(String name) {
+		switch (name) {
+			case "id":
+				return ID;
+			case "room":
+				return roomID;
+		}
+		return null;
+	}
+
+	@Override
+	public Set<String> getStatValueStringSet(String name) {
+		switch (name) {
+			case "visibleAreas":
+				return getVisibleAreaIDs();
+		}
+		return null;
+	}
+
+	@Override
+	public void onStatChange() {
+
+	}
+
+	@Override
+	public void setStateBoolean(String name, boolean value) {
+		switch (name) {
+			case "known":
+				isKnown = value;
+				break;
+		}
+	}
+
+	@Override
+	public void setStateInteger(String name, int value) {
+
+	}
+
+	@Override
+	public void setStateFloat(String name, float value) {
+
+	}
+
+	@Override
+	public void setStateString(String name, String value) {
+
+	}
+
+	@Override
+	public void setStateStringSet(String name, Set<String> value) {
+
+	}
+
+	@Override
+	public void modifyStateInteger(String name, int amount) {
+
+	}
+
+	@Override
+	public void modifyStateFloat(String name, float amount) {
+
+	}
+
+	@Override
+	public void triggerEffect(String name) {
+
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {

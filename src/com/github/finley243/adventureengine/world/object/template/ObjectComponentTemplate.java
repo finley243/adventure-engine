@@ -10,6 +10,7 @@ public abstract class ObjectComponentTemplate extends GameInstanced {
 
     public ObjectComponentTemplate(Game game, String ID, boolean startEnabled) {
         super(game);
+        if (ID == null) throw new IllegalArgumentException("ObjectComponentTemplate ID cannot be null");
         this.ID = ID;
         this.startEnabled = startEnabled;
     }

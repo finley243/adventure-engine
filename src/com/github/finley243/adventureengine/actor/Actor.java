@@ -986,8 +986,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	@Override
 	public void setStateBoolean(String name, boolean value) {
 		switch (name) {
-			case "known": // Possibly move to triggerEffect?
-				setKnown();
+			case "known":
+				isKnown = value;
 				break;
 			case "enabled":
 				setEnabled(value);

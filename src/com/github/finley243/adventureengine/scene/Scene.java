@@ -3,11 +3,13 @@ package com.github.finley243.adventureengine.scene;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.stat.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-public class Scene {
+public class Scene implements StatHolder {
 
 	public enum SceneType {
 		SEQUENTIAL, SELECTOR, RANDOM
@@ -66,6 +68,113 @@ public class Scene {
 
 	public boolean hasVisited() {
 		return hasTriggered;
+	}
+
+	@Override
+	public StatInt getStatInt(String name) {
+		return null;
+	}
+
+	@Override
+	public StatFloat getStatFloat(String name) {
+		return null;
+	}
+
+	@Override
+	public StatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public StatString getStatString(String name) {
+		return null;
+	}
+
+	@Override
+	public StatStringSet getStatStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public int getStatValueInt(String name) {
+		return 0;
+	}
+
+	@Override
+	public float getStatValueFloat(String name) {
+		return 0;
+	}
+
+	@Override
+	public boolean getStatValueBoolean(String name) {
+		switch (name) {
+			case "triggered":
+				return hasTriggered;
+		}
+		return false;
+	}
+
+	@Override
+	public String getStatValueString(String name) {
+		switch (name) {
+			case "id":
+				return ID;
+		}
+		return null;
+	}
+
+	@Override
+	public Set<String> getStatValueStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public void onStatChange() {
+
+	}
+
+	@Override
+	public void setStateBoolean(String name, boolean value) {
+		switch (name) {
+			case "triggered":
+				hasTriggered = value;
+				break;
+		}
+	}
+
+	@Override
+	public void setStateInteger(String name, int value) {
+
+	}
+
+	@Override
+	public void setStateFloat(String name, float value) {
+
+	}
+
+	@Override
+	public void setStateString(String name, String value) {
+
+	}
+
+	@Override
+	public void setStateStringSet(String name, Set<String> value) {
+
+	}
+
+	@Override
+	public void modifyStateInteger(String name, int amount) {
+
+	}
+
+	@Override
+	public void modifyStateFloat(String name, float amount) {
+
+	}
+
+	@Override
+	public void triggerEffect(String name) {
+
 	}
 
 	public void loadState(SaveData saveData) {
