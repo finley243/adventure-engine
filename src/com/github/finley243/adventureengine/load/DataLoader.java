@@ -343,7 +343,7 @@ public class DataLoader {
                 String statName = LoadUtils.attribute(variableElement, "stat", null);
                 return new VariableStat(statHolderReference, dataType, statName);
             case "global":
-                String globalVariableID = LoadUtils.attribute(variableElement, "id", null);
+                String globalVariableID = LoadUtils.attribute(variableElement, "globalID", null);
                 return new VariableGlobal(globalVariableID);
             case "literal":
                 if ("boolean".equals(dataType)) {
@@ -402,9 +402,6 @@ public class DataLoader {
             case "external":
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
                 return new ScriptExternal(condition, scriptID);
-            case "money":
-                int moneyValue = LoadUtils.attributeInt(scriptElement, "value", 0);
-                return new ScriptMoney(condition, actorRef, moneyValue);
             case "addItem":
                 String addItemID = LoadUtils.attribute(scriptElement, "item", null);
                 return new ScriptAddItem(condition, actorRef, addItemID);
@@ -417,14 +414,6 @@ public class DataLoader {
             case "scene":
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
                 return new ScriptScene(condition, actorRef, scenes);
-            case "varSet":
-                String varSetID = LoadUtils.attribute(scriptElement, "variable", null);
-                int varSetValue = LoadUtils.attributeInt(scriptElement, "value", 0);
-                return new ScriptVariableSet(condition, varSetID, varSetValue);
-            case "varMod":
-                String varModID = LoadUtils.attribute(scriptElement, "variable", null);
-                int varModValue = LoadUtils.attributeInt(scriptElement, "value", 0);
-                return new ScriptVariableMod(condition, varModID, varModValue);
             case "combat":
                 ActorReference combatantRef = loadActorReference(scriptElement, "combatant");
                 return new ScriptCombat(condition, actorRef, combatantRef);
@@ -433,37 +422,35 @@ public class DataLoader {
                 String relationFaction = LoadUtils.attribute(scriptElement, "relationFaction", null);
                 Faction.FactionRelation relation = LoadUtils.attributeEnum(scriptElement, "relation", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
                 return new ScriptFactionRelation(condition, targetFaction, relationFaction, relation);
-            case "moveActor":
-                String moveActorArea = LoadUtils.attribute(scriptElement, "area", null);
-                return new ScriptMoveActor(condition, actorRef, moveActorArea);
-            case "actorState":
-                boolean actorEnabled = LoadUtils.attributeBool(scriptElement, "enabled", true);
-                return new ScriptActorState(condition, actorRef, actorEnabled);
             case "bark":
                 String barkTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
                 return new ScriptBark(condition, actorRef, barkTrigger);
             case "nearestActorScript":
                 String nearestTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
                 return new ScriptNearestActorWithScript(condition, nearestTrigger);
-            case "unlock":
-                String unlockObject = LoadUtils.attribute(scriptElement, "object", null);
-                return new ScriptUnlock(condition, unlockObject);
-            case "alertState":
-                TargetingComponent.AlertState alertState = LoadUtils.attributeEnum(scriptElement, "state", TargetingComponent.AlertState.class, TargetingComponent.AlertState.AWARE);
-                return new ScriptAlertState(condition, actorRef, alertState);
-            case "revealObject":
-                String revealObject = LoadUtils.attribute(scriptElement, "object", null);
-                return new ScriptRevealObject(condition, revealObject);
             case "timerStart":
                 String timerID = LoadUtils.attribute(scriptElement, "timerID", null);
                 int timerDuration = LoadUtils.attributeInt(scriptElement, "duration", 1);
                 Script timerExpireScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "expireScript"));
                 return new ScriptTimerStart(condition, timerID, timerDuration, timerExpireScript);
-            case "componentState":
-                String componentStateObjectID = LoadUtils.attribute(scriptElement, "objectID", null);
-                String componentStateComponentID = LoadUtils.attribute(scriptElement, "componentID", null);
-                boolean componentStateEnabled = LoadUtils.attributeBool(scriptElement, "enabled", true);
-                return new ScriptComponentState(condition, componentStateObjectID, componentStateComponentID, componentStateEnabled);
+            case "setState":
+                StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
+                String setStateName = LoadUtils.attribute(scriptElement, "state", null);
+                Variable setStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"));
+                return new ScriptSetState(condition, setStateHolder, setStateName, setStateVariable);
+            case "modifyState":
+                StatHolderReference modifyStateHolder = loadStatHolderReference(scriptElement);
+                String modifyStateName = LoadUtils.attribute(scriptElement, "state", null);
+                Variable modifyStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"));
+                return new ScriptModifyState(condition, modifyStateHolder, modifyStateName, modifyStateVariable);
+            case "setGlobal":
+                String setGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
+                Variable setGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"));
+                return new ScriptSetGlobal(condition, setGlobalID, setGlobalVariable);
+            case "modifyGlobal":
+                String modifyGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
+                Variable modifyGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"));
+                return new ScriptModifyGlobal(condition, modifyGlobalID, modifyGlobalVariable);
             case "select":
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSelect, true);

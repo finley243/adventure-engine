@@ -15,7 +15,7 @@ public class EffectStateInt extends Effect {
 
     @Override
     public void start(StatHolder target) {
-        target.modifyState(state, amount);
+        target.modifyStateInteger(state, amount);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class EffectStateInt extends Effect {
 
     @Override
     public void eachRound(StatHolder target) {
-        target.modifyState(state, amount);
+        target.modifyStateInteger(state, amount);
     }
 
     @Override

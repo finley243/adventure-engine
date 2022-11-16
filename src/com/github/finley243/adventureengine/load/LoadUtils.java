@@ -131,5 +131,15 @@ public class LoadUtils {
 		}
 		return null;
 	}
+
+	public static <T extends Enum<T>> T stringToEnum(String value, Class<T> enumClass) {
+		if (value == null) return null;
+		for(T current : EnumSet.allOf(enumClass)) {
+			if(value.equalsIgnoreCase(current.toString())) {
+				return current;
+			}
+		}
+		return null;
+	}
 	
 }

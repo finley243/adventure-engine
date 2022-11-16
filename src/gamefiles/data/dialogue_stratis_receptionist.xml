@@ -39,8 +39,12 @@
             <text>He hands you a white keycard with the Stratis Hotel logo.</text>
             <script type="all">
                 <script type="addItem" actor="PLAYER" item="stratis_room_key"/>
-                <script type="money" actor="PLAYER" value="-300"/>
-                <script type="varSet" variable="purchased_stratis_room" value="1"/>
+                <script type="modifyState" state="money" holder="PLAYER">
+                    <var dataType="int" value="-300"/>
+                </script>
+                <script type="setGlobal" globalID="purchased_stratis_room">
+                    <var dataType="int" value="1"/>
+                </script>
             </script>
         </line>
         <line redirect="stratis_receptionist_main">

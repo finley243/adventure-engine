@@ -312,7 +312,7 @@ public class ItemWeapon extends ItemEquippable implements StatHolder {
 	}
 
 	@Override
-	public void modifyState(String name, int amount) {
+	public void modifyStateInteger(String name, int amount) {
 		if ("ammo".equals(name)) {
 			ammoCount = MathUtils.bound(ammoCount + amount, 0, getClipSize());
 		}

@@ -23,6 +23,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemApparel;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneManager;
@@ -473,24 +474,20 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		return isSleeping;
 	}
 
-	public void setSleeping(boolean state) {
-		this.isSleeping = state;
-	}
-	
 	public boolean isActive() {
 		return !isDead() && !isSleeping();
 	}
 
 	public void startSleep(int minutes) {
 		sleepCounter = DateTimeController.minutesToRounds(minutes);
-		setSleeping(true);
+		isSleeping = true;
 	}
 
 	private void updateSleep() {
 		if(sleepCounter != 0) {
 			sleepCounter -= 1;
 			if (sleepCounter <= 0) {
-				setSleeping(false);
+				isSleeping = false;
 				sleepCounter = 0;
 			}
 		}
@@ -944,11 +941,33 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public boolean getStatValueBoolean(String name) {
+		switch (name) {
+			case "enabled":
+				return isEnabled;
+			case "sleeping":
+				return isSleeping;
+			case "inCombat":
+				return isInCombat();
+			case "usingObject":
+				return isUsingObject();
+			case "dead":
+				return isDead;
+			case "active":
+				return isActive();
+		}
 		return false;
 	}
 
 	@Override
 	public String getStatValueString(String name) {
+		switch (name) {
+			case "id":
+				return getID();
+			case "area":
+				return getArea().getID();
+			case "room":
+				return getArea().getRoom().getID();
+		}
 		return null;
 	}
 
@@ -965,7 +984,55 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	@Override
-	public void modifyState(String name, int amount) {
+	public void setStateBoolean(String name, boolean value) {
+		switch (name) {
+			case "known": // Possibly move to triggerEffect?
+				setKnown();
+				break;
+			case "enabled":
+				setEnabled(value);
+				break;
+		}
+	}
+
+	@Override
+	public void setStateInteger(String name, int value) {
+		switch (name) {
+			case "hp":
+				HP = value;
+				break;
+			case "money":
+				money = value;
+				break;
+		}
+	}
+
+	@Override
+	public void setStateFloat(String name, float value) {
+
+	}
+
+	@Override
+	public void setStateString(String name, String value) {
+		switch (name) {
+			case "area":
+				setArea(game().data().getArea(value));
+				break;
+			case "alertState":
+				if (targetingComponent != null) {
+					targetingComponent.setAlertState(LoadUtils.stringToEnum(value, TargetingComponent.AlertState.class));
+				}
+				break;
+		}
+	}
+
+	@Override
+	public void setStateStringSet(String name, Set<String> value) {
+
+	}
+
+	@Override
+	public void modifyStateInteger(String name, int amount) {
 		switch (name) {
 			case "heal":
 				heal(amount);
@@ -976,7 +1043,15 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			case "damageIgnoreArmor":
 				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 0.0f, new ArrayList<>()));
 				break;
+			case "money":
+				money += amount;
+				break;
 		}
+	}
+
+	@Override
+	public void modifyStateFloat(String name, float amount) {
+
 	}
 
 	@Override

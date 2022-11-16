@@ -238,11 +238,29 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public boolean getStatValueBoolean(String name) {
+		switch (name) {
+			case "enabled":
+				return isEnabled;
+			case "hidden":
+				return isHidden;
+			case "guarded":
+				return isGuarded();
+		}
 		return false;
 	}
 
 	@Override
 	public String getStatValueString(String name) {
+		switch (name) {
+			case "id":
+				return getID();
+			case "templateID":
+				return templateID;
+			case "area":
+				return getArea().getID();
+			case "room":
+				return getArea().getRoom().getID();
+		}
 		return null;
 	}
 
@@ -257,7 +275,51 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public void modifyState(String name, int amount) {
+	public void setStateBoolean(String name, boolean value) {
+		switch (name) {
+			case "known": // Possibly move to triggerEffect?
+				setKnown();
+				break;
+			case "enabled":
+				setEnabled(value);
+				break;
+			case "hidden":
+				setHidden(value);
+				break;
+		}
+	}
+
+	@Override
+	public void setStateInteger(String name, int value) {
+
+	}
+
+	@Override
+	public void setStateFloat(String name, float value) {
+
+	}
+
+	@Override
+	public void setStateString(String name, String value) {
+		switch (name) {
+			case "area":
+				setArea(game().data().getArea(value));
+				break;
+		}
+	}
+
+	@Override
+	public void setStateStringSet(String name, Set<String> value) {
+
+	}
+
+	@Override
+	public void modifyStateInteger(String name, int amount) {
+
+	}
+
+	@Override
+	public void modifyStateFloat(String name, float amount) {
 
 	}
 

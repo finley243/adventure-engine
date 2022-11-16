@@ -98,7 +98,41 @@ public abstract class ObjectComponent implements StatHolder {
     }
 
     @Override
-    public void modifyState(String name, int amount) {
+    public void setStateBoolean(String name, boolean value) {
+        switch (name) {
+            case "enabled":
+                setEnabled(value);
+                break;
+        }
+    }
+
+    @Override
+    public void setStateInteger(String name, int value) {
+
+    }
+
+    @Override
+    public void setStateFloat(String name, float value) {
+
+    }
+
+    @Override
+    public void setStateString(String name, String value) {
+
+    }
+
+    @Override
+    public void setStateStringSet(String name, Set<String> value) {
+
+    }
+
+    @Override
+    public void modifyStateInteger(String name, int amount) {
+
+    }
+
+    @Override
+    public void modifyStateFloat(String name, float amount) {
 
     }
 

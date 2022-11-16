@@ -158,7 +158,37 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public void modifyState(String name, int amount) {
+	public void setStateBoolean(String name, boolean value) {
+
+	}
+
+	@Override
+	public void setStateInteger(String name, int value) {
+
+	}
+
+	@Override
+	public void setStateFloat(String name, float value) {
+
+	}
+
+	@Override
+	public void setStateString(String name, String value) {
+
+	}
+
+	@Override
+	public void setStateStringSet(String name, Set<String> value) {
+
+	}
+
+	@Override
+	public void modifyStateInteger(String name, int amount) {
+
+	}
+
+	@Override
+	public void modifyStateFloat(String name, float amount) {
 
 	}
 
