@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;
-import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
@@ -335,7 +334,7 @@ public class DataLoader {
                 return new VariableStat(statHolderReference, dataType, statName);
             case "global":
                 String globalVariableID = LoadUtils.attribute(variableElement, "globalID", null);
-                return new VariableGlobal(globalVariableID);
+                return new VariableGlobal(dataType, globalVariableID);
             case "literal":
                 if ("boolean".equals(dataType)) {
                     boolean literalBoolean = LoadUtils.attributeBool(variableElement, "value", true);
