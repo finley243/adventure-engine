@@ -260,15 +260,8 @@ public class DataLoader {
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch (type) {
-            case "actorLocation":
-                String actorArea = LoadUtils.attribute(conditionElement, "area", null);
-                String actorRoom = LoadUtils.attribute(conditionElement, "room", null);
-                boolean useRoom = actorArea == null;
-                return new ConditionActorLocation(invert, actorRef, (useRoom ? actorRoom : actorArea), useRoom);
             case "actorAvailableForScene":
                 return new ConditionActorAvailableForScene(invert, actorRef);
-            case "actorDead":
-                return new ConditionActorDead(invert, actorRef);
             case "combatant":
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatant(invert, actorRef, targetRef);
@@ -283,8 +276,6 @@ public class DataLoader {
             case "actorVisible":
                 ActorReference visibleTargetRef = loadActorReference(conditionElement, "target");
                 return new ConditionActorVisible(invert, actorRef, visibleTargetRef);
-            case "inCombat":
-                return new ConditionActorInCombat(invert, actorRef);
             case "time":
                 Element timeStartElement = LoadUtils.singleChildWithName(conditionElement, "start");
                 Element timeEndElement = LoadUtils.singleChildWithName(conditionElement, "end");
