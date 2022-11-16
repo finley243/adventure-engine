@@ -25,4 +25,12 @@ public class ObjectComponentItemUse extends ObjectComponent {
         return actions;
     }
 
+    @Override
+    public boolean getValueBoolean(String name) {
+        if ("succeeded".equals(name)) {
+            return hasSucceeded;
+        }
+        return super.getValueBoolean(name);
+    }
+
 }
