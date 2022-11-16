@@ -763,10 +763,17 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		}
 	}
 
+	public Set<Area> getVisibleAreas() {
+		if (isUsingObject() && !getUsingObject().userCanSeeOtherAreas()) {
+			return Set.of(getArea());
+		} else {
+			return getArea().getLineOfSightAreas();
+		}
+	}
+
 	public Set<Actor> getVisibleActors() {
 		Set<Actor> visibleActors = new HashSet<>();
-		Set<Area> visibleAreas = getArea().getVisibleAreas(this);
-		for(Area visibleArea : visibleAreas) {
+		for(Area visibleArea : getVisibleAreas()) {
 			for(Actor actor : visibleArea.getActors()) {
 				if(actor != this && !actor.isInCover()) {
 					visibleActors.add(actor);
@@ -778,8 +785,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	public Set<WorldObject> getVisibleObjects() {
 		Set<WorldObject> visibleObjects = new HashSet<>();
-		Set<Area> visibleAreas = getArea().getVisibleAreas(this);
-		for (Area visibleArea : visibleAreas) {
+		for (Area visibleArea : getVisibleAreas()) {
 			for (WorldObject object : visibleArea.getObjects()) {
 				if (!object.isHidden()) {
 					visibleObjects.add(object);
@@ -801,14 +807,14 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 	
 	public boolean canSee(Actor target) {
-		return this.equals(target) || getArea().getVisibleAreas(this).contains(target.getArea()) && !target.isInCover();
+		return this.equals(target) || getVisibleActors().contains(target);
 	}
 
 	public boolean canSee(AttackTarget target) {
 		if (target instanceof Actor) {
 			return canSee((Actor) target);
 		} else {
-			return getArea().getVisibleAreas(this).contains(target.getArea());
+			return getVisibleAttackTargets().contains(target);
 		}
 	}
 

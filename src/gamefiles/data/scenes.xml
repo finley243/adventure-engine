@@ -1,8 +1,18 @@
 <data>
     <scene id="stratis_lobby_intro">
         <condition type="all">
-            <condition type="actorAvailableForScene" actor="stratis_receptionist"/>
-            <condition type="actorAvailableForScene" actor="stratis_guard_lobby"/>
+            <condition type="boolean">
+                <var type="stat" dataType="boolean" stat="active" holder="actor" holderID="stratis_receptionist"/>
+            </condition>
+            <condition type="boolean" invert="true">
+                <var type="stat" dataType="boolean" stat="inCombat" holder="actor" holderID="stratis_receptionist"/>
+            </condition>
+            <condition type="boolean">
+                <var type="stat" dataType="boolean" stat="active" holder="actor" holderID="stratis_guard_lobby"/>
+            </condition>
+            <condition type="boolean" invert="true">
+                <var type="stat" dataType="boolean" stat="inCombat" holder="actor" holderID="stratis_guard_lobby"/>
+            </condition>
             <condition type="compare">
                 <var1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_receptionist"/>
                 <var2 dataType="string" value="stratis_hotel_lobby_desk"/>

@@ -302,26 +302,22 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		return movableAreas;
 	}
 
-	public Set<Area> getVisibleAreas(Actor subject) {
+	public Set<Area> getLineOfSightAreas() {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
-		if (!subject.isUsingObject() || subject.getUsingObject().userCanSeeOtherAreas()) {
-			for (AreaLink link : linkedAreas.values()) {
-				if (link.isVisible()) {
-					if (!subject.isInCover()) {
-						Area area = game().data().getArea(link.getAreaID());
-						visibleAreas.add(area);
-					}
-				}
+		for (AreaLink link : linkedAreas.values()) {
+			if (link.isVisible()) {
+					Area area = game().data().getArea(link.getAreaID());
+					visibleAreas.add(area);
 			}
-			for (RoomLink roomLink : getRoom().getLinkedRooms().values()) {
-				visibleAreas.addAll(game().data().getRoom(roomLink.getRoomID()).getAreas());
-			}
+		}
+		for (RoomLink roomLink : getRoom().getLinkedRooms().values()) {
+			visibleAreas.addAll(game().data().getRoom(roomLink.getRoomID()).getAreas());
 		}
 		return visibleAreas;
 	}
 
-	public Set<String> getVisibleAreaIDs() {
+	public Set<String> getLineOfSightAreaIDs() {
 		Set<String> visibleAreaIDs = new HashSet<>();
 		visibleAreaIDs.add(this.getID());
 		for (AreaLink link : linkedAreas.values()) {
@@ -496,7 +492,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	public Set<String> getValueStringSet(String name) {
 		switch (name) {
 			case "visibleAreas":
-				return getVisibleAreaIDs();
+				return getLineOfSightAreaIDs();
 		}
 		return null;
 	}

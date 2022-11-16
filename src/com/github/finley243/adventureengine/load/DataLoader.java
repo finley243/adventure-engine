@@ -259,8 +259,6 @@ public class DataLoader {
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch (type) {
-            case "actorAvailableForScene":
-                return new ConditionActorAvailableForScene(invert, actorRef);
             case "combatant":
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatant(invert, actorRef, targetRef);

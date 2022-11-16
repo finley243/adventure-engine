@@ -33,7 +33,7 @@ public class PerceptionHandler {
 		for (Actor actor : actors) {
 			boolean actorCanSeeEvent = false;
 			for (Area origin : e.getOrigins()) {
-				if (actor.getArea().getVisibleAreas(actor).contains(origin)) {
+				if (actor.getArea().getLineOfSightAreas(actor).contains(origin)) {
 					actorCanSeeEvent = true;
 					break;
 				}
