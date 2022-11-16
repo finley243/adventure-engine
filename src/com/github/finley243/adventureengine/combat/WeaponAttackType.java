@@ -116,7 +116,8 @@ public class WeaponAttackType {
                 }
             }
         } else if (category == AttackCategory.SPREAD) {
-            for (Area target : subject.getArea().getLineOfSightAreas(subject)) {
+            // Possibly switch to only areas visible to the subject?
+            for (Area target : subject.getArea().getLineOfSightAreas()) {
                 actions.add(new ActionAttackArea(item, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType));
             }
         }
