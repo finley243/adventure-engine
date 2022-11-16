@@ -3,8 +3,14 @@
         <condition type="all">
             <condition type="actorAvailableForScene" actor="stratis_receptionist"/>
             <condition type="actorAvailableForScene" actor="stratis_guard_lobby"/>
-            <condition type="actorLocation" actor="stratis_receptionist" area="stratis_hotel_lobby_desk"/>
-            <condition type="actorLocation" actor="stratis_guard_lobby" area="stratis_hotel_lobby_seating"/>
+            <condition type="compare">
+                <var1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_receptionist"/>
+                <var2 dataType="string" value="stratis_hotel_lobby_desk"/>
+            </condition>
+            <condition type="compare">
+                <var1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_guard_lobby"/>
+                <var2 dataType="string" value="stratis_hotel_lobby_seating"/>
+            </condition>
         </condition>
         <line>
             <text>The receptionist leans on the desk and sighs. He looks up from the computer, towards the security guard standing near the seating area.</text>
