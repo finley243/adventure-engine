@@ -13,7 +13,6 @@ import java.util.Set;
 
 public class ActorTemplate extends GameInstanced {
 	
-	private final String ID;
 	private final String parentID;
 	
 	private final String name;
@@ -42,7 +41,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Map<String, Bark> barks;
 	
 	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, Boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, Boolean vendorBuyAll, Boolean vendorStartDisabled) {
-		super(game);
+		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
 			if (isProperName == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: isProperName");
@@ -59,7 +58,6 @@ public class ActorTemplate extends GameInstanced {
 			}
 			if (lootTable == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: lootTable");
 		}
-		this.ID = ID;
 		this.parentID = parentID;
 		this.name = name;
 		this.isProperName = isProperName;
@@ -80,10 +78,6 @@ public class ActorTemplate extends GameInstanced {
 		this.vendorBuyTags = vendorBuyTags;
 		this.vendorBuyAll = vendorBuyAll;
 		this.vendorStartDisabled = vendorStartDisabled;
-	}
-	
-	public String getID() {
-		return ID;
 	}
 
 	// TODO - Find a better way to inherit values from parent

@@ -28,7 +28,6 @@ import java.util.*;
  */
 public class WorldObject extends GameInstanced implements Noun, Physical, StatHolder {
 
-	private final String ID;
 	private final String templateID;
 	private boolean isKnown;
 	private boolean isEnabled;
@@ -40,9 +39,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Map<String, ComponentLink> linkedObjects;
 	
 	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentLink> linkedObjects) {
-		super(gameInstance);
+		super(gameInstance, ID);
 		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
-		this.ID = ID;
 		this.templateID = templateID;
 		this.defaultArea = area;
 		this.area = area;
@@ -50,10 +48,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.components = new HashMap<>();
 		this.linkedObjects = linkedObjects;
 		setEnabled(!startDisabled);
-	}
-
-	public String getID() {
-		return ID;
 	}
 
 	public ObjectTemplate getTemplate() {
@@ -358,7 +352,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public int hashCode() {
-		return ID.hashCode();
+		return getID().hashCode();
 	}
 
 	@Override

@@ -5,18 +5,11 @@ import com.github.finley243.adventureengine.GameInstanced;
 
 public abstract class ObjectComponentTemplate extends GameInstanced {
 
-    private final String ID;
     private final boolean startEnabled;
 
     public ObjectComponentTemplate(Game game, String ID, boolean startEnabled) {
-        super(game);
-        if (ID == null) throw new IllegalArgumentException("ObjectComponentTemplate ID cannot be null");
-        this.ID = ID;
+        super(game, ID);
         this.startEnabled = startEnabled;
-    }
-
-    public String getID() {
-        return ID;
     }
 
     public boolean startEnabled() {

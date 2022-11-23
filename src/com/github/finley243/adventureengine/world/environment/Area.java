@@ -31,8 +31,6 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		IN, ON, NEAR, FRONT, BESIDE, BEHIND
 	}
 
-	private final String ID;
-
 	private final String landmarkID;
 	private final String name;
 	private final AreaNameType nameType;
@@ -62,9 +60,8 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	private final Map<AreaEffect, List<Integer>> areaEffects;
 	
 	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
-		super(game);
+		super(game, ID);
 		if(landmarkID == null && name == null) throw new IllegalArgumentException("Landmark and name cannot both be null: " + ID);
-		this.ID = ID;
 		this.landmarkID = landmarkID;
 		this.name = name;
 		this.nameType = nameType;
@@ -78,10 +75,6 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		this.itemInventory = new Inventory(game, null);
 		this.scripts = scripts;
 		this.areaEffects = new HashMap<>();
-	}
-	
-	public String getID() {
-		return ID;
 	}
 
 	public WorldObject getLandmark() {
@@ -213,14 +206,14 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	public void addObject(WorldObject object) {
 		boolean didAdd = objects.add(object);
 		if(!didAdd) {
-			System.out.println("Area " + ID + " already contains object " + object + ".");
+			System.out.println("Area " + getID() + " already contains object " + object + ".");
 		}
 	}
 	
 	public void removeObject(WorldObject object) {
 		boolean didRemove = objects.remove(object);
 		if(!didRemove) {
-			System.out.println("Area " + ID + " does not contain object " + object + ".");
+			System.out.println("Area " + getID() + " does not contain object " + object + ".");
 		}
 	}
 	
@@ -253,14 +246,14 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	public void addActor(Actor actor) {
 		boolean didAdd = actors.add(actor);
 		if(!didAdd) {
-			System.out.println("Area " + ID + " already contains actor " + actor + ".");
+			System.out.println("Area " + getID() + " already contains actor " + actor + ".");
 		}
 	}
 	
 	public void removeActor(Actor actor) {
 		boolean didRemove = actors.remove(actor);
 		if(!didRemove) {
-			System.out.println("Area " + ID + " does not contain actor " + actor + ".");
+			System.out.println("Area " + getID() + " does not contain actor " + actor + ".");
 		}
 	}
 
@@ -481,7 +474,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	public String getValueString(String name) {
 		switch (name) {
 			case "id":
-				return ID;
+				return getID();
 			case "room":
 				return roomID;
 		}
@@ -577,7 +570,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	
 	@Override
 	public int hashCode() {
-		return ID.hashCode();
+		return getID().hashCode();
 	}
 	
 }

@@ -21,17 +21,10 @@ import java.util.Set;
 
 public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
-	// ID is null if the item is stateless
-	private final String ID;
 	private boolean isKnown;
 
 	public Item(Game game, String ID) {
-		super(game);
-		this.ID = ID;
-	}
-
-	public String getID() {
-		return ID;
+		super(game, ID);
 	}
 
 	@Override

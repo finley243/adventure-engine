@@ -18,7 +18,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun {
 
 	private int generatedCount;
 
-	private final String ID;
 	private final String name;
 	private final Scene description;
 	private final int price;
@@ -26,8 +25,7 @@ public abstract class ItemTemplate extends GameInstanced implements Noun {
 	private final Map<String, Script> scripts;
 
 	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType) {
-		super(game);
-		this.ID = ID;
+		super(game, ID);
 		this.name = name;
 		this.description = description;
 		this.scripts = scripts;
@@ -39,13 +37,9 @@ public abstract class ItemTemplate extends GameInstanced implements Noun {
 	public abstract boolean hasState();
 
 	public String generateInstanceID() {
-		String newID = ID + "_" + generatedCount;
+		String newID = getID() + "_" + generatedCount;
 		generatedCount += 1;
 		return newID;
-	}
-	
-	public String getID() {
-		return ID;
 	}
 	
 	@Override
@@ -122,13 +116,13 @@ public abstract class ItemTemplate extends GameInstanced implements Noun {
 		if(!(o instanceof ItemTemplate)) {
 			return false;
 		} else {
-			return this.ID.equals(((ItemTemplate) o).ID);
+			return this.getID().equals(((ItemTemplate) o).getID());
 		}
 	}
 
 	@Override
 	public int hashCode() {
-		return ID.hashCode();
+		return getID().hashCode();
 	}
 	
 }

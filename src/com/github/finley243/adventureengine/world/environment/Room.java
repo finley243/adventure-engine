@@ -19,7 +19,6 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
  */
 public class Room extends GameInstanced implements Noun, StatHolder {
 
-	private final String ID;
 	private final String name;
 	private final boolean isProperName;
 	private boolean isKnown;
@@ -33,8 +32,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	private boolean hasVisited;
 
 	public Room(Game game, String ID, String name, boolean isProperName, Scene description, String ownerFaction, Set<Area> areas, Map<String, RoomLink> linkedRooms, Map<String, Script> scripts) {
-		super(game);
-		this.ID = ID;
+		super(game, ID);
 		this.name = name;
 		this.isProperName = isProperName;
 		this.description = description;
@@ -43,10 +41,6 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 		this.linkedRooms = linkedRooms;
 		this.hasVisited = false;
 		this.scripts = scripts;
-	}
-	
-	public String getID() {
-		return ID;
 	}
 	
 	public Set<Area> getAreas(){
@@ -190,7 +184,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	public String getValueString(String name) {
 		switch (name) {
 			case "id":
-				return ID;
+				return getID();
 			case "ownerFaction":
 				return ownerFaction;
 		}

@@ -84,7 +84,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	private final String templateID;
-	private final String ID;
 	private boolean isKnown;
 	private final Area defaultArea;
 	private Area area;
@@ -116,8 +115,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	private boolean playerControlled;
 
 	public Actor(Game game, String ID, Area area, String templateID, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControlled) {
-		super(game);
-		this.ID = ID;
+		super(game, ID);
 		this.defaultArea = area;
 		this.area = area;
 		this.templateID = templateID;
@@ -166,10 +164,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	public boolean isPlayer() {
 		return this.equals(game().data().getPlayer());
-	}
-	
-	public String getID() {
-		return ID;
 	}
 	
 	@Override
@@ -1165,12 +1159,12 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public String toString() {
-		return ID;
+		return getID();
 	}
 	
 	@Override
 	public int hashCode() {
-		return ID.hashCode();
+		return getID().hashCode();
 	}
 	
 	@Override

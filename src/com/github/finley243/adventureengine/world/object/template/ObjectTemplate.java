@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class ObjectTemplate extends GameInstanced {
 
-    private final String ID;
     private final String name;
     private final Scene description;
     private final Map<String, Script> scripts;
@@ -19,17 +18,12 @@ public class ObjectTemplate extends GameInstanced {
     private final Map<String, ObjectComponentTemplate> components;
 
     public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, ObjectComponentTemplate> components) {
-        super(game);
-        this.ID = ID;
+        super(game, ID);
         this.name = name;
         this.description = description;
         this.scripts = scripts;
         this.customActions = customActions;
         this.components = components;
-    }
-
-    public String getID() {
-        return ID;
     }
 
     public String getName() {
