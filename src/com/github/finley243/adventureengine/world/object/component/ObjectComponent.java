@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,8 @@ public abstract class ObjectComponent implements StatHolder {
         this.object = object;
         this.isEnabled = startEnabled;
     }
+
+    public abstract ObjectComponentTemplate getTemplate();
 
     public abstract List<Action> getActions(Actor subject);
 
@@ -84,6 +87,12 @@ public abstract class ObjectComponent implements StatHolder {
 
     @Override
     public String getValueString(String name) {
+        switch (name) {
+            case "id":
+                return getID();
+            case "templateID":
+                return getTemplate().getID();
+        }
         return null;
     }
 

@@ -68,7 +68,7 @@ public class DataLoader {
                                     game.data().addFaction(faction.getID(), faction);
                                     break;
                                 case "scene":
-                                    Scene scene = loadScene((Element) currentChild);
+                                    Scene scene = loadScene(game, (Element) currentChild);
                                     game.data().addScene(scene.getID(), scene);
                                     break;
                                 case "actor":
@@ -199,7 +199,7 @@ public class DataLoader {
         return skills;
     }
 
-    private static Scene loadScene(Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
+    private static Scene loadScene(Game game, Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
         if (sceneElement == null) return null;
         String sceneID = sceneElement.getAttribute("id");
         Scene.SceneType type;
@@ -230,7 +230,7 @@ public class DataLoader {
             SceneChoice choice = loadSceneChoice(choiceElement);
             choices.add(choice);
         }
-        return new Scene(sceneID, condition, once, priority, lines, choices, type);
+        return new Scene(game, sceneID, condition, once, priority, lines, choices, type);
     }
 
     private static SceneLine loadSceneLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
@@ -486,7 +486,7 @@ public class DataLoader {
         String type = itemElement.getAttribute("type");
         String id = itemElement.getAttribute("id");
         String name = LoadUtils.singleTag(itemElement, "name", null);
-        Scene description = loadScene(LoadUtils.singleChildWithName(itemElement, "description"));
+        Scene description = loadScene(game, LoadUtils.singleChildWithName(itemElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
         String attackType = LoadUtils.attribute(itemElement, "attackType", null);
@@ -625,7 +625,7 @@ public class DataLoader {
         Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
         String roomName = roomNameElement.getTextContent();
         boolean roomNameIsProper = LoadUtils.attributeBool(roomNameElement, "proper", false);
-        Scene roomDescription = loadScene(LoadUtils.singleChildWithName(roomElement, "description"));
+        Scene roomDescription = loadScene(game, LoadUtils.singleChildWithName(roomElement, "description"));
         String roomOwnerFaction = LoadUtils.attribute(roomElement, "faction", null);
         Map<String, Script> roomScripts = loadScriptsWithTriggers(roomElement);
 
@@ -657,7 +657,7 @@ public class DataLoader {
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = (nameElement == null ? null : nameElement.getTextContent());
         Area.AreaNameType nameType = LoadUtils.attributeEnum(nameElement, "type", Area.AreaNameType.class, Area.AreaNameType.IN);
-        Scene description = loadScene(LoadUtils.singleChildWithName(areaElement, "description"));
+        Scene description = loadScene(game, LoadUtils.singleChildWithName(areaElement, "description"));
         Element areaOwnerElement = LoadUtils.singleChildWithName(areaElement, "owner");
         String areaOwnerFaction = (areaOwnerElement != null ? areaOwnerElement.getTextContent() : null);
         boolean areaIsPrivate = LoadUtils.attributeBool(areaOwnerElement, "private", false);
@@ -709,7 +709,7 @@ public class DataLoader {
     private static ObjectTemplate loadObjectTemplate(Game game, Element objectElement) throws ParserConfigurationException, IOException, SAXException {
         String ID = LoadUtils.attribute(objectElement, "id", null);
         String name = LoadUtils.singleTag(objectElement, "name", null);
-        Scene description = loadScene(LoadUtils.singleChildWithName(objectElement, "description"));
+        Scene description = loadScene(game, LoadUtils.singleChildWithName(objectElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         // TODO - Find way to load object ID for custom actions (needs to be the instance ID, not the template ID)
         List<ActionCustom> customActions = loadCustomActions(objectElement, null, "action");

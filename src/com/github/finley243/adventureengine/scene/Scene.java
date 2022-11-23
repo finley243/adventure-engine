@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.scene;
 
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -9,13 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class Scene implements StatHolder {
+public class Scene extends GameInstanced implements StatHolder {
 
 	public enum SceneType {
 		SEQUENTIAL, SELECTOR, RANDOM
 	}
-
-	private final String ID;
 
 	private final Condition condition;
 	private final boolean once;
@@ -27,8 +27,8 @@ public class Scene implements StatHolder {
 
 	private boolean hasTriggered;
 	
-	public Scene(String ID, Condition condition, boolean once, int priority, List<SceneLine> lines, List<SceneChoice> choices, SceneType type) {
-		this.ID = ID;
+	public Scene(Game game, String ID, Condition condition, boolean once, int priority, List<SceneLine> lines, List<SceneChoice> choices, SceneType type) {
+		super(game, ID);
 		this.condition = condition;
 		this.once = once;
 		this.priority = priority;
@@ -36,10 +36,6 @@ public class Scene implements StatHolder {
 		this.choices = choices;
 		this.type = type;
 		this.hasTriggered = false;
-	}
-	
-	public String getID() {
-		return ID;
 	}
 
 	public boolean canChoose(Actor subject, Actor target) {
@@ -118,7 +114,7 @@ public class Scene implements StatHolder {
 	public String getValueString(String name) {
 		switch (name) {
 			case "id":
-				return ID;
+				return getID();
 		}
 		return null;
 	}

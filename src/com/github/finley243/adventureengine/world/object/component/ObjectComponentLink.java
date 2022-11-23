@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.action.ActionMoveLink;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateLink;
 
 import java.util.ArrayList;
@@ -17,6 +18,11 @@ public class ObjectComponentLink extends ObjectComponent {
     public ObjectComponentLink(String ID, WorldObject object, ObjectComponentTemplateLink template) {
         super(ID, object, template.startEnabled());
         this.template = template;
+    }
+
+    @Override
+    public ObjectComponentTemplate getTemplate() {
+        return template;
     }
 
     public WorldObject getLinkedObject() {

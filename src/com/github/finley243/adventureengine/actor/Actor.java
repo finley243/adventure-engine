@@ -963,6 +963,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		switch (name) {
 			case "id":
 				return getID();
+			case "templateID":
+				return templateID;
 			case "area":
 				return getArea().getID();
 			case "room":

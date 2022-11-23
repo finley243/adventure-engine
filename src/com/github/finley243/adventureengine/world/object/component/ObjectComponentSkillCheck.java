@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.object.component;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateSkillCheck;
 
 import java.util.ArrayList;
@@ -17,6 +18,11 @@ public class ObjectComponentSkillCheck extends ObjectComponent {
     public ObjectComponentSkillCheck(String ID, WorldObject object, ObjectComponentTemplateSkillCheck template) {
         super(ID, object, template.startEnabled());
         this.template = template;
+    }
+
+    @Override
+    public ObjectComponentTemplate getTemplate() {
+        return template;
     }
 
     @Override

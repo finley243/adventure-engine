@@ -137,6 +137,12 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public String getValueString(String name) {
+		switch (name) {
+			case "id":
+				return getID();
+			case "templateID":
+				return getTemplate().getID();
+		}
 		return null;
 	}
 

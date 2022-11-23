@@ -16,7 +16,7 @@ import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.*;
 
-public class ItemWeapon extends ItemEquippable implements StatHolder {
+public class ItemWeapon extends ItemEquippable {
 
 	public static final float HIT_CHANCE_BASE_MELEE_MIN = 0.10f;
 	public static final float HIT_CHANCE_BASE_MELEE_MAX = 0.90f;
