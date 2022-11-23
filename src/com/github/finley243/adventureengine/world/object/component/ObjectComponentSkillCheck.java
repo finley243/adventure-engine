@@ -11,18 +11,22 @@ import java.util.List;
 
 public class ObjectComponentSkillCheck extends ObjectComponent {
 
-    private final ObjectComponentTemplateSkillCheck template;
+    private final String templateID;
 
     private boolean hasSucceeded;
 
-    public ObjectComponentSkillCheck(String ID, WorldObject object, ObjectComponentTemplateSkillCheck template) {
-        super(ID, object, template.startEnabled());
-        this.template = template;
+    public ObjectComponentSkillCheck(String ID, WorldObject object, String templateID) {
+        super(ID, object);
+        this.templateID = templateID;
     }
 
     @Override
     public ObjectComponentTemplate getTemplate() {
-        return template;
+        return getTemplateSkillCheck();
+    }
+
+    public ObjectComponentTemplateSkillCheck getTemplateSkillCheck() {
+        return (ObjectComponentTemplateSkillCheck) getObject().game().data().getObjectComponentTemplate(templateID);
     }
 
     @Override

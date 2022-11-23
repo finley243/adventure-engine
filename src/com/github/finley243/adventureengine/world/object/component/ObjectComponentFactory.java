@@ -9,13 +9,13 @@ public class ObjectComponentFactory {
 
     public static ObjectComponent create(ObjectComponentTemplate template, String ID, WorldObject object) {
         if (template instanceof ObjectComponentTemplateInventory) {
-            return new ObjectComponentInventory(ID, object, (ObjectComponentTemplateInventory) template);
+            return new ObjectComponentInventory(ID, object, template.getID());
         } else if (template instanceof ObjectComponentTemplateNetwork) {
-            return new ObjectComponentNetwork(ID, object, (ObjectComponentTemplateNetwork) template);
+            return new ObjectComponentNetwork(ID, object, template.getID());
         } else if (template instanceof ObjectComponentTemplateLink) {
-            return new ObjectComponentLink(ID, object, (ObjectComponentTemplateLink) template);
+            return new ObjectComponentLink(ID, object, template.getID());
         } else if (template instanceof ObjectComponentTemplateUsable) {
-            return new ObjectComponentUsable(ID, object, (ObjectComponentTemplateUsable) template);
+            return new ObjectComponentUsable(ID, object, template.getID());
         }
         return null;
     }

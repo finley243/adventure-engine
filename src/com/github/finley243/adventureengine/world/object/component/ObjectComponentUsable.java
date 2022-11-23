@@ -11,16 +11,20 @@ import java.util.List;
 
 public class ObjectComponentUsable extends ObjectComponent {
 
-    private final ObjectComponentTemplateUsable template;
+    private final String templateID;
 
-    public ObjectComponentUsable(String ID, WorldObject object, ObjectComponentTemplateUsable template) {
-        super(ID, object, template.startEnabled());
-        this.template = template;
+    public ObjectComponentUsable(String ID, WorldObject object, String templateID) {
+        super(ID, object);
+        this.templateID = templateID;
     }
 
     @Override
     public ObjectComponentTemplate getTemplate() {
-        return template;
+        return getTemplateUsable();
+    }
+
+    public ObjectComponentTemplateUsable getTemplateUsable() {
+        return (ObjectComponentTemplateUsable) getObject().game().data().getObjectComponentTemplate(templateID);
     }
 
     @Override

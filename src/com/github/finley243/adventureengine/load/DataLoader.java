@@ -717,10 +717,11 @@ public class DataLoader {
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         // TODO - Find way to load object ID for custom actions (needs to be the instance ID, not the template ID)
         List<ActionCustom> customActions = loadCustomActions(objectElement, null, "action");
-        Map<String, ObjectComponentTemplate> components = new HashMap<>();
+        Map<String, String> components = new HashMap<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
-            ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(game, componentElement);
-            components.put(componentTemplate.getID(), componentTemplate);
+            String componentID = LoadUtils.attribute(componentElement, "id", null);
+            String componentTemplate = LoadUtils.attribute(componentElement, "template", null);
+            components.put(componentID, componentTemplate);
         }
         return new ObjectTemplate(game, ID, name, description, scripts, customActions, components);
     }

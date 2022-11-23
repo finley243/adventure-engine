@@ -13,24 +13,28 @@ import java.util.List;
 
 public class ObjectComponentInventory extends ObjectComponent {
 
-    private final ObjectComponentTemplateInventory template;
+    private final String templateID;
     private final Inventory inventory;
 
-    public ObjectComponentInventory(String ID, WorldObject object, ObjectComponentTemplateInventory template) {
-        super(ID, object, template.startEnabled());
+    public ObjectComponentInventory(String ID, WorldObject object, String templateID) {
+        super(ID, object);
         this.inventory = new Inventory(object.game(), null);
-        this.template = template;
+        this.templateID = templateID;
     }
 
     @Override
     public ObjectComponentTemplate getTemplate() {
-        return template;
+        return getTemplateInventory();
+    }
+
+    public ObjectComponentTemplateInventory getTemplateInventory() {
+        return (ObjectComponentTemplateInventory) getObject().game().data().getObjectComponentTemplate(templateID);
     }
 
     @Override
     public List<Action> getActions(Actor subject) {
         if (isEnabled()) {
-            return new ArrayList<>(inventory.getExternalActions(getObject(), template.getName(), subject, template.isExposed()));
+            return new ArrayList<>(inventory.getExternalActions(getObject(), getTemplateInventory().getName(), subject, getTemplateInventory().isExposed()));
         } else {
             return new ArrayList<>();
         }
@@ -38,8 +42,9 @@ public class ObjectComponentInventory extends ObjectComponent {
 
     @Override
     public void onNewGameInit() {
-        if (template.getLootTable() != null) {
-            inventory.addItems(template.getLootTable().generateItems(getObject().game()));
+        super.onNewGameInit();
+        if (getTemplateInventory().getLootTable() != null) {
+            inventory.addItems(getTemplateInventory().getLootTable().generateItems(getObject().game()));
         }
     }
 

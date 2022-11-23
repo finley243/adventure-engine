@@ -13,16 +13,20 @@ import java.util.List;
 
 public class ObjectComponentLink extends ObjectComponent {
 
-    private final ObjectComponentTemplateLink template;
+    private final String templateID;
 
-    public ObjectComponentLink(String ID, WorldObject object, ObjectComponentTemplateLink template) {
-        super(ID, object, template.startEnabled());
-        this.template = template;
+    public ObjectComponentLink(String ID, WorldObject object, String templateID) {
+        super(ID, object);
+        this.templateID = templateID;
     }
 
     @Override
     public ObjectComponentTemplate getTemplate() {
-        return template;
+        return getTemplateLink();
+    }
+
+    public ObjectComponentTemplateLink getTemplateLink() {
+        return (ObjectComponentTemplateLink) getObject().game().data().getObjectComponentTemplate(templateID);
     }
 
     public WorldObject getLinkedObject() {
@@ -36,7 +40,7 @@ public class ObjectComponentLink extends ObjectComponent {
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-        if (template.isMovable()) {
+        if (getTemplateLink().isMovable()) {
             actions.add(new ActionMoveLink(this));
         }
         return actions;

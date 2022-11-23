@@ -15,12 +15,11 @@ public abstract class ObjectComponent implements StatHolder {
     private final String ID;
     private final WorldObject object;
 
-    public ObjectComponent(String ID, WorldObject object, boolean startEnabled) {
+    public ObjectComponent(String ID, WorldObject object) {
         if (ID == null) throw new IllegalArgumentException("ObjectComponent ID cannot be null");
         if (ID.isEmpty()) throw new IllegalArgumentException("ObjectComponent ID cannot be empty");
         this.ID = ID;
         this.object = object;
-        this.isEnabled = startEnabled;
     }
 
     public abstract ObjectComponentTemplate getTemplate();
@@ -43,7 +42,9 @@ public abstract class ObjectComponent implements StatHolder {
         return isEnabled;
     }
 
-    public void onNewGameInit() {}
+    public void onNewGameInit() {
+        this.isEnabled = getTemplate().startEnabled();
+    }
 
     @Override
     public StatInt getStatInt(String name) {

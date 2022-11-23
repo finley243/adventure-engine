@@ -12,22 +12,26 @@ import java.util.List;
 
 public class ObjectComponentNetwork extends ObjectComponent {
 
-    private final ObjectComponentTemplateNetwork template;
+    private final String templateID;
 
-    public ObjectComponentNetwork(String ID, WorldObject object, ObjectComponentTemplateNetwork template) {
-        super(ID, object, template.startEnabled());
-        this.template = template;
+    public ObjectComponentNetwork(String ID, WorldObject object, String templateID) {
+        super(ID, object);
+        this.templateID = templateID;
     }
 
     @Override
     public ObjectComponentTemplate getTemplate() {
-        return template;
+        return getTemplateNetwork();
+    }
+
+    public ObjectComponentTemplateNetwork getTemplateNetwork() {
+        return (ObjectComponentTemplateNetwork) getObject().game().data().getObjectComponentTemplate(templateID);
     }
 
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-        Network network = subject.game().data().getNetwork(template.getNetworkID());
+        Network network = subject.game().data().getNetwork(getTemplateNetwork().getNetworkID());
         actions.addAll(network.networkActions(subject));
         return actions;
     }
