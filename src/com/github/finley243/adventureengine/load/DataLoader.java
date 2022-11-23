@@ -79,6 +79,10 @@ public class DataLoader {
                                     ObjectTemplate object = loadObjectTemplate(game, (Element) currentChild);
                                     game.data().addObjectTemplate(object.getID(), object);
                                     break;
+                                case "objectComponent":
+                                    ObjectComponentTemplate objectComponent = loadObjectComponentTemplate(game, (Element) currentChild);
+                                    game.data().addObjectComponentTemplate(objectComponent.getID(), objectComponent);
+                                    break;
                                 case "item":
                                     ItemTemplate item = loadItemTemplate(game, (Element) currentChild);
                                     game.data().addItem(item.getID(), item);
