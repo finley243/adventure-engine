@@ -24,7 +24,7 @@ public class ActionTalk extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Talk", canChoose(subject), new String[]{target.getName()});
+		return new MenuChoice("Talk", canChoose(subject), new String[]{target.getName()}, new String[]{"talk to " + target.getName(), "talk " + target.getName(), "talk with " + target.getName(), "speak to " + target.getName(), "speak with " + target.getName()});
 	}
 
 	@Override

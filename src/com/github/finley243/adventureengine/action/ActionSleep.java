@@ -25,7 +25,7 @@ public class ActionSleep extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Sleep", canChoose(subject));
+        return new MenuChoice("Sleep", canChoose(subject), new String[]{"sleep", "go to sleep", "fall asleep"});
     }
 
 }

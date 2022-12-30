@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
+import com.github.finley243.adventureengine.ui.ConsoleParserInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.environment.Area;

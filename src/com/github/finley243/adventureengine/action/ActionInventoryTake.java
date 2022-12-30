@@ -46,7 +46,7 @@ public class ActionInventoryTake extends Action {
         } else {
             menuPath = new String[]{owner.getName(), name, item.getName() + subject.inventory().itemCountLabel(item)};
         }
-        return new MenuChoice("Take", canChoose(subject), menuPath);
+        return new MenuChoice("Take", canChoose(subject), menuPath, new String[]{"take " + item.getName() + " from " + owner.getName(), "pick up " + item.getName() + " from " + owner.getName(), "pickup " + item.getName() + " from " + owner.getName()});
     }
 
     @Override

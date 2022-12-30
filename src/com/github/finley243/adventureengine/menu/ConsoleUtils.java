@@ -5,6 +5,10 @@ import java.util.Scanner;
 public class ConsoleUtils {
 
 	private static final Scanner CONSOLE = new Scanner(System.in);
+
+	public static String stringInput() {
+		return CONSOLE.nextLine();
+	}
 	
 	public static int intInRange(int min, int max) {
 		int input;

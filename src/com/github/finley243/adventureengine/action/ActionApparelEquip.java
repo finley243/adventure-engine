@@ -31,6 +31,6 @@ public class ActionApparelEquip extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Equip", canChoose(subject), new String[]{"inventory", item.getName()});
+        return new MenuChoice("Equip", canChoose(subject), new String[]{"inventory", item.getName()}, new String[]{"equip " + item.getName(), "put on " + item.getName()});
     }
 }

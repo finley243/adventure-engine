@@ -20,7 +20,7 @@ public class ActionNetworkBreach extends NetworkAction {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Breach Node", canChoose(subject), new String[] {"network", node.getName()});
+        return new MenuChoice("Breach Node", canChoose(subject), new String[] {"network", node.getName()}, new String[]{"breach " + node.getName()});
     }
 
     @Override

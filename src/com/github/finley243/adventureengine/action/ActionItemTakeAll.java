@@ -5,10 +5,7 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.NounMapper;
-import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.PluralNoun;
+import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionItemTakeAll extends Action {
@@ -50,7 +47,7 @@ public class ActionItemTakeAll extends Action {
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
 		int count = area.getInventory().itemCount(item);
-		return new MenuChoice("Take all", canChoose(subject), new String[]{"ground", item.getName() + (count > 1 ? " (" + count + ")" : "")});
+		return new MenuChoice("Take all", canChoose(subject), new String[]{"ground", item.getName() + (count > 1 ? " (" + count + ")" : "")}, new String[]{"take all " + LangUtils.pluralizeNoun(item.getName()), "pick up all " + LangUtils.pluralizeNoun(item.getName()), "pickup all " + LangUtils.pluralizeNoun(item.getName())});
 	}
 
 	@Override

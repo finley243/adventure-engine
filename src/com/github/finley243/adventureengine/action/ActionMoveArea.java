@@ -47,7 +47,7 @@ public class ActionMoveArea extends ActionMove {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(LangUtils.titleCase(link.getMoveName(subject.getArea())), canChoose(subject), new String[]{"move"});
+		return new MenuChoice(LangUtils.titleCase(link.getMoveName(subject.getArea())), canChoose(subject), new String[]{"move"}, new String[]{"move " + area.getName(), "go " + area.getName(), "walk " + area.getName(), "run " + area.getName(), "move to " + area.getName(), "go to " + area.getName(), "walk to " + area.getName(), "run to " + area.getName(), "move towards " + area.getName(), "go towards " + area.getName(), "walk towards " + area.getName(), "run towards " + area.getName(), "move toward " + area.getName(), "go toward " + area.getName(), "walk toward " + area.getName(), "run toward " + area.getName()});
 	}
 
 	@Override

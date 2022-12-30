@@ -55,7 +55,7 @@ public class ActionItemConsume extends Action {
 			prompt = "Use";
 			break;
 		}
-		return new MenuChoice(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)});
+		return new MenuChoice(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)}, new String[]{"consume " + item.getName(), "eat " + item.getName(), "drink " + item.getName(), "use " + item.getName()});
 	}
 
 	@Override

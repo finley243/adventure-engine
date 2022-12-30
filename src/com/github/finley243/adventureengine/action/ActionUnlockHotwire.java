@@ -41,7 +41,7 @@ public class ActionUnlockHotwire extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Hotwire lock", canChoose(subject), new String[]{object.getName()});
+        return new MenuChoice("Hotwire lock", canChoose(subject), new String[]{object.getName()}, new String[]{"hotwire " + object.getName(), "hotwire lock on " + object.getName()});
     }
 
     @Override

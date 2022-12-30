@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -51,7 +52,7 @@ public class ActionAttackArea extends ActionAttack {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice(LangUtils.titleCase(area.getRelativeName(subject.getArea())) + " (" + subject.getArea().getRelativeDirection(subject.getArea()) + ", " + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", weapon.getName(), getPrompt()});
+        return new MenuChoice(LangUtils.titleCase(area.getRelativeName(subject.getArea())) + " (" + subject.getArea().getRelativeDirection(subject.getArea()) + ", " + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", weapon.getName(), getPrompt()}, new String[]{getPrompt().toLowerCase() + " " + area.getRelativeName(subject.getArea()), getPrompt().toLowerCase() + " at " + area.getRelativeName(subject.getArea()), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + area.getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + area.getName()});
     }
 
 }

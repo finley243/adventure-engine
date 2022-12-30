@@ -50,7 +50,7 @@ public class ActionMoveDoor extends ActionMove {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("(" + door.getDirection() + ") " + "Enter", canChoose(subject), new String[]{door.getName()});
+		return new MenuChoice("(" + door.getDirection() + ") " + "Enter", canChoose(subject), new String[]{door.getName()}, new String[]{"enter " + door.getName(), "go through " + door.getName(), "move through " + door.getName()});
 	}
 
 	@Override

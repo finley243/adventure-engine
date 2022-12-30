@@ -1,7 +1,7 @@
 <data>
     <object id="door_basic">
         <name>door</name>
-        <component id="door_link" type="link" movable="true" visible="false" direction="N"/>
+        <component id="door_link" template="door_link"/>
     </object>
     <object id="chair_plastic">
         <name>plastic chair</name>

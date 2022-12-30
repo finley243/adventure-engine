@@ -41,7 +41,7 @@ public class ActionUnlockPick extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Pick lock", canChoose(subject), new String[]{object.getName()});
+        return new MenuChoice("Pick lock", canChoose(subject), new String[]{object.getName()}, new String[]{"pick lock on " + object.getName()});
     }
 
     @Override

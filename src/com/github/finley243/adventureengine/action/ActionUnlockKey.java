@@ -50,7 +50,7 @@ public class ActionUnlockKey extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Use key", canChoose(subject), new String[]{object.getName()});
+        return new MenuChoice("Use key", canChoose(subject), new String[]{object.getName()}, new String[]{"unlock " + object.getName()});
     }
 
 }

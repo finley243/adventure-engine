@@ -33,7 +33,7 @@ public class ActionItemDrop extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Drop", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)});
+		return new MenuChoice("Drop", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)}, new String[]{"drop " + item.getName()});
 	}
 
 	@Override

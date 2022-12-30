@@ -52,7 +52,7 @@ public class ActionMoveLink extends ActionMove {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("(" + linkComponent.getDirection() + ") " + "Enter", canChoose(subject), new String[]{linkComponent.getObject().getName()});
+		return new MenuChoice("(" + linkComponent.getDirection() + ") " + "Enter", canChoose(subject), new String[]{linkComponent.getObject().getName()}, new String[]{"enter " + linkComponent.getObject().getName(), "go through " + linkComponent.getObject().getName(), "move through " + linkComponent.getObject().getName()});
 	}
 
 	@Override

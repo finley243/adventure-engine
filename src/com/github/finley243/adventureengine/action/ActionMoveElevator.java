@@ -56,7 +56,7 @@ public class ActionMoveElevator extends ActionMove {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), new String[]{elevator.getName()});
+		return new MenuChoice("Go to floor " + destination.getFloorNumber() + " (" + destination.getFloorName() + ")", canChoose(subject), new String[]{elevator.getName()}, new String[]{"take " + elevator.getName() + " to " + destination.getFloorName(), "ride " + elevator.getName() + " to " + destination.getFloorName(), "take " + elevator.getName() + " to floor " + destination.getFloorNumber(), "ride " + elevator.getName() + " to floor " + destination.getFloorNumber(), "take " + elevator.getName() + " to level " + destination.getFloorNumber(), "ride " + elevator.getName() + " to level " + destination.getFloorNumber()});
 	}
 
 	@Override

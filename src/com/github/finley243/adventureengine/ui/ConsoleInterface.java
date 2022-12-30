@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.ConsoleUtils;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +19,11 @@ public class ConsoleInterface implements UserInterface {
 	}
 	
 	@Override
-	@Subscribe
 	public void onTextEvent(RenderTextEvent e) {
 		System.out.println(e.getText());
 	}
 	
 	@Override
-	@Subscribe
 	public void onMenuEvent(RenderMenuEvent e) {
 		List<MenuChoice> validChoices = new ArrayList<>();
 		for(MenuChoice choice : e.getMenuChoices()) {

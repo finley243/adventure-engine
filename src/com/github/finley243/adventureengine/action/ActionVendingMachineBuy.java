@@ -37,7 +37,7 @@ public class ActionVendingMachineBuy extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Buy " + subject.game().data().getItem(itemID).getName(), canChoose(subject), new String[]{vendingMachine.getName()});
+		return new MenuChoice("Buy " + subject.game().data().getItem(itemID).getName(), canChoose(subject), new String[]{vendingMachine.getName()}, new String[]{"buy " + subject.game().data().getItem(itemID).getName() + " from " + vendingMachine.getName()});
 	}
 
 }

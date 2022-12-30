@@ -42,7 +42,7 @@ public class ActionCustom extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice(prompt, canChoose(subject), new String[] {subject.game().data().getObject(object).getName()});
+        return new MenuChoice(prompt, canChoose(subject), new String[] {subject.game().data().getObject(object).getName()}, new String[]{prompt});
     }
 
     public boolean canShow(Actor subject) {

@@ -26,7 +26,7 @@ public class ActionEnd extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("End turn", canChoose(subject));
+		return new MenuChoice("End turn", canChoose(subject), new String[]{"end turn", "end", "wait"});
 	}
 
 	@Override

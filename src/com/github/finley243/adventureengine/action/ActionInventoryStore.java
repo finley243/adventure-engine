@@ -48,7 +48,7 @@ public class ActionInventoryStore extends Action {
         } else {
             menuPath = new String[]{owner.getName(), name, "transfer", item.getName() + subject.inventory().itemCountLabel(item)};
         }
-        return new MenuChoice((isExposed ? "Place" : "Store"), canChoose(subject), menuPath);
+        return new MenuChoice((isExposed ? "Place" : "Store"), canChoose(subject), menuPath, new String[]{"store " + item.getName() + " in " + owner.getName(), "place " + item.getName() + " on " + owner.getName(), "put " + item.getName() + " in " + owner.getName(), "put " + item.getName() + " on " + owner.getName()});
     }
 
     @Override

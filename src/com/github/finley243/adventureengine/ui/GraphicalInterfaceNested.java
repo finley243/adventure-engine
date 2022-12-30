@@ -70,7 +70,6 @@ public class GraphicalInterfaceNested implements UserInterface {
 	}
 
 	@Override
-	@Subscribe
 	public void onTextEvent(RenderTextEvent e) {
 		SwingUtilities.invokeLater(() -> {
 			textPanel.append(e.getText() + "\n");
@@ -91,7 +90,6 @@ public class GraphicalInterfaceNested implements UserInterface {
 	}
 
 	@Override
-	@Subscribe
 	public void onMenuEvent(RenderMenuEvent e) {
 		SwingUtilities.invokeLater(() -> {
 			choicePanel.removeAll();

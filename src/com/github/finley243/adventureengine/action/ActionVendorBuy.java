@@ -46,7 +46,7 @@ public class ActionVendorBuy extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice(LangUtils.titleCase(item.getName()) + " [" + item.getTemplate().getPrice() + "]", canChoose(subject), new String[]{vendor.getName(), "buy"});
+        return new MenuChoice(LangUtils.titleCase(item.getName()) + " [" + item.getTemplate().getPrice() + "]", canChoose(subject), new String[]{vendor.getName(), "buy"}, new String[]{"buy " + item.getName() + " from " + vendor.getName()});
     }
 
 }

@@ -42,7 +42,7 @@ public class ActionUseStop extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(object.getStopPrompt(), canChoose(subject), new String[]{object.getName()});
+		return new MenuChoice(object.getStopPrompt(), canChoose(subject), new String[]{object.getName()}, new String[]{object.getStopPrompt().toLowerCase()});
 	}
 
 	@Override

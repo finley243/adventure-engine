@@ -29,7 +29,7 @@ public class MenuManager {
 		for(Action action : actions) {
 			menuChoices.add(action.getMenuChoices(subject));
 		}
-		int actionIndex = getMenuInput(subject.game(), menuChoices);
+		int actionIndex = getMenuInput(subject.game(), menuChoices, false);
 		return actions.get(actionIndex);
 	}
 
@@ -114,15 +114,15 @@ public class MenuManager {
 	private SceneChoice sceneMenuInput(Game game, List<SceneChoice> choices) {
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		for(SceneChoice choice : choices) {
-			menuChoices.add(new MenuChoice(choice.getPrompt(), true));
+			menuChoices.add(new MenuChoice(choice.getPrompt(), true, new String[]{}));
 		}
-		int selectionIndex = getMenuInput(game, menuChoices);
+		int selectionIndex = getMenuInput(game, menuChoices, true);
 		return choices.get(selectionIndex);
 	}
 
-	private synchronized int getMenuInput(Game game, List<MenuChoice> menuChoices) {
+	private synchronized int getMenuInput(Game game, List<MenuChoice> menuChoices, boolean forcePrompts) {
 		this.index = -1;
-		game.eventBus().post(new RenderMenuEvent(menuChoices));
+		game.eventBus().post(new RenderMenuEvent(menuChoices, forcePrompts));
 		while(this.index == -1) {
 			game.threadControl().pause();
 		}

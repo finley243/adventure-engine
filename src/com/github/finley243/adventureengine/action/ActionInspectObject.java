@@ -27,7 +27,7 @@ public class ActionInspectObject extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Inspect", canChoose(subject), new String[]{object.getName()});
+		return new MenuChoice("Inspect", canChoose(subject), new String[]{object.getName()}, new String[]{"inspect " + object.getName(), "examine " + object.getName(), "look at " + object.getName()});
 	}
 
 	@Override

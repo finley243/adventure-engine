@@ -43,7 +43,7 @@ public class ActionUseStart extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(object.getStartPrompt(), canChoose(subject), new String[]{object.getName()});
+		return new MenuChoice(object.getStartPrompt(), canChoose(subject), new String[]{object.getName()}, new String[]{object.getStartPrompt().toLowerCase()});
 	}
 
 	@Override

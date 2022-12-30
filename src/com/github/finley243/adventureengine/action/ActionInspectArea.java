@@ -38,7 +38,7 @@ public class ActionInspectArea extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Look around", canChoose(subject));
+        return new MenuChoice("Look around", canChoose(subject), new String[]{"look around", "explore"});
     }
 
 }

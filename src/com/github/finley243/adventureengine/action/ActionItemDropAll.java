@@ -4,10 +4,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.NounMapper;
-import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.PluralNoun;
+import com.github.finley243.adventureengine.textgen.*;
 
 public class ActionItemDropAll extends Action {
 
@@ -35,7 +32,7 @@ public class ActionItemDropAll extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Drop all", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)});
+		return new MenuChoice("Drop all", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)}, new String[]{"drop all " + LangUtils.pluralizeNoun(item.getName())});
 	}
 
 	@Override

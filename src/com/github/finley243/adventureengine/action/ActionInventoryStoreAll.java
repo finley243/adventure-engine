@@ -47,7 +47,7 @@ public class ActionInventoryStoreAll extends Action {
         } else {
             menuPath = new String[]{owner.getName(), name, "transfer", item.getName() + subject.inventory().itemCountLabel(item)};
         }
-        return new MenuChoice((isExposed ? "Place all" : "Store all"), canChoose(subject), menuPath);
+        return new MenuChoice((isExposed ? "Place all" : "Store all"), canChoose(subject), menuPath, new String[]{"store all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName(), "place all " + LangUtils.pluralizeNoun(item.getName()) + " on " + owner.getName(), "put all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName(), "put all " + LangUtils.pluralizeNoun(item.getName()) + " on " + owner.getName()});
     }
 
     @Override
