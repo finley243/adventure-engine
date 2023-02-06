@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
+import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.ConsoleParserInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
 import com.github.finley243.adventureengine.ui.UserInterface;
@@ -51,7 +52,19 @@ public class Game {
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
 
 		PerceptionHandler perceptionHandler = new PerceptionHandler();
-		UserInterface userInterface = new GraphicalInterfaceNested(this);
+		UserInterface userInterface;
+		switch (data.getConfig("interfaceType")) {
+			case "graphicalChoice":
+				userInterface = new GraphicalInterfaceNested(this);
+				break;
+			case "consoleParser":
+				userInterface = new ConsoleParserInterface(this);
+				break;
+			case "consoleChoice":
+			default:
+				userInterface = new ConsoleInterface(this);
+				break;
+		}
 		eventBus().register(perceptionHandler);
 		eventBus().register(userInterface);
 		eventBus().register(this);

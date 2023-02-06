@@ -1,8 +1,9 @@
 <config>
+    <gameName>AdventureEngine</gameName>
+    <interfaceType>graphicalChoice</interfaceType>
     <playerStats>player</playerStats>
     <playerID>player</playerID>
     <playerStartArea>fifth_corner_store_counter</playerStartArea>
-    <gameName>AdventureEngine</gameName>
     <startTimeHours>8</startTimeHours>
     <startTimeMinutes>0</startTimeMinutes>
     <startDateYear>2054</startDateYear>
