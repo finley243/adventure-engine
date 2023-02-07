@@ -6,7 +6,7 @@
         <name>corner store</name>
         <description>
             <line>
-                <text>The store is small, with no wasted space. Just south of the entrance is the checkout counter. To the north are aisles stocked with various goods, and behind them is a row of coolers filled with drinks.</text>
+                <text>The store is small, with no wasted space. Just south of the entrance is the checkout counter, and to the north are aisles stocked with various goods. Behind them is a row of coolers, their bright lights illuminating the back of the store.</text>
             </line>
         </description>
         <area id="fifth_corner_store_entrance" landmark="fifth_corner_store_door_exit">
@@ -26,7 +26,7 @@
                 <behaviors>
                     <behavior type="area" area="fifth_corner_store_counter">
                         <idle>
-                            <phrase>$_actor {yawn$s_actor|stretch$es_actor|tap$s_actor $actor's fingers rhythmically on the counter}</phrase>
+                            <phrase>$_actor {yawn$s_actor|stretch$es_actor|tap$s_actor $actor's fingers rhythmically on the counter|look$s_actor across the store|check$s_actor something under the counter, then straighten$s_actor back up|glance$s_actor out the window}</phrase>
                         </idle>
                     </behavior>
                 </behaviors>
@@ -42,7 +42,7 @@
             <name type="near">coolers</name>
             <description>
                 <line>
-                    <text>Behind the aisles, a row of illuminated coolers cast a cool white glow across the linoleum floor. They are emitting a soft buzzing noise. The air is colder here than in the rest of the store.</text>
+                    <text>Behind the aisles, a row of illuminated coolers cast a cool white glow across the linoleum floor. The air is colder here than in the rest of the store, and a low hum echoes off the walls. </text>
                 </line>
             </description>
             <link dist="FAR" dir="S" area="fifth_corner_store_entrance"/>
