@@ -786,9 +786,7 @@ public class DataLoader {
             case "link":
                 boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
                 boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
-                // TODO - Find a way to load the direction from the object instance, just like the linked object ID
-                AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(componentElement, "direction", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
-                return new ObjectComponentTemplateLink(game, ID, startEnabled, linkIsMovable, linkIsVisible, linkDirection);
+                return new ObjectComponentTemplateLink(game, ID, startEnabled, linkIsMovable, linkIsVisible);
             case "usable":
                 return new ObjectComponentTemplateUsable(game, ID, startEnabled);
             default:

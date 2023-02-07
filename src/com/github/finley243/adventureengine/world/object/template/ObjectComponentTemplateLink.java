@@ -7,13 +7,11 @@ public class ObjectComponentTemplateLink extends ObjectComponentTemplate {
 
     private final boolean isMovable;
     private final boolean isVisible;
-    private final AreaLink.CompassDirection direction;
 
-    public ObjectComponentTemplateLink(Game game, String ID, boolean startEnabled, boolean isMovable, boolean isVisible, AreaLink.CompassDirection direction) {
+    public ObjectComponentTemplateLink(Game game, String ID, boolean startEnabled, boolean isMovable, boolean isVisible) {
         super(game, ID, startEnabled);
         this.isMovable = isMovable;
         this.isVisible = isVisible;
-        this.direction = direction;
     }
 
     public boolean isMovable() {
@@ -22,10 +20,6 @@ public class ObjectComponentTemplateLink extends ObjectComponentTemplate {
 
     public boolean isVisible() {
         return isVisible;
-    }
-
-    public AreaLink.CompassDirection getDirection() {
-        return direction;
     }
 
 }
