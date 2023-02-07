@@ -738,7 +738,7 @@ public class DataLoader {
         for (Element linkedObjectElement : LoadUtils.directChildrenWithName(objectElement, "link")) {
             String componentID = LoadUtils.attribute(linkedObjectElement, "component", null);
             String linkedObjectID = LoadUtils.attribute(linkedObjectElement, "object", null);
-            AreaLink.CompassDirection linkedObjectDirection = LoadUtils.attributeEnum(linkedObjectElement, "direction", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
+            AreaLink.CompassDirection linkedObjectDirection = LoadUtils.attributeEnum(linkedObjectElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
             ComponentLink componentLink = new ComponentLink(linkedObjectID, linkedObjectDirection);
             linkedObjects.put(componentID, componentLink);
         }

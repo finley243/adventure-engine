@@ -28,7 +28,7 @@ import java.util.*;
 public class Area extends GameInstanced implements Noun, StatHolder {
 
 	public enum AreaNameType {
-		IN, ON, NEAR, FRONT, BESIDE, BEHIND
+		IN, ON, NEAR, FRONT, SIDE, BEHIND
 	}
 
 	private final String landmarkID;
@@ -148,7 +148,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 					return roomPhrase + "near " + getFormattedName();
 				case FRONT:
 					return roomPhrase + "in front of " + getFormattedName();
-				case BESIDE:
+				case SIDE:
 					return roomPhrase + "beside " + getFormattedName();
 				case BEHIND:
 					return roomPhrase + "behind " + getFormattedName();
@@ -180,7 +180,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 					return Phrases.get("moveFront");
 				case BEHIND:
 					return Phrases.get("moveBehind");
-				case BESIDE:
+				case SIDE:
 					return Phrases.get("moveBeside");
 				case NEAR:
 				default:

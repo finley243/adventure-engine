@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 public class AreaLink {
 
     public enum AreaLinkType {
-        BASIC(true), CORNER(false);
+        BASIC(true), CORNER(false), OBSTRUCTED(false);
 
         public final boolean isVisible;
 

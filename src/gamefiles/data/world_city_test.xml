@@ -8,7 +8,7 @@
     <room id="street_archer_fifth_sixth">
         <name proper="true">Archer St</name>
         <area id="archer_corner_store_side">
-            <name type="beside">corner store</name>
+            <name type="side">corner store</name>
             <link type="CORNER" dist="CLOSE" dir="NW" area="fifth_corner_store_front"/>
             <link dist="CLOSE" dir="E" area="archer_apartments_exterior"/>
         </area>
@@ -29,15 +29,15 @@
         <name proper="true">5th Ave</name>
         <area id="fifth_corner_store_front" landmark="fifth_corner_store_exterior_door">
             <link type="CORNER" dist="CLOSE" dir="SE" area="archer_corner_store_side"/>
-            <object type="basic" id="fifth_corner_store_exterior_door" template="door_basic" link="fifth_corner_store_door_exit" dir="E">
-                <link component="door_link" object="fifth_corner_store_door_exit"/>
+            <object type="basic" id="fifth_corner_store_exterior_door" template="door_basic">
+                <link component="door_link" object="fifth_corner_store_door_exit" dir="E"/>
             </object>
         </area>
     </room>
     <room id="street_sixth_sinclair_archer">
         <name proper="true">6th Ave</name>
         <area id="sixth_burger_restaurant_side">
-            <name type="beside">BigBurger</name>
+            <name type="side">BigBurger</name>
             <link type="CORNER" dist="CLOSE" dir="SW" area="archer_burger_restaurant_front"/>
         </area>
     </room>
