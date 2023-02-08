@@ -49,6 +49,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	public static final int SKILL_MIN = 1;
 	public static final int SKILL_MAX = 10;
 	public static final int MAX_HP = 1000;
+	public static final int MAX_DAMAGE_RESIST = 1000;
 	public static final int MAX_ACTION_POINTS = 10;
 	
 	public enum Attribute {
@@ -89,6 +90,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	private Area area;
 	private final StatInt maxHP;
 	private int HP;
+	private final Map<Damage.DamageType, StatInt> damageResistance;
 	private final boolean startDisabled;
 	private boolean isEnabled;
 	private final boolean startDead;
@@ -98,8 +100,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	private final StatInt actionPoints;
 	private int actionPointsUsed;
 	private final Map<Action, Integer> blockedActions;
-	private final EnumMap<Attribute, StatInt> attributes;
-	private final EnumMap<Skill, StatInt> skills;
+	private final Map<Attribute, StatInt> attributes;
+	private final Map<Skill, StatInt> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final ApparelComponent apparelComponent;
@@ -125,16 +127,20 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		this.startDead = startDead;
 		this.isDead = startDead;
 		this.maxHP = new StatInt(this);
+		this.damageResistance = new EnumMap<Damage.DamageType, StatInt>(Damage.DamageType.class);
+		for (Damage.DamageType damageType : Damage.DamageType.values()) {
+			this.damageResistance.put(damageType, new StatInt(this));
+		}
 		this.actionPoints = new StatInt(this);
 		this.inventory = new Inventory(game, this);
 		this.apparelComponent = new ApparelComponent(this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		this.attributes = new EnumMap<>(Attribute.class);
-		for(Attribute attribute : Attribute.values()) {
+		for (Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, new StatInt(this));
 		}
 		this.skills = new EnumMap<>(Skill.class);
-		for(Skill skill : Skill.values()) {
+		for (Skill skill : Skill.values()) {
 			this.skills.put(skill, new StatInt(this));
 		}
 		this.effectComponent = new EffectComponent(this);
@@ -341,6 +347,10 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
 	}
 
+	public int getDamageResistance(Damage.DamageType damageType) {
+		return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST);
+	}
+
 	public int getActionPoints() {
 		return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
 	}
@@ -369,7 +379,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			effectComponent.addEffect(game().data().getEffect(effectID));
 		}
 		int amount = damage.getAmount();
-		amount -= apparelComponent.getDamageResistance(getTemplate().getDefaultApparelSlot(), damage.getType()) * damage.getArmorMult();
+		//amount -= apparelComponent.getDamageResistance(getTemplate().getDefaultApparelSlot(), damage.getType()) * damage.getArmorMult();
+		amount -= getDamageResistance(damage.getType()) * damage.getArmorMult();
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;
@@ -389,7 +400,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			effectComponent.addEffect(game().data().getEffect(effectID));
 		}
 		int amount = damage.getAmount();
-		amount -= apparelComponent.getDamageResistance(limb.getApparelSlot(), damage.getType()) * damage.getArmorMult();
+		//amount -= apparelComponent.getDamageResistance(limb.getApparelSlot(), damage.getType()) * damage.getArmorMult();
+		amount -= getDamageResistance(damage.getType()) * damage.getArmorMult();
 		if(amount < 0) amount = 0;
 		if(amount > 0) {
 			limb.applyEffects(this);
@@ -819,6 +831,16 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 				return maxHP;
 			case "actionPoints":
 				return actionPoints;
+			case "damageResistPhysical":
+				return damageResistance.get(Damage.DamageType.PHYSICAL);
+			case "damageResistThermal":
+				return damageResistance.get(Damage.DamageType.THERMAL);
+			case "damageResistChemical":
+				return damageResistance.get(Damage.DamageType.CHEMICAL);
+			case "damageResistExplosive":
+				return damageResistance.get(Damage.DamageType.EXPLOSIVE);
+			case "damageResistElectrical":
+				return damageResistance.get(Damage.DamageType.ELECTRICAL);
 			case "body":
 				return attributes.get(Attribute.BODY);
 			case "intelligence":
@@ -891,6 +913,16 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 				return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
 			case "money":
 				return money;
+			case "damageResistPhysical":
+				return damageResistance.get(Damage.DamageType.PHYSICAL).value(getTemplate().getDamageResistance(Damage.DamageType.PHYSICAL), 0, MAX_DAMAGE_RESIST);
+			case "damageResistThermal":
+				return damageResistance.get(Damage.DamageType.THERMAL).value(getTemplate().getDamageResistance(Damage.DamageType.THERMAL), 0, MAX_DAMAGE_RESIST);
+			case "damageResistChemical":
+				return damageResistance.get(Damage.DamageType.CHEMICAL).value(getTemplate().getDamageResistance(Damage.DamageType.CHEMICAL), 0, MAX_DAMAGE_RESIST);
+			case "damageResistExplosive":
+				return damageResistance.get(Damage.DamageType.EXPLOSIVE).value(getTemplate().getDamageResistance(Damage.DamageType.EXPLOSIVE), 0, MAX_DAMAGE_RESIST);
+			case "damageResistElectrical":
+				return damageResistance.get(Damage.DamageType.ELECTRICAL).value(getTemplate().getDamageResistance(Damage.DamageType.ELECTRICAL), 0, MAX_DAMAGE_RESIST);
 			case "body":
 				return attributes.get(Attribute.BODY).value(getTemplate().getAttribute(Attribute.BODY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
 			case "intelligence":

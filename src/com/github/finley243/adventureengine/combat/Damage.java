@@ -7,7 +7,7 @@ import java.util.List;
 public class Damage {
 
     public enum DamageType {
-        PHYSICAL, THERMAL, CHEMICAL, EXPLOSIVE, ELECTRIC
+        PHYSICAL, THERMAL, CHEMICAL, EXPLOSIVE, ELECTRICAL
     }
 
     private final DamageType type;

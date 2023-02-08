@@ -1,4 +1,5 @@
 <data>
     <effect id="hitLimbWeapon" type="trigger" trigger="dropEquippedForce"/>
     <effect id="foodBasic" type="state" state="heal" amount="10"/>
+    <effect id="armorMedium" type="mod" stat="damageResistPhysical" amount="5"/>
 </data>

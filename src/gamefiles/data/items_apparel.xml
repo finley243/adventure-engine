@@ -2,11 +2,11 @@
     <item type="apparel" id="tactical_vest" price="40">
         <name>tactical vest</name>
         <slot>torso</slot>
-        <damageResist type="physical" amount="5"/>
+        <effect>armorMedium</effect>
     </item>
     <item type="apparel" id="tactical_helmet" price="30">
         <name>tactical helmet</name>
         <slot>head</slot>
-        <damageResist type="physical" amount="5"/>
+        <effect>armorMedium</effect>
     </item>
 </data>

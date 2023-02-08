@@ -137,6 +137,7 @@ public class DataLoader {
         Boolean isEnforcer = LoadUtils.attributeBool(actorElement, "isEnforcer", null);
 
         Integer hp = LoadUtils.attributeInt(actorElement, "hp", null);
+        Map<Damage.DamageType, Integer> damageResistance = loadDamageResistance(actorElement);
         List<Limb> limbs = loadLimbs(actorElement);
         String defaultApparelSlot = LoadUtils.attribute(actorElement, "defaultApparelSlot", null);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
@@ -160,13 +161,13 @@ public class DataLoader {
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
         Boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
         Boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistance, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
     private static List<Limb> loadLimbs(Element element) {
         List<Limb> limbs = new ArrayList<>();
-        if(element == null) return limbs;
-        for(Element limbElement : LoadUtils.directChildrenWithName(element, "limb")) {
+        if (element == null) return limbs;
+        for (Element limbElement : LoadUtils.directChildrenWithName(element, "limb")) {
             limbs.add(loadLimb(limbElement));
         }
         return limbs;
@@ -183,8 +184,8 @@ public class DataLoader {
 
     private static Map<Actor.Attribute, Integer> loadAttributes(Element element) {
         Map<Actor.Attribute, Integer> attributes = new EnumMap<>(Actor.Attribute.class);
-        if(element == null) return attributes;
-        for(Element attributeElement : LoadUtils.directChildrenWithName(element, "attribute")) {
+        if (element == null) return attributes;
+        for (Element attributeElement : LoadUtils.directChildrenWithName(element, "attribute")) {
             Actor.Attribute attribute = LoadUtils.attributeEnum(attributeElement, "key", Actor.Attribute.class, null);
             int value = LoadUtils.attributeInt(attributeElement, "value", 0);
             attributes.put(attribute, value);
@@ -194,13 +195,24 @@ public class DataLoader {
 
     private static Map<Actor.Skill, Integer> loadSkills(Element element) {
         Map<Actor.Skill, Integer> skills = new EnumMap<>(Actor.Skill.class);
-        if(element == null) return skills;
-        for(Element skillElement : LoadUtils.directChildrenWithName(element, "skill")) {
+        if (element == null) return skills;
+        for (Element skillElement : LoadUtils.directChildrenWithName(element, "skill")) {
             Actor.Skill skill = LoadUtils.attributeEnum(skillElement, "key", Actor.Skill.class, null);
             int value = LoadUtils.attributeInt(skillElement, "value", 0);
             skills.put(skill, value);
         }
         return skills;
+    }
+
+    private static Map<Damage.DamageType, Integer> loadDamageResistance(Element element) {
+        Map<Damage.DamageType, Integer> damageResistance = new EnumMap<Damage.DamageType, Integer>(Damage.DamageType.class);
+        if (element == null) return damageResistance;
+        for (Element damageResistanceElement : LoadUtils.directChildrenWithName(element, "damageResistance")) {
+            Damage.DamageType damageType = LoadUtils.attributeEnum(damageResistanceElement, "type", Damage.DamageType.class, null);
+            int value = LoadUtils.attributeInt(damageResistanceElement, "value", 0);
+            damageResistance.put(damageType, value);
+        }
+        return damageResistance;
     }
 
     private static Scene loadScene(Game game, Element sceneElement) throws ParserConfigurationException, SAXException, IOException {

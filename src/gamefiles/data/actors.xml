@@ -33,6 +33,11 @@
         <limb hitChance="0.8" damageMult="1.0" apparelSlot="legs">
             <name>leg</name>
         </limb>
+        <damageResistance type="PHYSICAL" value="0"/>
+        <damageResistance type="THERMAL" value="0"/>
+        <damageResistance type="CHEMICAL" value="0"/>
+        <damageResistance type="EXPLOSIVE" value="0"/>
+        <damageResistance type="ELECTRICAL" value="0"/>
         <inventory/>
     </actor>
     <actor id="player" parent="default" hp="50" faction="player">

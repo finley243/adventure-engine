@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.item.ItemApparel;
 
 import java.util.HashMap;
@@ -17,11 +16,6 @@ public class ApparelComponent {
     public ApparelComponent(Actor actor) {
         this.actor = actor;
         this.equipped = new HashMap<>();
-    }
-
-    public int getDamageResistance(String slot, Damage.DamageType type) {
-        if(isSlotEmpty(slot)) return 0;
-        return equipped.get(slot).getDamageResistance(type);
     }
 
     public boolean isSlotEmpty(String slot) {
