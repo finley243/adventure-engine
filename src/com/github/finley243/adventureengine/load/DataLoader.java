@@ -205,7 +205,7 @@ public class DataLoader {
     }
 
     private static Map<Damage.DamageType, Integer> loadDamageResistance(Element element) {
-        Map<Damage.DamageType, Integer> damageResistance = new EnumMap<Damage.DamageType, Integer>(Damage.DamageType.class);
+        Map<Damage.DamageType, Integer> damageResistance = new EnumMap<>(Damage.DamageType.class);
         if (element == null) return damageResistance;
         for (Element damageResistanceElement : LoadUtils.directChildrenWithName(element, "damageResistance")) {
             Damage.DamageType damageType = LoadUtils.attributeEnum(damageResistanceElement, "type", Damage.DamageType.class, null);
@@ -776,25 +776,43 @@ public class DataLoader {
         }
     }
 
-    private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) {
+    private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) throws ParserConfigurationException, IOException, SAXException {
         String ID = LoadUtils.attribute(componentElement, "id", null);
         String type = LoadUtils.attribute(componentElement, "type", null);
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
+        String name = LoadUtils.singleTag(componentElement, "name", null);
         switch (type) {
             case "inventory":
-                String inventoryName = LoadUtils.singleTag(componentElement, "name", null);
                 LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
                 boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "exposed", false);
-                return new ObjectComponentTemplateInventory(game, ID, startEnabled, inventoryName, lootTable, inventoryIsExposed);
+                return new ObjectComponentTemplateInventory(game, ID, startEnabled, name, lootTable, inventoryIsExposed);
             case "network":
                 String networkID = LoadUtils.attribute(componentElement, "network", null);
-                return new ObjectComponentTemplateNetwork(game, ID, startEnabled, networkID);
+                return new ObjectComponentTemplateNetwork(game, ID, startEnabled, name, networkID);
             case "link":
                 boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
                 boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
-                return new ObjectComponentTemplateLink(game, ID, startEnabled, linkIsMovable, linkIsVisible);
+                return new ObjectComponentTemplateLink(game, ID, startEnabled, name, linkIsMovable, linkIsVisible);
             case "usable":
-                return new ObjectComponentTemplateUsable(game, ID, startEnabled);
+                return new ObjectComponentTemplateUsable(game, ID, startEnabled, name);
+            case "check":
+                String checkPrompt = LoadUtils.singleTag(componentElement, "prompt", null);
+                boolean checkCanFail = LoadUtils.attributeBool(componentElement, "canFail", false);
+                String checkPhraseSuccess = LoadUtils.singleTag(componentElement, "phraseSuccess", null);
+                String checkPhraseFailure = LoadUtils.singleTag(componentElement, "phraseFailure", null);
+                Condition checkCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "condition"));
+                return new ObjectComponentTemplateCheck(game, ID, startEnabled, name, checkPrompt, checkCondition, checkCanFail, checkPhraseSuccess, checkPhraseFailure);
+            case "itemUse":
+                String itemUsePrompt = LoadUtils.singleTag(componentElement, "prompt", null);
+                String itemUsePhrase = LoadUtils.singleTag(componentElement, "phrase", null);
+                List<ObjectComponentTemplateItemUse.ItemUseData> itemUseData = new ArrayList<>();
+                for (Element itemUseElement : LoadUtils.directChildrenWithName(componentElement, "item")) {
+                    String itemID = LoadUtils.attribute(itemUseElement, "id", null);
+                    int itemCount = LoadUtils.attributeInt(itemUseElement, "count", 1);
+                    boolean isConsumed = LoadUtils.attributeBool(itemUseElement, "consumed", true);
+                    itemUseData.add(new ObjectComponentTemplateItemUse.ItemUseData(itemID, itemCount, isConsumed));
+                }
+                return new ObjectComponentTemplateItemUse(game, ID, startEnabled, name, itemUsePrompt, itemUseData, itemUsePhrase);
             default:
                 throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
         }

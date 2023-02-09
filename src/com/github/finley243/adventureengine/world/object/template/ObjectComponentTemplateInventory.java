@@ -5,19 +5,13 @@ import com.github.finley243.adventureengine.item.LootTable;
 
 public class ObjectComponentTemplateInventory extends ObjectComponentTemplate {
 
-    private final String name;
     private final LootTable lootTable;
     private final boolean isExposed;
 
     public ObjectComponentTemplateInventory(Game game, String ID, boolean startEnabled, String name, LootTable lootTable, boolean isExposed) {
-        super(game, ID, startEnabled);
-        this.name = name;
+        super(game, ID, startEnabled, name);
         this.lootTable = lootTable;
         this.isExposed = isExposed;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public LootTable getLootTable() {

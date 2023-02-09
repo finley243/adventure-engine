@@ -16,16 +16,12 @@ public class ObjectComponentFactory {
             return new ObjectComponentLink(ID, object, template.getID());
         } else if (template instanceof ObjectComponentTemplateUsable) {
             return new ObjectComponentUsable(ID, object, template.getID());
+        } else if (template instanceof ObjectComponentTemplateCheck) {
+            return new ObjectComponentCheck(ID, object, template.getID());
+        } else if (template instanceof ObjectComponentTemplateItemUse) {
+            return new ObjectComponentItemUse(ID, object, template.getID());
         }
         return null;
-    }
-
-    public static void loadComponents(Map<String, String> templates, WorldObject object) {
-        for (String ID : templates.keySet()) {
-            String templateID = templates.get(ID);
-            ObjectComponent component = create(object.game().data().getObjectComponentTemplate(templateID), ID, object);
-            object.addComponent(ID, component);
-        }
     }
 
 }

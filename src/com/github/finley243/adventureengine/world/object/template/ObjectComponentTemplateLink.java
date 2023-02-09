@@ -8,8 +8,8 @@ public class ObjectComponentTemplateLink extends ObjectComponentTemplate {
     private final boolean isMovable;
     private final boolean isVisible;
 
-    public ObjectComponentTemplateLink(Game game, String ID, boolean startEnabled, boolean isMovable, boolean isVisible) {
-        super(game, ID, startEnabled);
+    public ObjectComponentTemplateLink(Game game, String ID, boolean startEnabled, String name, boolean isMovable, boolean isVisible) {
+        super(game, ID, startEnabled, name);
         this.isMovable = isMovable;
         this.isVisible = isVisible;
     }

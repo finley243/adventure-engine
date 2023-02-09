@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionObjectItemUse;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -32,6 +33,7 @@ public class ObjectComponentItemUse extends ObjectComponent {
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
+        actions.add(new ActionObjectItemUse(this));
         return actions;
     }
 
@@ -41,6 +43,15 @@ public class ObjectComponentItemUse extends ObjectComponent {
             return hasSucceeded;
         }
         return super.getValueBoolean(name);
+    }
+
+    @Override
+    public void setStateBoolean(String name, boolean value) {
+        if ("succeeded".equals(name)) {
+            this.hasSucceeded = value;
+        } else {
+            super.setStateBoolean(name, value);
+        }
     }
 
 }

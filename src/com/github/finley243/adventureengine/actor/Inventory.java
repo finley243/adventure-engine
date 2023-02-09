@@ -64,6 +64,16 @@ public class Inventory {
 		return itemsStateless.containsKey(itemID) || items.containsKey(itemID);
 	}
 
+	public boolean hasItems(String itemID, int count) {
+		if (itemsStateless.containsKey(itemID)) {
+			return itemsStateless.get(itemID) >= count;
+		} else if (items.containsKey(itemID)) {
+			return items.get(itemID).size() >= count;
+		} else {
+			return false;
+		}
+	}
+
 	public boolean hasItemWithTag(String tag) {
 		for (String current : items.keySet()) {
 			if (game.data().getItem(current).getTags().contains(tag)) {
@@ -174,7 +184,7 @@ public class Inventory {
 	}
 
 	public void removeItems(String itemID, int count) {
-		if (game.data().getItem(itemID).hasState()) throw new IllegalArgumentException("Cannot remove an item with state by its ID");
+		//if (game.data().getItem(itemID).hasState()) throw new IllegalArgumentException("Cannot remove an item with state by its ID");
 		if (count <= 0) throw new IllegalArgumentException("Cannot remove non-positive number of items: " + itemID);
 		if (itemsStateless.containsKey(itemID)) {
 			int currentCount = itemsStateless.get(itemID);
@@ -183,6 +193,12 @@ public class Inventory {
 				itemsStateless.remove(itemID);
 			} else {
 				itemsStateless.put(itemID, newCount);
+			}
+		} else if (items.containsKey(itemID)) {
+			for (int i = 0; i < count; i++) {
+				if (!items.get(itemID).isEmpty()) {
+					items.get(itemID).remove(items.get(itemID).size() - 1);
+				}
 			}
 		}
 	}
