@@ -509,14 +509,8 @@ public class DataLoader {
         switch (type) {
             case "apparel":
                 Set<String> apparelSlots = LoadUtils.setOfTags(itemElement, "slot");
-                Map<Damage.DamageType, Integer> damageResistance = new HashMap<>();
-                for (Element damageResistElement : LoadUtils.directChildrenWithName(itemElement, "damageResist")) {
-                    Damage.DamageType damageResistType = LoadUtils.attributeEnum(damageResistElement, "type", Damage.DamageType.class, Damage.DamageType.PHYSICAL);
-                    int amount = LoadUtils.attributeInt(damageResistElement, "amount", 0);
-                    damageResistance.putIfAbsent(damageResistType, amount);
-                }
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ApparelTemplate(game, id, name, description, scripts, price, attackType, apparelSlots, damageResistance, apparelEffects);
+                return new ApparelTemplate(game, id, name, description, scripts, price, attackType, apparelSlots, apparelEffects);
             case "consumable":
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");

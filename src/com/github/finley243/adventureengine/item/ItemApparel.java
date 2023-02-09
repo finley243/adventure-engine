@@ -35,10 +35,6 @@ public class ItemApparel extends Item {
 		return getApparelTemplate().getSlots();
 	}
 
-	public int getDamageResistance(Damage.DamageType type) {
-		return getApparelTemplate().getDamageResistance(type);
-	}
-
 	public void onEquip(Actor subject) {
 		getApparelTemplate().onEquip(subject);
 	}

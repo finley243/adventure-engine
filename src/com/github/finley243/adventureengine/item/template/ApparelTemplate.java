@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
@@ -14,13 +13,11 @@ import java.util.Set;
 public class ApparelTemplate extends ItemTemplate {
 	
 	private final Set<String> slots;
-	private final Map<Damage.DamageType, Integer> damageResistance;
 	private final List<String> effects;
 	
-	public ApparelTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, Set<String> slots, Map<Damage.DamageType, Integer> damageResistance, List<String> effects) {
+	public ApparelTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, Set<String> slots, List<String> effects) {
 		super(game, ID, name, description, scripts, price, attackType);
 		this.slots = slots;
-		this.damageResistance = damageResistance;
 		this.effects = effects;
 	}
 
@@ -31,10 +28,6 @@ public class ApparelTemplate extends ItemTemplate {
 	
 	public Set<String> getSlots() {
 		return slots;
-	}
-
-	public int getDamageResistance(Damage.DamageType type) {
-		return damageResistance.getOrDefault(type, 0);
 	}
 
 	public List<String> getEffects() {
