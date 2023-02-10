@@ -1,13 +1,11 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -80,7 +78,7 @@ public abstract class Behavior {
     }
 
     public boolean isValid(Actor subject) {
-        return condition == null || condition.isMet(subject, subject);
+        return condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject));
     }
 
     public Idle getIdle(Actor subject) {

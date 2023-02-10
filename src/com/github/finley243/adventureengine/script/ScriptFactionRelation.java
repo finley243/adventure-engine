@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.condition.Condition;
@@ -18,8 +19,8 @@ public class ScriptFactionRelation extends Script {
 	}
 
 	@Override
-	public void executeSuccess(Actor subject, Actor target) {
-		subject.game().data().getFaction(targetFaction).setRelation(relationFaction, relation);
+	public void executeSuccess(ContextScript context) {
+		context.game().data().getFaction(targetFaction).setRelation(relationFaction, relation);
 	}
 
 }

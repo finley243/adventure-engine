@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.ActorReference;
 
 public class ConditionActorVisible extends Condition {
@@ -15,7 +15,7 @@ public class ConditionActorVisible extends Condition {
     }
 
     @Override
-    public boolean isMetInternal(Actor subject, Actor target) {
-        return actor.getActor(subject, target).canSee(this.target.getActor(subject, target));
+    public boolean isMetInternal(ContextScript context) {
+        return actor.getActor(context).canSee(target.getActor(context));
     }
 }

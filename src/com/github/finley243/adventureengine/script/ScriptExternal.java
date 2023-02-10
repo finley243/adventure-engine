@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
 
 public class ScriptExternal extends Script {
@@ -13,7 +13,7 @@ public class ScriptExternal extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject, Actor target) {
-        subject.game().data().getScript(scriptID).execute(subject, target);
+    protected void executeSuccess(ContextScript context) {
+        context.game().data().getScript(scriptID).execute(context);
     }
 }

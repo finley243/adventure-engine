@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.environment;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
@@ -541,7 +542,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if(scripts.containsKey(entryPoint)) {
-			scripts.get(entryPoint).execute(subject, target);
+			scripts.get(entryPoint).execute(new ContextScript(game(), subject, target));
 		}
 	}
 

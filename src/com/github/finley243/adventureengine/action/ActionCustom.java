@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
@@ -31,13 +32,13 @@ public class ActionCustom extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.game().eventBus().post(new RenderTextEvent(description));
         if(script != null) {
-            script.execute(subject, subject);
+            script.execute(new ContextScript(subject.game(), subject, subject));
         }
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && (condition == null || condition.isMet(subject, subject));
+        return super.canChoose(subject) && (condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject)));
     }
 
     @Override
@@ -46,7 +47,7 @@ public class ActionCustom extends Action {
     }
 
     public boolean canShow(Actor subject) {
-        return conditionShow == null || conditionShow.isMet(subject, subject);
+        return conditionShow == null || conditionShow.isMet(new ContextScript(subject.game(), subject, subject));
     }
 
 }

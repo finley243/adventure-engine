@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 
 /**
  * A pre-condition that can be checked
@@ -17,11 +17,11 @@ public abstract class Condition {
 		this.invert = invert;
 	}
 	
-	public boolean isMet(Actor subject, Actor target) {
-		return isMetInternal(subject, target) != invert;
+	public boolean isMet(ContextScript context) {
+		return isMetInternal(context) != invert;
 	}
 
-	protected abstract boolean isMetInternal(Actor subject, Actor target);
+	protected abstract boolean isMetInternal(ContextScript context);
 
 	public static boolean equalityCheckFloat(float value1, float value2, Equality equality) {
 		switch(equality) {

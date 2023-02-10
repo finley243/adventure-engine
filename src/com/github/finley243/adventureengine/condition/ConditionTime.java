@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 
 public class ConditionTime extends Condition {
 
@@ -18,8 +18,8 @@ public class ConditionTime extends Condition {
     }
 
     @Override
-    public boolean isMetInternal(Actor subject, Actor target) {
-        return subject.game().data().time().isInRange(hours1, minutes1, hours2, minutes2);
+    public boolean isMetInternal(ContextScript context) {
+        return context.game().data().time().isInRange(hours1, minutes1, hours2, minutes2);
     }
 
 }

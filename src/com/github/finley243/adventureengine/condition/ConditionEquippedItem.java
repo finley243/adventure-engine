@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.item.Item;
 
@@ -19,8 +19,8 @@ public class ConditionEquippedItem extends Condition {
 	}
 
 	@Override
-	public boolean isMetInternal(Actor subject, Actor target) {
-		Item equippedItem = actor.getActor(subject, target).equipmentComponent().getEquippedItem();
+	public boolean isMetInternal(ContextScript context) {
+		Item equippedItem = actor.getActor(context).equipmentComponent().getEquippedItem();
 		if(equippedItem == null) return false;
 		if(itemID != null) {
 			return equippedItem.getTemplate().getID().equals(itemID);

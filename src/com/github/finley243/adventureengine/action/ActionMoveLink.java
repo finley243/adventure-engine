@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -8,8 +9,6 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.ObjectDoor;
-import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
 
 public class ActionMoveLink extends ActionMove {
@@ -42,7 +41,8 @@ public class ActionMoveLink extends ActionMove {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && linkComponent.getTemplateLink().getCondition().isMet(subject, subject);
+		return super.canChoose(subject) &&
+				(linkComponent.getTemplateLink().getCondition() == null || linkComponent.getTemplateLink().getCondition().isMet(new ContextScript(subject.game(), subject, subject)));
 	}
 
 	@Override

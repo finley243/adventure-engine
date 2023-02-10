@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.variable.Variable;
 
 public class ConditionBoolean extends Condition {
@@ -15,8 +15,8 @@ public class ConditionBoolean extends Condition {
     }
 
     @Override
-    protected boolean isMetInternal(Actor subject, Actor target) {
-        return variable.getValueBoolean(subject.game(), subject, target);
+    protected boolean isMetInternal(ContextScript context) {
+        return variable.getValueBoolean(context);
     }
 
 }

@@ -1,9 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.DateTimeController;
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.MathUtils;
+import com.github.finley243.adventureengine.*;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionEnd;
 import com.github.finley243.adventureengine.action.ActionMove;
@@ -1100,7 +1097,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	public boolean triggerScript(String trigger, Actor target) {
 		Script script = getTemplate().getScript(trigger);
 		if (script != null) {
-			script.execute(this, target);
+			script.execute(new ContextScript(game(), this, target));
 			return true;
 		} else {
 			return false;

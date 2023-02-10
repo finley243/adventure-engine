@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.variable.Variable;
 
 public class ConditionSetContains extends Condition {
@@ -18,8 +18,8 @@ public class ConditionSetContains extends Condition {
     }
 
     @Override
-    protected boolean isMetInternal(Actor subject, Actor target) {
-        return variableSet.getValueStringSet(subject.game(), subject, target).contains(variableString.getValueString(subject.game(), subject, target));
+    protected boolean isMetInternal(ContextScript context) {
+        return variableSet.getValueStringSet(context).contains(variableString.getValueString(context));
     }
 
 }

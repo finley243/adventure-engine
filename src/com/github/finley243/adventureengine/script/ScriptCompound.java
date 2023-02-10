@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.List;
@@ -18,15 +18,15 @@ public class ScriptCompound extends Script {
     }
 
     @Override
-    public void executeSuccess(Actor subject, Actor target) {
-        for(Script current : subScripts) {
-            if(select) {
-                boolean wasExecuted = current.execute(subject, target);
+    public void executeSuccess(ContextScript context) {
+        for (Script current : subScripts) {
+            if (select) {
+                boolean wasExecuted = current.execute(context);
                 if(wasExecuted) {
                     break;
                 }
             } else {
-                current.execute(subject, target);
+                current.execute(context);
             }
         }
     }

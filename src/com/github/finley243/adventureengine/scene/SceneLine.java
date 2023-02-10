@@ -1,9 +1,8 @@
 package com.github.finley243.adventureengine.scene;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
@@ -39,7 +38,7 @@ public class SceneLine {
     }
     
     public boolean shouldShow(Actor subject, Actor target, String lastTopicID) {
-    	return (condition == null || condition.isMet(subject, target))
+    	return (condition == null || condition.isMet(new ContextScript(subject.game(), subject, target)))
                 && !(once && hasTriggered)
                 && !(fromSceneID != null && !fromSceneID.equals(lastTopicID));
     }
@@ -47,7 +46,7 @@ public class SceneLine {
     public void trigger(Actor subject, Actor target) {
     	hasTriggered = true;
         if(script != null) {
-            script.execute(subject, target);
+            script.execute(new ContextScript(subject.game(), subject, target));
         }
     }
     

@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.item.Item;
@@ -18,9 +18,9 @@ public class ScriptAddItem extends Script {
 	}
 	
 	@Override
-	public void executeSuccess(Actor subject, Actor target) {
-		Item item = ItemFactory.create(subject.game(), subject.game().data().getItem(itemID));
-		actor.getActor(subject, target).inventory().addItem(item);
+	public void executeSuccess(ContextScript context) {
+		Item item = ItemFactory.create(context.game(), context.game().data().getItem(itemID));
+		actor.getActor(context).inventory().addItem(item);
 	}
 	
 }

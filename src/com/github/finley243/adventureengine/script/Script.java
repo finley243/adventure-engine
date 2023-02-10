@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 
@@ -16,13 +17,12 @@ public abstract class Script {
 
 	/**
 	 * Execute the script if the conditions are met
-	 * @param subject The contextual subject actor
-	 * @param target The contextual target actor
+	 * @param context Contains the contextual references (subject, target, etc.)
 	 * @return Whether the script was executed
 	 */
-	public boolean execute(Actor subject, Actor target) {
-		if(canExecute(subject, target)) {
-			executeSuccess(subject, target);
+	public boolean execute(ContextScript context) {
+		if(canExecute(context)) {
+			executeSuccess(context);
 			return true;
 		} else {
 			return false;
@@ -32,13 +32,12 @@ public abstract class Script {
 	/**
 	 * Executed if all conditions are met when calling Script::execute
 	 *
-	 * @param subject The contextual subject actor
-	 * @param target The contextual target actor
+	 * @param context Contains the contextual references (subject, target, etc.)
 	 */
-	protected abstract void executeSuccess(Actor subject, Actor target);
+	protected abstract void executeSuccess(ContextScript context);
 
-	private boolean canExecute(Actor subject, Actor target) {
-		return condition == null || condition.isMet(subject, target);
+	private boolean canExecute(ContextScript context) {
+		return condition == null || condition.isMet(context);
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.variable.Variable;
 
@@ -16,15 +16,15 @@ public class ScriptModifyGlobal extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject, Actor target) {
+    protected void executeSuccess(ContextScript context) {
         switch (variable.getDataType()) {
             case INTEGER:
-                int oldValueInt = subject.game().data().getGlobalInteger(globalID);
-                subject.game().data().setGlobalInteger(globalID, oldValueInt + variable.getValueInteger(subject.game(), subject, target));
+                int oldValueInt = context.game().data().getGlobalInteger(globalID);
+                context.game().data().setGlobalInteger(globalID, oldValueInt + variable.getValueInteger(context));
                 break;
             case FLOAT:
-                float oldValueFloat = subject.game().data().getGlobalFloat(globalID);
-                subject.game().data().setGlobalFloat(globalID, oldValueFloat + variable.getValueFloat(subject.game(), subject, target));
+                float oldValueFloat = context.game().data().getGlobalFloat(globalID);
+                context.game().data().setGlobalFloat(globalID, oldValueFloat + variable.getValueFloat(context));
                 break;
             default:
                 throw new UnsupportedOperationException("No modify functions for provided data type: " + variable.getDataType());

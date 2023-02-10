@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.condition.Condition;
@@ -17,14 +18,14 @@ public class ScriptNearestActorWithScript extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject, Actor target) {
+    protected void executeSuccess(ContextScript context) {
         // TODO - Improve efficiency of nearest actor check
         List<Actor> nearestActor = new ArrayList<>();
         List<Integer> nearestActorDist = new ArrayList<>();
-        for(Actor visibleActor : subject.game().data().getPlayer().getVisibleActors()) {
+        for(Actor visibleActor : context.game().data().getPlayer().getVisibleActors()) {
             // TODO - Replace with dedicated pathfinding function
             //int distance = visibleActor.getArea().getDistanceTo(subject.game().data().getPlayer().getArea().getID());
-            int distance = Pathfinder.findPath(visibleActor.getArea(), subject.game().data().getPlayer().getArea()).size() - 1;
+            int distance = Pathfinder.findPath(visibleActor.getArea(), context.game().data().getPlayer().getArea()).size() - 1;
             int addAtIndex = nearestActor.size();
             for(int i = 0; i < nearestActor.size(); i++) {
                 if(distance <= nearestActorDist.get(i)) {
@@ -36,7 +37,7 @@ public class ScriptNearestActorWithScript extends Script {
             nearestActorDist.add(addAtIndex, distance);
         }
         for(Actor nearActor : nearestActor) {
-            boolean executed = nearActor.triggerScript(trigger, target);
+            boolean executed = nearActor.triggerScript(trigger, context.getTarget());
             if(executed) {
                 break;
             }

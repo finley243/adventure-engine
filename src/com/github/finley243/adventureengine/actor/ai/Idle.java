@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -18,7 +19,7 @@ public class Idle {
     }
 
     public boolean canPlay(Actor subject) {
-        return condition == null || condition.isMet(subject, subject);
+        return condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject));
     }
 
     public void trigger(Actor subject) {

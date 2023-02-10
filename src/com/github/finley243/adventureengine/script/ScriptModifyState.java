@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.variable.Variable;
@@ -19,13 +19,13 @@ public class ScriptModifyState extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject, Actor target) {
+    protected void executeSuccess(ContextScript context) {
         switch (variable.getDataType()) {
             case INTEGER:
-                holder.getHolder(subject.game(), subject, target).modStateInteger(state, variable.getValueInteger(subject.game(), subject, target));
+                holder.getHolder(context).modStateInteger(state, variable.getValueInteger(context));
                 break;
             case FLOAT:
-                holder.getHolder(subject.game(), subject, target).modStateFloat(state, variable.getValueFloat(subject.game(), subject, target));
+                holder.getHolder(context).modStateFloat(state, variable.getValueFloat(context));
                 break;
             default:
                 throw new UnsupportedOperationException("No modify functions for provided data type: " + variable.getDataType());

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.item;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
@@ -74,7 +75,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if(getTemplate().getScripts().containsKey(entryPoint)) {
-			getTemplate().getScripts().get(entryPoint).execute(subject, target);
+			getTemplate().getScripts().get(entryPoint).execute(new ContextScript(game(), subject, target));
 		}
 	}
 

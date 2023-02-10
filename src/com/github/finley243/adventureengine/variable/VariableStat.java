@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.variable;
 
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 import java.util.Set;
@@ -37,33 +36,33 @@ public class VariableStat extends Variable {
     }
 
     @Override
-    public boolean getValueBoolean(Game game, Actor subject, Actor target) {
+    public boolean getValueBoolean(ContextScript context) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getValueBoolean(stat);
+        return holder.getHolder(context).getValueBoolean(stat);
     }
 
     @Override
-    public int getValueInteger(Game game, Actor subject, Actor target) {
+    public int getValueInteger(ContextScript context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getValueInt(stat);
+        return holder.getHolder(context).getValueInt(stat);
     }
 
     @Override
-    public float getValueFloat(Game game, Actor subject, Actor target) {
+    public float getValueFloat(ContextScript context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getValueFloat(stat);
+        return holder.getHolder(context).getValueFloat(stat);
     }
 
     @Override
-    public String getValueString(Game game, Actor subject, Actor target) {
+    public String getValueString(ContextScript context) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getValueString(stat);
+        return holder.getHolder(context).getValueString(stat);
     }
 
     @Override
-    public Set<String> getValueStringSet(Game game, Actor subject, Actor target) {
+    public Set<String> getValueStringSet(ContextScript context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
-        return holder.getHolder(game, subject, target).getValueStringSet(stat);
+        return holder.getHolder(context).getValueStringSet(stat);
     }
 
 }

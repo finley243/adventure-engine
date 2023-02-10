@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.object;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
@@ -191,7 +192,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
-			getTemplate().getScripts().get(entryPoint).execute(subject, target);
+			getTemplate().getScripts().get(entryPoint).execute(new ContextScript(game(), subject, target));
 		}
 	}
 

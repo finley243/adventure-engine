@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.variable;
 
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 
 import java.util.Set;
 
@@ -34,33 +33,33 @@ public class VariableGlobal extends Variable {
     }
 
     @Override
-    public boolean getValueBoolean(Game game, Actor subject, Actor target) {
+    public boolean getValueBoolean(ContextScript context) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
-        return game.data().getGlobalBoolean(variableID);
+        return context.game().data().getGlobalBoolean(variableID);
     }
 
     @Override
-    public int getValueInteger(Game game, Actor subject, Actor target) {
+    public int getValueInteger(ContextScript context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
-        return game.data().getGlobalInteger(variableID);
+        return context.game().data().getGlobalInteger(variableID);
     }
 
     @Override
-    public float getValueFloat(Game game, Actor subject, Actor target) {
+    public float getValueFloat(ContextScript context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
-        return game.data().getGlobalFloat(variableID);
+        return context.game().data().getGlobalFloat(variableID);
     }
 
     @Override
-    public String getValueString(Game game, Actor subject, Actor target) {
+    public String getValueString(ContextScript context) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
-        return game.data().getGlobalString(variableID);
+        return context.game().data().getGlobalString(variableID);
     }
 
     @Override
-    public Set<String> getValueStringSet(Game game, Actor subject, Actor target) {
+    public Set<String> getValueStringSet(ContextScript context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
-        return game.data().getGlobalStringSet(variableID);
+        return context.game().data().getGlobalStringSet(variableID);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.variable;
 
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 
 import java.util.Set;
 
@@ -13,15 +12,15 @@ public abstract class Variable {
 
     public abstract DataType getDataType();
 
-    public abstract boolean getValueBoolean(Game game, Actor subject, Actor target);
+    public abstract boolean getValueBoolean(ContextScript context);
 
-    public abstract int getValueInteger(Game game, Actor subject, Actor target);
+    public abstract int getValueInteger(ContextScript context);
 
-    public abstract float getValueFloat(Game game, Actor subject, Actor target);
+    public abstract float getValueFloat(ContextScript context);
 
-    public abstract String getValueString(Game game, Actor subject, Actor target);
+    public abstract String getValueString(ContextScript context);
 
-    public abstract Set<String> getValueStringSet(Game game, Actor subject, Actor target);
+    public abstract Set<String> getValueStringSet(ContextScript context);
 
     public boolean canCompareTo(Variable other) {
         if (this.getDataType() == DataType.STRING_SET || other.getDataType() == DataType.STRING_SET) {

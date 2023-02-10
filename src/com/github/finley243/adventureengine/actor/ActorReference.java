@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.actor;
 
+import com.github.finley243.adventureengine.ContextScript;
+
 public class ActorReference {
 
 	public enum ReferenceType {
@@ -14,17 +16,17 @@ public class ActorReference {
 		this.reference = reference;
 	}
 	
-	public Actor getActor(Actor subject, Actor target) {
+	public Actor getActor(ContextScript context) {
 		switch(type) {
 		case PLAYER:
-			return subject.game().data().getPlayer();
+			return context.game().data().getPlayer();
 		case REFERENCE:
-			return subject.game().data().getActor(reference);
+			return context.game().data().getActor(reference);
 		case TARGET:
-			return target;
+			return context.getTarget();
 		case SUBJECT:
 		default:
-			return subject;
+			return context.getSubject();
 		}
 	}
 	

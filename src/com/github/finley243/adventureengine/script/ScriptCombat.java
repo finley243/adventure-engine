@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;
 
@@ -16,9 +16,9 @@ public class ScriptCombat extends Script{
     }
 
     @Override
-    public void executeSuccess(Actor subject, Actor target) {
-        if(this.target.getActor(subject, target).targetingComponent() != null) {
-            this.target.getActor(subject, target).targetingComponent().addCombatant(combatant.getActor(subject, target));
+    public void executeSuccess(ContextScript context) {
+        if (this.target.getActor(context).targetingComponent() != null) {
+            this.target.getActor(context).targetingComponent().addCombatant(combatant.getActor(context));
         }
     }
 

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
@@ -19,7 +20,7 @@ public class ActionObjectCheck extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        if (!componentCheck.getTemplateCheck().canFail() || componentCheck.getTemplateCheck().getCheckCondition().isMet(subject, subject)) {
+        if (!componentCheck.getTemplateCheck().canFail() || componentCheck.getTemplateCheck().getCheckCondition().isMet(new ContextScript(subject.game(), subject, subject))) {
             componentCheck.setStateBoolean("succeeded", true);
             Context context = new Context(new NounMapper().put("actor", subject).build());
             subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(componentCheck.getTemplateCheck().getPhraseSuccess()), context, this, null, subject, null));
@@ -34,7 +35,7 @@ public class ActionObjectCheck extends Action {
         if (componentCheck.getTemplateCheck().canFail()) {
             return super.canChoose(subject);
         } else {
-            return super.canChoose(subject) && componentCheck.getTemplateCheck().getCheckCondition().isMet(subject, subject);
+            return super.canChoose(subject) && componentCheck.getTemplateCheck().getCheckCondition().isMet(new ContextScript(subject.game(), subject, subject));
         }
     }
 

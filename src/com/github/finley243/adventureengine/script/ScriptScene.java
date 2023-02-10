@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;
@@ -19,8 +20,8 @@ public class ScriptScene extends Script {
     }
 
     @Override
-    public void executeSuccess(Actor subject, Actor target) {
-        SceneManager.triggerFromIDs(subject.game(), actor.getActor(subject, target), actor.getActor(subject, target), scenes);
+    public void executeSuccess(ContextScript context) {
+        SceneManager.triggerFromIDs(context.game(), actor.getActor(context), actor.getActor(context), scenes);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.variable.Variable;
@@ -19,22 +19,22 @@ public class ScriptSetState extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject, Actor target) {
+    protected void executeSuccess(ContextScript context) {
         switch (variable.getDataType()) {
             case BOOLEAN:
-                holder.getHolder(subject.game(), subject, target).setStateBoolean(state, variable.getValueBoolean(subject.game(), subject, target));
+                holder.getHolder(context).setStateBoolean(state, variable.getValueBoolean(context));
                 break;
             case INTEGER:
-                holder.getHolder(subject.game(), subject, target).setStateInteger(state, variable.getValueInteger(subject.game(), subject, target));
+                holder.getHolder(context).setStateInteger(state, variable.getValueInteger(context));
                 break;
             case FLOAT:
-                holder.getHolder(subject.game(), subject, target).setStateFloat(state, variable.getValueFloat(subject.game(), subject, target));
+                holder.getHolder(context).setStateFloat(state, variable.getValueFloat(context));
                 break;
             case STRING:
-                holder.getHolder(subject.game(), subject, target).setStateString(state, variable.getValueString(subject.game(), subject, target));
+                holder.getHolder(context).setStateString(state, variable.getValueString(context));
                 break;
             case STRING_SET:
-                holder.getHolder(subject.game(), subject, target).setStateStringSet(state, variable.getValueStringSet(subject.game(), subject, target));
+                holder.getHolder(context).setStateStringSet(state, variable.getValueStringSet(context));
                 break;
         }
     }

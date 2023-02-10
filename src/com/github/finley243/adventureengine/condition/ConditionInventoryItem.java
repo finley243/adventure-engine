@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.ActorReference;
 
 public class ConditionInventoryItem extends Condition {
@@ -17,11 +17,11 @@ public class ConditionInventoryItem extends Condition {
 	}
 
 	@Override
-	public boolean isMetInternal(Actor subject, Actor target) {
+	public boolean isMetInternal(ContextScript context) {
 		if(itemID != null) {
-			return actor.getActor(subject, target).inventory().hasItem(itemID);
+			return actor.getActor(context).inventory().hasItem(itemID);
 		} else {
-			return actor.getActor(subject, target).inventory().hasItemWithTag(tag);
+			return actor.getActor(context).inventory().hasItemWithTag(tag);
 		}
 	}
 

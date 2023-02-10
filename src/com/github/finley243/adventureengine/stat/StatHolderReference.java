@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.stat;
 
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 
 public class StatHolderReference {
 
@@ -16,29 +15,29 @@ public class StatHolderReference {
         this.holderLocalID = holderLocalID;
     }
 
-    public StatHolder getHolder(Game game, Actor subject, Actor target) {
+    public StatHolder getHolder(ContextScript context) {
         switch (holderType) {
             case "actor":
-                return game.data().getActor(holderID);
+                return context.game().data().getActor(holderID);
             case "object":
-                return game.data().getObject(holderID);
+                return context.game().data().getObject(holderID);
             case "objectComponent":
-                return game.data().getObject(holderID).getComponent(holderLocalID);
+                return context.game().data().getObject(holderID).getComponent(holderLocalID);
             case "item":
-                return game.data().getItemState(holderID);
+                return context.game().data().getItemState(holderID);
             case "area":
-                return game.data().getArea(holderID);
+                return context.game().data().getArea(holderID);
             case "room":
-                return game.data().getRoom(holderID);
+                return context.game().data().getRoom(holderID);
             case "scene":
-                return game.data().getScene(holderID);
+                return context.game().data().getScene(holderID);
             case "player":
-                return game.data().getPlayer();
+                return context.game().data().getPlayer();
             case "target":
-                return target;
+                return context.getTarget();
             case "subject":
             default:
-                return subject;
+                return context.getSubject();
         }
     }
 

@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.item.Item;
@@ -26,28 +26,28 @@ public class ScriptTransferItem extends Script {
     }
 
     @Override
-    protected void executeSuccess(Actor subject, Actor target) {
-        Item itemPlaceholder = ItemFactory.create(subject.game(), item);
+    protected void executeSuccess(ContextScript context) {
+        Item itemPlaceholder = ItemFactory.create(context.game(), item);
         switch (type) {
             case "one":
-                actor.getActor(subject, target).inventory().removeItem(itemPlaceholder);
-                this.target.getActor(subject, target).inventory().addItem(itemPlaceholder);
+                actor.getActor(context).inventory().removeItem(itemPlaceholder);
+                target.getActor(context).inventory().addItem(itemPlaceholder);
                 break;
             case "all":
                 if (item == null) { // All items in inventory
-                    Map<Item, Integer> items = actor.getActor(subject, target).inventory().getItemMap();
-                    actor.getActor(subject, target).inventory().clear();
-                    this.target.getActor(subject, target).inventory().addItems(items);
+                    Map<Item, Integer> items = actor.getActor(context).inventory().getItemMap();
+                    actor.getActor(context).inventory().clear();
+                    target.getActor(context).inventory().addItems(items);
                 } else { // All items of type
-                    int inventoryCount = actor.getActor(subject, target).inventory().itemCount(itemPlaceholder);
-                    actor.getActor(subject, target).inventory().removeItems(itemPlaceholder, inventoryCount);
-                    this.target.getActor(subject, target).inventory().addItems(itemPlaceholder, inventoryCount);
+                    int inventoryCount = actor.getActor(context).inventory().itemCount(itemPlaceholder);
+                    actor.getActor(context).inventory().removeItems(itemPlaceholder, inventoryCount);
+                    target.getActor(context).inventory().addItems(itemPlaceholder, inventoryCount);
                 }
                 break;
             case "count":
             default:
-                actor.getActor(subject, target).inventory().removeItems(itemPlaceholder, count);
-                this.target.getActor(subject, target).inventory().addItems(itemPlaceholder, count);
+                actor.getActor(context).inventory().removeItems(itemPlaceholder, count);
+                target.getActor(context).inventory().addItems(itemPlaceholder, count);
                 break;
         }
     }

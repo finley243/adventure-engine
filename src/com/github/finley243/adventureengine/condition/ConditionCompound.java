@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.condition;
 
 import java.util.List;
 
-import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.ContextScript;
 
 public class ConditionCompound extends Condition {
 	
@@ -16,9 +16,9 @@ public class ConditionCompound extends Condition {
 	}
 	
 	@Override
-	public boolean isMetInternal(Actor subject, Actor target) {
+	public boolean isMetInternal(ContextScript context) {
 		for(Condition condition : conditions) {
-			if(condition.isMet(subject, target) == useOr) {
+			if(condition.isMet(context) == useOr) {
 				return useOr;
 			}
 		}
