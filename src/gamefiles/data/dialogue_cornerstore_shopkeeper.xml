@@ -18,7 +18,9 @@
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_questions_repeat">
-        <condition type="sceneVisited" scene="cornerstore_shopkeeper_andre_questions"/>
+        <condition type="boolean">
+            <var type="stat" dataType="boolean" holder="scene" holderID="cornerstore_shopkeeper_andre_questions" stat="triggered"/>
+        </condition>
         <line redirect="cornerstore_shopkeeper_andre_questions">
             <text>"Go ahead."</text>
         </line>
