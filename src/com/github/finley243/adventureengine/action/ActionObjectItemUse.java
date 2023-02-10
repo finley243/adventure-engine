@@ -26,12 +26,16 @@ public class ActionObjectItemUse extends Action {
             }
         }
         componentItemUse.setStateBoolean("succeeded", true);
-        Context context = new Context(new NounMapper().put("actor", subject).build());
+        // TODO - Add items to MultiNoun in context
+        Context context = new Context(new NounMapper().put("actor", subject).put("object", componentItemUse.getObject()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(componentItemUse.getTemplateItemUse().getPhrase()), context, this, null, subject, null));
     }
 
     @Override
     public boolean canChoose(Actor subject) {
+        if (componentItemUse.hasSucceeded()) {
+            return false;
+        }
         if (!super.canChoose(subject)) {
             return false;
         }

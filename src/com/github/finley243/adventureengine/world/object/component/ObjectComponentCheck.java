@@ -30,6 +30,10 @@ public class ObjectComponentCheck extends ObjectComponent {
         return (ObjectComponentTemplateCheck) getObject().game().data().getObjectComponentTemplate(templateID);
     }
 
+    public boolean hasSucceeded() {
+        return hasSucceeded;
+    }
+
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();

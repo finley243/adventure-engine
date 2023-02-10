@@ -22,16 +22,19 @@ public class ActionObjectCheck extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         if (!componentCheck.getTemplateCheck().canFail() || componentCheck.getTemplateCheck().getCheckCondition().isMet(new ContextScript(subject.game(), subject, subject, componentCheck.getObject()))) {
             componentCheck.setStateBoolean("succeeded", true);
-            Context context = new Context(new NounMapper().put("actor", subject).build());
+            Context context = new Context(new NounMapper().put("actor", subject).put("object", componentCheck.getObject()).build());
             subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(componentCheck.getTemplateCheck().getPhraseSuccess()), context, this, null, subject, null));
         } else {
-            Context context = new Context(new NounMapper().put("actor", subject).build());
+            Context context = new Context(new NounMapper().put("actor", subject).put("object", componentCheck.getObject()).build());
             subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(componentCheck.getTemplateCheck().getPhraseFailure()), context, this, null, subject, null));
         }
     }
 
     @Override
     public boolean canChoose(Actor subject) {
+        if (componentCheck.hasSucceeded()) {
+            return false;
+        }
         if (componentCheck.getTemplateCheck().canFail()) {
             return super.canChoose(subject);
         } else {
