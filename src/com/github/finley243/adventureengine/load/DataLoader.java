@@ -294,9 +294,6 @@ public class DataLoader {
                 int hours2 = LoadUtils.attributeInt(timeEndElement, "hours", 0);
                 int minutes2 = LoadUtils.attributeInt(timeEndElement, "minutes", 0);
                 return new ConditionTime(invert, hours1, minutes1, hours2, minutes2);
-            case "sceneVisited":
-                String sceneVisitedID = LoadUtils.attribute(conditionElement, "scene", null);
-                return new ConditionSceneVisited(invert, sceneVisitedID);
             case "random":
                 float randomChance = LoadUtils.attributeFloat(conditionElement, "chance", 0.0f);
                 return new ConditionRandom(invert, randomChance);
@@ -790,9 +787,10 @@ public class DataLoader {
                 String networkID = LoadUtils.attribute(componentElement, "network", null);
                 return new ObjectComponentTemplateNetwork(game, ID, startEnabled, name, networkID);
             case "link":
+                Condition linkCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "condition"));
                 boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
                 boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
-                return new ObjectComponentTemplateLink(game, ID, startEnabled, name, linkIsMovable, linkIsVisible);
+                return new ObjectComponentTemplateLink(game, ID, startEnabled, name, linkCondition, linkIsMovable, linkIsVisible);
             case "usable":
                 return new ObjectComponentTemplateUsable(game, ID, startEnabled, name);
             case "check":

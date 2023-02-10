@@ -42,7 +42,7 @@ public class ActionMoveLink extends ActionMove {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) /*&& door.canEnter()*/;
+		return super.canChoose(subject) && linkComponent.getTemplateLink().getCondition().isMet(subject, subject);
 	}
 
 	@Override
