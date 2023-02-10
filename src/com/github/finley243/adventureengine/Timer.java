@@ -19,7 +19,7 @@ public class Timer extends GameInstanced {
             roundsRemaining -= 1;
         }
         if (roundsRemaining <= 0 && expireScript != null) {
-            expireScript.execute(new ContextScript(game(), game().data().getPlayer(), game().data().getPlayer()));
+            expireScript.execute(new ContextScript(game(), game().data().getPlayer(), game().data().getPlayer(), null));
         }
     }
 

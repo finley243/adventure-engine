@@ -1097,7 +1097,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	public boolean triggerScript(String trigger, Actor target) {
 		Script script = getTemplate().getScript(trigger);
 		if (script != null) {
-			script.execute(new ContextScript(game(), this, target));
+			script.execute(new ContextScript(game(), this, target, null));
 			return true;
 		} else {
 			return false;

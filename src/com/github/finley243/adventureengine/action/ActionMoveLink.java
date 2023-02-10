@@ -42,7 +42,7 @@ public class ActionMoveLink extends ActionMove {
 	@Override
 	public boolean canChoose(Actor subject) {
 		return super.canChoose(subject) &&
-				(linkComponent.getTemplateLink().getCondition() == null || linkComponent.getTemplateLink().getCondition().isMet(new ContextScript(subject.game(), subject, subject)));
+				(linkComponent.getTemplateLink().getCondition() == null || linkComponent.getTemplateLink().getCondition().isMet(new ContextScript(subject.game(), subject, subject, linkComponent.getObject())));
 	}
 
 	@Override

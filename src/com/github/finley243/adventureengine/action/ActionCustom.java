@@ -32,13 +32,13 @@ public class ActionCustom extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.game().eventBus().post(new RenderTextEvent(description));
         if(script != null) {
-            script.execute(new ContextScript(subject.game(), subject, subject));
+            script.execute(new ContextScript(subject.game(), subject, subject, subject.game().data().getObject(object)));
         }
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && (condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject)));
+        return super.canChoose(subject) && (condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject, subject.game().data().getObject(object))));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ActionCustom extends Action {
     }
 
     public boolean canShow(Actor subject) {
-        return conditionShow == null || conditionShow.isMet(new ContextScript(subject.game(), subject, subject));
+        return conditionShow == null || conditionShow.isMet(new ContextScript(subject.game(), subject, subject, subject.game().data().getObject(object)));
     }
 
 }
