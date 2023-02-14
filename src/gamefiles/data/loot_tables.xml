@@ -25,12 +25,20 @@
     <lootTable id="vendor_cornerstore">
         <table count="5">junk_random</table>
     </lootTable>
-    <lootTable id="vendor_bigburger">
+    <lootTable id="vendor_bigburger" useAll="true">
         <item countMin="20" countMax="40">burger</item>
         <item countMin="20" countMax="40">burger_cheese</item>
         <item countMin="20" countMax="40">burger_deluxe</item>
         <item countMin="20" countMax="40">french_fries</item>
         <item countMin="10" countMax="20">nitron_cola</item>
         <item countMin="10" countMax="20">nitron_diet</item>
+    </lootTable>
+    <lootTable id="store_snacks" useAll="true">
+        <item countMin="2" countMax="10">nutri_chips_bacon</item>
+        <item countMin="2" countMax="10">nutri_chips_wasabi</item>
+    </lootTable>
+    <lootTable id="store_soft_drinks" useAll="true">
+        <item countMin="2" countMax="10">nitron_cola</item>
+        <item countMin="2" countMax="10">nitron_diet</item>
     </lootTable>
 </data>

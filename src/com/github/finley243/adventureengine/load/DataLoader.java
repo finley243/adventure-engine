@@ -745,7 +745,7 @@ public class DataLoader {
             ComponentParams paramsObject = loadComponentParams(paramsElement);
             componentParams.put(componentID, paramsObject);
         }
-        switch (type) {
+        /*switch (type) {
             case "door":
                 String doorLink = LoadUtils.attribute(objectElement, "link", null);
                 AreaLink.CompassDirection doorDirection = LoadUtils.attributeEnum(objectElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
@@ -770,7 +770,8 @@ public class DataLoader {
             case "basic":
             default:
                 return new WorldObject(game, id, template, area, startDisabled, startHidden, componentParams);
-        }
+        }*/
+        return new WorldObject(game, id, template, area, startDisabled, startHidden, componentParams);
     }
 
     private static ComponentParams loadComponentParams(Element paramsElement) {
@@ -793,7 +794,7 @@ public class DataLoader {
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
         String name = LoadUtils.singleTag(componentElement, "name", null);
         switch (type) {
-            case "inventory":
+            case "container":
                 LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
                 boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "exposed", false);
                 return new ObjectComponentTemplateInventory(game, ID, startEnabled, name, lootTable, inventoryIsExposed);

@@ -15,4 +15,12 @@
         <name>french fries</name>
         <effect>foodBasic</effect>
     </item>
+    <item type="consumable" id="nutri_chips_bacon" price="5" consumableType="FOOD">
+        <name>Smoky Bacon Nutri-Chips</name>
+        <effect>foodBasic</effect>
+    </item>
+    <item type="consumable" id="nutri_chips_wasabi" price="5" consumableType="FOOD">
+        <name>Wasabi Ginger Nutri-Chips</name>
+        <effect>foodBasic</effect>
+    </item>
 </data>

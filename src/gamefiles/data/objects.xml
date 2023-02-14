@@ -14,4 +14,35 @@
     <object id="counter">
         <name>counter</name>
     </object>
+    <object id="gumball_machine">
+        <name>gumball machine</name>
+    </object>
+    <object id="garbage_bin">
+        <name>garbage bin</name>
+        <component id="container" template="garbage_bin_container"/>
+    </object>
+    <object id="store_shelf_snacks">
+        <name>snacks shelf</name>
+        <component id="container" template="store_shelf_snacks_container"/>
+    </object>
+    <object id="store_shelf_meals">
+        <name>meal shelf</name>
+        <component id="container" template="store_shelf_snacks_container"/>
+    </object>
+    <object id="store_shelf_alcohol">
+        <name>alcohol shelf</name>
+        <component id="container" template="store_shelf_snacks_container"/>
+    </object>
+    <object id="store_shelf_medicine">
+        <name>medicine shelf</name>
+        <component id="container" template="store_shelf_snacks_container"/>
+    </object>
+    <object id="store_cooler_soft_drinks">
+        <name>soft drinks cooler</name>
+        <component id="container" template="store_cooler_soft_drinks_container"/>
+    </object>
+    <object id="store_cooler_alcohol">
+        <name>alcohol cooler</name>
+        <component id="container" template="store_cooler_soft_drinks_container"/>
+    </object>
 </data>

@@ -2,29 +2,33 @@
     <room id="sinclair_tech_store">
         <name>Argon Electronics</name>
     </room>
-    <room id="fifth_corner_store">
-        <name>corner store</name>
+    <room id="wilsons_corner_store">
+        <name>Wilson's corner store</name>
         <description>
             <line>
                 <text>The store is small, with no wasted space. Just south of the entrance is the checkout counter, and to the north are aisles stocked with various goods. Behind them is a row of coolers, their bright lights illuminating the back of the store.</text>
             </line>
         </description>
-        <area id="fifth_corner_store_entrance" landmark="fifth_corner_store_door_exit">
-            <link dist="CLOSE" dir="S" area="fifth_corner_store_counter"/>
-            <link dist="CLOSE" dir="N" area="fifth_corner_store_aisle"/>
-            <link dist="FAR" dir="NE" area="fifth_corner_store_coolers"/>
-            <object type="basic" id="fifth_corner_store_door_exit" template="door_locked_easy">
-                <component type="link" id="door_link" object="fifth_corner_store_exterior_door" dir="W"/>
+        <area id="wilsons_corner_store_entrance" landmark="wilsons_corner_store_door_exit">
+            <link dist="CLOSE" dir="S" area="wilsons_corner_store_counter"/>
+            <link dist="CLOSE" dir="NW" area="wilsons_corner_store_aisle_food"/>
+            <link dist="CLOSE" dir="NE" area="wilsons_corner_store_aisle_general"/>
+            <link dist="FAR" dir="NE" area="wilsons_corner_store_coolers"/>
+            <object id="wilsons_corner_store_door_exit" template="door_locked_easy">
+                <component type="link" id="door_link" object="wilsons_corner_store_exterior_door" dir="W"/>
             </object>
+            <object id="wilsons_corner_store_gumball_machine" template="gumball_machine"/>
+            <object id="wilsons_corner_store_garbage_bin" template="garbage_bin"/>
         </area>
-        <area id="fifth_corner_store_counter" landmark="fifth_corner_store_counter">
-            <link dist="CLOSE" dir="N" area="fifth_corner_store_entrance"/>
-            <link dist="FAR" dir="N" area="fifth_corner_store_coolers"/>
-            <link dist="FAR" dir="N" area="fifth_corner_store_aisle"/>
-            <object type="basic" id="fifth_corner_store_counter" template="counter"/>
-            <actor id="cornerstore_shopkeeper" template="cornerstore_shopkeeper">
+        <area id="wilsons_corner_store_counter" landmark="wilsons_corner_store_counter">
+            <link dist="CLOSE" dir="N" area="wilsons_corner_store_entrance"/>
+            <link dist="FAR" dir="N" area="wilsons_corner_store_coolers"/>
+            <link dist="FAR" dir="NW" area="wilsons_corner_store_aisle_food"/>
+            <link dist="FAR" dir="NE" area="wilsons_corner_store_aisle_general"/>
+            <object id="wilsons_corner_store_counter" template="counter"/>
+            <actor id="frank_wilson" template="frank_wilson">
                 <behaviors>
-                    <behavior type="area" area="fifth_corner_store_counter">
+                    <behavior type="area" area="wilsons_corner_store_counter">
                         <idle>
                             <phrase>$_actor {yawn$s_actor|stretch$es_actor|tap$s_actor $actor's fingers rhythmically on the counter|look$s_actor across the store|check$s_actor something under the counter, then straighten$s_actor back up|glance$s_actor out the window}</phrase>
                         </idle>
@@ -32,22 +36,37 @@
                 </behaviors>
             </actor>
         </area>
-        <area id="fifth_corner_store_aisle">
-            <name type="in">aisle</name>
-            <link dist="CLOSE" dir="S" area="fifth_corner_store_entrance"/>
-            <link dist="CLOSE" dir="N" area="fifth_corner_store_coolers"/>
-            <link dist="FAR" dir="S" area="fifth_corner_store_counter"/>
+        <area id="wilsons_corner_store_aisle_food">
+            <name type="in">food aisle</name>
+            <link dist="CLOSE" dir="S" area="wilsons_corner_store_entrance"/>
+            <link dist="CLOSE" dir="N" area="wilsons_corner_store_coolers"/>
+            <link dist="FAR" dir="S" area="wilsons_corner_store_counter"/>
+            <link type="OBSTRUCTED" dist="CLOSE" dir="E" area="wilsons_corner_store_aisle_general"/>
+            <object id="wilsons_corner_store_shelf_snacks" template="store_shelf_snacks"/>
+            <object id="wilsons_corner_store_shelf_meals" template="store_shelf_meals"/>
+            <object id="wilsons_corner_store_shelf_alcohol" template="store_shelf_alcohol"/>
         </area>
-        <area id="fifth_corner_store_coolers">
+        <area id="wilsons_corner_store_aisle_general">
+            <name type="in">general goods aisle</name>
+            <link dist="CLOSE" dir="S" area="wilsons_corner_store_entrance"/>
+            <link dist="CLOSE" dir="N" area="wilsons_corner_store_coolers"/>
+            <link dist="FAR" dir="S" area="wilsons_corner_store_counter"/>
+            <link type="OBSTRUCTED" dist="CLOSE" dir="W" area="wilsons_corner_store_aisle_food"/>
+            <object id="wilsons_corner_store_shelf_medicine" template="store_shelf_medicine"/>
+        </area>
+        <area id="wilsons_corner_store_coolers">
             <name type="near">coolers</name>
             <description>
                 <line>
                     <text>Behind the aisles, a row of illuminated coolers cast a cool white glow across the linoleum floor. The air is colder here than in the rest of the store, and a low hum echoes off the walls. </text>
                 </line>
             </description>
-            <link dist="FAR" dir="S" area="fifth_corner_store_entrance"/>
-            <link dist="CLOSE" dir="S" area="fifth_corner_store_aisle"/>
-            <link dist="FAR" dir="S" area="fifth_corner_store_counter"/>
+            <link dist="FAR" dir="S" area="wilsons_corner_store_entrance"/>
+            <link dist="CLOSE" dir="SW" area="wilsons_corner_store_aisle_food"/>
+            <link dist="CLOSE" dir="SE" area="wilsons_corner_store_aisle_general"/>
+            <link dist="FAR" dir="S" area="wilsons_corner_store_counter"/>
+            <object id="wilsons_corner_store_cooler_soft_drinks" template="store_cooler_soft_drinks"/>
+            <object id="wilsons_corner_store_cooler_alcohol" template="store_cooler_alcohol"/>
         </area>
     </room>
     <room id="archer_burger_restaurant">

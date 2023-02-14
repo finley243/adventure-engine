@@ -13,4 +13,19 @@
             <var2 dataType="int" value="3"/>
         </condition>
     </objectComponent>
+    <objectComponent id="garbage_bin_container" type="container">
+        <inventory>
+            <table countMin="0" countMax="3">junk_random</table>
+        </inventory>
+    </objectComponent>
+    <objectComponent id="store_shelf_snacks_container" type="container">
+        <inventory>
+            <table>store_snacks</table>
+        </inventory>
+    </objectComponent>
+    <objectComponent id="store_cooler_soft_drinks_container" type="container">
+        <inventory>
+            <table>store_soft_drinks</table>
+        </inventory>
+    </objectComponent>
 </data>
