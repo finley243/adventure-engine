@@ -30,11 +30,11 @@ public class ObjectComponentLink extends ObjectComponent {
     }
 
     public WorldObject getLinkedObject() {
-        return getObject().game().data().getObject(getObject().getComponentLink(getID()).getObject());
+        return getObject().game().data().getObject((String) getObject().getComponentParams(getID()).getParameter("object"));
     }
 
     public AreaLink.CompassDirection getDirection() {
-        return getObject().getComponentLink(getID()).getDirection();
+        return (AreaLink.CompassDirection) getObject().getComponentParams(getID()).getParameter("direction");
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
-import com.github.finley243.adventureengine.world.object.component.ComponentLink;
+import com.github.finley243.adventureengine.world.object.params.ComponentParams;
 
 import java.util.List;
 import java.util.Map;
@@ -20,8 +20,8 @@ public class ObjectDoor extends WorldObject {
 	private final AreaLink.CompassDirection direction;
 	private final Lock lock;
 
-	public ObjectDoor(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentLink> linkedObjects, String linkedDoorID, AreaLink.CompassDirection direction, Lock lock) {
-		super(game, ID, templateID, area, startDisabled, startHidden, linkedObjects);
+	public ObjectDoor(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams, String linkedDoorID, AreaLink.CompassDirection direction, Lock lock) {
+		super(game, ID, templateID, area, startDisabled, startHidden, componentParams);
 		this.linkedDoorID = linkedDoorID;
 		this.direction = direction;
 		this.lock = lock;

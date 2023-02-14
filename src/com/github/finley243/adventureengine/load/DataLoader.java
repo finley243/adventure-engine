@@ -33,7 +33,9 @@ import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
-import com.github.finley243.adventureengine.world.object.component.ComponentLink;
+import com.github.finley243.adventureengine.world.object.params.ComponentParams;
+import com.github.finley243.adventureengine.world.object.params.ComponentParamsItemUse;
+import com.github.finley243.adventureengine.world.object.params.ComponentParamsLink;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -737,40 +739,52 @@ public class DataLoader {
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
         boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);
         List<ActionCustom> customUsingActions = loadCustomActions(objectElement, id, "actionUsing");
-        Map<String, ComponentLink> linkedObjects = new HashMap<>();
-        for (Element linkedObjectElement : LoadUtils.directChildrenWithName(objectElement, "link")) {
-            String componentID = LoadUtils.attribute(linkedObjectElement, "component", null);
-            String linkedObjectID = LoadUtils.attribute(linkedObjectElement, "object", null);
-            AreaLink.CompassDirection linkedObjectDirection = LoadUtils.attributeEnum(linkedObjectElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
-            ComponentLink componentLink = new ComponentLink(linkedObjectID, linkedObjectDirection);
-            linkedObjects.put(componentID, componentLink);
+        Map<String, ComponentParams> componentParams = new HashMap<>();
+        for (Element paramsElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
+            String componentID = LoadUtils.attribute(paramsElement, "id", null);
+            ComponentParams paramsObject = loadComponentParams(paramsElement);
+            componentParams.put(componentID, paramsObject);
         }
         switch (type) {
             case "door":
                 String doorLink = LoadUtils.attribute(objectElement, "link", null);
                 AreaLink.CompassDirection doorDirection = LoadUtils.attributeEnum(objectElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
                 Lock doorLock = loadLock(objectElement, id);
-                return new ObjectDoor(game, id, template, area, startDisabled, startHidden, linkedObjects, doorLink, doorDirection, doorLock);
+                return new ObjectDoor(game, id, template, area, startDisabled, startHidden, componentParams, doorLink, doorDirection, doorLock);
             case "elevator":
                 Element floorElement = LoadUtils.singleChildWithName(objectElement, "floor");
                 int floorNumber = LoadUtils.attributeInt(floorElement, "number", 1);
                 String floorName = floorElement.getTextContent();
                 boolean elevatorStartLocked = LoadUtils.attributeBool(objectElement, "startLocked", false);
                 Set<String> linkedElevatorIDs = LoadUtils.setOfTags(objectElement, "link");
-                return new ObjectElevator(game, id, template, area, startDisabled, startHidden, linkedObjects, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
+                return new ObjectElevator(game, id, template, area, startDisabled, startHidden, componentParams, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
             case "chair":
-                return new ObjectChair(game, id, template, area, startDisabled, startHidden, linkedObjects, customUsingActions);
+                return new ObjectChair(game, id, template, area, startDisabled, startHidden, componentParams, customUsingActions);
             case "bed":
-                return new ObjectBed(game, id, template, area, startDisabled, startHidden, linkedObjects, customUsingActions);
+                return new ObjectBed(game, id, template, area, startDisabled, startHidden, componentParams, customUsingActions);
             case "cover":
-                return new ObjectCover(game, id, template, area, startDisabled, startHidden, linkedObjects, customUsingActions);
+                return new ObjectCover(game, id, template, area, startDisabled, startHidden, componentParams, customUsingActions);
             case "vendingMachine":
                 List<String> vendingItems = LoadUtils.listOfTags(objectElement, "item");
-                return new ObjectVendingMachine(game, id, template, area, startDisabled, startHidden, linkedObjects, vendingItems);
+                return new ObjectVendingMachine(game, id, template, area, startDisabled, startHidden, componentParams, vendingItems);
             case "basic":
             default:
-                return new WorldObject(game, id, template, area, startDisabled, startHidden, linkedObjects);
+                return new WorldObject(game, id, template, area, startDisabled, startHidden, componentParams);
         }
+    }
+
+    private static ComponentParams loadComponentParams(Element paramsElement) {
+        String type = LoadUtils.attribute(paramsElement, "type", null);
+        switch (type) {
+            case "link":
+                String linkObject = LoadUtils.attribute(paramsElement, "object", null);
+                AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(paramsElement, "dir", AreaLink.CompassDirection.class, null);
+                return new ComponentParamsLink(linkObject, linkDirection);
+            case "itemUse":
+                Set<String> itemKeys = LoadUtils.setOfTags(paramsElement, "keyItem");
+                return new ComponentParamsItemUse(itemKeys);
+        }
+        return null;
     }
 
     private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) throws ParserConfigurationException, IOException, SAXException {

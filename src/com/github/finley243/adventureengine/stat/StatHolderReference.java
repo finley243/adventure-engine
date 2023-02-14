@@ -28,9 +28,9 @@ public class StatHolderReference {
             case "parentObjectComponent":
                 return context.getParentObject().getComponent(holderLocalID);
             case "linkedObject":
-                return context.game().data().getObject(context.getParentObject().getComponentLink(holderID).getObject());
+                return context.game().data().getObject((String) context.getParentObject().getComponentParams(holderID).getParameter("object"));
             case "linkedObjectComponent":
-                return context.game().data().getObject(context.getParentObject().getComponentLink(holderID).getObject()).getComponent(holderLocalID);
+                return context.game().data().getObject((String) context.getParentObject().getComponentParams(holderID).getParameter("object")).getComponent(holderLocalID);
             case "item":
                 return context.game().data().getItemState(holderID);
             case "area":

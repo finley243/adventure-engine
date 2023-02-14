@@ -30,7 +30,7 @@
         <area id="fifth_corner_store_front" landmark="fifth_corner_store_exterior_door">
             <link type="CORNER" dist="CLOSE" dir="SE" area="archer_corner_store_side"/>
             <object type="basic" id="fifth_corner_store_exterior_door" template="door_basic">
-                <link component="door_link" object="fifth_corner_store_door_exit" dir="E"/>
+                <component type="link" id="door_link" object="fifth_corner_store_door_exit" dir="E"/>
             </object>
         </area>
     </room>

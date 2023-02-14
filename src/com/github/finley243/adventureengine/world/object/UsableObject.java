@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.action.ActionUseStop;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.component.ComponentLink;
+import com.github.finley243.adventureengine.world.object.params.ComponentParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,8 @@ public abstract class UsableObject extends WorldObject {
 	private final List<ActionCustom> customUsingActions;
 	private Actor user;
 
-	public UsableObject(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentLink> linkedObjects, List<ActionCustom> customUsingActions) {
-		super(game, ID, templateID, area, startDisabled, startHidden, linkedObjects);
+	public UsableObject(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams, List<ActionCustom> customUsingActions) {
+		super(game, ID, templateID, area, startDisabled, startHidden, componentParams);
 		this.customUsingActions = customUsingActions;
 	}
 

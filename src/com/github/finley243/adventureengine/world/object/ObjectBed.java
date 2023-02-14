@@ -5,15 +5,15 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionSleep;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.component.ComponentLink;
+import com.github.finley243.adventureengine.world.object.params.ComponentParams;
 
 import java.util.List;
 import java.util.Map;
 
 public class ObjectBed extends UsableObject {
 
-    public ObjectBed(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentLink> linkedObjects, List<ActionCustom> customUsingActions) {
-        super(game, ID, templateID, area, startDisabled, startHidden, linkedObjects, customUsingActions);
+    public ObjectBed(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams, List<ActionCustom> customUsingActions) {
+        super(game, ID, templateID, area, startDisabled, startHidden, componentParams, customUsingActions);
     }
 
     @Override

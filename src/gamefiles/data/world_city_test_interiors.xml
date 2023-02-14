@@ -14,7 +14,7 @@
             <link dist="CLOSE" dir="N" area="fifth_corner_store_aisle"/>
             <link dist="FAR" dir="NE" area="fifth_corner_store_coolers"/>
             <object type="basic" id="fifth_corner_store_door_exit" template="door_locked_easy">
-                <link component="door_link" object="fifth_corner_store_exterior_door" dir="W"/>
+                <component type="link" id="door_link" object="fifth_corner_store_exterior_door" dir="W"/>
             </object>
         </area>
         <area id="fifth_corner_store_counter" landmark="fifth_corner_store_counter">

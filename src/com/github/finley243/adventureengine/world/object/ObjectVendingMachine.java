@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionVendingMachineBuy;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.component.ComponentLink;
+import com.github.finley243.adventureengine.world.object.params.ComponentParams;
 
 import java.util.List;
 import java.util.Map;
@@ -14,8 +14,8 @@ public class ObjectVendingMachine extends WorldObject {
 
 	private final List<String> vendingItems;
 	
-	public ObjectVendingMachine(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentLink> linkedObjects, List<String> vendingItems) {
-		super(game, ID, templateID, area, startDisabled, startHidden, linkedObjects);
+	public ObjectVendingMachine(Game game, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams, List<String> vendingItems) {
+		super(game, ID, templateID, area, startDisabled, startHidden, componentParams);
 		this.vendingItems = vendingItems;
 	}
 
