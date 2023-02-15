@@ -1,4 +1,10 @@
 <data>
+    <objectComponent id="chair" type="usable">
+        <startPhrase>sit</startPhrase>
+        <endPhrase>getUp</endPhrase>
+        <startPrompt>Sit</startPrompt>
+        <endPrompt>Stand</endPrompt>
+    </objectComponent>
     <objectComponent id="door_link" type="link" movable="true" visible="false"/>
     <objectComponent id="door_link_locked" type="link" movable="true" visible="false">
         <condition type="boolean">

@@ -2,7 +2,7 @@
     <room id="street_sinclair_fifth_sixth">
         <name proper="true">Sinclair St</name>
         <area id="sinclair_tech_store_front" landmark="sinclair_tech_store_exterior_door">
-            <object id="sinclair_tech_store_exterior_door" template="door_basic"/>
+            <object id="sinclair_tech_store_exterior_door" template="door_fake"/>
         </area>
     </room>
     <room id="street_archer_fifth_sixth">
@@ -15,13 +15,13 @@
         <area id="archer_apartments_exterior" landmark="archer_apartments_exterior_door">
             <link dist="CLOSE" dir="W" area="wilsons_corner_store_side"/>
             <link dist="CLOSE" dir="E" area="archer_burger_restaurant_front"/>
-            <object id="archer_apartments_exterior_door" template="door_basic"/>
+            <object id="archer_apartments_exterior_door" template="door_fake"/>
         </area>
         <area id="archer_burger_restaurant_front">
             <name type="front">BigBurger</name>
             <link dist="CLOSE" dir="W" area="archer_apartments_exterior"/>
             <link type="CORNER" dist="CLOSE" dir="NE" area="sixth_burger_restaurant_side"/>
-            <object id="archer_burger_restaurant_exterior_door" template="door_basic"/>
+            <object id="archer_burger_restaurant_exterior_door" template="door_fake"/>
             <object id="archer_burger_restaurant_exterior_chair" template="chair_plastic"/>
         </area>
     </room>

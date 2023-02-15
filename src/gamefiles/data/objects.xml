@@ -3,6 +3,9 @@
         <name>door</name>
         <component id="door_link" template="door_link"/>
     </object>
+    <object id="door_fake">
+        <name>door</name>
+    </object>
     <object id="door_locked_easy">
         <name>door</name>
         <component id="door_link" template="door_link_locked"/>
@@ -10,6 +13,7 @@
     </object>
     <object id="chair_plastic">
         <name>plastic chair</name>
+        <component id="chair" template="chair"/>
     </object>
     <object id="counter">
         <name>counter</name>

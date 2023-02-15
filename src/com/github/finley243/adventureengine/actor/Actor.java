@@ -31,8 +31,8 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.UsableObject;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
 
 import java.util.*;
 
@@ -107,7 +107,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	private final TargetingComponent targetingComponent;
 	private final BehaviorComponent behaviorComponent;
 	private int money;
-	private UsableObject usingObject;
+	private ObjectComponentUsable usingObject;
 	private final Set<AreaTarget> areaTargets;
 	private final InvestigateTarget investigateTarget;
 	private int sleepCounter;
@@ -297,7 +297,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	public boolean isInCover() {
-		return isUsingObject() && getUsingObject().userInCover();
+		return isUsingObject() && getUsingObject().getTemplateUsable().userIsInCover();
 	}
 	
 	public Inventory inventory() {
@@ -566,7 +566,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		}
 	}
 	
-	public void startUsingObject(UsableObject object) {
+	public void startUsingObject(ObjectComponentUsable object) {
 		this.usingObject = object;
 	}
 	
@@ -574,7 +574,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		this.usingObject = null;
 	}
 
-	public UsableObject getUsingObject() {
+	public ObjectComponentUsable getUsingObject() {
 		return usingObject;
 	}
 	
@@ -642,7 +642,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			}
 		}
 		if(isUsingObject()) {
-			actions.addAll(getUsingObject().usingActions());
+			actions.addAll(getUsingObject().getUsingActions(this));
 		}
 		if(canMove()) {
 			actions.addAll(getArea().getMoveActions());
@@ -767,7 +767,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	public Set<Area> getVisibleAreas() {
-		if (isUsingObject() && !getUsingObject().userCanSeeOtherAreas()) {
+		if (isUsingObject() && !getUsingObject().getTemplateUsable().userCanSeeOtherAreas()) {
 			return Set.of(getArea());
 		} else {
 			return getArea().getLineOfSightAreas();
@@ -1145,7 +1145,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 				this.apparelComponent.equip((ItemApparel) game().data().getItemState(saveData.getValueString()));
 				break;
 			case "usingObject":
-				startUsingObject((UsableObject) game().data().getObject(saveData.getValueString()));
+				// TODO - Fix broken save data for using object (needs two IDs, the object and the component)
+				//startUsingObject((ObjectComponentUsable) game().data().getObject(saveData.getValueString()).getComponent());
 				break;
 			case "actionPointsUsed":
 				this.actionPointsUsed = saveData.getValueInt();

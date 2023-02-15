@@ -3,8 +3,6 @@ package com.github.finley243.adventureengine.world.object;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.action.ActionUseStart;
-import com.github.finley243.adventureengine.action.ActionUseStop;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -67,15 +65,15 @@ public abstract class UsableObject extends WorldObject {
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = super.localActions(subject);
 		if(isAvailableToUse() && !subject.isUsingObject()) {
-			actions.add(new ActionUseStart(this));
+			//actions.add(new ActionUseStart(this));
 		}
 		return actions;
 	}
 
 	public List<Action> usingActions() {
 		List<Action> actions = new ArrayList<>();
-		actions.add(new ActionUseStop(this));
-		actions.addAll(customUsingActions);
+		//actions.add(new ActionUseStop(this));
+		//actions.addAll(customUsingActions);
 		return actions;
 	}
 

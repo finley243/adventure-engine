@@ -2,13 +2,11 @@ package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionSleep;
-import com.github.finley243.adventureengine.action.ActionUseStart;
+import com.github.finley243.adventureengine.action.ActionUseStartComponent;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.ObjectBed;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class BehaviorSleep extends Behavior {
 
     @Override
     public float actionUtilityOverride(Actor subject, Action action) {
-        if(action instanceof ActionUseStart && ((ActionUseStart) action).getObject() instanceof ObjectBed && ((ActionUseStart) action).getObject().getID().equals(bed)) {
+        if(action instanceof ActionUseStartComponent && ((ActionUseStartComponent) action).getComponent().getObject().getID().equals(bed)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         } else if(action instanceof ActionSleep) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;

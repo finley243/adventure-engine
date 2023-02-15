@@ -807,7 +807,14 @@ public class DataLoader {
                 boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
                 return new ObjectComponentTemplateLink(game, ID, startEnabled, name, linkCondition, linkIsMovable, linkIsVisible);
             case "usable":
-                return new ObjectComponentTemplateUsable(game, ID, startEnabled, name);
+                String usableStartPhrase = LoadUtils.singleTag(componentElement, "startPhrase", null);
+                String usableEndPhrase = LoadUtils.singleTag(componentElement, "endPhrase", null);
+                String usableStartPrompt = LoadUtils.singleTag(componentElement, "startPrompt", null);
+                String usableEndPrompt = LoadUtils.singleTag(componentElement, "endPrompt", null);
+                boolean userIsInCover = LoadUtils.attributeBool(componentElement, "cover", false);
+                boolean userIsHidden = LoadUtils.attributeBool(componentElement, "hidden", false);
+                boolean userCanSeeOtherAreas = LoadUtils.attributeBool(componentElement, "seeOtherAreas", true);
+                return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas);
             case "check":
                 String checkPrompt = LoadUtils.singleTag(componentElement, "prompt", null);
                 boolean checkCanFail = LoadUtils.attributeBool(componentElement, "canFail", false);
