@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionUseStartComponent;
 import com.github.finley243.adventureengine.action.ActionUseEndComponent;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -54,6 +55,12 @@ public class ObjectComponentUsable extends ObjectComponent {
     public List<Action> getUsingActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionUseEndComponent(this));
+        for (ActionCustom usingAction : getTemplateUsable().getUsingActions()) {
+            usingAction.setObject(getObject());
+            if (usingAction.canShow(subject)) {
+                actions.add(usingAction);
+            }
+        }
         return actions;
     }
 

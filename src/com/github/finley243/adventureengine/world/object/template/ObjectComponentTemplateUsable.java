@@ -1,6 +1,9 @@
 package com.github.finley243.adventureengine.world.object.template;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.action.ActionCustom;
+
+import java.util.List;
 
 public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
 
@@ -11,8 +14,9 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
     private final boolean userIsInCover;
     private final boolean userIsHidden;
     private final boolean userCanSeeOtherAreas;
+    private final List<ActionCustom> usingActions;
 
-    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas) {
+    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, List<ActionCustom> usingActions) {
         super(game, ID, startEnabled, name);
         this.startPhrase = startPhrase;
         this.endPhrase = endPhrase;
@@ -21,6 +25,7 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
         this.userIsInCover = userIsInCover;
         this.userIsHidden = userIsHidden;
         this.userCanSeeOtherAreas = userCanSeeOtherAreas;
+        this.usingActions = usingActions;
     }
 
     public String getStartPhrase() {
@@ -49,6 +54,10 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
 
     public boolean userCanSeeOtherAreas() {
         return userCanSeeOtherAreas;
+    }
+
+    public List<ActionCustom> getUsingActions() {
+        return usingActions;
     }
 
 }

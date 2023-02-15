@@ -721,7 +721,7 @@ public class DataLoader {
         Scene description = loadScene(game, LoadUtils.singleChildWithName(objectElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         // TODO - Find way to load object ID for custom actions (needs to be the instance ID, not the template ID)
-        List<ActionCustom> customActions = loadCustomActions(objectElement, null, "action");
+        List<ActionCustom> customActions = loadCustomActions(objectElement, "action");
         Map<String, String> components = new HashMap<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
             String componentID = LoadUtils.attribute(componentElement, "id", null);
@@ -738,7 +738,7 @@ public class DataLoader {
         String id = LoadUtils.attribute(objectElement, "id", null);
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
         boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);
-        List<ActionCustom> customUsingActions = loadCustomActions(objectElement, id, "actionUsing");
+        //List<ActionCustom> customUsingActions = loadCustomActions(objectElement, "actionUsing");
         Map<String, ComponentParams> componentParams = new HashMap<>();
         for (Element paramsElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
             String componentID = LoadUtils.attribute(paramsElement, "id", null);
@@ -814,7 +814,8 @@ public class DataLoader {
                 boolean userIsInCover = LoadUtils.attributeBool(componentElement, "cover", false);
                 boolean userIsHidden = LoadUtils.attributeBool(componentElement, "hidden", false);
                 boolean userCanSeeOtherAreas = LoadUtils.attributeBool(componentElement, "seeOtherAreas", true);
-                return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas);
+                List<ActionCustom> usingActions = loadCustomActions(componentElement, "usingAction");
+                return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, usingActions);
             case "check":
                 String checkPrompt = LoadUtils.singleTag(componentElement, "prompt", null);
                 boolean checkCanFail = LoadUtils.attributeBool(componentElement, "canFail", false);
@@ -848,16 +849,16 @@ public class DataLoader {
         return new Lock(objectID, startLocked, keys, lockpickLevel, hotwireLevel);
     }
 
-    private static List<ActionCustom> loadCustomActions(Element objectElement, String objectID, String elementName) throws ParserConfigurationException, IOException, SAXException {
+    private static List<ActionCustom> loadCustomActions(Element objectElement, String elementName) throws ParserConfigurationException, IOException, SAXException {
         if(objectElement == null) return new ArrayList<>();
         List<ActionCustom> actions = new ArrayList<>();
         for (Element actionElement : LoadUtils.directChildrenWithName(objectElement, elementName)) {
             String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
-            String description = LoadUtils.singleTag(actionElement, "description", null);
+            String phrase = LoadUtils.singleTag(actionElement, "phrase", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
             Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
             Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
-            actions.add(new ActionCustom(prompt, description, objectID, condition, conditionShow, script));
+            actions.add(new ActionCustom(prompt, phrase, condition, conditionShow, script));
         }
         return actions;
     }
