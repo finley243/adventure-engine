@@ -23,4 +23,8 @@
         <name>Wasabi Ginger Nutri-Chips</name>
         <effect>foodBasic</effect>
     </item>
+    <item type="consumable" id="gumball" price="1" consumableType="FOOD">
+        <name>gumball</name>
+        <effect>foodBasic</effect>
+    </item>
 </data>

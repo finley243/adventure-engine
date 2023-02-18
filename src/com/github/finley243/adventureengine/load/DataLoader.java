@@ -511,7 +511,7 @@ public class DataLoader {
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
                 return new ApparelTemplate(game, id, name, description, scripts, price, attackType, apparelSlots, apparelEffects);
             case "consumable":
-                ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "type", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
+                ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "consumableType", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");
                 return new ConsumableTemplate(game, id, name, description, scripts, price, attackType, consumableType, consumableEffects);
             case "weapon":
@@ -834,6 +834,9 @@ public class DataLoader {
                     itemUseData.add(new ObjectComponentTemplateItemUse.ItemUseData(itemID, itemCount, isConsumed));
                 }
                 return new ObjectComponentTemplateItemUse(game, ID, startEnabled, name, itemUsePrompt, itemUseData, itemUsePhrase);
+            case "vending":
+                List<String> vendingItems = LoadUtils.listOfTags(componentElement, "item");
+                return new ObjectComponentTemplateVending(game, ID, startEnabled, name, vendingItems);
             default:
                 throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
         }

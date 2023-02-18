@@ -20,6 +20,8 @@ public class ObjectComponentFactory {
             return new ObjectComponentCheck(ID, object, template.getID());
         } else if (template instanceof ObjectComponentTemplateItemUse) {
             return new ObjectComponentItemUse(ID, object, template.getID());
+        } else if (template instanceof ObjectComponentTemplateVending) {
+            return new ObjectComponentVending(ID, object, template.getID());
         }
         return null;
     }

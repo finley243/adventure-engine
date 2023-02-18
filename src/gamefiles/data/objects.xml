@@ -20,6 +20,7 @@
     </object>
     <object id="gumball_machine">
         <name>gumball machine</name>
+        <component id="vending" template="vending_gumball"/>
     </object>
     <object id="garbage_bin">
         <name>garbage bin</name>

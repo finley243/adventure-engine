@@ -34,4 +34,7 @@
             <table>store_soft_drinks</table>
         </inventory>
     </objectComponent>
+    <objectComponent id="vending_gumball" type="vending">
+        <item>gumball</item>
+    </objectComponent>
 </data>
