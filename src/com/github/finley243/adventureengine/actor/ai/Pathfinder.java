@@ -6,7 +6,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
-import com.github.finley243.adventureengine.world.object.ObjectDoor;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
 
@@ -38,29 +37,30 @@ public class Pathfinder {
 		startPath.add(startArea);
 		paths.add(startPath);
 		hasVisited.add(startArea);
-		while(!paths.isEmpty()) {
+		while (!paths.isEmpty()) {
 			List<Area> currentPath = paths.remove();
 			Area pathEnd = currentPath.get(currentPath.size() - 1);
-			if(targetAreas.contains(pathEnd)) {
+			if (targetAreas.contains(pathEnd)) {
 				return currentPath;
 			}
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
-			//if(pathEnd.getRoom() != targetArea.getRoom()) {
-				for(WorldObject object : pathEnd.getObjects()) {
-					if(object instanceof ObjectDoor) {
-						linkedAreasGlobal.add(((ObjectDoor) object).getLinkedArea());
-					} else if(object instanceof ObjectElevator) {
-						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
-					} else if(object.getLinkComponents().isEmpty()) {
+			//if (pathEnd.getRoom() != targetArea.getRoom()) {
+				for (WorldObject object : pathEnd.getObjects()) {
+					List<ObjectComponentLink> linkComponents = object.getLinkComponents();
+					if (!linkComponents.isEmpty()) {
 						for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
 							linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
 						}
 					}
+					// TODO - Replace with component functionality
+					if (object instanceof ObjectElevator) {
+						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
+					}
 				}
 			//}
 			Collections.shuffle(linkedAreasGlobal);
-			for(Area linkedArea : linkedAreasGlobal) {
-				if(!hasVisited.contains(linkedArea)) {
+			for (Area linkedArea : linkedAreasGlobal) {
+				if (!hasVisited.contains(linkedArea)) {
 					List<Area> linkedPath = new ArrayList<>(currentPath);
 					linkedPath.add(linkedArea);
 					paths.add(linkedPath);
@@ -78,13 +78,13 @@ public class Pathfinder {
 		startPath.add(origin);
 		paths.add(startPath);
 		areasInRange.add(origin);
-		while(!paths.isEmpty()) {
+		while (!paths.isEmpty()) {
 			List<Area> currentPath = paths.remove();
 			Area pathEnd = currentPath.get(currentPath.size() - 1);
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
-			for(Area linkedArea : linkedAreasGlobal) {
-				if(!areasInRange.contains(linkedArea)) {
-					if(currentPath.size() - 1 < range) {
+			for (Area linkedArea : linkedAreasGlobal) {
+				if (!areasInRange.contains(linkedArea)) {
+					if (currentPath.size() - 1 < range) {
 						List<Area> linkedPath = new ArrayList<>(currentPath);
 						linkedPath.add(linkedArea);
 						paths.add(linkedPath);
@@ -104,23 +104,28 @@ public class Pathfinder {
 		startPath.add(origin);
 		paths.add(startPath);
 		visited.add(origin);
-		while(!paths.isEmpty()) {
+		while (!paths.isEmpty()) {
 			List<Area> currentPath = paths.remove();
 			Area pathEnd = currentPath.get(currentPath.size() - 1);
 			actorsInRange.addAll(pathEnd.getActors());
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
-			if(throughExits) {
+			if (throughExits) {
 				for (WorldObject object : pathEnd.getObjects()) {
-					if (object instanceof ObjectDoor) {
-						linkedAreasGlobal.add(((ObjectDoor) object).getLinkedArea());
-					} else if (object instanceof ObjectElevator) {
+					List<ObjectComponentLink> linkComponents = object.getLinkComponents();
+					if (!linkComponents.isEmpty()) {
+						for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
+							linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
+						}
+					}
+					// TODO - Replace with component functionality
+					if (object instanceof ObjectElevator) {
 						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
 					}
 				}
 			}
-			for(Area linkedArea : linkedAreasGlobal) {
-				if(!visited.contains(linkedArea)) {
-					if(currentPath.size() - 1 < range) {
+			for (Area linkedArea : linkedAreasGlobal) {
+				if (!visited.contains(linkedArea)) {
+					if (currentPath.size() - 1 < range) {
 						List<Area> linkedPath = new ArrayList<>(currentPath);
 						linkedPath.add(linkedArea);
 						paths.add(linkedPath);
@@ -137,25 +142,30 @@ public class Pathfinder {
 		Queue<Area> areaQueue = new LinkedList<>();
 		areaQueue.add(origin);
 		visited.add(origin);
-		while(!areaQueue.isEmpty()) {
+		while (!areaQueue.isEmpty()) {
 			Area currentArea = areaQueue.remove();
 			Set<Actor> currentAreaActors = currentArea.getActors();
-			if(!currentAreaActors.isEmpty()) {
+			if (!currentAreaActors.isEmpty()) {
 				return randomActorFromSet(currentAreaActors);
 			}
 			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas());
-			if(throughExits) {
+			if (throughExits) {
 				for (WorldObject object : currentArea.getObjects()) {
-					if (object instanceof ObjectDoor) {
-						linkedAreasGlobal.add(((ObjectDoor) object).getLinkedArea());
-					} else if (object instanceof ObjectElevator) {
+					List<ObjectComponentLink> linkComponents = object.getLinkComponents();
+					if (!linkComponents.isEmpty()) {
+						for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
+							linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
+						}
+					}
+					// TODO - Replace with component functionality
+					if (object instanceof ObjectElevator) {
 						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
 					}
 				}
 			}
 			Collections.shuffle(linkedAreasGlobal);
-			for(Area linkedArea : linkedAreasGlobal) {
-				if(!visited.contains(linkedArea)) {
+			for (Area linkedArea : linkedAreasGlobal) {
+				if (!visited.contains(linkedArea)) {
 					areaQueue.add(linkedArea);
 					visited.add(linkedArea);
 				}
@@ -165,7 +175,7 @@ public class Pathfinder {
 	}
 
 	private static Actor randomActorFromSet(Set<Actor> actors) {
-		if(actors.isEmpty()) return null;
+		if (actors.isEmpty()) return null;
 		List<Actor> actorList = new ArrayList<>(actors);
 		return actorList.get(ThreadLocalRandom.current().nextInt(actorList.size()));
 	}

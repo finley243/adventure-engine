@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionUseStartComponent;
+import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
@@ -31,7 +31,7 @@ public class BehaviorObject extends Behavior {
     @Override
     public float actionUtilityOverride(Actor subject, Action action) {
         // TODO - Allow specifying a component to use (right now, it will select randomly from all usable components)
-        if(action instanceof ActionUseStartComponent && ((ActionUseStartComponent) action).getComponent().getObject().getID().equals(object)) {
+        if(action instanceof ActionObjectUseStart && ((ActionObjectUseStart) action).getComponent().getObject().getID().equals(object)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         }/* else if(action instanceof ActionUseStop && ((ActionUseStop) action).getObject().getID().equals(object)) {
             return 0.0f;

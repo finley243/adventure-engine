@@ -9,7 +9,6 @@ import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.world.object.ObjectVendingMachine;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentVending;
 
 public class ActionObjectVendingBuy extends Action {
