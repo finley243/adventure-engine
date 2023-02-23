@@ -27,7 +27,6 @@ import com.github.finley243.adventureengine.variable.Variable;
 import com.github.finley243.adventureengine.variable.VariableGlobal;
 import com.github.finley243.adventureengine.variable.VariableLiteral;
 import com.github.finley243.adventureengine.variable.VariableStat;
-import com.github.finley243.adventureengine.world.Lock;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -840,16 +839,6 @@ public class DataLoader {
             default:
                 throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
         }
-    }
-
-    private static Lock loadLock(Element objectElement, String objectID) {
-        Element lockElement = LoadUtils.singleChildWithName(objectElement, "lock");
-        if (lockElement == null) return null;
-        boolean startLocked = LoadUtils.attributeBool(lockElement, "startLocked", true);
-        int lockpickLevel = LoadUtils.attributeInt(lockElement, "lockpick", 0);
-        int hotwireLevel = LoadUtils.attributeInt(lockElement, "hotwire", 0);
-        Set<String> keys = LoadUtils.setOfTags(lockElement, "key");
-        return new Lock(objectID, startLocked, keys, lockpickLevel, hotwireLevel);
     }
 
     private static List<ActionCustom> loadCustomActions(Element objectElement, String elementName) throws ParserConfigurationException, IOException, SAXException {
