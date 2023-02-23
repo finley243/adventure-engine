@@ -1,14 +1,12 @@
 package com.github.finley243.adventureengine.world.object.params;
 
-import com.github.finley243.adventureengine.world.object.params.ComponentParams;
-
 import java.util.Set;
 
-public class ComponentParamsItemUse implements ComponentParams {
+public class ComponentParamsKey implements ComponentParams {
 
     private final Set<String> keyItems;
 
-    public ComponentParamsItemUse(Set<String> keyItems) {
+    public ComponentParamsKey(Set<String> keyItems) {
         this.keyItems = keyItems;
     }
 

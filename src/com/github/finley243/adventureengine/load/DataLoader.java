@@ -33,7 +33,7 @@ import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
 import com.github.finley243.adventureengine.world.object.params.ComponentParams;
-import com.github.finley243.adventureengine.world.object.params.ComponentParamsItemUse;
+import com.github.finley243.adventureengine.world.object.params.ComponentParamsKey;
 import com.github.finley243.adventureengine.world.object.params.ComponentParamsLink;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
@@ -733,43 +733,15 @@ public class DataLoader {
     private static WorldObject loadObject(Game game, Element objectElement, Area area) throws ParserConfigurationException, IOException, SAXException {
         if(objectElement == null) return null;
         String template = LoadUtils.attribute(objectElement, "template", null);
-        String type = LoadUtils.attribute(objectElement, "type", null);
         String id = LoadUtils.attribute(objectElement, "id", null);
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
         boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);
-        //List<ActionCustom> customUsingActions = loadCustomActions(objectElement, "actionUsing");
         Map<String, ComponentParams> componentParams = new HashMap<>();
         for (Element paramsElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
             String componentID = LoadUtils.attribute(paramsElement, "id", null);
             ComponentParams paramsObject = loadComponentParams(paramsElement);
             componentParams.put(componentID, paramsObject);
         }
-        /*switch (type) {
-            case "door":
-                String doorLink = LoadUtils.attribute(objectElement, "link", null);
-                AreaLink.CompassDirection doorDirection = LoadUtils.attributeEnum(objectElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
-                Lock doorLock = loadLock(objectElement, id);
-                return new ObjectDoor(game, id, template, area, startDisabled, startHidden, componentParams, doorLink, doorDirection, doorLock);
-            case "elevator":
-                Element floorElement = LoadUtils.singleChildWithName(objectElement, "floor");
-                int floorNumber = LoadUtils.attributeInt(floorElement, "number", 1);
-                String floorName = floorElement.getTextContent();
-                boolean elevatorStartLocked = LoadUtils.attributeBool(objectElement, "startLocked", false);
-                Set<String> linkedElevatorIDs = LoadUtils.setOfTags(objectElement, "link");
-                return new ObjectElevator(game, id, template, area, startDisabled, startHidden, componentParams, floorNumber, floorName, linkedElevatorIDs, elevatorStartLocked);
-            case "chair":
-                return new ObjectChair(game, id, template, area, startDisabled, startHidden, componentParams, customUsingActions);
-            case "bed":
-                return new ObjectBed(game, id, template, area, startDisabled, startHidden, componentParams, customUsingActions);
-            case "cover":
-                return new ObjectCover(game, id, template, area, startDisabled, startHidden, componentParams, customUsingActions);
-            case "vendingMachine":
-                List<String> vendingItems = LoadUtils.listOfTags(objectElement, "item");
-                return new ObjectVendingMachine(game, id, template, area, startDisabled, startHidden, componentParams, vendingItems);
-            case "basic":
-            default:
-                return new WorldObject(game, id, template, area, startDisabled, startHidden, componentParams);
-        }*/
         return new WorldObject(game, id, template, area, startDisabled, startHidden, componentParams);
     }
 
@@ -780,9 +752,9 @@ public class DataLoader {
                 String linkObject = LoadUtils.attribute(paramsElement, "object", null);
                 AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(paramsElement, "dir", AreaLink.CompassDirection.class, null);
                 return new ComponentParamsLink(linkObject, linkDirection);
-            case "itemUse":
-                Set<String> itemKeys = LoadUtils.setOfTags(paramsElement, "keyItem");
-                return new ComponentParamsItemUse(itemKeys);
+            case "key":
+                Set<String> keyItems = LoadUtils.setOfTags(paramsElement, "item");
+                return new ComponentParamsKey(keyItems);
         }
         return null;
     }
@@ -833,6 +805,10 @@ public class DataLoader {
                     itemUseData.add(new ObjectComponentTemplateItemUse.ItemUseData(itemID, itemCount, isConsumed));
                 }
                 return new ObjectComponentTemplateItemUse(game, ID, startEnabled, name, itemUsePrompt, itemUseData, itemUsePhrase);
+            case "key":
+                String keyPrompt = LoadUtils.singleTag(componentElement, "prompt", null);
+                String keyPhrase = LoadUtils.singleTag(componentElement, "phrase", null);
+                return new ObjectComponentTemplateKey(game, ID, startEnabled, name, keyPrompt, keyPhrase);
             case "vending":
                 List<String> vendingItems = LoadUtils.listOfTags(componentElement, "item");
                 return new ObjectComponentTemplateVending(game, ID, startEnabled, name, vendingItems);
