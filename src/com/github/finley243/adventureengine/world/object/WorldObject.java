@@ -36,6 +36,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Map<String, ObjectComponent> components;
 	// Key: component ID, Value: linked object and parameters
 	private final Map<String, ComponentParams> componentParams;
+	private final Map<String, Boolean> localVarsBool;
 	
 	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams) {
 		super(gameInstance, ID);
@@ -46,6 +47,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
 		this.componentParams = componentParams;
+		this.localVarsBool = new HashMap<>();
 		setEnabled(!startDisabled);
 	}
 
@@ -236,8 +238,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				return isHidden;
 			case "guarded":
 				return isGuarded();
+			default:
+				return localVarsBool.getOrDefault(name, false);
 		}
-		return false;
 	}
 
 	@Override
@@ -276,6 +279,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				break;
 			case "hidden":
 				isHidden = value;
+				break;
+			default:
+				localVarsBool.put(name, value);
 				break;
 		}
 	}
