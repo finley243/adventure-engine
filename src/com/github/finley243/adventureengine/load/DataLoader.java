@@ -281,9 +281,9 @@ public class DataLoader {
                 String itemEquipExact = LoadUtils.attribute(conditionElement, "exact", null);
                 return new ConditionEquippedItem(invert, actorRef, itemEquipTag, itemEquipExact);
             case "inventoryItem":
-                String itemInvTag = LoadUtils.attribute(conditionElement, "tag", null);
-                String itemInvExact = LoadUtils.attribute(conditionElement, "exact", null);
-                return new ConditionInventoryItem(invert, actorRef, itemInvTag, itemInvExact);
+                Variable invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varInv"));
+                String invItemID = LoadUtils.attribute(conditionElement, "exact", null);
+                return new ConditionInventoryItem(invert, invItemVar, invItemID);
             case "actorVisible":
                 ActorReference visibleTargetRef = loadActorReference(conditionElement, "target");
                 return new ConditionActorVisible(invert, actorRef, visibleTargetRef);
@@ -402,14 +402,16 @@ public class DataLoader {
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
                 return new ScriptExternal(condition, scriptID);
             case "addItem":
+                Variable addItemInv = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInv"));
                 String addItemID = LoadUtils.attribute(scriptElement, "item", null);
-                return new ScriptAddItem(condition, actorRef, addItemID);
+                return new ScriptAddItem(condition, addItemInv, addItemID);
             case "transferItem":
-                ActorReference transferTargetRef = loadActorReference(scriptElement, "target");
+                Variable transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvOrigin"));
+                Variable transferItemInvTarget = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvTarget"));
                 String transferItemID = LoadUtils.attribute(scriptElement, "item", null);
-                String transferItemSelect = LoadUtils.attribute(scriptElement, "select", null);
+                boolean transferItemAll = LoadUtils.attributeBool(scriptElement, "all", false);
                 int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);
-                return new ScriptTransferItem(condition, actorRef, transferTargetRef, transferItemID, transferItemSelect, transferItemCount);
+                return new ScriptTransferItem(condition, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferItemAll, transferItemCount);
             case "scene":
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
                 return new ScriptScene(condition, actorRef, scenes);
@@ -730,7 +732,7 @@ public class DataLoader {
         return new ObjectTemplate(game, ID, name, description, scripts, customActions, components);
     }
 
-    private static WorldObject loadObject(Game game, Element objectElement, Area area) throws ParserConfigurationException, IOException, SAXException {
+    private static WorldObject loadObject(Game game, Element objectElement, Area area) {
         if(objectElement == null) return null;
         String template = LoadUtils.attribute(objectElement, "template", null);
         String id = LoadUtils.attribute(objectElement, "id", null);

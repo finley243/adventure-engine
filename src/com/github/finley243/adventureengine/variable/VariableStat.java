@@ -31,6 +31,8 @@ public class VariableStat extends Variable {
                 return DataType.STRING;
             case "stringSet":
                 return DataType.STRING_SET;
+            case "inventory":
+                return DataType.INVENTORY;
             default:
                 return null;
         }
