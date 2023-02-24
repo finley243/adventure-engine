@@ -242,8 +242,8 @@ public class TargetingComponent {
     }
 
     private Set<AreaLink.DistanceCategory> idealDistances() {
-        if (actor.equipmentComponent() != null && actor.equipmentComponent().hasEquippedItem() && actor.equipmentComponent().getEquippedItem() instanceof ItemWeapon) {
-            return ((ItemWeapon) actor.equipmentComponent().getEquippedItem()).getRanges();
+        if (actor.getEquipmentComponent() != null && actor.getEquipmentComponent().hasEquippedItem() && actor.getEquipmentComponent().getEquippedItem() instanceof ItemWeapon) {
+            return ((ItemWeapon) actor.getEquipmentComponent().getEquippedItem()).getRanges();
         } else {
             return Set.of(AreaLink.DistanceCategory.NEAR);
         }

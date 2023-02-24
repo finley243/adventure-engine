@@ -23,14 +23,14 @@ public class ActionItemEquip extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.equipmentComponent().equip(item);
+		subject.getEquipmentComponent().equip(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, this, null, subject, null));
 	}
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && !subject.equipmentComponent().hasEquippedItem();
+		return super.canChoose(subject) && !subject.getEquipmentComponent().hasEquippedItem();
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class ActionItemEquip extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Equip", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)}, new String[]{"equip " + item.getName(), "pull out " + item.getName(), "take out " + item.getName()});
+		return new MenuChoice("Equip", canChoose(subject), new String[]{"inventory", item.getName() + subject.getInventory().itemCountLabel(item)}, new String[]{"equip " + item.getName(), "pull out " + item.getName(), "take out " + item.getName()});
 	}
 
 	@Override

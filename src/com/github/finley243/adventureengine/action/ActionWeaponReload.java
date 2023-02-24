@@ -30,15 +30,15 @@ public class ActionWeaponReload extends Action {
 		subject.triggerScript("on_reload", subject);
 		if (subject == subject.game().data().getPlayer()) {
 			if (!ammoType.equals(weapon.getLoadedAmmoType()) && weapon.getAmmoRemaining() > 0) {
-				subject.inventory().addItems(ammoType, weapon.getAmmoRemaining());
+				subject.getInventory().addItems(ammoType, weapon.getAmmoRemaining());
 				weapon.emptyAmmo();
 			}
-			int ammoInInventory = subject.inventory().itemCount(ammoType);
+			int ammoInInventory = subject.getInventory().itemCount(ammoType);
 			int reloadAmount = Math.min(weapon.reloadCapacity(), ammoInInventory);
 			weapon.loadAmmo(reloadAmount);
 			weapon.setLoadedAmmoType(ammoType);
 			ammoType.onLoad(weapon);
-			subject.inventory().removeItems(ammoType, reloadAmount);
+			subject.getInventory().removeItems(ammoType, reloadAmount);
 		} else {
 			weapon.loadAmmo(weapon.reloadCapacity());
 		}
@@ -48,7 +48,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && (weapon.getAmmoFraction() < 1.0f || weapon.getLoadedAmmoType() == null || !weapon.getLoadedAmmoType().getTemplate().equals(ammoType.getTemplate())) && (subject != subject.game().data().getPlayer() || subject.inventory().hasItem(ammoType.getTemplate().getID()));
+		return super.canChoose(subject) && (weapon.getAmmoFraction() < 1.0f || weapon.getLoadedAmmoType() == null || !weapon.getLoadedAmmoType().getTemplate().equals(ammoType.getTemplate())) && (subject != subject.game().data().getPlayer() || subject.getInventory().hasItem(ammoType.getTemplate().getID()));
 	}
 
 	@Override

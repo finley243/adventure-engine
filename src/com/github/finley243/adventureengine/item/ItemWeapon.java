@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
@@ -306,7 +307,7 @@ public class ItemWeapon extends ItemEquippable {
 			int difference = ammoCount - getClipSize();
 			ammoCount = getClipSize();
 			if (getEquippedActor() != null) {
-				getEquippedActor().inventory().addItems(ammoType, difference);
+				getEquippedActor().getInventory().addItems(ammoType, difference);
 			}
 		}
 	}
@@ -320,6 +321,11 @@ public class ItemWeapon extends ItemEquippable {
 
 	@Override
 	public void triggerEffect(String name) {}
+
+	@Override
+	public Inventory getInventory() {
+		return null;
+	}
 
 	public void addEffect(Effect effect) {
 		if (effect.isInstant()) {

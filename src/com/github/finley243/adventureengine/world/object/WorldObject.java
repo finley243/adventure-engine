@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.*;
@@ -158,7 +159,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	public boolean isGuarded() {
 		for (Actor actor : getArea().getActors()) {
-			if (actor.behaviorComponent().isGuarding(this)) {
+			if (actor.getBehaviorComponent().isGuarding(this)) {
 				return true;
 			}
 		}
@@ -323,6 +324,11 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public void triggerEffect(String name) {
 
+	}
+
+	@Override
+	public Inventory getInventory() {
+		return null;
 	}
 
 	public void loadState(SaveData saveData) {

@@ -29,7 +29,7 @@ public class ActionInventoryStore extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        subject.inventory().removeItem(item);
+        subject.getInventory().removeItem(item);
         inventory.addItem(item);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("inventory", owner).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((isExposed ? "placeOn" : "storeIn")), context, this, null, subject, null));
@@ -44,9 +44,9 @@ public class ActionInventoryStore extends Action {
     public MenuChoice getMenuChoices(Actor subject) {
         String[] menuPath;
         if (name == null) {
-            menuPath = new String[]{owner.getName(), "transfer", item.getName() + subject.inventory().itemCountLabel(item)};
+            menuPath = new String[]{owner.getName(), "transfer", item.getName() + subject.getInventory().itemCountLabel(item)};
         } else {
-            menuPath = new String[]{owner.getName(), name, "transfer", item.getName() + subject.inventory().itemCountLabel(item)};
+            menuPath = new String[]{owner.getName(), name, "transfer", item.getName() + subject.getInventory().itemCountLabel(item)};
         }
         return new MenuChoice((isExposed ? "Place" : "Store"), canChoose(subject), menuPath, new String[]{"store " + item.getName() + " in " + owner.getName(), "place " + item.getName() + " on " + owner.getName(), "put " + item.getName() + " in " + owner.getName(), "put " + item.getName() + " on " + owner.getName()});
     }

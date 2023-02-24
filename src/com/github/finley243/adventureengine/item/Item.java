@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.action.ActionInspectItem;
 import com.github.finley243.adventureengine.action.ActionItemDrop;
 import com.github.finley243.adventureengine.action.ActionItemDropAll;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -84,7 +85,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionItemDrop(this));
-		if (subject.inventory().itemCount(this) > 1) {
+		if (subject.getInventory().itemCount(this) > 1) {
 			actions.add(new ActionItemDropAll(this));
 		}
 		if (this.getDescription() != null) {
@@ -195,6 +196,11 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public void triggerEffect(String name) {
 
+	}
+
+	@Override
+	public Inventory getInventory() {
+		return null;
 	}
 
 	public void loadState(SaveData saveData) {}

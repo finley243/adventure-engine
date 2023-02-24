@@ -49,7 +49,7 @@ public class VendorComponent {
             actions.add(new ActionVendorBuy(vendor, vendorInventory, item, item.getTemplate().getPrice()));
         }
         if(!buyTags.isEmpty() || buyAll) {
-            for (Item item : subject.inventory().getItems()) {
+            for (Item item : subject.getInventory().getItems()) {
                 boolean canBuy = buyAll;
                 if(!canBuy) {
                     // TODO - Optimize checks?

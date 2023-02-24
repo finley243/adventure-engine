@@ -1,13 +1,14 @@
 package com.github.finley243.adventureengine.variable;
 
 import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.actor.Inventory;
 
 import java.util.Set;
 
 public abstract class Variable {
 
     public enum DataType {
-        BOOLEAN, INTEGER, FLOAT, STRING, STRING_SET
+        BOOLEAN, INTEGER, FLOAT, STRING, STRING_SET, INVENTORY
     }
 
     public abstract DataType getDataType();
@@ -22,8 +23,12 @@ public abstract class Variable {
 
     public abstract Set<String> getValueStringSet(ContextScript context);
 
+    public abstract Inventory getValueInventory(ContextScript context);
+
     public boolean canCompareTo(Variable other) {
         if (this.getDataType() == DataType.STRING_SET || other.getDataType() == DataType.STRING_SET) {
+            return false;
+        } else if (this.getDataType() == DataType.INVENTORY || other.getDataType() == DataType.INVENTORY) {
             return false;
         }
         if (this.getDataType() == DataType.INTEGER || this.getDataType() == DataType.FLOAT) {

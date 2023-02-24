@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemApparel;
@@ -13,7 +12,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.*;
 
-public class Inventory implements StatHolder {
+public class Inventory {
 
 	private final Game game;
 	// If inventory belongs to an object or secondary component (e.g. vendor inventory), actor will be null
@@ -131,10 +130,10 @@ public class Inventory implements StatHolder {
 				}
 				if (wasRemoved && actor != null) {
 					if (item instanceof ItemApparel) {
-						actor.apparelComponent().unequip((ItemApparel) item);
+						actor.getApparelComponent().unequip((ItemApparel) item);
 					}
 					if (item instanceof ItemEquippable) {
-						actor.equipmentComponent().unequip((ItemEquippable) item);
+						actor.getEquipmentComponent().unequip((ItemEquippable) item);
 					}
 				}
 			}
@@ -146,10 +145,10 @@ public class Inventory implements StatHolder {
 					itemsStateless.remove(item.getTemplate().getID());
 					if (actor != null) {
 						if (item instanceof ItemApparel) {
-							actor.apparelComponent().unequip((ItemApparel) item);
+							actor.getApparelComponent().unequip((ItemApparel) item);
 						}
 						if (item instanceof ItemEquippable) {
-							actor.equipmentComponent().unequip((ItemEquippable) item);
+							actor.getEquipmentComponent().unequip((ItemEquippable) item);
 						}
 					}
 				} else {
@@ -169,10 +168,10 @@ public class Inventory implements StatHolder {
 				itemsStateless.remove(item.getTemplate().getID());
 				if (actor != null) {
 					if (item instanceof ItemApparel) {
-						actor.apparelComponent().unequip((ItemApparel) item);
+						actor.getApparelComponent().unequip((ItemApparel) item);
 					}
 					if (item instanceof ItemEquippable) {
-						actor.equipmentComponent().unequip((ItemEquippable) item);
+						actor.getEquipmentComponent().unequip((ItemEquippable) item);
 					}
 				}
 			} else {
@@ -264,7 +263,7 @@ public class Inventory implements StatHolder {
 			}
 		}
 		if (subject != null) {
-			actions.addAll(subject.inventory().getStoreActions(owner, name, this, isExposed));
+			actions.addAll(subject.getInventory().getStoreActions(owner, name, this, isExposed));
 		}
 		return actions;
 	}
@@ -312,101 +311,6 @@ public class Inventory implements StatHolder {
 			state.add(new SaveData(null, null, "itemStateless", itemType, itemsStateless.get(itemType)));
 		}
 		return state;
-	}
-
-	@Override
-	public StatInt getStatInt(String name) {
-		return null;
-	}
-
-	@Override
-	public StatFloat getStatFloat(String name) {
-		return null;
-	}
-
-	@Override
-	public StatBoolean getStatBoolean(String name) {
-		return null;
-	}
-
-	@Override
-	public StatString getStatString(String name) {
-		return null;
-	}
-
-	@Override
-	public StatStringSet getStatStringSet(String name) {
-		return null;
-	}
-
-	@Override
-	public void onStatChange() {
-
-	}
-
-	@Override
-	public int getValueInt(String name) {
-		return itemCount(name);
-	}
-
-	@Override
-	public float getValueFloat(String name) {
-		return 0;
-	}
-
-	@Override
-	public boolean getValueBoolean(String name) {
-		return hasItem(name);
-	}
-
-	@Override
-	public String getValueString(String name) {
-		return null;
-	}
-
-	@Override
-	public Set<String> getValueStringSet(String name) {
-		return null;
-	}
-
-	@Override
-	public void setStateBoolean(String name, boolean value) {
-
-	}
-
-	@Override
-	public void setStateInteger(String name, int value) {
-
-	}
-
-	@Override
-	public void setStateFloat(String name, float value) {
-
-	}
-
-	@Override
-	public void setStateString(String name, String value) {
-
-	}
-
-	@Override
-	public void setStateStringSet(String name, Set<String> value) {
-
-	}
-
-	@Override
-	public void modStateInteger(String name, int amount) {
-
-	}
-
-	@Override
-	public void modStateFloat(String name, float amount) {
-
-	}
-
-	@Override
-	public void triggerEffect(String name) {
-
 	}
 
 }

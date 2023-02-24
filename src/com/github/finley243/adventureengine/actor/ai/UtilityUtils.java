@@ -29,12 +29,12 @@ public class UtilityUtils {
 	}
 
 	public static float getCoverUtility(Actor subject) {
-		if(subject.targetingComponent() == null) return 0.0f;
+		if(subject.getTargetingComponent() == null) return 0.0f;
 		int targetsBlocked = 0;
 		int totalTargets = 0;
-		for(Actor target : subject.targetingComponent().getCombatants()) {
-			Area lastKnownArea = subject.targetingComponent().getLastKnownArea(target);
-			if (target.equipmentComponent().hasRangedWeaponEquipped() && lastKnownArea != null && lastKnownArea != subject.getArea()) {
+		for(Actor target : subject.getTargetingComponent().getCombatants()) {
+			Area lastKnownArea = subject.getTargetingComponent().getLastKnownArea(target);
+			if (target.getEquipmentComponent().hasRangedWeaponEquipped() && lastKnownArea != null && lastKnownArea != subject.getArea()) {
 				targetsBlocked++;
 			}
 			totalTargets++;
@@ -45,9 +45,9 @@ public class UtilityUtils {
 	public static float getPursueTargetUtility(Actor subject, Actor target) {
 		if (subject.canSee(target)) {
 			return PURSUE_TARGET_UTILITY_INVISIBLE;
-		} else if (subject.equipmentComponent().hasRangedWeaponEquipped()) {
+		} else if (subject.getEquipmentComponent().hasRangedWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_RANGED;
-		} else if(subject.equipmentComponent().hasMeleeWeaponEquipped()) {
+		} else if(subject.getEquipmentComponent().hasMeleeWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_MELEE;
 		} else {
 			return PURSUE_TARGET_UTILITY_UNARMED;
@@ -64,7 +64,7 @@ public class UtilityUtils {
 		for(Action currentAction : actions) {
 			if(currentAction.canChoose(actor)) {
 				float currentWeight = currentAction.utility(actor);
-				float behaviorOverride = actor.behaviorComponent().actionUtilityOverride(currentAction);
+				float behaviorOverride = actor.getBehaviorComponent().actionUtilityOverride(currentAction);
 				if(behaviorOverride >= 0.0f) {
 					currentWeight = behaviorOverride;
 				}

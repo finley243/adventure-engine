@@ -299,12 +299,13 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	public boolean isInCover() {
 		return isUsingObject() && getUsingObject().getTemplateUsable().userIsInCover();
 	}
-	
-	public Inventory inventory() {
+
+	@Override
+	public Inventory getInventory() {
 		return inventory;
 	}
 
-	public ApparelComponent apparelComponent() {
+	public ApparelComponent getApparelComponent() {
 		return apparelComponent;
 	}
 
@@ -312,7 +313,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		return getTemplate().getLimbs();
 	}
 	
-	public EquipmentComponent equipmentComponent() {
+	public EquipmentComponent getEquipmentComponent() {
 		return equipmentComponent;
 	}
 
@@ -324,11 +325,11 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		money += value;
 	}
 
-	public EffectComponent effectComponent() {
+	public EffectComponent getEffectComponent() {
 		return effectComponent;
 	}
 
-	public BehaviorComponent behaviorComponent() {
+	public BehaviorComponent getBehaviorComponent() {
 		return behaviorComponent;
 	}
 
@@ -599,7 +600,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		return false;
 	}
 
-	public TargetingComponent targetingComponent() {
+	public TargetingComponent getTargetingComponent() {
 		return targetingComponent;
 	}
 	
@@ -676,15 +677,15 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			updateSleep();
 			return;
 		}
-		if (effectComponent() != null) {
-			effectComponent().onStartTurn();
+		if (getEffectComponent() != null) {
+			getEffectComponent().onStartTurn();
 		}
-		if (targetingComponent() != null) {
-			targetingComponent().updateTurn();
+		if (getTargetingComponent() != null) {
+			getTargetingComponent().updateTurn();
 		}
 		investigateTarget.nextTurn(this);
-		if (behaviorComponent() != null) {
-			behaviorComponent().update();
+		if (getBehaviorComponent() != null) {
+			getBehaviorComponent().update();
 		}
 		this.actionPointsUsed = 0;
 		this.blockedActions.clear();
@@ -693,7 +694,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		int repeatActionCount = 0;
 		while (!endTurn) {
 			updatePursueTargets();
-			targetingComponent().update();
+			getTargetingComponent().update();
 			investigateTarget.update(this);
 			List<Action> availableActions = availableActions();
 			for (Action action : availableActions) {
@@ -743,8 +744,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	private void playIdle() {
-		if (behaviorComponent() != null) {
-			Idle idle = behaviorComponent().getIdle();
+		if (getBehaviorComponent() != null) {
+			Idle idle = getBehaviorComponent().getIdle();
 			if (idle != null) {
 				idle.trigger(this);
 			}

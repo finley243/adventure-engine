@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -247,6 +248,11 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public void triggerEffect(String name) {
 
+	}
+
+	@Override
+	public Inventory getInventory() {
+		return null;
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {

@@ -26,7 +26,7 @@ public class ActionObjectVendingBuy extends Action {
 	public void choose(Actor subject, int repeatActionCount) {
 		Item item = ItemFactory.create(subject.game(), itemID);
 		subject.adjustMoney(-item.getTemplate().getPrice());
-		subject.inventory().addItem(item);
+		subject.getInventory().addItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", component.getObject()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("buy"), context, this, null, subject, null));
 	}

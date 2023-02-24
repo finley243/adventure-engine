@@ -33,7 +33,7 @@ public class ActionObjectKey extends Action {
             return false;
         }
         for (String keyItem : componentKey.getKeyItems()) {
-            if (subject.inventory().hasItem(keyItem)) {
+            if (subject.getInventory().hasItem(keyItem)) {
                 return true;
             }
         }

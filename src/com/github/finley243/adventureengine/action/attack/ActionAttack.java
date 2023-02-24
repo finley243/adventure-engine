@@ -162,8 +162,8 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     public void onEnd(Actor subject, int repeatActionCount) {
         // TODO - Use illegal action system to add targets if detected
         for (AttackTarget target : targets) {
-            if (target instanceof Actor && ((Actor) target).targetingComponent() != null) {
-                ((Actor) target).targetingComponent().addCombatant(subject);
+            if (target instanceof Actor && ((Actor) target).getTargetingComponent() != null) {
+                ((Actor) target).getTargetingComponent().addCombatant(subject);
             }
         }
     }
@@ -209,9 +209,9 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public float utility(Actor subject) {
-        if (subject.targetingComponent() == null) return 0.0f;
+        if (subject.getTargetingComponent() == null) return 0.0f;
         for (AttackTarget target : targets) {
-            if (target instanceof Actor && subject.targetingComponent().isCombatant((Actor) target)) {
+            if (target instanceof Actor && subject.getTargetingComponent().isCombatant((Actor) target)) {
                 return 0.8f;
             }
         }

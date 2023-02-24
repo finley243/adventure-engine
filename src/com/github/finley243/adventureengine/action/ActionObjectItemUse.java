@@ -22,7 +22,7 @@ public class ActionObjectItemUse extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         for (ObjectComponentTemplateItemUse.ItemUseData itemUseData : componentItemUse.getTemplateItemUse().getItemUseData()) {
             if (itemUseData.isConsumed) {
-                subject.inventory().removeItems(itemUseData.itemID, itemUseData.count);
+                subject.getInventory().removeItems(itemUseData.itemID, itemUseData.count);
             }
         }
         componentItemUse.setStateBoolean("succeeded", true);
@@ -40,7 +40,7 @@ public class ActionObjectItemUse extends Action {
             return false;
         }
         for (ObjectComponentTemplateItemUse.ItemUseData itemUseData : componentItemUse.getTemplateItemUse().getItemUseData()) {
-            if (!subject.inventory().hasItems(itemUseData.itemID, itemUseData.count)) {
+            if (!subject.getInventory().hasItems(itemUseData.itemID, itemUseData.count)) {
                 return false;
             }
         }

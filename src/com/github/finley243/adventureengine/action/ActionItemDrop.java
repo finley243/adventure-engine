@@ -19,7 +19,7 @@ public class ActionItemDrop extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.inventory().removeItem(item);
+		subject.getInventory().removeItem(item);
 		//Item.itemToObject(subject.game(), item, 1, subject.getArea());
 		subject.getArea().getInventory().addItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
@@ -33,7 +33,7 @@ public class ActionItemDrop extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Drop", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)}, new String[]{"drop " + item.getName()});
+		return new MenuChoice("Drop", canChoose(subject), new String[]{"inventory", item.getName() + subject.getInventory().itemCountLabel(item)}, new String[]{"drop " + item.getName()});
 	}
 
 	@Override

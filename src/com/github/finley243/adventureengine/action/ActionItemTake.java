@@ -25,7 +25,7 @@ public class ActionItemTake extends Action {
 	public void choose(Actor subject, int repeatActionCount) {
 		//Item item = Item.objectToItem(subject.game(), objectItem, 1);
 		area.getInventory().removeItem(item);
-		subject.inventory().addItem(item);
+		subject.getInventory().addItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, this, null, subject, null));
 	}

@@ -29,7 +29,7 @@ public class ActionVendorBuy extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         vendorInventory.removeItem(item);
         subject.adjustMoney(-price);
-        subject.inventory().addItem(item);
+        subject.getInventory().addItem(item);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", vendor).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("buy"), context, this, null, subject, null));
     }

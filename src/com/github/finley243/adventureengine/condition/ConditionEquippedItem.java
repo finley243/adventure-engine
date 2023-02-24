@@ -20,7 +20,7 @@ public class ConditionEquippedItem extends Condition {
 
 	@Override
 	public boolean isMetInternal(ContextScript context) {
-		Item equippedItem = actor.getActor(context).equipmentComponent().getEquippedItem();
+		Item equippedItem = actor.getActor(context).getEquipmentComponent().getEquippedItem();
 		if(equippedItem == null) return false;
 		if(itemID != null) {
 			return equippedItem.getTemplate().getID().equals(itemID);

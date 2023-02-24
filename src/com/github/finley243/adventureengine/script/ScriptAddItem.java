@@ -20,7 +20,7 @@ public class ScriptAddItem extends Script {
 	@Override
 	public void executeSuccess(ContextScript context) {
 		Item item = ItemFactory.create(context.game(), context.game().data().getItem(itemID));
-		actor.getActor(context).inventory().addItem(item);
+		actor.getActor(context).getInventory().addItem(item);
 	}
 	
 }

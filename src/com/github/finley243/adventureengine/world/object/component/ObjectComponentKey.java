@@ -31,6 +31,7 @@ public class ObjectComponentKey extends ObjectComponent {
         return (ObjectComponentTemplateKey) getObject().game().data().getObjectComponentTemplate(templateID);
     }
 
+    @SuppressWarnings("unchecked")
     public Set<String> getKeyItems() {
         return (Set<String>) getObject().getComponentParams(getID()).getParameter("keyItems");
     }

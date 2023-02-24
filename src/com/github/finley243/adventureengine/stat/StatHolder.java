@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
+import com.github.finley243.adventureengine.actor.Inventory;
+
 import java.util.Set;
 
 public interface StatHolder {
@@ -41,5 +43,7 @@ public interface StatHolder {
     void modStateFloat(String name, float amount);
 
     void triggerEffect(String name);
+
+    Inventory getInventory();
 
 }

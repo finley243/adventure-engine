@@ -39,14 +39,6 @@ public class StatHolderReference {
                 return context.game().data().getRoom(holderID);
             case "scene":
                 return context.game().data().getScene(holderID);
-            case "playerInventory":
-                return context.game().data().getPlayer().inventory();
-            case "subjectInventory":
-                return context.getSubject().inventory();
-            case "targetInventory":
-                return context.getTarget().inventory();
-            case "actorInventory":
-                return context.game().data().getActor(holderID).inventory();
             case "player":
                 return context.game().data().getPlayer();
             case "target":

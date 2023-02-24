@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.variable;
 
 import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.actor.Inventory;
 
 import java.util.Set;
 
@@ -109,6 +110,11 @@ public class VariableLiteral extends Variable {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
         if (valueStringSet == null) throw new UnsupportedOperationException();
         return valueStringSet;
+    }
+
+    @Override
+    public Inventory getValueInventory(ContextScript context) {
+        throw new UnsupportedOperationException("Inventory can not be referenced as a literal variable");
     }
 
 }

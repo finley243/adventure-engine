@@ -27,8 +27,8 @@ public class ActionInventoryStoreAll extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        int count = subject.inventory().itemCount(item);
-        subject.inventory().removeItems(item, count);
+        int count = subject.getInventory().itemCount(item);
+        subject.getInventory().removeItems(item, count);
         inventory.addItems(item, count);
         Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((isExposed ? "placeOn" : "storeIn")), context, this, null, subject, null));
@@ -43,9 +43,9 @@ public class ActionInventoryStoreAll extends Action {
     public MenuChoice getMenuChoices(Actor subject) {
         String[] menuPath;
         if (name == null) {
-            menuPath = new String[]{owner.getName(), "transfer", item.getName() + subject.inventory().itemCountLabel(item)};
+            menuPath = new String[]{owner.getName(), "transfer", item.getName() + subject.getInventory().itemCountLabel(item)};
         } else {
-            menuPath = new String[]{owner.getName(), name, "transfer", item.getName() + subject.inventory().itemCountLabel(item)};
+            menuPath = new String[]{owner.getName(), name, "transfer", item.getName() + subject.getInventory().itemCountLabel(item)};
         }
         return new MenuChoice((isExposed ? "Place all" : "Store all"), canChoose(subject), menuPath, new String[]{"store all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName(), "place all " + LangUtils.pluralizeNoun(item.getName()) + " on " + owner.getName(), "put all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName(), "put all " + LangUtils.pluralizeNoun(item.getName()) + " on " + owner.getName()});
     }

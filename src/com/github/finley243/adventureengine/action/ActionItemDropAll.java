@@ -17,8 +17,8 @@ public class ActionItemDropAll extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		int count = subject.inventory().itemCount(item);
-		subject.inventory().removeItems(item, count);
+		int count = subject.getInventory().itemCount(item);
+		subject.getInventory().removeItems(item, count);
 		//Item.itemToObject(subject.game(), item, count, subject.getArea());
 		subject.getArea().getInventory().addItems(item, count);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(item, count)).build());
@@ -32,7 +32,7 @@ public class ActionItemDropAll extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Drop all", canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)}, new String[]{"drop all " + LangUtils.pluralizeNoun(item.getName())});
+		return new MenuChoice("Drop all", canChoose(subject), new String[]{"inventory", item.getName() + subject.getInventory().itemCountLabel(item)}, new String[]{"drop all " + LangUtils.pluralizeNoun(item.getName())});
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -149,6 +150,11 @@ public abstract class ObjectComponent implements StatHolder {
     @Override
     public void triggerEffect(String name) {
 
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return null;
     }
 
 }

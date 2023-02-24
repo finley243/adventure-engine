@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.variable;
 
 import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.actor.Inventory;
 
 import java.util.Set;
 
@@ -60,6 +61,11 @@ public class VariableGlobal extends Variable {
     public Set<String> getValueStringSet(ContextScript context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
         return context.game().data().getGlobalStringSet(variableID);
+    }
+
+    @Override
+    public Inventory getValueInventory(ContextScript context) {
+        throw new UnsupportedOperationException("Inventory can not be referenced as a global variable");
     }
 
 }

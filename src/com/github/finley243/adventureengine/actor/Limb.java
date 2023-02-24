@@ -1,8 +1,5 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.actor.component.ApparelComponent;
-import com.github.finley243.adventureengine.effect.Effect;
-
 import java.util.List;
 
 public class Limb {
@@ -39,7 +36,7 @@ public class Limb {
 
     public void applyEffects(Actor target) {
         for(String effectID : hitEffects) {
-            target.effectComponent().addEffect(target.game().data().getEffect(effectID));
+            target.getEffectComponent().addEffect(target.game().data().getEffect(effectID));
         }
     }
 

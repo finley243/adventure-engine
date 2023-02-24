@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.variable;
 
 import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 import java.util.Set;
@@ -63,6 +64,12 @@ public class VariableStat extends Variable {
     public Set<String> getValueStringSet(ContextScript context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
         return holder.getHolder(context).getValueStringSet(stat);
+    }
+
+    @Override
+    public Inventory getValueInventory(ContextScript context) {
+        if (getDataType() != DataType.INVENTORY) throw new UnsupportedOperationException();
+        return holder.getHolder(context).getInventory();
     }
 
 }

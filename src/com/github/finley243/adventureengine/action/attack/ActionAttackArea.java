@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -36,7 +35,7 @@ public class ActionAttackArea extends ActionAttack {
                 ((ItemWeapon) weapon).consumeAmmo(getAmmoConsumed());
             }
         } else {
-            subject.inventory().removeItems(weapon, getAmmoConsumed());
+            subject.getInventory().removeItems(weapon, getAmmoConsumed());
             // TODO - Make this optional (e.g. do not place a grenade object after using a grenade)
             //Item.itemToObject(weapon.game(), weapon, getAmmoConsumed(), area);
             area.getInventory().addItems(weapon, getAmmoConsumed());

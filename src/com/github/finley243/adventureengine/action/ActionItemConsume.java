@@ -19,7 +19,7 @@ public class ActionItemConsume extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.inventory().removeItem(item);
+		subject.getInventory().removeItem(item);
 		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
 		String phrase;
 		switch(item.getConsumableType()) {
@@ -36,7 +36,7 @@ public class ActionItemConsume extends Action {
 		}
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
 		for(String effect : item.getEffects()) {
-			subject.effectComponent().addEffect(subject.game().data().getEffect(effect));
+			subject.getEffectComponent().addEffect(subject.game().data().getEffect(effect));
 		}
 	}
 	
@@ -55,7 +55,7 @@ public class ActionItemConsume extends Action {
 			prompt = "Use";
 			break;
 		}
-		return new MenuChoice(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.inventory().itemCountLabel(item)}, new String[]{"consume " + item.getName(), "eat " + item.getName(), "drink " + item.getName(), "use " + item.getName()});
+		return new MenuChoice(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.getInventory().itemCountLabel(item)}, new String[]{"consume " + item.getName(), "eat " + item.getName(), "drink " + item.getName(), "use " + item.getName()});
 	}
 
 	@Override

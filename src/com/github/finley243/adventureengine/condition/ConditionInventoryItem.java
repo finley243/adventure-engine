@@ -19,9 +19,9 @@ public class ConditionInventoryItem extends Condition {
 	@Override
 	public boolean isMetInternal(ContextScript context) {
 		if(itemID != null) {
-			return actor.getActor(context).inventory().hasItem(itemID);
+			return actor.getActor(context).getInventory().hasItem(itemID);
 		} else {
-			return actor.getActor(context).inventory().hasItemWithTag(tag);
+			return actor.getActor(context).getInventory().hasItemWithTag(tag);
 		}
 	}
 
