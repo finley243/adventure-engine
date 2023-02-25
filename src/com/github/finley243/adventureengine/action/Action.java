@@ -17,11 +17,8 @@ public abstract class Action {
 	}
 
 	private boolean disabled;
-	private final ActionDetectionChance detectionChance;
 
-	public Action(ActionDetectionChance detectionChance) {
-		this.detectionChance = detectionChance;
-	}
+	public Action() {}
 
 	public abstract void choose(Actor subject, int repeatActionCount);
 
@@ -56,7 +53,7 @@ public abstract class Action {
 	}
 
 	public ActionDetectionChance detectionChance() {
-		return detectionChance;
+		return ActionDetectionChance.NONE;
 	}
 
 	public ActionResponseType responseType() {

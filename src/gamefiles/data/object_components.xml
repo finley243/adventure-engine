@@ -7,16 +7,8 @@
     </objectComponent>
     <objectComponent id="door_link" type="link" movable="true" visible="false"/>
     <objectComponent id="door_link_locked" type="link" movable="true" visible="false">
-        <condition type="boolean">
-            <var type="stat" dataType="boolean" stat="succeeded" holder="parentObjectComponent" holderLocalID="door_lock"/>
-        </condition>
-    </objectComponent>
-    <objectComponent id="door_lock_easy" type="check" canFail="false">
-        <prompt>Pick lock</prompt>
-        <phraseSuccess>pickLock</phraseSuccess>
-        <condition type="compare">
-            <var1 type="stat" dataType="int" stat="lockpick" holder="subject"/>
-            <var2 dataType="int" value="3"/>
+        <condition type="boolean" invert="true">
+            <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
         </condition>
     </objectComponent>
     <objectComponent id="garbage_bin_container" type="container">

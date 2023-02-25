@@ -14,7 +14,6 @@ public class ActionObjectUseStart extends Action {
 	private final ObjectComponentUsable component;
 
 	public ActionObjectUseStart(ObjectComponentUsable component) {
-		super(ActionDetectionChance.LOW);
 		this.component = component;
 	}
 

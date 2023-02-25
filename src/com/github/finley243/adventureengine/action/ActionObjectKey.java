@@ -13,7 +13,6 @@ public class ActionObjectKey extends Action {
     private final ObjectComponentKey componentKey;
 
     public ActionObjectKey(ObjectComponentKey componentKey) {
-        super(ActionDetectionChance.NONE);
         this.componentKey = componentKey;
     }
 

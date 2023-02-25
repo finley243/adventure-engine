@@ -13,7 +13,6 @@ public class ActionObjectUseEnd extends Action {
 	private final ObjectComponentUsable component;
 
 	public ActionObjectUseEnd(ObjectComponentUsable component) {
-		super(ActionDetectionChance.LOW);
 		this.component = component;
 	}
 

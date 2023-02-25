@@ -15,21 +15,26 @@ public class ActionCustom extends Action {
 
     private final String prompt;
     private final String phrase;
-    // The condition under which the action can be selected
+    private final String phraseFail;
+    // The condition under which the action can be selected, or alternatively the condition under which the action will succeed
     private final Condition condition;
     // The condition under which the action will be added to the list of possible actions
     private final Condition conditionShow;
+    private final boolean canFail;
     private final Script script;
+    private final Script scriptFail;
     // Updated each time the action is retrieved
     private WorldObject object;
 
-    public ActionCustom(String prompt, String phrase, Condition condition, Condition conditionShow, Script script) {
-        super(ActionDetectionChance.LOW);
+    public ActionCustom(boolean canFail, String prompt, String phrase, String phraseFail, Condition condition, Condition conditionShow, Script script, Script scriptFail) {
+        this.canFail = canFail;
         this.prompt = prompt;
         this.phrase = phrase;
+        this.phraseFail = phraseFail;
         this.condition = condition;
         this.conditionShow = conditionShow;
         this.script = script;
+        this.scriptFail = scriptFail;
     }
 
     public void setObject(WorldObject object) {
@@ -40,16 +45,23 @@ public class ActionCustom extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         if (object == null) throw new UnsupportedOperationException("Object was not set in ActionCustom before execution");
         Context context = new Context(new NounMapper().put("actor", subject).put("object", object).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
-        if(script != null) {
-            script.execute(new ContextScript(subject.game(), subject, subject, object));
+        if (canFail && !condition.isMet(new ContextScript(subject.game(), subject, subject, object))) {
+            subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phraseFail), context, this, null, subject, null));
+            if (scriptFail != null) {
+                scriptFail.execute(new ContextScript(subject.game(), subject, subject, object));
+            }
+        } else {
+            subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
+            if (script != null) {
+                script.execute(new ContextScript(subject.game(), subject, subject, object));
+            }
         }
     }
 
     @Override
     public boolean canChoose(Actor subject) {
         if (object == null) throw new UnsupportedOperationException("Object was not set in ActionCustom before execution");
-        return super.canChoose(subject) && (condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject, object)));
+        return super.canChoose(subject) && (condition == null || canFail || condition.isMet(new ContextScript(subject.game(), subject, subject, object)));
     }
 
     @Override

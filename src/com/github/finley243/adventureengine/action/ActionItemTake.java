@@ -16,7 +16,6 @@ public class ActionItemTake extends Action {
 	private final Item item;
 	
 	public ActionItemTake(Area area, Item item) {
-		super(ActionDetectionChance.LOW);
 		this.area = area;
 		this.item = item;
 	}

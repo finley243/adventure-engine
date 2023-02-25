@@ -14,7 +14,6 @@ public class ActionObjectItemUse extends Action {
     private final ObjectComponentItemUse componentItemUse;
 
     public ActionObjectItemUse(ObjectComponentItemUse componentItemUse) {
-        super(ActionDetectionChance.NONE);
         this.componentItemUse = componentItemUse;
     }
 

@@ -18,7 +18,6 @@ public class ActionInventoryTake extends Action {
     private final Item item;
 
     public ActionInventoryTake(Noun owner, String name, Inventory inventory, Item item) {
-        super(ActionDetectionChance.LOW);
         this.owner = owner;
         this.name = name;
         this.inventory = inventory;

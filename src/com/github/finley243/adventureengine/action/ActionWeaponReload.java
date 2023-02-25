@@ -20,7 +20,6 @@ public class ActionWeaponReload extends Action {
 	private final ItemAmmo ammoType;
 	
 	public ActionWeaponReload(ItemWeapon weapon, ItemAmmo ammoType) {
-		super(ActionDetectionChance.NONE);
 		this.weapon = weapon;
 		this.ammoType = ammoType;
 	}

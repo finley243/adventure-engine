@@ -844,12 +844,15 @@ public class DataLoader {
         if(objectElement == null) return new ArrayList<>();
         List<ActionCustom> actions = new ArrayList<>();
         for (Element actionElement : LoadUtils.directChildrenWithName(objectElement, elementName)) {
+            boolean canFail = LoadUtils.attributeBool(actionElement, "canFail", false);
             String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
             String phrase = LoadUtils.singleTag(actionElement, "phrase", null);
+            String phraseFail = LoadUtils.singleTag(actionElement, "phraseFail", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
             Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
             Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
-            actions.add(new ActionCustom(prompt, phrase, condition, conditionShow, script));
+            Script scriptFail = loadScript(LoadUtils.singleChildWithName(actionElement, "scriptFail"));
+            actions.add(new ActionCustom(canFail, prompt, phrase, phraseFail, condition, conditionShow, script, scriptFail));
         }
         return actions;
     }

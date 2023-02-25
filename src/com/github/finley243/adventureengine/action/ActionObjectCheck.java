@@ -14,7 +14,6 @@ public class ActionObjectCheck extends Action {
     private final ObjectComponentCheck componentCheck;
 
     public ActionObjectCheck(ObjectComponentCheck componentCheck) {
-        super(ActionDetectionChance.NONE);
         this.componentCheck = componentCheck;
     }
 

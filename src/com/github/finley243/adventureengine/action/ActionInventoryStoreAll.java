@@ -17,7 +17,6 @@ public class ActionInventoryStoreAll extends Action {
     private final boolean isExposed;
 
     public ActionInventoryStoreAll(Noun owner, String name, Inventory inventory, Item item, boolean isExposed) {
-        super(ActionDetectionChance.LOW);
         this.owner = owner;
         this.name = name;
         this.inventory = inventory;

@@ -14,7 +14,6 @@ public class ActionItemTakeAll extends Action {
 	private final Item item;
 
 	public ActionItemTakeAll(Area area, Item item) {
-		super(ActionDetectionChance.LOW);
 		this.area = area;
 		this.item = item;
 	}

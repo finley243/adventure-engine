@@ -8,7 +8,6 @@ public class ActionTalk extends Action {
 	private final Actor target;
 	
 	public ActionTalk(Actor target) {
-		super(ActionDetectionChance.HIGH);
 		this.target = target;
 	}
 	
@@ -36,5 +35,10 @@ public class ActionTalk extends Action {
             return other.target == this.target;
         }
     }
+
+	@Override
+	public ActionDetectionChance detectionChance() {
+		return ActionDetectionChance.HIGH;
+	}
 
 }

@@ -17,7 +17,6 @@ public class ActionObjectVendingBuy extends Action {
 	private final String itemID;
 
 	public ActionObjectVendingBuy(ObjectComponentVending component, String itemID) {
-		super(ActionDetectionChance.LOW);
 		this.component = component;
 		this.itemID = itemID;
 	}

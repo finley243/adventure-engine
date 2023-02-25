@@ -7,9 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ActionRandom extends Action {
 
-    public ActionRandom(ActionDetectionChance detectionChance) {
-        super(detectionChance);
-    }
+    public ActionRandom() {}
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {

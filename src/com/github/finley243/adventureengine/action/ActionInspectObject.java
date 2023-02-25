@@ -10,7 +10,6 @@ public class ActionInspectObject extends Action {
 	private final WorldObject object;
 
 	public ActionInspectObject(WorldObject object) {
-		super(ActionDetectionChance.NONE);
 		this.object = object;
 	}
 	

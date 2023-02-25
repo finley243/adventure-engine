@@ -17,7 +17,6 @@ public class ActionItemEquip extends Action {
 	private final ItemEquippable item;
 	
 	public ActionItemEquip(ItemEquippable item) {
-		super(ActionDetectionChance.NONE);
 		this.item = item;
 	}
 	

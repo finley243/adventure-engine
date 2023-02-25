@@ -13,7 +13,6 @@ public class ActionApparelEquip extends Action {
     private final ItemApparel item;
 
     public ActionApparelEquip(ItemApparel item) {
-        super(ActionDetectionChance.LOW);
         this.item = item;
     }
 
@@ -33,4 +32,5 @@ public class ActionApparelEquip extends Action {
     public MenuChoice getMenuChoices(Actor subject) {
         return new MenuChoice("Equip", canChoose(subject), new String[]{"inventory", item.getName()}, new String[]{"equip " + item.getName(), "put on " + item.getName()});
     }
+
 }

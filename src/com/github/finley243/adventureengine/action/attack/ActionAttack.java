@@ -52,7 +52,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final AttackHitChanceType hitChanceType;
 
     public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill attackSkill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType) {
-        super(ActionDetectionChance.HIGH, targets);
+        super(targets);
         this.weaponNoun = weaponNoun;
         this.targets = targets;
         this.limb = limb;
@@ -230,6 +230,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public ActionResponseType responseType() {
         return ActionResponseType.ATTACK;
+    }
+
+    @Override
+    public ActionDetectionChance detectionChance() {
+        return ActionDetectionChance.HIGH;
     }
 
     private String getHitPhrase(int repeatActionCount) {

@@ -5,9 +5,7 @@ import com.github.finley243.adventureengine.menu.MenuChoice;
 
 public class ActionEnd extends Action {
 
-	public ActionEnd() {
-		super(ActionDetectionChance.NONE);
-	}
+	public ActionEnd() {}
 
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

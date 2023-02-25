@@ -5,9 +5,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public abstract class ActionMove extends Action {
 
-    public ActionMove() {
-        super(ActionDetectionChance.HIGH);
-    }
+    public ActionMove() {}
 
     @Override
     public boolean canChoose(Actor subject) {
@@ -30,5 +28,10 @@ public abstract class ActionMove extends Action {
     }
 
     public abstract Area getDestinationArea();
+
+    @Override
+    public ActionDetectionChance detectionChance() {
+        return ActionDetectionChance.HIGH;
+    }
 
 }
