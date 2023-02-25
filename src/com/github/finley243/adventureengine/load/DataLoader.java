@@ -729,7 +729,28 @@ public class DataLoader {
             String componentTemplate = LoadUtils.attribute(componentElement, "template", null);
             components.put(componentID, componentTemplate);
         }
-        return new ObjectTemplate(game, ID, name, description, scripts, customActions, components);
+        Map<String, Boolean> localVarsBooleanDefault = new HashMap<>();
+        Map<String, Integer> localVarsIntegerDefault = new HashMap<>();
+        Map<String, Float> localVarsFloatDefault = new HashMap<>();
+        for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
+            String varName = LoadUtils.attribute(varDefaultElement, "name", null);
+            String varDataType = LoadUtils.attribute(varDefaultElement, "dataType", null);
+            switch (varDataType) {
+                case "boolean":
+                    boolean booleanValue = LoadUtils.attributeBool(varDefaultElement, "value", false);
+                    localVarsBooleanDefault.put(varName, booleanValue);
+                    break;
+                case "int":
+                    int integerValue = LoadUtils.attributeInt(varDefaultElement, "value", 0);
+                    localVarsIntegerDefault.put(varName, integerValue);
+                    break;
+                case "float":
+                    float floatValue = LoadUtils.attributeFloat(varDefaultElement, "value", 0.0f);
+                    localVarsFloatDefault.put(varName, floatValue);
+                    break;
+            }
+        }
+        return new ObjectTemplate(game, ID, name, description, scripts, customActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault);
     }
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) {

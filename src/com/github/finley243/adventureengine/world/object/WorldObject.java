@@ -16,7 +16,9 @@ import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.component.*;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentFactory;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
 import com.github.finley243.adventureengine.world.object.params.ComponentParams;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
@@ -37,7 +39,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Map<String, ObjectComponent> components;
 	// Key: component ID, Value: linked object and parameters
 	private final Map<String, ComponentParams> componentParams;
-	private final Map<String, Boolean> localVarsBool;
+	private final Map<String, Boolean> localVarsBoolean;
+	private final Map<String, Integer> localVarsInteger;
+	private final Map<String, Float> localVarsFloat;
 	
 	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams) {
 		super(gameInstance, ID);
@@ -48,7 +52,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
 		this.componentParams = componentParams;
-		this.localVarsBool = new HashMap<>();
+		this.localVarsBoolean = new HashMap<>();
+		this.localVarsInteger = new HashMap<>();
+		this.localVarsFloat = new HashMap<>();
 		setEnabled(!startDisabled);
 	}
 
@@ -222,12 +228,12 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public int getValueInt(String name) {
-		return 0;
+		return localVarsInteger.getOrDefault(name, getTemplate().getLocalVarsIntegerDefault().getOrDefault(name, 0));
 	}
 
 	@Override
 	public float getValueFloat(String name) {
-		return 0;
+		return localVarsFloat.getOrDefault(name, getTemplate().getLocalVarsFloatDefault().getOrDefault(name, 0.0f));
 	}
 
 	@Override
@@ -240,7 +246,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			case "guarded":
 				return isGuarded();
 			default:
-				return localVarsBool.getOrDefault(name, false);
+				return localVarsBoolean.getOrDefault(name, getTemplate().getLocalVarsBooleanDefault().getOrDefault(name, false));
 		}
 	}
 
@@ -282,19 +288,19 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				isHidden = value;
 				break;
 			default:
-				localVarsBool.put(name, value);
+				localVarsBoolean.put(name, value);
 				break;
 		}
 	}
 
 	@Override
 	public void setStateInteger(String name, int value) {
-
+		localVarsInteger.put(name, value);
 	}
 
 	@Override
 	public void setStateFloat(String name, float value) {
-
+		localVarsFloat.put(name, value);
 	}
 
 	@Override

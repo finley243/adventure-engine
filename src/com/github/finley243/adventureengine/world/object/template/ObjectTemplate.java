@@ -16,14 +16,20 @@ public class ObjectTemplate extends GameInstanced {
     private final Map<String, Script> scripts;
     private final List<ActionCustom> customActions;
     private final Map<String, String> components;
+    private final Map<String, Boolean> localVarsBooleanDefault;
+    private final Map<String, Integer> localVarsIntegerDefault;
+    private final Map<String, Float> localVarsFloatDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> components) {
+    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault) {
         super(game, ID);
         this.name = name;
         this.description = description;
         this.scripts = scripts;
         this.customActions = customActions;
         this.components = components;
+        this.localVarsBooleanDefault = localVarsBooleanDefault;
+        this.localVarsIntegerDefault = localVarsIntegerDefault;
+        this.localVarsFloatDefault = localVarsFloatDefault;
     }
 
     public String getName() {
@@ -44,6 +50,18 @@ public class ObjectTemplate extends GameInstanced {
 
     public Map<String, String> getComponents() {
         return components;
+    }
+
+    public Map<String, Boolean> getLocalVarsBooleanDefault() {
+        return localVarsBooleanDefault;
+    }
+
+    public Map<String, Integer> getLocalVarsIntegerDefault() {
+        return localVarsIntegerDefault;
+    }
+
+    public Map<String, Float> getLocalVarsFloatDefault() {
+        return localVarsFloatDefault;
     }
 
 }
