@@ -281,7 +281,7 @@ public class DataLoader {
                 String itemEquipExact = LoadUtils.attribute(conditionElement, "exact", null);
                 return new ConditionEquippedItem(invert, actorRef, itemEquipTag, itemEquipExact);
             case "inventoryItem":
-                Variable invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varInv"));
+                Variable invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varInv"), "inventory", "stat");
                 String invItemID = LoadUtils.attribute(conditionElement, "exact", null);
                 return new ConditionInventoryItem(invert, invItemVar, invItemID);
             case "actorVisible":
@@ -302,15 +302,15 @@ public class DataLoader {
                 String timerID = LoadUtils.attribute(conditionElement, "timerID", null);
                 return new ConditionTimerActive(invert, timerID);
             case "boolean":
-                Variable booleanVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var"));
+                Variable booleanVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var"), "boolean", "global");
                 return new ConditionBoolean(invert, booleanVariable);
             case "contains":
-                Variable containsSetVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varSet"));
-                Variable containsValueVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varValue"));
+                Variable containsSetVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varSet"), "stringSet", null);
+                Variable containsValueVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varValue"), "string", null);
                 return new ConditionSetContains(invert, containsSetVariable, containsValueVariable);
             case "compare":
-                Variable compareVariable1 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var1"));
-                Variable compareVariable2 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var2"));
+                Variable compareVariable1 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var1"), null, null);
+                Variable compareVariable2 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var2"), null, null);
                 Condition.Equality compareEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
                 return new ConditionCompare(invert, compareVariable1, compareVariable2, compareEquality);
             case "any":
@@ -333,9 +333,9 @@ public class DataLoader {
         return subConditions;
     }
 
-    private static Variable loadVariable(Element variableElement) {
-        String type = LoadUtils.attribute(variableElement, "type", null);
-        String dataType = LoadUtils.attribute(variableElement, "dataType", null);
+    private static Variable loadVariable(Element variableElement, String dataTypeDefault, String varTypeDefault) {
+        String type = LoadUtils.attribute(variableElement, "type", varTypeDefault);
+        String dataType = LoadUtils.attribute(variableElement, "dataType", dataTypeDefault);
         switch (type) {
             case "stat":
                 StatHolderReference statHolderReference = loadStatHolderReference(variableElement);
@@ -404,12 +404,12 @@ public class DataLoader {
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
                 return new ScriptExternal(condition, scriptID);
             case "addItem":
-                Variable addItemInv = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInv"));
+                Variable addItemInv = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInv"), "inventory", "stat");
                 String addItemID = LoadUtils.attribute(scriptElement, "item", null);
                 return new ScriptAddItem(condition, addItemInv, addItemID);
             case "transferItem":
-                Variable transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvOrigin"));
-                Variable transferItemInvTarget = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvTarget"));
+                Variable transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvOrigin"), "inventory", "stat");
+                Variable transferItemInvTarget = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvTarget"), "inventory", "stat");
                 String transferItemID = LoadUtils.attribute(scriptElement, "item", null);
                 boolean transferItemAll = LoadUtils.attributeBool(scriptElement, "all", false);
                 int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);
@@ -439,20 +439,20 @@ public class DataLoader {
             case "setState":
                 StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
                 String setStateName = LoadUtils.attribute(scriptElement, "state", null);
-                Variable setStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"));
+                Variable setStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null, null);
                 return new ScriptSetState(condition, setStateHolder, setStateName, setStateVariable);
             case "modifyState":
                 StatHolderReference modifyStateHolder = loadStatHolderReference(scriptElement);
                 String modifyStateName = LoadUtils.attribute(scriptElement, "state", null);
-                Variable modifyStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"));
+                Variable modifyStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null, null);
                 return new ScriptModifyState(condition, modifyStateHolder, modifyStateName, modifyStateVariable);
             case "setGlobal":
                 String setGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
-                Variable setGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"));
+                Variable setGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null, null);
                 return new ScriptSetGlobal(condition, setGlobalID, setGlobalVariable);
             case "modifyGlobal":
                 String modifyGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
-                Variable modifyGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"));
+                Variable modifyGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null, null);
                 return new ScriptModifyGlobal(condition, modifyGlobalID, modifyGlobalVariable);
             case "select":
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
