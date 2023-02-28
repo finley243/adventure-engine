@@ -9,9 +9,9 @@ import com.github.finley243.adventureengine.variable.Variable;
 public class ScriptAddItem extends Script {
 
 	private final Variable inventory;
-	private final String itemID;
+	private final Variable itemID;
 	
-	public ScriptAddItem(Condition condition, Variable inventory, String itemID) {
+	public ScriptAddItem(Condition condition, Variable inventory, Variable itemID) {
 		super(condition);
 		this.inventory = inventory;
 		this.itemID = itemID;
@@ -19,7 +19,7 @@ public class ScriptAddItem extends Script {
 	
 	@Override
 	public void executeSuccess(ContextScript context) {
-		Item item = ItemFactory.create(context.game(), context.game().data().getItem(itemID));
+		Item item = ItemFactory.create(context.game(), context.game().data().getItem(itemID.getValueString(context)));
 		inventory.getValueInventory(context).addItem(item);
 	}
 	

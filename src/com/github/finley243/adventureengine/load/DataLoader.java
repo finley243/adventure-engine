@@ -282,7 +282,7 @@ public class DataLoader {
                 return new ConditionEquippedItem(invert, actorRef, itemEquipTag, itemEquipExact);
             case "inventoryItem":
                 Variable invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varInv"), "inventory", "stat");
-                String invItemID = LoadUtils.attribute(conditionElement, "exact", null);
+                Variable invItemID = loadVariable(LoadUtils.singleChildWithName(conditionElement, "item"), "string", null);
                 return new ConditionInventoryItem(invert, invItemVar, invItemID);
             case "actorVisible":
                 ActorReference visibleTargetRef = loadActorReference(conditionElement, "target");
@@ -405,12 +405,12 @@ public class DataLoader {
                 return new ScriptExternal(condition, scriptID);
             case "addItem":
                 Variable addItemInv = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInv"), "inventory", "stat");
-                String addItemID = LoadUtils.attribute(scriptElement, "item", null);
+                Variable addItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string", null);
                 return new ScriptAddItem(condition, addItemInv, addItemID);
             case "transferItem":
                 Variable transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvOrigin"), "inventory", "stat");
                 Variable transferItemInvTarget = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvTarget"), "inventory", "stat");
-                String transferItemID = LoadUtils.attribute(scriptElement, "item", null);
+                Variable transferItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string", null);
                 boolean transferItemAll = LoadUtils.attributeBool(scriptElement, "all", false);
                 int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);
                 return new ScriptTransferItem(condition, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferItemAll, transferItemCount);

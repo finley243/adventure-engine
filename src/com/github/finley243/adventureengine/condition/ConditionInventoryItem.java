@@ -7,9 +7,9 @@ import com.github.finley243.adventureengine.variable.Variable;
 public class ConditionInventoryItem extends Condition {
 
 	private final Variable inventory;
-	private final String itemID;
+	private final Variable itemID;
 
-	public ConditionInventoryItem(boolean invert, Variable inventory, String itemID) {
+	public ConditionInventoryItem(boolean invert, Variable inventory, Variable itemID) {
 		super(invert);
 		this.inventory = inventory;
 		this.itemID = itemID;
@@ -17,7 +17,7 @@ public class ConditionInventoryItem extends Condition {
 
 	@Override
 	public boolean isMetInternal(ContextScript context) {
-		return inventory.getValueInventory(context).hasItem(itemID);
+		return inventory.getValueInventory(context).hasItem(itemID.getValueString(context));
 	}
 
 }

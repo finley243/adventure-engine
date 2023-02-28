@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.ContextScript;
-import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
@@ -13,24 +12,27 @@ public class ScriptTransferItem extends Script {
 
     private final Variable inventoryOrigin;
     private final Variable inventoryTarget;
-    private final String item;
+    private final Variable itemID;
     private final boolean all;
     private final int count;
 
-    public ScriptTransferItem(Condition condition, Variable inventoryOrigin, Variable inventoryTarget, String item, boolean all, int count) {
+    public ScriptTransferItem(Condition condition, Variable inventoryOrigin, Variable inventoryTarget, Variable itemID, boolean all, int count) {
         super(condition);
         this.inventoryOrigin = inventoryOrigin;
         this.inventoryTarget = inventoryTarget;
-        this.item = item;
+        this.itemID = itemID;
         this.all = all;
         this.count = count;
     }
 
     @Override
     protected void executeSuccess(ContextScript context) {
-        Item itemPlaceholder = ItemFactory.create(context.game(), item);
+        Item itemPlaceholder = null;
+        if (itemID != null) {
+            itemPlaceholder = ItemFactory.create(context.game(), itemID.getValueString(context));
+        }
         if (all) {
-            if (item == null) { // All items in inventory
+            if (itemID == null) { // All items in inventory
                 Map<Item, Integer> allItems = inventoryOrigin.getValueInventory(context).getItemMap();
                 inventoryOrigin.getValueInventory(context).clear();
                 inventoryTarget.getValueInventory(context).addItems(allItems);
