@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.script.Script;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ObjectTemplate extends GameInstanced {
 
@@ -19,8 +20,10 @@ public class ObjectTemplate extends GameInstanced {
     private final Map<String, Boolean> localVarsBooleanDefault;
     private final Map<String, Integer> localVarsIntegerDefault;
     private final Map<String, Float> localVarsFloatDefault;
+    private final Map<String, String> localVarsStringDefault;
+    private final Map<String, Set<String>> localVarsStringSetDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault) {
+    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
         super(game, ID);
         this.name = name;
         this.description = description;
@@ -30,6 +33,8 @@ public class ObjectTemplate extends GameInstanced {
         this.localVarsBooleanDefault = localVarsBooleanDefault;
         this.localVarsIntegerDefault = localVarsIntegerDefault;
         this.localVarsFloatDefault = localVarsFloatDefault;
+        this.localVarsStringDefault = localVarsStringDefault;
+        this.localVarsStringSetDefault = localVarsStringSetDefault;
     }
 
     public String getName() {
@@ -62,6 +67,14 @@ public class ObjectTemplate extends GameInstanced {
 
     public Map<String, Float> getLocalVarsFloatDefault() {
         return localVarsFloatDefault;
+    }
+
+    public Map<String, String> getLocalVarsStringDefault() {
+        return localVarsStringDefault;
+    }
+
+    public Map<String, Set<String>> getLocalVarsStringSetDefault() {
+        return localVarsStringSetDefault;
     }
 
 }

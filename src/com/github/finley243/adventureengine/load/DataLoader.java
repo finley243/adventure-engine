@@ -334,7 +334,7 @@ public class DataLoader {
     }
 
     private static Variable loadVariable(Element variableElement) {
-        String type = LoadUtils.attribute(variableElement, "type", "literal");
+        String type = LoadUtils.attribute(variableElement, "type", null);
         String dataType = LoadUtils.attribute(variableElement, "dataType", null);
         switch (type) {
             case "stat":
@@ -345,21 +345,23 @@ public class DataLoader {
                 String globalVariableID = LoadUtils.attribute(variableElement, "globalID", null);
                 return new VariableGlobal(dataType, globalVariableID);
             case "literal":
-                if ("boolean".equals(dataType)) {
-                    boolean literalBoolean = LoadUtils.attributeBool(variableElement, "value", true);
-                    return new VariableLiteral(dataType, literalBoolean);
-                } else if ("int".equals(dataType)) {
-                    int literalInteger = LoadUtils.attributeInt(variableElement, "value", 0);
-                    return new VariableLiteral(dataType, literalInteger);
-                } else if ("float".equals(dataType)) {
-                    float literalFloat = LoadUtils.attributeFloat(variableElement, "value", 0.0f);
-                    return new VariableLiteral(dataType, literalFloat);
-                } else if ("string".equals(dataType)) {
-                    String literalString = LoadUtils.attribute(variableElement, "value", null);
-                    return new VariableLiteral(dataType, literalString);
-                } else if ("stringSet".equals(dataType)) {
-                    Set<String> literalStringSet = LoadUtils.setOfTags(variableElement, "value");
-                    return new VariableLiteral(dataType, literalStringSet);
+            default:
+                switch (dataType) {
+                    case "boolean":
+                        boolean literalBoolean = LoadUtils.attributeBool(variableElement, "value", true);
+                        return new VariableLiteral(dataType, literalBoolean);
+                    case "int":
+                        int literalInteger = LoadUtils.attributeInt(variableElement, "value", 0);
+                        return new VariableLiteral(dataType, literalInteger);
+                    case "float":
+                        float literalFloat = LoadUtils.attributeFloat(variableElement, "value", 0.0f);
+                        return new VariableLiteral(dataType, literalFloat);
+                    case "string":
+                        String literalString = LoadUtils.attribute(variableElement, "value", null);
+                        return new VariableLiteral(dataType, literalString);
+                    case "stringSet":
+                        Set<String> literalStringSet = LoadUtils.setOfTags(variableElement, "value");
+                        return new VariableLiteral(dataType, literalStringSet);
                 }
         }
         return null;
@@ -732,6 +734,8 @@ public class DataLoader {
         Map<String, Boolean> localVarsBooleanDefault = new HashMap<>();
         Map<String, Integer> localVarsIntegerDefault = new HashMap<>();
         Map<String, Float> localVarsFloatDefault = new HashMap<>();
+        Map<String, String> localVarsStringDefault = new HashMap<>();
+        Map<String, Set<String>> localVarsStringSetDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
             String varDataType = LoadUtils.attribute(varDefaultElement, "dataType", null);
@@ -748,9 +752,17 @@ public class DataLoader {
                     float floatValue = LoadUtils.attributeFloat(varDefaultElement, "value", 0.0f);
                     localVarsFloatDefault.put(varName, floatValue);
                     break;
+                case "string":
+                    String stringValue = LoadUtils.attribute(varDefaultElement, "value", "EMPTY");
+                    localVarsStringDefault.put(varName, stringValue);
+                    break;
+                case "stringSet":
+                    Set<String> stringSetValue = LoadUtils.setOfTags(varDefaultElement, "value");
+                    localVarsStringSetDefault.put(varName, stringSetValue);
+                    break;
             }
         }
-        return new ObjectTemplate(game, ID, name, description, scripts, customActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault);
+        return new ObjectTemplate(game, ID, name, description, scripts, customActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
     }
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) {

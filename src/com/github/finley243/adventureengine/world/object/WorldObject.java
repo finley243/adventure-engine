@@ -42,6 +42,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Map<String, Boolean> localVarsBoolean;
 	private final Map<String, Integer> localVarsInteger;
 	private final Map<String, Float> localVarsFloat;
+	private final Map<String, String> localVarsString;
+	private final Map<String, Set<String>> localVarsStringSet;
 	
 	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams) {
 		super(gameInstance, ID);
@@ -55,6 +57,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.localVarsBoolean = new HashMap<>();
 		this.localVarsInteger = new HashMap<>();
 		this.localVarsFloat = new HashMap<>();
+		this.localVarsString = new HashMap<>();
+		this.localVarsStringSet = new HashMap<>();
 		setEnabled(!startDisabled);
 	}
 
@@ -261,13 +265,14 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				return getArea().getID();
 			case "room":
 				return getArea().getRoom().getID();
+			default:
+				return localVarsString.getOrDefault(name, getTemplate().getLocalVarsStringDefault().getOrDefault(name, null));
 		}
-		return null;
 	}
 
 	@Override
 	public Set<String> getValueStringSet(String name) {
-		return null;
+		return localVarsStringSet.getOrDefault(name, getTemplate().getLocalVarsStringSetDefault().getOrDefault(name, null));
 	}
 
 	@Override
@@ -309,22 +314,26 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			case "area":
 				setArea(game().data().getArea(value));
 				break;
+			default:
+				localVarsString.put(name, value);
 		}
 	}
 
 	@Override
 	public void setStateStringSet(String name, Set<String> value) {
-
+		localVarsStringSet.put(name, value);
 	}
 
 	@Override
 	public void modStateInteger(String name, int amount) {
-
+		int valueOld = localVarsInteger.getOrDefault(name, getTemplate().getLocalVarsIntegerDefault().getOrDefault(name, 0));
+		localVarsInteger.put(name, valueOld + amount);
 	}
 
 	@Override
 	public void modStateFloat(String name, float amount) {
-
+		float valueOld = localVarsFloat.getOrDefault(name, getTemplate().getLocalVarsFloatDefault().getOrDefault(name, 0.0f));
+		localVarsFloat.put(name, valueOld + amount);
 	}
 
 	@Override

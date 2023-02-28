@@ -27,6 +27,7 @@ public class ActionCustom extends Action {
     private WorldObject object;
 
     public ActionCustom(boolean canFail, String prompt, String phrase, String phraseFail, Condition condition, Condition conditionShow, Script script, Script scriptFail) {
+        if (canFail && condition == null) throw new IllegalArgumentException("Condition cannot be null if canFail is true");
         this.canFail = canFail;
         this.prompt = prompt;
         this.phrase = phrase;
