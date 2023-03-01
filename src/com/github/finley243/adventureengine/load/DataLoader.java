@@ -345,6 +345,7 @@ public class DataLoader {
                 String globalVariableID = LoadUtils.attribute(variableElement, "globalID", null);
                 return new VariableGlobal(dataType, globalVariableID);
             case "literal":
+            case null:
             default:
                 switch (dataType) {
                     case "boolean":
