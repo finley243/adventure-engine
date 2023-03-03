@@ -363,7 +363,13 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		}
 		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, this, null));
 	}
-	
+
+	@Override
+	public boolean canBeAttacked() {
+		return !isDead();
+	}
+
+	@Override
 	public void damage(Damage damage) {
 		if(damage.getLimb() != null) {
 			damageLimb(damage, damage.getLimb());

@@ -259,17 +259,19 @@ public class ItemWeapon extends ItemEquippable {
 				return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
 			case "clipSize":
 				return clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
+			case "ammoCount":
+				return ammoCount;
 		}
-		return 0;
+		return super.getValueInt(name);
 	}
 
 	@Override
 	public float getValueFloat(String name) {
 		switch (name) {
 			case "accuracyBonus":
-
+				return accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f);
 			case "armorMult":
-
+				return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
 		}
 		return 0;
 	}

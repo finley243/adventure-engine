@@ -8,12 +8,14 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
@@ -28,7 +30,7 @@ import java.util.*;
 /**
  * An object that can exist in the game world
  */
-public class WorldObject extends GameInstanced implements Noun, Physical, StatHolder {
+public class WorldObject extends GameInstanced implements Noun, Physical, StatHolder, AttackTarget {
 
 	private final String templateID;
 	private boolean isKnown;
@@ -108,7 +110,17 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	public boolean forcePronoun() {
 		return false;
 	}
-	
+
+	@Override
+	public boolean canBeAttacked() {
+		return false;
+	}
+
+	@Override
+	public void damage(Damage damage) {
+		// TODO - Fill in effects of attacking object
+	}
+
 	@Override
 	public Area getArea() {
 		return area;

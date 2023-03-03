@@ -260,11 +260,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	public Set<AttackTarget> getAttackTargets() {
 		Set<AttackTarget> targets = new HashSet<>(getActors());
-		for (WorldObject object : getObjects()) {
-			if (object instanceof AttackTarget) {
-				targets.add((AttackTarget) object);
-			}
-		}
+		targets.addAll(getObjects());
 		return targets;
 	}
 

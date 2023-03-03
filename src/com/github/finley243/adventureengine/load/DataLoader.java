@@ -50,10 +50,10 @@ import java.util.*;
 public class DataLoader {
 
     public static void loadFromDir(Game game, File dir) throws ParserConfigurationException, IOException, SAXException {
-        if(dir.isDirectory()) {
+        if (dir.isDirectory()) {
             File[] files = dir.listFiles();
             assert files != null;
-            for(File file : files) {
+            for (File file : files) {
                 if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase("xml")) {
                     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                     DocumentBuilder builder = factory.newDocumentBuilder();
@@ -161,11 +161,11 @@ public class DataLoader {
         }
 
         Element vendorElement = LoadUtils.singleChildWithName(actorElement, "vendor");
-        Boolean isVendor = vendorElement != null;
+        boolean isVendor = vendorElement != null;
         String vendorLootTable = LoadUtils.attribute(vendorElement, "lootTable", null);
         Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
-        Boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
-        Boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
+        boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
+        boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
         return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistance, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
     }
 
@@ -241,13 +241,13 @@ public class DataLoader {
         int priority = LoadUtils.attributeInt(sceneElement, "priority", 1);
         List<Element> lineElements = LoadUtils.directChildrenWithName(sceneElement, "line");
         List<SceneLine> lines = new ArrayList<>();
-        for(Element lineElement : lineElements) {
+        for (Element lineElement : lineElements) {
             SceneLine line = loadSceneLine(lineElement);
             lines.add(line);
         }
         List<Element> choiceElements = LoadUtils.directChildrenWithName(sceneElement, "choice");
         List<SceneChoice> choices = new ArrayList<>();
-        for(Element choiceElement : choiceElements) {
+        for (Element choiceElement : choiceElements) {
             SceneChoice choice = loadSceneChoice(choiceElement);
             choices.add(choice);
         }
@@ -272,7 +272,7 @@ public class DataLoader {
     }
 
     private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
-        if(conditionElement == null) return null;
+        if (conditionElement == null) return null;
         String type = LoadUtils.attribute(conditionElement, "type", "compound");
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
@@ -384,7 +384,7 @@ public class DataLoader {
     private static List<Script> loadSubScripts(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
         List<Element> scriptElements = LoadUtils.directChildrenWithName(parentElement, "script");
         List<Script> scripts = new ArrayList<>();
-        for(Element scriptElement : scriptElements) {
+        for (Element scriptElement : scriptElements) {
             Script script = loadScript(scriptElement);
             scripts.add(script);
         }
@@ -393,7 +393,7 @@ public class DataLoader {
 
     private static Map<String, Script> loadScriptsWithTriggers(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
         Map<String, Script> scripts = new HashMap<>();
-        for(Element scriptElement : LoadUtils.directChildrenWithName(parentElement, "script")) {
+        for (Element scriptElement : LoadUtils.directChildrenWithName(parentElement, "script")) {
             String trigger = scriptElement.getAttribute("trigger");
             Script script = loadScript(scriptElement);
             scripts.put(trigger, script);
@@ -402,7 +402,7 @@ public class DataLoader {
     }
 
     private static Script loadScript(Element scriptElement) throws ParserConfigurationException, IOException, SAXException {
-        if(scriptElement == null) return null;
+        if (scriptElement == null) return null;
         String type = scriptElement.getAttribute("type");
         Condition condition = loadCondition(LoadUtils.singleChildWithName(scriptElement, "condition"));
         ActorReference actorRef = loadActorReference(scriptElement, "actor");
@@ -472,7 +472,7 @@ public class DataLoader {
     }
 
     private static ActorReference loadActorReference(Element element, String name) {
-        if(element == null || !element.hasAttribute(name)) return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
+        if (element == null || !element.hasAttribute(name)) return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
         String targetRef = element.getAttribute(name);
         switch (targetRef) {
             case "PLAYER":
@@ -487,7 +487,7 @@ public class DataLoader {
     }
 
     private static Faction loadFaction(Element factionElement) {
-        if(factionElement == null) return null;
+        if (factionElement == null) return null;
         String id = factionElement.getAttribute("id");
         Faction.FactionRelation defaultRelation = LoadUtils.attributeEnum(factionElement, "default", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
         Map<String, Faction.FactionRelation> relations = loadFactionRelations(factionElement);
@@ -495,10 +495,10 @@ public class DataLoader {
     }
 
     private static Map<String, Faction.FactionRelation> loadFactionRelations(Element factionElement) {
-        if(factionElement == null) return new HashMap<>();
+        if (factionElement == null) return new HashMap<>();
         Map<String, Faction.FactionRelation> relations = new HashMap<>();
         List<Element> relationElements = LoadUtils.directChildrenWithName(factionElement, "relation");
-        for(Element relationElement : relationElements) {
+        for (Element relationElement : relationElements) {
             String factionID = LoadUtils.attribute(relationElement, "faction", null);
             Faction.FactionRelation type = LoadUtils.attributeEnum(relationElement, "type", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
             relations.put(factionID, type);
@@ -507,7 +507,7 @@ public class DataLoader {
     }
 
     private static ItemTemplate loadItemTemplate(Game game, Element itemElement) throws ParserConfigurationException, IOException, SAXException {
-        if(itemElement == null) return null;
+        if (itemElement == null) return null;
         String type = itemElement.getAttribute("type");
         String id = itemElement.getAttribute("id");
         String name = LoadUtils.singleTag(itemElement, "name", null);
@@ -547,17 +547,17 @@ public class DataLoader {
     }
 
     private static List<Effect> loadEffects(Element effectsElement) {
-        if(effectsElement == null) return new ArrayList<>();
+        if (effectsElement == null) return new ArrayList<>();
         List<Element> effectElements = LoadUtils.directChildrenWithName(effectsElement, "effect");
         List<Effect> effects = new ArrayList<>();
-        for(Element effectElement : effectElements) {
+        for (Element effectElement : effectElements) {
             effects.add(loadEffect(effectElement));
         }
         return effects;
     }
 
     private static Effect loadEffect(Element effectElement) {
-        if(effectElement == null) return null;
+        if (effectElement == null) return null;
         boolean manualRemoval = LoadUtils.attributeBool(effectElement, "isPermanent", false);
         String effectType = LoadUtils.attribute(effectElement, "type", null);
         int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
@@ -607,7 +607,7 @@ public class DataLoader {
     }
 
     private static LootTable loadLootTable(Element tableElement, boolean useAllDefault) {
-        if(tableElement == null) return null;
+        if (tableElement == null) return null;
         String tableID = tableElement.getAttribute("id");
         boolean useAll = LoadUtils.attributeBool(tableElement, "useAll", useAllDefault);
         List<Element> entryItems = LoadUtils.directChildrenWithName(tableElement, "item");
@@ -625,7 +625,7 @@ public class DataLoader {
     }
 
     private static LootTableEntry loadLootTableEntry(Element entryElement, boolean isTable) {
-        if(entryElement == null) return null;
+        if (entryElement == null) return null;
         String referenceID = entryElement.getTextContent();
         float chance = LoadUtils.attributeFloat(entryElement, "chance", 1.0f);
         int count = LoadUtils.attributeInt(entryElement, "count", 1);
@@ -639,7 +639,7 @@ public class DataLoader {
     }
 
     private static Room loadRoom(Game game, Element roomElement) throws ParserConfigurationException, IOException, SAXException {
-        if(roomElement == null) return null;
+        if (roomElement == null) return null;
         String roomID = roomElement.getAttribute("id");
         Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
         String roomName = roomNameElement.getTextContent();
@@ -650,7 +650,7 @@ public class DataLoader {
 
         List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
         Set<Area> areas = new HashSet<>();
-        for(Element areaElement : areaElements) {
+        for (Element areaElement : areaElements) {
             Area area = loadArea(game, areaElement, roomID);
             areas.add(area);
             game.data().addArea(area.getID(), area);
@@ -670,7 +670,7 @@ public class DataLoader {
     }
 
     private static Area loadArea(Game game, Element areaElement, String roomID) throws ParserConfigurationException, IOException, SAXException {
-        if(areaElement == null) return null;
+        if (areaElement == null) return null;
         String areaID = areaElement.getAttribute("id");
         String landmarkID = LoadUtils.attribute(areaElement, "landmark", null);
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
@@ -772,7 +772,7 @@ public class DataLoader {
     }
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) {
-        if(objectElement == null) return null;
+        if (objectElement == null) return null;
         String template = LoadUtils.attribute(objectElement, "template", null);
         String id = LoadUtils.attribute(objectElement, "id", null);
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
@@ -845,9 +845,8 @@ public class DataLoader {
         return new ActionCustom(canFail, prompt, phrase, phraseFail, condition, conditionShow, script, scriptFail);
     }
 
-    // TODO - Delay creation of instances until all data has been loaded (could attempt to load instance before template is loaded)
     private static Actor loadActorInstance(Game game, Element actorElement, Area area) throws ParserConfigurationException, IOException, SAXException {
-        if(actorElement == null) return null;
+        if (actorElement == null) return null;
         String ID = actorElement.getAttribute("id");
         String template = LoadUtils.attribute(actorElement, "template", null);
         List<Behavior> behaviors = loadBehaviors(LoadUtils.singleChildWithName(actorElement, "behaviors"));
@@ -857,9 +856,9 @@ public class DataLoader {
     }
 
     private static List<Behavior> loadBehaviors(Element behaviorsElement) throws ParserConfigurationException, IOException, SAXException {
-        if(behaviorsElement == null) return new ArrayList<>();
+        if (behaviorsElement == null) return new ArrayList<>();
         List<Behavior> behaviors = new ArrayList<>();
-        for(Element behaviorElement : LoadUtils.directChildrenWithName(behaviorsElement, "behavior")) {
+        for (Element behaviorElement : LoadUtils.directChildrenWithName(behaviorsElement, "behavior")) {
             Behavior behavior;
             String type = LoadUtils.attribute(behaviorElement, "type", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"));

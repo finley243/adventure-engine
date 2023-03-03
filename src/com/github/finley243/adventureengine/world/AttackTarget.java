@@ -5,6 +5,8 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public interface AttackTarget {
 
+    boolean canBeAttacked();
+
     void damage(Damage damage);
 
     Area getArea();

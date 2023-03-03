@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -102,14 +103,14 @@ public class WeaponAttackType {
             targetEffectsCombined.addAll(weapon.getTargetEffects());
         }
         if (category == AttackCategory.SINGLE) {
-            for (Actor target : subject.getVisibleActors()) {
-                if (!target.equals(subject) && !target.isDead()) {
+            for (AttackTarget target : subject.getVisibleAttackTargets()) {
+                if (!target.equals(subject) && target.canBeAttacked()) {
                     actions.add(new ActionAttackBasic(item, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType));
                 }
             }
         } else if (category == AttackCategory.TARGETED) {
             for (Actor target : subject.getVisibleActors()) {
-                if (!target.equals(subject) && !target.isDead()) {
+                if (!target.equals(subject) && target.canBeAttacked()) {
                     for (Limb limb : target.getLimbs()) {
                         actions.add(new ActionAttackLimb(item, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType));
                     }
