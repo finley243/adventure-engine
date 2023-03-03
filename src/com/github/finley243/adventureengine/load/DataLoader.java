@@ -283,7 +283,8 @@ public class DataLoader {
             case "inventoryItem":
                 Variable invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varInv"), "inventory", "stat");
                 Variable invItemID = loadVariable(LoadUtils.singleChildWithName(conditionElement, "item"), "string", null);
-                return new ConditionInventoryItem(invert, invItemVar, invItemID);
+                boolean invRequireAll = LoadUtils.attributeBool(conditionElement, "requireAll", false);
+                return new ConditionInventoryItem(invert, invItemVar, invItemID, invRequireAll);
             case "actorVisible":
                 ActorReference visibleTargetRef = loadActorReference(conditionElement, "target");
                 return new ConditionActorVisible(invert, actorRef, visibleTargetRef);
@@ -334,6 +335,7 @@ public class DataLoader {
     }
 
     private static Variable loadVariable(Element variableElement, String dataTypeDefault, String varTypeDefault) {
+        if (variableElement == null) return null;
         String type = LoadUtils.attribute(variableElement, "type", varTypeDefault);
         String dataType = LoadUtils.attribute(variableElement, "dataType", dataTypeDefault);
         switch (type) {
