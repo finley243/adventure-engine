@@ -15,7 +15,7 @@ public class ObjectTemplate extends GameInstanced {
     private final String name;
     private final Scene description;
     private final Map<String, Script> scripts;
-    private final List<ActionCustom> customActions;
+    private final List<String> customActions;
     private final Map<String, String> components;
     private final Map<String, Boolean> localVarsBooleanDefault;
     private final Map<String, Integer> localVarsIntegerDefault;
@@ -23,7 +23,7 @@ public class ObjectTemplate extends GameInstanced {
     private final Map<String, String> localVarsStringDefault;
     private final Map<String, Set<String>> localVarsStringSetDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom> customActions, Map<String, String> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
+    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<String> customActions, Map<String, String> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
         super(game, ID);
         this.name = name;
         this.description = description;
@@ -49,7 +49,7 @@ public class ObjectTemplate extends GameInstanced {
         return scripts;
     }
 
-    public List<ActionCustom> getCustomActions() {
+    public List<String> getCustomActions() {
         return customActions;
     }
 

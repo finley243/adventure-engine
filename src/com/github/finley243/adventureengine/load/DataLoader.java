@@ -33,7 +33,6 @@ import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.environment.RoomLink;
 import com.github.finley243.adventureengine.world.object.*;
 import com.github.finley243.adventureengine.world.object.params.ComponentParams;
-import com.github.finley243.adventureengine.world.object.params.ComponentParamsKey;
 import com.github.finley243.adventureengine.world.object.params.ComponentParamsLink;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
@@ -113,6 +112,11 @@ public class DataLoader {
                                     String effectID = LoadUtils.attribute((Element) currentChild, "id", null);
                                     Effect effect = loadEffect((Element) currentChild);
                                     game.data().addEffect(effectID, effect);
+                                    break;
+                                case "action":
+                                    String actionID = LoadUtils.attribute((Element) currentChild, "id", null);
+                                    ActionCustom action = loadCustomAction((Element) currentChild);
+                                    game.data().addAction(actionID, action);
                                     break;
                                 case "network":
                                     Network network = loadNetwork((Element) currentChild);
@@ -281,7 +285,7 @@ public class DataLoader {
                 String itemEquipExact = LoadUtils.attribute(conditionElement, "exact", null);
                 return new ConditionEquippedItem(invert, actorRef, itemEquipTag, itemEquipExact);
             case "inventoryItem":
-                Variable invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varInv"), "inventory", "stat");
+                Variable invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "inv"), "inventory", "stat");
                 Variable invItemID = loadVariable(LoadUtils.singleChildWithName(conditionElement, "item"), "string", null);
                 boolean invRequireAll = LoadUtils.attributeBool(conditionElement, "requireAll", false);
                 return new ConditionInventoryItem(invert, invItemVar, invItemID, invRequireAll);
@@ -407,12 +411,12 @@ public class DataLoader {
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
                 return new ScriptExternal(condition, scriptID);
             case "addItem":
-                Variable addItemInv = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInv"), "inventory", "stat");
+                Variable addItemInv = loadVariable(LoadUtils.singleChildWithName(scriptElement, "inv"), "inventory", "stat");
                 Variable addItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string", null);
                 return new ScriptAddItem(condition, addItemInv, addItemID);
             case "transferItem":
-                Variable transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvOrigin"), "inventory", "stat");
-                Variable transferItemInvTarget = loadVariable(LoadUtils.singleChildWithName(scriptElement, "varInvTarget"), "inventory", "stat");
+                Variable transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "invOrigin"), "inventory", "stat");
+                Variable transferItemInvTarget = loadVariable(LoadUtils.singleChildWithName(scriptElement, "invTarget"), "inventory", "stat");
                 Variable transferItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string", null);
                 boolean transferItemAll = LoadUtils.attributeBool(scriptElement, "all", false);
                 int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);
@@ -726,8 +730,7 @@ public class DataLoader {
         String name = LoadUtils.singleTag(objectElement, "name", null);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(objectElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
-        // TODO - Find way to load object ID for custom actions (needs to be the instance ID, not the template ID)
-        List<ActionCustom> customActions = loadCustomActions(objectElement, "action");
+        List<String> customActions = LoadUtils.listOfTags(objectElement, "action");
         Map<String, String> components = new HashMap<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
             String componentID = LoadUtils.attribute(componentElement, "id", null);
@@ -790,9 +793,6 @@ public class DataLoader {
                 String linkObject = LoadUtils.attribute(paramsElement, "object", null);
                 AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(paramsElement, "dir", AreaLink.CompassDirection.class, null);
                 return new ComponentParamsLink(linkObject, linkDirection);
-            case "key":
-                Set<String> keyItems = LoadUtils.setOfTags(paramsElement, "item");
-                return new ComponentParamsKey(keyItems);
         }
         return null;
     }
@@ -823,30 +823,8 @@ public class DataLoader {
                 boolean userIsInCover = LoadUtils.attributeBool(componentElement, "cover", false);
                 boolean userIsHidden = LoadUtils.attributeBool(componentElement, "hidden", false);
                 boolean userCanSeeOtherAreas = LoadUtils.attributeBool(componentElement, "seeOtherAreas", true);
-                List<ActionCustom> usingActions = loadCustomActions(componentElement, "usingAction");
+                List<String> usingActions = LoadUtils.listOfTags(componentElement, "usingAction");
                 return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, usingActions);
-            case "check":
-                String checkPrompt = LoadUtils.singleTag(componentElement, "prompt", null);
-                boolean checkCanFail = LoadUtils.attributeBool(componentElement, "canFail", false);
-                String checkPhraseSuccess = LoadUtils.singleTag(componentElement, "phraseSuccess", null);
-                String checkPhraseFailure = LoadUtils.singleTag(componentElement, "phraseFailure", null);
-                Condition checkCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "condition"));
-                return new ObjectComponentTemplateCheck(game, ID, startEnabled, name, checkPrompt, checkCondition, checkCanFail, checkPhraseSuccess, checkPhraseFailure);
-            case "itemUse":
-                String itemUsePrompt = LoadUtils.singleTag(componentElement, "prompt", null);
-                String itemUsePhrase = LoadUtils.singleTag(componentElement, "phrase", null);
-                List<ObjectComponentTemplateItemUse.ItemUseData> itemUseData = new ArrayList<>();
-                for (Element itemUseElement : LoadUtils.directChildrenWithName(componentElement, "item")) {
-                    String itemID = LoadUtils.attribute(itemUseElement, "id", null);
-                    int itemCount = LoadUtils.attributeInt(itemUseElement, "count", 1);
-                    boolean isConsumed = LoadUtils.attributeBool(itemUseElement, "consumed", true);
-                    itemUseData.add(new ObjectComponentTemplateItemUse.ItemUseData(itemID, itemCount, isConsumed));
-                }
-                return new ObjectComponentTemplateItemUse(game, ID, startEnabled, name, itemUsePrompt, itemUseData, itemUsePhrase);
-            case "key":
-                String keyPrompt = LoadUtils.singleTag(componentElement, "prompt", null);
-                String keyPhrase = LoadUtils.singleTag(componentElement, "phrase", null);
-                return new ObjectComponentTemplateKey(game, ID, startEnabled, name, keyPrompt, keyPhrase);
             case "vending":
                 List<String> vendingItems = LoadUtils.listOfTags(componentElement, "item");
                 return new ObjectComponentTemplateVending(game, ID, startEnabled, name, vendingItems);
@@ -855,21 +833,16 @@ public class DataLoader {
         }
     }
 
-    private static List<ActionCustom> loadCustomActions(Element objectElement, String elementName) throws ParserConfigurationException, IOException, SAXException {
-        if(objectElement == null) return new ArrayList<>();
-        List<ActionCustom> actions = new ArrayList<>();
-        for (Element actionElement : LoadUtils.directChildrenWithName(objectElement, elementName)) {
-            boolean canFail = LoadUtils.attributeBool(actionElement, "canFail", false);
-            String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
-            String phrase = LoadUtils.singleTag(actionElement, "phrase", null);
-            String phraseFail = LoadUtils.singleTag(actionElement, "phraseFail", null);
-            Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
-            Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
-            Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
-            Script scriptFail = loadScript(LoadUtils.singleChildWithName(actionElement, "scriptFail"));
-            actions.add(new ActionCustom(canFail, prompt, phrase, phraseFail, condition, conditionShow, script, scriptFail));
-        }
-        return actions;
+    private static ActionCustom loadCustomAction(Element actionElement) throws ParserConfigurationException, IOException, SAXException {
+        boolean canFail = LoadUtils.attributeBool(actionElement, "canFail", false);
+        String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
+        String phrase = LoadUtils.singleTag(actionElement, "phrase", null);
+        String phraseFail = LoadUtils.singleTag(actionElement, "phraseFail", null);
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
+        Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
+        Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
+        Script scriptFail = loadScript(LoadUtils.singleChildWithName(actionElement, "scriptFail"));
+        return new ActionCustom(canFail, prompt, phrase, phraseFail, condition, conditionShow, script, scriptFail);
     }
 
     // TODO - Delay creation of instances until all data has been loaded (could attempt to load instance before template is loaded)

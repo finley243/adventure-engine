@@ -1,0 +1,34 @@
+<data>
+    <action id="lock_pick">
+        <prompt>Pick lock</prompt>
+        <phrase>pickLock</phrase>
+        <condition>
+            <condition type="boolean">
+                <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+            </condition>
+            <condition type="compare" equality="GREATER_EQUAL">
+                <var1 type="stat" dataType="int" stat="lockpick" holder="subject"/>
+                <var2 type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
+            </condition>
+        </condition>
+        <script type="setState" state="locked" holder="parentObject">
+            <var dataType="boolean" value="false"/>
+        </script>
+    </action>
+    <action id="lock_key">
+        <prompt>Unlock</prompt>
+        <phrase>unlock</phrase>
+        <condition>
+            <condition type="boolean">
+                <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+            </condition>
+            <condition type="inventoryItem" requireAll="false">
+                <inv type="stat" dataType="inventory" holder="subject"/>
+                <item type="stat" dataType="stringSet" stat="lock_keys" holder="parentObject"/>
+            </condition>
+        </condition>
+        <script type="setState" state="locked" holder="parentObject">
+            <var dataType="boolean" value="false"/>
+        </script>
+    </action>
+</data>

@@ -46,6 +46,7 @@
         <skill key="MELEE" value="5"/>
         <skill key="INTIMIDATION" value="6"/>
         <inventory>
+            <item>wilsons_corner_store_key</item>
             <item>pistol_heavy</item>
             <item>katana</item>
             <!--<item>tactical_vest</item>-->
@@ -111,6 +112,7 @@
     <actor id="frank_wilson" parent="default" hp="50" faction="cornerstore_staff" dialogueStart="cornerstore_shopkeeper_start">
         <name proper="false" pronoun="HE">shopkeeper</name>
         <inventory>
+            <item>wilsons_corner_store_key</item>
             <item>pistol_heavy</item>
         </inventory>
         <vendor lootTable="vendor_cornerstore"/>

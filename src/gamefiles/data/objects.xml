@@ -10,22 +10,12 @@
         <name>door</name>
         <component id="door_link" template="door_link_locked"/>
         <localVar name="locked" dataType="boolean" value="true"/>
-        <action>
-            <prompt>Pick lock</prompt>
-            <phrase>pickLock</phrase>
-            <condition>
-                <condition type="boolean">
-                    <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
-                </condition>
-                <condition type="compare" equality="GREATER_EQUAL">
-                    <var1 type="stat" dataType="int" stat="lockpick" holder="subject"/>
-                    <var2 dataType="int" value="3"/>
-                </condition>
-            </condition>
-            <script type="setState" state="locked" holder="parentObject">
-                <var dataType="boolean" value="false"/>
-            </script>
-        </action>
+        <localVar name="lock_pick_difficulty" dataType="int" value="5"/>
+        <localVar name="lock_keys" dataType="stringSet">
+            <value>wilsons_corner_store_key</value>
+        </localVar>
+        <action>lock_key</action>
+        <action>lock_pick</action>
     </object>
     <object id="chair_plastic">
         <name>plastic chair</name>

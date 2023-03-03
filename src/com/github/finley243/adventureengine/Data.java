@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine;
 
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorFactory;
 import com.github.finley243.adventureengine.actor.ActorTemplate;
@@ -54,6 +55,7 @@ public class Data {
 	private final Map<String, Network> networks = new HashMap<>();
 	private final Map<String, Timer> timers = new HashMap<>();
 	private final Map<String, Effect> effects = new HashMap<>();
+	private final Map<String, ActionCustom> actions = new HashMap<>();
 
 	private final Map<String, Boolean> globalBooleans = new HashMap<>();
 	private final Map<String, Integer> globalIntegers = new HashMap<>();
@@ -104,7 +106,12 @@ public class Data {
 		networks.clear();
 		timers.clear();
 		effects.clear();
+		actions.clear();
 		globalIntegers.clear();
+		globalFloats.clear();
+		globalBooleans.clear();
+		globalStrings.clear();
+		globalStringSets.clear();
 		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
 		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getConfig("playerStats"));
 		addActor(player.getID(), player);
@@ -380,6 +387,16 @@ public class Data {
 
 	public Effect getEffect(String id) {
 		return effects.get(id);
+	}
+
+	public void addAction(String id, ActionCustom value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add action with blank ID");
+		if(actions.containsKey(id)) throw new IllegalArgumentException("Cannot add action with existing ID: " + id);
+		actions.put(id, value);
+	}
+
+	public ActionCustom getAction(String id) {
+		return actions.get(id);
 	}
 
 	public void setGlobalBoolean(String id, boolean value) {

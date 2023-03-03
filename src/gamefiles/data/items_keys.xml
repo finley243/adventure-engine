@@ -11,4 +11,7 @@
     <item type="misc" id="stratis_security_key">
         <name>Stratis security key</name>
     </item>
+    <item type="misc" id="wilsons_corner_store_key">
+        <name>Wilson's corner store key</name>
+    </item>
 </data>
