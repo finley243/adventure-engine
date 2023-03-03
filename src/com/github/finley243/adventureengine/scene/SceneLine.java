@@ -38,7 +38,7 @@ public class SceneLine {
     }
     
     public boolean shouldShow(Actor subject, Actor target, String lastTopicID) {
-    	return (condition == null || condition.isMet(new ContextScript(subject.game(), subject, target, null)))
+    	return (condition == null || condition.isMet(new ContextScript(subject.game(), subject, target, null, null)))
                 && !(once && hasTriggered)
                 && !(fromSceneID != null && !fromSceneID.equals(lastTopicID));
     }
@@ -46,7 +46,7 @@ public class SceneLine {
     public void trigger(Actor subject, Actor target) {
     	hasTriggered = true;
         if(script != null) {
-            script.execute(new ContextScript(subject.game(), subject, target, null));
+            script.execute(new ContextScript(subject.game(), subject, target, null, null));
         }
     }
     

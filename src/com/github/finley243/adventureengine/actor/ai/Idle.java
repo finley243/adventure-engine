@@ -19,7 +19,7 @@ public class Idle {
     }
 
     public boolean canPlay(Actor subject) {
-        return condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject, null));
+        return condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject, null, null));
     }
 
     public void trigger(Actor subject) {

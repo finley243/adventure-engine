@@ -542,7 +542,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if(scripts.containsKey(entryPoint)) {
-			scripts.get(entryPoint).execute(new ContextScript(game(), subject, target, null));
+			scripts.get(entryPoint).execute(new ContextScript(game(), subject, target, null, null));
 		}
 	}
 

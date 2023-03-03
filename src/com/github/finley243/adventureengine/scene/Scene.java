@@ -41,7 +41,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	public boolean canChoose(Actor subject, Actor target) {
-		return (condition == null || condition.isMet(new ContextScript(game(), subject, target, null))) && !(once && hasTriggered);
+		return (condition == null || condition.isMet(new ContextScript(game(), subject, target, null, null))) && !(once && hasTriggered);
 	}
 	
 	public List<SceneLine> getLines() {

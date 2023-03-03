@@ -46,15 +46,15 @@ public class ActionCustom extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         if (object == null) throw new UnsupportedOperationException("Object was not set in ActionCustom before execution");
         Context context = new Context(new NounMapper().put("actor", subject).put("object", object).build());
-        if (canFail && !condition.isMet(new ContextScript(subject.game(), subject, subject, object))) {
+        if (canFail && !condition.isMet(new ContextScript(subject.game(), subject, subject, object, null))) {
             subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phraseFail), context, this, null, subject, null));
             if (scriptFail != null) {
-                scriptFail.execute(new ContextScript(subject.game(), subject, subject, object));
+                scriptFail.execute(new ContextScript(subject.game(), subject, subject, object, null));
             }
         } else {
             subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
             if (script != null) {
-                script.execute(new ContextScript(subject.game(), subject, subject, object));
+                script.execute(new ContextScript(subject.game(), subject, subject, object, null));
             }
         }
     }
@@ -62,7 +62,7 @@ public class ActionCustom extends Action {
     @Override
     public boolean canChoose(Actor subject) {
         if (object == null) throw new UnsupportedOperationException("Object was not set in ActionCustom before execution");
-        return super.canChoose(subject) && (condition == null || canFail || condition.isMet(new ContextScript(subject.game(), subject, subject, object)));
+        return super.canChoose(subject) && (condition == null || canFail || condition.isMet(new ContextScript(subject.game(), subject, subject, object, null)));
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ActionCustom extends Action {
 
     public boolean canShow(Actor subject) {
         if (object == null) throw new UnsupportedOperationException("Object was not set in ActionCustom before execution");
-        return conditionShow == null || conditionShow.isMet(new ContextScript(subject.game(), subject, subject, object));
+        return conditionShow == null || conditionShow.isMet(new ContextScript(subject.game(), subject, subject, object, null));
     }
 
 }

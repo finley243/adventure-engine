@@ -31,6 +31,22 @@ public class StatHolderReference {
                 return context.game().data().getObject((String) context.getParentObject().getComponentParams(holderID).getParameter("object"));
             case "linkedObjectComponent":
                 return context.game().data().getObject((String) context.getParentObject().getComponentParams(holderID).getParameter("object")).getComponent(holderLocalID);
+            case "actorEquippedItem":
+                return context.game().data().getActor(holderID).getEquipmentComponent().getEquippedItem();
+            case "subjectEquippedItem":
+                return context.getSubject().getEquipmentComponent().getEquippedItem();
+            case "targetEquippedItem":
+                return context.getTarget().getEquipmentComponent().getEquippedItem();
+            case "playerEquippedItem":
+                return context.game().data().getPlayer().getEquipmentComponent().getEquippedItem();
+            case "actorUsingObject":
+                return context.game().data().getActor(holderID).getUsingObject().getObject();
+            case "subjectUsingObject":
+                return context.getSubject().getUsingObject().getObject();
+            case "targetUsingObject":
+                return context.getTarget().getUsingObject().getObject();
+            case "playerUsingObject":
+                return context.game().data().getPlayer().getUsingObject().getObject();
             case "item":
                 return context.game().data().getItemState(holderID);
             case "area":
