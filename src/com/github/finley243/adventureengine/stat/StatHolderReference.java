@@ -49,6 +49,8 @@ public class StatHolderReference {
                 return context.game().data().getPlayer().getUsingObject().getObject();
             case "item":
                 return context.game().data().getItemState(holderID);
+            case "parentItem":
+                return context.getParentItem();
             case "area":
                 return context.game().data().getArea(holderID);
             case "room":
