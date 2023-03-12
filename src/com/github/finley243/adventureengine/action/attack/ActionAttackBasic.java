@@ -28,8 +28,7 @@ public class ActionAttackBasic extends ActionAttack {
 	public void consumeAmmo(Actor subject) {
 		if (weapon instanceof ItemWeapon) {
 			if (((ItemWeapon) weapon).getClipSize() > 0) {
-				if (((ItemWeapon) weapon).getLoadedAmmoType().isReusable() && ((ItemWeapon) weapon).getLoadedAmmoType() != null) {
-					//Item.itemToObject(weapon.game(), ((ItemWeapon) weapon).getLoadedAmmoType(), getAmmoConsumed(), target.getArea());
+				if (((ItemWeapon) weapon).getLoadedAmmoType() != null && ((ItemWeapon) weapon).getLoadedAmmoType().isReusable()) {
 					target.getArea().getInventory().addItems(((ItemWeapon) weapon).getLoadedAmmoType(), getAmmoConsumed());
 				}
 				((ItemWeapon) weapon).consumeAmmo(getAmmoConsumed());

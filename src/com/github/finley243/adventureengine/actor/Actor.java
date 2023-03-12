@@ -565,13 +565,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			}
 		}
 	}
-
-	public void onDetectionUpdate(Actor subject, int detectionLevel, int maxDetectionLevel) {
-		if (playerControlled) {
-			// TODO - Change to SensoryEvent produced in TargetingComponent to avoid rendering before action phrases?
-			game().eventBus().post(new RenderTextEvent("(" + subject.getName() + " detection increased to " + detectionLevel + "/" + maxDetectionLevel + ")"));
-		}
-	}
 	
 	public void startUsingObject(ObjectComponentUsable object) {
 		this.usingObject = object;

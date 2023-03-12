@@ -20,7 +20,18 @@ public class TargetingComponent {
     private static final int TRESPASSING_TURNS_UNTIL_HOSTILE = 2;
 
     public enum DetectionState {
-        DETECTING, TRESPASSING, COMBATANT, NONCOMBATANT, DEAD
+        DETECTING(true, 8),
+        TRESPASSING(true, 4),
+        COMBATANT(false, 8),
+        NONCOMBATANT(false, 4),
+        DEAD(false, -1);
+
+        public final boolean updateOnTurn; // Only updates if visible
+        public final int turnsUntilRemove; // If -1, will never remove while in this state
+        DetectionState(boolean updateOnTurn, int turnsUntilRemove) {
+            this.updateOnTurn = updateOnTurn;
+            this.turnsUntilRemove = turnsUntilRemove;
+        }
     }
 
     public enum AlertState {
@@ -35,23 +46,11 @@ public class TargetingComponent {
     }
 
     private final Actor actor;
-    // Value is number of turns the actor has been detected
-    private final Map<Actor, Integer> detectionCounters;
-    private final Map<Actor, Integer> trespassingCounters;
-    private final Map<Actor, Combatant> combatants;
-    // TODO - Add system for removing non-combatants after they are not visible for several turns, just like combatants
-    private final Set<Actor> nonCombatants;
-    private final Set<Actor> deadActors;
     private final Map<Actor, DetectedActor> detectedActors;
     private AlertState alertState;
 
     public TargetingComponent(Actor actor) {
         this.actor = actor;
-        detectionCounters = new HashMap<>();
-        trespassingCounters = new HashMap<>();
-        combatants = new HashMap<>();
-        nonCombatants = new HashSet<>();
-        deadActors = new HashSet<>();
         this.detectedActors = new HashMap<>();
         this.alertState = DEFAULT_ALERT_STATE;
     }
@@ -60,69 +59,66 @@ public class TargetingComponent {
         this.alertState = state;
     }
 
-    public void clear() {
-        detectionCounters.clear();
-        combatants.clear();
-        nonCombatants.clear();
-        deadActors.clear();
-        detectedActors.clear();
-    }
-
-    // Executed at the beginning of subject's turn
     public void updateTurn() {
-        // TODO - Implement new system for lowering/removing detection counters when actors are not seen for a period of time
-        /*Set<Actor> visibleActors = actor.getVisibleActors();
-        for(Actor actor : detectionCounters.keySet()) {
-            if(!visibleActors.contains(actor)) {
-                detectionCounters.remove(actor);
-            }
-        }*/
-        for (Actor trespasser : trespassingCounters.keySet()) {
-            int newCounter = trespassingCounters.get(trespasser) + 1;
-            if (newCounter >= TRESPASSING_TURNS_UNTIL_HOSTILE) {
-                trespassingCounters.remove(trespasser);
-                addCombatant(trespasser);
+        Set<Actor> visibleActors = actor.getVisibleActors();
+        Set<Actor> actorsToRemove = new HashSet<>();
+        for (Map.Entry<Actor, DetectedActor> entry : detectedActors.entrySet()) {
+            if (visibleActors.contains(entry.getKey())) {
+                entry.getValue().lostVisualCounter = 0;
+                entry.getValue().lastKnownArea = entry.getKey().getArea();
+                if (entry.getValue().state.updateOnTurn) {
+                    updateState(entry.getKey());
+                }
             } else {
-                trespassingCounters.put(trespasser, newCounter);
-                actor.triggerScript("trespassing_warning", trespasser);
-                actor.triggerBark("trespassing_warning", trespasser);
+                if (entry.getValue().state.turnsUntilRemove != -1) {
+                    entry.getValue().lostVisualCounter += 1;
+                    if (entry.getValue().lostVisualCounter >= entry.getValue().state.turnsUntilRemove) {
+                        actorsToRemove.add(entry.getKey());
+                    }
+                }
             }
         }
-        for (Combatant combatant : combatants.values()) {
-            combatant.turnsUntilRemove -= 1;
+        for (Actor actorToRemove : actorsToRemove) {
+            if (detectedActors.get(actorToRemove).areaTarget != null) {
+                detectedActors.get(actorToRemove).areaTarget.markForRemoval();
+            }
+            detectedActors.remove(actorToRemove);
         }
     }
 
-    // Executed before each action during subject's turn
     public void update() {
-        boolean startEmpty = combatants.isEmpty();
-        for (Iterator<Actor> itr = combatants.keySet().iterator(); itr.hasNext();) {
-            Actor target = itr.next();
-            Combatant combatant = combatants.get(target);
-            if (combatant.areaTarget == null) {
-                combatant.areaTarget = new AreaTarget(idealAreas(combatant.lastKnownArea), 0.0f, true);
-                actor.addPursueTarget(combatant.areaTarget);
-            }
-            if (actor.canSee(target)) {
-                combatant.lastKnownArea = target.getArea();
-                combatant.turnsUntilRemove = TURNS_UNTIL_END_COMBAT;
-            }
-            combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
-            combatant.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, target));
-            if (target.isDead() || combatant.turnsUntilRemove <= 0) {
-                combatant.areaTarget.markForRemoval();
-                itr.remove();
+        boolean startedInCombat = false;
+        for (Map.Entry<Actor, DetectedActor> entry : detectedActors.entrySet()) {
+            if (entry.getValue().state == DetectionState.COMBATANT) {
+                startedInCombat = true;
+                if (actor.canSee(entry.getKey())) {
+                    entry.getValue().lastKnownArea = entry.getKey().getArea();
+                }
+                if (entry.getKey().isDead()) {
+                    entry.getValue().state = DetectionState.DEAD;
+                    entry.getValue().stateCounter = 0;
+                    if (entry.getValue().areaTarget != null) {
+                        entry.getValue().areaTarget.markForRemoval();
+                        entry.getValue().areaTarget = null;
+                    }
+                } else if (entry.getValue().areaTarget == null) {
+                    entry.getValue().areaTarget = new AreaTarget(idealAreas(entry.getValue().lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, entry.getKey()), true);
+                    actor.addPursueTarget(entry.getValue().areaTarget);
+                } else {
+                    entry.getValue().areaTarget.setTargetAreas(idealAreas(entry.getValue().lastKnownArea));
+                    entry.getValue().areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, entry.getKey()));
+                }
             }
         }
-        if (!startEmpty && combatants.isEmpty()) {
+        if (startedInCombat && !hasCombatants()) {
             actor.triggerScript("on_combat_end", actor);
             actor.triggerBark("on_combat_end", actor);
         }
     }
 
     public void updateCombatantArea(Actor target, Area area) {
-        if(combatants.containsKey(target)) {
-            Combatant combatant = combatants.get(target);
+        if(detectedActors.containsKey(target)) {
+            DetectedActor combatant = detectedActors.get(target);
             combatant.lastKnownArea = area;
             if (combatant.areaTarget != null) {
                 combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
@@ -131,113 +127,71 @@ public class TargetingComponent {
     }
 
     public void onVisibleAction(Action action, Actor subject) {
-        if (!isDetected(subject)) {
+        if (!detectedActors.containsKey(subject) || detectedActors.get(subject).state == DetectionState.DETECTING) {
             float detectionChance = getActionDetectionChance(action, subject);
             boolean detected = MathUtils.randomCheck(detectionChance);
             if (detected) {
-                if (detectionCounters.containsKey(subject)) {
-                    int currentCount = detectionCounters.get(subject);
-                    detectionCounters.put(subject, currentCount + 1);
-                } else {
-                    detectionCounters.put(subject, 1);
+                if (!detectedActors.containsKey(subject)) {
+                    detectedActors.put(subject, new DetectedActor(DetectionState.DETECTING, subject.getArea()));
                 }
-                subject.onDetectionUpdate(actor, detectionCounters.get(subject), detectionThreshold());
-                if (detectionCounters.get(subject) >= detectionThreshold()) {
-                    onDetected(subject);
+                // TODO - Replace with detection phrase (different phrases depending on level of detection)
+                //subject.onDetectionUpdate(subject, detectedActors.get(subject).stateCounter, detectionThreshold());
+                updateState(subject);
+            }
+        }
+        // TODO - Handle criminal action detection
+    }
+
+    private void updateState(Actor target) {
+        detectedActors.get(target).stateCounter += 1;
+        if (detectedActors.get(target).stateCounter >= getStateTriggerValue(detectedActors.get(target).state)) {
+            detectedActors.get(target).stateCounter = 0;
+            switch (detectedActors.get(target).state) {
+                case DETECTING -> {
+                    if (actor.isDead()) {
+                        // TODO - Limit response to actors in allied faction?
+                        actor.triggerScript("on_detect_dead", target);
+                        actor.triggerBark("on_detect_dead", target);
+                        detectedActors.get(target).state = DetectionState.DEAD;
+                    } else if ((target.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getRoom().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
+                        (target.getArea().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
+                        // TODO - Limit trespassing response to allies of owner faction (and possibly just enforcers)
+                        actor.triggerScript("on_detect_target_trespassing", target);
+                        actor.triggerBark("on_detect_target_trespassing", target);
+                        // TODO - Make trespassing cause a warning first (actor follows trespasser?), become hostile after a couple turns
+                        detectedActors.get(target).state = DetectionState.TRESPASSING;
+                    } else if (actor.getFaction().getRelationTo(target.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
+                        actor.triggerScript("on_detect_target_hostile", target);
+                        actor.triggerBark("on_detect_target_hostile", target);
+                        detectedActors.get(target).state = DetectionState.COMBATANT;
+                    } else {
+                        detectedActors.get(target).state = DetectionState.NONCOMBATANT;
+                    }
+                }
+                case TRESPASSING -> {
+                    // TODO - Transition to combatant
                 }
             }
         }
     }
 
-    private int detectionThreshold() {
-        return alertState.turnsToDetect;
-    }
-
-    private void progressState(Actor subject) {
-        DetectedActor detectionData = detectedActors.get(subject);
-        switch (detectionData.state) {
-            case DETECTING -> {
-                // TODO - Implement functionality of onDetected (transition to noncombatant, trespassing, or combatant)
-            }
-            case TRESPASSING -> {
-                // TODO - Transition to combatant
-            }
-        }
-    }
-
-    private void onDetected(Actor subject) {
-        // TODO - Add allied target adding? Handle with bark communication? (only for active combatants, not detected targets)
-        if ((actor.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getRoom().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
-                (actor.getArea().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
-            actor.triggerScript("on_detect_target_trespassing", subject);
-            actor.triggerBark("on_detect_target_trespassing", subject);
-            // TODO - Make trespassing cause a warning first (actor follows trespasser?), become hostile after a couple turns
-            //addCombatant(actor);
-            addTrespasser(actor);
-        } else if (actor.getFaction().getRelationTo(subject.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
-            actor.triggerScript("on_detect_target_faction", subject);
-            actor.triggerBark("on_detect_target_faction", subject);
-            addCombatant(actor);
-        } else {
-            addNonCombatant(actor);
-        }
-    }
-
-    // TODO - Needs to account for adding a combatant that is already in the non-combatant set
     public void addCombatant(Actor target) {
-        if (combatants.isEmpty()) {
+        if (!hasCombatants()) {
             actor.triggerScript("on_combat_start", target);
             actor.triggerBark("on_combat_start", target);
         }
-        detectionCounters.remove(target);
-        if (!combatants.containsKey(target)) {
-            combatants.put(target, new Combatant(target.getArea()));
+        if (detectedActors.containsKey(target)) {
+            detectedActors.get(target).state = DetectionState.COMBATANT;
+            detectedActors.get(target).stateCounter = 0;
+            detectedActors.get(target).lastKnownArea = target.getArea();
+        } else {
+            detectedActors.put(target, new DetectedActor(DetectionState.COMBATANT, target.getArea()));
         }
     }
-
-    private void addNonCombatant(Actor target) {
-        detectionCounters.remove(target);
-        nonCombatants.add(target);
-    }
-
-    private void addTrespasser(Actor target) {
-        detectionCounters.remove(target);
-        if (!trespassingCounters.containsKey(target)) {
-            trespassingCounters.put(target, 0);
-        }
-    }
-
-    /*public boolean isCombatant(Actor target){
-        return combatants.containsKey(target);
-    }*/
 
     public boolean isCombatant(Actor target) {
         return detectedActors.containsKey(target) && detectedActors.get(target).state == DetectionState.COMBATANT;
     }
-
-    /*public boolean isNonCombatant(Actor target) {
-        return nonCombatants.contains(target);
-    }*/
-
-    public boolean isNonCombatant(Actor target) {
-        return detectedActors.containsKey(target) && detectedActors.get(target).state == DetectionState.NONCOMBATANT;
-    }
-
-    /*public boolean isTrespasser(Actor target) {
-        return trespassingCounters.containsKey(target);
-    }*/
-
-    public boolean isTrespasser(Actor target) {
-        return detectedActors.containsKey(target) && detectedActors.get(target).state == DetectionState.TRESPASSING;
-    }
-
-    public boolean isDetected(Actor target) {
-        return isCombatant(target) || isNonCombatant(target) || isTrespasser(target);
-    }
-
-    /*public boolean hasCombatants() {
-        return !combatants.isEmpty();
-    }*/
 
     public boolean hasCombatants() {
         for (DetectedActor actor : detectedActors.values()) {
@@ -248,15 +202,6 @@ public class TargetingComponent {
         return false;
     }
 
-    /*public boolean hasCombatantsInArea(Area area) {
-        for(Combatant combatant : combatants.values()) {
-            if(combatant.lastKnownArea.equals(area)) {
-                return true;
-            }
-        }
-        return false;
-    }*/
-
     public boolean hasCombatantsInArea(Area area) {
         for (DetectedActor actor : detectedActors.values()) {
             if (actor.state == DetectionState.COMBATANT && actor.lastKnownArea != null && actor.lastKnownArea.equals(area)) {
@@ -265,10 +210,6 @@ public class TargetingComponent {
         }
         return false;
     }
-
-    /*public Set<Actor> getCombatants() {
-        return combatants.keySet();
-    }*/
 
     public Set<Actor> getCombatants() {
         Set<Actor> combatants = new HashSet<>();
@@ -279,14 +220,6 @@ public class TargetingComponent {
         }
         return combatants;
     }
-
-    /*public Area getLastKnownArea(Actor target) {
-        if(combatants.containsKey(target)) {
-            return combatants.get(target).lastKnownArea;
-        } else {
-            return null;
-        }
-    }*/
 
     public Area getLastKnownArea(Actor target) {
         if (!detectedActors.containsKey(target)) {
@@ -304,6 +237,20 @@ public class TargetingComponent {
             case NONE:
             default:
                 return 0.0f;
+        }
+    }
+
+    public int getStateTriggerValue(DetectionState state) {
+        switch (state) {
+            case DETECTING -> {
+                return alertState.turnsToDetect;
+            }
+            case TRESPASSING -> {
+                return TRESPASSING_TURNS_UNTIL_HOSTILE;
+            }
+            case COMBATANT, NONCOMBATANT, DEAD, default -> {
+                return -1;
+            }
         }
     }
 
@@ -368,26 +315,18 @@ public class TargetingComponent {
         return state;
     }*/
 
-    private static class Combatant {
-        public AreaTarget areaTarget;
-        public Area lastKnownArea;
-        public int turnsUntilRemove;
-
-        public Combatant(Area lastKnownArea) {
-            this.lastKnownArea = lastKnownArea;
-            this.turnsUntilRemove = TURNS_UNTIL_END_COMBAT;
-        }
-    }
-
     public static class DetectedActor {
         public DetectionState state;
         public int lostVisualCounter; // Counts up each turn while target is not visible, set to 0 when target is visible
-        public int stateCounter; // Counts down each turn until reaching 0, used to trigger state changes
+        public int stateCounter; // Counts up each turn (or on detection event) while target is visible until reaching state trigger value, used to trigger state changes
         public Area lastKnownArea;
         public AreaTarget areaTarget;
 
-        public DetectedActor(DetectionState state, int detectionCounter, Area lastKnownArea, AreaTarget areaTarget) {
-
+        public DetectedActor(DetectionState state, Area lastKnownArea) {
+            this.state = state;
+            this.lastKnownArea = lastKnownArea;
+            this.lostVisualCounter = 0;
+            this.stateCounter = 0;
         }
     }
 
