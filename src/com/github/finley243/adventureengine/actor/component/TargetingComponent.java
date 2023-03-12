@@ -19,6 +19,10 @@ public class TargetingComponent {
     private static final AlertState DEFAULT_ALERT_STATE = AlertState.AWARE;
     private static final int TRESPASSING_TURNS_UNTIL_HOSTILE = 2;
 
+    public enum DetectionState {
+        DETECTING, TRESPASSING, COMBATANT, NONCOMBATANT, DEAD
+    }
+
     public enum AlertState {
         DISTRACTED(4),
         AWARE(2),
@@ -38,6 +42,7 @@ public class TargetingComponent {
     // TODO - Add system for removing non-combatants after they are not visible for several turns, just like combatants
     private final Set<Actor> nonCombatants;
     private final Set<Actor> deadActors;
+    private final Map<Actor, DetectedActor> detectedActors;
     private AlertState alertState;
 
     public TargetingComponent(Actor actor) {
@@ -47,6 +52,7 @@ public class TargetingComponent {
         combatants = new HashMap<>();
         nonCombatants = new HashSet<>();
         deadActors = new HashSet<>();
+        this.detectedActors = new HashMap<>();
         this.alertState = DEFAULT_ALERT_STATE;
     }
 
@@ -59,6 +65,7 @@ public class TargetingComponent {
         combatants.clear();
         nonCombatants.clear();
         deadActors.clear();
+        detectedActors.clear();
     }
 
     // Executed at the beginning of subject's turn
@@ -146,6 +153,18 @@ public class TargetingComponent {
         return alertState.turnsToDetect;
     }
 
+    private void progressState(Actor subject) {
+        DetectedActor detectionData = detectedActors.get(subject);
+        switch (detectionData.state) {
+            case DETECTING -> {
+                // TODO - Implement functionality of onDetected (transition to noncombatant, trespassing, or combatant)
+            }
+            case TRESPASSING -> {
+                // TODO - Transition to combatant
+            }
+        }
+    }
+
     private void onDetected(Actor subject) {
         // TODO - Add allied target adding? Handle with bark communication? (only for active combatants, not detected targets)
         if ((actor.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(actor.getArea().getRoom().getOwnerFaction()).getRelationTo(subject.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
@@ -188,45 +207,92 @@ public class TargetingComponent {
         }
     }
 
-    public boolean isCombatant(Actor target){
+    /*public boolean isCombatant(Actor target){
         return combatants.containsKey(target);
+    }*/
+
+    public boolean isCombatant(Actor target) {
+        return detectedActors.containsKey(target) && detectedActors.get(target).state == DetectionState.COMBATANT;
     }
+
+    /*public boolean isNonCombatant(Actor target) {
+        return nonCombatants.contains(target);
+    }*/
 
     public boolean isNonCombatant(Actor target) {
-        return nonCombatants.contains(target);
+        return detectedActors.containsKey(target) && detectedActors.get(target).state == DetectionState.NONCOMBATANT;
     }
 
-    public boolean isTrespasser(Actor target) {
+    /*public boolean isTrespasser(Actor target) {
         return trespassingCounters.containsKey(target);
+    }*/
+
+    public boolean isTrespasser(Actor target) {
+        return detectedActors.containsKey(target) && detectedActors.get(target).state == DetectionState.TRESPASSING;
     }
 
     public boolean isDetected(Actor target) {
         return isCombatant(target) || isNonCombatant(target) || isTrespasser(target);
     }
 
-    public boolean hasCombatants() {
+    /*public boolean hasCombatants() {
         return !combatants.isEmpty();
-    }
+    }*/
 
-    public boolean hasCombatantsInArea(Area area) {
-        for(Combatant combatant : combatants.values()) {
-            if(combatant.lastKnownArea.equals(area)) {
+    public boolean hasCombatants() {
+        for (DetectedActor actor : detectedActors.values()) {
+            if (actor.state == DetectionState.COMBATANT) {
                 return true;
             }
         }
         return false;
     }
 
-    public Set<Actor> getCombatants() {
-        return combatants.keySet();
+    /*public boolean hasCombatantsInArea(Area area) {
+        for(Combatant combatant : combatants.values()) {
+            if(combatant.lastKnownArea.equals(area)) {
+                return true;
+            }
+        }
+        return false;
+    }*/
+
+    public boolean hasCombatantsInArea(Area area) {
+        for (DetectedActor actor : detectedActors.values()) {
+            if (actor.state == DetectionState.COMBATANT && actor.lastKnownArea != null && actor.lastKnownArea.equals(area)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public Area getLastKnownArea(Actor target) {
+    /*public Set<Actor> getCombatants() {
+        return combatants.keySet();
+    }*/
+
+    public Set<Actor> getCombatants() {
+        Set<Actor> combatants = new HashSet<>();
+        for (Map.Entry<Actor, DetectedActor> actor : detectedActors.entrySet()) {
+            if (actor.getValue().state == DetectionState.COMBATANT) {
+                combatants.add(actor.getKey());
+            }
+        }
+        return combatants;
+    }
+
+    /*public Area getLastKnownArea(Actor target) {
         if(combatants.containsKey(target)) {
             return combatants.get(target).lastKnownArea;
         } else {
             return null;
         }
+    }*/
+
+    public Area getLastKnownArea(Actor target) {
+        if (!detectedActors.containsKey(target)) {
+            return null;
+        }
+        return detectedActors.get(target).lastKnownArea;
     }
 
     public float getActionDetectionChance(Action action, Actor subject) {
@@ -242,6 +308,7 @@ public class TargetingComponent {
     }
 
     private Set<AreaLink.DistanceCategory> idealDistances() {
+        // TODO - Generalize function (not specific to weapon)
         if (actor.getEquipmentComponent() != null && actor.getEquipmentComponent().hasEquippedItem() && actor.getEquipmentComponent().getEquippedItem() instanceof ItemWeapon) {
             return ((ItemWeapon) actor.getEquipmentComponent().getEquippedItem()).getRanges();
         } else {
@@ -251,15 +318,10 @@ public class TargetingComponent {
 
     private Set<Area> idealAreas(Area origin) {
         Set<AreaLink.DistanceCategory> idealDistances = idealDistances();
-        if (idealDistances.size() == 1 && idealDistances.contains(AreaLink.DistanceCategory.NEAR)) {
-            Set<Area> idealAreas = new HashSet<>();
-            idealAreas.add(origin);
-            return idealAreas;
-        }
         return origin.visibleAreasInRange(actor, idealDistances);
     }
 
-    public void loadState(SaveData data) {
+    /*public void loadState(SaveData data) {
         if (data.getParameter().equals("targeting")) {
             for (SaveData subData : data.getValueMulti()) {
                 switch (subData.getParameter()) {
@@ -304,7 +366,7 @@ public class TargetingComponent {
             state.add(new SaveData(null, null, "combatant", combatantData));
         }
         return state;
-    }
+    }*/
 
     private static class Combatant {
         public AreaTarget areaTarget;
@@ -314,6 +376,18 @@ public class TargetingComponent {
         public Combatant(Area lastKnownArea) {
             this.lastKnownArea = lastKnownArea;
             this.turnsUntilRemove = TURNS_UNTIL_END_COMBAT;
+        }
+    }
+
+    public static class DetectedActor {
+        public DetectionState state;
+        public int lostVisualCounter; // Counts up each turn while target is not visible, set to 0 when target is visible
+        public int stateCounter; // Counts down each turn until reaching 0, used to trigger state changes
+        public Area lastKnownArea;
+        public AreaTarget areaTarget;
+
+        public DetectedActor(DetectionState state, int detectionCounter, Area lastKnownArea, AreaTarget areaTarget) {
+
         }
     }
 

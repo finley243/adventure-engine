@@ -1141,7 +1141,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 				}
 				break;
 			case "targeting":
-				if(targetingComponent != null) targetingComponent.loadState(saveData);
+				//if(targetingComponent != null) targetingComponent.loadState(saveData);
+				break;
 			case "inventory":
 				if (inventory != null) inventory.loadState(saveData);
 				break;
@@ -1179,7 +1180,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "inventory", inventory.saveState()));
 		}
 		if (targetingComponent != null) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "targeting", targetingComponent.saveState()));
+			//state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "targeting", targetingComponent.saveState()));
 		}
 		if(equipmentComponent.hasEquippedItem()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedItem", equipmentComponent.getEquippedItem().getID()));

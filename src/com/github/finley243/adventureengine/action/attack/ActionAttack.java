@@ -238,19 +238,19 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     private String getHitPhrase(int repeatActionCount) {
-        return repeatActionCount > 0 ? hitPhraseRepeat : hitPhrase;
+        return repeatActionCount > 0 && hitPhraseRepeat != null ? hitPhraseRepeat : hitPhrase;
     }
 
     private String getMissPhrase(int repeatActionCount) {
-        return repeatActionCount > 0 ? missPhraseRepeat : missPhrase;
+        return repeatActionCount > 0 && missPhraseRepeat != null ? missPhraseRepeat : missPhrase;
     }
 
     private String getHitOverallPhrase(int repeatActionCount) {
-        return repeatActionCount > 0 ? hitOverallPhraseRepeat : hitOverallPhrase;
+        return repeatActionCount > 0 && hitOverallPhraseRepeat != null ? hitOverallPhraseRepeat : hitOverallPhrase;
     }
 
     private String getMissOverallPhrase(int repeatActionCount) {
-        return repeatActionCount > 0 ? missOverallPhraseRepeat : missOverallPhrase;
+        return repeatActionCount > 0 && missOverallPhraseRepeat != null ? missOverallPhraseRepeat : missOverallPhrase;
     }
 
 }
