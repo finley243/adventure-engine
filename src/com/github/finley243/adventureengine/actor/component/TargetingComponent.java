@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -15,15 +14,14 @@ import java.util.*;
 
 public class TargetingComponent {
 
-    private static final int TURNS_UNTIL_END_COMBAT = 8;
     private static final AlertState DEFAULT_ALERT_STATE = AlertState.AWARE;
     private static final int TRESPASSING_TURNS_UNTIL_HOSTILE = 2;
 
     public enum DetectionState {
         DETECTING(true, 8),
         TRESPASSING(true, 4),
-        COMBATANT(false, 8),
-        NONCOMBATANT(false, 4),
+        HOSTILE(false, 8),
+        PASSIVE(false, 4),
         DEAD(false, -1);
 
         public final boolean updateOnTurn; // Only updates if visible
@@ -89,7 +87,7 @@ public class TargetingComponent {
     public void update() {
         boolean startedInCombat = false;
         for (Map.Entry<Actor, DetectedActor> entry : detectedActors.entrySet()) {
-            if (entry.getValue().state == DetectionState.COMBATANT) {
+            if (entry.getValue().state == DetectionState.HOSTILE) {
                 startedInCombat = true;
                 if (actor.canSee(entry.getKey())) {
                     entry.getValue().lastKnownArea = entry.getKey().getArea();
@@ -110,13 +108,13 @@ public class TargetingComponent {
                 }
             }
         }
-        if (startedInCombat && !hasCombatants()) {
+        if (startedInCombat && !hasTargetsOfType(DetectionState.HOSTILE)) {
             actor.triggerScript("on_combat_end", actor);
             actor.triggerBark("on_combat_end", actor);
         }
     }
 
-    public void updateCombatantArea(Actor target, Area area) {
+    public void updateTargetArea(Actor target, Area area) {
         if(detectedActors.containsKey(target)) {
             DetectedActor combatant = detectedActors.get(target);
             combatant.lastKnownArea = area;
@@ -158,63 +156,65 @@ public class TargetingComponent {
                         // TODO - Limit trespassing response to allies of owner faction (and possibly just enforcers)
                         actor.triggerScript("on_detect_target_trespassing", target);
                         actor.triggerBark("on_detect_target_trespassing", target);
-                        // TODO - Make trespassing cause a warning first (actor follows trespasser?), become hostile after a couple turns
+                        // TODO - Make actor follow trespasser until they leave the area?
                         detectedActors.get(target).state = DetectionState.TRESPASSING;
                     } else if (actor.getFaction().getRelationTo(target.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
                         actor.triggerScript("on_detect_target_hostile", target);
                         actor.triggerBark("on_detect_target_hostile", target);
-                        detectedActors.get(target).state = DetectionState.COMBATANT;
+                        detectedActors.get(target).state = DetectionState.HOSTILE;
                     } else {
-                        detectedActors.get(target).state = DetectionState.NONCOMBATANT;
+                        detectedActors.get(target).state = DetectionState.PASSIVE;
                     }
                 }
                 case TRESPASSING -> {
-                    // TODO - Transition to combatant
+                    actor.triggerScript("on_trespassing_become_hostile", target);
+                    actor.triggerBark("on_trespassing_become_hostile", target);
+                    detectedActors.get(target).state = DetectionState.HOSTILE;
                 }
             }
         }
     }
 
     public void addCombatant(Actor target) {
-        if (!hasCombatants()) {
+        if (!hasTargetsOfType(DetectionState.HOSTILE)) {
             actor.triggerScript("on_combat_start", target);
             actor.triggerBark("on_combat_start", target);
         }
         if (detectedActors.containsKey(target)) {
-            detectedActors.get(target).state = DetectionState.COMBATANT;
+            detectedActors.get(target).state = DetectionState.HOSTILE;
             detectedActors.get(target).stateCounter = 0;
             detectedActors.get(target).lastKnownArea = target.getArea();
         } else {
-            detectedActors.put(target, new DetectedActor(DetectionState.COMBATANT, target.getArea()));
+            detectedActors.put(target, new DetectedActor(DetectionState.HOSTILE, target.getArea()));
         }
     }
 
-    public boolean isCombatant(Actor target) {
-        return detectedActors.containsKey(target) && detectedActors.get(target).state == DetectionState.COMBATANT;
+    public boolean isTargetOfType(Actor target, DetectionState type) {
+        return detectedActors.containsKey(target) && detectedActors.get(target).state == type;
     }
 
-    public boolean hasCombatants() {
+    public boolean hasTargetsOfType(DetectionState type) {
         for (DetectedActor actor : detectedActors.values()) {
-            if (actor.state == DetectionState.COMBATANT) {
+            if (actor.state == type) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean hasCombatantsInArea(Area area) {
+    public boolean hasTargetsOfTypeInArea(DetectionState type, Area area) {
         for (DetectedActor actor : detectedActors.values()) {
-            if (actor.state == DetectionState.COMBATANT && actor.lastKnownArea != null && actor.lastKnownArea.equals(area)) {
+            if (actor.state == type && actor.lastKnownArea != null && actor.lastKnownArea.equals(area)) {
                 return true;
             }
         }
         return false;
     }
 
-    public Set<Actor> getCombatants() {
+    public Set<Actor> getTargetsOfType(DetectionState type) {
         Set<Actor> combatants = new HashSet<>();
         for (Map.Entry<Actor, DetectedActor> actor : detectedActors.entrySet()) {
-            if (actor.getValue().state == DetectionState.COMBATANT) {
+            if (actor.getValue().state == type) {
                 combatants.add(actor.getKey());
             }
         }
@@ -248,7 +248,7 @@ public class TargetingComponent {
             case TRESPASSING -> {
                 return TRESPASSING_TURNS_UNTIL_HOSTILE;
             }
-            case COMBATANT, NONCOMBATANT, DEAD, default -> {
+            case HOSTILE, PASSIVE, DEAD, default -> {
                 return -1;
             }
         }

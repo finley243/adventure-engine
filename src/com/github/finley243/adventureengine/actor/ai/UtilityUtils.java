@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.ai;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.ArrayList;
@@ -15,8 +16,7 @@ public class UtilityUtils {
 	public static final float PURSUE_TARGET_UTILITY_RANGED = 0.6f;
 	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.7f;
 	public static final float PURSUE_TARGET_UTILITY_UNARMED = 0.0f;
-	public static final float INVESTIGATE_NOISE_UTILITY = 0.5f;
-	
+
 	public static float getMovementUtility(Actor subject, Area area, boolean isDoor) {
 		float utility = 0.0f;
 		for (AreaTarget target : subject.getPursueTargets()) {
@@ -29,10 +29,10 @@ public class UtilityUtils {
 	}
 
 	public static float getCoverUtility(Actor subject) {
-		if(subject.getTargetingComponent() == null) return 0.0f;
+		if (subject.getTargetingComponent() == null) return 0.0f;
 		int targetsBlocked = 0;
 		int totalTargets = 0;
-		for(Actor target : subject.getTargetingComponent().getCombatants()) {
+		for (Actor target : subject.getTargetingComponent().getTargetsOfType(TargetingComponent.DetectionState.HOSTILE)) {
 			Area lastKnownArea = subject.getTargetingComponent().getLastKnownArea(target);
 			if (target.getEquipmentComponent().hasRangedWeaponEquipped() && lastKnownArea != null && lastKnownArea != subject.getArea()) {
 				targetsBlocked++;

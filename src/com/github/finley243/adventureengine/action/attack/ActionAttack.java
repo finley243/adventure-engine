@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandomEach;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.combat.CombatHelper;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -211,7 +212,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     public float utility(Actor subject) {
         if (subject.getTargetingComponent() == null) return 0.0f;
         for (AttackTarget target : targets) {
-            if (target instanceof Actor && subject.getTargetingComponent().isCombatant((Actor) target)) {
+            if (target instanceof Actor && subject.getTargetingComponent().isTargetOfType((Actor) target, TargetingComponent.DetectionState.HOSTILE)) {
                 return 0.8f;
             }
         }

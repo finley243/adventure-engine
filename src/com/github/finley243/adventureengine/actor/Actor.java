@@ -7,7 +7,6 @@ import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.Idle;
-import com.github.finley243.adventureengine.actor.ai.InvestigateTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
@@ -109,7 +108,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	private int money;
 	private ObjectComponentUsable usingObject;
 	private final Set<AreaTarget> areaTargets;
-	private final InvestigateTarget investigateTarget;
 	private int sleepCounter;
 	private boolean playerControlled;
 
@@ -120,7 +118,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		this.templateID = templateID;
 		this.targetingComponent = new TargetingComponent(this);
 		this.areaTargets = new HashSet<>();
-		this.investigateTarget = new InvestigateTarget();
 		this.startDead = startDead;
 		this.isDead = startDead;
 		this.maxHP = new StatInt(this);
@@ -547,7 +544,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 						}
 					}
 					if (event.getAction() instanceof ActionMove) {
-						targetingComponent.updateCombatantArea(event.getSubject(), ((ActionMove) event.getAction()).getDestinationArea());
+						targetingComponent.updateTargetArea(event.getSubject(), ((ActionMove) event.getAction()).getDestinationArea());
 					}
 				} else {
 					if (event.isBark()) {
@@ -583,11 +580,11 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 	
 	public boolean isInCombat() {
-		return targetingComponent.hasCombatants();
+		return targetingComponent.hasTargetsOfType(TargetingComponent.DetectionState.HOSTILE);
 	}
 	
 	public boolean hasMeleeTargets() {
-		return targetingComponent.hasCombatantsInArea(getArea());
+		return targetingComponent.hasTargetsOfTypeInArea(TargetingComponent.DetectionState.HOSTILE, getArea());
 	}
 
 	public boolean hasWeapon() {
@@ -682,7 +679,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		if (getTargetingComponent() != null) {
 			getTargetingComponent().updateTurn();
 		}
-		investigateTarget.nextTurn(this);
 		if (getBehaviorComponent() != null) {
 			getBehaviorComponent().update();
 		}
@@ -694,7 +690,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		while (!endTurn) {
 			updatePursueTargets();
 			getTargetingComponent().update();
-			investigateTarget.update(this);
 			List<Action> availableActions = availableActions();
 			for (Action action : availableActions) {
 				if (getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
