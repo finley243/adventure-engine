@@ -56,4 +56,9 @@
         <name>alcohol cooler</name>
         <component id="container" template="store_cooler_soft_drinks_container"/>
     </object>
+    <object id="vending_machine_nitron">
+        <name>Nitron Cola vending machine</name>
+        <action>vending_nitron_cola</action>
+        <action>vending_nitron_diet</action>
+    </object>
 </data>

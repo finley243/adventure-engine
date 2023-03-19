@@ -11,6 +11,7 @@
             <name type="side">corner store</name>
             <link type="CORNER" dist="CLOSE" dir="NW" area="wilsons_corner_store_front"/>
             <link dist="CLOSE" dir="E" area="archer_apartments_exterior"/>
+            <object id="wilsons_corner_store_exterior_vending_machine" template="vending_machine_nitron"/>
         </area>
         <area id="archer_apartments_exterior" landmark="archer_apartments_exterior_door">
             <link dist="CLOSE" dir="W" area="wilsons_corner_store_side"/>

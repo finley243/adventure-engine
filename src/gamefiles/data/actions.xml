@@ -31,4 +31,38 @@
             <var dataType="boolean" value="false"/>
         </script>
     </action>
+    <action id="vending_nitron_cola">
+        <prompt>Buy Nitron Cola (10)</prompt>
+        <phrase>vendingMachineBuy</phrase>
+        <condition type="compare" equality="GREATER_EQUAL">
+            <var1 type="state" dataType="int" state="money" holder="subject"/>
+            <var2 dataType="int" value="10"/>
+        </condition>
+        <script>
+            <script type="addItem">
+                <inv type="stat" dataType="inventory" holder="subject"/>
+                <var dataType="string" value="nitron_cola"/>
+            </script>
+            <script type="modifyState" dataType="int" state="money" holder="subject">
+                <var dataType="int" value="-10"/>
+            </script>
+        </script>
+    </action>
+    <action id="vending_nitron_diet">
+        <prompt>Buy Nitron Diet (10)</prompt>
+        <phrase>vendingMachineBuy</phrase>
+        <condition type="compare" equality="GREATER_EQUAL">
+            <var1 type="state" dataType="int" state="money" holder="subject"/>
+            <var2 dataType="int" value="10"/>
+        </condition>
+        <script>
+            <script type="addItem">
+                <inv type="stat" dataType="inventory" holder="subject"/>
+                <var dataType="string" value="nitron_cola"/>
+            </script>
+            <script type="modifyState" dataType="int" state="money" holder="subject">
+                <var dataType="int" value="-10"/>
+            </script>
+        </script>
+    </action>
 </data>
