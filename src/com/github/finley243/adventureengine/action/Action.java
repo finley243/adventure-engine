@@ -28,8 +28,8 @@ public abstract class Action {
 		return !disabled;
 	}
 
-	public void disable() {
-		disabled = true;
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
 	}
 	
 	public float utility(Actor subject) {

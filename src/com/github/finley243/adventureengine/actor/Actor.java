@@ -660,7 +660,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 				}
 			}
 			if (isBlocked) {
-				currentAction.disable();
+				currentAction.setDisabled(true);
 			}
 		}
 		actions.add(new ActionEnd());
@@ -693,7 +693,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			List<Action> availableActions = availableActions();
 			for (Action action : availableActions) {
 				if (getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
-					action.disable();
+					action.setDisabled(true);
 				}
 			}
 			Action chosenAction = chooseAction(availableActions);
