@@ -24,7 +24,7 @@ public class StatHolderReference {
         if (subType == null) {
             return parentHolder;
         }
-        StatHolder subHolder = parentHolder.getSubHolder(subType, subID.getValueString(context));
+        StatHolder subHolder = parentHolder.getSubHolder(subType, subID == null ? null : subID.getValueString(context));
         if (subHolder == null) {
             throw new IllegalArgumentException("StatHolder sub-type '" + subType + "' does not exist on holder type '" + holderType + "'");
         }
