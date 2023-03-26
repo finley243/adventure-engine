@@ -85,6 +85,9 @@ public class TargetingComponent {
     }
 
     public void update() {
+        for (Actor visibleActor : actor.getVisibleActors()) {
+            processDetectionEvent(visibleActor, getPassiveDetectionChance(visibleActor));
+        }
         boolean startedInCombat = false;
         for (Map.Entry<Actor, DetectedActor> entry : detectedActors.entrySet()) {
             if (entry.getValue().state == DetectionState.HOSTILE) {
@@ -125,8 +128,12 @@ public class TargetingComponent {
     }
 
     public void onVisibleAction(Action action, Actor subject) {
+        processDetectionEvent(subject, getActionDetectionChance(action, subject));
+        // TODO - Handle criminal action detection
+    }
+
+    private void processDetectionEvent(Actor subject, float detectionChance) {
         if (!detectedActors.containsKey(subject) || detectedActors.get(subject).state == DetectionState.DETECTING) {
-            float detectionChance = getActionDetectionChance(action, subject);
             boolean detected = MathUtils.randomCheck(detectionChance);
             if (detected) {
                 if (!detectedActors.containsKey(subject)) {
@@ -137,7 +144,6 @@ public class TargetingComponent {
                 updateState(subject);
             }
         }
-        // TODO - Handle criminal action detection
     }
 
     private void updateState(Actor target) {
@@ -233,10 +239,29 @@ public class TargetingComponent {
             case LOW:
                 return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.50f);
             case HIGH:
-                return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.10f, 0.95f);
+                return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.05f, 0.95f);
             case NONE:
             default:
                 return 0.0f;
+        }
+    }
+
+    public float getPassiveDetectionChance(Actor subject) {
+        AreaLink.DistanceCategory distance = actor.getArea().getDistanceTo(subject.getArea().getID());
+        if (subject.isDead()) {
+            return switch (distance) {
+                case NEAR -> 0.95f;
+                case CLOSE -> 0.80f;
+                case FAR -> 0.60f;
+                case DISTANT ->  0.25f;
+            };
+        } else {
+            return switch (distance) {
+                case NEAR -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.50f, 0.95f);
+                case CLOSE -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.20f, 0.80f);
+                case FAR -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.60f);
+                case DISTANT ->  MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.25f);
+            };
         }
     }
 
