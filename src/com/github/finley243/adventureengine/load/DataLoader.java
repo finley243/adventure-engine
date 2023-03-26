@@ -375,9 +375,21 @@ public class DataLoader {
 
     private static StatHolderReference loadStatHolderReference(Element statHolderElement) {
         String holderType = LoadUtils.attribute(statHolderElement, "holder", "subject");
-        String holderID = LoadUtils.attribute(statHolderElement, "holderID", null);
+        String holderIDLiteral = LoadUtils.attribute(statHolderElement, "holderID", null);
+        Variable holderID;
+        if (holderIDLiteral != null) {
+            holderID = new VariableLiteral("string", holderIDLiteral);
+        } else {
+            holderID = loadVariable(LoadUtils.singleChildWithName(statHolderElement, "holderID"), "string", null);
+        }
         String subType = LoadUtils.attribute(statHolderElement, "subType", null);
-        String subID = LoadUtils.attribute(statHolderElement, "subID", null);
+        String subIDLiteral = LoadUtils.attribute(statHolderElement, "subID", null);
+        Variable subID;
+        if (subIDLiteral != null) {
+            subID = new VariableLiteral("string", subIDLiteral);
+        } else {
+            subID = loadVariable(LoadUtils.singleChildWithName(statHolderElement, "subID"), "string", null);
+        }
         return new StatHolderReference(holderType, holderID, subType, subID);
     }
 
