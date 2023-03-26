@@ -6,7 +6,8 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.MapBuilder;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -25,7 +26,7 @@ public class ActionItemTake extends Action {
 		//Item item = Item.objectToItem(subject.game(), objectItem, 1);
 		area.getInventory().removeItem(item);
 		subject.getInventory().addItem(item);
-		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
+		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, this, null, subject, null));
 	}
 

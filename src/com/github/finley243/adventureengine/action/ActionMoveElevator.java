@@ -1,11 +1,12 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.ObjectElevator;
@@ -36,7 +37,7 @@ public class ActionMoveElevator extends ActionMove {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		Area lastArea = subject.getArea();
-		Context context = new Context(new NounMapper().put("actor", subject).put("elevator", elevator).build());
+		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("elevator", elevator).build());
 		String takeElevatorPhrase;
 		if(elevator.getFloorNumber() < destination.getFloorNumber()) {
 			takeElevatorPhrase = "takeElevatorUp";

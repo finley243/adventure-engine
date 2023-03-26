@@ -6,7 +6,8 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.MapBuilder;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
@@ -32,7 +33,7 @@ public class ActionMoveLink extends ActionMove {
 	public void choose(Actor subject, int repeatActionCount) {
 		Area lastArea = subject.getArea();
 		Area area = getDestinationArea();
-		Context context = new Context(new NounMapper().put("actor", subject).put("door", linkComponent.getObject()).put("room", area.getRoom()).build());
+		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("door", linkComponent.getObject()).put("room", area.getRoom()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("moveThrough"), context, this, null, subject, null));
 		subject.game().eventBus().post(new SensoryEvent(area, Phrases.get("moveThroughReverse"), context, this, null, subject, null));
 		subject.setArea(area);

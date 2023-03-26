@@ -5,7 +5,8 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.MapBuilder;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionItemDrop extends Action {
@@ -21,7 +22,7 @@ public class ActionItemDrop extends Action {
 		subject.getInventory().removeItem(item);
 		//Item.itemToObject(subject.game(), item, 1, subject.getArea());
 		subject.getArea().getInventory().addItem(item);
-		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).build());
+		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, null, subject, null));
 	}
 

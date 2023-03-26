@@ -365,7 +365,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		if(amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, getMaxHP() - HP);
 		HP += amount;
-		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
+		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder().put("actor", this).build());
 		if(SHOW_HP_CHANGES) {
 			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null, this, null));
 		}
@@ -399,7 +399,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			kill();
 		} else {
 			triggerScript("on_damaged", this);
-			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
+			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
 			}
@@ -425,7 +425,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			kill();
 		} else {
 			triggerScript("on_damaged", this);
-			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new NounMapper().put("actor", this).build());
+			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder().put("actor", this).build());
 			if(SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
 			}
@@ -435,7 +435,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	
 	public void kill() {
 		triggerScript("on_death", this);
-		Context context = new Context(new NounMapper().put("actor", this).build());
+		Context context = new Context(new MapBuilder().put("actor", this).build());
 		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
 		dropEquippedItem();
 		isDead = true;
@@ -449,7 +449,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
 			getArea().getInventory().addItem(item);
-			Context context = new Context(new NounMapper().put("actor", this).put("item", item).build());
+			Context context = new Context(new MapBuilder().put("actor", this).put("item", item).build());
 			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("drop"), context, null, null, this, null));
 		}
 	}
@@ -460,7 +460,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			inventory.removeItem(item);
 			Area landingArea = MathUtils.selectRandomFromSet(getArea().getMovableAreas());
 			landingArea.getInventory().addItem(item);
-			Context context = new Context(Map.of("area", landingArea.getRelativeName(getArea())), new NounMapper().put("actor", this).put("item", item).build());
+			Context context = new Context(Map.of("area", landingArea.getRelativeName(getArea())), new MapBuilder().put("actor", this).put("item", item).build());
 			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null, this, null));
 		}
 	}

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
@@ -34,7 +35,7 @@ public class ActionMoveArea extends ActionMove {
 		} else {
 			moveLocation = area;
 		}
-		Context context = new Context(new NounMapper().put("actor", subject).put("area", moveLocation).build());
+		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("area", moveLocation).build());
 		subject.game().eventBus().post(new SensoryEvent(new Area[]{subject.getArea(), area}, link.getMovePhrase(subject.getArea()), context, this, null, subject, null));
 		subject.setArea(area);
 		subject.onMove(lastArea);

@@ -4,7 +4,8 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.MapBuilder;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
 
@@ -27,7 +28,7 @@ public class ActionObjectUseEnd extends Action {
 		}
 		component.removeUser();
 		subject.stopUsingObject();
-		Context context = new Context(new NounMapper().put("actor", subject).put("object", component.getObject()).build());
+		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(component.getTemplateUsable().getEndPhrase()), context, this, null, subject, null));
 	}
 

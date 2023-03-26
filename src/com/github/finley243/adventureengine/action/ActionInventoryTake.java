@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -28,7 +28,7 @@ public class ActionInventoryTake extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         inventory.removeItem(item);
         subject.getInventory().addItem(item);
-        Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("inventory", owner).build());
+        Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("inventory", owner).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, null, subject, null));
     }
 

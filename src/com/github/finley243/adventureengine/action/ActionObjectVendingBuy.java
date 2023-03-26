@@ -7,7 +7,8 @@ import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.NounMapper;
+import com.github.finley243.adventureengine.MapBuilder;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentVending;
 
@@ -26,7 +27,7 @@ public class ActionObjectVendingBuy extends Action {
 		Item item = ItemFactory.create(subject.game(), itemID);
 		subject.adjustMoney(-item.getTemplate().getPrice());
 		subject.getInventory().addItem(item);
-		Context context = new Context(new NounMapper().put("actor", subject).put("item", item).put("vendor", component.getObject()).build());
+		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("vendor", component.getObject()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("buy"), context, this, null, subject, null));
 	}
 

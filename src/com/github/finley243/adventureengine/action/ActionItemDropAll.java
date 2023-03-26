@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
@@ -20,7 +21,7 @@ public class ActionItemDropAll extends Action {
 		subject.getInventory().removeItems(item, count);
 		//Item.itemToObject(subject.game(), item, count, subject.getArea());
 		subject.getArea().getInventory().addItems(item, count);
-		Context context = new Context(new NounMapper().put("actor", subject).put("item", new PluralNoun(item, count)).build());
+		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, null, subject, null));
 	}
 
