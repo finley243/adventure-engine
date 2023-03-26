@@ -2,10 +2,8 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.NounMapper;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -13,67 +11,46 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionCustom extends Action {
 
-    private final String prompt;
-    private final String phrase;
-    private final String phraseFail;
-    // The condition under which the action can be selected, or alternatively the condition under which the action will succeed
-    private final Condition condition;
-    // The condition under which the action will be added to the list of possible actions
-    private final Condition conditionShow;
-    private final boolean canFail;
-    private final Script script;
-    private final Script scriptFail;
-    // Updated each time the action is retrieved
-    private WorldObject object;
+    private final WorldObject object;
+    private final String template;
 
-    public ActionCustom(boolean canFail, String prompt, String phrase, String phraseFail, Condition condition, Condition conditionShow, Script script, Script scriptFail) {
-        if (canFail && condition == null) throw new IllegalArgumentException("Condition cannot be null if canFail is true");
-        this.canFail = canFail;
-        this.prompt = prompt;
-        this.phrase = phrase;
-        this.phraseFail = phraseFail;
-        this.condition = condition;
-        this.conditionShow = conditionShow;
-        this.script = script;
-        this.scriptFail = scriptFail;
+    public ActionCustom(WorldObject object, String template) {
+        this.object = object;
+        this.template = template;
     }
 
-    public void setObject(WorldObject object) {
-        this.object = object;
+    public ActionTemplate getTemplate() {
+        return object.game().data().getActionTemplate(template);
     }
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        if (object == null) throw new UnsupportedOperationException("Object was not set in ActionCustom before execution");
         Context context = new Context(new NounMapper().put("actor", subject).put("object", object).build());
-        if (canFail && !condition.isMet(new ContextScript(subject.game(), subject, subject, object, null))) {
-            subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phraseFail), context, this, null, subject, null));
-            if (scriptFail != null) {
-                scriptFail.execute(new ContextScript(subject.game(), subject, subject, object, null));
+        if (getTemplate().canFail() && !getTemplate().getConditionSuccess().isMet(new ContextScript(subject.game(), subject, subject, object, null))) {
+            subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getTemplate().getPhraseFail()), context, this, null, subject, null));
+            if (getTemplate().getScriptFail() != null) {
+                getTemplate().getScriptFail().execute(new ContextScript(subject.game(), subject, subject, object, null));
             }
         } else {
-            subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
-            if (script != null) {
-                script.execute(new ContextScript(subject.game(), subject, subject, object, null));
+            subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getTemplate().getPhrase()), context, this, null, subject, null));
+            if (getTemplate().getScript() != null) {
+                getTemplate().getScript().execute(new ContextScript(subject.game(), subject, subject, object, null));
             }
         }
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        if (object == null) throw new UnsupportedOperationException("Object was not set in ActionCustom before execution");
-        return super.canChoose(subject) && (condition == null || canFail || condition.isMet(new ContextScript(subject.game(), subject, subject, object, null)));
+        return super.canChoose(subject) && (getTemplate().getConditionSelect() == null || getTemplate().getConditionSelect().isMet(new ContextScript(subject.game(), subject, subject, object, null)));
     }
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        if (object == null) throw new UnsupportedOperationException("Object was not set in ActionCustom before execution");
-        return new MenuChoice(prompt, canChoose(subject), new String[] {object.getName()}, new String[]{prompt});
+        return new MenuChoice(getTemplate().getPrompt(), canChoose(subject), new String[] {object.getName()}, new String[]{getTemplate().getPrompt()});
     }
 
     public boolean canShow(Actor subject) {
-        if (object == null) throw new UnsupportedOperationException("Object was not set in ActionCustom before execution");
-        return conditionShow == null || conditionShow.isMet(new ContextScript(subject.game(), subject, subject, object, null));
+        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new ContextScript(subject.game(), subject, subject, object, null));
     }
 
 }

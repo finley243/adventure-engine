@@ -1,7 +1,7 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.Idle;
@@ -31,7 +31,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.environment.RoomLink;
-import com.github.finley243.adventureengine.world.object.*;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.params.ComponentParams;
 import com.github.finley243.adventureengine.world.object.params.ComponentParamsLink;
 import com.github.finley243.adventureengine.world.object.template.*;
@@ -114,9 +114,8 @@ public class DataLoader {
                                     game.data().addEffect(effectID, effect);
                                     break;
                                 case "action":
-                                    String actionID = LoadUtils.attribute((Element) currentChild, "id", null);
-                                    ActionCustom action = loadCustomAction((Element) currentChild);
-                                    game.data().addAction(actionID, action);
+                                    ActionTemplate action = loadActionTemplate(game, (Element) currentChild);
+                                    game.data().addActionTemplate(action.getID(), action);
                                     break;
                                 case "network":
                                     Network network = loadNetwork((Element) currentChild);
@@ -833,16 +832,18 @@ public class DataLoader {
         }
     }
 
-    private static ActionCustom loadCustomAction(Element actionElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ActionTemplate loadActionTemplate(Game game, Element actionElement) throws ParserConfigurationException, IOException, SAXException {
+        String ID = LoadUtils.attribute(actionElement, "id", null);
         boolean canFail = LoadUtils.attributeBool(actionElement, "canFail", false);
         String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
         String phrase = LoadUtils.singleTag(actionElement, "phrase", null);
         String phraseFail = LoadUtils.singleTag(actionElement, "phraseFail", null);
-        Condition condition = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
+        Condition conditionSelect = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
+        Condition conditionSuccess = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionSuccess"));
         Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
         Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
         Script scriptFail = loadScript(LoadUtils.singleChildWithName(actionElement, "scriptFail"));
-        return new ActionCustom(canFail, prompt, phrase, phraseFail, condition, conditionShow, script, scriptFail);
+        return new ActionTemplate(game, ID, prompt, phrase, phraseFail, conditionSelect, conditionSuccess, conditionShow, canFail, script, scriptFail);
     }
 
     private static Actor loadActorInstance(Game game, Element actorElement, Area area) throws ParserConfigurationException, IOException, SAXException {

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorFactory;
 import com.github.finley243.adventureengine.actor.ActorTemplate;
@@ -55,7 +56,7 @@ public class Data {
 	private final Map<String, Network> networks = new HashMap<>();
 	private final Map<String, Timer> timers = new HashMap<>();
 	private final Map<String, Effect> effects = new HashMap<>();
-	private final Map<String, ActionCustom> actions = new HashMap<>();
+	private final Map<String, ActionTemplate> actionTemplates = new HashMap<>();
 
 	private final Map<String, Boolean> globalBooleans = new HashMap<>();
 	private final Map<String, Integer> globalIntegers = new HashMap<>();
@@ -106,7 +107,7 @@ public class Data {
 		networks.clear();
 		timers.clear();
 		effects.clear();
-		actions.clear();
+		actionTemplates.clear();
 		globalIntegers.clear();
 		globalFloats.clear();
 		globalBooleans.clear();
@@ -389,14 +390,14 @@ public class Data {
 		return effects.get(id);
 	}
 
-	public void addAction(String id, ActionCustom value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add action with blank ID");
-		if(actions.containsKey(id)) throw new IllegalArgumentException("Cannot add action with existing ID: " + id);
-		actions.put(id, value);
+	public void addActionTemplate(String id, ActionTemplate value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add action template with blank ID");
+		if(actionTemplates.containsKey(id)) throw new IllegalArgumentException("Cannot add action template with existing ID: " + id);
+		actionTemplates.put(id, value);
 	}
 
-	public ActionCustom getAction(String id) {
-		return actions.get(id);
+	public ActionTemplate getActionTemplate(String id) {
+		return actionTemplates.get(id);
 	}
 
 	public void setGlobalBoolean(String id, boolean value) {

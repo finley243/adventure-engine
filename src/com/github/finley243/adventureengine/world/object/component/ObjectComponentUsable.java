@@ -56,9 +56,7 @@ public class ObjectComponentUsable extends ObjectComponent {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionObjectUseEnd(this));
         for (String usingAction : getTemplateUsable().getUsingActions()) {
-            ActionCustom action = getObject().game().data().getAction(usingAction);
-            action.setObject(getObject());
-            action.setDisabled(false);
+            ActionCustom action = new ActionCustom(getObject(), usingAction);
             if (action.canShow(subject)) {
                 actions.add(action);
             }
