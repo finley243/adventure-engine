@@ -376,8 +376,9 @@ public class DataLoader {
     private static StatHolderReference loadStatHolderReference(Element statHolderElement) {
         String holderType = LoadUtils.attribute(statHolderElement, "holder", "subject");
         String holderID = LoadUtils.attribute(statHolderElement, "holderID", null);
-        String holderLocalID = LoadUtils.attribute(statHolderElement, "holderLocalID", null);
-        return new StatHolderReference(holderType, holderID, holderLocalID);
+        String subType = LoadUtils.attribute(statHolderElement, "subType", null);
+        String subID = LoadUtils.attribute(statHolderElement, "subID", null);
+        return new StatHolderReference(holderType, holderID, subType, subID);
     }
 
     private static List<Script> loadSubScripts(Element parentElement) throws ParserConfigurationException, IOException, SAXException {

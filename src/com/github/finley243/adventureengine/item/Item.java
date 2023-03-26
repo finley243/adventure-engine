@@ -203,6 +203,11 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 		return null;
 	}
 
+	@Override
+	public StatHolder getSubHolder(String name, String ID) {
+		return null;
+	}
+
 	public void loadState(SaveData saveData) {}
 
 	public List<SaveData> saveState() {

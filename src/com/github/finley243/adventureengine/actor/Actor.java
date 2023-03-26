@@ -302,6 +302,17 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		return inventory;
 	}
 
+	@Override
+	public StatHolder getSubHolder(String name, String ID) {
+		switch (name) {
+			case "equippedItem":
+				return getEquipmentComponent().getEquippedItem();
+			case "usingObject":
+				return getUsingObject();
+		}
+		return null;
+	}
+
 	public ApparelComponent getApparelComponent() {
 		return apparelComponent;
 	}

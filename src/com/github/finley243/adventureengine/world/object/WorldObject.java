@@ -359,6 +359,17 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return null;
 	}
 
+	@Override
+	public StatHolder getSubHolder(String name, String ID) {
+		switch (name) {
+			case "component":
+				return getComponent(ID);
+			case "linkedObject":
+				return game().data().getObject((String) getComponentParams(ID).getParameter("object"));
+		}
+		return null;
+	}
+
 	public void loadState(SaveData saveData) {
 		switch (saveData.getParameter()) {
 			case "isKnown":

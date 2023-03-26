@@ -180,6 +180,11 @@ public class Scene extends GameInstanced implements StatHolder {
 		return null;
 	}
 
+	@Override
+	public StatHolder getSubHolder(String name, String ID) {
+		return null;
+	}
+
 	public void loadState(SaveData saveData) {
 		if ("hasTriggered".equals(saveData.getParameter())) {
 			this.hasTriggered = saveData.getValueBoolean();

@@ -46,4 +46,6 @@ public interface StatHolder {
 
     Inventory getInventory();
 
+    StatHolder getSubHolder(String name, String ID);
+
 }

@@ -157,4 +157,9 @@ public abstract class ObjectComponent implements StatHolder {
         return null;
     }
 
+    @Override
+    public StatHolder getSubHolder(String name, String ID) {
+        return null;
+    }
+
 }

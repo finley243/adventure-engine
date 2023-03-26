@@ -268,6 +268,11 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		return itemInventory;
 	}
 
+	@Override
+	public StatHolder getSubHolder(String name, String ID) {
+		return null;
+	}
+
 	public List<Action> getItemActions() {
 		return itemInventory.getAreaActions(this);
 	}
