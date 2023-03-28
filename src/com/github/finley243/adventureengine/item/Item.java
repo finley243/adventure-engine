@@ -76,7 +76,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if(getTemplate().getScripts().containsKey(entryPoint)) {
-			getTemplate().getScripts().get(entryPoint).execute(new ContextScript(game(), subject, target, null, this));
+			getTemplate().getScripts().get(entryPoint).execute(new ContextScript(game(), subject, target, this));
 		}
 	}
 
@@ -142,8 +142,6 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 		switch (name) {
 			case "id":
 				return getID();
-			case "templateID":
-				return getTemplate().getID();
 		}
 		return null;
 	}
@@ -205,6 +203,9 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
+		if ("template".equals(name)) {
+			return getTemplate();
+		}
 		return null;
 	}
 

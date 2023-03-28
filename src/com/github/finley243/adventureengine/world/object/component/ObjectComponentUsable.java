@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateUsable;
+import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +56,8 @@ public class ObjectComponentUsable extends ObjectComponent {
     public List<Action> getUsingActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionObjectUseEnd(this));
-        for (String usingAction : getTemplateUsable().getUsingActions()) {
-            ActionCustom action = new ActionCustom(getObject(), usingAction);
+        for (ObjectTemplate.CustomActionHolder usingAction : getTemplateUsable().getUsingActions()) {
+            ActionCustom action = new ActionCustom(getObject(), usingAction.action(), usingAction.parameters());
             if (action.canShow(subject)) {
                 actions.add(action);
             }

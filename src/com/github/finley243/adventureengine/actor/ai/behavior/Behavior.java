@@ -78,7 +78,7 @@ public abstract class Behavior {
     }
 
     public boolean isValid(Actor subject) {
-        return condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject, null, null));
+        return condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject));
     }
 
     public Idle getIdle(Actor subject) {

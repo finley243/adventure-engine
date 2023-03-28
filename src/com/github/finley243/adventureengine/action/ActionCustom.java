@@ -8,16 +8,21 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.variable.Variable;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+
+import java.util.Map;
 
 public class ActionCustom extends Action {
 
     private final WorldObject object;
     private final String template;
+    private final Map<String, Variable> parameters;
 
-    public ActionCustom(WorldObject object, String template) {
+    public ActionCustom(WorldObject object, String template, Map<String, Variable> parameters) {
         this.object = object;
         this.template = template;
+        this.parameters = parameters;
     }
 
     public ActionTemplate getTemplate() {
@@ -27,22 +32,22 @@ public class ActionCustom extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("object", object).build());
-        if (getTemplate().canFail() && !getTemplate().getConditionSuccess().isMet(new ContextScript(subject.game(), subject, subject, object, null))) {
+        if (getTemplate().canFail() && !getTemplate().getConditionSuccess().isMet(new ContextScript(subject.game(), subject, subject, object, parameters))) {
             subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getTemplate().getPhraseFail()), context, this, null, subject, null));
             if (getTemplate().getScriptFail() != null) {
-                getTemplate().getScriptFail().execute(new ContextScript(subject.game(), subject, subject, object, null));
+                getTemplate().getScriptFail().execute(new ContextScript(subject.game(), subject, subject, object, parameters));
             }
         } else {
             subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getTemplate().getPhrase()), context, this, null, subject, null));
             if (getTemplate().getScript() != null) {
-                getTemplate().getScript().execute(new ContextScript(subject.game(), subject, subject, object, null));
+                getTemplate().getScript().execute(new ContextScript(subject.game(), subject, subject, object, parameters));
             }
         }
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && (getTemplate().getConditionSelect() == null || getTemplate().getConditionSelect().isMet(new ContextScript(subject.game(), subject, subject, object, null)));
+        return super.canChoose(subject) && (getTemplate().getConditionSelect() == null || getTemplate().getConditionSelect().isMet(new ContextScript(subject.game(), subject, subject, object, parameters)));
     }
 
     @Override
@@ -51,7 +56,7 @@ public class ActionCustom extends Action {
     }
 
     public boolean canShow(Actor subject) {
-        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new ContextScript(subject.game(), subject, subject, object, null));
+        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new ContextScript(subject.game(), subject, subject, object, parameters));
     }
 
 }

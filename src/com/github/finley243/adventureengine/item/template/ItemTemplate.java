@@ -2,9 +2,11 @@ package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class ItemTemplate extends GameInstanced implements Noun {
+public abstract class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 
 	private int generatedCount;
 
@@ -95,6 +97,120 @@ public abstract class ItemTemplate extends GameInstanced implements Noun {
 
 	public Map<String, Script> getScripts() {
 		return scripts;
+	}
+
+	@Override
+	public StatInt getStatInt(String name) {
+		return null;
+	}
+
+	@Override
+	public StatFloat getStatFloat(String name) {
+		return null;
+	}
+
+	@Override
+	public StatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public StatString getStatString(String name) {
+		return null;
+	}
+
+	@Override
+	public StatStringSet getStatStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public int getValueInt(String name) {
+		if ("price".equals(name)) {
+			return price;
+		}
+		return 0;
+	}
+
+	@Override
+	public float getValueFloat(String name) {
+		return 0;
+	}
+
+	@Override
+	public boolean getValueBoolean(String name) {
+		return false;
+	}
+
+	@Override
+	public String getValueString(String name) {
+		switch (name) {
+			case "id":
+				return getID();
+			case "name":
+				return name;
+		}
+		return null;
+	}
+
+	@Override
+	public Set<String> getValueStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public void onStatChange() {
+
+	}
+
+	@Override
+	public void setStateBoolean(String name, boolean value) {
+
+	}
+
+	@Override
+	public void setStateInteger(String name, int value) {
+
+	}
+
+	@Override
+	public void setStateFloat(String name, float value) {
+
+	}
+
+	@Override
+	public void setStateString(String name, String value) {
+
+	}
+
+	@Override
+	public void setStateStringSet(String name, Set<String> value) {
+
+	}
+
+	@Override
+	public void modStateInteger(String name, int amount) {
+
+	}
+
+	@Override
+	public void modStateFloat(String name, float amount) {
+
+	}
+
+	@Override
+	public void triggerEffect(String name) {
+
+	}
+
+	@Override
+	public Inventory getInventory() {
+		return null;
+	}
+
+	@Override
+	public StatHolder getSubHolder(String name, String ID) {
+		return null;
 	}
 
 	public void loadState(SaveData saveData) {

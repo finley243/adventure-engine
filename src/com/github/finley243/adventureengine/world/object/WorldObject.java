@@ -170,9 +170,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		for (ObjectComponent component : components.values()) {
 			actions.addAll(component.getActions(subject));
 		}
-		for (String customAction : getTemplate().getCustomActions()) {
+		for (ObjectTemplate.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 			// TODO - Add action parameters here (in ActionCustom constructor)
-			ActionCustom action = new ActionCustom(this, customAction);
+			ActionCustom action = new ActionCustom(this, customAction.action(), customAction.parameters());
 			if (action.canShow(subject)) {
 				actions.add(action);
 			}
@@ -214,7 +214,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
-			getTemplate().getScripts().get(entryPoint).execute(new ContextScript(game(), subject, target, this, null));
+			getTemplate().getScripts().get(entryPoint).execute(new ContextScript(game(), subject, target, this));
 		}
 	}
 

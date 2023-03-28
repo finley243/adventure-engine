@@ -14,8 +14,8 @@
         <localVar name="lock_keys" dataType="stringSet">
             <value>wilsons_corner_store_key</value>
         </localVar>
-        <action>lock_key</action>
-        <action>lock_pick</action>
+        <action template="lock_key"/>
+        <action template="lock_pick"/>
     </object>
     <object id="chair_plastic">
         <name>plastic chair</name>
@@ -58,7 +58,11 @@
     </object>
     <object id="vending_machine_nitron">
         <name>Nitron Cola vending machine</name>
-        <action>vending_nitron_cola</action>
-        <action>vending_nitron_diet</action>
+        <action template="vending_machine">
+            <parameter name="item" dataType="string" value="nitron_cola"/>
+        </action>
+        <action template="vending_machine">
+            <parameter name="item" dataType="string" value="nitron_diet"/>
+        </action>
     </object>
 </data>

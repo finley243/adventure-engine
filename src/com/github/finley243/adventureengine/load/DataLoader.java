@@ -23,10 +23,7 @@ import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.variable.Variable;
-import com.github.finley243.adventureengine.variable.VariableGlobal;
-import com.github.finley243.adventureengine.variable.VariableLiteral;
-import com.github.finley243.adventureengine.variable.VariableStat;
+import com.github.finley243.adventureengine.variable.*;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -349,6 +346,9 @@ public class DataLoader {
             case "global":
                 String globalVariableID = LoadUtils.attribute(variableElement, "globalID", null);
                 return new VariableGlobal(dataType, globalVariableID);
+            case "parameter":
+                String parameterName = LoadUtils.attribute(variableElement, "name", null);
+                return new VariableParameter(dataType, parameterName);
             case "literal":
             case null:
             default:
@@ -742,7 +742,7 @@ public class DataLoader {
         String name = LoadUtils.singleTag(objectElement, "name", null);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(objectElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
-        List<String> customActions = LoadUtils.listOfTags(objectElement, "action");
+        List<ObjectTemplate.CustomActionHolder> customActions = loadCustomActions(objectElement, "action");
         Map<String, String> components = new HashMap<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
             String componentID = LoadUtils.attribute(componentElement, "id", null);
@@ -800,11 +800,10 @@ public class DataLoader {
 
     private static ComponentParams loadComponentParams(Element paramsElement) {
         String type = LoadUtils.attribute(paramsElement, "type", null);
-        switch (type) {
-            case "link":
-                String linkObject = LoadUtils.attribute(paramsElement, "object", null);
-                AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(paramsElement, "dir", AreaLink.CompassDirection.class, null);
-                return new ComponentParamsLink(linkObject, linkDirection);
+        if ("link".equals(type)) {
+            String linkObject = LoadUtils.attribute(paramsElement, "object", null);
+            AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(paramsElement, "dir", AreaLink.CompassDirection.class, null);
+            return new ComponentParamsLink(linkObject, linkDirection);
         }
         return null;
     }
@@ -835,7 +834,7 @@ public class DataLoader {
                 boolean userIsInCover = LoadUtils.attributeBool(componentElement, "cover", false);
                 boolean userIsHidden = LoadUtils.attributeBool(componentElement, "hidden", false);
                 boolean userCanSeeOtherAreas = LoadUtils.attributeBool(componentElement, "seeOtherAreas", true);
-                List<String> usingActions = LoadUtils.listOfTags(componentElement, "usingAction");
+                List<ObjectTemplate.CustomActionHolder> usingActions = loadCustomActions(componentElement, "usingAction");
                 return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, usingActions);
             case "vending":
                 List<String> vendingItems = LoadUtils.listOfTags(componentElement, "item");
@@ -857,6 +856,23 @@ public class DataLoader {
         Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
         Script scriptFail = loadScript(LoadUtils.singleChildWithName(actionElement, "scriptFail"));
         return new ActionTemplate(game, ID, prompt, phrase, phraseFail, conditionSelect, conditionSuccess, conditionShow, canFail, script, scriptFail);
+    }
+
+    private static List<ObjectTemplate.CustomActionHolder> loadCustomActions(Element parentElement, String name) {
+        List<ObjectTemplate.CustomActionHolder> customActions = new ArrayList<>();
+        if (parentElement != null) {
+            for (Element actionElement : LoadUtils.directChildrenWithName(parentElement, name)) {
+                String action = LoadUtils.attribute(actionElement, "template", null);
+                Map<String, Variable> parameters = new HashMap<>();
+                for (Element variableElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
+                    String parameterName = LoadUtils.attribute(variableElement, "name", null);
+                    Variable parameterVariable = loadVariable(variableElement, null, "literal");
+                    parameters.put(parameterName, parameterVariable);
+                }
+                customActions.add(new ObjectTemplate.CustomActionHolder(action, parameters));
+            }
+        }
+        return customActions;
     }
 
     private static Actor loadActorInstance(Game game, Element actorElement, Area area) throws ParserConfigurationException, IOException, SAXException {
