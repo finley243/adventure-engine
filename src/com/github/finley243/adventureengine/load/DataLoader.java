@@ -349,6 +349,18 @@ public class DataLoader {
             case "parameter":
                 String parameterName = LoadUtils.attribute(variableElement, "name", null);
                 return new VariableParameter(dataType, parameterName);
+            case "sum":
+                List<Variable> sumVariables = new ArrayList<>();
+                for (Element sumVariableElement : LoadUtils.directChildrenWithName(variableElement, "var")) {
+                    sumVariables.add(loadVariable(sumVariableElement, null, null));
+                }
+                return new VariableSum(sumVariables);
+            case "product":
+                List<Variable> productVariables = new ArrayList<>();
+                for (Element productVariableElement : LoadUtils.directChildrenWithName(variableElement, "var")) {
+                    productVariables.add(loadVariable(productVariableElement, null, null));
+                }
+                return new VariableProduct(productVariables);
             case "literal":
             case null:
             default:
