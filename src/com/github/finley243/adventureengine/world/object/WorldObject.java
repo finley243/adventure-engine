@@ -142,20 +142,18 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		}
 	}
 
-	public void setHidden(boolean hidden) {
-		this.isHidden = hidden;
-	}
-
 	public boolean isHidden() {
 		return isHidden;
 	}
 
 	public void onNewGameInit() {
-		for (String componentID : getTemplate().getComponents().keySet()) {
-			ObjectComponentTemplate componentTemplate = game().data().getObjectComponentTemplate(getTemplate().getComponents().get(componentID));
-			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, componentID, this);
-			addComponent(componentID, component);
-			component.onNewGameInit();
+		for (Map.Entry<String, String> componentEntry : getTemplate().getComponents().entrySet()) {
+			ObjectComponentTemplate componentTemplate = game().data().getObjectComponentTemplate(componentEntry.getValue());
+			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, componentEntry.getKey(), this);
+			components.put(componentEntry.getKey(), component);
+			if (component != null) {
+				component.onNewGameInit();
+			}
 		}
 	}
 
@@ -167,14 +165,15 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		if (getDescription() != null) {
 			actions.add(new ActionInspectObject(this));
 		}
-		for (ObjectComponent component : components.values()) {
-			actions.addAll(component.getActions(subject));
-		}
-		for (ObjectTemplate.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-			// TODO - Add action parameters here (in ActionCustom constructor)
-			ActionCustom action = new ActionCustom(this, customAction.action(), customAction.parameters());
-			if (action.canShow(subject)) {
-				actions.add(action);
+		if (!isGuarded()) {
+			for (ObjectComponent component : components.values()) {
+				actions.addAll(component.getActions(subject));
+			}
+			for (ObjectTemplate.CustomActionHolder customAction : getTemplate().getCustomActions()) {
+				ActionCustom action = new ActionCustom(this, customAction.action(), customAction.parameters());
+				if (action.canShow(subject)) {
+					actions.add(action);
+				}
 			}
 		}
 		return actions;
@@ -187,10 +186,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			}
 		}
 		return false;
-	}
-
-	public void addComponent(String componentID, ObjectComponent component) {
-		components.put(componentID, component);
 	}
 
 	public ObjectComponent getComponent(String componentID) {
@@ -323,12 +318,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public void setStateString(String name, String value) {
-		switch (name) {
-			case "area":
-				setArea(game().data().getArea(value));
-				break;
-			default:
-				localVarsString.put(name, value);
+		if ("area".equals(name)) {
+			setArea(game().data().getArea(value));
+		} else {
+			localVarsString.put(name, value);
 		}
 	}
 

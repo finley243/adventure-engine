@@ -5,7 +5,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.ObjectElevator;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
 
@@ -44,20 +43,14 @@ public class Pathfinder {
 				return currentPath;
 			}
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
-			//if (pathEnd.getRoom() != targetArea.getRoom()) {
-				for (WorldObject object : pathEnd.getObjects()) {
-					List<ObjectComponentLink> linkComponents = object.getLinkComponents();
-					if (!linkComponents.isEmpty()) {
-						for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
-							linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
-						}
-					}
-					// TODO - Replace with component functionality
-					if (object instanceof ObjectElevator) {
-						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
+			for (WorldObject object : pathEnd.getObjects()) {
+				List<ObjectComponentLink> linkComponents = object.getLinkComponents();
+				if (!linkComponents.isEmpty()) {
+					for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
+						linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
 					}
 				}
-			//}
+			}
 			Collections.shuffle(linkedAreasGlobal);
 			for (Area linkedArea : linkedAreasGlobal) {
 				if (!hasVisited.contains(linkedArea)) {
@@ -117,10 +110,6 @@ public class Pathfinder {
 							linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
 						}
 					}
-					// TODO - Replace with component functionality
-					if (object instanceof ObjectElevator) {
-						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
-					}
 				}
 			}
 			for (Area linkedArea : linkedAreasGlobal) {
@@ -156,10 +145,6 @@ public class Pathfinder {
 						for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
 							linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
 						}
-					}
-					// TODO - Replace with component functionality
-					if (object instanceof ObjectElevator) {
-						linkedAreasGlobal.addAll(((ObjectElevator) object).getLinkedAreas());
 					}
 				}
 			}
