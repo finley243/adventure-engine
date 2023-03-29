@@ -23,7 +23,6 @@ import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.variable.*;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -61,64 +60,64 @@ public class DataLoader {
                     while (currentChild != null) {
                         if (currentChild.getNodeType() == Node.ELEMENT_NODE) {
                             switch (currentChild.getNodeName()) {
-                                case "faction":
+                                case "faction" -> {
                                     Faction faction = loadFaction((Element) currentChild);
                                     game.data().addFaction(faction.getID(), faction);
-                                    break;
-                                case "scene":
+                                }
+                                case "scene" -> {
                                     Scene scene = loadScene(game, (Element) currentChild);
                                     game.data().addScene(scene.getID(), scene);
-                                    break;
-                                case "actor":
+                                }
+                                case "actor" -> {
                                     ActorTemplate actor = loadActor(game, (Element) currentChild);
                                     game.data().addActorTemplate(actor.getID(), actor);
-                                    break;
-                                case "object":
+                                }
+                                case "object" -> {
                                     ObjectTemplate object = loadObjectTemplate(game, (Element) currentChild);
                                     game.data().addObjectTemplate(object.getID(), object);
-                                    break;
-                                case "objectComponent":
+                                }
+                                case "objectComponent" -> {
                                     ObjectComponentTemplate objectComponent = loadObjectComponentTemplate(game, (Element) currentChild);
                                     game.data().addObjectComponentTemplate(objectComponent.getID(), objectComponent);
-                                    break;
-                                case "item":
+                                }
+                                case "item" -> {
                                     ItemTemplate item = loadItemTemplate(game, (Element) currentChild);
                                     game.data().addItem(item.getID(), item);
-                                    break;
-                                case "lootTable":
+                                }
+                                case "lootTable" -> {
                                     LootTable table = loadLootTable((Element) currentChild, false);
                                     game.data().addLootTable(table.getID(), table);
-                                    break;
-                                case "weaponClass":
+                                }
+                                case "weaponClass" -> {
                                     WeaponClass weaponClass = loadWeaponClass((Element) currentChild);
                                     game.data().addWeaponClass(weaponClass.getID(), weaponClass);
-                                    break;
-                                case "attackType":
+                                }
+                                case "attackType" -> {
                                     WeaponAttackType attackType = loadWeaponAttackType((Element) currentChild);
                                     game.data().addAttackType(attackType.getID(), attackType);
-                                    break;
-                                case "room":
+                                }
+                                case "room" -> {
                                     Room room = loadRoom(game, (Element) currentChild);
                                     game.data().addRoom(room.getID(), room);
-                                    break;
-                                case "script":
+                                }
+                                case "script" -> {
                                     String scriptID = LoadUtils.attribute((Element) currentChild, "id", null);
                                     Script script = loadScript((Element) currentChild);
                                     game.data().addScript(scriptID, script);
-                                    break;
-                                case "effect":
+                                }
+                                case "effect" -> {
                                     String effectID = LoadUtils.attribute((Element) currentChild, "id", null);
                                     Effect effect = loadEffect((Element) currentChild);
                                     game.data().addEffect(effectID, effect);
-                                    break;
-                                case "action":
+                                }
+                                case "action" -> {
                                     ActionTemplate action = loadActionTemplate(game, (Element) currentChild);
                                     game.data().addActionTemplate(action.getID(), action);
-                                    break;
-                                case "network":
+                                }
+                                case "network" -> {
                                     Network network = loadNetwork((Element) currentChild);
                                     game.data().addNetwork(network.getID(), network);
-                                    break;
+                                }
                             }
                         }
                         currentChild = currentChild.getNextSibling();
@@ -220,19 +219,11 @@ public class DataLoader {
     private static Scene loadScene(Game game, Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
         if (sceneElement == null) return null;
         String sceneID = sceneElement.getAttribute("id");
-        Scene.SceneType type;
-        switch (sceneElement.getAttribute("type")) {
-            case "random":
-                type = Scene.SceneType.RANDOM;
-                break;
-            case "select":
-                type = Scene.SceneType.SELECTOR;
-                break;
-            case "all":
-            default:
-                type = Scene.SceneType.SEQUENTIAL;
-                break;
-        }
+        Scene.SceneType type = switch (sceneElement.getAttribute("type")) {
+            case "random" -> Scene.SceneType.RANDOM;
+            case "select" -> Scene.SceneType.SELECTOR;
+            case "all", default -> Scene.SceneType.SEQUENTIAL;
+        };
         Condition condition = loadCondition(LoadUtils.singleChildWithName(sceneElement, "condition"));
         boolean once = LoadUtils.attributeBool(sceneElement, "once", false);
         int priority = LoadUtils.attributeInt(sceneElement, "priority", 1);
@@ -274,18 +265,21 @@ public class DataLoader {
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch (type) {
-            case "combatant":
+            case "combatant" -> {
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatant(invert, actorRef, targetRef);
-            case "inventoryItem":
+            }
+            case "inventoryItem" -> {
                 Variable invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "inv"), "inventory", "stat");
                 Variable invItemID = loadVariable(LoadUtils.singleChildWithName(conditionElement, "item"), "string", null);
                 boolean invRequireAll = LoadUtils.attributeBool(conditionElement, "requireAll", false);
                 return new ConditionInventoryItem(invert, invItemVar, invItemID, invRequireAll);
-            case "actorVisible":
+            }
+            case "actorVisible" -> {
                 ActorReference visibleTargetRef = loadActorReference(conditionElement, "target");
                 return new ConditionActorVisible(invert, actorRef, visibleTargetRef);
-            case "time":
+            }
+            case "time" -> {
                 Element timeStartElement = LoadUtils.singleChildWithName(conditionElement, "start");
                 Element timeEndElement = LoadUtils.singleChildWithName(conditionElement, "end");
                 int hours1 = LoadUtils.attributeInt(timeStartElement, "hours", 0);
@@ -293,31 +287,38 @@ public class DataLoader {
                 int hours2 = LoadUtils.attributeInt(timeEndElement, "hours", 0);
                 int minutes2 = LoadUtils.attributeInt(timeEndElement, "minutes", 0);
                 return new ConditionTime(invert, hours1, minutes1, hours2, minutes2);
-            case "random":
+            }
+            case "random" -> {
                 float randomChance = LoadUtils.attributeFloat(conditionElement, "chance", 0.0f);
                 return new ConditionRandom(invert, randomChance);
-            case "timerActive":
+            }
+            case "timerActive" -> {
                 String timerID = LoadUtils.attribute(conditionElement, "timerID", null);
                 return new ConditionTimerActive(invert, timerID);
-            case "boolean":
+            }
+            case "boolean" -> {
                 Variable booleanVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var"), "boolean", "global");
                 return new ConditionBoolean(invert, booleanVariable);
-            case "contains":
+            }
+            case "contains" -> {
                 Variable containsSetVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varSet"), "stringSet", null);
                 Variable containsValueVariable = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varValue"), "string", null);
                 return new ConditionSetContains(invert, containsSetVariable, containsValueVariable);
-            case "compare":
+            }
+            case "compare" -> {
                 Variable compareVariable1 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var1"), null, null);
                 Variable compareVariable2 = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var2"), null, null);
                 Condition.Equality compareEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
                 return new ConditionCompare(invert, compareVariable1, compareVariable2, compareEquality);
-            case "any":
+            }
+            case "any" -> {
                 List<Condition> subConditionsAny = loadSubConditions(conditionElement);
                 return new ConditionCompound(invert, subConditionsAny, true);
-            case "all":
-            default:
+            }
+            default -> {
                 List<Condition> subConditionsAll = loadSubConditions(conditionElement);
                 return new ConditionCompound(invert, subConditionsAll, false);
+            }
         }
     }
 
@@ -336,51 +337,61 @@ public class DataLoader {
         String type = LoadUtils.attribute(variableElement, "type", varTypeDefault);
         String dataType = LoadUtils.attribute(variableElement, "dataType", dataTypeDefault);
         switch (type) {
-            case "stat":
+            case "stat" -> {
                 StatHolderReference statHolderReference = loadStatHolderReference(variableElement);
                 String statName = LoadUtils.attribute(variableElement, "stat", null);
                 return new VariableStat(statHolderReference, dataType, statName);
-            case "global":
+            }
+            case "global" -> {
                 String globalVariableID = LoadUtils.attribute(variableElement, "globalID", null);
                 return new VariableGlobal(dataType, globalVariableID);
-            case "parameter":
+            }
+            case "parameter" -> {
                 String parameterName = LoadUtils.attribute(variableElement, "name", null);
                 return new VariableParameter(dataType, parameterName);
-            case "sum":
+            }
+            case "sum" -> {
                 List<Variable> sumVariables = new ArrayList<>();
                 for (Element sumVariableElement : LoadUtils.directChildrenWithName(variableElement, "var")) {
                     sumVariables.add(loadVariable(sumVariableElement, null, null));
                 }
                 return new VariableSum(sumVariables);
-            case "product":
+            }
+            case "product" -> {
                 List<Variable> productVariables = new ArrayList<>();
                 for (Element productVariableElement : LoadUtils.directChildrenWithName(variableElement, "var")) {
                     productVariables.add(loadVariable(productVariableElement, null, null));
                 }
                 return new VariableProduct(productVariables);
-            case "toString":
+            }
+            case "toString" -> {
                 Variable toStringVariable = loadVariable(LoadUtils.singleChildWithName(variableElement, "var"), null, null);
                 return new VariableToString(toStringVariable);
-            case "literal":
-            case null:
-            default:
+            }
+            case null, default -> {
                 switch (dataType) {
-                    case "boolean":
+                    case "boolean" -> {
                         boolean literalBoolean = LoadUtils.attributeBool(variableElement, "value", true);
                         return new VariableLiteral(dataType, literalBoolean);
-                    case "int":
+                    }
+                    case "int" -> {
                         int literalInteger = LoadUtils.attributeInt(variableElement, "value", 0);
                         return new VariableLiteral(dataType, literalInteger);
-                    case "float":
+                    }
+                    case "float" -> {
                         float literalFloat = LoadUtils.attributeFloat(variableElement, "value", 0.0f);
                         return new VariableLiteral(dataType, literalFloat);
-                    case "string":
+                    }
+                    case "string" -> {
                         String literalString = LoadUtils.attribute(variableElement, "value", null);
                         return new VariableLiteral(dataType, literalString);
-                    case "stringSet":
+                    }
+                    case "stringSet" -> {
                         Set<String> literalStringSet = LoadUtils.setOfTags(variableElement, "value");
                         return new VariableLiteral(dataType, literalStringSet);
+                    }
                 }
+            }
         }
         return null;
     }
@@ -431,83 +442,93 @@ public class DataLoader {
         Condition condition = loadCondition(LoadUtils.singleChildWithName(scriptElement, "condition"));
         ActorReference actorRef = loadActorReference(scriptElement, "actor");
         switch (type) {
-            case "external":
+            case "external" -> {
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
                 return new ScriptExternal(condition, scriptID);
-            case "addItem":
+            }
+            case "addItem" -> {
                 Variable addItemInv = loadVariable(LoadUtils.singleChildWithName(scriptElement, "inv"), "inventory", "stat");
                 Variable addItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string", null);
                 return new ScriptAddItem(condition, addItemInv, addItemID);
-            case "transferItem":
+            }
+            case "transferItem" -> {
                 Variable transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "invOrigin"), "inventory", "stat");
                 Variable transferItemInvTarget = loadVariable(LoadUtils.singleChildWithName(scriptElement, "invTarget"), "inventory", "stat");
                 Variable transferItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string", null);
                 boolean transferItemAll = LoadUtils.attributeBool(scriptElement, "all", false);
                 int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);
                 return new ScriptTransferItem(condition, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferItemAll, transferItemCount);
-            case "scene":
+            }
+            case "scene" -> {
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
                 return new ScriptScene(condition, actorRef, scenes);
-            case "combat":
+            }
+            case "combat" -> {
                 ActorReference combatantRef = loadActorReference(scriptElement, "combatant");
                 return new ScriptCombat(condition, actorRef, combatantRef);
-            case "factionRelation":
+            }
+            case "factionRelation" -> {
                 String targetFaction = LoadUtils.attribute(scriptElement, "targetFaction", null);
                 String relationFaction = LoadUtils.attribute(scriptElement, "relationFaction", null);
                 Faction.FactionRelation relation = LoadUtils.attributeEnum(scriptElement, "relation", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
                 return new ScriptFactionRelation(condition, targetFaction, relationFaction, relation);
-            case "bark":
+            }
+            case "bark" -> {
                 String barkTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
                 return new ScriptBark(condition, actorRef, barkTrigger);
-            case "nearestActorScript":
+            }
+            case "nearestActorScript" -> {
                 String nearestTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
                 return new ScriptNearestActorWithScript(condition, nearestTrigger);
-            case "timerStart":
+            }
+            case "timerStart" -> {
                 String timerID = LoadUtils.attribute(scriptElement, "timerID", null);
                 int timerDuration = LoadUtils.attributeInt(scriptElement, "duration", 1);
                 Script timerExpireScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "expireScript"));
                 return new ScriptTimerStart(condition, timerID, timerDuration, timerExpireScript);
-            case "setState":
+            }
+            case "setState" -> {
                 StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
                 String setStateName = LoadUtils.attribute(scriptElement, "state", null);
                 Variable setStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null, null);
                 return new ScriptSetState(condition, setStateHolder, setStateName, setStateVariable);
-            case "modifyState":
+            }
+            case "modifyState" -> {
                 StatHolderReference modifyStateHolder = loadStatHolderReference(scriptElement);
                 String modifyStateName = LoadUtils.attribute(scriptElement, "state", null);
                 Variable modifyStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null, null);
                 return new ScriptModifyState(condition, modifyStateHolder, modifyStateName, modifyStateVariable);
-            case "setGlobal":
+            }
+            case "setGlobal" -> {
                 String setGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
                 Variable setGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null, null);
                 return new ScriptSetGlobal(condition, setGlobalID, setGlobalVariable);
-            case "modifyGlobal":
+            }
+            case "modifyGlobal" -> {
                 String modifyGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
                 Variable modifyGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null, null);
                 return new ScriptModifyGlobal(condition, modifyGlobalID, modifyGlobalVariable);
-            case "select":
+            }
+            case "select" -> {
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSelect, true);
-            case "all":
-            default:
+            }
+            case "all", default -> {
                 List<Script> subScriptsSequence = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSequence, false);
+            }
         }
     }
 
     private static ActorReference loadActorReference(Element element, String name) {
-        if (element == null || !element.hasAttribute(name)) return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
-        String targetRef = element.getAttribute(name);
-        switch (targetRef) {
-            case "PLAYER":
-                return new ActorReference(ActorReference.ReferenceType.PLAYER, null);
-            case "SUBJECT":
-                return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
-            case "TARGET":
-                return new ActorReference(ActorReference.ReferenceType.TARGET, null);
-            default:
-                return new ActorReference(ActorReference.ReferenceType.REFERENCE, targetRef);
-        }
+        if (element == null) return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
+        String targetRef = LoadUtils.attribute(element, name, null);
+        return switch (targetRef) {
+            case "PLAYER" -> new ActorReference(ActorReference.ReferenceType.PLAYER, null);
+            case "SUBJECT" -> new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
+            case "TARGET" -> new ActorReference(ActorReference.ReferenceType.TARGET, null);
+            default -> new ActorReference(ActorReference.ReferenceType.REFERENCE, targetRef);
+        };
     }
 
     private static Faction loadFaction(Element factionElement) {
@@ -540,15 +561,17 @@ public class DataLoader {
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
         String attackType = LoadUtils.attribute(itemElement, "attackType", null);
         switch (type) {
-            case "apparel":
+            case "apparel" -> {
                 Set<String> apparelSlots = LoadUtils.setOfTags(itemElement, "slot");
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
                 return new ApparelTemplate(game, id, name, description, scripts, price, attackType, apparelSlots, apparelEffects);
-            case "consumable":
+            }
+            case "consumable" -> {
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "consumableType", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");
                 return new ConsumableTemplate(game, id, name, description, scripts, price, attackType, consumableType, consumableEffects);
-            case "weapon":
+            }
+            case "weapon" -> {
                 String weaponClass = LoadUtils.attribute(itemElement, "class", null);
                 int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
                 Element damageElement = LoadUtils.singleChildWithName(itemElement, "damage");
@@ -560,13 +583,15 @@ public class DataLoader {
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 return new WeaponTemplate(game, id, name, description, scripts, price, attackType, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
-            case "ammo":
+            }
+            case "ammo" -> {
                 List<String> ammoWeaponEffects = LoadUtils.listOfTags(itemElement, "weaponEffect");
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
                 return new AmmoTemplate(game, id, name, description, scripts, price, attackType, ammoWeaponEffects, ammoIsReusable);
-            case "misc":
-            default:
+            }
+            default -> {
                 return new MiscTemplate(game, id, name, description, scripts, price, attackType);
+            }
         }
     }
 
@@ -587,14 +612,16 @@ public class DataLoader {
         int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
         boolean stackable = LoadUtils.attributeBool(effectElement, "stack", true);
         switch (effectType) {
-            case "state":
+            case "state" -> {
                 String state = LoadUtils.attribute(effectElement, "state", null);
                 int stateAmount = LoadUtils.attributeInt(effectElement, "amount", 0);
                 return new EffectStateInt(duration, manualRemoval, stackable, state, stateAmount);
-            case "trigger":
+            }
+            case "trigger" -> {
                 String trigger = LoadUtils.attribute(effectElement, "trigger", null);
                 return new EffectTrigger(duration, manualRemoval, stackable, trigger);
-            case "mod":
+            }
+            case "mod" -> {
                 String statMod = LoadUtils.attribute(effectElement, "stat", null);
                 String statModValue = LoadUtils.attribute(effectElement, "amount", "0");
                 boolean statModIsFloat = statModValue.contains(".");
@@ -605,28 +632,35 @@ public class DataLoader {
                     int statModValueInt = Integer.parseInt(statModValue);
                     return new EffectStatModInt(duration, manualRemoval, stackable, statMod, statModValueInt);
                 }
-            case "mult":
+            }
+            case "mult" -> {
                 String statMult = LoadUtils.attribute(effectElement, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
                 return new EffectStatMult(duration, manualRemoval, stackable, statMult, statMultAmount);
-            case "boolean":
+            }
+            case "boolean" -> {
                 String statBoolean = LoadUtils.attribute(effectElement, "stat", null);
                 boolean statBooleanValue = LoadUtils.attributeBool(effectElement, "value", true);
                 return new EffectStatBoolean(duration, manualRemoval, stackable, statBoolean, statBooleanValue);
-            case "string":
+            }
+            case "string" -> {
                 String statString = LoadUtils.attribute(effectElement, "stat", null);
                 String statStringValue = LoadUtils.attribute(effectElement, "value", null);
                 return new EffectStatString(duration, manualRemoval, stackable, statString, statStringValue);
-            case "stringSet":
+            }
+            case "stringSet" -> {
                 String statStringSet = LoadUtils.attribute(effectElement, "stat", null);
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
                 return new EffectStringSet(duration, manualRemoval, stackable, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
-            case "compound":
+            }
+            case "compound" -> {
                 List<Effect> compoundEffects = loadEffects(effectElement);
                 return new EffectCompound(duration, manualRemoval, stackable, compoundEffects);
-            default:
+            }
+            default -> {
                 return null;
+            }
         }
     }
 
@@ -725,7 +759,6 @@ public class DataLoader {
         List<Element> objectElements = LoadUtils.directChildrenWithName(areaElement, "object");
         for (Element objectElement : objectElements) {
             WorldObject object = loadObject(game, objectElement, area);
-            //loadObjectComponents(objectElement, object);
             game.data().addObject(object.getID(), object);
         }
 
@@ -770,26 +803,26 @@ public class DataLoader {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
             String varDataType = LoadUtils.attribute(varDefaultElement, "dataType", null);
             switch (varDataType) {
-                case "boolean":
+                case "boolean" -> {
                     boolean booleanValue = LoadUtils.attributeBool(varDefaultElement, "value", false);
                     localVarsBooleanDefault.put(varName, booleanValue);
-                    break;
-                case "int":
+                }
+                case "int" -> {
                     int integerValue = LoadUtils.attributeInt(varDefaultElement, "value", 0);
                     localVarsIntegerDefault.put(varName, integerValue);
-                    break;
-                case "float":
+                }
+                case "float" -> {
                     float floatValue = LoadUtils.attributeFloat(varDefaultElement, "value", 0.0f);
                     localVarsFloatDefault.put(varName, floatValue);
-                    break;
-                case "string":
+                }
+                case "string" -> {
                     String stringValue = LoadUtils.attribute(varDefaultElement, "value", "EMPTY");
                     localVarsStringDefault.put(varName, stringValue);
-                    break;
-                case "stringSet":
+                }
+                case "stringSet" -> {
                     Set<String> stringSetValue = LoadUtils.setOfTags(varDefaultElement, "value");
                     localVarsStringSetDefault.put(varName, stringSetValue);
-                    break;
+                }
             }
         }
         return new ObjectTemplate(game, ID, name, description, scripts, customActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
@@ -816,26 +849,26 @@ public class DataLoader {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
             String varDataType = LoadUtils.attribute(varDefaultElement, "dataType", null);
             switch (varDataType) {
-                case "boolean":
+                case "boolean" -> {
                     boolean booleanValue = LoadUtils.attributeBool(varDefaultElement, "value", false);
                     localVarsBooleanDefault.put(varName, booleanValue);
-                    break;
-                case "int":
+                }
+                case "int" -> {
                     int integerValue = LoadUtils.attributeInt(varDefaultElement, "value", 0);
                     localVarsIntegerDefault.put(varName, integerValue);
-                    break;
-                case "float":
+                }
+                case "float" -> {
                     float floatValue = LoadUtils.attributeFloat(varDefaultElement, "value", 0.0f);
                     localVarsFloatDefault.put(varName, floatValue);
-                    break;
-                case "string":
+                }
+                case "string" -> {
                     String stringValue = LoadUtils.attribute(varDefaultElement, "value", "EMPTY");
                     localVarsStringDefault.put(varName, stringValue);
-                    break;
-                case "stringSet":
+                }
+                case "stringSet" -> {
                     Set<String> stringSetValue = LoadUtils.setOfTags(varDefaultElement, "value");
                     localVarsStringSetDefault.put(varName, stringSetValue);
-                    break;
+                }
             }
         }
         return new WorldObject(game, id, template, area, startDisabled, startHidden, componentParams, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
@@ -857,19 +890,22 @@ public class DataLoader {
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
         String name = LoadUtils.singleTag(componentElement, "name", null);
         switch (type) {
-            case "container":
+            case "container" -> {
                 LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
                 boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "exposed", false);
                 return new ObjectComponentTemplateInventory(game, ID, startEnabled, name, lootTable, inventoryIsExposed);
-            case "network":
+            }
+            case "network" -> {
                 String networkID = LoadUtils.attribute(componentElement, "network", null);
                 return new ObjectComponentTemplateNetwork(game, ID, startEnabled, name, networkID);
-            case "link":
+            }
+            case "link" -> {
                 Condition linkCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "condition"));
                 boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
                 boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
                 return new ObjectComponentTemplateLink(game, ID, startEnabled, name, linkCondition, linkIsMovable, linkIsVisible);
-            case "usable":
+            }
+            case "usable" -> {
                 String usableStartPhrase = LoadUtils.singleTag(componentElement, "startPhrase", null);
                 String usableEndPhrase = LoadUtils.singleTag(componentElement, "endPhrase", null);
                 String usableStartPrompt = LoadUtils.singleTag(componentElement, "startPrompt", null);
@@ -879,8 +915,8 @@ public class DataLoader {
                 boolean userCanSeeOtherAreas = LoadUtils.attributeBool(componentElement, "seeOtherAreas", true);
                 List<ObjectTemplate.CustomActionHolder> usingActions = loadCustomActions(componentElement, "usingAction");
                 return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, usingActions);
-            default:
-                throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
+            }
+            default -> throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
         }
     }
 
@@ -952,37 +988,35 @@ public class DataLoader {
                 idles.add(idle);
             }
             switch (type) {
-                case "area":
+                case "area" -> {
                     String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
                     behavior = new BehaviorArea(condition, duration, idles, areaTarget);
-                    break;
-                case "object":
+                }
+                case "object" -> {
                     String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
                     behavior = new BehaviorObject(condition, duration, idles, objectTarget);
-                    break;
-                case "guard":
+                }
+                case "guard" -> {
                     String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
                     behavior = new BehaviorGuard(condition, duration, idles, guardTarget);
-                    break;
-                case "sandbox":
+                }
+                case "sandbox" -> {
                     String startArea = LoadUtils.attribute(behaviorElement, "area", null);
                     behavior = new BehaviorSandbox(condition, duration, idles, startArea);
-                    break;
-                case "sleep":
+                }
+                case "sleep" -> {
                     String bedTarget = LoadUtils.attribute(behaviorElement, "bed", null);
                     behavior = new BehaviorSleep(condition, idles, bedTarget);
-                    break;
-                case "vendor":
+                }
+                case "vendor" -> {
                     String vendorArea = LoadUtils.attribute(behaviorElement, "area", null);
                     behavior = new BehaviorVendor(condition, duration, idles, vendorArea);
-                    break;
-                case "cycle":
+                }
+                case "cycle" -> {
                     List<Behavior> cycleBehaviors = loadBehaviors(behaviorElement);
                     behavior = new BehaviorCycle(condition, cycleBehaviors);
-                    break;
-                default:
-                    behavior = null;
-                    break;
+                }
+                default -> behavior = null;
             }
             behaviors.add(behavior);
         }
@@ -1050,20 +1084,22 @@ public class DataLoader {
         String name = LoadUtils.singleTag(nodeElement, "name", null);
         int securityLevel = LoadUtils.attributeInt(nodeElement, "securityLevel", 0);
         switch (type) {
-            case "data":
+            case "data" -> {
                 String dataSceneID = LoadUtils.attribute(nodeElement, "scene", null);
                 return new NetworkNodeData(ID, name, securityLevel, dataSceneID);
-            case "control":
+            }
+            case "control" -> {
                 String controlObjectID = LoadUtils.attribute(nodeElement, "object", null);
                 return new NetworkNodeControl(ID, name, securityLevel, controlObjectID);
-            case "group":
-            default:
+            }
+            default -> {
                 Set<NetworkNode> groupNodes = new HashSet<>();
                 for (Element childNodeElement : LoadUtils.directChildrenWithName(nodeElement, "node")) {
                     NetworkNode childNode = loadNetworkNode(childNodeElement);
                     groupNodes.add(childNode);
                 }
                 return new NetworkNodeGroup(ID, name, securityLevel, groupNodes);
+            }
         }
     }
 
