@@ -23,6 +23,7 @@ import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.variable.*;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -862,12 +863,18 @@ public class DataLoader {
         String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
         String phrase = LoadUtils.singleTag(actionElement, "phrase", null);
         String phraseFail = LoadUtils.singleTag(actionElement, "phraseFail", null);
+        Map<String, Variable> customNouns = new LinkedHashMap<>();
+        for (Element nounElement : LoadUtils.directChildrenWithName(actionElement, "noun")) {
+            String nounName = LoadUtils.attribute(nounElement, "name", null);
+            Variable nounVariable = loadVariable(nounElement, "noun", "stat");
+            customNouns.put(nounName, nounVariable);
+        }
         Condition conditionSelect = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
         Condition conditionSuccess = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionSuccess"));
         Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
         Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
         Script scriptFail = loadScript(LoadUtils.singleChildWithName(actionElement, "scriptFail"));
-        return new ActionTemplate(game, ID, prompt, phrase, phraseFail, conditionSelect, conditionSuccess, conditionShow, canFail, script, scriptFail);
+        return new ActionTemplate(game, ID, prompt, phrase, phraseFail, customNouns, conditionSelect, conditionSuccess, conditionShow, canFail, script, scriptFail);
     }
 
     private static List<ObjectTemplate.CustomActionHolder> loadCustomActions(Element parentElement, String name) {

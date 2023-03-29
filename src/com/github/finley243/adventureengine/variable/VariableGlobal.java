@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.variable;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 
@@ -66,6 +67,11 @@ public class VariableGlobal extends Variable {
     @Override
     public Inventory getValueInventory(ContextScript context) {
         throw new UnsupportedOperationException("Inventory can not be referenced as a global variable");
+    }
+
+    @Override
+    public Noun getValueNoun(ContextScript context) {
+        throw new UnsupportedOperationException("Noun can not be referenced as a global variable");
     }
 
 }

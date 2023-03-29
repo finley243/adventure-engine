@@ -61,4 +61,4 @@ getUp:$_actor get$s_actor up from $object
 lieDown:$_actor lie$s_actor down in $object
 sleep:after a brief moment, $_actor fall$s_actor asleep
 searchContainer:$_actor search$es_actor through $container
-vendingMachineBuy:$_actor press$es_actor the order button and the item drops into the tray
+vendingMachineBuy:$_actor press$es_actor the order button and $item drops into the tray

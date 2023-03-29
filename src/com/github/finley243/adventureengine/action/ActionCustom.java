@@ -31,7 +31,11 @@ public class ActionCustom extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("object", object).build());
+        MapBuilder<String, Noun> nounMap = new MapBuilder<String, Noun>().put("actor", subject).put("object", object);
+        for (Map.Entry<String, Variable> entry : getTemplate().getCustomNouns().entrySet()) {
+            nounMap.put(entry.getKey(), entry.getValue().getValueNoun(new ContextScript(subject.game(), subject, subject, object, parameters)));
+        }
+        Context context = new Context(nounMap.build());
         if (getTemplate().canFail() && !getTemplate().getConditionSuccess().isMet(new ContextScript(subject.game(), subject, subject, object, parameters))) {
             subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getTemplate().getPhraseFail()), context, this, null, subject, null));
             if (getTemplate().getScriptFail() != null) {

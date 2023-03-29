@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.variable;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 
@@ -28,6 +29,10 @@ public class VariableParameter extends Variable {
                 return DataType.STRING;
             case "stringSet":
                 return DataType.STRING_SET;
+            case "inventory":
+                return DataType.INVENTORY;
+            case "noun":
+                return DataType.NOUN;
             default:
                 return null;
         }
@@ -62,4 +67,10 @@ public class VariableParameter extends Variable {
     public Inventory getValueInventory(ContextScript context) {
         return context.getParameters().get(name).getValueInventory(context);
     }
+
+    @Override
+    public Noun getValueNoun(ContextScript context) {
+        return context.getParameters().get(name).getValueNoun(context);
+    }
+
 }

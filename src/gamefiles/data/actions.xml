@@ -68,6 +68,9 @@
     <action id="vending_machine">
         <prompt>Buy</prompt>
         <phrase>vendingMachineBuy</phrase>
+        <noun name="item" holder="itemTemplate">
+            <holderID type="parameter" name="item"/>
+        </noun>
         <condition type="compare" equality="GREATER_EQUAL">
             <var1 type="stat" dataType="int" stat="money" holder="subject"/>
             <var2 type="stat" dataType="int" holder="itemTemplate" stat="price">
@@ -81,6 +84,12 @@
             </script>
             <script type="modifyState" dataType="int" state="money" holder="subject">
                 <var dataType="int" value="-10"/>
+                <var type="product" dataType="int">
+                    <var type="stat" dataType="int" holder="itemTemplate" stat="price">
+                        <holderID type="parameter" name="item"/>
+                    </var>
+                    <var dataType="int" value="-1"/>
+                </var>
             </script>
         </script>
     </action>

@@ -2,7 +2,9 @@ package com.github.finley243.adventureengine.variable;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
+import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 
@@ -33,6 +35,8 @@ public class VariableStat extends Variable {
                 return DataType.STRING_SET;
             case "inventory":
                 return DataType.INVENTORY;
+            case "noun":
+                return DataType.NOUN;
             default:
                 return null;
         }
@@ -72,6 +76,17 @@ public class VariableStat extends Variable {
     public Inventory getValueInventory(ContextScript context) {
         if (getDataType() != DataType.INVENTORY) throw new UnsupportedOperationException();
         return holder.getHolder(context).getInventory();
+    }
+
+    @Override
+    public Noun getValueNoun(ContextScript context) {
+        if (getDataType() != DataType.NOUN) throw new UnsupportedOperationException();
+        StatHolder statHolderObject = holder.getHolder(context);
+        if (statHolderObject instanceof Noun) {
+            return (Noun) statHolderObject;
+        } else {
+            throw new IllegalArgumentException("Specified StatHolder is not a Noun");
+        }
     }
 
 }
