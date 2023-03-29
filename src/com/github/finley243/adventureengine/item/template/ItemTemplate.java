@@ -155,6 +155,9 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 
 	@Override
 	public Set<String> getValueStringSet(String name) {
+		if ("tags".equals(name)) {
+			return getTags();
+		}
 		return null;
 	}
 

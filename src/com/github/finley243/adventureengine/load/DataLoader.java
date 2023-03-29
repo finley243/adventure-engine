@@ -277,10 +277,6 @@ public class DataLoader {
             case "combatant":
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatant(invert, actorRef, targetRef);
-            case "equippedItem":
-                String itemEquipTag = LoadUtils.attribute(conditionElement, "tag", null);
-                String itemEquipExact = LoadUtils.attribute(conditionElement, "exact", null);
-                return new ConditionEquippedItem(invert, actorRef, itemEquipTag, itemEquipExact);
             case "inventoryItem":
                 Variable invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "inv"), "inventory", "stat");
                 Variable invItemID = loadVariable(LoadUtils.singleChildWithName(conditionElement, "item"), "string", null);
