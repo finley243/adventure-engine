@@ -883,9 +883,6 @@ public class DataLoader {
                 boolean userCanSeeOtherAreas = LoadUtils.attributeBool(componentElement, "seeOtherAreas", true);
                 List<ObjectTemplate.CustomActionHolder> usingActions = loadCustomActions(componentElement, "usingAction");
                 return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, usingActions);
-            case "vending":
-                List<String> vendingItems = LoadUtils.listOfTags(componentElement, "item");
-                return new ObjectComponentTemplateVending(game, ID, startEnabled, name, vendingItems);
             default:
                 throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
         }
