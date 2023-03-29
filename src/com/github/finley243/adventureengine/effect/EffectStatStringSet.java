@@ -1,17 +1,17 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 import com.github.finley243.adventureengine.stat.StatStringSet;
 
 import java.util.Set;
 
-public class EffectStringSet extends Effect {
+public class EffectStatStringSet extends Effect {
 
     private final String stat;
     private final Set<String> valuesAdd;
     private final Set<String> valuesRemove;
 
-    public EffectStringSet(int duration, boolean manualRemoval, boolean stackable, String stat, Set<String> valuesAdd, Set<String> valuesRemove) {
+    public EffectStatStringSet(int duration, boolean manualRemoval, boolean stackable, String stat, Set<String> valuesAdd, Set<String> valuesRemove) {
         super(duration, manualRemoval, stackable);
         this.stat = stat;
         this.valuesAdd = valuesAdd;
@@ -19,20 +19,20 @@ public class EffectStringSet extends Effect {
     }
 
     @Override
-    public void start(StatHolder target) {
+    public void start(EffectableStatHolder target) {
         StatStringSet moddableSet = target.getStatStringSet(stat);
         moddableSet.addAdditional(valuesAdd);
         moddableSet.addCancellation(valuesRemove);
     }
 
     @Override
-    public void end(StatHolder target) {
+    public void end(EffectableStatHolder target) {
         StatStringSet moddableSet = target.getStatStringSet(stat);
         moddableSet.removeAdditional(valuesAdd);
         moddableSet.removeCancellation(valuesRemove);
     }
 
     @Override
-    public void eachRound(StatHolder target) {}
+    public void eachRound(EffectableStatHolder target) {}
 
 }

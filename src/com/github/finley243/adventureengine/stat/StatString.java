@@ -5,10 +5,10 @@ import java.util.Deque;
 
 public class StatString {
 
-    private final StatHolder target;
+    private final EffectableStatHolder target;
     private final Deque<String> stringStack;
 
-    public StatString(StatHolder target) {
+    public StatString(EffectableStatHolder target) {
         this.target = target;
         this.stringStack = new ArrayDeque<>();
     }

@@ -16,7 +16,7 @@ import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.*;
 
-public class ItemWeapon extends ItemEquippable {
+public class ItemWeapon extends ItemEquippable implements EffectableStatHolder {
 
 	public static final float HIT_CHANCE_BASE_MELEE_MIN = 0.10f;
 	public static final float HIT_CHANCE_BASE_MELEE_MAX = 0.90f;
@@ -202,7 +202,7 @@ public class ItemWeapon extends ItemEquippable {
 			case "rate" -> rate;
 			case "critDamage" -> critDamage;
 			case "clipSize" -> clipSize;
-			default -> super.getStatInt(name);
+			default -> null;
 		};
 	}
 
@@ -213,7 +213,7 @@ public class ItemWeapon extends ItemEquippable {
 		} else if ("armorMult".equals(name)) {
 			return armorMult;
 		}
-		return super.getStatFloat(name);
+		return null;
 	}
 
 	@Override
@@ -221,7 +221,7 @@ public class ItemWeapon extends ItemEquippable {
 		if ("isSilenced".equals(name)) {
 			return isSilenced;
 		}
-		return super.getStatBoolean(name);
+		return null;
 	}
 
 	@Override
@@ -229,7 +229,7 @@ public class ItemWeapon extends ItemEquippable {
 		if ("damageType".equals(name)) {
 			return damageType;
 		}
-		return super.getStatString(name);
+		return null;
 	}
 
 	@Override
@@ -239,7 +239,7 @@ public class ItemWeapon extends ItemEquippable {
 		} else if ("attackTypes".equals(name)) {
 			return attackTypes;
 		}
-		return super.getStatStringSet(name);
+		return null;
 	}
 
 	@Override
@@ -297,8 +297,10 @@ public class ItemWeapon extends ItemEquippable {
 				getEquippedActor().getInventory().addItems(ammoType, difference);
 			}
 		}
-		super.onStatChange();
 	}
+
+	@Override
+	public void triggerEffect(String name) {}
 
 	@Override
 	public void modStateInteger(String name, int amount) {

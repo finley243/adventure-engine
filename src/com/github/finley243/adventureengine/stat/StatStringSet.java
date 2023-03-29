@@ -7,11 +7,11 @@ import java.util.Set;
 
 public class StatStringSet {
 
-    private final StatHolder target;
+    private final EffectableStatHolder target;
     private final Map<String, Integer> additional;
     private final Map<String, Integer> cancellation;
 
-    public StatStringSet(StatHolder target) {
+    public StatStringSet(EffectableStatHolder target) {
         this.target = target;
         this.additional = new HashMap<>();
         this.cancellation = new HashMap<>();

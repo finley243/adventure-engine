@@ -65,31 +65,6 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
-		return null;
-	}
-
-	@Override
-	public StatFloat getStatFloat(String name) {
-		return null;
-	}
-
-	@Override
-	public StatBoolean getStatBoolean(String name) {
-		return null;
-	}
-
-	@Override
-	public StatString getStatString(String name) {
-		return null;
-	}
-
-	@Override
-	public StatStringSet getStatStringSet(String name) {
-		return null;
-	}
-
-	@Override
 	public int getValueInt(String name) {
 		return 0;
 	}
@@ -118,11 +93,6 @@ public class Scene extends GameInstanced implements StatHolder {
 	@Override
 	public Set<String> getValueStringSet(String name) {
 		return null;
-	}
-
-	@Override
-	public void onStatChange() {
-
 	}
 
 	@Override
@@ -159,11 +129,6 @@ public class Scene extends GameInstanced implements StatHolder {
 
 	@Override
 	public void modStateFloat(String name, float amount) {
-
-	}
-
-	@Override
-	public void triggerEffect(String name) {
 
 	}
 

@@ -214,31 +214,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
-		return null;
-	}
-
-	@Override
-	public StatFloat getStatFloat(String name) {
-		return null;
-	}
-
-	@Override
-	public StatBoolean getStatBoolean(String name) {
-		return null;
-	}
-
-	@Override
-	public StatString getStatString(String name) {
-		return null;
-	}
-
-	@Override
-	public StatStringSet getStatStringSet(String name) {
-		return null;
-	}
-
-	@Override
 	public int getValueInt(String name) {
 		return localVarsInteger.getOrDefault(name, getTemplate().getLocalVarsIntegerDefault().getOrDefault(name, 0));
 	}
@@ -274,11 +249,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public Set<String> getValueStringSet(String name) {
 		return localVarsStringSet.getOrDefault(name, getTemplate().getLocalVarsStringSetDefault().getOrDefault(name, null));
-	}
-
-	@Override
-	public void onStatChange() {
-
 	}
 
 	@Override
@@ -328,11 +298,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public void triggerEffect(String name) {
-
-	}
-
-	@Override
 	public Inventory getInventory() {
 		return null;
 	}
@@ -342,6 +307,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return switch (name) {
 			case "component" -> getComponent(ID);
 			case "linkedObject" -> game().data().getObject((String) getComponentParams(ID).getParameter("object"));
+			case "area" -> getArea();
 			default -> null;
 		};
 	}

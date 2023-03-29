@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 
 /**
  * An effect that modifies an actor
@@ -17,11 +17,11 @@ public abstract class Effect {
 		this.stackable = stackable;
 	}
 	
-	public abstract void start(StatHolder target);
+	public abstract void start(EffectableStatHolder target);
 	
-	public abstract void end(StatHolder target);
+	public abstract void end(EffectableStatHolder target);
 	
-	public abstract void eachRound(StatHolder target);
+	public abstract void eachRound(EffectableStatHolder target);
 
 	public boolean manualRemoval() {
 		return manualRemoval;

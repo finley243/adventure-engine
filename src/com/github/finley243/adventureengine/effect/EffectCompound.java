@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 
 import java.util.List;
 
@@ -14,21 +14,21 @@ public class EffectCompound extends Effect {
     }
 
     @Override
-    public void start(StatHolder target) {
+    public void start(EffectableStatHolder target) {
         for (Effect subEffect : subEffects) {
             subEffect.start(target);
         }
     }
 
     @Override
-    public void end(StatHolder target) {
+    public void end(EffectableStatHolder target) {
         for (Effect subEffect : subEffects) {
             subEffect.end(target);
         }
     }
 
     @Override
-    public void eachRound(StatHolder target) {
+    public void eachRound(EffectableStatHolder target) {
         for (Effect subEffect : subEffects) {
             subEffect.eachRound(target);
         }

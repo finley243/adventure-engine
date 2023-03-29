@@ -6,18 +6,6 @@ import java.util.Set;
 
 public interface StatHolder {
 
-    StatInt getStatInt(String name);
-
-    StatFloat getStatFloat(String name);
-
-    StatBoolean getStatBoolean(String name);
-
-    StatString getStatString(String name);
-
-    StatStringSet getStatStringSet(String name);
-
-    void onStatChange();
-
     int getValueInt(String name);
 
     float getValueFloat(String name);
@@ -41,8 +29,6 @@ public interface StatHolder {
     void modStateInteger(String name, int amount);
 
     void modStateFloat(String name, float amount);
-
-    void triggerEffect(String name);
 
     Inventory getInventory();
 

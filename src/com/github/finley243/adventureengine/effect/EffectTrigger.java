@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 
 public class EffectTrigger extends Effect {
 
@@ -12,17 +12,17 @@ public class EffectTrigger extends Effect {
     }
 
     @Override
-    public void start(StatHolder target) {
+    public void start(EffectableStatHolder target) {
         target.triggerEffect(trigger);
     }
 
     @Override
-    public void end(StatHolder target) {
+    public void end(EffectableStatHolder target) {
 
     }
 
     @Override
-    public void eachRound(StatHolder target) {
+    public void eachRound(EffectableStatHolder target) {
         target.triggerEffect(trigger);
     }
 

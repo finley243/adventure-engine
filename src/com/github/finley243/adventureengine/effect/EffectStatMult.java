@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 import com.github.finley243.adventureengine.stat.StatFloat;
 import com.github.finley243.adventureengine.stat.StatInt;
 
@@ -16,7 +16,7 @@ public class EffectStatMult extends Effect {
     }
 
     @Override
-    public void start(StatHolder target) {
+    public void start(EffectableStatHolder target) {
         StatInt statInt = target.getStatInt(stat);
         if(statInt != null) {
             statInt.addMult(amount);
@@ -29,7 +29,7 @@ public class EffectStatMult extends Effect {
     }
 
     @Override
-    public void end(StatHolder target) {
+    public void end(EffectableStatHolder target) {
         StatInt statInt = target.getStatInt(stat);
         if(statInt != null) {
             statInt.addMult(-amount);
@@ -42,7 +42,7 @@ public class EffectStatMult extends Effect {
     }
 
     @Override
-    public void eachRound(StatHolder target) {
+    public void eachRound(EffectableStatHolder target) {
 
     }
 

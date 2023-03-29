@@ -652,7 +652,7 @@ public class DataLoader {
                 String statStringSet = LoadUtils.attribute(effectElement, "stat", null);
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
-                return new EffectStringSet(duration, manualRemoval, stackable, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
+                return new EffectStatStringSet(duration, manualRemoval, stackable, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
             }
             case "compound" -> {
                 List<Effect> compoundEffects = loadEffects(effectElement);

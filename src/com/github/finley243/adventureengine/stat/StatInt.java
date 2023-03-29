@@ -4,11 +4,11 @@ import com.github.finley243.adventureengine.MathUtils;
 
 public class StatInt {
 
-    private final StatHolder target;
+    private final EffectableStatHolder target;
     private int mod;
     private float mult;
 
-    public StatInt(StatHolder target) {
+    public StatInt(EffectableStatHolder target) {
         this.target = target;
     }
 

@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateUsable;
@@ -63,6 +64,22 @@ public class ObjectComponentUsable extends ObjectComponent {
             }
         }
         return actions;
+    }
+
+    @Override
+    public boolean getValueBoolean(String name) {
+        if ("hasUser".equals(name)) {
+            return getUser() != null;
+        }
+        return super.getValueBoolean(name);
+    }
+
+    @Override
+    public StatHolder getSubHolder(String name, String ID) {
+        if ("user".equals(name)) {
+            return getUser();
+        }
+        return super.getSubHolder(name, ID);
     }
 
 }

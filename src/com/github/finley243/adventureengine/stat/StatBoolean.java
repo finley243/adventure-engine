@@ -2,13 +2,13 @@ package com.github.finley243.adventureengine.stat;
 
 public class StatBoolean {
 
-    private final StatHolder target;
+    private final EffectableStatHolder target;
     // If there are both true and false modifiers, the priority value will be used
     private final boolean priorityValue;
     private int countTrue;
     private int countFalse;
 
-    public StatBoolean(StatHolder target, boolean priorityValue) {
+    public StatBoolean(EffectableStatHolder target, boolean priorityValue) {
         this.target = target;
         this.priorityValue = priorityValue;
     }

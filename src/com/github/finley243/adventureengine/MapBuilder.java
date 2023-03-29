@@ -1,13 +1,14 @@
 package com.github.finley243.adventureengine;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapBuilder<K, V> {
 
-    private final LinkedHashMap<K, V> map;
+    private final Map<K, V> map;
 
     public MapBuilder() {
-        this.map = new LinkedHashMap<>();
+        this.map = new HashMap<>();
     }
 
     public MapBuilder<K, V> put(K key, V value) {
@@ -15,7 +16,7 @@ public class MapBuilder<K, V> {
         return this;
     }
 
-    public LinkedHashMap<K, V> build() {
+    public Map<K, V> build() {
         return map;
     }
 

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.textgen;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Context {
@@ -32,11 +31,11 @@ public class Context {
 	private final Map<String, Noun> objects;
 	private final Map<String, String> vars;
 
-	public Context(LinkedHashMap<String, Noun> objects) {
+	public Context(Map<String, Noun> objects) {
 		this(new HashMap<>(), objects);
 	}
 
-	public Context(Map<String, String> vars, LinkedHashMap<String, Noun> objects) {
+	public Context(Map<String, String> vars, Map<String, Noun> objects) {
 		if (objects == null) throw new IllegalArgumentException("Context objects cannot be null");
 		for (Noun object : objects.values()) {
 			if(object == null) throw new IllegalArgumentException("Context objects cannot be null");

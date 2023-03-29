@@ -37,7 +37,7 @@ import com.github.finley243.adventureengine.world.object.component.ObjectCompone
 
 import java.util.*;
 
-public class Actor extends GameInstanced implements Noun, Physical, StatHolder, AttackTarget {
+public class Actor extends GameInstanced implements Noun, Physical, EffectableStatHolder, AttackTarget {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 3;
@@ -309,6 +309,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		return switch (name) {
 			case "equippedItem" -> getEquipmentComponent().getEquippedItem();
 			case "usingObject" -> getUsingObject();
+			case "area" -> getArea();
 			default -> null;
 		};
 	}
@@ -916,6 +917,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			case "sleeping" -> isSleeping;
 			case "inCombat" -> isInCombat();
 			case "usingObject" -> isUsingObject();
+			case "inCover" -> isInCover();
 			case "dead" -> isDead;
 			case "active" -> isActive();
 			default -> false;

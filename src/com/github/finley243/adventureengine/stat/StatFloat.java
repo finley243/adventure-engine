@@ -2,11 +2,11 @@ package com.github.finley243.adventureengine.stat;
 
 public class StatFloat {
 
-    private final StatHolder target;
+    private final EffectableStatHolder target;
     private float mod;
     private float mult;
 
-    public StatFloat(StatHolder target) {
+    public StatFloat(EffectableStatHolder target) {
         this.target = target;
     }
 

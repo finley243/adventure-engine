@@ -227,6 +227,9 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
+		if ("room".equals(name)) {
+			return getRoom();
+		}
 		return null;
 	}
 
@@ -386,31 +389,6 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
-		return null;
-	}
-
-	@Override
-	public StatFloat getStatFloat(String name) {
-		return null;
-	}
-
-	@Override
-	public StatBoolean getStatBoolean(String name) {
-		return null;
-	}
-
-	@Override
-	public StatString getStatString(String name) {
-		return null;
-	}
-
-	@Override
-	public StatStringSet getStatStringSet(String name) {
-		return null;
-	}
-
-	@Override
 	public int getValueInt(String name) {
 		return 0;
 	}
@@ -443,11 +421,6 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 			return getLineOfSightAreaIDs();
 		}
 		return null;
-	}
-
-	@Override
-	public void onStatChange() {
-
 	}
 
 	@Override
@@ -487,11 +460,6 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	}
 
-	@Override
-	public void triggerEffect(String name) {
-
-	}
-
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
 			scripts.get(entryPoint).execute(new ContextScript(game(), subject, target));
@@ -512,16 +480,6 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 			state.add(new SaveData(SaveData.DataType.AREA, this.getID(), "isKnown", isKnown()));
 		}
 		return state;
-	}
-	
-	@Override
-	public String toString() {
-		return getID();
-	}
-	
-	@Override
-	public int hashCode() {
-		return getID().hashCode();
 	}
 	
 }

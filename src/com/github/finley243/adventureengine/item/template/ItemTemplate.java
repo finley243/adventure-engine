@@ -100,31 +100,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
-		return null;
-	}
-
-	@Override
-	public StatFloat getStatFloat(String name) {
-		return null;
-	}
-
-	@Override
-	public StatBoolean getStatBoolean(String name) {
-		return null;
-	}
-
-	@Override
-	public StatString getStatString(String name) {
-		return null;
-	}
-
-	@Override
-	public StatStringSet getStatStringSet(String name) {
-		return null;
-	}
-
-	@Override
 	public int getValueInt(String name) {
 		if ("price".equals(name)) {
 			return price;
@@ -160,11 +135,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	@Override
-	public void onStatChange() {
-
-	}
-
-	@Override
 	public void setStateBoolean(String name, boolean value) {
 
 	}
@@ -196,11 +166,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 
 	@Override
 	public void modStateFloat(String name, float amount) {
-
-	}
-
-	@Override
-	public void triggerEffect(String name) {
 
 	}
 
