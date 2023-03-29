@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 import com.github.finley243.adventureengine.stat.StatStringSet;
 
@@ -11,8 +12,8 @@ public class EffectStatStringSet extends Effect {
     private final Set<String> valuesAdd;
     private final Set<String> valuesRemove;
 
-    public EffectStatStringSet(int duration, boolean manualRemoval, boolean stackable, String stat, Set<String> valuesAdd, Set<String> valuesRemove) {
-        super(duration, manualRemoval, stackable);
+    public EffectStatStringSet(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, String stat, Set<String> valuesAdd, Set<String> valuesRemove) {
+        super(game, ID, duration, manualRemoval, stackable);
         this.stat = stat;
         this.valuesAdd = valuesAdd;
         this.valuesRemove = valuesRemove;

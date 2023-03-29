@@ -106,9 +106,8 @@ public class DataLoader {
                                     game.data().addScript(scriptID, script);
                                 }
                                 case "effect" -> {
-                                    String effectID = LoadUtils.attribute((Element) currentChild, "id", null);
-                                    Effect effect = loadEffect((Element) currentChild);
-                                    game.data().addEffect(effectID, effect);
+                                    Effect effect = loadEffect(game, (Element) currentChild);
+                                    game.data().addEffect(effect.getID(), effect);
                                 }
                                 case "action" -> {
                                     ActionTemplate action = loadActionTemplate(game, (Element) currentChild);
@@ -595,18 +594,19 @@ public class DataLoader {
         }
     }
 
-    private static List<Effect> loadEffects(Element effectsElement) {
+    private static List<Effect> loadEffects(Game game, Element effectsElement) {
         if (effectsElement == null) return new ArrayList<>();
         List<Element> effectElements = LoadUtils.directChildrenWithName(effectsElement, "effect");
         List<Effect> effects = new ArrayList<>();
         for (Element effectElement : effectElements) {
-            effects.add(loadEffect(effectElement));
+            effects.add(loadEffect(game, effectElement));
         }
         return effects;
     }
 
-    private static Effect loadEffect(Element effectElement) {
+    private static Effect loadEffect(Game game, Element effectElement) {
         if (effectElement == null) return null;
+        String ID = LoadUtils.attribute(effectElement, "id", null);
         boolean manualRemoval = LoadUtils.attributeBool(effectElement, "isPermanent", false);
         String effectType = LoadUtils.attribute(effectElement, "type", null);
         int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
@@ -615,11 +615,11 @@ public class DataLoader {
             case "state" -> {
                 String state = LoadUtils.attribute(effectElement, "state", null);
                 int stateAmount = LoadUtils.attributeInt(effectElement, "amount", 0);
-                return new EffectStateInt(duration, manualRemoval, stackable, state, stateAmount);
+                return new EffectStateInt(game, ID, duration, manualRemoval, stackable, state, stateAmount);
             }
             case "trigger" -> {
                 String trigger = LoadUtils.attribute(effectElement, "trigger", null);
-                return new EffectTrigger(duration, manualRemoval, stackable, trigger);
+                return new EffectTrigger(game, ID, duration, manualRemoval, stackable, trigger);
             }
             case "mod" -> {
                 String statMod = LoadUtils.attribute(effectElement, "stat", null);
@@ -627,36 +627,36 @@ public class DataLoader {
                 boolean statModIsFloat = statModValue.contains(".");
                 if (statModIsFloat) {
                     float statModValueFloat = Float.parseFloat(statModValue);
-                    return new EffectStatModFloat(duration, manualRemoval, stackable, statMod, statModValueFloat);
+                    return new EffectStatModFloat(game, ID, duration, manualRemoval, stackable, statMod, statModValueFloat);
                 } else {
                     int statModValueInt = Integer.parseInt(statModValue);
-                    return new EffectStatModInt(duration, manualRemoval, stackable, statMod, statModValueInt);
+                    return new EffectStatModInt(game, ID, duration, manualRemoval, stackable, statMod, statModValueInt);
                 }
             }
             case "mult" -> {
                 String statMult = LoadUtils.attribute(effectElement, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
-                return new EffectStatMult(duration, manualRemoval, stackable, statMult, statMultAmount);
+                return new EffectStatMult(game, ID, duration, manualRemoval, stackable, statMult, statMultAmount);
             }
             case "boolean" -> {
                 String statBoolean = LoadUtils.attribute(effectElement, "stat", null);
                 boolean statBooleanValue = LoadUtils.attributeBool(effectElement, "value", true);
-                return new EffectStatBoolean(duration, manualRemoval, stackable, statBoolean, statBooleanValue);
+                return new EffectStatBoolean(game, ID, duration, manualRemoval, stackable, statBoolean, statBooleanValue);
             }
             case "string" -> {
                 String statString = LoadUtils.attribute(effectElement, "stat", null);
                 String statStringValue = LoadUtils.attribute(effectElement, "value", null);
-                return new EffectStatString(duration, manualRemoval, stackable, statString, statStringValue);
+                return new EffectStatString(game, ID, duration, manualRemoval, stackable, statString, statStringValue);
             }
             case "stringSet" -> {
                 String statStringSet = LoadUtils.attribute(effectElement, "stat", null);
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
-                return new EffectStatStringSet(duration, manualRemoval, stackable, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
+                return new EffectStatStringSet(game, ID, duration, manualRemoval, stackable, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
             }
             case "compound" -> {
-                List<Effect> compoundEffects = loadEffects(effectElement);
-                return new EffectCompound(duration, manualRemoval, stackable, compoundEffects);
+                List<Effect> compoundEffects = loadEffects(game, effectElement);
+                return new EffectCompound(game, ID, duration, manualRemoval, stackable, compoundEffects);
             }
             default -> {
                 return null;

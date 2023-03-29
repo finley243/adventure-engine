@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 
 public class EffectStatBoolean extends Effect {
@@ -7,8 +8,8 @@ public class EffectStatBoolean extends Effect {
     private final String stat;
     private final boolean value;
 
-    public EffectStatBoolean(int duration, boolean manualRemoval, boolean stackable, String stat, boolean value) {
-        super(duration, manualRemoval, stackable);
+    public EffectStatBoolean(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, String stat, boolean value) {
+        super(game, ID, duration, manualRemoval, stackable);
         this.stat = stat;
         this.value = value;
     }

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.effect;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 
 import java.util.List;
@@ -8,8 +9,8 @@ public class EffectCompound extends Effect {
 
     private final List<Effect> subEffects;
 
-    public EffectCompound(int duration, boolean manualRemoval, boolean stackable, List<Effect> subEffects) {
-        super(duration, manualRemoval, stackable);
+    public EffectCompound(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, List<Effect> subEffects) {
+        super(game, ID, duration, manualRemoval, stackable);
         this.subEffects = subEffects;
     }
 
