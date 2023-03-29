@@ -250,32 +250,25 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public boolean getValueBoolean(String name) {
-		switch (name) {
-			case "enabled":
-				return isEnabled;
-			case "hidden":
-				return isHidden;
-			case "guarded":
-				return isGuarded();
-			default:
-				return localVarsBoolean.getOrDefault(name, getTemplate().getLocalVarsBooleanDefault().getOrDefault(name, false));
-		}
+		return switch (name) {
+			case "enabled" -> isEnabled;
+			case "hidden" -> isHidden;
+			case "guarded" -> isGuarded();
+			default ->
+					localVarsBoolean.getOrDefault(name, getTemplate().getLocalVarsBooleanDefault().getOrDefault(name, false));
+		};
 	}
 
 	@Override
 	public String getValueString(String name) {
-		switch (name) {
-			case "id":
-				return getID();
-			case "templateID":
-				return templateID;
-			case "area":
-				return getArea().getID();
-			case "room":
-				return getArea().getRoom().getID();
-			default:
-				return localVarsString.getOrDefault(name, getTemplate().getLocalVarsStringDefault().getOrDefault(name, null));
-		}
+		return switch (name) {
+			case "id" -> getID();
+			case "templateID" -> templateID;
+			case "area" -> getArea().getID();
+			case "room" -> getArea().getRoom().getID();
+			default ->
+					localVarsString.getOrDefault(name, getTemplate().getLocalVarsStringDefault().getOrDefault(name, null));
+		};
 	}
 
 	@Override
@@ -291,18 +284,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public void setStateBoolean(String name, boolean value) {
 		switch (name) {
-			case "known":
-				isKnown = value;
-				break;
-			case "enabled":
-				setEnabled(value);
-				break;
-			case "hidden":
-				isHidden = value;
-				break;
-			default:
-				localVarsBoolean.put(name, value);
-				break;
+			case "known" -> isKnown = value;
+			case "enabled" -> setEnabled(value);
+			case "hidden" -> isHidden = value;
+			default -> localVarsBoolean.put(name, value);
 		}
 	}
 
@@ -354,26 +339,18 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
-		switch (name) {
-			case "component":
-				return getComponent(ID);
-			case "linkedObject":
-				return game().data().getObject((String) getComponentParams(ID).getParameter("object"));
-		}
-		return null;
+		return switch (name) {
+			case "component" -> getComponent(ID);
+			case "linkedObject" -> game().data().getObject((String) getComponentParams(ID).getParameter("object"));
+			default -> null;
+		};
 	}
 
 	public void loadState(SaveData saveData) {
 		switch (saveData.getParameter()) {
-			case "isKnown":
-				this.isKnown = saveData.getValueBoolean();
-				break;
-			case "isEnabled":
-				setEnabled(saveData.getValueBoolean());
-				break;
-			case "area":
-				this.area = game().data().getArea(saveData.getValueString());
-				break;
+			case "isKnown" -> this.isKnown = saveData.getValueBoolean();
+			case "isEnabled" -> setEnabled(saveData.getValueBoolean());
+			case "area" -> this.area = game().data().getArea(saveData.getValueString());
 		}
 	}
 
@@ -389,21 +366,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "area", area.getID()));
 		}
 		return state;
-	}
-
-	@Override
-	public int hashCode() {
-		return getID().hashCode();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		return o instanceof WorldObject && ((WorldObject) o).getID().equals(this.getID());
-	}
-
-	@Override
-	public String toString() {
-		return this.getID();
 	}
 
 }

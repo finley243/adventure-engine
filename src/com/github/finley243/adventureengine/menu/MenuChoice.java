@@ -36,7 +36,7 @@ public class MenuChoice implements Comparable<MenuChoice> {
 
     public String getFullPrompt() {
         StringBuilder fullPrompt = new StringBuilder();
-        for(String current : path) {
+        for (String current : path) {
             fullPrompt.append(LangUtils.titleCase(current)).append(" - ");
         }
         fullPrompt.append(prompt);
@@ -57,7 +57,7 @@ public class MenuChoice implements Comparable<MenuChoice> {
 
     private String sortingString() {
         StringBuilder builder = new StringBuilder();
-        for(String current : path) {
+        for (String current : path) {
             builder.append(current);
         }
         builder.append(prompt);

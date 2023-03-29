@@ -18,10 +18,8 @@ public class StatBoolean {
             return base;
         } else if (countTrue > 0 && countFalse > 0) {
             return priorityValue;
-        } else if (countTrue > 0) {
-            return true;
         } else {
-            return false;
+            return countTrue > 0;
         }
     }
 

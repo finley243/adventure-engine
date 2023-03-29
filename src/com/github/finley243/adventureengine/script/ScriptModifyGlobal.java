@@ -18,16 +18,16 @@ public class ScriptModifyGlobal extends Script {
     @Override
     protected void executeSuccess(ContextScript context) {
         switch (variable.getDataType()) {
-            case INTEGER:
+            case INTEGER -> {
                 int oldValueInt = context.game().data().getGlobalInteger(globalID);
                 context.game().data().setGlobalInteger(globalID, oldValueInt + variable.getValueInteger(context));
-                break;
-            case FLOAT:
+            }
+            case FLOAT -> {
                 float oldValueFloat = context.game().data().getGlobalFloat(globalID);
                 context.game().data().setGlobalFloat(globalID, oldValueFloat + variable.getValueFloat(context));
-                break;
-            default:
-                throw new UnsupportedOperationException("No modify functions for provided data type: " + variable.getDataType());
+            }
+            default ->
+                    throw new UnsupportedOperationException("No modify functions for provided data type: " + variable.getDataType());
         }
     }
 

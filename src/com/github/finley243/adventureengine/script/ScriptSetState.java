@@ -21,21 +21,11 @@ public class ScriptSetState extends Script {
     @Override
     protected void executeSuccess(ContextScript context) {
         switch (variable.getDataType()) {
-            case BOOLEAN:
-                holder.getHolder(context).setStateBoolean(state, variable.getValueBoolean(context));
-                break;
-            case INTEGER:
-                holder.getHolder(context).setStateInteger(state, variable.getValueInteger(context));
-                break;
-            case FLOAT:
-                holder.getHolder(context).setStateFloat(state, variable.getValueFloat(context));
-                break;
-            case STRING:
-                holder.getHolder(context).setStateString(state, variable.getValueString(context));
-                break;
-            case STRING_SET:
-                holder.getHolder(context).setStateStringSet(state, variable.getValueStringSet(context));
-                break;
+            case BOOLEAN -> holder.getHolder(context).setStateBoolean(state, variable.getValueBoolean(context));
+            case INTEGER -> holder.getHolder(context).setStateInteger(state, variable.getValueInteger(context));
+            case FLOAT -> holder.getHolder(context).setStateFloat(state, variable.getValueFloat(context));
+            case STRING -> holder.getHolder(context).setStateString(state, variable.getValueString(context));
+            case STRING_SET -> holder.getHolder(context).setStateStringSet(state, variable.getValueStringSet(context));
         }
     }
 

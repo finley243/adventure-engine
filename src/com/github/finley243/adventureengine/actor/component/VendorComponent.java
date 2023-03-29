@@ -44,17 +44,17 @@ public class VendorComponent {
 
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-        if(!enabled) return actions;
-        for(Item item : vendorInventory.getItems()) {
+        if (!enabled) return actions;
+        for (Item item : vendorInventory.getItems()) {
             actions.add(new ActionVendorBuy(vendor, vendorInventory, item, item.getTemplate().getPrice()));
         }
-        if(!buyTags.isEmpty() || buyAll) {
+        if (!buyTags.isEmpty() || buyAll) {
             for (Item item : subject.getInventory().getItems()) {
                 boolean canBuy = buyAll;
-                if(!canBuy) {
+                if (!canBuy) {
                     // TODO - Optimize checks?
-                    for(String buyTag : buyTags) {
-                        if(item.getTemplate().getTags().contains(buyTag)) {
+                    for (String buyTag : buyTags) {
+                        if (item.getTemplate().getTags().contains(buyTag)) {
                             canBuy = true;
                             break;
                         }

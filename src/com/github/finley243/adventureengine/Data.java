@@ -1,17 +1,16 @@
 package com.github.finley243.adventureengine;
 
-import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ActorFactory;
 import com.github.finley243.adventureengine.actor.ActorTemplate;
 import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
-import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.load.DataLoader;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.network.Network;
@@ -261,11 +260,6 @@ public class Data {
 
 	public Collection<WorldObject> getObjects() {
 		return objects.values();
-	}
-
-	public void removeObject(String id) {
-		if(!objects.containsKey(id)) throw new IllegalArgumentException("Cannot remove object because ID does not exist: " + id);
-		objects.remove(id);
 	}
 	
 	public void addItem(String id, ItemTemplate value) {

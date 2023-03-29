@@ -89,13 +89,11 @@ public abstract class ObjectComponent implements StatHolder {
 
     @Override
     public String getValueString(String name) {
-        switch (name) {
-            case "id":
-                return getID();
-            case "templateID":
-                return getTemplate().getID();
-        }
-        return null;
+        return switch (name) {
+            case "id" -> getID();
+            case "templateID" -> getTemplate().getID();
+            default -> null;
+        };
     }
 
     @Override
@@ -110,10 +108,8 @@ public abstract class ObjectComponent implements StatHolder {
 
     @Override
     public void setStateBoolean(String name, boolean value) {
-        switch (name) {
-            case "enabled":
-                setEnabled(value);
-                break;
+        if ("enabled".equals(name)) {
+            setEnabled(value);
         }
     }
 

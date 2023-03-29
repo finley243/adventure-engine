@@ -39,10 +39,9 @@ public class Network {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof Network)) {
+        if (!(o instanceof Network other)) {
             return false;
         } else {
-            Network other = (Network) o;
             return this.getID().equals(other.getID());
         }
     }

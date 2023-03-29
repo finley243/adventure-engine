@@ -1,8 +1,6 @@
 package com.github.finley243.adventureengine.variable;
 
 import com.github.finley243.adventureengine.ContextScript;
-import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 

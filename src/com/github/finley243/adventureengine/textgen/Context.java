@@ -37,11 +37,11 @@ public class Context {
 	}
 
 	public Context(Map<String, String> vars, LinkedHashMap<String, Noun> objects) {
-		if(objects == null) throw new IllegalArgumentException("Context objects cannot be null");
-		for(Noun object : objects.values()) {
+		if (objects == null) throw new IllegalArgumentException("Context objects cannot be null");
+		for (Noun object : objects.values()) {
 			if(object == null) throw new IllegalArgumentException("Context objects cannot be null");
 		}
-		if(vars == null) throw new IllegalArgumentException("Context vars cannot be null");
+		if (vars == null) throw new IllegalArgumentException("Context vars cannot be null");
 		this.objects = objects;
 		this.vars = vars;
 	}

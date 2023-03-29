@@ -22,7 +22,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Game {
@@ -52,19 +51,11 @@ public class Game {
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
 
 		PerceptionHandler perceptionHandler = new PerceptionHandler();
-		UserInterface userInterface;
-		switch (data.getConfig("interfaceType")) {
-			case "graphicalChoice":
-				userInterface = new GraphicalInterfaceNested(this);
-				break;
-			case "consoleParser":
-				userInterface = new ConsoleParserInterface(this);
-				break;
-			case "consoleChoice":
-			default:
-				userInterface = new ConsoleInterface(this);
-				break;
-		}
+		UserInterface userInterface = switch (data.getConfig("interfaceType")) {
+			case "graphicalChoice" -> new GraphicalInterfaceNested(this);
+			case "consoleParser" -> new ConsoleParserInterface(this);
+			case "consoleChoice", default -> new ConsoleInterface(this);
+		};
 		eventBus().register(perceptionHandler);
 		eventBus().register(userInterface);
 		eventBus().register(this);

@@ -17,7 +17,7 @@ public abstract class ActionRandomEach<T> extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         boolean continueAfterStart = onStart(subject, repeatActionCount);
-        if(continueAfterStart) {
+        if (continueAfterStart) {
             if (MathUtils.randomCheck(chanceOverall(subject))) {
                 onSuccessOverall(subject, repeatActionCount);
                 for (T target : collection) {

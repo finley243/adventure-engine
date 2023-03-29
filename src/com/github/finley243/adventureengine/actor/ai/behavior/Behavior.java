@@ -23,16 +23,12 @@ public abstract class Behavior {
     private final Condition condition;
     // If duration = 0, behavior will continue indefinitely until endCondition is met or until superseded by another behavior
     private final int duration;
-    //private final List<Scene> idleScenes;
     private final List<Idle> idles;
-    //private final boolean allowCombatActions;
-    //private final boolean allowItemActions;
     private int turnsRemaining;
 
     public Behavior(Condition condition, int duration, List<Idle> idles) {
         this.condition = condition;
         this.duration = duration;
-        //this.idleScenes = idleScenes;
         this.idles = idles;
         this.turnsRemaining = 0;
     }
@@ -41,8 +37,8 @@ public abstract class Behavior {
     public abstract boolean isInTargetState(Actor subject);
 
     public void update(Actor subject) {
-        if(duration > 0 && turnsRemaining > 0) {
-            if(isInTargetState(subject)) {
+        if (duration > 0 && turnsRemaining > 0) {
+            if (isInTargetState(subject)) {
                 turnsRemaining -= 1;
             } else {
                 // Reset counter if countdown condition is interrupted
@@ -58,7 +54,7 @@ public abstract class Behavior {
     public abstract Area getTargetArea(Actor subject);
 
     public boolean hasCompleted(Actor subject) {
-        if(duration > 0) {
+        if (duration > 0) {
             return turnsRemaining == 0;
         } else {
             return isInTargetState(subject);

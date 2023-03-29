@@ -62,7 +62,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	
 	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game, ID);
-		if(landmarkID == null && name == null) throw new IllegalArgumentException("Landmark and name cannot both be null: " + ID);
+		if (landmarkID == null && name == null) throw new IllegalArgumentException("Landmark and name cannot both be null: " + ID);
 		this.landmarkID = landmarkID;
 		this.name = name;
 		this.nameType = nameType;
@@ -96,7 +96,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	}
 
 	public String getOwnerFaction() {
-		if(ownerFaction == null) return getRoom().getOwnerFaction();
+		if (ownerFaction == null) return getRoom().getOwnerFaction();
 		return ownerFaction;
 	}
 
@@ -140,22 +140,14 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		if (landmarkID != null) {
 			return roomPhrase + "near " + getLandmark().getFormattedName();
 		} else {
-			switch (nameType) {
-				case IN:
-					return roomPhrase + "in " + getFormattedName();
-				case ON:
-					return roomPhrase + "on " + getFormattedName();
-				case NEAR:
-					return roomPhrase + "near " + getFormattedName();
-				case FRONT:
-					return roomPhrase + "in front of " + getFormattedName();
-				case SIDE:
-					return roomPhrase + "beside " + getFormattedName();
-				case BEHIND:
-					return roomPhrase + "behind " + getFormattedName();
-				default:
-					return null;
-			}
+			return switch (nameType) {
+				case IN -> roomPhrase + "in " + getFormattedName();
+				case ON -> roomPhrase + "on " + getFormattedName();
+				case NEAR -> roomPhrase + "near " + getFormattedName();
+				case FRONT -> roomPhrase + "in front of " + getFormattedName();
+				case SIDE -> roomPhrase + "beside " + getFormattedName();
+				case BEHIND -> roomPhrase + "behind " + getFormattedName();
+			};
 		}
 	}
 
@@ -172,21 +164,14 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		} else if (!origin.getRoom().equals(this.getRoom())) {
 			return Phrases.get("moveTo");
 		} else {
-			switch (nameType) {
-				case IN:
-					return Phrases.get("moveTo");
-				case ON:
-					return Phrases.get("moveOnto");
-				case FRONT:
-					return Phrases.get("moveFront");
-				case BEHIND:
-					return Phrases.get("moveBehind");
-				case SIDE:
-					return Phrases.get("moveBeside");
-				case NEAR:
-				default:
-					return Phrases.get("moveToward");
-			}
+			return switch (nameType) {
+				case IN -> Phrases.get("moveTo");
+				case ON -> Phrases.get("moveOnto");
+				case FRONT -> Phrases.get("moveFront");
+				case BEHIND -> Phrases.get("moveBehind");
+				case SIDE -> Phrases.get("moveBeside");
+				case NEAR -> Phrases.get("moveToward");
+			};
 		}
 	}
 
@@ -197,23 +182,17 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	public Set<WorldObject> getObjects(){
 		return objects;
 	}
-
-	public Set<WorldObject> getObjectsExcludeLandmark() {
-		Set<WorldObject> nonLandmarkObjects = new HashSet<>(objects);
-		nonLandmarkObjects.remove(getLandmark());
-		return nonLandmarkObjects;
-	}
 	
 	public void addObject(WorldObject object) {
 		boolean didAdd = objects.add(object);
-		if(!didAdd) {
+		if (!didAdd) {
 			System.out.println("Area " + getID() + " already contains object " + object + ".");
 		}
 	}
 	
 	public void removeObject(WorldObject object) {
 		boolean didRemove = objects.remove(object);
-		if(!didRemove) {
+		if (!didRemove) {
 			System.out.println("Area " + getID() + " does not contain object " + object + ".");
 		}
 	}
@@ -221,39 +200,17 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	public Set<Actor> getActors(){
 		return actors;
 	}
-
-	public Set<Actor> getActors(Actor exclude) {
-		Set<Actor> actorsExclude = new HashSet<>(actors);
-		if (exclude != null) {
-			actorsExclude.remove(exclude);
-		}
-		return actorsExclude;
-	}
-
-	public String getActorList(Actor exclude) {
-		StringBuilder actorList = new StringBuilder();
-		boolean firstActor = true;
-		for(Actor actor : getActors(exclude)) {
-			if(!firstActor) {
-				actorList.append(", ");
-			} else {
-				firstActor = false;
-			}
-			actorList.append(actor.getName());
-		}
-		return actorList.toString();
-	}
 	
 	public void addActor(Actor actor) {
 		boolean didAdd = actors.add(actor);
-		if(!didAdd) {
+		if (!didAdd) {
 			System.out.println("Area " + getID() + " already contains actor " + actor + ".");
 		}
 	}
 	
 	public void removeActor(Actor actor) {
 		boolean didRemove = actors.remove(actor);
-		if(!didRemove) {
+		if (!didRemove) {
 			System.out.println("Area " + getID() + " does not contain actor " + actor + ".");
 		}
 	}
@@ -279,8 +236,8 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	public List<Action> getMoveActions() {
 		List<Action> moveActions = new ArrayList<>();
-		for(AreaLink link : linkedAreas.values()) {
-			if(link.getDistance().isMovable) {
+		for (AreaLink link : linkedAreas.values()) {
+			if (link.getDistance().isMovable) {
 				moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
 			}
 		}
@@ -289,8 +246,8 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	public Set<Area> getMovableAreas() {
 		Set<Area> movableAreas = new HashSet<>();
-		for(AreaLink link : linkedAreas.values()) {
-			if((link.getDistance().isMovable)) {
+		for (AreaLink link : linkedAreas.values()) {
+			if (link.getDistance().isMovable) {
 				movableAreas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
@@ -465,29 +422,25 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public boolean getValueBoolean(String name) {
-		switch (name) {
-			case "known":
-				return isKnown;
+		if ("known".equals(name)) {
+			return isKnown;
 		}
 		return false;
 	}
 
 	@Override
 	public String getValueString(String name) {
-		switch (name) {
-			case "id":
-				return getID();
-			case "room":
-				return roomID;
-		}
-		return null;
+		return switch (name) {
+			case "id" -> getID();
+			case "room" -> roomID;
+			default -> null;
+		};
 	}
 
 	@Override
 	public Set<String> getValueStringSet(String name) {
-		switch (name) {
-			case "visibleAreas":
-				return getLineOfSightAreaIDs();
+		if ("visibleAreas".equals(name)) {
+			return getLineOfSightAreaIDs();
 		}
 		return null;
 	}
@@ -499,10 +452,8 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public void setStateBoolean(String name, boolean value) {
-		switch (name) {
-			case "known":
-				isKnown = value;
-				break;
+		if ("known".equals(name)) {
+			isKnown = value;
 		}
 	}
 
@@ -542,24 +493,22 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
-		if(scripts.containsKey(entryPoint)) {
+		if (scripts.containsKey(entryPoint)) {
 			scripts.get(entryPoint).execute(new ContextScript(game(), subject, target));
 		}
 	}
 
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
-			case "isKnown":
-				if(saveData.getValueBoolean()) {
-					setKnown();
-				}
-				break;
+		if (saveData.getParameter().equals("isKnown")) {
+			if (saveData.getValueBoolean()) {
+				setKnown();
+			}
 		}
 	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		if(isKnown()) {
+		if (isKnown()) {
 			state.add(new SaveData(SaveData.DataType.AREA, this.getID(), "isKnown", isKnown()));
 		}
 		return state;

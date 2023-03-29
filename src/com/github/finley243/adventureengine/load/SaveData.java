@@ -78,40 +78,34 @@ public class SaveData implements Serializable {
     }
 
     public void apply(Data data) {
-        switch(type) {
-            case AREA:
+        switch (type) {
+            case AREA -> {
                 Area area = data.getArea(id);
                 area.loadState(this);
-                break;
-            case ROOM:
+            }
+            case ROOM -> {
                 Room room = data.getRoom(id);
                 room.loadState(this);
-                break;
-            case ACTOR:
+            }
+            case ACTOR -> {
                 Actor actor = data.getActor(id);
                 actor.loadState(this);
-                break;
-            case OBJECT:
+            }
+            case OBJECT -> {
                 WorldObject object = data.getObject(id);
                 object.loadState(this);
-                break;
-            case SCENE:
+            }
+            case SCENE -> {
                 Scene topic = data.getScene(id);
                 topic.loadState(this);
-                break;
-            case VARIABLE:
-                data.setGlobalInteger(id, valueInt);
-                break;
-            case ITEM_INSTANCE:
-                ItemFactory.load(data.game(), valueString, id);
-                break;
-            case ITEM_TEMPLATE:
+            }
+            case VARIABLE -> data.setGlobalInteger(id, valueInt);
+            case ITEM_INSTANCE -> ItemFactory.load(data.game(), valueString, id);
+            case ITEM_TEMPLATE -> {
                 ItemTemplate itemTemplate = data.getItem(id);
                 itemTemplate.loadState(this);
-                break;
-            case TIME:
-                data.time().loadState(this);
-                break;
+            }
+            case TIME -> data.time().loadState(this);
         }
     }
 

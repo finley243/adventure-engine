@@ -23,7 +23,7 @@ public class Faction {
 	}
 	
 	public FactionRelation getRelationTo(String factionID) {
-		if(factionID.equals(this.ID)) {
+		if (factionID.equals(this.ID)) {
 			return FactionRelation.ASSIST;
 		} else {
 			return relations.getOrDefault(factionID, defaultRelation);

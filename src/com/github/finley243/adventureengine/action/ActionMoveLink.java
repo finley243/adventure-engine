@@ -58,11 +58,10 @@ public class ActionMoveLink extends ActionMove {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionMoveLink)) {
+        if (!(o instanceof ActionMoveLink other)) {
             return false;
         } else {
-            ActionMoveLink other = (ActionMoveLink) o;
-            return other.linkComponent == this.linkComponent;
+			return other.linkComponent == this.linkComponent;
         }
     }
 

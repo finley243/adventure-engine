@@ -28,11 +28,10 @@ public class ActionTalk extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionTalk)) {
+        if (!(o instanceof ActionTalk other)) {
             return false;
         } else {
-            ActionTalk other = (ActionTalk) o;
-            return other.target == this.target;
+			return other.target == this.target;
         }
     }
 

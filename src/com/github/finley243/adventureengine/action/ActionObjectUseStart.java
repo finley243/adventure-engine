@@ -35,7 +35,7 @@ public class ActionObjectUseStart extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(component.getTemplateUsable().userIsInCover()) {
+		if (component.getTemplateUsable().userIsInCover()) {
 			return UtilityUtils.getCoverUtility(subject);
 		}
 		return 0.0f;
@@ -48,11 +48,10 @@ public class ActionObjectUseStart extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionObjectUseStart)) {
+        if (!(o instanceof ActionObjectUseStart other)) {
             return false;
         } else {
-            ActionObjectUseStart other = (ActionObjectUseStart) o;
-            return other.component == this.component;
+			return other.component == this.component;
         }
     }
 

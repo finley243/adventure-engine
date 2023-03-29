@@ -22,13 +22,13 @@ public class ScriptNearestActorWithScript extends Script {
         // TODO - Improve efficiency of nearest actor check
         List<Actor> nearestActor = new ArrayList<>();
         List<Integer> nearestActorDist = new ArrayList<>();
-        for(Actor visibleActor : context.game().data().getPlayer().getVisibleActors()) {
+        for (Actor visibleActor : context.game().data().getPlayer().getVisibleActors()) {
             // TODO - Replace with dedicated pathfinding function
             //int distance = visibleActor.getArea().getDistanceTo(subject.game().data().getPlayer().getArea().getID());
             int distance = Pathfinder.findPath(visibleActor.getArea(), context.game().data().getPlayer().getArea()).size() - 1;
             int addAtIndex = nearestActor.size();
-            for(int i = 0; i < nearestActor.size(); i++) {
-                if(distance <= nearestActorDist.get(i)) {
+            for (int i = 0; i < nearestActor.size(); i++) {
+                if (distance <= nearestActorDist.get(i)) {
                     addAtIndex = i;
                     break;
                 }
@@ -36,11 +36,9 @@ public class ScriptNearestActorWithScript extends Script {
             nearestActor.add(addAtIndex, visibleActor);
             nearestActorDist.add(addAtIndex, distance);
         }
-        for(Actor nearActor : nearestActor) {
+        for (Actor nearActor : nearestActor) {
             boolean executed = nearActor.triggerScript(trigger, context.getTarget());
-            if(executed) {
-                break;
-            }
+            if (executed) break;
         }
     }
 

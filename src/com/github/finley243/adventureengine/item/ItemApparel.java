@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionApparelEquip;
 import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.item.template.ApparelTemplate;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 

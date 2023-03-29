@@ -26,7 +26,7 @@ public class ActionItemUnequip extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(!subject.isInCombat()) {
+		if (!subject.isInCombat()) {
 			return 0.4f;
 		}
 		return 0.0f;
@@ -39,11 +39,10 @@ public class ActionItemUnequip extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionItemUnequip)) {
+        if (!(o instanceof ActionItemUnequip other)) {
             return false;
         } else {
-            ActionItemUnequip other = (ActionItemUnequip) o;
-            return other.item == this.item;
+			return other.item == this.item;
         }
     }
 	

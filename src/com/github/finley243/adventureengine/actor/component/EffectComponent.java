@@ -35,10 +35,10 @@ public class EffectComponent {
     }
 
     public void removeEffect(Effect effect) {
-        if(effects.containsKey(effect)) {
+        if (effects.containsKey(effect)) {
             effect.end(actor);
             effects.get(effect).remove(0);
-            if(effects.get(effect).isEmpty()) {
+            if (effects.get(effect).isEmpty()) {
                 effects.remove(effect);
             }
         }
@@ -46,10 +46,10 @@ public class EffectComponent {
 
     public void onStartTurn() {
         Iterator<Effect> itr = effects.keySet().iterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             Effect effect = itr.next();
             effect.eachRound(actor);
-            if(!effect.manualRemoval()) {
+            if (!effect.manualRemoval()) {
                 List<Integer> counters = effects.get(effect);
                 for (int i = 0; i < counters.size(); i++) {
                     int counterValue = counters.get(i) + 1;
@@ -67,8 +67,8 @@ public class EffectComponent {
     }
 
     public List<SaveData> saveState() {
-        for(Effect effect : effects.keySet()) {
-            if(effect.needsSaveData()) {
+        for (Effect effect : effects.keySet()) {
+            if (effect.needsSaveData()) {
                 // TODO - Store effect parameters and timer list (only store temporary effects)
             }
         }

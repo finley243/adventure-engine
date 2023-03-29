@@ -6,7 +6,7 @@ public class ThreadControl {
 
     public synchronized void pause() {
         this.pauseThread = true;
-        while(pauseThread) {
+        while (pauseThread) {
             try {
                 wait();
             } catch (InterruptedException e) {

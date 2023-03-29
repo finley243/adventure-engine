@@ -23,7 +23,6 @@ public class ActionItemTake extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		//Item item = Item.objectToItem(subject.game(), objectItem, 1);
 		area.getInventory().removeItem(item);
 		subject.getInventory().addItem(item);
 		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
@@ -32,7 +31,7 @@ public class ActionItemTake extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(item instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
+		if (item instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
 			return 0.7f;
 		} else {
 			return 0.0f;
@@ -51,21 +50,11 @@ public class ActionItemTake extends Action {
 	}
 
 	@Override
-	public ActionResponseType responseType() {
-		// TODO - Implement "isStealing" functionality in Item
-		/*if (objectItem.isStealing()) {
-			return ActionResponseType.STEAL;
-		}*/
-		return ActionResponseType.NONE;
-	}
-
-	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionItemTake)) {
+        if (!(o instanceof ActionItemTake other)) {
             return false;
         } else {
-            ActionItemTake other = (ActionItemTake) o;
-            return other.item == this.item;
+			return other.item == this.item;
         }
     }
 	

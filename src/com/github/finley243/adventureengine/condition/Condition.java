@@ -24,21 +24,14 @@ public abstract class Condition {
 	protected abstract boolean isMetInternal(ContextScript context);
 
 	public static boolean equalityCheckFloat(float value1, float value2, Equality equality) {
-		switch(equality) {
-			case LESS:
-				return (value1 < value2);
-			case GREATER:
-				return (value1 > value2);
-			case LESS_EQUAL:
-				return (value1 <= value2);
-			case EQUAL:
-				return (value1 == value2);
-			case NOT_EQUAL:
-				return (value1 != value2);
-			case GREATER_EQUAL:
-			default:
-				return (value1 >= value2);
-		}
+		return switch (equality) {
+			case LESS -> (value1 < value2);
+			case GREATER -> (value1 > value2);
+			case LESS_EQUAL -> (value1 <= value2);
+			case EQUAL -> (value1 == value2);
+			case NOT_EQUAL -> (value1 != value2);
+			default -> (value1 >= value2);
+		};
 	}
 	
 }

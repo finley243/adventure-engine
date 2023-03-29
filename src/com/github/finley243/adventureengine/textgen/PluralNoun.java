@@ -6,7 +6,7 @@ public class PluralNoun implements Noun {
     private final int count;
 
     public PluralNoun(Noun noun, int count) {
-        if(count <= 1) throw new IllegalArgumentException("PluralNoun count must be greater than 1");
+        if (count <= 1) throw new IllegalArgumentException("PluralNoun count must be greater than 1");
         this.noun = noun;
         this.count = count;
     }
@@ -18,7 +18,7 @@ public class PluralNoun implements Noun {
 
     @Override
     public String getFormattedName() {
-        if(isKnown()) {
+        if (isKnown()) {
             return "the " + getName();
         } else {
             return count + " " + getName();

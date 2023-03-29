@@ -289,12 +289,9 @@ public class Inventory {
 		if (data.getParameter().equals("inventory")) {
 			for (SaveData subData : data.getValueMulti()) {
 				switch (subData.getParameter()) {
-					case "item":
-						addItem(game.data().getItemState(subData.getValueString()));
-						break;
-					case "itemStateless":
-						addItems(ItemFactory.create(game, subData.getValueString()), subData.getValueInt());
-						break;
+					case "item" -> addItem(game.data().getItemState(subData.getValueString()));
+					case "itemStateless" ->
+							addItems(ItemFactory.create(game, subData.getValueString()), subData.getValueInt());
 				}
 			}
 		}

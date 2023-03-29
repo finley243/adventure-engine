@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.ContextScript;
-import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.condition.Condition;
 

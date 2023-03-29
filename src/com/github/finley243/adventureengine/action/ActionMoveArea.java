@@ -53,11 +53,10 @@ public class ActionMoveArea extends ActionMove {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionMoveArea)) {
+        if (!(o instanceof ActionMoveArea other)) {
             return false;
         } else {
-            ActionMoveArea other = (ActionMoveArea) o;
-            return other.area == this.area;
+			return other.area == this.area;
         }
     }
 	

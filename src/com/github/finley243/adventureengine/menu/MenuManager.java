@@ -26,7 +26,7 @@ public class MenuManager {
 	
 	public Action actionMenu(List<Action> actions, Actor subject) {
 		List<MenuChoice> menuChoices = new ArrayList<>();
-		for(Action action : actions) {
+		for (Action action : actions) {
 			menuChoices.add(action.getMenuChoices(subject));
 		}
 		int actionIndex = getMenuInput(subject.game(), menuChoices, false);
@@ -38,7 +38,7 @@ public class MenuManager {
 	}
 
 	private void sceneMenu(Actor subject, Actor target, Scene scene, String lastSceneID) {
-		scene.setVisited();
+		scene.setTriggered();
 		List<SceneLine> lines = selectValidLines(subject, target, scene, lastSceneID);
 		boolean showChoices = true;
 		String redirect = null;
@@ -113,7 +113,7 @@ public class MenuManager {
 	
 	private SceneChoice sceneMenuInput(Game game, List<SceneChoice> choices) {
 		List<MenuChoice> menuChoices = new ArrayList<>();
-		for(SceneChoice choice : choices) {
+		for (SceneChoice choice : choices) {
 			menuChoices.add(new MenuChoice(choice.getPrompt(), true, new String[]{}));
 		}
 		int selectionIndex = getMenuInput(game, menuChoices, true);
@@ -123,7 +123,7 @@ public class MenuManager {
 	private synchronized int getMenuInput(Game game, List<MenuChoice> menuChoices, boolean forcePrompts) {
 		this.index = -1;
 		game.eventBus().post(new RenderMenuEvent(menuChoices, forcePrompts));
-		while(this.index == -1) {
+		while (this.index == -1) {
 			game.threadControl().pause();
 		}
 		return this.index;

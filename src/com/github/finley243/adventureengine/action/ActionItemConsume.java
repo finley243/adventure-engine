@@ -21,50 +21,33 @@ public class ActionItemConsume extends Action {
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.getInventory().removeItem(item);
 		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
-		String phrase;
-		switch(item.getConsumableType()) {
-			case DRINK:
-				phrase = "drink";
-				break;
-			case FOOD:
-				phrase = "eat";
-				break;
-			case OTHER:
-			default:
-				phrase = "consume";
-				break;
-		}
+		String phrase = switch (item.getConsumableType()) {
+			case DRINK -> "drink";
+			case FOOD -> "eat";
+			case OTHER -> "consume";
+		};
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
-		for(String effect : item.getEffects()) {
+		for (String effect : item.getEffects()) {
 			subject.getEffectComponent().addEffect(subject.game().data().getEffect(effect));
 		}
 	}
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		String prompt;
-		switch(item.getConsumableType()) {
-		case DRINK:
-			prompt = "Drink";
-			break;
-		case FOOD:
-			prompt = "Eat";
-			break;
-		case OTHER:
-		default:
-			prompt = "Use";
-			break;
-		}
+		String prompt = switch (item.getConsumableType()) {
+			case DRINK -> "Drink";
+			case FOOD -> "Eat";
+			case OTHER -> "Use";
+		};
 		return new MenuChoice(prompt, canChoose(subject), new String[]{"inventory", item.getName() + subject.getInventory().itemCountLabel(item)}, new String[]{"consume " + item.getName(), "eat " + item.getName(), "drink " + item.getName(), "use " + item.getName()});
 	}
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionItemConsume)) {
+        if (!(o instanceof ActionItemConsume other)) {
             return false;
         } else {
-            ActionItemConsume other = (ActionItemConsume) o;
-            return other.item == this.item;
+			return other.item == this.item;
         }
     }
 

@@ -95,8 +95,8 @@ public class GraphicalInterfaceNested implements UserInterface {
 			choicePanel.removeAll();
 			List<MenuChoice> menuData = e.getMenuChoices();
 			Map<String, JPopupMenu> categories = new HashMap<>();
-			for(MenuChoice current : menuData) {
-				if(current.getPath().length == 0) {
+			for (MenuChoice current : menuData) {
+				if (current.getPath().length == 0) {
 					JButton button = new JButton(current.getPrompt());
 					button.addActionListener(new ChoiceButtonListener(game, current.getIndex()));
 					button.setEnabled(current.isEnabled());
@@ -109,7 +109,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 						categoryButton.addActionListener(eAction -> menuCategory.show(categoryButton, categoryButton.getWidth(), 0));
 						categories.put(current.getPath()[0], menuCategory);
 					}
-					if(current.getPath().length > 1) {
+					if (current.getPath().length > 1) {
 						JMenu parentElement = null;
 						for (MenuElement subElement : categories.get(current.getPath()[0]).getSubElements()) {
 							if (subElement.getComponent().getName() != null && subElement.getComponent().getName().equalsIgnoreCase(current.getPath()[1])) {
@@ -123,7 +123,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 							categories.get(current.getPath()[0]).add(parentElement);
 						}
 						JMenu lastParent;
-						for(int i = 2; i < current.getPath().length; i++) {
+						for (int i = 2; i < current.getPath().length; i++) {
 							lastParent = parentElement;
 							parentElement = null;
 							for (Component subComponent : lastParent.getMenuComponents()) {

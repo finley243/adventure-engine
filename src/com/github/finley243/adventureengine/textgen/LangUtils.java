@@ -5,9 +5,9 @@ public class LangUtils {
 	public static String pluralizeNoun(String noun) {
 		String lastLetter = noun.substring(noun.length() - 1);
 		String lastTwoLetters = noun.substring(noun.length() - 2);
-		if(lastLetter.equals("s") || lastLetter.equals("x") || lastLetter.equals("z") || lastTwoLetters.equals("ch") || lastTwoLetters.equals("sh")) {
+		if (lastLetter.equals("s") || lastLetter.equals("x") || lastLetter.equals("z") || lastTwoLetters.equals("ch") || lastTwoLetters.equals("sh")) {
 			return noun + "es";
-		} else if(lastLetter.equals("y") && "aeiou".indexOf(noun.charAt(noun.length() - 2)) < 0) { // Second to last character is not a vowel
+		} else if (lastLetter.equals("y") && "aeiou".indexOf(noun.charAt(noun.length() - 2)) < 0) { // Second to last character is not a vowel
 			return noun.substring(0, noun.length() - 1) + "ies";
 		} else {
 			return noun + "s";
@@ -34,19 +34,19 @@ public class LangUtils {
 	
 	public static String titleCase(String line) {
 		String[] words = line.split(" ");
-		for(int i = 0; i < words.length; i++) {
+		for (int i = 0; i < words.length; i++) {
 			words[i] = capitalize(words[i]);
 		}
 		StringBuilder newLine = new StringBuilder();
-		for(String word : words) {
+		for (String word : words) {
 			newLine.append(word).append(" ");
 		}
 		return newLine.toString().trim();
 	}
 	
 	public static String possessive(String noun, boolean plural) {
-		if(plural) {
-			if(noun.charAt(noun.length() - 1) == 's') {
+		if (plural) {
+			if (noun.charAt(noun.length() - 1) == 's') {
 				return noun + "'";
 			} else {
 				return noun + "'s";
@@ -57,9 +57,9 @@ public class LangUtils {
 	}
 	
 	public static String addArticle(String word, boolean indefinite) {
-		if(indefinite) {
+		if (indefinite) {
 			boolean startsWithVowel = "aeiou".indexOf(word.charAt(0)) >= 0;
-			if(startsWithVowel) {
+			if (startsWithVowel) {
 				return "an " + word;
 			} else {
 				return "a " + word;

@@ -15,13 +15,11 @@ public class ComponentParamsLink implements ComponentParams {
 
     @Override
     public Object getParameter(String key) {
-        switch (key) {
-            case "object":
-                return object;
-            case "direction":
-                return direction;
-        }
-        return null;
+        return switch (key) {
+            case "object" -> object;
+            case "direction" -> direction;
+            default -> null;
+        };
     }
 
 }

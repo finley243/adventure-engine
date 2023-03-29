@@ -49,10 +49,9 @@ public class ActionInventoryTakeAll extends Action {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionInventoryTakeAll)) {
+        if (!(o instanceof ActionInventoryTakeAll other)) {
             return false;
         } else {
-            ActionInventoryTakeAll other = (ActionInventoryTakeAll) o;
             return other.owner == this.owner && other.item == this.item && other.inventory == this.inventory;
         }
     }

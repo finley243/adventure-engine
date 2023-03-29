@@ -21,14 +21,10 @@ public class ScriptModifyState extends Script {
     @Override
     protected void executeSuccess(ContextScript context) {
         switch (variable.getDataType()) {
-            case INTEGER:
-                holder.getHolder(context).modStateInteger(state, variable.getValueInteger(context));
-                break;
-            case FLOAT:
-                holder.getHolder(context).modStateFloat(state, variable.getValueFloat(context));
-                break;
-            default:
-                throw new UnsupportedOperationException("No modify functions for provided data type: " + variable.getDataType());
+            case INTEGER -> holder.getHolder(context).modStateInteger(state, variable.getValueInteger(context));
+            case FLOAT -> holder.getHolder(context).modStateFloat(state, variable.getValueFloat(context));
+            default ->
+                    throw new UnsupportedOperationException("No modify functions for provided data type: " + variable.getDataType());
         }
     }
 

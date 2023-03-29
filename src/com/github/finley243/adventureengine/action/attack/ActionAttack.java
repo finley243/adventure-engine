@@ -221,16 +221,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public boolean isBlockedMatch(Action action) {
-        if(action instanceof ActionAttack) {
+        if (action instanceof ActionAttack) {
             return ((ActionAttack) action).getWeaponNoun() == this.getWeaponNoun();
         } else {
             return false;
         }
-    }
-
-    @Override
-    public ActionResponseType responseType() {
-        return ActionResponseType.ATTACK;
     }
 
     @Override

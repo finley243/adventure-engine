@@ -1,12 +1,12 @@
 package com.github.finley243.adventureengine.actor.ai;
 
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
+
+import java.util.*;
 
 public class Pathfinder {
 
@@ -29,7 +29,7 @@ public class Pathfinder {
 	 * @return Shortest path from currentArea to targetArea
 	 */
 	public static List<Area> findPath(Area startArea, Set<Area> targetAreas) {
-		if(targetAreas.contains(startArea)) return Collections.singletonList(startArea);
+		if (targetAreas.contains(startArea)) return Collections.singletonList(startArea);
 		Set<Area> hasVisited = new HashSet<>();
 		Queue<List<Area>> paths = new LinkedList<>();
 		List<Area> startPath = new ArrayList<>();
@@ -162,7 +162,7 @@ public class Pathfinder {
 	private static Actor randomActorFromSet(Set<Actor> actors) {
 		if (actors.isEmpty()) return null;
 		List<Actor> actorList = new ArrayList<>(actors);
-		return actorList.get(ThreadLocalRandom.current().nextInt(actorList.size()));
+		return MathUtils.selectRandomFromList(actorList);
 	}
-	
+
 }

@@ -31,11 +31,10 @@ public class ActionInspectObject extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionInspectObject)) {
+        if (!(o instanceof ActionInspectObject other)) {
             return false;
         } else {
-            ActionInspectObject other = (ActionInspectObject) o;
-            return other.object == this.object;
+			return other.object == this.object;
         }
     }
 

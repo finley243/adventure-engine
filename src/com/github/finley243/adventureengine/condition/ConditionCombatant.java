@@ -17,7 +17,7 @@ public class ConditionCombatant extends Condition {
 
     @Override
     public boolean isMetInternal(ContextScript context) {
-        if(actor.getActor(context).getTargetingComponent() == null) return false;
+        if (actor.getActor(context).getTargetingComponent() == null) return false;
         return actor.getActor(context).getTargetingComponent().isTargetOfType(target.getActor(context), TargetingComponent.DetectionState.HOSTILE);
     }
 

@@ -21,8 +21,6 @@ public class ActionItemTakeAll extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		//int count = objectItem.getCount();
-		//Item item = Item.objectToItem(subject.game(), objectItem, count);
 		int count = area.getInventory().itemCount(item);
 		area.getInventory().removeItems(item, count);
 		subject.getInventory().addItems(item, count);
@@ -32,7 +30,7 @@ public class ActionItemTakeAll extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(item instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
+		if (item instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
 			return 0.7f;
 		} else {
 			return 0.0f;
@@ -51,20 +49,11 @@ public class ActionItemTakeAll extends Action {
 	}
 
 	@Override
-	public ActionResponseType responseType() {
-		/*if (objectItem.isStealing()) {
-			return ActionResponseType.STEAL;
-		}*/
-		return ActionResponseType.NONE;
-	}
-
-	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionItemTakeAll)) {
+        if (!(o instanceof ActionItemTakeAll other)) {
             return false;
         } else {
-            ActionItemTakeAll other = (ActionItemTakeAll) o;
-            return other.item == this.item;
+			return other.item == this.item;
         }
     }
 	

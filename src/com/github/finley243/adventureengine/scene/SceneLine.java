@@ -45,7 +45,7 @@ public class SceneLine {
     
     public void trigger(Actor subject, Actor target) {
     	hasTriggered = true;
-        if(script != null) {
+        if (script != null) {
             script.execute(new ContextScript(subject.game(), subject, target));
         }
     }

@@ -9,6 +9,7 @@ public class DateTimeController {
 
     public static final int MINUTES_PER_ROUND = 2;
     public static final boolean USE_24_HOUR_FORMAT = false;
+    public static final int MINUTES_PER_DAY = 1440;
 
     private int minutes;
     private int day;
@@ -20,17 +21,17 @@ public class DateTimeController {
 
     public void onNextRound() {
         minutes += MINUTES_PER_ROUND;
-        if(minutes >= 1440) {
+        if (minutes >= MINUTES_PER_DAY) {
             minutes = 0;
             day += 1;
             weekday += 1;
-            if(weekday > 7) {
+            if (weekday > 7) {
                 weekday = 1;
             }
-            if(day > daysInMonth()) {
+            if (day > daysInMonth()) {
                 day = 1;
                 month += 1;
-                if(month > 12) {
+                if (month > 12) {
                     month = 1;
                     year += 1;
                 }
@@ -57,7 +58,7 @@ public class DateTimeController {
         boolean crossZero = hours1 > hours2;
         int totalMinutes1 = (hours1 * 60) + minutes1;
         int totalMinutes2 = (hours2 * 60) + minutes2;
-        if(!crossZero && minutes >= totalMinutes1 && minutes <= totalMinutes2) {
+        if (!crossZero && minutes >= totalMinutes1 && minutes <= totalMinutes2) {
             return true;
         } else return crossZero && (minutes >= totalMinutes1 || minutes <= totalMinutes2);
     }
@@ -68,11 +69,11 @@ public class DateTimeController {
 
     public int getHoursComponent() {
         int hours = minutes / 60;
-        if(USE_24_HOUR_FORMAT) {
+        if (USE_24_HOUR_FORMAT) {
             return hours;
-        } else if(hours == 0) {
+        } else if (hours == 0) {
             return 12;
-        } else if(hours > 12) {
+        } else if (hours > 12) {
             return hours - 12;
         } else {
             return hours;
@@ -84,46 +85,25 @@ public class DateTimeController {
     }
 
     public int daysInMonth() {
-        switch(month) {
-            case 0:
-            case 2:
-            case 4:
-            case 6:
-            case 7:
-            case 9:
-            case 11:
-                return 31;
-            case 3:
-            case 5:
-            case 8:
-            case 10:
-                return 30;
-            case 1:
-                return 28;
-            default:
-                return -1;
-        }
+        return switch (month) {
+            case 0, 2, 4, 6, 7, 9, 11 -> 31;
+            case 3, 5, 8, 10 -> 30;
+            case 1 -> 28;
+            default -> -1;
+        };
     }
 
     public String getWeekdayName() {
-        switch(weekday) {
-            case 1:
-                return "monday";
-            case 2:
-                return "tuesday";
-            case 3:
-                return "wednesday";
-            case 4:
-                return "thursday";
-            case 5:
-                return "friday";
-            case 6:
-                return "saturday";
-            case 7:
-                return "sunday";
-            default:
-                return null;
-        }
+        return switch (weekday) {
+            case 1 -> "monday";
+            case 2 -> "tuesday";
+            case 3 -> "wednesday";
+            case 4 -> "thursday";
+            case 5 -> "friday";
+            case 6 -> "saturday";
+            case 7 -> "sunday";
+            default -> null;
+        };
     }
 
     @Override
@@ -132,15 +112,15 @@ public class DateTimeController {
         int hoursComponent = getHoursComponent();
         int minutesComponent = getMinutesComponent();
         result.append(hoursComponent).append(":");
-        if(minutesComponent == 0) {
+        if (minutesComponent == 0) {
             result.append("00");
-        } else if(minutesComponent < 10) {
+        } else if (minutesComponent < 10) {
             result.append("0").append(minutesComponent);
         } else {
             result.append(minutesComponent);
         }
-        if(!USE_24_HOUR_FORMAT) {
-            if(isPM()) {
+        if (!USE_24_HOUR_FORMAT) {
+            if (isPM()) {
                 result.append(" PM");
             } else {
                 result.append(" AM");
@@ -152,24 +132,16 @@ public class DateTimeController {
     }
 
     public static int getWeekdayIndex(String day) {
-        switch(day.toLowerCase()) {
-            case "monday":
-                return 1;
-            case "tuesday":
-                return 2;
-            case "wednesday":
-                return 3;
-            case "thursday":
-                return 4;
-            case "friday":
-                return 5;
-            case "saturday":
-                return 6;
-            case "sunday":
-                return 7;
-            default:
-                return -1;
-        }
+        return switch (day.toLowerCase()) {
+            case "monday" -> 1;
+            case "tuesday" -> 2;
+            case "wednesday" -> 3;
+            case "thursday" -> 4;
+            case "friday" -> 5;
+            case "saturday" -> 6;
+            case "sunday" -> 7;
+            default -> -1;
+        };
     }
 
     public static int minutesToRounds(int minutes) {
@@ -191,22 +163,12 @@ public class DateTimeController {
     }
 
     public void loadState(SaveData state) {
-        switch(state.getParameter()) {
-            case "minutes":
-                this.minutes = state.getValueInt();
-                break;
-            case "year":
-                this.year = state.getValueInt();
-                break;
-            case "month":
-                this.month = state.getValueInt();
-                break;
-            case "day":
-                this.day = state.getValueInt();
-                break;
-            case "weekday":
-                this.weekday = state.getValueInt();
-                break;
+        switch (state.getParameter()) {
+            case "minutes" -> this.minutes = state.getValueInt();
+            case "year" -> this.year = state.getValueInt();
+            case "month" -> this.month = state.getValueInt();
+            case "day" -> this.day = state.getValueInt();
+            case "weekday" -> this.weekday = state.getValueInt();
         }
     }
 

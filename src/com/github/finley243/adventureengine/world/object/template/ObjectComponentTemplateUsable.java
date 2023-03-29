@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.world.object.template;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.action.ActionCustom;
 
 import java.util.List;
 

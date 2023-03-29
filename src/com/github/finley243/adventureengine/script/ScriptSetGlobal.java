@@ -18,23 +18,13 @@ public class ScriptSetGlobal extends Script {
     @Override
     protected void executeSuccess(ContextScript context) {
         switch (variable.getDataType()) {
-            case BOOLEAN:
-                context.game().data().setGlobalBoolean(globalID, variable.getValueBoolean(context));
-                break;
-            case INTEGER:
-                context.game().data().setGlobalInteger(globalID, variable.getValueInteger(context));
-                break;
-            case FLOAT:
-                context.game().data().setGlobalFloat(globalID, variable.getValueFloat(context));
-                break;
-            case STRING:
-                context.game().data().setGlobalString(globalID, variable.getValueString(context));
-                break;
-            case STRING_SET:
-                context.game().data().setGlobalStringSet(globalID, variable.getValueStringSet(context));
-                break;
-            default:
-                throw new UnsupportedOperationException("No globals for provided data type: " + variable.getDataType());
+            case BOOLEAN -> context.game().data().setGlobalBoolean(globalID, variable.getValueBoolean(context));
+            case INTEGER -> context.game().data().setGlobalInteger(globalID, variable.getValueInteger(context));
+            case FLOAT -> context.game().data().setGlobalFloat(globalID, variable.getValueFloat(context));
+            case STRING -> context.game().data().setGlobalString(globalID, variable.getValueString(context));
+            case STRING_SET -> context.game().data().setGlobalStringSet(globalID, variable.getValueStringSet(context));
+            default ->
+                    throw new UnsupportedOperationException("No globals for provided data type: " + variable.getDataType());
         }
     }
 

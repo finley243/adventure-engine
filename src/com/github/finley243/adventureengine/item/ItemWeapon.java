@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
@@ -126,7 +125,7 @@ public class ItemWeapon extends ItemEquippable {
 	}
 
 	public float getAmmoFraction() {
-		if(getWeaponTemplate().getClipSize() == 0) return 1.0f;
+		if (getWeaponTemplate().getClipSize() == 0) return 1.0f;
 		return ((float) ammoCount) / ((float) getWeaponTemplate().getClipSize());
 	}
 
@@ -198,18 +197,13 @@ public class ItemWeapon extends ItemEquippable {
 
 	@Override
 	public StatInt getStatInt(String name) {
-		switch(name) {
-			case "damage":
-				return damage;
-			case "rate":
-				return rate;
-			case "critDamage":
-				return critDamage;
-			case "clipSize":
-				return clipSize;
-			default:
-				return null;
-		}
+		return switch (name) {
+			case "damage" -> damage;
+			case "rate" -> rate;
+			case "critDamage" -> critDamage;
+			case "clipSize" -> clipSize;
+			default -> super.getStatInt(name);
+		};
 	}
 
 	@Override
@@ -219,7 +213,7 @@ public class ItemWeapon extends ItemEquippable {
 		} else if ("armorMult".equals(name)) {
 			return armorMult;
 		}
-		return null;
+		return super.getStatFloat(name);
 	}
 
 	@Override
@@ -227,7 +221,7 @@ public class ItemWeapon extends ItemEquippable {
 		if ("isSilenced".equals(name)) {
 			return isSilenced;
 		}
-		return null;
+		return super.getStatBoolean(name);
 	}
 
 	@Override
@@ -235,7 +229,7 @@ public class ItemWeapon extends ItemEquippable {
 		if ("damageType".equals(name)) {
 			return damageType;
 		}
-		return null;
+		return super.getStatString(name);
 	}
 
 	@Override
@@ -245,88 +239,74 @@ public class ItemWeapon extends ItemEquippable {
 		} else if ("attackTypes".equals(name)) {
 			return attackTypes;
 		}
-		return null;
+		return super.getStatStringSet(name);
 	}
 
 	@Override
 	public int getValueInt(String name) {
-		switch (name) {
-			case "damage":
-				return damage.value(getWeaponTemplate().getDamage(), 1, 1000);
-			case "rate":
-				return rate.value(getWeaponTemplate().getRate(), 1, 50);
-			case "critDamage":
-				return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
-			case "clipSize":
-				return clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
-			case "ammoCount":
-				return ammoCount;
-		}
-		return super.getValueInt(name);
+		return switch (name) {
+			case "damage" -> damage.value(getWeaponTemplate().getDamage(), 1, 1000);
+			case "rate" -> rate.value(getWeaponTemplate().getRate(), 1, 50);
+			case "critDamage" -> critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
+			case "clipSize" -> clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
+			case "ammoCount" -> ammoCount;
+			default -> super.getValueInt(name);
+		};
 	}
 
 	@Override
 	public float getValueFloat(String name) {
-		switch (name) {
-			case "accuracyBonus":
-				return accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f);
-			case "armorMult":
-				return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
-		}
-		return 0;
+		return switch (name) {
+			case "accuracyBonus" -> accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f);
+			case "armorMult" -> armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
+			default -> super.getValueFloat(name);
+		};
 	}
 
 	@Override
 	public boolean getValueBoolean(String name) {
-		if (name.equals("isSilenced")) {
+		if ("isSilenced".equals(name)) {
 			return isSilenced.value(getWeaponTemplate().isSilenced());
 		}
-		return false;
+		return super.getValueBoolean(name);
 	}
 
 	@Override
 	public String getValueString(String name) {
-		if (name.equals("damageType")) {
+		if ("damageType".equals(name)) {
 			return damageType.value(getWeaponTemplate().getDamageType().toString().toLowerCase());
 		}
-		return null;
+		return super.getValueString(name);
 	}
 
 	@Override
 	public Set<String> getValueStringSet(String name) {
-		switch (name) {
-			case "attackTypes":
-				return attackTypes.value(getWeaponClass().getAttackTypes());
-			case "ranges":
-				return ranges.valueFromEnum(getWeaponClass().getPrimaryRanges());
-		}
-		return null;
+		return switch (name) {
+			case "attackTypes" -> attackTypes.value(getWeaponClass().getAttackTypes());
+			case "ranges" -> ranges.valueFromEnum(getWeaponClass().getPrimaryRanges());
+			default -> super.getValueStringSet(name);
+		};
 	}
 
 	@Override
 	public void onStatChange() {
-		if(ammoCount > getClipSize()) {
+		if (ammoCount > getClipSize()) {
 			int difference = ammoCount - getClipSize();
 			ammoCount = getClipSize();
 			if (getEquippedActor() != null) {
 				getEquippedActor().getInventory().addItems(ammoType, difference);
 			}
 		}
+		super.onStatChange();
 	}
 
 	@Override
 	public void modStateInteger(String name, int amount) {
 		if ("ammo".equals(name)) {
 			ammoCount = MathUtils.bound(ammoCount + amount, 0, getClipSize());
+		} else {
+			super.modStateInteger(name, amount);
 		}
-	}
-
-	@Override
-	public void triggerEffect(String name) {}
-
-	@Override
-	public Inventory getInventory() {
-		return null;
 	}
 
 	public void addEffect(Effect effect) {
@@ -347,10 +327,10 @@ public class ItemWeapon extends ItemEquippable {
 	}
 
 	public void removeEffect(Effect effect) {
-		if(effects.containsKey(effect)) {
+		if (effects.containsKey(effect)) {
 			effect.end(this);
 			effects.get(effect).remove(0);
-			if(effects.get(effect).isEmpty()) {
+			if (effects.get(effect).isEmpty()) {
 				effects.remove(effect);
 			}
 		}
@@ -368,7 +348,7 @@ public class ItemWeapon extends ItemEquippable {
 	@Override
 	public List<SaveData> saveState() {
 		List<SaveData> state = super.saveState();
-		if(ammoCount != getWeaponTemplate().getClipSize()) {
+		if (ammoCount != getWeaponTemplate().getClipSize()) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammoCount", ammoCount));
 		}
 		return state;

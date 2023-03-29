@@ -3,8 +3,6 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public abstract class ActionRandom extends Action {
 
     public ActionRandom() {}
@@ -12,7 +10,7 @@ public abstract class ActionRandom extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         boolean continueAfterStart = onStart(subject, repeatActionCount);
-        if(continueAfterStart) {
+        if (continueAfterStart) {
             if (MathUtils.randomCheck(chance(subject))) {
                 onSuccess(subject, repeatActionCount);
             } else {

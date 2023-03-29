@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.world.object.template;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 public class ObjectComponentTemplateLink extends ObjectComponentTemplate {
 

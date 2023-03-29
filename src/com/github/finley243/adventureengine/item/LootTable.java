@@ -1,9 +1,11 @@
 package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.MathUtils;
 
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LootTable {
 
@@ -23,8 +25,8 @@ public class LootTable {
 
 	public Map<Item, Integer> generateItems(Game game) {
 		Map<Item, Integer> generatedItems = new HashMap<>();
-		if(useAll) {
-			for(LootTableEntry entry : entries) {
+		if (useAll) {
+			for (LootTableEntry entry : entries) {
 				Map<Item, Integer> entryItems = entry.generateItems(game);
 				for (Item entryItem : entryItems.keySet()) {
 					if (generatedItems.containsKey(entryItem)) {
@@ -36,13 +38,12 @@ public class LootTable {
 				}
 			}
 		} else {
-			generatedItems.putAll(getRandomEntry().generateItems(game));
+			LootTableEntry randomEntry = MathUtils.selectRandomFromList(entries);
+			if (randomEntry != null) {
+				generatedItems.putAll(randomEntry.generateItems(game));
+			}
 		}
 		return generatedItems;
-	}
-	
-	private LootTableEntry getRandomEntry() {
-		return entries.get(ThreadLocalRandom.current().nextInt(entries.size()));
 	}
 
 }

@@ -48,4 +48,9 @@ public class ObjectComponentInventory extends ObjectComponent {
         }
     }
 
+    @Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+
 }

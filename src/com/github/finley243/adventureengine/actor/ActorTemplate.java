@@ -135,12 +135,12 @@ public class ActorTemplate extends GameInstanced {
 	}
 	
 	public LootTable getLootTable() {
-		if(lootTable == null && parentID == null) return null;
+		if (lootTable == null && parentID == null) return null;
 		return lootTable != null ? lootTable : game().data().getActorTemplate(parentID).getLootTable();
 	}
 
 	public String getDialogueStart() {
-		if(dialogueStart == null && parentID == null) return null;
+		if (dialogueStart == null && parentID == null) return null;
 		return dialogueStart != null ? dialogueStart : game().data().getActorTemplate(parentID).getDialogueStart();
 	}
 

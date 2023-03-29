@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.script.Script;
 
 import java.util.HashSet;

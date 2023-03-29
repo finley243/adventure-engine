@@ -22,19 +22,15 @@ public class ItemFactory {
 	}
 
 	private static Item create(Game game, ItemTemplate stats, String ID) {
-		Item item = null;
-		if(stats instanceof ConsumableTemplate) {
-			item = new ItemConsumable(game, ID, stats.getID());
-		} else if(stats instanceof ApparelTemplate) {
-			item = new ItemApparel(game, ID, stats.getID());
-		} else if(stats instanceof WeaponTemplate) {
-			item = new ItemWeapon(game, ID, stats.getID());
-		} else if(stats instanceof AmmoTemplate) {
-			item = new ItemAmmo(game, ID, stats.getID());
-		} else if(stats instanceof MiscTemplate) {
-			item = new ItemMisc(game, ID, stats.getID());
-		}
-		if(item != null && stats.hasState()) {
+		Item item = switch (stats) {
+			case ConsumableTemplate ignored -> new ItemConsumable(game, ID, stats.getID());
+			case ApparelTemplate ignored -> new ItemApparel(game, ID, stats.getID());
+			case WeaponTemplate ignored -> new ItemWeapon(game, ID, stats.getID());
+			case AmmoTemplate ignored -> new ItemAmmo(game, ID, stats.getID());
+			case MiscTemplate ignored -> new ItemMisc(game, ID, stats.getID());
+			default -> null;
+		};
+		if (item != null && stats.hasState()) {
 			game.data().addItemState(ID, item);
 		}
 		return item;

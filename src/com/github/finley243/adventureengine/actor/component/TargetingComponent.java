@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
@@ -129,6 +130,9 @@ public class TargetingComponent {
 
     public void onVisibleAction(Action action, Actor subject) {
         processDetectionEvent(subject, getActionDetectionChance(action, subject));
+        if (action instanceof ActionMove actionMove) {
+            updateTargetArea(subject, actionMove.getDestinationArea());
+        }
         // TODO - Handle criminal action detection
     }
 
@@ -235,15 +239,11 @@ public class TargetingComponent {
     }
 
     public float getActionDetectionChance(Action action, Actor subject) {
-        switch (action.detectionChance()){
-            case LOW:
-                return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.50f);
-            case HIGH:
-                return MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.05f, 0.95f);
-            case NONE:
-            default:
-                return 0.0f;
-        }
+        return switch (action.detectionChance()) {
+            case LOW -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.50f);
+            case HIGH -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.05f, 0.95f);
+            default -> 0.0f;
+        };
     }
 
     public float getPassiveDetectionChance(Actor subject) {

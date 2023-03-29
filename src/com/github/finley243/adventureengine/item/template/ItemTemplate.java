@@ -51,7 +51,7 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	
 	@Override
 	public String getFormattedName() {
-		if(!isProperName()) {
+		if (!isProperName()) {
 			return LangUtils.addArticle(getName(), true);
 		} else {
 			return getName();
@@ -144,13 +144,11 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 
 	@Override
 	public String getValueString(String name) {
-		switch (name) {
-			case "id":
-				return getID();
-			case "name":
-				return getName();
-		}
-		return null;
+		return switch (name) {
+			case "id" -> getID();
+			case "name" -> getName();
+			default -> null;
+		};
 	}
 
 	@Override
@@ -217,31 +215,17 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	public void loadState(SaveData saveData) {
-		if(saveData.getParameter().equals("generatedCount")) {
+		if (saveData.getParameter().equals("generatedCount")) {
 			this.generatedCount = saveData.getValueInt();
 		}
 	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		if(generatedCount > 0) {
+		if (generatedCount > 0) {
 			state.add(new SaveData(SaveData.DataType.ITEM_TEMPLATE, this.getID(), "generatedCount", generatedCount));
 		}
 		return state;
-	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if(!(o instanceof ItemTemplate)) {
-			return false;
-		} else {
-			return this.getID().equals(((ItemTemplate) o).getID());
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return getID().hashCode();
 	}
 	
 }

@@ -17,17 +17,12 @@ public class ActorReference {
 	}
 	
 	public Actor getActor(ContextScript context) {
-		switch(type) {
-		case PLAYER:
-			return context.game().data().getPlayer();
-		case REFERENCE:
-			return context.game().data().getActor(reference);
-		case TARGET:
-			return context.getTarget();
-		case SUBJECT:
-		default:
-			return context.getSubject();
-		}
+		return switch (type) {
+			case PLAYER -> context.game().data().getPlayer();
+			case REFERENCE -> context.game().data().getActor(reference);
+			case TARGET -> context.getTarget();
+			default -> context.getSubject();
+		};
 	}
 	
 	public boolean isPlayer() {

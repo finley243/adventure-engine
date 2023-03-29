@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 

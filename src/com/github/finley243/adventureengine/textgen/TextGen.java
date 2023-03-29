@@ -38,7 +38,7 @@ public class TextGen {
 		sentence += LangUtils.capitalize(line);
 		sentence += ".";
 		lastContext = context;
-		for(Noun object : context.getObjects().values()) {
+		for (Noun object : context.getObjects().values()) {
 			object.setKnown();
 		}
 		return sentence;
@@ -52,7 +52,7 @@ public class TextGen {
 		List<String> varTags = new ArrayList<>(vars.keySet());
 		varTags.sort(Comparator.comparingInt(String::length));
 		Collections.reverse(varTags);
-		for(String varTag : varTags) {
+		for (String varTag : varTags) {
 			line = line.replace("$" + varTag, vars.get(varTag));
 		}
 		return line;
@@ -60,12 +60,12 @@ public class TextGen {
 
 	private static String determineContext(String line, Context context) {
 		boolean[] usePronouns = new boolean[context.getObjects().size()];
-		if(lastContext != null) {
+		if (lastContext != null) {
 			List<Noun> objectList = new ArrayList<>(context.getObjects().values());
 			List<Noun> lastObjectList = new ArrayList<>(lastContext.getObjects().values());
-			for(int i = 0; i < objectList.size(); i++) {
+			for (int i = 0; i < objectList.size(); i++) {
 				Noun object = objectList.get(i);
-				if(!lastObjectList.isEmpty()) {
+				if (!lastObjectList.isEmpty()) {
 					if (lastObjectList.size() <= i && object == lastObjectList.get(lastObjectList.size() - 1)
 							|| lastObjectList.size() > i && object == lastObjectList.get(i)) {
 						if (!matchesAnyPronounsUpToObjectIndex(lastContext, object.getPronoun(), i, usePronouns)) {
@@ -77,11 +77,11 @@ public class TextGen {
 		}
 		List<String> objectTagList = new ArrayList<>(context.getObjects().keySet());
 		Map<String, Boolean> usePronounsMap = new LinkedHashMap<>();
-		for(int i = 0; i < objectTagList.size(); i++) {
+		for (int i = 0; i < objectTagList.size(); i++) {
 			usePronounsMap.put(objectTagList.get(i), usePronouns[i]);
 		}
-		for(String objectTag : context.getObjects().keySet()) {
-			if(context.getObjects().get(objectTag).forcePronoun()) {
+		for (String objectTag : context.getObjects().keySet()) {
+			if (context.getObjects().get(objectTag).forcePronoun()) {
 				usePronounsMap.put(objectTag, true);
 			}
 		}
@@ -144,7 +144,7 @@ public class TextGen {
 		objectTags.sort(Comparator.comparingInt(String::length));
 		Collections.reverse(objectTags);
 
-		for(String objectTag : objectTags) {
+		for (String objectTag : objectTags) {
 			// Reflexive
 			line = line.replace("$" + objectTag + "_self", objects.get(objectTag).getPronoun().reflexive);
 			// Object name (no articles/pronouns)
@@ -160,11 +160,11 @@ public class TextGen {
 		List<String> varTags = new ArrayList<>(context.getVars().keySet());
 		varTags.sort(Comparator.comparingInt(String::length));
 		Collections.reverse(varTags);
-		for(String varTag : varTags) {
+		for (String varTag : varTags) {
 			line = line.replace("$" + varTag, context.getVars().get(varTag));
 		}
 
-		for(String objectTag : objectTags) {
+		for (String objectTag : objectTags) {
 			line = line.replace(VERB_S + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "s" : ""));
 			line = line.replace(VERB_ES + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "es" : ""));
 			line = line.replace(VERB_IES + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "ies" : "y"));
@@ -202,7 +202,7 @@ public class TextGen {
 	// Returns whether there is a matching (and used) pronoun in context that is below the given index
 	private static boolean matchesAnyPronounsUpToObjectIndex(Context context, Pronoun pronoun, int index, boolean[] usePronouns) {
 		List<Noun> objectsList = new ArrayList<>(context.getObjects().values());
-		for(int i = 0; i < Math.min(objectsList.size(), index - 1); i++) {
+		for (int i = 0; i < Math.min(objectsList.size(), index - 1); i++) {
 			Pronoun objectPronoun = objectsList.get(i).getPronoun();
 			if(usePronouns[i] && objectPronoun == pronoun) return true;
 		}

@@ -60,12 +60,8 @@ public class Scene extends GameInstanced implements StatHolder {
 		return priority;
 	}
 
-	public void setVisited() {
+	public void setTriggered() {
 		hasTriggered = true;
-	}
-
-	public boolean hasVisited() {
-		return hasTriggered;
 	}
 
 	@Override
@@ -105,18 +101,16 @@ public class Scene extends GameInstanced implements StatHolder {
 
 	@Override
 	public boolean getValueBoolean(String name) {
-		switch (name) {
-			case "triggered":
-				return hasTriggered;
+		if ("triggered".equals(name)) {
+			return hasTriggered;
 		}
 		return false;
 	}
 
 	@Override
 	public String getValueString(String name) {
-		switch (name) {
-			case "id":
-				return getID();
+		if ("id".equals(name)) {
+			return getID();
 		}
 		return null;
 	}
@@ -133,10 +127,8 @@ public class Scene extends GameInstanced implements StatHolder {
 
 	@Override
 	public void setStateBoolean(String name, boolean value) {
-		switch (name) {
-			case "triggered":
-				hasTriggered = value;
-				break;
+		if ("triggered".equals(name)) {
+			hasTriggered = value;
 		}
 	}
 

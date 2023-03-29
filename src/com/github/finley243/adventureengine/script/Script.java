@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.ContextScript;
-import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 
 /**
@@ -21,7 +20,7 @@ public abstract class Script {
 	 * @return Whether the script was executed
 	 */
 	public boolean execute(ContextScript context) {
-		if(canExecute(context)) {
+		if (canExecute(context)) {
 			executeSuccess(context);
 			return true;
 		} else {

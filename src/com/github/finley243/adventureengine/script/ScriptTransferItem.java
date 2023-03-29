@@ -30,6 +30,7 @@ public class ScriptTransferItem extends Script {
         Item itemPlaceholder = null;
         if (itemID != null) {
             itemPlaceholder = ItemFactory.create(context.game(), itemID.getValueString(context));
+            if (itemPlaceholder == null) throw new IllegalArgumentException("Provided itemID is invalid");
         }
         if (all) {
             if (itemID == null) { // All items in inventory
@@ -42,8 +43,10 @@ public class ScriptTransferItem extends Script {
                 inventoryTarget.getValueInventory(context).addItems(itemPlaceholder, countInInventory);
             }
         } else {
-            inventoryOrigin.getValueInventory(context).removeItems(itemPlaceholder, count);
-            inventoryTarget.getValueInventory(context).addItems(itemPlaceholder, count);
+            if (itemPlaceholder != null) {
+                inventoryOrigin.getValueInventory(context).removeItems(itemPlaceholder, count);
+                inventoryTarget.getValueInventory(context).addItems(itemPlaceholder, count);
+            }
         }
     }
 

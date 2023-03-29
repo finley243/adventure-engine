@@ -1,17 +1,17 @@
 package com.github.finley243.adventureengine.scene;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SceneManager {
 
     public static void trigger(Game game, Actor subject, Actor target, List<Scene> scenes) {
         Scene scene = selectScene(subject, target, scenes);
-        if(scene != null) {
+        if (scene != null) {
             game.menuManager().sceneMenu(subject, target, scene);
         }
     }
@@ -33,8 +33,8 @@ public class SceneManager {
     private static Scene selectScene(Actor subject, Actor target, List<Scene> scenes) {
         List<Scene> validScenes = new ArrayList<>();
         int maxPriority = 0;
-        for(Scene scene : scenes) {
-            if(scene.canChoose(subject, target)) {
+        for (Scene scene : scenes) {
+            if (scene.canChoose(subject, target)) {
                 if (scene.getPriority() > maxPriority) {
                     validScenes.clear();
                     validScenes.add(scene);
@@ -43,10 +43,10 @@ public class SceneManager {
                 }
             }
         }
-        if(validScenes.isEmpty()) {
+        if (validScenes.isEmpty()) {
             return null;
         }
-        return validScenes.get(ThreadLocalRandom.current().nextInt(validScenes.size()));
+        return MathUtils.selectRandomFromList(validScenes);
     }
 
 }

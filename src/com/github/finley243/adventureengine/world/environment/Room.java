@@ -68,7 +68,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	public boolean hasVisited() {
 		return hasVisited;
 	}
-	
+
 	public void setVisited() {
 		hasVisited = true;
 	}
@@ -79,7 +79,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	
 	public Set<WorldObject> getObjects() {
 		Set<WorldObject> objects = new HashSet<>();
-		for(Area area : areas) {
+		for (Area area : areas) {
 			objects.addAll(area.getObjects());
 		}
 		return objects;
@@ -87,7 +87,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	
 	public Set<Actor> getActors() {
 		Set<Actor> actors = new HashSet<>();
-		for(Area area : areas) {
+		for (Area area : areas) {
 			actors.addAll(area.getActors());
 		}
 		return actors;
@@ -100,7 +100,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public String getFormattedName() {
-		if(!isProperName()) {
+		if (!isProperName()) {
 			return LangUtils.addArticle(getName(), !isKnown);
 		} else {
 			return getName();
@@ -173,24 +173,20 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public boolean getValueBoolean(String name) {
-		switch (name) {
-			case "known":
-				return isKnown();
-			case "visited":
-				return hasVisited();
-		}
-		return false;
+		return switch (name) {
+			case "known" -> isKnown();
+			case "visited" -> hasVisited();
+			default -> false;
+		};
 	}
 
 	@Override
 	public String getValueString(String name) {
-		switch (name) {
-			case "id":
-				return getID();
-			case "ownerFaction":
-				return ownerFaction;
-		}
-		return null;
+		return switch (name) {
+			case "id" -> getID();
+			case "ownerFaction" -> ownerFaction;
+			default -> null;
+		};
 	}
 
 	@Override
@@ -206,12 +202,8 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public void setStateBoolean(String name, boolean value) {
 		switch (name) {
-			case "known":
-				isKnown = value;
-				break;
-			case "visited":
-				hasVisited = value;
-				break;
+			case "known" -> isKnown = value;
+			case "visited" -> hasVisited = value;
 		}
 	}
 
@@ -261,28 +253,24 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
-		if(scripts.containsKey(entryPoint)) {
+		if (scripts.containsKey(entryPoint)) {
 			scripts.get(entryPoint).execute(new ContextScript(game(), subject, target));
 		}
 	}
 
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
-			case "isKnown":
-				this.isKnown = saveData.getValueBoolean();
-				break;
-			case "hasVisited":
-				this.hasVisited = saveData.getValueBoolean();
-				break;
+		switch (saveData.getParameter()) {
+			case "isKnown" -> this.isKnown = saveData.getValueBoolean();
+			case "hasVisited" -> this.hasVisited = saveData.getValueBoolean();
 		}
 	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		if(isKnown) {
+		if (isKnown) {
 			state.add(new SaveData(SaveData.DataType.ROOM, this.getID(), "isKnown", isKnown));
 		}
-		if(hasVisited) {
+		if (hasVisited) {
 			state.add(new SaveData(SaveData.DataType.ROOM, this.getID(), "hasVisited", hasVisited));
 		}
 		return state;

@@ -19,7 +19,6 @@ public class ActionItemDropAll extends Action {
 	public void choose(Actor subject, int repeatActionCount) {
 		int count = subject.getInventory().itemCount(item);
 		subject.getInventory().removeItems(item, count);
-		//Item.itemToObject(subject.game(), item, count, subject.getArea());
 		subject.getArea().getInventory().addItems(item, count);
 		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, null, subject, null));
@@ -37,11 +36,10 @@ public class ActionItemDropAll extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionItemDropAll)) {
+        if (!(o instanceof ActionItemDropAll other)) {
             return false;
         } else {
-            ActionItemDropAll other = (ActionItemDropAll) o;
-            return other.item == this.item;
+			return other.item == this.item;
         }
     }
 	

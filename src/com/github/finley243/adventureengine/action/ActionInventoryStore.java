@@ -52,10 +52,9 @@ public class ActionInventoryStore extends Action {
 
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionInventoryStore)) {
+        if (!(o instanceof ActionInventoryStore other)) {
             return false;
         } else {
-            ActionInventoryStore other = (ActionInventoryStore) o;
             return other.owner == this.owner && other.item == this.item && other.inventory == this.inventory;
         }
     }

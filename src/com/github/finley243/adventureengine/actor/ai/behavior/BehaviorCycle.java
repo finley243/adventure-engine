@@ -15,10 +15,10 @@ public class BehaviorCycle extends Behavior {
 
     public BehaviorCycle(Condition condition, List<Behavior> stages) {
         super(condition, 0, null);
-        if(stages.isEmpty()) throw new IllegalArgumentException("BehaviorCycle stages cannot be empty");
-        if(stages.size() == 1) throw new IllegalArgumentException("BehaviorCycle cannot have 1 stage");
-        for(Behavior behavior : stages) {
-            if(behavior instanceof BehaviorCycle) throw new IllegalArgumentException("BehaviorCycle cannot contain another BehaviorCycle");
+        if (stages.isEmpty()) throw new IllegalArgumentException("BehaviorCycle stages cannot be empty");
+        if (stages.size() == 1) throw new IllegalArgumentException("BehaviorCycle cannot have 1 stage");
+        for (Behavior behavior : stages) {
+            if (behavior instanceof BehaviorCycle) throw new IllegalArgumentException("BehaviorCycle cannot contain another BehaviorCycle");
         }
         this.stages = stages;
     }
@@ -31,9 +31,9 @@ public class BehaviorCycle extends Behavior {
     @Override
     public void update(Actor subject) {
         stages.get(currentStage).update(subject);
-        if(stages.get(currentStage).hasCompleted(subject)) {
+        if (stages.get(currentStage).hasCompleted(subject)) {
             currentStage += 1;
-            if(currentStage >= stages.size()) {
+            if (currentStage >= stages.size()) {
                 currentStage = 0;
             }
             stages.get(currentStage).onStart();

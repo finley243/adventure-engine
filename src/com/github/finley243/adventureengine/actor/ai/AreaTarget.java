@@ -27,13 +27,13 @@ public class AreaTarget {
 	}
 	
 	public void update(Actor subject) {
-		if(path == null || !targetAreas.contains(path.get(path.size() - 1))) {
+		if (path == null || !targetAreas.contains(path.get(path.size() - 1))) {
 			path = Pathfinder.findPath(subject.getArea(), targetAreas);
 			pathIndex = 0;
 		}
-		if(path != null && path.get(pathIndex) != subject.getArea()) {
+		if (path != null && path.get(pathIndex) != subject.getArea()) {
 			int currentIndex = getCurrentIndex(subject);
-			if(currentIndex == -1) {
+			if (currentIndex == -1) {
 				path = Pathfinder.findPath(subject.getArea(), targetAreas);
 				pathIndex = 0;
 			} else {
@@ -75,13 +75,13 @@ public class AreaTarget {
 	}
 
 	public boolean isOnPath(Area area) {
-		if(path == null) return false;
-		if(pathIndex + 1 >= path.size()) return false;
+		if (path == null) return false;
+		if (pathIndex + 1 >= path.size()) return false;
 		return path.get(pathIndex + 1) == area;
 	}
 	
 	public int getDistance(Actor subject) {
-		if(path == null) {
+		if (path == null) {
 			path = Pathfinder.findPath(subject.getArea(), targetAreas);
 			pathIndex = 0;
 		}
@@ -94,8 +94,8 @@ public class AreaTarget {
 	}
 	
 	private int getCurrentIndex(Actor subject) {
-		for(int i = 0; i < path.size(); i++) {
-			if(path.get(i) == subject.getArea()) {
+		for (int i = 0; i < path.size(); i++) {
+			if (path.get(i) == subject.getArea()) {
 				return i;
 			}
 		}
@@ -104,7 +104,7 @@ public class AreaTarget {
 	
 	@Override
 	public boolean equals(Object other) {
-		if(!(other instanceof AreaTarget)) {
+		if (!(other instanceof AreaTarget)) {
 			return false;
 		} else {
 			return this == other;

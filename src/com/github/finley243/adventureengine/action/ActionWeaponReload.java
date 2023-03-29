@@ -51,10 +51,10 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(!subject.isInCombat()) {
+		if (!subject.isInCombat()) {
 			return (1.0f - weapon.getAmmoFraction()) * RELOAD_UTILITY_NONCOMBAT;
 		} else {
-			if(weapon.getAmmoFraction() == 0) {
+			if (weapon.getAmmoFraction() == 0) {
 				return RELOAD_UTILITY_COMBAT_EMPTY;
 			} else {
 				return (1.0f - weapon.getAmmoFraction()) * RELOAD_UTILITY_COMBAT;
@@ -69,11 +69,10 @@ public class ActionWeaponReload extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionWeaponReload)) {
+        if (!(o instanceof ActionWeaponReload other)) {
             return false;
         } else {
-            ActionWeaponReload other = (ActionWeaponReload) o;
-            return other.weapon == this.weapon;
+			return other.weapon == this.weapon;
         }
     }
 

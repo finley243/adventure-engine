@@ -47,7 +47,7 @@ public class UtilityUtils {
 			return PURSUE_TARGET_UTILITY_INVISIBLE;
 		} else if (subject.getEquipmentComponent().hasRangedWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_RANGED;
-		} else if(subject.getEquipmentComponent().hasMeleeWeaponEquipped()) {
+		} else if (subject.getEquipmentComponent().hasMeleeWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_MELEE;
 		} else {
 			return PURSUE_TARGET_UTILITY_UNARMED;
@@ -57,18 +57,18 @@ public class UtilityUtils {
 	public static Action selectActionByUtility(Actor actor, List<Action> actions, int chaos) {
 		List<List<Action>> bestActions = new ArrayList<>(chaos + 1);
 		List<Float> maxWeights = new ArrayList<>(chaos + 1);
-		for(int i = 0; i < chaos + 1; i++) {
+		for (int i = 0; i < chaos + 1; i++) {
 			bestActions.add(new ArrayList<>());
 			maxWeights.add(0.0f);
 		}
-		for(Action currentAction : actions) {
-			if(currentAction.canChoose(actor)) {
+		for (Action currentAction : actions) {
+			if (currentAction.canChoose(actor)) {
 				float currentWeight = currentAction.utility(actor);
 				float behaviorOverride = actor.getBehaviorComponent().actionUtilityOverride(currentAction);
-				if(behaviorOverride >= 0.0f) {
+				if (behaviorOverride >= 0.0f) {
 					currentWeight = behaviorOverride;
 				}
-				if(currentWeight != 0) {
+				if (currentWeight != 0) {
 					for (int i = 0; i < chaos + 1; i++) {
 						if (currentWeight == maxWeights.get(i)) {
 							bestActions.get(i).add(currentAction);
@@ -86,13 +86,13 @@ public class UtilityUtils {
 			}
 		}
 		float weightSum = 0.0f;
-		for(float weight : maxWeights) {
+		for (float weight : maxWeights) {
 			weightSum += weight;
 		}
 		float partialWeightSum = 0.0f;
 		float random = ThreadLocalRandom.current().nextFloat();
-		for(int i = 0; i < chaos + 1; i++) {
-			if(random < partialWeightSum + (maxWeights.get(i) / weightSum)) {
+		for (int i = 0; i < chaos + 1; i++) {
+			if (random < partialWeightSum + (maxWeights.get(i) / weightSum)) {
 				return bestActions.get(i).get(ThreadLocalRandom.current().nextInt(bestActions.get(i).size()));
 			} else {
 				partialWeightSum += (maxWeights.get(i) / weightSum);

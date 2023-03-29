@@ -20,7 +20,7 @@ public class ConfigLoader {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(file);
 		Element rootElement = document.getDocumentElement();
-		for(String configName : CONFIG_LIST) {
+		for (String configName : CONFIG_LIST) {
 			String value = LoadUtils.singleTag(rootElement, configName, null);
 			game.data().addConfig(configName, value);
 		}

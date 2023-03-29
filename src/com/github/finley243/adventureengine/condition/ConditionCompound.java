@@ -17,8 +17,8 @@ public class ConditionCompound extends Condition {
 	
 	@Override
 	public boolean isMetInternal(ContextScript context) {
-		for(Condition condition : conditions) {
-			if(condition.isMet(context) == useOr) {
+		for (Condition condition : conditions) {
+			if (condition.isMet(context) == useOr) {
 				return useOr;
 			}
 		}

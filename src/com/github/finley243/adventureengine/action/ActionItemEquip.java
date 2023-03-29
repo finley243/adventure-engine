@@ -35,8 +35,7 @@ public class ActionItemEquip extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if(item instanceof ItemWeapon) {
-			ItemWeapon weapon = (ItemWeapon) item;
+		if (item instanceof ItemWeapon weapon) {
 			if (!subject.isInCombat()) return 0;
 			if (weapon.isRanged()) {
 				if (subject.hasMeleeTargets()) {
@@ -63,11 +62,10 @@ public class ActionItemEquip extends Action {
 
 	@Override
     public boolean equals(Object o) {
-        if(!(o instanceof ActionItemEquip)) {
+        if (!(o instanceof ActionItemEquip other)) {
             return false;
         } else {
-            ActionItemEquip other = (ActionItemEquip) o;
-            return other.item == this.item;
+			return other.item == this.item;
         }
     }
 

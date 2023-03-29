@@ -17,7 +17,7 @@ public class ConsoleUtils {
 			if(input > max || input < min) {
 				System.out.println("Input outside range. Please enter a valid number.");
 			}
-		} while(input > max || input < min);
+		} while (input > max || input < min);
 		return input;
 	}
 	

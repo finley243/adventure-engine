@@ -21,11 +21,6 @@ public class StatString {
         }
     }
 
-    public <E extends Enum<E>> String valueFromEnum(E base) {
-        return value(base.toString().toLowerCase());
-    }
-
-
     public <E extends Enum<E>> E valueEnum(E base, Class<E> enumType) {
         if (stringStack.isEmpty()) {
             return base;

@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.*;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionEnd;
-import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.Idle;
@@ -25,8 +24,11 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.*;
-import com.github.finley243.adventureengine.textgen.*;
+import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -121,7 +123,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		this.startDead = startDead;
 		this.isDead = startDead;
 		this.maxHP = new StatInt(this);
-		this.damageResistance = new EnumMap<Damage.DamageType, StatInt>(Damage.DamageType.class);
+		this.damageResistance = new EnumMap<>(Damage.DamageType.class);
 		for (Damage.DamageType damageType : Damage.DamageType.values()) {
 			this.damageResistance.put(damageType, new StatInt(this));
 		}
@@ -173,7 +175,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public String getFormattedName() {
-		if(!isProperName()) {
+		if (!isProperName()) {
 			return LangUtils.addArticle(getNameState() + getName(), !isKnown());
 		} else {
 			return getNameState() + getName();
@@ -181,7 +183,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	private String getNameState() {
-		if(isDead()) {
+		if (isDead()) {
 			return "dead ";
 		} else {
 			return "";
@@ -225,14 +227,14 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	@Override
 	public void setArea(Area area) {
 		boolean newRoom = getArea() == null || !getArea().getRoom().equals(area.getRoom());
-		if(this.area != null) {
+		if (this.area != null) {
 			this.area.removeActor(this);
 		}
 		this.area = area;
 		area.addActor(this);
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
-			if(newRoom) {
+			if (newRoom) {
 				getArea().getRoom().triggerScript("on_player_enter", this, this);
 			}
 			getArea().triggerScript("on_player_enter", this, this);
@@ -243,14 +245,14 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		if (isPlayer()) {
 			boolean isRoomChange = !lastArea.getRoom().equals(getArea().getRoom());
 			boolean isAreaChange = isRoomChange || !lastArea.equals(getArea());
-			if(isRoomChange && getArea().getRoom().getDescription() != null) {
+			if (isRoomChange && getArea().getRoom().getDescription() != null) {
 				SceneManager.trigger(game(), this, this, getArea().getRoom().getDescription());
 				getArea().getRoom().setKnown();
 				for (Area area : getArea().getRoom().getAreas()) {
 					area.setKnown();
 				}
 			}
-			if(isAreaChange && getArea().getDescription() != null) {
+			if (isAreaChange && getArea().getDescription() != null) {
 				SceneManager.trigger(game(), this, this, getArea().getDescription());
 				getArea().setKnown();
 			}
@@ -263,9 +265,9 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	
 	public void setEnabled(boolean enable) {
 		if (area == null) throw new UnsupportedOperationException("Attempt to enable actor in null area: " + this.getID());
-		if(isEnabled != enable) {
+		if (isEnabled != enable) {
 			isEnabled = enable;
-			if(enable) {
+			if (enable) {
 				area.addActor(this);
 			} else {
 				area.removeActor(this);
@@ -304,13 +306,11 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
-		switch (name) {
-			case "equippedItem":
-				return getEquipmentComponent().getEquippedItem();
-			case "usingObject":
-				return getUsingObject();
-		}
-		return null;
+		return switch (name) {
+			case "equippedItem" -> getEquipmentComponent().getEquippedItem();
+			case "usingObject" -> getUsingObject();
+			default -> null;
+		};
 	}
 
 	public ApparelComponent getApparelComponent() {
@@ -341,10 +341,6 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		return behaviorComponent;
 	}
 
-	public int getHP() {
-		return HP;
-	}
-
 	public float getHPProportion() {
 		return ((float) HP) / ((float) getMaxHP());
 	}
@@ -362,11 +358,11 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 	
 	public void heal(int amount) {
-		if(amount < 0) throw new IllegalArgumentException();
+		if (amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, getMaxHP() - HP);
 		HP += amount;
-		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder().put("actor", this).build());
-		if(SHOW_HP_CHANGES) {
+		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
+		if (SHOW_HP_CHANGES) {
 			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null, this, null));
 		}
 		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, this, null));
@@ -379,7 +375,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public void damage(Damage damage) {
-		if(damage.getLimb() != null) {
+		if (damage.getLimb() != null) {
 			damageLimb(damage, damage.getLimb());
 		} else {
 			damageDirect(damage);
@@ -399,7 +395,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 			kill();
 		} else {
 			triggerScript("on_damaged", this);
-			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder().put("actor", this).build());
+			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
 			}
@@ -414,19 +410,19 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 		int amount = damage.getAmount();
 		//amount -= apparelComponent.getDamageResistance(limb.getApparelSlot(), damage.getType()) * damage.getArmorMult();
 		amount -= getDamageResistance(damage.getType()) * damage.getArmorMult();
-		if(amount < 0) amount = 0;
-		if(amount > 0) {
+		if (amount < 0) amount = 0;
+		if (amount > 0) {
 			limb.applyEffects(this);
 		}
 		amount *= limb.getDamageMult();
 		HP -= amount;
-		if(HP <= 0) {
+		if (HP <= 0) {
 			HP = 0;
 			kill();
 		} else {
 			triggerScript("on_damaged", this);
-			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder().put("actor", this).build());
-			if(SHOW_HP_CHANGES) {
+			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
+			if (SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
 			}
 			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, this, null));
@@ -435,7 +431,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	
 	public void kill() {
 		triggerScript("on_death", this);
-		Context context = new Context(new MapBuilder().put("actor", this).build());
+		Context context = new Context(new MapBuilder<String, Noun>().put("actor", this).build());
 		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
 		dropEquippedItem();
 		isDead = true;
@@ -445,39 +441,43 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	public void dropEquippedItem() {
-		if(equipmentComponent.hasEquippedItem()) {
+		if (equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
 			getArea().getInventory().addItem(item);
-			Context context = new Context(new MapBuilder().put("actor", this).put("item", item).build());
+			Context context = new Context(new MapBuilder<String, Noun>().put("actor", this).put("item", item).build());
 			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("drop"), context, null, null, this, null));
 		}
 	}
 
 	public void dropEquippedItemForce() {
-		if(equipmentComponent.hasEquippedItem()) {
+		if (equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
-			Area landingArea = MathUtils.selectRandomFromSet(getArea().getMovableAreas());
+			Set<Area> movableAreas = getArea().getMovableAreas();
+			Area landingArea = MathUtils.selectRandomFromSet(movableAreas);
+			if (landingArea == null) {
+				landingArea = getArea();
+			}
 			landingArea.getInventory().addItem(item);
-			Context context = new Context(Map.of("area", landingArea.getRelativeName(getArea())), new MapBuilder().put("actor", this).put("item", item).build());
+			Context context = new Context(Map.of("area", landingArea.getRelativeName(getArea())), new MapBuilder<String, Noun>().put("actor", this).put("item", item).build());
 			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null, this, null));
 		}
 	}
 
 	public String getConditionDescription() {
 		float hpProportion = getHPProportion();
-		if(hpProportion == 1.0f) {
+		if (hpProportion == 1.0f) {
 			return "in perfect condition";
-		} else if(hpProportion >= 0.9f) {
+		} else if (hpProportion >= 0.9f) {
 			return "barely scratched";
-		} else if(hpProportion >= 0.75f) {
+		} else if (hpProportion >= 0.75f) {
 			return "lightly injured";
-		} else if(hpProportion >= 0.55f) {
+		} else if (hpProportion >= 0.55f) {
 			return "moderately injured";
-		} else if(hpProportion >= 0.35f) {
+		} else if (hpProportion >= 0.35f) {
 			return "heavily injured";
-		} else if(hpProportion >= 0.15f) {
+		} else if (hpProportion >= 0.15f) {
 			return "dangerously injured";
 		} else {
 			return "clinging to life";
@@ -502,7 +502,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	private void updateSleep() {
-		if(sleepCounter != 0) {
+		if (sleepCounter != 0) {
 			sleepCounter -= 1;
 			if (sleepCounter <= 0) {
 				isSleeping = false;
@@ -512,61 +512,32 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 	
 	public void onSensoryEvent(SensoryEvent event, boolean visible) {
-		if(isActive() && isEnabled()) {
+		if (isActive() && isEnabled()) {
 			if (isPlayer()) {
 				if (visible) {
 					String text = event.getTextVisible();
 					if (text != null) {
 						game().eventBus().post(new RenderTextEvent(text));
 					}
-				} else if(event.getTextAudible() != null) {
+				} else if (event.getTextAudible() != null) {
 					String text = event.getTextAudible();
 					if (text != null) {
 						game().eventBus().post(new RenderTextEvent(text));
 					}
 				}
 			} else {
-				if (visible) {
+				if (visible) { // Visible
 					if (event.isAction()) {
 						targetingComponent.onVisibleAction(event.getAction(), event.getSubject());
-						switch(event.getAction().responseType()) {
-							case STEAL:
-								triggerBark("alert_steal", event.getSubject());
-								targetingComponent.addCombatant(event.getSubject());
-								break;
-							case ATTACK:
-								triggerBark("alert_attack", event.getSubject());
-								targetingComponent.addCombatant(event.getSubject());
-								break;
-							case BREAK_LOCK:
-								triggerBark("alert_break_lock", event.getSubject());
-								targetingComponent.addCombatant(event.getSubject());
-								break;
-							case NONE:
-							default:
-						}
 					} else if (event.isBark()) {
-						switch(event.getBark().responseType()) {
-							case HOSTILE:
-								targetingComponent.addCombatant(event.getTarget());
-								break;
-							case NONE:
-							default:
+						if (event.getBark().responseType() == Bark.BarkResponseType.HOSTILE) {
+							targetingComponent.addCombatant(event.getTarget());
 						}
 					}
-					if (event.getAction() instanceof ActionMove) {
-						targetingComponent.updateTargetArea(event.getSubject(), ((ActionMove) event.getAction()).getDestinationArea());
-					}
-				} else {
+				} else { // Audible
 					if (event.isBark()) {
-						switch(event.getBark().responseType()) {
-							case HOSTILE:
-								if (getTemplate().isEnforcer()) {
-									targetingComponent.addCombatant(event.getTarget());
-								}
-								break;
-							case NONE:
-							default:
+						if (event.getBark().responseType() == Bark.BarkResponseType.HOSTILE) {
+							targetingComponent.addCombatant(event.getTarget());
 						}
 					}
 				}
@@ -599,8 +570,8 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	public boolean hasWeapon() {
-		for(Item item : inventory.getItems()) {
-			if(item instanceof ItemWeapon) {
+		for (Item item : inventory.getItems()) {
+			if (item instanceof ItemWeapon) {
 				return true;
 			}
 		}
@@ -622,14 +593,14 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> action = new ArrayList<>();
-		if(isActive()) {
-			if(getTemplate().getDialogueStart() != null) {
+		if (isActive()) {
+			if (getTemplate().getDialogueStart() != null) {
 				action.add(new ActionTalk(this));
 			}
-			if(vendorComponent != null && behaviorComponent != null && behaviorComponent.isVendingEnabled()) {
+			if (vendorComponent != null && behaviorComponent != null && behaviorComponent.isVendingEnabled()) {
 				action.addAll(vendorComponent.getActions(subject));
 			}
-		} else if(isDead()) {
+		} else if (isDead()) {
 			action.addAll(inventory.getExternalActions(this, null, subject, false));
 		}
 		return action;
@@ -637,32 +608,32 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	public List<Action> availableActions() {
 		List<Action> actions = new ArrayList<>();
-		if(equipmentComponent.hasEquippedItem()) {
+		if (equipmentComponent.hasEquippedItem()) {
 			actions.addAll(equipmentComponent.getEquippedItem().equippedActions(this));
 		}
-		for(Actor actor : getArea().getActors()) {
+		for (Actor actor : getArea().getActors()) {
 			actions.addAll(actor.localActions(this));
 		}
 		actions.addAll(getArea().getItemActions());
-		for(WorldObject object : getArea().getObjects()) {
+		for (WorldObject object : getArea().getObjects()) {
 			if (!object.isHidden()) {
 				actions.addAll(object.localActions(this));
 			}
 		}
-		if(isUsingObject()) {
+		if (isUsingObject()) {
 			actions.addAll(getUsingObject().getUsingActions(this));
 		}
-		if(canMove()) {
+		if (canMove()) {
 			actions.addAll(getArea().getMoveActions());
 		}
 		actions.addAll(getArea().getAreaActions(this));
-		for(Item item : inventory.getItems()) {
+		for (Item item : inventory.getItems()) {
 			actions.addAll(item.inventoryActions(this));
 		}
-		for(ItemApparel item : apparelComponent.getEquippedItems()) {
+		for (ItemApparel item : apparelComponent.getEquippedItems()) {
 			actions.addAll(item.equippedActions(this));
 		}
-		for(Action currentAction : actions) {
+		for (Action currentAction : actions) {
 			boolean isBlocked = false;
 			for (Action blockedAction : blockedActions.keySet()) {
 				if (!(blockedActions.get(blockedAction) > 0 && blockedAction.isRepeatMatch(currentAction)) && blockedAction.isBlockedMatch(currentAction)) {
@@ -763,10 +734,10 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	
 	private void updatePursueTargets() {
 		Iterator<AreaTarget> itr = areaTargets.iterator();
-		while(itr.hasNext()) {
+		while (itr.hasNext()) {
 			AreaTarget target = itr.next();
 			target.update(this);
-			if(target.shouldRemove()) {
+			if (target.shouldRemove()) {
 				itr.remove();
 			}
 		}
@@ -782,9 +753,9 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	public Set<Actor> getVisibleActors() {
 		Set<Actor> visibleActors = new HashSet<>();
-		for(Area visibleArea : getVisibleAreas()) {
-			for(Actor actor : visibleArea.getActors()) {
-				if(actor != this && !actor.isInCover()) {
+		for (Area visibleArea : getVisibleAreas()) {
+			for (Actor actor : visibleArea.getActors()) {
+				if (actor != this && !actor.isInCover()) {
 					visibleActors.add(actor);
 				}
 			}
@@ -807,11 +778,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	public Set<AttackTarget> getVisibleAttackTargets() {
 		Set<AttackTarget> attackTargets = new HashSet<>(getVisibleActors());
 		attackTargets.remove(this);
-		for (WorldObject visibleObject : getVisibleObjects()) {
-			if (visibleObject instanceof AttackTarget) {
-				attackTargets.add((AttackTarget) visibleObject);
-			}
-		}
+		attackTargets.addAll(getVisibleObjects());
 		return attackTargets;
 	}
 	
@@ -829,60 +796,34 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public StatInt getStatInt(String name) {
-		switch (name) {
-			case "maxHP":
-				return maxHP;
-			case "actionPoints":
-				return actionPoints;
-			case "damageResistPhysical":
-				return damageResistance.get(Damage.DamageType.PHYSICAL);
-			case "damageResistThermal":
-				return damageResistance.get(Damage.DamageType.THERMAL);
-			case "damageResistChemical":
-				return damageResistance.get(Damage.DamageType.CHEMICAL);
-			case "damageResistExplosive":
-				return damageResistance.get(Damage.DamageType.EXPLOSIVE);
-			case "damageResistElectrical":
-				return damageResistance.get(Damage.DamageType.ELECTRICAL);
-			case "body":
-				return attributes.get(Attribute.BODY);
-			case "intelligence":
-				return attributes.get(Attribute.INTELLIGENCE);
-			case "charisma":
-				return attributes.get(Attribute.CHARISMA);
-			case "dexterity":
-				return attributes.get(Attribute.DEXTERITY);
-			case "agility":
-				return attributes.get(Attribute.AGILITY);
-			case "melee":
-				return skills.get(Skill.MELEE);
-			case "throwing":
-				return skills.get(Skill.THROWING);
-			case "intimidation":
-				return skills.get(Skill.INTIMIDATION);
-			case "software":
-				return skills.get(Skill.SOFTWARE);
-			case "hardware":
-				return skills.get(Skill.HARDWARE);
-			case "medicine":
-				return skills.get(Skill.MEDICINE);
-			case "barter":
-				return skills.get(Skill.BARTER);
-			case "persuasion":
-				return skills.get(Skill.PERSUASION);
-			case "deception":
-				return skills.get(Skill.DECEPTION);
-			case "handguns":
-				return skills.get(Skill.HANDGUNS);
-			case "longArms":
-				return skills.get(Skill.LONG_ARMS);
-			case "lockpick":
-				return skills.get(Skill.LOCKPICK);
-			case "stealth":
-				return skills.get(Skill.STEALTH);
-			default:
-				return null;
-		}
+		return switch (name) {
+			case "maxHP" -> maxHP;
+			case "actionPoints" -> actionPoints;
+			case "damageResistPhysical" -> damageResistance.get(Damage.DamageType.PHYSICAL);
+			case "damageResistThermal" -> damageResistance.get(Damage.DamageType.THERMAL);
+			case "damageResistChemical" -> damageResistance.get(Damage.DamageType.CHEMICAL);
+			case "damageResistExplosive" -> damageResistance.get(Damage.DamageType.EXPLOSIVE);
+			case "damageResistElectrical" -> damageResistance.get(Damage.DamageType.ELECTRICAL);
+			case "body" -> attributes.get(Attribute.BODY);
+			case "intelligence" -> attributes.get(Attribute.INTELLIGENCE);
+			case "charisma" -> attributes.get(Attribute.CHARISMA);
+			case "dexterity" -> attributes.get(Attribute.DEXTERITY);
+			case "agility" -> attributes.get(Attribute.AGILITY);
+			case "melee" -> skills.get(Skill.MELEE);
+			case "throwing" -> skills.get(Skill.THROWING);
+			case "intimidation" -> skills.get(Skill.INTIMIDATION);
+			case "software" -> skills.get(Skill.SOFTWARE);
+			case "hardware" -> skills.get(Skill.HARDWARE);
+			case "medicine" -> skills.get(Skill.MEDICINE);
+			case "barter" -> skills.get(Skill.BARTER);
+			case "persuasion" -> skills.get(Skill.PERSUASION);
+			case "deception" -> skills.get(Skill.DECEPTION);
+			case "handguns" -> skills.get(Skill.HANDGUNS);
+			case "longArms" -> skills.get(Skill.LONG_ARMS);
+			case "lockpick" -> skills.get(Skill.LOCKPICK);
+			case "stealth" -> skills.get(Skill.STEALTH);
+			default -> null;
+		};
 	}
 
 	@Override
@@ -907,63 +848,57 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public int getValueInt(String name) {
-		switch (name) {
-			case "maxHP":
-				return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
-			case "HP":
-				return HP;
-			case "actionPoints":
-				return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
-			case "money":
-				return money;
-			case "damageResistPhysical":
-				return damageResistance.get(Damage.DamageType.PHYSICAL).value(getTemplate().getDamageResistance(Damage.DamageType.PHYSICAL), 0, MAX_DAMAGE_RESIST);
-			case "damageResistThermal":
-				return damageResistance.get(Damage.DamageType.THERMAL).value(getTemplate().getDamageResistance(Damage.DamageType.THERMAL), 0, MAX_DAMAGE_RESIST);
-			case "damageResistChemical":
-				return damageResistance.get(Damage.DamageType.CHEMICAL).value(getTemplate().getDamageResistance(Damage.DamageType.CHEMICAL), 0, MAX_DAMAGE_RESIST);
-			case "damageResistExplosive":
-				return damageResistance.get(Damage.DamageType.EXPLOSIVE).value(getTemplate().getDamageResistance(Damage.DamageType.EXPLOSIVE), 0, MAX_DAMAGE_RESIST);
-			case "damageResistElectrical":
-				return damageResistance.get(Damage.DamageType.ELECTRICAL).value(getTemplate().getDamageResistance(Damage.DamageType.ELECTRICAL), 0, MAX_DAMAGE_RESIST);
-			case "body":
-				return attributes.get(Attribute.BODY).value(getTemplate().getAttribute(Attribute.BODY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "intelligence":
-				return attributes.get(Attribute.INTELLIGENCE).value(getTemplate().getAttribute(Attribute.INTELLIGENCE), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "charisma":
-				return attributes.get(Attribute.CHARISMA).value(getTemplate().getAttribute(Attribute.CHARISMA), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "dexterity":
-				return attributes.get(Attribute.DEXTERITY).value(getTemplate().getAttribute(Attribute.DEXTERITY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "agility":
-				return attributes.get(Attribute.AGILITY).value(getTemplate().getAttribute(Attribute.AGILITY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "melee":
-				return skills.get(Skill.MELEE).value(getTemplate().getSkill(Skill.MELEE), SKILL_MIN, SKILL_MAX);
-			case "throwing":
-				return skills.get(Skill.THROWING).value(getTemplate().getSkill(Skill.THROWING), SKILL_MIN, SKILL_MAX);
-			case "intimidation":
-				return skills.get(Skill.INTIMIDATION).value(getTemplate().getSkill(Skill.INTIMIDATION), SKILL_MIN, SKILL_MAX);
-			case "software":
-				return skills.get(Skill.SOFTWARE).value(getTemplate().getSkill(Skill.SOFTWARE), SKILL_MIN, SKILL_MAX);
-			case "hardware":
-				return skills.get(Skill.HARDWARE).value(getTemplate().getSkill(Skill.HARDWARE), SKILL_MIN, SKILL_MAX);
-			case "medicine":
-				return skills.get(Skill.MEDICINE).value(getTemplate().getSkill(Skill.MEDICINE), SKILL_MIN, SKILL_MAX);
-			case "barter":
-				return skills.get(Skill.BARTER).value(getTemplate().getSkill(Skill.BARTER), SKILL_MIN, SKILL_MAX);
-			case "persuasion":
-				return skills.get(Skill.PERSUASION).value(getTemplate().getSkill(Skill.PERSUASION), SKILL_MIN, SKILL_MAX);
-			case "deception":
-				return skills.get(Skill.DECEPTION).value(getTemplate().getSkill(Skill.DECEPTION), SKILL_MIN, SKILL_MAX);
-			case "handguns":
-				return skills.get(Skill.HANDGUNS).value(getTemplate().getSkill(Skill.HANDGUNS), SKILL_MIN, SKILL_MAX);
-			case "longArms":
-				return skills.get(Skill.LONG_ARMS).value(getTemplate().getSkill(Skill.LONG_ARMS), SKILL_MIN, SKILL_MAX);
-			case "lockpick":
-				return skills.get(Skill.LOCKPICK).value(getTemplate().getSkill(Skill.LOCKPICK), SKILL_MIN, SKILL_MAX);
-			case "stealth":
-				return skills.get(Skill.STEALTH).value(getTemplate().getSkill(Skill.STEALTH), SKILL_MIN, SKILL_MAX);
-		}
-		return 0;
+		return switch (name) {
+			case "maxHP" -> maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
+			case "HP" -> HP;
+			case "actionPoints" -> actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
+			case "money" -> money;
+			case "damageResistPhysical" ->
+					damageResistance.get(Damage.DamageType.PHYSICAL).value(getTemplate().getDamageResistance(Damage.DamageType.PHYSICAL), 0, MAX_DAMAGE_RESIST);
+			case "damageResistThermal" ->
+					damageResistance.get(Damage.DamageType.THERMAL).value(getTemplate().getDamageResistance(Damage.DamageType.THERMAL), 0, MAX_DAMAGE_RESIST);
+			case "damageResistChemical" ->
+					damageResistance.get(Damage.DamageType.CHEMICAL).value(getTemplate().getDamageResistance(Damage.DamageType.CHEMICAL), 0, MAX_DAMAGE_RESIST);
+			case "damageResistExplosive" ->
+					damageResistance.get(Damage.DamageType.EXPLOSIVE).value(getTemplate().getDamageResistance(Damage.DamageType.EXPLOSIVE), 0, MAX_DAMAGE_RESIST);
+			case "damageResistElectrical" ->
+					damageResistance.get(Damage.DamageType.ELECTRICAL).value(getTemplate().getDamageResistance(Damage.DamageType.ELECTRICAL), 0, MAX_DAMAGE_RESIST);
+			case "body" ->
+					attributes.get(Attribute.BODY).value(getTemplate().getAttribute(Attribute.BODY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "intelligence" ->
+					attributes.get(Attribute.INTELLIGENCE).value(getTemplate().getAttribute(Attribute.INTELLIGENCE), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "charisma" ->
+					attributes.get(Attribute.CHARISMA).value(getTemplate().getAttribute(Attribute.CHARISMA), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "dexterity" ->
+					attributes.get(Attribute.DEXTERITY).value(getTemplate().getAttribute(Attribute.DEXTERITY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "agility" ->
+					attributes.get(Attribute.AGILITY).value(getTemplate().getAttribute(Attribute.AGILITY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+			case "melee" -> skills.get(Skill.MELEE).value(getTemplate().getSkill(Skill.MELEE), SKILL_MIN, SKILL_MAX);
+			case "throwing" ->
+					skills.get(Skill.THROWING).value(getTemplate().getSkill(Skill.THROWING), SKILL_MIN, SKILL_MAX);
+			case "intimidation" ->
+					skills.get(Skill.INTIMIDATION).value(getTemplate().getSkill(Skill.INTIMIDATION), SKILL_MIN, SKILL_MAX);
+			case "software" ->
+					skills.get(Skill.SOFTWARE).value(getTemplate().getSkill(Skill.SOFTWARE), SKILL_MIN, SKILL_MAX);
+			case "hardware" ->
+					skills.get(Skill.HARDWARE).value(getTemplate().getSkill(Skill.HARDWARE), SKILL_MIN, SKILL_MAX);
+			case "medicine" ->
+					skills.get(Skill.MEDICINE).value(getTemplate().getSkill(Skill.MEDICINE), SKILL_MIN, SKILL_MAX);
+			case "barter" -> skills.get(Skill.BARTER).value(getTemplate().getSkill(Skill.BARTER), SKILL_MIN, SKILL_MAX);
+			case "persuasion" ->
+					skills.get(Skill.PERSUASION).value(getTemplate().getSkill(Skill.PERSUASION), SKILL_MIN, SKILL_MAX);
+			case "deception" ->
+					skills.get(Skill.DECEPTION).value(getTemplate().getSkill(Skill.DECEPTION), SKILL_MIN, SKILL_MAX);
+			case "handguns" ->
+					skills.get(Skill.HANDGUNS).value(getTemplate().getSkill(Skill.HANDGUNS), SKILL_MIN, SKILL_MAX);
+			case "longArms" ->
+					skills.get(Skill.LONG_ARMS).value(getTemplate().getSkill(Skill.LONG_ARMS), SKILL_MIN, SKILL_MAX);
+			case "lockpick" ->
+					skills.get(Skill.LOCKPICK).value(getTemplate().getSkill(Skill.LOCKPICK), SKILL_MIN, SKILL_MAX);
+			case "stealth" ->
+					skills.get(Skill.STEALTH).value(getTemplate().getSkill(Skill.STEALTH), SKILL_MIN, SKILL_MAX);
+			default -> 0;
+		};
 	}
 
 	@Override
@@ -976,36 +911,26 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public boolean getValueBoolean(String name) {
-		switch (name) {
-			case "enabled":
-				return isEnabled;
-			case "sleeping":
-				return isSleeping;
-			case "inCombat":
-				return isInCombat();
-			case "usingObject":
-				return isUsingObject();
-			case "dead":
-				return isDead;
-			case "active":
-				return isActive();
-		}
-		return false;
+		return switch (name) {
+			case "enabled" -> isEnabled;
+			case "sleeping" -> isSleeping;
+			case "inCombat" -> isInCombat();
+			case "usingObject" -> isUsingObject();
+			case "dead" -> isDead;
+			case "active" -> isActive();
+			default -> false;
+		};
 	}
 
 	@Override
 	public String getValueString(String name) {
-		switch (name) {
-			case "id":
-				return getID();
-			case "templateID":
-				return templateID;
-			case "area":
-				return getArea().getID();
-			case "room":
-				return getArea().getRoom().getID();
-		}
-		return null;
+		return switch (name) {
+			case "id" -> getID();
+			case "templateID" -> templateID;
+			case "area" -> getArea().getID();
+			case "room" -> getArea().getRoom().getID();
+			default -> null;
+		};
 	}
 
 	@Override
@@ -1015,7 +940,7 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 
 	@Override
 	public void onStatChange() {
-		if(HP > getMaxHP()) {
+		if (HP > getMaxHP()) {
 			HP = getMaxHP();
 		}
 	}
@@ -1023,24 +948,17 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	@Override
 	public void setStateBoolean(String name, boolean value) {
 		switch (name) {
-			case "known":
-				isKnown = value;
-				break;
-			case "enabled":
-				setEnabled(value);
-				break;
+			case "known" -> isKnown = value;
+			case "enabled" -> setEnabled(value);
+			case "playerControlled" -> playerControlled = value;
 		}
 	}
 
 	@Override
 	public void setStateInteger(String name, int value) {
 		switch (name) {
-			case "hp":
-				HP = value;
-				break;
-			case "money":
-				money = value;
-				break;
+			case "hp" -> HP = value;
+			case "money" -> money = value;
 		}
 	}
 
@@ -1052,14 +970,12 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	@Override
 	public void setStateString(String name, String value) {
 		switch (name) {
-			case "area":
-				setArea(game().data().getArea(value));
-				break;
-			case "alertState":
+			case "area" -> setArea(game().data().getArea(value));
+			case "alertState" -> {
 				if (targetingComponent != null) {
 					targetingComponent.setAlertState(LoadUtils.stringToEnum(value, TargetingComponent.AlertState.class));
 				}
-				break;
+			}
 		}
 	}
 
@@ -1071,18 +987,12 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	@Override
 	public void modStateInteger(String name, int amount) {
 		switch (name) {
-			case "heal":
-				heal(amount);
-				break;
-			case "damage":
-				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 1.0f, new ArrayList<>()));
-				break;
-			case "damageIgnoreArmor":
-				damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 0.0f, new ArrayList<>()));
-				break;
-			case "money":
-				money += amount;
-				break;
+			case "heal" -> heal(amount);
+			case "damage" ->
+					damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 1.0f, new ArrayList<>()));
+			case "damageIgnoreArmor" ->
+					damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 0.0f, new ArrayList<>()));
+			case "money" -> money += amount;
 		}
 	}
 
@@ -1120,95 +1030,60 @@ public class Actor extends GameInstanced implements Noun, Physical, StatHolder, 
 	}
 
 	public void loadState(SaveData saveData) {
-		switch(saveData.getParameter()) {
-			case "hp":
-				this.HP = saveData.getValueInt();
-				break;
-			case "isEnabled":
-				setEnabled(saveData.getValueBoolean());
-			case "isDead":
-				this.isDead = saveData.getValueBoolean();
-				break;
-			case "isKnown":
-				this.isKnown = saveData.getValueBoolean();
-				break;
-			case "area":
-				if(saveData.getValueString() == null) {
+		switch (saveData.getParameter()) {
+			case "hp" -> this.HP = saveData.getValueInt();
+			case "isEnabled" -> setEnabled(saveData.getValueBoolean());
+			case "isDead" -> this.isDead = saveData.getValueBoolean();
+			case "isKnown" -> this.isKnown = saveData.getValueBoolean();
+			case "area" -> {
+				if (saveData.getValueString() == null) {
 					this.area = null;
 				} else {
 					this.area = game().data().getArea(saveData.getValueString());
 				}
-				break;
-			case "targeting":
-				//if(targetingComponent != null) targetingComponent.loadState(saveData);
-				break;
-			case "inventory":
+			}
+			case "inventory" -> {
 				if (inventory != null) inventory.loadState(saveData);
-				break;
-			case "equippedItem":
-				this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
-				break;
-			case "equippedApparel":
-				this.apparelComponent.equip((ItemApparel) game().data().getItemState(saveData.getValueString()));
-				break;
-			case "usingObject":
-				// TODO - Fix broken save data for using object (needs two IDs, the object and the component)
-				//startUsingObject((ObjectComponentUsable) game().data().getObject(saveData.getValueString()).getComponent());
-				break;
-			case "actionPointsUsed":
-				this.actionPointsUsed = saveData.getValueInt();
-				break;
+			}
+			case "equippedItem" -> this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
+			case "equippedApparel" -> this.apparelComponent.equip((ItemApparel) game().data().getItemState(saveData.getValueString()));
+			case "actionPointsUsed" -> this.actionPointsUsed = saveData.getValueInt();
 		}
 	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		if(isKnown) {
+		if (isKnown) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isKnown", isKnown));
 		}
-		if(isEnabled == startDisabled) {
+		if (isEnabled == startDisabled) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isEnabled", isEnabled));
 		}
-		if(isDead != startDead) {
+		if (isDead != startDead) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isDead", isDead));
 		}
-		if(area != defaultArea) {
+		if (area != defaultArea) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", (area == null ? null : area.getID())));
 		}
-		if(inventory != null) {
+		if (inventory != null) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "inventory", inventory.saveState()));
 		}
 		if (targetingComponent != null) {
 			//state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "targeting", targetingComponent.saveState()));
 		}
-		if(equipmentComponent.hasEquippedItem()) {
+		if (equipmentComponent.hasEquippedItem()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedItem", equipmentComponent.getEquippedItem().getID()));
 		}
-		for(ItemApparel item : apparelComponent.getEquippedItems()) {
+		for (ItemApparel item : apparelComponent.getEquippedItems()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedApparel", item.getID()));
 		}
-		if(usingObject != null) {
+		if (usingObject != null) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "usingObject", usingObject.getID()));
 		}
-		if(actionPointsUsed != 0) {
+		if (actionPointsUsed != 0) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "actionPointsUsed", actionPointsUsed));
 		}
 		return state;
-	}
-
-	@Override
-	public String toString() {
-		return getID();
-	}
-	
-	@Override
-	public int hashCode() {
-		return getID().hashCode();
-	}
-	
-	@Override
-	public boolean equals(Object o) {
-		return o instanceof Actor && this.getID().equals(((Actor) o).getID());
 	}
 	
 }

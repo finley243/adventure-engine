@@ -25,7 +25,7 @@ public class BehaviorComponent {
     }
 
     private Behavior currentBehavior() {
-        if(behaviors.isEmpty() || currentIndex == -1 || currentIndex >= behaviors.size()) return null;
+        if (behaviors.isEmpty() || currentIndex == -1 || currentIndex >= behaviors.size()) return null;
         return behaviors.get(currentIndex);
     }
 
@@ -41,7 +41,7 @@ public class BehaviorComponent {
     // A return value of -1.0f indicates no override for given action
     public float actionUtilityOverride(Action action) {
         Behavior current = currentBehavior();
-        if(current == null) {
+        if (current == null) {
             return -1.0f;
         } else {
             return current.actionUtilityOverride(actor, action);
@@ -59,16 +59,16 @@ public class BehaviorComponent {
     }
 
     public void update() {
-        if(behaviors.isEmpty()) return;
+        if (behaviors.isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
-        if(currentBehavior != null) {
-            if(areaTarget == null) {
-                if(currentBehavior.getTargetArea(actor) != null) {
+        if (currentBehavior != null) {
+            if (areaTarget == null) {
+                if (currentBehavior.getTargetArea(actor) != null) {
                     areaTarget = new AreaTarget(currentBehavior.getTargetArea(actor), actor.isInCombat() ? Behavior.BEHAVIOR_MOVEMENT_UTILITY_COMBAT : Behavior.BEHAVIOR_MOVEMENT_UTILITY, true);
                     actor.addPursueTarget(areaTarget);
                 }
             } else {
-                if(currentBehavior.getTargetArea(actor) != null) {
+                if (currentBehavior.getTargetArea(actor) != null) {
                     areaTarget.setTargetArea(currentBehavior.getTargetArea(actor));
                     areaTarget.setTargetUtility(actor.isInCombat() ? Behavior.BEHAVIOR_MOVEMENT_UTILITY_COMBAT : Behavior.BEHAVIOR_MOVEMENT_UTILITY);
                 } else {
@@ -78,19 +78,19 @@ public class BehaviorComponent {
             }
             currentBehavior.update(actor);
         }
-        if(currentBehavior != null && !currentBehavior.isValid(actor)) {
+        if (currentBehavior != null && !currentBehavior.isValid(actor)) {
             currentBehavior = null;
             currentIndex = -1;
             areaTarget.markForRemoval();
             areaTarget = null;
         }
-        if(currentBehavior == null || currentBehavior.hasCompleted(actor)) {
+        if (currentBehavior == null || currentBehavior.hasCompleted(actor)) {
             for (int i = 0; i < (currentBehavior == null ? behaviors.size() : currentIndex); i++) {
-                if(behaviors.get(i).isValid(actor)) {
+                if (behaviors.get(i).isValid(actor)) {
                     currentIndex = i;
                     behaviors.get(i).onStart();
-                    if(areaTarget != null) {
-                        if(behaviors.get(i).getTargetArea(actor) != null) {
+                    if (areaTarget != null) {
+                        if (behaviors.get(i).getTargetArea(actor) != null) {
                             areaTarget.setTargetArea(behaviors.get(i).getTargetArea(actor));
                         } else {
                             areaTarget.markForRemoval();

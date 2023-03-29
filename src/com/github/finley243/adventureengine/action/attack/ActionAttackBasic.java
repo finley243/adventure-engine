@@ -36,7 +36,6 @@ public class ActionAttackBasic extends ActionAttack {
 		} else {
 			subject.getInventory().removeItems(weapon, getAmmoConsumed());
 			// TODO - Make this optional (e.g. do not place a grenade object after using a grenade)
-			//Item.itemToObject(weapon.game(), weapon, getAmmoConsumed(), target.getArea());
 			target.getArea().getInventory().addItems(weapon, getAmmoConsumed());
 		}
 	}
