@@ -6,14 +6,10 @@
     <object id="door_fake">
         <name>door</name>
     </object>
-    <object id="door_locked_easy">
+    <object id="door_locked">
         <name>door</name>
         <component id="door_link" template="door_link_locked"/>
         <localVar name="locked" dataType="boolean" value="true"/>
-        <localVar name="lock_pick_difficulty" dataType="int" value="5"/>
-        <localVar name="lock_keys" dataType="stringSet">
-            <value>wilsons_corner_store_key</value>
-        </localVar>
         <action template="lock_key"/>
         <action template="lock_pick"/>
     </object>

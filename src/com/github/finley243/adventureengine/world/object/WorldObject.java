@@ -46,8 +46,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Map<String, Float> localVarsFloat;
 	private final Map<String, String> localVarsString;
 	private final Map<String, Set<String>> localVarsStringSet;
-	
-	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams) {
+
+	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
 		super(gameInstance, ID);
 		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
 		this.templateID = templateID;
@@ -56,11 +56,11 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
 		this.componentParams = componentParams;
-		this.localVarsBoolean = new HashMap<>();
-		this.localVarsInteger = new HashMap<>();
-		this.localVarsFloat = new HashMap<>();
-		this.localVarsString = new HashMap<>();
-		this.localVarsStringSet = new HashMap<>();
+		this.localVarsBoolean = localVarsBooleanDefault;
+		this.localVarsInteger = localVarsIntegerDefault;
+		this.localVarsFloat = localVarsFloatDefault;
+		this.localVarsString = localVarsStringDefault;
+		this.localVarsStringSet = localVarsStringSetDefault;
 		setEnabled(!startDisabled);
 	}
 

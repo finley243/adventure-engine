@@ -14,8 +14,12 @@
             <link dist="CLOSE" dir="NW" area="wilsons_corner_store_aisle_food"/>
             <link dist="CLOSE" dir="NE" area="wilsons_corner_store_aisle_general"/>
             <link dist="FAR" dir="NE" area="wilsons_corner_store_coolers"/>
-            <object id="wilsons_corner_store_door_exit" template="door_locked_easy">
+            <object id="wilsons_corner_store_door_exit" template="door_locked">
                 <component type="link" id="door_link" object="wilsons_corner_store_exterior_door" dir="W"/>
+                <localVar name="lock_pick_difficulty" dataType="int" value="5"/>
+                <localVar name="lock_keys" dataType="stringSet">
+                    <value>wilsons_corner_store_key</value>
+                </localVar>
             </object>
             <object id="wilsons_corner_store_gumball_machine" template="gumball_machine"/>
             <object id="wilsons_corner_store_garbage_bin" template="garbage_bin"/>

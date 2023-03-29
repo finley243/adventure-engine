@@ -811,7 +811,38 @@ public class DataLoader {
             ComponentParams paramsObject = loadComponentParams(paramsElement);
             componentParams.put(componentID, paramsObject);
         }
-        return new WorldObject(game, id, template, area, startDisabled, startHidden, componentParams);
+        Map<String, Boolean> localVarsBooleanDefault = new HashMap<>();
+        Map<String, Integer> localVarsIntegerDefault = new HashMap<>();
+        Map<String, Float> localVarsFloatDefault = new HashMap<>();
+        Map<String, String> localVarsStringDefault = new HashMap<>();
+        Map<String, Set<String>> localVarsStringSetDefault = new HashMap<>();
+        for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
+            String varName = LoadUtils.attribute(varDefaultElement, "name", null);
+            String varDataType = LoadUtils.attribute(varDefaultElement, "dataType", null);
+            switch (varDataType) {
+                case "boolean":
+                    boolean booleanValue = LoadUtils.attributeBool(varDefaultElement, "value", false);
+                    localVarsBooleanDefault.put(varName, booleanValue);
+                    break;
+                case "int":
+                    int integerValue = LoadUtils.attributeInt(varDefaultElement, "value", 0);
+                    localVarsIntegerDefault.put(varName, integerValue);
+                    break;
+                case "float":
+                    float floatValue = LoadUtils.attributeFloat(varDefaultElement, "value", 0.0f);
+                    localVarsFloatDefault.put(varName, floatValue);
+                    break;
+                case "string":
+                    String stringValue = LoadUtils.attribute(varDefaultElement, "value", "EMPTY");
+                    localVarsStringDefault.put(varName, stringValue);
+                    break;
+                case "stringSet":
+                    Set<String> stringSetValue = LoadUtils.setOfTags(varDefaultElement, "value");
+                    localVarsStringSetDefault.put(varName, stringSetValue);
+                    break;
+            }
+        }
+        return new WorldObject(game, id, template, area, startDisabled, startHidden, componentParams, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
     }
 
     private static ComponentParams loadComponentParams(Element paramsElement) {
