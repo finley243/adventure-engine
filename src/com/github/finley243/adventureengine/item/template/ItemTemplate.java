@@ -148,7 +148,7 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 			case "id":
 				return getID();
 			case "name":
-				return name;
+				return getName();
 		}
 		return null;
 	}

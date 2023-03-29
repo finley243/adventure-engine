@@ -31,46 +31,20 @@
             <var dataType="boolean" value="false"/>
         </script>
     </action>
-    <action id="vending_nitron_cola">
-        <prompt>Buy Nitron Cola (10)</prompt>
-        <phrase>vendingMachineBuy</phrase>
-        <condition type="compare" equality="GREATER_EQUAL">
-            <var1 type="stat" dataType="int" stat="money" holder="subject"/>
-            <var2 dataType="int" value="10"/>
-        </condition>
-        <script>
-            <script type="addItem">
-                <inv type="stat" dataType="inventory" holder="subject"/>
-                <item dataType="string" value="nitron_cola"/>
-            </script>
-            <script type="modifyState" dataType="int" state="money" holder="subject">
-                <var dataType="int" value="-10"/>
-            </script>
-        </script>
-    </action>
-    <action id="vending_nitron_diet">
-        <prompt>Buy Nitron Diet (10)</prompt>
-        <phrase>vendingMachineBuy</phrase>
-        <condition type="compare" equality="GREATER_EQUAL">
-            <var1 type="stat" dataType="int" stat="money" holder="subject"/>
-            <var2 dataType="int" value="10"/>
-        </condition>
-        <script>
-            <script type="addItem">
-                <inv type="stat" dataType="inventory" holder="subject"/>
-                <item dataType="string" value="nitron_diet"/>
-            </script>
-            <script type="modifyState" dataType="int" state="money" holder="subject">
-                <var dataType="int" value="-10"/>
-            </script>
-        </script>
-    </action>
     <action id="vending_machine">
-        <prompt>Buy</prompt>
+        <prompt>Buy $item ($price)</prompt>
         <phrase>vendingMachineBuy</phrase>
         <noun name="item" holder="itemTemplate">
             <holderID type="parameter" name="item"/>
         </noun>
+        <textVar name="item" type="stat" holder="itemTemplate" stat="name">
+            <holderID type="parameter" name="item"/>
+        </textVar>
+        <textVar name="price" type="toString">
+            <var type="stat" dataType="int" holder="itemTemplate" stat="price">
+                <holderID type="parameter" name="item"/>
+            </var>
+        </textVar>
         <condition type="compare" equality="GREATER_EQUAL">
             <var1 type="stat" dataType="int" stat="money" holder="subject"/>
             <var2 type="stat" dataType="int" holder="itemTemplate" stat="price">

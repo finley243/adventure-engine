@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class VariableLiteral extends Variable {
 
-    private final String dataType;
+    private final DataType dataType;
     private final Boolean valueBoolean;
     private final Integer valueInteger;
     private final Float valueFloat;
@@ -16,7 +16,7 @@ public class VariableLiteral extends Variable {
     private final Set<String> valueStringSet;
 
     public VariableLiteral(String dataType, boolean value) {
-        this.dataType = dataType;
+        this.dataType = dataTypeFromString(dataType);
         this.valueBoolean = value;
         this.valueInteger = null;
         this.valueFloat = null;
@@ -25,7 +25,7 @@ public class VariableLiteral extends Variable {
     }
 
     public VariableLiteral(String dataType, int value) {
-        this.dataType = dataType;
+        this.dataType = dataTypeFromString(dataType);
         this.valueBoolean = null;
         this.valueInteger = value;
         this.valueFloat = null;
@@ -34,7 +34,7 @@ public class VariableLiteral extends Variable {
     }
 
     public VariableLiteral(String dataType, float value) {
-        this.dataType = dataType;
+        this.dataType = dataTypeFromString(dataType);
         this.valueBoolean = null;
         this.valueInteger = null;
         this.valueFloat = value;
@@ -43,7 +43,7 @@ public class VariableLiteral extends Variable {
     }
 
     public VariableLiteral(String dataType, String value) {
-        this.dataType = dataType;
+        this.dataType = dataTypeFromString(dataType);
         this.valueBoolean = null;
         this.valueInteger = null;
         this.valueFloat = null;
@@ -52,7 +52,7 @@ public class VariableLiteral extends Variable {
     }
 
     public VariableLiteral(String dataType, Set<String> value) {
-        this.dataType = dataType;
+        this.dataType = dataTypeFromString(dataType);
         this.valueBoolean = null;
         this.valueInteger = null;
         this.valueFloat = null;
@@ -62,20 +62,7 @@ public class VariableLiteral extends Variable {
 
     @Override
     public DataType getDataType() {
-        switch (dataType) {
-            case "boolean":
-                return DataType.BOOLEAN;
-            case "int":
-                return DataType.INTEGER;
-            case "float":
-                return DataType.FLOAT;
-            case "string":
-                return DataType.STRING;
-            case "stringSet":
-                return DataType.STRING_SET;
-            default:
-                return null;
-        }
+        return dataType;
     }
 
     @Override
@@ -111,16 +98,6 @@ public class VariableLiteral extends Variable {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
         if (valueStringSet == null) throw new UnsupportedOperationException();
         return valueStringSet;
-    }
-
-    @Override
-    public Inventory getValueInventory(ContextScript context) {
-        throw new UnsupportedOperationException("Inventory can not be referenced as a literal variable");
-    }
-
-    @Override
-    public Noun getValueNoun(ContextScript context) {
-        throw new UnsupportedOperationException("Noun can not be referenced as a literal variable");
     }
 
 }

@@ -48,6 +48,16 @@ public class TextGen {
 		lastContext = null;
 	}
 
+	public static String generateVarsOnly(String line, Map<String, String> vars) {
+		List<String> varTags = new ArrayList<>(vars.keySet());
+		varTags.sort(Comparator.comparingInt(String::length));
+		Collections.reverse(varTags);
+		for(String varTag : varTags) {
+			line = line.replace("$" + varTag, vars.get(varTag));
+		}
+		return line;
+	}
+
 	private static String determineContext(String line, Context context) {
 		boolean[] usePronouns = new boolean[context.getObjects().size()];
 		if(lastContext != null) {

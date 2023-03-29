@@ -362,6 +362,9 @@ public class DataLoader {
                     productVariables.add(loadVariable(productVariableElement, null, null));
                 }
                 return new VariableProduct(productVariables);
+            case "toString":
+                Variable toStringVariable = loadVariable(LoadUtils.singleChildWithName(variableElement, "var"), null, null);
+                return new VariableToString(toStringVariable);
             case "literal":
             case null:
             default:
@@ -863,18 +866,24 @@ public class DataLoader {
         String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
         String phrase = LoadUtils.singleTag(actionElement, "phrase", null);
         String phraseFail = LoadUtils.singleTag(actionElement, "phraseFail", null);
-        Map<String, Variable> customNouns = new LinkedHashMap<>();
+        Map<String, Variable> customNouns = new HashMap<>();
         for (Element nounElement : LoadUtils.directChildrenWithName(actionElement, "noun")) {
             String nounName = LoadUtils.attribute(nounElement, "name", null);
             Variable nounVariable = loadVariable(nounElement, "noun", "stat");
             customNouns.put(nounName, nounVariable);
+        }
+        Map<String, Variable> textVars = new HashMap<>();
+        for (Element textVarElement : LoadUtils.directChildrenWithName(actionElement, "textVar")) {
+            String varName = LoadUtils.attribute(textVarElement, "name", null);
+            Variable variable = loadVariable(textVarElement, "string", null);
+            textVars.put(varName, variable);
         }
         Condition conditionSelect = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
         Condition conditionSuccess = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionSuccess"));
         Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
         Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
         Script scriptFail = loadScript(LoadUtils.singleChildWithName(actionElement, "scriptFail"));
-        return new ActionTemplate(game, ID, prompt, phrase, phraseFail, customNouns, conditionSelect, conditionSuccess, conditionShow, canFail, script, scriptFail);
+        return new ActionTemplate(game, ID, prompt, phrase, phraseFail, customNouns, textVars, conditionSelect, conditionSuccess, conditionShow, canFail, script, scriptFail);
     }
 
     private static List<ObjectTemplate.CustomActionHolder> loadCustomActions(Element parentElement, String name) {

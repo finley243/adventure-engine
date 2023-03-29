@@ -14,19 +14,33 @@ public abstract class Variable {
 
     public abstract DataType getDataType();
 
-    public abstract boolean getValueBoolean(ContextScript context);
+    public boolean getValueBoolean(ContextScript context) {
+        throw new UnsupportedOperationException("Invalid data type function: boolean");
+    }
 
-    public abstract int getValueInteger(ContextScript context);
+    public int getValueInteger(ContextScript context) {
+        throw new UnsupportedOperationException("Invalid data type function: integer");
+    }
 
-    public abstract float getValueFloat(ContextScript context);
+    public float getValueFloat(ContextScript context) {
+        throw new UnsupportedOperationException("Invalid data type function: float");
+    }
 
-    public abstract String getValueString(ContextScript context);
+    public String getValueString(ContextScript context) {
+        throw new UnsupportedOperationException("Invalid data type function: string");
+    }
 
-    public abstract Set<String> getValueStringSet(ContextScript context);
+    public Set<String> getValueStringSet(ContextScript context) {
+        throw new UnsupportedOperationException("Invalid data type function: string set");
+    }
 
-    public abstract Inventory getValueInventory(ContextScript context);
+    public Inventory getValueInventory(ContextScript context) {
+        throw new UnsupportedOperationException("Invalid data type function: inventory");
+    }
 
-    public abstract Noun getValueNoun(ContextScript context);
+    public Noun getValueNoun(ContextScript context) {
+        throw new UnsupportedOperationException("Invalid data type function: noun");
+    }
 
     public boolean canCompareTo(Variable other) {
         if (this.getDataType() == DataType.STRING_SET || other.getDataType() == DataType.STRING_SET) {
@@ -40,6 +54,19 @@ public abstract class Variable {
             return other.getDataType() == DataType.INTEGER || other.getDataType() == DataType.FLOAT;
         }
         return this.getDataType() == other.getDataType();
+    }
+
+    public static DataType dataTypeFromString(String name) {
+        return switch (name) {
+            case "boolean" -> DataType.BOOLEAN;
+            case "int" -> DataType.INTEGER;
+            case "float" -> DataType.FLOAT;
+            case "string" -> DataType.STRING;
+            case "stringSet" -> DataType.STRING_SET;
+            case "inventory" -> DataType.INVENTORY;
+            case "noun" -> DataType.NOUN;
+            default -> null;
+        };
     }
 
 }

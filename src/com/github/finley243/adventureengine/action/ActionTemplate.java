@@ -14,6 +14,7 @@ public class ActionTemplate extends GameInstanced {
     private final String phrase;
     private final String phraseFail;
     private final Map<String, Variable> customNouns;
+    private final Map<String, Variable> textVars;
     // The condition under which the action can be selected
     private final Condition conditionSelect;
     // The condition under which the action will succeed
@@ -24,13 +25,14 @@ public class ActionTemplate extends GameInstanced {
     private final Script script;
     private final Script scriptFail;
 
-    public ActionTemplate(Game game, String ID, String prompt, String phrase, String phraseFail, Map<String, Variable> customNouns, Condition conditionSelect, Condition conditionSuccess, Condition conditionShow, boolean canFail, Script script, Script scriptFail) {
+    public ActionTemplate(Game game, String ID, String prompt, String phrase, String phraseFail, Map<String, Variable> customNouns, Map<String, Variable> textVars, Condition conditionSelect, Condition conditionSuccess, Condition conditionShow, boolean canFail, Script script, Script scriptFail) {
         super(game, ID);
         if (canFail && conditionSuccess == null) throw new IllegalArgumentException("Success condition cannot be null if canFail is true");
         this.prompt = prompt;
         this.phrase = phrase;
         this.phraseFail = phraseFail;
         this.customNouns = customNouns;
+        this.textVars = textVars;
         this.conditionSelect = conditionSelect;
         this.conditionSuccess = conditionSuccess;
         this.conditionShow = conditionShow;
@@ -53,6 +55,10 @@ public class ActionTemplate extends GameInstanced {
 
     public Map<String, Variable> getCustomNouns() {
         return customNouns;
+    }
+
+    public Map<String, Variable> getTextVars() {
+        return textVars;
     }
 
     public Condition getConditionSelect() {

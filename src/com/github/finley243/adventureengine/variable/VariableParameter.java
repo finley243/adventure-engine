@@ -8,34 +8,17 @@ import java.util.Set;
 
 public class VariableParameter extends Variable {
 
-    private final String dataType;
+    private final DataType dataType;
     private final String name;
 
     public VariableParameter(String dataType, String name) {
-        this.dataType = dataType;
+        this.dataType = dataTypeFromString(dataType);
         this.name = name;
     }
 
     @Override
     public DataType getDataType() {
-        switch (dataType) {
-            case "boolean":
-                return DataType.BOOLEAN;
-            case "int":
-                return DataType.INTEGER;
-            case "float":
-                return DataType.FLOAT;
-            case "string":
-                return DataType.STRING;
-            case "stringSet":
-                return DataType.STRING_SET;
-            case "inventory":
-                return DataType.INVENTORY;
-            case "noun":
-                return DataType.NOUN;
-            default:
-                return null;
-        }
+        return dataType;
     }
 
     @Override

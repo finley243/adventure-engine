@@ -8,9 +8,11 @@ import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.variable.Variable;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ActionCustom extends Action {
@@ -35,7 +37,11 @@ public class ActionCustom extends Action {
         for (Map.Entry<String, Variable> entry : getTemplate().getCustomNouns().entrySet()) {
             nounMap.put(entry.getKey(), entry.getValue().getValueNoun(new ContextScript(subject.game(), subject, subject, object, parameters)));
         }
-        Context context = new Context(nounMap.build());
+        Map<String, String> contextVars = new HashMap<>();
+        for (Map.Entry<String, Variable> entry : getTemplate().getTextVars().entrySet()) {
+            contextVars.put(entry.getKey(), entry.getValue().getValueString(new ContextScript(subject.game(), subject, subject, object, parameters)));
+        }
+        Context context = new Context(contextVars, nounMap.build());
         if (getTemplate().canFail() && !getTemplate().getConditionSuccess().isMet(new ContextScript(subject.game(), subject, subject, object, parameters))) {
             subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getTemplate().getPhraseFail()), context, this, null, subject, null));
             if (getTemplate().getScriptFail() != null) {
@@ -56,7 +62,12 @@ public class ActionCustom extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice(getTemplate().getPrompt(), canChoose(subject), new String[] {object.getName()}, new String[]{getTemplate().getPrompt()});
+        Map<String, String> contextVars = new HashMap<>();
+        for (Map.Entry<String, Variable> entry : getTemplate().getTextVars().entrySet()) {
+            contextVars.put(entry.getKey(), entry.getValue().getValueString(new ContextScript(subject.game(), subject, subject, object, parameters)));
+        }
+        String promptWithVars = TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars);
+        return new MenuChoice(promptWithVars, canChoose(subject), new String[] {object.getName()}, new String[]{getTemplate().getPrompt()});
     }
 
     public boolean canShow(Actor subject) {
