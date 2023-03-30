@@ -141,7 +141,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 		for (Skill skill : Skill.values()) {
 			this.skills.put(skill, new StatInt(this));
 		}
-		this.effectComponent = new EffectComponent(this);
+		this.effectComponent = new EffectComponent(game, this, new ContextScript(game, this, this));
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
 		this.blockedActions = new HashMap<>();
 		this.startDisabled = startDisabled;
@@ -390,7 +390,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 
 	private void damageDirect(Damage damage) {
 		for (String effectID : damage.getTargetEffects()) {
-			effectComponent.addEffect(game().data().getEffect(effectID));
+			effectComponent.addEffect(effectID);
 		}
 		int amount = damage.getAmount();
 		//amount -= apparelComponent.getDamageResistance(getTemplate().getDefaultApparelSlot(), damage.getType()) * damage.getArmorMult();
@@ -411,7 +411,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 
 	private void damageLimb(Damage damage, Limb limb) {
 		for (String effectID : damage.getTargetEffects()) {
-			effectComponent.addEffect(game().data().getEffect(effectID));
+			effectComponent.addEffect(effectID);
 		}
 		int amount = damage.getAmount();
 		//amount -= apparelComponent.getDamageResistance(limb.getApparelSlot(), damage.getType()) * damage.getArmorMult();
@@ -662,7 +662,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 			return;
 		}
 		if (getEffectComponent() != null) {
-			getEffectComponent().onStartTurn();
+			getEffectComponent().onStartRound();
 		}
 		if (getTargetingComponent() != null) {
 			getTargetingComponent().updateTurn();

@@ -59,67 +59,68 @@ public class DataLoader {
                     Node currentChild = rootElement.getFirstChild();
                     while (currentChild != null) {
                         if (currentChild.getNodeType() == Node.ELEMENT_NODE) {
+                            Element currentElement = (Element) currentChild;
                             switch (currentChild.getNodeName()) {
                                 case "faction" -> {
-                                    Faction faction = loadFaction((Element) currentChild);
+                                    Faction faction = loadFaction(currentElement);
                                     game.data().addFaction(faction.getID(), faction);
                                 }
                                 case "scene" -> {
-                                    Scene scene = loadScene(game, (Element) currentChild);
+                                    Scene scene = loadScene(game, currentElement);
                                     game.data().addScene(scene.getID(), scene);
                                 }
                                 case "actor" -> {
-                                    ActorTemplate actor = loadActor(game, (Element) currentChild);
+                                    ActorTemplate actor = loadActor(game, currentElement);
                                     game.data().addActorTemplate(actor.getID(), actor);
                                 }
                                 case "object" -> {
-                                    ObjectTemplate object = loadObjectTemplate(game, (Element) currentChild);
+                                    ObjectTemplate object = loadObjectTemplate(game, currentElement);
                                     game.data().addObjectTemplate(object.getID(), object);
                                 }
                                 case "objectComponent" -> {
-                                    ObjectComponentTemplate objectComponent = loadObjectComponentTemplate(game, (Element) currentChild);
+                                    ObjectComponentTemplate objectComponent = loadObjectComponentTemplate(game, currentElement);
                                     game.data().addObjectComponentTemplate(objectComponent.getID(), objectComponent);
                                 }
                                 case "item" -> {
-                                    ItemTemplate item = loadItemTemplate(game, (Element) currentChild);
+                                    ItemTemplate item = loadItemTemplate(game, currentElement);
                                     game.data().addItem(item.getID(), item);
                                 }
                                 case "lootTable" -> {
-                                    LootTable table = loadLootTable((Element) currentChild, false);
+                                    LootTable table = loadLootTable(currentElement, false);
                                     game.data().addLootTable(table.getID(), table);
                                 }
                                 case "weaponClass" -> {
-                                    WeaponClass weaponClass = loadWeaponClass((Element) currentChild);
+                                    WeaponClass weaponClass = loadWeaponClass(currentElement);
                                     game.data().addWeaponClass(weaponClass.getID(), weaponClass);
                                 }
                                 case "attackType" -> {
-                                    WeaponAttackType attackType = loadWeaponAttackType((Element) currentChild);
+                                    WeaponAttackType attackType = loadWeaponAttackType(currentElement);
                                     game.data().addAttackType(attackType.getID(), attackType);
                                 }
                                 case "room" -> {
-                                    Room room = loadRoom(game, (Element) currentChild);
+                                    Room room = loadRoom(game, currentElement);
                                     game.data().addRoom(room.getID(), room);
                                 }
                                 case "script" -> {
-                                    String scriptID = LoadUtils.attribute((Element) currentChild, "id", null);
-                                    Script script = loadScript((Element) currentChild);
+                                    String scriptID = LoadUtils.attribute(currentElement, "id", null);
+                                    Script script = loadScript(currentElement);
                                     game.data().addScript(scriptID, script);
                                 }
                                 case "condition" -> {
-                                    String conditionID = LoadUtils.attribute((Element) currentChild, "id", null);
-                                    Condition condition = loadCondition((Element) currentChild);
+                                    String conditionID = LoadUtils.attribute(currentElement, "id", null);
+                                    Condition condition = loadCondition(currentElement);
                                     game.data().addCondition(conditionID, condition);
                                 }
                                 case "effect" -> {
-                                    Effect effect = loadEffect(game, (Element) currentChild);
+                                    Effect effect = loadEffect(game, currentElement);
                                     game.data().addEffect(effect.getID(), effect);
                                 }
                                 case "action" -> {
-                                    ActionTemplate action = loadActionTemplate(game, (Element) currentChild);
+                                    ActionTemplate action = loadActionTemplate(game, currentElement);
                                     game.data().addActionTemplate(action.getID(), action);
                                 }
                                 case "network" -> {
-                                    Network network = loadNetwork((Element) currentChild);
+                                    Network network = loadNetwork(currentElement);
                                     game.data().addNetwork(network.getID(), network);
                                 }
                             }
@@ -131,7 +132,7 @@ public class DataLoader {
         }
     }
 
-    private static ActorTemplate loadActor(Game game, Element actorElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ActorTemplate loadActor(Game game, Element actorElement) {
         String id = LoadUtils.attribute(actorElement, "id", null);
         String parentID = LoadUtils.attribute(actorElement, "parent", null);
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
@@ -220,7 +221,7 @@ public class DataLoader {
         return damageResistance;
     }
 
-    private static Scene loadScene(Game game, Element sceneElement) throws ParserConfigurationException, SAXException, IOException {
+    private static Scene loadScene(Game game, Element sceneElement) {
         if (sceneElement == null) return null;
         String sceneID = sceneElement.getAttribute("id");
         Scene.SceneType type = switch (sceneElement.getAttribute("type")) {
@@ -246,7 +247,7 @@ public class DataLoader {
         return new Scene(game, sceneID, condition, once, priority, lines, choices, type);
     }
 
-    private static SceneLine loadSceneLine(Element lineElement) throws ParserConfigurationException, SAXException, IOException {
+    private static SceneLine loadSceneLine(Element lineElement) {
         boolean once = LoadUtils.attributeBool(lineElement, "once", false);
         boolean exit = LoadUtils.attributeBool(lineElement, "exit", false);
         String redirect = LoadUtils.attribute(lineElement, "redirect", null);
@@ -263,7 +264,7 @@ public class DataLoader {
         return new SceneChoice(link, prompt);
     }
 
-    private static Condition loadCondition(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
+    private static Condition loadCondition(Element conditionElement) {
         if (conditionElement == null) return null;
         String type = LoadUtils.attribute(conditionElement, "type", "compound");
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
@@ -330,7 +331,7 @@ public class DataLoader {
         }
     }
 
-    private static List<Condition> loadSubConditions(Element conditionElement) throws ParserConfigurationException, SAXException, IOException {
+    private static List<Condition> loadSubConditions(Element conditionElement) {
         List<Element> subConditionElements = LoadUtils.directChildrenWithName(conditionElement, "condition");
         List<Condition> subConditions = new ArrayList<>();
         for (Element subConditionElement : subConditionElements) {
@@ -424,7 +425,7 @@ public class DataLoader {
         return new StatHolderReference(holderType, holderID, subType, subID);
     }
 
-    private static List<Script> loadSubScripts(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
+    private static List<Script> loadSubScripts(Element parentElement) {
         List<Element> scriptElements = LoadUtils.directChildrenWithName(parentElement, "script");
         List<Script> scripts = new ArrayList<>();
         for (Element scriptElement : scriptElements) {
@@ -434,7 +435,7 @@ public class DataLoader {
         return scripts;
     }
 
-    private static Map<String, Script> loadScriptsWithTriggers(Element parentElement) throws ParserConfigurationException, IOException, SAXException {
+    private static Map<String, Script> loadScriptsWithTriggers(Element parentElement) {
         Map<String, Script> scripts = new HashMap<>();
         for (Element scriptElement : LoadUtils.directChildrenWithName(parentElement, "script")) {
             String trigger = scriptElement.getAttribute("trigger");
@@ -444,7 +445,7 @@ public class DataLoader {
         return scripts;
     }
 
-    private static Script loadScript(Element scriptElement) throws ParserConfigurationException, IOException, SAXException {
+    private static Script loadScript(Element scriptElement) {
         if (scriptElement == null) return null;
         String type = scriptElement.getAttribute("type");
         Condition condition = loadCondition(LoadUtils.singleChildWithName(scriptElement, "condition"));
@@ -559,7 +560,7 @@ public class DataLoader {
         return relations;
     }
 
-    private static ItemTemplate loadItemTemplate(Game game, Element itemElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ItemTemplate loadItemTemplate(Game game, Element itemElement) {
         if (itemElement == null) return null;
         String type = itemElement.getAttribute("type");
         String id = itemElement.getAttribute("id");
@@ -620,15 +621,18 @@ public class DataLoader {
         String effectType = LoadUtils.attribute(effectElement, "type", null);
         int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
         boolean stackable = LoadUtils.attributeBool(effectElement, "stack", true);
+        Condition conditionAdd = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionAdd"));
+        Condition conditionRemove = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionRemove"));
+        Condition conditionActive = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionActive"));
         switch (effectType) {
             case "state" -> {
                 String state = LoadUtils.attribute(effectElement, "state", null);
                 int stateAmount = LoadUtils.attributeInt(effectElement, "amount", 0);
-                return new EffectStateInt(game, ID, duration, manualRemoval, stackable, state, stateAmount);
+                return new EffectStateInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, state, stateAmount);
             }
             case "trigger" -> {
                 String trigger = LoadUtils.attribute(effectElement, "trigger", null);
-                return new EffectTrigger(game, ID, duration, manualRemoval, stackable, trigger);
+                return new EffectTrigger(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, trigger);
             }
             case "mod" -> {
                 String statMod = LoadUtils.attribute(effectElement, "stat", null);
@@ -636,36 +640,36 @@ public class DataLoader {
                 boolean statModIsFloat = statModValue.contains(".");
                 if (statModIsFloat) {
                     float statModValueFloat = Float.parseFloat(statModValue);
-                    return new EffectStatModFloat(game, ID, duration, manualRemoval, stackable, statMod, statModValueFloat);
+                    return new EffectStatModFloat(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statMod, statModValueFloat);
                 } else {
                     int statModValueInt = Integer.parseInt(statModValue);
-                    return new EffectStatModInt(game, ID, duration, manualRemoval, stackable, statMod, statModValueInt);
+                    return new EffectStatModInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statMod, statModValueInt);
                 }
             }
             case "mult" -> {
                 String statMult = LoadUtils.attribute(effectElement, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
-                return new EffectStatMult(game, ID, duration, manualRemoval, stackable, statMult, statMultAmount);
+                return new EffectStatMult(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statMult, statMultAmount);
             }
             case "boolean" -> {
                 String statBoolean = LoadUtils.attribute(effectElement, "stat", null);
                 boolean statBooleanValue = LoadUtils.attributeBool(effectElement, "value", true);
-                return new EffectStatBoolean(game, ID, duration, manualRemoval, stackable, statBoolean, statBooleanValue);
+                return new EffectStatBoolean(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statBoolean, statBooleanValue);
             }
             case "string" -> {
                 String statString = LoadUtils.attribute(effectElement, "stat", null);
                 String statStringValue = LoadUtils.attribute(effectElement, "value", null);
-                return new EffectStatString(game, ID, duration, manualRemoval, stackable, statString, statStringValue);
+                return new EffectStatString(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statString, statStringValue);
             }
             case "stringSet" -> {
                 String statStringSet = LoadUtils.attribute(effectElement, "stat", null);
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
-                return new EffectStatStringSet(game, ID, duration, manualRemoval, stackable, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
+                return new EffectStatStringSet(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
             }
             case "compound" -> {
                 List<Effect> compoundEffects = loadEffects(game, effectElement);
-                return new EffectCompound(game, ID, duration, manualRemoval, stackable, compoundEffects);
+                return new EffectCompound(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, compoundEffects);
             }
             default -> {
                 return null;
@@ -705,7 +709,7 @@ public class DataLoader {
         }
     }
 
-    private static Room loadRoom(Game game, Element roomElement) throws ParserConfigurationException, IOException, SAXException {
+    private static Room loadRoom(Game game, Element roomElement) {
         if (roomElement == null) return null;
         String roomID = roomElement.getAttribute("id");
         Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
@@ -736,7 +740,7 @@ public class DataLoader {
         return new Room(game, roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, areas, linkedRooms, roomScripts);
     }
 
-    private static Area loadArea(Game game, Element areaElement, String roomID) throws ParserConfigurationException, IOException, SAXException {
+    private static Area loadArea(Game game, Element areaElement, String roomID) {
         if (areaElement == null) return null;
         String areaID = areaElement.getAttribute("id");
         String landmarkID = LoadUtils.attribute(areaElement, "landmark", null);
@@ -791,7 +795,7 @@ public class DataLoader {
         return ItemFactory.create(game, itemTemplate);
     }
 
-    private static ObjectTemplate loadObjectTemplate(Game game, Element objectElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ObjectTemplate loadObjectTemplate(Game game, Element objectElement) {
         String ID = LoadUtils.attribute(objectElement, "id", null);
         String name = LoadUtils.singleTag(objectElement, "name", null);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(objectElement, "description"));
@@ -893,7 +897,7 @@ public class DataLoader {
         return null;
     }
 
-    private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) {
         String ID = LoadUtils.attribute(componentElement, "id", null);
         String type = LoadUtils.attribute(componentElement, "type", null);
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
@@ -929,7 +933,7 @@ public class DataLoader {
         }
     }
 
-    private static ActionTemplate loadActionTemplate(Game game, Element actionElement) throws ParserConfigurationException, IOException, SAXException {
+    private static ActionTemplate loadActionTemplate(Game game, Element actionElement) {
         String ID = LoadUtils.attribute(actionElement, "id", null);
         boolean canFail = LoadUtils.attributeBool(actionElement, "canFail", false);
         String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
@@ -972,7 +976,7 @@ public class DataLoader {
         return customActions;
     }
 
-    private static Actor loadActorInstance(Game game, Element actorElement, Area area) throws ParserConfigurationException, IOException, SAXException {
+    private static Actor loadActorInstance(Game game, Element actorElement, Area area) {
         if (actorElement == null) return null;
         String ID = actorElement.getAttribute("id");
         String template = LoadUtils.attribute(actorElement, "template", null);
@@ -982,7 +986,7 @@ public class DataLoader {
         return ActorFactory.create(game, ID, area, template, behaviors, startDead, startDisabled);
     }
 
-    private static List<Behavior> loadBehaviors(Element behaviorsElement) throws ParserConfigurationException, IOException, SAXException {
+    private static List<Behavior> loadBehaviors(Element behaviorsElement) {
         if (behaviorsElement == null) return new ArrayList<>();
         List<Behavior> behaviors = new ArrayList<>();
         for (Element behaviorElement : LoadUtils.directChildrenWithName(behaviorsElement, "behavior")) {
@@ -1032,7 +1036,7 @@ public class DataLoader {
         return behaviors;
     }
 
-    private static Idle loadIdle(Element idleElement) throws ParserConfigurationException, IOException, SAXException {
+    private static Idle loadIdle(Element idleElement) {
         Condition condition = loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"));
         String phrase = LoadUtils.singleTag(idleElement, "phrase", null);
         return new Idle(condition, phrase);

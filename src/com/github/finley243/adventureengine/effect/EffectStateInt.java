@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.effect;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 
 public class EffectStateInt extends Effect {
@@ -8,8 +9,8 @@ public class EffectStateInt extends Effect {
     private final String state;
     private final int amount;
 
-    public EffectStateInt(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, String state, int amount) {
-        super(game, ID, duration, manualRemoval, stackable);
+    public EffectStateInt(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, String state, int amount) {
+        super(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive);
         this.state = state;
         this.amount = amount;
     }

@@ -5,9 +5,9 @@ import java.util.List;
 public class AreaEffect {
 
     private final int duration;
-    private final List<Effect> effects;
+    private final List<String> effects;
 
-    public AreaEffect(int duration, List<Effect> effects) {
+    public AreaEffect(int duration, List<String> effects) {
         this.duration = duration;
         this.effects = effects;
     }
@@ -16,7 +16,7 @@ public class AreaEffect {
         return duration;
     }
 
-    public List<Effect> getEffects() {
+    public List<String> getEffects() {
         return effects;
     }
 

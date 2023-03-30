@@ -36,7 +36,7 @@ public class Limb {
 
     public void applyEffects(Actor target) {
         for(String effectID : hitEffects) {
-            target.getEffectComponent().addEffect(target.game().data().getEffect(effectID));
+            target.getEffectComponent().addEffect(effectID);
         }
     }
 

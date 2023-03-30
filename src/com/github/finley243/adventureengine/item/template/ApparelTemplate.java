@@ -36,13 +36,13 @@ public class ApparelTemplate extends ItemTemplate {
 
 	public void onEquip(Actor target) {
 		for (String effect : getEffects()) {
-			target.getEffectComponent().addEffect(target.game().data().getEffect(effect));
+			target.getEffectComponent().addEffect(effect);
 		}
 	}
 
 	public void onUnequip(Actor target) {
 		for (String effect : getEffects()) {
-			target.getEffectComponent().removeEffect(target.game().data().getEffect(effect));
+			target.getEffectComponent().removeEffect(effect);
 		}
 	}
 

@@ -330,7 +330,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		// TODO - Start non-actor effects
 		for (Actor actor : getActors()) {
 			if (actor.getEffectComponent() != null) {
-				for (Effect effect : areaEffect.getEffects()) {
+				for (String effect : areaEffect.getEffects()) {
 					actor.getEffectComponent().addEffect(effect);
 				}
 			}
@@ -343,7 +343,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 			AreaEffect areaEffect = itr.next();
 			for (Actor actor : getActors()) {
 				if (actor.getEffectComponent() != null) {
-					for (Effect effect : areaEffect.getEffects()) {
+					for (String effect : areaEffect.getEffects()) {
 						actor.getEffectComponent().addEffect(effect);
 					}
 				}
