@@ -105,6 +105,11 @@ public class DataLoader {
                                     Script script = loadScript((Element) currentChild);
                                     game.data().addScript(scriptID, script);
                                 }
+                                case "condition" -> {
+                                    String conditionID = LoadUtils.attribute((Element) currentChild, "id", null);
+                                    Condition condition = loadCondition((Element) currentChild);
+                                    game.data().addCondition(conditionID, condition);
+                                }
                                 case "effect" -> {
                                     Effect effect = loadEffect(game, (Element) currentChild);
                                     game.data().addEffect(effect.getID(), effect);

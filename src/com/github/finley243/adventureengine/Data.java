@@ -7,6 +7,8 @@ import com.github.finley243.adventureengine.actor.ActorTemplate;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
+import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.condition.ConditionExternal;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.LootTable;
@@ -51,6 +53,7 @@ public class Data {
 	private final Map<String, WeaponAttackType> attackTypes = new HashMap<>();
 	private final Map<String, Scene> scenes = new HashMap<>();
 	private final Map<String, Script> scripts = new HashMap<>();
+	private final Map<String, Condition> conditions = new HashMap<>();
 	private final Map<String, Faction> factions = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
 	private final Map<String, Timer> timers = new HashMap<>();
@@ -102,6 +105,7 @@ public class Data {
 		attackTypes.clear();
 		scenes.clear();
 		scripts.clear();
+		conditions.clear();
 		factions.clear();
 		networks.clear();
 		timers.clear();
@@ -331,6 +335,16 @@ public class Data {
 
 	public Script getScript(String id) {
 		return scripts.get(id);
+	}
+
+	public void addCondition(String id, Condition condition) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add condition with blank ID");
+		if(conditions.containsKey(id)) throw new IllegalArgumentException("Cannot add condition with existing ID: " + id);
+		conditions.put(id, condition);
+	}
+
+	public Condition getCondition(String id) {
+		return conditions.get(id);
 	}
 	
 	public void addFaction(String id, Faction value) {
