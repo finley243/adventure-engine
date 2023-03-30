@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 
-import javax.script.ScriptContext;
 import java.util.*;
 
 public class EffectComponent {
@@ -25,6 +24,7 @@ public class EffectComponent {
     public void addEffect(String effectID) {
         Effect effect = game.data().getEffect(effectID);
         if (effect.getConditionAdd() == null || effect.getConditionAdd().isMet(scriptContext)) {
+            effect.getScriptAdd().execute(scriptContext);
             if (effect.isInstant()) {
                 effect.start(statHolder);
                 effect.end(statHolder);
@@ -48,6 +48,7 @@ public class EffectComponent {
             if (effects.get(effectID).get(0).isActive) {
                 effect.end(statHolder);
             }
+            effect.getScriptRemove().execute(scriptContext);
             effects.get(effectID).remove(0);
             if (effects.get(effectID).isEmpty()) {
                 effects.remove(effectID);
@@ -68,6 +69,7 @@ public class EffectComponent {
                     instance.isActive = true;
                     effect.start(statHolder);
                 }
+                effect.getScriptRound().execute(scriptContext);
                 if (instance.isActive) {
                     effect.eachRound(statHolder);
                 }
@@ -82,6 +84,7 @@ public class EffectComponent {
                     }
                     if (currentInstance.turnsRemaining == 0 || (effect.getConditionRemove() != null && effect.getConditionRemove().isMet(scriptContext))) {
                         effect.end(statHolder);
+                        effect.getScriptRemove().execute(scriptContext);
                         instanceItr.remove();
                         if (effectInstances.isEmpty()) {
                             itr.remove();

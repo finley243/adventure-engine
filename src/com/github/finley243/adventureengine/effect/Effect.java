@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.effect;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 
 /**
@@ -17,8 +18,11 @@ public abstract class Effect extends GameInstanced {
 	private final Condition conditionAdd;
 	private final Condition conditionRemove;
 	private final Condition conditionActive;
+	private final Script scriptAdd;
+	private final Script scriptRemove;
+	private final Script scriptRound;
 
-	public Effect(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive) {
+	public Effect(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound) {
 		super(game, ID);
 		this.manualRemoval = manualRemoval;
 		this.duration = duration;
@@ -26,6 +30,9 @@ public abstract class Effect extends GameInstanced {
 		this.conditionAdd = conditionAdd;
 		this.conditionRemove = conditionRemove;
 		this.conditionActive = conditionActive;
+		this.scriptAdd = scriptAdd;
+		this.scriptRemove = scriptRemove;
+		this.scriptRound = scriptRound;
 	}
 	
 	public abstract void start(EffectableStatHolder target);
@@ -64,6 +71,18 @@ public abstract class Effect extends GameInstanced {
 
 	public Condition getConditionActive() {
 		return conditionActive;
+	}
+
+	public Script getScriptAdd() {
+		return scriptAdd;
+	}
+
+	public Script getScriptRemove() {
+		return scriptRemove;
+	}
+
+	public Script getScriptRound() {
+		return scriptRound;
 	}
 	
 }

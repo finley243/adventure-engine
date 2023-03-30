@@ -627,15 +627,18 @@ public class DataLoader {
         Condition conditionAdd = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionAdd"));
         Condition conditionRemove = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionRemove"));
         Condition conditionActive = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionActive"));
+        Script scriptAdd = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptAdd"));
+        Script scriptRemove = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRemove"));
+        Script scriptRound = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRound"));
         switch (effectType) {
             case "state" -> {
                 String state = LoadUtils.attribute(effectElement, "state", null);
                 int stateAmount = LoadUtils.attributeInt(effectElement, "amount", 0);
-                return new EffectStateInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, state, stateAmount);
+                return new EffectStateInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, state, stateAmount);
             }
             case "trigger" -> {
                 String trigger = LoadUtils.attribute(effectElement, "trigger", null);
-                return new EffectTrigger(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, trigger);
+                return new EffectTrigger(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, trigger);
             }
             case "mod" -> {
                 String statMod = LoadUtils.attribute(effectElement, "stat", null);
@@ -643,36 +646,36 @@ public class DataLoader {
                 boolean statModIsFloat = statModValue.contains(".");
                 if (statModIsFloat) {
                     float statModValueFloat = Float.parseFloat(statModValue);
-                    return new EffectStatModFloat(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statMod, statModValueFloat);
+                    return new EffectStatModFloat(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueFloat);
                 } else {
                     int statModValueInt = Integer.parseInt(statModValue);
-                    return new EffectStatModInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statMod, statModValueInt);
+                    return new EffectStatModInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueInt);
                 }
             }
             case "mult" -> {
                 String statMult = LoadUtils.attribute(effectElement, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
-                return new EffectStatMult(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statMult, statMultAmount);
+                return new EffectStatMult(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMult, statMultAmount);
             }
             case "boolean" -> {
                 String statBoolean = LoadUtils.attribute(effectElement, "stat", null);
                 boolean statBooleanValue = LoadUtils.attributeBool(effectElement, "value", true);
-                return new EffectStatBoolean(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statBoolean, statBooleanValue);
+                return new EffectStatBoolean(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statBoolean, statBooleanValue);
             }
             case "string" -> {
                 String statString = LoadUtils.attribute(effectElement, "stat", null);
                 String statStringValue = LoadUtils.attribute(effectElement, "value", null);
-                return new EffectStatString(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statString, statStringValue);
+                return new EffectStatString(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statString, statStringValue);
             }
             case "stringSet" -> {
                 String statStringSet = LoadUtils.attribute(effectElement, "stat", null);
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
-                return new EffectStatStringSet(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
+                return new EffectStatStringSet(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
             }
             case "compound" -> {
                 List<Effect> compoundEffects = loadEffects(game, effectElement);
-                return new EffectCompound(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, compoundEffects);
+                return new EffectCompound(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, compoundEffects);
             }
             default -> {
                 return null;
