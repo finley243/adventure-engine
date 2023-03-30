@@ -269,6 +269,10 @@ public class DataLoader {
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
         ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch (type) {
+            case "external" -> {
+                String externalID = LoadUtils.attribute(conditionElement, "conditionID", null);
+                return new ConditionExternal(invert, externalID);
+            }
             case "combatant" -> {
                 ActorReference targetRef = loadActorReference(conditionElement, "target");
                 return new ConditionCombatant(invert, actorRef, targetRef);
