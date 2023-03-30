@@ -380,6 +380,9 @@ public class DataLoader {
                 Variable toStringVariable = loadVariable(LoadUtils.singleChildWithName(variableElement, "var"), null);
                 return new VariableToString(toStringVariable);
             }
+            case "randomStringFromSet" -> {
+                Variable randomSetVariable = loadVariable(LoadUtils.singleChildWithName(variableElement, "set"), "stringSet");
+            }
             case null, default -> {
                 switch (dataType) {
                     case "boolean" -> {

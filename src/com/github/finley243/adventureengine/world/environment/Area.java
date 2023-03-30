@@ -257,6 +257,16 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		return movableAreas;
 	}
 
+	private Set<String> getMovableAreaIDs() {
+		Set<String> movableAreas = new HashSet<>();
+		for (AreaLink link : linkedAreas.values()) {
+			if (link.getDistance().isMovable) {
+				movableAreas.add(link.getAreaID());
+			}
+		}
+		return movableAreas;
+	}
+
 	public Set<Area> getLineOfSightAreas() {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
@@ -417,10 +427,11 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public Set<String> getValueStringSet(String name) {
-		if ("visibleAreas".equals(name)) {
-			return getLineOfSightAreaIDs();
-		}
-		return null;
+		return switch (name) {
+			case "visibleAreas" -> getLineOfSightAreaIDs();
+			case "movableAreas" -> getMovableAreaIDs();
+			default -> null;
+		};
 	}
 
 	@Override
