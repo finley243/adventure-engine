@@ -44,9 +44,4 @@ public class EffectStatMult extends Effect {
         }
     }
 
-    @Override
-    public void eachRound(EffectableStatHolder target) {
-
-    }
-
 }

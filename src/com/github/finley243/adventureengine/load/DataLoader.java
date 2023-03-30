@@ -631,11 +631,6 @@ public class DataLoader {
         Script scriptRemove = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRemove"));
         Script scriptRound = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRound"));
         switch (effectType) {
-            case "state" -> {
-                String state = LoadUtils.attribute(effectElement, "state", null);
-                int stateAmount = LoadUtils.attributeInt(effectElement, "amount", 0);
-                return new EffectStateInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, state, stateAmount);
-            }
             case "trigger" -> {
                 String trigger = LoadUtils.attribute(effectElement, "trigger", null);
                 return new EffectTrigger(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, trigger);
@@ -677,8 +672,8 @@ public class DataLoader {
                 List<Effect> compoundEffects = loadEffects(game, effectElement);
                 return new EffectCompound(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, compoundEffects);
             }
-            default -> {
-                return null;
+            case "basic", default -> {
+                return new Effect(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
             }
         }
     }

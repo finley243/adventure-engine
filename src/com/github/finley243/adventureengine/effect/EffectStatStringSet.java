@@ -35,7 +35,4 @@ public class EffectStatStringSet extends Effect {
         moddableSet.removeCancellation(valuesRemove);
     }
 
-    @Override
-    public void eachRound(EffectableStatHolder target) {}
-
 }

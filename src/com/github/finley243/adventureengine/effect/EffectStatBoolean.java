@@ -28,9 +28,4 @@ public class EffectStatBoolean extends Effect {
         target.onStatChange();
     }
 
-    @Override
-    public void eachRound(EffectableStatHolder target) {
-
-    }
-
 }

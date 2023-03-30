@@ -33,9 +33,4 @@ public class EffectStatModFloat extends Effect {
         }
     }
 
-    @Override
-    public void eachRound(EffectableStatHolder target) {
-
-    }
-
 }

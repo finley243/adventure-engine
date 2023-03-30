@@ -9,7 +9,7 @@ import com.github.finley243.adventureengine.stat.EffectableStatHolder;
 /**
  * An effect that modifies an EffectableStatHolder
  */
-public abstract class Effect extends GameInstanced {
+public class Effect extends GameInstanced {
 
 	private final boolean manualRemoval;
 	/** If set to -1, the effect will remain active until the endCondition is met. If set to 0, the effect is instant. */
@@ -35,11 +35,11 @@ public abstract class Effect extends GameInstanced {
 		this.scriptRound = scriptRound;
 	}
 	
-	public abstract void start(EffectableStatHolder target);
+	public void start(EffectableStatHolder target) {}
 	
-	public abstract void end(EffectableStatHolder target);
+	public void end(EffectableStatHolder target) {}
 	
-	public abstract void eachRound(EffectableStatHolder target);
+	public void eachRound(EffectableStatHolder target) {}
 
 	public boolean manualRemoval() {
 		return manualRemoval;

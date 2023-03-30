@@ -1,5 +1,9 @@
 <data>
     <effect id="hitLimbWeapon" type="trigger" trigger="dropEquippedForce"/>
-    <effect id="foodBasic" type="state" state="heal" amount="10"/>
+    <effect id="foodBasic">
+        <scriptStart type="modifyState" state="heal">
+            <var dataType="int" value="10"/>
+        </scriptStart>
+    </effect>
     <effect id="armorMedium" type="mod" stat="damageResistPhysical" amount="5"/>
 </data>

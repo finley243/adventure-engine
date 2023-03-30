@@ -26,7 +26,4 @@ public class EffectStatString extends Effect {
         target.getStatString(stat).removeMod(value);
     }
 
-    @Override
-    public void eachRound(EffectableStatHolder target) {}
-
 }

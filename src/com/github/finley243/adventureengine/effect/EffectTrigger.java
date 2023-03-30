@@ -20,11 +20,6 @@ public class EffectTrigger extends Effect {
     }
 
     @Override
-    public void end(EffectableStatHolder target) {
-
-    }
-
-    @Override
     public void eachRound(EffectableStatHolder target) {
         target.triggerEffect(trigger);
     }
