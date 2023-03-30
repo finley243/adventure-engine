@@ -14,12 +14,12 @@
                 <var type="stat" dataType="boolean" stat="inCombat" holder="actor" holderID="stratis_guard_lobby"/>
             </condition>
             <condition type="compare">
-                <var1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_receptionist"/>
-                <var2 dataType="string" value="stratis_hotel_lobby_desk"/>
+                <var type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_receptionist"/>
+                <var dataType="string" value="stratis_hotel_lobby_desk"/>
             </condition>
             <condition type="compare">
-                <var1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_guard_lobby"/>
-                <var2 dataType="string" value="stratis_hotel_lobby_seating"/>
+                <var type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_guard_lobby"/>
+                <var dataType="string" value="stratis_hotel_lobby_seating"/>
             </condition>
         </condition>
         <line>

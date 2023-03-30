@@ -44,8 +44,8 @@
     <scene id="cornerstore_shopkeeper_andre_intimidate" type="select">
         <line redirect="cornerstore_shopkeeper_andre_questions">
             <condition type="compare">
-                <var1 type="stat" dataType="int" stat="intimidation" holder="player"/>
-                <var2 dataType="int" value="6"/>
+                <var type="stat" dataType="int" stat="intimidation" holder="player"/>
+                <var dataType="int" value="6"/>
             </condition>
             <text>The shopkeeper puts up his hands.</text>
             <text>"Okay, okay. Fine. Ask your damn questions."</text>
@@ -57,8 +57,8 @@
     </scene>
     <scene id="cornerstore_shopkeeper_andre_bribe">
         <condition type="compare">
-            <var1 type="stat" dataType="int" stat="money" holder="player"/>
-            <var2 dataType="int" value="200"/>
+            <var type="stat" dataType="int" stat="money" holder="player"/>
+            <var dataType="int" value="200"/>
         </condition>
         <line redirect="cornerstore_shopkeeper_andre_questions">
             <script type="modifyState" state="money" holder="PLAYER">

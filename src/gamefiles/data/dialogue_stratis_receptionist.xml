@@ -19,8 +19,10 @@
     </scene>
     <scene id="stratis_receptionist_request_room">
         <condition type="compare" equality="EQUAL">
-            <var1 type="global" dataType="int" id="purchased_stratis_room"/>
-            <var2 dataType="int" value="0"/>
+            <var type="global" dataType="int">
+                <var dataType="string" value="purchased_stratis_room"/>
+            </var>
+            <var dataType="int" value="0"/>
         </condition>
         <line>
             <text>He taps the screen in front of him and quickly scans its contents.</text>
@@ -31,8 +33,8 @@
     </scene>
     <scene id="stratis_receptionist_purchase_room">
         <condition type="compare">
-            <var1 type="stat" dataType="int" stat="money" holder="player"/>
-            <var2 dataType="int" value="300"/>
+            <var type="stat" dataType="int" stat="money" holder="player"/>
+            <var dataType="int" value="300"/>
         </condition>
         <line>
             <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>

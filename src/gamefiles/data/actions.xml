@@ -7,8 +7,8 @@
                 <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
             </condition>
             <condition type="compare" equality="GREATER_EQUAL">
-                <var1 type="stat" dataType="int" stat="lockpick" holder="subject"/>
-                <var2 type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
+                <var type="stat" dataType="int" stat="lockpick" holder="subject"/>
+                <var type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
             </condition>
         </condition>
         <script type="setState" state="locked" holder="parentObject">
@@ -46,10 +46,10 @@
             </var>
         </textVar>
         <condition type="compare" equality="GREATER_EQUAL">
-            <var1 type="stat" dataType="int" stat="money" holder="subject"/>
-            <var2 type="stat" dataType="int" holder="itemTemplate" stat="price">
+            <var type="stat" dataType="int" stat="money" holder="subject"/>
+            <var type="stat" dataType="int" holder="itemTemplate" stat="price">
                 <holderID type="parameter" name="item"/>
-            </var2>
+            </var>
         </condition>
         <script>
             <script type="addItem">
