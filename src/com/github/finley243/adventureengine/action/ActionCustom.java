@@ -61,6 +61,11 @@ public class ActionCustom extends Action {
     }
 
     @Override
+    public int actionPoints(Actor subject) {
+        return getTemplate().getActionPoints();
+    }
+
+    @Override
     public MenuChoice getMenuChoices(Actor subject) {
         Map<String, String> contextVars = new HashMap<>();
         for (Map.Entry<String, Variable> entry : getTemplate().getTextVars().entrySet()) {

@@ -382,6 +382,7 @@ public class DataLoader {
             }
             case "randomStringFromSet" -> {
                 Variable randomSetVariable = loadVariable(LoadUtils.singleChildWithName(variableElement, "set"), "stringSet");
+                return new VariableRandomStringFromSet(randomSetVariable);
             }
             case null, default -> {
                 switch (dataType) {
@@ -955,12 +956,13 @@ public class DataLoader {
             Variable variable = loadVariable(textVarElement, "string");
             textVars.put(varName, variable);
         }
+        int actionPoints = LoadUtils.attributeInt(actionElement, "actionPoints", 0);
         Condition conditionSelect = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
         Condition conditionSuccess = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionSuccess"));
         Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
         Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
         Script scriptFail = loadScript(LoadUtils.singleChildWithName(actionElement, "scriptFail"));
-        return new ActionTemplate(game, ID, prompt, phrase, phraseFail, customNouns, textVars, conditionSelect, conditionSuccess, conditionShow, canFail, script, scriptFail);
+        return new ActionTemplate(game, ID, prompt, phrase, phraseFail, customNouns, textVars, actionPoints, conditionSelect, conditionSuccess, conditionShow, canFail, script, scriptFail);
     }
 
     private static List<ObjectTemplate.CustomActionHolder> loadCustomActions(Element parentElement, String name) {
