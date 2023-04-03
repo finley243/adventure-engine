@@ -1,8 +1,26 @@
 <data>
     <script id="dropEquipped">
-
+        <script type="transferItem">
+            <invOrigin holder="subject"/>
+            <invTarget holder="area">
+                <holderID type="stat" holder="subject" subType="area" stat="id"/>
+            </invTarget>
+            <!-- BROKEN -->
+            <item type="stat" holder="subject" subType="equippedItem" stat="id"/>
+            <!-- BROKEN -->
+        </script>
     </script>
     <script id="dropEquippedForce">
-
+        <script type="transferItem">
+            <invOrigin holder="subject"/>
+            <invTarget holder="area">
+                <holderID type="randomStringFromSet">
+                    <set holder="subject" subType="area" stat="movableAreas"/>
+                </holderID>
+            </invTarget>
+            <!-- BROKEN -->
+            <item type="stat" holder="subject" subType="equippedItem" stat="id"/>
+            <!-- BROKEN -->
+        </script>
     </script>
 </data>
