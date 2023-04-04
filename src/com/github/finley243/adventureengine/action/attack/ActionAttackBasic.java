@@ -29,14 +29,14 @@ public class ActionAttackBasic extends ActionAttack {
 		if (weapon instanceof ItemWeapon) {
 			if (((ItemWeapon) weapon).getClipSize() > 0) {
 				if (((ItemWeapon) weapon).getLoadedAmmoType() != null && ((ItemWeapon) weapon).getLoadedAmmoType().isReusable()) {
-					target.getArea().getInventory().addItems(((ItemWeapon) weapon).getLoadedAmmoType(), getAmmoConsumed());
+					target.getArea().getInventory().addItems(((ItemWeapon) weapon).getLoadedAmmoType().getTemplate().getID(), getAmmoConsumed());
 				}
 				((ItemWeapon) weapon).consumeAmmo(getAmmoConsumed());
 			}
 		} else {
-			subject.getInventory().removeItems(weapon, getAmmoConsumed());
+			subject.getInventory().removeItems(weapon.getTemplate().getID(), getAmmoConsumed());
 			// TODO - Make this optional (e.g. do not place a grenade object after using a grenade)
-			target.getArea().getInventory().addItems(weapon, getAmmoConsumed());
+			target.getArea().getInventory().addItems(weapon.getTemplate().getID(), getAmmoConsumed());
 		}
 	}
 

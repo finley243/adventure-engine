@@ -40,11 +40,11 @@ public class Inventory {
 		}
 	}
 
-	public void addItems(Item item, int count) {
-		if (item.getTemplate().hasState()) throw new IllegalArgumentException("Cannot add multiple Items with state: " + item.getTemplate().getID());
-		if (count <= 0) throw new IllegalArgumentException("Cannot add non-positive number of Items: " + item.getTemplate().getID());
-		int currentCount = itemsStateless.getOrDefault(item.getTemplate().getID(), 0);
-		itemsStateless.put(item.getTemplate().getID(), currentCount + count);
+	public void addItems(String itemID, int count) {
+		if (game.data().getItem(itemID).hasState()) throw new IllegalArgumentException("Cannot add multiple Items with state: " + itemID);
+		if (count <= 0) throw new IllegalArgumentException("Cannot add non-positive number of Items: " + itemID);
+		int currentCount = itemsStateless.getOrDefault(itemID, 0);
+		itemsStateless.put(itemID, currentCount + count);
 	}
 
 	public void addItems(Map<Item, Integer> itemMap) {
@@ -52,7 +52,7 @@ public class Inventory {
 			if (item.getTemplate().hasState()) {
 				addItem(item);
 			} else {
-				addItems(item, itemMap.get(item));
+				addItems(item.getTemplate().getID(), itemMap.get(item));
 			}
 		}
 	}
@@ -158,7 +158,7 @@ public class Inventory {
 		}
 	}
 
-	public void removeItems(Item item, int count) {
+	/*public void removeItems(Item item, int count) {
 		if (item.getTemplate().hasState()) throw new IllegalArgumentException("Cannot remove multiple items with state: " + item.getTemplate().getID());
 		if (count <= 0) throw new IllegalArgumentException("Cannot remove non-positive number of items: " + item.getTemplate().getID());
 		if (itemsStateless.containsKey(item.getTemplate().getID())) {
@@ -178,7 +178,7 @@ public class Inventory {
 				itemsStateless.put(item.getTemplate().getID(), newCount);
 			}
 		}
-	}
+	}*/
 
 	public void removeItems(String itemID, int count) {
 		//if (game.data().getItem(itemID).hasState()) throw new IllegalArgumentException("Cannot remove an item with state by its ID");
@@ -291,7 +291,7 @@ public class Inventory {
 				switch (subData.getParameter()) {
 					case "item" -> addItem(game.data().getItemState(subData.getValueString()));
 					case "itemStateless" ->
-							addItems(ItemFactory.create(game, subData.getValueString()), subData.getValueInt());
+							addItems(subData.getValueString(), subData.getValueInt());
 				}
 			}
 		}

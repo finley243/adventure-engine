@@ -294,7 +294,7 @@ public class ItemWeapon extends ItemEquippable implements EffectableStatHolder {
 			int difference = ammoCount - getClipSize();
 			ammoCount = getClipSize();
 			if (getEquippedActor() != null) {
-				getEquippedActor().getInventory().addItems(ammoType, difference);
+				getEquippedActor().getInventory().addItems(ammoType.getTemplate().getID(), difference);
 			}
 		}
 	}

@@ -471,9 +471,9 @@ public class DataLoader {
                 Variable transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "invOrigin"), "inventory");
                 Variable transferItemInvTarget = loadVariable(LoadUtils.singleChildWithName(scriptElement, "invTarget"), "inventory");
                 Variable transferItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string");
-                boolean transferItemAll = LoadUtils.attributeBool(scriptElement, "all", false);
+                ScriptTransferItem.TransferItemsType transferType = LoadUtils.attributeEnum(scriptElement, "transferType", ScriptTransferItem.TransferItemsType.class, ScriptTransferItem.TransferItemsType.COUNT);
                 int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);
-                return new ScriptTransferItem(condition, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferItemAll, transferItemCount);
+                return new ScriptTransferItem(condition, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferType, transferItemCount);
             }
             case "scene" -> {
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");

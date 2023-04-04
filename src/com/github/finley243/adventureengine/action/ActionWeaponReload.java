@@ -27,7 +27,7 @@ public class ActionWeaponReload extends Action {
 		subject.triggerScript("on_reload", subject);
 		if (subject == subject.game().data().getPlayer()) {
 			if (!ammoType.equals(weapon.getLoadedAmmoType()) && weapon.getAmmoRemaining() > 0) {
-				subject.getInventory().addItems(ammoType, weapon.getAmmoRemaining());
+				subject.getInventory().addItems(ammoType.getTemplate().getID(), weapon.getAmmoRemaining());
 				weapon.emptyAmmo();
 			}
 			int ammoInInventory = subject.getInventory().itemCount(ammoType);
@@ -35,7 +35,7 @@ public class ActionWeaponReload extends Action {
 			weapon.loadAmmo(reloadAmount);
 			weapon.setLoadedAmmoType(ammoType);
 			ammoType.onLoad(weapon);
-			subject.getInventory().removeItems(ammoType, reloadAmount);
+			subject.getInventory().removeItems(ammoType.getTemplate().getID(), reloadAmount);
 		} else {
 			weapon.loadAmmo(weapon.reloadCapacity());
 			weapon.setLoadedAmmoType(ammoType);
