@@ -345,7 +345,7 @@ public class DataLoader {
 
     private static Variable loadVariable(Element variableElement, String dataTypeDefault) {
         if (variableElement == null) return null;
-        String defaultType = (dataTypeDefault.equals("inventory") || dataTypeDefault.equals("noun")) ? "stat" : null;
+        String defaultType = ("inventory".equals(dataTypeDefault) || "noun".equals(dataTypeDefault)) ? "stat" : null;
         String type = LoadUtils.attribute(variableElement, "type", defaultType);
         String dataType = LoadUtils.attribute(variableElement, "dataType", dataTypeDefault);
         switch (type) {
@@ -676,7 +676,7 @@ public class DataLoader {
                 List<Effect> compoundEffects = loadEffects(game, effectElement);
                 return new EffectCompound(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, compoundEffects);
             }
-            case "basic", default -> {
+            case "basic", null, default -> {
                 return new Effect(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
             }
         }

@@ -21,6 +21,7 @@ public class StatHolderReference {
 
     public StatHolder getHolder(ContextScript context) {
         StatHolder parentHolder = getParentHolder(context);
+        if (parentHolder == null) throw new IllegalArgumentException("StatHolder of type '" + holderType + "' with ID '" + (holderID == null ? null : holderID.getValueString(context)) + "' is null");
         if (subType == null) {
             return parentHolder;
         }

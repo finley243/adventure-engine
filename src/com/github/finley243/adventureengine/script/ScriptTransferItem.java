@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.variable.Variable;
 
 import java.util.Map;
@@ -36,21 +36,26 @@ public class ScriptTransferItem extends Script {
     protected void executeSuccess(ContextScript context) {
         switch (transferType) {
             case INSTANCE -> {
-                inventoryOrigin.getValueInventory(context).removeItem(context.game().data().getItemState(itemID.getValueString(context)));
-                inventoryTarget.getValueInventory(context).addItem(context.game().data().getItemState(itemID.getValueString(context)));
+                String itemIDValue = itemID.getValueString(context);
+                inventoryOrigin.getValueInventory(context).removeItem(context.game().data().getItemState(itemIDValue));
+                inventoryTarget.getValueInventory(context).addItem(context.game().data().getItemState(itemIDValue));
             }
             case COUNT -> {
-                inventoryOrigin.getValueInventory(context).removeItems(itemID.getValueString(context), count);
-                inventoryTarget.getValueInventory(context).addItems(itemID.getValueString(context), count);
+                String itemIDValue = itemID.getValueString(context);
+                inventoryOrigin.getValueInventory(context).removeItems(itemIDValue, count);
+                inventoryTarget.getValueInventory(context).addItems(itemIDValue, count);
             }
             case TYPE -> {
-                int countInInventory = inventoryOrigin.getValueInventory(context).itemCount(itemID.getValueString(context));
-                inventoryOrigin.getValueInventory(context).removeItems(itemID.getValueString(context), countInInventory);
-                inventoryTarget.getValueInventory(context).addItems(itemID.getValueString(context), countInInventory);
+                String itemIDValue = itemID.getValueString(context);
+                Inventory invOriginValue = inventoryOrigin.getValueInventory(context);
+                int countInInventory = invOriginValue.itemCount(itemIDValue);
+                invOriginValue.removeItems(itemIDValue, countInInventory);
+                inventoryTarget.getValueInventory(context).addItems(itemIDValue, countInInventory);
             }
             case ALL -> {
-                Map<Item, Integer> allItems = inventoryOrigin.getValueInventory(context).getItemMap();
-                inventoryOrigin.getValueInventory(context).clear();
+                Inventory invOriginValue = inventoryOrigin.getValueInventory(context);
+                Map<Item, Integer> allItems = invOriginValue.getItemMap();
+                invOriginValue.clear();
                 inventoryTarget.getValueInventory(context).addItems(allItems);
             }
         }

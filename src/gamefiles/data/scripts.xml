@@ -13,7 +13,7 @@
             <invOrigin holder="subject"/>
             <invTarget holder="area">
                 <holderID type="randomStringFromSet">
-                    <set holder="subject" subType="area" stat="movableAreas"/>
+                    <set type="stat" holder="subject" subType="area" stat="movableAreas"/>
                 </holderID>
             </invTarget>
             <item type="stat" holder="subject" subType="equippedItem" stat="id"/>
