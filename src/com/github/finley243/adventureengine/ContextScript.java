@@ -42,6 +42,17 @@ public class ContextScript {
         this.parameters = parameters;
     }
 
+    public ContextScript(ContextScript context, Map<String, Variable> addedParameters) {
+        this.game = context.game;
+        this.subject = context.subject;
+        this.target = context.target;
+        this.parentObject = context.parentObject;
+        this.parentItem = context.parentItem;
+        this.parameters = new HashMap<>();
+        this.parameters.putAll(context.parameters);
+        this.parameters.putAll(addedParameters);
+    }
+
     public Game game() {
         return game;
     }
