@@ -98,6 +98,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 	private final StatInt actionPoints;
 	private int actionPointsUsed;
 	private final StatBoolean canMove;
+	private final StatBoolean canDodge;
 	private final Map<Action, Integer> blockedActions;
 	private final Map<Attribute, StatInt> attributes;
 	private final Map<Skill, StatInt> skills;
@@ -130,6 +131,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 		}
 		this.actionPoints = new StatInt(this);
 		this.canMove = new StatBoolean(this, false);
+		this.canDodge = new StatBoolean(this, false);
 		this.inventory = new Inventory(game, this);
 		this.apparelComponent = new ApparelComponent(this);
 		this.equipmentComponent = new EquipmentComponent(this);
@@ -298,6 +300,10 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 			return false;
 		}
 		return canMove.value(true);
+	}
+
+	public boolean canDodge() {
+		return canDodge.value(true);
 	}
 
 	public boolean isInCover() {
@@ -841,6 +847,8 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 	public StatBoolean getStatBoolean(String name) {
 		if ("canMove".equals(name)) {
 			return canMove;
+		} else if ("canDodge".equals(name)) {
+			return canDodge;
 		}
 		return null;
 	}
@@ -929,6 +937,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 			case "dead" -> isDead;
 			case "active" -> isActive();
 			case "canMove" -> canMove();
+			case "canDodge" -> canDodge();
 			default -> false;
 		};
 	}
