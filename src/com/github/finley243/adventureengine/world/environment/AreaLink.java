@@ -76,12 +76,18 @@ public class AreaLink {
     public String getMoveName(Area currentArea) {
         if (moveNameOverride != null) {
             return "(" + getDirection() + ") " + moveNameOverride;
-        } else if (type == AreaLinkType.CORNER) {
-            return "(" + getDirection() + ") " + "turn corner";
         } else if (!currentArea.getRoom().equals(currentArea.game().data().getArea(areaID).getRoom())) {
-            return "(" + getDirection() + ") " + currentArea.game().data().getArea(areaID).getRoom().getName();
+            if (type == AreaLinkType.CORNER) {
+                return "(" + getDirection() + ") " + "turn corner to " + currentArea.game().data().getArea(areaID).getRoom().getName();
+            } else {
+                return "(" + getDirection() + ") " + currentArea.game().data().getArea(areaID).getRoom().getName();
+            }
         } else {
-            return "(" + getDirection() + ") " + currentArea.game().data().getArea(areaID).getName();
+            if (type == AreaLinkType.CORNER) {
+                return "(" + getDirection() + ") " + "turn corner to " + currentArea.game().data().getArea(areaID).getName();
+            } else {
+                return "(" + getDirection() + ") " + currentArea.game().data().getArea(areaID).getName();
+            }
         }
     }
 

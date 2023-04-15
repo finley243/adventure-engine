@@ -11,9 +11,8 @@
         </description>
         <area id="wilsons_corner_store_entrance" landmark="wilsons_corner_store_door_exit">
             <link dist="CLOSE" dir="S" area="wilsons_corner_store_counter"/>
-            <link dist="CLOSE" dir="NW" area="wilsons_corner_store_aisle_food"/>
-            <link dist="CLOSE" dir="NE" area="wilsons_corner_store_aisle_general"/>
-            <link dist="FAR" dir="NE" area="wilsons_corner_store_coolers"/>
+            <link dist="CLOSE" dir="N" area="wilsons_corner_store_aisle"/>
+            <link dist="FAR" dir="N" area="wilsons_corner_store_coolers"/>
             <object id="wilsons_corner_store_door_exit" template="door_locked">
                 <component type="link" id="door_link" object="wilsons_corner_store_exterior_door" dir="W"/>
                 <localVar name="lock_pick_difficulty" dataType="int" value="5"/>
@@ -27,8 +26,7 @@
         <area id="wilsons_corner_store_counter" landmark="wilsons_corner_store_counter">
             <link dist="CLOSE" dir="N" area="wilsons_corner_store_entrance"/>
             <link dist="FAR" dir="N" area="wilsons_corner_store_coolers"/>
-            <link dist="FAR" dir="NW" area="wilsons_corner_store_aisle_food"/>
-            <link dist="FAR" dir="NE" area="wilsons_corner_store_aisle_general"/>
+            <link dist="FAR" dir="N" area="wilsons_corner_store_aisle"/>
             <object id="wilsons_corner_store_counter" template="counter"/>
             <actor id="frank_wilson" template="frank_wilson">
                 <behaviors>
@@ -40,23 +38,13 @@
                 </behaviors>
             </actor>
         </area>
-        <area id="wilsons_corner_store_aisle_food">
-            <name type="in">food aisle</name>
+        <area id="wilsons_corner_store_aisle">
+            <name type="in">aisles</name>
             <link dist="CLOSE" dir="S" area="wilsons_corner_store_entrance"/>
             <link dist="CLOSE" dir="N" area="wilsons_corner_store_coolers"/>
             <link dist="FAR" dir="S" area="wilsons_corner_store_counter"/>
-            <link type="OBSTRUCTED" dist="CLOSE" dir="E" area="wilsons_corner_store_aisle_general"/>
-            <object id="wilsons_corner_store_shelf_snacks" template="store_shelf_snacks"/>
-            <object id="wilsons_corner_store_shelf_meals" template="store_shelf_meals"/>
-            <object id="wilsons_corner_store_shelf_alcohol" template="store_shelf_alcohol"/>
-        </area>
-        <area id="wilsons_corner_store_aisle_general">
-            <name type="in">general goods aisle</name>
-            <link dist="CLOSE" dir="S" area="wilsons_corner_store_entrance"/>
-            <link dist="CLOSE" dir="N" area="wilsons_corner_store_coolers"/>
-            <link dist="FAR" dir="S" area="wilsons_corner_store_counter"/>
-            <link type="OBSTRUCTED" dist="CLOSE" dir="W" area="wilsons_corner_store_aisle_food"/>
             <object id="wilsons_corner_store_shelf_medicine" template="store_shelf_medicine"/>
+            <object id="wilsons_corner_store_shelf_snacks" template="store_shelf_snacks"/>
         </area>
         <area id="wilsons_corner_store_coolers">
             <name type="near">coolers</name>
@@ -66,8 +54,7 @@
                 </line>
             </description>
             <link dist="FAR" dir="S" area="wilsons_corner_store_entrance"/>
-            <link dist="CLOSE" dir="SW" area="wilsons_corner_store_aisle_food"/>
-            <link dist="CLOSE" dir="SE" area="wilsons_corner_store_aisle_general"/>
+            <link dist="CLOSE" dir="S" area="wilsons_corner_store_aisle"/>
             <link dist="FAR" dir="S" area="wilsons_corner_store_counter"/>
             <object id="wilsons_corner_store_cooler_soft_drinks" template="store_cooler_soft_drinks"/>
             <object id="wilsons_corner_store_cooler_alcohol" template="store_cooler_alcohol"/>
