@@ -271,7 +271,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
 		for (AreaLink link : linkedAreas.values()) {
-			if (link.isVisible()) {
+			if (game().data().getLinkType(link.getType()).isVisible()) {
 					Area area = game().data().getArea(link.getAreaID());
 					visibleAreas.add(area);
 			}
@@ -286,7 +286,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		Set<String> visibleAreaIDs = new HashSet<>();
 		visibleAreaIDs.add(this.getID());
 		for (AreaLink link : linkedAreas.values()) {
-			if (link.isVisible()) {
+			if (game().data().getLinkType(link.getType()).isVisible()) {
 				visibleAreaIDs.add(link.getAreaID());
 			}
 		}
@@ -299,7 +299,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	public boolean isVisible(Actor subject, String areaID) {
 		if (linkedAreas.containsKey(areaID)) {
 			AreaLink link = linkedAreas.get(areaID);
-			return link.isVisible();
+			return game().data().getLinkType(link.getType()).isVisible();
 		} else {
 			return getRoom().getLinkedRooms().containsKey(game().data().getArea(areaID).getRoom().getID());
 		}

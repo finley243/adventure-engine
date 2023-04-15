@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.component;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
+import com.github.finley243.adventureengine.action.ActionMoveCustomLink;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
@@ -131,6 +132,8 @@ public class TargetingComponent {
     public void onVisibleAction(Action action, Actor subject) {
         processDetectionEvent(subject, getActionDetectionChance(action, subject));
         if (action instanceof ActionMove actionMove) {
+            updateTargetArea(subject, actionMove.getDestinationArea());
+        } else if (action instanceof ActionMoveCustomLink actionMove) {
             updateTargetArea(subject, actionMove.getDestinationArea());
         }
         // TODO - Handle criminal action detection

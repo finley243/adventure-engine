@@ -1,0 +1,18 @@
+<data>
+    <action id="move_basic">
+        <prompt>Pick lock</prompt>
+        <phrase>pickLock</phrase>
+        <condition>
+            <condition type="boolean">
+                <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+            </condition>
+            <condition type="compare" equality="GREATER_EQUAL">
+                <var type="stat" dataType="int" stat="lockpick" holder="subject"/>
+                <var type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
+            </condition>
+        </condition>
+        <script type="setState" state="locked" holder="parentObject">
+            <var dataType="boolean" value="false"/>
+        </script>
+    </action>
+</data>

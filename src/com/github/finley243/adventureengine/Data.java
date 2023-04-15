@@ -19,6 +19,7 @@ import com.github.finley243.adventureengine.network.Network;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -59,6 +60,7 @@ public class Data {
 	private final Map<String, Timer> timers = new HashMap<>();
 	private final Map<String, Effect> effects = new HashMap<>();
 	private final Map<String, ActionTemplate> actionTemplates = new HashMap<>();
+	private final Map<String, LinkType> linkTypes = new HashMap<>();
 
 	private final Map<String, Boolean> globalBooleans = new HashMap<>();
 	private final Map<String, Integer> globalIntegers = new HashMap<>();
@@ -111,6 +113,7 @@ public class Data {
 		timers.clear();
 		effects.clear();
 		actionTemplates.clear();
+		linkTypes.clear();
 		globalIntegers.clear();
 		globalFloats.clear();
 		globalBooleans.clear();
@@ -406,6 +409,16 @@ public class Data {
 
 	public ActionTemplate getActionTemplate(String id) {
 		return actionTemplates.get(id);
+	}
+
+	public void addLinkType(String id, LinkType value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add link type with blank ID");
+		if(actionTemplates.containsKey(id)) throw new IllegalArgumentException("Cannot add link type with existing ID: " + id);
+		linkTypes.put(id, value);
+	}
+
+	public LinkType getLinkType(String id) {
+		return linkTypes.get(id);
 	}
 
 	public void setGlobalBoolean(String id, boolean value) {

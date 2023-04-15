@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.world.environment;
 
-import com.github.finley243.adventureengine.textgen.Phrases;
-
 public class AreaLink {
 
     public enum AreaLinkType {
@@ -38,13 +36,13 @@ public class AreaLink {
     }
 
     private final String areaID;
-    private final AreaLinkType type;
+    private final String type;
     private final CompassDirection direction;
     private final DistanceCategory distance;
     private final String moveNameOverride;
     private final String movePhraseOverride;
 
-    public AreaLink(String areaID, AreaLinkType type, CompassDirection direction, DistanceCategory distance, String moveNameOverride, String movePhraseOverride) {
+    public AreaLink(String areaID, String type, CompassDirection direction, DistanceCategory distance, String moveNameOverride, String movePhraseOverride) {
         this.areaID = areaID;
         this.type = type;
         this.direction = direction;
@@ -57,12 +55,8 @@ public class AreaLink {
         return areaID;
     }
 
-    public AreaLinkType getType() {
+    public String getType() {
         return type;
-    }
-
-    public boolean isVisible() {
-        return type.isVisible;
     }
 
     public CompassDirection getDirection() {
@@ -74,7 +68,7 @@ public class AreaLink {
     }
 
     public String getMoveName(Area currentArea) {
-        if (moveNameOverride != null) {
+        /*if (moveNameOverride != null) {
             return "(" + getDirection() + ") " + moveNameOverride;
         } else if (!currentArea.getRoom().equals(currentArea.game().data().getArea(areaID).getRoom())) {
             if (type == AreaLinkType.CORNER) {
@@ -88,16 +82,22 @@ public class AreaLink {
             } else {
                 return "(" + getDirection() + ") " + currentArea.game().data().getArea(areaID).getName();
             }
+        }*/
+        if (moveNameOverride != null) {
+            return "(" + getDirection() + ") " + moveNameOverride;
+        } else {
+            return null;
         }
     }
 
     public String getMovePhrase(Area currentArea) {
         if (movePhraseOverride != null) {
             return movePhraseOverride;
-        } else if (type == AreaLinkType.CORNER) {
-            return Phrases.get("moveCorner");
+        //} else if (type == AreaLinkType.CORNER) {
+            //return Phrases.get("moveCorner");
         } else {
-            return currentArea.game().data().getArea(areaID).getMovePhrase(currentArea);
+            //return currentArea.game().data().getArea(areaID).getMovePhrase(currentArea);
+            return null;
         }
     }
 

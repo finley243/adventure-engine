@@ -24,10 +24,7 @@ import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.variable.*;
-import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.environment.AreaLink;
-import com.github.finley243.adventureengine.world.environment.Room;
-import com.github.finley243.adventureengine.world.environment.RoomLink;
+import com.github.finley243.adventureengine.world.environment.*;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.params.ComponentParams;
 import com.github.finley243.adventureengine.world.object.params.ComponentParamsLink;
@@ -118,6 +115,10 @@ public class DataLoader {
                                 case "action" -> {
                                     ActionTemplate action = loadActionTemplate(game, currentElement);
                                     game.data().addActionTemplate(action.getID(), action);
+                                }
+                                case "linkType" -> {
+                                    LinkType linkType = loadLinkType(game, currentElement);
+                                    game.data().addLinkType(linkType.getID(), linkType);
                                 }
                                 case "network" -> {
                                     Network network = loadNetwork(currentElement);
@@ -761,7 +762,7 @@ public class DataLoader {
         Map<String, AreaLink> linkSet = new HashMap<>();
         for (Element linkElement : linkElements) {
             String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
-            AreaLink.AreaLinkType linkType = LoadUtils.attributeEnum(linkElement, "type", AreaLink.AreaLinkType.class, AreaLink.AreaLinkType.BASIC);
+            String linkType = LoadUtils.attribute(linkElement, "type", null);
             AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
             AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
             String moveNameOverride = LoadUtils.singleTag(linkElement, "moveName", null);
@@ -980,6 +981,13 @@ public class DataLoader {
             }
         }
         return customActions;
+    }
+
+    private static LinkType loadLinkType(Game game, Element linkTypeElement) {
+        String ID = LoadUtils.attribute(linkTypeElement, "id", null);
+        boolean isVisible = LoadUtils.attributeBool(linkTypeElement, "visible", true);
+        String moveAction = LoadUtils.attribute(linkTypeElement, "moveAction", null);
+        return new LinkType(game, ID, isVisible, moveAction);
     }
 
     private static Actor loadActorInstance(Game game, Element actorElement, Area area) {
