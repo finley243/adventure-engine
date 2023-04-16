@@ -3,6 +3,9 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.variable.Variable;
+
+import java.util.Map;
 
 public class ScriptBark extends Script {
 
@@ -10,8 +13,8 @@ public class ScriptBark extends Script {
     private final ActorReference actor;
     private final String trigger;
 
-    public ScriptBark(Condition condition, ActorReference actor, String trigger) {
-        super(condition);
+    public ScriptBark(Condition condition, Map<String, Variable> localParameters, ActorReference actor, String trigger) {
+        super(condition, localParameters);
         this.actor = actor;
         this.trigger = trigger;
     }

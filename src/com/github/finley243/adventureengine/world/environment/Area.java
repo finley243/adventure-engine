@@ -3,7 +3,9 @@ package com.github.finley243.adventureengine.world.environment;
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -18,6 +20,8 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.variable.VariableLiteral;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -241,7 +245,8 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (link.getDistance().isMovable) {
-				moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
+				//moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
+				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Variable>().put("areaID", new VariableLiteral("string", link.getAreaID())).build()));
 			}
 		}
 		return moveActions;

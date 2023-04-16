@@ -1,3 +1,4 @@
 <data>
     <linkType id="basic" visible="true" moveAction="move_basic"/>
+    <linkType id="corner" visible="false" moveAction="move_basic"/>
 </data>

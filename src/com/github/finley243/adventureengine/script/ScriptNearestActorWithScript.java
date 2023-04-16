@@ -4,16 +4,18 @@ import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.variable.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ScriptNearestActorWithScript extends Script {
 
     private final String trigger;
 
-    public ScriptNearestActorWithScript(Condition condition, String trigger) {
-        super(condition);
+    public ScriptNearestActorWithScript(Condition condition, Map<String, Variable> localParameters, String trigger) {
+        super(condition, localParameters);
         this.trigger = trigger;
     }
 

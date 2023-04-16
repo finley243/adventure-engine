@@ -4,13 +4,15 @@ import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.variable.Variable;
 
+import java.util.Map;
+
 public class ScriptSetGlobal extends Script {
 
     private final String globalID;
     private final Variable variable;
 
-    public ScriptSetGlobal(Condition condition, String globalID, Variable variable) {
-        super(condition);
+    public ScriptSetGlobal(Condition condition, Map<String, Variable> localParameters, String globalID, Variable variable) {
+        super(condition, localParameters);
         this.globalID = globalID;
         this.variable = variable;
     }

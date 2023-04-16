@@ -2,6 +2,10 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.variable.Variable;
+import com.google.errorprone.annotations.Var;
+
+import java.util.Map;
 
 /**
  * An action that can be executed at a given time
@@ -9,9 +13,11 @@ import com.github.finley243.adventureengine.condition.Condition;
 public abstract class Script {
 
 	private final Condition condition;
+	private final Map<String, Variable> localParameters;
 
-	public Script(Condition condition) {
+	public Script(Condition condition, Map<String, Variable> localParameters) {
 		this.condition = condition;
+		this.localParameters = localParameters;
 	}
 
 	/**
@@ -20,8 +26,9 @@ public abstract class Script {
 	 * @return Whether the script was executed
 	 */
 	public boolean execute(ContextScript context) {
-		if (canExecute(context)) {
-			executeSuccess(context);
+		ContextScript localContext = new ContextScript(context, localParameters);
+		if (canExecute(localContext)) {
+			executeSuccess(localContext);
 			return true;
 		} else {
 			return false;

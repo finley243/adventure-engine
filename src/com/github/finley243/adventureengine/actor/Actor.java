@@ -230,7 +230,8 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 	
 	@Override
 	public void setArea(Area area) {
-		boolean newRoom = getArea() == null || !getArea().getRoom().equals(area.getRoom());
+		boolean isNewRoom = getArea() == null || !getArea().getRoom().equals(area.getRoom());
+		boolean isNewArea = getArea() == null || !getArea().equals(area);
 		if (this.area != null) {
 			this.area.removeActor(this);
 		}
@@ -238,28 +239,21 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 		area.addActor(this);
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
-			if (newRoom) {
-				getArea().getRoom().triggerScript("on_player_enter", this, this);
-			}
-			getArea().triggerScript("on_player_enter", this, this);
-		}
-	}
-
-	public void onMove(Area lastArea) {
-		if (isPlayer()) {
-			boolean isRoomChange = !lastArea.getRoom().equals(getArea().getRoom());
-			boolean isAreaChange = isRoomChange || !lastArea.equals(getArea());
-			if (isRoomChange && getArea().getRoom().getDescription() != null) {
+			if (isNewRoom && getArea().getRoom().getDescription() != null) {
 				SceneManager.trigger(game(), this, this, getArea().getRoom().getDescription());
 				getArea().getRoom().setKnown();
-				for (Area area : getArea().getRoom().getAreas()) {
-					area.setKnown();
+				for (Area areaInRoom : getArea().getRoom().getAreas()) {
+					areaInRoom.setKnown();
 				}
 			}
-			if (isAreaChange && getArea().getDescription() != null) {
+			if (isNewArea && getArea().getDescription() != null) {
 				SceneManager.trigger(game(), this, this, getArea().getDescription());
 				getArea().setKnown();
 			}
+			if (isNewRoom) {
+				getArea().getRoom().triggerScript("on_player_enter", this, this);
+			}
+			getArea().triggerScript("on_player_enter", this, this);
 		}
 	}
 	

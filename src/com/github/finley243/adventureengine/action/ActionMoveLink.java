@@ -37,7 +37,6 @@ public class ActionMoveLink extends ActionMove {
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("moveThrough"), context, this, null, subject, null));
 		subject.game().eventBus().post(new SensoryEvent(area, Phrases.get("moveThroughReverse"), context, this, null, subject, null));
 		subject.setArea(area);
-		subject.onMove(lastArea);
 	}
 
 	@Override

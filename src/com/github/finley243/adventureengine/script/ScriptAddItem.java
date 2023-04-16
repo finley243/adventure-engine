@@ -6,13 +6,15 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.variable.Variable;
 
+import java.util.Map;
+
 public class ScriptAddItem extends Script {
 
 	private final Variable inventory;
 	private final Variable itemID;
 	
-	public ScriptAddItem(Condition condition, Variable inventory, Variable itemID) {
-		super(condition);
+	public ScriptAddItem(Condition condition, Map<String, Variable> localParameters, Variable inventory, Variable itemID) {
+		super(condition, localParameters);
 		this.inventory = inventory;
 		this.itemID = itemID;
 	}

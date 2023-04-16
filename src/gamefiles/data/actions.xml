@@ -1,7 +1,6 @@
 <data>
     <action id="lock_pick">
         <prompt>Pick lock</prompt>
-        <phrase>pickLock</phrase>
         <condition>
             <condition type="boolean">
                 <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
@@ -11,13 +10,18 @@
                 <var type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
             </condition>
         </condition>
-        <script type="setState" state="locked" holder="parentObject">
-            <var dataType="boolean" value="false"/>
+        <script>
+            <script type="setState" state="locked" holder="parentObject">
+                <var dataType="boolean" value="false"/>
+            </script>
+            <script type="sensoryEvent">
+                <phrase>pickLock</phrase>
+                <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+            </script>
         </script>
     </action>
     <action id="lock_key">
         <prompt>Unlock</prompt>
-        <phrase>unlock</phrase>
         <condition>
             <condition type="boolean">
                 <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
@@ -27,43 +31,52 @@
                 <item type="stat" dataType="stringSet" stat="lock_keys" holder="parentObject"/>
             </condition>
         </condition>
-        <script type="setState" state="locked" holder="parentObject">
-            <var dataType="boolean" value="false"/>
+        <script>
+            <script type="setState" state="locked" holder="parentObject">
+                <var dataType="boolean" value="false"/>
+            </script>
+            <script type="sensoryEvent">
+                <phrase>unlock</phrase>
+                <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+            </script>
         </script>
     </action>
     <action id="vending_machine">
-        <prompt>Buy $item ($price)</prompt>
-        <phrase>vendingMachineBuy</phrase>
-        <noun name="item" holder="itemTemplate">
-            <holderID type="parameter" name="item"/>
-        </noun>
-        <textVar name="item" type="stat" holder="itemTemplate" stat="name">
-            <holderID type="parameter" name="item"/>
-        </textVar>
-        <textVar name="price" type="toString">
+        <prompt>Buy $itemName ($price)</prompt>
+        <parameter name="itemName" dataType="string" type="stat" holder="itemTemplate" stat="name">
+            <holderID type="parameter" name="itemID"/>
+        </parameter>
+        <parameter name="price" dataType="string" type="toString">
             <var type="stat" dataType="int" holder="itemTemplate" stat="price">
-                <holderID type="parameter" name="item"/>
+                <holderID type="parameter" name="itemID"/>
             </var>
-        </textVar>
+        </parameter>
         <condition type="compare" equality="GREATER_EQUAL">
             <var type="stat" dataType="int" stat="money" holder="subject"/>
             <var type="stat" dataType="int" holder="itemTemplate" stat="price">
-                <holderID type="parameter" name="item"/>
+                <holderID type="parameter" name="itemID"/>
             </var>
         </condition>
         <script>
             <script type="addItem">
                 <inv type="stat" dataType="inventory" holder="subject"/>
-                <item type="parameter" dataType="string" name="item"/>
+                <item type="parameter" dataType="string" name="itemID"/>
             </script>
             <script type="modifyState" dataType="int" state="money" holder="subject">
                 <var dataType="int" value="-10"/>
                 <var type="product" dataType="int">
                     <var type="stat" dataType="int" holder="itemTemplate" stat="price">
-                        <holderID type="parameter" name="item"/>
+                        <holderID type="parameter" name="itemID"/>
                     </var>
                     <var dataType="int" value="-1"/>
                 </var>
+            </script>
+            <script type="sensoryEvent">
+                <parameter name="item" type="stat" dataType="noun" holder="itemTemplate">
+                    <holderID type="parameter" name="itemID"/>
+                </parameter>
+                <phrase>vendingMachineBuy</phrase>
+                <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
             </script>
         </script>
     </action>

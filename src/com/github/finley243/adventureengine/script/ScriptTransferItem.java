@@ -23,8 +23,8 @@ public class ScriptTransferItem extends Script {
     private final TransferItemsType transferType;
     private final int count;
 
-    public ScriptTransferItem(Condition condition, Variable inventoryOrigin, Variable inventoryTarget, Variable itemID, TransferItemsType transferType, int count) {
-        super(condition);
+    public ScriptTransferItem(Condition condition, Map<String, Variable> localParameters, Variable inventoryOrigin, Variable inventoryTarget, Variable itemID, TransferItemsType transferType, int count) {
+        super(condition, localParameters);
         this.inventoryOrigin = inventoryOrigin;
         this.inventoryTarget = inventoryTarget;
         this.itemID = itemID;

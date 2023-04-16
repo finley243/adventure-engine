@@ -458,15 +458,21 @@ public class DataLoader {
         String type = scriptElement.getAttribute("type");
         Condition condition = loadCondition(LoadUtils.singleChildWithName(scriptElement, "condition"));
         ActorReference actorRef = loadActorReference(scriptElement, "actor");
+        Map<String, Variable> localParameters = new HashMap<>();
+        for (Element parameterElement : LoadUtils.directChildrenWithName(scriptElement, "parameter")) {
+            String parameterName = LoadUtils.attribute(parameterElement, "name", null);
+            Variable parameterValue = loadVariable(parameterElement, null);
+            localParameters.put(parameterName, parameterValue);
+        }
         switch (type) {
             case "external" -> {
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
-                return new ScriptExternal(condition, scriptID);
+                return new ScriptExternal(condition, localParameters, scriptID);
             }
             case "addItem" -> {
                 Variable addItemInv = loadVariable(LoadUtils.singleChildWithName(scriptElement, "inv"), "inventory");
                 Variable addItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string");
-                return new ScriptAddItem(condition, addItemInv, addItemID);
+                return new ScriptAddItem(condition, localParameters, addItemInv, addItemID);
             }
             case "transferItem" -> {
                 Variable transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "invOrigin"), "inventory");
@@ -474,65 +480,71 @@ public class DataLoader {
                 Variable transferItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string");
                 ScriptTransferItem.TransferItemsType transferType = LoadUtils.attributeEnum(scriptElement, "transferType", ScriptTransferItem.TransferItemsType.class, ScriptTransferItem.TransferItemsType.COUNT);
                 int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);
-                return new ScriptTransferItem(condition, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferType, transferItemCount);
+                return new ScriptTransferItem(condition, localParameters, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferType, transferItemCount);
             }
             case "scene" -> {
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
-                return new ScriptScene(condition, actorRef, scenes);
+                return new ScriptScene(condition, localParameters, actorRef, scenes);
             }
             case "combat" -> {
                 ActorReference combatantRef = loadActorReference(scriptElement, "combatant");
-                return new ScriptCombat(condition, actorRef, combatantRef);
+                return new ScriptCombat(condition, localParameters, actorRef, combatantRef);
             }
             case "factionRelation" -> {
                 String targetFaction = LoadUtils.attribute(scriptElement, "targetFaction", null);
                 String relationFaction = LoadUtils.attribute(scriptElement, "relationFaction", null);
                 Faction.FactionRelation relation = LoadUtils.attributeEnum(scriptElement, "relation", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
-                return new ScriptFactionRelation(condition, targetFaction, relationFaction, relation);
+                return new ScriptFactionRelation(condition, localParameters, targetFaction, relationFaction, relation);
+            }
+            case "sensoryEvent" -> {
+                String phrase = LoadUtils.singleTag(scriptElement, "phrase", null);
+                String phraseAudible = LoadUtils.singleTag(scriptElement, "phraseAudible", null);
+                Variable area = loadVariable(LoadUtils.singleChildWithName(scriptElement, "area"), "string");
+                return new ScriptSensoryEvent(condition, localParameters, phrase, phraseAudible, area);
             }
             case "bark" -> {
                 String barkTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
-                return new ScriptBark(condition, actorRef, barkTrigger);
+                return new ScriptBark(condition, localParameters, actorRef, barkTrigger);
             }
             case "nearestActorScript" -> {
                 String nearestTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
-                return new ScriptNearestActorWithScript(condition, nearestTrigger);
+                return new ScriptNearestActorWithScript(condition, localParameters, nearestTrigger);
             }
             case "timerStart" -> {
                 String timerID = LoadUtils.attribute(scriptElement, "timerID", null);
                 int timerDuration = LoadUtils.attributeInt(scriptElement, "duration", 1);
                 Script timerExpireScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "expireScript"));
-                return new ScriptTimerStart(condition, timerID, timerDuration, timerExpireScript);
+                return new ScriptTimerStart(condition, localParameters, timerID, timerDuration, timerExpireScript);
             }
             case "setState" -> {
                 StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
                 String setStateName = LoadUtils.attribute(scriptElement, "state", null);
                 Variable setStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null);
-                return new ScriptSetState(condition, setStateHolder, setStateName, setStateVariable);
+                return new ScriptSetState(condition, localParameters, setStateHolder, setStateName, setStateVariable);
             }
             case "modifyState" -> {
                 StatHolderReference modifyStateHolder = loadStatHolderReference(scriptElement);
                 String modifyStateName = LoadUtils.attribute(scriptElement, "state", null);
                 Variable modifyStateVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null);
-                return new ScriptModifyState(condition, modifyStateHolder, modifyStateName, modifyStateVariable);
+                return new ScriptModifyState(condition, localParameters, modifyStateHolder, modifyStateName, modifyStateVariable);
             }
             case "setGlobal" -> {
                 String setGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
                 Variable setGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null);
-                return new ScriptSetGlobal(condition, setGlobalID, setGlobalVariable);
+                return new ScriptSetGlobal(condition, localParameters, setGlobalID, setGlobalVariable);
             }
             case "modifyGlobal" -> {
                 String modifyGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
                 Variable modifyGlobalVariable = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null);
-                return new ScriptModifyGlobal(condition, modifyGlobalID, modifyGlobalVariable);
+                return new ScriptModifyGlobal(condition, localParameters, modifyGlobalID, modifyGlobalVariable);
             }
             case "select" -> {
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
-                return new ScriptCompound(condition, subScriptsSelect, true);
+                return new ScriptCompound(condition, localParameters, subScriptsSelect, true);
             }
             case "all", default -> {
                 List<Script> subScriptsSequence = loadSubScripts(scriptElement);
-                return new ScriptCompound(condition, subScriptsSequence, false);
+                return new ScriptCompound(condition, localParameters, subScriptsSequence, false);
             }
         }
     }
@@ -941,29 +953,18 @@ public class DataLoader {
 
     private static ActionTemplate loadActionTemplate(Game game, Element actionElement) {
         String ID = LoadUtils.attribute(actionElement, "id", null);
-        boolean canFail = LoadUtils.attributeBool(actionElement, "canFail", false);
         String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
-        String phrase = LoadUtils.singleTag(actionElement, "phrase", null);
-        String phraseFail = LoadUtils.singleTag(actionElement, "phraseFail", null);
-        Map<String, Variable> customNouns = new HashMap<>();
-        for (Element nounElement : LoadUtils.directChildrenWithName(actionElement, "noun")) {
-            String nounName = LoadUtils.attribute(nounElement, "name", null);
-            Variable nounVariable = loadVariable(nounElement, "noun");
-            customNouns.put(nounName, nounVariable);
-        }
-        Map<String, Variable> textVars = new HashMap<>();
-        for (Element textVarElement : LoadUtils.directChildrenWithName(actionElement, "textVar")) {
-            String varName = LoadUtils.attribute(textVarElement, "name", null);
-            Variable variable = loadVariable(textVarElement, "string");
-            textVars.put(varName, variable);
+        Map<String, Variable> parameters = new HashMap<>();
+        for (Element parameterElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
+            String parameterName = LoadUtils.attribute(parameterElement, "name", null);
+            Variable parameterValue = loadVariable(parameterElement, null);
+            parameters.put(parameterName, parameterValue);
         }
         int actionPoints = LoadUtils.attributeInt(actionElement, "actionPoints", 0);
         Condition conditionSelect = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
-        Condition conditionSuccess = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionSuccess"));
         Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
         Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
-        Script scriptFail = loadScript(LoadUtils.singleChildWithName(actionElement, "scriptFail"));
-        return new ActionTemplate(game, ID, prompt, phrase, phraseFail, customNouns, textVars, actionPoints, conditionSelect, conditionSuccess, conditionShow, canFail, script, scriptFail);
+        return new ActionTemplate(game, ID, prompt, parameters, actionPoints, conditionSelect, conditionShow, script);
     }
 
     private static List<ObjectTemplate.CustomActionHolder> loadCustomActions(Element parentElement, String name) {
