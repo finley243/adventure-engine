@@ -30,7 +30,7 @@
                 <parameter name="area" dataType="noun" type="stat" holder="area">
                     <holderID dataType="string" type="parameter" name="areaID"/>
                 </parameter>
-                <phrase>moveTo</phrase>
+                <phrase>moveCorner</phrase>
                 <area type="buildStringSet">
                     <var type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
                     <var type="parameter" dataType="string" name="areaID"/>
