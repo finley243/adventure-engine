@@ -170,7 +170,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				actions.addAll(component.getActions(subject));
 			}
 			for (ObjectTemplate.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-				ActionCustom action = new ActionCustom(game(), this, customAction.action(), customAction.parameters(), new String[] {this.getName()});
+				ActionCustom action = new ActionCustom(game(), this, customAction.action(), customAction.parameters(), new String[] {this.getName()}, false);
 				if (action.canShow(subject)) {
 					actions.add(action);
 				}

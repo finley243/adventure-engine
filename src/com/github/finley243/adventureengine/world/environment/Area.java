@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.effect.AreaEffect;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -246,7 +247,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		for (AreaLink link : linkedAreas.values()) {
 			if (link.getDistance().isMovable) {
 				//moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
-				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Variable>().put("areaID", new VariableLiteral(link.getAreaID())).put("dir", new VariableLiteral(link.getDirection().toString())).build(), new String[] {"move"}));
+				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Variable>().put("areaID", new VariableLiteral(link.getAreaID())).put("dir", new VariableLiteral(link.getDirection().toString())).build(), new String[] {"move"}, true));
 			}
 		}
 		return moveActions;

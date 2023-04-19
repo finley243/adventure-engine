@@ -3,10 +3,12 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.HashMap;
@@ -19,13 +21,15 @@ public class ActionCustom extends Action {
     private final String template;
     private final Map<String, Variable> parameters;
     private final String[] menuPath;
+    private final boolean isMove;
 
-    public ActionCustom(Game game, WorldObject object, String template, Map<String, Variable> parameters, String[] menuPath) {
+    public ActionCustom(Game game, WorldObject object, String template, Map<String, Variable> parameters, String[] menuPath, boolean isMove) {
         this.game = game;
         this.object = object;
         this.template = template;
         this.parameters = parameters;
         this.menuPath = menuPath;
+        this.isMove = isMove;
     }
 
     public Game game() {
@@ -54,6 +58,15 @@ public class ActionCustom extends Action {
     @Override
     public int actionPoints(Actor subject) {
         return getTemplate().getActionPoints();
+    }
+
+    @Override
+    public float utility(Actor subject) {
+        if (isMove) {
+            Area destinationArea = game.data().getArea(parameters.get("areaID").getValueString(new ContextScript(game, subject, subject)));
+            return UtilityUtils.getMovementUtility(subject, destinationArea, true) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
+        }
+        return 0.0f;
     }
 
     @Override

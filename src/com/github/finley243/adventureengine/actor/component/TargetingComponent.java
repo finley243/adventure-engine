@@ -130,9 +130,7 @@ public class TargetingComponent {
 
     public void onVisibleAction(Action action, Actor subject) {
         processDetectionEvent(subject, getActionDetectionChance(action, subject));
-        if (action instanceof ActionMove actionMove) {
-            updateTargetArea(subject, actionMove.getDestinationArea());
-        }
+        updateTargetArea(subject, subject.getArea());
         // TODO - Handle criminal action detection
     }
 
