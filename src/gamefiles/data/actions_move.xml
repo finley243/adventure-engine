@@ -1,8 +1,44 @@
 <data>
     <action id="move_basic">
-        <prompt>Move $areaID</prompt>
-        <script type="setState" state="area" holder="subject">
-            <var dataType="string" type="parameter" name="areaID"/>
+        <prompt>$areaName ($dir)</prompt>
+        <parameter name="areaName" dataType="string" type="stat" holder="area" stat="name">
+            <holderID dataType="string" type="parameter" name="areaID"/>
+        </parameter>
+        <script>
+            <script type="sensoryEvent">
+                <parameter name="area" dataType="noun" type="stat" holder="area">
+                    <holderID dataType="string" type="parameter" name="areaID"/>
+                </parameter>
+                <phrase>moveTo</phrase>
+                <area type="buildStringSet">
+                    <var type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+                    <var type="parameter" dataType="string" name="areaID"/>
+                </area>
+            </script>
+            <script type="setState" state="area" holder="subject">
+                <var dataType="string" type="parameter" name="areaID"/>
+            </script>
+        </script>
+    </action>
+    <action id="move_corner">
+        <prompt>Around corner ($dir)</prompt>
+        <parameter name="areaName" dataType="string" type="stat" holder="area" stat="name">
+            <holderID dataType="string" type="parameter" name="areaID"/>
+        </parameter>
+        <script>
+            <script type="sensoryEvent">
+                <parameter name="area" dataType="noun" type="stat" holder="area">
+                    <holderID dataType="string" type="parameter" name="areaID"/>
+                </parameter>
+                <phrase>moveTo</phrase>
+                <area type="buildStringSet">
+                    <var type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+                    <var type="parameter" dataType="string" name="areaID"/>
+                </area>
+            </script>
+            <script type="setState" state="area" holder="subject">
+                <var dataType="string" type="parameter" name="areaID"/>
+            </script>
         </script>
     </action>
 </data>

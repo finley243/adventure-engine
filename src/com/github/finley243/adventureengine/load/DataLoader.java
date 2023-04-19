@@ -385,27 +385,34 @@ public class DataLoader {
                 Variable randomSetVariable = loadVariable(LoadUtils.singleChildWithName(variableElement, "set"), "stringSet");
                 return new VariableRandomStringFromSet(randomSetVariable);
             }
+            case "buildStringSet" -> {
+                List<Variable> stringVars = new ArrayList<>();
+                for (Element stringVarElement : LoadUtils.directChildrenWithName(variableElement, "var")) {
+                    stringVars.add(loadVariable(stringVarElement, "string"));
+                }
+                return new VariableSetFromStrings(stringVars);
+            }
             case null, default -> {
                 switch (dataType) {
                     case "boolean" -> {
                         boolean literalBoolean = LoadUtils.attributeBool(variableElement, "value", true);
-                        return new VariableLiteral(dataType, literalBoolean);
+                        return new VariableLiteral(literalBoolean);
                     }
                     case "int" -> {
                         int literalInteger = LoadUtils.attributeInt(variableElement, "value", 0);
-                        return new VariableLiteral(dataType, literalInteger);
+                        return new VariableLiteral(literalInteger);
                     }
                     case "float" -> {
                         float literalFloat = LoadUtils.attributeFloat(variableElement, "value", 0.0f);
-                        return new VariableLiteral(dataType, literalFloat);
+                        return new VariableLiteral(literalFloat);
                     }
                     case "string" -> {
                         String literalString = LoadUtils.attribute(variableElement, "value", null);
-                        return new VariableLiteral(dataType, literalString);
+                        return new VariableLiteral(literalString);
                     }
                     case "stringSet" -> {
                         Set<String> literalStringSet = LoadUtils.setOfTags(variableElement, "value");
-                        return new VariableLiteral(dataType, literalStringSet);
+                        return new VariableLiteral(literalStringSet);
                     }
                 }
             }
@@ -418,7 +425,7 @@ public class DataLoader {
         String holderIDLiteral = LoadUtils.attribute(statHolderElement, "holderID", null);
         Variable holderID;
         if (holderIDLiteral != null) {
-            holderID = new VariableLiteral("string", holderIDLiteral);
+            holderID = new VariableLiteral(holderIDLiteral);
         } else {
             holderID = loadVariable(LoadUtils.singleChildWithName(statHolderElement, "holderID"), "string");
         }
@@ -426,7 +433,7 @@ public class DataLoader {
         String subIDLiteral = LoadUtils.attribute(statHolderElement, "subID", null);
         Variable subID;
         if (subIDLiteral != null) {
-            subID = new VariableLiteral("string", subIDLiteral);
+            subID = new VariableLiteral(subIDLiteral);
         } else {
             subID = loadVariable(LoadUtils.singleChildWithName(statHolderElement, "subID"), "string");
         }

@@ -28,24 +28,24 @@ public class VariableLiteral extends Variable {
         this.valueNoun = valueNoun;
     }
 
-    public VariableLiteral(String dataType, boolean value) {
-        this(dataTypeFromString(dataType), value, null, null, null, null, null, null);
+    public VariableLiteral(boolean value) {
+        this(DataType.BOOLEAN, value, null, null, null, null, null, null);
     }
 
-    public VariableLiteral(String dataType, int value) {
-        this(dataTypeFromString(dataType), null, value, null, null, null, null, null);
+    public VariableLiteral(int value) {
+        this(DataType.INTEGER, null, value, null, null, null, null, null);
     }
 
-    public VariableLiteral(String dataType, float value) {
-        this(dataTypeFromString(dataType), null, null, value, null, null, null, null);
+    public VariableLiteral(float value) {
+        this(DataType.FLOAT, null, null, value, null, null, null, null);
     }
 
-    public VariableLiteral(String dataType, String value) {
-        this(dataTypeFromString(dataType), null, null, null, value, null, null, null);
+    public VariableLiteral(String value) {
+        this(DataType.STRING, null, null, null, value, null, null, null);
     }
 
-    public VariableLiteral(String dataType, Set<String> value) {
-        this(dataTypeFromString(dataType), null, null, null, null, value, null, null);
+    public VariableLiteral(Set<String> value) {
+        this(DataType.STRING_SET, null, null, null, null, value, null, null);
     }
 
     @Override

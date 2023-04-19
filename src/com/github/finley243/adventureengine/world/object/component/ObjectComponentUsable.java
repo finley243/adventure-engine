@@ -58,7 +58,7 @@ public class ObjectComponentUsable extends ObjectComponent {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionObjectUseEnd(this));
         for (ObjectTemplate.CustomActionHolder usingAction : getTemplateUsable().getUsingActions()) {
-            ActionCustom action = new ActionCustom(getObject().game(), getObject(), usingAction.action(), usingAction.parameters());
+            ActionCustom action = new ActionCustom(getObject().game(), getObject(), usingAction.action(), usingAction.parameters(), new String[] {getObject().getName()});
             if (action.canShow(subject)) {
                 actions.add(action);
             }

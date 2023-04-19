@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.variable.Variable;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -17,12 +18,14 @@ public class ActionCustom extends Action {
     private final WorldObject object;
     private final String template;
     private final Map<String, Variable> parameters;
+    private final String[] menuPath;
 
-    public ActionCustom(Game game, WorldObject object, String template, Map<String, Variable> parameters) {
+    public ActionCustom(Game game, WorldObject object, String template, Map<String, Variable> parameters, String[] menuPath) {
         this.game = game;
         this.object = object;
         this.template = template;
         this.parameters = parameters;
+        this.menuPath = menuPath;
     }
 
     public Game game() {
@@ -66,13 +69,7 @@ public class ActionCustom extends Action {
                 contextVars.put(entry.getKey(), entry.getValue().getValueString(new ContextScript(subject.game(), subject, subject, object, parameters)));
             }
         }
-        String promptWithVars = TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars);
-        String[] menuPath;
-        if (object != null) {
-            menuPath = new String[] {object.getName()};
-        } else {
-            menuPath = new String[0];
-        }
+        String promptWithVars = LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
         return new MenuChoice(promptWithVars, canChoose(subject), menuPath, new String[]{getTemplate().getPrompt()});
     }
 

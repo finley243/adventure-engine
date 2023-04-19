@@ -246,7 +246,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		for (AreaLink link : linkedAreas.values()) {
 			if (link.getDistance().isMovable) {
 				//moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
-				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Variable>().put("areaID", new VariableLiteral("string", link.getAreaID())).build()));
+				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Variable>().put("areaID", new VariableLiteral(link.getAreaID())).put("dir", new VariableLiteral(link.getDirection().toString())).build(), new String[] {"move"}));
 			}
 		}
 		return moveActions;
@@ -425,6 +425,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	public String getValueString(String name) {
 		return switch (name) {
 			case "id" -> getID();
+			case "name" -> getName();
 			case "room" -> roomID;
 			default -> null;
 		};
