@@ -1,22 +1,22 @@
 package com.github.finley243.adventureengine.condition;
 
 import com.github.finley243.adventureengine.ContextScript;
-import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.expression.Expression;
 
 public class ConditionBoolean extends Condition {
 
-    private final Variable variable;
+    private final Expression expression;
 
-    public ConditionBoolean(boolean invert, Variable variable) {
+    public ConditionBoolean(boolean invert, Expression expression) {
         super(invert);
-        if (variable == null) throw new IllegalArgumentException("Variable is null");
-        if (variable.getDataType() != Variable.DataType.BOOLEAN) throw new IllegalArgumentException("Variable is non-boolean");
-        this.variable = variable;
+        if (expression == null) throw new IllegalArgumentException("Variable is null");
+        if (expression.getDataType() != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("Variable is non-boolean");
+        this.expression = expression;
     }
 
     @Override
     protected boolean isMetInternal(ContextScript context) {
-        return variable.getValueBoolean(context);
+        return expression.getValueBoolean(context);
     }
 
 }

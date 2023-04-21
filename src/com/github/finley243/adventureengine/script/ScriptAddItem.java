@@ -4,16 +4,16 @@ import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
-import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.Map;
 
 public class ScriptAddItem extends Script {
 
-	private final Variable inventory;
-	private final Variable itemID;
+	private final Expression inventory;
+	private final Expression itemID;
 	
-	public ScriptAddItem(Condition condition, Map<String, Variable> localParameters, Variable inventory, Variable itemID) {
+	public ScriptAddItem(Condition condition, Map<String, Expression> localParameters, Expression inventory, Expression itemID) {
 		super(condition, localParameters);
 		this.inventory = inventory;
 		this.itemID = itemID;

@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.List;
 import java.util.Map;
@@ -77,6 +77,6 @@ public class ObjectTemplate extends GameInstanced {
         return localVarsStringSetDefault;
     }
 
-    public record CustomActionHolder(String action, Map<String, Variable> parameters) {}
+    public record CustomActionHolder(String action, Map<String, Expression> parameters) {}
 
 }

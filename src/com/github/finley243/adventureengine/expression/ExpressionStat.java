@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.variable;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -8,13 +8,13 @@ import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 
-public class VariableStat extends Variable {
+public class ExpressionStat extends Expression {
 
     private final StatHolderReference holder;
     private final DataType dataType;
     private final String stat;
 
-    public VariableStat(StatHolderReference holder, String dataType, String stat) {
+    public ExpressionStat(StatHolderReference holder, String dataType, String stat) {
         this.holder = holder;
         this.dataType = dataTypeFromString(dataType);
         this.stat = stat;

@@ -2,8 +2,7 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.variable.Variable;
-import com.google.errorprone.annotations.Var;
+import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.Map;
 
@@ -13,9 +12,9 @@ import java.util.Map;
 public abstract class Script {
 
 	private final Condition condition;
-	private final Map<String, Variable> localParameters;
+	private final Map<String, Expression> localParameters;
 
-	public Script(Condition condition, Map<String, Variable> localParameters) {
+	public Script(Condition condition, Map<String, Expression> localParameters) {
 		this.condition = condition;
 		this.localParameters = localParameters;
 	}

@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public class ContextScript {
     private final Actor target;
     private final WorldObject parentObject;
     private final Item parentItem;
-    private final Map<String, Variable> parameters;
+    private final Map<String, Expression> parameters;
 
     public ContextScript(Game game, Actor subject, Actor target) {
         this(game, subject, target, null, null, new HashMap<>());
@@ -25,7 +25,7 @@ public class ContextScript {
         this(game, subject, target, parentObject, null, new HashMap<>());
     }
 
-    public ContextScript(Game game, Actor subject, Actor target, WorldObject parentObject, Map<String, Variable> parameters) {
+    public ContextScript(Game game, Actor subject, Actor target, WorldObject parentObject, Map<String, Expression> parameters) {
         this(game, subject, target, parentObject, null, parameters);
     }
 
@@ -33,7 +33,7 @@ public class ContextScript {
         this(game, subject, target, null, parentItem, new HashMap<>());
     }
 
-    public ContextScript(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Map<String, Variable> parameters) {
+    public ContextScript(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Map<String, Expression> parameters) {
         this.game = game;
         this.subject = subject;
         this.target = target;
@@ -42,7 +42,7 @@ public class ContextScript {
         this.parameters = parameters;
     }
 
-    public ContextScript(ContextScript context, Map<String, Variable> addedParameters) {
+    public ContextScript(ContextScript context, Map<String, Expression> addedParameters) {
         this.game = context.game;
         this.subject = context.subject;
         this.target = context.target;
@@ -73,7 +73,7 @@ public class ContextScript {
         return parentItem;
     }
 
-    public Map<String, Variable> getParameters() {
+    public Map<String, Expression> getParameters() {
         return parameters;
     }
 

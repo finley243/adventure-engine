@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.variable;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -6,12 +6,12 @@ import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 
-public class VariableParameter extends Variable {
+public class ExpressionParameter extends Expression {
 
     private final DataType dataType;
     private final String name;
 
-    public VariableParameter(String dataType, String name) {
+    public ExpressionParameter(String dataType, String name) {
         this.dataType = dataTypeFromString(dataType);
         this.name = name;
     }

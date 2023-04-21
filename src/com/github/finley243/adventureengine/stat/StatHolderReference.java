@@ -1,18 +1,18 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.ContextScript;
-import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.expression.Expression;
 
 public class StatHolderReference {
 
     private final String holderType;
-    private final Variable holderID;
+    private final Expression holderID;
     private final String subType;
-    private final Variable subID;
+    private final Expression subID;
 
-    public StatHolderReference(String holderType, Variable holderID, String subType, Variable subID) {
-        if (holderID != null && holderID.getDataType() != Variable.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID must be a string");
-        if (subID != null && subID.getDataType() != Variable.DataType.STRING) throw new IllegalArgumentException("StatHolderReference subID must be a string");
+    public StatHolderReference(String holderType, Expression holderID, String subType, Expression subID) {
+        if (holderID != null && holderID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID must be a string");
+        if (subID != null && subID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference subID must be a string");
         this.holderType = holderType;
         this.holderID = holderID;
         this.subType = subType;

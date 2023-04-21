@@ -4,14 +4,14 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.Map;
 
 public class ActionTemplate extends GameInstanced {
 
     private final String prompt;
-    private final Map<String, Variable> parameters;
+    private final Map<String, Expression> parameters;
     private final int actionPoints;
     // The condition under which the action can be selected
     private final Condition conditionSelect;
@@ -19,7 +19,7 @@ public class ActionTemplate extends GameInstanced {
     private final Condition conditionShow;
     private final Script script;
 
-    public ActionTemplate(Game game, String ID, String prompt, Map<String, Variable> parameters, int actionPoints, Condition conditionSelect, Condition conditionShow, Script script) {
+    public ActionTemplate(Game game, String ID, String prompt, Map<String, Expression> parameters, int actionPoints, Condition conditionSelect, Condition conditionShow, Script script) {
         super(game, ID);
         this.prompt = prompt;
         this.parameters = parameters;
@@ -33,7 +33,7 @@ public class ActionTemplate extends GameInstanced {
         return prompt;
     }
 
-    public Map<String, Variable> getParameters() {
+    public Map<String, Expression> getParameters() {
         return parameters;
     }
 

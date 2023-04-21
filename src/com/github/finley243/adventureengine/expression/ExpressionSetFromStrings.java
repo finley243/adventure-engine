@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.variable;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.ContextScript;
 
@@ -6,11 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class VariableSetFromStrings extends Variable {
+public class ExpressionSetFromStrings extends Expression {
 
-    private final List<Variable> stringVars;
+    private final List<Expression> stringVars;
 
-    public VariableSetFromStrings(List<Variable> stringVars) {
+    public ExpressionSetFromStrings(List<Expression> stringVars) {
         this.stringVars = stringVars;
     }
 
@@ -22,7 +22,7 @@ public class VariableSetFromStrings extends Variable {
     @Override
     public Set<String> getValueStringSet(ContextScript context) {
         Set<String> stringSet = new HashSet<>();
-        for (Variable stringVar : stringVars) {
+        for (Expression stringVar : stringVars) {
             stringSet.add(stringVar.getValueString(context));
         }
         return stringSet;

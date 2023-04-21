@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.variable;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 
-public class VariableLiteral extends Variable {
+public class ExpressionLiteral extends Expression {
 
     private final DataType dataType;
     private final Boolean valueBoolean;
@@ -17,7 +17,7 @@ public class VariableLiteral extends Variable {
     private final Inventory valueInventory;
     private final Noun valueNoun;
 
-    private VariableLiteral(DataType dataType, Boolean valueBoolean, Integer valueInteger, Float valueFloat, String valueString, Set<String> valueStringSet, Inventory valueInventory, Noun valueNoun) {
+    private ExpressionLiteral(DataType dataType, Boolean valueBoolean, Integer valueInteger, Float valueFloat, String valueString, Set<String> valueStringSet, Inventory valueInventory, Noun valueNoun) {
         this.dataType = dataType;
         this.valueBoolean = valueBoolean;
         this.valueInteger = valueInteger;
@@ -28,23 +28,23 @@ public class VariableLiteral extends Variable {
         this.valueNoun = valueNoun;
     }
 
-    public VariableLiteral(boolean value) {
+    public ExpressionLiteral(boolean value) {
         this(DataType.BOOLEAN, value, null, null, null, null, null, null);
     }
 
-    public VariableLiteral(int value) {
+    public ExpressionLiteral(int value) {
         this(DataType.INTEGER, null, value, null, null, null, null, null);
     }
 
-    public VariableLiteral(float value) {
+    public ExpressionLiteral(float value) {
         this(DataType.FLOAT, null, null, value, null, null, null, null);
     }
 
-    public VariableLiteral(String value) {
+    public ExpressionLiteral(String value) {
         this(DataType.STRING, null, null, null, value, null, null, null);
     }
 
-    public VariableLiteral(Set<String> value) {
+    public ExpressionLiteral(Set<String> value) {
         this(DataType.STRING_SET, null, null, null, null, value, null, null);
     }
 
@@ -102,15 +102,15 @@ public class VariableLiteral extends Variable {
         return valueNoun;
     }
 
-    public static VariableLiteral convertToLiteral(Variable variable, ContextScript context) {
-        return switch (variable.getDataType()) {
-            case BOOLEAN -> new VariableLiteral(DataType.BOOLEAN, variable.getValueBoolean(context), null, null, null, null, null, null);
-            case INTEGER -> new VariableLiteral(DataType.INTEGER, null, variable.getValueInteger(context), null, null, null, null, null);
-            case FLOAT -> new VariableLiteral(DataType.FLOAT, null, null, variable.getValueFloat(context), null, null, null, null);
-            case STRING -> new VariableLiteral(DataType.STRING, null, null, null, variable.getValueString(context), null, null, null);
-            case STRING_SET -> new VariableLiteral(DataType.STRING_SET, null, null, null, null, variable.getValueStringSet(context), null, null);
-            case INVENTORY -> new VariableLiteral(DataType.INVENTORY, null, null, null, null, null, variable.getValueInventory(context), null);
-            case NOUN -> new VariableLiteral(DataType.NOUN, null, null, null, null, null, null, variable.getValueNoun(context));
+    public static ExpressionLiteral convertToLiteral(Expression expression, ContextScript context) {
+        return switch (expression.getDataType()) {
+            case BOOLEAN -> new ExpressionLiteral(DataType.BOOLEAN, expression.getValueBoolean(context), null, null, null, null, null, null);
+            case INTEGER -> new ExpressionLiteral(DataType.INTEGER, null, expression.getValueInteger(context), null, null, null, null, null);
+            case FLOAT -> new ExpressionLiteral(DataType.FLOAT, null, null, expression.getValueFloat(context), null, null, null, null);
+            case STRING -> new ExpressionLiteral(DataType.STRING, null, null, null, expression.getValueString(context), null, null, null);
+            case STRING_SET -> new ExpressionLiteral(DataType.STRING_SET, null, null, null, null, expression.getValueStringSet(context), null, null);
+            case INVENTORY -> new ExpressionLiteral(DataType.INVENTORY, null, null, null, null, null, expression.getValueInventory(context), null);
+            case NOUN -> new ExpressionLiteral(DataType.NOUN, null, null, null, null, null, null, expression.getValueNoun(context));
             default -> null;
         };
     }

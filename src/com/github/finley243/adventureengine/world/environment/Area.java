@@ -7,12 +7,9 @@ import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
-import com.github.finley243.adventureengine.action.ActionMoveArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.effect.AreaEffect;
-import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -21,8 +18,8 @@ import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.variable.Variable;
-import com.github.finley243.adventureengine.variable.VariableLiteral;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionLiteral;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -247,7 +244,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		for (AreaLink link : linkedAreas.values()) {
 			if (link.getDistance().isMovable) {
 				//moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
-				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Variable>().put("areaID", new VariableLiteral(link.getAreaID())).put("dir", new VariableLiteral(link.getDirection().toString())).build(), new String[] {"move"}, true));
+				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Expression>().put("areaID", new ExpressionLiteral(link.getAreaID())).put("dir", new ExpressionLiteral(link.getDirection().toString())).build(), new String[] {"move"}, true));
 			}
 		}
 		return moveActions;

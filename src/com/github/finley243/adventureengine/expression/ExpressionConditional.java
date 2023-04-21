@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.variable;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -8,16 +8,16 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import java.util.List;
 import java.util.Set;
 
-public class VariableConditional extends Variable {
+public class ExpressionConditional extends Expression {
 
     private final DataType dataType;
     private final List<ConditionVariablePair> conditionVariablePairs;
-    private final Variable variableElse;
+    private final Expression expressionElse;
 
-    public VariableConditional(String dataType, List<ConditionVariablePair> conditionVariablePairs, Variable variableElse) {
+    public ExpressionConditional(String dataType, List<ConditionVariablePair> conditionVariablePairs, Expression expressionElse) {
         this.dataType = dataTypeFromString(dataType);
         this.conditionVariablePairs = conditionVariablePairs;
-        this.variableElse = variableElse;
+        this.expressionElse = expressionElse;
     }
 
     @Override
@@ -30,10 +30,10 @@ public class VariableConditional extends Variable {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
-                return pair.variable.getValueBoolean(context);
+                return pair.expression.getValueBoolean(context);
             }
         }
-        return variableElse.getValueBoolean(context);
+        return expressionElse.getValueBoolean(context);
     }
 
     @Override
@@ -41,10 +41,10 @@ public class VariableConditional extends Variable {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
-                return pair.variable.getValueInteger(context);
+                return pair.expression.getValueInteger(context);
             }
         }
-        return variableElse.getValueInteger(context);
+        return expressionElse.getValueInteger(context);
     }
 
     @Override
@@ -52,10 +52,10 @@ public class VariableConditional extends Variable {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
-                return pair.variable.getValueFloat(context);
+                return pair.expression.getValueFloat(context);
             }
         }
-        return variableElse.getValueFloat(context);
+        return expressionElse.getValueFloat(context);
     }
 
     @Override
@@ -63,10 +63,10 @@ public class VariableConditional extends Variable {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
-                return pair.variable.getValueString(context);
+                return pair.expression.getValueString(context);
             }
         }
-        return variableElse.getValueString(context);
+        return expressionElse.getValueString(context);
     }
 
     @Override
@@ -74,10 +74,10 @@ public class VariableConditional extends Variable {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
-                return pair.variable.getValueStringSet(context);
+                return pair.expression.getValueStringSet(context);
             }
         }
-        return variableElse.getValueStringSet(context);
+        return expressionElse.getValueStringSet(context);
     }
 
     @Override
@@ -85,10 +85,10 @@ public class VariableConditional extends Variable {
         if (getDataType() != DataType.INVENTORY) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
-                return pair.variable.getValueInventory(context);
+                return pair.expression.getValueInventory(context);
             }
         }
-        return variableElse.getValueInventory(context);
+        return expressionElse.getValueInventory(context);
     }
 
     @Override
@@ -96,19 +96,19 @@ public class VariableConditional extends Variable {
         if (getDataType() != DataType.NOUN) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
-                return pair.variable.getValueNoun(context);
+                return pair.expression.getValueNoun(context);
             }
         }
-        return variableElse.getValueNoun(context);
+        return expressionElse.getValueNoun(context);
     }
 
     public static class ConditionVariablePair {
         private final Condition condition;
-        private final Variable variable;
+        private final Expression expression;
 
-        public ConditionVariablePair(Condition condition, Variable variable) {
+        public ConditionVariablePair(Condition condition, Expression expression) {
             this.condition = condition;
-            this.variable = variable;
+            this.expression = expression;
         }
     }
 

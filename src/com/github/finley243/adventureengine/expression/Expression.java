@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.variable;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 
-public abstract class Variable {
+public abstract class Expression {
 
     public enum DataType {
         BOOLEAN, INTEGER, FLOAT, STRING, STRING_SET, INVENTORY, NOUN
@@ -42,7 +42,7 @@ public abstract class Variable {
         throw new UnsupportedOperationException("Invalid data type function: noun");
     }
 
-    public boolean canCompareTo(Variable other) {
+    public boolean canCompareTo(Expression other) {
         if (this.getDataType() == DataType.STRING_SET || other.getDataType() == DataType.STRING_SET) {
             return false;
         } else if (this.getDataType() == DataType.INVENTORY || other.getDataType() == DataType.INVENTORY) {

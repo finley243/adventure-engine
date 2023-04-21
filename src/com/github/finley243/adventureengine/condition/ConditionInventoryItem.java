@@ -1,19 +1,19 @@
 package com.github.finley243.adventureengine.condition;
 
 import com.github.finley243.adventureengine.ContextScript;
-import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.expression.Expression;
 
 public class ConditionInventoryItem extends Condition {
 
-	private final Variable inventory;
-	private final Variable itemID;
+	private final Expression inventory;
+	private final Expression itemID;
 	private final boolean requireAll;
 
-	public ConditionInventoryItem(boolean invert, Variable inventory, Variable itemID, boolean requireAll) {
+	public ConditionInventoryItem(boolean invert, Expression inventory, Expression itemID, boolean requireAll) {
 		super(invert);
-		if (inventory.getDataType() != Variable.DataType.INVENTORY)
+		if (inventory.getDataType() != Expression.DataType.INVENTORY)
 			throw new IllegalArgumentException("Variable inventory must have type inventory");
-		if (itemID.getDataType() != Variable.DataType.STRING && itemID.getDataType() != Variable.DataType.STRING_SET)
+		if (itemID.getDataType() != Expression.DataType.STRING && itemID.getDataType() != Expression.DataType.STRING_SET)
 			throw new IllegalArgumentException("Variable itemID must have type string or string set");
 		this.inventory = inventory;
 		this.itemID = itemID;
@@ -22,7 +22,7 @@ public class ConditionInventoryItem extends Condition {
 
 	@Override
 	public boolean isMetInternal(ContextScript context) {
-		if (itemID.getDataType() == Variable.DataType.STRING_SET) {
+		if (itemID.getDataType() == Expression.DataType.STRING_SET) {
 			for (String item : itemID.getValueStringSet(context)) {
 				boolean hasItem = inventory.getValueInventory(context).hasItem(item);
 				if (hasItem != requireAll) {

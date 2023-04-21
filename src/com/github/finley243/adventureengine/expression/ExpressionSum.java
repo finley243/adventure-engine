@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.variable;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -7,19 +7,19 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import java.util.List;
 import java.util.Set;
 
-public class VariableSum extends Variable {
+public class ExpressionSum extends Expression {
 
-    private final List<Variable> variables;
+    private final List<Expression> expressions;
     private final boolean isFloat;
 
-    public VariableSum(List<Variable> variables) {
-        if (variables.isEmpty()) throw new IllegalArgumentException("Variable list is empty");
-        this.variables = variables;
+    public ExpressionSum(List<Expression> expressions) {
+        if (expressions.isEmpty()) throw new IllegalArgumentException("Variable list is empty");
+        this.expressions = expressions;
         boolean hasFloatVariable = false;
-        for (Variable variable : variables) {
-            if (variable.getDataType() == DataType.FLOAT) {
+        for (Expression expression : expressions) {
+            if (expression.getDataType() == DataType.FLOAT) {
                 hasFloatVariable = true;
-            } else if (variable.getDataType() != DataType.INTEGER) {
+            } else if (expression.getDataType() != DataType.INTEGER) {
                 throw new IllegalArgumentException("Only integers and floats are allowed");
             }
         }
@@ -44,8 +44,8 @@ public class VariableSum extends Variable {
     public int getValueInteger(ContextScript context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
         int sum = 0;
-        for (Variable variable : variables) {
-            sum += variable.getValueInteger(context);
+        for (Expression expression : expressions) {
+            sum += expression.getValueInteger(context);
         }
         return sum;
     }
@@ -54,11 +54,11 @@ public class VariableSum extends Variable {
     public float getValueFloat(ContextScript context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
         float sum = 0.0f;
-        for (Variable variable : variables) {
-            if (variable.getDataType() == DataType.FLOAT) {
-                sum += variable.getValueFloat(context);
+        for (Expression expression : expressions) {
+            if (expression.getDataType() == DataType.FLOAT) {
+                sum += expression.getValueFloat(context);
             } else {
-                sum += variable.getValueInteger(context);
+                sum += expression.getValueInteger(context);
             }
         }
         return sum;

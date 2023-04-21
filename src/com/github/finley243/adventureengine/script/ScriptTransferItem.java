@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.Map;
 
@@ -17,13 +17,13 @@ public class ScriptTransferItem extends Script {
         ALL // All items in inventory
     }
 
-    private final Variable inventoryOrigin;
-    private final Variable inventoryTarget;
-    private final Variable itemID;
+    private final Expression inventoryOrigin;
+    private final Expression inventoryTarget;
+    private final Expression itemID;
     private final TransferItemsType transferType;
     private final int count;
 
-    public ScriptTransferItem(Condition condition, Map<String, Variable> localParameters, Variable inventoryOrigin, Variable inventoryTarget, Variable itemID, TransferItemsType transferType, int count) {
+    public ScriptTransferItem(Condition condition, Map<String, Expression> localParameters, Expression inventoryOrigin, Expression inventoryTarget, Expression itemID, TransferItemsType transferType, int count) {
         super(condition, localParameters);
         this.inventoryOrigin = inventoryOrigin;
         this.inventoryTarget = inventoryTarget;

@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextGen;
-import com.github.finley243.adventureengine.variable.Variable;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -19,11 +19,11 @@ public class ActionCustom extends Action {
     private final Game game;
     private final WorldObject object;
     private final String template;
-    private final Map<String, Variable> parameters;
+    private final Map<String, Expression> parameters;
     private final String[] menuPath;
     private final boolean isMove;
 
-    public ActionCustom(Game game, WorldObject object, String template, Map<String, Variable> parameters, String[] menuPath, boolean isMove) {
+    public ActionCustom(Game game, WorldObject object, String template, Map<String, Expression> parameters, String[] menuPath, boolean isMove) {
         this.game = game;
         this.object = object;
         this.template = template;
@@ -43,7 +43,7 @@ public class ActionCustom extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         if (getTemplate().getScript() != null) {
-            Map<String, Variable> combinedParameters = new HashMap<>();
+            Map<String, Expression> combinedParameters = new HashMap<>();
             combinedParameters.putAll(getTemplate().getParameters());
             combinedParameters.putAll(parameters);
             getTemplate().getScript().execute(new ContextScript(subject.game(), subject, subject, object, combinedParameters));
@@ -72,13 +72,13 @@ public class ActionCustom extends Action {
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
         Map<String, String> contextVars = new HashMap<>();
-        for (Map.Entry<String, Variable> entry : getTemplate().getParameters().entrySet()) {
-            if (entry.getValue().getDataType() == Variable.DataType.STRING) {
+        for (Map.Entry<String, Expression> entry : getTemplate().getParameters().entrySet()) {
+            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
                 contextVars.put(entry.getKey(), entry.getValue().getValueString(new ContextScript(subject.game(), subject, subject, object, parameters)));
             }
         }
-        for (Map.Entry<String, Variable> entry : parameters.entrySet()) {
-            if (entry.getValue().getDataType() == Variable.DataType.STRING) {
+        for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
+            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
                 contextVars.put(entry.getKey(), entry.getValue().getValueString(new ContextScript(subject.game(), subject, subject, object, parameters)));
             }
         }

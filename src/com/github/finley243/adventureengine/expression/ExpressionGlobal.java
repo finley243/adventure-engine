@@ -1,17 +1,17 @@
-package com.github.finley243.adventureengine.variable;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.ContextScript;
 
 import java.util.Set;
 
-public class VariableGlobal extends Variable {
+public class ExpressionGlobal extends Expression {
 
     private final DataType dataType;
-    private final Variable variableID;
+    private final Expression expressionID;
 
-    public VariableGlobal(String dataType, Variable variableID) {
+    public ExpressionGlobal(String dataType, Expression expressionID) {
         this.dataType = dataTypeFromString(dataType);
-        this.variableID = variableID;
+        this.expressionID = expressionID;
     }
 
     @Override
@@ -22,31 +22,31 @@ public class VariableGlobal extends Variable {
     @Override
     public boolean getValueBoolean(ContextScript context) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
-        return context.game().data().getGlobalBoolean(variableID.getValueString(context));
+        return context.game().data().getGlobalBoolean(expressionID.getValueString(context));
     }
 
     @Override
     public int getValueInteger(ContextScript context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
-        return context.game().data().getGlobalInteger(variableID.getValueString(context));
+        return context.game().data().getGlobalInteger(expressionID.getValueString(context));
     }
 
     @Override
     public float getValueFloat(ContextScript context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
-        return context.game().data().getGlobalFloat(variableID.getValueString(context));
+        return context.game().data().getGlobalFloat(expressionID.getValueString(context));
     }
 
     @Override
     public String getValueString(ContextScript context) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
-        return context.game().data().getGlobalString(variableID.getValueString(context));
+        return context.game().data().getGlobalString(expressionID.getValueString(context));
     }
 
     @Override
     public Set<String> getValueStringSet(ContextScript context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
-        return context.game().data().getGlobalStringSet(variableID.getValueString(context));
+        return context.game().data().getGlobalStringSet(expressionID.getValueString(context));
     }
 
 }

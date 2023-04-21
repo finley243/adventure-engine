@@ -1,15 +1,12 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.ContextScript;
-import com.github.finley243.adventureengine.MapBuilder;
-import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.textgen.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.variable.Variable;
-import com.github.finley243.adventureengine.variable.VariableLiteral;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.HashMap;
@@ -20,9 +17,9 @@ public class ScriptSensoryEvent extends Script {
 
     private final String phrase;
     private final String phraseAudible;
-    private final Variable area;
+    private final Expression area;
 
-    public ScriptSensoryEvent(Condition condition, Map<String, Variable> localParameters, String phrase, String phraseAudible, Variable area) {
+    public ScriptSensoryEvent(Condition condition, Map<String, Expression> localParameters, String phrase, String phraseAudible, Expression area) {
         super(condition, localParameters);
         this.phrase = phrase;
         this.phraseAudible = phraseAudible;
@@ -39,12 +36,12 @@ public class ScriptSensoryEvent extends Script {
     }
 
     private Area[] getOriginAreas(ContextScript context) {
-        if (area.getDataType() == Variable.DataType.STRING) {
+        if (area.getDataType() == Expression.DataType.STRING) {
             String areaID = area.getValueString(context);
             Area[] areaArray = new Area[1];
             areaArray[0] = context.game().data().getArea(areaID);
             return areaArray;
-        } else if (area.getDataType() == Variable.DataType.STRING_SET) {
+        } else if (area.getDataType() == Expression.DataType.STRING_SET) {
             Set<String> areaIDSet = area.getValueStringSet(context);
             Area[] areaArray = new Area[areaIDSet.size()];
             int index = 0;
@@ -71,8 +68,8 @@ public class ScriptSensoryEvent extends Script {
         if (context.getParentItem() != null) {
             nounMap.put("item", context.getParentItem());
         }
-        for (Map.Entry<String, Variable> entry : context.getParameters().entrySet()) {
-            if (entry.getValue().getDataType() == Variable.DataType.NOUN) {
+        for (Map.Entry<String, Expression> entry : context.getParameters().entrySet()) {
+            if (entry.getValue().getDataType() == Expression.DataType.NOUN) {
                 nounMap.put(entry.getKey(), entry.getValue().getValueNoun(context));
             }
         }
@@ -81,8 +78,8 @@ public class ScriptSensoryEvent extends Script {
 
     private Map<String, String> getTextVarMap(ContextScript context) {
         Map<String, String> textVarValues = new HashMap<>();
-        for (Map.Entry<String, Variable> entry : context.getParameters().entrySet()) {
-            if (entry.getValue().getDataType() == Variable.DataType.STRING) {
+        for (Map.Entry<String, Expression> entry : context.getParameters().entrySet()) {
+            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
                 textVarValues.put(entry.getKey(), entry.getValue().getValueString(context));
             }
         }

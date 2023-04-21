@@ -1,15 +1,15 @@
-package com.github.finley243.adventureengine.variable;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.MathUtils;
 
 import java.util.Set;
 
-public class VariableRandomStringFromSet extends Variable {
+public class ExpressionRandomStringFromSet extends Expression {
 
-    private final Variable stringSetVar;
+    private final Expression stringSetVar;
 
-    public VariableRandomStringFromSet(Variable stringSetVar) {
+    public ExpressionRandomStringFromSet(Expression stringSetVar) {
         this.stringSetVar = stringSetVar;
     }
 
