@@ -17,10 +17,10 @@ public class UtilityUtils {
 	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.7f;
 	public static final float PURSUE_TARGET_UTILITY_UNARMED = 0.0f;
 
-	public static float getMovementUtility(Actor subject, Area area, boolean isDoor) {
+	public static float getMovementUtility(Actor subject, Area area) {
 		float utility = 0.0f;
 		for (AreaTarget target : subject.getPursueTargets()) {
-			if (!(isDoor && !target.shouldUseDoors()) && target.isOnPath(area)) {
+			if (target.isOnPath(area)) {
 				utility += target.getTargetUtility();
 			}
 		}

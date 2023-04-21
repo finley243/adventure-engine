@@ -47,7 +47,7 @@ public class ActionMoveLink extends ActionMove {
 
 	@Override
 	public float utility(Actor subject) {
-		return UtilityUtils.getMovementUtility(subject, getDestinationArea(), true) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
+		return UtilityUtils.getMovementUtility(subject, getDestinationArea()) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
 	}
 	
 	@Override

@@ -70,10 +70,6 @@ public class AreaTarget {
 		return markForRemoval || (!manualRemoval && path != null && pathIndex == path.size() - 1);
 	}
 
-	public boolean shouldUseDoors() {
-		return true;
-	}
-
 	public boolean isOnPath(Area area) {
 		if (path == null) return false;
 		if (pathIndex + 1 >= path.size()) return false;

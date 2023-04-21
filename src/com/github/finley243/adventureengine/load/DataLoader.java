@@ -392,6 +392,16 @@ public class DataLoader {
                 }
                 return new VariableSetFromStrings(stringVars);
             }
+            case "conditional" -> {
+                List<VariableConditional.ConditionVariablePair> conditionVariablePairs = new ArrayList<>();
+                for (Element pairElement : LoadUtils.directChildrenWithName(variableElement, "if")) {
+                    Condition condition = loadCondition(LoadUtils.singleChildWithName(pairElement, "condition"));
+                    Variable variable = loadVariable(LoadUtils.singleChildWithName(pairElement, "var"), dataType);
+                    conditionVariablePairs.add(new VariableConditional.ConditionVariablePair(condition, variable));
+                }
+                Variable variableElse = loadVariable(LoadUtils.singleChildWithName(variableElement, "else"), dataType);
+                return new VariableConditional(dataType, conditionVariablePairs, variableElse);
+            }
             case null, default -> {
                 switch (dataType) {
                     case "boolean" -> {
