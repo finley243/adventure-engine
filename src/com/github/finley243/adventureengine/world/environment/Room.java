@@ -107,10 +107,6 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 		}
 	}
 
-	public String getRelativeName() {
-		return "in " + getFormattedName();
-	}
-
 	@Override
 	public void setKnown() {
 		isKnown = true;

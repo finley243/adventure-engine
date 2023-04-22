@@ -439,35 +439,14 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 		triggerScript("on_death", this);
 		Context context = new Context(new MapBuilder<String, Noun>().put("actor", this).build());
 		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
-		dropEquippedItem();
-		isDead = true;
-		if (isPlayer()) {
-			game().eventBus().post(new PlayerDeathEvent());
-		}
-	}
-
-	public void dropEquippedItem() {
 		if (equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
 			getArea().getInventory().addItem(item);
-			Context context = new Context(new MapBuilder<String, Noun>().put("actor", this).put("item", item).build());
-			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("drop"), context, null, null, this, null));
 		}
-	}
-
-	public void dropEquippedItemForce() {
-		if (equipmentComponent.hasEquippedItem()) {
-			Item item = equipmentComponent.getEquippedItem();
-			inventory.removeItem(item);
-			Set<Area> movableAreas = getArea().getMovableAreas();
-			Area landingArea = MathUtils.selectRandomFromSet(movableAreas);
-			if (landingArea == null) {
-				landingArea = getArea();
-			}
-			landingArea.getInventory().addItem(item);
-			Context context = new Context(Map.of("area", landingArea.getRelativeName(getArea())), new MapBuilder<String, Noun>().put("actor", this).put("item", item).build());
-			game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("forceDrop"), context, null, null, this, null));
+		isDead = true;
+		if (isPlayer()) {
+			game().eventBus().post(new PlayerDeathEvent());
 		}
 	}
 
@@ -927,6 +906,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 			case "sleeping" -> isSleeping;
 			case "inCombat" -> isInCombat();
 			case "usingObject" -> isUsingObject();
+			case "hasEquippedItem" -> getEquipmentComponent().hasEquippedItem();
 			case "inCover" -> isInCover();
 			case "dead" -> isDead;
 			case "active" -> isActive();
@@ -1013,15 +993,6 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 	@Override
 	public void modStateFloat(String name, float amount) {
 
-	}
-
-	@Override
-	public void triggerEffect(String name) {
-		if (name.equals("dropEquipped")) {
-			dropEquippedItem();
-		} else if (name.equals("dropEquippedForce")) {
-			dropEquippedItemForce();
-		}
 	}
 
 	public boolean triggerScript(String trigger, Actor target) {

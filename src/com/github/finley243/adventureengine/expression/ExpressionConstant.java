@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
 
-public class ExpressionLiteral extends Expression {
+public class ExpressionConstant extends Expression {
 
     private final DataType dataType;
     private final Boolean valueBoolean;
@@ -17,7 +17,7 @@ public class ExpressionLiteral extends Expression {
     private final Inventory valueInventory;
     private final Noun valueNoun;
 
-    private ExpressionLiteral(DataType dataType, Boolean valueBoolean, Integer valueInteger, Float valueFloat, String valueString, Set<String> valueStringSet, Inventory valueInventory, Noun valueNoun) {
+    private ExpressionConstant(DataType dataType, Boolean valueBoolean, Integer valueInteger, Float valueFloat, String valueString, Set<String> valueStringSet, Inventory valueInventory, Noun valueNoun) {
         this.dataType = dataType;
         this.valueBoolean = valueBoolean;
         this.valueInteger = valueInteger;
@@ -28,24 +28,32 @@ public class ExpressionLiteral extends Expression {
         this.valueNoun = valueNoun;
     }
 
-    public ExpressionLiteral(boolean value) {
+    public ExpressionConstant(boolean value) {
         this(DataType.BOOLEAN, value, null, null, null, null, null, null);
     }
 
-    public ExpressionLiteral(int value) {
+    public ExpressionConstant(int value) {
         this(DataType.INTEGER, null, value, null, null, null, null, null);
     }
 
-    public ExpressionLiteral(float value) {
+    public ExpressionConstant(float value) {
         this(DataType.FLOAT, null, null, value, null, null, null, null);
     }
 
-    public ExpressionLiteral(String value) {
+    public ExpressionConstant(String value) {
         this(DataType.STRING, null, null, null, value, null, null, null);
     }
 
-    public ExpressionLiteral(Set<String> value) {
+    public ExpressionConstant(Set<String> value) {
         this(DataType.STRING_SET, null, null, null, null, value, null, null);
+    }
+
+    public ExpressionConstant(Inventory value) {
+        this(DataType.INVENTORY, null, null, null, null, null, value, null);
+    }
+
+    public ExpressionConstant(Noun value) {
+        this(DataType.NOUN, null, null, null, null, null, null, value);
     }
 
     @Override
@@ -100,19 +108,6 @@ public class ExpressionLiteral extends Expression {
         if (getDataType() != DataType.NOUN) throw new UnsupportedOperationException();
         if (valueNoun == null) throw new UnsupportedOperationException();
         return valueNoun;
-    }
-
-    public static ExpressionLiteral convertToLiteral(Expression expression, ContextScript context) {
-        return switch (expression.getDataType()) {
-            case BOOLEAN -> new ExpressionLiteral(DataType.BOOLEAN, expression.getValueBoolean(context), null, null, null, null, null, null);
-            case INTEGER -> new ExpressionLiteral(DataType.INTEGER, null, expression.getValueInteger(context), null, null, null, null, null);
-            case FLOAT -> new ExpressionLiteral(DataType.FLOAT, null, null, expression.getValueFloat(context), null, null, null, null);
-            case STRING -> new ExpressionLiteral(DataType.STRING, null, null, null, expression.getValueString(context), null, null, null);
-            case STRING_SET -> new ExpressionLiteral(DataType.STRING_SET, null, null, null, null, expression.getValueStringSet(context), null, null);
-            case INVENTORY -> new ExpressionLiteral(DataType.INVENTORY, null, null, null, null, null, expression.getValueInventory(context), null);
-            case NOUN -> new ExpressionLiteral(DataType.NOUN, null, null, null, null, null, null, expression.getValueNoun(context));
-            default -> null;
-        };
     }
 
 }

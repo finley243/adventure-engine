@@ -280,8 +280,8 @@ public class DataLoader {
                 return new ConditionCombatant(invert, actorRef, targetRef);
             }
             case "inventoryItem" -> {
-                Expression invItemVar = loadVariable(LoadUtils.singleChildWithName(conditionElement, "inv"), "inventory");
-                Expression invItemID = loadVariable(LoadUtils.singleChildWithName(conditionElement, "item"), "string");
+                Expression invItemVar = loadExpression(LoadUtils.singleChildWithName(conditionElement, "inv"), "inventory");
+                Expression invItemID = loadExpression(LoadUtils.singleChildWithName(conditionElement, "item"), "string");
                 boolean invRequireAll = LoadUtils.attributeBool(conditionElement, "requireAll", false);
                 return new ConditionInventoryItem(invert, invItemVar, invItemID, invRequireAll);
             }
@@ -307,19 +307,19 @@ public class DataLoader {
                 return new ConditionTimerActive(invert, timerID);
             }
             case "boolean" -> {
-                Expression booleanExpression = loadVariable(LoadUtils.singleChildWithName(conditionElement, "var"), "boolean");
+                Expression booleanExpression = loadExpression(LoadUtils.singleChildWithName(conditionElement, "var"), "boolean");
                 return new ConditionBoolean(invert, booleanExpression);
             }
             case "contains" -> {
-                Expression containsSetExpression = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varSet"), "stringSet");
-                Expression containsValueExpression = loadVariable(LoadUtils.singleChildWithName(conditionElement, "varValue"), "string");
+                Expression containsSetExpression = loadExpression(LoadUtils.singleChildWithName(conditionElement, "varSet"), "stringSet");
+                Expression containsValueExpression = loadExpression(LoadUtils.singleChildWithName(conditionElement, "varValue"), "string");
                 return new ConditionSetContains(invert, containsSetExpression, containsValueExpression);
             }
             case "compare" -> {
                 List<Element> varElements = LoadUtils.directChildrenWithName(conditionElement, "var");
                 if (varElements.size() != 2) throw new IllegalArgumentException("Compare condition must have exactly 2 variables (number of variables: " + varElements.size() + ")");
-                Expression compareExpression1 = loadVariable(varElements.get(0), null);
-                Expression compareExpression2 = loadVariable(varElements.get(1), null);
+                Expression compareExpression1 = loadExpression(varElements.get(0), null);
+                Expression compareExpression2 = loadExpression(varElements.get(1), null);
                 Condition.Equality compareEquality = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Equality.class, Condition.Equality.GREATER_EQUAL);
                 return new ConditionCompare(invert, compareExpression1, compareExpression2, compareEquality);
             }
@@ -344,85 +344,85 @@ public class DataLoader {
         return subConditions;
     }
 
-    private static Expression loadVariable(Element variableElement, String dataTypeDefault) {
-        if (variableElement == null) return null;
+    private static Expression loadExpression(Element expressionElement, String dataTypeDefault) {
+        if (expressionElement == null) return null;
         String defaultType = ("inventory".equals(dataTypeDefault) || "noun".equals(dataTypeDefault)) ? "stat" : null;
-        String type = LoadUtils.attribute(variableElement, "type", defaultType);
-        String dataType = LoadUtils.attribute(variableElement, "dataType", dataTypeDefault);
+        String type = LoadUtils.attribute(expressionElement, "type", defaultType);
+        String dataType = LoadUtils.attribute(expressionElement, "dataType", dataTypeDefault);
         switch (type) {
             case "stat" -> {
-                StatHolderReference statHolderReference = loadStatHolderReference(variableElement);
-                String statName = LoadUtils.attribute(variableElement, "stat", null);
+                StatHolderReference statHolderReference = loadStatHolderReference(expressionElement);
+                String statName = LoadUtils.attribute(expressionElement, "stat", null);
                 return new ExpressionStat(statHolderReference, dataType, statName);
             }
             case "global" -> {
-                Expression globalExpressionID = loadVariable(LoadUtils.singleChildWithName(variableElement, "globalID"), "string");
+                Expression globalExpressionID = loadExpression(LoadUtils.singleChildWithName(expressionElement, "globalID"), "string");
                 return new ExpressionGlobal(dataType, globalExpressionID);
             }
             case "parameter" -> {
-                String parameterName = LoadUtils.attribute(variableElement, "name", null);
+                String parameterName = LoadUtils.attribute(expressionElement, "name", null);
                 return new ExpressionParameter(dataType, parameterName);
             }
             case "sum" -> {
                 List<Expression> sumExpressions = new ArrayList<>();
-                for (Element sumVariableElement : LoadUtils.directChildrenWithName(variableElement, "var")) {
-                    sumExpressions.add(loadVariable(sumVariableElement, null));
+                for (Element sumVariableElement : LoadUtils.directChildrenWithName(expressionElement, "var")) {
+                    sumExpressions.add(loadExpression(sumVariableElement, null));
                 }
                 return new ExpressionSum(sumExpressions);
             }
             case "product" -> {
                 List<Expression> productExpressions = new ArrayList<>();
-                for (Element productVariableElement : LoadUtils.directChildrenWithName(variableElement, "var")) {
-                    productExpressions.add(loadVariable(productVariableElement, null));
+                for (Element productVariableElement : LoadUtils.directChildrenWithName(expressionElement, "var")) {
+                    productExpressions.add(loadExpression(productVariableElement, null));
                 }
                 return new ExpressionProduct(productExpressions);
             }
             case "toString" -> {
-                Expression toStringExpression = loadVariable(LoadUtils.singleChildWithName(variableElement, "var"), null);
+                Expression toStringExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "var"), null);
                 return new ExpressionToString(toStringExpression);
             }
             case "randomStringFromSet" -> {
-                Expression randomSetExpression = loadVariable(LoadUtils.singleChildWithName(variableElement, "set"), "stringSet");
+                Expression randomSetExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
                 return new ExpressionRandomStringFromSet(randomSetExpression);
             }
             case "buildStringSet" -> {
                 List<Expression> stringVars = new ArrayList<>();
-                for (Element stringVarElement : LoadUtils.directChildrenWithName(variableElement, "var")) {
-                    stringVars.add(loadVariable(stringVarElement, "string"));
+                for (Element stringVarElement : LoadUtils.directChildrenWithName(expressionElement, "var")) {
+                    stringVars.add(loadExpression(stringVarElement, "string"));
                 }
                 return new ExpressionSetFromStrings(stringVars);
             }
             case "conditional" -> {
                 List<ExpressionConditional.ConditionVariablePair> conditionVariablePairs = new ArrayList<>();
-                for (Element pairElement : LoadUtils.directChildrenWithName(variableElement, "if")) {
+                for (Element pairElement : LoadUtils.directChildrenWithName(expressionElement, "if")) {
                     Condition condition = loadCondition(LoadUtils.singleChildWithName(pairElement, "condition"));
-                    Expression expression = loadVariable(LoadUtils.singleChildWithName(pairElement, "var"), dataType);
+                    Expression expression = loadExpression(LoadUtils.singleChildWithName(pairElement, "var"), dataType);
                     conditionVariablePairs.add(new ExpressionConditional.ConditionVariablePair(condition, expression));
                 }
-                Expression expressionElse = loadVariable(LoadUtils.singleChildWithName(variableElement, "else"), dataType);
+                Expression expressionElse = loadExpression(LoadUtils.singleChildWithName(expressionElement, "else"), dataType);
                 return new ExpressionConditional(dataType, conditionVariablePairs, expressionElse);
             }
             case null, default -> {
                 switch (dataType) {
                     case "boolean" -> {
-                        boolean literalBoolean = LoadUtils.attributeBool(variableElement, "value", true);
-                        return new ExpressionLiteral(literalBoolean);
+                        boolean literalBoolean = LoadUtils.attributeBool(expressionElement, "value", true);
+                        return new ExpressionConstant(literalBoolean);
                     }
                     case "int" -> {
-                        int literalInteger = LoadUtils.attributeInt(variableElement, "value", 0);
-                        return new ExpressionLiteral(literalInteger);
+                        int literalInteger = LoadUtils.attributeInt(expressionElement, "value", 0);
+                        return new ExpressionConstant(literalInteger);
                     }
                     case "float" -> {
-                        float literalFloat = LoadUtils.attributeFloat(variableElement, "value", 0.0f);
-                        return new ExpressionLiteral(literalFloat);
+                        float literalFloat = LoadUtils.attributeFloat(expressionElement, "value", 0.0f);
+                        return new ExpressionConstant(literalFloat);
                     }
                     case "string" -> {
-                        String literalString = LoadUtils.attribute(variableElement, "value", null);
-                        return new ExpressionLiteral(literalString);
+                        String literalString = LoadUtils.attribute(expressionElement, "value", null);
+                        return new ExpressionConstant(literalString);
                     }
                     case "stringSet" -> {
-                        Set<String> literalStringSet = LoadUtils.setOfTags(variableElement, "value");
-                        return new ExpressionLiteral(literalStringSet);
+                        Set<String> literalStringSet = LoadUtils.setOfTags(expressionElement, "value");
+                        return new ExpressionConstant(literalStringSet);
                     }
                 }
             }
@@ -435,17 +435,17 @@ public class DataLoader {
         String holderIDLiteral = LoadUtils.attribute(statHolderElement, "holderID", null);
         Expression holderID;
         if (holderIDLiteral != null) {
-            holderID = new ExpressionLiteral(holderIDLiteral);
+            holderID = new ExpressionConstant(holderIDLiteral);
         } else {
-            holderID = loadVariable(LoadUtils.singleChildWithName(statHolderElement, "holderID"), "string");
+            holderID = loadExpression(LoadUtils.singleChildWithName(statHolderElement, "holderID"), "string");
         }
         String subType = LoadUtils.attribute(statHolderElement, "subType", null);
         String subIDLiteral = LoadUtils.attribute(statHolderElement, "subID", null);
         Expression subID;
         if (subIDLiteral != null) {
-            subID = new ExpressionLiteral(subIDLiteral);
+            subID = new ExpressionConstant(subIDLiteral);
         } else {
-            subID = loadVariable(LoadUtils.singleChildWithName(statHolderElement, "subID"), "string");
+            subID = loadExpression(LoadUtils.singleChildWithName(statHolderElement, "subID"), "string");
         }
         return new StatHolderReference(holderType, holderID, subType, subID);
     }
@@ -478,7 +478,7 @@ public class DataLoader {
         Map<String, Expression> localParameters = new HashMap<>();
         for (Element parameterElement : LoadUtils.directChildrenWithName(scriptElement, "parameter")) {
             String parameterName = LoadUtils.attribute(parameterElement, "name", null);
-            Expression parameterValue = loadVariable(parameterElement, null);
+            Expression parameterValue = loadExpression(parameterElement, null);
             localParameters.put(parameterName, parameterValue);
         }
         switch (type) {
@@ -487,14 +487,14 @@ public class DataLoader {
                 return new ScriptExternal(condition, localParameters, scriptID);
             }
             case "addItem" -> {
-                Expression addItemInv = loadVariable(LoadUtils.singleChildWithName(scriptElement, "inv"), "inventory");
-                Expression addItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string");
+                Expression addItemInv = loadExpression(LoadUtils.singleChildWithName(scriptElement, "inv"), "inventory");
+                Expression addItemID = loadExpression(LoadUtils.singleChildWithName(scriptElement, "item"), "string");
                 return new ScriptAddItem(condition, localParameters, addItemInv, addItemID);
             }
             case "transferItem" -> {
-                Expression transferItemInvOrigin = loadVariable(LoadUtils.singleChildWithName(scriptElement, "invOrigin"), "inventory");
-                Expression transferItemInvTarget = loadVariable(LoadUtils.singleChildWithName(scriptElement, "invTarget"), "inventory");
-                Expression transferItemID = loadVariable(LoadUtils.singleChildWithName(scriptElement, "item"), "string");
+                Expression transferItemInvOrigin = loadExpression(LoadUtils.singleChildWithName(scriptElement, "invOrigin"), "inventory");
+                Expression transferItemInvTarget = loadExpression(LoadUtils.singleChildWithName(scriptElement, "invTarget"), "inventory");
+                Expression transferItemID = loadExpression(LoadUtils.singleChildWithName(scriptElement, "item"), "string");
                 ScriptTransferItem.TransferItemsType transferType = LoadUtils.attributeEnum(scriptElement, "transferType", ScriptTransferItem.TransferItemsType.class, ScriptTransferItem.TransferItemsType.COUNT);
                 int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);
                 return new ScriptTransferItem(condition, localParameters, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferType, transferItemCount);
@@ -516,7 +516,7 @@ public class DataLoader {
             case "sensoryEvent" -> {
                 String phrase = LoadUtils.singleTag(scriptElement, "phrase", null);
                 String phraseAudible = LoadUtils.singleTag(scriptElement, "phraseAudible", null);
-                Expression area = loadVariable(LoadUtils.singleChildWithName(scriptElement, "area"), "string");
+                Expression area = loadExpression(LoadUtils.singleChildWithName(scriptElement, "area"), "string");
                 return new ScriptSensoryEvent(condition, localParameters, phrase, phraseAudible, area);
             }
             case "bark" -> {
@@ -536,27 +536,27 @@ public class DataLoader {
             case "setState" -> {
                 StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
                 String setStateName = LoadUtils.attribute(scriptElement, "state", null);
-                Expression setStateExpression = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null);
+                Expression setStateExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "var"), null);
                 return new ScriptSetState(condition, localParameters, setStateHolder, setStateName, setStateExpression);
             }
             case "modifyState" -> {
                 StatHolderReference modifyStateHolder = loadStatHolderReference(scriptElement);
                 String modifyStateName = LoadUtils.attribute(scriptElement, "state", null);
-                Expression modifyStateExpression = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null);
+                Expression modifyStateExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "var"), null);
                 return new ScriptModifyState(condition, localParameters, modifyStateHolder, modifyStateName, modifyStateExpression);
             }
             case "setGlobal" -> {
                 String setGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
-                Expression setGlobalExpression = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null);
+                Expression setGlobalExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "var"), null);
                 return new ScriptSetGlobal(condition, localParameters, setGlobalID, setGlobalExpression);
             }
             case "modifyGlobal" -> {
                 String modifyGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
-                Expression modifyGlobalExpression = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null);
+                Expression modifyGlobalExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "var"), null);
                 return new ScriptModifyGlobal(condition, localParameters, modifyGlobalID, modifyGlobalExpression);
             }
             case "iterator" -> {
-                Expression setExpression = loadVariable(LoadUtils.singleChildWithName(scriptElement, "set"), "stringSet");
+                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "set"), "stringSet");
                 String iteratorParameterName = LoadUtils.attribute(scriptElement, "itrName", null);
                 Script iteratedScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "script"));
                 return new ScriptIterator(condition, localParameters, setExpression, iteratorParameterName, iteratedScript);
@@ -671,10 +671,6 @@ public class DataLoader {
         Script scriptRemove = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRemove"));
         Script scriptRound = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRound"));
         switch (effectType) {
-            case "trigger" -> {
-                String trigger = LoadUtils.attribute(effectElement, "trigger", null);
-                return new EffectTrigger(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, trigger);
-            }
             case "mod" -> {
                 String statMod = LoadUtils.attribute(effectElement, "stat", null);
                 String statModValue = LoadUtils.attribute(effectElement, "amount", "0");
@@ -980,7 +976,7 @@ public class DataLoader {
         Map<String, Expression> parameters = new HashMap<>();
         for (Element parameterElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
             String parameterName = LoadUtils.attribute(parameterElement, "name", null);
-            Expression parameterValue = loadVariable(parameterElement, null);
+            Expression parameterValue = loadExpression(parameterElement, null);
             parameters.put(parameterName, parameterValue);
         }
         int actionPoints = LoadUtils.attributeInt(actionElement, "actionPoints", 0);
@@ -998,7 +994,7 @@ public class DataLoader {
                 Map<String, Expression> parameters = new HashMap<>();
                 for (Element variableElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
                     String parameterName = LoadUtils.attribute(variableElement, "name", null);
-                    Expression parameterExpression = loadVariable(variableElement, null);
+                    Expression parameterExpression = loadExpression(variableElement, null);
                     parameters.put(parameterName, parameterExpression);
                 }
                 customActions.add(new ObjectTemplate.CustomActionHolder(action, parameters));

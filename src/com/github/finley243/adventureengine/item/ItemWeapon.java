@@ -300,9 +300,6 @@ public class ItemWeapon extends ItemEquippable implements EffectableStatHolder {
 	}
 
 	@Override
-	public void triggerEffect(String name) {}
-
-	@Override
 	public void modStateInteger(String name, int amount) {
 		if ("ammo".equals(name)) {
 			ammoCount = MathUtils.bound(ammoCount + amount, 0, getClipSize());

@@ -14,6 +14,4 @@ public interface EffectableStatHolder extends StatHolder {
 
     void onStatChange();
 
-    void triggerEffect(String name);
-
 }

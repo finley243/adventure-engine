@@ -1,22 +1,52 @@
 <data>
     <script id="dropEquipped">
+        <condition type="boolean">
+            <var type="stat" holder="subject" stat="hasEquippedItem"/>
+        </condition>
+        <parameter name="dropAreaID" type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+        <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equippedItem" stat="id"/>
         <script type="transferItem" transferType="instance">
             <invOrigin holder="subject"/>
             <invTarget holder="area">
-                <holderID type="stat" holder="subject" subType="area" stat="id"/>
+                <holderID type="parameter" name="dropAreaID"/>
             </invTarget>
-            <item type="stat" holder="subject" subType="equippedItem" stat="id"/>
+            <item type="parameter" name="equippedItemID"/>
+        </script>
+        <script type="sensoryEvent">
+            <parameter name="item" type="stat" dataType="noun" holder="item">
+                <holderID type="parameter" name="equippedItemID"/>
+            </parameter>
+            <parameter name="inArea" type="stat" dataType="string" holder="area" stat="relativeName">
+                <holderID type="parameter" name="dropAreaID"/>
+            </parameter>
+            <phrase>drop</phrase>
+            <area type="stat" holder="subject" subType="area" stat="id"/>
         </script>
     </script>
     <script id="dropEquippedForce">
+        <condition type="boolean">
+            <var type="stat" holder="subject" stat="hasEquippedItem"/>
+        </condition>
+        <parameter name="dropAreaID" type="randomStringFromSet" dataType="string">
+            <set type="stat" holder="subject" subType="area" stat="movableAreas"/>
+        </parameter>
+        <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equippedItem" stat="id"/>
         <script type="transferItem" transferType="instance">
             <invOrigin holder="subject"/>
             <invTarget holder="area">
-                <holderID type="randomStringFromSet">
-                    <set type="stat" holder="subject" subType="area" stat="movableAreas"/>
-                </holderID>
+                <holderID type="parameter" name="dropAreaID"/>
             </invTarget>
-            <item type="stat" holder="subject" subType="equippedItem" stat="id"/>
+            <item type="parameter" name="equippedItemID"/>
+        </script>
+        <script type="sensoryEvent">
+            <parameter name="item" type="stat" dataType="noun" holder="item">
+                <holderID type="parameter" name="equippedItemID"/>
+            </parameter>
+            <parameter name="inArea" type="stat" dataType="string" holder="area" stat="relativeName">
+                <holderID type="parameter" name="dropAreaID"/>
+            </parameter>
+            <phrase>forceDrop</phrase>
+            <area type="stat" holder="subject" subType="area" stat="id"/>
         </script>
     </script>
 </data>

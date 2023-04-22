@@ -69,4 +69,16 @@ public abstract class Expression {
         };
     }
 
+    public static ExpressionConstant convertToConstant(Expression expression, ContextScript context) {
+        return switch (expression.getDataType()) {
+            case BOOLEAN -> new ExpressionConstant(expression.getValueBoolean(context));
+            case INTEGER -> new ExpressionConstant(expression.getValueInteger(context));
+            case FLOAT -> new ExpressionConstant(expression.getValueFloat(context));
+            case STRING -> new ExpressionConstant(expression.getValueString(context));
+            case STRING_SET -> new ExpressionConstant(expression.getValueStringSet(context));
+            case INVENTORY -> new ExpressionConstant(expression.getValueInventory(context));
+            case NOUN -> new ExpressionConstant(expression.getValueNoun(context));
+        };
+    }
+
 }

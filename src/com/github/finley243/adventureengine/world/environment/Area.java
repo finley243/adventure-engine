@@ -10,16 +10,15 @@ import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.effect.AreaEffect;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstant;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.*;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Context.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionLiteral;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -132,23 +131,17 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		}
 	}
 
-	public String getRelativeName(Area origin) {
-		String roomPhrase;
-		if (!origin.getRoom().equals(this.getRoom())) {
-			roomPhrase = this.getRoom().getRelativeName() + ", ";
-		} else {
-			roomPhrase = "";
-		}
+	public String getRelativeName() {
 		if (landmarkID != null) {
-			return roomPhrase + "near " + getLandmark().getFormattedName();
+			return "near " + getLandmark().getFormattedName();
 		} else {
 			return switch (nameType) {
-				case IN -> roomPhrase + "in " + getFormattedName();
-				case ON -> roomPhrase + "on " + getFormattedName();
-				case NEAR -> roomPhrase + "near " + getFormattedName();
-				case FRONT -> roomPhrase + "in front of " + getFormattedName();
-				case SIDE -> roomPhrase + "beside " + getFormattedName();
-				case BEHIND -> roomPhrase + "behind " + getFormattedName();
+				case IN -> "in " + getFormattedName();
+				case ON -> "on " + getFormattedName();
+				case NEAR -> "near " + getFormattedName();
+				case FRONT -> "in front of " + getFormattedName();
+				case SIDE -> "beside " + getFormattedName();
+				case BEHIND -> "behind " + getFormattedName();
 			};
 		}
 	}
@@ -160,19 +153,17 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		return null;
 	}
 
-	public String getMovePhrase(Area origin) {
+	public String getMovePhrase() {
 		if (landmarkID != null) {
-			return Phrases.get("moveToward");
-		} else if (!origin.getRoom().equals(this.getRoom())) {
-			return Phrases.get("moveTo");
+			return "moveToward";
 		} else {
 			return switch (nameType) {
-				case IN -> Phrases.get("moveTo");
-				case ON -> Phrases.get("moveOnto");
-				case FRONT -> Phrases.get("moveFront");
-				case BEHIND -> Phrases.get("moveBehind");
-				case SIDE -> Phrases.get("moveBeside");
-				case NEAR -> Phrases.get("moveToward");
+				case IN -> "moveTo";
+				case ON -> "moveOnto";
+				case FRONT -> "moveFront";
+				case BEHIND -> "moveBehind";
+				case SIDE -> "moveBeside";
+				case NEAR -> "moveToward";
 			};
 		}
 	}
@@ -244,7 +235,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		for (AreaLink link : linkedAreas.values()) {
 			if (link.getDistance().isMovable) {
 				//moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
-				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Expression>().put("areaID", new ExpressionLiteral(link.getAreaID())).put("dir", new ExpressionLiteral(link.getDirection().toString())).build(), new String[] {"move"}, true));
+				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Expression>().put("areaID", new ExpressionConstant(link.getAreaID())).put("dir", new ExpressionConstant(link.getDirection().toString())).build(), new String[] {"move"}, true));
 			}
 		}
 		return moveActions;
@@ -424,6 +415,8 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		return switch (name) {
 			case "id" -> getID();
 			case "name" -> getName();
+			case "relativeName" -> getRelativeName();
+			case "movePhrase" -> getMovePhrase();
 			case "room" -> roomID;
 			default -> null;
 		};

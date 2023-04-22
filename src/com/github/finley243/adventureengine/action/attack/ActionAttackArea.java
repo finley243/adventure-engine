@@ -49,7 +49,7 @@ public class ActionAttackArea extends ActionAttack {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice(LangUtils.titleCase(area.getRelativeName(subject.getArea())) + " (" + subject.getArea().getRelativeDirection(subject.getArea()) + ", " + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", weapon.getName(), getPrompt()}, new String[]{getPrompt().toLowerCase() + " " + area.getRelativeName(subject.getArea()), getPrompt().toLowerCase() + " at " + area.getRelativeName(subject.getArea()), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + area.getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + area.getName()});
+        return new MenuChoice(LangUtils.titleCase(area.getRelativeName()) + " (" + subject.getArea().getRelativeDirection(subject.getArea()) + ", " + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", weapon.getName(), getPrompt()}, new String[]{getPrompt().toLowerCase() + " " + area.getRelativeName(), getPrompt().toLowerCase() + " at " + area.getRelativeName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + area.getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + area.getName()});
     }
 
 }

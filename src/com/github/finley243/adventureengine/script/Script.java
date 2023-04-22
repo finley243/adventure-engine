@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.ContextScript;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,8 +26,12 @@ public abstract class Script {
 	 * @return Whether the script was executed
 	 */
 	public boolean execute(ContextScript context) {
-		ContextScript localContext = new ContextScript(context, localParameters);
-		if (canExecute(localContext)) {
+		if (canExecute(context)) {
+			Map<String, Expression> localParametersComputed = new HashMap<>();
+			for (Map.Entry<String, Expression> entry : localParameters.entrySet()) {
+				localParametersComputed.put(entry.getKey(), Expression.convertToConstant(entry.getValue(), context));
+			}
+			ContextScript localContext = new ContextScript(context, localParametersComputed);
 			executeSuccess(localContext);
 			return true;
 		} else {
