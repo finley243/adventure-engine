@@ -555,6 +555,12 @@ public class DataLoader {
                 Expression modifyGlobalExpression = loadVariable(LoadUtils.singleChildWithName(scriptElement, "var"), null);
                 return new ScriptModifyGlobal(condition, localParameters, modifyGlobalID, modifyGlobalExpression);
             }
+            case "iterator" -> {
+                Expression setExpression = loadVariable(LoadUtils.singleChildWithName(scriptElement, "set"), "stringSet");
+                String iteratorParameterName = LoadUtils.attribute(scriptElement, "itrName", null);
+                Script iteratedScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "script"));
+                return new ScriptIterator(condition, localParameters, setExpression, iteratorParameterName, iteratedScript);
+            }
             case "select" -> {
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, localParameters, subScriptsSelect, true);
