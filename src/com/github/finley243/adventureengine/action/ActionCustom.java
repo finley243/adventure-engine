@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
@@ -46,13 +46,13 @@ public class ActionCustom extends Action {
             Map<String, Expression> combinedParameters = new HashMap<>();
             combinedParameters.putAll(getTemplate().getParameters());
             combinedParameters.putAll(parameters);
-            getTemplate().getScript().execute(new ContextScript(subject.game(), subject, subject, object, combinedParameters));
+            getTemplate().getScript().execute(new Context(subject.game(), subject, subject, object, combinedParameters));
         }
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && (getTemplate().getConditionSelect() == null || getTemplate().getConditionSelect().isMet(new ContextScript(subject.game(), subject, subject, object, parameters)));
+        return super.canChoose(subject) && (getTemplate().getConditionSelect() == null || getTemplate().getConditionSelect().isMet(new Context(subject.game(), subject, subject, object, parameters)));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ActionCustom extends Action {
     @Override
     public float utility(Actor subject) {
         if (isMove) {
-            Area destinationArea = game.data().getArea(parameters.get("areaID").getValueString(new ContextScript(game, subject, subject)));
+            Area destinationArea = game.data().getArea(parameters.get("areaID").getValueString(new Context(game, subject, subject)));
             return UtilityUtils.getMovementUtility(subject, destinationArea) * ActionMoveArea.MOVE_UTILITY_MULTIPLIER;
         }
         return 0.0f;
@@ -74,12 +74,12 @@ public class ActionCustom extends Action {
         Map<String, String> contextVars = new HashMap<>();
         for (Map.Entry<String, Expression> entry : getTemplate().getParameters().entrySet()) {
             if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new ContextScript(subject.game(), subject, subject, object, parameters)));
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, parameters)));
             }
         }
         for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
             if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new ContextScript(subject.game(), subject, subject, object, parameters)));
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, parameters)));
             }
         }
         String promptWithVars = LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
@@ -87,7 +87,7 @@ public class ActionCustom extends Action {
     }
 
     public boolean canShow(Actor subject) {
-        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new ContextScript(subject.game(), subject, subject, object, parameters));
+        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new Context(subject.game(), subject, subject, object, parameters));
     }
 
 }

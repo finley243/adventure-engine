@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.List;
 import java.util.Map;

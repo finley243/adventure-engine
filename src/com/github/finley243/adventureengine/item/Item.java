@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.item;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
@@ -13,7 +13,7 @@ import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.*;
-import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 
@@ -61,7 +61,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Context.Pronoun getPronoun() {
+	public TextContext.Pronoun getPronoun() {
 		return getTemplate().getPronoun();
 	}
 
@@ -76,7 +76,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if(getTemplate().getScripts().containsKey(entryPoint)) {
-			getTemplate().getScripts().get(entryPoint).execute(new ContextScript(game(), subject, target, this));
+			getTemplate().getScripts().get(entryPoint).execute(new Context(game(), subject, target, this));
 		}
 	}
 

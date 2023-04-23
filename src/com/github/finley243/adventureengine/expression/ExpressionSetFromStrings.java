@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ExpressionSetFromStrings extends Expression {
     }
 
     @Override
-    public Set<String> getValueStringSet(ContextScript context) {
+    public Set<String> getValueStringSet(Context context) {
         Set<String> stringSet = new HashSet<>();
         for (Expression stringVar : stringVars) {
             stringSet.add(stringVar.getValueString(context));

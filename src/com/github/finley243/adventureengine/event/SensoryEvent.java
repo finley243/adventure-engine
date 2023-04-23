@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.event;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Bark;
-import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -12,26 +12,26 @@ public class SensoryEvent {
 	private final Area[] origins;
 	private final String lineVisible;
 	private final String lineAudible;
-	private final Context context;
+	private final TextContext context;
 	private final Action action;
 	private final Bark bark;
 	private final Actor subject;
 	private final Actor target;
 	private final boolean isLoud;
 
-	public SensoryEvent(Area origin, String lineVisible, Context context, Action action, Bark bark, Actor subject, Actor target) {
+	public SensoryEvent(Area origin, String lineVisible, TextContext context, Action action, Bark bark, Actor subject, Actor target) {
 		this(new Area[]{origin}, lineVisible, null, context, false, action, bark, subject, target);
 	}
 
-	public SensoryEvent(Area[] origins, String lineVisible, Context context, Action action, Bark bark, Actor subject, Actor target) {
+	public SensoryEvent(Area[] origins, String lineVisible, TextContext context, Action action, Bark bark, Actor subject, Actor target) {
 		this(origins, lineVisible, null, context, false, action, bark, subject, target);
 	}
 
-	public SensoryEvent(Area origin, String lineVisible, String lineAudible, Context context, boolean isLoud, Action action, Bark bark, Actor subject, Actor target) {
+	public SensoryEvent(Area origin, String lineVisible, String lineAudible, TextContext context, boolean isLoud, Action action, Bark bark, Actor subject, Actor target) {
 		this(new Area[]{origin}, lineVisible, lineAudible, context, isLoud, action, bark, subject, target);
 	}
 
-	public SensoryEvent(Area[] origins, String lineVisible, String lineAudible, Context context, boolean isLoud, Action action, Bark bark, Actor subject, Actor target) {
+	public SensoryEvent(Area[] origins, String lineVisible, String lineAudible, TextContext context, boolean isLoud, Action action, Bark bark, Actor subject, Actor target) {
 		this.origins = origins;
 		this.lineVisible = lineVisible;
 		this.lineAudible = lineAudible;

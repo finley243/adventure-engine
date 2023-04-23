@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 
 public class ExpressionToString extends Expression {
 
@@ -16,7 +16,7 @@ public class ExpressionToString extends Expression {
     }
 
     @Override
-    public String getValueString(ContextScript context) {
+    public String getValueString(Context context) {
         return switch (expression.getDataType()) {
             case BOOLEAN -> Boolean.toString(expression.getValueBoolean(context));
             case INTEGER -> Integer.toString(expression.getValueInteger(context));

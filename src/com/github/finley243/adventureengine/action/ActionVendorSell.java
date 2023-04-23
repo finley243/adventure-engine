@@ -27,7 +27,7 @@ public class ActionVendorSell extends Action {
         subject.getInventory().removeItem(item);
         subject.adjustMoney(price);
         vendorInventory.addItem(item);
-        Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("vendor", vendor).build());
+        TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("vendor", vendor).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("sell"), context, this, null, subject, null));
     }
 

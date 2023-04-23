@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.textgen.Noun;
 
@@ -36,12 +36,12 @@ public class ExpressionProduct extends Expression {
     }
 
     @Override
-    public boolean getValueBoolean(ContextScript context) {
+    public boolean getValueBoolean(Context context) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int getValueInteger(ContextScript context) {
+    public int getValueInteger(Context context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
         int product = 1;
         for (Expression expression : expressions) {
@@ -51,7 +51,7 @@ public class ExpressionProduct extends Expression {
     }
 
     @Override
-    public float getValueFloat(ContextScript context) {
+    public float getValueFloat(Context context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
         float product = 1.0f;
         for (Expression expression : expressions) {
@@ -65,22 +65,22 @@ public class ExpressionProduct extends Expression {
     }
 
     @Override
-    public String getValueString(ContextScript context) {
+    public String getValueString(Context context) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Set<String> getValueStringSet(ContextScript context) {
+    public Set<String> getValueStringSet(Context context) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Inventory getValueInventory(ContextScript context) {
+    public Inventory getValueInventory(Context context) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Noun getValueNoun(ContextScript context) {
+    public Noun getValueNoun(Context context) {
         throw new UnsupportedOperationException();
     }
 

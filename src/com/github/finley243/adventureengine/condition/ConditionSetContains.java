@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ConditionSetContains extends Condition {
@@ -18,7 +18,7 @@ public class ConditionSetContains extends Condition {
     }
 
     @Override
-    protected boolean isMetInternal(ContextScript context) {
+    protected boolean isMetInternal(Context context) {
         return expressionSet.getValueStringSet(context).contains(expressionString.getValueString(context));
     }
 

@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.world.object;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
@@ -12,7 +12,7 @@ import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.*;
-import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -209,7 +209,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
-			getTemplate().getScripts().get(entryPoint).execute(new ContextScript(game(), subject, target, this));
+			getTemplate().getScripts().get(entryPoint).execute(new Context(game(), subject, target, this));
 		}
 	}
 

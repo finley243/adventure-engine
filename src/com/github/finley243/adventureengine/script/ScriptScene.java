@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.ActorReference;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.scene.SceneManager;
@@ -21,7 +21,7 @@ public class ScriptScene extends Script {
     }
 
     @Override
-    public void executeSuccess(ContextScript context) {
+    public void executeSuccess(Context context) {
         SceneManager.triggerFromIDs(context.game(), actor.getActor(context), actor.getActor(context), scenes);
     }
 

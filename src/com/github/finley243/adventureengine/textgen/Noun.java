@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.textgen;
 
-import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 /**
  * Represents anything that can be referred to as a noun (used for text generation)

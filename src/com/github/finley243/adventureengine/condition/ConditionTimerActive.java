@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 
 public class ConditionTimerActive extends Condition {
 
@@ -12,7 +12,7 @@ public class ConditionTimerActive extends Condition {
     }
 
     @Override
-    protected boolean isMetInternal(ContextScript context) {
+    protected boolean isMetInternal(Context context) {
         return context.game().data().isTimerActive(timerID);
     }
 

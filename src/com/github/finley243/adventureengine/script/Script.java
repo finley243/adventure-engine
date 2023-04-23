@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
@@ -25,13 +25,13 @@ public abstract class Script {
 	 * @param context Contains the contextual references (subject, target, etc.)
 	 * @return Whether the script was executed
 	 */
-	public boolean execute(ContextScript context) {
+	public boolean execute(Context context) {
 		if (canExecute(context)) {
 			Map<String, Expression> localParametersComputed = new HashMap<>();
 			for (Map.Entry<String, Expression> entry : localParameters.entrySet()) {
 				localParametersComputed.put(entry.getKey(), Expression.convertToConstant(entry.getValue(), context));
 			}
-			ContextScript localContext = new ContextScript(context, localParametersComputed);
+			Context localContext = new Context(context, localParametersComputed);
 			executeSuccess(localContext);
 			return true;
 		} else {
@@ -44,9 +44,9 @@ public abstract class Script {
 	 *
 	 * @param context Contains the contextual references (subject, target, etc.)
 	 */
-	protected abstract void executeSuccess(ContextScript context);
+	protected abstract void executeSuccess(Context context);
 
-	private boolean canExecute(ContextScript context) {
+	private boolean canExecute(Context context) {
 		return condition == null || condition.isMet(context);
 	}
 

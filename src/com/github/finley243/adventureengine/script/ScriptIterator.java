@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -23,11 +23,11 @@ public class ScriptIterator extends Script {
     }
 
     @Override
-    protected void executeSuccess(ContextScript context) {
+    protected void executeSuccess(Context context) {
         Set<String> stringSet = setExpression.getValueStringSet(context);
         for (String currentString : stringSet) {
             Expression iteratorParameter = new ExpressionConstant(currentString);
-            iteratedScript.execute(new ContextScript(context, new MapBuilder<String, Expression>().put(iteratorParameterName, iteratorParameter).build()));
+            iteratedScript.execute(new Context(context, new MapBuilder<String, Expression>().put(iteratorParameterName, iteratorParameter).build()));
         }
     }
 

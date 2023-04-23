@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 
 public class ExpressionSetSize extends Expression {
 
@@ -16,7 +16,7 @@ public class ExpressionSetSize extends Expression {
     }
 
     @Override
-    public int getValueInteger(ContextScript context) {
+    public int getValueInteger(Context context) {
         return expressionSet.getValueStringSet(context).size();
     }
 

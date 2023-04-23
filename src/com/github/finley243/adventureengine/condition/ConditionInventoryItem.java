@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ConditionInventoryItem extends Condition {
@@ -21,7 +21,7 @@ public class ConditionInventoryItem extends Condition {
 	}
 
 	@Override
-	public boolean isMetInternal(ContextScript context) {
+	public boolean isMetInternal(Context context) {
 		if (itemID.getDataType() == Expression.DataType.STRING_SET) {
 			for (String item : itemID.getValueStringSet(context)) {
 				boolean hasItem = inventory.getValueInventory(context).hasItem(item);

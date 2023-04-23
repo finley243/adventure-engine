@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.Item;
@@ -30,7 +30,7 @@ public class ActionInventoryStore extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.getInventory().removeItem(item);
         inventory.addItem(item);
-        Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("inventory", owner).build());
+        TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("inventory", owner).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((isExposed ? "placeOn" : "storeIn")), context, this, null, subject, null));
     }
 

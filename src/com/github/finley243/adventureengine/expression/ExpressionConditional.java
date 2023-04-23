@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -26,7 +26,7 @@ public class ExpressionConditional extends Expression {
     }
 
     @Override
-    public boolean getValueBoolean(ContextScript context) {
+    public boolean getValueBoolean(Context context) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
@@ -37,7 +37,7 @@ public class ExpressionConditional extends Expression {
     }
 
     @Override
-    public int getValueInteger(ContextScript context) {
+    public int getValueInteger(Context context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
@@ -48,7 +48,7 @@ public class ExpressionConditional extends Expression {
     }
 
     @Override
-    public float getValueFloat(ContextScript context) {
+    public float getValueFloat(Context context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
@@ -59,7 +59,7 @@ public class ExpressionConditional extends Expression {
     }
 
     @Override
-    public String getValueString(ContextScript context) {
+    public String getValueString(Context context) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
@@ -70,7 +70,7 @@ public class ExpressionConditional extends Expression {
     }
 
     @Override
-    public Set<String> getValueStringSet(ContextScript context) {
+    public Set<String> getValueStringSet(Context context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
@@ -81,7 +81,7 @@ public class ExpressionConditional extends Expression {
     }
 
     @Override
-    public Inventory getValueInventory(ContextScript context) {
+    public Inventory getValueInventory(Context context) {
         if (getDataType() != DataType.INVENTORY) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
@@ -92,7 +92,7 @@ public class ExpressionConditional extends Expression {
     }
 
     @Override
-    public Noun getValueNoun(ContextScript context) {
+    public Noun getValueNoun(Context context) {
         if (getDataType() != DataType.NOUN) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {

@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
@@ -26,43 +26,43 @@ public class ExpressionStat extends Expression {
     }
 
     @Override
-    public boolean getValueBoolean(ContextScript context) {
+    public boolean getValueBoolean(Context context) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
         return holder.getHolder(context).getValueBoolean(stat);
     }
 
     @Override
-    public int getValueInteger(ContextScript context) {
+    public int getValueInteger(Context context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
         return holder.getHolder(context).getValueInt(stat);
     }
 
     @Override
-    public float getValueFloat(ContextScript context) {
+    public float getValueFloat(Context context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
         return holder.getHolder(context).getValueFloat(stat);
     }
 
     @Override
-    public String getValueString(ContextScript context) {
+    public String getValueString(Context context) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
         return holder.getHolder(context).getValueString(stat);
     }
 
     @Override
-    public Set<String> getValueStringSet(ContextScript context) {
+    public Set<String> getValueStringSet(Context context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
         return holder.getHolder(context).getValueStringSet(stat);
     }
 
     @Override
-    public Inventory getValueInventory(ContextScript context) {
+    public Inventory getValueInventory(Context context) {
         if (getDataType() != DataType.INVENTORY) throw new UnsupportedOperationException();
         return holder.getHolder(context).getInventory();
     }
 
     @Override
-    public Noun getValueNoun(ContextScript context) {
+    public Noun getValueNoun(Context context) {
         if (getDataType() != DataType.NOUN) throw new UnsupportedOperationException();
         StatHolder statHolderObject = holder.getHolder(context);
         if (statHolderObject instanceof Noun) {

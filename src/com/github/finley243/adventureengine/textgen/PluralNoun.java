@@ -41,8 +41,8 @@ public class PluralNoun implements Noun {
     }
 
     @Override
-    public Context.Pronoun getPronoun() {
-        return Context.Pronoun.THEY;
+    public TextContext.Pronoun getPronoun() {
+        return TextContext.Pronoun.THEY;
     }
 
     @Override

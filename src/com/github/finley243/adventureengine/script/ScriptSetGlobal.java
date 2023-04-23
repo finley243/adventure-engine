@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
@@ -18,7 +18,7 @@ public class ScriptSetGlobal extends Script {
     }
 
     @Override
-    protected void executeSuccess(ContextScript context) {
+    protected void executeSuccess(Context context) {
         switch (expression.getDataType()) {
             case BOOLEAN -> context.game().data().setGlobalBoolean(globalID, expression.getValueBoolean(context));
             case INTEGER -> context.game().data().setGlobalInteger(globalID, expression.getValueInteger(context));

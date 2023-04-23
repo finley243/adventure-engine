@@ -1,11 +1,11 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -33,7 +33,7 @@ public class ActionMoveLink extends ActionMove {
 	public void choose(Actor subject, int repeatActionCount) {
 		Area lastArea = subject.getArea();
 		Area area = getDestinationArea();
-		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("door", linkComponent.getObject()).put("room", area.getRoom()).build());
+		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("door", linkComponent.getObject()).put("room", area.getRoom()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("moveThrough"), context, this, null, subject, null));
 		subject.game().eventBus().post(new SensoryEvent(area, Phrases.get("moveThroughReverse"), context, this, null, subject, null));
 		subject.setArea(area);
@@ -42,7 +42,7 @@ public class ActionMoveLink extends ActionMove {
 	@Override
 	public boolean canChoose(Actor subject) {
 		return super.canChoose(subject) &&
-				(linkComponent.getTemplateLink().getCondition() == null || linkComponent.getTemplateLink().getCondition().isMet(new ContextScript(subject.game(), subject, subject, linkComponent.getObject())));
+				(linkComponent.getTemplateLink().getCondition() == null || linkComponent.getTemplateLink().getCondition().isMet(new Context(subject.game(), subject, subject, linkComponent.getObject())));
 	}
 
 	@Override

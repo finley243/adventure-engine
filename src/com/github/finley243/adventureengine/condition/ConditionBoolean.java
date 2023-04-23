@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ConditionBoolean extends Condition {
@@ -15,7 +15,7 @@ public class ConditionBoolean extends Condition {
     }
 
     @Override
-    protected boolean isMetInternal(ContextScript context) {
+    protected boolean isMetInternal(Context context) {
         return expression.getValueBoolean(context);
     }
 

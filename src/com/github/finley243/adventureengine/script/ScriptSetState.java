@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -21,7 +21,7 @@ public class ScriptSetState extends Script {
     }
 
     @Override
-    protected void executeSuccess(ContextScript context) {
+    protected void executeSuccess(Context context) {
         switch (expression.getDataType()) {
             case BOOLEAN -> holder.getHolder(context).setStateBoolean(state, expression.getValueBoolean(context));
             case INTEGER -> holder.getHolder(context).setStateInteger(state, expression.getValueInteger(context));

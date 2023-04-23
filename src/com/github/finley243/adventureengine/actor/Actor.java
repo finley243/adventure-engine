@@ -24,8 +24,8 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.*;
-import com.github.finley243.adventureengine.textgen.Context;
-import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.TextContext;
+import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -143,7 +143,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 		for (Skill skill : Skill.values()) {
 			this.skills.put(skill, new StatInt(this));
 		}
-		this.effectComponent = new EffectComponent(game, this, new ContextScript(game, this, this));
+		this.effectComponent = new EffectComponent(game, this, new Context(game, this, this));
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
 		this.blockedActions = new HashMap<>();
 		this.startDisabled = startDisabled;
@@ -367,7 +367,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 		if (amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, getMaxHP() - HP);
 		HP += amount;
-		Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
+		TextContext context = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 		if (SHOW_HP_CHANGES) {
 			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null, this, null));
 		}
@@ -401,7 +401,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 			kill();
 		} else {
 			triggerScript("on_damaged", this);
-			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
+			TextContext context = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
 			}
@@ -427,7 +427,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 			kill();
 		} else {
 			triggerScript("on_damaged", this);
-			Context context = new Context(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
+			TextContext context = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
 			}
@@ -437,7 +437,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 	
 	public void kill() {
 		triggerScript("on_death", this);
-		Context context = new Context(new MapBuilder<String, Noun>().put("actor", this).build());
+		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
 		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
 		if (equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
@@ -998,7 +998,7 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 	public boolean triggerScript(String trigger, Actor target) {
 		Script script = getTemplate().getScript(trigger);
 		if (script != null) {
-			script.execute(new ContextScript(game(), this, target));
+			script.execute(new Context(game(), this, target));
 			return true;
 		} else {
 			return false;

@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 
 import java.util.Set;
 
@@ -20,31 +20,31 @@ public class ExpressionGlobal extends Expression {
     }
 
     @Override
-    public boolean getValueBoolean(ContextScript context) {
+    public boolean getValueBoolean(Context context) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
         return context.game().data().getGlobalBoolean(expressionID.getValueString(context));
     }
 
     @Override
-    public int getValueInteger(ContextScript context) {
+    public int getValueInteger(Context context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
         return context.game().data().getGlobalInteger(expressionID.getValueString(context));
     }
 
     @Override
-    public float getValueFloat(ContextScript context) {
+    public float getValueFloat(Context context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
         return context.game().data().getGlobalFloat(expressionID.getValueString(context));
     }
 
     @Override
-    public String getValueString(ContextScript context) {
+    public String getValueString(Context context) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
         return context.game().data().getGlobalString(expressionID.getValueString(context));
     }
 
     @Override
-    public Set<String> getValueStringSet(ContextScript context) {
+    public Set<String> getValueStringSet(Context context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
         return context.game().data().getGlobalStringSet(expressionID.getValueString(context));
     }

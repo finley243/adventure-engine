@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.condition;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ConditionCompare extends Condition {
@@ -23,7 +23,7 @@ public class ConditionCompare extends Condition {
     }
 
     @Override
-    protected boolean isMetInternal(ContextScript context) {
+    protected boolean isMetInternal(Context context) {
         if ((expression1.getDataType() == Expression.DataType.INTEGER || expression1.getDataType() == Expression.DataType.FLOAT) &&
             (expression2.getDataType() == Expression.DataType.INTEGER || expression2.getDataType() == Expression.DataType.FLOAT)) {
             float value1;

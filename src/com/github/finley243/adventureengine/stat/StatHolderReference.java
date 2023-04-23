@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.stat;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class StatHolderReference {
@@ -19,7 +19,7 @@ public class StatHolderReference {
         this.subID = subID;
     }
 
-    public StatHolder getHolder(ContextScript context) {
+    public StatHolder getHolder(Context context) {
         StatHolder parentHolder = getParentHolder(context);
         if (parentHolder == null) throw new IllegalArgumentException("StatHolder of type '" + holderType + "' with ID '" + (holderID == null ? null : holderID.getValueString(context)) + "' is null");
         if (subType == null) {
@@ -32,7 +32,7 @@ public class StatHolderReference {
         return subHolder;
     }
 
-    private StatHolder getParentHolder(ContextScript context) {
+    private StatHolder getParentHolder(Context context) {
         return switch (holderType) {
             case "object" -> context.game().data().getObject(holderID.getValueString(context));
             case "parentObject" -> context.getParentObject();

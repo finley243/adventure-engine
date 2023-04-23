@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -27,15 +27,15 @@ public class ScriptSensoryEvent extends Script {
     }
 
     @Override
-    protected void executeSuccess(ContextScript context) {
+    protected void executeSuccess(Context context) {
         Area[] originAreas = getOriginAreas(context);
         Map<String, String> contextVars = getTextVarMap(context);
         Map<String, Noun> contextNouns = getContextNounMap(context);
-        Context textContext = new Context(contextVars, contextNouns);
+        TextContext textContext = new TextContext(contextVars, contextNouns);
         context.game().eventBus().post(new SensoryEvent(originAreas, Phrases.get(phrase), Phrases.get(phraseAudible), textContext, false, null, null, context.getSubject(), context.getTarget()));
     }
 
-    private Area[] getOriginAreas(ContextScript context) {
+    private Area[] getOriginAreas(Context context) {
         if (area.getDataType() == Expression.DataType.STRING) {
             String areaID = area.getValueString(context);
             Area[] areaArray = new Area[1];
@@ -54,7 +54,7 @@ public class ScriptSensoryEvent extends Script {
         return null;
     }
 
-    private Map<String, Noun> getContextNounMap(ContextScript context) {
+    private Map<String, Noun> getContextNounMap(Context context) {
         Map<String, Noun> nounMap = new HashMap<>();
         if (context.getSubject() != null) {
             nounMap.put("actor", context.getSubject());
@@ -76,7 +76,7 @@ public class ScriptSensoryEvent extends Script {
         return nounMap;
     }
 
-    private Map<String, String> getTextVarMap(ContextScript context) {
+    private Map<String, String> getTextVarMap(Context context) {
         Map<String, String> textVarValues = new HashMap<>();
         for (Map.Entry<String, Expression> entry : context.getParameters().entrySet()) {
             if (entry.getValue().getDataType() == Expression.DataType.STRING) {

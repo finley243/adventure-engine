@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.textgen.Noun;
 
@@ -22,37 +22,37 @@ public class ExpressionParameter extends Expression {
     }
 
     @Override
-    public boolean getValueBoolean(ContextScript context) {
+    public boolean getValueBoolean(Context context) {
         return context.getParameters().get(name).getValueBoolean(context);
     }
 
     @Override
-    public int getValueInteger(ContextScript context) {
+    public int getValueInteger(Context context) {
         return context.getParameters().get(name).getValueInteger(context);
     }
 
     @Override
-    public float getValueFloat(ContextScript context) {
+    public float getValueFloat(Context context) {
         return context.getParameters().get(name).getValueFloat(context);
     }
 
     @Override
-    public String getValueString(ContextScript context) {
+    public String getValueString(Context context) {
         return context.getParameters().get(name).getValueString(context);
     }
 
     @Override
-    public Set<String> getValueStringSet(ContextScript context) {
+    public Set<String> getValueStringSet(Context context) {
         return context.getParameters().get(name).getValueStringSet(context);
     }
 
     @Override
-    public Inventory getValueInventory(ContextScript context) {
+    public Inventory getValueInventory(Context context) {
         return context.getParameters().get(name).getValueInventory(context);
     }
 
     @Override
-    public Noun getValueNoun(ContextScript context) {
+    public Noun getValueNoun(Context context) {
         return context.getParameters().get(name).getValueNoun(context);
     }
 

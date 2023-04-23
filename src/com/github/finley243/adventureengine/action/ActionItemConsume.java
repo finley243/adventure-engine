@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.ItemConsumable;
@@ -20,7 +20,7 @@ public class ActionItemConsume extends Action {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.getInventory().removeItem(item);
-		Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
+		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
 		String phrase = switch (item.getConsumableType()) {
 			case DRINK -> "drink";
 			case FOOD -> "eat";

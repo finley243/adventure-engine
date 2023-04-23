@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 
 public class ActorReference {
 
@@ -16,7 +16,7 @@ public class ActorReference {
 		this.reference = reference;
 	}
 	
-	public Actor getActor(ContextScript context) {
+	public Actor getActor(Context context) {
 		return switch (type) {
 			case PLAYER -> context.game().data().getPlayer();
 			case REFERENCE -> context.game().data().getActor(reference);

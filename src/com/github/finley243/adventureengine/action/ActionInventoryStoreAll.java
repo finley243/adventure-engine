@@ -30,7 +30,7 @@ public class ActionInventoryStoreAll extends Action {
         int count = subject.getInventory().itemCount(item);
         subject.getInventory().removeItems(item.getTemplate().getID(), count);
         inventory.addItems(item.getTemplate().getID(), count);
-        Context context = new Context(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
+        TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((isExposed ? "placeOn" : "storeIn")), context, this, null, subject, null));
     }
 

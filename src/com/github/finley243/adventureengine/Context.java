@@ -8,7 +8,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ContextScript {
+public class Context {
 
     private final Game game;
     private final Actor subject;
@@ -17,23 +17,23 @@ public class ContextScript {
     private final Item parentItem;
     private final Map<String, Expression> parameters;
 
-    public ContextScript(Game game, Actor subject, Actor target) {
+    public Context(Game game, Actor subject, Actor target) {
         this(game, subject, target, null, null, new HashMap<>());
     }
 
-    public ContextScript(Game game, Actor subject, Actor target, WorldObject parentObject) {
+    public Context(Game game, Actor subject, Actor target, WorldObject parentObject) {
         this(game, subject, target, parentObject, null, new HashMap<>());
     }
 
-    public ContextScript(Game game, Actor subject, Actor target, WorldObject parentObject, Map<String, Expression> parameters) {
+    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Map<String, Expression> parameters) {
         this(game, subject, target, parentObject, null, parameters);
     }
 
-    public ContextScript(Game game, Actor subject, Actor target, Item parentItem) {
+    public Context(Game game, Actor subject, Actor target, Item parentItem) {
         this(game, subject, target, null, parentItem, new HashMap<>());
     }
 
-    public ContextScript(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Map<String, Expression> parameters) {
+    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Map<String, Expression> parameters) {
         this.game = game;
         this.subject = subject;
         this.target = target;
@@ -42,7 +42,7 @@ public class ContextScript {
         this.parameters = parameters;
     }
 
-    public ContextScript(ContextScript context, Map<String, Expression> addedParameters) {
+    public Context(Context context, Map<String, Expression> addedParameters) {
         this.game = context.game;
         this.subject = context.subject;
         this.target = context.target;

@@ -22,7 +22,7 @@ import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
-import com.github.finley243.adventureengine.textgen.Context;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.world.environment.*;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -139,7 +139,7 @@ public class DataLoader {
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
         String name = nameElement != null ? nameElement.getTextContent() : null;
         Boolean nameIsProper = nameElement != null && LoadUtils.attributeBool(nameElement, "proper", false);
-        Context.Pronoun pronoun = LoadUtils.attributeEnum(nameElement, "pronoun", Context.Pronoun.class, Context.Pronoun.THEY);
+        TextContext.Pronoun pronoun = LoadUtils.attributeEnum(nameElement, "pronoun", TextContext.Pronoun.class, TextContext.Pronoun.THEY);
         String faction = LoadUtils.attribute(actorElement, "faction", null);
         Boolean isEnforcer = LoadUtils.attributeBool(actorElement, "isEnforcer", null);
 

@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.textgen;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Context {
+public class TextContext {
 	
 	public enum Pronoun{
 		HE("he", "him", "his", "himself", true),
@@ -31,11 +31,11 @@ public class Context {
 	private final Map<String, Noun> objects;
 	private final Map<String, String> vars;
 
-	public Context(Map<String, Noun> objects) {
+	public TextContext(Map<String, Noun> objects) {
 		this(new HashMap<>(), objects);
 	}
 
-	public Context(Map<String, String> vars, Map<String, Noun> objects) {
+	public TextContext(Map<String, String> vars, Map<String, Noun> objects) {
 		if (objects == null) throw new IllegalArgumentException("Context objects cannot be null");
 		for (Noun object : objects.values()) {
 			if(object == null) throw new IllegalArgumentException("Context objects cannot be null");
@@ -56,7 +56,7 @@ public class Context {
 	@Override
 	public boolean equals(Object o) {
 		// Not checking for vars equality
-		return (o instanceof Context) && objects.equals(((Context) o).getObjects());
+		return (o instanceof TextContext) && objects.equals(((TextContext) o).getObjects());
 	}
 	
 }

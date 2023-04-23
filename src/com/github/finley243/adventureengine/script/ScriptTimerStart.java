@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Timer;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -21,7 +21,7 @@ public class ScriptTimerStart extends Script {
     }
 
     @Override
-    protected void executeSuccess(ContextScript context) {
+    protected void executeSuccess(Context context) {
         Timer timer = new Timer(context.game(), timerID, timerDuration, timerExpireScript);
         context.game().data().addTimer(timer.getID(), timer);
     }

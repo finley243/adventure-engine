@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -74,7 +74,7 @@ public abstract class Behavior {
     }
 
     public boolean isValid(Actor subject) {
-        return condition == null || condition.isMet(new ContextScript(subject.game(), subject, subject));
+        return condition == null || condition.isMet(new Context(subject.game(), subject, subject));
     }
 
     public Idle getIdle(Actor subject) {

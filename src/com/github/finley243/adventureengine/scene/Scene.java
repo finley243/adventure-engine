@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.scene;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -41,7 +41,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	public boolean canChoose(Actor subject, Actor target) {
-		return (condition == null || condition.isMet(new ContextScript(game(), subject, target))) && !(once && hasTriggered);
+		return (condition == null || condition.isMet(new Context(game(), subject, target))) && !(once && hasTriggered);
 	}
 	
 	public List<SceneLine> getLines() {

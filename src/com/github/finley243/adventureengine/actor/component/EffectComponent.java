@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.actor.component;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.stat.EffectableStatHolder;
@@ -11,10 +11,10 @@ public class EffectComponent {
 
     private final Game game;
     private final EffectableStatHolder statHolder;
-    private final ContextScript scriptContext;
+    private final Context scriptContext;
     private final Map<String, List<EffectData>> effects;
 
-    public EffectComponent(Game game, EffectableStatHolder statHolder, ContextScript scriptContext) {
+    public EffectComponent(Game game, EffectableStatHolder statHolder, Context scriptContext) {
         this.game = game;
         this.statHolder = statHolder;
         this.scriptContext = scriptContext;

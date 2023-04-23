@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
@@ -20,7 +20,7 @@ public class ScriptCompound extends Script {
     }
 
     @Override
-    public void executeSuccess(ContextScript context) {
+    public void executeSuccess(Context context) {
         for (Script current : subScripts) {
             if (select) {
                 boolean wasExecuted = current.execute(context);

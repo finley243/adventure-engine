@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.ContextScript;
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.textgen.Noun;
 
@@ -14,31 +14,31 @@ public abstract class Expression {
 
     public abstract DataType getDataType();
 
-    public boolean getValueBoolean(ContextScript context) {
+    public boolean getValueBoolean(Context context) {
         throw new UnsupportedOperationException("Invalid data type function: boolean");
     }
 
-    public int getValueInteger(ContextScript context) {
+    public int getValueInteger(Context context) {
         throw new UnsupportedOperationException("Invalid data type function: integer");
     }
 
-    public float getValueFloat(ContextScript context) {
+    public float getValueFloat(Context context) {
         throw new UnsupportedOperationException("Invalid data type function: float");
     }
 
-    public String getValueString(ContextScript context) {
+    public String getValueString(Context context) {
         throw new UnsupportedOperationException("Invalid data type function: string");
     }
 
-    public Set<String> getValueStringSet(ContextScript context) {
+    public Set<String> getValueStringSet(Context context) {
         throw new UnsupportedOperationException("Invalid data type function: string set");
     }
 
-    public Inventory getValueInventory(ContextScript context) {
+    public Inventory getValueInventory(Context context) {
         throw new UnsupportedOperationException("Invalid data type function: inventory");
     }
 
-    public Noun getValueNoun(ContextScript context) {
+    public Noun getValueNoun(Context context) {
         throw new UnsupportedOperationException("Invalid data type function: noun");
     }
 
@@ -69,7 +69,7 @@ public abstract class Expression {
         };
     }
 
-    public static ExpressionConstant convertToConstant(Expression expression, ContextScript context) {
+    public static ExpressionConstant convertToConstant(Expression expression, Context context) {
         return switch (expression.getDataType()) {
             case BOOLEAN -> new ExpressionConstant(expression.getValueBoolean(context));
             case INTEGER -> new ExpressionConstant(expression.getValueInteger(context));

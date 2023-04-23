@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.textgen;
 
-import com.github.finley243.adventureengine.textgen.Context.Pronoun;
+import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -23,14 +23,14 @@ public class TextGen {
 	private static final String VERB_BE_NOT = "$isn't";
 	private static final String VERB_HAVE = "$has";
 	
-	private static Context lastContext;
+	private static TextContext lastContext;
 
 	/*
 	 * Format for tags: $_subject hit$s_subject $object1 with $object2
 	 * Format for OR expressions: {this thing|other thing} or {$tag thing|other thing}
 	 */
 
-	public static String generate(String line, Context context) {
+	public static String generate(String line, TextContext context) {
 		if (line == null) return null;
 		String sentence = "";
 		line = chooseRandoms(line);
@@ -58,7 +58,7 @@ public class TextGen {
 		return line;
 	}
 
-	private static String determineContext(String line, Context context) {
+	private static String determineContext(String line, TextContext context) {
 		boolean[] usePronouns = new boolean[context.getObjects().size()];
 		if (lastContext != null) {
 			List<Noun> objectList = new ArrayList<>(context.getObjects().values());
@@ -137,7 +137,7 @@ public class TextGen {
 		return parts;
 	}
 
-	private static String populateFromContext(String line, Context context, Map<String, Boolean> usePronouns) {
+	private static String populateFromContext(String line, TextContext context, Map<String, Boolean> usePronouns) {
 		Map<String, Noun> objects = context.getObjects();
 
 		List<String> objectTags = new ArrayList<>(objects.keySet());
@@ -200,7 +200,7 @@ public class TextGen {
 	}
 
 	// Returns whether there is a matching (and used) pronoun in context that is below the given index
-	private static boolean matchesAnyPronounsUpToObjectIndex(Context context, Pronoun pronoun, int index, boolean[] usePronouns) {
+	private static boolean matchesAnyPronounsUpToObjectIndex(TextContext context, Pronoun pronoun, int index, boolean[] usePronouns) {
 		List<Noun> objectsList = new ArrayList<>(context.getObjects().values());
 		for (int i = 0; i < Math.min(objectsList.size(), index - 1); i++) {
 			Pronoun objectPronoun = objectsList.get(i).getPronoun();

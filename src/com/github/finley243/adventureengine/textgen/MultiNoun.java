@@ -88,11 +88,11 @@ public class MultiNoun implements Noun {
     }
 
     @Override
-    public Context.Pronoun getPronoun() {
+    public TextContext.Pronoun getPronoun() {
         if (nouns.size() == 1) {
-            return Context.Pronoun.IT;
+            return TextContext.Pronoun.IT;
         }
-        return Context.Pronoun.THEY;
+        return TextContext.Pronoun.THEY;
     }
 
     @Override
