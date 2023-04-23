@@ -57,10 +57,10 @@
     <object id="vending_machine_nitron">
         <name>Nitron Cola vending machine</name>
         <action template="vending_machine">
-            <parameter name="itemID" dataType="string" value="nitron_cola"/>
+            <parameter name="itemID" value="nitron_cola"/>
         </action>
         <action template="vending_machine">
-            <parameter name="itemID" dataType="string" value="nitron_diet"/>
+            <parameter name="itemID" value="nitron_diet"/>
         </action>
     </object>
 </data>

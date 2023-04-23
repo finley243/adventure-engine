@@ -15,11 +15,11 @@
             </condition>
             <condition type="compare">
                 <var type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_receptionist"/>
-                <var dataType="string" value="stratis_hotel_lobby_desk"/>
+                <var value="stratis_hotel_lobby_desk"/>
             </condition>
             <condition type="compare">
                 <var type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_guard_lobby"/>
-                <var dataType="string" value="stratis_hotel_lobby_seating"/>
+                <var value="stratis_hotel_lobby_seating"/>
             </condition>
         </condition>
         <line>

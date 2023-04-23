@@ -133,6 +133,10 @@ public class LoadUtils {
 		return null;
 	}
 
+	public static boolean hasChildWithName(Element parent, String name) {
+		return singleChildWithName(parent, name) != null;
+	}
+
 	public static <T extends Enum<T>> T stringToEnum(String value, Class<T> enumClass) {
 		if (value == null) return null;
 		for (T current : EnumSet.allOf(enumClass)) {

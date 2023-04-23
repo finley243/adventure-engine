@@ -12,7 +12,7 @@
         </condition>
         <script>
             <script type="setState" state="locked" holder="parentObject">
-                <var dataType="boolean" value="false"/>
+                <var value="f"/>
             </script>
             <script type="sensoryEvent">
                 <phrase>pickLock</phrase>
@@ -33,7 +33,7 @@
         </condition>
         <script>
             <script type="setState" state="locked" holder="parentObject">
-                <var dataType="boolean" value="false"/>
+                <var value="f"/>
             </script>
             <script type="sensoryEvent">
                 <phrase>unlock</phrase>
@@ -68,7 +68,7 @@
                     <var type="stat" dataType="int" holder="itemTemplate" stat="price">
                         <holderID type="parameter" name="itemID"/>
                     </var>
-                    <var dataType="int" value="-1"/>
+                    <var value="-1"/>
                 </var>
             </script>
             <script type="sensoryEvent">

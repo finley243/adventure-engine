@@ -411,27 +411,21 @@ public class DataLoader {
                 return new ExpressionConditional(dataType, conditionVariablePairs, expressionElse);
             }
             case null, default -> {
-                switch (dataType) {
-                    case "boolean" -> {
-                        boolean literalBoolean = LoadUtils.attributeBool(expressionElement, "value", true);
-                        return new ExpressionConstant(literalBoolean);
-                    }
-                    case "int" -> {
-                        int literalInteger = LoadUtils.attributeInt(expressionElement, "value", 0);
-                        return new ExpressionConstant(literalInteger);
-                    }
-                    case "float" -> {
-                        float literalFloat = LoadUtils.attributeFloat(expressionElement, "value", 0.0f);
-                        return new ExpressionConstant(literalFloat);
-                    }
-                    case "string" -> {
-                        String literalString = LoadUtils.attribute(expressionElement, "value", null);
-                        return new ExpressionConstant(literalString);
-                    }
-                    case "stringSet" -> {
-                        Set<String> literalStringSet = LoadUtils.setOfTags(expressionElement, "value");
-                        return new ExpressionConstant(literalStringSet);
-                    }
+                String valueString = LoadUtils.attribute(expressionElement, "value", null);
+                if (LoadUtils.isValidFloat(valueString)) {
+                    return new ExpressionConstant(Float.parseFloat(valueString));
+                } else if (LoadUtils.isValidInteger(valueString)) {
+                    return new ExpressionConstant(Integer.parseInt(valueString));
+                } else if (LoadUtils.isValidBoolean(valueString)) {
+                    boolean valueBoolean = valueString.equalsIgnoreCase("t");
+                    return new ExpressionConstant(valueBoolean);
+                } else if (valueString != null) {
+                    return new ExpressionConstant(valueString);
+                } else if (!expressionElement.getTextContent().isEmpty()) {
+                    return new ExpressionConstant(expressionElement.getTextContent());
+                } else if (LoadUtils.hasChildWithName(expressionElement, "value")) {
+                    Set<String> stringSet = LoadUtils.setOfTags(expressionElement, "value");
+                    return new ExpressionConstant(stringSet);
                 }
             }
         }
