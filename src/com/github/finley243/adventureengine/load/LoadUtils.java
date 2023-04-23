@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class LoadUtils {
 
@@ -140,6 +141,23 @@ public class LoadUtils {
 			}
 		}
 		return null;
+	}
+
+	public static boolean isValidInteger(String value) {
+		if (value == null) return false;
+		Pattern pattern = Pattern.compile("-?\\d+");
+		return pattern.matcher(value).matches();
+	}
+
+	public static boolean isValidFloat(String value) {
+		if (value == null) return false;
+		Pattern pattern = Pattern.compile("-?\\d+\\.\\d+");
+		return pattern.matcher(value).matches();
+	}
+
+	public static boolean isValidBoolean(String value) {
+		if (value == null) return false;
+		return value.equalsIgnoreCase("t") || value.equalsIgnoreCase("f");
 	}
 	
 }
