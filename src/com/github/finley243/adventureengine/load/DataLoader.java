@@ -392,6 +392,10 @@ public class DataLoader {
                 }
                 return new ExpressionSetFromStrings(stringVars);
             }
+            case "round" -> {
+                Expression roundExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "var"), "float");
+                return new ExpressionRound(roundExpression);
+            }
             case "conditional" -> {
                 List<ExpressionConditional.ConditionVariablePair> conditionVariablePairs = new ArrayList<>();
                 for (Element pairElement : LoadUtils.directChildrenWithName(expressionElement, "if")) {
