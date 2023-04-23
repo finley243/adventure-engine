@@ -382,8 +382,12 @@ public class DataLoader {
                 return new ExpressionToString(toStringExpression);
             }
             case "randomStringFromSet" -> {
-                Expression randomSetExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
-                return new ExpressionRandomStringFromSet(randomSetExpression);
+                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
+                return new ExpressionRandomStringFromSet(setExpression);
+            }
+            case "size" -> {
+                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
+                return new ExpressionSetSize(setExpression);
             }
             case "buildStringSet" -> {
                 List<Expression> stringVars = new ArrayList<>();
