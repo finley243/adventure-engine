@@ -417,7 +417,7 @@ public class DataLoader {
                 } else if (LoadUtils.isValidInteger(valueString)) {
                     return new ExpressionConstant(Integer.parseInt(valueString));
                 } else if (LoadUtils.isValidBoolean(valueString)) {
-                    boolean valueBoolean = valueString.equalsIgnoreCase("t");
+                    boolean valueBoolean = valueString.equalsIgnoreCase("t") || valueString.equalsIgnoreCase("true");
                     return new ExpressionConstant(valueBoolean);
                 } else if (valueString != null) {
                     return new ExpressionConstant(valueString);

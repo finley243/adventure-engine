@@ -161,7 +161,7 @@ public class LoadUtils {
 
 	public static boolean isValidBoolean(String value) {
 		if (value == null) return false;
-		return value.equalsIgnoreCase("t") || value.equalsIgnoreCase("f");
+		return value.equalsIgnoreCase("t") || value.equalsIgnoreCase("f") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false");
 	}
 	
 }
