@@ -22,7 +22,7 @@ public class ScriptTimerStart extends Script {
 
     @Override
     protected void executeSuccess(Context context) {
-        Timer timer = new Timer(context.game(), timerID, timerDuration, timerExpireScript);
+        Timer timer = new Timer(context.game(), timerID, timerDuration, timerExpireScript, context);
         context.game().data().addTimer(timer.getID(), timer);
     }
 
