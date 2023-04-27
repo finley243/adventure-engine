@@ -411,19 +411,19 @@ public class DataLoader {
             case null, default -> {
                 String valueString = LoadUtils.attribute(expressionElement, "value", null);
                 if (LoadUtils.isValidFloat(valueString)) {
-                    return new ExpressionConstant(Float.parseFloat(valueString));
+                    return new ExpressionConstantFloat(Float.parseFloat(valueString));
                 } else if (LoadUtils.isValidInteger(valueString)) {
-                    return new ExpressionConstant(Integer.parseInt(valueString));
+                    return new ExpressionConstantInteger(Integer.parseInt(valueString));
                 } else if (LoadUtils.isValidBoolean(valueString)) {
                     boolean valueBoolean = valueString.equalsIgnoreCase("t") || valueString.equalsIgnoreCase("true");
-                    return new ExpressionConstant(valueBoolean);
+                    return new ExpressionConstantBoolean(valueBoolean);
                 } else if (valueString != null) {
-                    return new ExpressionConstant(valueString);
+                    return new ExpressionConstantString(valueString);
                 } else if (!expressionElement.getTextContent().isEmpty()) {
-                    return new ExpressionConstant(expressionElement.getTextContent());
+                    return new ExpressionConstantString(expressionElement.getTextContent());
                 } else if (LoadUtils.hasChildWithName(expressionElement, "value")) {
                     Set<String> stringSet = LoadUtils.setOfTags(expressionElement, "value");
-                    return new ExpressionConstant(stringSet);
+                    return new ExpressionConstantStringSet(stringSet);
                 }
             }
         }
@@ -437,14 +437,14 @@ public class DataLoader {
         if (attributeValue == null) {
             return null;
         } else if (LoadUtils.isValidFloat(attributeValue)) {
-            return new ExpressionConstant(Float.parseFloat(attributeValue));
+            return new ExpressionConstantFloat(Float.parseFloat(attributeValue));
         } else if (LoadUtils.isValidInteger(attributeValue)) {
-            return new ExpressionConstant(Integer.parseInt(attributeValue));
+            return new ExpressionConstantInteger(Integer.parseInt(attributeValue));
         } else if (LoadUtils.isValidBoolean(attributeValue)) {
             boolean valueBoolean = attributeValue.equalsIgnoreCase("t") || attributeValue.equalsIgnoreCase("true");
-            return new ExpressionConstant(valueBoolean);
+            return new ExpressionConstantBoolean(valueBoolean);
         } else {
-            return new ExpressionConstant(attributeValue);
+            return new ExpressionConstantString(attributeValue);
         }
     }
 

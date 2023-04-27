@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstant;
+import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 
 import java.util.Map;
 import java.util.Set;
@@ -26,7 +26,7 @@ public class ScriptIterator extends Script {
     protected void executeSuccess(Context context) {
         Set<String> stringSet = setExpression.getValueStringSet(context);
         for (String currentString : stringSet) {
-            Expression iteratorParameter = new ExpressionConstant(currentString);
+            Expression iteratorParameter = new ExpressionConstantString(currentString);
             iteratedScript.execute(new Context(context, new MapBuilder<String, Expression>().put(iteratorParameterName, iteratorParameter).build()));
         }
     }

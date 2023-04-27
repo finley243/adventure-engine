@@ -69,15 +69,15 @@ public abstract class Expression {
         };
     }
 
-    public static ExpressionConstant convertToConstant(Expression expression, Context context) {
+    public static Expression convertToConstant(Expression expression, Context context) {
         return switch (expression.getDataType()) {
-            case BOOLEAN -> new ExpressionConstant(expression.getValueBoolean(context));
-            case INTEGER -> new ExpressionConstant(expression.getValueInteger(context));
-            case FLOAT -> new ExpressionConstant(expression.getValueFloat(context));
-            case STRING -> new ExpressionConstant(expression.getValueString(context));
-            case STRING_SET -> new ExpressionConstant(expression.getValueStringSet(context));
-            case INVENTORY -> new ExpressionConstant(expression.getValueInventory(context));
-            case NOUN -> new ExpressionConstant(expression.getValueNoun(context));
+            case BOOLEAN -> new ExpressionConstantBoolean(expression.getValueBoolean(context));
+            case INTEGER -> new ExpressionConstantInteger(expression.getValueInteger(context));
+            case FLOAT -> new ExpressionConstantFloat(expression.getValueFloat(context));
+            case STRING -> new ExpressionConstantString(expression.getValueString(context));
+            case STRING_SET -> new ExpressionConstantStringSet(expression.getValueStringSet(context));
+            case INVENTORY -> new ExpressionConstantInventory(expression.getValueInventory(context));
+            case NOUN -> new ExpressionConstantNoun(expression.getValueNoun(context));
         };
     }
 
