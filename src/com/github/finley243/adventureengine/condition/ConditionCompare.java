@@ -7,9 +7,9 @@ public class ConditionCompare extends Condition {
 
     private final Expression expression1;
     private final Expression expression2;
-    private final Equality equality;
+    private final Comparator comparator;
 
-    public ConditionCompare(boolean invert, Expression expression1, Expression expression2, Equality equality) {
+    public ConditionCompare(boolean invert, Expression expression1, Expression expression2, Comparator comparator) {
         super(invert);
         if (expression1 == null || expression2 == null) {
             throw new IllegalArgumentException("One or more variables is null");
@@ -19,7 +19,7 @@ public class ConditionCompare extends Condition {
         }
         this.expression1 = expression1;
         this.expression2 = expression2;
-        this.equality = equality;
+        this.comparator = comparator;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ConditionCompare extends Condition {
             } else {
                 value2 = expression2.getValueFloat(context);
             }
-            return Condition.equalityCheckFloat(value1, value2, equality);
+            return Condition.comparatorCheckFloat(value1, value2, comparator);
         } else if (expression1.getDataType() == Expression.DataType.BOOLEAN) {
             return expression1.getValueBoolean(context) == expression2.getValueBoolean(context);
         } else if (expression1.getDataType() == Expression.DataType.STRING) {

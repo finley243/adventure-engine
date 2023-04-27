@@ -19,7 +19,7 @@
     </scene>
     <scene id="cornerstore_shopkeeper_andre_questions_repeat">
         <condition type="boolean">
-            <var type="stat" dataType="boolean" holder="scene" holderID="cornerstore_shopkeeper_andre_questions" stat="triggered"/>
+            <value type="stat" dataType="boolean" holder="scene" holderID="cornerstore_shopkeeper_andre_questions" stat="triggered"/>
         </condition>
         <line redirect="cornerstore_shopkeeper_andre_questions">
             <text>"Go ahead."</text>
@@ -43,9 +43,8 @@
     </scene>
     <scene id="cornerstore_shopkeeper_andre_intimidate" type="select">
         <line redirect="cornerstore_shopkeeper_andre_questions">
-            <condition type="compare">
-                <var type="stat" dataType="int" stat="intimidation" holder="player"/>
-                <var dataType="int" value="6"/>
+            <condition type="compare" value2="6">
+                <value1 type="stat" dataType="int" stat="intimidation" holder="player"/>
             </condition>
             <text>The shopkeeper puts up his hands.</text>
             <text>"Okay, okay. Fine. Ask your damn questions."</text>
@@ -56,14 +55,11 @@
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_bribe">
-        <condition type="compare">
-            <var type="stat" dataType="int" stat="money" holder="player"/>
-            <var dataType="int" value="200"/>
+        <condition type="compare" value2="200">
+            <value1 type="stat" dataType="int" stat="money" holder="player"/>
         </condition>
         <line redirect="cornerstore_shopkeeper_andre_questions">
-            <script type="modifyState" state="money" holder="PLAYER">
-                <var dataType="int" value="-200"/>
-            </script>
+            <script type="modifyState" state="money" holder="PLAYER" value="-200"/>
             <text>A smirk comes across the shopkeepers face. He straightens his glasses.</text>
             <text>"See, I like people who know how to conduct business. You've got questions, ask away."</text>
         </line>

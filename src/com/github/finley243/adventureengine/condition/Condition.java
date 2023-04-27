@@ -7,7 +7,7 @@ import com.github.finley243.adventureengine.Context;
  */
 public abstract class Condition {
 	
-	public enum Equality {
+	public enum Comparator {
 		LESS, GREATER, LESS_EQUAL, GREATER_EQUAL, EQUAL, NOT_EQUAL
 	}
 
@@ -23,8 +23,8 @@ public abstract class Condition {
 
 	protected abstract boolean isMetInternal(Context context);
 
-	public static boolean equalityCheckFloat(float value1, float value2, Equality equality) {
-		return switch (equality) {
+	public static boolean comparatorCheckFloat(float value1, float value2, Comparator comparator) {
+		return switch (comparator) {
 			case LESS -> (value1 < value2);
 			case GREATER -> (value1 > value2);
 			case LESS_EQUAL -> (value1 <= value2);

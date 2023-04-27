@@ -3,17 +3,15 @@
         <prompt>Pick lock</prompt>
         <condition>
             <condition type="boolean">
-                <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+                <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
             </condition>
-            <condition type="compare" equality="GREATER_EQUAL">
-                <var type="stat" dataType="int" stat="lockpick" holder="subject"/>
-                <var type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
+            <condition type="compare" comparator="GREATER_EQUAL">
+                <value1 type="stat" dataType="int" stat="lockpick" holder="subject"/>
+                <value2 type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
             </condition>
         </condition>
         <script>
-            <script type="setState" state="locked" holder="parentObject">
-                <var value="f"/>
-            </script>
+            <script type="setState" state="locked" holder="parentObject" value="false"/>
             <script type="sensoryEvent">
                 <phrase>pickLock</phrase>
                 <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
@@ -24,7 +22,7 @@
         <prompt>Unlock</prompt>
         <condition>
             <condition type="boolean">
-                <var type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+                <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
             </condition>
             <condition type="inventoryItem" requireAll="false">
                 <inv type="stat" dataType="inventory" holder="subject"/>
@@ -32,9 +30,7 @@
             </condition>
         </condition>
         <script>
-            <script type="setState" state="locked" holder="parentObject">
-                <var value="f"/>
-            </script>
+            <script type="setState" state="locked" holder="parentObject" value="false"/>
             <script type="sensoryEvent">
                 <phrase>unlock</phrase>
                 <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
@@ -47,15 +43,15 @@
             <holderID type="parameter" name="itemID"/>
         </parameter>
         <parameter name="price" dataType="string" type="toString">
-            <var type="stat" dataType="int" holder="itemTemplate" stat="price">
+            <value type="stat" dataType="int" holder="itemTemplate" stat="price">
                 <holderID type="parameter" name="itemID"/>
-            </var>
+            </value>
         </parameter>
-        <condition type="compare" equality="GREATER_EQUAL">
-            <var type="stat" dataType="int" stat="money" holder="subject"/>
-            <var type="stat" dataType="int" holder="itemTemplate" stat="price">
+        <condition type="compare" comparator="GREATER_EQUAL">
+            <value1 type="stat" dataType="int" stat="money" holder="subject"/>
+            <value2 type="stat" dataType="int" holder="itemTemplate" stat="price">
                 <holderID type="parameter" name="itemID"/>
-            </var>
+            </value2>
         </condition>
         <script>
             <script type="transferItem">
@@ -63,13 +59,12 @@
                 <item type="parameter" dataType="string" name="itemID"/>
             </script>
             <script type="modifyState" dataType="int" state="money" holder="subject">
-                <var dataType="int" value="-10"/>
-                <var type="product" dataType="int">
-                    <var type="stat" dataType="int" holder="itemTemplate" stat="price">
+                <value type="product" dataType="int">
+                    <value type="stat" dataType="int" holder="itemTemplate" stat="price">
                         <holderID type="parameter" name="itemID"/>
-                    </var>
-                    <var value="-1"/>
-                </var>
+                    </value>
+                    <value value="-1"/>
+                </value>
             </script>
             <script type="sensoryEvent">
                 <parameter name="item" type="stat" dataType="noun" holder="itemTemplate">

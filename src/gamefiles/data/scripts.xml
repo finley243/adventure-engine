@@ -1,7 +1,7 @@
 <data>
     <script id="dropEquipped">
         <condition type="boolean">
-            <var type="stat" holder="subject" stat="hasEquippedItem"/>
+            <value type="stat" holder="subject" stat="hasEquippedItem"/>
         </condition>
         <parameter name="dropAreaID" type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
         <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equippedItem" stat="id"/>
@@ -25,7 +25,7 @@
     </script>
     <script id="dropEquippedForce">
         <condition type="boolean">
-            <var type="stat" holder="subject" stat="hasEquippedItem"/>
+            <value type="stat" holder="subject" stat="hasEquippedItem"/>
         </condition>
         <parameter name="dropAreaID" type="randomStringFromSet" dataType="string">
             <set type="stat" holder="subject" subType="area" stat="movableAreas"/>

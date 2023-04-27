@@ -11,12 +11,12 @@
                 </parameter>
                 <phrase>moveTo</phrase>
                 <area type="buildStringSet">
-                    <var type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
-                    <var type="parameter" dataType="string" name="areaID"/>
+                    <value type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+                    <value type="parameter" dataType="string" name="areaID"/>
                 </area>
             </script>
             <script type="setState" state="area" holder="subject">
-                <var dataType="string" type="parameter" name="areaID"/>
+                <value dataType="string" type="parameter" name="areaID"/>
             </script>
         </script>
     </action>
@@ -32,12 +32,12 @@
                 </parameter>
                 <phrase>moveCorner</phrase>
                 <area type="buildStringSet">
-                    <var type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
-                    <var type="parameter" dataType="string" name="areaID"/>
+                    <value type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+                    <value type="parameter" dataType="string" name="areaID"/>
                 </area>
             </script>
             <script type="setState" state="area" holder="subject">
-                <var dataType="string" type="parameter" name="areaID"/>
+                <value dataType="string" type="parameter" name="areaID"/>
             </script>
         </script>
     </action>

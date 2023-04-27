@@ -3,9 +3,7 @@
         <scriptAdd type="external" scriptID="dropEquippedForce"/>
     </effect>
     <effect id="foodBasic">
-        <scriptAdd type="modifyState" state="heal">
-            <var dataType="int" value="10"/>
-        </scriptAdd>
+        <scriptAdd type="modifyState" state="heal" value="10"/>
     </effect>
     <effect id="armorMedium" type="mod" stat="damageResistPhysical" amount="5"/>
 </data>

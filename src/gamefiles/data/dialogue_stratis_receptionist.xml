@@ -18,11 +18,8 @@
         <choice link="stratis_receptionist_end">That will be all.</choice>
     </scene>
     <scene id="stratis_receptionist_request_room">
-        <condition type="compare" equality="EQUAL">
-            <var type="global" dataType="int">
-                <var dataType="string" value="purchased_stratis_room"/>
-            </var>
-            <var dataType="int" value="0"/>
+        <condition type="boolean" invert="true">
+            <value type="global" dataType="boolean" globalID="purchased_stratis_room"/>
         </condition>
         <line>
             <text>He taps the screen in front of him and quickly scans its contents.</text>
@@ -32,24 +29,18 @@
         <choice link="stratis_receptionist_main_return">Not right now.</choice>
     </scene>
     <scene id="stratis_receptionist_purchase_room">
-        <condition type="compare">
-            <var type="stat" dataType="int" stat="money" holder="player"/>
-            <var dataType="int" value="300"/>
+        <condition type="compare" value2="300">
+            <value1 type="stat" dataType="int" stat="money" holder="player"/>
         </condition>
         <line>
             <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
             <text>He hands you a white keycard with the Stratis Hotel logo.</text>
             <script type="all">
-                <script type="transferItem">
+                <script type="transferItem" item="stratis_room_key">
                     <toInv holder="player"/>
-                    <item value="stratis_room_key"/>
                 </script>
-                <script type="modifyState" state="money" holder="PLAYER">
-                    <var dataType="int" value="-300"/>
-                </script>
-                <script type="setGlobal" globalID="purchased_stratis_room">
-                    <var dataType="int" value="1"/>
-                </script>
+                <script type="modifyState" state="money" holder="PLAYER" value="-300"/>
+                <script type="setGlobal" globalID="purchased_stratis_room" value="true"/>
             </script>
         </line>
         <line redirect="stratis_receptionist_main">

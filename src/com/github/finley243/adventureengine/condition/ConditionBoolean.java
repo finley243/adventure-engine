@@ -9,8 +9,8 @@ public class ConditionBoolean extends Condition {
 
     public ConditionBoolean(boolean invert, Expression expression) {
         super(invert);
-        if (expression == null) throw new IllegalArgumentException("Variable is null");
-        if (expression.getDataType() != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("Variable is non-boolean");
+        if (expression == null) throw new IllegalArgumentException("ConditionBoolean expression is null");
+        if (expression.getDataType() != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("ConditionBoolean expression is not a boolean");
         this.expression = expression;
     }
 
