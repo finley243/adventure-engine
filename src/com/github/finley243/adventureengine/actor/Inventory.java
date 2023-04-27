@@ -41,10 +41,19 @@ public class Inventory {
 	}
 
 	public void addItems(String itemID, int count) {
-		if (game.data().getItem(itemID).hasState()) throw new IllegalArgumentException("Cannot add multiple Items with state: " + itemID);
 		if (count <= 0) throw new IllegalArgumentException("Cannot add non-positive number of Items: " + itemID);
-		int currentCount = itemsStateless.getOrDefault(itemID, 0);
-		itemsStateless.put(itemID, currentCount + count);
+		if (game.data().getItem(itemID).hasState()) {
+			if (!items.containsKey(itemID)) {
+				items.put(itemID, new ArrayList<>());
+			}
+			for (int i = 0; i < count; i++) {
+				Item itemInstance = ItemFactory.create(game, itemID);
+				items.get(itemID).add(itemInstance);
+			}
+		} else {
+			int currentCount = itemsStateless.getOrDefault(itemID, 0);
+			itemsStateless.put(itemID, currentCount + count);
+		}
 	}
 
 	public void addItems(Map<Item, Integer> itemMap) {
@@ -158,30 +167,7 @@ public class Inventory {
 		}
 	}
 
-	/*public void removeItems(Item item, int count) {
-		if (item.getTemplate().hasState()) throw new IllegalArgumentException("Cannot remove multiple items with state: " + item.getTemplate().getID());
-		if (count <= 0) throw new IllegalArgumentException("Cannot remove non-positive number of items: " + item.getTemplate().getID());
-		if (itemsStateless.containsKey(item.getTemplate().getID())) {
-			int currentCount = itemsStateless.get(item.getTemplate().getID());
-			int newCount = currentCount - count;
-			if (newCount <= 0) {
-				itemsStateless.remove(item.getTemplate().getID());
-				if (actor != null) {
-					if (item instanceof ItemApparel) {
-						actor.getApparelComponent().unequip((ItemApparel) item);
-					}
-					if (item instanceof ItemEquippable) {
-						actor.getEquipmentComponent().unequip((ItemEquippable) item);
-					}
-				}
-			} else {
-				itemsStateless.put(item.getTemplate().getID(), newCount);
-			}
-		}
-	}*/
-
 	public void removeItems(String itemID, int count) {
-		//if (game.data().getItem(itemID).hasState()) throw new IllegalArgumentException("Cannot remove an item with state by its ID");
 		if (count <= 0) throw new IllegalArgumentException("Cannot remove non-positive number of items: " + itemID);
 		if (itemsStateless.containsKey(itemID)) {
 			int currentCount = itemsStateless.get(itemID);

@@ -6,10 +6,10 @@
         <parameter name="dropAreaID" type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
         <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equippedItem" stat="id"/>
         <script type="transferItem" transferType="instance">
-            <invOrigin holder="subject"/>
-            <invTarget holder="area">
+            <fromInv holder="subject"/>
+            <toInv holder="area">
                 <holderID type="parameter" name="dropAreaID"/>
-            </invTarget>
+            </toInv>
             <item type="parameter" name="equippedItemID"/>
         </script>
         <script type="sensoryEvent">
@@ -32,10 +32,10 @@
         </parameter>
         <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equippedItem" stat="id"/>
         <script type="transferItem" transferType="instance">
-            <invOrigin holder="subject"/>
-            <invTarget holder="area">
+            <fromInv holder="subject"/>
+            <toInv holder="area">
                 <holderID type="parameter" name="dropAreaID"/>
-            </invTarget>
+            </toInv>
             <item type="parameter" name="equippedItemID"/>
         </script>
         <script type="sensoryEvent">

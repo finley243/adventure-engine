@@ -488,14 +488,9 @@ public class DataLoader {
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
                 return new ScriptExternal(condition, localParameters, scriptID);
             }
-            case "addItem" -> {
-                Expression addItemInv = loadExpression(LoadUtils.singleChildWithName(scriptElement, "inv"), "inventory");
-                Expression addItemID = loadExpression(LoadUtils.singleChildWithName(scriptElement, "item"), "string");
-                return new ScriptAddItem(condition, localParameters, addItemInv, addItemID);
-            }
             case "transferItem" -> {
-                Expression transferItemInvOrigin = loadExpression(LoadUtils.singleChildWithName(scriptElement, "invOrigin"), "inventory");
-                Expression transferItemInvTarget = loadExpression(LoadUtils.singleChildWithName(scriptElement, "invTarget"), "inventory");
+                Expression transferItemInvOrigin = loadExpression(LoadUtils.singleChildWithName(scriptElement, "fromInv"), "inventory");
+                Expression transferItemInvTarget = loadExpression(LoadUtils.singleChildWithName(scriptElement, "toInv"), "inventory");
                 Expression transferItemID = loadExpression(LoadUtils.singleChildWithName(scriptElement, "item"), "string");
                 ScriptTransferItem.TransferItemsType transferType = LoadUtils.attributeEnum(scriptElement, "transferType", ScriptTransferItem.TransferItemsType.class, ScriptTransferItem.TransferItemsType.COUNT);
                 int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);

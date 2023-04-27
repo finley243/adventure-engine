@@ -58,8 +58,8 @@
             </var>
         </condition>
         <script>
-            <script type="addItem">
-                <inv type="stat" dataType="inventory" holder="subject"/>
+            <script type="transferItem">
+                <toInv holder="subject"/>
                 <item type="parameter" dataType="string" name="itemID"/>
             </script>
             <script type="modifyState" dataType="int" state="money" holder="subject">
