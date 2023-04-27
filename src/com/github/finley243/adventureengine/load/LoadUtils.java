@@ -149,13 +149,13 @@ public class LoadUtils {
 
 	public static boolean isValidInteger(String value) {
 		if (value == null) return false;
-		Pattern pattern = Pattern.compile("-?\\d+");
+		Pattern pattern = Pattern.compile("^-?\\d+$");
 		return pattern.matcher(value).matches();
 	}
 
 	public static boolean isValidFloat(String value) {
 		if (value == null) return false;
-		Pattern pattern = Pattern.compile("-?\\d+\\.\\d+");
+		Pattern pattern = Pattern.compile("^-?\\d+\\.\\d+$");
 		return pattern.matcher(value).matches();
 	}
 
