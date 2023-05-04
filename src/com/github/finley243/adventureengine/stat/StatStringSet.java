@@ -5,14 +5,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class StatStringSet {
+public class StatStringSet extends Stat {
 
-    private final EffectableStatHolder target;
     private final Map<String, Integer> additional;
     private final Map<String, Integer> cancellation;
 
-    public StatStringSet(EffectableStatHolder target) {
-        this.target = target;
+    public StatStringSet(String name, EffectableStatHolder target) {
+        super(name, target);
         this.additional = new HashMap<>();
         this.cancellation = new HashMap<>();
     }
@@ -56,7 +55,7 @@ public class StatStringSet {
                 additional.put(value, count + 1);
             }
         }
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
     public void removeAdditional(Set<String> values) {
@@ -70,7 +69,7 @@ public class StatStringSet {
                 }
             }
         }
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
     public void addCancellation(Set<String> values) {
@@ -82,7 +81,7 @@ public class StatStringSet {
                 cancellation.put(value, count + 1);
             }
         }
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
     public void removeCancellation(Set<String> values) {
@@ -96,7 +95,7 @@ public class StatStringSet {
                 }
             }
         }
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
     private <T extends Enum<T>> T enumValue(String string, Class<T> enumClass) {

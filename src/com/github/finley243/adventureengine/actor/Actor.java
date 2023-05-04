@@ -124,24 +124,24 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 		this.areaTargets = new HashSet<>();
 		this.startDead = startDead;
 		this.isDead = startDead;
-		this.maxHP = new StatInt(this);
+		this.maxHP = new StatInt("maxHP", this);
 		this.damageResistance = new EnumMap<>(Damage.DamageType.class);
 		for (Damage.DamageType damageType : Damage.DamageType.values()) {
-			this.damageResistance.put(damageType, new StatInt(this));
+			this.damageResistance.put(damageType, new StatInt("damageResistance" + damageType, this));
 		}
-		this.actionPoints = new StatInt(this);
-		this.canMove = new StatBoolean(this, false);
-		this.canDodge = new StatBoolean(this, false);
+		this.actionPoints = new StatInt("actionPoints", this);
+		this.canMove = new StatBoolean("canMove", this, false);
+		this.canDodge = new StatBoolean("canDodge", this, false);
 		this.inventory = new Inventory(game, this);
 		this.apparelComponent = new ApparelComponent(this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		this.attributes = new EnumMap<>(Attribute.class);
 		for (Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new StatInt(this));
+			this.attributes.put(attribute, new StatInt("attribute" + attribute, this));
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for (Skill skill : Skill.values()) {
-			this.skills.put(skill, new StatInt(this));
+			this.skills.put(skill, new StatInt("skill" + skill, this));
 		}
 		this.effectComponent = new EffectComponent(game, this, new Context(game, this, this));
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
@@ -933,8 +933,8 @@ public class Actor extends GameInstanced implements Noun, Physical, EffectableSt
 	}
 
 	@Override
-	public void onStatChange() {
-		if (HP > getMaxHP()) {
+	public void onStatChange(String name) {
+		if ("maxHP".equals(name) && HP > getMaxHP()) {
 			HP = getMaxHP();
 		}
 	}

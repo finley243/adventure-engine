@@ -3,13 +3,12 @@ package com.github.finley243.adventureengine.stat;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class StatString {
+public class StatString extends Stat {
 
-    private final EffectableStatHolder target;
     private final Deque<String> stringStack;
 
-    public StatString(EffectableStatHolder target) {
-        this.target = target;
+    public StatString(String name, EffectableStatHolder target) {
+        super(name, target);
         this.stringStack = new ArrayDeque<>();
     }
 
@@ -35,12 +34,12 @@ public class StatString {
 
     public void addMod(String value) {
         stringStack.push(value);
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
     public void removeMod(String value) {
         stringStack.remove(value);
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
 }

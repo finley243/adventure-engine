@@ -12,6 +12,6 @@ public interface EffectableStatHolder extends StatHolder {
 
     StatStringSet getStatStringSet(String name);
 
-    void onStatChange();
+    void onStatChange(String name);
 
 }

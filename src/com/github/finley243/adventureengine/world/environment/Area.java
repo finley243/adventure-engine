@@ -9,13 +9,12 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.effect.AreaEffect;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
@@ -27,7 +26,7 @@ import java.util.*;
 /**
  * Represents a section of a room that can contain objects and actors
  */
-public class Area extends GameInstanced implements Noun, StatHolder {
+public class Area extends GameInstanced implements Noun, EffectableStatHolder {
 
 	public enum AreaNameType {
 		IN, ON, NEAR, FRONT, SIDE, BEHIND
@@ -59,7 +58,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	// Inventory containing all items in the area (that are not in object or actor inventories)
 	private final Inventory itemInventory;
 
-	private final Map<AreaEffect, List<Integer>> areaEffects;
+	private final StatStringSet effects;
 	
 	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game, ID);
@@ -76,7 +75,7 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		this.actors = new HashSet<>();
 		this.itemInventory = new Inventory(game, null);
 		this.scripts = scripts;
-		this.areaEffects = new HashMap<>();
+		this.effects = new StatStringSet("effects", this);
 	}
 
 	public WorldObject getLandmark() {
@@ -326,43 +325,14 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 		return areas;
 	}
 
-	public void addAreaEffect(AreaEffect areaEffect) {
-		if (!areaEffects.containsKey(areaEffect)) {
-			areaEffects.put(areaEffect, new ArrayList<>());
-		}
-		areaEffects.get(areaEffect).add(0);
-		// TODO - Start non-actor effects
-		for (Actor actor : getActors()) {
-			if (actor.getEffectComponent() != null) {
-				for (String effect : areaEffect.getEffects()) {
-					actor.getEffectComponent().addEffect(effect);
-				}
-			}
-		}
+	public void onStartRound() {
+		applyEffects();
 	}
 
-	public void onStartRound() {
-		Iterator<AreaEffect> itr = areaEffects.keySet().iterator();
-		while (itr.hasNext()) {
-			AreaEffect areaEffect = itr.next();
-			for (Actor actor : getActors()) {
-				if (actor.getEffectComponent() != null) {
-					for (String effect : areaEffect.getEffects()) {
-						actor.getEffectComponent().addEffect(effect);
-					}
-				}
-			}
-			List<Integer> counters = areaEffects.get(areaEffect);
-			for (int i = 0; i < counters.size(); i++) {
-				int counterValue = counters.get(i) + 1;
-				counters.set(i, counterValue);
-				if (counterValue == areaEffect.getDuration()) {
-					// TODO - End non-actor effects
-					counters.remove(0);
-					if (counters.isEmpty()) {
-						itr.remove();
-					}
-				}
+	public void applyEffects() {
+		for (Actor actor : getActors()) {
+			for (String effectID : effects.value(new HashSet<>())) {
+				actor.getEffectComponent().addEffect(effectID);
 			}
 		}
 	}
@@ -466,6 +436,41 @@ public class Area extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public void modStateFloat(String name, float amount) {
 
+	}
+
+	@Override
+	public StatInt getStatInt(String name) {
+		return null;
+	}
+
+	@Override
+	public StatFloat getStatFloat(String name) {
+		return null;
+	}
+
+	@Override
+	public StatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public StatString getStatString(String name) {
+		return null;
+	}
+
+	@Override
+	public StatStringSet getStatStringSet(String name) {
+		if ("effects".equals(name)) {
+			return effects;
+		}
+		return null;
+	}
+
+	@Override
+	public void onStatChange(String name) {
+		if ("effects".equals(name)) {
+			applyEffects();
+		}
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {

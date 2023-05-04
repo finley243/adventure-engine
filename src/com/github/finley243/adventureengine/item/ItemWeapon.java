@@ -42,16 +42,16 @@ public class ItemWeapon extends ItemEquippable implements EffectableStatHolder {
 	public ItemWeapon(Game game, String ID, String templateID) {
 		super(game, ID);
 		this.templateID = templateID;
-		this.attackTypes = new StatStringSet(this);
-		this.damage = new StatInt(this);
-		this.rate = new StatInt(this);
-		this.critDamage = new StatInt(this);
-		this.ranges = new StatStringSet(this);
-		this.clipSize = new StatInt(this);
-		this.accuracyBonus = new StatFloat(this);
-		this.armorMult = new StatFloat(this);
-		this.damageType = new StatString(this);
-		this.isSilenced = new StatBoolean(this, false);
+		this.attackTypes = new StatStringSet("attackTypes", this);
+		this.damage = new StatInt("damage", this);
+		this.rate = new StatInt("rate", this);
+		this.critDamage = new StatInt("critDamage", this);
+		this.ranges = new StatStringSet("ranges", this);
+		this.clipSize = new StatInt("clipSize", this);
+		this.accuracyBonus = new StatFloat("accuracyBonus", this);
+		this.armorMult = new StatFloat("armorMult", this);
+		this.damageType = new StatString("damageType", this);
+		this.isSilenced = new StatBoolean("isSilenced", this, false);
 		this.ammoType = null;
 		this.ammoCount = 0;
 		this.effects = new HashMap<>();
@@ -289,7 +289,7 @@ public class ItemWeapon extends ItemEquippable implements EffectableStatHolder {
 	}
 
 	@Override
-	public void onStatChange() {
+	public void onStatChange(String name) {
 		if (ammoCount > getClipSize()) {
 			int difference = ammoCount - getClipSize();
 			ammoCount = getClipSize();

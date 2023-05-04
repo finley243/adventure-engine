@@ -1,15 +1,14 @@
 package com.github.finley243.adventureengine.stat;
 
-public class StatBoolean {
+public class StatBoolean extends Stat {
 
-    private final EffectableStatHolder target;
     // If there are both true and false modifiers, the priority value will be used
     private final boolean priorityValue;
     private int countTrue;
     private int countFalse;
 
-    public StatBoolean(EffectableStatHolder target, boolean priorityValue) {
-        this.target = target;
+    public StatBoolean(String name, EffectableStatHolder target, boolean priorityValue) {
+        super(name, target);
         this.priorityValue = priorityValue;
     }
 
@@ -29,7 +28,7 @@ public class StatBoolean {
         } else {
             this.countFalse += 1;
         }
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
     public void removeMod(boolean value) {
@@ -38,7 +37,7 @@ public class StatBoolean {
         } else {
             this.countFalse -= 1;
         }
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
 }

@@ -1,13 +1,12 @@
 package com.github.finley243.adventureengine.stat;
 
-public class StatFloat {
+public class StatFloat extends Stat {
 
-    private final EffectableStatHolder target;
     private float mod;
     private float mult;
 
-    public StatFloat(EffectableStatHolder target) {
-        this.target = target;
+    public StatFloat(String name, EffectableStatHolder target) {
+        super(name, target);
     }
 
     public float value(float base, float min, float max) {
@@ -17,12 +16,12 @@ public class StatFloat {
 
     public void addMod(float value) {
         mod += value;
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
     public void addMult(float value) {
         mult += value;
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
 }

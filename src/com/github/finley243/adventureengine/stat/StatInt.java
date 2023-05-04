@@ -2,14 +2,13 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.MathUtils;
 
-public class StatInt {
+public class StatInt extends Stat {
 
-    private final EffectableStatHolder target;
     private int mod;
     private float mult;
 
-    public StatInt(EffectableStatHolder target) {
-        this.target = target;
+    public StatInt(String name, EffectableStatHolder target) {
+        super(name, target);
     }
 
     public int value(int base, int min, int max) {
@@ -19,12 +18,12 @@ public class StatInt {
 
     public void addMod(int value) {
         mod += value;
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
     public void addMult(float value) {
         mult += value;
-        target.onStatChange();
+        getTarget().onStatChange(getName());
     }
 
 }
