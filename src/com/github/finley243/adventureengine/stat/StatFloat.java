@@ -5,7 +5,7 @@ public class StatFloat extends Stat {
     private float mod;
     private float mult;
 
-    public StatFloat(String name, EffectableStatHolder target) {
+    public StatFloat(String name, MutableStatHolder target) {
         super(name, target);
     }
 

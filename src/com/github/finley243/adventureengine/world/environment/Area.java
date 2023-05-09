@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * Represents a section of a room that can contain objects and actors
  */
-public class Area extends GameInstanced implements Noun, EffectableStatHolder {
+public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	public enum AreaNameType {
 		IN, ON, NEAR, FRONT, SIDE, BEHIND

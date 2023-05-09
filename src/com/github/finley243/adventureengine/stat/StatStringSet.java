@@ -10,7 +10,7 @@ public class StatStringSet extends Stat {
     private final Map<String, Integer> additional;
     private final Map<String, Integer> cancellation;
 
-    public StatStringSet(String name, EffectableStatHolder target) {
+    public StatStringSet(String name, MutableStatHolder target) {
         super(name, target);
         this.additional = new HashMap<>();
         this.cancellation = new HashMap<>();

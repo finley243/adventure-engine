@@ -3,18 +3,18 @@ package com.github.finley243.adventureengine.actor.component;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.effect.Effect;
-import com.github.finley243.adventureengine.stat.EffectableStatHolder;
+import com.github.finley243.adventureengine.stat.MutableStatHolder;
 
 import java.util.*;
 
 public class EffectComponent {
 
     private final Game game;
-    private final EffectableStatHolder statHolder;
+    private final MutableStatHolder statHolder;
     private final Context scriptContext;
     private final Map<String, List<EffectData>> effects;
 
-    public EffectComponent(Game game, EffectableStatHolder statHolder, Context scriptContext) {
+    public EffectComponent(Game game, MutableStatHolder statHolder, Context scriptContext) {
         this.game = game;
         this.statHolder = statHolder;
         this.scriptContext = scriptContext;

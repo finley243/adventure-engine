@@ -7,7 +7,7 @@ public class StatString extends Stat {
 
     private final Deque<String> stringStack;
 
-    public StatString(String name, EffectableStatHolder target) {
+    public StatString(String name, MutableStatHolder target) {
         super(name, target);
         this.stringStack = new ArrayDeque<>();
     }

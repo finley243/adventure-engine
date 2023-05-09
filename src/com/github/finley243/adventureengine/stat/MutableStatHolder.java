@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.stat;
 
-public interface EffectableStatHolder extends StatHolder {
+public interface MutableStatHolder extends StatHolder {
 
     StatInt getStatInt(String name);
 

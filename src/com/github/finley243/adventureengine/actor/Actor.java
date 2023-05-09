@@ -37,7 +37,7 @@ import com.github.finley243.adventureengine.world.object.component.ObjectCompone
 
 import java.util.*;
 
-public class Actor extends GameInstanced implements Noun, Physical, EffectableStatHolder, AttackTarget {
+public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ACTIONS_PER_TURN = 3;

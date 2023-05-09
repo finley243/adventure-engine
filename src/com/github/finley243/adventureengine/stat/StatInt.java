@@ -7,7 +7,7 @@ public class StatInt extends Stat {
     private int mod;
     private float mult;
 
-    public StatInt(String name, EffectableStatHolder target) {
+    public StatInt(String name, MutableStatHolder target) {
         super(name, target);
     }
 

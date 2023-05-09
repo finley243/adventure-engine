@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.effect;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.EffectableStatHolder;
+import com.github.finley243.adventureengine.stat.MutableStatHolder;
 import com.github.finley243.adventureengine.stat.StatStringSet;
 
 import java.util.Set;
@@ -22,14 +22,14 @@ public class EffectStatStringSet extends Effect {
     }
 
     @Override
-    public void start(EffectableStatHolder target) {
+    public void start(MutableStatHolder target) {
         StatStringSet moddableSet = target.getStatStringSet(stat);
         moddableSet.addAdditional(valuesAdd);
         moddableSet.addCancellation(valuesRemove);
     }
 
     @Override
-    public void end(EffectableStatHolder target) {
+    public void end(MutableStatHolder target) {
         StatStringSet moddableSet = target.getStatStringSet(stat);
         moddableSet.removeAdditional(valuesAdd);
         moddableSet.removeCancellation(valuesRemove);

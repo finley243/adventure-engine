@@ -7,7 +7,7 @@ public class StatBoolean extends Stat {
     private int countTrue;
     private int countFalse;
 
-    public StatBoolean(String name, EffectableStatHolder target, boolean priorityValue) {
+    public StatBoolean(String name, MutableStatHolder target, boolean priorityValue) {
         super(name, target);
         this.priorityValue = priorityValue;
     }

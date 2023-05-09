@@ -3,9 +3,9 @@ package com.github.finley243.adventureengine.stat;
 public class Stat {
 
     private final String name;
-    private final EffectableStatHolder target;
+    private final MutableStatHolder target;
 
-    public Stat(String name, EffectableStatHolder target) {
+    public Stat(String name, MutableStatHolder target) {
         this.name = name;
         this.target = target;
     }
@@ -14,7 +14,7 @@ public class Stat {
         return name;
     }
 
-    public EffectableStatHolder getTarget() {
+    public MutableStatHolder getTarget() {
         return target;
     }
 

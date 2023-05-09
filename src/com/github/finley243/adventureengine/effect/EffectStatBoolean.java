@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.effect;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.EffectableStatHolder;
+import com.github.finley243.adventureengine.stat.MutableStatHolder;
 
 public class EffectStatBoolean extends Effect {
 
@@ -17,13 +17,13 @@ public class EffectStatBoolean extends Effect {
     }
 
     @Override
-    public void start(EffectableStatHolder target) {
+    public void start(MutableStatHolder target) {
         target.getStatBoolean(stat).addMod(value);
         target.onStatChange();
     }
 
     @Override
-    public void end(EffectableStatHolder target) {
+    public void end(MutableStatHolder target) {
         target.getStatBoolean(stat).removeMod(value);
         target.onStatChange();
     }
