@@ -30,15 +30,6 @@ public class ActionItemTakeAll extends Action {
 	}
 
 	@Override
-	public float utility(Actor subject) {
-		if (item instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
-			return 0.7f;
-		} else {
-			return 0.0f;
-		}
-	}
-
-	@Override
 	public int actionPoints(Actor subject) {
 		return 0;
 	}

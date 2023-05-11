@@ -640,15 +640,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			updateSleep();
 			return;
 		}
-		if (getEffectComponent() != null) {
-			getEffectComponent().onStartRound();
-		}
-		if (getTargetingComponent() != null) {
-			getTargetingComponent().updateTurn();
-		}
-		if (getBehaviorComponent() != null) {
-			getBehaviorComponent().update();
-		}
+		getEffectComponent().onStartRound();
+		getTargetingComponent().updateTurn();
+		getBehaviorComponent().update();
 		this.actionPointsUsed = 0;
 		this.blockedActions.clear();
 		this.endTurn = false;
