@@ -10,18 +10,20 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.List;
 
-public class BehaviorObject extends Behavior {
+public class BehaviorUse extends Behavior {
 
     private final String object;
+    private final String component;
 
-    public BehaviorObject(Condition condition, int duration, List<Idle> idles, String object) {
+    public BehaviorUse(Condition condition, int duration, List<Idle> idles, String object, String component) {
         super(condition, duration, idles);
         this.object = object;
+        this.component = component;
     }
 
     @Override
     public boolean isInTargetState(Actor subject) {
-        return subject.isUsingObject() && subject.getUsingObject().getID().equals(object);
+        return subject.isUsingObject() && subject.getUsingObject().getObject().getID().equals(object) && subject.getUsingObject().getID().equals(component);
     }
 
     @Override
@@ -31,10 +33,9 @@ public class BehaviorObject extends Behavior {
 
     @Override
     public float actionUtilityOverride(Actor subject, Action action) {
-        // TODO - Allow specifying a component to use (right now, it will select randomly from all usable components)
-        if (action instanceof ActionObjectUseStart && ((ActionObjectUseStart) action).getComponent().getObject().getID().equals(object)) {
+        if (action instanceof ActionObjectUseStart actionUseStart && actionUseStart.getComponent().getObject().getID().equals(object) && actionUseStart.getComponent().getID().equals(component)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
-        } else if(action instanceof ActionObjectUseEnd && ((ActionObjectUseEnd) action).getComponent().getObject().getID().equals(object)) {
+        } else if(action instanceof ActionObjectUseEnd actionUseEnd && actionUseEnd.getComponent().getObject().getID().equals(object) && actionUseEnd.getComponent().getID().equals(component)) {
             return 0.0f;
         }
         return -1.0f;

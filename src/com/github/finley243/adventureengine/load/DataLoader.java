@@ -1040,9 +1040,10 @@ public class DataLoader {
                     String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
                     behavior = new BehaviorArea(condition, duration, idles, areaTarget);
                 }
-                case "object" -> {
+                case "use" -> {
                     String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
-                    behavior = new BehaviorObject(condition, duration, idles, objectTarget);
+                    String componentTarget = LoadUtils.attribute(behaviorElement, "component", null);
+                    behavior = new BehaviorUse(condition, duration, idles, objectTarget, componentTarget);
                 }
                 case "guard" -> {
                     String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
