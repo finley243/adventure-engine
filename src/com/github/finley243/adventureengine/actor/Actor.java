@@ -17,18 +17,17 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemApparel;
 import com.github.finley243.adventureengine.item.ItemEquippable;
-import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.*;
-import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.TextContext;
+import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -168,6 +167,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 
+	public ActorTemplate getTemplate() {
+		return game().data().getActorTemplate(templateID);
+	}
+
 	public boolean isPlayer() {
 		return this.equals(game().data().getPlayer());
 	}
@@ -179,23 +182,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public String getFormattedName() {
-		if (!isProperName()) {
-			return LangUtils.addArticle(getNameState() + getName(), !isKnown());
-		} else {
-			return getNameState() + getName();
-		}
-	}
-
-	private String getNameState() {
+		String statePrefix = "";
 		if (isDead()) {
-			return "dead ";
-		} else {
-			return "";
+			statePrefix = "dead ";
 		}
-	}
-
-	public ActorTemplate getTemplate() {
-		return game().data().getActorTemplate(templateID);
+		if (!isProperName()) {
+			return LangUtils.addArticle(statePrefix + getName(), !isKnown());
+		} else {
+			return statePrefix + getName();
+		}
 	}
 
 	@Override
@@ -304,39 +299,25 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return isUsingObject() && getUsingObject().getTemplateUsable().userIsInCover();
 	}
 
-	@Override
-	public Inventory getInventory() {
-		return inventory;
-	}
-
-	@Override
-	public StatHolder getSubHolder(String name, String ID) {
-		return switch (name) {
-			case "equippedItem" -> getEquipmentComponent().getEquippedItem();
-			case "usingObject" -> getUsingObject();
-			case "area" -> getArea();
-			default -> null;
-		};
-	}
-
-	public ApparelComponent getApparelComponent() {
-		return apparelComponent;
+	public int getMoney() {
+		return money;
 	}
 
 	public List<Limb> getLimbs() {
 		return getTemplate().getLimbs();
 	}
+
+	@Override
+	public Inventory getInventory() {
+		return inventory;
+	}
+
+	public ApparelComponent getApparelComponent() {
+		return apparelComponent;
+	}
 	
 	public EquipmentComponent getEquipmentComponent() {
 		return equipmentComponent;
-	}
-
-	public int getMoney() {
-		return money;
-	}
-	
-	public void adjustMoney(int value) {
-		money += value;
 	}
 
 	public EffectComponent getEffectComponent() {
@@ -347,8 +328,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return behaviorComponent;
 	}
 
-	public float getHPProportion() {
-		return ((float) HP) / ((float) getMaxHP());
+	public TargetingComponent getTargetingComponent() {
+		return targetingComponent;
 	}
 
 	public int getMaxHP() {
@@ -445,13 +426,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			getArea().getInventory().addItem(item);
 		}
 		isDead = true;
+		HP = 0;
 		if (isPlayer()) {
 			game().eventBus().post(new PlayerDeathEvent());
 		}
 	}
 
 	public String getConditionDescription() {
-		float hpProportion = getHPProportion();
+		float hpProportion = ((float) HP) / ((float) getMaxHP());
 		if (hpProportion == 1.0f) {
 			return "in perfect condition";
 		} else if (hpProportion >= 0.9f) {
@@ -530,12 +512,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 	
-	public void startUsingObject(ObjectComponentUsable object) {
+	public void setUsingObject(ObjectComponentUsable object) {
 		this.usingObject = object;
-	}
-	
-	public void stopUsingObject() {
-		this.usingObject = null;
 	}
 
 	public ObjectComponentUsable getUsingObject() {
@@ -548,23 +526,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	
 	public boolean isInCombat() {
 		return targetingComponent.hasTargetsOfType(TargetingComponent.DetectionState.HOSTILE);
-	}
-	
-	public boolean hasMeleeTargets() {
-		return targetingComponent.hasTargetsOfTypeInArea(TargetingComponent.DetectionState.HOSTILE, getArea());
-	}
-
-	public boolean hasWeapon() {
-		for (Item item : inventory.getItems()) {
-			if (item instanceof ItemWeapon) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public TargetingComponent getTargetingComponent() {
-		return targetingComponent;
 	}
 	
 	public void addPursueTarget(AreaTarget target) {
@@ -760,7 +721,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		attackTargets.addAll(getVisibleObjects());
 		return attackTargets;
 	}
-	
+
 	public boolean canSee(Actor target) {
 		return this.equals(target) || getVisibleActors().contains(target);
 	}
@@ -987,6 +948,16 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	@Override
 	public void modStateFloat(String name, float amount) {
 
+	}
+
+	@Override
+	public StatHolder getSubHolder(String name, String ID) {
+		return switch (name) {
+			case "equippedItem" -> getEquipmentComponent().getEquippedItem();
+			case "usingObject" -> getUsingObject();
+			case "area" -> getArea();
+			default -> null;
+		};
 	}
 
 	public boolean triggerScript(String trigger, Actor target) {

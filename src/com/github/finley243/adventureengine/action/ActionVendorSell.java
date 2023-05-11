@@ -25,7 +25,7 @@ public class ActionVendorSell extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.getInventory().removeItem(item);
-        subject.adjustMoney(price);
+        subject.modStateInteger("money", price);
         vendorInventory.addItem(item);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("vendor", vendor).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("sell"), context, this, null, subject, null));

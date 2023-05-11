@@ -27,7 +27,7 @@ public class ActionObjectUseEnd extends Action {
 			subject.triggerScript("on_leave_cover", subject);
 		}
 		component.removeUser();
-		subject.stopUsingObject();
+		subject.setUsingObject(null);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(component.getTemplateUsable().getEndPhrase()), context, this, null, subject, null));
 	}

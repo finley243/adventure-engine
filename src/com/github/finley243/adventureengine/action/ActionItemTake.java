@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
@@ -31,7 +32,7 @@ public class ActionItemTake extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if (item instanceof ItemWeapon && subject.isInCombat() && !subject.hasWeapon()) {
+		if (item instanceof ItemWeapon && subject.isInCombat() && !UtilityUtils.actorHasWeapon(subject)) {
 			return 0.7f;
 		} else {
 			return 0.0f;

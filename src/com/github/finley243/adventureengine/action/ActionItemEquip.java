@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.TextContext;
@@ -38,13 +39,13 @@ public class ActionItemEquip extends Action {
 		if (item instanceof ItemWeapon weapon) {
 			if (!subject.isInCombat()) return 0;
 			if (weapon.isRanged()) {
-				if (subject.hasMeleeTargets()) {
+				if (UtilityUtils.actorHasMeleeTargets(subject)) {
 					return SUBOPTIMAL_WEAPON_UTILITY;
 				} else {
 					return OPTIMAL_WEAPON_UTILITY;
 				}
 			} else {
-				if (subject.hasMeleeTargets()) {
+				if (UtilityUtils.actorHasMeleeTargets(subject)) {
 					return OPTIMAL_WEAPON_UTILITY;
 				} else {
 					return SUBOPTIMAL_WEAPON_UTILITY;

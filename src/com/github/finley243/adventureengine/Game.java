@@ -62,7 +62,7 @@ public class Game {
 
 		data().newGame();
 
-		data().getPlayer().adjustMoney(50);
+		data().getPlayer().setStateInteger("money", 50);
 
 		/*File saveFile = new File(GAMEFILES + "/save.aes");
 		SaveLoader.saveGame(saveFile, data());

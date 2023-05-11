@@ -28,7 +28,7 @@ public class ActionObjectUseStart extends Action {
 			subject.triggerScript("on_take_cover", subject);
 		}
 		component.setUser(subject);
-		subject.startUsingObject(component);
+		subject.setUsingObject(component);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(component.getTemplateUsable().getStartPhrase()), context, this, null, subject, null));
 	}
