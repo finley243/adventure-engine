@@ -1,5 +1,5 @@
 <data>
-    <attackType id="throw_item" category="SINGLE" ammoConsumed="1" skill="THROWING" hitChanceMin="0.25" hitChanceMax="0.95" canDodge="true" damage="2" damageType="PHYSICAL" armorMult="1.0" rate="1">
+    <attackType id="throw_item" category="single" ammoConsumed="1" skill="throwing" hitChanceMin="0.25" hitChanceMax="0.95" canDodge="true" damage="2" damageType="physical" armorMult="1.0" rate="1">
         <range>NEAR</range>
         <range>CLOSE</range>
         <prompt>Throw</prompt>
@@ -8,49 +8,49 @@
         <missPhrase>meleeMiss</missPhrase>
         <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
     </attackType>
-    <attackType id="basic_ranged" category="SINGLE" ammoConsumed="1" canDodge="false">
+    <attackType id="basic_ranged" category="single" ammoConsumed="1" canDodge="false">
         <prompt>Attack</prompt>
         <hitPhrase>rangedHit</hitPhrase>
         <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedMiss</missPhrase>
         <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
     </attackType>
-    <attackType id="basic_melee" category="SINGLE" ammoConsumed="1" canDodge="true">
+    <attackType id="basic_melee" category="single" ammoConsumed="1" canDodge="true">
         <prompt>Attack</prompt>
         <hitPhrase>meleeHit</hitPhrase>
         <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
         <missPhrase>meleeMiss</missPhrase>
         <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
     </attackType>
-    <attackType id="targeted_ranged" category="TARGETED" ammoConsumed="1" canDodge="false">
+    <attackType id="targeted_ranged" category="targeted" ammoConsumed="1" canDodge="false">
         <prompt>Targeted Attack</prompt>
         <hitPhrase>rangedHitLimb</hitPhrase>
         <hitPhraseRepeat>rangedHitLimbRepeat</hitPhraseRepeat>
         <missPhrase>rangedMissLimb</missPhrase>
         <missPhraseRepeat>rangedMissLimbRepeat</missPhraseRepeat>
     </attackType>
-    <attackType id="targeted_melee" category="TARGETED" ammoConsumed="1" canDodge="true">
+    <attackType id="targeted_melee" category="targeted" ammoConsumed="1" canDodge="true">
         <prompt>Targeted Attack</prompt>
         <hitPhrase>meleeHitLimb</hitPhrase>
         <hitPhraseRepeat>meleeHitLimbRepeat</hitPhraseRepeat>
         <missPhrase>meleeMissLimb</missPhrase>
         <missPhraseRepeat>meleeMissLimbRepeat</missPhraseRepeat>
     </attackType>
-    <attackType id="spread_ranged" category="SPREAD" ammoConsumed="1" canDodge="false">
+    <attackType id="spread_ranged" category="spread" ammoConsumed="1" canDodge="false">
         <prompt>Spread Attack</prompt>
         <hitPhrase>rangedHit</hitPhrase>
         <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedMiss</missPhrase>
         <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
     </attackType>
-    <attackType id="spread_melee" category="SPREAD" ammoConsumed="1" canDodge="true">
+    <attackType id="spread_melee" category="spread" ammoConsumed="1" canDodge="true">
         <prompt>Spread Attack</prompt>
         <hitPhrase>meleeHit</hitPhrase>
         <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
         <missPhrase>meleeMiss</missPhrase>
         <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
     </attackType>
-    <attackType id="autofire" category="SINGLE" ammoConsumed="3" rate="1" damageMult="2.0" hitChanceMult="-0.4" canDodge="false">
+    <attackType id="autofire" category="single" ammoConsumed="3" rate="1" damageMult="2.0" hitChanceMult="-0.4" canDodge="false">
         <prompt>Autofire</prompt>
         <hitPhrase>rangedAutoHit</hitPhrase>
         <hitPhraseRepeat>rangedAutoHitRepeat</hitPhraseRepeat>

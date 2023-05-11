@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.combat.Damage;
+import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
@@ -12,7 +13,7 @@ import java.util.Set;
 public class WeaponTemplate extends ItemTemplate {
 
 	public static final float CRIT_CHANCE = 0.05f;
-	
+
 	private final String weaponClass;
 	private final int damage;
 	private final int rate;
@@ -42,8 +43,8 @@ public class WeaponTemplate extends ItemTemplate {
 		return true;
 	}
 	
-	public String getWeaponClass() {
-		return weaponClass;
+	public WeaponClass getWeaponClass() {
+		return game().data().getWeaponClass(weaponClass);
 	}
 	
 	public int getDamage() {
@@ -82,49 +83,19 @@ public class WeaponTemplate extends ItemTemplate {
 	public Set<String> getTags() {
 		Set<String> tags = new HashSet<>();
 		tags.add("weapon");
-		// TODO - Rewrite weapon tag system for WeaponClass system
-		/*if(getType().isRanged) {
+		WeaponClass weaponClassInstance = getWeaponClass();
+		if (weaponClassInstance.isRanged()) {
 			tags.add("weapon_ranged");
 		} else {
 			tags.add("weapon_melee");
 		}
-		switch(getSkill()) {
-			case HANDGUNS:
-				tags.add("weapon_handgun");
-				break;
-			case LONG_ARMS:
-				tags.add("weapon_long_arm");
-				break;
+		if (weaponClassInstance.isTwoHanded()) {
+			tags.add("weapon_two_handed");
+		} else {
+			tags.add("weapon_one_handed");
 		}
-		switch(getType()) {
-			case PISTOL:
-				tags.add("weapon_pistol");
-				break;
-			case SMG:
-				tags.add("weapon_smg");
-				break;
-			case SHOTGUN:
-				tags.add("weapon_shotgun");
-				break;
-			case ASSAULT_RIFLE:
-				tags.add("weapon_assault_rifle");
-				break;
-			case SNIPER_RIFLE:
-				tags.add("weapon_sniper_rifle");
-				break;
-			case KNIFE:
-				tags.add("weapon_knife");
-				break;
-			case SWORD:
-				tags.add("weapon_sword");
-				break;
-			case CLUB:
-				tags.add("weapon_club");
-				break;
-			case AXE:
-				tags.add("weapon_axe");
-				break;
-		}*/
+		tags.add("weapon_class_" + weaponClassInstance.getID());
+		tags.add("weapon_skill_" + weaponClassInstance.getSkill().toString().toLowerCase());
 		return tags;
 	}
 	

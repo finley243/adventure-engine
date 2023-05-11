@@ -67,7 +67,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	public WeaponClass getWeaponClass() {
-		return game().data().getWeaponClass(getWeaponTemplate().getWeaponClass());
+		return getWeaponTemplate().getWeaponClass();
 	}
 	
 	public boolean isRanged() {
