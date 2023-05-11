@@ -1,13 +1,4 @@
 <data>
-    <attackType id="throw_item" category="single" ammoConsumed="1" skill="throwing" hitChanceMin="0.25" hitChanceMax="0.95" canDodge="true" damage="2" damageType="physical" armorMult="1.0" rate="1">
-        <range>NEAR</range>
-        <range>CLOSE</range>
-        <prompt>Throw</prompt>
-        <hitPhrase>meleeHit</hitPhrase>
-        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
-        <missPhrase>meleeMiss</missPhrase>
-        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
-    </attackType>
     <attackType id="basic_ranged" category="single" ammoConsumed="1" canDodge="false">
         <prompt>Attack</prompt>
         <hitPhrase>rangedHit</hitPhrase>
@@ -56,5 +47,12 @@
         <hitPhraseRepeat>rangedAutoHitRepeat</hitPhraseRepeat>
         <missPhrase>rangedAutoMiss</missPhrase>
         <missPhraseRepeat>rangedAutoMissRepeat</missPhraseRepeat>
+    </attackType>
+    <attackType id="grenade" category="spread" ammoConsumed="0" weaponConsumeType="destroy" canDodge="false">
+        <prompt>Throw</prompt>
+        <hitOverallPhrase>grenadeHit</hitOverallPhrase>
+        <hitOverallPhraseRepeat>grenadeHitRepeat</hitOverallPhraseRepeat>
+        <missOverallPhrase>grenadeMiss</missOverallPhrase>
+        <missOverallPhraseRepeat>grenadeMissRepeat</missOverallPhraseRepeat>
     </attackType>
 </data>

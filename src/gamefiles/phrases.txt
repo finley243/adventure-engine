@@ -57,6 +57,10 @@ rangedAutoHit:$_actor fire$s_actor a spray of bullets from $actor's $weapon_name
 rangedAutoHitRepeat:$_actor fire$s_actor another spray at $target, and they hit $target
 rangedAutoMiss:$_actor fire$s_actor a spray of bullets from $actor's $weapon_name at $target, but $_actor miss$es_actor
 rangedAutoMissRepeat:$_actor fire$s_actor another spray at $target, but $_actor miss$es_actor
+grenadeHit:$_actor throw$s_actor $weapon $inArea and $weapon explode$s_weapon
+grenadeHitRepeat:$_actor throw$s_actor $weapon $inArea and $weapon explode$s_weapon
+grenadeMiss:$_actor {tr$ies_actor to throw|throw$s_actor} $weapon $inArea but $_actor miss$es_actor
+grenadeMissRepeat:$_actor {tr$ies_actor to throw|throw$s_actor} $weapon $inArea but $_actor miss$es_actor
 getUp:$_actor get$s_actor up from $object
 lieDown:$_actor lie$s_actor down in $object
 sleep:after a brief moment, $_actor fall$s_actor asleep

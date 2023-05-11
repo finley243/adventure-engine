@@ -23,16 +23,14 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	private final String name;
 	private final Scene description;
 	private final int price;
-	private final String attackType;
 	private final Map<String, Script> scripts;
 
-	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType) {
+	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price) {
 		super(game, ID);
 		this.name = name;
 		this.description = description;
 		this.scripts = scripts;
 		this.price = price;
-		this.attackType = attackType;
 		this.generatedCount = 1;
 	}
 
@@ -87,10 +85,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	
 	public int getPrice() {
 		return price;
-	}
-
-	public String getAttackType() {
-		return attackType;
 	}
 
 	public abstract Set<String> getTags();

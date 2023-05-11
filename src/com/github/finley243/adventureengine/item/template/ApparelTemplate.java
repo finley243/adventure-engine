@@ -15,8 +15,8 @@ public class ApparelTemplate extends ItemTemplate {
 	private final Set<String> slots;
 	private final List<String> effects;
 	
-	public ApparelTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, Set<String> slots, List<String> effects) {
-		super(game, ID, name, description, scripts, price, attackType);
+	public ApparelTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, Set<String> slots, List<String> effects) {
+		super(game, ID, name, description, scripts, price);
 		this.slots = slots;
 		this.effects = effects;
 	}

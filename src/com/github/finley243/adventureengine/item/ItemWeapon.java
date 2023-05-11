@@ -28,6 +28,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	private final StatInt damage;
 	private final StatInt rate;
 	private final StatInt critDamage;
+	private final StatFloat critChance;
 	private final StatStringSet ranges;
 	private final StatInt clipSize;
 	private final StatFloat accuracyBonus;
@@ -46,6 +47,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		this.damage = new StatInt("damage", this);
 		this.rate = new StatInt("rate", this);
 		this.critDamage = new StatInt("critDamage", this);
+		this.critChance = new StatFloat("critChance", this);
 		this.ranges = new StatStringSet("ranges", this);
 		this.clipSize = new StatInt("clipSize", this);
 		this.accuracyBonus = new StatFloat("accuracyBonus", this);
@@ -92,6 +94,10 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	
 	public int getCritDamage() {
 		return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
+	}
+
+	public float getCritChance() {
+		return critChance.value(getWeaponTemplate().getCritChance(), 0.0f, 1.0f);
 	}
 
 	public Set<AreaLink.DistanceCategory> getRanges() {
@@ -185,7 +191,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
 		for (String attackType : getAttackTypes()) {
-			actions.addAll(game().data().getAttackType(attackType).generateActions(subject, this, this));
+			actions.addAll(game().data().getAttackType(attackType).generateActions(subject, this));
 		}
 		if (getClipSize() > 0) {
 			for (String current : getWeaponClass().getAmmoTypes()) {

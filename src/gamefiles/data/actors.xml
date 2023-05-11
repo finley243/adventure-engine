@@ -44,11 +44,13 @@
         <name proper="true" pronoun="YOU">PLAYER</name>
         <skill key="HANDGUNS" value="5"/>
         <skill key="MELEE" value="5"/>
+        <skill key="THROWING" value="5"/>
         <skill key="INTIMIDATION" value="6"/>
         <inventory>
             <item>wilsons_corner_store_key</item>
             <item>pistol_heavy</item>
             <item>katana</item>
+            <item>grenade_frag</item>
             <!--<item>tactical_vest</item>-->
             <!--<item>tactical_helmet</item>-->
             <item>nitron_cola</item>

@@ -7,12 +7,14 @@ import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.combat.CombatHelper;
 import com.github.finley243.adventureengine.combat.Damage;
+import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final Set<AttackTarget> targets;
     private final Noun weaponNoun;
     private final Limb limb;
+    private final Area area;
     private final String prompt;
     private final String hitPhrase;
     private final String hitPhraseRepeat;
@@ -42,6 +45,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final float baseHitChanceMax;
     private final float hitChanceBonus;
     private final int ammoConsumed;
+    private final WeaponAttackType.WeaponConsumeType weaponConsumeType;
     private final Set<AreaLink.DistanceCategory> ranges;
     private final int rate;
     private final int damage;
@@ -52,11 +56,12 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final boolean canDodge;
     private final AttackHitChanceType hitChanceType;
 
-    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill attackSkill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType) {
+    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill attackSkill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType) {
         super(targets);
         this.weaponNoun = weaponNoun;
         this.targets = targets;
         this.limb = limb;
+        this.area = area;
         this.prompt = prompt;
         this.hitPhrase = hitPhrase;
         this.hitPhraseRepeat = hitPhraseRepeat;
@@ -71,6 +76,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.baseHitChanceMax = baseHitChanceMax;
         this.hitChanceBonus = hitChanceBonus;
         this.ammoConsumed = ammoConsumed;
+        this.weaponConsumeType = weaponConsumeType;
         this.ranges = ranges;
         this.rate = rate;
         this.damage = damage;
@@ -100,6 +106,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return limb;
     }
 
+    public Area getArea() {
+        return area;
+    }
+
     public int damage() {
         return damage;
     }
@@ -122,6 +132,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     public Set<AreaLink.DistanceCategory> getRanges() {
         return ranges;
+    }
+
+    public WeaponAttackType.WeaponConsumeType getWeaponConsumeType() {
+        return weaponConsumeType;
     }
 
     @Override
@@ -172,7 +186,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
         int damage = damage();
-        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
+        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), attackContext, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
         target.damage(damageData);
@@ -181,20 +195,20 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
-        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
+        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), attackContext, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
         subject.triggerScript("on_attack_failure", (target instanceof Actor ? (Actor) target : subject));
     }
 
     @Override
     public void onSuccessOverall(Actor subject, int repeatActionCount) {
-        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeaponNoun()).build());
+        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeaponNoun()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitOverallPhrase(repeatActionCount)), attackContext, this, null, subject, null));
     }
 
     @Override
     public void onFailOverall(Actor subject, int repeatActionCount) {
-        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeaponNoun()).build());
+        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeaponNoun()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissOverallPhrase(repeatActionCount)), attackContext, this, null, subject, null));
     }
 

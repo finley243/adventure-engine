@@ -612,17 +612,16 @@ public class DataLoader {
         Scene description = loadScene(game, LoadUtils.singleChildWithName(itemElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
-        String attackType = LoadUtils.attribute(itemElement, "attackType", null);
         switch (type) {
             case "apparel" -> {
                 Set<String> apparelSlots = LoadUtils.setOfTags(itemElement, "slot");
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ApparelTemplate(game, id, name, description, scripts, price, attackType, apparelSlots, apparelEffects);
+                return new ApparelTemplate(game, id, name, description, scripts, price, apparelSlots, apparelEffects);
             }
             case "consumable" -> {
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "consumableType", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ConsumableTemplate(game, id, name, description, scripts, price, attackType, consumableType, consumableEffects);
+                return new ConsumableTemplate(game, id, name, description, scripts, price, consumableType, consumableEffects);
             }
             case "weapon" -> {
                 String weaponClass = LoadUtils.attribute(itemElement, "class", null);
@@ -630,20 +629,21 @@ public class DataLoader {
                 Element damageElement = LoadUtils.singleChildWithName(itemElement, "damage");
                 int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
                 int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
+                float critChance = LoadUtils.attributeFloat(itemElement, "critChance", 0.0f);
                 Damage.DamageType weaponDamageType = LoadUtils.attributeEnum(damageElement, "type", Damage.DamageType.class, Damage.DamageType.PHYSICAL);
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
-                return new WeaponTemplate(game, id, name, description, scripts, price, attackType, weaponClass, weaponDamage, weaponRate, critDamage, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
+                return new WeaponTemplate(game, id, name, description, scripts, price, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType);
             }
             case "ammo" -> {
                 List<String> ammoWeaponEffects = LoadUtils.listOfTags(itemElement, "weaponEffect");
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
-                return new AmmoTemplate(game, id, name, description, scripts, price, attackType, ammoWeaponEffects, ammoIsReusable);
+                return new AmmoTemplate(game, id, name, description, scripts, price, ammoWeaponEffects, ammoIsReusable);
             }
             default -> {
-                return new MiscTemplate(game, id, name, description, scripts, price, attackType);
+                return new MiscTemplate(game, id, name, description, scripts, price);
             }
         }
     }
@@ -1102,6 +1102,7 @@ public class DataLoader {
         String missOverallPhrase = LoadUtils.singleTag(attackTypeElement, "missOverallPhrase", null);
         String missOverallPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "missOverallPhraseRepeat", null);
         int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
+        WeaponAttackType.WeaponConsumeType weaponConsumeType = LoadUtils.attributeEnum(attackTypeElement, "weaponConsumeType", WeaponAttackType.WeaponConsumeType.class, WeaponAttackType.WeaponConsumeType.NONE);
         Actor.Skill skillOverride = LoadUtils.attributeEnum(attackTypeElement, "skill", Actor.Skill.class, null);
         Float baseHitChanceMin = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMin", null);
         Float baseHitChanceMax = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMax", null);
@@ -1116,7 +1117,7 @@ public class DataLoader {
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
         ActionAttack.AttackHitChanceType hitChanceType = LoadUtils.attributeEnum(attackTypeElement, "hitChanceType", ActionAttack.AttackHitChanceType.class, ActionAttack.AttackHitChanceType.INDEPENDENT);
-        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, ammoConsumed, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, hitChanceMult, canDodge, hitChanceType);
+        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, ammoConsumed, weaponConsumeType, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, hitChanceMult, canDodge, hitChanceType);
     }
 
     private static Network loadNetwork(Element networkElement) {

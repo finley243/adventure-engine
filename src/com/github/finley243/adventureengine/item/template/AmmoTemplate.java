@@ -14,8 +14,8 @@ public class AmmoTemplate extends ItemTemplate {
     private final List<String> weaponEffects;
     private final boolean isReusable;
 
-    public AmmoTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, List<String> weaponEffects, boolean isReusable) {
-        super(game, ID, name, description, scripts, price, attackType);
+    public AmmoTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, List<String> weaponEffects, boolean isReusable) {
+        super(game, ID, name, description, scripts, price);
         this.weaponEffects = weaponEffects;
         this.isReusable = isReusable;
     }

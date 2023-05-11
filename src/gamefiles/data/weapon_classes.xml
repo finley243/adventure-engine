@@ -60,4 +60,9 @@
         <attackType>basic_melee</attackType>
         <attackType>targeted_melee</attackType>
     </weaponClass>
+    <weaponClass id="grenade" isRanged="true" isTwoHanded="false" skill="throwing">
+        <name>grenade</name>
+        <range>CLOSE</range>
+        <attackType>grenade</attackType>
+    </weaponClass>
 </data>

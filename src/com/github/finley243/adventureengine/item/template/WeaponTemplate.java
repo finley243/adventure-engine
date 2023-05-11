@@ -12,25 +12,25 @@ import java.util.Set;
 
 public class WeaponTemplate extends ItemTemplate {
 
-	public static final float CRIT_CHANCE = 0.05f;
-
 	private final String weaponClass;
 	private final int damage;
 	private final int rate;
 	private final int critDamage;
+	private final float critChance;
 	private final int clipSize;
 	private final float accuracyBonus;
 	private final float armorMult;
 	private final boolean silenced;
 	private final Damage.DamageType damageType;
 
-	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String attackType, String weaponClass, int damage, int rate, int critDamage, int clipSize, float accuracyBonus, float armorMult, boolean silenced, Damage.DamageType damageType) {
-		super(game, ID, name, description, scripts, price, attackType);
+	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, float accuracyBonus, float armorMult, boolean silenced, Damage.DamageType damageType) {
+		super(game, ID, name, description, scripts, price);
 		if (weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null: " + ID);
 		this.weaponClass = weaponClass;
 		this.damage = damage;
 		this.rate = rate;
 		this.critDamage = critDamage;
+		this.critChance = critChance;
 		this.clipSize = clipSize;
 		this.accuracyBonus = accuracyBonus;
 		this.armorMult = armorMult;
@@ -57,6 +57,10 @@ public class WeaponTemplate extends ItemTemplate {
 	
 	public int getCritDamage() {
 		return critDamage;
+	}
+
+	public float getCritChance() {
+		return critChance;
 	}
 	
 	public int getClipSize() {

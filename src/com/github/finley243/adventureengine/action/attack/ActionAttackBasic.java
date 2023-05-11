@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.Damage;
-import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -16,34 +16,35 @@ import java.util.Set;
 public class ActionAttackBasic extends ActionAttack {
 
 	private final AttackTarget target;
-	private final Item weapon;
+	private final ItemWeapon weapon;
 
-	public ActionAttackBasic(Item weapon, AttackTarget target, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill skill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType) {
-		super(weapon, Set.of(target), null, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, baseHitChanceMin, baseHitChanceMax, hitChanceBonus, ammoConsumed, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceMult, canDodge, hitChanceType);
+	public ActionAttackBasic(ItemWeapon weapon, AttackTarget target, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill skill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType) {
+		super(weapon, Set.of(target), null, null, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, baseHitChanceMin, baseHitChanceMax, hitChanceBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceMult, canDodge, hitChanceType);
 		this.target = target;
 		this.weapon = weapon;
 	}
 
 	@Override
 	public void consumeAmmo(Actor subject) {
-		if (weapon instanceof ItemWeapon) {
-			if (((ItemWeapon) weapon).getClipSize() > 0) {
-				if (((ItemWeapon) weapon).getLoadedAmmoType() != null && ((ItemWeapon) weapon).getLoadedAmmoType().isReusable()) {
-					target.getArea().getInventory().addItems(((ItemWeapon) weapon).getLoadedAmmoType().getTemplate().getID(), getAmmoConsumed());
-				}
-				((ItemWeapon) weapon).consumeAmmo(getAmmoConsumed());
+		if (weapon.getClipSize() > 0) {
+			if (weapon.getLoadedAmmoType() != null && weapon.getLoadedAmmoType().isReusable()) {
+				target.getArea().getInventory().addItems(weapon.getLoadedAmmoType().getTemplate().getID(), getAmmoConsumed());
 			}
-		} else {
-			subject.getInventory().removeItems(weapon.getTemplate().getID(), getAmmoConsumed());
-			// TODO - Make this optional (e.g. do not place a grenade object after using a grenade)
-			target.getArea().getInventory().addItems(weapon.getTemplate().getID(), getAmmoConsumed());
+			weapon.consumeAmmo(getAmmoConsumed());
+		}
+		switch (getWeaponConsumeType()) {
+			case PLACE -> {
+				subject.getInventory().removeItem(weapon);
+				target.getArea().getInventory().addItem(weapon);
+			}
+			case DESTROY -> subject.getInventory().removeItem(weapon);
 		}
 	}
 
 	@Override
 	public boolean canChoose(Actor subject) {
 		return super.canChoose(subject)
-				&& (!(weapon instanceof ItemWeapon) || ((ItemWeapon) weapon).getClipSize() == 0 || ((ItemWeapon) weapon).getAmmoRemaining() >= getAmmoConsumed())
+				&& (weapon.getClipSize() == 0 || weapon.getAmmoRemaining() >= getAmmoConsumed())
 				&& getRanges().contains(subject.getArea().getDistanceTo(target.getArea().getID()))
 				&& subject.canSee(target);
 	}
