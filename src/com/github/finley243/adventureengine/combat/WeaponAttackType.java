@@ -49,14 +49,14 @@ public class WeaponAttackType {
     private final Integer rateOverride;
     private final Integer damageOverride;
     private final float damageMult;
-    private final Damage.DamageType damageTypeOverride;
+    private final String damageTypeOverride;
     private final Float armorMultOverride;
     private final List<String> targetEffects;
     private final float hitChanceMult;
     private final boolean canDodge;
     private final ActionAttack.AttackHitChanceType hitChanceType;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, int ammoConsumed, WeaponConsumeType weaponConsumeType, Actor.Skill skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, Damage.DamageType damageTypeOverride, Float armorMultOverride, List<String> targetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, int ammoConsumed, WeaponConsumeType weaponConsumeType, Actor.Skill skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType) {
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
@@ -100,7 +100,7 @@ public class WeaponAttackType {
         Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getRanges())) : weapon.getRanges());
         int rate = rateOverride != null ? rateOverride : weapon.getRate();
         int damage = damageOverride != null ? damageOverride : (int) (weapon.getDamage() * (damageMult + 1.0f));
-        Damage.DamageType damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getDamageType();
+        String damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getDamageType();
         float armorMult = armorMultOverride != null ? armorMultOverride : weapon.getArmorMult();
         List<String> targetEffectsCombined = new ArrayList<>(targetEffects);
         targetEffectsCombined.addAll(weapon.getTargetEffects());

@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
@@ -22,7 +21,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Boolean isEnforcer;
 
 	private final Integer maxHP;
-	private final Map<Damage.DamageType, Integer> damageResistance;
+	private final Map<String, Integer> damageResistance;
 	private final List<Limb> limbs;
 	private final String defaultApparelSlot;
 	private final Map<Actor.Attribute, Integer> attributes;
@@ -34,7 +33,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<Damage.DamageType, Integer> damageResistance, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -43,9 +42,6 @@ public class ActorTemplate extends GameInstanced {
 			if (faction == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: faction");
 			if (isEnforcer == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: isEnforcer");
 			if (maxHP == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: maxHP");
-			for (Damage.DamageType damageType : Damage.DamageType.values()) {
-				if (!damageResistance.containsKey(damageType)) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: damage resistance - " + damageType);
-			}
 			if (defaultApparelSlot == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: defaultApparelSlot");
 			for (Actor.Attribute attribute : Actor.Attribute.values()) {
 				if (!attributes.containsKey(attribute)) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: attribute - " + attribute);
@@ -98,11 +94,13 @@ public class ActorTemplate extends GameInstanced {
 		return maxHP != null ? maxHP : game().data().getActorTemplate(parentID).getMaxHP();
 	}
 
-	public int getDamageResistance(Damage.DamageType damageType) {
+	public int getDamageResistance(String damageType) {
 		if (damageResistance.containsKey(damageType)) {
 			return damageResistance.get(damageType);
-		} else {
+		} else if (parentID != null) {
 			return game().data().getActorTemplate(parentID).getDamageResistance(damageType);
+		} else {
+			return 0;
 		}
 	}
 

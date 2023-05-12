@@ -49,14 +49,14 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final Set<AreaLink.DistanceCategory> ranges;
     private final int rate;
     private final int damage;
-    private final Damage.DamageType damageType;
+    private final String damageType;
     private final float armorMult;
     private final List<String> targetEffects;
     private final float hitChanceMult;
     private final boolean canDodge;
     private final AttackHitChanceType hitChanceType;
 
-    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill attackSkill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, Damage.DamageType damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType) {
+    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill attackSkill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType) {
         super(targets);
         this.weaponNoun = weaponNoun;
         this.targets = targets;

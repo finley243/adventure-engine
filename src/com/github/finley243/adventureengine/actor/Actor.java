@@ -87,7 +87,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private Area area;
 	private final StatInt maxHP;
 	private int HP;
-	private final Map<Damage.DamageType, StatInt> damageResistance;
+	private final Map<String, StatInt> damageResistance;
 	private final boolean startDisabled;
 	private boolean isEnabled;
 	private final boolean startDead;
@@ -123,10 +123,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.startDead = startDead;
 		this.isDead = startDead;
 		this.maxHP = new StatInt("maxHP", this);
-		this.damageResistance = new EnumMap<>(Damage.DamageType.class);
-		for (Damage.DamageType damageType : Damage.DamageType.values()) {
-			this.damageResistance.put(damageType, new StatInt("damageResistance" + damageType, this));
-		}
+		this.damageResistance = new HashMap<>();
 		this.actionPoints = new StatInt("actionPoints", this);
 		this.canMove = new StatBoolean("canMove", this, false);
 		this.canDodge = new StatBoolean("canDodge", this, false);
@@ -152,6 +149,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void onNewGameInit() {
 		if (!startDead) {
 			HP = this.maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
+		}
+		for (String damageType : game().data().getDamageTypes()) {
+			this.damageResistance.put(damageType, new StatInt("damageResistance" + LangUtils.capitalize(damageType), this));
 		}
 		if (getTemplate().getLootTable() != null) {
 			inventory.addItems(getTemplate().getLootTable().generateItems(game()));
@@ -290,10 +290,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return isUsingObject() && getUsingObject().getTemplateUsable().userIsInCover();
 	}
 
-	public int getMoney() {
-		return money;
-	}
-
 	public List<Limb> getLimbs() {
 		return getTemplate().getLimbs();
 	}
@@ -327,7 +323,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
 	}
 
-	public int getDamageResistance(Damage.DamageType damageType) {
+	public int getDamageResistance(String damageType) {
 		return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST);
 	}
 
@@ -724,14 +720,17 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public StatInt getStatInt(String name) {
+		if (name.startsWith("damageResist")) {
+			for (String damageType : game().data().getDamageTypes()) {
+				if (name.equals("damageResist" + LangUtils.capitalize(damageType))) {
+					return damageResistance.get(damageType);
+				}
+			}
+			return null;
+		}
 		return switch (name) {
 			case "maxHP" -> maxHP;
 			case "actionPoints" -> actionPoints;
-			case "damageResistPhysical" -> damageResistance.get(Damage.DamageType.PHYSICAL);
-			case "damageResistThermal" -> damageResistance.get(Damage.DamageType.THERMAL);
-			case "damageResistChemical" -> damageResistance.get(Damage.DamageType.CHEMICAL);
-			case "damageResistExplosive" -> damageResistance.get(Damage.DamageType.EXPLOSIVE);
-			case "damageResistElectrical" -> damageResistance.get(Damage.DamageType.ELECTRICAL);
 			case "body" -> attributes.get(Attribute.BODY);
 			case "intelligence" -> attributes.get(Attribute.INTELLIGENCE);
 			case "charisma" -> attributes.get(Attribute.CHARISMA);
@@ -781,21 +780,19 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public int getValueInt(String name) {
+		if (name.startsWith("damageResist")) {
+			for (String damageType : game().data().getDamageTypes()) {
+				if (name.equals("damageResist" + LangUtils.capitalize(damageType))) {
+					return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST);
+				}
+			}
+			return 0;
+		}
 		return switch (name) {
 			case "maxHP" -> maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
 			case "HP" -> HP;
 			case "actionPoints" -> actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
 			case "money" -> money;
-			case "damageResistPhysical" ->
-					damageResistance.get(Damage.DamageType.PHYSICAL).value(getTemplate().getDamageResistance(Damage.DamageType.PHYSICAL), 0, MAX_DAMAGE_RESIST);
-			case "damageResistThermal" ->
-					damageResistance.get(Damage.DamageType.THERMAL).value(getTemplate().getDamageResistance(Damage.DamageType.THERMAL), 0, MAX_DAMAGE_RESIST);
-			case "damageResistChemical" ->
-					damageResistance.get(Damage.DamageType.CHEMICAL).value(getTemplate().getDamageResistance(Damage.DamageType.CHEMICAL), 0, MAX_DAMAGE_RESIST);
-			case "damageResistExplosive" ->
-					damageResistance.get(Damage.DamageType.EXPLOSIVE).value(getTemplate().getDamageResistance(Damage.DamageType.EXPLOSIVE), 0, MAX_DAMAGE_RESIST);
-			case "damageResistElectrical" ->
-					damageResistance.get(Damage.DamageType.ELECTRICAL).value(getTemplate().getDamageResistance(Damage.DamageType.ELECTRICAL), 0, MAX_DAMAGE_RESIST);
 			case "body" ->
 					attributes.get(Attribute.BODY).value(getTemplate().getAttribute(Attribute.BODY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
 			case "intelligence" ->
@@ -925,10 +922,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void modStateInteger(String name, int amount) {
 		switch (name) {
 			case "heal" -> heal(amount);
-			case "damage" ->
-					damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 1.0f, new ArrayList<>()));
-			case "damageIgnoreArmor" ->
-					damageDirect(new Damage(Damage.DamageType.PHYSICAL, amount, null, 0.0f, new ArrayList<>()));
 			case "money" -> money += amount;
 		}
 	}

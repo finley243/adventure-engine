@@ -8,7 +8,6 @@ import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.condition.ConditionExternal;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.LootTable;
@@ -61,6 +60,8 @@ public class Data {
 	private final Map<String, Effect> effects = new HashMap<>();
 	private final Map<String, ActionTemplate> actionTemplates = new HashMap<>();
 	private final Map<String, LinkType> linkTypes = new HashMap<>();
+
+	private final Set<String> damageTypes = new HashSet<>();
 
 	private final Map<String, Boolean> globalBooleans = new HashMap<>();
 	private final Map<String, Integer> globalIntegers = new HashMap<>();
@@ -419,6 +420,16 @@ public class Data {
 
 	public LinkType getLinkType(String id) {
 		return linkTypes.get(id);
+	}
+
+	public void addDamageType(String id) {
+		if (id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add damage type with blank ID");
+		if (damageTypes.contains(id)) throw new IllegalArgumentException("Cannot add damage type with existing ID: " + id);
+		damageTypes.add(id);
+	}
+
+	public Set<String> getDamageTypes() {
+		return damageTypes;
 	}
 
 	public void setGlobalBoolean(String id, boolean value) {

@@ -1,0 +1,7 @@
+<data>
+    <damageType id="physical"/>
+    <damageType id="thermal"/>
+    <damageType id="chemical"/>
+    <damageType id="explosive"/>
+    <damageType id="electrical"/>
+</data>

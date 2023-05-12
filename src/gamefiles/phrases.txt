@@ -25,7 +25,7 @@ rangedHit:$_actor fire$s_actor a shot with $actor's $weapon_name and it hits $ta
 rangedHitRepeat:$_actor fire$s_actor another shot and it hits $target
 rangedMiss:$_actor fire$s_actor a shot with $actor's $weapon_name at $target, but it misses
 rangedMissRepeat:$_actor fire$s_actor another shot at $target, but it misses
-reload:$_actor reload$s_actor $weapon
+reload:$_actor reload$s_actor $actor's $weapon_name
 sell:$_actor sell$s_actor $item
 sit:$_actor sit$s_actor in $object
 stand:$_actor stand$s_actor up

@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -122,8 +121,8 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
 	}
 
-	public Damage.DamageType getDamageType() {
-		return damageType.valueEnum(getWeaponTemplate().getDamageType(), Damage.DamageType.class);
+	public String getDamageType() {
+		return damageType.value(getWeaponTemplate().getDamageType());
 	}
 
 	public int getAmmoRemaining() {
@@ -280,7 +279,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	@Override
 	public String getValueString(String name) {
 		if ("damageType".equals(name)) {
-			return damageType.value(getWeaponTemplate().getDamageType().toString().toLowerCase());
+			return damageType.value(getWeaponTemplate().getDamageType());
 		}
 		return super.getValueString(name);
 	}

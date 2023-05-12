@@ -6,18 +6,14 @@ import java.util.List;
 
 public class Damage {
 
-    public enum DamageType {
-        PHYSICAL, THERMAL, CHEMICAL, EXPLOSIVE, ELECTRICAL
-    }
-
-    private final DamageType type;
+    private final String type;
     private final int amount;
     private final Limb limb;
     // Multiplier for armor value of target (1.0f = unchanged, 0.0f = ignores armor)
     private final float armorMult;
     private final List<String> targetEffects;
 
-    public Damage(DamageType type, int amount, Limb limb, float armorMult, List<String> targetEffects) {
+    public Damage(String type, int amount, Limb limb, float armorMult, List<String> targetEffects) {
         if (amount < 0) throw new IllegalArgumentException("Damage amount cannot be less than 0");
         this.type = type;
         this.amount = amount;
@@ -26,7 +22,7 @@ public class Damage {
         this.targetEffects = targetEffects;
     }
 
-    public DamageType getType() {
+    public String getType() {
         return type;
     }
 

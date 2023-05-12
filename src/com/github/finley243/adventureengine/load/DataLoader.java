@@ -6,11 +6,11 @@ import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.condition.*;
 import com.github.finley243.adventureengine.effect.*;
+import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.LootTable;
@@ -23,7 +23,6 @@ import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.world.environment.*;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.params.ComponentParams;
@@ -124,6 +123,10 @@ public class DataLoader {
                                     Network network = loadNetwork(currentElement);
                                     game.data().addNetwork(network.getID(), network);
                                 }
+                                case "damageType" -> {
+                                    String ID = LoadUtils.attribute(currentElement, "id", "");
+                                    game.data().addDamageType(ID);
+                                }
                             }
                         }
                         currentChild = currentChild.getNextSibling();
@@ -144,7 +147,7 @@ public class DataLoader {
         Boolean isEnforcer = LoadUtils.attributeBool(actorElement, "isEnforcer", null);
 
         Integer hp = LoadUtils.attributeInt(actorElement, "hp", null);
-        Map<Damage.DamageType, Integer> damageResistance = loadDamageResistance(actorElement);
+        Map<String, Integer> damageResistance = loadDamageResistance(actorElement);
         List<Limb> limbs = loadLimbs(actorElement);
         String defaultApparelSlot = LoadUtils.attribute(actorElement, "defaultApparelSlot", null);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
@@ -205,11 +208,11 @@ public class DataLoader {
         return skills;
     }
 
-    private static Map<Damage.DamageType, Integer> loadDamageResistance(Element element) {
-        Map<Damage.DamageType, Integer> damageResistance = new EnumMap<>(Damage.DamageType.class);
+    private static Map<String, Integer> loadDamageResistance(Element element) {
+        Map<String, Integer> damageResistance = new HashMap<>();
         if (element == null) return damageResistance;
         for (Element damageResistanceElement : LoadUtils.directChildrenWithName(element, "damageResistance")) {
-            Damage.DamageType damageType = LoadUtils.attributeEnum(damageResistanceElement, "type", Damage.DamageType.class, null);
+            String damageType = LoadUtils.attribute(damageResistanceElement, "type", null);
             int value = LoadUtils.attributeInt(damageResistanceElement, "value", 0);
             damageResistance.put(damageType, value);
         }
@@ -624,7 +627,7 @@ public class DataLoader {
                 int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
                 int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
                 float critChance = LoadUtils.attributeFloat(itemElement, "critChance", 0.0f);
-                Damage.DamageType weaponDamageType = LoadUtils.attributeEnum(damageElement, "type", Damage.DamageType.class, Damage.DamageType.PHYSICAL);
+                String weaponDamageType = LoadUtils.attribute(damageElement, "type", game.data().getConfig("defaultDamageType"));
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
@@ -1102,7 +1105,7 @@ public class DataLoader {
         Integer rateOverride = LoadUtils.attributeInt(attackTypeElement, "rate", null);
         Integer damageOverride = LoadUtils.attributeInt(attackTypeElement, "damage", null);
         float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
-        Damage.DamageType damageTypeOverride = LoadUtils.attributeEnum(attackTypeElement, "damageType", Damage.DamageType.class, null);
+        String damageTypeOverride = LoadUtils.attribute(attackTypeElement, "damageType", null);
         Float armorMultOverride = LoadUtils.attributeFloat(attackTypeElement, "armorMult", null);
         List<String> targetEffects = LoadUtils.listOfTags(attackTypeElement, "targetEffect");
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
