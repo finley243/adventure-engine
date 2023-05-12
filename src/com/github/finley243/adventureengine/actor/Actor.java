@@ -105,7 +105,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Inventory inventory;
 	private final ApparelComponent apparelComponent;
 	private final EquipmentComponent equipmentComponent;
-	private VendorComponent vendorComponent;
 	private final TargetingComponent targetingComponent;
 	private final BehaviorComponent behaviorComponent;
 	private int money;
@@ -156,14 +155,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		if (getTemplate().getLootTable() != null) {
 			inventory.addItems(getTemplate().getLootTable().generateItems(game()));
-		}
-		if (getTemplate().isVendor()) {
-			this.vendorComponent = new VendorComponent(this);
-		} else {
-			this.vendorComponent = null;
-		}
-		if (vendorComponent != null) {
-			vendorComponent.generateInventory();
 		}
 	}
 
@@ -542,9 +533,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (isActive()) {
 			if (getTemplate().getDialogueStart() != null) {
 				action.add(new ActionTalk(this));
-			}
-			if (vendorComponent != null && behaviorComponent != null && behaviorComponent.isVendingEnabled()) {
-				action.addAll(vendorComponent.getActions(subject));
 			}
 		} else if (isDead()) {
 			action.addAll(inventory.getExternalActions(this, null, subject, false));

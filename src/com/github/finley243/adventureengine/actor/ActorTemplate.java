@@ -9,7 +9,6 @@ import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ActorTemplate extends GameInstanced {
 	
@@ -32,16 +31,10 @@ public class ActorTemplate extends GameInstanced {
 	private final LootTable lootTable;
 	private final String dialogueStart;
 
-	private final Boolean isVendor;
-	private final String vendorLootTable;
-	private final Set<String> vendorBuyTags;
-	private final Boolean vendorBuyAll;
-	private final Boolean vendorStartDisabled;
-
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<Damage.DamageType, Integer> damageResistance, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, Boolean isVendor, String vendorLootTable, Set<String> vendorBuyTags, Boolean vendorBuyAll, Boolean vendorStartDisabled) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<Damage.DamageType, Integer> damageResistance, List<Limb> limbs, String defaultApparelSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -78,11 +71,6 @@ public class ActorTemplate extends GameInstanced {
 		this.dialogueStart = dialogueStart;
 		this.scripts = scripts;
 		this.barks = barks;
-		this.isVendor = isVendor;
-		this.vendorLootTable = vendorLootTable;
-		this.vendorBuyTags = vendorBuyTags;
-		this.vendorBuyAll = vendorBuyAll;
-		this.vendorStartDisabled = vendorStartDisabled;
 	}
 
 	// TODO - Find a better way to inherit values from parent
@@ -162,26 +150,6 @@ public class ActorTemplate extends GameInstanced {
 		} else {
 			return null;
 		}
-	}
-
-	public boolean isVendor() {
-		return isVendor;
-	}
-
-	public String getVendorLootTable() {
-		return vendorLootTable;
-	}
-
-	public Set<String> vendorBuyTags() {
-		return vendorBuyTags;
-	}
-
-	public boolean vendorBuyAll() {
-		return vendorBuyAll;
-	}
-
-	public boolean vendorStartDisabled() {
-		return vendorStartDisabled;
 	}
 	
 }

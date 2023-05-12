@@ -69,10 +69,6 @@ public abstract class Behavior {
         return false;
     }
 
-    public boolean isVendingEnabled(Actor subject) {
-        return false;
-    }
-
     public boolean isValid(Actor subject) {
         return condition == null || condition.isMet(new Context(subject.game(), subject, subject));
     }

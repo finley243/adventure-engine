@@ -162,13 +162,7 @@ public class DataLoader {
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
         }
 
-        Element vendorElement = LoadUtils.singleChildWithName(actorElement, "vendor");
-        boolean isVendor = vendorElement != null;
-        String vendorLootTable = LoadUtils.attribute(vendorElement, "lootTable", null);
-        Set<String> vendorBuyTags = LoadUtils.setOfTags(vendorElement, "buyTag");
-        boolean vendorBuyAll = LoadUtils.attributeBool(vendorElement, "buyAll", false);
-        boolean vendorStartDisabled = LoadUtils.attributeBool(vendorElement, "startDisabled", false);
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistance, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks, isVendor, vendorLootTable, vendorBuyTags, vendorBuyAll, vendorStartDisabled);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistance, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -1056,10 +1050,6 @@ public class DataLoader {
                 case "sleep" -> {
                     String bedTarget = LoadUtils.attribute(behaviorElement, "bed", null);
                     behavior = new BehaviorSleep(condition, idles, bedTarget);
-                }
-                case "vendor" -> {
-                    String vendorArea = LoadUtils.attribute(behaviorElement, "area", null);
-                    behavior = new BehaviorVendor(condition, duration, idles, vendorArea);
                 }
                 case "cycle" -> {
                     List<Behavior> cycleBehaviors = loadBehaviors(behaviorElement);
