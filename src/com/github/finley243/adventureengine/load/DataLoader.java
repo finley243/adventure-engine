@@ -176,12 +176,13 @@ public class DataLoader {
     }
 
     private static Limb loadLimb(Element element) {
+        String ID = LoadUtils.attribute(element, "id", null);
         String name = LoadUtils.singleTag(element, "name", null);
         float hitChance = LoadUtils.attributeFloat(element, "hitChance", 1.0f);
         float damageMult = LoadUtils.attributeFloat(element, "damageMult", 1.0f);
         String apparelSlot = LoadUtils.attribute(element, "apparelSlot", null);
         List<String> hitEffects = LoadUtils.listOfTags(element, "hitEffect");
-        return new Limb(name, hitChance, damageMult, apparelSlot, hitEffects);
+        return new Limb(ID, name, hitChance, damageMult, apparelSlot, hitEffects);
     }
 
     private static Map<Actor.Attribute, Integer> loadAttributes(Element element) {

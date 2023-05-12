@@ -20,24 +20,24 @@
         <skill key="LOCKPICK" value="4"/>
         <skill key="STEALTH" value="4"/>
         <skill key="DODGE" value="4"/>
-        <limb hitChance="0.5" damageMult="2.0" apparelSlot="head">
+        <limb id="head" hitChance="0.5" damageMult="2.0" apparelSlot="head">
             <name>head</name>
         </limb>
-        <limb hitChance="0.7" damageMult="1.0" apparelSlot="torso">
+        <limb id="arm" hitChance="0.7" damageMult="1.0" apparelSlot="torso">
             <name>arm</name>
         </limb>
-        <limb hitChance="0.5" damageMult="0.75" apparelSlot="torso">
+        <limb id="hand" hitChance="0.5" damageMult="0.75" apparelSlot="torso">
             <name>hand</name>
             <effect>hitLimbWeapon</effect>
         </limb>
-        <limb hitChance="0.8" damageMult="1.0" apparelSlot="legs">
+        <limb id="leg" hitChance="0.8" damageMult="1.0" apparelSlot="legs">
             <name>leg</name>
         </limb>
-        <damageResistance type="PHYSICAL" value="0"/>
-        <damageResistance type="THERMAL" value="0"/>
-        <damageResistance type="CHEMICAL" value="0"/>
-        <damageResistance type="EXPLOSIVE" value="0"/>
-        <damageResistance type="ELECTRICAL" value="0"/>
+        <damageResistance type="physical" value="0"/>
+        <damageResistance type="thermal" value="0"/>
+        <damageResistance type="chemical" value="0"/>
+        <damageResistance type="explosive" value="0"/>
+        <damageResistance type="electrical" value="0"/>
         <inventory/>
     </actor>
     <actor id="player" parent="default" hp="50" faction="player">
@@ -107,9 +107,6 @@
         <inventory>
             <item>pistol_light</item>
         </inventory>
-        <vendor lootTable="weapon_ranged_3">
-            <buyTag>weapon_ranged</buyTag>
-        </vendor>
     </actor>
     <actor id="frank_wilson" parent="default" hp="50" faction="cornerstore_staff" dialogueStart="cornerstore_shopkeeper_start">
         <name proper="false" pronoun="HE">shopkeeper</name>
@@ -117,6 +114,5 @@
             <item>wilsons_corner_store_key</item>
             <item>pistol_heavy</item>
         </inventory>
-        <vendor lootTable="vendor_cornerstore"/>
     </actor>
 </data>

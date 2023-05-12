@@ -4,18 +4,24 @@ import java.util.List;
 
 public class Limb {
 
+    private final String ID;
     private final String name;
     private final float hitChance;
     private final float damageMult;
     private final String apparelSlot;
     private final List<String> hitEffects;
 
-    public Limb(String name, float hitChance, float damageMult, String apparelSlot, List<String> hitEffects) {
+    public Limb(String ID, String name, float hitChance, float damageMult, String apparelSlot, List<String> hitEffects) {
+        this.ID = ID;
         this.name = name;
         this.hitChance = hitChance;
         this.damageMult = damageMult;
         this.apparelSlot = apparelSlot;
         this.hitEffects = hitEffects;
+    }
+
+    public String getID() {
+        return ID;
     }
 
     public String getName() {
@@ -41,8 +47,16 @@ public class Limb {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o instanceof Limb otherLimb) {
+            return otherLimb.getID().equals(this.getID());
+        }
+        return false;
+    }
+
+    @Override
     public int hashCode() {
-        return name.hashCode();
+        return getID().hashCode();
     }
 
 }
