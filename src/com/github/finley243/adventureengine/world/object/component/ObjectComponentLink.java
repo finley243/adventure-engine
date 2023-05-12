@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.object.component;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveLink;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -30,11 +31,11 @@ public class ObjectComponentLink extends ObjectComponent {
     }
 
     public WorldObject getLinkedObject() {
-        return getObject().game().data().getObject((String) getObject().getComponentParams(getID()).getParameter("object"));
+        return getObject().game().data().getObject(getObject().getValueString(getID() + "_object"));
     }
 
     public AreaLink.CompassDirection getDirection() {
-        return (AreaLink.CompassDirection) getObject().getComponentParams(getID()).getParameter("direction");
+        return LoadUtils.stringToEnum(getObject().getValueString(getID() + "_dir"), AreaLink.CompassDirection.class);
     }
 
     @Override

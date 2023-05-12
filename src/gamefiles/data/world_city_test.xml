@@ -31,7 +31,8 @@
         <area id="wilsons_corner_store_front" landmark="wilsons_corner_store_exterior_door">
             <link type="corner" dist="CLOSE" dir="SE" area="wilsons_corner_store_side"/>
             <object id="wilsons_corner_store_exterior_door" template="door_basic">
-                <component type="link" id="door_link" object="wilsons_corner_store_door_exit" dir="E"/>
+                <localVar name="door_link_object" dataType="string" value="wilsons_corner_store_door_exit"/>
+                <localVar name="door_link_dir" dataType="string" value="E"/>
             </object>
         </area>
     </room>

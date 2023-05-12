@@ -14,7 +14,8 @@
             <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_aisle"/>
             <link type="basic" dist="FAR" dir="N" area="wilsons_corner_store_coolers"/>
             <object id="wilsons_corner_store_door_exit" template="door_locked">
-                <component type="link" id="door_link" object="wilsons_corner_store_exterior_door" dir="W"/>
+                <localVar name="door_link_object" dataType="string" value="wilsons_corner_store_exterior_door"/>
+                <localVar name="door_link_dir" dataType="string" value="W"/>
                 <localVar name="lock_pick_difficulty" dataType="int" value="5"/>
                 <localVar name="lock_keys" dataType="stringSet">
                     <value>wilsons_corner_store_key</value>

@@ -25,8 +25,6 @@ import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.environment.*;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.object.params.ComponentParams;
-import com.github.finley243.adventureengine.world.object.params.ComponentParamsLink;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -882,12 +880,6 @@ public class DataLoader {
         String id = LoadUtils.attribute(objectElement, "id", null);
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
         boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);
-        Map<String, ComponentParams> componentParams = new HashMap<>();
-        for (Element paramsElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
-            String componentID = LoadUtils.attribute(paramsElement, "id", null);
-            ComponentParams paramsObject = loadComponentParams(paramsElement);
-            componentParams.put(componentID, paramsObject);
-        }
         Map<String, Boolean> localVarsBooleanDefault = new HashMap<>();
         Map<String, Integer> localVarsIntegerDefault = new HashMap<>();
         Map<String, Float> localVarsFloatDefault = new HashMap<>();
@@ -919,17 +911,7 @@ public class DataLoader {
                 }
             }
         }
-        return new WorldObject(game, id, template, area, startDisabled, startHidden, componentParams, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
-    }
-
-    private static ComponentParams loadComponentParams(Element paramsElement) {
-        String type = LoadUtils.attribute(paramsElement, "type", null);
-        if ("link".equals(type)) {
-            String linkObject = LoadUtils.attribute(paramsElement, "object", null);
-            AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(paramsElement, "dir", AreaLink.CompassDirection.class, null);
-            return new ComponentParamsLink(linkObject, linkDirection);
-        }
-        return null;
+        return new WorldObject(game, id, template, area, startDisabled, startHidden, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
     }
 
     private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) {

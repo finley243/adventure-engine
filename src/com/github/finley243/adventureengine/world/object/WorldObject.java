@@ -11,17 +11,16 @@ import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.stat.*;
-import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentFactory;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
-import com.github.finley243.adventureengine.world.object.params.ComponentParams;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
@@ -39,15 +38,13 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Area defaultArea;
 	private Area area;
 	private final Map<String, ObjectComponent> components;
-	// Key: component ID, Value: linked object and parameters
-	private final Map<String, ComponentParams> componentParams;
 	private final Map<String, Boolean> localVarsBoolean;
 	private final Map<String, Integer> localVarsInteger;
 	private final Map<String, Float> localVarsFloat;
 	private final Map<String, String> localVarsString;
 	private final Map<String, Set<String>> localVarsStringSet;
 
-	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, ComponentParams> componentParams, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
+	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
 		super(gameInstance, ID);
 		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
 		this.templateID = templateID;
@@ -55,7 +52,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.area = area;
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
-		this.componentParams = componentParams;
 		this.localVarsBoolean = localVarsBooleanDefault;
 		this.localVarsInteger = localVarsIntegerDefault;
 		this.localVarsFloat = localVarsFloatDefault;
@@ -192,10 +188,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return components.get(componentID);
 	}
 
-	public ComponentParams getComponentParams(String componentID) {
-		return componentParams.get(componentID);
-	}
-
 	// TODO - This may need to be optimized (possibly store a separate set of link components?)
 	public List<ObjectComponentLink> getLinkComponents() {
 		List<ObjectComponentLink> linkComponents = new ArrayList<>();
@@ -306,7 +298,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	public StatHolder getSubHolder(String name, String ID) {
 		return switch (name) {
 			case "component" -> getComponent(ID);
-			case "linkedObject" -> game().data().getObject((String) getComponentParams(ID).getParameter("object"));
 			case "area" -> getArea();
 			default -> null;
 		};
