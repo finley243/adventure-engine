@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.stat;
 
-public class Stat {
+public abstract class Stat {
 
     private final String name;
     private final MutableStatHolder target;
