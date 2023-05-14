@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine;
 
-public class GameInstanced {
+public abstract class GameInstanced {
 
     private final Game game;
     private final String ID;
