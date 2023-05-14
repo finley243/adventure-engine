@@ -1,19 +1,19 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.actor.ActorReference;
+import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 import java.util.Map;
 
 public class ScriptBark extends Script {
 
-    // List of possible lines to be selected
-    private final ActorReference actor;
+    private final StatHolderReference actor;
     private final String trigger;
 
-    public ScriptBark(Condition condition, Map<String, Expression> localParameters, ActorReference actor, String trigger) {
+    public ScriptBark(Condition condition, Map<String, Expression> localParameters, StatHolderReference actor, String trigger) {
         super(condition, localParameters);
         this.actor = actor;
         this.trigger = trigger;
@@ -21,7 +21,10 @@ public class ScriptBark extends Script {
 
     @Override
     protected void executeSuccess(Context context) {
-        actor.getActor(context).triggerBark(trigger, context.getTarget());
+        if (!(actor.getHolder(context) instanceof Actor actorCast)) {
+            return;
+        }
+        actorCast.triggerBark(trigger, context.getTarget());
     }
 
 }

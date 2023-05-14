@@ -265,14 +265,14 @@ public class DataLoader {
         if (conditionElement == null) return null;
         String type = LoadUtils.attribute(conditionElement, "type", "compound");
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
-        ActorReference actorRef = loadActorReference(conditionElement, "actor");
         switch (type) {
             case "external" -> {
                 String externalID = LoadUtils.attribute(conditionElement, "conditionID", null);
                 return new ConditionExternal(invert, externalID);
             }
             case "combatant" -> {
-                ActorReference targetRef = loadActorReference(conditionElement, "target");
+                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(conditionElement, "actor"));
+                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(conditionElement, "target"));
                 return new ConditionCombatant(invert, actorRef, targetRef);
             }
             case "inventoryItem" -> {
@@ -281,9 +281,10 @@ public class DataLoader {
                 boolean invRequireAll = LoadUtils.attributeBool(conditionElement, "requireAll", false);
                 return new ConditionInventoryItem(invert, invItemVar, invItemID, invRequireAll);
             }
-            case "actorVisible" -> {
-                ActorReference visibleTargetRef = loadActorReference(conditionElement, "target");
-                return new ConditionActorVisible(invert, actorRef, visibleTargetRef);
+            case "visible" -> {
+                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(conditionElement, "actor"));
+                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(conditionElement, "target"));
+                return new ConditionVisible(invert, actorRef, targetRef);
             }
             case "time" -> {
                 Element timeStartElement = LoadUtils.singleChildWithName(conditionElement, "start");
@@ -476,7 +477,6 @@ public class DataLoader {
         if (scriptElement == null) return null;
         String type = scriptElement.getAttribute("type");
         Condition condition = loadCondition(LoadUtils.singleChildWithName(scriptElement, "condition"));
-        ActorReference actorRef = loadActorReference(scriptElement, "actor");
         Map<String, Expression> localParameters = new HashMap<>();
         for (Element parameterElement : LoadUtils.directChildrenWithName(scriptElement, "parameter")) {
             String parameterName = LoadUtils.attribute(parameterElement, "name", null);
@@ -497,12 +497,14 @@ public class DataLoader {
                 return new ScriptTransferItem(condition, localParameters, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferType, transferItemCount);
             }
             case "scene" -> {
+                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
                 List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
                 return new ScriptScene(condition, localParameters, actorRef, scenes);
             }
             case "combat" -> {
-                ActorReference combatantRef = loadActorReference(scriptElement, "combatant");
-                return new ScriptCombat(condition, localParameters, actorRef, combatantRef);
+                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
+                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "target"));
+                return new ScriptCombat(condition, localParameters, actorRef, targetRef);
             }
             case "factionRelation" -> {
                 String targetFaction = LoadUtils.attribute(scriptElement, "targetFaction", null);
@@ -517,6 +519,7 @@ public class DataLoader {
                 return new ScriptSensoryEvent(condition, localParameters, phrase, phraseAudible, area);
             }
             case "bark" -> {
+                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
                 String barkTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
                 return new ScriptBark(condition, localParameters, actorRef, barkTrigger);
             }
@@ -567,17 +570,6 @@ public class DataLoader {
                 return new ScriptCompound(condition, localParameters, subScriptsSequence, false);
             }
         }
-    }
-
-    private static ActorReference loadActorReference(Element element, String name) {
-        if (element == null) return new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
-        String targetRef = LoadUtils.attribute(element, name, null);
-        return switch (targetRef) {
-            case "PLAYER" -> new ActorReference(ActorReference.ReferenceType.PLAYER, null);
-            case "SUBJECT" -> new ActorReference(ActorReference.ReferenceType.SUBJECT, null);
-            case "TARGET" -> new ActorReference(ActorReference.ReferenceType.TARGET, null);
-            case null, default -> new ActorReference(ActorReference.ReferenceType.REFERENCE, targetRef);
-        };
     }
 
     private static Faction loadFaction(Element factionElement) {
