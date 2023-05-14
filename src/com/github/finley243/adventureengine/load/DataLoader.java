@@ -1008,9 +1008,9 @@ public class DataLoader {
                 idles.add(idle);
             }
             switch (type) {
-                case "area" -> {
+                case "move" -> {
                     String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
-                    behavior = new BehaviorArea(condition, duration, idles, areaTarget);
+                    behavior = new BehaviorMove(condition, duration, idles, areaTarget);
                 }
                 case "use" -> {
                     String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
@@ -1020,10 +1020,6 @@ public class DataLoader {
                 case "guard" -> {
                     String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
                     behavior = new BehaviorGuard(condition, duration, idles, guardTarget);
-                }
-                case "sandbox" -> {
-                    String startArea = LoadUtils.attribute(behaviorElement, "area", null);
-                    behavior = new BehaviorSandbox(condition, duration, idles, startArea);
                 }
                 case "sleep" -> {
                     String bedTarget = LoadUtils.attribute(behaviorElement, "bed", null);

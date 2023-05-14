@@ -7,11 +7,11 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.List;
 
-public class BehaviorArea extends Behavior {
+public class BehaviorMove extends Behavior {
 
     private final String area;
 
-    public BehaviorArea(Condition condition, int duration, List<Idle> idles, String area) {
+    public BehaviorMove(Condition condition, int duration, List<Idle> idles, String area) {
         super(condition, duration, idles);
         this.area = area;
     }
