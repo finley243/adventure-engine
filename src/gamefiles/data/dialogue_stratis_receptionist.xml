@@ -39,7 +39,7 @@
                 <script type="transferItem" item="stratis_room_key">
                     <toInv holder="player"/>
                 </script>
-                <script type="modifyState" state="money" holder="PLAYER" value="-300"/>
+                <script type="modifyState" stat="money" holder="player" value="-300"/>
                 <script type="setGlobal" globalID="purchased_stratis_room" value="true"/>
             </script>
         </line>
@@ -78,7 +78,10 @@
         <line exit="true">
             <text>The receptionist smirks.</text>
             <text>"You think you're the first to try that here?"</text>
-            <script type="combat" combatant="PLAYER"/>
+            <script type="combat">
+                <actor holder="target"/>
+                <target holder="player"/>
+            </script>
         </line>
     </scene>
     <scene id="stratis_receptionist_end">

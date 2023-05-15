@@ -59,7 +59,7 @@
             <value1 type="stat" dataType="int" stat="money" holder="player"/>
         </condition>
         <line redirect="cornerstore_shopkeeper_andre_questions">
-            <script type="modifyState" state="money" holder="PLAYER" value="-200"/>
+            <script type="modifyState" stat="money" holder="player" value="-200"/>
             <text>A smirk comes across the shopkeepers face. He straightens his glasses.</text>
             <text>"See, I like people who know how to conduct business. You've got questions, ask away."</text>
         </line>

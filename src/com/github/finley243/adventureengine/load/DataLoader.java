@@ -535,13 +535,13 @@ public class DataLoader {
             }
             case "setState" -> {
                 StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
-                String setStateName = LoadUtils.attribute(scriptElement, "state", null);
+                String setStateName = LoadUtils.attribute(scriptElement, "stat", null);
                 Expression setStateExpression = loadExpressionOrAttribute(scriptElement, "value", null);
                 return new ScriptSetState(condition, localParameters, setStateHolder, setStateName, setStateExpression);
             }
             case "modifyState" -> {
                 StatHolderReference modifyStateHolder = loadStatHolderReference(scriptElement);
-                String modifyStateName = LoadUtils.attribute(scriptElement, "state", null);
+                String modifyStateName = LoadUtils.attribute(scriptElement, "stat", null);
                 Expression modifyStateExpression = loadExpressionOrAttribute(scriptElement, "value", null);
                 return new ScriptModifyState(condition, localParameters, modifyStateHolder, modifyStateName, modifyStateExpression);
             }

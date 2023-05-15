@@ -11,7 +11,7 @@
             </condition>
         </condition>
         <script>
-            <script type="setState" state="locked" holder="parentObject" value="false"/>
+            <script type="setState" stat="locked" holder="parentObject" value="false"/>
             <script type="sensoryEvent">
                 <phrase>pickLock</phrase>
                 <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
@@ -30,7 +30,7 @@
             </condition>
         </condition>
         <script>
-            <script type="setState" state="locked" holder="parentObject" value="false"/>
+            <script type="setState" stat="locked" holder="parentObject" value="false"/>
             <script type="sensoryEvent">
                 <phrase>unlock</phrase>
                 <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
@@ -58,7 +58,7 @@
                 <toInv holder="subject"/>
                 <item type="parameter" dataType="string" name="itemID"/>
             </script>
-            <script type="modifyState" dataType="int" state="money" holder="subject">
+            <script type="modifyState" dataType="int" stat="money" holder="subject">
                 <value type="product" dataType="int">
                     <value type="stat" dataType="int" holder="itemTemplate" stat="price">
                         <holderID type="parameter" name="itemID"/>
