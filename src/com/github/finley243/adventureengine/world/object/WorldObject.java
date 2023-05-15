@@ -124,6 +124,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	
 	@Override
 	public void setArea(Area area) {
+		if (isEnabled) {
+			this.area.removeObject(this);
+			area.addObject(this);
+		}
 		this.area = area;
 	}
 
@@ -230,7 +234,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	public String getValueString(String name) {
 		return switch (name) {
 			case "id" -> getID();
-			case "templateID" -> templateID;
+			case "template_id" -> templateID;
 			case "area" -> getArea().getID();
 			case "room" -> getArea().getRoom().getID();
 			default ->
@@ -305,8 +309,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	public void loadState(SaveData saveData) {
 		switch (saveData.getParameter()) {
-			case "isKnown" -> this.isKnown = saveData.getValueBoolean();
-			case "isEnabled" -> setEnabled(saveData.getValueBoolean());
+			case "is_known" -> this.isKnown = saveData.getValueBoolean();
+			case "is_enabled" -> setEnabled(saveData.getValueBoolean());
 			case "area" -> this.area = game().data().getArea(saveData.getValueString());
 		}
 	}
@@ -314,10 +318,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
 		if (isKnown) {
-			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "isKnown", isKnown));
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "is_known", isKnown));
 		}
 		if (!isEnabled) {
-			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "isEnabled", isEnabled));
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "is_enabled", isEnabled));
 		}
 		if (area != defaultArea) {
 			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "area", area.getID()));

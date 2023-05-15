@@ -143,7 +143,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	public void loadState(SaveData saveData) {
-		if ("hasTriggered".equals(saveData.getParameter())) {
+		if ("has_triggered".equals(saveData.getParameter())) {
 			this.hasTriggered = saveData.getValueBoolean();
 		}
 	}
@@ -151,7 +151,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
 		if (hasTriggered) {
-			state.add(new SaveData(SaveData.DataType.SCENE, this.getID(), "hasTriggered", hasTriggered));
+			state.add(new SaveData(SaveData.DataType.SCENE, this.getID(), "has_triggered", hasTriggered));
 		}
 		return state;
 	}

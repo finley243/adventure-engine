@@ -66,7 +66,7 @@ public abstract class ObjectComponent implements StatHolder {
     public String getValueString(String name) {
         return switch (name) {
             case "id" -> getID();
-            case "templateID" -> getTemplate().getID();
+            case "template_id" -> getTemplate().getID();
             default -> null;
         };
     }

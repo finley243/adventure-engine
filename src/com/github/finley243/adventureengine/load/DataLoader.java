@@ -513,8 +513,8 @@ public class DataLoader {
                 return new ScriptFactionRelation(condition, localParameters, targetFaction, relationFaction, relation);
             }
             case "sensoryEvent" -> {
-                String phrase = LoadUtils.singleTag(scriptElement, "phrase", null);
-                String phraseAudible = LoadUtils.singleTag(scriptElement, "phraseAudible", null);
+                Expression phrase = loadExpression(LoadUtils.singleChildWithName(scriptElement, "phrase"), "string");
+                Expression phraseAudible = loadExpression(LoadUtils.singleChildWithName(scriptElement, "phraseAudible"), "string");
                 Expression area = loadExpression(LoadUtils.singleChildWithName(scriptElement, "area"), "string");
                 return new ScriptSensoryEvent(condition, localParameters, phrase, phraseAudible, area);
             }

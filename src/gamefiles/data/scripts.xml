@@ -1,5 +1,5 @@
 <data>
-    <script id="dropEquipped">
+    <script id="drop_equipped">
         <condition type="boolean">
             <value type="stat" holder="subject" stat="hasEquippedItem"/>
         </condition>
@@ -23,7 +23,7 @@
             <area type="stat" holder="subject" subType="area" stat="id"/>
         </script>
     </script>
-    <script id="dropEquippedForce">
+    <script id="drop_equipped_force">
         <condition type="boolean">
             <value type="stat" holder="subject" stat="hasEquippedItem"/>
         </condition>

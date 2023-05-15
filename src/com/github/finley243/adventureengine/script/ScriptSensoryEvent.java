@@ -15,11 +15,11 @@ import java.util.Set;
 
 public class ScriptSensoryEvent extends Script {
 
-    private final String phrase;
-    private final String phraseAudible;
+    private final Expression phrase;
+    private final Expression phraseAudible;
     private final Expression area;
 
-    public ScriptSensoryEvent(Condition condition, Map<String, Expression> localParameters, String phrase, String phraseAudible, Expression area) {
+    public ScriptSensoryEvent(Condition condition, Map<String, Expression> localParameters, Expression phrase, Expression phraseAudible, Expression area) {
         super(condition, localParameters);
         this.phrase = phrase;
         this.phraseAudible = phraseAudible;
@@ -32,7 +32,9 @@ public class ScriptSensoryEvent extends Script {
         Map<String, String> contextVars = getTextVarMap(context);
         Map<String, Noun> contextNouns = getContextNounMap(context);
         TextContext textContext = new TextContext(contextVars, contextNouns);
-        context.game().eventBus().post(new SensoryEvent(originAreas, Phrases.get(phrase), Phrases.get(phraseAudible), textContext, false, null, null, context.getSubject(), context.getTarget()));
+        String phraseString = (phrase == null ? null : phrase.getValueString(context));
+        String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString(context));
+        context.game().eventBus().post(new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, false, null, null, context.getSubject(), context.getTarget()));
     }
 
     private Area[] getOriginAreas(Context context) {

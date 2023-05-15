@@ -6,7 +6,7 @@
                 <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
             </condition>
             <condition type="compare" comparator="GREATER_EQUAL">
-                <value1 type="stat" dataType="int" stat="lockpick" holder="subject"/>
+                <value1 type="stat" dataType="int" stat="skill_lockpick" holder="subject"/>
                 <value2 type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
             </condition>
         </condition>

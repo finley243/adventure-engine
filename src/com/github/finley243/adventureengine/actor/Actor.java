@@ -122,21 +122,21 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.areaTargets = new HashSet<>();
 		this.startDead = startDead;
 		this.isDead = startDead;
-		this.maxHP = new StatInt("maxHP", this);
+		this.maxHP = new StatInt("max_hp", this);
 		this.damageResistance = new HashMap<>();
-		this.actionPoints = new StatInt("actionPoints", this);
-		this.canMove = new StatBoolean("canMove", this, false);
-		this.canDodge = new StatBoolean("canDodge", this, false);
+		this.actionPoints = new StatInt("action_points", this);
+		this.canMove = new StatBoolean("can_move", this, false);
+		this.canDodge = new StatBoolean("can_dodge", this, false);
 		this.inventory = new Inventory(game, this);
 		this.apparelComponent = new ApparelComponent(this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		this.attributes = new EnumMap<>(Attribute.class);
 		for (Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new StatInt("attribute" + attribute, this));
+			this.attributes.put(attribute, new StatInt("attribute_" + attribute, this));
 		}
 		this.skills = new EnumMap<>(Skill.class);
 		for (Skill skill : Skill.values()) {
-			this.skills.put(skill, new StatInt("skill" + skill, this));
+			this.skills.put(skill, new StatInt("skill_" + skill, this));
 		}
 		this.effectComponent = new EffectComponent(game, this, new Context(game, this, this));
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
@@ -151,7 +151,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			HP = this.maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
 		}
 		for (String damageType : game().data().getDamageTypes()) {
-			this.damageResistance.put(damageType, new StatInt("damageResistance" + LangUtils.capitalize(damageType), this));
+			this.damageResistance.put(damageType, new StatInt("damage_resist_" + damageType, this));
 		}
 		if (getTemplate().getLootTable() != null) {
 			inventory.addItems(getTemplate().getLootTable().generateItems(game()));
@@ -720,35 +720,31 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public StatInt getStatInt(String name) {
-		if (name.startsWith("damageResist")) {
+		if (name.startsWith("damage_resist_")) {
 			for (String damageType : game().data().getDamageTypes()) {
-				if (name.equals("damageResist" + LangUtils.capitalize(damageType))) {
+				if (name.equals("damage_resist_" + damageType)) {
 					return damageResistance.get(damageType);
+				}
+			}
+			return null;
+		} else if (name.startsWith("attribute_")) {
+			for (Attribute attribute : Attribute.values()) {
+				if (name.equals("attribute_" + attribute.toString().toLowerCase())) {
+					return attributes.get(attribute);
+				}
+			}
+			return null;
+		} else if (name.startsWith("skill_")) {
+			for (Skill skill : Skill.values()) {
+				if (name.equals("skill_" + skill.toString().toLowerCase())) {
+					return skills.get(skill);
 				}
 			}
 			return null;
 		}
 		return switch (name) {
-			case "maxHP" -> maxHP;
-			case "actionPoints" -> actionPoints;
-			case "body" -> attributes.get(Attribute.BODY);
-			case "intelligence" -> attributes.get(Attribute.INTELLIGENCE);
-			case "charisma" -> attributes.get(Attribute.CHARISMA);
-			case "dexterity" -> attributes.get(Attribute.DEXTERITY);
-			case "agility" -> attributes.get(Attribute.AGILITY);
-			case "melee" -> skills.get(Skill.MELEE);
-			case "throwing" -> skills.get(Skill.THROWING);
-			case "intimidation" -> skills.get(Skill.INTIMIDATION);
-			case "software" -> skills.get(Skill.SOFTWARE);
-			case "hardware" -> skills.get(Skill.HARDWARE);
-			case "medicine" -> skills.get(Skill.MEDICINE);
-			case "barter" -> skills.get(Skill.BARTER);
-			case "persuasion" -> skills.get(Skill.PERSUASION);
-			case "deception" -> skills.get(Skill.DECEPTION);
-			case "handguns" -> skills.get(Skill.HANDGUNS);
-			case "longArms" -> skills.get(Skill.LONG_ARMS);
-			case "lockpick" -> skills.get(Skill.LOCKPICK);
-			case "stealth" -> skills.get(Skill.STEALTH);
+			case "max_hp" -> maxHP;
+			case "action_points" -> actionPoints;
 			default -> null;
 		};
 	}
@@ -760,9 +756,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public StatBoolean getStatBoolean(String name) {
-		if ("canMove".equals(name)) {
+		if ("can_move".equals(name)) {
 			return canMove;
-		} else if ("canDodge".equals(name)) {
+		} else if ("can_dodge".equals(name)) {
 			return canDodge;
 		}
 		return null;
@@ -780,60 +776,40 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public int getValueInt(String name) {
-		if (name.startsWith("damageResist")) {
+		if (name.startsWith("damage_resist_")) {
 			for (String damageType : game().data().getDamageTypes()) {
-				if (name.equals("damageResist" + LangUtils.capitalize(damageType))) {
+				if (name.equals("damage_resist_" + damageType)) {
 					return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST);
+				}
+			}
+			return 0;
+		} else if (name.startsWith("attribute_")) {
+			for (Attribute attribute : Attribute.values()) {
+				if (name.equals("attribute_" + attribute.toString().toLowerCase())) {
+					return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+				}
+			}
+			return 0;
+		} else if (name.startsWith("skill_")) {
+			for (Skill skill : Skill.values()) {
+				if (name.equals("skill_" + skill.toString().toLowerCase())) {
+					return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX);
 				}
 			}
 			return 0;
 		}
 		return switch (name) {
-			case "maxHP" -> maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
-			case "HP" -> HP;
-			case "actionPoints" -> actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
+			case "max_hp" -> maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
+			case "hp" -> HP;
+			case "action_points" -> actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
 			case "money" -> money;
-			case "body" ->
-					attributes.get(Attribute.BODY).value(getTemplate().getAttribute(Attribute.BODY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "intelligence" ->
-					attributes.get(Attribute.INTELLIGENCE).value(getTemplate().getAttribute(Attribute.INTELLIGENCE), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "charisma" ->
-					attributes.get(Attribute.CHARISMA).value(getTemplate().getAttribute(Attribute.CHARISMA), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "dexterity" ->
-					attributes.get(Attribute.DEXTERITY).value(getTemplate().getAttribute(Attribute.DEXTERITY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "agility" ->
-					attributes.get(Attribute.AGILITY).value(getTemplate().getAttribute(Attribute.AGILITY), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
-			case "melee" -> skills.get(Skill.MELEE).value(getTemplate().getSkill(Skill.MELEE), SKILL_MIN, SKILL_MAX);
-			case "throwing" ->
-					skills.get(Skill.THROWING).value(getTemplate().getSkill(Skill.THROWING), SKILL_MIN, SKILL_MAX);
-			case "intimidation" ->
-					skills.get(Skill.INTIMIDATION).value(getTemplate().getSkill(Skill.INTIMIDATION), SKILL_MIN, SKILL_MAX);
-			case "software" ->
-					skills.get(Skill.SOFTWARE).value(getTemplate().getSkill(Skill.SOFTWARE), SKILL_MIN, SKILL_MAX);
-			case "hardware" ->
-					skills.get(Skill.HARDWARE).value(getTemplate().getSkill(Skill.HARDWARE), SKILL_MIN, SKILL_MAX);
-			case "medicine" ->
-					skills.get(Skill.MEDICINE).value(getTemplate().getSkill(Skill.MEDICINE), SKILL_MIN, SKILL_MAX);
-			case "barter" -> skills.get(Skill.BARTER).value(getTemplate().getSkill(Skill.BARTER), SKILL_MIN, SKILL_MAX);
-			case "persuasion" ->
-					skills.get(Skill.PERSUASION).value(getTemplate().getSkill(Skill.PERSUASION), SKILL_MIN, SKILL_MAX);
-			case "deception" ->
-					skills.get(Skill.DECEPTION).value(getTemplate().getSkill(Skill.DECEPTION), SKILL_MIN, SKILL_MAX);
-			case "handguns" ->
-					skills.get(Skill.HANDGUNS).value(getTemplate().getSkill(Skill.HANDGUNS), SKILL_MIN, SKILL_MAX);
-			case "longArms" ->
-					skills.get(Skill.LONG_ARMS).value(getTemplate().getSkill(Skill.LONG_ARMS), SKILL_MIN, SKILL_MAX);
-			case "lockpick" ->
-					skills.get(Skill.LOCKPICK).value(getTemplate().getSkill(Skill.LOCKPICK), SKILL_MIN, SKILL_MAX);
-			case "stealth" ->
-					skills.get(Skill.STEALTH).value(getTemplate().getSkill(Skill.STEALTH), SKILL_MIN, SKILL_MAX);
 			default -> 0;
 		};
 	}
 
 	@Override
 	public float getValueFloat(String name) {
-		if ("hpProportion".equals(name)) {
+		if ("hp_proportion".equals(name)) {
 			return ((float) HP) / ((float) getMaxHP());
 		}
 		return 0;
@@ -844,14 +820,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return switch (name) {
 			case "enabled" -> isEnabled;
 			case "sleeping" -> isSleeping;
-			case "inCombat" -> isInCombat();
-			case "usingObject" -> isUsingObject();
-			case "hasEquippedItem" -> getEquipmentComponent().hasEquippedItem();
-			case "inCover" -> isInCover();
+			case "in_combat" -> isInCombat();
+			case "using_object" -> isUsingObject();
+			case "has_equipped_item" -> getEquipmentComponent().hasEquippedItem();
+			case "in_cover" -> isInCover();
 			case "dead" -> isDead;
 			case "active" -> isActive();
-			case "canMove" -> canMove();
-			case "canDodge" -> canDodge();
+			case "can_move" -> canMove();
+			case "can_dodge" -> canDodge();
 			default -> false;
 		};
 	}
@@ -860,7 +836,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public String getValueString(String name) {
 		return switch (name) {
 			case "id" -> getID();
-			case "templateID" -> templateID;
+			case "template_id" -> templateID;
 			case "area" -> getArea().getID();
 			case "room" -> getArea().getRoom().getID();
 			default -> null;
@@ -874,7 +850,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public void onStatChange(String name) {
-		if ("maxHP".equals(name) && HP > getMaxHP()) {
+		if ("max_hp".equals(name) && HP > getMaxHP()) {
 			HP = getMaxHP();
 		}
 	}
@@ -884,7 +860,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		switch (name) {
 			case "known" -> isKnown = value;
 			case "enabled" -> setEnabled(value);
-			case "playerControlled" -> playerControlled = value;
+			case "player_controlled" -> playerControlled = value;
 		}
 	}
 
@@ -905,7 +881,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void setStateString(String name, String value) {
 		switch (name) {
 			case "area" -> setArea(game().data().getArea(value));
-			case "alertState" -> {
+			case "alert_state" -> {
 				if (targetingComponent != null) {
 					targetingComponent.setAlertState(LoadUtils.stringToEnum(value, TargetingComponent.AlertState.class));
 				}
@@ -934,8 +910,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
 		return switch (name) {
-			case "equippedItem" -> getEquipmentComponent().getEquippedItem();
-			case "usingObject" -> getUsingObject();
+			case "equipped_item" -> getEquipmentComponent().getEquippedItem();
+			case "using_object" -> getUsingObject();
 			case "area" -> getArea();
 			default -> null;
 		};
@@ -963,9 +939,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void loadState(SaveData saveData) {
 		switch (saveData.getParameter()) {
 			case "hp" -> this.HP = saveData.getValueInt();
-			case "isEnabled" -> setEnabled(saveData.getValueBoolean());
-			case "isDead" -> this.isDead = saveData.getValueBoolean();
-			case "isKnown" -> this.isKnown = saveData.getValueBoolean();
+			case "is_enabled" -> setEnabled(saveData.getValueBoolean());
+			case "is_dead" -> this.isDead = saveData.getValueBoolean();
+			case "is_known" -> this.isKnown = saveData.getValueBoolean();
 			case "area" -> {
 				if (saveData.getValueString() == null) {
 					this.area = null;
@@ -976,22 +952,22 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "inventory" -> {
 				if (inventory != null) inventory.loadState(saveData);
 			}
-			case "equippedItem" -> this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
-			case "equippedApparel" -> this.apparelComponent.equip((ItemApparel) game().data().getItemState(saveData.getValueString()));
-			case "actionPointsUsed" -> this.actionPointsUsed = saveData.getValueInt();
+			case "equipped_item" -> this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
+			case "equipped_apparel" -> this.apparelComponent.equip((ItemApparel) game().data().getItemState(saveData.getValueString()));
+			case "action_points_used" -> this.actionPointsUsed = saveData.getValueInt();
 		}
 	}
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
 		if (isKnown) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isKnown", isKnown));
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "is_known", isKnown));
 		}
 		if (isEnabled == startDisabled) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isEnabled", isEnabled));
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "is_enabled", isEnabled));
 		}
 		if (isDead != startDead) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "isDead", isDead));
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "is_dead", isDead));
 		}
 		if (area != defaultArea) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", (area == null ? null : area.getID())));
@@ -1003,16 +979,16 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			//state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "targeting", targetingComponent.saveState()));
 		}
 		if (equipmentComponent.hasEquippedItem()) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedItem", equipmentComponent.getEquippedItem().getID()));
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equipped_item", equipmentComponent.getEquippedItem().getID()));
 		}
 		for (ItemApparel item : apparelComponent.getEquippedItems()) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equippedApparel", item.getID()));
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equipped_apparel", item.getID()));
 		}
 		if (usingObject != null) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "usingObject", usingObject.getID()));
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "using_object", usingObject.getID()));
 		}
 		if (actionPointsUsed != 0) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "actionPointsUsed", actionPointsUsed));
+			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "action_points_used", actionPointsUsed));
 		}
 		return state;
 	}

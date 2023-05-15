@@ -1,9 +1,9 @@
 <data>
-    <effect id="hitLimbWeapon">
-        <scriptAdd type="external" scriptID="dropEquippedForce"/>
+    <effect id="hit_limb_weapon">
+        <scriptAdd type="external" scriptID="drop_equipped_force"/>
     </effect>
-    <effect id="foodBasic">
+    <effect id="food_basic">
         <scriptAdd type="modifyState" state="heal" value="10"/>
     </effect>
-    <effect id="armorMedium" type="mod" stat="damageResistPhysical" amount="5"/>
+    <effect id="armor_medium" type="mod" stat="damage_resist_physical" amount="5"/>
 </data>

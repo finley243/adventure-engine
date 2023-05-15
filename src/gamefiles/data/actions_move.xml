@@ -22,9 +22,6 @@
     </action>
     <action id="move_corner">
         <prompt>Around corner ($dir)</prompt>
-        <parameter name="areaName" dataType="string" type="stat" holder="area" stat="name">
-            <holderID dataType="string" type="parameter" name="areaID"/>
-        </parameter>
         <script>
             <script type="sensoryEvent">
                 <parameter name="area" dataType="noun" type="stat" holder="area">

@@ -385,8 +385,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return switch (name) {
 			case "id" -> getID();
 			case "name" -> getName();
-			case "relativeName" -> getRelativeName();
-			case "movePhrase" -> getMovePhrase();
+			case "relative_name" -> getRelativeName();
+			case "move_phrase" -> getMovePhrase();
 			case "room" -> roomID;
 			default -> null;
 		};
@@ -395,8 +395,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	@Override
 	public Set<String> getValueStringSet(String name) {
 		return switch (name) {
-			case "visibleAreas" -> getLineOfSightAreaIDs();
-			case "movableAreas" -> getMovableAreaIDs();
+			case "visible_areas" -> getLineOfSightAreaIDs();
+			case "movable_areas" -> getMovableAreaIDs();
 			default -> null;
 		};
 	}
@@ -480,7 +480,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	public void loadState(SaveData saveData) {
-		if (saveData.getParameter().equals("isKnown")) {
+		if (saveData.getParameter().equals("is_known")) {
 			if (saveData.getValueBoolean()) {
 				setKnown();
 			}
@@ -490,7 +490,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
 		if (isKnown()) {
-			state.add(new SaveData(SaveData.DataType.AREA, this.getID(), "isKnown", isKnown()));
+			state.add(new SaveData(SaveData.DataType.AREA, this.getID(), "is_known", isKnown()));
 		}
 		return state;
 	}

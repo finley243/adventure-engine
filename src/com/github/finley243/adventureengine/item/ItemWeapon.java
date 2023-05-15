@@ -205,17 +205,17 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return switch (name) {
 			case "damage" -> damage;
 			case "rate" -> rate;
-			case "critDamage" -> critDamage;
-			case "clipSize" -> clipSize;
+			case "crit_damage" -> critDamage;
+			case "clip_size" -> clipSize;
 			default -> null;
 		};
 	}
 
 	@Override
 	public StatFloat getStatFloat(String name) {
-		if ("accuracyBonus".equals(name)) {
+		if ("accuracy_bonus".equals(name)) {
 			return accuracyBonus;
-		} else if ("armorMult".equals(name)) {
+		} else if ("armor_mult".equals(name)) {
 			return armorMult;
 		}
 		return null;
@@ -223,7 +223,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 
 	@Override
 	public StatBoolean getStatBoolean(String name) {
-		if ("isSilenced".equals(name)) {
+		if ("is_silenced".equals(name)) {
 			return isSilenced;
 		}
 		return null;
@@ -231,7 +231,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 
 	@Override
 	public StatString getStatString(String name) {
-		if ("damageType".equals(name)) {
+		if ("damage_type".equals(name)) {
 			return damageType;
 		}
 		return null;
@@ -241,7 +241,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	public StatStringSet getStatStringSet(String name) {
 		if ("ranges".equals(name)) {
 			return ranges;
-		} else if ("attackTypes".equals(name)) {
+		} else if ("attack_types".equals(name)) {
 			return attackTypes;
 		}
 		return null;
@@ -252,9 +252,9 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return switch (name) {
 			case "damage" -> damage.value(getWeaponTemplate().getDamage(), 1, 1000);
 			case "rate" -> rate.value(getWeaponTemplate().getRate(), 1, 50);
-			case "critDamage" -> critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
-			case "clipSize" -> clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
-			case "ammoCount" -> ammoCount;
+			case "crit_damage" -> critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
+			case "clip_size" -> clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
+			case "ammo_count" -> ammoCount;
 			default -> super.getValueInt(name);
 		};
 	}
@@ -262,15 +262,15 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	@Override
 	public float getValueFloat(String name) {
 		return switch (name) {
-			case "accuracyBonus" -> accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f);
-			case "armorMult" -> armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
+			case "accuracy_bonus" -> accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f);
+			case "armor_mult" -> armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
 			default -> super.getValueFloat(name);
 		};
 	}
 
 	@Override
 	public boolean getValueBoolean(String name) {
-		if ("isSilenced".equals(name)) {
+		if ("is_silenced".equals(name)) {
 			return isSilenced.value(getWeaponTemplate().isSilenced());
 		}
 		return super.getValueBoolean(name);
@@ -278,7 +278,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 
 	@Override
 	public String getValueString(String name) {
-		if ("damageType".equals(name)) {
+		if ("damage_type".equals(name)) {
 			return damageType.value(getWeaponTemplate().getDamageType());
 		}
 		return super.getValueString(name);
@@ -287,7 +287,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	@Override
 	public Set<String> getValueStringSet(String name) {
 		return switch (name) {
-			case "attackTypes" -> attackTypes.value(getWeaponClass().getAttackTypes());
+			case "attack_types" -> attackTypes.value(getWeaponClass().getAttackTypes());
 			case "ranges" -> ranges.valueFromEnum(getWeaponClass().getPrimaryRanges());
 			default -> super.getValueStringSet(name);
 		};
@@ -342,7 +342,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 
 	@Override
 	public void loadState(SaveData saveData) {
-		if ("ammoCount".equals(saveData.getParameter())) {
+		if ("ammo_count".equals(saveData.getParameter())) {
 			this.ammoCount = saveData.getValueInt();
 		} else {
 			super.loadState(saveData);
@@ -353,7 +353,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	public List<SaveData> saveState() {
 		List<SaveData> state = super.saveState();
 		if (ammoCount != getWeaponTemplate().getClipSize()) {
-			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammoCount", ammoCount));
+			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "ammo_count", ammoCount));
 		}
 		return state;
 	}

@@ -44,7 +44,7 @@
     <scene id="cornerstore_shopkeeper_andre_intimidate" type="select">
         <line redirect="cornerstore_shopkeeper_andre_questions">
             <condition type="compare" value2="6">
-                <value1 type="stat" dataType="int" stat="intimidation" holder="player"/>
+                <value1 type="stat" dataType="int" stat="skill_intimidation" holder="player"/>
             </condition>
             <text>The shopkeeper puts up his hands.</text>
             <text>"Okay, okay. Fine. Ask your damn questions."</text>

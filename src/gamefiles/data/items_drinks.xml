@@ -1,10 +1,10 @@
 <data>
     <item type="consumable" id="nitron_cola" price="10" consumableType="DRINK">
         <name>Nitron Cola</name>
-        <effect>foodBasic</effect>
+        <effect>food_basic</effect>
     </item>
     <item type="consumable" id="nitron_diet" price="10" consumableType="DRINK">
         <name>Nitron Diet</name>
-        <effect>foodBasic</effect>
+        <effect>food_basic</effect>
     </item>
 </data>

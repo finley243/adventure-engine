@@ -174,7 +174,7 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	public void loadState(SaveData saveData) {
-		if (saveData.getParameter().equals("generatedCount")) {
+		if (saveData.getParameter().equals("generated_count")) {
 			this.generatedCount = saveData.getValueInt();
 		}
 	}
@@ -182,7 +182,7 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
 		if (generatedCount > 0) {
-			state.add(new SaveData(SaveData.DataType.ITEM_TEMPLATE, this.getID(), "generatedCount", generatedCount));
+			state.add(new SaveData(SaveData.DataType.ITEM_TEMPLATE, this.getID(), "generated_count", generatedCount));
 		}
 		return state;
 	}
