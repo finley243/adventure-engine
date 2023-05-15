@@ -1025,9 +1025,10 @@ public class DataLoader {
                     String bedTarget = LoadUtils.attribute(behaviorElement, "bed", null);
                     behavior = new BehaviorSleep(condition, idles, bedTarget);
                 }
-                case "cycle" -> {
-                    List<Behavior> cycleBehaviors = loadBehaviors(behaviorElement);
-                    behavior = new BehaviorCycle(condition, cycleBehaviors);
+                case "procedure" -> {
+                    List<Behavior> procedureBehaviors = loadBehaviors(behaviorElement);
+                    boolean isCycle = LoadUtils.attributeBool(behaviorElement, "isCycle", false);
+                    behavior = new BehaviorProcedure(condition, isCycle, procedureBehaviors);
                 }
                 default -> behavior = null;
             }
