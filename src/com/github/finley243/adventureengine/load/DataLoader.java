@@ -530,8 +530,9 @@ public class DataLoader {
             case "timerStart" -> {
                 String timerID = LoadUtils.attribute(scriptElement, "timerID", null);
                 int timerDuration = LoadUtils.attributeInt(scriptElement, "duration", 1);
-                Script timerExpireScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "expireScript"));
-                return new ScriptTimerStart(condition, localParameters, timerID, timerDuration, timerExpireScript);
+                Script timerScriptExpire = loadScript(LoadUtils.singleChildWithName(scriptElement, "scriptExpire"));
+                Script timerScriptUpdate = loadScript(LoadUtils.singleChildWithName(scriptElement, "scriptUpdate"));
+                return new ScriptTimerStart(condition, localParameters, timerID, timerDuration, timerScriptExpire, timerScriptUpdate);
             }
             case "setState" -> {
                 StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
