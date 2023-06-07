@@ -70,9 +70,9 @@ public class ScriptSensoryEvent extends Script {
         if (context.getParentItem() != null) {
             nounMap.put("item", context.getParentItem());
         }
-        for (Map.Entry<String, Expression> entry : context.getParameters().entrySet()) {
-            if (entry.getValue().getDataType() == Expression.DataType.NOUN) {
-                nounMap.put(entry.getKey(), entry.getValue().getValueNoun(context));
+        for (Map.Entry<String, Context.Variable> entry : context.getParameters().entrySet()) {
+            if (entry.getValue().getExpression().getDataType() == Expression.DataType.NOUN) {
+                nounMap.put(entry.getKey(), entry.getValue().getExpression().getValueNoun(context));
             }
         }
         return nounMap;
@@ -80,9 +80,9 @@ public class ScriptSensoryEvent extends Script {
 
     private Map<String, String> getTextVarMap(Context context) {
         Map<String, String> textVarValues = new HashMap<>();
-        for (Map.Entry<String, Expression> entry : context.getParameters().entrySet()) {
-            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                textVarValues.put(entry.getKey(), entry.getValue().getValueString(context));
+        for (Map.Entry<String, Context.Variable> entry : context.getParameters().entrySet()) {
+            if (entry.getValue().getExpression().getDataType() == Expression.DataType.STRING) {
+                textVarValues.put(entry.getKey(), entry.getValue().getExpression().getValueString(context));
             }
         }
         return textVarValues;

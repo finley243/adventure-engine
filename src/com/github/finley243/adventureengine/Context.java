@@ -15,7 +15,7 @@ public class Context {
     private final Actor target;
     private final WorldObject parentObject;
     private final Item parentItem;
-    private final Map<String, Expression> parameters;
+    private final Map<String, Variable> parameters;
 
     public Context(Game game, Actor subject, Actor target) {
         this(game, subject, target, null, null, new HashMap<>());
@@ -39,7 +39,10 @@ public class Context {
         this.target = target;
         this.parentObject = parentObject;
         this.parentItem = parentItem;
-        this.parameters = parameters;
+        this.parameters = new HashMap<>();
+        for (Map.Entry<String, Expression> parameter : parameters.entrySet()) {
+            this.parameters.put(parameter.getKey(), new Variable(parameter.getValue()));
+        }
     }
 
     public Context(Context context, Map<String, Expression> addedParameters) {
@@ -50,7 +53,13 @@ public class Context {
         this.parentItem = context.parentItem;
         this.parameters = new HashMap<>();
         this.parameters.putAll(context.parameters);
-        this.parameters.putAll(addedParameters);
+        for (Map.Entry<String, Expression> parameter : addedParameters.entrySet()) {
+            if (this.parameters.containsKey(parameter.getKey())) {
+                this.parameters.get(parameter.getKey()).setExpression(parameter.getValue());
+            } else {
+                this.parameters.put(parameter.getKey(), new Variable(parameter.getValue()));
+            }
+        }
     }
 
     public Game game() {
@@ -73,8 +82,26 @@ public class Context {
         return parentItem;
     }
 
-    public Map<String, Expression> getParameters() {
+    public Map<String, Variable> getParameters() {
         return parameters;
+    }
+
+    public static class Variable {
+        private Expression expression;
+
+        public Variable(Expression expression) {
+            if (expression == null) throw new IllegalArgumentException("Expression cannot be initialized to null");
+            this.expression = expression;
+        }
+
+        public Expression getExpression() {
+            return expression;
+        }
+
+        public void setExpression(Expression expression) {
+            if (expression == null) throw new IllegalArgumentException("Expression cannot be set to null");
+            this.expression = expression;
+        }
     }
 
 }
