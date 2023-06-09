@@ -24,6 +24,9 @@ public class ActionObjectUseStart extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
+		if (subject.isUsingObject()) {
+			subject.getUsingObject().removeUser();
+		}
 		if (component.getTemplateUsable().userIsInCover()) {
 			subject.triggerScript("on_take_cover", subject);
 		}
