@@ -270,6 +270,10 @@ public class DataLoader {
         if (conditionElement == null) return null;
         String type = LoadUtils.attribute(conditionElement, "type", "compound");
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
+        if (conditionElement.hasAttribute("external")) {
+            String externalID = LoadUtils.attribute(conditionElement, "external", null);
+            return new ConditionExternal(invert, externalID);
+        }
         switch (type) {
             case "external" -> {
                 String externalID = LoadUtils.attribute(conditionElement, "conditionID", null);
@@ -349,6 +353,10 @@ public class DataLoader {
         String defaultType = ("inventory".equals(dataTypeDefault) || "noun".equals(dataTypeDefault)) ? "stat" : null;
         String type = LoadUtils.attribute(expressionElement, "type", defaultType);
         String dataType = LoadUtils.attribute(expressionElement, "dataType", dataTypeDefault);
+        if (expressionElement.hasAttribute("external")) {
+            String externalID = LoadUtils.attribute(expressionElement, "external", null);
+            return new ExpressionExternal(dataType, externalID);
+        }
         switch (type) {
             case "stat" -> {
                 StatHolderReference statHolderReference = loadStatHolderReference(expressionElement);
@@ -491,6 +499,10 @@ public class DataLoader {
             String parameterName = LoadUtils.attribute(parameterElement, "name", null);
             Expression parameterValue = loadExpression(parameterElement, null);
             localParameters.put(parameterName, parameterValue);
+        }
+        if (scriptElement.hasAttribute("external")) {
+            String externalID = LoadUtils.attribute(scriptElement, "external", null);
+            return new ScriptExternal(condition, localParameters, externalID);
         }
         switch (type) {
             case "external" -> {
