@@ -944,8 +944,9 @@ public class DataLoader {
                 boolean userIsInCover = LoadUtils.attributeBool(componentElement, "cover", false);
                 boolean userIsHidden = LoadUtils.attributeBool(componentElement, "hidden", false);
                 boolean userCanSeeOtherAreas = LoadUtils.attributeBool(componentElement, "seeOtherAreas", true);
+                String vehicleType = LoadUtils.attribute(componentElement, "vehicleType", null);
                 List<ObjectTemplate.CustomActionHolder> usingActions = loadCustomActions(componentElement, "usingAction");
-                return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, usingActions);
+                return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, vehicleType, usingActions);
             }
             default -> throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
         }

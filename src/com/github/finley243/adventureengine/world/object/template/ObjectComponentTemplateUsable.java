@@ -13,9 +13,10 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
     private final boolean userIsInCover;
     private final boolean userIsHidden;
     private final boolean userCanSeeOtherAreas;
+    private final String vehicleType;
     private final List<ObjectTemplate.CustomActionHolder> usingActions;
 
-    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, List<ObjectTemplate.CustomActionHolder> usingActions) {
+    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, String vehicleType, List<ObjectTemplate.CustomActionHolder> usingActions) {
         super(game, ID, startEnabled, name);
         this.startPhrase = startPhrase;
         this.endPhrase = endPhrase;
@@ -24,6 +25,7 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
         this.userIsInCover = userIsInCover;
         this.userIsHidden = userIsHidden;
         this.userCanSeeOtherAreas = userCanSeeOtherAreas;
+        this.vehicleType = vehicleType;
         this.usingActions = usingActions;
     }
 
@@ -53,6 +55,10 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
 
     public boolean userCanSeeOtherAreas() {
         return userCanSeeOtherAreas;
+    }
+
+    public String getVehicleType() {
+        return vehicleType;
     }
 
     public List<ObjectTemplate.CustomActionHolder> getUsingActions() {
