@@ -27,10 +27,18 @@ public class ObjectComponentVehicle extends ObjectComponent {
         return (ObjectComponentTemplateVehicle) getObject().game().data().getObjectComponentTemplate(templateID);
     }
 
+    public WorldObject getObjectOverride() {
+        if (getObject().getValueString(getID() + "_object_override") != null) {
+            return getObject().game().data().getObject(getObject().getValueString(getID() + "_object_override"));
+        }
+        return null;
+    }
+
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-        actions.addAll(getObject().getArea().getMoveActions(getTemplateVehicle().getVehicleType(), getObject()));
+        WorldObject objectOverride = getObjectOverride();
+        actions.addAll(getObject().getArea().getMoveActions(getTemplateVehicle().getVehicleType(), objectOverride == null ? getObject() : objectOverride));
         return actions;
     }
 
