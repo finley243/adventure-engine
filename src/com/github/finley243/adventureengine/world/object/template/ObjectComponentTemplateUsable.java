@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.object.template;
 import com.github.finley243.adventureengine.Game;
 
 import java.util.List;
+import java.util.Set;
 
 public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
 
@@ -13,11 +14,12 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
     private final boolean userIsInCover;
     private final boolean userIsHidden;
     private final boolean userCanSeeOtherAreas;
-    private final String vehicleType;
+    // Actions from components specified by local IDs will be added to usable actions
+    private final Set<String> componentsExposed;
     private final List<ObjectTemplate.CustomActionHolder> usingActions;
 
-    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, String vehicleType, List<ObjectTemplate.CustomActionHolder> usingActions) {
-        super(game, ID, startEnabled, name);
+    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, boolean actionsRestricted, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, Set<String> componentsExposed, List<ObjectTemplate.CustomActionHolder> usingActions) {
+        super(game, ID, startEnabled, actionsRestricted, name);
         this.startPhrase = startPhrase;
         this.endPhrase = endPhrase;
         this.startPrompt = startPrompt;
@@ -25,7 +27,7 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
         this.userIsInCover = userIsInCover;
         this.userIsHidden = userIsHidden;
         this.userCanSeeOtherAreas = userCanSeeOtherAreas;
-        this.vehicleType = vehicleType;
+        this.componentsExposed = componentsExposed;
         this.usingActions = usingActions;
     }
 
@@ -57,8 +59,8 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
         return userCanSeeOtherAreas;
     }
 
-    public String getVehicleType() {
-        return vehicleType;
+    public Set<String> getComponentsExposed() {
+        return componentsExposed;
     }
 
     public List<ObjectTemplate.CustomActionHolder> getUsingActions() {

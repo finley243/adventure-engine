@@ -28,6 +28,10 @@ public abstract class ObjectComponent implements StatHolder {
 
     public abstract List<Action> getActions(Actor subject);
 
+    public boolean actionsRestricted() {
+        return getTemplate().actionsRestricted();
+    }
+
     public String getID() {
         return ID;
     }

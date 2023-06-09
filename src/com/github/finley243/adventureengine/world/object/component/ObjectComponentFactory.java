@@ -14,6 +14,8 @@ public class ObjectComponentFactory {
             return new ObjectComponentLink(ID, object, template.getID());
         } else if (template instanceof ObjectComponentTemplateUsable) {
             return new ObjectComponentUsable(ID, object, template.getID());
+        } else if (template instanceof ObjectComponentTemplateVehicle) {
+            return new ObjectComponentVehicle(ID, object, template.getID());
         }
         return null;
     }

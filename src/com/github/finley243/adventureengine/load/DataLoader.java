@@ -919,22 +919,23 @@ public class DataLoader {
         String ID = LoadUtils.attribute(componentElement, "id", null);
         String type = LoadUtils.attribute(componentElement, "type", null);
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
+        boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "actionsRestricted", false);
         String name = LoadUtils.singleTag(componentElement, "name", null);
         switch (type) {
             case "container" -> {
                 LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
                 boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "exposed", false);
-                return new ObjectComponentTemplateInventory(game, ID, startEnabled, name, lootTable, inventoryIsExposed);
+                return new ObjectComponentTemplateInventory(game, ID, startEnabled, actionsRestricted, name, lootTable, inventoryIsExposed);
             }
             case "network" -> {
                 String networkID = LoadUtils.attribute(componentElement, "network", null);
-                return new ObjectComponentTemplateNetwork(game, ID, startEnabled, name, networkID);
+                return new ObjectComponentTemplateNetwork(game, ID, startEnabled, actionsRestricted, name, networkID);
             }
             case "link" -> {
                 Condition linkCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "condition"));
                 boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
                 boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
-                return new ObjectComponentTemplateLink(game, ID, startEnabled, name, linkCondition, linkIsMovable, linkIsVisible);
+                return new ObjectComponentTemplateLink(game, ID, startEnabled, actionsRestricted, name, linkCondition, linkIsMovable, linkIsVisible);
             }
             case "usable" -> {
                 String usableStartPhrase = LoadUtils.singleTag(componentElement, "startPhrase", null);
@@ -944,9 +945,13 @@ public class DataLoader {
                 boolean userIsInCover = LoadUtils.attributeBool(componentElement, "cover", false);
                 boolean userIsHidden = LoadUtils.attributeBool(componentElement, "hidden", false);
                 boolean userCanSeeOtherAreas = LoadUtils.attributeBool(componentElement, "seeOtherAreas", true);
-                String vehicleType = LoadUtils.attribute(componentElement, "vehicleType", null);
+                Set<String> componentsExposed = LoadUtils.setOfTags(componentElement, "exposedComponent");
                 List<ObjectTemplate.CustomActionHolder> usingActions = loadCustomActions(componentElement, "usingAction");
-                return new ObjectComponentTemplateUsable(game, ID, startEnabled, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, vehicleType, usingActions);
+                return new ObjectComponentTemplateUsable(game, ID, startEnabled, actionsRestricted, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, componentsExposed, usingActions);
+            }
+            case "vehicle" -> {
+                String vehicleType = LoadUtils.attribute(componentElement, "vehicleType", null);
+                return new ObjectComponentTemplateVehicle(game, ID, startEnabled, actionsRestricted, name, vehicleType);
             }
             default -> throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
         }
