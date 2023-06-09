@@ -27,7 +27,7 @@ public class ScriptNearestActorWithScript extends Script {
         for (Actor visibleActor : context.game().data().getPlayer().getVisibleActors()) {
             // TODO - Replace with dedicated pathfinding function
             //int distance = visibleActor.getArea().getDistanceTo(subject.game().data().getPlayer().getArea().getID());
-            int distance = Pathfinder.findPath(visibleActor.getArea(), context.game().data().getPlayer().getArea()).size() - 1;
+            int distance = Pathfinder.findPath(visibleActor.getArea(), context.game().data().getPlayer().getArea(), null).size() - 1;
             int addAtIndex = nearestActor.size();
             for (int i = 0; i < nearestActor.size(); i++) {
                 if (distance <= nearestActorDist.get(i)) {

@@ -28,13 +28,13 @@ public class AreaTarget {
 	
 	public void update(Actor subject) {
 		if (path == null || !targetAreas.contains(path.get(path.size() - 1))) {
-			path = Pathfinder.findPath(subject.getArea(), targetAreas);
+			path = Pathfinder.findPath(subject.getArea(), targetAreas, null);
 			pathIndex = 0;
 		}
 		if (path != null && path.get(pathIndex) != subject.getArea()) {
 			int currentIndex = getCurrentIndex(subject);
 			if (currentIndex == -1) {
-				path = Pathfinder.findPath(subject.getArea(), targetAreas);
+				path = Pathfinder.findPath(subject.getArea(), targetAreas, null);
 				pathIndex = 0;
 			} else {
 				pathIndex = currentIndex;
@@ -78,7 +78,7 @@ public class AreaTarget {
 	
 	public int getDistance(Actor subject) {
 		if (path == null) {
-			path = Pathfinder.findPath(subject.getArea(), targetAreas);
+			path = Pathfinder.findPath(subject.getArea(), targetAreas, null);
 			pathIndex = 0;
 		}
 		return (path == null ? -1 : path.size() - (pathIndex + 1));

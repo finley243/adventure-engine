@@ -16,10 +16,10 @@ public class Pathfinder {
 	 * @param targetArea Position the path leads to
 	 * @return Shortest path from currentArea to targetArea
 	 */
-	public static List<Area> findPath(Area startArea, Area targetArea) {
+	public static List<Area> findPath(Area startArea, Area targetArea, String vehicleType) {
 		Set<Area> targetSet = new HashSet<>();
 		targetSet.add(targetArea);
-		return findPath(startArea, targetSet);
+		return findPath(startArea, targetSet, vehicleType);
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class Pathfinder {
 	 * @param targetAreas Positions the path could lead to
 	 * @return Shortest path from currentArea to targetArea
 	 */
-	public static List<Area> findPath(Area startArea, Set<Area> targetAreas) {
+	public static List<Area> findPath(Area startArea, Set<Area> targetAreas, String vehicleType) {
 		if (targetAreas.contains(startArea)) return Collections.singletonList(startArea);
 		Set<Area> hasVisited = new HashSet<>();
 		Queue<List<Area>> paths = new LinkedList<>();
@@ -42,7 +42,7 @@ public class Pathfinder {
 			if (targetAreas.contains(pathEnd)) {
 				return currentPath;
 			}
-			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
+			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(vehicleType));
 			for (WorldObject object : pathEnd.getObjects()) {
 				List<ObjectComponentLink> linkComponents = object.getLinkComponents();
 				if (!linkComponents.isEmpty()) {
@@ -64,6 +64,7 @@ public class Pathfinder {
 		return null;
 	}
 
+	// TODO - Should use reachable areas, not movable areas
 	public static Set<Area> areasInRange(Area origin, int range) {
 		Queue<List<Area>> paths = new LinkedList<>();
 		List<Area> startPath = new ArrayList<>();
@@ -74,7 +75,7 @@ public class Pathfinder {
 		while (!paths.isEmpty()) {
 			List<Area> currentPath = paths.remove();
 			Area pathEnd = currentPath.get(currentPath.size() - 1);
-			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
+			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(null));
 			for (Area linkedArea : linkedAreasGlobal) {
 				if (!areasInRange.contains(linkedArea)) {
 					if (currentPath.size() - 1 < range) {
@@ -89,6 +90,7 @@ public class Pathfinder {
 		return areasInRange;
 	}
 
+	// TODO - Should use reachable areas, not movable areas
 	public static Set<Actor> actorsInRange(Area origin, int range, boolean throughExits) {
 		Set<Area> visited = new HashSet<>();
 		Queue<List<Area>> paths = new LinkedList<>();
@@ -101,7 +103,7 @@ public class Pathfinder {
 			List<Area> currentPath = paths.remove();
 			Area pathEnd = currentPath.get(currentPath.size() - 1);
 			actorsInRange.addAll(pathEnd.getActors());
-			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas());
+			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(null));
 			if (throughExits) {
 				for (WorldObject object : pathEnd.getObjects()) {
 					List<ObjectComponentLink> linkComponents = object.getLinkComponents();
@@ -126,6 +128,7 @@ public class Pathfinder {
 		return actorsInRange;
 	}
 
+	// TODO - Should use reachable areas, not movable areas
 	public static Actor nearestActor(Area origin, boolean throughExits) {
 		Set<Area> visited = new HashSet<>();
 		Queue<Area> areaQueue = new LinkedList<>();
@@ -137,7 +140,7 @@ public class Pathfinder {
 			if (!currentAreaActors.isEmpty()) {
 				return randomActorFromSet(currentAreaActors);
 			}
-			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas());
+			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas(null));
 			if (throughExits) {
 				for (WorldObject object : currentArea.getObjects()) {
 					List<ObjectComponentLink> linkComponents = object.getLinkComponents();

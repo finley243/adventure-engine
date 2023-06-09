@@ -795,9 +795,7 @@ public class DataLoader {
             String linkType = LoadUtils.attribute(linkElement, "type", null);
             AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
             AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
-            String moveNameOverride = LoadUtils.singleTag(linkElement, "moveName", null);
-            String movePhraseOverride = LoadUtils.singleTag(linkElement, "movePhrase", null);
-            AreaLink link = new AreaLink(linkAreaID, linkType, linkDirection, linkDistance, moveNameOverride, movePhraseOverride);
+            AreaLink link = new AreaLink(linkAreaID, linkType, linkDirection, linkDistance);
             linkSet.put(linkAreaID, link);
         }
 
@@ -989,8 +987,14 @@ public class DataLoader {
     private static LinkType loadLinkType(Game game, Element linkTypeElement) {
         String ID = LoadUtils.attribute(linkTypeElement, "id", null);
         boolean isVisible = LoadUtils.attributeBool(linkTypeElement, "visible", true);
-        String moveAction = LoadUtils.attribute(linkTypeElement, "moveAction", null);
-        return new LinkType(game, ID, isVisible, moveAction);
+        String actorMoveAction = LoadUtils.attribute(linkTypeElement, "moveAction", null);
+        Map<String, String> vehicleMoveActions = new HashMap<>();
+        for (Element vehicleMoveActionElement : LoadUtils.directChildrenWithName(linkTypeElement, "vehicleMoveAction")) {
+            String vehicleType = LoadUtils.attribute(vehicleMoveActionElement, "type", null);
+            String vehicleAction = LoadUtils.attribute(vehicleMoveActionElement, "action", null);
+            vehicleMoveActions.put(vehicleType, vehicleAction);
+        }
+        return new LinkType(game, ID, isVisible, actorMoveAction, vehicleMoveActions);
     }
 
     private static Actor loadActorInstance(Game game, Element actorElement, Area area) {

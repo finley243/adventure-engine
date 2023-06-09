@@ -229,31 +229,30 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return itemInventory.getAreaActions(this);
 	}
 
-	public List<Action> getMoveActions() {
+	public List<Action> getMoveActions(String vehicleType) {
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
-			if (link.getDistance().isMovable) {
-				//moveActions.add(new ActionMoveArea(game().data().getArea(link.getAreaID()), link));
-				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getMoveAction(), new MapBuilder<String, Expression>().put("areaID", new ExpressionConstantString(link.getAreaID())).put("dir", new ExpressionConstantString(link.getDirection().toString())).build(), new String[] {"move"}, true));
+			if (vehicleType == null && link.isMovable(game())) {
+				moveActions.add(new ActionCustom(game(), null, game().data().getLinkType(link.getType()).getActorMoveAction(), new MapBuilder<String, Expression>().put("areaID", new ExpressionConstantString(link.getAreaID())).put("dir", new ExpressionConstantString(link.getDirection().toString())).build(), new String[] {"move"}, true));
 			}
 		}
 		return moveActions;
 	}
 
-	public Set<Area> getMovableAreas() {
+	public Set<Area> getMovableAreas(String vehicleType) {
 		Set<Area> movableAreas = new HashSet<>();
 		for (AreaLink link : linkedAreas.values()) {
-			if (link.getDistance().isMovable) {
+			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
 				movableAreas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
 		return movableAreas;
 	}
 
-	private Set<String> getMovableAreaIDs() {
+	private Set<String> getMovableAreaIDs(String vehicleType) {
 		Set<String> movableAreas = new HashSet<>();
 		for (AreaLink link : linkedAreas.values()) {
-			if (link.getDistance().isMovable) {
+			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
 				movableAreas.add(link.getAreaID());
 			}
 		}
@@ -396,7 +395,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public Set<String> getValueStringSet(String name) {
 		return switch (name) {
 			case "visible_areas" -> getLineOfSightAreaIDs();
-			case "movable_areas" -> getMovableAreaIDs();
+			case "movable_areas" -> getMovableAreaIDs(null);
 			default -> null;
 		};
 	}

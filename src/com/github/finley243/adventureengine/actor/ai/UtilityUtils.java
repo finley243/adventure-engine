@@ -19,6 +19,8 @@ public class UtilityUtils {
 	public static final float PURSUE_TARGET_UTILITY_INVISIBLE = 0.7f;
 	public static final float PURSUE_TARGET_UTILITY_UNARMED = 0.0f;
 
+	public static final float MOVE_UTILITY_MULTIPLIER = 0.7f;
+
 	public static float getMovementUtility(Actor subject, Area area) {
 		float utility = 0.0f;
 		for (AreaTarget target : subject.getPursueTargets()) {
