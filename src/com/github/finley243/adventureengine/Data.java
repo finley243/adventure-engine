@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -53,6 +54,7 @@ public class Data {
 	private final Map<String, WeaponAttackType> attackTypes = new HashMap<>();
 	private final Map<String, Scene> scenes = new HashMap<>();
 	private final Map<String, Script> scripts = new HashMap<>();
+	private final Map<String, Expression> expressions = new HashMap<>();
 	private final Map<String, Condition> conditions = new HashMap<>();
 	private final Map<String, Faction> factions = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
@@ -331,20 +333,30 @@ public class Data {
 		return scenes.get(id);
 	}
 
-	public void addScript(String id, Script script) {
+	public void addScript(String id, Script value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add script with blank ID");
 		if(scripts.containsKey(id)) throw new IllegalArgumentException("Cannot add script with existing ID: " + id);
-		scripts.put(id, script);
+		scripts.put(id, value);
 	}
 
 	public Script getScript(String id) {
 		return scripts.get(id);
 	}
 
-	public void addCondition(String id, Condition condition) {
+	public void addExpression(String id, Expression value) {
+		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add expression with blank ID");
+		if(expressions.containsKey(id)) throw new IllegalArgumentException("Cannot add expression with existing ID: " + id);
+		expressions.put(id, value);
+	}
+
+	public Expression getExpression(String id) {
+		return expressions.get(id);
+	}
+
+	public void addCondition(String id, Condition value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add condition with blank ID");
 		if(conditions.containsKey(id)) throw new IllegalArgumentException("Cannot add condition with existing ID: " + id);
-		conditions.put(id, condition);
+		conditions.put(id, value);
 	}
 
 	public Condition getCondition(String id) {

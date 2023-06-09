@@ -100,6 +100,11 @@ public class DataLoader {
                                     Script script = loadScript(currentElement);
                                     game.data().addScript(scriptID, script);
                                 }
+                                case "expression" -> {
+                                    String expressionID = LoadUtils.attribute(currentElement, "id", null);
+                                    Expression expression = loadExpression(currentElement, null);
+                                    game.data().addExpression(expressionID, expression);
+                                }
                                 case "condition" -> {
                                     String conditionID = LoadUtils.attribute(currentElement, "id", null);
                                     Condition condition = loadCondition(currentElement);
@@ -353,6 +358,10 @@ public class DataLoader {
             case "global" -> {
                 Expression globalExpressionID = loadExpressionOrAttribute(expressionElement, "globalID", "string");
                 return new ExpressionGlobal(dataType, globalExpressionID);
+            }
+            case "external" -> {
+                String externalID = LoadUtils.attribute(expressionElement, "id", null);
+                return new ExpressionExternal(dataType, externalID);
             }
             case "parameter" -> {
                 String parameterName = LoadUtils.attribute(expressionElement, "name", null);
