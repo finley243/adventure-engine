@@ -52,11 +52,12 @@ public class WeaponAttackType {
     private final String damageTypeOverride;
     private final Float armorMultOverride;
     private final List<String> targetEffects;
+    private final boolean overrideTargetEffects;
     private final float hitChanceMult;
     private final boolean canDodge;
     private final ActionAttack.AttackHitChanceType hitChanceType;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, int ammoConsumed, WeaponConsumeType weaponConsumeType, Actor.Skill skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, int ammoConsumed, WeaponConsumeType weaponConsumeType, Actor.Skill skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType) {
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
@@ -81,6 +82,7 @@ public class WeaponAttackType {
         this.damageTypeOverride = damageTypeOverride;
         this.armorMultOverride = armorMultOverride;
         this.targetEffects = targetEffects;
+        this.overrideTargetEffects = overrideTargetEffects;
         this.hitChanceMult = hitChanceMult;
         this.canDodge = canDodge;
         this.hitChanceType = hitChanceType;
@@ -103,7 +105,9 @@ public class WeaponAttackType {
         String damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getDamageType();
         float armorMult = armorMultOverride != null ? armorMultOverride : weapon.getArmorMult();
         List<String> targetEffectsCombined = new ArrayList<>(targetEffects);
-        targetEffectsCombined.addAll(weapon.getTargetEffects());
+        if (!overrideTargetEffects) {
+            targetEffectsCombined.addAll(weapon.getTargetEffects());
+        }
         switch (category) {
             case SINGLE -> {
                 for (AttackTarget target : subject.getVisibleAttackTargets()) {

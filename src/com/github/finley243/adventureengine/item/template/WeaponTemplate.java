@@ -22,8 +22,9 @@ public class WeaponTemplate extends ItemTemplate {
 	private final float armorMult;
 	private final boolean silenced;
 	private final String damageType;
+	private final Set<String> targetEffects;
 
-	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, float accuracyBonus, float armorMult, boolean silenced, String damageType) {
+	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, float accuracyBonus, float armorMult, boolean silenced, String damageType, Set<String> targetEffects) {
 		super(game, ID, name, description, scripts, price);
 		if (weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null: " + ID);
 		this.weaponClass = weaponClass;
@@ -36,6 +37,7 @@ public class WeaponTemplate extends ItemTemplate {
 		this.armorMult = armorMult;
 		this.silenced = silenced;
 		this.damageType = damageType;
+		this.targetEffects = targetEffects;
 	}
 
 	@Override
@@ -81,6 +83,10 @@ public class WeaponTemplate extends ItemTemplate {
 
 	public String getDamageType() {
 		return damageType;
+	}
+
+	public Set<String> getTargetEffects() {
+		return targetEffects;
 	}
 
 	@Override

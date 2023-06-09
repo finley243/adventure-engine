@@ -34,6 +34,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	private final StatFloat armorMult;
 	private final StatString damageType;
 	private final StatBoolean isSilenced;
+	private final StatStringSet targetEffects;
 	private ItemAmmo ammoType;
 	private int ammoCount;
 
@@ -53,6 +54,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		this.armorMult = new StatFloat("armorMult", this);
 		this.damageType = new StatString("damageType", this);
 		this.isSilenced = new StatBoolean("isSilenced", this, false);
+		this.targetEffects = new StatStringSet("targetEffects", this);
 		this.ammoType = null;
 		this.ammoCount = 0;
 		this.effects = new HashMap<>();
@@ -112,9 +114,8 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
 	}
 
-	// TODO - Add target effects to weapons
-	public List<String> getTargetEffects() {
-		return new ArrayList<>();
+	public Set<String> getTargetEffects() {
+		return targetEffects.value(getWeaponTemplate().getTargetEffects());
 	}
 
 	public int getClipSize() {
@@ -243,6 +244,8 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 			return ranges;
 		} else if ("attack_types".equals(name)) {
 			return attackTypes;
+		} else if ("target_effects".equals(name)) {
+			return targetEffects;
 		}
 		return null;
 	}
@@ -289,6 +292,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return switch (name) {
 			case "attack_types" -> attackTypes.value(getWeaponClass().getAttackTypes());
 			case "ranges" -> ranges.valueFromEnum(getWeaponClass().getPrimaryRanges());
+			case "target_effects" -> targetEffects.value(getWeaponTemplate().getTargetEffects());
 			default -> super.getValueStringSet(name);
 		};
 	}
