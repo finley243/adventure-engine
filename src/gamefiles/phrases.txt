@@ -20,6 +20,8 @@ moveFront:$_actor move$s_actor in front of $area
 moveBehind:$_actor move$s_actor behind $area
 moveBeside:$_actor move$s_actor beside $area
 moveCorner:$_actor turn$s_actor around the corner to $area
+driveTo:$_actor drive$s_actor $vehicle to $area
+driveCorner:$_actor drive$s_actor $vehicle around the corner to $area
 pickUp:$_actor grab$s_actor $item
 rangedHit:$_actor fire$s_actor a shot with $actor's $weapon_name and it hits $target
 rangedHitRepeat:$_actor fire$s_actor another shot and it hits $target

@@ -63,4 +63,9 @@
             <parameter name="itemID" value="nitron_diet"/>
         </action>
     </object>
+    <object id="motorcycle">
+        <name>motorcycle</name>
+        <component id="controller" template="vehicle_motorcycle"/>
+        <component id="seat" template="motorcycle_seat"/>
+    </object>
 </data>

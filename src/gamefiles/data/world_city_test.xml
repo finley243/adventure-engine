@@ -34,6 +34,7 @@
                 <localVar name="door_link_object" dataType="string" value="wilsons_corner_store_door_exit"/>
                 <localVar name="door_link_dir" dataType="string" value="E"/>
             </object>
+            <object id="test_motorcycle" template="motorcycle"/>
         </area>
     </room>
     <room id="street_sixth_sinclair_archer">

@@ -229,11 +229,12 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return itemInventory.getAreaActions(this);
 	}
 
-	public List<Action> getMoveActions(String vehicleType, WorldObject vehicleObject) {
+	public List<Action> getMoveActions(String vehicleType, WorldObject vehicleObject, String menuCategory) {
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
-				moveActions.add(new ActionCustom(game(), vehicleObject, game().data().getLinkType(link.getType()).getActorMoveAction(), new MapBuilder<String, Expression>().put("areaID", new ExpressionConstantString(link.getAreaID())).put("dir", new ExpressionConstantString(link.getDirection().toString())).build(), new String[] {"move"}, true));
+				String actionTemplate = vehicleType == null ? game().data().getLinkType(link.getType()).getActorMoveAction() : game().data().getLinkType(link.getType()).getVehicleMoveAction(vehicleType);
+				moveActions.add(new ActionCustom(game(), vehicleObject, actionTemplate, new MapBuilder<String, Expression>().put("areaID", new ExpressionConstantString(link.getAreaID())).put("dir", new ExpressionConstantString(link.getDirection().toString())).build(), new String[] {menuCategory}, true));
 			}
 		}
 		return moveActions;

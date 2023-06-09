@@ -932,7 +932,7 @@ public class DataLoader {
         String ID = LoadUtils.attribute(componentElement, "id", null);
         String type = LoadUtils.attribute(componentElement, "type", null);
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
-        boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "actionsRestricted", false);
+        boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "restricted", false);
         String name = LoadUtils.singleTag(componentElement, "name", null);
         switch (type) {
             case "container" -> {
@@ -964,7 +964,8 @@ public class DataLoader {
             }
             case "vehicle" -> {
                 String vehicleType = LoadUtils.attribute(componentElement, "vehicleType", null);
-                return new ObjectComponentTemplateVehicle(game, ID, startEnabled, actionsRestricted, name, vehicleType);
+                String moveMenuName = LoadUtils.singleTag(componentElement, "moveMenuName", null);
+                return new ObjectComponentTemplateVehicle(game, ID, startEnabled, actionsRestricted, name, vehicleType, moveMenuName);
             }
             default -> throw new IllegalArgumentException("ObjectComponentTemplate has invalid or missing type");
         }

@@ -1,4 +1,8 @@
 <data>
-    <linkType id="basic" visible="true" moveAction="move_basic"/>
-    <linkType id="corner" visible="false" moveAction="move_corner"/>
+    <linkType id="basic" visible="true" moveAction="move_basic">
+        <vehicleMoveAction type="motorcycle" action="drive"/>
+    </linkType>
+    <linkType id="corner" visible="false" moveAction="move_corner">
+        <vehicleMoveAction type="motorcycle" action="drive_corner"/>
+    </linkType>
 </data>

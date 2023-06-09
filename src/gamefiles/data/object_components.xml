@@ -26,4 +26,14 @@
             <table>store_soft_drinks</table>
         </inventory>
     </objectComponent>
+    <objectComponent id="vehicle_motorcycle" type="vehicle" restricted="true" vehicleType="motorcycle">
+        <moveMenuName>drive</moveMenuName>
+    </objectComponent>
+    <objectComponent id="motorcycle_seat" type="usable">
+        <startPhrase>sit</startPhrase>
+        <endPhrase>getUp</endPhrase>
+        <startPrompt>Sit</startPrompt>
+        <endPrompt>Stand</endPrompt>
+        <exposedComponent>controller</exposedComponent>
+    </objectComponent>
 </data>
