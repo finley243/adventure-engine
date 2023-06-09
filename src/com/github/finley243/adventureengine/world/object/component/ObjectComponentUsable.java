@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateUsable;
@@ -43,6 +44,21 @@ public class ObjectComponentUsable extends ObjectComponent {
 
     public void removeUser() {
         this.user = null;
+    }
+
+    @Override
+    public void onSetObjectEnabled(boolean enable) {
+        if (!enable && user != null) {
+            user.setUsingObject(null);
+            removeUser();
+        }
+    }
+
+    @Override
+    public void onSetObjectArea(Area area) {
+        if (user != null) {
+            user.setArea(area);
+        }
     }
 
     @Override

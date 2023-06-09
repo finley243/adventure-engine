@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.stat.*;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 
@@ -46,6 +47,10 @@ public abstract class ObjectComponent implements StatHolder {
     public void onNewGameInit() {
         this.isEnabled = getTemplate().startEnabled();
     }
+
+    public void onSetObjectEnabled(boolean enable) {}
+
+    public void onSetObjectArea(Area area) {}
 
     @Override
     public int getValueInt(String name) {

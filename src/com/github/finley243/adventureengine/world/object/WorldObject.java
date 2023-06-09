@@ -127,6 +127,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		if (isEnabled) {
 			this.area.removeObject(this);
 			area.addObject(this);
+			for (ObjectComponent component : components.values()) {
+				component.onSetObjectArea(area);
+			}
 		}
 		this.area = area;
 	}
@@ -138,6 +141,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				area.addObject(this);
 			} else {
 				area.removeObject(this);
+			}
+			for (ObjectComponent component : components.values()) {
+				component.onSetObjectEnabled(enable);
 			}
 		}
 	}
