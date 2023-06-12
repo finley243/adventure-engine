@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
+import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextGen;
@@ -18,14 +19,16 @@ public class ActionCustom extends Action {
 
     private final Game game;
     private final WorldObject object;
+    private final Item item;
     private final String template;
     private final Map<String, Expression> parameters;
     private final String[] menuPath;
     private final boolean isMove;
 
-    public ActionCustom(Game game, WorldObject object, String template, Map<String, Expression> parameters, String[] menuPath, boolean isMove) {
+    public ActionCustom(Game game, WorldObject object, Item item, String template, Map<String, Expression> parameters, String[] menuPath, boolean isMove) {
         this.game = game;
         this.object = object;
+        this.item = item;
         this.template = template;
         this.parameters = parameters;
         this.menuPath = menuPath;
@@ -46,13 +49,13 @@ public class ActionCustom extends Action {
             Map<String, Expression> combinedParameters = new HashMap<>();
             combinedParameters.putAll(getTemplate().getParameters());
             combinedParameters.putAll(parameters);
-            getTemplate().getScript().execute(new Context(subject.game(), subject, subject, object, combinedParameters));
+            getTemplate().getScript().execute(new Context(subject.game(), subject, subject, object, item, combinedParameters));
         }
     }
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && (getTemplate().getConditionSelect() == null || getTemplate().getConditionSelect().isMet(new Context(subject.game(), subject, subject, object, parameters)));
+        return super.canChoose(subject) && (getTemplate().getConditionSelect() == null || getTemplate().getConditionSelect().isMet(new Context(subject.game(), subject, subject, object, item, parameters)));
     }
 
     @Override
@@ -74,12 +77,12 @@ public class ActionCustom extends Action {
         Map<String, String> contextVars = new HashMap<>();
         for (Map.Entry<String, Expression> entry : getTemplate().getParameters().entrySet()) {
             if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, parameters)));
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, item, parameters)));
             }
         }
         for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
             if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, parameters)));
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, item, parameters)));
             }
         }
         String promptWithVars = LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
@@ -87,7 +90,9 @@ public class ActionCustom extends Action {
     }
 
     public boolean canShow(Actor subject) {
-        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new Context(subject.game(), subject, subject, object, parameters));
+        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new Context(subject.game(), subject, subject, object, item, parameters));
     }
+
+    public record CustomActionHolder(String action, Map<String, Expression> parameters) {}
 
 }

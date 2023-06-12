@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.template;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.action.ActionCustom;
 
 import java.util.List;
 import java.util.Set;
@@ -18,9 +19,9 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
     private final boolean userCanPerformParentActions;
     // Actions from components specified by local IDs will be added to usable actions
     private final Set<String> componentsExposed;
-    private final List<ObjectTemplate.CustomActionHolder> usingActions;
+    private final List<ActionCustom.CustomActionHolder> usingActions;
 
-    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, boolean actionsRestricted, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, boolean userCanPerformLocalActions, boolean userCanPerformParentActions, Set<String> componentsExposed, List<ObjectTemplate.CustomActionHolder> usingActions) {
+    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, boolean actionsRestricted, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, boolean userCanPerformLocalActions, boolean userCanPerformParentActions, Set<String> componentsExposed, List<ActionCustom.CustomActionHolder> usingActions) {
         super(game, ID, startEnabled, actionsRestricted, name);
         this.startPhrase = startPhrase;
         this.endPhrase = endPhrase;
@@ -75,7 +76,7 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
         return componentsExposed;
     }
 
-    public List<ObjectTemplate.CustomActionHolder> getUsingActions() {
+    public List<ActionCustom.CustomActionHolder> getUsingActions() {
         return usingActions;
     }
 

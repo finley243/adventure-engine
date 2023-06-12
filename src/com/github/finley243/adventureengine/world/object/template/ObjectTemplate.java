@@ -2,9 +2,9 @@ package com.github.finley243.adventureengine.world.object.template;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class ObjectTemplate extends GameInstanced {
     private final String name;
     private final Scene description;
     private final Map<String, Script> scripts;
-    private final List<CustomActionHolder> customActions;
+    private final List<ActionCustom.CustomActionHolder> customActions;
     private final Map<String, String> components;
     private final Map<String, Boolean> localVarsBooleanDefault;
     private final Map<String, Integer> localVarsIntegerDefault;
@@ -23,7 +23,7 @@ public class ObjectTemplate extends GameInstanced {
     private final Map<String, String> localVarsStringDefault;
     private final Map<String, Set<String>> localVarsStringSetDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<CustomActionHolder> customActions, Map<String, String> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
+    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, Map<String, String> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
         super(game, ID);
         this.name = name;
         this.description = description;
@@ -49,7 +49,7 @@ public class ObjectTemplate extends GameInstanced {
         return scripts;
     }
 
-    public List<CustomActionHolder> getCustomActions() {
+    public List<ActionCustom.CustomActionHolder> getCustomActions() {
         return customActions;
     }
 
@@ -76,7 +76,5 @@ public class ObjectTemplate extends GameInstanced {
     public Map<String, Set<String>> getLocalVarsStringSetDefault() {
         return localVarsStringSetDefault;
     }
-
-    public record CustomActionHolder(String action, Map<String, Expression> parameters) {}
 
 }

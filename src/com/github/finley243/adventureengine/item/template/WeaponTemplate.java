@@ -1,12 +1,14 @@
 package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,8 +26,8 @@ public class WeaponTemplate extends ItemTemplate {
 	private final String damageType;
 	private final Set<String> targetEffects;
 
-	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, float accuracyBonus, float armorMult, boolean silenced, String damageType, Set<String> targetEffects) {
-		super(game, ID, name, description, scripts, price);
+	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, float accuracyBonus, float armorMult, boolean silenced, String damageType, Set<String> targetEffects) {
+		super(game, ID, name, description, scripts, customActions, price);
 		if (weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null: " + ID);
 		this.weaponClass = weaponClass;
 		this.damage = damage;

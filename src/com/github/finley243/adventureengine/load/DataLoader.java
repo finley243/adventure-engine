@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.*;
@@ -635,17 +636,18 @@ public class DataLoader {
         String name = LoadUtils.singleTag(itemElement, "name", null);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(itemElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
+        List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(itemElement, "action");
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
         switch (type) {
             case "apparel" -> {
                 Set<String> apparelSlots = LoadUtils.setOfTags(itemElement, "slot");
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ApparelTemplate(game, id, name, description, scripts, price, apparelSlots, apparelEffects);
+                return new ApparelTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects);
             }
             case "consumable" -> {
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "consumableType", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
                 List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ConsumableTemplate(game, id, name, description, scripts, price, consumableType, consumableEffects);
+                return new ConsumableTemplate(game, id, name, description, scripts, customActions, price, consumableType, consumableEffects);
             }
             case "weapon" -> {
                 String weaponClass = LoadUtils.attribute(itemElement, "class", null);
@@ -660,15 +662,15 @@ public class DataLoader {
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 Set<String> weaponTargetEffects = LoadUtils.setOfTags(itemElement, "targetEffect");
-                return new WeaponTemplate(game, id, name, description, scripts, price, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
+                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
             }
             case "ammo" -> {
                 List<String> ammoWeaponEffects = LoadUtils.listOfTags(itemElement, "weaponEffect");
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
-                return new AmmoTemplate(game, id, name, description, scripts, price, ammoWeaponEffects, ammoIsReusable);
+                return new AmmoTemplate(game, id, name, description, scripts, customActions, price, ammoWeaponEffects, ammoIsReusable);
             }
             default -> {
-                return new MiscTemplate(game, id, name, description, scripts, price);
+                return new MiscTemplate(game, id, name, description, scripts, customActions, price);
             }
         }
     }
@@ -861,7 +863,7 @@ public class DataLoader {
         String name = LoadUtils.singleTag(objectElement, "name", null);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(objectElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
-        List<ObjectTemplate.CustomActionHolder> customActions = loadCustomActions(objectElement, "action");
+        List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(objectElement, "action");
         Map<String, String> components = new HashMap<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
             String componentID = LoadUtils.attribute(componentElement, "id", null);
@@ -975,7 +977,7 @@ public class DataLoader {
                 boolean userCanPerformLocalActions = LoadUtils.attributeBool(componentElement, "localActions", true);
                 boolean userCanPerformParentActions = LoadUtils.attributeBool(componentElement, "parentActions", true);
                 Set<String> componentsExposed = LoadUtils.setOfTags(componentElement, "exposedComponent");
-                List<ObjectTemplate.CustomActionHolder> usingActions = loadCustomActions(componentElement, "usingAction");
+                List<ActionCustom.CustomActionHolder> usingActions = loadCustomActions(componentElement, "usingAction");
                 return new ObjectComponentTemplateUsable(game, ID, startEnabled, actionsRestricted, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, componentsExposed, usingActions);
             }
             case "vehicle" -> {
@@ -1003,8 +1005,8 @@ public class DataLoader {
         return new ActionTemplate(game, ID, prompt, parameters, actionPoints, conditionSelect, conditionShow, script);
     }
 
-    private static List<ObjectTemplate.CustomActionHolder> loadCustomActions(Element parentElement, String name) {
-        List<ObjectTemplate.CustomActionHolder> customActions = new ArrayList<>();
+    private static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name) {
+        List<ActionCustom.CustomActionHolder> customActions = new ArrayList<>();
         if (parentElement != null) {
             for (Element actionElement : LoadUtils.directChildrenWithName(parentElement, name)) {
                 String action = LoadUtils.attribute(actionElement, "template", null);
@@ -1014,7 +1016,7 @@ public class DataLoader {
                     Expression parameterExpression = loadExpression(variableElement, null);
                     parameters.put(parameterName, parameterExpression);
                 }
-                customActions.add(new ObjectTemplate.CustomActionHolder(action, parameters));
+                customActions.add(new ActionCustom.CustomActionHolder(action, parameters));
             }
         }
         return customActions;

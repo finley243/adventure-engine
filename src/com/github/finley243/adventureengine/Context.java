@@ -25,10 +25,6 @@ public class Context {
         this(game, subject, target, parentObject, null, new HashMap<>());
     }
 
-    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Map<String, Expression> parameters) {
-        this(game, subject, target, parentObject, null, parameters);
-    }
-
     public Context(Game game, Actor subject, Actor target, Item parentItem) {
         this(game, subject, target, null, parentItem, new HashMap<>());
     }

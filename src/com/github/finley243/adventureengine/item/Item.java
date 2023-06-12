@@ -3,10 +3,7 @@ package com.github.finley243.adventureengine.item;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionInspectItem;
-import com.github.finley243.adventureengine.action.ActionItemDrop;
-import com.github.finley243.adventureengine.action.ActionItemDropAll;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -90,6 +87,12 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 		}
 		if (this.getDescription() != null) {
 			actions.add(new ActionInspectItem(this));
+		}
+		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
+			ActionCustom action = new ActionCustom(game(), null, this, customAction.action(), customAction.parameters(), new String[] {this.getName()}, false);
+			if (action.canShow(subject)) {
+				actions.add(action);
+			}
 		}
 		return actions;
 	}

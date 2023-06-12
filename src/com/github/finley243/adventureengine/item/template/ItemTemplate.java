@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -24,12 +25,14 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	private final Scene description;
 	private final int price;
 	private final Map<String, Script> scripts;
+	private final List<ActionCustom.CustomActionHolder> customActions;
 
-	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price) {
+	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price) {
 		super(game, ID);
 		this.name = name;
 		this.description = description;
 		this.scripts = scripts;
+		this.customActions = customActions;
 		this.price = price;
 		this.generatedCount = 1;
 	}
@@ -91,6 +94,10 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 
 	public Map<String, Script> getScripts() {
 		return scripts;
+	}
+
+	public List<ActionCustom.CustomActionHolder> getCustomActions() {
+		return customActions;
 	}
 
 	@Override

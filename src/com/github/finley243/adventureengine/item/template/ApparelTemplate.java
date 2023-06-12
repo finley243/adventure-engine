@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -15,8 +16,8 @@ public class ApparelTemplate extends ItemTemplate {
 	private final Set<String> slots;
 	private final List<String> effects;
 	
-	public ApparelTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, Set<String> slots, List<String> effects) {
-		super(game, ID, name, description, scripts, price);
+	public ApparelTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, Set<String> slots, List<String> effects) {
+		super(game, ID, name, description, scripts, customActions, price);
 		this.slots = slots;
 		this.effects = effects;
 	}

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
@@ -14,8 +15,8 @@ public class AmmoTemplate extends ItemTemplate {
     private final List<String> weaponEffects;
     private final boolean isReusable;
 
-    public AmmoTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, int price, List<String> weaponEffects, boolean isReusable) {
-        super(game, ID, name, description, scripts, price);
+    public AmmoTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, List<String> weaponEffects, boolean isReusable) {
+        super(game, ID, name, description, scripts, customActions, price);
         this.weaponEffects = weaponEffects;
         this.isReusable = isReusable;
     }
