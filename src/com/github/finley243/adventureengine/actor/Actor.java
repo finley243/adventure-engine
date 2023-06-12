@@ -282,6 +282,13 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return canMove.value(true);
 	}
 
+	public boolean canPerformLocalActions() {
+		if (isUsingObject()) {
+			return getUsingObject().getTemplateUsable().userCanPerformLocalActions();
+		}
+		return true;
+	}
+
 	public boolean canDodge() {
 		return canDodge.value(true);
 	}
@@ -541,17 +548,22 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (equipmentComponent.hasEquippedItem()) {
 			actions.addAll(equipmentComponent.getEquippedItem().equippedActions(this));
 		}
-		for (Actor actor : getArea().getActors()) {
-			actions.addAll(actor.localActions(this));
-		}
-		actions.addAll(getArea().getItemActions());
-		for (WorldObject object : getArea().getObjects()) {
-			if (!object.isHidden()) {
-				actions.addAll(object.localActions(this));
+		if (canPerformLocalActions()) {
+			for (Actor actor : getArea().getActors()) {
+				actions.addAll(actor.localActions(this));
+			}
+			actions.addAll(getArea().getItemActions());
+			for (WorldObject object : getArea().getObjects()) {
+				if (!object.isHidden() && (!isUsingObject() || !object.equals(getUsingObject().getObject()))) {
+					actions.addAll(object.localActions(this));
+				}
 			}
 		}
 		if (isUsingObject()) {
 			actions.addAll(getUsingObject().getUsingActions(this));
+			if (getUsingObject().getTemplateUsable().userCanPerformParentActions()) {
+				actions.addAll(getUsingObject().getObject().localActions(this));
+			}
 		}
 		if (canMove()) {
 			actions.addAll(getArea().getMoveActions(null, null, "move"));

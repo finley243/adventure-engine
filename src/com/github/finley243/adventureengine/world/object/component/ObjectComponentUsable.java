@@ -64,7 +64,7 @@ public class ObjectComponentUsable extends ObjectComponent {
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-        if (user == null && !subject.isUsingObject()) {
+        if (user == null && (!subject.isUsingObject() || !subject.getUsingObject().equals(this))) {
             actions.add(new ActionObjectUseStart(this));
         }
         return actions;

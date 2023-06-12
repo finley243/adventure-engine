@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.object.component;
 
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -130,6 +131,17 @@ public abstract class ObjectComponent implements StatHolder {
     @Override
     public StatHolder getSubHolder(String name, String ID) {
         return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ObjectComponent component)) {
+            return false;
+        } else if (!(component.getClass().equals(this.getClass()))) {
+            return false;
+        } else {
+            return component.getObject().equals(this.getObject()) && component.getID().equals(this.getID());
+        }
     }
 
 }

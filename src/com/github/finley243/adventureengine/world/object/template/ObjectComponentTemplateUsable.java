@@ -14,11 +14,13 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
     private final boolean userIsInCover;
     private final boolean userIsHidden;
     private final boolean userCanSeeOtherAreas;
+    private final boolean userCanPerformLocalActions;
+    private final boolean userCanPerformParentActions;
     // Actions from components specified by local IDs will be added to usable actions
     private final Set<String> componentsExposed;
     private final List<ObjectTemplate.CustomActionHolder> usingActions;
 
-    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, boolean actionsRestricted, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, Set<String> componentsExposed, List<ObjectTemplate.CustomActionHolder> usingActions) {
+    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, boolean actionsRestricted, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, boolean userCanPerformLocalActions, boolean userCanPerformParentActions, Set<String> componentsExposed, List<ObjectTemplate.CustomActionHolder> usingActions) {
         super(game, ID, startEnabled, actionsRestricted, name);
         this.startPhrase = startPhrase;
         this.endPhrase = endPhrase;
@@ -27,6 +29,8 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
         this.userIsInCover = userIsInCover;
         this.userIsHidden = userIsHidden;
         this.userCanSeeOtherAreas = userCanSeeOtherAreas;
+        this.userCanPerformLocalActions = userCanPerformLocalActions;
+        this.userCanPerformParentActions = userCanPerformParentActions;
         this.componentsExposed = componentsExposed;
         this.usingActions = usingActions;
     }
@@ -57,6 +61,14 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
 
     public boolean userCanSeeOtherAreas() {
         return userCanSeeOtherAreas;
+    }
+
+    public boolean userCanPerformLocalActions() {
+        return userCanPerformLocalActions;
+    }
+
+    public boolean userCanPerformParentActions() {
+        return userCanPerformParentActions;
     }
 
     public Set<String> getComponentsExposed() {
