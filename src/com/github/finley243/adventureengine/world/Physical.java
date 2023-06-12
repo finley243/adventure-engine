@@ -17,5 +17,8 @@ public interface Physical {
 	
 	// Actions that can be performed within the same area
 	List<Action> localActions(Actor subject);
+
+	// Actions that can be performed whenever the target can be seen
+	List<Action> visibleActions(Actor subject);
 	
 }

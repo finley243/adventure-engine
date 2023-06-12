@@ -168,9 +168,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
-		if (getDescription() != null) {
-			actions.add(new ActionInspectObject(this));
-		}
 		if (!isGuarded()) {
 			for (ObjectComponent component : components.values()) {
 				if (!component.actionsRestricted()) {
@@ -183,6 +180,15 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 					actions.add(action);
 				}
 			}
+		}
+		return actions;
+	}
+
+	@Override
+	public List<Action> visibleActions(Actor subject) {
+		List<Action> actions = new ArrayList<>();
+		if (getDescription() != null) {
+			actions.add(new ActionInspectObject(this));
 		}
 		return actions;
 	}

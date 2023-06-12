@@ -543,6 +543,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return action;
 	}
 
+	@Override
+	public List<Action> visibleActions(Actor subject) {
+		return new ArrayList<>();
+	}
+
 	public List<Action> availableActions() {
 		List<Action> actions = new ArrayList<>();
 		if (equipmentComponent.hasEquippedItem()) {
@@ -564,6 +569,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			if (getUsingObject().getTemplateUsable().userCanPerformParentActions()) {
 				actions.addAll(getUsingObject().getObject().localActions(this));
 			}
+		}
+		for (Actor visibleActor : getVisibleActors()) {
+			actions.addAll(visibleActor.visibleActions(this));
+		}
+		for (WorldObject visibleObject : getVisibleObjects()) {
+			actions.addAll(visibleObject.visibleActions(this));
 		}
 		if (canMove()) {
 			actions.addAll(getArea().getMoveActions(null, null, "move"));
