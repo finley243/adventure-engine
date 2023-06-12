@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action.network;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.network.NetworkNode;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 
 public class ActionNetworkBreach extends NetworkAction {
 
@@ -20,7 +21,7 @@ public class ActionNetworkBreach extends NetworkAction {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Breach Node", canChoose(subject), new String[] {"network", node.getName()}, new String[]{"breach " + node.getName()});
+        return new MenuChoice("Breach Node", canChoose(subject), new String[] {"Network", LangUtils.titleCase(node.getName())}, new String[]{"breach " + node.getName()});
     }
 
     @Override

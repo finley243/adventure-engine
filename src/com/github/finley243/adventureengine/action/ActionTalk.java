@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 
 public class ActionTalk extends Action {
 
@@ -23,7 +24,7 @@ public class ActionTalk extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Talk", canChoose(subject), new String[]{target.getName()}, new String[]{"talk to " + target.getName(), "talk " + target.getName(), "talk with " + target.getName(), "speak to " + target.getName(), "speak with " + target.getName()});
+		return new MenuChoice("Talk", canChoose(subject), new String[]{LangUtils.titleCase(target.getName())}, new String[]{"talk to " + target.getName(), "talk " + target.getName(), "talk with " + target.getName(), "speak to " + target.getName(), "speak with " + target.getName()});
 	}
 
 	@Override

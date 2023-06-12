@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemApparel;
@@ -288,11 +289,11 @@ public class Inventory {
 	public static String getItemNameFormatted(Item item, Inventory inventory) {
 		if (item.getTemplate().hasState() && inventory.itemCount(item.getTemplate().getID()) > 1) {
 			int instanceIndex = inventory.items.get(item.getTemplate().getID()).indexOf(item) + 1;
-			return item.getName() + " (" + instanceIndex + ")";
+			return LangUtils.titleCase(item.getName()) + " (" + instanceIndex + ")";
 		} else if (inventory.itemCount(item) > 1) {
-			return item.getName() + " x" + inventory.itemCount(item);
+			return LangUtils.titleCase(item.getName()) + " x" + inventory.itemCount(item);
 		} else {
-			return item.getName();
+			return LangUtils.titleCase(item.getName());
 		}
 	}
 

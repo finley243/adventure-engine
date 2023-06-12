@@ -40,7 +40,7 @@ public class ActionItemConsume extends Action {
 			case FOOD -> "Eat";
 			case OTHER -> "Use";
 		};
-		return new MenuChoice(prompt, canChoose(subject), new String[]{"inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"consume " + item.getName(), "eat " + item.getName(), "drink " + item.getName(), "use " + item.getName()});
+		return new MenuChoice(prompt, canChoose(subject), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"consume " + item.getName(), "eat " + item.getName(), "drink " + item.getName(), "use " + item.getName()});
 	}
 
 	@Override

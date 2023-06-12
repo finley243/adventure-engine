@@ -103,7 +103,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 					choicePanel.add(button);
 				} else {
 					if (!categories.containsKey(current.getPath()[0])) {
-						JButton categoryButton = new JButton(LangUtils.titleCase(current.getPath()[0]));
+						JButton categoryButton = new JButton(/*LangUtils.titleCase(*/current.getPath()[0]/*)*/);
 						choicePanel.add(categoryButton);
 						JPopupMenu menuCategory = new JPopupMenu(current.getPath()[0]);
 						categoryButton.addActionListener(eAction -> menuCategory.show(categoryButton, categoryButton.getWidth(), 0));
@@ -118,7 +118,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 							}
 						}
 						if (parentElement == null) {
-							parentElement = new JMenu(LangUtils.titleCase(current.getPath()[1]));
+							parentElement = new JMenu(/*LangUtils.titleCase(*/current.getPath()[1]/*)*/);
 							parentElement.setName(current.getPath()[1]);
 							categories.get(current.getPath()[0]).add(parentElement);
 						}
@@ -133,7 +133,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 								}
 							}
 							if (parentElement == null) {
-								parentElement = new JMenu(LangUtils.titleCase(current.getPath()[i]));
+								parentElement = new JMenu(/*LangUtils.titleCase(*/current.getPath()[i]/*)*/);
 								parentElement.setName(current.getPath()[i]);
 								lastParent.add(parentElement);
 							}

@@ -46,7 +46,7 @@ public class ActionAttackArea extends ActionAttack {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice(LangUtils.titleCase(getArea().getRelativeName()) + " (" + (getArea().equals(subject.getArea()) ? "" : getArea().getRelativeDirection(subject.getArea()) + ", ") + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", weapon.getName(), getPrompt()}, new String[]{getPrompt().toLowerCase() + " " + getArea().getRelativeName(), getPrompt().toLowerCase() + " at " + getArea().getRelativeName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + getArea().getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + getArea().getName()});
+        return new MenuChoice(LangUtils.titleCase(getArea().getRelativeName()) + " (" + (getArea().equals(subject.getArea()) ? "" : getArea().getRelativeDirection(subject.getArea()) + ", ") + getChanceTag(subject) + ")", canChoose(subject), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), LangUtils.titleCase(getPrompt())}, new String[]{getPrompt().toLowerCase() + " " + getArea().getRelativeName(), getPrompt().toLowerCase() + " at " + getArea().getRelativeName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + getArea().getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + getArea().getName()});
     }
 
 }

@@ -43,9 +43,9 @@ public class ActionInventoryStoreAll extends Action {
     public MenuChoice getMenuChoices(Actor subject) {
         String[] menuPath;
         if (name == null) {
-            menuPath = new String[]{owner.getName(), "transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
+            menuPath = new String[]{LangUtils.titleCase(owner.getName()), "Transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
         } else {
-            menuPath = new String[]{owner.getName(), name, "transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
+            menuPath = new String[]{LangUtils.titleCase(owner.getName()), LangUtils.titleCase(name), "Transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
         }
         return new MenuChoice((isExposed ? "Place all" : "Store all"), canChoose(subject), menuPath, new String[]{"store all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName(), "place all " + LangUtils.pluralizeNoun(item.getName()) + " on " + owner.getName(), "put all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName(), "put all " + LangUtils.pluralizeNoun(item.getName()) + " on " + owner.getName()});
     }

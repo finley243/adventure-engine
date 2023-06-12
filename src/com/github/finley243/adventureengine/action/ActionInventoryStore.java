@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -43,9 +44,9 @@ public class ActionInventoryStore extends Action {
     public MenuChoice getMenuChoices(Actor subject) {
         String[] menuPath;
         if (name == null) {
-            menuPath = new String[]{owner.getName(), "transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
+            menuPath = new String[]{LangUtils.titleCase(owner.getName()), "Transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
         } else {
-            menuPath = new String[]{owner.getName(), name, "transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
+            menuPath = new String[]{LangUtils.titleCase(owner.getName()), LangUtils.titleCase(name), "Transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
         }
         return new MenuChoice((isExposed ? "Place" : "Store"), canChoose(subject), menuPath, new String[]{"store " + item.getName() + " in " + owner.getName(), "place " + item.getName() + " on " + owner.getName(), "put " + item.getName() + " in " + owner.getName(), "put " + item.getName() + " on " + owner.getName()});
     }

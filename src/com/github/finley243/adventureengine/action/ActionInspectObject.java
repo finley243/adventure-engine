@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.scene.SceneManager;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInspectObject extends Action {
@@ -26,7 +27,7 @@ public class ActionInspectObject extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Inspect", canChoose(subject), new String[]{object.getName()}, new String[]{"inspect " + object.getName(), "examine " + object.getName(), "look at " + object.getName()});
+		return new MenuChoice("Inspect", canChoose(subject), new String[]{LangUtils.titleCase(object.getName())}, new String[]{"inspect " + object.getName(), "examine " + object.getName(), "look at " + object.getName()});
 	}
 
 	@Override

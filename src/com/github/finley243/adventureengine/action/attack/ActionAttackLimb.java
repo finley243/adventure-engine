@@ -52,7 +52,7 @@ public class ActionAttackLimb extends ActionAttack {
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
 		return new MenuChoice(LangUtils.titleCase(getLimb().getName()) + " (" + getChanceTag(subject) + ")",
-				canChoose(subject), new String[]{"attack", weapon.getName(), getPrompt(), ((Noun) target).getName()}, new String[]{getPrompt().toLowerCase() + " " + LangUtils.possessive(((Noun) target).getName(), false) + " " + getLimb().getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " at " + LangUtils.possessive(((Noun) target).getName(), false) + " " + getLimb().getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + LangUtils.possessive(((Noun) target).getName(), false) + " " + getLimb().getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + LangUtils.possessive(((Noun) target).getName(), false) + " " + getLimb().getName()});
+				canChoose(subject), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), LangUtils.titleCase(getPrompt()), LangUtils.titleCase(((Noun) target).getName())}, new String[]{getPrompt().toLowerCase() + " " + LangUtils.possessive(((Noun) target).getName(), false) + " " + getLimb().getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " at " + LangUtils.possessive(((Noun) target).getName(), false) + " " + getLimb().getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + LangUtils.possessive(((Noun) target).getName(), false) + " " + getLimb().getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + LangUtils.possessive(((Noun) target).getName(), false) + " " + getLimb().getName()});
 	}
 
 }

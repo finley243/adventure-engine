@@ -37,7 +37,7 @@ public class ActionItemTakeAll extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Take all", canChoose(subject), new String[]{"ground", Inventory.getItemNameFormatted(item, area.getInventory())}, new String[]{"take all " + LangUtils.pluralizeNoun(item.getName()), "pick up all " + LangUtils.pluralizeNoun(item.getName()), "pickup all " + LangUtils.pluralizeNoun(item.getName())});
+		return new MenuChoice("Take all", canChoose(subject), new String[]{"Ground", Inventory.getItemNameFormatted(item, area.getInventory())}, new String[]{"take all " + LangUtils.pluralizeNoun(item.getName()), "pick up all " + LangUtils.pluralizeNoun(item.getName()), "pickup all " + LangUtils.pluralizeNoun(item.getName())});
 	}
 
 	@Override

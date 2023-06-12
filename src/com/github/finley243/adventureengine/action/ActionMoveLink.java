@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -52,7 +53,7 @@ public class ActionMoveLink extends ActionMove {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("(" + linkComponent.getDirection() + ") " + "Enter", canChoose(subject), new String[]{linkComponent.getObject().getName()}, new String[]{"enter " + linkComponent.getObject().getName(), "go through " + linkComponent.getObject().getName(), "move through " + linkComponent.getObject().getName()});
+		return new MenuChoice("(" + linkComponent.getDirection() + ") " + "Enter", canChoose(subject), new String[]{LangUtils.titleCase(linkComponent.getObject().getName())}, new String[]{"enter " + linkComponent.getObject().getName(), "go through " + linkComponent.getObject().getName(), "move through " + linkComponent.getObject().getName()});
 	}
 
 	@Override

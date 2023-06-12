@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -41,9 +42,9 @@ public class ActionInventoryTake extends Action {
     public MenuChoice getMenuChoices(Actor subject) {
         String[] menuPath;
         if (name == null) {
-            menuPath = new String[]{owner.getName(), Inventory.getItemNameFormatted(item, inventory)};
+            menuPath = new String[]{LangUtils.titleCase(owner.getName()), Inventory.getItemNameFormatted(item, inventory)};
         } else {
-            menuPath = new String[]{owner.getName(), name, Inventory.getItemNameFormatted(item, inventory)};
+            menuPath = new String[]{LangUtils.titleCase(owner.getName()), LangUtils.titleCase(name), Inventory.getItemNameFormatted(item, inventory)};
         }
         return new MenuChoice("Take", canChoose(subject), menuPath, new String[]{"take " + item.getName() + " from " + owner.getName(), "pick up " + item.getName() + " from " + owner.getName(), "pickup " + item.getName() + " from " + owner.getName()});
     }

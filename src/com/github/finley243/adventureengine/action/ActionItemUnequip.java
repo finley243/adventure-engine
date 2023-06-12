@@ -35,7 +35,7 @@ public class ActionItemUnequip extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Unequip", canChoose(subject), new String[]{"inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"unequip " + item.getName(), "put away " + item.getName()});
+		return new MenuChoice("Unequip", canChoose(subject), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"unequip " + item.getName(), "put away " + item.getName()});
 	}
 
 	@Override

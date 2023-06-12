@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -77,7 +78,7 @@ public class ObjectComponentUsable extends ObjectComponent {
             actions.addAll(getObject().getComponent(exposedComponent).getActions(subject));
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsingActions()) {
-            ActionCustom action = new ActionCustom(getObject().game(), getObject(), null, usingAction.action(), usingAction.parameters(), new String[] {getObject().getName()}, false);
+            ActionCustom action = new ActionCustom(getObject().game(), getObject(), null, usingAction.action(), usingAction.parameters(), new String[] {LangUtils.titleCase(getObject().getName())}, false);
             if (action.canShow(subject)) {
                 actions.add(action);
             }

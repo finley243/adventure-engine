@@ -50,7 +50,7 @@ public class ActionAttackBasic extends ActionAttack {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(LangUtils.titleCase(((Noun) target).getName()) + " (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{"attack", weapon.getName(), getPrompt()}, new String[]{getPrompt().toLowerCase() + " " + ((Noun) target).getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " at " + ((Noun) target).getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + ((Noun) target).getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + ((Noun) target).getName()});
+		return new MenuChoice(LangUtils.titleCase(((Noun) target).getName()) + " (" + getChanceTag(subject) + ")", canChoose(subject), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), LangUtils.titleCase(getPrompt())}, new String[]{getPrompt().toLowerCase() + " " + ((Noun) target).getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " at " + ((Noun) target).getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + ((Noun) target).getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + ((Noun) target).getName()});
 	}
 
 }
