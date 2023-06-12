@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
@@ -46,8 +47,7 @@ public class ActionItemTake extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		int count = area.getInventory().itemCount(item);
-		return new MenuChoice("Take", canChoose(subject), new String[]{"ground", item.getName() + (count > 1 ? " (" + count + ")" : "")}, new String[]{"take " + item.getName(), "pick up " + item.getName(), "pickup " + item.getName()});
+		return new MenuChoice("Take", canChoose(subject), new String[]{"ground", Inventory.getItemNameFormatted(item, area.getInventory())}, new String[]{"take " + item.getName(), "pick up " + item.getName(), "pickup " + item.getName()});
 	}
 
 	@Override

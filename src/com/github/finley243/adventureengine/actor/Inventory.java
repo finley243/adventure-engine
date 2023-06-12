@@ -94,6 +94,7 @@ public class Inventory {
 		return false;
 	}
 
+	// TODO - Possibly change behavior to return count of stated items with the same template, rather than count of instance
 	public int itemCount(Item item) {
 		if (item.getTemplate().hasState()) {
 			if (items.containsKey(item.getTemplate().getID()) && items.get(item.getTemplate().getID()).contains(item)) {
@@ -115,18 +116,6 @@ public class Inventory {
 			}
 		} else {
 			return itemsStateless.getOrDefault(itemID, 0);
-		}
-	}
-
-	public String itemCountLabel(Item item) {
-		int itemCount = itemCount(item);
-		if (itemCount > 1) {
-			return " (" + itemCount + ")";
-		} else if(item.getTemplate().hasState() && items.get(item.getTemplate().getID()).size() > 1) {
-			int itemIndex = items.get(item.getTemplate().getID()).indexOf(item);
-			return " " + (itemIndex + 1);
-		} else {
-			return "";
 		}
 	}
 
@@ -294,6 +283,17 @@ public class Inventory {
 			state.add(new SaveData(null, null, "itemStateless", itemType, itemsStateless.get(itemType)));
 		}
 		return state;
+	}
+
+	public static String getItemNameFormatted(Item item, Inventory inventory) {
+		if (item.getTemplate().hasState() && inventory.itemCount(item.getTemplate().getID()) > 1) {
+			int instanceIndex = inventory.items.get(item.getTemplate().getID()).indexOf(item) + 1;
+			return item.getName() + " (" + instanceIndex + ")";
+		} else if (inventory.itemCount(item) > 1) {
+			return item.getName() + " x" + inventory.itemCount(item);
+		} else {
+			return item.getName();
+		}
 	}
 
 }

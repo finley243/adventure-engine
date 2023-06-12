@@ -41,9 +41,9 @@ public class ActionInventoryTake extends Action {
     public MenuChoice getMenuChoices(Actor subject) {
         String[] menuPath;
         if (name == null) {
-            menuPath = new String[]{owner.getName(), item.getName() + inventory.itemCountLabel(item)};
+            menuPath = new String[]{owner.getName(), Inventory.getItemNameFormatted(item, inventory)};
         } else {
-            menuPath = new String[]{owner.getName(), name, item.getName() + inventory.itemCountLabel(item)};
+            menuPath = new String[]{owner.getName(), name, Inventory.getItemNameFormatted(item, inventory)};
         }
         return new MenuChoice("Take", canChoose(subject), menuPath, new String[]{"take " + item.getName() + " from " + owner.getName(), "pick up " + item.getName() + " from " + owner.getName(), "pickup " + item.getName() + " from " + owner.getName()});
     }

@@ -48,7 +48,7 @@
         <skill key="INTIMIDATION" value="6"/>
         <inventory>
             <item>wilsons_corner_store_key</item>
-            <item>pistol_heavy</item>
+            <item count="3">pistol_heavy</item>
             <item>katana</item>
             <item>grenade_frag</item>
             <!--<item>tactical_vest</item>-->

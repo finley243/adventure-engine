@@ -43,9 +43,9 @@ public class ActionInventoryStore extends Action {
     public MenuChoice getMenuChoices(Actor subject) {
         String[] menuPath;
         if (name == null) {
-            menuPath = new String[]{owner.getName(), "transfer", item.getName() + subject.getInventory().itemCountLabel(item)};
+            menuPath = new String[]{owner.getName(), "transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
         } else {
-            menuPath = new String[]{owner.getName(), name, "transfer", item.getName() + subject.getInventory().itemCountLabel(item)};
+            menuPath = new String[]{owner.getName(), name, "transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
         }
         return new MenuChoice((isExposed ? "Place" : "Store"), canChoose(subject), menuPath, new String[]{"store " + item.getName() + " in " + owner.getName(), "place " + item.getName() + " on " + owner.getName(), "put " + item.getName() + " in " + owner.getName(), "put " + item.getName() + " on " + owner.getName()});
     }

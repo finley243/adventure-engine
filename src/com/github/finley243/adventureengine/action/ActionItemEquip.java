@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
@@ -58,7 +59,7 @@ public class ActionItemEquip extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Equip", canChoose(subject), new String[]{"inventory", item.getName() + subject.getInventory().itemCountLabel(item)}, new String[]{"equip " + item.getName(), "pull out " + item.getName(), "take out " + item.getName()});
+		return new MenuChoice("Equip", canChoose(subject), new String[]{"inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"equip " + item.getName(), "pull out " + item.getName(), "take out " + item.getName()});
 	}
 
 	@Override

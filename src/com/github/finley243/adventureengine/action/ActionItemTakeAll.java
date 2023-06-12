@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
@@ -36,8 +37,7 @@ public class ActionItemTakeAll extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		int count = area.getInventory().itemCount(item);
-		return new MenuChoice("Take all", canChoose(subject), new String[]{"ground", item.getName() + (count > 1 ? " (" + count + ")" : "")}, new String[]{"take all " + LangUtils.pluralizeNoun(item.getName()), "pick up all " + LangUtils.pluralizeNoun(item.getName()), "pickup all " + LangUtils.pluralizeNoun(item.getName())});
+		return new MenuChoice("Take all", canChoose(subject), new String[]{"ground", Inventory.getItemNameFormatted(item, area.getInventory())}, new String[]{"take all " + LangUtils.pluralizeNoun(item.getName()), "pick up all " + LangUtils.pluralizeNoun(item.getName()), "pickup all " + LangUtils.pluralizeNoun(item.getName())});
 	}
 
 	@Override
