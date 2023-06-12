@@ -819,9 +819,10 @@ public class DataLoader {
 
         List<Element> linkElements = LoadUtils.directChildrenWithName(areaElement, "link");
         Map<String, AreaLink> linkSet = new HashMap<>();
+        String linkTypeDefault = game.data().getConfig("defaultLinkType");
         for (Element linkElement : linkElements) {
             String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
-            String linkType = LoadUtils.attribute(linkElement, "type", null);
+            String linkType = LoadUtils.attribute(linkElement, "type", linkTypeDefault);
             AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
             AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
             AreaLink link = new AreaLink(linkAreaID, linkType, linkDirection, linkDistance);

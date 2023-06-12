@@ -5,6 +5,7 @@
     <playerID>player</playerID>
     <playerStartArea>wilsons_corner_store_side</playerStartArea>
     <defaultDamageType>physical</defaultDamageType>
+    <defaultLinkType>basic</defaultLinkType>
     <startTimeHours>8</startTimeHours>
     <startTimeMinutes>0</startTimeMinutes>
     <startDateYear>2054</startDateYear>

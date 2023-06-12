@@ -40,7 +40,7 @@ public class Game {
 	private boolean continueGameLoop;
 
 	/** Main game constructor, loads data and starts game loop */
-	public Game() throws ParserConfigurationException, SAXException, IOException {
+	public Game() throws ParserConfigurationException, SAXException, IOException, GameDataException {
 		eventBus = new EventBus();
 		threadControl = new ThreadControl();
 		menuManager = new MenuManager();
