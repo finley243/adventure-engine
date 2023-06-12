@@ -375,19 +375,33 @@ public class DataLoader {
                 String parameterName = LoadUtils.attribute(expressionElement, "name", null);
                 return new ExpressionParameter(dataType, parameterName);
             }
-            case "sum" -> {
+            case "add" -> {
                 List<Expression> sumExpressions = new ArrayList<>();
                 for (Element sumVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
                     sumExpressions.add(loadExpression(sumVariableElement, null));
                 }
-                return new ExpressionSum(sumExpressions);
+                return new ExpressionAdd(sumExpressions);
             }
-            case "product" -> {
+            case "multiply" -> {
                 List<Expression> productExpressions = new ArrayList<>();
                 for (Element productVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
                     productExpressions.add(loadExpression(productVariableElement, null));
                 }
-                return new ExpressionProduct(productExpressions);
+                return new ExpressionMultiply(productExpressions);
+            }
+            case "subtract" -> {
+                Expression expression1 = loadExpressionOrAttribute(expressionElement, "value1", null);
+                Expression expression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
+                return new ExpressionSubtract(expression1, expression2);
+            }
+            case "divide" -> {
+                Expression expression1 = loadExpressionOrAttribute(expressionElement, "value1", null);
+                Expression expression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
+                return new ExpressionDivide(expression1, expression2);
+            }
+            case "hasVariable" -> {
+                String variableName = LoadUtils.attribute(expressionElement, "name", null);
+                return new ExpressionHasVariable(variableName);
             }
             case "toString" -> {
                 Expression toStringExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "value"), null);

@@ -1,26 +1,23 @@
 package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.List;
-import java.util.Set;
 
-public class ExpressionSum extends Expression {
+public class ExpressionAdd extends Expression {
 
     private final List<Expression> expressions;
     private final boolean isFloat;
 
-    public ExpressionSum(List<Expression> expressions) {
-        if (expressions.isEmpty()) throw new IllegalArgumentException("Variable list is empty");
+    public ExpressionAdd(List<Expression> expressions) {
+        if (expressions.isEmpty()) throw new IllegalArgumentException("Expression list is empty");
         this.expressions = expressions;
         boolean hasFloatVariable = false;
         for (Expression expression : expressions) {
             if (expression.getDataType() == DataType.FLOAT) {
                 hasFloatVariable = true;
             } else if (expression.getDataType() != DataType.INTEGER) {
-                throw new IllegalArgumentException("Only integers and floats are allowed");
+                throw new IllegalArgumentException("Non-numeric expression provided to ExpressionAdd");
             }
         }
         this.isFloat = hasFloatVariable;
@@ -33,11 +30,6 @@ public class ExpressionSum extends Expression {
         } else {
             return DataType.INTEGER;
         }
-    }
-
-    @Override
-    public boolean getValueBoolean(Context context) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -62,26 +54,6 @@ public class ExpressionSum extends Expression {
             }
         }
         return sum;
-    }
-
-    @Override
-    public String getValueString(Context context) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Set<String> getValueStringSet(Context context) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Inventory getValueInventory(Context context) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Noun getValueNoun(Context context) {
-        throw new UnsupportedOperationException();
     }
 
 }
