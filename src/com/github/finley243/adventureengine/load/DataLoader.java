@@ -400,6 +400,11 @@ public class DataLoader {
                 Expression expression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
                 return new ExpressionDivide(expression1, expression2);
             }
+            case "power" -> {
+                Expression expressionBase = loadExpressionOrAttribute(expressionElement, "base", null);
+                Expression expressionExponent = loadExpressionOrAttribute(expressionElement, "exponent", null);
+                return new ExpressionPower(expressionBase, expressionExponent);
+            }
             case "hasVariable" -> {
                 String variableName = LoadUtils.attribute(expressionElement, "name", null);
                 return new ExpressionHasVariable(variableName);
