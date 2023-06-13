@@ -74,8 +74,11 @@ public class ObjectComponentUsable extends ObjectComponent {
     public List<Action> getUsingActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionObjectUseEnd(this));
-        for (String exposedComponent : getTemplateUsable().getComponentsExposed()) {
-            actions.addAll(getObject().getComponent(exposedComponent).getActions(subject));
+        for (String exposedComponentID : getTemplateUsable().getComponentsExposed()) {
+            ObjectComponent component = getObject().getComponent(exposedComponentID);
+            if (component.isEnabled()) {
+                actions.addAll(component.getActions(subject));
+            }
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsingActions()) {
             ActionCustom action = new ActionCustom(getObject().game(), getObject(), null, usingAction.action(), usingAction.parameters(), new String[] {LangUtils.titleCase(getObject().getName())}, false);
