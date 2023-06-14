@@ -960,8 +960,10 @@ public class DataLoader {
             case "container" -> {
                 LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
                 boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "exposed", false);
+                boolean enableTake = LoadUtils.attributeBool(componentElement, "enableTake", true);
+                boolean enableStore = LoadUtils.attributeBool(componentElement, "enableStore", true);
                 List<ActionCustom.CustomActionHolder> perItemActions = loadCustomActions(componentElement, "itemAction");
-                return new ObjectComponentTemplateInventory(game, ID, startEnabled, actionsRestricted, name, lootTable, inventoryIsExposed, perItemActions);
+                return new ObjectComponentTemplateInventory(game, ID, startEnabled, actionsRestricted, name, lootTable, inventoryIsExposed, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
                 String networkID = LoadUtils.attribute(componentElement, "network", null);

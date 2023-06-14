@@ -224,7 +224,18 @@ public class Inventory {
 		return actions;
 	}
 
-	public List<Action> getExternalActions(Noun owner, String name, Actor subject, boolean isExposed) {
+	public List<Action> getExternalActions(Noun owner, String name, Actor subject, boolean isExposed, boolean enableTake, boolean enableStore) {
+		List<Action> actions = new ArrayList<>();
+		if (enableTake) {
+			actions.addAll(getTakeActions(owner, name));
+		}
+		if (subject != null && enableStore) {
+			actions.addAll(subject.getInventory().getStoreActions(owner, name, this, isExposed));
+		}
+		return actions;
+	}
+
+	private List<Action> getTakeActions(Noun owner, String name) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
@@ -237,9 +248,6 @@ public class Inventory {
 			if (itemCount(current) > 1) {
 				actions.add(new ActionInventoryTakeAll(owner, name, this, item));
 			}
-		}
-		if (subject != null) {
-			actions.addAll(subject.getInventory().getStoreActions(owner, name, this, isExposed));
 		}
 		return actions;
 	}

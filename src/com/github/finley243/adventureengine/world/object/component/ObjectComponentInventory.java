@@ -37,7 +37,7 @@ public class ObjectComponentInventory extends ObjectComponent {
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-        actions.addAll(inventory.getExternalActions(getObject(), getTemplateInventory().getName(), subject, getTemplateInventory().isExposed()));
+        actions.addAll(inventory.getExternalActions(getObject(), getTemplateInventory().getName(), subject, getTemplateInventory().isExposed(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
         for (ActionCustom.CustomActionHolder customAction : getTemplateInventory().getPerItemActions()) {
             for (Item item : inventory.getItems()) {
                 String[] menuPath;
