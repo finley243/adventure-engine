@@ -376,6 +376,20 @@ public class DataLoader {
                 String parameterName = LoadUtils.attribute(expressionElement, "name", null);
                 return new ExpressionParameter(dataType, parameterName);
             }
+            case "and" -> {
+                List<Expression> expressions = new ArrayList<>();
+                for (Element productVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
+                    expressions.add(loadExpression(productVariableElement, null));
+                }
+                return new ExpressionLogicCompound(expressions, true);
+            }
+            case "or" -> {
+                List<Expression> expressions = new ArrayList<>();
+                for (Element productVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
+                    expressions.add(loadExpression(productVariableElement, null));
+                }
+                return new ExpressionLogicCompound(expressions, false);
+            }
             case "add" -> {
                 List<Expression> sumExpressions = new ArrayList<>();
                 for (Element sumVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
