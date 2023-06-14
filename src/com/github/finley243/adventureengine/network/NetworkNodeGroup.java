@@ -17,10 +17,10 @@ public class NetworkNodeGroup extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Actor subject) {
+    protected List<Action> breachedActions(Actor subject, String componentName) {
         List<Action> actions = new ArrayList<>();
         for (NetworkNode childNode : childNodes) {
-            actions.addAll(childNode.breachedActions(subject));
+            actions.addAll(childNode.breachedActions(subject, componentName));
         }
         return actions;
     }

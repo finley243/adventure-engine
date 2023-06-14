@@ -53,7 +53,13 @@ public class ActionMoveLink extends ActionMove {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("(" + linkComponent.getDirection() + ") " + "Enter", canChoose(subject), new String[]{LangUtils.titleCase(linkComponent.getObject().getName())}, new String[]{"enter " + linkComponent.getObject().getName(), "go through " + linkComponent.getObject().getName(), "move through " + linkComponent.getObject().getName()});
+		String[] menuPath;
+		if (linkComponent.getTemplate().getName() != null) {
+			menuPath = new String[] {LangUtils.titleCase(linkComponent.getObject().getName()), LangUtils.titleCase(linkComponent.getTemplate().getName())};
+		} else {
+			menuPath = new String[] {LangUtils.titleCase(linkComponent.getObject().getName())};
+		}
+		return new MenuChoice("(" + linkComponent.getDirection() + ") " + "Enter", canChoose(subject), menuPath, new String[]{"enter " + linkComponent.getObject().getName(), "go through " + linkComponent.getObject().getName(), "move through " + linkComponent.getObject().getName()});
 	}
 
 	@Override

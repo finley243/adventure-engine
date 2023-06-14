@@ -81,7 +81,13 @@ public class ObjectComponentUsable extends ObjectComponent {
             }
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsingActions()) {
-            ActionCustom action = new ActionCustom(getObject().game(), getObject(), null, usingAction.action(), usingAction.parameters(), new String[] {LangUtils.titleCase(getObject().getName())}, false);
+            String[] menuPath;
+            if (getTemplate().getName() != null) {
+                menuPath = new String[] {LangUtils.titleCase(getObject().getName()), LangUtils.titleCase(getTemplate().getName())};
+            } else {
+                menuPath = new String[] {LangUtils.titleCase(getObject().getName())};
+            }
+            ActionCustom action = new ActionCustom(getObject().game(), getObject(), null, usingAction.action(), usingAction.parameters(), menuPath, false);
             if (action.canShow(subject)) {
                 actions.add(action);
             }

@@ -21,7 +21,7 @@ public class NetworkNodeData extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Actor subject) {
+    protected List<Action> breachedActions(Actor subject, String componentName) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionNetworkReadData(this));
         return actions;

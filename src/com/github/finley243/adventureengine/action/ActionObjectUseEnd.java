@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -43,7 +44,13 @@ public class ActionObjectUseEnd extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(component.getTemplateUsable().getEndPrompt(), canChoose(subject), new String[]{LangUtils.titleCase(component.getObject().getName())}, new String[]{component.getTemplateUsable().getEndPrompt().toLowerCase()});
+		String[] menuPath;
+		if (component.getTemplate().getName() != null) {
+			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName()), LangUtils.titleCase(component.getTemplate().getName())};
+		} else {
+			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName())};
+		}
+		return new MenuChoice(component.getTemplateUsable().getEndPrompt(), canChoose(subject), menuPath, new String[]{component.getTemplateUsable().getEndPrompt().toLowerCase()});
 	}
 
 	@Override

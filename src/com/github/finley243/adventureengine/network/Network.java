@@ -26,9 +26,9 @@ public class Network {
         return name;
     }
 
-    public List<Action> networkActions(Actor subject) {
+    public List<Action> networkActions(Actor subject, String componentName) {
         List<Action> actions = new ArrayList<>();
-        actions.addAll(topNode.actions(subject));
+        actions.addAll(topNode.actions(subject, componentName));
         return actions;
     }
 

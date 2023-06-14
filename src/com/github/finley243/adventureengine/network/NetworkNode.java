@@ -41,17 +41,17 @@ public abstract class NetworkNode {
         this.isBreached = state;
     }
 
-    public List<Action> actions(Actor subject) {
+    public List<Action> actions(Actor subject, String componentName) {
         List<Action> actions = new ArrayList<>();
         if (isBreached()) {
-            actions.addAll(breachedActions(subject));
+            actions.addAll(breachedActions(subject, componentName));
         } else {
             actions.add(new ActionNetworkBreach(this));
         }
         return actions;
     }
 
-    protected abstract List<Action> breachedActions(Actor subject);
+    protected abstract List<Action> breachedActions(Actor subject, String componentName);
 
     @Override
     public boolean equals(Object o) {

@@ -47,7 +47,13 @@ public class ActionObjectUseStart extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(component.getTemplateUsable().getStartPrompt(), canChoose(subject), new String[]{LangUtils.titleCase(component.getObject().getName())}, new String[]{component.getTemplateUsable().getStartPrompt().toLowerCase()});
+		String[] menuPath;
+		if (component.getTemplate().getName() != null) {
+			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName()), LangUtils.titleCase(component.getTemplate().getName())};
+		} else {
+			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName())};
+		}
+		return new MenuChoice(component.getTemplateUsable().getStartPrompt(), canChoose(subject), menuPath, new String[]{component.getTemplateUsable().getStartPrompt().toLowerCase()});
 	}
 
 	@Override
