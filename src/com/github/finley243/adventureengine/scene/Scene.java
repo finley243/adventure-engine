@@ -40,8 +40,8 @@ public class Scene extends GameInstanced implements StatHolder {
 		this.hasTriggered = false;
 	}
 
-	public boolean canChoose(Actor subject, Actor target) {
-		return (condition == null || condition.isMet(new Context(game(), subject, target))) && !(once && hasTriggered);
+	public boolean canChoose(Context context) {
+		return (condition == null || condition.isMet(context)) && !(once && hasTriggered);
 	}
 	
 	public List<SceneLine> getLines() {

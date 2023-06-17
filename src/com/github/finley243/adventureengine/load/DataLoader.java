@@ -226,8 +226,8 @@ public class DataLoader {
 
     private static Scene loadScene(Game game, Element sceneElement) {
         if (sceneElement == null) return null;
-        String sceneID = sceneElement.getAttribute("id");
-        Scene.SceneType type = switch (sceneElement.getAttribute("type")) {
+        String sceneID = LoadUtils.attribute(sceneElement, "id", null);
+        Scene.SceneType type = switch (LoadUtils.attribute(sceneElement, "type", "all")) {
             case "random" -> Scene.SceneType.RANDOM;
             case "select" -> Scene.SceneType.SELECTOR;
             case "all", default -> Scene.SceneType.SEQUENTIAL;
@@ -255,10 +255,25 @@ public class DataLoader {
         boolean exit = LoadUtils.attributeBool(lineElement, "exit", false);
         String redirect = LoadUtils.attribute(lineElement, "redirect", null);
         String from = LoadUtils.attribute(lineElement, "from", null);
-        List<String> texts = LoadUtils.listOfTags(lineElement, "text");
-        Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
-        Script script = loadScript(LoadUtils.singleChildWithName(lineElement, "script"));
-        return new SceneLine(texts, condition, script, once, exit, redirect, from);
+        // TODO - Check this condition's functionality more thoroughly (may have unexpected results in rare situations)
+        if (lineElement.getChildNodes().getLength() == 1) {
+            String text = lineElement.getTextContent().trim();
+            return new SceneLine(text, once, exit, redirect, from);
+        } else {
+            Scene.SceneType type = switch (LoadUtils.attribute(lineElement, "type", "all")) {
+                case "random" -> Scene.SceneType.RANDOM;
+                case "select" -> Scene.SceneType.SELECTOR;
+                case "all", default -> Scene.SceneType.SEQUENTIAL;
+            };
+            Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
+            Script script = loadScript(LoadUtils.singleChildWithName(lineElement, "script"));
+            List<SceneLine> subLines = new ArrayList<>();
+            for (Element subLineElement : LoadUtils.directChildrenWithName(lineElement, "line")) {
+                SceneLine subLine = loadSceneLine(subLineElement);
+                subLines.add(subLine);
+            }
+            return new SceneLine(type, subLines, condition, script, once, exit, redirect, from);
+        }
     }
 
     private static SceneChoice loadSceneChoice(Element choiceElement) {

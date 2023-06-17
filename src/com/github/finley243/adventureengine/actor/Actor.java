@@ -226,14 +226,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
 			if (isNewRoom && getArea().getRoom().getDescription() != null) {
-				SceneManager.trigger(game(), this, this, getArea().getRoom().getDescription());
+				SceneManager.trigger(new Context(game(), this, this), getArea().getRoom().getDescription());
 				getArea().getRoom().setKnown();
 				for (Area areaInRoom : getArea().getRoom().getAreas()) {
 					areaInRoom.setKnown();
 				}
 			}
 			if (isNewArea && getArea().getDescription() != null) {
-				SceneManager.trigger(game(), this, this, getArea().getDescription());
+				SceneManager.trigger(new Context(game(), this, this), getArea().getDescription());
 				getArea().setKnown();
 			}
 			if (isNewRoom) {

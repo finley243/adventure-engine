@@ -20,26 +20,24 @@
                 <value1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_guard_lobby"/>
             </condition>
         </condition>
-        <line>
-            <text>The receptionist leans on the desk and sighs. He looks up from the computer, towards the security guard standing near the seating area.</text>
-            <text>"Man, could this day be any longer?"</text>
-            <text>The guard smirks. "Don't tempt fate."</text>
-            <text>The receptionist shrugs. "Looks to me like it's fate's day off."</text>
-            <text>As he turns back to the computer, he notices you and clears his throat.</text>
-        </line>
+        <line>The receptionist leans on the desk and sighs. He looks up from the computer, towards the security guard standing near the seating area.</line>
+        <line>"Man, could this day be any longer?"</line>
+        <line>The guard smirks. "Don't tempt fate."</line>
+        <line>The receptionist shrugs. "Looks to me like it's fate's day off."</line>
+        <line>As he turns back to the computer, he notices you and clears his throat.</line>
     </scene>
     <scene id="test_weapon_bark">
         <line>
             <condition type="equippedItem" actor="PLAYER" tag="weapon_handgun"/>
-            <text>"Hey, holster that firearm! No open carry allowed here."</text>
+            <line>"Hey, holster that firearm! No open carry allowed here."</line>
         </line>
         <line>
             <condition type="equippedItem" actor="PLAYER" tag="weapon_long_arm"/>
-            <text>"Hey, put away that rifle! No open carry allowed here."</text>
+            <line>"Hey, put away that rifle! No open carry allowed here."</line>
         </line>
         <line>
             <condition type="equippedItem" actor="PLAYER" tag="weapon_melee"/>
-            <text>"Hey, put that away! No open carry allowed here. And that applies to ALL weapons, not just guns."</text>
+            <line>"Hey, put that away! No open carry allowed here. And that applies to ALL weapons, not just guns."</line>
         </line>
     </scene>
 </data>

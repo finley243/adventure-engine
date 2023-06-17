@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.scene.SceneManager;
@@ -16,14 +17,14 @@ public class ActionInspectArea extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         if (area.getRoom().getDescription() != null) {
-            SceneManager.trigger(subject.game(), subject, subject, area.getRoom().getDescription());
+            SceneManager.trigger(new Context(subject.game(), subject, subject), area.getRoom().getDescription());
             area.getRoom().setKnown();
             for (Area area : area.getRoom().getAreas()) {
                 area.setKnown();
             }
         }
         if (area.getDescription() != null) {
-            SceneManager.trigger(subject.game(), subject, subject, area.getDescription());
+            SceneManager.trigger(new Context(subject.game(), subject, subject), area.getDescription());
             area.setKnown();
         }
         area.getRoom().triggerScript("on_inspect", subject, subject);

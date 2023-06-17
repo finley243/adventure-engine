@@ -1,16 +1,10 @@
 <data>
     <scene id="stratis_receptionist_start" type="select">
-        <line redirect="stratis_receptionist_main" once="true">
-            <text>"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</text>
-        </line>
-        <line redirect="stratis_receptionist_main">
-            <text>"Welcome back. How can I be of assistance?"</text>
-        </line>
+        <line redirect="stratis_receptionist_main" once="true">"Hello, welcome to the Stratis Hotel. How can I be of assistance?"</line>
+        <line redirect="stratis_receptionist_main">"Welcome back. How can I be of assistance?"</line>
     </scene>
     <scene id="stratis_receptionist_main_return">
-        <line redirect="stratis_receptionist_main">
-            <text>"Very well. Anything else I can do for you?"</text>
-        </line>
+        <line redirect="stratis_receptionist_main">"Very well. Anything else I can do for you?"</line>
     </scene>
     <scene id="stratis_receptionist_main">
         <choice link="stratis_receptionist_request_room">Do you have any rooms available?</choice>
@@ -21,10 +15,8 @@
         <condition type="boolean" invert="true">
             <value type="global" dataType="boolean" globalID="purchased_stratis_room"/>
         </condition>
-        <line>
-            <text>He taps the screen in front of him and quickly scans its contents.</text>
-            <text>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."</text>
-        </line>
+        <line>He taps the screen in front of him and quickly scans its contents.</line>
+        <line>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."</line>
         <choice link="stratis_receptionist_purchase_room">I'll take the room.</choice>
         <choice link="stratis_receptionist_main_return">Not right now.</choice>
     </scene>
@@ -33,8 +25,8 @@
             <value1 type="stat" dataType="int" stat="money" holder="player"/>
         </condition>
         <line>
-            <text>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</text>
-            <text>He hands you a white keycard with the Stratis Hotel logo.</text>
+            <line>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</line>
+            <line>He hands you a white keycard with the Stratis Hotel logo.</line>
             <script type="all">
                 <script type="transferItem" item="stratis_room_key">
                     <toInv holder="player"/>
@@ -43,14 +35,10 @@
                 <script type="setGlobal" globalID="purchased_stratis_room" value="true"/>
             </script>
         </line>
-        <line redirect="stratis_receptionist_main">
-            <text>"Enjoy your stay. Is there anything else I can do for you?"</text>
-        </line>
+        <line redirect="stratis_receptionist_main">"Enjoy your stay. Is there anything else I can do for you?"</line>
     </scene>
     <scene id="stratis_receptionist_info">
-        <line>
-            <text>"Of course."</text>
-        </line>
+        <line>"Of course."</line>
         <choice link="stratis_receptionist_info_amenities">What amenities are available here?</choice>
         <choice link="stratis_receptionist_info_guests">Get a lot of high-profile guests here?</choice>
         <choice link="stratis_receptionist_info_rees">Is there someone staying here by the name of Abel Rees?</choice>
@@ -58,26 +46,20 @@
         <choice link="stratis_receptionist_main_return">That's all.</choice>
     </scene>
     <scene id="stratis_receptionist_info_amenities">
-        <line redirect="stratis_receptionist_info">
-            <text>The receptionist grins slightly.</text>
-            <text>"Everything you could need. Five-star restaurant, rooftop pool. We also provide the fastest network access of any hotel in the area, included with every room."</text>
-        </line>
+        <line>The receptionist grins slightly.</line>
+        <line redirect="stratis_receptionist_info">"Everything you could need. Five-star restaurant, rooftop pool. We also provide the fastest network access of any hotel in the area, included with every room."</line>
     </scene>
     <scene id="stratis_receptionist_info_guests">
-        <line redirect="stratis_receptionist_info">
-            <text>"Why yes, of course. The Stratis is the best, and most secure, hotel in the area."</text>
-        </line>
+        <line redirect="stratis_receptionist_info">"Why yes, of course. The Stratis is the best, and most secure, hotel in the area."</line>
     </scene>
     <scene id="stratis_receptionist_info_rees">
-        <line redirect="stratis_receptionist_info">
-            <text>The receptionist narrows his eyes.</text>
-            <text>"We can't disclose the identity of our guests to the public. As you can imagine, that would be bad for business."</text>
-        </line>
+        <line>The receptionist narrows his eyes.</line>
+        <line redirect="stratis_receptionist_info">"We can't disclose the identity of our guests to the public. As you can imagine, that would be bad for business."</line>
     </scene>
     <scene id="stratis_receptionist_combat">
         <line exit="true">
-            <text>The receptionist smirks.</text>
-            <text>"You think you're the first to try that here?"</text>
+            <line>The receptionist smirks.</line>
+            <line>"You think you're the first to try that here?"</line>
             <script type="combat">
                 <actor holder="target"/>
                 <target holder="player"/>
@@ -85,8 +67,6 @@
         </line>
     </scene>
     <scene id="stratis_receptionist_end">
-        <line exit="true">
-            <text>"Very well. Have a lovely day."</text>
-        </line>
+        <line exit="true">"Very well. Have a lovely day."</line>
     </scene>
 </data>

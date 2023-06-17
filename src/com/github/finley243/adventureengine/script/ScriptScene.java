@@ -26,7 +26,7 @@ public class ScriptScene extends Script {
         if (!(actor.getHolder(context) instanceof Actor actorCast)) {
             return;
         }
-        SceneManager.triggerFromIDs(context.game(), actorCast, actorCast, scenes);
+        SceneManager.triggerFromIDs(new Context(context, actorCast, actorCast), scenes);
     }
 
 }

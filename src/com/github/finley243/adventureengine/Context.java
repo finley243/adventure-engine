@@ -41,6 +41,15 @@ public class Context {
         }
     }
 
+    public Context(Context context, Actor subject, Actor target) {
+        this.game = context.game;
+        this.subject = subject;
+        this.target = target;
+        this.parentObject = context.parentObject;
+        this.parentItem = context.parentItem;
+        this.parameters = new HashMap<>(context.parameters);
+    }
+
     public Context(Context context, Map<String, Expression> addedParameters) {
         this.game = context.game;
         this.subject = context.subject;

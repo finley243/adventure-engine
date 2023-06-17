@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.scene.SceneManager;
@@ -16,7 +17,7 @@ public class ActionInspectObject extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		SceneManager.trigger(subject.game(), subject, subject, object.getDescription());
+		SceneManager.trigger(new Context(subject.game(), subject, subject, object), object.getDescription());
 		object.triggerScript("on_inspect", subject, subject);
 	}
 

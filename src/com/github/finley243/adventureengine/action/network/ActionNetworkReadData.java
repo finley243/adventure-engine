@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action.network;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.network.NetworkNodeData;
@@ -17,7 +18,7 @@ public class ActionNetworkReadData extends NetworkAction {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        SceneManager.trigger(subject.game(), subject, subject, subject.game().data().getScene(node.getSceneID()));
+        SceneManager.trigger(new Context(subject.game(), subject, subject), subject.game().data().getScene(node.getSceneID()));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -14,12 +15,12 @@ public class ActionTalk extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.game().menuManager().sceneMenu(target, target, target.getDialogueStart());
+		subject.game().menuManager().sceneMenu(new Context(target.game(), target, target), target.getDialogueStart());
 	}
 
 	@Override
 	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && subject.isPlayer() && !target.isInCombat() && target.getDialogueStart().canChoose(target, target);
+		return super.canChoose(subject) && subject.isPlayer() && !target.isInCombat() && target.getDialogueStart().canChoose(new Context(target.game(), target, target));
 	}
 	
 	@Override
