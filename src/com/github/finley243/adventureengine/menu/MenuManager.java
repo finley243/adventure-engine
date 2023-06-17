@@ -45,7 +45,7 @@ public class MenuManager {
 		String redirect = null;
 		for (SceneLine line : lines) {
 			if (scene.getType() != SceneType.SEQUENTIAL || line.shouldShow(context, lastSceneID)) {
-				SceneLineResult lineResult = executeLine(context, line, lastSceneID, scene.getID());
+				SceneLineResult lineResult = executeLine(context, line, lastSceneID);
 				if (lineResult.exit) {
 					showChoices = false;
 					break;
@@ -88,18 +88,17 @@ public class MenuManager {
 		return validLines;
 	}
 
-	private SceneLineResult executeLine(Context context, SceneLine line, String lastSceneID, String currentSceneID) {
+	private SceneLineResult executeLine(Context context, SceneLine line, String lastSceneID) {
 		if (line.getText() != null) {
 			context.game().eventBus().post(new RenderTextEvent(line.getText()));
-			System.out.println("LINE: " + line.getText());
 		}
 		line.trigger(context);
 		if (line.getSubLines() != null) {
 			List<SceneLine> lines = selectValidLines(context, line.getType(), line.getSubLines(), lastSceneID);
 			for (SceneLine subLine : lines) {
 				if (line.getType() != SceneType.SEQUENTIAL || subLine.shouldShow(context, lastSceneID)) {
-					SceneLineResult subLineResult = executeLine(context, subLine, lastSceneID, currentSceneID);
-					if (subLineResult.exit || subLineResult.redirectID != null) {
+					SceneLineResult subLineResult = executeLine(context, subLine, lastSceneID);
+					if (subLineResult.shouldEndLine()) {
 						return subLineResult;
 					}
 				}
@@ -148,13 +147,9 @@ public class MenuManager {
 		this.index = e.getIndex();
 	}
 
-	private static class SceneLineResult {
-		public final boolean exit;
-		public final String redirectID;
-
-		public SceneLineResult(boolean exit, String redirectID) {
-			this.exit = exit;
-			this.redirectID = redirectID;
+	private record SceneLineResult(boolean exit, String redirectID) {
+		public boolean shouldEndLine() {
+			return exit || redirectID != null;
 		}
 	}
 	
