@@ -6,18 +6,14 @@ import com.github.finley243.adventureengine.world.object.template.*;
 public class ObjectComponentFactory {
 
     public static ObjectComponent create(ObjectComponentTemplate template, String ID, WorldObject object) {
-        if (template instanceof ObjectComponentTemplateInventory) {
-            return new ObjectComponentInventory(ID, object, template.getID());
-        } else if (template instanceof ObjectComponentTemplateNetwork) {
-            return new ObjectComponentNetwork(ID, object, template.getID());
-        } else if (template instanceof ObjectComponentTemplateLink) {
-            return new ObjectComponentLink(ID, object, template.getID());
-        } else if (template instanceof ObjectComponentTemplateUsable) {
-            return new ObjectComponentUsable(ID, object, template.getID());
-        } else if (template instanceof ObjectComponentTemplateVehicle) {
-            return new ObjectComponentVehicle(ID, object, template.getID());
-        }
-        return null;
+        return switch (template) {
+            case ObjectComponentTemplateInventory ignored -> new ObjectComponentInventory(ID, object, template.getID());
+            case ObjectComponentTemplateNetwork ignored -> new ObjectComponentNetwork(ID, object, template.getID());
+            case ObjectComponentTemplateLink ignored -> new ObjectComponentLink(ID, object, template.getID());
+            case ObjectComponentTemplateUsable ignored -> new ObjectComponentUsable(ID, object, template.getID());
+            case ObjectComponentTemplateVehicle ignored -> new ObjectComponentVehicle(ID, object, template.getID());
+            default -> null;
+        };
     }
 
 }

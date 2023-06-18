@@ -698,6 +698,11 @@ public class DataLoader {
                 Set<String> weaponTargetEffects = LoadUtils.setOfTags(itemElement, "targetEffect");
                 return new WeaponTemplate(game, id, name, description, scripts, customActions, price, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
             }
+            case "weaponMod" -> {
+                String modSlot = LoadUtils.attribute(itemElement, "modSlot", null);
+                List<String> weaponEffects = LoadUtils.listOfTags(itemElement, "effect");
+                return new WeaponModTemplate(game, id, name, description, scripts, customActions, price, modSlot, weaponEffects);
+            }
             case "ammo" -> {
                 List<String> ammoWeaponEffects = LoadUtils.listOfTags(itemElement, "weaponEffect");
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);

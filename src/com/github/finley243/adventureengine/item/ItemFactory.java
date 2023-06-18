@@ -26,6 +26,7 @@ public class ItemFactory {
 			case ConsumableTemplate ignored -> new ItemConsumable(game, ID, stats.getID());
 			case ApparelTemplate ignored -> new ItemApparel(game, ID, stats.getID());
 			case WeaponTemplate ignored -> new ItemWeapon(game, ID, stats.getID());
+			case WeaponModTemplate ignored -> new ItemWeaponMod(game, ID, stats.getID());
 			case AmmoTemplate ignored -> new ItemAmmo(game, ID, stats.getID());
 			case MiscTemplate ignored -> new ItemMisc(game, ID, stats.getID());
 			default -> null;
