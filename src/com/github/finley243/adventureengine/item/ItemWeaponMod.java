@@ -24,7 +24,7 @@ public class ItemWeaponMod extends Item {
     }
 
     public WeaponModTemplate getWeaponModTemplate() {
-        return (WeaponModTemplate) game().data().getItem(templateID);
+        return (WeaponModTemplate) game().data().getItemTemplate(templateID);
     }
 
     @Override

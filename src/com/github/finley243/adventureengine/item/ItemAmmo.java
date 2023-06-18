@@ -19,7 +19,7 @@ public class ItemAmmo extends Item {
     }
 
     public AmmoTemplate getAmmoTemplate() {
-        return (AmmoTemplate) game().data().getItem(templateID);
+        return (AmmoTemplate) game().data().getItemTemplate(templateID);
     }
 
     public boolean isReusable() {

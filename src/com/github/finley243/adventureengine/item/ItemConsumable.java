@@ -25,7 +25,7 @@ public class ItemConsumable extends Item {
 	}
 
 	public ConsumableTemplate getConsumableTemplate() {
-		return (ConsumableTemplate) game().data().getItem(templateID);
+		return (ConsumableTemplate) game().data().getItemTemplate(templateID);
 	}
 	
 	public ConsumableType getConsumableType() {

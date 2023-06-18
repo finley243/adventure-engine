@@ -11,11 +11,8 @@ import java.util.List;
 
 public class ObjectComponentVehicle extends ObjectComponent {
 
-    private final String templateID;
-
-    public ObjectComponentVehicle(String ID, WorldObject object, String templateID) {
+    public ObjectComponentVehicle(String ID, WorldObject object) {
         super(ID, object);
-        this.templateID = templateID;
     }
 
     @Override
@@ -24,7 +21,7 @@ public class ObjectComponentVehicle extends ObjectComponent {
     }
 
     public ObjectComponentTemplateVehicle getTemplateVehicle() {
-        return (ObjectComponentTemplateVehicle) getObject().game().data().getObjectComponentTemplate(templateID);
+        return (ObjectComponentTemplateVehicle) getObject().getTemplate().getComponents().get(getID());
     }
 
     public WorldObject getObjectOverride() {

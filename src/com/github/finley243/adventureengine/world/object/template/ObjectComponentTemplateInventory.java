@@ -14,8 +14,8 @@ public class ObjectComponentTemplateInventory extends ObjectComponentTemplate {
     private final boolean enableStore;
     private final List<ActionCustom.CustomActionHolder> perItemActions;
 
-    public ObjectComponentTemplateInventory(Game game, String ID, boolean startEnabled, boolean actionsRestricted, String name, LootTable lootTable, boolean isExposed, boolean enableTake, boolean enableStore, List<ActionCustom.CustomActionHolder> perItemActions) {
-        super(game, ID, startEnabled, actionsRestricted, name);
+    public ObjectComponentTemplateInventory(Game game, boolean startEnabled, boolean actionsRestricted, String name, LootTable lootTable, boolean isExposed, boolean enableTake, boolean enableStore, List<ActionCustom.CustomActionHolder> perItemActions) {
+        super(game, startEnabled, actionsRestricted, name);
         this.lootTable = lootTable;
         this.isExposed = isExposed;
         this.enableTake = enableTake;

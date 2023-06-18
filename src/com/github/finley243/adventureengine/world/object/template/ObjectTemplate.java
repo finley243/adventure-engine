@@ -16,14 +16,14 @@ public class ObjectTemplate extends GameInstanced {
     private final Scene description;
     private final Map<String, Script> scripts;
     private final List<ActionCustom.CustomActionHolder> customActions;
-    private final Map<String, String> components;
+    private final Map<String, ObjectComponentTemplate> components;
     private final Map<String, Boolean> localVarsBooleanDefault;
     private final Map<String, Integer> localVarsIntegerDefault;
     private final Map<String, Float> localVarsFloatDefault;
     private final Map<String, String> localVarsStringDefault;
     private final Map<String, Set<String>> localVarsStringSetDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, Map<String, String> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
+    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, Map<String, ObjectComponentTemplate> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
         super(game, ID);
         this.name = name;
         this.description = description;
@@ -53,7 +53,7 @@ public class ObjectTemplate extends GameInstanced {
         return customActions;
     }
 
-    public Map<String, String> getComponents() {
+    public Map<String, ObjectComponentTemplate> getComponents() {
         return components;
     }
 

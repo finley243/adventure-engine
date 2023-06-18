@@ -27,7 +27,7 @@ public class ItemApparel extends Item {
 	}
 
 	public ApparelTemplate getApparelTemplate() {
-		return (ApparelTemplate) game().data().getItem(templateID);
+		return (ApparelTemplate) game().data().getItemTemplate(templateID);
 	}
 
 	public Set<String> getApparelSlots() {

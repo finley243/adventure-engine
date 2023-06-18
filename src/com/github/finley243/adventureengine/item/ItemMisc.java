@@ -19,7 +19,7 @@ public class ItemMisc extends Item {
     }
 
     public MiscTemplate getMiscTemplate() {
-        return (MiscTemplate) game().data().getItem(templateID);
+        return (MiscTemplate) game().data().getItemTemplate(templateID);
     }
 
 }

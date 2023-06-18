@@ -43,7 +43,7 @@ public class Inventory {
 
 	public void addItems(String itemID, int count) {
 		if (count <= 0) throw new IllegalArgumentException("Cannot add non-positive number of Items: " + itemID);
-		if (game.data().getItem(itemID).hasState()) {
+		if (game.data().getItemTemplate(itemID).hasState()) {
 			if (!items.containsKey(itemID)) {
 				items.put(itemID, new ArrayList<>());
 			}
@@ -83,12 +83,12 @@ public class Inventory {
 
 	public boolean hasItemWithTag(String tag) {
 		for (String current : items.keySet()) {
-			if (game.data().getItem(current).getTags().contains(tag)) {
+			if (game.data().getItemTemplate(current).getTags().contains(tag)) {
 				return true;
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
-			if (game.data().getItem(current).getTags().contains(tag)) {
+			if (game.data().getItemTemplate(current).getTags().contains(tag)) {
 				return true;
 			}
 		}
@@ -109,7 +109,7 @@ public class Inventory {
 	}
 
 	public int itemCount(String itemID) {
-		if (game.data().getItem(itemID).hasState()) {
+		if (game.data().getItemTemplate(itemID).hasState()) {
 			if (items.containsKey(itemID)) {
 				return items.get(itemID).size();
 			} else {

@@ -1,10 +1,9 @@
 package com.github.finley243.adventureengine.world.object.component;
 
-import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.stat.*;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -74,11 +73,10 @@ public abstract class ObjectComponent implements StatHolder {
 
     @Override
     public String getValueString(String name) {
-        return switch (name) {
-            case "id" -> getID();
-            case "template_id" -> getTemplate().getID();
-            default -> null;
-        };
+        if ("id".equals(name)) {
+            return getID();
+        }
+        return null;
     }
 
     @Override

@@ -22,7 +22,6 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 import org.xml.sax.SAXException;
 
@@ -45,9 +44,8 @@ public class Data {
 	private final Map<String, Actor> actors = new HashMap<>();
 	private final Map<String, ActorTemplate> actorStats = new HashMap<>();
 	private final Map<String, ObjectTemplate> objectTemplates = new HashMap<>();
-	private final Map<String, ObjectComponentTemplate> objectComponentTemplates = new HashMap<>();
 	private final Map<String, WorldObject> objects = new HashMap<>();
-	private final Map<String, ItemTemplate> items = new HashMap<>();
+	private final Map<String, ItemTemplate> itemTemplates = new HashMap<>();
 	private final Map<String, Item> itemStates = new HashMap<>();
 	private final Map<String, LootTable> lootTables = new HashMap<>();
 	private final Map<String, WeaponClass> weaponClasses = new HashMap<>();
@@ -80,7 +78,7 @@ public class Data {
 		return time;
 	}
 
-	public void newGame() throws ParserConfigurationException, IOException, SAXException {
+	public void newGame() throws ParserConfigurationException, IOException, SAXException, GameDataException {
 		reset();
 		for (Area area : areas.values()) {
 			area.onNewGameInit();
@@ -88,22 +86,20 @@ public class Data {
 		for (Actor actor : actors.values()) {
 			actor.onNewGameInit();
 		}
-		// Using ArrayList to avoid Concurrent Modification Exception
 		for (WorldObject object : new ArrayList<>(objects.values())) {
 			object.onNewGameInit();
 		}
 	}
 
-	public void reset() throws ParserConfigurationException, IOException, SAXException {
+	public void reset() throws ParserConfigurationException, IOException, SAXException, GameDataException {
 		time.reset(this);
 		areas.clear();
 		rooms.clear();
 		actors.clear();
 		actorStats.clear();
 		objectTemplates.clear();
-		objectComponentTemplates.clear();
 		objects.clear();
-		items.clear();
+		itemTemplates.clear();
 		itemStates.clear();
 		lootTables.clear();
 		weaponClasses.clear();
@@ -141,7 +137,7 @@ public class Data {
 		for(WorldObject object : objects.values()) {
 			state.addAll(object.saveState());
 		}
-		for(ItemTemplate itemTemplate : items.values()) {
+		for(ItemTemplate itemTemplate : itemTemplates.values()) {
 			state.addAll(itemTemplate.saveState());
 		}
 		for(Scene topic : scenes.values()) {
@@ -156,7 +152,7 @@ public class Data {
 		return state;
 	}
 
-	public void loadState(List<SaveData> state) throws ParserConfigurationException, IOException, SAXException {
+	public void loadState(List<SaveData> state) throws ParserConfigurationException, IOException, SAXException, GameDataException {
 		reset();
 		// TODO - Improve efficiency
 		List<SaveData> nonItemSaveData = new ArrayList<>();
@@ -248,16 +244,6 @@ public class Data {
 		return objectTemplates.get(id);
 	}
 
-	public void addObjectComponentTemplate(String id, ObjectComponentTemplate value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add object component template with blank ID");
-		if(objectComponentTemplates.containsKey(id)) throw new IllegalArgumentException("Cannot add object component template with existing ID: " + id);
-		objectComponentTemplates.put(id, value);
-	}
-
-	public ObjectComponentTemplate getObjectComponentTemplate(String id) {
-		return objectComponentTemplates.get(id);
-	}
-
 	public void addObject(String id, WorldObject value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add object with blank ID");
 		if(objects.containsKey(id)) throw new IllegalArgumentException("Cannot add object with existing ID: " + id);
@@ -272,14 +258,14 @@ public class Data {
 		return objects.values();
 	}
 	
-	public void addItem(String id, ItemTemplate value) {
+	public void addItemTemplate(String id, ItemTemplate value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add item with blank ID");
-		if(items.containsKey(id)) throw new IllegalArgumentException("Cannot add item with existing ID: " + id);
-		items.put(id, value);
+		if(itemTemplates.containsKey(id)) throw new IllegalArgumentException("Cannot add item with existing ID: " + id);
+		itemTemplates.put(id, value);
 	}
 	
-	public ItemTemplate getItem(String id) {
-		return items.get(id);
+	public ItemTemplate getItemTemplate(String id) {
+		return itemTemplates.get(id);
 	}
 
 	public void addItemState(String id, Item value) {

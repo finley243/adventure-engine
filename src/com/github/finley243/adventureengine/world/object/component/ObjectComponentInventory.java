@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -16,13 +15,11 @@ import java.util.List;
 
 public class ObjectComponentInventory extends ObjectComponent {
 
-    private final String templateID;
     private final Inventory inventory;
 
-    public ObjectComponentInventory(String ID, WorldObject object, String templateID) {
+    public ObjectComponentInventory(String ID, WorldObject object) {
         super(ID, object);
         this.inventory = new Inventory(object.game(), null);
-        this.templateID = templateID;
     }
 
     @Override
@@ -31,7 +28,7 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     public ObjectComponentTemplateInventory getTemplateInventory() {
-        return (ObjectComponentTemplateInventory) getObject().game().data().getObjectComponentTemplate(templateID);
+        return (ObjectComponentTemplateInventory) getObject().getTemplate().getComponents().get(getID());
     }
 
     @Override

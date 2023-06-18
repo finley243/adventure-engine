@@ -153,9 +153,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	public void onNewGameInit() {
-		for (Map.Entry<String, String> componentEntry : getTemplate().getComponents().entrySet()) {
-			ObjectComponentTemplate componentTemplate = game().data().getObjectComponentTemplate(componentEntry.getValue());
-			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, componentEntry.getKey(), this);
+		for (Map.Entry<String, ObjectComponentTemplate> componentEntry : getTemplate().getComponents().entrySet()) {
+			ObjectComponent component = ObjectComponentFactory.create(componentEntry.getValue(), componentEntry.getKey(), this);
 			components.put(componentEntry.getKey(), component);
 			if (component != null) {
 				component.onNewGameInit();

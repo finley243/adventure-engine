@@ -102,7 +102,7 @@ public class SaveData implements Serializable {
             case VARIABLE -> data.setGlobalInteger(id, valueInt);
             case ITEM_INSTANCE -> ItemFactory.load(data.game(), valueString, id);
             case ITEM_TEMPLATE -> {
-                ItemTemplate itemTemplate = data.getItem(id);
+                ItemTemplate itemTemplate = data.getItemTemplate(id);
                 itemTemplate.loadState(this);
             }
             case TIME -> data.time().loadState(this);

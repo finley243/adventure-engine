@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.Data;
+import com.github.finley243.adventureengine.GameDataException;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,7 +19,7 @@ public class SaveLoader {
         fileStream.close();
     }
 
-    public static void loadGame(File saveFile, Data data) throws IOException, ClassNotFoundException, ParserConfigurationException, SAXException {
+    public static void loadGame(File saveFile, Data data) throws IOException, ClassNotFoundException, ParserConfigurationException, SAXException, GameDataException {
         FileInputStream fileStream = new FileInputStream(saveFile);
         ObjectInputStream objectStream = new ObjectInputStream(fileStream);
         @SuppressWarnings("unchecked")

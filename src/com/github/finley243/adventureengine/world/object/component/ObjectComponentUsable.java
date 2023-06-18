@@ -2,8 +2,8 @@ package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
+import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -11,19 +11,16 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateUsable;
-import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectComponentUsable extends ObjectComponent {
 
-    private final String templateID;
     private Actor user;
 
-    public ObjectComponentUsable(String ID, WorldObject object, String templateID) {
+    public ObjectComponentUsable(String ID, WorldObject object) {
         super(ID, object);
-        this.templateID = templateID;
     }
 
     @Override
@@ -32,7 +29,7 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     public ObjectComponentTemplateUsable getTemplateUsable() {
-        return (ObjectComponentTemplateUsable) getObject().game().data().getObjectComponentTemplate(templateID);
+        return (ObjectComponentTemplateUsable) getObject().getTemplate().getComponents().get(getID());
     }
 
     public Actor getUser() {

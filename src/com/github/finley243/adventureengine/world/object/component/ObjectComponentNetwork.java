@@ -12,11 +12,8 @@ import java.util.List;
 
 public class ObjectComponentNetwork extends ObjectComponent {
 
-    private final String templateID;
-
-    public ObjectComponentNetwork(String ID, WorldObject object, String templateID) {
+    public ObjectComponentNetwork(String ID, WorldObject object) {
         super(ID, object);
-        this.templateID = templateID;
     }
 
     @Override
@@ -25,7 +22,7 @@ public class ObjectComponentNetwork extends ObjectComponent {
     }
 
     public ObjectComponentTemplateNetwork getTemplateNetwork() {
-        return (ObjectComponentTemplateNetwork) getObject().game().data().getObjectComponentTemplate(templateID);
+        return (ObjectComponentTemplateNetwork) getObject().getTemplate().getComponents().get(getID());
     }
 
     @Override

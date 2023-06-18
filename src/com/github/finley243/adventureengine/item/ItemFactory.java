@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.item.template.*;
 public class ItemFactory {
 
 	public static Item create(Game game, String statsID) {
-		return create(game, game.data().getItem(statsID));
+		return create(game, game.data().getItemTemplate(statsID));
 	}
 	
 	public static Item create(Game game, ItemTemplate stats) {
@@ -18,7 +18,7 @@ public class ItemFactory {
 	}
 
 	public static void load(Game game, String statsID, String ID) {
-		create(game, game.data().getItem(statsID), ID);
+		create(game, game.data().getItemTemplate(statsID), ID);
 	}
 
 	private static Item create(Game game, ItemTemplate stats, String ID) {

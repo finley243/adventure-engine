@@ -40,7 +40,7 @@ public class LootTableEntry {
 					}
 				}
 			} else {
-				if (game.data().getItem(referenceID).hasState()) {
+				if (game.data().getItemTemplate(referenceID).hasState()) {
 					for (int i = 0; i < count; i++) {
 						items.put(ItemFactory.create(game, referenceID), 1);
 					}

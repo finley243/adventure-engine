@@ -14,11 +14,8 @@ import java.util.List;
 
 public class ObjectComponentLink extends ObjectComponent {
 
-    private final String templateID;
-
-    public ObjectComponentLink(String ID, WorldObject object, String templateID) {
+    public ObjectComponentLink(String ID, WorldObject object) {
         super(ID, object);
-        this.templateID = templateID;
     }
 
     @Override
@@ -27,7 +24,7 @@ public class ObjectComponentLink extends ObjectComponent {
     }
 
     public ObjectComponentTemplateLink getTemplateLink() {
-        return (ObjectComponentTemplateLink) getObject().game().data().getObjectComponentTemplate(templateID);
+        return (ObjectComponentTemplateLink) getObject().getTemplate().getComponents().get(getID());
     }
 
     public WorldObject getLinkedObject() {

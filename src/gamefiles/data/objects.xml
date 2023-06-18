@@ -1,21 +1,30 @@
 <data>
     <object id="door_basic">
         <name>door</name>
-        <component id="door_link" template="door_link"/>
+        <component id="door_link" type="link" movable="true" visible="false"/>
     </object>
     <object id="door_fake">
         <name>door</name>
     </object>
     <object id="door_locked">
         <name>door</name>
-        <component id="door_link" template="door_link_locked"/>
+        <component id="door_link" type="link" movable="true" visible="false">
+            <condition type="boolean" invert="true">
+                <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+            </condition>
+        </component>
         <localVar name="locked" dataType="boolean" value="true"/>
         <action template="lock_key"/>
         <action template="lock_pick"/>
     </object>
     <object id="chair_plastic">
         <name>plastic chair</name>
-        <component id="chair" template="chair"/>
+        <component id="chair" type="usable">
+            <startPhrase>sit</startPhrase>
+            <endPhrase>getUp</endPhrase>
+            <startPrompt>Sit</startPrompt>
+            <endPrompt>Stand</endPrompt>
+        </component>
     </object>
     <object id="counter">
         <name>counter</name>
@@ -28,31 +37,59 @@
     </object>
     <object id="garbage_bin">
         <name>garbage bin</name>
-        <component id="container" template="garbage_bin_container"/>
+        <component id="inventory" type="inventory">
+            <inventory>
+                <table countMin="0" countMax="3">junk_random</table>
+            </inventory>
+        </component>
     </object>
     <object id="store_shelf_snacks">
         <name>snacks shelf</name>
-        <component id="container" template="store_shelf_snacks_container"/>
+        <component id="inventory" type="inventory">
+            <inventory>
+                <table>store_snacks</table>
+            </inventory>
+        </component>
     </object>
     <object id="store_shelf_meals">
         <name>meal shelf</name>
-        <component id="container" template="store_shelf_snacks_container"/>
+        <component id="inventory" type="inventory">
+            <inventory>
+                <table>store_snacks</table>
+            </inventory>
+        </component>
     </object>
     <object id="store_shelf_alcohol">
         <name>alcohol shelf</name>
-        <component id="container" template="store_shelf_snacks_container"/>
+        <component id="inventory" type="inventory">
+            <inventory>
+                <table>store_snacks</table>
+            </inventory>
+        </component>
     </object>
     <object id="store_shelf_medicine">
         <name>medicine shelf</name>
-        <component id="container" template="store_shelf_snacks_container"/>
+        <component id="inventory" type="inventory">
+            <inventory>
+                <table>store_snacks</table>
+            </inventory>
+        </component>
     </object>
     <object id="store_cooler_soft_drinks">
         <name>soft drinks cooler</name>
-        <component id="container" template="store_cooler_soft_drinks_container"/>
+        <component id="inventory" type="inventory">
+            <inventory>
+                <table>store_soft_drinks</table>
+            </inventory>
+        </component>
     </object>
     <object id="store_cooler_alcohol">
         <name>alcohol cooler</name>
-        <component id="container" template="store_cooler_soft_drinks_container"/>
+        <component id="inventory" type="inventory">
+            <inventory>
+                <table>store_soft_drinks</table>
+            </inventory>
+        </component>
     </object>
     <object id="vending_machine_nitron">
         <name>Nitron Cola vending machine</name>
@@ -65,7 +102,15 @@
     </object>
     <object id="motorcycle">
         <name>motorcycle</name>
-        <component id="controller" template="vehicle_motorcycle"/>
-        <component id="seat" template="motorcycle_seat"/>
+        <component id="controller" type="vehicle" restricted="true" vehicleType="motorcycle">
+            <moveMenuName>Drive</moveMenuName>
+        </component>
+        <component id="seat" type="usable">
+            <startPhrase>sit</startPhrase>
+            <endPhrase>getUp</endPhrase>
+            <startPrompt>Sit</startPrompt>
+            <endPrompt>Stand</endPrompt>
+            <exposedComponent>controller</exposedComponent>
+        </component>
     </object>
 </data>

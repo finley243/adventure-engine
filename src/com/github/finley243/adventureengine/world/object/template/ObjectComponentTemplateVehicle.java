@@ -8,8 +8,8 @@ public class ObjectComponentTemplateVehicle extends ObjectComponentTemplate {
     // Menu category under which move actions will be placed
     private final String moveMenuName;
 
-    public ObjectComponentTemplateVehicle(Game game, String ID, boolean startEnabled, boolean actionsRestricted, String name, String vehicleType, String moveMenuName) {
-        super(game, ID, startEnabled, actionsRestricted, name);
+    public ObjectComponentTemplateVehicle(Game game, boolean startEnabled, boolean actionsRestricted, String name, String vehicleType, String moveMenuName) {
+        super(game, startEnabled, actionsRestricted, name);
         this.vehicleType = vehicleType;
         this.moveMenuName = moveMenuName;
     }

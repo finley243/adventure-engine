@@ -21,8 +21,8 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
     private final Set<String> componentsExposed;
     private final List<ActionCustom.CustomActionHolder> usingActions;
 
-    public ObjectComponentTemplateUsable(Game game, String ID, boolean startEnabled, boolean actionsRestricted, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, boolean userCanPerformLocalActions, boolean userCanPerformParentActions, Set<String> componentsExposed, List<ActionCustom.CustomActionHolder> usingActions) {
-        super(game, ID, startEnabled, actionsRestricted, name);
+    public ObjectComponentTemplateUsable(Game game, boolean startEnabled, boolean actionsRestricted, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, boolean userCanPerformLocalActions, boolean userCanPerformParentActions, Set<String> componentsExposed, List<ActionCustom.CustomActionHolder> usingActions) {
+        super(game, startEnabled, actionsRestricted, name);
         this.startPhrase = startPhrase;
         this.endPhrase = endPhrase;
         this.startPrompt = startPrompt;

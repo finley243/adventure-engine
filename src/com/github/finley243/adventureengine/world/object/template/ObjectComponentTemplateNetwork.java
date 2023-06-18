@@ -6,8 +6,8 @@ public class ObjectComponentTemplateNetwork extends ObjectComponentTemplate {
 
     private final String networkID;
 
-    public ObjectComponentTemplateNetwork(Game game, String ID, boolean startEnabled, boolean actionsRestricted, String name, String networkID) {
-        super(game, ID, startEnabled, actionsRestricted, name);
+    public ObjectComponentTemplateNetwork(Game game, boolean startEnabled, boolean actionsRestricted, String name, String networkID) {
+        super(game, startEnabled, actionsRestricted, name);
         this.networkID = networkID;
     }
 
