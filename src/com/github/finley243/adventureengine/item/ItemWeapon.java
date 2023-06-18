@@ -1,10 +1,13 @@
 package com.github.finley243.adventureengine.item;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionModRemove;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.component.EffectComponent;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -35,10 +38,12 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	private final StatString damageType;
 	private final StatBoolean isSilenced;
 	private final StatStringSet targetEffects;
+	private final Map<String, List<ItemWeaponMod>> mods;
 	private ItemAmmo ammoType;
 	private int ammoCount;
 
-	private final Map<Effect, List<Integer>> effects;
+	// TODO - EffectComponent round updates (handled by current inventory owner, either actor or area)
+	private final EffectComponent effectComponent;
 	
 	public ItemWeapon(Game game, String ID, String templateID) {
 		super(game, ID);
@@ -55,9 +60,11 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		this.damageType = new StatString("damageType", this);
 		this.isSilenced = new StatBoolean("isSilenced", this, false);
 		this.targetEffects = new StatStringSet("targetEffects", this);
+		this.mods = new HashMap<>();
 		this.ammoType = null;
 		this.ammoCount = 0;
-		this.effects = new HashMap<>();
+		//this.effects = new HashMap<>();
+		this.effectComponent = new EffectComponent(game, this, new Context(game, game.data().getPlayer(), game.data().getPlayer(), this));
 	}
 
 	@Override
@@ -187,6 +194,37 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return attackTypes.value(getWeaponClass().getAttackTypes());
 	}
 
+	public EffectComponent getEffectComponent() {
+		return effectComponent;
+	}
+
+	public boolean canInstallMod(ItemWeaponMod mod) {
+		String modSlot = mod.getWeaponModTemplate().getModSlot();
+		return getWeaponTemplate().getModSlots().containsKey(modSlot) && (!mods.containsKey(modSlot) || mods.get(modSlot).size() < getWeaponTemplate().getModSlots().get(modSlot));
+	}
+
+	public void installMod(ItemWeaponMod mod) {
+		for (String effectID : mod.getWeaponModTemplate().getWeaponEffects()) {
+			effectComponent.addEffect(effectID);
+		}
+		String modSlot = mod.getWeaponModTemplate().getModSlot();
+		if (!mods.containsKey(modSlot)) {
+			mods.put(modSlot, new ArrayList<>());
+		}
+		mods.get(modSlot).add(mod);
+	}
+
+	public void removeMod(ItemWeaponMod mod) {
+		for (String effectID : mod.getWeaponModTemplate().getWeaponEffects()) {
+			effectComponent.removeEffect(effectID);
+		}
+		String modSlot = mod.getWeaponModTemplate().getModSlot();
+		mods.get(modSlot).remove(mod);
+		if (mods.get(modSlot).isEmpty()) {
+			mods.remove(modSlot);
+		}
+	}
+
 	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
@@ -196,6 +234,17 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		if (getClipSize() > 0) {
 			for (String current : getWeaponClass().getAmmoTypes()) {
 				actions.add(new ActionWeaponReload(this, (ItemAmmo) ItemFactory.create(game(), current)));
+			}
+		}
+		return actions;
+	}
+
+	@Override
+	public List<Action> inventoryActions(Actor subject) {
+		List<Action> actions = super.inventoryActions(subject);
+		for (List<ItemWeaponMod> modList : mods.values()) {
+			for (ItemWeaponMod mod : modList) {
+				actions.add(new ActionModRemove(this, mod));
 			}
 		}
 		return actions;
@@ -299,7 +348,8 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 
 	@Override
 	public void onStatChange(String name) {
-		if (ammoCount > getClipSize()) {
+		System.out.println("Weapon stat change: " + name);
+		if ("clip_size".equals(name) && ammoCount > getClipSize()) {
 			int difference = ammoCount - getClipSize();
 			ammoCount = getClipSize();
 			if (getEquippedActor() != null) {
@@ -314,33 +364,6 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 			ammoCount = MathUtils.bound(ammoCount + amount, 0, getClipSize());
 		} else {
 			super.modStateInteger(name, amount);
-		}
-	}
-
-	public void addEffect(Effect effect) {
-		if (effect.isInstant()) {
-			effect.start(this);
-			effect.end(this);
-		} else {
-			if (!effects.containsKey(effect)) {
-				effects.put(effect, new ArrayList<>());
-			}
-			if (effect.isStackable() || !effects.get(effect).isEmpty()) {
-				effects.get(effect).add(0);
-				effect.start(this);
-			} else {
-				effects.get(effect).set(0, 0);
-			}
-		}
-	}
-
-	public void removeEffect(Effect effect) {
-		if (effects.containsKey(effect)) {
-			effect.end(this);
-			effects.get(effect).remove(0);
-			if (effects.get(effect).isEmpty()) {
-				effects.remove(effect);
-			}
 		}
 	}
 

@@ -57,6 +57,7 @@
             <item count="20">ammo_pistol</item>
             <item>rifle_auto</item>
             <item count="50">ammo_rifle</item>
+            <item>mag_extended_pistol</item>
         </inventory>
     </actor>
     <actor id="stratis_receptionist" parent="default" hp="40" faction="stratis_hotel_staff" dialogueStart="stratis_receptionist_start">

@@ -696,7 +696,13 @@ public class DataLoader {
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
                 Set<String> weaponTargetEffects = LoadUtils.setOfTags(itemElement, "targetEffect");
-                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
+                Map<String, Integer> modSlots = new HashMap<>();
+                for (Element modSlotElement : LoadUtils.directChildrenWithName(itemElement, "modSlot")) {
+                    String slotName = LoadUtils.attribute(modSlotElement, "name", null);
+                    int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
+                    modSlots.put(slotName, slotCount);
+                }
+                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
             }
             case "weaponMod" -> {
                 String modSlot = LoadUtils.attribute(itemElement, "modSlot", null);
@@ -727,7 +733,7 @@ public class DataLoader {
     private static Effect loadEffect(Game game, Element effectElement) {
         if (effectElement == null) return null;
         String ID = LoadUtils.attribute(effectElement, "id", null);
-        boolean manualRemoval = LoadUtils.attributeBool(effectElement, "isPermanent", false);
+        boolean manualRemoval = LoadUtils.attributeBool(effectElement, "permanent", false);
         String effectType = LoadUtils.attribute(effectElement, "type", null);
         int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
         boolean stackable = LoadUtils.attributeBool(effectElement, "stack", true);

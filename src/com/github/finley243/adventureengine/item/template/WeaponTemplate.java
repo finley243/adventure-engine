@@ -25,10 +25,16 @@ public class WeaponTemplate extends ItemTemplate {
 	private final boolean silenced;
 	private final String damageType;
 	private final Set<String> targetEffects;
+	private final Map<String, Integer> modSlots;
 
-	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, float accuracyBonus, float armorMult, boolean silenced, String damageType, Set<String> targetEffects) {
+	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, float accuracyBonus, float armorMult, boolean silenced, String damageType, Set<String> targetEffects, Map<String, Integer> modSlots) {
 		super(game, ID, name, description, scripts, customActions, price);
 		if (weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null: " + ID);
+		for (Map.Entry<String, Integer> entry : modSlots.entrySet()) {
+			if (entry.getValue() <= 0) {
+				throw new IllegalArgumentException("Specified mod slot must have a count greater than or equal to 1: " + ID + " - slot: " + entry.getKey());
+			}
+		}
 		this.weaponClass = weaponClass;
 		this.damage = damage;
 		this.rate = rate;
@@ -40,6 +46,7 @@ public class WeaponTemplate extends ItemTemplate {
 		this.silenced = silenced;
 		this.damageType = damageType;
 		this.targetEffects = targetEffects;
+		this.modSlots = modSlots;
 	}
 
 	@Override
@@ -89,6 +96,10 @@ public class WeaponTemplate extends ItemTemplate {
 
 	public Set<String> getTargetEffects() {
 		return targetEffects;
+	}
+
+	public Map<String, Integer> getModSlots() {
+		return modSlots;
 	}
 
 	@Override

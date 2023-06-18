@@ -28,13 +28,13 @@ public class ItemAmmo extends Item {
 
     public void onLoad(ItemWeapon weapon) {
         for (String effectID : getAmmoTemplate().getWeaponEffects()) {
-            weapon.addEffect(game().data().getEffect(effectID));
+            weapon.getEffectComponent().addEffect(effectID);
         }
     }
 
     public void onUnload(ItemWeapon weapon) {
         for (String effectID : getAmmoTemplate().getWeaponEffects()) {
-            weapon.removeEffect(game().data().getEffect(effectID));
+            weapon.getEffectComponent().removeEffect(effectID);
         }
     }
 

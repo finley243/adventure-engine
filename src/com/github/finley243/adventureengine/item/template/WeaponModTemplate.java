@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,10 @@ public class WeaponModTemplate extends ItemTemplate {
 
     @Override
     public Set<String> getTags() {
-        return null;
+        Set<String> tags = new HashSet<>();
+        tags.add("weapon_mod");
+        tags.add("weapon_mod_slot_" + modSlot);
+        return tags;
     }
 
     public String getModSlot() {

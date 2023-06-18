@@ -64,7 +64,7 @@ public class ActionWeaponReload extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(LangUtils.titleCase(ammoType.getName()), canChoose(subject), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), "reload (" + weapon.getAmmoRemaining() + "/" + weapon.getClipSize() + ")"}, new String[]{"reload " + weapon.getName() + " with " + LangUtils.pluralizeNoun(ammoType.getName())});
+		return new MenuChoice(LangUtils.titleCase(ammoType.getName()), canChoose(subject), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), "Reload (" + weapon.getAmmoRemaining() + "/" + weapon.getClipSize() + ")"}, new String[]{"reload " + weapon.getName() + " with " + LangUtils.pluralizeNoun(ammoType.getName())});
 	}
 
 	@Override

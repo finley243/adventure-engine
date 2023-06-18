@@ -19,12 +19,14 @@
         <damage base="10" crit="5"/>
         <rate>2</rate>
         <clipSize>12</clipSize>
+        <modSlot name="pistol_mag"/>
     </item>
     <item type="weapon" id="pistol_heavy" price="50" class="pistol">
         <name>heavy pistol</name>
         <damage base="14" crit="6"/>
         <rate>2</rate>
         <clipSize>6</clipSize>
+        <modSlot name="pistol_mag"/>
     </item>
     <item type="weapon" id="rifle_auto" price="90" class="assault_rifle">
         <name>auto rifle</name>
