@@ -744,16 +744,16 @@ public class DataLoader {
         Script scriptRemove = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRemove"));
         Script scriptRound = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRound"));
         switch (effectType) {
-            case "mod" -> {
+            case "add" -> {
                 String statMod = LoadUtils.attribute(effectElement, "stat", null);
                 String statModValue = LoadUtils.attribute(effectElement, "amount", "0");
                 boolean statModIsFloat = statModValue.contains(".");
                 if (statModIsFloat) {
                     float statModValueFloat = Float.parseFloat(statModValue);
-                    return new EffectStatModFloat(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueFloat);
+                    return new EffectStatAddFloat(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueFloat);
                 } else {
                     int statModValueInt = Integer.parseInt(statModValue);
-                    return new EffectStatModInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueInt);
+                    return new EffectStatAddInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueInt);
                 }
             }
             case "mult" -> {

@@ -5,6 +5,6 @@
     <effect id="food_basic">
         <scriptAdd type="modifyState" state="heal" value="10"/>
     </effect>
-    <effect id="armor_medium" type="mod" stat="damage_resist_physical" amount="5" permanent="true"/>
-    <effect id="mag_extended_pistol_effect" type="mod" stat="clip_size" amount="6" permanent="true"/>
+    <effect id="armor_medium" type="add" stat="damage_resist_physical" amount="5" permanent="true"/>
+    <effect id="mag_extended_pistol_effect" type="add" stat="clip_size" amount="6" permanent="true"/>
 </data>
