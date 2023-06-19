@@ -1,12 +1,12 @@
 <data>
-    <weaponClass id="pistol" isRanged="true" isTwoHanded="false" skill="handguns">
+    <weaponClass id="pistol" isRanged="true" isTwoHanded="false" isLoud="true" skill="handguns">
         <name>pistol</name>
         <range>CLOSE</range>
         <ammo>ammo_pistol</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
     </weaponClass>
-    <weaponClass id="smg" isRanged="true" isTwoHanded="false" skill="handguns">
+    <weaponClass id="smg" isRanged="true" isTwoHanded="false" isLoud="true" skill="handguns">
         <name>SMG</name>
         <range>CLOSE</range>
         <ammo>ammo_pistol</ammo>
@@ -14,14 +14,14 @@
         <attackType>targeted_ranged</attackType>
         <attackType>autofire</attackType>
     </weaponClass>
-    <weaponClass id="shotgun" isRanged="true" isTwoHanded="true" skill="long_arms">
+    <weaponClass id="shotgun" isRanged="true" isTwoHanded="true" isLoud="true" skill="long_arms">
         <name>shotgun</name>
         <range>FAR</range>
         <ammo>ammo_rifle</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
     </weaponClass>
-    <weaponClass id="assault_rifle" isRanged="true" isTwoHanded="true" skill="long_arms">
+    <weaponClass id="assault_rifle" isRanged="true" isTwoHanded="true" isLoud="true" skill="long_arms">
         <name>assault rifle</name>
         <range>FAR</range>
         <ammo>ammo_rifle</ammo>
@@ -29,38 +29,38 @@
         <attackType>targeted_ranged</attackType>
         <attackType>autofire</attackType>
     </weaponClass>
-    <weaponClass id="sniper_rifle" isRanged="true" isTwoHanded="true" skill="long_arms">
+    <weaponClass id="sniper_rifle" isRanged="true" isTwoHanded="true" isLoud="true" skill="long_arms">
         <name>sniper rifle</name>
         <range>DISTANT</range>
         <ammo>ammo_rifle</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
     </weaponClass>
-    <weaponClass id="knife" isRanged="false" isTwoHanded="false" skill="melee">
+    <weaponClass id="knife" isRanged="false" isTwoHanded="false" isLoud="false" skill="melee">
         <name>knife</name>
         <range>NEAR</range>
         <attackType>basic_melee</attackType>
         <attackType>targeted_melee</attackType>
     </weaponClass>
-    <weaponClass id="sword" isRanged="false" isTwoHanded="true" skill="melee">
+    <weaponClass id="sword" isRanged="false" isTwoHanded="true" isLoud="false" skill="melee">
         <name>sword</name>
         <range>NEAR</range>
         <attackType>basic_melee</attackType>
         <attackType>targeted_melee</attackType>
     </weaponClass>
-    <weaponClass id="club" isRanged="false" isTwoHanded="true" skill="melee">
+    <weaponClass id="club" isRanged="false" isTwoHanded="true" isLoud="false" skill="melee">
         <name>club</name>
         <range>NEAR</range>
         <attackType>basic_melee</attackType>
         <attackType>targeted_melee</attackType>
     </weaponClass>
-    <weaponClass id="axe" isRanged="false" isTwoHanded="true" skill="melee">
+    <weaponClass id="axe" isRanged="false" isTwoHanded="true" isLoud="false" skill="melee">
         <name>axe</name>
         <range>NEAR</range>
         <attackType>basic_melee</attackType>
         <attackType>targeted_melee</attackType>
     </weaponClass>
-    <weaponClass id="grenade" isRanged="true" isTwoHanded="false" skill="throwing">
+    <weaponClass id="grenade" isRanged="true" isTwoHanded="false" isLoud="true" skill="throwing">
         <name>grenade</name>
         <range>CLOSE</range>
         <attackType>grenade</attackType>

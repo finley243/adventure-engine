@@ -34,10 +34,18 @@ public class WeaponAttackType {
     private final String hitPhraseRepeat;
     private final String hitOverallPhrase;
     private final String hitOverallPhraseRepeat;
+    private final String hitPhraseAudible;
+    private final String hitPhraseRepeatAudible;
+    private final String hitOverallPhraseAudible;
+    private final String hitOverallPhraseRepeatAudible;
     private final String missPhrase;
     private final String missPhraseRepeat;
     private final String missOverallPhrase;
     private final String missOverallPhraseRepeat;
+    private final String missPhraseAudible;
+    private final String missPhraseRepeatAudible;
+    private final String missOverallPhraseAudible;
+    private final String missOverallPhraseRepeatAudible;
     private final int ammoConsumed;
     private final WeaponConsumeType weaponConsumeType;
 
@@ -56,8 +64,9 @@ public class WeaponAttackType {
     private final float hitChanceMult;
     private final boolean canDodge;
     private final ActionAttack.AttackHitChanceType hitChanceType;
+    private final Boolean isLoudOverride;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, int ammoConsumed, WeaponConsumeType weaponConsumeType, Actor.Skill skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, int ammoConsumed, WeaponConsumeType weaponConsumeType, Actor.Skill skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType, Boolean isLoudOverride) {
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
@@ -65,10 +74,18 @@ public class WeaponAttackType {
         this.hitPhraseRepeat = hitPhraseRepeat;
         this.hitOverallPhrase = hitOverallPhrase;
         this.hitOverallPhraseRepeat = hitOverallPhraseRepeat;
+        this.hitPhraseAudible = hitPhraseAudible;
+        this.hitPhraseRepeatAudible = hitPhraseRepeatAudible;
+        this.hitOverallPhraseAudible = hitOverallPhraseAudible;
+        this.hitOverallPhraseRepeatAudible = hitOverallPhraseRepeatAudible;
         this.missPhrase = missPhrase;
         this.missPhraseRepeat = missPhraseRepeat;
         this.missOverallPhrase = missOverallPhrase;
         this.missOverallPhraseRepeat = missOverallPhraseRepeat;
+        this.missPhraseAudible = missPhraseAudible;
+        this.missPhraseRepeatAudible = missPhraseRepeatAudible;
+        this.missOverallPhraseAudible = missOverallPhraseAudible;
+        this.missOverallPhraseRepeatAudible = missOverallPhraseRepeatAudible;
         this.ammoConsumed = ammoConsumed;
         this.weaponConsumeType = weaponConsumeType;
         this.skillOverride = skillOverride;
@@ -86,6 +103,7 @@ public class WeaponAttackType {
         this.hitChanceMult = hitChanceMult;
         this.canDodge = canDodge;
         this.hitChanceType = hitChanceType;
+        this.isLoudOverride = isLoudOverride;
     }
 
     public String getID() {
@@ -104,6 +122,7 @@ public class WeaponAttackType {
         int damage = damageOverride != null ? damageOverride : (int) (weapon.getDamage() * (damageMult + 1.0f));
         String damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getDamageType();
         float armorMult = armorMultOverride != null ? armorMultOverride : weapon.getArmorMult();
+        boolean isLoud = isLoudOverride != null ? isLoudOverride : weapon.isLoud();
         List<String> targetEffectsCombined = new ArrayList<>(targetEffects);
         if (!overrideTargetEffects) {
             targetEffectsCombined.addAll(weapon.getTargetEffects());
@@ -112,7 +131,7 @@ public class WeaponAttackType {
             case SINGLE -> {
                 for (AttackTarget target : subject.getVisibleAttackTargets()) {
                     if (!target.equals(subject) && target.canBeAttacked()) {
-                        actions.add(new ActionAttackBasic(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType));
+                        actions.add(new ActionAttackBasic(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType, isLoud));
                     }
                 }
             }
@@ -120,7 +139,7 @@ public class WeaponAttackType {
                 for (Actor target : subject.getVisibleActors()) {
                     if (!target.equals(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
-                            actions.add(new ActionAttackLimb(weapon, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType));
+                            actions.add(new ActionAttackLimb(weapon, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType, isLoud));
                         }
                     }
                 }
@@ -128,7 +147,7 @@ public class WeaponAttackType {
             case SPREAD -> {
                 // Possibly switch to only areas visible to the subject?
                 for (Area target : subject.getArea().getLineOfSightAreas()) {
-                    actions.add(new ActionAttackArea(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType));
+                    actions.add(new ActionAttackArea(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType, isLoud));
                 }
             }
         }

@@ -1145,11 +1145,12 @@ public class DataLoader {
         String name = LoadUtils.singleTag(weaponClassElement, "name", null);
         boolean isRanged = LoadUtils.attributeBool(weaponClassElement, "isRanged", false);
         boolean isTwoHanded = LoadUtils.attributeBool(weaponClassElement, "isTwoHanded", false);
+        boolean isLoud = LoadUtils.attributeBool(weaponClassElement, "isLoud", false);
         Actor.Skill skill = LoadUtils.attributeEnum(weaponClassElement, "skill", Actor.Skill.class, Actor.Skill.MELEE);
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(weaponClassElement, "range", AreaLink.DistanceCategory.class);
         Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
         Set<String> attackTypes = LoadUtils.setOfTags(weaponClassElement, "attackType");
-        return new WeaponClass(ID, name, isRanged, isTwoHanded, skill, primaryRanges, ammoTypes, attackTypes);
+        return new WeaponClass(ID, name, isRanged, isTwoHanded, isLoud, skill, primaryRanges, ammoTypes, attackTypes);
     }
 
     private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) {
@@ -1160,10 +1161,18 @@ public class DataLoader {
         String hitPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "hitPhraseRepeat", null);
         String hitOverallPhrase = LoadUtils.singleTag(attackTypeElement, "hitOverallPhrase", null);
         String hitOverallPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "hitOverallPhraseRepeat", null);
+        String hitPhraseAudible = LoadUtils.singleTag(attackTypeElement, "hitPhraseAudible", null);
+        String hitPhraseRepeatAudible = LoadUtils.singleTag(attackTypeElement, "hitPhraseRepeatAudible", null);
+        String hitOverallPhraseAudible = LoadUtils.singleTag(attackTypeElement, "hitOverallPhraseAudible", null);
+        String hitOverallPhraseRepeatAudible = LoadUtils.singleTag(attackTypeElement, "hitOverallPhraseRepeatAudible", null);
         String missPhrase = LoadUtils.singleTag(attackTypeElement, "missPhrase", null);
         String missPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "missPhraseRepeat", null);
         String missOverallPhrase = LoadUtils.singleTag(attackTypeElement, "missOverallPhrase", null);
         String missOverallPhraseRepeat = LoadUtils.singleTag(attackTypeElement, "missOverallPhraseRepeat", null);
+        String missPhraseAudible = LoadUtils.singleTag(attackTypeElement, "missPhraseAudible", null);
+        String missPhraseRepeatAudible = LoadUtils.singleTag(attackTypeElement, "missPhraseRepeatAudible", null);
+        String missOverallPhraseAudible = LoadUtils.singleTag(attackTypeElement, "missOverallPhraseAudible", null);
+        String missOverallPhraseRepeatAudible = LoadUtils.singleTag(attackTypeElement, "missOverallPhraseRepeatAudible", null);
         int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
         WeaponAttackType.WeaponConsumeType weaponConsumeType = LoadUtils.attributeEnum(attackTypeElement, "weaponConsumeType", WeaponAttackType.WeaponConsumeType.class, WeaponAttackType.WeaponConsumeType.NONE);
         Actor.Skill skillOverride = LoadUtils.attributeEnum(attackTypeElement, "skill", Actor.Skill.class, null);
@@ -1181,7 +1190,8 @@ public class DataLoader {
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
         boolean canDodge = LoadUtils.attributeBool(attackTypeElement, "canDodge", false);
         ActionAttack.AttackHitChanceType hitChanceType = LoadUtils.attributeEnum(attackTypeElement, "hitChanceType", ActionAttack.AttackHitChanceType.class, ActionAttack.AttackHitChanceType.INDEPENDENT);
-        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, ammoConsumed, weaponConsumeType, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChanceMult, canDodge, hitChanceType);
+        Boolean isLoudOverride = LoadUtils.attributeBool(attackTypeElement, "isLoudOverride", null);
+        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, ammoConsumed, weaponConsumeType, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChanceMult, canDodge, hitChanceType, isLoudOverride);
     }
 
     private static Network loadNetwork(Element networkElement) {

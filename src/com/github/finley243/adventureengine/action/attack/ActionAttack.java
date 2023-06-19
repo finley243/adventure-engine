@@ -36,10 +36,18 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final String hitPhraseRepeat;
     private final String hitOverallPhrase;
     private final String hitOverallPhraseRepeat;
+    private final String hitPhraseAudible;
+    private final String hitPhraseRepeatAudible;
+    private final String hitOverallPhraseAudible;
+    private final String hitOverallPhraseRepeatAudible;
     private final String missPhrase;
     private final String missPhraseRepeat;
     private final String missOverallPhrase;
     private final String missOverallPhraseRepeat;
+    private final String missPhraseAudible;
+    private final String missPhraseRepeatAudible;
+    private final String missOverallPhraseAudible;
+    private final String missOverallPhraseRepeatAudible;
     private final Actor.Skill attackSkill;
     private final float baseHitChanceMin;
     private final float baseHitChanceMax;
@@ -55,8 +63,9 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final float hitChanceMult;
     private final boolean canDodge;
     private final AttackHitChanceType hitChanceType;
+    private final boolean isLoud;
 
-    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, Actor.Skill attackSkill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType) {
+    public ActionAttack(Noun weaponNoun, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, Actor.Skill attackSkill, float baseHitChanceMin, float baseHitChanceMax, float hitChanceBonus, int ammoConsumed, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType, boolean isLoud) {
         super(targets);
         this.weaponNoun = weaponNoun;
         this.targets = targets;
@@ -67,10 +76,18 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.hitPhraseRepeat = hitPhraseRepeat;
         this.hitOverallPhrase = hitOverallPhrase;
         this.hitOverallPhraseRepeat = hitOverallPhraseRepeat;
+        this.hitPhraseAudible = hitPhraseAudible;
+        this.hitPhraseRepeatAudible = hitPhraseRepeatAudible;
+        this.hitOverallPhraseAudible = hitOverallPhraseAudible;
+        this.hitOverallPhraseRepeatAudible = hitOverallPhraseRepeatAudible;
         this.missPhrase = missPhrase;
         this.missPhraseRepeat = missPhraseRepeat;
         this.missOverallPhrase = missOverallPhrase;
         this.missOverallPhraseRepeat = missOverallPhraseRepeat;
+        this.missPhraseAudible = missPhraseAudible;
+        this.missPhraseRepeatAudible = missPhraseRepeatAudible;
+        this.missOverallPhraseAudible = missOverallPhraseAudible;
+        this.missOverallPhraseRepeatAudible = missOverallPhraseRepeatAudible;
         this.attackSkill = attackSkill;
         this.baseHitChanceMin = baseHitChanceMin;
         this.baseHitChanceMax = baseHitChanceMax;
@@ -86,6 +103,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.hitChanceMult = hitChanceMult;
         this.canDodge = canDodge;
         this.hitChanceType = hitChanceType;
+        this.isLoud = isLoud;
     }
 
     public abstract void consumeAmmo(Actor subject);
@@ -187,7 +205,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
         int damage = damage();
         TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), attackContext, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), Phrases.get(getHitPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
         target.damage(damageData);
         subject.triggerScript("on_attack_success", (target instanceof Actor ? (Actor) target : subject));
@@ -196,20 +214,20 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
         TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), attackContext, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), Phrases.get(getMissPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
         subject.triggerScript("on_attack_failure", (target instanceof Actor ? (Actor) target : subject));
     }
 
     @Override
     public void onSuccessOverall(Actor subject, int repeatActionCount) {
         TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeaponNoun()).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitOverallPhrase(repeatActionCount)), attackContext, this, null, subject, null));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitOverallPhrase(repeatActionCount)), Phrases.get(getHitOverallPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, null));
     }
 
     @Override
     public void onFailOverall(Actor subject, int repeatActionCount) {
         TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeaponNoun()).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissOverallPhrase(repeatActionCount)), attackContext, this, null, subject, null));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissOverallPhrase(repeatActionCount)), Phrases.get(getMissOverallPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, null));
     }
 
     @Override
@@ -261,6 +279,22 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     private String getMissOverallPhrase(int repeatActionCount) {
         return repeatActionCount > 0 && missOverallPhraseRepeat != null ? missOverallPhraseRepeat : missOverallPhrase;
+    }
+
+    private String getHitPhraseAudible(int repeatActionCount) {
+        return repeatActionCount > 0 && hitPhraseRepeatAudible != null ? hitPhraseRepeatAudible : hitPhraseAudible;
+    }
+
+    private String getMissPhraseAudible(int repeatActionCount) {
+        return repeatActionCount > 0 && missPhraseRepeatAudible != null ? missPhraseRepeatAudible : missPhraseAudible;
+    }
+
+    private String getHitOverallPhraseAudible(int repeatActionCount) {
+        return repeatActionCount > 0 && hitOverallPhraseRepeatAudible != null ? hitOverallPhraseRepeatAudible : hitOverallPhraseAudible;
+    }
+
+    private String getMissOverallPhraseAudible(int repeatActionCount) {
+        return repeatActionCount > 0 && missOverallPhraseRepeatAudible != null ? missOverallPhraseRepeatAudible : missOverallPhraseAudible;
     }
 
 }

@@ -62,7 +62,6 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		this.mods = new HashMap<>();
 		this.ammoType = null;
 		this.ammoCount = 0;
-		//this.effects = new HashMap<>();
 		this.effectComponent = new EffectComponent(game, this, new Context(game, game.data().getPlayer(), game.data().getPlayer(), this));
 	}
 
@@ -176,9 +175,12 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		setLoadedAmmoType(null);
 	}
 
-	// TODO - Use isSilenced value to determine isLoud parameter of attack events
 	public boolean isSilenced() {
 		return isSilenced.value(getWeaponTemplate().isSilenced());
+	}
+
+	public boolean isLoud() {
+		return getWeaponClass().isLoud() && !isSilenced();
 	}
 
 	public Set<String> getAmmoTypes() {
@@ -347,7 +349,6 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 
 	@Override
 	public void onStatChange(String name) {
-		System.out.println("Weapon stat change: " + name);
 		if ("clip_size".equals(name) && ammoCount > getClipSize()) {
 			int difference = ammoCount - getClipSize();
 			ammoCount = getClipSize();
