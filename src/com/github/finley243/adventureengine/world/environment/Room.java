@@ -133,17 +133,17 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public int getValueInt(String name) {
+	public int getValueInt(String name, Context context) {
 		return 0;
 	}
 
 	@Override
-	public float getValueFloat(String name) {
+	public float getValueFloat(String name, Context context) {
 		return 0;
 	}
 
 	@Override
-	public boolean getValueBoolean(String name) {
+	public boolean getValueBoolean(String name, Context context) {
 		return switch (name) {
 			case "known" -> isKnown();
 			case "visited" -> hasVisited();
@@ -152,7 +152,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public String getValueString(String name) {
+	public String getValueString(String name, Context context) {
 		return switch (name) {
 			case "id" -> getID();
 			case "owner_faction" -> ownerFaction;
@@ -161,7 +161,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Set<String> getValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name, Context context) {
 		return null;
 	}
 

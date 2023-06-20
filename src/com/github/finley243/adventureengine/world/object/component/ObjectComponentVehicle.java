@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.object.component;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -25,8 +26,8 @@ public class ObjectComponentVehicle extends ObjectComponent {
     }
 
     public WorldObject getObjectOverride() {
-        if (getObject().getValueString(getID() + "_object_override") != null) {
-            return getObject().game().data().getObject(getObject().getValueString(getID() + "_object_override"));
+        if (getObject().getValueString(getID() + "_object_override", new Context(getObject().game(), getObject())) != null) {
+            return getObject().game().data().getObject(getObject().getValueString(getID() + "_object_override", new Context(getObject().game(), getObject())));
         }
         return null;
     }

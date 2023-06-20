@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.HashMap;
@@ -25,8 +26,20 @@ public class Context {
         this(game, subject, target, parentObject, null, new HashMap<>());
     }
 
+    public Context(Game game, WorldObject parentObject) {
+        this(game, null, null, parentObject, null, new HashMap<>());
+    }
+
     public Context(Game game, Actor subject, Actor target, Item parentItem) {
         this(game, subject, target, null, parentItem, new HashMap<>());
+    }
+
+    public Context(Game game, Item parentItem) {
+        this(game, null, null, null, parentItem, new HashMap<>());
+    }
+
+    public Context(Game game, Actor subject, AttackTarget attackTarget) {
+        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null);
     }
 
     public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Map<String, Expression> parameters) {

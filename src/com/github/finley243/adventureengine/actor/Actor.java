@@ -148,7 +148,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public void onNewGameInit() {
 		if (!startDead) {
-			HP = this.maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
+			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
 		}
 		for (String damageType : game().data().getDamageTypes()) {
 			this.damageResistance.put(damageType, new StatInt("damage_resist_" + damageType, this));
@@ -259,12 +259,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 	
-	public int getAttribute(Attribute attribute) {
-		return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+	public int getAttribute(Attribute attribute, Context context) {
+		return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context);
 	}
 
-	public int getSkill(Skill skill) {
-		return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX);
+	public int getSkill(Skill skill, Context context) {
+		return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX, context);
 	}
 	
 	public Scene getDialogueStart() {
@@ -275,11 +275,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return game().data().getFaction(getTemplate().getFaction());
 	}
 	
-	public boolean canMove() {
+	public boolean canMove(Context context) {
 		if (isUsingObject()) {
 			return false;
 		}
-		return canMove.value(true);
+		return canMove.value(true, context);
 	}
 
 	public boolean canPerformLocalActions() {
@@ -289,8 +289,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return true;
 	}
 
-	public boolean canDodge() {
-		return canDodge.value(true);
+	public boolean canDodge(Context context) {
+		return canDodge.value(true, context);
 	}
 
 	public boolean isInCover() {
@@ -327,26 +327,26 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public int getMaxHP() {
-		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
+		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
 	}
 
-	public int getDamageResistance(String damageType) {
-		return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST);
+	public int getDamageResistance(String damageType, Context context) {
+		return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, context);
 	}
 
 	public int getActionPoints() {
-		return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
+		return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS, new Context(game(), this, this));
 	}
 	
 	public void heal(int amount) {
 		if (amount < 0) throw new IllegalArgumentException();
 		amount = Math.min(amount, getMaxHP() - HP);
 		HP += amount;
-		TextContext context = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
+		TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 		if (SHOW_HP_CHANGES) {
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", context, null, null, this, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", textContext, null, null, this, null));
 		}
-		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, this, null));
+		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", textContext, null, null, this, null));
 	}
 
 	@Override
@@ -355,42 +355,42 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public void damage(Damage damage) {
+	public void damage(Damage damage, Context context) {
 		if (damage.getLimb() != null) {
-			damageLimb(damage, damage.getLimb());
+			damageLimb(damage, damage.getLimb(), context);
 		} else {
-			damageDirect(damage);
+			damageDirect(damage, context);
 		}
 	}
 
-	private void damageDirect(Damage damage) {
+	private void damageDirect(Damage damage, Context context) {
 		for (String effectID : damage.getTargetEffects()) {
 			effectComponent.addEffect(effectID);
 		}
 		int amount = damage.getAmount();
 		//amount -= apparelComponent.getDamageResistance(getTemplate().getDefaultApparelSlot(), damage.getType()) * damage.getArmorMult();
-		amount -= getDamageResistance(damage.getType()) * damage.getArmorMult();
+		amount -= getDamageResistance(damage.getType(), context) * damage.getArmorMult();
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;
 			kill();
 		} else {
 			triggerScript("on_damaged", this);
-			TextContext context = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
+			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", textContext, null, null, this, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, this, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", textContext, null, null, this, null));
 		}
 	}
 
-	private void damageLimb(Damage damage, Limb limb) {
+	private void damageLimb(Damage damage, Limb limb, Context context) {
 		for (String effectID : damage.getTargetEffects()) {
 			effectComponent.addEffect(effectID);
 		}
 		int amount = damage.getAmount();
 		//amount -= apparelComponent.getDamageResistance(limb.getApparelSlot(), damage.getType()) * damage.getArmorMult();
-		amount -= getDamageResistance(damage.getType()) * damage.getArmorMult();
+		amount -= getDamageResistance(damage.getType(), context) * damage.getArmorMult();
 		if (amount < 0) amount = 0;
 		if (amount > 0) {
 			limb.applyEffects(this);
@@ -402,11 +402,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			kill();
 		} else {
 			triggerScript("on_damaged", this);
-			TextContext context = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
+			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", context, null, null, this, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", textContext, null, null, this, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", context, null, null, this, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", textContext, null, null, this, null));
 		}
 	}
 	
@@ -576,7 +576,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		for (WorldObject visibleObject : getVisibleObjects()) {
 			actions.addAll(visibleObject.visibleActions(this));
 		}
-		if (canMove()) {
+		if (canMove(new Context(game(), this, this))) {
 			actions.addAll(getArea().getMoveActions(this, null, null, "Move"));
 		}
 		actions.addAll(getArea().getAreaActions(this));
@@ -798,40 +798,40 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public int getValueInt(String name) {
+	public int getValueInt(String name, Context context) {
 		if (name.startsWith("damage_resist_")) {
 			for (String damageType : game().data().getDamageTypes()) {
 				if (name.equals("damage_resist_" + damageType)) {
-					return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST);
+					return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, context);
 				}
 			}
 			return 0;
 		} else if (name.startsWith("attribute_")) {
 			for (Attribute attribute : Attribute.values()) {
 				if (name.equals("attribute_" + attribute.toString().toLowerCase())) {
-					return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+					return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context);
 				}
 			}
 			return 0;
 		} else if (name.startsWith("skill_")) {
 			for (Skill skill : Skill.values()) {
 				if (name.equals("skill_" + skill.toString().toLowerCase())) {
-					return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX);
+					return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX, context);
 				}
 			}
 			return 0;
 		}
 		return switch (name) {
-			case "max_hp" -> maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP);
+			case "max_hp" -> maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, context);
 			case "hp" -> HP;
-			case "action_points" -> actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS);
+			case "action_points" -> actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS, context);
 			case "money" -> money;
 			default -> 0;
 		};
 	}
 
 	@Override
-	public float getValueFloat(String name) {
+	public float getValueFloat(String name, Context context) {
 		if ("hp_proportion".equals(name)) {
 			return ((float) HP) / ((float) getMaxHP());
 		}
@@ -839,7 +839,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public boolean getValueBoolean(String name) {
+	public boolean getValueBoolean(String name, Context context) {
 		return switch (name) {
 			case "enabled" -> isEnabled;
 			case "sleeping" -> isSleeping;
@@ -849,14 +849,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "in_cover" -> isInCover();
 			case "dead" -> isDead;
 			case "active" -> isActive();
-			case "can_move" -> canMove();
-			case "can_dodge" -> canDodge();
+			case "can_move" -> canMove(context);
+			case "can_dodge" -> canDodge(context);
 			default -> false;
 		};
 	}
 
 	@Override
-	public String getValueString(String name) {
+	public String getValueString(String name, Context context) {
 		return switch (name) {
 			case "id" -> getID();
 			case "template_id" -> templateID;
@@ -867,7 +867,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public Set<String> getValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name, Context context) {
 		return null;
 	}
 

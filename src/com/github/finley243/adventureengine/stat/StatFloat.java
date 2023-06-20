@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
+import com.github.finley243.adventureengine.Context;
+
 public class StatFloat extends Stat {
 
     private float mod;
@@ -9,7 +11,7 @@ public class StatFloat extends Stat {
         super(name, target);
     }
 
-    public float value(float base, float min, float max) {
+    public float value(float base, float min, float max, Context context) {
         float computedValue = (base * (mult + 1.0f)) + mod;
         return Math.min(Math.max(computedValue, min), max);
     }

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.stat;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 
 public class StatInt extends Stat {
@@ -11,7 +12,7 @@ public class StatInt extends Stat {
         super(name, target);
     }
 
-    public int value(int base, int min, int max) {
+    public int value(int base, int min, int max, Context context) {
         int computedValue = Math.round(base * (mult + 1.0f)) + mod;
         return MathUtils.bound(computedValue, min, max);
     }

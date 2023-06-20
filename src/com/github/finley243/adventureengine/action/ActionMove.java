@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -9,7 +10,7 @@ public abstract class ActionMove extends Action {
 
     @Override
     public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && subject.canMove();
+        return super.canChoose(subject) && subject.canMove(new Context(subject.game(), subject, subject));
     }
 
     @Override

@@ -1,20 +1,21 @@
 package com.github.finley243.adventureengine.stat;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 
 import java.util.Set;
 
 public interface StatHolder {
 
-    int getValueInt(String name);
+    int getValueInt(String name, Context context);
 
-    float getValueFloat(String name);
+    float getValueFloat(String name, Context context);
 
-    boolean getValueBoolean(String name);
+    boolean getValueBoolean(String name, Context context);
 
-    String getValueString(String name);
+    String getValueString(String name, Context context);
 
-    Set<String> getValueStringSet(String name);
+    Set<String> getValueStringSet(String name, Context context);
 
     void setStateBoolean(String name, boolean value);
 

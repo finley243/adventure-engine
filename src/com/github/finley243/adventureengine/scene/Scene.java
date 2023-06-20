@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.scene;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -65,17 +64,17 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public int getValueInt(String name) {
+	public int getValueInt(String name, Context context) {
 		return 0;
 	}
 
 	@Override
-	public float getValueFloat(String name) {
+	public float getValueFloat(String name, Context context) {
 		return 0;
 	}
 
 	@Override
-	public boolean getValueBoolean(String name) {
+	public boolean getValueBoolean(String name, Context context) {
 		if ("triggered".equals(name)) {
 			return hasTriggered;
 		}
@@ -83,7 +82,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public String getValueString(String name) {
+	public String getValueString(String name, Context context) {
 		if ("id".equals(name)) {
 			return getID();
 		}
@@ -91,7 +90,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public Set<String> getValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name, Context context) {
 		return null;
 	}
 

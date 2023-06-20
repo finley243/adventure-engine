@@ -82,12 +82,12 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return getWeaponClass().isRanged();
 	}
 	
-	public int getDamage() {
-		return damage.value(getWeaponTemplate().getDamage(), 1, 1000);
+	public int getDamage(Context context) {
+		return damage.value(getWeaponTemplate().getDamage(), 1, 1000, context);
 	}
 	
-	public int getRate() {
-		return rate.value(getWeaponTemplate().getRate(), 1, 50);
+	public int getRate(Context context) {
+		return rate.value(getWeaponTemplate().getRate(), 1, 50, context);
 	}
 
 	public float getBaseHitChanceMin() {
@@ -98,37 +98,37 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return isRanged() ? HIT_CHANCE_BASE_RANGED_MAX : HIT_CHANCE_BASE_MELEE_MAX;
 	}
 	
-	public int getCritDamage() {
-		return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
+	public int getCritDamage(Context context) {
+		return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000, context);
 	}
 
-	public float getCritChance() {
-		return critChance.value(getWeaponTemplate().getCritChance(), 0.0f, 1.0f);
+	public float getCritChance(Context context) {
+		return critChance.value(getWeaponTemplate().getCritChance(), 0.0f, 1.0f, context);
 	}
 
-	public Set<AreaLink.DistanceCategory> getRanges() {
-		return ranges.valueEnum(getWeaponClass().getPrimaryRanges(), AreaLink.DistanceCategory.class);
+	public Set<AreaLink.DistanceCategory> getRanges(Context context) {
+		return ranges.valueEnum(getWeaponClass().getPrimaryRanges(), AreaLink.DistanceCategory.class, context);
 	}
 
 	// TODO - Change to accuracy multiplier?
-	public float getAccuracyBonus() {
-		return accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f);
+	public float getAccuracyBonus(Context context) {
+		return accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f, context);
 	}
 
-	public float getArmorMult() {
-		return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
+	public float getArmorMult(Context context) {
+		return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, context);
 	}
 
-	public Set<String> getTargetEffects() {
-		return targetEffects.value(getWeaponTemplate().getTargetEffects());
+	public Set<String> getTargetEffects(Context context) {
+		return targetEffects.value(getWeaponTemplate().getTargetEffects(), context);
 	}
 
 	public int getClipSize() {
-		return clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
+		return clipSize.value(getWeaponTemplate().getClipSize(), 0, 100, new Context(game(), this));
 	}
 
-	public String getDamageType() {
-		return damageType.value(getWeaponTemplate().getDamageType());
+	public String getDamageType(Context context) {
+		return damageType.value(getWeaponTemplate().getDamageType(), context);
 	}
 
 	public int getAmmoRemaining() {
@@ -175,12 +175,12 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		setLoadedAmmoType(null);
 	}
 
-	public boolean isSilenced() {
-		return isSilenced.value(getWeaponTemplate().isSilenced());
+	public boolean isSilenced(Context context) {
+		return isSilenced.value(getWeaponTemplate().isSilenced(), context);
 	}
 
-	public boolean isLoud() {
-		return getWeaponClass().isLoud() && !isSilenced();
+	public boolean isLoud(Context context) {
+		return getWeaponClass().isLoud() && !isSilenced(context);
 	}
 
 	public Set<String> getAmmoTypes() {
@@ -192,7 +192,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	public Set<String> getAttackTypes() {
-		return attackTypes.value(getWeaponClass().getAttackTypes());
+		return attackTypes.value(getWeaponClass().getAttackTypes(), new Context(game(), this));
 	}
 
 	public EffectComponent getEffectComponent() {
@@ -233,7 +233,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 			actions.addAll(game().data().getAttackType(attackType).generateActions(subject, this));
 		}
 		if (getClipSize() > 0) {
-			for (String current : getWeaponClass().getAmmoTypes()) {
+			for (String current : getAmmoTypes()) {
 				actions.add(new ActionWeaponReload(this, (ItemAmmo) ItemFactory.create(game(), current)));
 			}
 		}
@@ -301,49 +301,49 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	@Override
-	public int getValueInt(String name) {
+	public int getValueInt(String name, Context context) {
 		return switch (name) {
-			case "damage" -> damage.value(getWeaponTemplate().getDamage(), 1, 1000);
-			case "rate" -> rate.value(getWeaponTemplate().getRate(), 1, 50);
-			case "crit_damage" -> critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000);
-			case "clip_size" -> clipSize.value(getWeaponTemplate().getClipSize(), 0, 100);
+			case "damage" -> damage.value(getWeaponTemplate().getDamage(), 1, 1000, context);
+			case "rate" -> rate.value(getWeaponTemplate().getRate(), 1, 50, context);
+			case "crit_damage" -> critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000, context);
+			case "clip_size" -> clipSize.value(getWeaponTemplate().getClipSize(), 0, 100, context);
 			case "ammo_count" -> ammoCount;
-			default -> super.getValueInt(name);
+			default -> super.getValueInt(name, context);
 		};
 	}
 
 	@Override
-	public float getValueFloat(String name) {
+	public float getValueFloat(String name, Context context) {
 		return switch (name) {
-			case "accuracy_bonus" -> accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f);
-			case "armor_mult" -> armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
-			default -> super.getValueFloat(name);
+			case "accuracy_bonus" -> accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f, context);
+			case "armor_mult" -> armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, context);
+			default -> super.getValueFloat(name, context);
 		};
 	}
 
 	@Override
-	public boolean getValueBoolean(String name) {
+	public boolean getValueBoolean(String name, Context context) {
 		if ("is_silenced".equals(name)) {
-			return isSilenced.value(getWeaponTemplate().isSilenced());
+			return isSilenced.value(getWeaponTemplate().isSilenced(), context);
 		}
-		return super.getValueBoolean(name);
+		return super.getValueBoolean(name, context);
 	}
 
 	@Override
-	public String getValueString(String name) {
+	public String getValueString(String name, Context context) {
 		if ("damage_type".equals(name)) {
-			return damageType.value(getWeaponTemplate().getDamageType());
+			return damageType.value(getWeaponTemplate().getDamageType(), context);
 		}
-		return super.getValueString(name);
+		return super.getValueString(name, context);
 	}
 
 	@Override
-	public Set<String> getValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name, Context context) {
 		return switch (name) {
-			case "attack_types" -> attackTypes.value(getWeaponClass().getAttackTypes());
-			case "ranges" -> ranges.valueFromEnum(getWeaponClass().getPrimaryRanges());
-			case "target_effects" -> targetEffects.value(getWeaponTemplate().getTargetEffects());
-			default -> super.getValueStringSet(name);
+			case "attack_types" -> attackTypes.value(getWeaponClass().getAttackTypes(), context);
+			case "ranges" -> ranges.valueFromEnum(getWeaponClass().getPrimaryRanges(), context);
+			case "target_effects" -> targetEffects.value(getWeaponTemplate().getTargetEffects(), context);
+			default -> super.getValueStringSet(name, context);
 		};
 	}
 

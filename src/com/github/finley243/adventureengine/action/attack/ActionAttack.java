@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action.attack;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandomEach;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -207,7 +208,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeaponNoun()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), Phrases.get(getHitPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
-        target.damage(damageData);
+        target.damage(damageData, new Context(subject.game(), subject, target));
         subject.triggerScript("on_attack_success", (target instanceof Actor ? (Actor) target : subject));
     }
 

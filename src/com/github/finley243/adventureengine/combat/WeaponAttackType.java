@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.combat;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.action.attack.ActionAttackArea;
@@ -112,20 +113,21 @@ public class WeaponAttackType {
 
     public List<Action> generateActions(Actor subject, ItemWeapon weapon) {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
+        Context context = new Context(subject.game(), subject, subject, weapon);
         List<Action> actions = new ArrayList<>();
         Actor.Skill skill = skillOverride != null ? skillOverride : weapon.getSkill();
         float hitChanceMin = baseHitChanceMinOverride != null ? baseHitChanceMinOverride : weapon.getBaseHitChanceMin();
         float hitChanceMax = baseHitChanceMaxOverride != null ? baseHitChanceMaxOverride : weapon.getBaseHitChanceMax();
-        float accuracyBonus = weapon.getAccuracyBonus();
-        Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getRanges())) : weapon.getRanges());
-        int rate = rateOverride != null ? rateOverride : weapon.getRate();
-        int damage = damageOverride != null ? damageOverride : (int) (weapon.getDamage() * (damageMult + 1.0f));
-        String damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getDamageType();
-        float armorMult = armorMultOverride != null ? armorMultOverride : weapon.getArmorMult();
-        boolean isLoud = isLoudOverride != null ? isLoudOverride : weapon.isLoud();
+        float accuracyBonus = weapon.getAccuracyBonus(context);
+        Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getRanges(context))) : weapon.getRanges(context));
+        int rate = rateOverride != null ? rateOverride : weapon.getRate(context);
+        int damage = damageOverride != null ? damageOverride : (int) (weapon.getDamage(context) * (damageMult + 1.0f));
+        String damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getDamageType(context);
+        float armorMult = armorMultOverride != null ? armorMultOverride : weapon.getArmorMult(context);
+        boolean isLoud = isLoudOverride != null ? isLoudOverride : weapon.isLoud(context);
         List<String> targetEffectsCombined = new ArrayList<>(targetEffects);
         if (!overrideTargetEffects) {
-            targetEffectsCombined.addAll(weapon.getTargetEffects());
+            targetEffectsCombined.addAll(weapon.getTargetEffects(context));
         }
         switch (category) {
             case SINGLE -> {

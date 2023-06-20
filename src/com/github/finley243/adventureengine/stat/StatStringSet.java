@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
+import com.github.finley243.adventureengine.Context;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,22 +18,22 @@ public class StatStringSet extends Stat {
         this.cancellation = new HashMap<>();
     }
 
-    public Set<String> value(Set<String> base) {
+    public Set<String> value(Set<String> base, Context context) {
         Set<String> outputSet = new HashSet<>(base);
         outputSet.addAll(additional.keySet());
         outputSet.removeAll(cancellation.keySet());
         return outputSet;
     }
 
-    public <T extends Enum<T>> Set<String> valueFromEnum(Set<T> base) {
+    public <T extends Enum<T>> Set<String> valueFromEnum(Set<T> base, Context context) {
         Set<String> enumStrings = new HashSet<>();
         for (T enumValue : base) {
             enumStrings.add(enumValue.toString().toLowerCase());
         }
-        return value(enumStrings);
+        return value(enumStrings, context);
     }
 
-    public <T extends Enum<T>> Set<T> valueEnum(Set<T> base, Class<T> enumClass) {
+    public <T extends Enum<T>> Set<T> valueEnum(Set<T> base, Class<T> enumClass, Context context) {
         Set<T> outputSet = new HashSet<>(base);
         Set<T> additionalEnum = new HashSet<>();
         Set<T> cancellationEnum = new HashSet<>();

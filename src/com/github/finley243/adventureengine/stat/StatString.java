@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
+import com.github.finley243.adventureengine.Context;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -12,7 +14,7 @@ public class StatString extends Stat {
         this.stringStack = new ArrayDeque<>();
     }
 
-    public String value(String base) {
+    public String value(String base, Context context) {
         if (stringStack.isEmpty()) {
             return base;
         } else {
@@ -20,7 +22,7 @@ public class StatString extends Stat {
         }
     }
 
-    public <E extends Enum<E>> E valueEnum(E base, Class<E> enumType) {
+    public <E extends Enum<E>> E valueEnum(E base, Class<E> enumType, Context context) {
         if (stringStack.isEmpty()) {
             return base;
         } else {

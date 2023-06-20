@@ -113,7 +113,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public void damage(Damage damage) {
+	public void damage(Damage damage, Context context) {
 		// TODO - Fill in effects of attacking object
 	}
 
@@ -223,17 +223,17 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public int getValueInt(String name) {
+	public int getValueInt(String name, Context context) {
 		return localVarsInteger.getOrDefault(name, getTemplate().getLocalVarsIntegerDefault().getOrDefault(name, 0));
 	}
 
 	@Override
-	public float getValueFloat(String name) {
+	public float getValueFloat(String name, Context context) {
 		return localVarsFloat.getOrDefault(name, getTemplate().getLocalVarsFloatDefault().getOrDefault(name, 0.0f));
 	}
 
 	@Override
-	public boolean getValueBoolean(String name) {
+	public boolean getValueBoolean(String name, Context context) {
 		return switch (name) {
 			case "enabled" -> isEnabled;
 			case "hidden" -> isHidden;
@@ -244,7 +244,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public String getValueString(String name) {
+	public String getValueString(String name, Context context) {
 		return switch (name) {
 			case "id" -> getID();
 			case "template_id" -> templateID;
@@ -256,7 +256,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public Set<String> getValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name, Context context) {
 		return localVarsStringSet.getOrDefault(name, getTemplate().getLocalVarsStringSetDefault().getOrDefault(name, null));
 	}
 

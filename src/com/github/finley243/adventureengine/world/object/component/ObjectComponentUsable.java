@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.object.component;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
@@ -93,11 +94,11 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     @Override
-    public boolean getValueBoolean(String name) {
+    public boolean getValueBoolean(String name, Context context) {
         if ("hasUser".equals(name)) {
             return getUser() != null;
         }
-        return super.getValueBoolean(name);
+        return super.getValueBoolean(name, context);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.item.template;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
@@ -101,7 +102,7 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	@Override
-	public int getValueInt(String name) {
+	public int getValueInt(String name, Context context) {
 		if ("price".equals(name)) {
 			return price;
 		}
@@ -109,17 +110,17 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	@Override
-	public float getValueFloat(String name) {
+	public float getValueFloat(String name, Context context) {
 		return 0;
 	}
 
 	@Override
-	public boolean getValueBoolean(String name) {
+	public boolean getValueBoolean(String name, Context context) {
 		return false;
 	}
 
 	@Override
-	public String getValueString(String name) {
+	public String getValueString(String name, Context context) {
 		return switch (name) {
 			case "id" -> getID();
 			case "name" -> getName();
@@ -128,7 +129,7 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	@Override
-	public Set<String> getValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name, Context context) {
 		if ("tags".equals(name)) {
 			return getTags();
 		}

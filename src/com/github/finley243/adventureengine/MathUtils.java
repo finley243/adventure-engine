@@ -31,36 +31,36 @@ public class MathUtils {
         return chanceLinear(difference, differenceMin, differenceMax, chanceMin, chanceMax);
     }
 
-    public static float chanceLinearSkill(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax) {
-        return chanceLinear(subject.getSkill(skill), Actor.SKILL_MIN, Actor.SKILL_MAX, chanceMin, chanceMax);
+    public static float chanceLinearSkill(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax, Context context) {
+        return chanceLinear(subject.getSkill(skill, context), Actor.SKILL_MIN, Actor.SKILL_MAX, chanceMin, chanceMax);
     }
 
-    public static float chanceLogSkill(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax) {
-        return chanceLog(subject.getSkill(skill), Actor.SKILL_MIN, Actor.SKILL_MAX, chanceMin, chanceMax);
+    public static float chanceLogSkill(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax, Context context) {
+        return chanceLog(subject.getSkill(skill, context), Actor.SKILL_MIN, Actor.SKILL_MAX, chanceMin, chanceMax);
     }
 
-    public static float chanceLinearSkillInverted(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax) {
-        return chanceMax + chanceMin - chanceLinearSkill(subject, skill, chanceMin, chanceMax);
+    public static float chanceLinearSkillInverted(Actor subject, Actor.Skill skill, float chanceMin, float chanceMax, Context context) {
+        return chanceMax + chanceMin - chanceLinearSkill(subject, skill, chanceMin, chanceMax, context);
     }
 
-    public static float chanceLinearAttribute(Actor subject, Actor.Attribute attribute, float chanceMin, float chanceMax) {
-        return chanceLinear(subject.getAttribute(attribute), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, chanceMin, chanceMax);
+    public static float chanceLinearAttribute(Actor subject, Actor.Attribute attribute, float chanceMin, float chanceMax, Context context) {
+        return chanceLinear(subject.getAttribute(attribute, context), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, chanceMin, chanceMax);
     }
 
-    public static float chanceLinearSkillContest(Actor subject1, Actor.Skill skill1, Actor subject2, Actor.Skill skill2, float ratio, float chanceMin, float chanceMax) {
-        return chanceLinearContest(subject1.getSkill(skill1), Actor.SKILL_MIN, Actor.SKILL_MAX, subject2.getSkill(skill2), Actor.SKILL_MIN, Actor.SKILL_MAX, ratio, chanceMin, chanceMax);
+    public static float chanceLinearSkillContest(Actor subject1, Actor.Skill skill1, Actor subject2, Actor.Skill skill2, float ratio, float chanceMin, float chanceMax, Context context) {
+        return chanceLinearContest(subject1.getSkill(skill1, context), Actor.SKILL_MIN, Actor.SKILL_MAX, subject2.getSkill(skill2, context), Actor.SKILL_MIN, Actor.SKILL_MAX, ratio, chanceMin, chanceMax);
     }
 
-    public static float chanceLinearAttributeContest(Actor subject1, Actor.Attribute attribute1, Actor subject2, Actor.Attribute attribute2, float ratio, float chanceMin, float chanceMax) {
-        return chanceLinearContest(subject1.getAttribute(attribute1), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, subject2.getAttribute(attribute2), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, ratio, chanceMin, chanceMax);
+    public static float chanceLinearAttributeContest(Actor subject1, Actor.Attribute attribute1, Actor subject2, Actor.Attribute attribute2, float ratio, float chanceMin, float chanceMax, Context context) {
+        return chanceLinearContest(subject1.getAttribute(attribute1, context), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, subject2.getAttribute(attribute2, context), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, ratio, chanceMin, chanceMax);
     }
 
-    public static float chanceLinearSkillAttributeContest(Actor subject1, Actor.Skill skill, Actor subject2, Actor.Attribute attribute, float ratio, float chanceMin, float chanceMax) {
-        return chanceLinearContest(subject1.getSkill(skill), Actor.SKILL_MIN, Actor.SKILL_MAX, subject2.getAttribute(attribute), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, ratio, chanceMin, chanceMax);
+    public static float chanceLinearSkillAttributeContest(Actor subject1, Actor.Skill skill, Actor subject2, Actor.Attribute attribute, float ratio, float chanceMin, float chanceMax, Context context) {
+        return chanceLinearContest(subject1.getSkill(skill, context), Actor.SKILL_MIN, Actor.SKILL_MAX, subject2.getAttribute(attribute, context), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, ratio, chanceMin, chanceMax);
     }
 
-    public static float chanceLinearAttributeSkillContest(Actor subject1, Actor.Attribute attribute, Actor subject2, Actor.Skill skill, float ratio, float chanceMin, float chanceMax) {
-        return chanceLinearContest(subject1.getAttribute(attribute), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, subject2.getSkill(skill), Actor.SKILL_MIN, Actor.SKILL_MAX, ratio, chanceMin, chanceMax);
+    public static float chanceLinearAttributeSkillContest(Actor subject1, Actor.Attribute attribute, Actor subject2, Actor.Skill skill, float ratio, float chanceMin, float chanceMax, Context context) {
+        return chanceLinearContest(subject1.getAttribute(attribute, context), Actor.ATTRIBUTE_MIN, Actor.ATTRIBUTE_MAX, subject2.getSkill(skill, context), Actor.SKILL_MIN, Actor.SKILL_MAX, ratio, chanceMin, chanceMax);
     }
 
     public static boolean randomCheck(float chance) {

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.component;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMove;
@@ -237,9 +238,10 @@ public class TargetingComponent {
     }
 
     public float getActionDetectionChance(Action action, Actor subject) {
+        Context context = new Context(actor.game(), actor, subject);
         return switch (action.detectionChance()) {
-            case LOW -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.50f);
-            case HIGH -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.05f, 0.95f);
+            case LOW -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.50f, context);
+            case HIGH -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.05f, 0.95f, context);
             default -> 0.0f;
         };
     }
@@ -254,11 +256,12 @@ public class TargetingComponent {
                 case DISTANT ->  0.25f;
             };
         } else {
+            Context context = new Context(actor.game(), actor, subject);
             return switch (distance) {
-                case NEAR -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.50f, 0.95f);
-                case CLOSE -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.20f, 0.80f);
-                case FAR -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.60f);
-                case DISTANT ->  MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.25f);
+                case NEAR -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.50f, 0.95f, context);
+                case CLOSE -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.20f, 0.80f, context);
+                case FAR -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.60f, context);
+                case DISTANT ->  MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.25f, context);
             };
         }
     }
@@ -280,7 +283,7 @@ public class TargetingComponent {
     private Set<AreaLink.DistanceCategory> idealDistances() {
         // TODO - Generalize function (not specific to weapon)
         if (actor.getEquipmentComponent() != null && actor.getEquipmentComponent().hasEquippedItem() && actor.getEquipmentComponent().getEquippedItem() instanceof ItemWeapon) {
-            return ((ItemWeapon) actor.getEquipmentComponent().getEquippedItem()).getRanges();
+            return ((ItemWeapon) actor.getEquipmentComponent().getEquippedItem()).getRanges(new Context(actor.game(), actor, actor));
         } else {
             return Set.of(AreaLink.DistanceCategory.NEAR);
         }

@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
+import com.github.finley243.adventureengine.Context;
+
 public class StatBoolean extends Stat {
 
     // If there are both true and false modifiers, the priority value will be used
@@ -12,7 +14,7 @@ public class StatBoolean extends Stat {
         this.priorityValue = priorityValue;
     }
 
-    public boolean value(boolean base) {
+    public boolean value(boolean base, Context context) {
         if (countTrue == 0 && countFalse == 0) {
             return base;
         } else if (countTrue > 0 && countFalse > 0) {

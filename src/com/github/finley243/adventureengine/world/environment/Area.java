@@ -334,7 +334,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	public void applyEffects() {
 		for (Actor actor : getActors()) {
-			for (String effectID : effects.value(new HashSet<>())) {
+			for (String effectID : effects.value(new HashSet<>(), new Context(game(), actor, actor))) {
 				actor.getEffectComponent().addEffect(effectID);
 			}
 		}
@@ -366,17 +366,17 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public int getValueInt(String name) {
+	public int getValueInt(String name, Context context) {
 		return 0;
 	}
 
 	@Override
-	public float getValueFloat(String name) {
+	public float getValueFloat(String name, Context context) {
 		return 0;
 	}
 
 	@Override
-	public boolean getValueBoolean(String name) {
+	public boolean getValueBoolean(String name, Context context) {
 		if ("known".equals(name)) {
 			return isKnown;
 		}
@@ -384,7 +384,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public String getValueString(String name) {
+	public String getValueString(String name, Context context) {
 		return switch (name) {
 			case "id" -> getID();
 			case "name" -> getName();
@@ -396,7 +396,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public Set<String> getValueStringSet(String name) {
+	public Set<String> getValueStringSet(String name, Context context) {
 		return switch (name) {
 			case "visible_areas" -> getLineOfSightAreaIDs();
 			case "movable_areas" -> getMovableAreaIDs(null);

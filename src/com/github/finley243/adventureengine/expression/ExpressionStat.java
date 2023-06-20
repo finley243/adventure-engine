@@ -28,31 +28,31 @@ public class ExpressionStat extends Expression {
     @Override
     public boolean getValueBoolean(Context context) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueBoolean(stat);
+        return holder.getHolder(context).getValueBoolean(stat, context);
     }
 
     @Override
     public int getValueInteger(Context context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueInt(stat);
+        return holder.getHolder(context).getValueInt(stat, context);
     }
 
     @Override
     public float getValueFloat(Context context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueFloat(stat);
+        return holder.getHolder(context).getValueFloat(stat, context);
     }
 
     @Override
     public String getValueString(Context context) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueString(stat);
+        return holder.getHolder(context).getValueString(stat, context);
     }
 
     @Override
     public Set<String> getValueStringSet(Context context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueStringSet(stat);
+        return holder.getHolder(context).getValueStringSet(stat, context);
     }
 
     @Override
