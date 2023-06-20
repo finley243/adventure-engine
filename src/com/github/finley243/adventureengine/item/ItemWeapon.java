@@ -368,6 +368,14 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	@Override
+	public StatHolder getSubHolder(String name, String ID) {
+		if ("ammo_type".equals(name)) {
+			return ammoType;
+		}
+		return super.getSubHolder(name, ID);
+	}
+
+	@Override
 	public void loadState(SaveData saveData) {
 		if ("ammo_count".equals(saveData.getParameter())) {
 			this.ammoCount = saveData.getValueInt();
