@@ -3,19 +3,33 @@ package com.github.finley243.adventureengine.stat;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StatBoolean extends Stat {
 
     // If there are both true and false modifiers, the priority value will be used
     private final boolean priorityValue;
-    private int countTrue;
-    private int countFalse;
+    private final List<StatBooleanMod> mods;
 
     public StatBoolean(String name, MutableStatHolder target, boolean priorityValue) {
         super(name, target);
         this.priorityValue = priorityValue;
+        this.mods = new ArrayList<>();
     }
 
     public boolean value(boolean base, Context context) {
+        int countTrue = 0;
+        int countFalse = 0;
+        for (StatBooleanMod mod : mods) {
+            if (mod.shouldApply(context)) {
+                if (mod.value) {
+                    countTrue += 1;
+                } else {
+                    countFalse += 1;
+                }
+            }
+        }
         if (countTrue == 0 && countFalse == 0) {
             return base;
         } else if (countTrue > 0 && countFalse > 0) {
@@ -25,21 +39,13 @@ public class StatBoolean extends Stat {
         }
     }
 
-    public void addMod(boolean value) {
-        if (value) {
-            this.countTrue += 1;
-        } else {
-            this.countFalse += 1;
-        }
+    public void addMod(StatBooleanMod mod) {
+        mods.add(mod);
         getTarget().onStatChange(getName());
     }
 
-    public void removeMod(boolean value) {
-        if (value) {
-            this.countTrue -= 1;
-        } else {
-            this.countFalse -= 1;
-        }
+    public void removeMod(StatBooleanMod mod) {
+        mods.remove(mod);
         getTarget().onStatChange(getName());
     }
 

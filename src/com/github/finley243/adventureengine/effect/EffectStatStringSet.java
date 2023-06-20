@@ -13,26 +13,26 @@ public class EffectStatStringSet extends Effect {
     private final String stat;
     private final Set<String> valuesAdd;
     private final Set<String> valuesRemove;
+    private final Condition statCondition;
 
-    public EffectStatStringSet(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound, String stat, Set<String> valuesAdd, Set<String> valuesRemove) {
+    public EffectStatStringSet(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound, String stat, Set<String> valuesAdd, Set<String> valuesRemove, Condition statCondition) {
         super(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
         this.stat = stat;
         this.valuesAdd = valuesAdd;
         this.valuesRemove = valuesRemove;
+        this.statCondition = statCondition;
     }
 
     @Override
     public void start(MutableStatHolder target) {
         StatStringSet moddableSet = target.getStatStringSet(stat);
-        moddableSet.addAdditional(valuesAdd);
-        moddableSet.addCancellation(valuesRemove);
+        moddableSet.addMod(new StatStringSet.StatStringSetMod(statCondition, valuesAdd, valuesRemove));
     }
 
     @Override
     public void end(MutableStatHolder target) {
         StatStringSet moddableSet = target.getStatStringSet(stat);
-        moddableSet.removeAdditional(valuesAdd);
-        moddableSet.removeCancellation(valuesRemove);
+        moddableSet.removeMod(new StatStringSet.StatStringSetMod(statCondition, valuesAdd, valuesRemove));
     }
 
 }

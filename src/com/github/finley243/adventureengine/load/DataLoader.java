@@ -744,35 +744,40 @@ public class DataLoader {
             case "add" -> {
                 String statMod = LoadUtils.attribute(effectElement, "stat", null);
                 String statModValue = LoadUtils.attribute(effectElement, "amount", "0");
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
                 boolean statModIsFloat = statModValue.contains(".");
                 if (statModIsFloat) {
                     float statModValueFloat = Float.parseFloat(statModValue);
-                    return new EffectStatAddFloat(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueFloat);
+                    return new EffectStatAddFloat(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueFloat, statCondition);
                 } else {
                     int statModValueInt = Integer.parseInt(statModValue);
-                    return new EffectStatAddInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueInt);
+                    return new EffectStatAddInt(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMod, statModValueInt, statCondition);
                 }
             }
             case "mult" -> {
                 String statMult = LoadUtils.attribute(effectElement, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
-                return new EffectStatMult(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMult, statMultAmount);
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
+                return new EffectStatMult(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMult, statMultAmount, statCondition);
             }
             case "boolean" -> {
                 String statBoolean = LoadUtils.attribute(effectElement, "stat", null);
                 boolean statBooleanValue = LoadUtils.attributeBool(effectElement, "value", true);
-                return new EffectStatBoolean(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statBoolean, statBooleanValue);
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
+                return new EffectStatBoolean(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statBoolean, statBooleanValue, statCondition);
             }
             case "string" -> {
                 String statString = LoadUtils.attribute(effectElement, "stat", null);
                 String statStringValue = LoadUtils.attribute(effectElement, "value", null);
-                return new EffectStatString(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statString, statStringValue);
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
+                return new EffectStatString(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statString, statStringValue, statCondition);
             }
             case "stringSet" -> {
                 String statStringSet = LoadUtils.attribute(effectElement, "stat", null);
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
-                return new EffectStatStringSet(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statStringSet, stringSetValuesAdd, stringSetValuesRemove);
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
+                return new EffectStatStringSet(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statStringSet, stringSetValuesAdd, stringSetValuesRemove, statCondition);
             }
             case "compound" -> {
                 List<Effect> compoundEffects = loadEffects(game, effectElement);

@@ -10,18 +10,20 @@ public class EffectStatAddInt extends Effect {
 
     private final String stat;
     private final int amount;
+    private final Condition statCondition;
 
-    public EffectStatAddInt(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound, String stat, int amount) {
+    public EffectStatAddInt(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound, String stat, int amount, Condition statCondition) {
         super(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
         this.stat = stat;
         this.amount = amount;
+        this.statCondition = statCondition;
     }
 
     @Override
     public void start(MutableStatHolder target) {
         StatInt statInt = target.getStatInt(stat);
         if(statInt != null) {
-            statInt.addMod(amount);
+            statInt.addMod(new StatInt.StatIntMod(statCondition, amount, 0.0f));
         }
     }
 
@@ -29,7 +31,7 @@ public class EffectStatAddInt extends Effect {
     public void end(MutableStatHolder target) {
         StatInt statInt = target.getStatInt(stat);
         if(statInt != null) {
-            statInt.addMod(-amount);
+            statInt.removeMod(new StatInt.StatIntMod(statCondition, amount, 0.0f));
         }
     }
 

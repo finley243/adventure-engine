@@ -2,50 +2,51 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.load.LoadUtils;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StatString extends Stat {
 
-    private final Deque<String> stringStack;
+    private final List<StatStringMod> mods;
 
     public StatString(String name, MutableStatHolder target) {
         super(name, target);
-        this.stringStack = new ArrayDeque<>();
+        this.mods = new ArrayList<>();
     }
 
     public String value(String base, Context context) {
-        if (stringStack.isEmpty()) {
-            return base;
-        } else {
-            return stringStack.peek();
+        String topValue = null;
+        for (StatStringMod mod : mods) {
+            if (mod.shouldApply(context)) {
+                topValue = mod.value;
+            }
         }
+        return topValue == null ? base : topValue;
     }
 
     public <E extends Enum<E>> E valueEnum(E base, Class<E> enumType, Context context) {
-        if (stringStack.isEmpty()) {
-            return base;
-        } else {
-            try {
-                return Enum.valueOf(enumType, stringStack.peek().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return null;
+        String topValue = null;
+        for (StatStringMod mod : mods) {
+            if (mod.shouldApply(context)) {
+                topValue = mod.value;
             }
         }
+        return topValue == null ? base : LoadUtils.stringToEnum(topValue, enumType);
     }
 
-    public void addMod(String value) {
-        stringStack.push(value);
+    public void addMod(StatStringMod mod) {
+        mods.add(mod);
         getTarget().onStatChange(getName());
     }
 
-    public void removeMod(String value) {
-        stringStack.remove(value);
+    public void removeMod(StatStringMod mod) {
+        mods.remove(mod);
         getTarget().onStatChange(getName());
     }
 
-    public record StatFloatMod(Condition condition, String value) {
+    public record StatStringMod(Condition condition, String value) {
         public boolean shouldApply(Context context) {
             return condition == null || condition.isMet(context);
         }

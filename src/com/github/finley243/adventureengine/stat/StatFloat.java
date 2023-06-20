@@ -3,27 +3,38 @@ package com.github.finley243.adventureengine.stat;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StatFloat extends Stat {
 
-    private float mod;
-    private float mult;
+    private final List<StatFloatMod> mods;
 
     public StatFloat(String name, MutableStatHolder target) {
         super(name, target);
+        this.mods = new ArrayList<>();
     }
 
     public float value(float base, float min, float max, Context context) {
-        float computedValue = (base * (mult + 1.0f)) + mod;
+        float add = 0.0f;
+        float mult = 0.0f;
+        for (StatFloatMod mod : mods) {
+            if (mod.shouldApply(context)) {
+                add += mod.add;
+                mult += mod.mult;
+            }
+        }
+        float computedValue = (base * (mult + 1.0f)) + add;
         return Math.min(Math.max(computedValue, min), max);
     }
 
-    public void addMod(float value) {
-        mod += value;
+    public void addMod(StatFloatMod mod) {
+        mods.add(mod);
         getTarget().onStatChange(getName());
     }
 
-    public void addMult(float value) {
-        mult += value;
+    public void removeMod(StatFloatMod mod) {
+        mods.remove(mod);
         getTarget().onStatChange(getName());
     }
 

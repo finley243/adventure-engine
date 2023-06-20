@@ -3,26 +3,25 @@ package com.github.finley243.adventureengine.stat;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class StatStringSet extends Stat {
 
-    private final Map<String, Integer> additional;
-    private final Map<String, Integer> cancellation;
+    private final List<StatStringSetMod> mods;
 
     public StatStringSet(String name, MutableStatHolder target) {
         super(name, target);
-        this.additional = new HashMap<>();
-        this.cancellation = new HashMap<>();
+        this.mods = new ArrayList<>();
     }
 
     public Set<String> value(Set<String> base, Context context) {
         Set<String> outputSet = new HashSet<>(base);
-        outputSet.addAll(additional.keySet());
-        outputSet.removeAll(cancellation.keySet());
+        for (StatStringSetMod mod : mods) {
+            if (mod.shouldApply(context)) {
+                outputSet.addAll(mod.addition);
+                outputSet.removeAll(mod.cancellation);
+            }
+        }
         return outputSet;
     }
 
@@ -38,10 +37,18 @@ public class StatStringSet extends Stat {
         Set<T> outputSet = new HashSet<>(base);
         Set<T> additionalEnum = new HashSet<>();
         Set<T> cancellationEnum = new HashSet<>();
-        for (String additionalString : additional.keySet()) {
+        Set<String> additional = new HashSet<>();
+        Set<String> cancellation = new HashSet<>();
+        for (StatStringSetMod mod : mods) {
+            if (mod.shouldApply(context)) {
+                additional.addAll(mod.addition);
+                cancellation.addAll(mod.cancellation);
+            }
+        }
+        for (String additionalString : additional) {
             additionalEnum.add(enumValue(additionalString, enumClass));
         }
-        for (String cancellationString : cancellation.keySet()) {
+        for (String cancellationString : cancellation) {
             cancellationEnum.add(enumValue(cancellationString, enumClass));
         }
         outputSet.addAll(additionalEnum);
@@ -49,55 +56,13 @@ public class StatStringSet extends Stat {
         return outputSet;
     }
 
-    public void addAdditional(Set<String> values) {
-        for (String value : values) {
-            if (!additional.containsKey(value)) {
-                additional.put(value, 1);
-            } else {
-                int count = additional.get(value);
-                additional.put(value, count + 1);
-            }
-        }
+    public void addMod(StatStringSetMod mod) {
+        mods.add(mod);
         getTarget().onStatChange(getName());
     }
 
-    public void removeAdditional(Set<String> values) {
-        for (String value : values) {
-            if (additional.containsKey(value)) {
-                int count = additional.get(value);
-                if (count == 1) {
-                    additional.remove(value);
-                } else {
-                    additional.put(value, count - 1);
-                }
-            }
-        }
-        getTarget().onStatChange(getName());
-    }
-
-    public void addCancellation(Set<String> values) {
-        for (String value : values) {
-            if (!cancellation.containsKey(value)) {
-                cancellation.put(value, 1);
-            } else {
-                int count = cancellation.get(value);
-                cancellation.put(value, count + 1);
-            }
-        }
-        getTarget().onStatChange(getName());
-    }
-
-    public void removeCancellation(Set<String> values) {
-        for (String value : values) {
-            if (cancellation.containsKey(value)) {
-                int count = cancellation.get(value);
-                if (count == 1) {
-                    cancellation.remove(value);
-                } else {
-                    cancellation.put(value, count - 1);
-                }
-            }
-        }
+    public void removeMod(StatStringSetMod mod) {
+        mods.remove(mod);
         getTarget().onStatChange(getName());
     }
 
@@ -109,7 +74,7 @@ public class StatStringSet extends Stat {
         }
     }
 
-    public record StatFloatMod(Condition condition, Set<String> addition, Set<String> cancellation) {
+    public record StatStringSetMod(Condition condition, Set<String> addition, Set<String> cancellation) {
         public boolean shouldApply(Context context) {
             return condition == null || condition.isMet(context);
         }
