@@ -12,20 +12,12 @@ import java.util.List;
 
 public class ItemConsumable extends Item {
 
-	private final String templateID;
-	
 	public ItemConsumable(Game game, String ID, String templateID) {
-		super(game, ID);
-		this.templateID = templateID;
+		super(game, ID, templateID);
 	}
 
-	@Override
-	public ItemTemplate getTemplate() {
-		return getConsumableTemplate();
-	}
-
-	public ConsumableTemplate getConsumableTemplate() {
-		return (ConsumableTemplate) game().data().getItemTemplate(templateID);
+	protected ConsumableTemplate getConsumableTemplate() {
+		return (ConsumableTemplate) getTemplate();
 	}
 	
 	public ConsumableType getConsumableType() {

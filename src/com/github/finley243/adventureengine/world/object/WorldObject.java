@@ -60,7 +60,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		setEnabled(!startDisabled);
 	}
 
-	public ObjectTemplate getTemplate() {
+	private ObjectTemplate getTemplate() {
 		return game().data().getObjectTemplate(templateID);
 	}
 	

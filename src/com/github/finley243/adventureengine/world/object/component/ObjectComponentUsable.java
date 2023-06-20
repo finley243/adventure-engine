@@ -20,17 +20,48 @@ public class ObjectComponentUsable extends ObjectComponent {
 
     private Actor user;
 
-    public ObjectComponentUsable(String ID, WorldObject object) {
-        super(ID, object);
+    public ObjectComponentUsable(String ID, WorldObject object, ObjectComponentTemplate template) {
+        super(ID, object, template);
     }
 
-    @Override
-    public ObjectComponentTemplate getTemplate() {
-        return getTemplateUsable();
+    private ObjectComponentTemplateUsable getTemplateUsable() {
+        return (ObjectComponentTemplateUsable) getTemplate();
     }
 
-    public ObjectComponentTemplateUsable getTemplateUsable() {
-        return (ObjectComponentTemplateUsable) getObject().getTemplate().getComponents().get(getID());
+    public String getStartPhrase() {
+        return getTemplateUsable().getStartPhrase();
+    }
+
+    public String getEndPhrase() {
+        return getTemplateUsable().getEndPhrase();
+    }
+
+    public String getStartPrompt() {
+        return getTemplateUsable().getStartPrompt();
+    }
+
+    public String getEndPrompt() {
+        return getTemplateUsable().getEndPrompt();
+    }
+
+    public boolean userIsInCover() {
+        return getTemplateUsable().userIsInCover();
+    }
+
+    public boolean userIsHidden() {
+        return getTemplateUsable().userIsHidden();
+    }
+
+    public boolean userCanSeeOtherAreas() {
+        return getTemplateUsable().userCanSeeOtherAreas();
+    }
+
+    public boolean userCanPerformLocalActions() {
+        return getTemplateUsable().userCanPerformLocalActions();
+    }
+
+    public boolean userCanPerformParentActions() {
+        return getTemplateUsable().userCanPerformParentActions();
     }
 
     public Actor getUser() {

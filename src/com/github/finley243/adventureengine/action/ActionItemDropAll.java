@@ -13,15 +13,15 @@ public class ActionItemDropAll extends Action {
 	private final Item item;
 
 	public ActionItemDropAll(Item item) {
-		if (item.getTemplate().hasState()) throw new IllegalArgumentException("Cannot perform ActionItemDropAll on item with state");
+		if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionItemDropAll on item with state");
 		this.item = item;
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		int count = subject.getInventory().itemCount(item);
-		subject.getInventory().removeItems(item.getTemplate().getID(), count);
-		subject.getArea().getInventory().addItems(item.getTemplate().getID(), count);
+		subject.getInventory().removeItems(item.getTemplateID(), count);
+		subject.getArea().getInventory().addItems(item.getTemplateID(), count);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, null, subject, null));
 	}

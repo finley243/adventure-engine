@@ -11,20 +11,12 @@ import java.util.List;
 
 public class ItemWeaponMod extends Item {
 
-    private final String templateID;
-
     public ItemWeaponMod(Game game, String ID, String templateID) {
-        super(game, ID);
-        this.templateID = templateID;
+        super(game, ID, templateID);
     }
 
-    @Override
-    public ItemTemplate getTemplate() {
-        return getWeaponModTemplate();
-    }
-
-    public WeaponModTemplate getWeaponModTemplate() {
-        return (WeaponModTemplate) game().data().getItemTemplate(templateID);
+    protected WeaponModTemplate getWeaponModTemplate() {
+        return (WeaponModTemplate) getTemplate();
     }
 
     @Override

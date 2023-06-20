@@ -14,20 +14,12 @@ import java.util.Set;
 
 public class ItemApparel extends Item {
 
-	private final String templateID;
-
 	public ItemApparel(Game game, String ID, String templateID) {
-		super(game, ID);
-		this.templateID = templateID;
+		super(game, ID, templateID);
 	}
 
-	@Override
-	public ItemTemplate getTemplate() {
-		return getApparelTemplate();
-	}
-
-	public ApparelTemplate getApparelTemplate() {
-		return (ApparelTemplate) game().data().getItemTemplate(templateID);
+	protected ApparelTemplate getApparelTemplate() {
+		return (ApparelTemplate) getTemplate();
 	}
 
 	public Set<String> getApparelSlots() {

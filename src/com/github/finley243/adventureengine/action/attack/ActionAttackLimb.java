@@ -28,7 +28,7 @@ public class ActionAttackLimb extends ActionAttack {
 	public void consumeAmmo(Actor subject) {
 		if (weapon.getClipSize() > 0 && weapon.getLoadedAmmoType() != null) {
 			if (weapon.getLoadedAmmoType().isReusable()) {
-				target.getArea().getInventory().addItems(weapon.getLoadedAmmoType().getTemplate().getID(), getAmmoConsumed());
+				target.getArea().getInventory().addItems(weapon.getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
 			}
 			weapon.consumeAmmo(getAmmoConsumed());
 		}

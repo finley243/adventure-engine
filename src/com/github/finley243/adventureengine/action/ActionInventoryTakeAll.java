@@ -16,7 +16,7 @@ public class ActionInventoryTakeAll extends Action {
     private final Item item;
 
     public ActionInventoryTakeAll(Noun owner, String name, Inventory inventory, Item item) {
-        if (item.getTemplate().hasState()) throw new IllegalArgumentException("Cannot perform ActionInventoryTakeAll on item with state");
+        if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionInventoryTakeAll on item with state");
         this.owner = owner;
         this.name = name;
         this.inventory = inventory;
@@ -26,8 +26,8 @@ public class ActionInventoryTakeAll extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         int count = inventory.itemCount(item);
-        inventory.removeItems(item.getTemplate().getID(), count);
-        subject.getInventory().addItems(item.getTemplate().getID(), count);
+        inventory.removeItems(item.getTemplateID(), count);
+        subject.getInventory().addItems(item.getTemplateID(), count);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, null, subject, null));
     }

@@ -21,9 +21,11 @@ import java.util.Set;
 public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	private boolean isKnown;
+	private final String templateID;
 
-	public Item(Game game, String ID) {
+	public Item(Game game, String ID, String templateID) {
 		super(game, ID);
+		this.templateID = templateID;
 	}
 
 	@Override
@@ -77,7 +79,17 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 		}
 	}
 
-	public abstract ItemTemplate getTemplate();
+	protected ItemTemplate getTemplate() {
+		return game().data().getItemTemplate(templateID);
+	}
+
+	public String getTemplateID() {
+		return getTemplate().getID();
+	}
+
+	public boolean hasState() {
+		return getTemplate().hasState();
+	}
 	
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();

@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateInventory;
 
 import java.util.List;
 import java.util.Set;
@@ -17,17 +18,25 @@ public abstract class ObjectComponent implements StatHolder {
     private boolean isEnabled;
     private final String ID;
     private final WorldObject object;
+    private final ObjectComponentTemplate template;
 
-    public ObjectComponent(String ID, WorldObject object) {
+    public ObjectComponent(String ID, WorldObject object, ObjectComponentTemplate template) {
         if (ID == null) throw new IllegalArgumentException("ObjectComponent ID cannot be null");
         if (ID.isEmpty()) throw new IllegalArgumentException("ObjectComponent ID cannot be empty");
         this.ID = ID;
         this.object = object;
+        this.template = template;
     }
 
-    public abstract ObjectComponentTemplate getTemplate();
+    protected ObjectComponentTemplate getTemplate() {
+        return template;
+    }
 
     public abstract List<Action> getActions(Actor subject);
+
+    public String getName() {
+        return getTemplate().getName();
+    }
 
     public boolean actionsRestricted() {
         return getTemplate().actionsRestricted();

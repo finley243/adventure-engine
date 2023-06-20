@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveLink;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -15,17 +16,16 @@ import java.util.List;
 
 public class ObjectComponentLink extends ObjectComponent {
 
-    public ObjectComponentLink(String ID, WorldObject object) {
-        super(ID, object);
+    public ObjectComponentLink(String ID, WorldObject object, ObjectComponentTemplate template) {
+        super(ID, object, template);
     }
 
-    @Override
-    public ObjectComponentTemplate getTemplate() {
-        return getTemplateLink();
+    private ObjectComponentTemplateLink getTemplateLink() {
+        return (ObjectComponentTemplateLink) getTemplate();
     }
 
-    public ObjectComponentTemplateLink getTemplateLink() {
-        return (ObjectComponentTemplateLink) getObject().getTemplate().getComponents().get(getID());
+    public Condition getCondition() {
+        return getTemplateLink().getCondition();
     }
 
     public WorldObject getLinkedObject() {

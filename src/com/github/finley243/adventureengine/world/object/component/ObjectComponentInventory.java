@@ -17,18 +17,13 @@ public class ObjectComponentInventory extends ObjectComponent {
 
     private final Inventory inventory;
 
-    public ObjectComponentInventory(String ID, WorldObject object) {
-        super(ID, object);
+    public ObjectComponentInventory(String ID, WorldObject object, ObjectComponentTemplate template) {
+        super(ID, object, template);
         this.inventory = new Inventory(object.game(), null);
     }
 
-    @Override
-    public ObjectComponentTemplate getTemplate() {
-        return getTemplateInventory();
-    }
-
-    public ObjectComponentTemplateInventory getTemplateInventory() {
-        return (ObjectComponentTemplateInventory) getObject().getTemplate().getComponents().get(getID());
+    private ObjectComponentTemplateInventory getTemplateInventory() {
+        return (ObjectComponentTemplateInventory) getTemplate();
     }
 
     @Override

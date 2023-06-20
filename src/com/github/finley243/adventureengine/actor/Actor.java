@@ -158,7 +158,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 
-	public ActorTemplate getTemplate() {
+	private ActorTemplate getTemplate() {
 		return game().data().getActorTemplate(templateID);
 	}
 
@@ -284,7 +284,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public boolean canPerformLocalActions() {
 		if (isUsingObject()) {
-			return getUsingObject().getTemplateUsable().userCanPerformLocalActions();
+			return getUsingObject().userCanPerformLocalActions();
 		}
 		return true;
 	}
@@ -294,7 +294,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public boolean isInCover() {
-		return isUsingObject() && getUsingObject().getTemplateUsable().userIsInCover();
+		return isUsingObject() && getUsingObject().userIsInCover();
 	}
 
 	public List<Limb> getLimbs() {
@@ -566,7 +566,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		if (isUsingObject()) {
 			actions.addAll(getUsingObject().getUsingActions(this));
-			if (getUsingObject().getTemplateUsable().userCanPerformParentActions()) {
+			if (getUsingObject().userCanPerformParentActions()) {
 				actions.addAll(getUsingObject().getObject().localActions(this));
 			}
 		}
@@ -691,7 +691,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public Set<Area> getVisibleAreas() {
-		if (isUsingObject() && !getUsingObject().getTemplateUsable().userCanSeeOtherAreas()) {
+		if (isUsingObject() && !getUsingObject().userCanSeeOtherAreas()) {
 			return Set.of(getArea());
 		} else {
 			return getArea().getLineOfSightAreas();

@@ -24,7 +24,6 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	public static final float HIT_CHANCE_BASE_RANGED_MIN = 0.10f;
 	public static final float HIT_CHANCE_BASE_RANGED_MAX = 0.90f;
 	
-	private final String templateID;
 	private final StatStringSet attackTypes;
 	private final StatInt damage;
 	private final StatInt rate;
@@ -45,8 +44,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	private final EffectComponent effectComponent;
 	
 	public ItemWeapon(Game game, String ID, String templateID) {
-		super(game, ID);
-		this.templateID = templateID;
+		super(game, ID, templateID);
 		this.attackTypes = new StatStringSet("attackTypes", this);
 		this.damage = new StatInt("damage", this);
 		this.rate = new StatInt("rate", this);
@@ -65,13 +63,8 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		this.effectComponent = new EffectComponent(game, this, new Context(game, game.data().getPlayer(), game.data().getPlayer(), this));
 	}
 
-	@Override
-	public ItemTemplate getTemplate() {
-		return getWeaponTemplate();
-	}
-
-	public WeaponTemplate getWeaponTemplate() {
-		return (WeaponTemplate) game().data().getItemTemplate(templateID);
+	protected WeaponTemplate getWeaponTemplate() {
+		return (WeaponTemplate) getTemplate();
 	}
 
 	public WeaponClass getWeaponClass() {

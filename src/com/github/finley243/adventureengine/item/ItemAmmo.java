@@ -6,20 +6,12 @@ import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 public class ItemAmmo extends Item {
 
-    private final String templateID;
-
     public ItemAmmo(Game game, String ID, String templateID) {
-        super(game, ID);
-        this.templateID = templateID;
+        super(game, ID, templateID);
     }
 
-    @Override
-    public ItemTemplate getTemplate() {
-        return getAmmoTemplate();
-    }
-
-    public AmmoTemplate getAmmoTemplate() {
-        return (AmmoTemplate) game().data().getItemTemplate(templateID);
+    protected AmmoTemplate getAmmoTemplate() {
+        return (AmmoTemplate) getTemplate();
     }
 
     public boolean isReusable() {

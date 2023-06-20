@@ -30,14 +30,14 @@ public class Inventory {
 	}
 
 	public void addItem(Item item) {
-		if (item.getTemplate().hasState()) {
-			if (!items.containsKey(item.getTemplate().getID())) {
-				items.put(item.getTemplate().getID(), new ArrayList<>());
+		if (item.hasState()) {
+			if (!items.containsKey(item.getTemplateID())) {
+				items.put(item.getTemplateID(), new ArrayList<>());
 			}
-			items.get(item.getTemplate().getID()).add(item);
+			items.get(item.getTemplateID()).add(item);
 		} else {
-			int currentCount = itemsStateless.getOrDefault(item.getTemplate().getID(), 0);
-			itemsStateless.put(item.getTemplate().getID(), currentCount + 1);
+			int currentCount = itemsStateless.getOrDefault(item.getTemplateID(), 0);
+			itemsStateless.put(item.getTemplateID(), currentCount + 1);
 		}
 	}
 
@@ -59,10 +59,10 @@ public class Inventory {
 
 	public void addItems(Map<Item, Integer> itemMap) {
 		for (Item item : itemMap.keySet()) {
-			if (item.getTemplate().hasState()) {
+			if (item.hasState()) {
 				addItem(item);
 			} else {
-				addItems(item.getTemplate().getID(), itemMap.get(item));
+				addItems(item.getTemplateID(), itemMap.get(item));
 			}
 		}
 	}
@@ -97,14 +97,14 @@ public class Inventory {
 
 	// TODO - Possibly change behavior to return count of stated items with the same template, rather than count of instance
 	public int itemCount(Item item) {
-		if (item.getTemplate().hasState()) {
-			if (items.containsKey(item.getTemplate().getID()) && items.get(item.getTemplate().getID()).contains(item)) {
+		if (item.hasState()) {
+			if (items.containsKey(item.getTemplateID()) && items.get(item.getTemplateID()).contains(item)) {
 				return 1;
 			} else {
 				return 0;
 			}
 		} else {
-			return itemsStateless.getOrDefault(item.getTemplate().getID(), 0);
+			return itemsStateless.getOrDefault(item.getTemplateID(), 0);
 		}
 	}
 
@@ -121,11 +121,11 @@ public class Inventory {
 	}
 
 	public void removeItem(Item item) {
-		if (item.getTemplate().hasState()) {
-			if (items.containsKey(item.getTemplate().getID())) {
-				boolean wasRemoved = items.get(item.getTemplate().getID()).remove(item);
-				if (items.get(item.getTemplate().getID()).isEmpty()) {
-					items.remove(item.getTemplate().getID());
+		if (item.hasState()) {
+			if (items.containsKey(item.getTemplateID())) {
+				boolean wasRemoved = items.get(item.getTemplateID()).remove(item);
+				if (items.get(item.getTemplateID()).isEmpty()) {
+					items.remove(item.getTemplateID());
 				}
 				if (wasRemoved && actor != null) {
 					if (item instanceof ItemApparel) {
@@ -137,11 +137,11 @@ public class Inventory {
 				}
 			}
 		} else {
-			if (itemsStateless.containsKey(item.getTemplate().getID())) {
-				int count = itemsStateless.get(item.getTemplate().getID());
+			if (itemsStateless.containsKey(item.getTemplateID())) {
+				int count = itemsStateless.get(item.getTemplateID());
 				int newCount = count - 1;
 				if (newCount <= 0) {
-					itemsStateless.remove(item.getTemplate().getID());
+					itemsStateless.remove(item.getTemplateID());
 					if (actor != null) {
 						if (item instanceof ItemApparel) {
 							actor.getApparelComponent().unequip((ItemApparel) item);
@@ -151,7 +151,7 @@ public class Inventory {
 						}
 					}
 				} else {
-					itemsStateless.put(item.getTemplate().getID(), newCount);
+					itemsStateless.put(item.getTemplateID(), newCount);
 				}
 			}
 		}
@@ -295,8 +295,8 @@ public class Inventory {
 	}
 
 	public static String getItemNameFormatted(Item item, Inventory inventory) {
-		if (item.getTemplate().hasState() && inventory.itemCount(item.getTemplate().getID()) > 1) {
-			int instanceIndex = inventory.items.get(item.getTemplate().getID()).indexOf(item) + 1;
+		if (item.hasState() && inventory.itemCount(item.getTemplateID()) > 1) {
+			int instanceIndex = inventory.items.get(item.getTemplateID()).indexOf(item) + 1;
 			return LangUtils.titleCase(item.getName()) + " (" + instanceIndex + ")";
 		} else if (inventory.itemCount(item) > 1) {
 			return LangUtils.titleCase(item.getName()) + " x" + inventory.itemCount(item);

@@ -17,7 +17,7 @@ public class ActionInventoryStoreAll extends Action {
     private final boolean isExposed;
 
     public ActionInventoryStoreAll(Noun owner, String name, Inventory inventory, Item item, boolean isExposed) {
-        if (item.getTemplate().hasState()) throw new IllegalArgumentException("Cannot perform ActionInventoryStoreAll on item with state");
+        if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionInventoryStoreAll on item with state");
         this.owner = owner;
         this.name = name;
         this.inventory = inventory;
@@ -28,8 +28,8 @@ public class ActionInventoryStoreAll extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         int count = subject.getInventory().itemCount(item);
-        subject.getInventory().removeItems(item.getTemplate().getID(), count);
-        inventory.addItems(item.getTemplate().getID(), count);
+        subject.getInventory().removeItems(item.getTemplateID(), count);
+        inventory.addItems(item.getTemplateID(), count);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((isExposed ? "placeOn" : "storeIn")), context, this, null, subject, null));
     }

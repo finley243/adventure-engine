@@ -12,17 +12,12 @@ import java.util.List;
 
 public class ObjectComponentNetwork extends ObjectComponent {
 
-    public ObjectComponentNetwork(String ID, WorldObject object) {
-        super(ID, object);
+    public ObjectComponentNetwork(String ID, WorldObject object, ObjectComponentTemplate template) {
+        super(ID, object, template);
     }
 
-    @Override
-    public ObjectComponentTemplate getTemplate() {
-        return getTemplateNetwork();
-    }
-
-    public ObjectComponentTemplateNetwork getTemplateNetwork() {
-        return (ObjectComponentTemplateNetwork) getObject().getTemplate().getComponents().get(getID());
+    private ObjectComponentTemplateNetwork getTemplateNetwork() {
+        return (ObjectComponentTemplateNetwork) getTemplate();
     }
 
     @Override

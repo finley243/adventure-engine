@@ -13,8 +13,8 @@ public abstract class ItemEquippable extends Item {
 
 	private Actor equippedActor;
 
-	public ItemEquippable(Game game, String ID) {
-		super(game, ID);
+	public ItemEquippable(Game game, String ID, String templateID) {
+		super(game, ID, templateID);
 	}
 
 	public Actor getEquippedActor() {

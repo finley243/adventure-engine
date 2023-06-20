@@ -25,18 +25,18 @@ public class ActionObjectUseEnd extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		if (component.getTemplateUsable().userIsInCover()) {
+		if (component.userIsInCover()) {
 			subject.triggerScript("on_leave_cover", subject);
 		}
 		component.removeUser();
 		subject.setUsingObject(null);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(component.getTemplateUsable().getEndPhrase()), context, this, null, subject, null));
+		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase()), context, this, null, subject, null));
 	}
 
 	@Override
 	public float utility(Actor subject) {
-		if (component.getTemplateUsable().userIsInCover()) {
+		if (component.userIsInCover()) {
 			return 0.3f;
 		}
 		return 0.0f;
@@ -45,12 +45,12 @@ public class ActionObjectUseEnd extends Action {
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
 		String[] menuPath;
-		if (component.getTemplate().getName() != null) {
-			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName()), LangUtils.titleCase(component.getTemplate().getName())};
+		if (component.getName() != null) {
+			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName()), LangUtils.titleCase(component.getName())};
 		} else {
 			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName())};
 		}
-		return new MenuChoice(component.getTemplateUsable().getEndPrompt(), canChoose(subject), menuPath, new String[]{component.getTemplateUsable().getEndPrompt().toLowerCase()});
+		return new MenuChoice(component.getEndPrompt(), canChoose(subject), menuPath, new String[]{component.getEndPrompt().toLowerCase()});
 	}
 
 	@Override

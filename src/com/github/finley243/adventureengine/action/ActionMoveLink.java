@@ -43,7 +43,7 @@ public class ActionMoveLink extends ActionMove {
 	@Override
 	public boolean canChoose(Actor subject) {
 		return super.canChoose(subject) &&
-				(linkComponent.getTemplateLink().getCondition() == null || linkComponent.getTemplateLink().getCondition().isMet(new Context(subject.game(), subject, subject, linkComponent.getObject())));
+				(linkComponent.getCondition() == null || linkComponent.getCondition().isMet(new Context(subject.game(), subject, subject, linkComponent.getObject())));
 	}
 
 	@Override
@@ -54,8 +54,8 @@ public class ActionMoveLink extends ActionMove {
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
 		String[] menuPath;
-		if (linkComponent.getTemplate().getName() != null) {
-			menuPath = new String[] {LangUtils.titleCase(linkComponent.getObject().getName()), LangUtils.titleCase(linkComponent.getTemplate().getName())};
+		if (linkComponent.getName() != null) {
+			menuPath = new String[] {LangUtils.titleCase(linkComponent.getObject().getName()), LangUtils.titleCase(linkComponent.getName())};
 		} else {
 			menuPath = new String[] {LangUtils.titleCase(linkComponent.getObject().getName())};
 		}

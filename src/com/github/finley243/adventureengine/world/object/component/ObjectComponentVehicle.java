@@ -12,17 +12,12 @@ import java.util.List;
 
 public class ObjectComponentVehicle extends ObjectComponent {
 
-    public ObjectComponentVehicle(String ID, WorldObject object) {
-        super(ID, object);
+    public ObjectComponentVehicle(String ID, WorldObject object, ObjectComponentTemplate template) {
+        super(ID, object, template);
     }
 
-    @Override
-    public ObjectComponentTemplate getTemplate() {
-        return getTemplateVehicle();
-    }
-
-    public ObjectComponentTemplateVehicle getTemplateVehicle() {
-        return (ObjectComponentTemplateVehicle) getObject().getTemplate().getComponents().get(getID());
+    private ObjectComponentTemplateVehicle getTemplateVehicle() {
+        return (ObjectComponentTemplateVehicle) getTemplate();
     }
 
     public WorldObject getObjectOverride() {
