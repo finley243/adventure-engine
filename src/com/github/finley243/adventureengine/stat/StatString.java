@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -42,6 +43,12 @@ public class StatString extends Stat {
     public void removeMod(String value) {
         stringStack.remove(value);
         getTarget().onStatChange(getName());
+    }
+
+    public record StatFloatMod(Condition condition, String value) {
+        public boolean shouldApply(Context context) {
+            return condition == null || condition.isMet(context);
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -105,6 +106,12 @@ public class StatStringSet extends Stat {
             return Enum.valueOf(enumClass, string.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
+        }
+    }
+
+    public record StatFloatMod(Condition condition, Set<String> addition, Set<String> cancellation) {
+        public boolean shouldApply(Context context) {
+            return condition == null || condition.isMet(context);
         }
     }
 

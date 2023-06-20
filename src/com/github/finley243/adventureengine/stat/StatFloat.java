@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.condition.Condition;
 
 public class StatFloat extends Stat {
 
@@ -24,6 +25,12 @@ public class StatFloat extends Stat {
     public void addMult(float value) {
         mult += value;
         getTarget().onStatChange(getName());
+    }
+
+    public record StatFloatMod(Condition condition, float add, float mult) {
+        public boolean shouldApply(Context context) {
+            return condition == null || condition.isMet(context);
+        }
     }
 
 }

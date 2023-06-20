@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.condition.Condition;
 
 public class StatBoolean extends Stat {
 
@@ -40,6 +41,12 @@ public class StatBoolean extends Stat {
             this.countFalse -= 1;
         }
         getTarget().onStatChange(getName());
+    }
+
+    public record StatBooleanMod(Condition condition, boolean value) {
+        public boolean shouldApply(Context context) {
+            return condition == null || condition.isMet(context);
+        }
     }
 
 }
