@@ -105,6 +105,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Inventory inventory;
 	private final ApparelComponent apparelComponent;
 	private final EquipmentComponent equipmentComponent;
+	private final StatStringSet equipmentEffects;
 	private final TargetingComponent targetingComponent;
 	private final BehaviorComponent behaviorComponent;
 	private int money;
@@ -130,6 +131,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.inventory = new Inventory(game, this);
 		this.apparelComponent = new ApparelComponent(this);
 		this.equipmentComponent = new EquipmentComponent(this);
+		this.equipmentEffects = new StatStringSet("equipment_effects", this);
 		this.attributes = new EnumMap<>(Attribute.class);
 		for (Attribute attribute : Attribute.values()) {
 			this.attributes.put(attribute, new StatInt("attribute_" + attribute, this));
@@ -794,6 +796,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public StatStringSet getStatStringSet(String name) {
+		if ("equipment_effects".equals(name)) {
+			return equipmentEffects;
+		}
 		return null;
 	}
 
@@ -868,6 +873,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public Set<String> getValueStringSet(String name, Context context) {
+		if ("equipment_effects".equals(name)) {
+			return equipmentEffects.value(new HashSet<>(), context);
+		}
 		return null;
 	}
 
