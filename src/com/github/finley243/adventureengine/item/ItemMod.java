@@ -4,19 +4,26 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionModInstall;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.item.template.WeaponModTemplate;
+import com.github.finley243.adventureengine.item.template.ModTemplate;
 
 import java.util.List;
 
-public class ItemWeaponMod extends Item {
+public class ItemMod extends Item {
 
-    public ItemWeaponMod(Game game, String ID, String templateID) {
+    public ItemMod(Game game, String ID, String templateID) {
         super(game, ID, templateID);
     }
 
-    protected WeaponModTemplate getWeaponModTemplate() {
-        return (WeaponModTemplate) getTemplate();
+    private ModTemplate getModTemplate() {
+        return (ModTemplate) getTemplate();
+    }
+
+    public String getModSlot() {
+        return getModTemplate().getModSlot();
+    }
+
+    public List<String> getEffects() {
+        return getModTemplate().getEffects();
     }
 
     @Override

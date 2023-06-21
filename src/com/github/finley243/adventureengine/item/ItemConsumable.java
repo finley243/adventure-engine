@@ -16,7 +16,7 @@ public class ItemConsumable extends Item {
 		super(game, ID, templateID);
 	}
 
-	protected ConsumableTemplate getConsumableTemplate() {
+	private ConsumableTemplate getConsumableTemplate() {
 		return (ConsumableTemplate) getTemplate();
 	}
 	

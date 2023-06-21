@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class WeaponModTemplate extends ItemTemplate {
+public class ModTemplate extends ItemTemplate {
 
     private final String modSlot;
-    private final List<String> weaponEffects;
+    private final List<String> effects;
 
-    public WeaponModTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, String modSlot, List<String> weaponEffects) {
+    public ModTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, String modSlot, List<String> effects) {
         super(game, ID, name, description, scripts, customActions, price);
         this.modSlot = modSlot;
-        this.weaponEffects = weaponEffects;
+        this.effects = effects;
     }
 
     @Override
@@ -29,8 +29,8 @@ public class WeaponModTemplate extends ItemTemplate {
     @Override
     public Set<String> getTags() {
         Set<String> tags = new HashSet<>();
-        tags.add("weapon_mod");
-        tags.add("weapon_mod_slot_" + modSlot);
+        tags.add("mod");
+        tags.add("mod_slot_" + modSlot);
         return tags;
     }
 
@@ -38,8 +38,8 @@ public class WeaponModTemplate extends ItemTemplate {
         return modSlot;
     }
 
-    public List<String> getWeaponEffects() {
-        return weaponEffects;
+    public List<String> getEffects() {
+        return effects;
     }
 
 }

@@ -701,10 +701,10 @@ public class DataLoader {
                 }
                 return new WeaponTemplate(game, id, name, description, scripts, customActions, price, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
             }
-            case "weaponMod" -> {
+            case "mod" -> {
                 String modSlot = LoadUtils.attribute(itemElement, "modSlot", null);
-                List<String> weaponEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new WeaponModTemplate(game, id, name, description, scripts, customActions, price, modSlot, weaponEffects);
+                List<String> effects = LoadUtils.listOfTags(itemElement, "effect");
+                return new ModTemplate(game, id, name, description, scripts, customActions, price, modSlot, effects);
             }
             case "ammo" -> {
                 List<String> ammoWeaponEffects = LoadUtils.listOfTags(itemElement, "weaponEffect");

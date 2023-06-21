@@ -9,7 +9,6 @@ import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.EffectComponent;
 import com.github.finley243.adventureengine.combat.WeaponClass;
-import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.stat.*;
@@ -36,7 +35,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	private final StatString damageType;
 	private final StatBoolean isSilenced;
 	private final StatStringSet targetEffects;
-	private final Map<String, List<ItemWeaponMod>> mods;
+	private final Map<String, List<ItemMod>> mods;
 	private ItemAmmo ammoType;
 	private int ammoCount;
 
@@ -63,7 +62,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		this.effectComponent = new EffectComponent(game, this, new Context(game, game.data().getPlayer(), game.data().getPlayer(), this));
 	}
 
-	protected WeaponTemplate getWeaponTemplate() {
+	private WeaponTemplate getWeaponTemplate() {
 		return (WeaponTemplate) getTemplate();
 	}
 
@@ -192,27 +191,27 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return effectComponent;
 	}
 
-	public boolean canInstallMod(ItemWeaponMod mod) {
-		String modSlot = mod.getWeaponModTemplate().getModSlot();
+	public boolean canInstallMod(ItemMod mod) {
+		String modSlot = mod.getModSlot();
 		return getWeaponTemplate().getModSlots().containsKey(modSlot) && (!mods.containsKey(modSlot) || mods.get(modSlot).size() < getWeaponTemplate().getModSlots().get(modSlot));
 	}
 
-	public void installMod(ItemWeaponMod mod) {
-		for (String effectID : mod.getWeaponModTemplate().getWeaponEffects()) {
+	public void installMod(ItemMod mod) {
+		for (String effectID : mod.getEffects()) {
 			effectComponent.addEffect(effectID);
 		}
-		String modSlot = mod.getWeaponModTemplate().getModSlot();
+		String modSlot = mod.getModSlot();
 		if (!mods.containsKey(modSlot)) {
 			mods.put(modSlot, new ArrayList<>());
 		}
 		mods.get(modSlot).add(mod);
 	}
 
-	public void removeMod(ItemWeaponMod mod) {
-		for (String effectID : mod.getWeaponModTemplate().getWeaponEffects()) {
+	public void removeMod(ItemMod mod) {
+		for (String effectID : mod.getEffects()) {
 			effectComponent.removeEffect(effectID);
 		}
-		String modSlot = mod.getWeaponModTemplate().getModSlot();
+		String modSlot = mod.getModSlot();
 		mods.get(modSlot).remove(mod);
 		if (mods.get(modSlot).isEmpty()) {
 			mods.remove(modSlot);
@@ -236,8 +235,8 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = super.inventoryActions(subject);
-		for (List<ItemWeaponMod> modList : mods.values()) {
-			for (ItemWeaponMod mod : modList) {
+		for (List<ItemMod> modList : mods.values()) {
+			for (ItemMod mod : modList) {
 				actions.add(new ActionModRemove(this, mod));
 			}
 		}

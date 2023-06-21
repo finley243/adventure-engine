@@ -3,16 +3,18 @@ package com.github.finley243.adventureengine.actor.component;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionMove;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class TargetingComponent {
 

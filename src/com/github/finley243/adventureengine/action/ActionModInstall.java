@@ -3,16 +3,15 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.item.ItemWeapon;
-import com.github.finley243.adventureengine.item.ItemWeaponMod;
+import com.github.finley243.adventureengine.item.ItemMod;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 
 public class ActionModInstall extends Action {
 
     private final ItemWeapon weapon;
-    private final ItemWeaponMod mod;
+    private final ItemMod mod;
 
-    public ActionModInstall(ItemWeapon weapon, ItemWeaponMod mod) {
+    public ActionModInstall(ItemWeapon weapon, ItemMod mod) {
         this.weapon = weapon;
         this.mod = mod;
     }

@@ -10,7 +10,7 @@ public class ItemAmmo extends Item {
         super(game, ID, templateID);
     }
 
-    protected AmmoTemplate getAmmoTemplate() {
+    private AmmoTemplate getAmmoTemplate() {
         return (AmmoTemplate) getTemplate();
     }
 

@@ -18,7 +18,7 @@ public class ItemApparel extends Item {
 		super(game, ID, templateID);
 	}
 
-	protected ApparelTemplate getApparelTemplate() {
+	private ApparelTemplate getApparelTemplate() {
 		return (ApparelTemplate) getTemplate();
 	}
 

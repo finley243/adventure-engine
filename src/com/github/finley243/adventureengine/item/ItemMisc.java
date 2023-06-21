@@ -10,7 +10,7 @@ public class ItemMisc extends Item {
         super(game, ID, templateID);
     }
 
-    protected MiscTemplate getMiscTemplate() {
+    private MiscTemplate getMiscTemplate() {
         return (MiscTemplate) getTemplate();
     }
 
