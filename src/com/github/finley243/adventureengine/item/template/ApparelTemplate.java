@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
@@ -14,12 +13,12 @@ import java.util.Set;
 public class ApparelTemplate extends ItemTemplate {
 	
 	private final Set<String> slots;
-	private final List<String> effects;
+	private final List<String> equippedEffects;
 	
-	public ApparelTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, Set<String> slots, List<String> effects) {
+	public ApparelTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, Set<String> slots, List<String> equippedEffects) {
 		super(game, ID, name, description, scripts, customActions, price);
 		this.slots = slots;
-		this.effects = effects;
+		this.equippedEffects = equippedEffects;
 	}
 
 	@Override
@@ -31,20 +30,8 @@ public class ApparelTemplate extends ItemTemplate {
 		return slots;
 	}
 
-	public List<String> getEffects() {
-		return effects;
-	}
-
-	public void onEquip(Actor target) {
-		for (String effect : getEffects()) {
-			target.getEffectComponent().addEffect(effect);
-		}
-	}
-
-	public void onUnequip(Actor target) {
-		for (String effect : getEffects()) {
-			target.getEffectComponent().removeEffect(effect);
-		}
+	public List<String> getEquippedEffects() {
+		return equippedEffects;
 	}
 
 	@Override

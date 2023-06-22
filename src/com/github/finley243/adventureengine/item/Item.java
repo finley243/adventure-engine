@@ -197,7 +197,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public boolean equals(Object o) {
-		return o instanceof Item && getTemplate() == ((Item) o).getTemplate() && (!getTemplate().hasState() || getID().equals(((Item) o).getID()));
+		return o instanceof Item otherItem && getTemplate().equals(otherItem.getTemplate()) && (!getTemplate().hasState() || getID().equals(otherItem.getID()));
 	}
 
 	@Override

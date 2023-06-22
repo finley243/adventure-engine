@@ -1,12 +1,10 @@
 package com.github.finley243.adventureengine.actor.component;
 
+import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.ItemApparel;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ApparelComponent {
 
@@ -19,11 +17,11 @@ public class ApparelComponent {
     }
 
     public boolean isSlotEmpty(String slot) {
-        return equipped.get(slot) == null;
+        return equipped.containsKey(slot);
     }
 
     public boolean isSlotEmpty(ItemApparel item) {
-        for (String slot : item.getApparelSlots()) {
+        for (String slot : item.getEquipSlots()) {
             if (!isSlotEmpty(slot)) {
                 return false;
             }
@@ -32,7 +30,7 @@ public class ApparelComponent {
     }
 
     public void equip(ItemApparel item) {
-        for (String slot : item.getApparelSlots()) {
+        for (String slot : item.getEquipSlots()) {
             ItemApparel lastEquipped = equipped.get(slot);
             if (lastEquipped != null) {
                 unequip(lastEquipped);
@@ -44,17 +42,23 @@ public class ApparelComponent {
 
     public void unequip(ItemApparel item) {
         if (getEquippedItems().contains(item)) {
-            for (String slot : item.getApparelSlots()) {
-                equipped.put(slot, null);
+            for (String slot : item.getEquipSlots()) {
+                equipped.remove(slot);
             }
             item.onUnequip(actor);
         }
     }
 
     public Set<ItemApparel> getEquippedItems() {
-        Set<ItemApparel> items = new HashSet<>(equipped.values());
-        items.remove(null);
-        return items;
+        return new HashSet<>(equipped.values());
+    }
+
+    public List<Action> getEquippedActions() {
+        List<Action> actions = new ArrayList<>();
+        for (ItemApparel item : getEquippedItems()) {
+            actions.addAll(item.equippedActions(actor));
+        }
+        return actions;
     }
 
 }

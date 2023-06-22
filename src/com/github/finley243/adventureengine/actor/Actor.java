@@ -585,9 +585,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		for (Item item : inventory.getItems()) {
 			actions.addAll(item.inventoryActions(this));
 		}
-		for (ItemApparel item : apparelComponent.getEquippedItems()) {
-			actions.addAll(item.equippedActions(this));
-		}
+		actions.addAll(apparelComponent.getEquippedActions());
 		for (Action currentAction : actions) {
 			boolean isBlocked = false;
 			for (Action blockedAction : blockedActions.keySet()) {

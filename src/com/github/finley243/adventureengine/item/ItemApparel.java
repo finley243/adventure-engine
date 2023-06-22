@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.action.ActionApparelEquip;
 import com.github.finley243.adventureengine.action.ActionApparelUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.template.ApparelTemplate;
-import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +21,24 @@ public class ItemApparel extends Item {
 		return (ApparelTemplate) getTemplate();
 	}
 
-	public Set<String> getApparelSlots() {
+	public Set<String> getEquipSlots() {
 		return getApparelTemplate().getSlots();
 	}
 
-	public void onEquip(Actor subject) {
-		getApparelTemplate().onEquip(subject);
+	public List<String> getEquippedEffects() {
+		return getApparelTemplate().getEquippedEffects();
 	}
 
-	public void onUnequip(Actor subject) {
-		getApparelTemplate().onUnequip(subject);
+	public void onEquip(Actor target) {
+		for (String effect : getEquippedEffects()) {
+			target.getEffectComponent().addEffect(effect);
+		}
+	}
+
+	public void onUnequip(Actor target) {
+		for (String effect : getEquippedEffects()) {
+			target.getEffectComponent().removeEffect(effect);
+		}
 	}
 
 	@Override
