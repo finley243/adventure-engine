@@ -284,11 +284,15 @@ public class TargetingComponent {
 
     private Set<AreaLink.DistanceCategory> idealDistances() {
         // TODO - Generalize function (not specific to weapon)
-        if (actor.getEquipmentComponent() != null && actor.getEquipmentComponent().hasEquippedItem() && actor.getEquipmentComponent().getEquippedItem() instanceof ItemWeapon) {
-            return ((ItemWeapon) actor.getEquipmentComponent().getEquippedItem()).getRanges(new Context(actor.game(), actor, actor));
-        } else {
+        Set<ItemWeapon> equippedWeapons = actor.getEquipmentComponent().getEquippedWeapons();
+        if (equippedWeapons.isEmpty()) {
             return Set.of(AreaLink.DistanceCategory.NEAR);
         }
+        Set<AreaLink.DistanceCategory> combinedRanges = new HashSet<>();
+        for (ItemWeapon weapon : equippedWeapons) {
+            combinedRanges.addAll(weapon.getRanges(new Context(actor.game(), actor, actor, weapon)));
+        }
+        return combinedRanges;
     }
 
     private Set<Area> idealAreas(Area origin) {

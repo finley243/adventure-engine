@@ -24,8 +24,8 @@ public class ItemFactory {
 	private static Item create(Game game, ItemTemplate stats, String ID) {
 		Item item = switch (stats) {
 			case ConsumableTemplate ignored -> new ItemConsumable(game, ID, stats.getID());
-			case ApparelTemplate ignored -> new ItemApparel(game, ID, stats.getID());
 			case WeaponTemplate ignored -> new ItemWeapon(game, ID, stats.getID());
+			case EquippableTemplate ignored -> new ItemEquippable(game, ID, stats.getID());
 			case ModTemplate ignored -> new ItemMod(game, ID, stats.getID());
 			case AmmoTemplate ignored -> new ItemAmmo(game, ID, stats.getID());
 			case MiscTemplate ignored -> new ItemMisc(game, ID, stats.getID());

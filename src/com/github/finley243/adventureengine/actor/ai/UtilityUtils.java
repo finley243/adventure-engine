@@ -47,12 +47,12 @@ public class UtilityUtils {
 	}
 	
 	public static float getPursueTargetUtility(Actor subject, Actor target) {
-		if (subject.canSee(target)) {
+		if (!subject.canSee(target)) {
 			return PURSUE_TARGET_UTILITY_INVISIBLE;
-		} else if (subject.getEquipmentComponent().hasRangedWeaponEquipped()) {
-			return PURSUE_TARGET_UTILITY_RANGED;
 		} else if (subject.getEquipmentComponent().hasMeleeWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_MELEE;
+		} else if (subject.getEquipmentComponent().hasRangedWeaponEquipped()) {
+			return PURSUE_TARGET_UTILITY_RANGED;
 		} else {
 			return PURSUE_TARGET_UTILITY_UNARMED;
 		}

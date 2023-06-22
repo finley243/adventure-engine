@@ -15,7 +15,6 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemApparel;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -103,7 +102,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Map<Skill, StatInt> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
-	private final ApparelComponent apparelComponent;
 	private final EquipmentComponent equipmentComponent;
 	private final StatStringSet equipmentEffects;
 	private final TargetingComponent targetingComponent;
@@ -129,7 +127,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.canMove = new StatBoolean("can_move", this, false);
 		this.canDodge = new StatBoolean("can_dodge", this, false);
 		this.inventory = new Inventory(game, this);
-		this.apparelComponent = new ApparelComponent(this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		this.equipmentEffects = new StatStringSet("equipment_effects", this);
 		this.attributes = new EnumMap<>(Attribute.class);
@@ -308,10 +305,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return inventory;
 	}
 
-	public ApparelComponent getApparelComponent() {
-		return apparelComponent;
-	}
-	
 	public EquipmentComponent getEquipmentComponent() {
 		return equipmentComponent;
 	}
@@ -416,11 +409,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		triggerScript("on_death", this);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
 		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
-		if (equipmentComponent.hasEquippedItem()) {
+		// TODO - Enable held item dropping on death for new equipment system
+		/*if (equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
 			inventory.removeItem(item);
 			getArea().getInventory().addItem(item);
-		}
+		}*/
 		isDead = true;
 		HP = 0;
 		if (isPlayer()) {
@@ -552,9 +546,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public List<Action> availableActions() {
 		List<Action> actions = new ArrayList<>();
-		if (equipmentComponent.hasEquippedItem()) {
-			actions.addAll(equipmentComponent.getEquippedItem().equippedActions(this));
-		}
 		if (canPerformLocalActions()) {
 			for (Actor actor : getArea().getActors()) {
 				actions.addAll(actor.localActions(this));
@@ -585,7 +576,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		for (Item item : inventory.getItems()) {
 			actions.addAll(item.inventoryActions(this));
 		}
-		actions.addAll(apparelComponent.getEquippedActions());
+		actions.addAll(equipmentComponent.getEquippedActions());
 		for (Action currentAction : actions) {
 			boolean isBlocked = false;
 			for (Action blockedAction : blockedActions.keySet()) {
@@ -843,12 +834,18 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public boolean getValueBoolean(String name, Context context) {
+		if (name.startsWith("has_equipped_")) {
+			for (String slot : getTemplate().getEquipSlots()) {
+				if (name.equals("has_equipped_" + slot)) {
+					return equipmentComponent.getEquippedItemInSlot(slot) != null;
+				}
+			}
+		}
 		return switch (name) {
 			case "enabled" -> isEnabled;
 			case "sleeping" -> isSleeping;
 			case "in_combat" -> isInCombat();
 			case "using_object" -> isUsingObject();
-			case "has_equipped_item" -> getEquipmentComponent().hasEquippedItem();
 			case "in_cover" -> isInCover();
 			case "dead" -> isDead;
 			case "active" -> isActive();
@@ -938,8 +935,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
+		if (name.startsWith("equipped_")) {
+			for (String slot : getTemplate().getEquipSlots()) {
+				if (name.equals("equipped_" + slot)) {
+					return equipmentComponent.getEquippedItemInSlot(slot);
+				}
+			}
+		}
 		return switch (name) {
-			case "equipped_item" -> getEquipmentComponent().getEquippedItem();
 			case "using_object" -> getUsingObject();
 			case "area" -> getArea();
 			default -> null;
@@ -981,8 +984,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "inventory" -> {
 				if (inventory != null) inventory.loadState(saveData);
 			}
-			case "equipped_item" -> this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
-			case "equipped_apparel" -> this.apparelComponent.equip((ItemApparel) game().data().getItemState(saveData.getValueString()));
+			//case "equipped_item" -> this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
+			//case "equipped_apparel" -> this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
 			case "action_points_used" -> this.actionPointsUsed = saveData.getValueInt();
 		}
 	}
@@ -1007,10 +1010,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (targetingComponent != null) {
 			//state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "targeting", targetingComponent.saveState()));
 		}
-		if (equipmentComponent.hasEquippedItem()) {
+		/*if (equipmentComponent.hasEquippedItem()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equipped_item", equipmentComponent.getEquippedItem().getID()));
-		}
-		for (ItemApparel item : apparelComponent.getEquippedItems()) {
+		}*/
+		for (ItemEquippable item : equipmentComponent.getEquippedItems()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equipped_apparel", item.getID()));
 		}
 		if (usingObject != null) {

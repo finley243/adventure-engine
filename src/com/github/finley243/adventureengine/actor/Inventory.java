@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemApparel;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -128,9 +127,6 @@ public class Inventory {
 					items.remove(item.getTemplateID());
 				}
 				if (wasRemoved && actor != null) {
-					if (item instanceof ItemApparel) {
-						actor.getApparelComponent().unequip((ItemApparel) item);
-					}
 					if (item instanceof ItemEquippable) {
 						actor.getEquipmentComponent().unequip((ItemEquippable) item);
 					}
@@ -143,9 +139,6 @@ public class Inventory {
 				if (newCount <= 0) {
 					itemsStateless.remove(item.getTemplateID());
 					if (actor != null) {
-						if (item instanceof ItemApparel) {
-							actor.getApparelComponent().unequip((ItemApparel) item);
-						}
 						if (item instanceof ItemEquippable) {
 							actor.getEquipmentComponent().unequip((ItemEquippable) item);
 						}

@@ -150,7 +150,8 @@ public class DataLoader {
         Integer hp = LoadUtils.attributeInt(actorElement, "hp", null);
         Map<String, Integer> damageResistance = loadDamageResistance(actorElement);
         List<Limb> limbs = loadLimbs(actorElement);
-        String defaultApparelSlot = LoadUtils.attribute(actorElement, "defaultApparelSlot", null);
+        Set<String> equipSlots = LoadUtils.setOfTags(actorElement, "equipSlot");
+        String defaultEquipSlot = LoadUtils.attribute(actorElement, "defaultEquipSlot", null);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
         String dialogueStart = LoadUtils.attribute(actorElement, "dialogueStart", null);
         Map<Actor.Attribute, Integer> attributes = loadAttributes(actorElement);
@@ -166,7 +167,7 @@ public class DataLoader {
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
         }
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistance, limbs, defaultApparelSlot, attributes, skills, lootTable, dialogueStart, scripts, barks);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistance, limbs, equipSlots, defaultEquipSlot, attributes, skills, lootTable, dialogueStart, scripts, barks);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -673,7 +674,7 @@ public class DataLoader {
             case "apparel" -> {
                 Set<String> apparelSlots = LoadUtils.setOfTags(itemElement, "slot");
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ApparelTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects);
+                return new EquippableTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects);
             }
             case "consumable" -> {
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "consumableType", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);

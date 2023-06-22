@@ -2,17 +2,13 @@ package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public class WeaponTemplate extends ItemTemplate {
+public class WeaponTemplate extends EquippableTemplate {
 
 	private final String weaponClass;
 	private final int damage;
@@ -28,7 +24,7 @@ public class WeaponTemplate extends ItemTemplate {
 	private final Map<String, Integer> modSlots;
 
 	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, float accuracyBonus, float armorMult, boolean silenced, String damageType, Set<String> targetEffects, Map<String, Integer> modSlots) {
-		super(game, ID, name, description, scripts, customActions, price);
+		super(game, ID, name, description, scripts, customActions, price, null, new ArrayList<>());
 		if (weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null: " + ID);
 		for (Map.Entry<String, Integer> entry : modSlots.entrySet()) {
 			if (entry.getValue() <= 0) {
@@ -52,6 +48,16 @@ public class WeaponTemplate extends ItemTemplate {
 	@Override
 	public boolean hasState() {
 		return true;
+	}
+
+	@Override
+	public Set<String> getSlots() {
+		Set<String> slots = new HashSet<>();
+		slots.add("hand_main");
+		if (getWeaponClass().isTwoHanded()) {
+			slots.add("hand_off");
+		}
+		return slots;
 	}
 	
 	public WeaponClass getWeaponClass() {

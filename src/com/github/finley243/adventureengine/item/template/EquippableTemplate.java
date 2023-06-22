@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ApparelTemplate extends ItemTemplate {
+public class EquippableTemplate extends ItemTemplate {
 	
 	private final Set<String> slots;
 	private final List<String> equippedEffects;
 	
-	public ApparelTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, Set<String> slots, List<String> equippedEffects) {
+	public EquippableTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, Set<String> slots, List<String> equippedEffects) {
 		super(game, ID, name, description, scripts, customActions, price);
 		this.slots = slots;
 		this.equippedEffects = equippedEffects;
