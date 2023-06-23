@@ -30,6 +30,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	private final StatFloat critChance;
 	private final StatStringSet ranges;
 	private final StatInt clipSize;
+	private final StatInt reloadActionPoints;
 	private final StatFloat accuracyBonus;
 	private final StatFloat armorMult;
 	private final StatString damageType;
@@ -44,18 +45,19 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	
 	public ItemWeapon(Game game, String ID, String templateID) {
 		super(game, ID, templateID);
-		this.attackTypes = new StatStringSet("attackTypes", this);
+		this.attackTypes = new StatStringSet("attack_types", this);
 		this.damage = new StatInt("damage", this);
 		this.rate = new StatInt("rate", this);
-		this.critDamage = new StatInt("critDamage", this);
-		this.critChance = new StatFloat("critChance", this);
+		this.critDamage = new StatInt("crit_damage", this);
+		this.critChance = new StatFloat("crit_chance", this);
 		this.ranges = new StatStringSet("ranges", this);
-		this.clipSize = new StatInt("clipSize", this);
-		this.accuracyBonus = new StatFloat("accuracyBonus", this);
-		this.armorMult = new StatFloat("armorMult", this);
-		this.damageType = new StatString("damageType", this);
-		this.isSilenced = new StatBoolean("isSilenced", this, false);
-		this.targetEffects = new StatStringSet("targetEffects", this);
+		this.clipSize = new StatInt("clip_size", this);
+		this.reloadActionPoints = new StatInt("reload_action_points", this);
+		this.accuracyBonus = new StatFloat("accuracy_bonus", this);
+		this.armorMult = new StatFloat("armor_mult", this);
+		this.damageType = new StatString("damage_type", this);
+		this.isSilenced = new StatBoolean("is_silenced", this, false);
+		this.targetEffects = new StatStringSet("target_effects", this);
 		this.mods = new HashMap<>();
 		this.ammoType = null;
 		this.ammoCount = 0;
@@ -167,6 +169,10 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		setLoadedAmmoType(null);
 	}
 
+	public int getReloadActionPoints(Context context) {
+		return reloadActionPoints.value(getWeaponTemplate().getReloadActionPoints(), 0, 1000, context);
+	}
+
 	public boolean isSilenced(Context context) {
 		return isSilenced.value(getWeaponTemplate().isSilenced(), context);
 	}
@@ -250,6 +256,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 			case "rate" -> rate;
 			case "crit_damage" -> critDamage;
 			case "clip_size" -> clipSize;
+			case "reload_action_points" -> reloadActionPoints;
 			default -> null;
 		};
 	}
@@ -299,6 +306,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 			case "rate" -> rate.value(getWeaponTemplate().getRate(), 1, 50, context);
 			case "crit_damage" -> critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000, context);
 			case "clip_size" -> clipSize.value(getWeaponTemplate().getClipSize(), 0, 100, context);
+			case "reload_action_points" -> reloadActionPoints.value(getWeaponTemplate().getReloadActionPoints(), 0, 1000, context);
 			case "ammo_count" -> ammoCount;
 			default -> super.getValueInt(name, context);
 		};

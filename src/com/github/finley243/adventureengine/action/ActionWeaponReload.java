@@ -1,6 +1,9 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.item.ItemAmmo;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -47,6 +50,11 @@ public class ActionWeaponReload extends Action {
 	@Override
 	public boolean canChoose(Actor subject) {
 		return super.canChoose(subject) && (weapon.getAmmoFraction() < 1.0f || weapon.getLoadedAmmoType() == null || !weapon.getLoadedAmmoType().getTemplateID().equals(ammoType.getTemplateID())) && (subject != subject.game().data().getPlayer() || subject.getInventory().hasItem(ammoType.getTemplateID()));
+	}
+
+	@Override
+	public int actionPoints(Actor subject) {
+		return weapon.getReloadActionPoints(new Context(subject.game(), subject, subject, weapon, new MapBuilder<String, Expression>().put("ammo_type", new ExpressionConstantString(ammoType.getTemplateID())).build()));
 	}
 
 	@Override

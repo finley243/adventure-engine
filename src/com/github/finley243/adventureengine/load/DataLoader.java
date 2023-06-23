@@ -704,6 +704,7 @@ public class DataLoader {
                 float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
+                int weaponReloadActionPoints = LoadUtils.singleTagInt(itemElement, "reloadActionPoints", 1);
                 Set<String> weaponTargetEffects = LoadUtils.setOfTags(itemElement, "targetEffect");
                 Map<String, Integer> modSlots = new HashMap<>();
                 for (Element modSlotElement : LoadUtils.directChildrenWithName(itemElement, "modSlot")) {
@@ -711,7 +712,7 @@ public class DataLoader {
                     int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
                     modSlots.put(slotName, slotCount);
                 }
-                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
+                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(itemElement, "modSlot", null);
