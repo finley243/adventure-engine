@@ -22,8 +22,8 @@ public class EquipmentComponent {
         return !equipped.containsKey(slot);
     }
 
-    public boolean isSlotEmpty(ItemEquippable item) {
-        for (String slot : item.getEquipSlots()) {
+    public boolean isSlotEmpty(Set<String> slots) {
+        for (String slot : slots) {
             if (!isSlotEmpty(slot)) {
                 return false;
             }
@@ -31,8 +31,10 @@ public class EquipmentComponent {
         return true;
     }
 
-    public void equip(ItemEquippable item) {
-        for (String slot : item.getEquipSlots()) {
+    public void equip(ItemEquippable item, Set<String> slots) {
+        if (!actor.getEquipSlots().containsAll(slots)) throw new UnsupportedOperationException("Specified equip slots do not exist on actor: " + actor + ", " + slots);
+        if (!item.getEquipSlots().contains(slots)) throw new UnsupportedOperationException("Invalid slots for equipping item: " + item + ", " + slots);
+        for (String slot : slots) {
             ItemEquippable lastEquipped = equipped.get(slot);
             if (lastEquipped != null) {
                 unequip(lastEquipped);
@@ -45,12 +47,12 @@ public class EquipmentComponent {
                 weapon.getEffectComponent().addEffect(equipmentEffect);
             }
         }
-        item.onEquip(actor);
+        item.onEquip(actor, slots);
     }
 
     public void unequip(ItemEquippable item) {
         if (getEquippedItems().contains(item)) {
-            for (String slot : item.getEquipSlots()) {
+            for (String slot : item.getEquippedSlots()) {
                 equipped.remove(slot);
             }
             if (item instanceof ItemWeapon weapon) {
@@ -101,6 +103,7 @@ public class EquipmentComponent {
     public List<Action> getEquippedActions() {
         List<Action> actions = new ArrayList<>();
         for (ItemEquippable item : getEquippedItems()) {
+            // TODO - Fix actions for multiple equipped items with the same name
             actions.addAll(item.equippedActions(actor));
         }
         return actions;

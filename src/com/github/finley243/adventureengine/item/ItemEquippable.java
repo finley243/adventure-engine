@@ -14,6 +14,7 @@ import java.util.Set;
 public class ItemEquippable extends Item {
 
 	private Actor equippedActor;
+	private Set<String> equippedSlots;
 
 	public ItemEquippable(Game game, String ID, String templateID) {
 		super(game, ID, templateID);
@@ -27,11 +28,19 @@ public class ItemEquippable extends Item {
 		return equippedActor;
 	}
 
-	public void setEquippedActor(Actor actor) {
+	private void setEquippedActor(Actor actor) {
 		this.equippedActor = actor;
 	}
 
-	public Set<String> getEquipSlots() {
+	public Set<String> getEquippedSlots() {
+		return equippedSlots;
+	}
+
+	private void setEquippedSlots(Set<String> slots) {
+		this.equippedSlots = slots;
+	}
+
+	public Set<Set<String>> getEquipSlots() {
 		return getApparelTemplate().getSlots();
 	}
 
@@ -39,22 +48,28 @@ public class ItemEquippable extends Item {
 		return getApparelTemplate().getEquippedEffects();
 	}
 
-	public void onEquip(Actor target) {
+	public void onEquip(Actor target, Set<String> slots) {
 		for (String effect : getEquippedEffects()) {
 			target.getEffectComponent().addEffect(effect);
 		}
+		setEquippedActor(target);
+		setEquippedSlots(slots);
 	}
 
 	public void onUnequip(Actor target) {
 		for (String effect : getEquippedEffects()) {
 			target.getEffectComponent().removeEffect(effect);
 		}
+		setEquippedActor(null);
+		setEquippedSlots(null);
 	}
 
 	@Override
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = super.inventoryActions(subject);
-		actions.add(new ActionItemEquip(this));
+		for (Set<String> slots : getEquipSlots()) {
+			actions.add(new ActionItemEquip(this, slots));
+		}
 		return actions;
 	}
 

@@ -46,16 +46,20 @@ public class WeaponTemplate extends EquippableTemplate {
 	}
 
 	@Override
-	public boolean hasState() {
-		return true;
-	}
-
-	@Override
-	public Set<String> getSlots() {
-		Set<String> slots = new HashSet<>();
-		slots.add("hand_main");
+	public Set<Set<String>> getSlots() {
+		Set<Set<String>> slots = new HashSet<>();
 		if (getWeaponClass().isTwoHanded()) {
-			slots.add("hand_off");
+			Set<String> bothHands = new HashSet<>();
+			bothHands.add("hand_main");
+			bothHands.add("hand_off");
+			slots.add(bothHands);
+		} else {
+			Set<String> mainHand = new HashSet<>();
+			Set<String> offHand = new HashSet<>();
+			mainHand.add("hand_main");
+			offHand.add("hand_off");
+			slots.add(mainHand);
+			slots.add(offHand);
 		}
 		return slots;
 	}

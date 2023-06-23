@@ -672,7 +672,11 @@ public class DataLoader {
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
         switch (type) {
             case "apparel" -> {
-                Set<String> apparelSlots = LoadUtils.setOfTags(itemElement, "slot");
+                Set<Set<String>> apparelSlots = new HashSet<>();
+                for (Element slotGroupElement : LoadUtils.directChildrenWithName(itemElement, "slotGroup")) {
+                    Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
+                    apparelSlots.add(slotGroup);
+                }
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
                 return new EquippableTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects);
             }

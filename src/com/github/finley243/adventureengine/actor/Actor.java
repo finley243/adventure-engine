@@ -321,6 +321,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return targetingComponent;
 	}
 
+	public Set<String> getEquipSlots() {
+		return getTemplate().getEquipSlots();
+	}
+
 	public int getMaxHP() {
 		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
 	}

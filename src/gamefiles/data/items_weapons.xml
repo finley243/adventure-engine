@@ -7,9 +7,7 @@
     <item type="weapon" id="katana" price="60" class="sword">
         <name>katana</name>
         <description>
-            <line>
-                <text>A razor-sharp sword of fine craftsmanship.</text>
-            </line>
+            <line>A razor-sharp sword of fine craftsmanship.</line>
         </description>
         <damage base="20" crit="10"/>
         <rate>2</rate>
@@ -31,9 +29,7 @@
     <item type="weapon" id="rifle_auto" price="90" class="assault_rifle">
         <name>auto rifle</name>
         <description>
-            <line>
-                <text>A full-auto assault rifle.</text>
-            </line>
+            <line>A full-auto assault rifle.</line>
         </description>
         <damage base="15" crit="4"/>
         <rate>2</rate>
