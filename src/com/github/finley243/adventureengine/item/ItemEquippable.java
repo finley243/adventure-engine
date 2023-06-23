@@ -2,9 +2,11 @@ package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionItemEquip;
 import com.github.finley243.adventureengine.action.ActionItemUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.item.template.EquippableTemplate;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class ItemEquippable extends Item {
 		super(game, ID, templateID);
 	}
 
-	private EquippableTemplate getApparelTemplate() {
+	private EquippableTemplate getEquippableTemplate() {
 		return (EquippableTemplate) getTemplate();
 	}
 
@@ -41,11 +43,11 @@ public class ItemEquippable extends Item {
 	}
 
 	public Set<Set<String>> getEquipSlots() {
-		return getApparelTemplate().getSlots();
+		return getEquippableTemplate().getSlots();
 	}
 
 	public List<String> getEquippedEffects() {
-		return getApparelTemplate().getEquippedEffects();
+		return getEquippableTemplate().getEquippedEffects();
 	}
 
 	public void onEquip(Actor target, Set<String> slots) {
@@ -76,6 +78,12 @@ public class ItemEquippable extends Item {
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionItemUnequip(this));
+		for (ActionCustom.CustomActionHolder equippedAction : getEquippableTemplate().getEquippedActions()) {
+			ActionCustom action = new ActionCustom(game(), null, this, equippedAction.action(), equippedAction.parameters(), new String[] {Inventory.getItemNameFormatted(this, subject.getInventory())}, false);
+			if (action.canShow(subject)) {
+				actions.add(action);
+			}
+		}
 		return actions;
 	}
 

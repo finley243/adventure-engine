@@ -14,11 +14,13 @@ public class EquippableTemplate extends ItemTemplate {
 	
 	private final Set<Set<String>> slots;
 	private final List<String> equippedEffects;
+	private final List<ActionCustom.CustomActionHolder> equippedActions;
 	
-	public EquippableTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, Set<Set<String>> slots, List<String> equippedEffects) {
+	public EquippableTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, Set<Set<String>> slots, List<String> equippedEffects, List<ActionCustom.CustomActionHolder> equippedActions) {
 		super(game, ID, name, description, scripts, customActions, price);
 		this.slots = slots;
 		this.equippedEffects = equippedEffects;
+		this.equippedActions = equippedActions;
 	}
 
 	@Override
@@ -32,6 +34,10 @@ public class EquippableTemplate extends ItemTemplate {
 
 	public List<String> getEquippedEffects() {
 		return equippedEffects;
+	}
+
+	public List<ActionCustom.CustomActionHolder> getEquippedActions() {
+		return equippedActions;
 	}
 
 	@Override

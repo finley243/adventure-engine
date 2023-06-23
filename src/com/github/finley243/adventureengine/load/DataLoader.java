@@ -683,7 +683,8 @@ public class DataLoader {
                     apparelSlots.add(slotGroup);
                 }
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new EquippableTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects);
+                List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");
+                return new EquippableTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects, equippedActions);
             }
             case "consumable" -> {
                 ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "consumableType", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
@@ -691,6 +692,7 @@ public class DataLoader {
                 return new ConsumableTemplate(game, id, name, description, scripts, customActions, price, consumableType, consumableEffects);
             }
             case "weapon" -> {
+                List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");
                 String weaponClass = LoadUtils.attribute(itemElement, "class", null);
                 int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
                 Element damageElement = LoadUtils.singleChildWithName(itemElement, "damage");
@@ -709,7 +711,7 @@ public class DataLoader {
                     int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
                     modSlots.put(slotName, slotCount);
                 }
-                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
+                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(itemElement, "modSlot", null);
