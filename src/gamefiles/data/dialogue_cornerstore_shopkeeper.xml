@@ -2,7 +2,6 @@
     <scene id="cornerstore_shopkeeper_start">
         <line once="true" redirect="cornerstore_shopkeeper_main">
             <line>"Welcome, welcome! We've got everything you need here, all at a good price. What can I help you with?"</line>
-            <line>TEST TEST</line>
         </line>
         <line redirect="cornerstore_shopkeeper_main">"Hello again! What can I help you with?"</line>
     </scene>
