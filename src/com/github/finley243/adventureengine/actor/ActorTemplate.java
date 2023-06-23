@@ -8,7 +8,6 @@ import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ActorTemplate extends GameInstanced {
 	
@@ -24,7 +23,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Integer maxHP;
 	private final Map<String, Integer> damageResistance;
 	private final List<Limb> limbs;
-	private final Set<String> equipSlots;
+	private final Map<String, EquipSlot> equipSlots;
 	private final String defaultEquipSlot;
 	private final Map<Actor.Attribute, Integer> attributes;
 	private final Map<Actor.Skill, Integer> skills;
@@ -35,7 +34,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, List<Limb> limbs, Set<String> equipSlots, String defaultEquipSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, List<Limb> limbs, Map<String, EquipSlot> equipSlots, String defaultEquipSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -112,7 +111,7 @@ public class ActorTemplate extends GameInstanced {
 		return !limbs.isEmpty() ? limbs : game().data().getActorTemplate(parentID).getLimbs();
 	}
 
-	public Set<String> getEquipSlots() {
+	public Map<String, EquipSlot> getEquipSlots() {
 		return !equipSlots.isEmpty() ? equipSlots : game().data().getActorTemplate(parentID).getEquipSlots();
 	}
 

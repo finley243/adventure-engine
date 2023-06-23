@@ -32,7 +32,7 @@ public class EquipmentComponent {
     }
 
     public void equip(ItemEquippable item, Set<String> slots) {
-        if (!actor.getEquipSlots().containsAll(slots)) throw new UnsupportedOperationException("Specified equip slots do not exist on actor: " + actor + ", " + slots);
+        if (!actor.getEquipSlots().keySet().containsAll(slots)) throw new UnsupportedOperationException("Specified equip slots do not exist on actor: " + actor + ", " + slots);
         if (!item.getEquipSlots().contains(slots)) throw new UnsupportedOperationException("Invalid slots for equipping item: " + item + ", " + slots);
         for (String slot : slots) {
             ItemEquippable lastEquipped = equipped.get(slot);

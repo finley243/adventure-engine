@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -41,8 +42,17 @@ public class ActionItemEquip extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        // TODO - Improve menu format for equip slots
-        return new MenuChoice("Equip " + slots, canChoose(subject), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"equip " + item.getName(), "put on " + item.getName()});
+        StringBuilder slotLabel = new StringBuilder();
+        boolean first = true;
+        for (String slot : slots) {
+            if (first) {
+                first = false;
+            } else {
+                slotLabel.append(", ");
+            }
+            slotLabel.append(LangUtils.titleCase(subject.getEquipSlots().get(slot).name()));
+        }
+        return new MenuChoice("Equip (" + slotLabel + ")", canChoose(subject), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"equip " + item.getName(), "put on " + item.getName()});
     }
 
     @Override

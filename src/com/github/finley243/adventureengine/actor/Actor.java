@@ -321,7 +321,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return targetingComponent;
 	}
 
-	public Set<String> getEquipSlots() {
+	public Map<String, EquipSlot> getEquipSlots() {
 		return getTemplate().getEquipSlots();
 	}
 
@@ -839,7 +839,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	@Override
 	public boolean getValueBoolean(String name, Context context) {
 		if (name.startsWith("has_equipped_")) {
-			for (String slot : getTemplate().getEquipSlots()) {
+			for (String slot : getTemplate().getEquipSlots().keySet()) {
 				if (name.equals("has_equipped_" + slot)) {
 					return equipmentComponent.getEquippedItemInSlot(slot) != null;
 				}
@@ -940,7 +940,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
 		if (name.startsWith("equipped_")) {
-			for (String slot : getTemplate().getEquipSlots()) {
+			for (String slot : getTemplate().getEquipSlots().keySet()) {
 				if (name.equals("equipped_" + slot)) {
 					return equipmentComponent.getEquippedItemInSlot(slot);
 				}

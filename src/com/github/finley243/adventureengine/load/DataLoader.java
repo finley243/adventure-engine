@@ -150,7 +150,12 @@ public class DataLoader {
         Integer hp = LoadUtils.attributeInt(actorElement, "hp", null);
         Map<String, Integer> damageResistance = loadDamageResistance(actorElement);
         List<Limb> limbs = loadLimbs(actorElement);
-        Set<String> equipSlots = LoadUtils.setOfTags(actorElement, "equipSlot");
+        Map<String, EquipSlot> equipSlots = new HashMap<>();
+        for (Element slotElement : LoadUtils.directChildrenWithName(actorElement, "equipSlot")) {
+            String slotID = LoadUtils.attribute(slotElement, "id", null);
+            String slotName = slotElement.getTextContent();
+            equipSlots.put(slotID, new EquipSlot(slotID, slotName));
+        }
         String defaultEquipSlot = LoadUtils.attribute(actorElement, "defaultEquipSlot", null);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
         String dialogueStart = LoadUtils.attribute(actorElement, "dialogueStart", null);

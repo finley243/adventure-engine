@@ -33,11 +33,11 @@
         <limb id="leg" hitChance="0.8" damageMult="1.0" apparelSlot="legs">
             <name>leg</name>
         </limb>
-        <equipSlot>head</equipSlot>
-        <equipSlot>torso</equipSlot>
-        <equipSlot>legs</equipSlot>
-        <equipSlot>hand_main</equipSlot>
-        <equipSlot>hand_off</equipSlot>
+        <equipSlot id="head">head</equipSlot>
+        <equipSlot id="torso">torso</equipSlot>
+        <equipSlot id="legs">legs</equipSlot>
+        <equipSlot id="hand_main">main hand</equipSlot>
+        <equipSlot id="hand_off">off hand</equipSlot>
         <damageResistance type="physical" value="0"/>
         <damageResistance type="thermal" value="0"/>
         <damageResistance type="chemical" value="0"/>
