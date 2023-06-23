@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
+import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.Scene.SceneType;
 import com.github.finley243.adventureengine.scene.SceneChoice;
@@ -24,6 +25,10 @@ public class MenuManager {
 	public MenuManager() {
 		this.index = -1;
 	}
+
+	public void pauseMenu(Game game) {
+		waitForContinue(game);
+	}
 	
 	public Action actionMenu(List<Action> actions, Actor subject) {
 		List<MenuChoice> menuChoices = new ArrayList<>();
@@ -35,6 +40,7 @@ public class MenuManager {
 	}
 
 	public void sceneMenu(Context context, Scene scene) {
+		context.game().eventBus().post(new TextClearEvent());
 		sceneMenu(context, scene, null);
 	}
 
@@ -44,6 +50,7 @@ public class MenuManager {
 		boolean showChoices = true;
 		String redirect = null;
 		for (SceneLine line : lines) {
+			//waitForContinue(context.game());
 			if (scene.getType() != SceneType.SEQUENTIAL || line.shouldShow(context, lastSceneID)) {
 				SceneLineResult lineResult = executeLine(context, line, lastSceneID);
 				if (lineResult.exit) {
@@ -117,10 +124,11 @@ public class MenuManager {
 		if (validChoices.isEmpty()) {
 			return null;
 		}
-		context.game().eventBus().post(new RenderTextEvent(""));
+		//context.game().eventBus().post(new RenderTextEvent(""));
 		SceneChoice selectedChoice = sceneMenuInput(context.game(), validChoices);
-		context.game().eventBus().post(new RenderTextEvent(selectedChoice.getPrompt()));
-		context.game().eventBus().post(new RenderTextEvent(""));
+		context.game().eventBus().post(new TextClearEvent());
+		//context.game().eventBus().post(new RenderTextEvent(selectedChoice.getPrompt()));
+		//context.game().eventBus().post(new RenderTextEvent(""));
 		return selectedChoice;
 	}
 	
@@ -131,6 +139,12 @@ public class MenuManager {
 		}
 		int selectionIndex = getMenuInput(game, menuChoices, true);
 		return choices.get(selectionIndex);
+	}
+
+	private void waitForContinue(Game game) {
+		List<MenuChoice> menuChoices = new ArrayList<>();
+		menuChoices.add(new MenuChoice("Continue", true, new String[] {"continue"}));
+		getMenuInput(game, menuChoices, true);
 	}
 
 	private synchronized int getMenuInput(Game game, List<MenuChoice> menuChoices, boolean forcePrompts) {

@@ -482,9 +482,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 					}
 				} else if (event.getTextAudible() != null) {
 					String text = event.getTextAudible();
-					if (text != null) {
-						game().eventBus().post(new RenderTextEvent(text));
-					}
+					game().eventBus().post(new RenderTextEvent(text));
 				}
 			} else {
 				if (visible) { // Visible

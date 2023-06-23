@@ -3,7 +3,7 @@
         <scriptAdd type="external" scriptID="drop_equipped_force"/>
     </effect>
     <effect id="food_basic">
-        <scriptAdd type="modifyState" state="heal" value="10"/>
+        <scriptAdd type="modifyState" stat="heal" value="10"/>
     </effect>
     <effect id="armor_medium" type="add" stat="damage_resist_physical" amount="5" permanent="true"/>
     <effect id="mag_extended_pistol_effect" type="add" stat="clip_size" amount="6" permanent="true"/>
