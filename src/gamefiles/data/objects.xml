@@ -34,6 +34,7 @@
         <action template="vending_machine">
             <parameter name="itemID" dataType="string" value="gumball"/>
         </action>
+        <networkAction template="vending_machine_hack_price"/>
     </object>
     <object id="garbage_bin">
         <name>garbage bin</name>
@@ -111,6 +112,19 @@
             <startPrompt>Sit</startPrompt>
             <endPrompt>Stand</endPrompt>
             <exposedComponent>controller</exposedComponent>
+        </component>
+    </object>
+    <object id="network_port">
+        <name>network port</name>
+        <component id="port" type="usable">
+            <startPhrase>jackIn</startPhrase>
+            <endPhrase>jackOut</endPhrase>
+            <startPrompt>Jack In</startPrompt>
+            <endPrompt>Jack Out</endPrompt>
+            <exposedComponent>network</exposedComponent>
+        </component>
+        <component id="network" type="network" restricted="true">
+            <networkID type="stat" dataType="string" holder="parentObject" stat="networkID"/>
         </component>
     </object>
 </data>

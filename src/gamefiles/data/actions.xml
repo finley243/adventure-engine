@@ -37,7 +37,7 @@
             </script>
         </script>
     </action>
-    <action id="vending_machine">
+    <!--<action id="vending_machine">
         <prompt>Buy $itemName ($price)</prompt>
         <parameter name="itemName" dataType="string" type="stat" holder="itemTemplate" stat="name">
             <holderID type="parameter" name="itemID"/>
@@ -74,5 +74,5 @@
                 <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
             </script>
         </script>
-    </action>
+    </action>-->
 </data>

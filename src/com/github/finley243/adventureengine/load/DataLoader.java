@@ -468,7 +468,7 @@ public class DataLoader {
                 List<ExpressionConditional.ConditionVariablePair> conditionVariablePairs = new ArrayList<>();
                 for (Element pairElement : LoadUtils.directChildrenWithName(expressionElement, "if")) {
                     Condition condition = loadCondition(LoadUtils.singleChildWithName(pairElement, "condition"));
-                    Expression expression = loadExpression(LoadUtils.singleChildWithName(pairElement, "value"), dataType);
+                    Expression expression = loadExpressionOrAttribute(pairElement, "value", dataType);
                     conditionVariablePairs.add(new ExpressionConditional.ConditionVariablePair(condition, expression));
                 }
                 Expression expressionElse = loadExpression(LoadUtils.singleChildWithName(expressionElement, "else"), dataType);
@@ -926,6 +926,7 @@ public class DataLoader {
         Scene description = loadScene(game, LoadUtils.singleChildWithName(objectElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(objectElement, "action");
+        List<ActionCustom.CustomActionHolder> networkActions = loadCustomActions(objectElement, "networkAction");
         Map<String, ObjectComponentTemplate> components = new HashMap<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
             String componentID = LoadUtils.attribute(componentElement, "id", null);
@@ -963,13 +964,14 @@ public class DataLoader {
                 }
             }
         }
-        return new ObjectTemplate(game, ID, name, description, scripts, customActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
+        return new ObjectTemplate(game, ID, name, description, scripts, customActions, networkActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
     }
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) {
         if (objectElement == null) return null;
         String template = LoadUtils.attribute(objectElement, "template", null);
         String id = LoadUtils.attribute(objectElement, "id", null);
+        String networkName = LoadUtils.singleTag(objectElement, "networkName", null);
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
         boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);
         Map<String, Boolean> localVarsBooleanDefault = new HashMap<>();
@@ -1003,7 +1005,7 @@ public class DataLoader {
                 }
             }
         }
-        return new WorldObject(game, id, template, area, startDisabled, startHidden, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
+        return new WorldObject(game, id, template, networkName, area, startDisabled, startHidden, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
     }
 
     private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) throws GameDataException {
@@ -1021,7 +1023,7 @@ public class DataLoader {
                 return new ObjectComponentTemplateInventory(game, startEnabled, actionsRestricted, name, lootTable, inventoryIsExposed, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
-                String networkID = LoadUtils.attribute(componentElement, "network", null);
+                Expression networkID = loadExpressionOrAttribute(componentElement, "networkID", "string");
                 return new ObjectComponentTemplateNetwork(game, startEnabled, actionsRestricted, name, networkID);
             }
             case "link" -> {
@@ -1215,7 +1217,7 @@ public class DataLoader {
 
     private static Network loadNetwork(Element networkElement) {
         String ID = LoadUtils.attribute(networkElement, "id", null);
-        String name = LoadUtils.attribute(networkElement, "name", null);
+        String name = LoadUtils.singleTag(networkElement, "name", null);
         NetworkNode topNode = loadNetworkNode(LoadUtils.singleChildWithName(networkElement, "node"));
         return new Network(ID, name, topNode);
     }
@@ -1234,7 +1236,7 @@ public class DataLoader {
                 String controlObjectID = LoadUtils.attribute(nodeElement, "object", null);
                 return new NetworkNodeControl(ID, name, securityLevel, controlObjectID);
             }
-            default -> {
+            case null, default -> {
                 Set<NetworkNode> groupNodes = new HashSet<>();
                 for (Element childNodeElement : LoadUtils.directChildrenWithName(nodeElement, "node")) {
                     NetworkNode childNode = loadNetworkNode(childNodeElement);

@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.network;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +28,14 @@ public class Network {
         return name;
     }
 
-    public List<Action> networkActions(Actor subject, String componentName) {
-        List<Action> actions = new ArrayList<>();
-        actions.addAll(topNode.actions(subject, componentName));
-        return actions;
+    public List<Action> networkActions(Actor subject, WorldObject object, String componentName) {
+        String[] menuPath;
+        if (componentName != null) {
+            menuPath = new String[] {LangUtils.titleCase(object.getName()), LangUtils.titleCase(componentName)};
+        } else {
+            menuPath = new String[] {LangUtils.titleCase(object.getName())};
+        }
+        return new ArrayList<>(topNode.actions(subject, object, menuPath));
     }
 
     @Override

@@ -23,6 +23,9 @@
             </object>
             <object id="wilsons_corner_store_gumball_machine" template="gumball_machine"/>
             <object id="wilsons_corner_store_garbage_bin" template="garbage_bin"/>
+            <object id="wilsons_corner_store_network_port" template="network_port">
+                <localVar name="networkID" dataType="string" value="wilsons_corner_store"/>
+            </object>
         </area>
         <area id="wilsons_corner_store_counter" landmark="wilsons_corner_store_counter">
             <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_entrance"/>

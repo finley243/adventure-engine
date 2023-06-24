@@ -32,6 +32,7 @@ import java.util.*;
 public class WorldObject extends GameInstanced implements Noun, Physical, StatHolder, AttackTarget {
 
 	private final String templateID;
+	private final String networkName;
 	private boolean isKnown;
 	private boolean isEnabled;
 	private boolean isHidden;
@@ -44,10 +45,11 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Map<String, String> localVarsString;
 	private final Map<String, Set<String>> localVarsStringSet;
 
-	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
+	public WorldObject(Game gameInstance, String ID, String templateID, String networkName, Area area, boolean startDisabled, boolean startHidden, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
 		super(gameInstance, ID);
 		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
 		this.templateID = templateID;
+		this.networkName = networkName;
 		this.defaultArea = area;
 		this.area = area;
 		this.isHidden = startHidden;
@@ -67,6 +69,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public String getName() {
 		return getTemplate().getName();
+	}
+
+	public String getNetworkName() {
+		return networkName;
 	}
 	
 	public Scene getDescription() {
@@ -188,6 +194,17 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		List<Action> actions = new ArrayList<>();
 		if (getDescription() != null) {
 			actions.add(new ActionInspectObject(this));
+		}
+		return actions;
+	}
+
+	public List<Action> networkActions(Actor subject, String[] menuPath) {
+		List<Action> actions = new ArrayList<>();
+		for (ActionCustom.CustomActionHolder networkAction : getTemplate().getNetworkActions()) {
+			ActionCustom action = new ActionCustom(game(), this, null, networkAction.action(), networkAction.parameters(), menuPath, false);
+			if (action.canShow(subject)) {
+				actions.add(action);
+			}
 		}
 		return actions;
 	}

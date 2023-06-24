@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.network;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,10 @@ public class NetworkNodeGroup extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Actor subject, String componentName) {
+    protected List<Action> breachedActions(Actor subject, WorldObject object, String[] menuPath) {
         List<Action> actions = new ArrayList<>();
         for (NetworkNode childNode : childNodes) {
-            actions.addAll(childNode.breachedActions(subject, componentName));
+            actions.addAll(childNode.actions(subject, object, menuPath));
         }
         return actions;
     }

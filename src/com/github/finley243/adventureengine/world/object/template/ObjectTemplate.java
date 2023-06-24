@@ -16,6 +16,7 @@ public class ObjectTemplate extends GameInstanced {
     private final Scene description;
     private final Map<String, Script> scripts;
     private final List<ActionCustom.CustomActionHolder> customActions;
+    private final List<ActionCustom.CustomActionHolder> networkActions;
     private final Map<String, ObjectComponentTemplate> components;
     private final Map<String, Boolean> localVarsBooleanDefault;
     private final Map<String, Integer> localVarsIntegerDefault;
@@ -23,12 +24,13 @@ public class ObjectTemplate extends GameInstanced {
     private final Map<String, String> localVarsStringDefault;
     private final Map<String, Set<String>> localVarsStringSetDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, Map<String, ObjectComponentTemplate> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
+    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, Map<String, ObjectComponentTemplate> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
         super(game, ID);
         this.name = name;
         this.description = description;
         this.scripts = scripts;
         this.customActions = customActions;
+        this.networkActions = networkActions;
         this.components = components;
         this.localVarsBooleanDefault = localVarsBooleanDefault;
         this.localVarsIntegerDefault = localVarsIntegerDefault;
@@ -51,6 +53,10 @@ public class ObjectTemplate extends GameInstanced {
 
     public List<ActionCustom.CustomActionHolder> getCustomActions() {
         return customActions;
+    }
+
+    public List<ActionCustom.CustomActionHolder> getNetworkActions() {
+        return networkActions;
     }
 
     public Map<String, ObjectComponentTemplate> getComponents() {

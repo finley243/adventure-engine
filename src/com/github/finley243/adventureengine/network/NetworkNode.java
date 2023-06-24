@@ -3,8 +3,11 @@ package com.github.finley243.adventureengine.network;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.network.ActionNetworkBreach;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class NetworkNode {
@@ -41,17 +44,19 @@ public abstract class NetworkNode {
         this.isBreached = state;
     }
 
-    public List<Action> actions(Actor subject, String componentName) {
+    public List<Action> actions(Actor subject, WorldObject object, String[] menuPath) {
         List<Action> actions = new ArrayList<>();
+        String[] currentNodePath = Arrays.copyOf(menuPath, menuPath.length + 1);
+        currentNodePath[currentNodePath.length - 1] = getName();
         if (isBreached()) {
-            actions.addAll(breachedActions(subject, componentName));
+            actions.addAll(breachedActions(subject, object, currentNodePath));
         } else {
-            actions.add(new ActionNetworkBreach(this));
+            actions.add(new ActionNetworkBreach(this, object, currentNodePath));
         }
         return actions;
     }
 
-    protected abstract List<Action> breachedActions(Actor subject, String componentName);
+    protected abstract List<Action> breachedActions(Actor subject, WorldObject object, String[] menuPath);
 
     @Override
     public boolean equals(Object o) {
