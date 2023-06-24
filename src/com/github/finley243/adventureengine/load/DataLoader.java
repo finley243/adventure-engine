@@ -971,7 +971,6 @@ public class DataLoader {
         if (objectElement == null) return null;
         String template = LoadUtils.attribute(objectElement, "template", null);
         String id = LoadUtils.attribute(objectElement, "id", null);
-        String networkName = LoadUtils.singleTag(objectElement, "networkName", null);
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
         boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);
         Map<String, Boolean> localVarsBooleanDefault = new HashMap<>();
@@ -1005,7 +1004,7 @@ public class DataLoader {
                 }
             }
         }
-        return new WorldObject(game, id, template, networkName, area, startDisabled, startHidden, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
+        return new WorldObject(game, id, template, area, startDisabled, startHidden, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
     }
 
     private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) throws GameDataException {
