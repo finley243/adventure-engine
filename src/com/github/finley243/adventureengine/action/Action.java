@@ -13,6 +13,7 @@ public abstract class Action {
 	}
 
 	private boolean disabled;
+	private String disabledReason;
 
 	public Action() {}
 
@@ -20,12 +21,16 @@ public abstract class Action {
 
 	public abstract MenuChoice getMenuChoices(Actor subject);
 
-	public boolean canChoose(Actor subject) {
-		return !disabled;
+	public CanChooseResult canChoose(Actor subject) {
+		if (disabled) {
+			return new CanChooseResult(false, disabledReason);
+		}
+		return new CanChooseResult(true, null);
 	}
 
-	public void setDisabled(boolean disabled) {
+	public void setDisabled(boolean disabled, String reason) {
 		this.disabled = disabled;
+		this.disabledReason = reason;
 	}
 	
 	public float utility(Actor subject) {
@@ -51,5 +56,7 @@ public abstract class Action {
 	public ActionDetectionChance detectionChance() {
 		return ActionDetectionChance.NONE;
 	}
+
+	public record CanChooseResult(boolean canChoose, String reason) {}
 
 }

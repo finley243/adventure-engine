@@ -9,8 +9,15 @@ public abstract class ActionMove extends Action {
     public ActionMove() {}
 
     @Override
-    public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && subject.canMove(new Context(subject.game(), subject, subject));
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        if (!subject.canMove(new Context(subject.game(), subject, subject))) {
+            return new CanChooseResult(false, "You cannot move");
+        }
+        return new CanChooseResult(true, null);
     }
 
     @Override

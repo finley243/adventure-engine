@@ -45,7 +45,7 @@ public class ActionInventoryTakeAll extends Action {
         } else {
             menuPath = new String[]{LangUtils.titleCase(owner.getName()), LangUtils.titleCase(name), Inventory.getItemNameFormatted(item, inventory)};
         }
-        return new MenuChoice("Take all", canChoose(subject), menuPath, new String[]{"take everything from " + owner.getName(), "pick up everything from " + owner.getName(), "pickup everything from " + owner.getName(), "take all items from " + owner.getName(), "pick up all items from " + owner.getName(), "pickup all items from " + owner.getName()});
+        return new MenuChoice("Take all", canChoose(subject).canChoose(), menuPath, new String[]{"take everything from " + owner.getName(), "pick up everything from " + owner.getName(), "pickup everything from " + owner.getName(), "take all items from " + owner.getName(), "pick up all items from " + owner.getName(), "pickup all items from " + owner.getName()});
     }
 
     @Override

@@ -23,13 +23,20 @@ public class ActionModInstall extends Action {
     }
 
     @Override
-    public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && weapon.canInstallMod(mod);
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        if (!weapon.canInstallMod(mod)) {
+            return new CanChooseResult(false, "Cannot be installed on this item");
+        }
+        return new CanChooseResult(true, null);
     }
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice(Inventory.getItemNameFormatted(weapon, subject.getInventory()), canChoose(subject), new String[]{"Inventory", Inventory.getItemNameFormatted(mod, subject.getInventory()), "Install"}, new String[]{"install " + mod.getName() + " on " + weapon.getName()});
+        return new MenuChoice(Inventory.getItemNameFormatted(weapon, subject.getInventory()), canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(mod, subject.getInventory()), "Install"}, new String[]{"install " + mod.getName() + " on " + weapon.getName()});
     }
 
 }

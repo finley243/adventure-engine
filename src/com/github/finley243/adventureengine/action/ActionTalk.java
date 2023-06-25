@@ -19,13 +19,27 @@ public class ActionTalk extends Action {
 	}
 
 	@Override
-	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && subject.isPlayer() && !target.isInCombat() && target.getDialogueStart().canChoose(new Context(target.game(), target, target));
+	public CanChooseResult canChoose(Actor subject) {
+		CanChooseResult resultSuper = super.canChoose(subject);
+		if (!resultSuper.canChoose()) {
+			return resultSuper;
+		}
+		if (!subject.isPlayer()) {
+			return new CanChooseResult(false, "Player only");
+		}
+		if (target.isInCombat()) {
+			return new CanChooseResult(false, "Target is in combat");
+		}
+		if (!target.getDialogueStart().canChoose(new Context(target.game(), target, target))) {
+			// TODO - Add custom condition reason text
+			return new CanChooseResult(false, "DIALOGUE SCENE CONDITION NOT MET");
+		}
+		return new CanChooseResult(true, null);
 	}
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Talk", canChoose(subject), new String[]{LangUtils.titleCase(target.getName())}, new String[]{"talk to " + target.getName(), "talk " + target.getName(), "talk with " + target.getName(), "speak to " + target.getName(), "speak with " + target.getName()});
+		return new MenuChoice("Talk", canChoose(subject).canChoose(), new String[]{LangUtils.titleCase(target.getName())}, new String[]{"talk to " + target.getName(), "talk " + target.getName(), "talk with " + target.getName(), "speak to " + target.getName(), "speak with " + target.getName()});
 	}
 
 	@Override

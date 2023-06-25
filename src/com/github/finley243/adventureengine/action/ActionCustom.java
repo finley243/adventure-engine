@@ -54,8 +54,16 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && (getTemplate().getConditionSelect() == null || getTemplate().getConditionSelect().isMet(new Context(subject.game(), subject, subject, object, item, parameters)));
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        if (getTemplate().getConditionSelect() != null && !getTemplate().getConditionSelect().isMet(new Context(subject.game(), subject, subject, object, item, parameters))) {
+            // TODO - Add custom condition reason text
+            return new CanChooseResult(false, "CUSTOM CONDITION NOT MET");
+        }
+        return new CanChooseResult(true, null);
     }
 
     @Override
@@ -86,7 +94,7 @@ public class ActionCustom extends Action {
             }
         }
         String promptWithVars = LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
-        return new MenuChoice(promptWithVars, canChoose(subject), menuPath, new String[]{getTemplate().getPrompt()});
+        return new MenuChoice(promptWithVars, canChoose(subject).canChoose(), menuPath, new String[]{getTemplate().getPrompt()});
     }
 
     public boolean canShow(Actor subject) {

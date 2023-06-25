@@ -50,7 +50,7 @@ public class ActionObjectUseEnd extends Action {
 		} else {
 			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName())};
 		}
-		return new MenuChoice(component.getEndPrompt(), canChoose(subject), menuPath, new String[]{component.getEndPrompt().toLowerCase()});
+		return new MenuChoice(component.getEndPrompt(), canChoose(subject).canChoose(), menuPath, new String[]{component.getEndPrompt().toLowerCase()});
 	}
 
 	@Override

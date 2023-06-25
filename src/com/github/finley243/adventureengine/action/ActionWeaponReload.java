@@ -48,8 +48,18 @@ public class ActionWeaponReload extends Action {
 	}
 
 	@Override
-	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) && (weapon.getAmmoFraction() < 1.0f || weapon.getLoadedAmmoType() == null || !weapon.getLoadedAmmoType().getTemplateID().equals(ammoType.getTemplateID())) && (subject != subject.game().data().getPlayer() || subject.getInventory().hasItem(ammoType.getTemplateID()));
+	public CanChooseResult canChoose(Actor subject) {
+		CanChooseResult resultSuper = super.canChoose(subject);
+		if (!resultSuper.canChoose()) {
+			return resultSuper;
+		}
+		if (weapon.getAmmoFraction() >= 1.0f && weapon.getLoadedAmmoType() != null && weapon.getLoadedAmmoType().getTemplateID().equals(ammoType.getTemplateID())) {
+			return new CanChooseResult(false, "Ammo already loaded");
+		}
+		if (subject != subject.game().data().getPlayer() || subject.getInventory().hasItem(ammoType.getTemplateID())) {
+			return new CanChooseResult(false, "No ammo in inventory");
+		}
+		return new CanChooseResult(true, null);
 	}
 
 	@Override
@@ -72,7 +82,7 @@ public class ActionWeaponReload extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(LangUtils.titleCase(ammoType.getName()), canChoose(subject), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), "Reload (" + weapon.getAmmoRemaining() + "/" + weapon.getClipSize() + ")"}, new String[]{"reload " + weapon.getName() + " with " + LangUtils.pluralizeNoun(ammoType.getName())});
+		return new MenuChoice(LangUtils.titleCase(ammoType.getName()), canChoose(subject).canChoose(), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), "Reload (" + weapon.getAmmoRemaining() + "/" + weapon.getClipSize() + ")"}, new String[]{"reload " + weapon.getName() + " with " + LangUtils.pluralizeNoun(ammoType.getName())});
 	}
 
 	@Override

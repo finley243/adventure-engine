@@ -23,13 +23,20 @@ public class ActionNetworkBreach extends NetworkAction {
     }
 
     @Override
-    public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && !node.isBreached();
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        if (node.isBreached()) {
+            return new CanChooseResult(false, "Node already breached");
+        }
+        return new CanChooseResult(true, null);
     }
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Breach Node", canChoose(subject), menuPath, new String[]{"breach " + node.getName()});
+        return new MenuChoice("Breach Node", canChoose(subject).canChoose(), menuPath, new String[]{"breach " + node.getName()});
     }
 
     @Override

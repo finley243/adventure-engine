@@ -25,7 +25,7 @@ public class ActionModRemove extends Action {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Remove", canChoose(subject), new String[]{"Inventory", Inventory.getItemNameFormatted(weapon, subject.getInventory()), "Mods", LangUtils.titleCase(mod.getName())}, new String[]{"remove " + mod.getName() + " from " + weapon.getName()});
+        return new MenuChoice("Remove", canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(weapon, subject.getInventory()), "Mods", LangUtils.titleCase(mod.getName())}, new String[]{"remove " + mod.getName() + " from " + weapon.getName()});
     }
 
 }

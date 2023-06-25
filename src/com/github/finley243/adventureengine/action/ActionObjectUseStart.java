@@ -53,7 +53,7 @@ public class ActionObjectUseStart extends Action {
 		} else {
 			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName())};
 		}
-		return new MenuChoice(component.getStartPrompt(), canChoose(subject), menuPath, new String[]{component.getStartPrompt().toLowerCase()});
+		return new MenuChoice(component.getStartPrompt(), canChoose(subject).canChoose(), menuPath, new String[]{component.getStartPrompt().toLowerCase()});
 	}
 
 	@Override

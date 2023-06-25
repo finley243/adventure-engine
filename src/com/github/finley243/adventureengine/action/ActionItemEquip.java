@@ -36,8 +36,18 @@ public class ActionItemEquip extends Action {
     }
 
     @Override
-    public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && subject.getEquipmentComponent().isSlotEmpty(slots) && item.getEquippedActor() == null;
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        if (!subject.getEquipmentComponent().isSlotEmpty(slots)) {
+            return new CanChooseResult(false, "Another item is already equipped");
+        }
+        if (item.getEquippedActor() != null) {
+            return new CanChooseResult(false, "Already equipped");
+        }
+        return new CanChooseResult(true, null);
     }
 
     @Override
@@ -52,7 +62,7 @@ public class ActionItemEquip extends Action {
             }
             slotLabel.append(LangUtils.titleCase(subject.getEquipSlots().get(slot).name()));
         }
-        return new MenuChoice("Equip (" + slotLabel + ")", canChoose(subject), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"equip " + item.getName(), "put on " + item.getName()});
+        return new MenuChoice("Equip (" + slotLabel + ")", canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"equip " + item.getName(), "put on " + item.getName()});
     }
 
     @Override

@@ -66,7 +66,7 @@ public class UtilityUtils {
 			maxWeights.add(0.0f);
 		}
 		for (Action currentAction : actions) {
-			if (currentAction.canChoose(actor)) {
+			if (currentAction.canChoose(actor).canChoose()) {
 				float currentWeight = currentAction.utility(actor);
 				float behaviorOverride = actor.getBehaviorComponent().actionUtilityOverride(currentAction);
 				if (behaviorOverride >= 0.0f) {

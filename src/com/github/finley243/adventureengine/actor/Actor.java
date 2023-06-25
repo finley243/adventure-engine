@@ -588,7 +588,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				}
 			}
 			if (isBlocked) {
-				currentAction.setDisabled(true);
+				currentAction.setDisabled(true, "Repeat turn limit reached");
 			}
 		}
 		actions.add(new ActionEnd());
@@ -615,7 +615,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			List<Action> availableActions = availableActions();
 			for (Action action : availableActions) {
 				if (getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
-					action.setDisabled(true);
+					action.setDisabled(true, "Not enough action points");
 				}
 			}
 			Action chosenAction = chooseAction(availableActions);

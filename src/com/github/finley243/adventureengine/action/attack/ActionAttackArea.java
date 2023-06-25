@@ -38,15 +38,26 @@ public class ActionAttackArea extends ActionAttack {
     }
 
     @Override
-    public boolean canChoose(Actor subject) {
-        return super.canChoose(subject)
-                && (weapon.getClipSize() == 0 || weapon.getAmmoRemaining() >= getAmmoConsumed())
-                && getRanges().contains(subject.getArea().getDistanceTo(getArea().getID())) && subject.getArea().isVisible(subject, getArea().getID());
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        if (weapon.getClipSize() != 0 && weapon.getAmmoRemaining() < getAmmoConsumed()) {
+            return new CanChooseResult(false, "Not enough ammo");
+        }
+        if (!getRanges().contains(subject.getArea().getDistanceTo(getArea().getID()))) {
+            return new CanChooseResult(false, "Target area outside range");
+        }
+        if (!subject.getArea().isVisible(subject, getArea().getID())) {
+            return new CanChooseResult(false, "Target area not visible");
+        }
+        return new CanChooseResult(true, null);
     }
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice(LangUtils.titleCase(getArea().getRelativeName()) + " (" + (getArea().equals(subject.getArea()) ? "" : getArea().getRelativeDirection(subject.getArea()) + ", ") + getChanceTag(subject) + ")", canChoose(subject), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), LangUtils.titleCase(getPrompt())}, new String[]{getPrompt().toLowerCase() + " " + getArea().getRelativeName(), getPrompt().toLowerCase() + " at " + getArea().getRelativeName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + getArea().getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + getArea().getName()});
+        return new MenuChoice(LangUtils.titleCase(getArea().getRelativeName()) + " (" + (getArea().equals(subject.getArea()) ? "" : getArea().getRelativeDirection(subject.getArea()) + ", ") + getChanceTag(subject) + ")", canChoose(subject).canChoose(), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), LangUtils.titleCase(getPrompt())}, new String[]{getPrompt().toLowerCase() + " " + getArea().getRelativeName(), getPrompt().toLowerCase() + " at " + getArea().getRelativeName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + getArea().getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + getArea().getName()});
     }
 
 }

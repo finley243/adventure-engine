@@ -41,9 +41,16 @@ public class ActionMoveLink extends ActionMove {
 	}
 
 	@Override
-	public boolean canChoose(Actor subject) {
-		return super.canChoose(subject) &&
-				(linkComponent.getCondition() == null || linkComponent.getCondition().isMet(new Context(subject.game(), subject, subject, linkComponent.getObject())));
+	public CanChooseResult canChoose(Actor subject) {
+		CanChooseResult resultSuper = super.canChoose(subject);
+		if (!resultSuper.canChoose()) {
+			return resultSuper;
+		}
+		if (linkComponent.getCondition() != null && !linkComponent.getCondition().isMet(new Context(subject.game(), subject, subject, linkComponent.getObject()))) {
+			// TODO - Add custom condition reason text
+			return new CanChooseResult(false, "LINK CONDITION NOT MET");
+		}
+		return new CanChooseResult(true, null);
 	}
 
 	@Override
@@ -59,7 +66,7 @@ public class ActionMoveLink extends ActionMove {
 		} else {
 			menuPath = new String[] {LangUtils.titleCase(linkComponent.getObject().getName())};
 		}
-		return new MenuChoice("(" + linkComponent.getDirection() + ") " + "Enter", canChoose(subject), menuPath, new String[]{"enter " + linkComponent.getObject().getName(), "go through " + linkComponent.getObject().getName(), "move through " + linkComponent.getObject().getName()});
+		return new MenuChoice("(" + linkComponent.getDirection() + ") " + "Enter", canChoose(subject).canChoose(), menuPath, new String[]{"enter " + linkComponent.getObject().getName(), "go through " + linkComponent.getObject().getName(), "move through " + linkComponent.getObject().getName()});
 	}
 
 	@Override

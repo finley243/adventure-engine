@@ -48,7 +48,7 @@ public class ActionInventoryStore extends Action {
         } else {
             menuPath = new String[]{LangUtils.titleCase(owner.getName()), LangUtils.titleCase(name), "Transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
         }
-        return new MenuChoice((isExposed ? "Place" : "Store"), canChoose(subject), menuPath, new String[]{"store " + item.getName() + " in " + owner.getName(), "place " + item.getName() + " on " + owner.getName(), "put " + item.getName() + " in " + owner.getName(), "put " + item.getName() + " on " + owner.getName()});
+        return new MenuChoice((isExposed ? "Place" : "Store"), canChoose(subject).canChoose(), menuPath, new String[]{"store " + item.getName() + " in " + owner.getName(), "place " + item.getName() + " on " + owner.getName(), "put " + item.getName() + " in " + owner.getName(), "put " + item.getName() + " on " + owner.getName()});
     }
 
     @Override

@@ -32,13 +32,20 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public boolean canChoose(Actor subject) {
-        return super.canChoose(subject) && (area.getDescription() != null || area.getRoom().getDescription() != null);
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        if (area.getDescription() == null && area.getRoom().getDescription() == null) {
+            return new CanChooseResult(false, "Nothing to see");
+        }
+        return new CanChooseResult(true, null);
     }
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Look around", canChoose(subject), new String[]{"look around", "explore"});
+        return new MenuChoice("Look around", canChoose(subject).canChoose(), new String[]{"look around", "explore"});
     }
 
 }

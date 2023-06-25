@@ -27,7 +27,7 @@ public class ActionNetworkReadData extends NetworkAction {
 
     @Override
     public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Read", canChoose(subject), menuPath, new String[]{"read data from " + node.getName()});
+        return new MenuChoice("Read", canChoose(subject).canChoose(), menuPath, new String[]{"read data from " + node.getName()});
     }
 
     @Override

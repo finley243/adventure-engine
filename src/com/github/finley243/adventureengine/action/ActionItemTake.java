@@ -47,7 +47,7 @@ public class ActionItemTake extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Take", canChoose(subject), new String[]{"Ground", Inventory.getItemNameFormatted(item, area.getInventory())}, new String[]{"take " + item.getName(), "pick up " + item.getName(), "pickup " + item.getName()});
+		return new MenuChoice("Take", canChoose(subject).canChoose(), new String[]{"Ground", Inventory.getItemNameFormatted(item, area.getInventory())}, new String[]{"take " + item.getName(), "pick up " + item.getName(), "pickup " + item.getName()});
 	}
 
 	@Override
