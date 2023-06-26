@@ -28,7 +28,7 @@
         </limb>
         <limb id="hand" hitChance="0.5" damageMult="0.75" apparelSlot="torso">
             <name>hand</name>
-            <effect>hit_limb_weapon</effect>
+            <hitEffect>hit_limb_weapon</hitEffect>
         </limb>
         <limb id="leg" hitChance="0.8" damageMult="1.0" apparelSlot="legs">
             <name>leg</name>

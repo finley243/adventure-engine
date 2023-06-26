@@ -12,9 +12,10 @@ public class ExpressionStat extends Expression {
 
     private final StatHolderReference holder;
     private final DataType dataType;
-    private final String stat;
+    private final Expression stat;
 
-    public ExpressionStat(StatHolderReference holder, String dataType, String stat) {
+    public ExpressionStat(StatHolderReference holder, String dataType, Expression stat) {
+        if (stat != null && stat.getDataType() != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         this.holder = holder;
         this.dataType = dataTypeFromString(dataType);
         this.stat = stat;
@@ -28,31 +29,36 @@ public class ExpressionStat extends Expression {
     @Override
     public boolean getValueBoolean(Context context) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueBoolean(stat, context);
+        String statName = stat == null ? null : stat.getValueString(context);
+        return holder.getHolder(context).getValueBoolean(statName, context);
     }
 
     @Override
     public int getValueInteger(Context context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueInt(stat, context);
+        String statName = stat == null ? null : stat.getValueString(context);
+        return holder.getHolder(context).getValueInt(statName, context);
     }
 
     @Override
     public float getValueFloat(Context context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueFloat(stat, context);
+        String statName = stat == null ? null : stat.getValueString(context);
+        return holder.getHolder(context).getValueFloat(statName, context);
     }
 
     @Override
     public String getValueString(Context context) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueString(stat, context);
+        String statName = stat == null ? null : stat.getValueString(context);
+        return holder.getHolder(context).getValueString(statName, context);
     }
 
     @Override
     public Set<String> getValueStringSet(Context context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
-        return holder.getHolder(context).getValueStringSet(stat, context);
+        String statName = stat == null ? null : stat.getValueString(context);
+        return holder.getHolder(context).getValueStringSet(statName, context);
     }
 
     @Override

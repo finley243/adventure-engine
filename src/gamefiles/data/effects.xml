@@ -1,6 +1,6 @@
 <data>
     <effect id="hit_limb_weapon">
-        <scriptAdd type="external" scriptID="drop_equipped_force"/>
+        <scriptAdd external="drop_equipped_force"/>
     </effect>
     <effect id="food_basic">
         <scriptAdd type="modifyState" stat="heal" value="10"/>

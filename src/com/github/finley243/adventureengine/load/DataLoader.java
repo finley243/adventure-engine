@@ -379,7 +379,7 @@ public class DataLoader {
         switch (type) {
             case "stat" -> {
                 StatHolderReference statHolderReference = loadStatHolderReference(expressionElement);
-                String statName = LoadUtils.attribute(expressionElement, "stat", null);
+                Expression statName = loadExpressionOrAttribute(expressionElement, "stat", "string");
                 return new ExpressionStat(statHolderReference, dataType, statName);
             }
             case "global" -> {
@@ -440,6 +440,13 @@ public class DataLoader {
             case "hasVariable" -> {
                 String variableName = LoadUtils.attribute(expressionElement, "name", null);
                 return new ExpressionHasVariable(variableName);
+            }
+            case "concat" -> {
+                List<Expression> stringExpressions = new ArrayList<>();
+                for (Element concatVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
+                    stringExpressions.add(loadExpression(concatVariableElement, "string"));
+                }
+                return new ExpressionConcatStrings(stringExpressions);
             }
             case "toString" -> {
                 Expression toStringExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "value"), null);

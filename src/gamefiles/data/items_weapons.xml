@@ -17,6 +17,7 @@
         <damage base="10" crit="5"/>
         <rate>2</rate>
         <clipSize>12</clipSize>
+        <reloadActionPoints>1</reloadActionPoints>
         <modSlot name="pistol_mag"/>
     </item>
     <item type="weapon" id="pistol_heavy" price="50" class="pistol">
@@ -24,6 +25,7 @@
         <damage base="14" crit="6"/>
         <rate>2</rate>
         <clipSize>6</clipSize>
+        <reloadActionPoints>1</reloadActionPoints>
         <modSlot name="pistol_mag"/>
     </item>
     <item type="weapon" id="rifle_auto" price="90" class="assault_rifle">
@@ -34,6 +36,7 @@
         <damage base="15" crit="4"/>
         <rate>2</rate>
         <clipSize>16</clipSize>
+        <reloadActionPoints>1</reloadActionPoints>
     </item>
     <item type="weapon" id="grenade_frag" price="10" class="grenade">
         <name>frag grenade</name>

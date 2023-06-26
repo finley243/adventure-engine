@@ -937,6 +937,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
+		// TODO - Possibly remove this check (superseded by ID-based retrieval)
 		if (name.startsWith("equipped_")) {
 			for (String slot : getTemplate().getEquipSlots().keySet()) {
 				if (name.equals("equipped_" + slot)) {
@@ -945,6 +946,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 		}
 		return switch (name) {
+			case "equipped_item" -> equipmentComponent.getEquippedItemInSlot(ID);
 			case "using_object" -> getUsingObject();
 			case "area" -> getArea();
 			default -> null;

@@ -56,7 +56,7 @@ public class ActionWeaponReload extends Action {
 		if (weapon.getAmmoFraction() >= 1.0f && weapon.getLoadedAmmoType() != null && weapon.getLoadedAmmoType().getTemplateID().equals(ammoType.getTemplateID())) {
 			return new CanChooseResult(false, "Ammo already loaded");
 		}
-		if (subject != subject.game().data().getPlayer() || subject.getInventory().hasItem(ammoType.getTemplateID())) {
+		if (subject.isPlayer() && !subject.getInventory().hasItem(ammoType.getTemplateID())) {
 			return new CanChooseResult(false, "No ammo in inventory");
 		}
 		return new CanChooseResult(true, null);

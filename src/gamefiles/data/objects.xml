@@ -100,6 +100,7 @@
         <action template="vending_machine">
             <parameter name="itemID" value="nitron_diet"/>
         </action>
+        <networkAction template="vending_machine_hack_price"/>
     </object>
     <object id="motorcycle">
         <name>motorcycle</name>

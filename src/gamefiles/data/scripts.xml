@@ -1,10 +1,25 @@
 <data>
     <script id="drop_equipped">
+        <script external="drop_equipped_specified_slot">
+            <parameter name="equippedSlot" value="hand_main"/>
+        </script>
+        <script external="drop_equipped_specified_slot">
+            <parameter name="equippedSlot" value="hand_off"/>
+        </script>
+    </script>
+    <script id="drop_equipped_specified_slot">
         <condition type="boolean">
-            <value type="stat" holder="subject" stat="hasEquippedItem"/>
+            <value type="stat" holder="subject">
+                <stat type="concat">
+                    <value value="has_equipped_"/>
+                    <value type="parameter" dataType="string" name="equippedSlot"/>
+                </stat>
+            </value>
         </condition>
         <parameter name="dropAreaID" type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
-        <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equippedItem" stat="id"/>
+        <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equipped_item" stat="id">
+            <subID type="parameter" dataType="string" name="equippedSlot"/>
+        </parameter>
         <script type="transferItem" transferType="instance">
             <fromInv holder="subject"/>
             <toInv holder="area">
@@ -16,7 +31,7 @@
             <parameter name="item" type="stat" dataType="noun" holder="item">
                 <holderID type="parameter" name="equippedItemID"/>
             </parameter>
-            <parameter name="inArea" type="stat" dataType="string" holder="area" stat="relativeName">
+            <parameter name="inArea" type="stat" dataType="string" holder="area" stat="relative_name">
                 <holderID type="parameter" name="dropAreaID"/>
             </parameter>
             <phrase>drop</phrase>
@@ -24,13 +39,28 @@
         </script>
     </script>
     <script id="drop_equipped_force">
+        <script external="drop_equipped_force_specified_slot">
+            <parameter name="equippedSlot" value="hand_main"/>
+        </script>
+        <script external="drop_equipped_force_specified_slot">
+            <parameter name="equippedSlot" value="hand_off"/>
+        </script>
+    </script>
+    <script id="drop_equipped_force_specified_slot">
         <condition type="boolean">
-            <value type="stat" holder="subject" stat="hasEquippedItem"/>
+            <value type="stat" holder="subject">
+                <stat type="concat">
+                    <value value="has_equipped_"/>
+                    <value type="parameter" dataType="string" name="equippedSlot"/>
+                </stat>
+            </value>
         </condition>
         <parameter name="dropAreaID" type="randomStringFromSet" dataType="string">
-            <set type="stat" holder="subject" subType="area" stat="movableAreas"/>
+            <set type="stat" holder="subject" subType="area" stat="movable_areas"/>
         </parameter>
-        <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equippedItem" stat="id"/>
+        <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equipped_item" stat="id">
+            <subID type="parameter" dataType="string" name="equippedSlot"/>
+        </parameter>
         <script type="transferItem" transferType="instance">
             <fromInv holder="subject"/>
             <toInv holder="area">
@@ -42,7 +72,7 @@
             <parameter name="item" type="stat" dataType="noun" holder="item">
                 <holderID type="parameter" name="equippedItemID"/>
             </parameter>
-            <parameter name="inArea" type="stat" dataType="string" holder="area" stat="relativeName">
+            <parameter name="inArea" type="stat" dataType="string" holder="area" stat="relative_name">
                 <holderID type="parameter" name="dropAreaID"/>
             </parameter>
             <phrase>forceDrop</phrase>
