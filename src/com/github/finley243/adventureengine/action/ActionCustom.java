@@ -76,8 +76,7 @@ public class ActionCustom extends Action {
     @Override
     public float utility(Actor subject) {
         if (isMove) {
-            Area destinationArea = game.data().getArea(parameters.get("areaID").getValueString(new Context(game, subject, subject)));
-            return UtilityUtils.getMovementUtility(subject, destinationArea) * UtilityUtils.MOVE_UTILITY_MULTIPLIER;
+            return UtilityUtils.getMovementUtility(subject, area) * UtilityUtils.MOVE_UTILITY_MULTIPLIER;
         }
         return 0.0f;
     }

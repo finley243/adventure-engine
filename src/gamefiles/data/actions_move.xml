@@ -28,7 +28,7 @@
                 </area>
             </script>
             <script type="setState" stat="area" holder="subject">
-                <value type="stat" dataType="string" holder="parentArea" name="id"/>
+                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
         </script>
     </action>
