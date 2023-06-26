@@ -40,6 +40,7 @@ public class StatHolderReference {
             case "itemTemplate" -> context.game().data().getItemTemplate(holderID.getValueString(context));
             case "parentItem" -> context.getParentItem();
             case "area" -> context.game().data().getArea(holderID.getValueString(context));
+            case "parentArea" -> context.getParentArea();
             case "room" -> context.game().data().getRoom(holderID.getValueString(context));
             case "scene" -> context.game().data().getScene(holderID.getValueString(context));
             case "actor" -> context.game().data().getActor(holderID.getValueString(context));

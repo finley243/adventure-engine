@@ -116,7 +116,7 @@ public class ObjectComponentUsable extends ObjectComponent {
             } else {
                 menuPath = new String[] {LangUtils.titleCase(getObject().getName())};
             }
-            ActionCustom action = new ActionCustom(getObject().game(), getObject(), null, usingAction.action(), usingAction.parameters(), menuPath, false);
+            ActionCustom action = new ActionCustom(getObject().game(), getObject(), null, null, usingAction.action(), usingAction.parameters(), menuPath, false);
             if (action.canShow(subject)) {
                 actions.add(action);
             }

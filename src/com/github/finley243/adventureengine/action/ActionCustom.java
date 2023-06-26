@@ -20,15 +20,17 @@ public class ActionCustom extends Action {
     private final Game game;
     private final WorldObject object;
     private final Item item;
+    private final Area area;
     private final String template;
     private final Map<String, Expression> parameters;
     private final String[] menuPath;
     private final boolean isMove;
 
-    public ActionCustom(Game game, WorldObject object, Item item, String template, Map<String, Expression> parameters, String[] menuPath, boolean isMove) {
+    public ActionCustom(Game game, WorldObject object, Item item, Area area, String template, Map<String, Expression> parameters, String[] menuPath, boolean isMove) {
         this.game = game;
         this.object = object;
         this.item = item;
+        this.area = area;
         this.template = template;
         this.parameters = parameters;
         this.menuPath = menuPath;
@@ -49,7 +51,7 @@ public class ActionCustom extends Action {
             Map<String, Expression> combinedParameters = new HashMap<>();
             combinedParameters.putAll(getTemplate().getParameters());
             combinedParameters.putAll(parameters);
-            getTemplate().getScript().execute(new Context(subject.game(), subject, subject, object, item, combinedParameters));
+            getTemplate().getScript().execute(new Context(subject.game(), subject, subject, object, item, area, combinedParameters));
         }
     }
 
@@ -59,7 +61,7 @@ public class ActionCustom extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        if (getTemplate().getConditionSelect() != null && !getTemplate().getConditionSelect().isMet(new Context(subject.game(), subject, subject, object, item, parameters))) {
+        if (getTemplate().getConditionSelect() != null && !getTemplate().getConditionSelect().isMet(new Context(subject.game(), subject, subject, object, item, area, parameters))) {
             // TODO - Add custom condition reason text
             return new CanChooseResult(false, "CUSTOM CONDITION NOT MET");
         }
@@ -85,12 +87,12 @@ public class ActionCustom extends Action {
         Map<String, String> contextVars = new HashMap<>();
         for (Map.Entry<String, Expression> entry : getTemplate().getParameters().entrySet()) {
             if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, item, parameters)));
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, item, area, parameters)));
             }
         }
         for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
             if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, item, parameters)));
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, subject, object, item, area, parameters)));
             }
         }
         String promptWithVars = LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
@@ -98,7 +100,7 @@ public class ActionCustom extends Action {
     }
 
     public boolean canShow(Actor subject) {
-        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new Context(subject.game(), subject, subject, object, item, parameters));
+        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new Context(subject.game(), subject, subject, object, item, area, parameters));
     }
 
     public record CustomActionHolder(String action, Map<String, Expression> parameters) {}

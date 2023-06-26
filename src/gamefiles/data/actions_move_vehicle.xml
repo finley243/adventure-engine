@@ -1,23 +1,19 @@
 <data>
     <action id="drive">
         <prompt>$areaName ($dir)</prompt>
-        <parameter name="areaName" dataType="string" type="stat" holder="area" stat="name">
-            <holderID dataType="string" type="parameter" name="areaID"/>
-        </parameter>
+        <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
         <script>
             <script type="sensoryEvent">
-                <parameter name="area" dataType="noun" type="stat" holder="area">
-                    <holderID dataType="string" type="parameter" name="areaID"/>
-                </parameter>
+                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
                 <parameter name="vehicle" dataType="noun" type="stat" holder="parentObject"/>
                 <phrase>driveTo</phrase>
                 <area type="buildStringSet">
                     <value type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
-                    <value type="parameter" dataType="string" name="areaID"/>
+                    <value type="stat" dataType="string" holder="parentArea" stat="id"/>
                 </area>
             </script>
             <script type="setState" stat="area" holder="parentObject">
-                <value dataType="string" type="parameter" name="areaID"/>
+                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
         </script>
     </action>
@@ -25,18 +21,16 @@
         <prompt>Around corner ($dir)</prompt>
         <script>
             <script type="sensoryEvent">
-                <parameter name="area" dataType="noun" type="stat" holder="area">
-                    <holderID dataType="string" type="parameter" name="areaID"/>
-                </parameter>
+                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
                 <parameter name="vehicle" dataType="noun" type="stat" holder="parentObject"/>
                 <phrase>driveCorner</phrase>
                 <area type="buildStringSet">
                     <value type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
-                    <value type="parameter" dataType="string" name="areaID"/>
+                    <value type="stat" dataType="string" holder="parentArea" stat="id"/>
                 </area>
             </script>
             <script type="setState" stat="area" holder="parentObject">
-                <value dataType="string" type="parameter" name="areaID"/>
+                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
         </script>
     </action>

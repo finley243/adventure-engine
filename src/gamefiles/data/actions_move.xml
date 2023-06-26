@@ -1,22 +1,18 @@
 <data>
     <action id="move_basic">
         <prompt>$areaName ($dir)</prompt>
-        <parameter name="areaName" dataType="string" type="stat" holder="area" stat="name">
-            <holderID dataType="string" type="parameter" name="areaID"/>
-        </parameter>
+        <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
         <script>
             <script type="sensoryEvent">
-                <parameter name="area" dataType="noun" type="stat" holder="area">
-                    <holderID dataType="string" type="parameter" name="areaID"/>
-                </parameter>
+                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
                 <phrase>moveTo</phrase>
                 <area type="buildStringSet">
                     <value type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
-                    <value type="parameter" dataType="string" name="areaID"/>
+                    <value type="stat" dataType="string" holder="parentArea" stat="id"/>
                 </area>
             </script>
             <script type="setState" stat="area" holder="subject">
-                <value dataType="string" type="parameter" name="areaID"/>
+                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
         </script>
     </action>
@@ -24,17 +20,15 @@
         <prompt>Around corner ($dir)</prompt>
         <script>
             <script type="sensoryEvent">
-                <parameter name="area" dataType="noun" type="stat" holder="area">
-                    <holderID dataType="string" type="parameter" name="areaID"/>
-                </parameter>
+                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
                 <phrase>moveCorner</phrase>
                 <area type="buildStringSet">
                     <value type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
-                    <value type="parameter" dataType="string" name="areaID"/>
+                    <value type="stat" dataType="string" holder="parentArea" stat="id"/>
                 </area>
             </script>
             <script type="setState" stat="area" holder="subject">
-                <value dataType="string" type="parameter" name="areaID"/>
+                <value type="stat" dataType="string" holder="parentArea" name="id"/>
             </script>
         </script>
     </action>
