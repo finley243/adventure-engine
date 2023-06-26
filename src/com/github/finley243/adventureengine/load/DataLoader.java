@@ -1091,13 +1091,17 @@ public class DataLoader {
         String ID = LoadUtils.attribute(linkTypeElement, "id", null);
         boolean isVisible = LoadUtils.attributeBool(linkTypeElement, "visible", true);
         String actorMoveAction = LoadUtils.attribute(linkTypeElement, "moveAction", null);
+        Set<AreaLink.DistanceCategory> actorMoveDistances = LoadUtils.setOfEnumTags(linkTypeElement, "moveDistance", AreaLink.DistanceCategory.class);
         Map<String, String> vehicleMoveActions = new HashMap<>();
-        for (Element vehicleMoveActionElement : LoadUtils.directChildrenWithName(linkTypeElement, "vehicleMoveAction")) {
-            String vehicleType = LoadUtils.attribute(vehicleMoveActionElement, "type", null);
-            String vehicleAction = LoadUtils.attribute(vehicleMoveActionElement, "action", null);
+        Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances = new HashMap<>();
+        for (Element vehicleTypeElement : LoadUtils.directChildrenWithName(linkTypeElement, "vehicleMoveAction")) {
+            String vehicleType = LoadUtils.attribute(vehicleTypeElement, "type", null);
+            String vehicleAction = LoadUtils.attribute(vehicleTypeElement, "action", null);
+            Set<AreaLink.DistanceCategory> vehicleTypeMoveDistances = LoadUtils.setOfEnumTags(linkTypeElement, "moveDistance", AreaLink.DistanceCategory.class);
             vehicleMoveActions.put(vehicleType, vehicleAction);
+            vehicleMoveDistances.put(vehicleType, vehicleTypeMoveDistances);
         }
-        return new LinkType(game, ID, isVisible, actorMoveAction, vehicleMoveActions);
+        return new LinkType(game, ID, isVisible, actorMoveAction, actorMoveDistances, vehicleMoveActions, vehicleMoveDistances);
     }
 
     private static Actor loadActorInstance(Game game, Element actorElement, Area area) {

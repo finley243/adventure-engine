@@ -42,11 +42,20 @@ public class AreaLink {
         if (game.data().getLinkType(getType()).getActorMoveAction() == null) {
             return false;
         }
-        return getDistance() == DistanceCategory.NEAR || getDistance() == DistanceCategory.CLOSE;
+        if (game.data().getLinkType(getType()).allowAllActorDistances()) {
+            return true;
+        }
+        return game.data().getLinkType(getType()).getActorMoveDistances().contains(getDistance());
     }
 
     public boolean isVehicleMovable(Game game, String vehicleType) {
-        return game.data().getLinkType(getType()).getVehicleMoveAction(vehicleType) != null;
+        if (game.data().getLinkType(getType()).getVehicleMoveAction(vehicleType) == null) {
+            return false;
+        }
+        if (game.data().getLinkType(getType()).allowAllVehicleDistances(vehicleType)) {
+            return true;
+        }
+        return game.data().getLinkType(getType()).getVehicleMoveDistances(vehicleType).contains(getDistance());
     }
 
     public CompassDirection getDirection() {
