@@ -27,6 +27,8 @@ public class ActorTemplate extends GameInstanced {
 	private final String defaultEquipSlot;
 	private final Map<Actor.Attribute, Integer> attributes;
 	private final Map<Actor.Skill, Integer> skills;
+
+	private final List<String> startingEffects;
 	
 	private final LootTable lootTable;
 	private final String dialogueStart;
@@ -34,7 +36,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, List<Limb> limbs, Map<String, EquipSlot> equipSlots, String defaultEquipSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, List<Limb> limbs, Map<String, EquipSlot> equipSlots, String defaultEquipSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -66,6 +68,7 @@ public class ActorTemplate extends GameInstanced {
 		this.defaultEquipSlot = defaultEquipSlot;
 		this.attributes = attributes;
 		this.skills = skills;
+		this.startingEffects = startingEffects;
 		this.lootTable = lootTable;
 		this.dialogueStart = dialogueStart;
 		this.scripts = scripts;
@@ -125,6 +128,10 @@ public class ActorTemplate extends GameInstanced {
 
 	public int getSkill(Actor.Skill skill) {
 		return skills.containsKey(skill) ? skills.get(skill) : game().data().getActorTemplate(parentID).getSkill(skill);
+	}
+
+	public List<String> getStartingEffects() {
+		return !startingEffects.isEmpty() || parentID == null ? startingEffects : game().data().getActorTemplate(parentID).getStartingEffects();
 	}
 	
 	public LootTable getLootTable() {

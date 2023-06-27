@@ -155,6 +155,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (getTemplate().getLootTable() != null) {
 			inventory.addItems(getTemplate().getLootTable().generateItems(game()));
 		}
+		for (String startingEffect : getTemplate().getStartingEffects()) {
+			getEffectComponent().addEffect(startingEffect);
+		}
 	}
 
 	private ActorTemplate getTemplate() {

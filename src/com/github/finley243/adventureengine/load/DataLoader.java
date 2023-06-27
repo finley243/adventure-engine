@@ -162,6 +162,7 @@ public class DataLoader {
         Map<Actor.Attribute, Integer> attributes = loadAttributes(actorElement);
         Map<Actor.Skill, Integer> skills = loadSkills(actorElement);
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
+        List<String> startingEffects = LoadUtils.listOfTags(actorElement, "startEffect");
 
         Map<String, Bark> barks = new HashMap<>();
         for (Element barkElement : LoadUtils.directChildrenWithName(actorElement, "bark")) {
@@ -172,7 +173,7 @@ public class DataLoader {
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
         }
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistance, limbs, equipSlots, defaultEquipSlot, attributes, skills, lootTable, dialogueStart, scripts, barks);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistance, limbs, equipSlots, defaultEquipSlot, attributes, skills, startingEffects, lootTable, dialogueStart, scripts, barks);
     }
 
     private static List<Limb> loadLimbs(Element element) {
