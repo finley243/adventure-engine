@@ -57,6 +57,10 @@ public class WeaponClass {
         return primaryRanges;
     }
 
+    public boolean usesAmmo() {
+        return !ammoTypes.isEmpty();
+    }
+
     public Set<String> getAmmoTypes() {
         return ammoTypes;
     }

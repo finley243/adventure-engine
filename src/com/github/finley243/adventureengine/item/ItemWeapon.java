@@ -118,7 +118,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	public int getClipSize() {
-		return clipSize.value(getWeaponTemplate().getClipSize(), 0, 100, new Context(game(), this));
+		return clipSize.value(getWeaponTemplate().getClipSize(), 1, 100, new Context(game(), this));
 	}
 
 	public String getDamageType(Context context) {
@@ -181,6 +181,10 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return getWeaponClass().isLoud() && !isSilenced(context);
 	}
 
+	public boolean usesAmmo() {
+		return getWeaponClass().usesAmmo();
+	}
+
 	public Set<String> getAmmoTypes() {
 		return getWeaponClass().getAmmoTypes();
 	}
@@ -230,7 +234,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		for (String attackType : getAttackTypes()) {
 			actions.addAll(game().data().getAttackType(attackType).generateActions(subject, this));
 		}
-		if (getClipSize() > 0) {
+		if (usesAmmo()) {
 			for (String current : getAmmoTypes()) {
 				actions.add(new ActionWeaponReload(this, (ItemAmmo) ItemFactory.create(game(), current)));
 			}
@@ -305,7 +309,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 			case "damage" -> damage.value(getWeaponTemplate().getDamage(), 1, 1000, context);
 			case "rate" -> rate.value(getWeaponTemplate().getRate(), 1, 50, context);
 			case "crit_damage" -> critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000, context);
-			case "clip_size" -> clipSize.value(getWeaponTemplate().getClipSize(), 0, 100, context);
+			case "clip_size" -> clipSize.value(getWeaponTemplate().getClipSize(), 1, 100, context);
 			case "reload_action_points" -> reloadActionPoints.value(getWeaponTemplate().getReloadActionPoints(), 0, 1000, context);
 			case "ammo_count" -> ammoCount;
 			default -> super.getValueInt(name, context);

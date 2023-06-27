@@ -25,7 +25,7 @@ public class ActionAttackBasic extends ActionAttack {
 
 	@Override
 	public void consumeAmmo(Actor subject) {
-		if (weapon.getClipSize() > 0) {
+		if (weapon.usesAmmo()) {
 			if (weapon.getLoadedAmmoType() != null && weapon.getLoadedAmmoType().isReusable()) {
 				target.getArea().getInventory().addItems(weapon.getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
 			}
@@ -46,7 +46,7 @@ public class ActionAttackBasic extends ActionAttack {
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
-		if (weapon.getClipSize() != 0 && weapon.getAmmoRemaining() < getAmmoConsumed()) {
+		if (weapon.usesAmmo() && weapon.getAmmoRemaining() < getAmmoConsumed()) {
 			return new CanChooseResult(false, "Not enough ammo");
 		}
 		if (!getRanges().contains(subject.getArea().getDistanceTo(target.getArea().getID()))) {

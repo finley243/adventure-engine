@@ -22,7 +22,7 @@ public class ActionAttackArea extends ActionAttack {
 
     @Override
     public void consumeAmmo(Actor subject) {
-        if (weapon.getClipSize() > 0) {
+        if (weapon.usesAmmo()) {
             if (weapon.getLoadedAmmoType().isReusable() && weapon.getLoadedAmmoType() != null) {
                 getArea().getInventory().addItems(weapon.getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
             }
@@ -43,7 +43,7 @@ public class ActionAttackArea extends ActionAttack {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        if (weapon.getClipSize() != 0 && weapon.getAmmoRemaining() < getAmmoConsumed()) {
+        if (weapon.usesAmmo() && weapon.getAmmoRemaining() < getAmmoConsumed()) {
             return new CanChooseResult(false, "Not enough ammo");
         }
         if (!getRanges().contains(subject.getArea().getDistanceTo(getArea().getID()))) {

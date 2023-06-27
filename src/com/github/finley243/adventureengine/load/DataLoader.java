@@ -720,7 +720,7 @@ public class DataLoader {
                 float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
-                int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 0);
+                int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 1);
                 int weaponReloadActionPoints = LoadUtils.singleTagInt(itemElement, "reloadActionPoints", 1);
                 Set<String> weaponTargetEffects = LoadUtils.setOfTags(itemElement, "targetEffect");
                 Map<String, Integer> modSlots = new HashMap<>();
