@@ -21,9 +21,9 @@ public class ScriptTransferItem extends Script {
     private final Expression inventoryTarget;
     private final Expression itemID;
     private final TransferItemsType transferType;
-    private final int count;
+    private final Expression count;
 
-    public ScriptTransferItem(Condition condition, Map<String, Expression> localParameters, Expression inventoryOrigin, Expression inventoryTarget, Expression itemID, TransferItemsType transferType, int count) {
+    public ScriptTransferItem(Condition condition, Map<String, Expression> localParameters, Expression inventoryOrigin, Expression inventoryTarget, Expression itemID, TransferItemsType transferType, Expression count) {
         super(condition, localParameters);
         switch (transferType) {
             case INSTANCE, TYPE, ALL -> {
@@ -33,6 +33,10 @@ public class ScriptTransferItem extends Script {
                 if (inventoryOrigin == null && inventoryTarget == null) throw new IllegalArgumentException("ScriptTransferItem of type COUNT must specify either an origin or target inventory");
             }
         }
+        if (inventoryOrigin != null && inventoryOrigin.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem inventoryOrigin is not a string");
+        if (inventoryTarget != null && inventoryTarget.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem inventoryTarget is not a string");
+        if (itemID != null && itemID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem itemID is not a string");
+        if (count != null && count.getDataType() != Expression.DataType.INTEGER) throw new IllegalArgumentException("ScriptTransferItem count is not an integer");
         this.inventoryOrigin = inventoryOrigin;
         this.inventoryTarget = inventoryTarget;
         this.itemID = itemID;
@@ -53,11 +57,12 @@ public class ScriptTransferItem extends Script {
             }
             case COUNT -> {
                 String itemIDValue = itemID.getValueString(context);
+                int countValue = count.getValueInteger(context);
                 if (inventoryOrigin != null) {
-                    inventoryOrigin.getValueInventory(context).removeItems(itemIDValue, count);
+                    inventoryOrigin.getValueInventory(context).removeItems(itemIDValue, countValue);
                 }
                 if (inventoryTarget != null) {
-                    inventoryTarget.getValueInventory(context).addItems(itemIDValue, count);
+                    inventoryTarget.getValueInventory(context).addItems(itemIDValue, countValue);
                 }
             }
             case TYPE -> {

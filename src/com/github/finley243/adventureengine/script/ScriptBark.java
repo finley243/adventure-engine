@@ -22,6 +22,7 @@ public class ScriptBark extends Script {
     @Override
     protected void executeSuccess(Context context) {
         if (!(actor.getHolder(context) instanceof Actor actorCast)) {
+            // TODO - Add error log
             return;
         }
         actorCast.triggerBark(trigger, context.getTarget());

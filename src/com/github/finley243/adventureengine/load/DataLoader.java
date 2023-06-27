@@ -521,6 +521,15 @@ public class DataLoader {
         }
     }
 
+    private static Expression loadExpressionOrAttribute(Element parentElement, String name, String dataTypeDefault, Expression defaultExpression) {
+        Expression resultExpression = loadExpressionOrAttribute(parentElement, name, dataTypeDefault);
+        if (resultExpression != null) {
+            return resultExpression;
+        } else {
+            return defaultExpression;
+        }
+    }
+
     private static StatHolderReference loadStatHolderReference(Element statHolderElement) {
         String holderType = LoadUtils.attribute(statHolderElement, "holder", "subject");
         Expression holderID = loadExpressionOrAttribute(statHolderElement, "holderID", "string");
@@ -573,12 +582,12 @@ public class DataLoader {
                 Expression transferItemInvTarget = loadExpression(LoadUtils.singleChildWithName(scriptElement, "toInv"), "inventory");
                 Expression transferItemID = loadExpressionOrAttribute(scriptElement, "item", "string");
                 ScriptTransferItem.TransferItemsType transferType = LoadUtils.attributeEnum(scriptElement, "transferType", ScriptTransferItem.TransferItemsType.class, ScriptTransferItem.TransferItemsType.COUNT);
-                int transferItemCount = LoadUtils.attributeInt(scriptElement, "count", 1);
+                Expression transferItemCount = loadExpressionOrAttribute(scriptElement, "count", "int", new ExpressionConstantInteger(1));
                 return new ScriptTransferItem(condition, localParameters, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferType, transferItemCount);
             }
             case "scene" -> {
                 StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
-                List<String> scenes = LoadUtils.listOfTags(scriptElement, "scene");
+                Expression scenes = loadExpressionOrAttribute(scriptElement, "scene", "string");
                 return new ScriptScene(condition, localParameters, actorRef, scenes);
             }
             case "combat" -> {
@@ -604,35 +613,35 @@ public class DataLoader {
                 return new ScriptBark(condition, localParameters, actorRef, barkTrigger);
             }
             case "nearestActorScript" -> {
-                String nearestTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
+                Expression nearestTrigger = loadExpressionOrAttribute(scriptElement, "trigger", "string");
                 return new ScriptNearestActorWithScript(condition, localParameters, nearestTrigger);
             }
             case "timerStart" -> {
-                String timerID = LoadUtils.attribute(scriptElement, "timerID", null);
-                int timerDuration = LoadUtils.attributeInt(scriptElement, "duration", 1);
+                Expression timerID = loadExpressionOrAttribute(scriptElement, "timerID", "string");
+                Expression timerDuration = loadExpressionOrAttribute(scriptElement, "duration", "int");
                 Script timerScriptExpire = loadScript(LoadUtils.singleChildWithName(scriptElement, "scriptExpire"));
                 Script timerScriptUpdate = loadScript(LoadUtils.singleChildWithName(scriptElement, "scriptUpdate"));
                 return new ScriptTimerStart(condition, localParameters, timerID, timerDuration, timerScriptExpire, timerScriptUpdate);
             }
             case "setState" -> {
                 StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
-                String setStateName = LoadUtils.attribute(scriptElement, "stat", null);
+                Expression setStateName = loadExpressionOrAttribute(scriptElement, "stat", "string");
                 Expression setStateExpression = loadExpressionOrAttribute(scriptElement, "value", null);
                 return new ScriptSetState(condition, localParameters, setStateHolder, setStateName, setStateExpression);
             }
             case "modifyState" -> {
                 StatHolderReference modifyStateHolder = loadStatHolderReference(scriptElement);
-                String modifyStateName = LoadUtils.attribute(scriptElement, "stat", null);
+                Expression modifyStateName = loadExpressionOrAttribute(scriptElement, "stat", "string");
                 Expression modifyStateExpression = loadExpressionOrAttribute(scriptElement, "value", null);
                 return new ScriptModifyState(condition, localParameters, modifyStateHolder, modifyStateName, modifyStateExpression);
             }
             case "setGlobal" -> {
-                String setGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
+                Expression setGlobalID = loadExpressionOrAttribute(scriptElement, "globalID", "string");
                 Expression setGlobalExpression = loadExpressionOrAttribute(scriptElement, "value", null);
                 return new ScriptSetGlobal(condition, localParameters, setGlobalID, setGlobalExpression);
             }
             case "modifyGlobal" -> {
-                String modifyGlobalID = LoadUtils.attribute(scriptElement, "globalID", null);
+                Expression modifyGlobalID = loadExpressionOrAttribute(scriptElement, "globalID", "string");
                 Expression modifyGlobalExpression = loadExpressionOrAttribute(scriptElement, "value", null);
                 return new ScriptModifyGlobal(condition, localParameters, modifyGlobalID, modifyGlobalExpression);
             }

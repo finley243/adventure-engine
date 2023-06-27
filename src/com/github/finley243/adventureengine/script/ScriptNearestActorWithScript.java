@@ -12,10 +12,12 @@ import java.util.Map;
 
 public class ScriptNearestActorWithScript extends Script {
 
-    private final String trigger;
+    private final Expression trigger;
 
-    public ScriptNearestActorWithScript(Condition condition, Map<String, Expression> localParameters, String trigger) {
+    public ScriptNearestActorWithScript(Condition condition, Map<String, Expression> localParameters, Expression trigger) {
         super(condition, localParameters);
+        if (trigger == null) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is null");
+        if (trigger.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is not a string");
         this.trigger = trigger;
     }
 
@@ -26,7 +28,6 @@ public class ScriptNearestActorWithScript extends Script {
         List<Integer> nearestActorDist = new ArrayList<>();
         for (Actor visibleActor : context.game().data().getPlayer().getVisibleActors()) {
             // TODO - Replace with dedicated pathfinding function
-            //int distance = visibleActor.getArea().getDistanceTo(subject.game().data().getPlayer().getArea().getID());
             int distance = Pathfinder.findPath(visibleActor.getArea(), context.game().data().getPlayer().getArea(), null).size() - 1;
             int addAtIndex = nearestActor.size();
             for (int i = 0; i < nearestActor.size(); i++) {
@@ -38,8 +39,9 @@ public class ScriptNearestActorWithScript extends Script {
             nearestActor.add(addAtIndex, visibleActor);
             nearestActorDist.add(addAtIndex, distance);
         }
+        String triggerValue = trigger.getValueString(context);
         for (Actor nearActor : nearestActor) {
-            boolean executed = nearActor.triggerScript(trigger, context.getTarget());
+            boolean executed = nearActor.triggerScript(triggerValue, context.getTarget());
             if (executed) break;
         }
     }
