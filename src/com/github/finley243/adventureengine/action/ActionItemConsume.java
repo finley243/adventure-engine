@@ -22,11 +22,7 @@ public class ActionItemConsume extends Action {
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.getInventory().removeItem(item);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
-		String phrase = switch (item.getConsumableType()) {
-			case DRINK -> "drink";
-			case FOOD -> "eat";
-			case OTHER -> "consume";
-		};
+		String phrase = item.getConsumePhrase();
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
 		for (String effect : item.getEffects()) {
 			subject.getEffectComponent().addEffect(effect);
@@ -35,12 +31,8 @@ public class ActionItemConsume extends Action {
 	
 	@Override
 	public MenuChoice getMenuChoices(Actor subject) {
-		String prompt = switch (item.getConsumableType()) {
-			case DRINK -> "Drink";
-			case FOOD -> "Eat";
-			case OTHER -> "Use";
-		};
-		return new MenuChoice(prompt, canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"consume " + item.getName(), "eat " + item.getName(), "drink " + item.getName(), "use " + item.getName()});
+		String prompt = item.getConsumePrompt();
+		return new MenuChoice(prompt, canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"consume " + item.getName(), "use " + item.getName(), prompt.toLowerCase() + " " + item.getName()});
 	}
 
 	@Override

@@ -704,9 +704,10 @@ public class DataLoader {
                 return new EquippableTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects, equippedActions);
             }
             case "consumable" -> {
-                ConsumableTemplate.ConsumableType consumableType = LoadUtils.attributeEnum(itemElement, "consumableType", ConsumableTemplate.ConsumableType.class, ConsumableTemplate.ConsumableType.OTHER);
+                String consumePrompt = LoadUtils.singleTag(itemElement, "consumePrompt", null);
+                String consumePhrase = LoadUtils.singleTag(itemElement, "consumePhrase", null);
                 List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ConsumableTemplate(game, id, name, description, scripts, customActions, price, consumableType, consumableEffects);
+                return new ConsumableTemplate(game, id, name, description, scripts, customActions, price, consumePrompt, consumePhrase, consumableEffects);
             }
             case "weapon" -> {
                 List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");

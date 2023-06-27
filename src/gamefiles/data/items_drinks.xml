@@ -1,10 +1,14 @@
 <data>
-    <item type="consumable" id="nitron_cola" price="10" consumableType="DRINK">
+    <item type="consumable" id="nitron_cola" price="10">
         <name>Nitron Cola</name>
+        <consumePrompt>Drink</consumePrompt>
+        <consumePhrase>drink</consumePhrase>
         <effect>food_basic</effect>
     </item>
-    <item type="consumable" id="nitron_diet" price="10" consumableType="DRINK">
+    <item type="consumable" id="nitron_diet" price="10">
         <name>Nitron Diet</name>
+        <consumePrompt>Drink</consumePrompt>
+        <consumePhrase>drink</consumePhrase>
         <effect>food_basic</effect>
     </item>
 </data>

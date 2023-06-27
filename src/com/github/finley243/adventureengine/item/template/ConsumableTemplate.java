@@ -11,17 +11,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class ConsumableTemplate extends ItemTemplate {
-
-	public enum ConsumableType{
-		FOOD, DRINK, OTHER
-	}
 	
-	private final ConsumableType type;
+	private final String consumePrompt;
+	private final String consumePhrase;
 	private final List<String> effects;
 	
-	public ConsumableTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, ConsumableType type, List<String> effects) {
+	public ConsumableTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, String consumePrompt, String consumePhrase, List<String> effects) {
 		super(game, ID, name, description, scripts, customActions, price);
-		this.type = type;
+		this.consumePrompt = consumePrompt;
+		this.consumePhrase = consumePhrase;
 		this.effects = effects;
 	}
 
@@ -30,8 +28,12 @@ public class ConsumableTemplate extends ItemTemplate {
 		return false;
 	}
 	
-	public ConsumableType getType() {
-		return type;
+	public String getConsumePrompt() {
+		return consumePrompt;
+	}
+
+	public String getConsumePhrase() {
+		return consumePhrase;
 	}
 	
 	public List<String> getEffects() {

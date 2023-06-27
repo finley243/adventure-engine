@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.item.template.AmmoTemplate;
-import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 public class ItemAmmo extends Item {
 

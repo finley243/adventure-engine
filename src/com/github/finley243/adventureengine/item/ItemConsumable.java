@@ -5,8 +5,6 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.template.ConsumableTemplate;
-import com.github.finley243.adventureengine.item.template.ConsumableTemplate.ConsumableType;
-import com.github.finley243.adventureengine.item.template.ItemTemplate;
 
 import java.util.List;
 
@@ -20,8 +18,12 @@ public class ItemConsumable extends Item {
 		return (ConsumableTemplate) getTemplate();
 	}
 	
-	public ConsumableType getConsumableType() {
-		return getConsumableTemplate().getType();
+	public String getConsumePrompt() {
+		return getConsumableTemplate().getConsumePrompt();
+	}
+
+	public String getConsumePhrase() {
+		return getConsumableTemplate().getConsumePhrase();
 	}
 	
 	public List<String> getEffects() {
