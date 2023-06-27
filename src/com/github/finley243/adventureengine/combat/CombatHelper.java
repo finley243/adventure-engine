@@ -12,14 +12,10 @@ public class CombatHelper {
 	// Range of final hit chance (clamped)
 	public static final float HIT_CHANCE_MAX = 0.99f;
 	public static final float HIT_CHANCE_MIN = 0.01f;
-	// Range of hit chance based on skill/attribute levels (before any modifiers)
-	public static final float HIT_CHANCE_BASE_MAX = 0.90f;
-	public static final float HIT_CHANCE_BASE_MIN = 0.20f;
 	
-	public static float calculateHitChance(Actor attacker, AttackTarget target, Limb limb, Actor.Skill attackSkill, Actor.Skill dodgeSkill, float hitChanceBaseMin, float hitChanceBaseMax, float accuracyBonus, boolean canBeDodged, float hitChanceMult) {
-		Context context = new Context(attacker.game(), attacker, target);
+	public static float calculateHitChance(Actor attacker, ItemWeapon weapon, AttackTarget target, Limb limb, Actor.Skill attackSkill, Actor.Skill dodgeSkill, float hitChanceBaseMin, float hitChanceBaseMax, boolean canBeDodged, float hitChanceMult) {
+		Context context = new Context(attacker.game(), attacker, target, weapon);
 		float chance = MathUtils.chanceLogSkill(attacker, attackSkill, hitChanceBaseMin, hitChanceBaseMax, context);
-		chance += accuracyBonus;
 		if (canBeDodged && target instanceof Actor actor && actor.canDodge(context)) {
 			int attackerSkill = attacker.getSkill(attackSkill, context);
 			int targetSkill = ((Actor) target).getSkill(dodgeSkill, context);
@@ -28,6 +24,7 @@ public class CombatHelper {
 				chance -= penaltyMult * 0.05f;
 			}
 		}
+		chance = weapon.getModifiedHitChance(context, chance);
 		if (limb != null) {
 			chance *= limb.getHitChance();
 		}
@@ -35,10 +32,10 @@ public class CombatHelper {
 		return MathUtils.bound(chance, HIT_CHANCE_MIN, HIT_CHANCE_MAX);
 	}
 
-	public static float calculateHitChanceNoTarget(Actor attacker, Limb limb, Actor.Skill attackSkill, float hitChanceBaseMin, float hitChanceBaseMax, float accuracyBonus, float hitChanceMult) {
-		Context context = new Context(attacker.game(), attacker, attacker);
+	public static float calculateHitChanceNoTarget(Actor attacker, ItemWeapon weapon, Limb limb, Actor.Skill attackSkill, float hitChanceBaseMin, float hitChanceBaseMax, float hitChanceMult) {
+		Context context = new Context(attacker.game(), attacker, attacker, weapon);
 		float chance = MathUtils.chanceLogSkill(attacker, attackSkill, hitChanceBaseMin, hitChanceBaseMax, context);
-		chance += accuracyBonus;
+		chance = weapon.getModifiedHitChance(context, chance);
 		if (limb != null) {
 			chance *= limb.getHitChance();
 		}

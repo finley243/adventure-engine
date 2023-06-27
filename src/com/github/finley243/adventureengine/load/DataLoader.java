@@ -718,7 +718,6 @@ public class DataLoader {
                 int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
                 float critChance = LoadUtils.attributeFloat(itemElement, "critChance", 0.0f);
                 String weaponDamageType = LoadUtils.attribute(damageElement, "type", game.data().getConfig("defaultDamageType"));
-                float weaponAccuracyBonus = LoadUtils.singleTagFloat(itemElement, "accuracyBonus", 0.0f);
                 float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
                 int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 1);
@@ -730,7 +729,7 @@ public class DataLoader {
                     int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
                     modSlots.put(slotName, slotCount);
                 }
-                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponAccuracyBonus, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
+                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(itemElement, "modSlot", null);

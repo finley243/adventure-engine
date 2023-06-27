@@ -17,14 +17,13 @@ public class WeaponTemplate extends EquippableTemplate {
 	private final float critChance;
 	private final int clipSize;
 	private final int reloadActionPoints;
-	private final float accuracyBonus;
 	private final float armorMult;
 	private final boolean silenced;
 	private final String damageType;
 	private final Set<String> targetEffects;
 	private final Map<String, Integer> modSlots;
 
-	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, List<ActionCustom.CustomActionHolder> equippedActions, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, int reloadActionPoints, float accuracyBonus, float armorMult, boolean silenced, String damageType, Set<String> targetEffects, Map<String, Integer> modSlots) {
+	public WeaponTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, List<ActionCustom.CustomActionHolder> equippedActions, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, int reloadActionPoints, float armorMult, boolean silenced, String damageType, Set<String> targetEffects, Map<String, Integer> modSlots) {
 		super(game, ID, name, description, scripts, customActions, price, null, new ArrayList<>(), equippedActions);
 		if (weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null: " + ID);
 		for (Map.Entry<String, Integer> entry : modSlots.entrySet()) {
@@ -39,7 +38,6 @@ public class WeaponTemplate extends EquippableTemplate {
 		this.critChance = critChance;
 		this.clipSize = clipSize;
 		this.reloadActionPoints = reloadActionPoints;
-		this.accuracyBonus = accuracyBonus;
 		this.armorMult = armorMult;
 		this.silenced = silenced;
 		this.damageType = damageType;
@@ -92,10 +90,6 @@ public class WeaponTemplate extends EquippableTemplate {
 
 	public int getReloadActionPoints() {
 		return reloadActionPoints;
-	}
-
-	public float getAccuracyBonus() {
-		return accuracyBonus;
 	}
 
 	public float getArmorMult() {

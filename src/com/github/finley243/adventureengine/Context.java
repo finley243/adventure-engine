@@ -48,6 +48,10 @@ public class Context {
         this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null);
     }
 
+    public Context(Game game, Actor subject, AttackTarget attackTarget, Item parentItem) {
+        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, null, new HashMap<>());
+    }
+
     public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Map<String, Expression> parameters) {
         this.game = game;
         this.subject = subject;

@@ -118,7 +118,6 @@ public class WeaponAttackType {
         Actor.Skill skill = skillOverride != null ? skillOverride : weapon.getSkill();
         float hitChanceMin = baseHitChanceMinOverride != null ? baseHitChanceMinOverride : weapon.getBaseHitChanceMin();
         float hitChanceMax = baseHitChanceMaxOverride != null ? baseHitChanceMaxOverride : weapon.getBaseHitChanceMax();
-        float accuracyBonus = weapon.getAccuracyBonus(context);
         Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getRanges(context))) : weapon.getRanges(context));
         int rate = rateOverride != null ? rateOverride : weapon.getRate(context);
         int damage = damageOverride != null ? damageOverride : (int) (weapon.getDamage(context) * (damageMult + 1.0f));
@@ -133,7 +132,7 @@ public class WeaponAttackType {
             case SINGLE -> {
                 for (AttackTarget target : subject.getVisibleAttackTargets()) {
                     if (!target.equals(subject) && target.canBeAttacked()) {
-                        actions.add(new ActionAttackBasic(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType, isLoud));
+                        actions.add(new ActionAttackBasic(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType, isLoud));
                     }
                 }
             }
@@ -141,7 +140,7 @@ public class WeaponAttackType {
                 for (Actor target : subject.getVisibleActors()) {
                     if (!target.equals(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
-                            actions.add(new ActionAttackLimb(weapon, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType, isLoud));
+                            actions.add(new ActionAttackLimb(weapon, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType, isLoud));
                         }
                     }
                 }
@@ -149,7 +148,7 @@ public class WeaponAttackType {
             case SPREAD -> {
                 // Possibly switch to only areas visible to the subject?
                 for (Area target : subject.getArea().getLineOfSightAreas()) {
-                    actions.add(new ActionAttackArea(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, accuracyBonus, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType, isLoud));
+                    actions.add(new ActionAttackArea(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, canDodge, hitChanceType, isLoud));
                 }
             }
         }

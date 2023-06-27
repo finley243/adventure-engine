@@ -31,7 +31,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	private final StatStringSet ranges;
 	private final StatInt clipSize;
 	private final StatInt reloadActionPoints;
-	private final StatFloat accuracyBonus;
+	private final StatFloat hitChanceModifier;
 	private final StatFloat armorMult;
 	private final StatString damageType;
 	private final StatBoolean isSilenced;
@@ -53,7 +53,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		this.ranges = new StatStringSet("ranges", this);
 		this.clipSize = new StatInt("clip_size", this);
 		this.reloadActionPoints = new StatInt("reload_action_points", this);
-		this.accuracyBonus = new StatFloat("accuracy_bonus", this);
+		this.hitChanceModifier = new StatFloat("hit_chance_bonus", this);
 		this.armorMult = new StatFloat("armor_mult", this);
 		this.damageType = new StatString("damage_type", this);
 		this.isSilenced = new StatBoolean("is_silenced", this, false);
@@ -104,9 +104,8 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return ranges.valueEnum(getWeaponClass().getPrimaryRanges(), AreaLink.DistanceCategory.class, context);
 	}
 
-	// TODO - Change to accuracy multiplier?
-	public float getAccuracyBonus(Context context) {
-		return accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f, context);
+	public float getModifiedHitChance(Context context, float baseChance) {
+		return hitChanceModifier.value(baseChance, 0.0f, 1.0f, context);
 	}
 
 	public float getArmorMult(Context context) {
@@ -118,7 +117,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	public int getClipSize() {
-		return clipSize.value(getWeaponTemplate().getClipSize(), 1, 100, new Context(game(), this));
+		return clipSize.value(getWeaponTemplate().getClipSize(), 1, 100, new Context(game(), getEquippedActor(), getEquippedActor(), this));
 	}
 
 	public String getDamageType(Context context) {
@@ -267,8 +266,8 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 
 	@Override
 	public StatFloat getStatFloat(String name) {
-		if ("accuracy_bonus".equals(name)) {
-			return accuracyBonus;
+		if ("hit_chance_modifier".equals(name)) {
+			return hitChanceModifier;
 		} else if ("armor_mult".equals(name)) {
 			return armorMult;
 		}
@@ -318,11 +317,10 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 
 	@Override
 	public float getValueFloat(String name, Context context) {
-		return switch (name) {
-			case "accuracy_bonus" -> accuracyBonus.value(getWeaponTemplate().getAccuracyBonus(), -1.0f, 1.0f, context);
-			case "armor_mult" -> armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, context);
-			default -> super.getValueFloat(name, context);
-		};
+		if ("armor_mult".equals(name)) {
+			return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, context);
+		}
+		return super.getValueFloat(name, context);
 	}
 
 	@Override
