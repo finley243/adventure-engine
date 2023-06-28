@@ -33,8 +33,8 @@ public class ScriptTransferItem extends Script {
                 if (inventoryOrigin == null && inventoryTarget == null) throw new IllegalArgumentException("ScriptTransferItem of type COUNT must specify either an origin or target inventory");
             }
         }
-        if (inventoryOrigin != null && inventoryOrigin.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem inventoryOrigin is not a string");
-        if (inventoryTarget != null && inventoryTarget.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem inventoryTarget is not a string");
+        if (inventoryOrigin != null && inventoryOrigin.getDataType() != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryOrigin is not an inventory");
+        if (inventoryTarget != null && inventoryTarget.getDataType() != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryTarget is not an inventory");
         if (itemID != null && itemID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem itemID is not a string");
         if (count != null && count.getDataType() != Expression.DataType.INTEGER) throw new IllegalArgumentException("ScriptTransferItem count is not an integer");
         this.inventoryOrigin = inventoryOrigin;

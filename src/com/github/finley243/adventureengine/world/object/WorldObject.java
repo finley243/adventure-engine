@@ -3,17 +3,20 @@ package com.github.finley243.adventureengine.world.object;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.combat.Damage;
+import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
@@ -37,6 +40,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private boolean isHidden;
 	private final Area defaultArea;
 	private Area area;
+	private int HP;
 	private final Map<String, ObjectComponent> components;
 	private final Map<String, Boolean> localVarsBoolean;
 	private final Map<String, Integer> localVarsInteger;
@@ -109,12 +113,20 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public boolean canBeAttacked() {
-		return false;
+		return getTemplate().getMaxHP() > 0 && HP > 0;
 	}
 
 	@Override
 	public void damage(Damage damage, Context context) {
-		// TODO - Fill in effects of attacking object
+		int amount = damage.getAmount();
+		amount -= getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult();
+		HP -= amount;
+		if (HP <= 0) {
+			HP = 0;
+			triggerScript("on_broken", new Context(game(), context.getSubject(), context.getTarget(), this));
+		} else {
+			triggerScript("on_damaged", new Context(game(), context.getSubject(), context.getTarget(), this));
+		}
 	}
 
 	@Override
@@ -160,6 +172,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				component.onNewGameInit();
 			}
 		}
+		this.HP = getTemplate().getMaxHP();
 	}
 
 	public void onStartRound() {}
@@ -227,9 +240,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return linkComponents;
 	}
 
-	public void triggerScript(String entryPoint, Actor subject, Actor target) {
+	public void triggerScript(String entryPoint, Context context) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
-			getTemplate().getScripts().get(entryPoint).execute(new Context(game(), subject, target, this));
+			getTemplate().getScripts().get(entryPoint).execute(context);
 		}
 	}
 

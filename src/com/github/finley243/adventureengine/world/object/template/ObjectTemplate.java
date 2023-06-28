@@ -13,7 +13,10 @@ import java.util.Set;
 public class ObjectTemplate extends GameInstanced {
 
     private final String name;
+    private final boolean isProperName;
     private final Scene description;
+    private final int maxHP;
+    private final Map<String, Integer> damageResistances;
     private final Map<String, Script> scripts;
     private final List<ActionCustom.CustomActionHolder> customActions;
     private final List<ActionCustom.CustomActionHolder> networkActions;
@@ -24,10 +27,13 @@ public class ObjectTemplate extends GameInstanced {
     private final Map<String, String> localVarsStringDefault;
     private final Map<String, Set<String>> localVarsStringSetDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, Map<String, ObjectComponentTemplate> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
+    public ObjectTemplate(Game game, String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, Map<String, ObjectComponentTemplate> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
         super(game, ID);
         this.name = name;
+        this.isProperName = isProperName;
         this.description = description;
+        this.maxHP = maxHP;
+        this.damageResistances = damageResistances;
         this.scripts = scripts;
         this.customActions = customActions;
         this.networkActions = networkActions;
@@ -43,8 +49,20 @@ public class ObjectTemplate extends GameInstanced {
         return name;
     }
 
+    public boolean isProperName() {
+        return isProperName;
+    }
+
     public Scene getDescription() {
         return description;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+
+    public int getDamageResistance(String damageType) {
+        return damageResistances.getOrDefault(damageType, 0);
     }
 
     public Map<String, Script> getScripts() {

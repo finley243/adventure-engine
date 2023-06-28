@@ -116,7 +116,7 @@ public class TargetingComponent {
             }
         }
         if (startedInCombat && !hasTargetsOfType(DetectionState.HOSTILE)) {
-            actor.triggerScript("on_combat_end", actor);
+            actor.triggerScript("on_combat_end", new Context(actor.game(), actor, actor));
             actor.triggerBark("on_combat_end", actor);
         }
     }
@@ -159,18 +159,18 @@ public class TargetingComponent {
                 case DETECTING -> {
                     if (actor.isDead()) {
                         // TODO - Limit response to actors in allied faction?
-                        actor.triggerScript("on_detect_dead", target);
+                        actor.triggerScript("on_detect_dead", new Context(actor.game(), actor, target));
                         actor.triggerBark("on_detect_dead", target);
                         detectedActors.get(target).state = DetectionState.DEAD;
                     } else if ((target.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getRoom().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
                         (target.getArea().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
                         // TODO - Limit trespassing response to allies of owner faction (and possibly just enforcers)
-                        actor.triggerScript("on_detect_target_trespassing", target);
+                        actor.triggerScript("on_detect_target_trespassing", new Context(actor.game(), actor, target));
                         actor.triggerBark("on_detect_target_trespassing", target);
                         // TODO - Make actor follow trespasser until they leave the area?
                         detectedActors.get(target).state = DetectionState.TRESPASSING;
                     } else if (actor.getFaction().getRelationTo(target.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
-                        actor.triggerScript("on_detect_target_hostile", target);
+                        actor.triggerScript("on_detect_target_hostile", new Context(actor.game(), actor, target));
                         actor.triggerBark("on_detect_target_hostile", target);
                         detectedActors.get(target).state = DetectionState.HOSTILE;
                     } else {
@@ -178,7 +178,7 @@ public class TargetingComponent {
                     }
                 }
                 case TRESPASSING -> {
-                    actor.triggerScript("on_trespassing_become_hostile", target);
+                    actor.triggerScript("on_trespassing_become_hostile", new Context(actor.game(), actor, target));
                     actor.triggerBark("on_trespassing_become_hostile", target);
                     detectedActors.get(target).state = DetectionState.HOSTILE;
                 }
@@ -188,7 +188,7 @@ public class TargetingComponent {
 
     public void addCombatant(Actor target) {
         if (!hasTargetsOfType(DetectionState.HOSTILE)) {
-            actor.triggerScript("on_combat_start", target);
+            actor.triggerScript("on_combat_start", new Context(actor.game(), actor, target));
             actor.triggerBark("on_combat_start", target);
         }
         if (detectedActors.containsKey(target)) {

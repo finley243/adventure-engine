@@ -939,8 +939,12 @@ public class DataLoader {
 
     private static ObjectTemplate loadObjectTemplate(Game game, Element objectElement) throws GameDataException {
         String ID = LoadUtils.attribute(objectElement, "id", null);
-        String name = LoadUtils.singleTag(objectElement, "name", null);
+        Element nameElement = LoadUtils.singleChildWithName(objectElement, "name");
+        String name = nameElement != null ? nameElement.getTextContent() : null;
+        boolean isProperName = LoadUtils.attributeBool(nameElement, "proper", false);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(objectElement, "description"));
+        int maxHP = LoadUtils.attributeInt(objectElement, "maxHP", 0);
+        Map<String, Integer> damageResistances = loadDamageResistance(objectElement);
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(objectElement, "action");
         List<ActionCustom.CustomActionHolder> networkActions = loadCustomActions(objectElement, "networkAction");
@@ -981,7 +985,7 @@ public class DataLoader {
                 }
             }
         }
-        return new ObjectTemplate(game, ID, name, description, scripts, customActions, networkActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
+        return new ObjectTemplate(game, ID, name, isProperName, description, maxHP, damageResistances, scripts, customActions, networkActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
     }
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) {

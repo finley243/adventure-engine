@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -29,7 +30,7 @@ public class ActionObjectUseStart extends Action {
 			subject.getUsingObject().removeUser();
 		}
 		if (component.userIsInCover()) {
-			subject.triggerScript("on_take_cover", subject);
+			subject.triggerScript("on_take_cover", new Context(subject.game(), subject, subject, getComponent().getObject()));
 		}
 		component.setUser(subject);
 		subject.setUsingObject(component);

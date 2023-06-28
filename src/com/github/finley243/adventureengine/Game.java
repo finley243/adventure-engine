@@ -17,6 +17,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import org.checkerframework.checker.units.qual.C;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -124,7 +125,7 @@ public class Game {
 		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
 		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
 		for (Actor visibleActor : data().getPlayer().getVisibleActors()) {
-			visibleActor.triggerScript("on_player_visible_round", data().getPlayer());
+			visibleActor.triggerScript("on_player_visible_round", new Context(this, visibleActor, data().getPlayer()));
 		}
 		for (Actor actor : data().getActors()) {
 			if (!actor.isPlayer()) {

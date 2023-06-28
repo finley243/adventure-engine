@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -26,7 +27,7 @@ public class ActionObjectUseEnd extends Action {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		if (component.userIsInCover()) {
-			subject.triggerScript("on_leave_cover", subject);
+			subject.triggerScript("on_leave_cover", new Context(subject.game(), subject, subject, getComponent().getObject()));
 		}
 		component.removeUser();
 		subject.setUsingObject(null);

@@ -377,7 +377,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			HP = 0;
 			kill();
 		} else {
-			triggerScript("on_damaged", this);
+			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", textContext, null, null, this, null));
@@ -403,7 +403,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			HP = 0;
 			kill();
 		} else {
-			triggerScript("on_damaged", this);
+			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
 				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", textContext, null, null, this, null));
@@ -413,7 +413,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 	
 	public void kill() {
-		triggerScript("on_death", this);
+		triggerScript("on_death", new Context(game(), this, this));
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
 		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
 		// TODO - Enable held item dropping on death for new equipment system
@@ -956,10 +956,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		};
 	}
 
-	public boolean triggerScript(String trigger, Actor target) {
+	public boolean triggerScript(String trigger, Context context) {
 		Script script = getTemplate().getScript(trigger);
 		if (script != null) {
-			script.execute(new Context(game(), this, target));
+			script.execute(context);
 			return true;
 		} else {
 			return false;

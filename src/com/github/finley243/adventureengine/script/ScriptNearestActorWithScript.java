@@ -41,7 +41,7 @@ public class ScriptNearestActorWithScript extends Script {
         }
         String triggerValue = trigger.getValueString(context);
         for (Actor nearActor : nearestActor) {
-            boolean executed = nearActor.triggerScript(triggerValue, context.getTarget());
+            boolean executed = nearActor.triggerScript(triggerValue, context);
             if (executed) break;
         }
     }
