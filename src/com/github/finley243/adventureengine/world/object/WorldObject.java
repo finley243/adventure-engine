@@ -129,6 +129,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		}
 	}
 
+	public boolean isBroken() {
+		return getTemplate().getMaxHP() > 0 && HP <= 0;
+	}
+
 	@Override
 	public Area getArea() {
 		return area;
@@ -262,6 +266,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			case "enabled" -> isEnabled;
 			case "hidden" -> isHidden;
 			case "guarded" -> isGuarded();
+			case "broken" -> isBroken();
 			default ->
 					localVarsBoolean.getOrDefault(name, getTemplate().getLocalVarsBooleanDefault().getOrDefault(name, false));
 		};
