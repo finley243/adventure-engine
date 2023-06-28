@@ -1189,13 +1189,17 @@ public class DataLoader {
         String ID = LoadUtils.attribute(weaponClassElement, "id", null);
         String name = LoadUtils.singleTag(weaponClassElement, "name", null);
         boolean isRanged = LoadUtils.attributeBool(weaponClassElement, "isRanged", false);
-        boolean isTwoHanded = LoadUtils.attributeBool(weaponClassElement, "isTwoHanded", false);
+        Set<Set<String>> slots = new HashSet<>();
+        for (Element slotGroupElement : LoadUtils.directChildrenWithName(weaponClassElement, "slotGroup")) {
+            Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
+            slots.add(slotGroup);
+        }
         boolean isLoud = LoadUtils.attributeBool(weaponClassElement, "isLoud", false);
         Actor.Skill skill = LoadUtils.attributeEnum(weaponClassElement, "skill", Actor.Skill.class, Actor.Skill.MELEE);
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(weaponClassElement, "range", AreaLink.DistanceCategory.class);
         Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
         Set<String> attackTypes = LoadUtils.setOfTags(weaponClassElement, "attackType");
-        return new WeaponClass(ID, name, isRanged, isTwoHanded, isLoud, skill, primaryRanges, ammoTypes, attackTypes);
+        return new WeaponClass(ID, name, isRanged, slots, isLoud, skill, primaryRanges, ammoTypes, attackTypes);
     }
 
     private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) {

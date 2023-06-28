@@ -1,67 +1,115 @@
 <data>
-    <weaponClass id="pistol" isRanged="true" isTwoHanded="false" isLoud="true" skill="handguns">
+    <weaponClass id="pistol" isRanged="true" isLoud="true" skill="handguns">
         <name>pistol</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+        </slotGroup>
+        <slotGroup>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>CLOSE</range>
         <ammo>ammo_pistol</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
     </weaponClass>
-    <weaponClass id="smg" isRanged="true" isTwoHanded="false" isLoud="true" skill="handguns">
+    <weaponClass id="smg" isRanged="true" isLoud="true" skill="handguns">
         <name>SMG</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+        </slotGroup>
+        <slotGroup>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>CLOSE</range>
         <ammo>ammo_pistol</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
         <attackType>autofire</attackType>
     </weaponClass>
-    <weaponClass id="shotgun" isRanged="true" isTwoHanded="true" isLoud="true" skill="long_arms">
+    <weaponClass id="shotgun" isRanged="true" isLoud="true" skill="long_arms">
         <name>shotgun</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>FAR</range>
         <ammo>ammo_rifle</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
     </weaponClass>
-    <weaponClass id="assault_rifle" isRanged="true" isTwoHanded="true" isLoud="true" skill="long_arms">
+    <weaponClass id="assault_rifle" isRanged="true" isLoud="true" skill="long_arms">
         <name>assault rifle</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>FAR</range>
         <ammo>ammo_rifle</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
         <attackType>autofire</attackType>
     </weaponClass>
-    <weaponClass id="sniper_rifle" isRanged="true" isTwoHanded="true" isLoud="true" skill="long_arms">
+    <weaponClass id="sniper_rifle" isRanged="true" isLoud="true" skill="long_arms">
         <name>sniper rifle</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>DISTANT</range>
         <ammo>ammo_rifle</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
     </weaponClass>
-    <weaponClass id="knife" isRanged="false" isTwoHanded="false" isLoud="false" skill="melee">
+    <weaponClass id="knife" isRanged="false" isLoud="false" skill="melee">
         <name>knife</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+        </slotGroup>
+        <slotGroup>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>NEAR</range>
         <attackType>basic_melee</attackType>
         <attackType>targeted_melee</attackType>
     </weaponClass>
-    <weaponClass id="sword" isRanged="false" isTwoHanded="true" isLoud="false" skill="melee">
+    <weaponClass id="sword" isRanged="false" isLoud="false" skill="melee">
         <name>sword</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>NEAR</range>
         <attackType>basic_melee</attackType>
         <attackType>targeted_melee</attackType>
     </weaponClass>
-    <weaponClass id="club" isRanged="false" isTwoHanded="true" isLoud="false" skill="melee">
+    <weaponClass id="club" isRanged="false" isLoud="false" skill="melee">
         <name>club</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>NEAR</range>
         <attackType>basic_melee</attackType>
         <attackType>targeted_melee</attackType>
     </weaponClass>
-    <weaponClass id="axe" isRanged="false" isTwoHanded="true" isLoud="false" skill="melee">
+    <weaponClass id="axe" isRanged="false" isLoud="false" skill="melee">
         <name>axe</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>NEAR</range>
         <attackType>basic_melee</attackType>
         <attackType>targeted_melee</attackType>
     </weaponClass>
-    <weaponClass id="grenade" isRanged="true" isTwoHanded="false" isLoud="true" skill="throwing">
+    <weaponClass id="grenade" isRanged="true" isLoud="true" skill="throwing">
         <name>grenade</name>
+        <slotGroup>
+            <slot>hand_main</slot>
+        </slotGroup>
+        <slotGroup>
+            <slot>hand_off</slot>
+        </slotGroup>
         <range>CLOSE</range>
         <attackType>grenade</attackType>
     </weaponClass>

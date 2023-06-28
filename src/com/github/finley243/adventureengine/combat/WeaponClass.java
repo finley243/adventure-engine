@@ -10,18 +10,18 @@ public class WeaponClass {
     private final String ID;
     private final String name;
     private final boolean isRanged;
-    private final boolean isTwoHanded;
+    private final Set<Set<String>> slots;
     private final boolean isLoud;
     private final Actor.Skill skill;
     private final Set<AreaLink.DistanceCategory> primaryRanges;
     private final Set<String> ammoTypes;
     private final Set<String> attackTypes;
 
-    public WeaponClass(String ID, String name, boolean isRanged, boolean isTwoHanded, boolean isLoud, Actor.Skill skill, Set<AreaLink.DistanceCategory> primaryRanges, Set<String> ammoTypes, Set<String> attackTypes) {
+    public WeaponClass(String ID, String name, boolean isRanged, Set<Set<String>> slots, boolean isLoud, Actor.Skill skill, Set<AreaLink.DistanceCategory> primaryRanges, Set<String> ammoTypes, Set<String> attackTypes) {
         this.ID = ID;
         this.name = name;
         this.isRanged = isRanged;
-        this.isTwoHanded = isTwoHanded;
+        this.slots = slots;
         this.isLoud = isLoud;
         this.skill = skill;
         this.primaryRanges = primaryRanges;
@@ -41,8 +41,8 @@ public class WeaponClass {
         return isRanged;
     }
 
-    public boolean isTwoHanded() {
-        return isTwoHanded;
+    public Set<Set<String>> getSlots() {
+        return slots;
     }
 
     public boolean isLoud() {

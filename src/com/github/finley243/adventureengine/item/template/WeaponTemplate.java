@@ -47,21 +47,7 @@ public class WeaponTemplate extends EquippableTemplate {
 
 	@Override
 	public Set<Set<String>> getSlots() {
-		Set<Set<String>> slots = new HashSet<>();
-		if (getWeaponClass().isTwoHanded()) {
-			Set<String> bothHands = new HashSet<>();
-			bothHands.add("hand_main");
-			bothHands.add("hand_off");
-			slots.add(bothHands);
-		} else {
-			Set<String> mainHand = new HashSet<>();
-			Set<String> offHand = new HashSet<>();
-			mainHand.add("hand_main");
-			offHand.add("hand_off");
-			slots.add(mainHand);
-			slots.add(offHand);
-		}
-		return slots;
+		return getWeaponClass().getSlots();
 	}
 	
 	public WeaponClass getWeaponClass() {
@@ -121,11 +107,6 @@ public class WeaponTemplate extends EquippableTemplate {
 			tags.add("weapon_ranged");
 		} else {
 			tags.add("weapon_melee");
-		}
-		if (weaponClassInstance.isTwoHanded()) {
-			tags.add("weapon_two_handed");
-		} else {
-			tags.add("weapon_one_handed");
 		}
 		tags.add("weapon_class_" + weaponClassInstance.getID());
 		tags.add("weapon_skill_" + weaponClassInstance.getSkill().toString().toLowerCase());
