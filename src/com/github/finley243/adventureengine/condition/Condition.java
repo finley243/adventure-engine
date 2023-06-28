@@ -1,15 +1,12 @@
 package com.github.finley243.adventureengine.condition;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.expression.ExpressionCompare;
 
 /**
  * A pre-condition that can be checked
  */
 public abstract class Condition {
-	
-	public enum Comparator {
-		LESS, GREATER, LESS_EQUAL, GREATER_EQUAL, EQUAL, NOT_EQUAL
-	}
 
 	private final boolean invert;
 
@@ -23,7 +20,7 @@ public abstract class Condition {
 
 	protected abstract boolean isMetInternal(Context context);
 
-	public static boolean comparatorCheckFloat(float value1, float value2, Comparator comparator) {
+	public static boolean comparatorCheckFloat(float value1, float value2, ExpressionCompare.Comparator comparator) {
 		return switch (comparator) {
 			case LESS -> (value1 < value2);
 			case GREATER -> (value1 > value2);

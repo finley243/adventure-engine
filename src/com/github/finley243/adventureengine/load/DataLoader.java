@@ -344,7 +344,7 @@ public class DataLoader {
             case "compare" -> {
                 Expression compareExpression1 = loadExpressionOrAttribute(conditionElement, "value1", null);
                 Expression compareExpression2 = loadExpressionOrAttribute(conditionElement, "value2", null);
-                Condition.Comparator comparator = LoadUtils.attributeEnum(conditionElement, "equality", Condition.Comparator.class, Condition.Comparator.GREATER_EQUAL);
+                ExpressionCompare.Comparator comparator = LoadUtils.attributeEnum(conditionElement, "equality", ExpressionCompare.Comparator.class, ExpressionCompare.Comparator.GREATER_EQUAL);
                 return new ConditionCompare(invert, compareExpression1, compareExpression2, comparator);
             }
             case "any" -> {
@@ -408,6 +408,16 @@ public class DataLoader {
                     expressions.add(loadExpression(productVariableElement, null));
                 }
                 return new ExpressionLogicCompound(expressions, false);
+            }
+            case "not" -> {
+                Expression notExpression = loadExpressionOrAttribute(expressionElement, "value", "boolean");
+                return new ExpressionNot(notExpression);
+            }
+            case "compare" -> {
+                Expression compareExpression1 = loadExpressionOrAttribute(expressionElement, "value1", null);
+                Expression compareExpression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
+                ExpressionCompare.Comparator comparator = LoadUtils.attributeEnum(expressionElement, "equality", ExpressionCompare.Comparator.class, ExpressionCompare.Comparator.GREATER_EQUAL);
+                return new ExpressionCompare(compareExpression1, compareExpression2, comparator);
             }
             case "add" -> {
                 List<Expression> sumExpressions = new ArrayList<>();

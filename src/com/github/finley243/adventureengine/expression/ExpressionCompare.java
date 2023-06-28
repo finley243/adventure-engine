@@ -1,32 +1,34 @@
-package com.github.finley243.adventureengine.condition;
+package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionCompare;
 
-public class ConditionCompare extends Condition {
+public class ExpressionCompare extends Expression {
+
+    public enum Comparator {
+        LESS, GREATER, LESS_EQUAL, GREATER_EQUAL, EQUAL, NOT_EQUAL
+    }
 
     private final Expression expression1;
     private final Expression expression2;
-    private final ExpressionCompare.Comparator comparator;
+    private final Comparator comparator;
 
-    public ConditionCompare(boolean invert, Expression expression1, Expression expression2, ExpressionCompare.Comparator comparator) {
-        super(invert);
-        if (expression1 == null || expression2 == null) {
-            throw new IllegalArgumentException("One or more variables is null");
-        }
-        if (!expression1.canCompareTo(expression2)) {
-            throw new IllegalArgumentException("Variables cannot be compared");
-        }
+    public ExpressionCompare(Expression expression1, Expression expression2, Comparator comparator) {
+        if (expression1 == null || expression2 == null) throw new IllegalArgumentException("One or more expressions is null");
+        if (!expression1.canCompareTo(expression2)) throw new IllegalArgumentException("Expressions cannot be compared");
         this.expression1 = expression1;
         this.expression2 = expression2;
         this.comparator = comparator;
     }
 
     @Override
-    protected boolean isMetInternal(Context context) {
+    public DataType getDataType() {
+        return DataType.BOOLEAN;
+    }
+
+    @Override
+    public boolean getValueBoolean(Context context) {
         if ((expression1.getDataType() == Expression.DataType.INTEGER || expression1.getDataType() == Expression.DataType.FLOAT) &&
-            (expression2.getDataType() == Expression.DataType.INTEGER || expression2.getDataType() == Expression.DataType.FLOAT)) {
+                (expression2.getDataType() == Expression.DataType.INTEGER || expression2.getDataType() == Expression.DataType.FLOAT)) {
             float value1;
             float value2;
             if (expression1.getDataType() == Expression.DataType.INTEGER) {
@@ -39,7 +41,7 @@ public class ConditionCompare extends Condition {
             } else {
                 value2 = expression2.getValueFloat(context);
             }
-            return Condition.comparatorCheckFloat(value1, value2, comparator);
+            return comparatorCheckFloat(value1, value2, comparator);
         } else if (expression1.getDataType() == Expression.DataType.BOOLEAN) {
             return expression1.getValueBoolean(context) == expression2.getValueBoolean(context);
         } else if (expression1.getDataType() == Expression.DataType.STRING) {
@@ -48,6 +50,17 @@ public class ConditionCompare extends Condition {
             return expression1.getValueStringSet(context).equals(expression2.getValueStringSet(context));
         }
         return false;
+    }
+
+    private boolean comparatorCheckFloat(float value1, float value2, Comparator comparator) {
+        return switch (comparator) {
+            case LESS -> (value1 < value2);
+            case GREATER -> (value1 > value2);
+            case LESS_EQUAL -> (value1 <= value2);
+            case EQUAL -> (value1 == value2);
+            case NOT_EQUAL -> (value1 != value2);
+            default -> (value1 >= value2);
+        };
     }
 
 }
