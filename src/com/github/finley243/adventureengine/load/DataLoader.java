@@ -534,9 +534,12 @@ public class DataLoader {
     private static StatHolderReference loadStatHolderReference(Element statHolderElement) {
         String holderType = LoadUtils.attribute(statHolderElement, "holder", "subject");
         Expression holderID = loadExpressionOrAttribute(statHolderElement, "holderID", "string");
-        String subType = LoadUtils.attribute(statHolderElement, "subType", null);
-        Expression subID = loadExpressionOrAttribute(statHolderElement, "subID", "string");
-        return new StatHolderReference(holderType, holderID, subType, subID);
+        StatHolderReference parentReference = null;
+        Element parentReferenceElement = LoadUtils.singleChildWithName(statHolderElement, "parentHolder");
+        if (parentReferenceElement != null) {
+            parentReference = loadStatHolderReference(parentReferenceElement);
+        }
+        return new StatHolderReference(holderType, holderID, parentReference);
     }
 
     private static List<Script> loadSubScripts(Element parentElement) {

@@ -7,7 +7,9 @@
                 <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
                 <phrase>moveTo</phrase>
                 <area type="buildStringSet">
-                    <value type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+                    <value type="stat" dataType="string" stat="id" holder="area">
+                        <parentHolder holder="subject"/>
+                    </value>
                     <value type="stat" dataType="string" holder="parentArea" stat="id"/>
                 </area>
             </script>
@@ -23,7 +25,9 @@
                 <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
                 <phrase>moveCorner</phrase>
                 <area type="buildStringSet">
-                    <value type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+                    <value type="stat" dataType="string" stat="id" holder="area">
+                        <parentHolder holder="subject"/>
+                    </value>
                     <value type="stat" dataType="string" holder="parentArea" stat="id"/>
                 </area>
             </script>

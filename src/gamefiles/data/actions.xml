@@ -14,7 +14,9 @@
             <script type="setState" stat="locked" holder="parentObject" value="false"/>
             <script type="sensoryEvent">
                 <phrase>pickLock</phrase>
-                <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+                <area type="stat" dataType="string" stat="id" holder="area">
+                    <parentHolder holder="subject"/>
+                </area>
             </script>
         </script>
     </action>
@@ -33,18 +35,27 @@
             <script type="setState" stat="locked" holder="parentObject" value="false"/>
             <script type="sensoryEvent">
                 <phrase>unlock</phrase>
-                <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+                <area type="stat" dataType="string" stat="id" holder="area">
+                    <parentHolder holder="subject"/>
+                </area>
             </script>
         </script>
     </action>
-    <!--<action id="vending_machine">
+    <action id="vending_machine">
         <prompt>Buy $itemName ($price)</prompt>
         <parameter name="itemName" dataType="string" type="stat" holder="itemTemplate" stat="name">
             <holderID type="parameter" name="itemID"/>
         </parameter>
         <parameter name="price" dataType="string" type="toString">
-            <value type="stat" dataType="int" holder="itemTemplate" stat="price">
-                <holderID type="parameter" name="itemID"/>
+            <value type="conditional" dataType="int">
+                <if value="0">
+                    <condition type="boolean">
+                        <value type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
+                    </condition>
+                </if>
+                <else type="stat" dataType="int" holder="itemTemplate" stat="price">
+                    <holderID type="parameter" name="itemID"/>
+                </else>
             </value>
         </parameter>
         <condition type="compare" comparator="GREATER_EQUAL">
@@ -59,11 +70,18 @@
                 <item type="parameter" dataType="string" name="itemID"/>
             </script>
             <script type="modifyState" dataType="int" stat="money" holder="subject">
-                <value type="multiply" dataType="int">
-                    <value type="stat" dataType="int" holder="itemTemplate" stat="price">
-                        <holderID type="parameter" name="itemID"/>
-                    </value>
-                    <value value="-1"/>
+                <value type="conditional" dataType="int">
+                    <if value="0">
+                        <condition type="boolean">
+                            <value type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
+                        </condition>
+                    </if>
+                    <else type="multiply" dataType="int">
+                        <value type="stat" dataType="int" holder="itemTemplate" stat="price">
+                            <holderID type="parameter" name="itemID"/>
+                        </value>
+                        <value value="-1"/>
+                    </else>
                 </value>
             </script>
             <script type="sensoryEvent">
@@ -71,8 +89,10 @@
                     <holderID type="parameter" name="itemID"/>
                 </parameter>
                 <phrase>vendingMachineBuy</phrase>
-                <area type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
+                <area type="stat" dataType="string" stat="id" holder="area">
+                    <parentHolder holder="subject"/>
+                </area>
             </script>
         </script>
-    </action>-->
+    </action>
 </data>

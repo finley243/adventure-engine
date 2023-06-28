@@ -16,9 +16,12 @@
                 </stat>
             </value>
         </condition>
-        <parameter name="dropAreaID" type="stat" dataType="string" holder="subject" subType="area" stat="id"/>
-        <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equipped_item" stat="id">
-            <subID type="parameter" dataType="string" name="equippedSlot"/>
+        <parameter name="dropAreaID" type="stat" dataType="string" stat="id" holder="area">
+            <parentHolder holder="subject"/>
+        </parameter>
+        <parameter name="equippedItemID" type="stat" dataType="string" stat="id" holder="equipped_item">
+            <holderID type="parameter" dataType="string" name="equippedSlot"/>
+            <parentHolder holder="subject"/>
         </parameter>
         <script type="transferItem" transferType="instance">
             <fromInv holder="subject"/>
@@ -35,7 +38,9 @@
                 <holderID type="parameter" name="dropAreaID"/>
             </parameter>
             <phrase>drop</phrase>
-            <area type="stat" holder="subject" subType="area" stat="id"/>
+            <area type="stat" stat="id" holder="area">
+                <parentHolder holder="subject"/>
+            </area>
         </script>
     </script>
     <script id="drop_equipped_force">
@@ -56,10 +61,13 @@
             </value>
         </condition>
         <parameter name="dropAreaID" type="randomStringFromSet" dataType="string">
-            <set type="stat" holder="subject" subType="area" stat="movable_areas"/>
+            <set type="stat" stat="movable_areas" holder="area">
+                <parentHolder holder="subject"/>
+            </set>
         </parameter>
-        <parameter name="equippedItemID" type="stat" dataType="string" holder="subject" subType="equipped_item" stat="id">
-            <subID type="parameter" dataType="string" name="equippedSlot"/>
+        <parameter name="equippedItemID" type="stat" dataType="string" stat="id" holder="equipped_item">
+            <holderID type="parameter" dataType="string" name="equippedSlot"/>
+            <parentHolder holder="subject"/>
         </parameter>
         <script type="transferItem" transferType="instance">
             <fromInv holder="subject"/>
@@ -76,7 +84,9 @@
                 <holderID type="parameter" name="dropAreaID"/>
             </parameter>
             <phrase>forceDrop</phrase>
-            <area type="stat" holder="subject" subType="area" stat="id"/>
+            <area type="stat" stat="id" holder="area">
+                <parentHolder holder="subject"/>
+            </area>
         </script>
     </script>
 </data>
