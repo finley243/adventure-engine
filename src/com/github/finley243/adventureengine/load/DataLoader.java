@@ -148,7 +148,19 @@ public class DataLoader {
         Boolean isEnforcer = LoadUtils.attributeBool(actorElement, "isEnforcer", null);
 
         Integer hp = LoadUtils.attributeInt(actorElement, "hp", null);
-        Map<String, Integer> damageResistance = loadDamageResistance(actorElement);
+        Map<String, Integer> damageResistances = new HashMap<>();
+        Map<String, Float> damageMults = new HashMap<>();
+        for (Element damageElement : LoadUtils.directChildrenWithName(actorElement, "damage")) {
+            String damageType = LoadUtils.attribute(damageElement, "type", null);
+            Integer damageResistance = LoadUtils.attributeInt(damageElement, "resistance", null);
+            Float damageMult = LoadUtils.attributeFloat(damageElement, "mult", null);
+            if (damageResistance != null) {
+                damageResistances.put(damageType, damageResistance);
+            }
+            if (damageMult != null) {
+                damageMults.put(damageType, damageMult);
+            }
+        }
         List<Limb> limbs = loadLimbs(actorElement);
         Map<String, EquipSlot> equipSlots = new HashMap<>();
         for (Element slotElement : LoadUtils.directChildrenWithName(actorElement, "equipSlot")) {
@@ -156,7 +168,6 @@ public class DataLoader {
             String slotName = slotElement.getTextContent();
             equipSlots.put(slotID, new EquipSlot(slotID, slotName));
         }
-        String defaultEquipSlot = LoadUtils.attribute(actorElement, "defaultEquipSlot", null);
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
         String dialogueStart = LoadUtils.attribute(actorElement, "dialogueStart", null);
         Map<Actor.Attribute, Integer> attributes = loadAttributes(actorElement);
@@ -173,7 +184,7 @@ public class DataLoader {
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
         }
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistance, limbs, equipSlots, defaultEquipSlot, attributes, skills, startingEffects, lootTable, dialogueStart, scripts, barks);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, startingEffects, lootTable, dialogueStart, scripts, barks);
     }
 
     private static List<Limb> loadLimbs(Element element) {
@@ -215,17 +226,6 @@ public class DataLoader {
             skills.put(skill, value);
         }
         return skills;
-    }
-
-    private static Map<String, Integer> loadDamageResistance(Element element) {
-        Map<String, Integer> damageResistance = new HashMap<>();
-        if (element == null) return damageResistance;
-        for (Element damageResistanceElement : LoadUtils.directChildrenWithName(element, "damageResistance")) {
-            String damageType = LoadUtils.attribute(damageResistanceElement, "type", null);
-            int value = LoadUtils.attributeInt(damageResistanceElement, "value", 0);
-            damageResistance.put(damageType, value);
-        }
-        return damageResistance;
     }
 
     private static Scene loadScene(Game game, Element sceneElement) {
@@ -720,7 +720,32 @@ public class DataLoader {
                 }
                 List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
                 List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");
-                return new EquippableTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects, equippedActions);
+                Map<String, Integer> damageResistances = new HashMap<>();
+                Map<String, Float> damageMults = new HashMap<>();
+                for (Element damageElement : LoadUtils.directChildrenWithName(itemElement, "damage")) {
+                    String damageType = LoadUtils.attribute(damageElement, "type", null);
+                    Integer resistance = LoadUtils.attributeInt(damageElement, "resistance", null);
+                    Float mult = LoadUtils.attributeFloat(damageElement, "mult", null);
+                    if (resistance != null) {
+                        damageResistances.put(damageType, resistance);
+                    }
+                    if (mult != null) {
+                        damageMults.put(damageType, mult);
+                    }
+                }
+                Set<String> coveredLimbs = LoadUtils.setOfTags(itemElement, "coveredLimb");
+                boolean coversMainBody = LoadUtils.attributeBool(itemElement, "coversMainBody", false);
+                return new ArmorTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects, equippedActions, damageResistances, damageMults, coveredLimbs, coversMainBody);
+            }
+            case "equippable" -> {
+                Set<Set<String>> equipSlots = new HashSet<>();
+                for (Element slotGroupElement : LoadUtils.directChildrenWithName(itemElement, "slotGroup")) {
+                    Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
+                    equipSlots.add(slotGroup);
+                }
+                List<String> equippedEffects = LoadUtils.listOfTags(itemElement, "effect");
+                List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");
+                return new EquippableTemplate(game, id, name, description, scripts, customActions, price, equipSlots, equippedEffects, equippedActions);
             }
             case "consumable" -> {
                 String consumePrompt = LoadUtils.singleTag(itemElement, "consumePrompt", null);
@@ -729,6 +754,7 @@ public class DataLoader {
                 return new ConsumableTemplate(game, id, name, description, scripts, customActions, price, consumePrompt, consumePhrase, consumableEffects);
             }
             case "weapon" -> {
+                List<String> equippedEffects = LoadUtils.listOfTags(itemElement, "equippedEffect");
                 List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");
                 String weaponClass = LoadUtils.attribute(itemElement, "class", null);
                 int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
@@ -748,7 +774,7 @@ public class DataLoader {
                     int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
                     modSlots.put(slotName, slotCount);
                 }
-                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
+                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, equippedEffects, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(itemElement, "modSlot", null);
@@ -963,7 +989,19 @@ public class DataLoader {
         boolean isProperName = LoadUtils.attributeBool(nameElement, "proper", false);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(objectElement, "description"));
         int maxHP = LoadUtils.attributeInt(objectElement, "maxHP", 0);
-        Map<String, Integer> damageResistances = loadDamageResistance(objectElement);
+        Map<String, Integer> damageResistances = new HashMap<>();
+        Map<String, Float> damageMults = new HashMap<>();
+        for (Element damageElement : LoadUtils.directChildrenWithName(objectElement, "damage")) {
+            String damageType = LoadUtils.attribute(damageElement, "type", null);
+            Integer damageResistance = LoadUtils.attributeInt(damageElement, "resistance", null);
+            Float damageMult = LoadUtils.attributeFloat(damageElement, "mult", null);
+            if (damageResistance != null) {
+                damageResistances.put(damageType, damageResistance);
+            }
+            if (damageMult != null) {
+                damageMults.put(damageType, damageMult);
+            }
+        }
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(objectElement, "action");
         List<ActionCustom.CustomActionHolder> networkActions = loadCustomActions(objectElement, "networkAction");
@@ -1004,7 +1042,7 @@ public class DataLoader {
                 }
             }
         }
-        return new ObjectTemplate(game, ID, name, isProperName, description, maxHP, damageResistances, scripts, customActions, networkActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
+        return new ObjectTemplate(game, ID, name, isProperName, description, maxHP, damageResistances, damageMults, scripts, customActions, networkActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
     }
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) {

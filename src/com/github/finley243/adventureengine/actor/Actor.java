@@ -46,6 +46,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public static final int SKILL_MAX = 10;
 	public static final int MAX_HP = 1000;
 	public static final int MAX_DAMAGE_RESIST = 1000;
+	public static final float MAX_DAMAGE_MULT = 0.9f;
 	public static final int MAX_ACTION_POINTS = 10;
 	
 	public enum Attribute {
@@ -87,6 +88,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final StatInt maxHP;
 	private int HP;
 	private final Map<String, StatInt> damageResistance;
+	private final Map<String, StatFloat> damageMult;
 	private final boolean startDisabled;
 	private boolean isEnabled;
 	private final boolean startDead;
@@ -123,6 +125,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.isDead = startDead;
 		this.maxHP = new StatInt("max_hp", this);
 		this.damageResistance = new HashMap<>();
+		this.damageMult = new HashMap<>();
 		this.actionPoints = new StatInt("action_points", this);
 		this.canMove = new StatBoolean("can_move", this, false);
 		this.canDodge = new StatBoolean("can_dodge", this, false);
@@ -151,6 +154,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		for (String damageType : game().data().getDamageTypes()) {
 			this.damageResistance.put(damageType, new StatInt("damage_resist_" + damageType, this));
+			this.damageMult.put(damageType, new StatFloat("damage_mult_" + damageType, this));
 		}
 		if (getTemplate().getLootTable() != null) {
 			inventory.addItems(getTemplate().getLootTable().generateItems(game()));
@@ -336,6 +340,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, context);
 	}
 
+	public float getDamageMult(String damageType, Context context) {
+		return damageMult.get(damageType).value(getTemplate().getDamageMult(damageType), 0.0f, MAX_DAMAGE_MULT, context);
+	}
+
 	public int getActionPoints() {
 		return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS, new Context(game(), this, this));
 	}
@@ -370,8 +378,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			effectComponent.addEffect(effectID);
 		}
 		int amount = damage.getAmount();
-		//amount -= apparelComponent.getDamageResistance(getTemplate().getDefaultApparelSlot(), damage.getType()) * damage.getArmorMult();
+		amount -= getEquipmentComponent().getDamageResistanceMain(damage.getType()) * damage.getArmorMult();
+		// TODO - Add additional armor mult for damage mults (part of the Damage object, affects by weapons/attacks/etc.)
+		amount -= amount * getEquipmentComponent().getDamageMultMain(damage.getType());
 		amount -= getDamageResistance(damage.getType(), context) * damage.getArmorMult();
+		amount -= getDamageMult(damage.getType(), context);
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;
@@ -391,8 +402,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			effectComponent.addEffect(effectID);
 		}
 		int amount = damage.getAmount();
-		//amount -= apparelComponent.getDamageResistance(limb.getApparelSlot(), damage.getType()) * damage.getArmorMult();
+		amount -= getEquipmentComponent().getDamageResistanceLimb(limb.getID(), damage.getType()) * damage.getArmorMult();
+		amount -= amount * getEquipmentComponent().getDamageMultLimb(limb.getID(), damage.getType());
 		amount -= getDamageResistance(damage.getType(), context) * damage.getArmorMult();
+		amount -= getDamageMult(damage.getType(), context);
 		if (amount < 0) amount = 0;
 		if (amount > 0) {
 			limb.applyEffects(this);
@@ -770,6 +783,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public StatFloat getStatFloat(String name) {
+		if (name.startsWith("damage_mult_")) {
+			for (String damageType : game().data().getDamageTypes()) {
+				if (name.equals("damage_mult_" + damageType)) {
+					return damageMult.get(damageType);
+				}
+			}
+			return null;
+		}
 		return null;
 	}
 
@@ -833,6 +854,13 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public float getValueFloat(String name, Context context) {
 		if ("hp_proportion".equals(name)) {
 			return ((float) HP) / ((float) getMaxHP());
+		} else if (name.startsWith("damage_mult_")) {
+			for (String damageType : game().data().getDamageTypes()) {
+				if (name.equals("damage_mult_" + damageType)) {
+					return damageMult.get(damageType).value(getTemplate().getDamageMult(damageType), 0, MAX_DAMAGE_MULT, context);
+				}
+			}
+			return 0;
 		}
 		return 0;
 	}

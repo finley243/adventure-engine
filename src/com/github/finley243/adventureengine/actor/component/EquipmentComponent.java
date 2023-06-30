@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.component;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.item.ItemArmor;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 
@@ -98,6 +99,46 @@ public class EquipmentComponent {
             }
         }
         return false;
+    }
+
+    public int getDamageResistanceMain(String damageType) {
+        int damageResistance = 0;
+        for (ItemEquippable item : equipped.values()) {
+            if (item instanceof ItemArmor armorItem && armorItem.coversMainBody()) {
+                damageResistance += armorItem.getDamageResistance(damageType);
+            }
+        }
+        return damageResistance;
+    }
+
+    public float getDamageMultMain(String damageType) {
+        float damageMult = 0;
+        for (ItemEquippable item : equipped.values()) {
+            if (item instanceof ItemArmor armorItem && armorItem.coversMainBody()) {
+                damageMult += armorItem.getDamageMult(damageType);
+            }
+        }
+        return damageMult;
+    }
+
+    public int getDamageResistanceLimb(String limb, String damageType) {
+        int damageResistance = 0;
+        for (ItemEquippable item : equipped.values()) {
+            if (item instanceof ItemArmor armorItem && armorItem.getCoveredLimbs().contains(limb)) {
+                damageResistance += armorItem.getDamageResistance(damageType);
+            }
+        }
+        return damageResistance;
+    }
+
+    public float getDamageMultLimb(String limb, String damageType) {
+        float damageMult = 0;
+        for (ItemEquippable item : equipped.values()) {
+            if (item instanceof ItemArmor armorItem && armorItem.getCoveredLimbs().contains(limb)) {
+                damageMult += armorItem.getDamageMult(damageType);
+            }
+        }
+        return damageMult;
     }
 
     public List<Action> getEquippedActions() {

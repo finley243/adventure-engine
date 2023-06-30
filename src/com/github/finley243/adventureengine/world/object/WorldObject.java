@@ -120,6 +120,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	public void damage(Damage damage, Context context) {
 		int amount = damage.getAmount();
 		amount -= getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult();
+		amount -= amount * getTemplate().getDamageMult(damage.getType());
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;

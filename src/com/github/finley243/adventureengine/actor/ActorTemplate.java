@@ -22,9 +22,9 @@ public class ActorTemplate extends GameInstanced {
 
 	private final Integer maxHP;
 	private final Map<String, Integer> damageResistance;
+	private final Map<String, Float> damageMult;
 	private final List<Limb> limbs;
 	private final Map<String, EquipSlot> equipSlots;
-	private final String defaultEquipSlot;
 	private final Map<Actor.Attribute, Integer> attributes;
 	private final Map<Actor.Skill, Integer> skills;
 
@@ -36,7 +36,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, List<Limb> limbs, Map<String, EquipSlot> equipSlots, String defaultEquipSlot, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<Actor.Attribute, Integer> attributes, Map<Actor.Skill, Integer> skills, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -46,7 +46,6 @@ public class ActorTemplate extends GameInstanced {
 			if (isEnforcer == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: isEnforcer");
 			if (maxHP == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: maxHP");
 			if (equipSlots.isEmpty()) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: equipSlots");
-			if (defaultEquipSlot == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: defaultEquipSlot");
 			for (Actor.Attribute attribute : Actor.Attribute.values()) {
 				if (!attributes.containsKey(attribute)) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: attribute - " + attribute);
 			}
@@ -63,9 +62,9 @@ public class ActorTemplate extends GameInstanced {
 		this.isEnforcer = isEnforcer;
 		this.maxHP = maxHP;
 		this.damageResistance = damageResistance;
+		this.damageMult = damageMult;
 		this.limbs = limbs;
 		this.equipSlots = equipSlots;
-		this.defaultEquipSlot = defaultEquipSlot;
 		this.attributes = attributes;
 		this.skills = skills;
 		this.startingEffects = startingEffects;
@@ -110,16 +109,22 @@ public class ActorTemplate extends GameInstanced {
 		}
 	}
 
+	public float getDamageMult(String damageType) {
+		if (damageMult.containsKey(damageType)) {
+			return damageMult.get(damageType);
+		} else if (parentID != null) {
+			return game().data().getActorTemplate(parentID).getDamageMult(damageType);
+		} else {
+			return 0.0f;
+		}
+	}
+
 	public List<Limb> getLimbs() {
 		return !limbs.isEmpty() ? limbs : game().data().getActorTemplate(parentID).getLimbs();
 	}
 
 	public Map<String, EquipSlot> getEquipSlots() {
 		return !equipSlots.isEmpty() ? equipSlots : game().data().getActorTemplate(parentID).getEquipSlots();
-	}
-
-	public String getDefaultEquipSlot() {
-		return defaultEquipSlot != null ? defaultEquipSlot : game().data().getActorTemplate(parentID).getDefaultEquipSlot();
 	}
 
 	public int getAttribute(Actor.Attribute attribute) {

@@ -1,16 +1,17 @@
 <data>
-    <item type="apparel" id="tactical_vest" price="40">
+    <item type="apparel" id="tactical_vest" price="40" coversMainBody="true">
         <name>tactical vest</name>
         <slotGroup>
             <slot>torso</slot>
         </slotGroup>
-        <effect>armor_medium</effect>
+        <damage type="physical" resistance="5"/>
     </item>
     <item type="apparel" id="tactical_helmet" price="30">
         <name>tactical helmet</name>
         <slotGroup>
             <slot>head</slot>
         </slotGroup>
-        <effect>armor_medium</effect>
+        <coveredLimb>head</coveredLimb>
+        <damage type="physical" resistance="3"/>
     </item>
 </data>
