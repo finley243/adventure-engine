@@ -467,6 +467,12 @@ public class DataLoader {
                 Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
                 return new ExpressionRandomStringFromSet(setExpression);
             }
+            case "filterSet" -> {
+                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
+                String parameterName = LoadUtils.attribute(expressionElement, "itrName", null);
+                Condition filterCondition = loadCondition(LoadUtils.singleChildWithName(expressionElement, "condition"));
+                return new ExpressionFilterSet(setExpression, parameterName, filterCondition);
+            }
             case "size" -> {
                 Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
                 return new ExpressionSetSize(setExpression);
