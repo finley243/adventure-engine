@@ -188,7 +188,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return getWeaponClass().getAmmoTypes();
 	}
 
-	public Actor.Skill getSkill() {
+	public String getSkill() {
 		return getWeaponClass().getSkill();
 	}
 

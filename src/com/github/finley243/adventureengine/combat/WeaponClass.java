@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.combat;
 
-import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.Set;
@@ -12,12 +11,12 @@ public class WeaponClass {
     private final boolean isRanged;
     private final Set<Set<String>> slots;
     private final boolean isLoud;
-    private final Actor.Skill skill;
+    private final String skill;
     private final Set<AreaLink.DistanceCategory> primaryRanges;
     private final Set<String> ammoTypes;
     private final Set<String> attackTypes;
 
-    public WeaponClass(String ID, String name, boolean isRanged, Set<Set<String>> slots, boolean isLoud, Actor.Skill skill, Set<AreaLink.DistanceCategory> primaryRanges, Set<String> ammoTypes, Set<String> attackTypes) {
+    public WeaponClass(String ID, String name, boolean isRanged, Set<Set<String>> slots, boolean isLoud, String skill, Set<AreaLink.DistanceCategory> primaryRanges, Set<String> ammoTypes, Set<String> attackTypes) {
         this.ID = ID;
         this.name = name;
         this.isRanged = isRanged;
@@ -49,7 +48,7 @@ public class WeaponClass {
         return isLoud;
     }
 
-    public Actor.Skill getSkill() {
+    public String getSkill() {
         return skill;
     }
 

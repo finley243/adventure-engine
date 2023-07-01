@@ -48,38 +48,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public static final int MAX_DAMAGE_RESIST = 1000;
 	public static final float MAX_DAMAGE_MULT = 0.9f;
 	public static final int MAX_ACTION_POINTS = 10;
-	
-	public enum Attribute {
-		BODY, INTELLIGENCE, CHARISMA, DEXTERITY, AGILITY
-	}
-	
-	public enum Skill {
-		// BODY
-		MELEE(Attribute.BODY),
-		THROWING(Attribute.BODY),
-		INTIMIDATION(Attribute.BODY),
-		// INTELLIGENCE
-		SOFTWARE(Attribute.INTELLIGENCE),
-		HARDWARE(Attribute.INTELLIGENCE),
-		MEDICINE(Attribute.INTELLIGENCE),
-		// CHARISMA
-		BARTER(Attribute.CHARISMA),
-		PERSUASION(Attribute.CHARISMA),
-		DECEPTION(Attribute.CHARISMA),
-		// DEXTERITY
-		HANDGUNS(Attribute.DEXTERITY),
-		LONG_ARMS(Attribute.DEXTERITY),
-		LOCKPICK(Attribute.DEXTERITY),
-		// AGILITY
-		STEALTH(Attribute.AGILITY),
-		DODGE(Attribute.AGILITY);
-
-		public final Attribute attribute;
-
-		Skill(Attribute attribute) {
-			this.attribute = attribute;
-		}
-	}
 
 	private final String templateID;
 	private boolean isKnown;
@@ -100,8 +68,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final StatBoolean canMove;
 	private final StatBoolean canDodge;
 	private final Map<Action, Integer> blockedActions;
-	private final Map<Attribute, StatInt> attributes;
-	private final Map<Skill, StatInt> skills;
+	private final Map<String, StatInt> attributes;
+	private final Map<String, StatInt> skills;
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final EquipmentComponent equipmentComponent;
@@ -132,14 +100,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.inventory = new Inventory(game, this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		this.equipmentEffects = new StatStringSet("equipment_effects", this);
-		this.attributes = new EnumMap<>(Attribute.class);
-		for (Attribute attribute : Attribute.values()) {
-			this.attributes.put(attribute, new StatInt("attribute_" + attribute, this));
-		}
-		this.skills = new EnumMap<>(Skill.class);
-		for (Skill skill : Skill.values()) {
-			this.skills.put(skill, new StatInt("skill_" + skill, this));
-		}
+		this.attributes = new HashMap<>();
+		this.skills = new HashMap<>();
 		this.effectComponent = new EffectComponent(game, this, new Context(game, this, this));
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
 		this.blockedActions = new HashMap<>();
@@ -152,9 +114,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (!startDead) {
 			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
 		}
-		for (String damageType : game().data().getDamageTypes()) {
+		for (String damageType : game().data().getDamageTypeIDs()) {
 			this.damageResistance.put(damageType, new StatInt("damage_resist_" + damageType, this));
 			this.damageMult.put(damageType, new StatFloat("damage_mult_" + damageType, this));
+		}
+		for (String attribute : game().data().getAttributeIDs()) {
+			this.attributes.put(attribute, new StatInt("attribute_" + attribute, this));
+		}
+		for (String skill : game().data().getSkillIDs()) {
+			this.skills.put(skill, new StatInt("skill_" + skill, this));
 		}
 		if (getTemplate().getLootTable() != null) {
 			inventory.addItems(getTemplate().getLootTable().generateItems(game()));
@@ -265,11 +233,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 	
-	public int getAttribute(Attribute attribute, Context context) {
+	public int getAttribute(String attribute, Context context) {
 		return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context);
 	}
 
-	public int getSkill(Skill skill, Context context) {
+	public int getSkill(String skill, Context context) {
 		return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX, context);
 	}
 	
@@ -753,22 +721,22 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	@Override
 	public StatInt getStatInt(String name) {
 		if (name.startsWith("damage_resist_")) {
-			for (String damageType : game().data().getDamageTypes()) {
+			for (String damageType : game().data().getDamageTypeIDs()) {
 				if (name.equals("damage_resist_" + damageType)) {
 					return damageResistance.get(damageType);
 				}
 			}
 			return null;
 		} else if (name.startsWith("attribute_")) {
-			for (Attribute attribute : Attribute.values()) {
-				if (name.equals("attribute_" + attribute.toString().toLowerCase())) {
+			for (String attribute : game().data().getAttributeIDs()) {
+				if (name.equals("attribute_" + attribute)) {
 					return attributes.get(attribute);
 				}
 			}
 			return null;
 		} else if (name.startsWith("skill_")) {
-			for (Skill skill : Skill.values()) {
-				if (name.equals("skill_" + skill.toString().toLowerCase())) {
+			for (String skill : game().data().getSkillIDs()) {
+				if (name.equals("skill_" + skill)) {
 					return skills.get(skill);
 				}
 			}
@@ -784,7 +752,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	@Override
 	public StatFloat getStatFloat(String name) {
 		if (name.startsWith("damage_mult_")) {
-			for (String damageType : game().data().getDamageTypes()) {
+			for (String damageType : game().data().getDamageTypeIDs()) {
 				if (name.equals("damage_mult_" + damageType)) {
 					return damageMult.get(damageType);
 				}
@@ -820,22 +788,22 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	@Override
 	public int getValueInt(String name, Context context) {
 		if (name.startsWith("damage_resist_")) {
-			for (String damageType : game().data().getDamageTypes()) {
+			for (String damageType : game().data().getDamageTypeIDs()) {
 				if (name.equals("damage_resist_" + damageType)) {
 					return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, context);
 				}
 			}
 			return 0;
 		} else if (name.startsWith("attribute_")) {
-			for (Attribute attribute : Attribute.values()) {
-				if (name.equals("attribute_" + attribute.toString().toLowerCase())) {
+			for (String attribute : game().data().getAttributeIDs()) {
+				if (name.equals("attribute_" + attribute)) {
 					return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context);
 				}
 			}
 			return 0;
 		} else if (name.startsWith("skill_")) {
-			for (Skill skill : Skill.values()) {
-				if (name.equals("skill_" + skill.toString().toLowerCase())) {
+			for (String skill : game().data().getSkillIDs()) {
+				if (name.equals("skill_" + skill)) {
 					return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX, context);
 				}
 			}
@@ -855,7 +823,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if ("hp_proportion".equals(name)) {
 			return ((float) HP) / ((float) getMaxHP());
 		} else if (name.startsWith("damage_mult_")) {
-			for (String damageType : game().data().getDamageTypes()) {
+			for (String damageType : game().data().getDamageTypeIDs()) {
 				if (name.equals("damage_mult_" + damageType)) {
 					return damageMult.get(damageType).value(getTemplate().getDamageMult(damageType), 0, MAX_DAMAGE_MULT, context);
 				}

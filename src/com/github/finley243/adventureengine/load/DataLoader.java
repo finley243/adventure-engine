@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.*;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.condition.*;
@@ -125,8 +126,16 @@ public class DataLoader {
                                     game.data().addNetwork(network.getID(), network);
                                 }
                                 case "damageType" -> {
-                                    String ID = LoadUtils.attribute(currentElement, "id", "");
-                                    game.data().addDamageType(ID);
+                                    DamageType damageType = loadDamageType(currentElement);
+                                    game.data().addDamageType(damageType.ID(), damageType);
+                                }
+                                case "attribute" -> {
+                                    Attribute attribute = loadAttribute(currentElement);
+                                    game.data().addAttribute(attribute.ID(), attribute);
+                                }
+                                case "skill" -> {
+                                    Skill skill = loadSkill(currentElement);
+                                    game.data().addSkill(skill.ID(), skill);
                                 }
                             }
                         }
@@ -135,6 +144,24 @@ public class DataLoader {
                 }
             }
         }
+    }
+
+    private static DamageType loadDamageType(Element element) {
+        String ID = LoadUtils.attribute(element, "id", null);
+        String name = element.getTextContent();
+        return new DamageType(ID, name);
+    }
+
+    private static Attribute loadAttribute(Element element) {
+        String ID = LoadUtils.attribute(element, "id", null);
+        String name = element.getTextContent();
+        return new Attribute(ID, name);
+    }
+
+    private static Skill loadSkill(Element element) {
+        String ID = LoadUtils.attribute(element, "id", null);
+        String name = element.getTextContent();
+        return new Skill(ID, name);
     }
 
     private static ActorTemplate loadActor(Game game, Element actorElement) {
@@ -170,8 +197,18 @@ public class DataLoader {
         }
         LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(actorElement, "inventory"), true);
         String dialogueStart = LoadUtils.attribute(actorElement, "dialogueStart", null);
-        Map<Actor.Attribute, Integer> attributes = loadAttributes(actorElement);
-        Map<Actor.Skill, Integer> skills = loadSkills(actorElement);
+        Map<String, Integer> attributes = new HashMap<>();
+        for (Element attributeElement : LoadUtils.directChildrenWithName(actorElement, "attribute")) {
+            String attribute = LoadUtils.attribute(attributeElement, "key", null);
+            int value = LoadUtils.attributeInt(attributeElement, "value", 0);
+            attributes.put(attribute, value);
+        }
+        Map<String, Integer> skills = new HashMap<>();
+        for (Element skillElement : LoadUtils.directChildrenWithName(actorElement, "skill")) {
+            String skill = LoadUtils.attribute(skillElement, "key", null);
+            int value = LoadUtils.attributeInt(skillElement, "value", 0);
+            skills.put(skill, value);
+        }
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
         List<String> startingEffects = LoadUtils.listOfTags(actorElement, "startEffect");
 
@@ -204,28 +241,6 @@ public class DataLoader {
         String apparelSlot = LoadUtils.attribute(element, "apparelSlot", null);
         List<String> hitEffects = LoadUtils.listOfTags(element, "hitEffect");
         return new Limb(ID, name, hitChance, damageMult, apparelSlot, hitEffects);
-    }
-
-    private static Map<Actor.Attribute, Integer> loadAttributes(Element element) {
-        Map<Actor.Attribute, Integer> attributes = new EnumMap<>(Actor.Attribute.class);
-        if (element == null) return attributes;
-        for (Element attributeElement : LoadUtils.directChildrenWithName(element, "attribute")) {
-            Actor.Attribute attribute = LoadUtils.attributeEnum(attributeElement, "key", Actor.Attribute.class, null);
-            int value = LoadUtils.attributeInt(attributeElement, "value", 0);
-            attributes.put(attribute, value);
-        }
-        return attributes;
-    }
-
-    private static Map<Actor.Skill, Integer> loadSkills(Element element) {
-        Map<Actor.Skill, Integer> skills = new EnumMap<>(Actor.Skill.class);
-        if (element == null) return skills;
-        for (Element skillElement : LoadUtils.directChildrenWithName(element, "skill")) {
-            Actor.Skill skill = LoadUtils.attributeEnum(skillElement, "key", Actor.Skill.class, null);
-            int value = LoadUtils.attributeInt(skillElement, "value", 0);
-            skills.put(skill, value);
-        }
-        return skills;
     }
 
     private static Scene loadScene(Game game, Element sceneElement) {
@@ -1252,7 +1267,7 @@ public class DataLoader {
             slots.add(slotGroup);
         }
         boolean isLoud = LoadUtils.attributeBool(weaponClassElement, "isLoud", false);
-        Actor.Skill skill = LoadUtils.attributeEnum(weaponClassElement, "skill", Actor.Skill.class, Actor.Skill.MELEE);
+        String skill = LoadUtils.attribute(weaponClassElement, "skill", null);
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(weaponClassElement, "range", AreaLink.DistanceCategory.class);
         Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
         Set<String> attackTypes = LoadUtils.setOfTags(weaponClassElement, "attackType");
@@ -1281,7 +1296,7 @@ public class DataLoader {
         String missOverallPhraseRepeatAudible = LoadUtils.singleTag(attackTypeElement, "missOverallPhraseRepeatAudible", null);
         int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
         WeaponAttackType.WeaponConsumeType weaponConsumeType = LoadUtils.attributeEnum(attackTypeElement, "weaponConsumeType", WeaponAttackType.WeaponConsumeType.class, WeaponAttackType.WeaponConsumeType.NONE);
-        Actor.Skill skillOverride = LoadUtils.attributeEnum(attackTypeElement, "skill", Actor.Skill.class, null);
+        String skillOverride = LoadUtils.attribute(attackTypeElement, "skill", null);
         Float baseHitChanceMin = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMin", null);
         Float baseHitChanceMax = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMax", null);
         boolean useNonIdealRange = LoadUtils.attributeBool(attackTypeElement, "nonIdealRange", false);

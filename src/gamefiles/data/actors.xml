@@ -1,25 +1,25 @@
 <data>
     <actor id="default" faction="default" isEnforcer="false" hp="30">
         <name proper="false" pronoun="THEY">DEFAULT</name>
-        <attribute key="BODY" value="4"/>
-        <attribute key="INTELLIGENCE" value="4"/>
-        <attribute key="CHARISMA" value="4"/>
-        <attribute key="DEXTERITY" value="4"/>
-        <attribute key="AGILITY" value="4"/>
-        <skill key="MELEE" value="4"/>
-        <skill key="THROWING" value="4"/>
-        <skill key="INTIMIDATION" value="4"/>
-        <skill key="SOFTWARE" value="4"/>
-        <skill key="HARDWARE" value="4"/>
-        <skill key="MEDICINE" value="4"/>
-        <skill key="BARTER" value="4"/>
-        <skill key="PERSUASION" value="4"/>
-        <skill key="DECEPTION" value="4"/>
-        <skill key="HANDGUNS" value="4"/>
-        <skill key="LONG_ARMS" value="4"/>
-        <skill key="LOCKPICK" value="4"/>
-        <skill key="STEALTH" value="4"/>
-        <skill key="DODGE" value="4"/>
+        <attribute key="body" value="4"/>
+        <attribute key="intelligence" value="4"/>
+        <attribute key="charisma" value="4"/>
+        <attribute key="dexterity" value="4"/>
+        <attribute key="agility" value="4"/>
+        <skill key="melee" value="4"/>
+        <skill key="throwing" value="4"/>
+        <skill key="intimidation" value="4"/>
+        <skill key="software" value="4"/>
+        <skill key="hardware" value="4"/>
+        <skill key="medicine" value="4"/>
+        <skill key="barter" value="4"/>
+        <skill key="persuasion" value="4"/>
+        <skill key="deception" value="4"/>
+        <skill key="handguns" value="4"/>
+        <skill key="long_arms" value="4"/>
+        <skill key="lockpick" value="4"/>
+        <skill key="stealth" value="4"/>
+        <skill key="dodge" value="4"/>
         <limb id="head" hitChance="0.5" damageMult="2.0" apparelSlot="head">
             <name>head</name>
         </limb>

@@ -50,7 +50,7 @@ public class WeaponAttackType {
     private final int ammoConsumed;
     private final WeaponConsumeType weaponConsumeType;
 
-    private final Actor.Skill skillOverride;
+    private final String skillOverride;
     private final Float baseHitChanceMinOverride;
     private final Float baseHitChanceMaxOverride;
     private final boolean useNonIdealRange;
@@ -67,7 +67,7 @@ public class WeaponAttackType {
     private final ActionAttack.AttackHitChanceType hitChanceType;
     private final Boolean isLoudOverride;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, int ammoConsumed, WeaponConsumeType weaponConsumeType, Actor.Skill skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType, Boolean isLoudOverride) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, int ammoConsumed, WeaponConsumeType weaponConsumeType, String skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, float hitChanceMult, boolean canDodge, ActionAttack.AttackHitChanceType hitChanceType, Boolean isLoudOverride) {
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
@@ -115,7 +115,7 @@ public class WeaponAttackType {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = new Context(subject.game(), subject, subject, weapon);
         List<Action> actions = new ArrayList<>();
-        Actor.Skill skill = skillOverride != null ? skillOverride : weapon.getSkill();
+        String skill = skillOverride != null ? skillOverride : weapon.getSkill();
         float hitChanceMin = baseHitChanceMinOverride != null ? baseHitChanceMinOverride : weapon.getBaseHitChanceMin();
         float hitChanceMax = baseHitChanceMaxOverride != null ? baseHitChanceMaxOverride : weapon.getBaseHitChanceMax();
         Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getRanges(context))) : weapon.getRanges(context));

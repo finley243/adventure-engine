@@ -1,10 +1,8 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.action.ActionTemplate;
-import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ActorFactory;
-import com.github.finley243.adventureengine.actor.ActorTemplate;
-import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.actor.*;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.condition.Condition;
@@ -61,7 +59,9 @@ public class Data {
 	private final Map<String, ActionTemplate> actionTemplates = new HashMap<>();
 	private final Map<String, LinkType> linkTypes = new HashMap<>();
 
-	private final Set<String> damageTypes = new HashSet<>();
+	private final Map<String, DamageType> damageTypes = new HashMap<>();
+	private final Map<String, Attribute> attributes = new HashMap<>();
+	private final Map<String, Skill> skills = new HashMap<>();
 
 	private final Map<String, Boolean> globalBooleans = new HashMap<>();
 	private final Map<String, Integer> globalIntegers = new HashMap<>();
@@ -113,6 +113,9 @@ public class Data {
 		effects.clear();
 		actionTemplates.clear();
 		linkTypes.clear();
+		damageTypes.clear();
+		attributes.clear();
+		skills.clear();
 		globalIntegers.clear();
 		globalFloats.clear();
 		globalBooleans.clear();
@@ -420,14 +423,46 @@ public class Data {
 		return linkTypes.get(id);
 	}
 
-	public void addDamageType(String id) {
+	public void addDamageType(String id, DamageType value) {
 		if (id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add damage type with blank ID");
-		if (damageTypes.contains(id)) throw new IllegalArgumentException("Cannot add damage type with existing ID: " + id);
-		damageTypes.add(id);
+		if (damageTypes.containsKey(id)) throw new IllegalArgumentException("Cannot add damage type with existing ID: " + id);
+		damageTypes.put(id, value);
 	}
 
-	public Set<String> getDamageTypes() {
-		return damageTypes;
+	public DamageType getDamageType(String id) {
+		return damageTypes.get(id);
+	}
+
+	public Set<String> getDamageTypeIDs() {
+		return damageTypes.keySet();
+	}
+
+	public void addAttribute(String id, Attribute value) {
+		if (id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add attribute with blank ID");
+		if (attributes.containsKey(id)) throw new IllegalArgumentException("Cannot add attribute with existing ID: " + id);
+		attributes.put(id, value);
+	}
+
+	public Attribute getAttribute(String id) {
+		return attributes.get(id);
+	}
+
+	public Set<String> getAttributeIDs() {
+		return attributes.keySet();
+	}
+
+	public void addSkill(String id, Skill value) {
+		if (id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add skill with blank ID");
+		if (skills.containsKey(id)) throw new IllegalArgumentException("Cannot add skill with existing ID: " + id);
+		skills.put(id, value);
+	}
+
+	public Skill getSkill(String id) {
+		return skills.get(id);
+	}
+
+	public Set<String> getSkillIDs() {
+		return skills.keySet();
 	}
 
 	public void setGlobalBoolean(String id, boolean value) {

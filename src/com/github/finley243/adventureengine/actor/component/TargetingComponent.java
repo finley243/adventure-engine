@@ -241,9 +241,10 @@ public class TargetingComponent {
 
     public float getActionDetectionChance(Action action, Actor subject) {
         Context context = new Context(actor.game(), actor, subject);
+        // TODO - Allow specifying detection skill
         return switch (action.detectionChance()) {
-            case LOW -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.50f, context);
-            case HIGH -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.05f, 0.95f, context);
+            case LOW -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.01f, 0.50f, context);
+            case HIGH -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.05f, 0.95f, context);
             default -> 0.0f;
         };
     }
@@ -260,10 +261,10 @@ public class TargetingComponent {
         } else {
             Context context = new Context(actor.game(), actor, subject);
             return switch (distance) {
-                case NEAR -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.50f, 0.95f, context);
-                case CLOSE -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.20f, 0.80f, context);
-                case FAR -> MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.60f, context);
-                case DISTANT ->  MathUtils.chanceLinearSkillInverted(subject, Actor.Skill.STEALTH, 0.01f, 0.25f, context);
+                case NEAR -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.50f, 0.95f, context);
+                case CLOSE -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.20f, 0.80f, context);
+                case FAR -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.01f, 0.60f, context);
+                case DISTANT ->  MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.01f, 0.25f, context);
             };
         }
     }

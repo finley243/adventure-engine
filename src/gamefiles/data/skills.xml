@@ -1,0 +1,21 @@
+<data>
+    <attribute id="body">body</attribute>
+    <attribute id="intelligence">intelligence</attribute>
+    <attribute id="charisma">charisma</attribute>
+    <attribute id="dexterity">dexterity</attribute>
+    <attribute id="agility">agility</attribute>
+    <skill id="melee">melee</skill>
+    <skill id="throwing">throwing</skill>
+    <skill id="intimidation">intimidation</skill>
+    <skill id="software">software</skill>
+    <skill id="hardware">hardware</skill>
+    <skill id="medicine">medicine</skill>
+    <skill id="barter">barter</skill>
+    <skill id="persuasion">persuasion</skill>
+    <skill id="deception">deception</skill>
+    <skill id="handguns">handguns</skill>
+    <skill id="long_arms">long arms</skill>
+    <skill id="lockpick">lockpick</skill>
+    <skill id="stealth">stealth</skill>
+    <skill id="dodge">dodge</skill>
+</data>
