@@ -4,6 +4,9 @@ target/
 # IntelliJ directory
 .idea/
 
+# Gamedata log directory
+src/gamefiles/logs/
+
 # Compiled class file
 *.class
 

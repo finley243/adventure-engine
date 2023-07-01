@@ -29,12 +29,14 @@ public class Game {
 	
 	public static final String GAMEFILES = "src/gamefiles";
 	public static final String DATA_DIRECTORY = "/data";
+	public static final String LOG_DIRECTORY = "/logs";
 	public static final String PHRASE_FILE = "/phrases.txt";
 	public static final String CONFIG_FILE = "/config.xml";
 
 	private final EventBus eventBus;
 	private final ThreadControl threadControl;
 	private final MenuManager menuManager;
+	private final DebugLogger debugLogger;
 
 	private final Data data;
 
@@ -45,6 +47,7 @@ public class Game {
 		eventBus = new EventBus();
 		threadControl = new ThreadControl();
 		menuManager = new MenuManager();
+		debugLogger = new DebugLogger(GAMEFILES + LOG_DIRECTORY);
 		eventBus().register(menuManager);
 		data = new Data(this);
 
@@ -88,6 +91,10 @@ public class Game {
 
 	public MenuManager menuManager() {
 		return menuManager;
+	}
+
+	public DebugLogger log() {
+		return debugLogger;
 	}
 
 	public Data data() {
