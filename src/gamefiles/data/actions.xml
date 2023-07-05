@@ -1,14 +1,12 @@
 <data>
     <action id="lock_pick">
         <prompt>Pick lock</prompt>
-        <condition>
-            <condition type="boolean">
-                <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
-            </condition>
-            <condition type="compare" comparator="GREATER_EQUAL">
+        <condition type="and">
+            <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+            <value type="compare" comparator="GREATER_EQUAL">
                 <value1 type="stat" dataType="int" stat="skill_lockpick" holder="subject"/>
                 <value2 type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
-            </condition>
+            </value>
         </condition>
         <script>
             <script type="setState" stat="locked" holder="parentObject" value="false"/>
@@ -22,14 +20,12 @@
     </action>
     <action id="lock_key">
         <prompt>Unlock</prompt>
-        <condition>
-            <condition type="boolean">
-                <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
-            </condition>
-            <condition type="inventoryItem" requireAll="false">
+        <condition type="and">
+            <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+            <value type="inventoryContains" requireAll="false">
                 <inv type="stat" dataType="inventory" holder="subject"/>
                 <item type="stat" dataType="stringSet" stat="lock_keys" holder="parentObject"/>
-            </condition>
+            </value>
         </condition>
         <script>
             <script type="setState" stat="locked" holder="parentObject" value="false"/>
@@ -49,9 +45,7 @@
         <parameter name="price" dataType="string" type="toString">
             <value type="conditional" dataType="int">
                 <if value="0">
-                    <condition type="boolean">
-                        <value type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
-                    </condition>
+                    <condition type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
                 </if>
                 <else type="stat" dataType="int" holder="itemTemplate" stat="price">
                     <holderID type="parameter" name="itemID"/>
@@ -72,9 +66,7 @@
             <script type="modifyState" dataType="int" stat="money" holder="subject">
                 <value type="conditional" dataType="int">
                     <if value="0">
-                        <condition type="boolean">
-                            <value type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
-                        </condition>
+                        <condition type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
                     </if>
                     <else type="multiply" dataType="int">
                         <value type="stat" dataType="int" holder="itemTemplate" stat="price">

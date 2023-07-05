@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -19,6 +21,7 @@ public class DebugLogger {
         this.timestampFormatter = DateTimeFormatter.ofPattern(TIMESTAMP_FORMAT_PATTERN);
         String fileName = logDirectory + "/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern(FILE_TIMESTAMP_FORMAT_PATTERN)) + ".txt";
         File file = new File(fileName);
+        Files.createDirectories(Paths.get(logDirectory));
         boolean createdLogFile = file.createNewFile();
         if (!createdLogFile) throw new IOException("Log file could not be created");
         FileWriter fileWriter = new FileWriter(file);

@@ -8,13 +8,11 @@
         </script>
     </script>
     <script id="drop_equipped_specified_slot">
-        <condition type="boolean">
-            <value type="stat" holder="subject">
-                <stat type="concat">
-                    <value value="has_equipped_"/>
-                    <value type="parameter" dataType="string" name="equippedSlot"/>
-                </stat>
-            </value>
+        <condition type="stat" holder="subject">
+            <stat type="concat">
+                <value value="has_equipped_"/>
+                <value type="parameter" dataType="string" name="equippedSlot"/>
+            </stat>
         </condition>
         <parameter name="dropAreaID" type="stat" dataType="string" stat="id" holder="area">
             <parentHolder holder="subject"/>
@@ -52,13 +50,11 @@
         </script>
     </script>
     <script id="drop_equipped_force_specified_slot">
-        <condition type="boolean">
-            <value type="stat" holder="subject">
-                <stat type="concat">
-                    <value value="has_equipped_"/>
-                    <value type="parameter" dataType="string" name="equippedSlot"/>
-                </stat>
-            </value>
+        <condition type="stat" holder="subject">
+            <stat type="concat">
+                <value value="has_equipped_"/>
+                <value type="parameter" dataType="string" name="equippedSlot"/>
+            </stat>
         </condition>
         <parameter name="dropAreaID" type="randomStringFromSet" dataType="string">
             <set type="stat" stat="movable_areas" holder="area">

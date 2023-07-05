@@ -9,9 +9,7 @@
     <object id="door_locked">
         <name>door</name>
         <component id="door_link" type="link" movable="true" visible="false">
-            <condition type="boolean" invert="true">
-                <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
-            </condition>
+            <condition invert="true" type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
         </component>
         <localVar name="locked" dataType="boolean" value="true"/>
         <action template="lock_key"/>

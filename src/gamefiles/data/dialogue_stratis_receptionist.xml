@@ -12,9 +12,7 @@
         <choice link="stratis_receptionist_end">That will be all.</choice>
     </scene>
     <scene id="stratis_receptionist_request_room">
-        <condition type="boolean" invert="true">
-            <value type="global" dataType="boolean" globalID="purchased_stratis_room"/>
-        </condition>
+        <condition type="global" globalID="purchased_stratis_room"/>
         <line>He taps the screen in front of him and quickly scans its contents.</line>
         <line>"Yes, it appears we have an available room on the fifth floor. King bed, thirty-inch holoscreen, and a beautiful view of the commercial district. Only 300 credits a night."</line>
         <choice link="stratis_receptionist_purchase_room">I'll take the room.</choice>

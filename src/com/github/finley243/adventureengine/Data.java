@@ -51,7 +51,6 @@ public class Data {
 	private final Map<String, Scene> scenes = new HashMap<>();
 	private final Map<String, Script> scripts = new HashMap<>();
 	private final Map<String, Expression> expressions = new HashMap<>();
-	private final Map<String, Condition> conditions = new HashMap<>();
 	private final Map<String, Faction> factions = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
 	private final Map<String, Timer> timers = new HashMap<>();
@@ -106,7 +105,6 @@ public class Data {
 		attackTypes.clear();
 		scenes.clear();
 		scripts.clear();
-		conditions.clear();
 		factions.clear();
 		networks.clear();
 		timers.clear();
@@ -340,16 +338,6 @@ public class Data {
 
 	public Expression getExpression(String id) {
 		return expressions.get(id);
-	}
-
-	public void addCondition(String id, Condition value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add condition with blank ID");
-		if(conditions.containsKey(id)) throw new IllegalArgumentException("Cannot add condition with existing ID: " + id);
-		conditions.put(id, value);
-	}
-
-	public Condition getCondition(String id) {
-		return conditions.get(id);
 	}
 	
 	public void addFaction(String id, Faction value) {

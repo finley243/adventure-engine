@@ -1,24 +1,20 @@
 <data>
     <scene id="stratis_lobby_intro">
-        <condition type="all">
-            <condition type="boolean">
-                <value type="stat" dataType="boolean" stat="active" holder="actor" holderID="stratis_receptionist"/>
-            </condition>
-            <condition type="boolean" invert="true">
+        <condition type="and">
+            <value type="stat" dataType="boolean" stat="active" holder="actor" holderID="stratis_receptionist"/>
+            <value type="not">
                 <value type="stat" dataType="boolean" stat="inCombat" holder="actor" holderID="stratis_receptionist"/>
-            </condition>
-            <condition type="boolean">
-                <value type="stat" dataType="boolean" stat="active" holder="actor" holderID="stratis_guard_lobby"/>
-            </condition>
-            <condition type="boolean" invert="true">
+            </value>
+            <value type="stat" dataType="boolean" stat="active" holder="actor" holderID="stratis_guard_lobby"/>
+            <value type="not">
                 <value type="stat" dataType="boolean" stat="inCombat" holder="actor" holderID="stratis_guard_lobby"/>
-            </condition>
-            <condition type="compare" value2="stratis_hotel_lobby_desk">
+            </value>
+            <value type="compare" value2="stratis_hotel_lobby_desk">
                 <value1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_receptionist"/>
-            </condition>
-            <condition type="compare" value2="stratis_hotel_lobby_seating">
+            </value>
+            <value type="compare" value2="stratis_hotel_lobby_seating">
                 <value1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_guard_lobby"/>
-            </condition>
+            </value>
         </condition>
         <line>The receptionist leans on the desk and sighs. He looks up from the computer, towards the security guard standing near the seating area.</line>
         <line>"Man, could this day be any longer?"</line>
@@ -26,7 +22,7 @@
         <line>The receptionist shrugs. "Looks to me like it's fate's day off."</line>
         <line>As he turns back to the computer, he notices you and clears his throat.</line>
     </scene>
-    <scene id="test_weapon_bark">
+    <!--<scene id="test_weapon_bark">
         <line>
             <condition type="equippedItem" actor="PLAYER" tag="weapon_handgun"/>
             <line>"Hey, holster that firearm! No open carry allowed here."</line>
@@ -39,5 +35,5 @@
             <condition type="equippedItem" actor="PLAYER" tag="weapon_melee"/>
             <line>"Hey, put that away! No open carry allowed here. And that applies to ALL weapons, not just guns."</line>
         </line>
-    </scene>
+    </scene>-->
 </data>

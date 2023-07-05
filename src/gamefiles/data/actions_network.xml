@@ -1,9 +1,7 @@
 <data>
     <action id="vending_machine_hack_price">
         <prompt>Hack Price</prompt>
-        <condition type="boolean" invert="true">
-            <value type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
-        </condition>
+        <condition invert="true" type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
         <script type="setState" dataType="boolean" stat="price_hacked" holder="parentObject" value="true"/>
     </action>
 </data>

@@ -14,9 +14,7 @@
         <line end="true">"'Till next time."</line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_questions_repeat">
-        <condition type="boolean">
-            <value type="stat" dataType="boolean" holder="scene" holderID="cornerstore_shopkeeper_andre_questions" stat="triggered"/>
-        </condition>
+        <condition type="stat" dataType="boolean" holder="scene" holderID="cornerstore_shopkeeper_andre_questions" stat="triggered"/>
         <line redirect="cornerstore_shopkeeper_andre_questions">"Go ahead."</line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre">

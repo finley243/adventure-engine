@@ -104,11 +104,6 @@ public class DataLoader {
                                     Expression expression = loadExpression(currentElement, null);
                                     game.data().addExpression(expressionID, expression);
                                 }
-                                case "condition" -> {
-                                    String conditionID = LoadUtils.attribute(currentElement, "id", null);
-                                    Condition condition = loadCondition(currentElement);
-                                    game.data().addCondition(conditionID, condition);
-                                }
                                 case "effect" -> {
                                     Effect effect = loadEffect(game, currentElement);
                                     game.data().addEffect(effect.getID(), effect);
@@ -303,84 +298,9 @@ public class DataLoader {
 
     private static Condition loadCondition(Element conditionElement) {
         if (conditionElement == null) return null;
-        String type = LoadUtils.attribute(conditionElement, "type", "compound");
         boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
-        if (conditionElement.hasAttribute("external")) {
-            String externalID = LoadUtils.attribute(conditionElement, "external", null);
-            return new ConditionExternal(invert, externalID);
-        }
-        switch (type) {
-            case "external" -> {
-                String externalID = LoadUtils.attribute(conditionElement, "conditionID", null);
-                return new ConditionExternal(invert, externalID);
-            }
-            case "combatant" -> {
-                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(conditionElement, "actor"));
-                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(conditionElement, "target"));
-                return new ConditionCombatant(invert, actorRef, targetRef);
-            }
-            case "inventoryItem" -> {
-                Expression invItemVar = loadExpression(LoadUtils.singleChildWithName(conditionElement, "inv"), "inventory");
-                Expression invItemID = loadExpressionOrAttribute(conditionElement, "item", "string");
-                boolean invRequireAll = LoadUtils.attributeBool(conditionElement, "requireAll", false);
-                return new ConditionInventoryItem(invert, invItemVar, invItemID, invRequireAll);
-            }
-            case "visible" -> {
-                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(conditionElement, "actor"));
-                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(conditionElement, "target"));
-                return new ConditionVisible(invert, actorRef, targetRef);
-            }
-            case "time" -> {
-                Element timeStartElement = LoadUtils.singleChildWithName(conditionElement, "start");
-                Element timeEndElement = LoadUtils.singleChildWithName(conditionElement, "end");
-                int hours1 = LoadUtils.attributeInt(timeStartElement, "hours", 0);
-                int minutes1 = LoadUtils.attributeInt(timeStartElement, "minutes", 0);
-                int hours2 = LoadUtils.attributeInt(timeEndElement, "hours", 0);
-                int minutes2 = LoadUtils.attributeInt(timeEndElement, "minutes", 0);
-                return new ConditionTime(invert, hours1, minutes1, hours2, minutes2);
-            }
-            case "random" -> {
-                Expression randomChance = loadExpressionOrAttribute(conditionElement, "chance", "float");
-                return new ConditionRandom(invert, randomChance);
-            }
-            case "timerActive" -> {
-                Expression timerID = loadExpressionOrAttribute(conditionElement, "timerID", "string");
-                return new ConditionTimerActive(invert, timerID);
-            }
-            case "boolean" -> {
-                Expression booleanExpression = loadExpression(LoadUtils.singleChildWithName(conditionElement, "value"), "boolean");
-                return new ConditionBoolean(invert, booleanExpression);
-            }
-            case "contains" -> {
-                Expression containsSetExpression = loadExpression(LoadUtils.singleChildWithName(conditionElement, "set"), "stringSet");
-                Expression containsValueExpression = loadExpressionOrAttribute(conditionElement, "value", "string");
-                return new ConditionSetContains(invert, containsSetExpression, containsValueExpression);
-            }
-            case "compare" -> {
-                Expression compareExpression1 = loadExpressionOrAttribute(conditionElement, "value1", null);
-                Expression compareExpression2 = loadExpressionOrAttribute(conditionElement, "value2", null);
-                ExpressionCompare.Comparator comparator = LoadUtils.attributeEnum(conditionElement, "equality", ExpressionCompare.Comparator.class, ExpressionCompare.Comparator.GREATER_EQUAL);
-                return new ConditionCompare(invert, compareExpression1, compareExpression2, comparator);
-            }
-            case "any" -> {
-                List<Condition> subConditionsAny = loadSubConditions(conditionElement);
-                return new ConditionCompound(invert, subConditionsAny, true);
-            }
-            default -> {
-                List<Condition> subConditionsAll = loadSubConditions(conditionElement);
-                return new ConditionCompound(invert, subConditionsAll, false);
-            }
-        }
-    }
-
-    private static List<Condition> loadSubConditions(Element conditionElement) {
-        List<Element> subConditionElements = LoadUtils.directChildrenWithName(conditionElement, "condition");
-        List<Condition> subConditions = new ArrayList<>();
-        for (Element subConditionElement : subConditionElements) {
-            Condition subCondition = loadCondition(subConditionElement);
-            subConditions.add(subCondition);
-        }
-        return subConditions;
+        Expression booleanExpression = loadExpression(conditionElement, "boolean");
+        return new Condition(invert, booleanExpression);
     }
 
     private static Expression loadExpression(Element expressionElement, String dataTypeDefault) {
