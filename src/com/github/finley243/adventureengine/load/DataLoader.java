@@ -410,6 +410,29 @@ public class DataLoader {
                 String parameterName = LoadUtils.attribute(expressionElement, "name", null);
                 return new ExpressionParameter(dataType, parameterName);
             }
+            case "timerActive" -> {
+                Expression timerID = loadExpressionOrAttribute(expressionElement, "timerID", "string");
+                return new ExpressionTimerActive(timerID);
+            }
+            case "timeRange" -> {
+                Element timeStartElement = LoadUtils.singleChildWithName(expressionElement, "start");
+                Element timeEndElement = LoadUtils.singleChildWithName(expressionElement, "end");
+                int hours1 = LoadUtils.attributeInt(timeStartElement, "hours", 0);
+                int minutes1 = LoadUtils.attributeInt(timeStartElement, "minutes", 0);
+                int hours2 = LoadUtils.attributeInt(timeEndElement, "hours", 0);
+                int minutes2 = LoadUtils.attributeInt(timeEndElement, "minutes", 0);
+                return new ExpressionTimeRange(hours1, minutes1, hours2, minutes2);
+            }
+            case "isCombatant" -> {
+                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "actor"));
+                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "target"));
+                return new ExpressionIsCombatant(actorRef, targetRef);
+            }
+            case "isVisible" -> {
+                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "actor"));
+                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "target"));
+                return new ExpressionIsVisible(actorRef, targetRef);
+            }
             case "and" -> {
                 List<Expression> expressions = new ArrayList<>();
                 for (Element productVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
@@ -463,6 +486,10 @@ public class DataLoader {
                 Expression expressionExponent = loadExpressionOrAttribute(expressionElement, "exponent", null);
                 return new ExpressionPower(expressionBase, expressionExponent);
             }
+            case "randomChance" -> {
+                Expression chance = loadExpressionOrAttribute(expressionElement, "chance", "float");
+                return new ExpressionRandomChance(chance);
+            }
             case "hasVariable" -> {
                 String variableName = LoadUtils.attribute(expressionElement, "name", null);
                 return new ExpressionHasVariable(variableName);
@@ -487,6 +514,17 @@ public class DataLoader {
                 String parameterName = LoadUtils.attribute(expressionElement, "itrName", null);
                 Condition filterCondition = loadCondition(LoadUtils.singleChildWithName(expressionElement, "condition"));
                 return new ExpressionFilterSet(setExpression, parameterName, filterCondition);
+            }
+            case "setContains" -> {
+                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
+                Expression stringExpression = loadExpressionOrAttribute(expressionElement, "value", "string");
+                return new ExpressionSetContains(setExpression, stringExpression);
+            }
+            case "inventoryContains" -> {
+                Expression inventory = loadExpression(LoadUtils.singleChildWithName(expressionElement, "inv"), "inventory");
+                Expression itemID = loadExpressionOrAttribute(expressionElement, "item", "string");
+                boolean requireAll = LoadUtils.attributeBool(expressionElement, "requireAll", false);
+                return new ExpressionInventoryContains(inventory, itemID, requireAll);
             }
             case "size" -> {
                 Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
