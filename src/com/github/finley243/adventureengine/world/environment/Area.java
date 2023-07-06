@@ -367,45 +367,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public int getValueInt(String name, Context context) {
-		return 0;
-	}
-
-	@Override
-	public float getValueFloat(String name, Context context) {
-		return 0;
-	}
-
-	@Override
-	public boolean getValueBoolean(String name, Context context) {
-		if ("known".equals(name)) {
-			return isKnown;
-		}
-		return false;
-	}
-
-	@Override
-	public String getValueString(String name, Context context) {
-		return switch (name) {
-			case "id" -> getID();
-			case "name" -> getName();
-			case "relative_name" -> getRelativeName();
-			case "move_phrase" -> getMovePhrase();
-			case "room" -> roomID;
-			default -> null;
-		};
-	}
-
-	@Override
-	public Set<String> getValueStringSet(String name, Context context) {
-		return switch (name) {
-			case "visible_areas" -> getLineOfSightAreaIDs();
-			case "movable_areas" -> getMovableAreaIDs(null);
-			default -> null;
-		};
-	}
-
-	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "id" -> new ExpressionConstantString(getID());

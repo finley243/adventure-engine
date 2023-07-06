@@ -6,6 +6,8 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
 import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -125,11 +127,11 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     @Override
-    public boolean getValueBoolean(String name, Context context) {
-        if ("hasUser".equals(name)) {
-            return getUser() != null;
+    public Expression getStatValue(String name, Context context) {
+        if ("has_user".equals(name)) {
+            return new ExpressionConstantBoolean(getUser() != null);
         }
-        return super.getValueBoolean(name, context);
+        return super.getStatValue(name, context);
     }
 
     @Override

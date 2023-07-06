@@ -304,53 +304,6 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	@Override
-	public int getValueInt(String name, Context context) {
-		return switch (name) {
-			case "damage" -> damage.value(getWeaponTemplate().getDamage(), 1, 1000, context);
-			case "rate" -> rate.value(getWeaponTemplate().getRate(), 1, 50, context);
-			case "crit_damage" -> critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000, context);
-			case "clip_size" -> clipSize.value(getWeaponTemplate().getClipSize(), 1, 100, context);
-			case "reload_action_points" -> reloadActionPoints.value(getWeaponTemplate().getReloadActionPoints(), 0, 1000, context);
-			case "ammo_count" -> ammoCount;
-			default -> super.getValueInt(name, context);
-		};
-	}
-
-	@Override
-	public float getValueFloat(String name, Context context) {
-		if ("armor_mult".equals(name)) {
-			return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, context);
-		}
-		return super.getValueFloat(name, context);
-	}
-
-	@Override
-	public boolean getValueBoolean(String name, Context context) {
-		if ("is_silenced".equals(name)) {
-			return isSilenced.value(getWeaponTemplate().isSilenced(), context);
-		}
-		return super.getValueBoolean(name, context);
-	}
-
-	@Override
-	public String getValueString(String name, Context context) {
-		if ("damage_type".equals(name)) {
-			return damageType.value(getWeaponTemplate().getDamageType(), context);
-		}
-		return super.getValueString(name, context);
-	}
-
-	@Override
-	public Set<String> getValueStringSet(String name, Context context) {
-		return switch (name) {
-			case "attack_types" -> attackTypes.value(getWeaponClass().getAttackTypes(), context);
-			case "ranges" -> ranges.valueFromEnum(getWeaponClass().getPrimaryRanges(), context);
-			case "target_effects" -> targetEffects.value(getWeaponTemplate().getTargetEffects(), context);
-			default -> super.getValueStringSet(name, context);
-		};
-	}
-
-	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "damage" -> new ExpressionConstantInteger(damage.value(getWeaponTemplate().getDamage(), 1, 1000, context));

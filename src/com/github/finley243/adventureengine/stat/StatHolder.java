@@ -8,16 +8,6 @@ import java.util.Set;
 
 public interface StatHolder {
 
-    int getValueInt(String name, Context context);
-
-    float getValueFloat(String name, Context context);
-
-    boolean getValueBoolean(String name, Context context);
-
-    String getValueString(String name, Context context);
-
-    Set<String> getValueStringSet(String name, Context context);
-
     Expression getStatValue(String name, Context context);
 
     void setStateBoolean(String name, boolean value);

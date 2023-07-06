@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.object.component;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateVehicle;
@@ -21,10 +22,15 @@ public class ObjectComponentVehicle extends ObjectComponent {
     }
 
     public WorldObject getObjectOverride() {
-        if (getObject().getValueString(getID() + "_object_override", new Context(getObject().game(), getObject())) != null) {
-            return getObject().game().data().getObject(getObject().getValueString(getID() + "_object_override", new Context(getObject().game(), getObject())));
+        Context context = new Context(getObject().game(), getObject());
+        Expression objectOverrideExpression = getObject().getStatValue(getID() + "_object_override", context);
+        if (objectOverrideExpression == null) return null;
+        if (objectOverrideExpression.getDataType() != Expression.DataType.STRING) {
+            getObject().game().log().print("ObjectComponentVehicle " + getObject() + "/" + this + " - object override local variable is not a string");
+            return null;
         }
-        return null;
+        String objectOverrideID = objectOverrideExpression.getValueString(context);
+        return getObject().game().data().getObject(objectOverrideID);
     }
 
     @Override

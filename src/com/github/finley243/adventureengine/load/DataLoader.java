@@ -482,11 +482,11 @@ public class DataLoader {
                     return new ExpressionConstantBoolean(valueBoolean);
                 } else if (valueString != null) {
                     return new ExpressionConstantString(valueString);
-                } else if (!expressionElement.getTextContent().isEmpty()) {
-                    return new ExpressionConstantString(expressionElement.getTextContent());
                 } else if (LoadUtils.hasChildWithName(expressionElement, "value")) {
                     Set<String> stringSet = LoadUtils.setOfTags(expressionElement, "value");
                     return new ExpressionConstantStringSet(stringSet);
+                } else if (!expressionElement.getTextContent().isEmpty()) {
+                    return new ExpressionConstantString(expressionElement.getTextContent());
                 }
             }
         }
@@ -984,38 +984,13 @@ public class DataLoader {
             ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(game, componentElement);
             components.put(componentID, componentTemplate);
         }
-        Map<String, Boolean> localVarsBooleanDefault = new HashMap<>();
-        Map<String, Integer> localVarsIntegerDefault = new HashMap<>();
-        Map<String, Float> localVarsFloatDefault = new HashMap<>();
-        Map<String, String> localVarsStringDefault = new HashMap<>();
-        Map<String, Set<String>> localVarsStringSetDefault = new HashMap<>();
+        Map<String, Expression> localVarsDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
-            String varDataType = LoadUtils.attribute(varDefaultElement, "dataType", null);
-            switch (varDataType) {
-                case "boolean" -> {
-                    boolean booleanValue = LoadUtils.attributeBool(varDefaultElement, "value", false);
-                    localVarsBooleanDefault.put(varName, booleanValue);
-                }
-                case "int" -> {
-                    int integerValue = LoadUtils.attributeInt(varDefaultElement, "value", 0);
-                    localVarsIntegerDefault.put(varName, integerValue);
-                }
-                case "float" -> {
-                    float floatValue = LoadUtils.attributeFloat(varDefaultElement, "value", 0.0f);
-                    localVarsFloatDefault.put(varName, floatValue);
-                }
-                case "string" -> {
-                    String stringValue = LoadUtils.attribute(varDefaultElement, "value", "EMPTY");
-                    localVarsStringDefault.put(varName, stringValue);
-                }
-                case "stringSet" -> {
-                    Set<String> stringSetValue = LoadUtils.setOfTags(varDefaultElement, "value");
-                    localVarsStringSetDefault.put(varName, stringSetValue);
-                }
-            }
+            Expression varExpression = loadExpression(varDefaultElement, null);
+            localVarsDefault.put(varName, varExpression);
         }
-        return new ObjectTemplate(game, ID, name, isProperName, description, maxHP, damageResistances, damageMults, scripts, customActions, networkActions, components, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
+        return new ObjectTemplate(game, ID, name, isProperName, description, maxHP, damageResistances, damageMults, scripts, customActions, networkActions, components, localVarsDefault);
     }
 
     private static WorldObject loadObject(Game game, Element objectElement, Area area) {
@@ -1024,38 +999,13 @@ public class DataLoader {
         String id = LoadUtils.attribute(objectElement, "id", null);
         boolean startDisabled = LoadUtils.attributeBool(objectElement, "startDisabled", false);
         boolean startHidden = LoadUtils.attributeBool(objectElement, "startHidden", false);
-        Map<String, Boolean> localVarsBooleanDefault = new HashMap<>();
-        Map<String, Integer> localVarsIntegerDefault = new HashMap<>();
-        Map<String, Float> localVarsFloatDefault = new HashMap<>();
-        Map<String, String> localVarsStringDefault = new HashMap<>();
-        Map<String, Set<String>> localVarsStringSetDefault = new HashMap<>();
+        Map<String, Expression> localVarsDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
-            String varDataType = LoadUtils.attribute(varDefaultElement, "dataType", null);
-            switch (varDataType) {
-                case "boolean" -> {
-                    boolean booleanValue = LoadUtils.attributeBool(varDefaultElement, "value", false);
-                    localVarsBooleanDefault.put(varName, booleanValue);
-                }
-                case "int" -> {
-                    int integerValue = LoadUtils.attributeInt(varDefaultElement, "value", 0);
-                    localVarsIntegerDefault.put(varName, integerValue);
-                }
-                case "float" -> {
-                    float floatValue = LoadUtils.attributeFloat(varDefaultElement, "value", 0.0f);
-                    localVarsFloatDefault.put(varName, floatValue);
-                }
-                case "string" -> {
-                    String stringValue = LoadUtils.attribute(varDefaultElement, "value", "EMPTY");
-                    localVarsStringDefault.put(varName, stringValue);
-                }
-                case "stringSet" -> {
-                    Set<String> stringSetValue = LoadUtils.setOfTags(varDefaultElement, "value");
-                    localVarsStringSetDefault.put(varName, stringSetValue);
-                }
-            }
+            Expression varExpression = loadExpression(varDefaultElement, null);
+            localVarsDefault.put(varName, varExpression);
         }
-        return new WorldObject(game, id, template, area, startDisabled, startHidden, localVarsBooleanDefault, localVarsIntegerDefault, localVarsFloatDefault, localVarsStringDefault, localVarsStringSetDefault);
+        return new WorldObject(game, id, template, area, startDisabled, startHidden, localVarsDefault);
     }
 
     private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) throws GameDataException {

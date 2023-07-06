@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveLink;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -29,11 +30,33 @@ public class ObjectComponentLink extends ObjectComponent {
     }
 
     public WorldObject getLinkedObject() {
-        return getObject().game().data().getObject(getObject().getValueString(getID() + "_object", new Context(getObject().game(), getObject())));
+        Context context = new Context(getObject().game(), getObject());
+        Expression linkedObjectExpression = getObject().getStatValue(getID() + "_object", context);
+        if (linkedObjectExpression == null) {
+            getObject().game().log().print("ObjectComponentLink " + getObject() + "/" + this + " - linked object local variable is missing");
+            return null;
+        }
+        if (linkedObjectExpression.getDataType() != Expression.DataType.STRING) {
+            getObject().game().log().print("ObjectComponentLink " + getObject() + "/" + this + " - linked object local variable is not a string");
+            return null;
+        }
+        String linkedObjectID = linkedObjectExpression.getValueString(context);
+        return getObject().game().data().getObject(linkedObjectID);
     }
 
     public AreaLink.CompassDirection getDirection() {
-        return LoadUtils.stringToEnum(getObject().getValueString(getID() + "_dir", new Context(getObject().game(), getObject())), AreaLink.CompassDirection.class);
+        Context context = new Context(getObject().game(), getObject());
+        Expression directionExpression = getObject().getStatValue(getID() + "_dir", context);
+        if (directionExpression == null) {
+            getObject().game().log().print("ObjectComponentLink " + getObject() + "/" + this + " - direction local variable is missing");
+            return null;
+        }
+        if (directionExpression.getDataType() != Expression.DataType.STRING) {
+            getObject().game().log().print("ObjectComponentLink " + getObject() + "/" + this + " - direction local variable is not a string");
+            return null;
+        }
+        String directionString = directionExpression.getValueString(context);
+        return LoadUtils.stringToEnum(directionString, AreaLink.CompassDirection.class);
     }
 
     @Override

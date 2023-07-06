@@ -106,41 +106,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	@Override
-	public int getValueInt(String name, Context context) {
-		if ("price".equals(name)) {
-			return price;
-		}
-		return 0;
-	}
-
-	@Override
-	public float getValueFloat(String name, Context context) {
-		return 0;
-	}
-
-	@Override
-	public boolean getValueBoolean(String name, Context context) {
-		return false;
-	}
-
-	@Override
-	public String getValueString(String name, Context context) {
-		return switch (name) {
-			case "id" -> getID();
-			case "name" -> getName();
-			default -> null;
-		};
-	}
-
-	@Override
-	public Set<String> getValueStringSet(String name, Context context) {
-		if ("tags".equals(name)) {
-			return getTags();
-		}
-		return null;
-	}
-
-	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "price" -> new ExpressionConstantInteger(price);

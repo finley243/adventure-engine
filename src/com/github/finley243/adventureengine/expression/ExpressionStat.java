@@ -31,7 +31,16 @@ public class ExpressionStat extends Expression {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
         if (stat == null) return false;
         String statName = stat.getValueString(context);
-        return holder.getHolder(context).getStatValue(statName, context).getValueBoolean(context);
+        Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
+        if (valueExpression == null) {
+            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            return false;
+        }
+        if (valueExpression.getDataType() != getDataType()) {
+            context.game().log().print("ExpressionStat " + statName + " - mismatched data type (stat type: " + valueExpression.getDataType() + ", expression type: " + getDataType() + ")");
+            return false;
+        }
+        return valueExpression.getValueBoolean(context);
     }
 
     @Override
@@ -39,7 +48,16 @@ public class ExpressionStat extends Expression {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
         if (stat == null) return 0;
         String statName = stat.getValueString(context);
-        return holder.getHolder(context).getStatValue(statName, context).getValueInteger(context);
+        Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
+        if (valueExpression == null) {
+            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            return 0;
+        }
+        if (valueExpression.getDataType() != getDataType()) {
+            context.game().log().print("ExpressionStat " + statName + " has mismatched data type (stat type: " + valueExpression.getDataType() + ", expression type: " + getDataType() + ")");
+            return 0;
+        }
+        return valueExpression.getValueInteger(context);
     }
 
     @Override
@@ -47,7 +65,16 @@ public class ExpressionStat extends Expression {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
         if (stat == null) return 0.0f;
         String statName = stat.getValueString(context);
-        return holder.getHolder(context).getStatValue(statName, context).getValueFloat(context);
+        Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
+        if (valueExpression == null) {
+            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            return 0;
+        }
+        if (valueExpression.getDataType() != getDataType()) {
+            context.game().log().print("ExpressionStat " + statName + " has mismatched data type (stat type: " + valueExpression.getDataType() + ", expression type: " + getDataType() + ")");
+            return 0;
+        }
+        return valueExpression.getValueFloat(context);
     }
 
     @Override
@@ -55,7 +82,16 @@ public class ExpressionStat extends Expression {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
         if (stat == null) return null;
         String statName = stat.getValueString(context);
-        return holder.getHolder(context).getStatValue(statName, context).getValueString(context);
+        Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
+        if (valueExpression == null) {
+            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            return null;
+        }
+        if (valueExpression.getDataType() != getDataType()) {
+            context.game().log().print("ExpressionStat " + statName + " has mismatched data type (stat type: " + valueExpression.getDataType() + ", expression type: " + getDataType() + ")");
+            return null;
+        }
+        return valueExpression.getValueString(context);
     }
 
     @Override
@@ -63,7 +99,16 @@ public class ExpressionStat extends Expression {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
         if (stat == null) return null;
         String statName = stat.getValueString(context);
-        return holder.getHolder(context).getStatValue(statName, context).getValueStringSet(context);
+        Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
+        if (valueExpression == null) {
+            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            return null;
+        }
+        if (valueExpression.getDataType() != getDataType()) {
+            context.game().log().print("ExpressionStat " + statName + " has mismatched data type (stat type: " + valueExpression.getDataType() + ", expression type: " + getDataType() + ")");
+            return null;
+        }
+        return valueExpression.getValueStringSet(context);
     }
 
     @Override

@@ -12,6 +12,8 @@
             <condition invert="true" type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
         </component>
         <localVar name="locked" dataType="boolean" value="true"/>
+        <localVar name="lock_keys" dataType="stringSet"/>
+        <localVar name="lock_pick_difficulty" dataType="int" value="1"/>
         <action template="lock_key"/>
         <action template="lock_pick"/>
     </object>
@@ -92,6 +94,7 @@
     </object>
     <object id="vending_machine_nitron">
         <name>Nitron Cola vending machine</name>
+        <localVar name="price_hacked" value="false"/>
         <action template="vending_machine">
             <parameter name="itemID" value="nitron_cola"/>
         </action>

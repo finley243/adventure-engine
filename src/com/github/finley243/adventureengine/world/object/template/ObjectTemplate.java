@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.world.object.template;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 
@@ -22,13 +23,9 @@ public class ObjectTemplate extends GameInstanced {
     private final List<ActionCustom.CustomActionHolder> customActions;
     private final List<ActionCustom.CustomActionHolder> networkActions;
     private final Map<String, ObjectComponentTemplate> components;
-    private final Map<String, Boolean> localVarsBooleanDefault;
-    private final Map<String, Integer> localVarsIntegerDefault;
-    private final Map<String, Float> localVarsFloatDefault;
-    private final Map<String, String> localVarsStringDefault;
-    private final Map<String, Set<String>> localVarsStringSetDefault;
+    private final Map<String, Expression> localVarsDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Float> damageMults, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, Map<String, ObjectComponentTemplate> components, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
+    public ObjectTemplate(Game game, String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Float> damageMults, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, Map<String, ObjectComponentTemplate> components, Map<String, Expression> localVarsDefault) {
         super(game, ID);
         this.name = name;
         this.isProperName = isProperName;
@@ -40,11 +37,7 @@ public class ObjectTemplate extends GameInstanced {
         this.customActions = customActions;
         this.networkActions = networkActions;
         this.components = components;
-        this.localVarsBooleanDefault = localVarsBooleanDefault;
-        this.localVarsIntegerDefault = localVarsIntegerDefault;
-        this.localVarsFloatDefault = localVarsFloatDefault;
-        this.localVarsStringDefault = localVarsStringDefault;
-        this.localVarsStringSetDefault = localVarsStringSetDefault;
+        this.localVarsDefault = localVarsDefault;
     }
 
     public String getName() {
@@ -87,24 +80,8 @@ public class ObjectTemplate extends GameInstanced {
         return components;
     }
 
-    public Map<String, Boolean> getLocalVarsBooleanDefault() {
-        return localVarsBooleanDefault;
-    }
-
-    public Map<String, Integer> getLocalVarsIntegerDefault() {
-        return localVarsIntegerDefault;
-    }
-
-    public Map<String, Float> getLocalVarsFloatDefault() {
-        return localVarsFloatDefault;
-    }
-
-    public Map<String, String> getLocalVarsStringDefault() {
-        return localVarsStringDefault;
-    }
-
-    public Map<String, Set<String>> getLocalVarsStringSetDefault() {
-        return localVarsStringSetDefault;
+    public Map<String, Expression> getLocalVarsDefault() {
+        return localVarsDefault;
     }
 
 }

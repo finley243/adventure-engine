@@ -3,23 +3,18 @@ package com.github.finley243.adventureengine.world.object;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.combat.Damage;
-import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
+import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
@@ -45,14 +40,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private Area area;
 	private int HP;
 	private final Map<String, ObjectComponent> components;
-	// TODO - Replace local vars with expressions in a single map
-	private final Map<String, Boolean> localVarsBoolean;
-	private final Map<String, Integer> localVarsInteger;
-	private final Map<String, Float> localVarsFloat;
-	private final Map<String, String> localVarsString;
-	private final Map<String, Set<String>> localVarsStringSet;
+	private final Map<String, Expression> localVars;
 
-	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Boolean> localVarsBooleanDefault, Map<String, Integer> localVarsIntegerDefault, Map<String, Float> localVarsFloatDefault, Map<String, String> localVarsStringDefault, Map<String, Set<String>> localVarsStringSetDefault) {
+	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Expression> localVarsDefault) {
 		super(gameInstance, ID);
 		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
 		this.templateID = templateID;
@@ -60,11 +50,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.area = area;
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
-		this.localVarsBoolean = localVarsBooleanDefault;
-		this.localVarsInteger = localVarsIntegerDefault;
-		this.localVarsFloat = localVarsFloatDefault;
-		this.localVarsString = localVarsStringDefault;
-		this.localVarsStringSet = localVarsStringSetDefault;
+		this.localVars = localVarsDefault;
 		setEnabled(!startDisabled);
 	}
 
@@ -256,45 +242,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public int getValueInt(String name, Context context) {
-		return localVarsInteger.getOrDefault(name, getTemplate().getLocalVarsIntegerDefault().getOrDefault(name, 0));
-	}
-
-	@Override
-	public float getValueFloat(String name, Context context) {
-		return localVarsFloat.getOrDefault(name, getTemplate().getLocalVarsFloatDefault().getOrDefault(name, 0.0f));
-	}
-
-	@Override
-	public boolean getValueBoolean(String name, Context context) {
-		return switch (name) {
-			case "enabled" -> isEnabled;
-			case "hidden" -> isHidden;
-			case "guarded" -> isGuarded();
-			case "broken" -> isBroken();
-			default ->
-					localVarsBoolean.getOrDefault(name, getTemplate().getLocalVarsBooleanDefault().getOrDefault(name, false));
-		};
-	}
-
-	@Override
-	public String getValueString(String name, Context context) {
-		return switch (name) {
-			case "id" -> getID();
-			case "template_id" -> templateID;
-			case "area" -> getArea().getID();
-			case "room" -> getArea().getRoom().getID();
-			default ->
-					localVarsString.getOrDefault(name, getTemplate().getLocalVarsStringDefault().getOrDefault(name, null));
-		};
-	}
-
-	@Override
-	public Set<String> getValueStringSet(String name, Context context) {
-		return localVarsStringSet.getOrDefault(name, getTemplate().getLocalVarsStringSetDefault().getOrDefault(name, null));
-	}
-
-	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "enabled" -> new ExpressionConstantBoolean(isEnabled);
@@ -305,7 +252,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			case "template_id" -> new ExpressionConstantString(templateID);
 			case "area" -> new ExpressionConstantString(getArea().getID());
 			case "room" -> new ExpressionConstantString(getArea().getRoom().getID());
-			default -> null;
+			default -> localVars.getOrDefault(name, getTemplate().getLocalVarsDefault().get(name));
 		};
 	}
 
@@ -315,18 +262,18 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			case "known" -> isKnown = value;
 			case "enabled" -> setEnabled(value);
 			case "hidden" -> isHidden = value;
-			default -> localVarsBoolean.put(name, value);
+			default -> localVars.put(name, new ExpressionConstantBoolean(value));
 		}
 	}
 
 	@Override
 	public void setStateInteger(String name, int value) {
-		localVarsInteger.put(name, value);
+		localVars.put(name, new ExpressionConstantInteger(value));
 	}
 
 	@Override
 	public void setStateFloat(String name, float value) {
-		localVarsFloat.put(name, value);
+		localVars.put(name, new ExpressionConstantFloat(value));
 	}
 
 	@Override
@@ -334,25 +281,37 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		if ("area".equals(name)) {
 			setArea(game().data().getArea(value));
 		} else {
-			localVarsString.put(name, value);
+			localVars.put(name, new ExpressionConstantString(value));
 		}
 	}
 
 	@Override
 	public void setStateStringSet(String name, Set<String> value) {
-		localVarsStringSet.put(name, value);
+		localVars.put(name, new ExpressionConstantStringSet(value));
 	}
 
 	@Override
 	public void modStateInteger(String name, int amount) {
-		int valueOld = localVarsInteger.getOrDefault(name, getTemplate().getLocalVarsIntegerDefault().getOrDefault(name, 0));
-		localVarsInteger.put(name, valueOld + amount);
+		Context context = new Context(game(), this);
+		int valueOld = 0;
+		if (localVars.containsKey(name)) {
+			valueOld = localVars.get(name).getValueInteger(context);
+		} else if (getTemplate().getLocalVarsDefault().containsKey(name)) {
+			valueOld = getTemplate().getLocalVarsDefault().get(name).getValueInteger(context);
+		}
+		localVars.put(name, new ExpressionConstantInteger(valueOld + amount));
 	}
 
 	@Override
 	public void modStateFloat(String name, float amount) {
-		float valueOld = localVarsFloat.getOrDefault(name, getTemplate().getLocalVarsFloatDefault().getOrDefault(name, 0.0f));
-		localVarsFloat.put(name, valueOld + amount);
+		Context context = new Context(game(), this);
+		float valueOld = 0;
+		if (localVars.containsKey(name)) {
+			valueOld = localVars.get(name).getValueFloat(context);
+		} else if (getTemplate().getLocalVarsDefault().containsKey(name)) {
+			valueOld = getTemplate().getLocalVarsDefault().get(name).getValueFloat(context);
+		}
+		localVars.put(name, new ExpressionConstantFloat(valueOld + amount));
 	}
 
 	@Override

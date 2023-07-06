@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.actor.Inventory;
 
 public class ExpressionInventoryContains extends Expression {
 
@@ -26,8 +27,9 @@ public class ExpressionInventoryContains extends Expression {
     @Override
     public boolean getValueBoolean(Context context) {
         if (itemID.getDataType() == Expression.DataType.STRING_SET) {
+            Inventory inventoryValue = inventory.getValueInventory(context);
             for (String item : itemID.getValueStringSet(context)) {
-                boolean hasItem = inventory.getValueInventory(context).hasItem(item);
+                boolean hasItem = inventoryValue.hasItem(item);
                 if (hasItem != requireAll) {
                     return hasItem;
                 }

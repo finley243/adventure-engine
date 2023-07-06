@@ -787,96 +787,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public int getValueInt(String name, Context context) {
-		if (name.startsWith("damage_resist_")) {
-			for (String damageType : game().data().getDamageTypeIDs()) {
-				if (name.equals("damage_resist_" + damageType)) {
-					return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, context);
-				}
-			}
-			return 0;
-		} else if (name.startsWith("attribute_")) {
-			for (String attribute : game().data().getAttributeIDs()) {
-				if (name.equals("attribute_" + attribute)) {
-					return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context);
-				}
-			}
-			return 0;
-		} else if (name.startsWith("skill_")) {
-			for (String skill : game().data().getSkillIDs()) {
-				if (name.equals("skill_" + skill)) {
-					return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX, context);
-				}
-			}
-			return 0;
-		}
-		return switch (name) {
-			case "max_hp" -> maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, context);
-			case "hp" -> HP;
-			case "action_points" -> actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS, context);
-			case "money" -> money;
-			default -> 0;
-		};
-	}
-
-	@Override
-	public float getValueFloat(String name, Context context) {
-		if ("hp_proportion".equals(name)) {
-			return ((float) HP) / ((float) getMaxHP());
-		} else if (name.startsWith("damage_mult_")) {
-			for (String damageType : game().data().getDamageTypeIDs()) {
-				if (name.equals("damage_mult_" + damageType)) {
-					return damageMult.get(damageType).value(getTemplate().getDamageMult(damageType), 0, MAX_DAMAGE_MULT, context);
-				}
-			}
-			return 0;
-		}
-		return 0;
-	}
-
-	@Override
-	public boolean getValueBoolean(String name, Context context) {
-		if (name.startsWith("has_equipped_")) {
-			for (String slot : getTemplate().getEquipSlots().keySet()) {
-				if (name.equals("has_equipped_" + slot)) {
-					return equipmentComponent.getEquippedItemInSlot(slot) != null;
-				}
-			}
-		}
-		return switch (name) {
-			case "enabled" -> isEnabled;
-			case "sleeping" -> isSleeping;
-			case "in_combat" -> isInCombat();
-			case "using_object" -> isUsingObject();
-			case "in_cover" -> isInCover();
-			case "dead" -> isDead;
-			case "active" -> isActive();
-			case "can_move" -> canMove(context);
-			case "can_dodge" -> canDodge(context);
-			default -> false;
-		};
-	}
-
-	@Override
-	public String getValueString(String name, Context context) {
-		return switch (name) {
-			case "id" -> getID();
-			case "template_id" -> templateID;
-			case "area" -> getArea().getID();
-			case "room" -> getArea().getRoom().getID();
-			default -> null;
-		};
-	}
-
-	@Override
-	public Set<String> getValueStringSet(String name, Context context) {
-		if ("equipment_effects".equals(name)) {
-			return equipmentEffects.value(new HashSet<>(), context);
-		}
-		return null;
-	}
-
-	@Override
 	public Expression getStatValue(String name, Context context) {
 		if (name.startsWith("damage_resist_")) {
 			for (String damageType : game().data().getDamageTypeIDs()) {
@@ -884,6 +794,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 					return new ExpressionConstantInteger(damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, context));
 				}
 			}
+			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
 			return new ExpressionConstantInteger(0);
 		} else if (name.startsWith("attribute_")) {
 			for (String attribute : game().data().getAttributeIDs()) {
@@ -891,6 +802,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 					return new ExpressionConstantInteger(attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context));
 				}
 			}
+			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid attribute");
 			return new ExpressionConstantInteger(0);
 		} else if (name.startsWith("skill_")) {
 			for (String skill : game().data().getSkillIDs()) {
@@ -898,6 +810,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 					return new ExpressionConstantInteger(skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX, context));
 				}
 			}
+			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid skill");
 			return new ExpressionConstantInteger(0);
 		} else if (name.startsWith("damage_mult_")) {
 			for (String damageType : game().data().getDamageTypeIDs()) {
@@ -905,6 +818,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 					return new ExpressionConstantFloat(damageMult.get(damageType).value(getTemplate().getDamageMult(damageType), 0, MAX_DAMAGE_MULT, context));
 				}
 			}
+			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
 			return new ExpressionConstantFloat(0);
 		} else if (name.startsWith("has_equipped_")) {
 			for (String slot : getTemplate().getEquipSlots().keySet()) {
@@ -912,6 +826,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 					return new ExpressionConstantBoolean(equipmentComponent.getEquippedItemInSlot(slot) != null);
 				}
 			}
+			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid equip slot");
 			return new ExpressionConstantBoolean(false);
 		}
 		return switch (name) {

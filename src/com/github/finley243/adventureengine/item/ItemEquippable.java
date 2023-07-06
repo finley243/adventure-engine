@@ -92,14 +92,6 @@ public class ItemEquippable extends Item {
 	}
 
 	@Override
-	public boolean getValueBoolean(String name, Context context) {
-		if ("has_equipped_actor".equals(name)) {
-			return equippedActor != null;
-		}
-		return super.getValueBoolean(name, context);
-	}
-
-	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "has_equipped_actor" -> new ExpressionConstantBoolean(equippedActor != null);

@@ -43,8 +43,9 @@ public class EquipmentComponent {
             equipped.put(slot, item);
         }
         // TODO - Expand to all equippable items
+        Context context = new Context(actor.game(), actor, actor, item);
         if (item instanceof ItemWeapon weapon) {
-            for (String equipmentEffect : actor.getValueStringSet("equipment_effects", new Context(actor.game(), actor, actor, item))) {
+            for (String equipmentEffect : actor.getStatValue("equipment_effects", context).getValueStringSet(context)) {
                 weapon.getEffectComponent().addEffect(equipmentEffect);
             }
         }
@@ -56,8 +57,9 @@ public class EquipmentComponent {
             for (String slot : item.getEquippedSlots()) {
                 equipped.remove(slot);
             }
+            Context context = new Context(actor.game(), actor, actor, item);
             if (item instanceof ItemWeapon weapon) {
-                for (String equipmentEffect : actor.getValueStringSet("equipment_effects", new Context(actor.game(), actor, actor, item))) {
+                for (String equipmentEffect : actor.getStatValue("equipment_effects", context).getValueStringSet(context)) {
                     weapon.getEffectComponent().removeEffect(equipmentEffect);
                 }
             }

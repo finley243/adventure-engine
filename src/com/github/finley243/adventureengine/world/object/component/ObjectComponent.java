@@ -70,34 +70,6 @@ public abstract class ObjectComponent implements StatHolder {
     public void onSetObjectArea(Area area) {}
 
     @Override
-    public int getValueInt(String name, Context context) {
-        return 0;
-    }
-
-    @Override
-    public float getValueFloat(String name, Context context) {
-        return 0;
-    }
-
-    @Override
-    public boolean getValueBoolean(String name, Context context) {
-        return false;
-    }
-
-    @Override
-    public String getValueString(String name, Context context) {
-        if ("id".equals(name)) {
-            return getID();
-        }
-        return null;
-    }
-
-    @Override
-    public Set<String> getValueStringSet(String name, Context context) {
-        return null;
-    }
-
-    @Override
     public Expression getStatValue(String name, Context context) {
         return switch (name) {
             case "enabled" -> new ExpressionConstantBoolean(isEnabled());

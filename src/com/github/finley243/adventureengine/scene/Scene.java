@@ -32,6 +32,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	private boolean hasTriggered;
 	
 	public Scene(Game game, String ID, Condition condition, boolean once, int priority, List<SceneLine> lines, List<SceneChoice> choices, SceneType type) {
+		// TODO - Always assigned a non-null ID (for in-line scenes, assign an "automatic" ID if none is manually specified)
 		super(game, ID);
 		this.condition = condition;
 		this.once = once;
@@ -64,37 +65,6 @@ public class Scene extends GameInstanced implements StatHolder {
 
 	public void setTriggered() {
 		hasTriggered = true;
-	}
-
-	@Override
-	public int getValueInt(String name, Context context) {
-		return 0;
-	}
-
-	@Override
-	public float getValueFloat(String name, Context context) {
-		return 0;
-	}
-
-	@Override
-	public boolean getValueBoolean(String name, Context context) {
-		if ("triggered".equals(name)) {
-			return hasTriggered;
-		}
-		return false;
-	}
-
-	@Override
-	public String getValueString(String name, Context context) {
-		if ("id".equals(name)) {
-			return getID();
-		}
-		return null;
-	}
-
-	@Override
-	public Set<String> getValueStringSet(String name, Context context) {
-		return null;
 	}
 
 	@Override
