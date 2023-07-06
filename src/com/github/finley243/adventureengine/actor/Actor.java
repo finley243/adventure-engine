@@ -14,6 +14,7 @@ import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
+import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.load.LoadUtils;
@@ -873,6 +874,68 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			return equipmentEffects.value(new HashSet<>(), context);
 		}
 		return null;
+	}
+
+	@Override
+	public Expression getStatValue(String name, Context context) {
+		if (name.startsWith("damage_resist_")) {
+			for (String damageType : game().data().getDamageTypeIDs()) {
+				if (name.equals("damage_resist_" + damageType)) {
+					return new ExpressionConstantInteger(damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, context));
+				}
+			}
+			return new ExpressionConstantInteger(0);
+		} else if (name.startsWith("attribute_")) {
+			for (String attribute : game().data().getAttributeIDs()) {
+				if (name.equals("attribute_" + attribute)) {
+					return new ExpressionConstantInteger(attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context));
+				}
+			}
+			return new ExpressionConstantInteger(0);
+		} else if (name.startsWith("skill_")) {
+			for (String skill : game().data().getSkillIDs()) {
+				if (name.equals("skill_" + skill)) {
+					return new ExpressionConstantInteger(skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX, context));
+				}
+			}
+			return new ExpressionConstantInteger(0);
+		} else if (name.startsWith("damage_mult_")) {
+			for (String damageType : game().data().getDamageTypeIDs()) {
+				if (name.equals("damage_mult_" + damageType)) {
+					return new ExpressionConstantFloat(damageMult.get(damageType).value(getTemplate().getDamageMult(damageType), 0, MAX_DAMAGE_MULT, context));
+				}
+			}
+			return new ExpressionConstantFloat(0);
+		} else if (name.startsWith("has_equipped_")) {
+			for (String slot : getTemplate().getEquipSlots().keySet()) {
+				if (name.equals("has_equipped_" + slot)) {
+					return new ExpressionConstantBoolean(equipmentComponent.getEquippedItemInSlot(slot) != null);
+				}
+			}
+			return new ExpressionConstantBoolean(false);
+		}
+		return switch (name) {
+			case "max_hp" -> new ExpressionConstantInteger(maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, context));
+			case "hp" -> new ExpressionConstantInteger(HP);
+			case "action_points" -> new ExpressionConstantInteger(actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS, context));
+			case "money" -> new ExpressionConstantInteger(money);
+			case "hp_proportion" -> new ExpressionConstantFloat(((float) HP) / ((float) getMaxHP()));
+			case "enabled" -> new ExpressionConstantBoolean(isEnabled);
+			case "sleeping" -> new ExpressionConstantBoolean(isSleeping);
+			case "in_combat" -> new ExpressionConstantBoolean(isInCombat());
+			case "using_object" -> new ExpressionConstantBoolean(isUsingObject());
+			case "in_cover" -> new ExpressionConstantBoolean(isInCover());
+			case "dead" -> new ExpressionConstantBoolean(isDead);
+			case "active" -> new ExpressionConstantBoolean(isActive());
+			case "can_move" -> new ExpressionConstantBoolean(canMove(context));
+			case "can_dodge" -> new ExpressionConstantBoolean(canDodge(context));
+			case "id" -> new ExpressionConstantString(getID());
+			case "template_id" -> new ExpressionConstantString(templateID);
+			case "area" -> new ExpressionConstantString(getArea().getID());
+			case "room" -> new ExpressionConstantString(getArea().getRoom().getID());
+			case "equipment_effects" -> new ExpressionConstantStringSet(equipmentEffects.value(new HashSet<>(), context));
+			default -> null;
+		};
 	}
 
 	@Override

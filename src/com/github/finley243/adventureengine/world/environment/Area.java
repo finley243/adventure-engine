@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
+import com.github.finley243.adventureengine.expression.ExpressionConstantStringSet;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -400,6 +401,20 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return switch (name) {
 			case "visible_areas" -> getLineOfSightAreaIDs();
 			case "movable_areas" -> getMovableAreaIDs(null);
+			default -> null;
+		};
+	}
+
+	@Override
+	public Expression getStatValue(String name, Context context) {
+		return switch (name) {
+			case "id" -> new ExpressionConstantString(getID());
+			case "name" -> new ExpressionConstantString(getName());
+			case "relative_name" -> new ExpressionConstantString(getRelativeName());
+			case "move_phrase" -> new ExpressionConstantString(getMovePhrase());
+			case "room" -> new ExpressionConstantString(roomID);
+			case "visible_areas" -> new ExpressionConstantStringSet(getLineOfSightAreaIDs());
+			case "movable_areas" -> new ExpressionConstantStringSet(getMovableAreaIDs(null));
 			default -> null;
 		};
 	}

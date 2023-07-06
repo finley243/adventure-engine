@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.item;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
@@ -7,7 +8,10 @@ import com.github.finley243.adventureengine.action.ActionItemEquip;
 import com.github.finley243.adventureengine.action.ActionItemUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
 import com.github.finley243.adventureengine.item.template.EquippableTemplate;
+import com.github.finley243.adventureengine.stat.StatHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +89,30 @@ public class ItemEquippable extends Item {
 			}
 		}
 		return actions;
+	}
+
+	@Override
+	public boolean getValueBoolean(String name, Context context) {
+		if ("has_equipped_actor".equals(name)) {
+			return equippedActor != null;
+		}
+		return super.getValueBoolean(name, context);
+	}
+
+	@Override
+	public Expression getStatValue(String name, Context context) {
+		return switch (name) {
+			case "has_equipped_actor" -> new ExpressionConstantBoolean(equippedActor != null);
+			default -> super.getStatValue(name, context);
+		};
+	}
+
+	@Override
+	public StatHolder getSubHolder(String name, String ID) {
+		if ("equipped_actor".equals(name)) {
+			return equippedActor;
+		}
+		return super.getSubHolder(name, ID);
 	}
 
 }

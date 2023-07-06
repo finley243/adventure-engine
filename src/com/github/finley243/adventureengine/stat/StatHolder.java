@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.Set;
 
@@ -16,6 +17,8 @@ public interface StatHolder {
     String getValueString(String name, Context context);
 
     Set<String> getValueStringSet(String name, Context context);
+
+    Expression getStatValue(String name, Context context);
 
     void setStateBoolean(String name, boolean value);
 

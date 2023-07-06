@@ -6,6 +6,8 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -135,6 +137,14 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public Set<String> getValueStringSet(String name, Context context) {
 		return null;
+	}
+
+	@Override
+	public Expression getStatValue(String name, Context context) {
+		return switch (name) {
+			case "id" -> new ExpressionConstantString(getID());
+			default -> null;
+		};
 	}
 
 	@Override

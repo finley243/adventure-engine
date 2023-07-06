@@ -4,6 +4,9 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
+import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -95,6 +98,15 @@ public abstract class ObjectComponent implements StatHolder {
     }
 
     @Override
+    public Expression getStatValue(String name, Context context) {
+        return switch (name) {
+            case "enabled" -> new ExpressionConstantBoolean(isEnabled());
+            case "id" -> new ExpressionConstantString(getID());
+            default -> null;
+        };
+    }
+
+    @Override
     public void setStateBoolean(String name, boolean value) {
         if ("enabled".equals(name)) {
             setEnabled(value);
@@ -138,6 +150,9 @@ public abstract class ObjectComponent implements StatHolder {
 
     @Override
     public StatHolder getSubHolder(String name, String ID) {
+        if ("object".equals(name)) {
+            return object;
+        }
         return null;
     }
 

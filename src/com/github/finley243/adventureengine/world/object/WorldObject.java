@@ -11,6 +11,9 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
+import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolder;
@@ -42,6 +45,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private Area area;
 	private int HP;
 	private final Map<String, ObjectComponent> components;
+	// TODO - Replace local vars with expressions in a single map
 	private final Map<String, Boolean> localVarsBoolean;
 	private final Map<String, Integer> localVarsInteger;
 	private final Map<String, Float> localVarsFloat;
@@ -288,6 +292,21 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public Set<String> getValueStringSet(String name, Context context) {
 		return localVarsStringSet.getOrDefault(name, getTemplate().getLocalVarsStringSetDefault().getOrDefault(name, null));
+	}
+
+	@Override
+	public Expression getStatValue(String name, Context context) {
+		return switch (name) {
+			case "enabled" -> new ExpressionConstantBoolean(isEnabled);
+			case "hidden" -> new ExpressionConstantBoolean(isHidden);
+			case "guarded" -> new ExpressionConstantBoolean(isGuarded());
+			case "broken" -> new ExpressionConstantBoolean(isBroken());
+			case "id" -> new ExpressionConstantString(getID());
+			case "template_id" -> new ExpressionConstantString(templateID);
+			case "area" -> new ExpressionConstantString(getArea().getID());
+			case "room" -> new ExpressionConstantString(getArea().getRoom().getID());
+			default -> null;
+		};
 	}
 
 	@Override

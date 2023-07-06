@@ -5,6 +5,9 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
+import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.stat.*;
 
@@ -92,6 +95,15 @@ public class Scene extends GameInstanced implements StatHolder {
 	@Override
 	public Set<String> getValueStringSet(String name, Context context) {
 		return null;
+	}
+
+	@Override
+	public Expression getStatValue(String name, Context context) {
+		return switch (name) {
+			case "triggered" -> new ExpressionConstantBoolean(hasTriggered);
+			case "id" -> new ExpressionConstantString(getID());
+			default -> null;
+		};
 	}
 
 	@Override
