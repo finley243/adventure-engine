@@ -33,7 +33,7 @@ public class ExpressionStat extends Expression {
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
-            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            context.game().log().print("ExpressionStat - stat " + statName + " does not exist on holder " + holder.getHolder(context));
             return false;
         }
         if (valueExpression.getDataType() != getDataType()) {
@@ -50,7 +50,7 @@ public class ExpressionStat extends Expression {
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
-            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            context.game().log().print("ExpressionStat - stat " + statName + " does not exist on holder " + holder.getHolder(context));
             return 0;
         }
         if (valueExpression.getDataType() != getDataType()) {
@@ -67,7 +67,7 @@ public class ExpressionStat extends Expression {
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
-            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            context.game().log().print("ExpressionStat - stat " + statName + " does not exist on holder " + holder.getHolder(context));
             return 0;
         }
         if (valueExpression.getDataType() != getDataType()) {
@@ -84,7 +84,7 @@ public class ExpressionStat extends Expression {
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
-            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            context.game().log().print("ExpressionStat - stat " + statName + " does not exist on holder " + holder.getHolder(context));
             return null;
         }
         if (valueExpression.getDataType() != getDataType()) {
@@ -101,7 +101,7 @@ public class ExpressionStat extends Expression {
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
-            context.game().log().print("ExpressionStat " + statName + " - stat does not exist");
+            context.game().log().print("ExpressionStat - stat " + statName + " does not exist on holder " + holder.getHolder(context));
             return null;
         }
         if (valueExpression.getDataType() != getDataType()) {
