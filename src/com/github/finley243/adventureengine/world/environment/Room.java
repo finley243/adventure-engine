@@ -138,7 +138,6 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
-			case "known" -> new ExpressionConstantBoolean(isKnown());
 			case "visited" -> new ExpressionConstantBoolean(hasVisited());
 			case "id" -> new ExpressionConstantString(getID());
 			case "owner_faction" -> new ExpressionConstantString(ownerFaction);
@@ -147,31 +146,14 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public void setStateBoolean(String name, boolean value) {
+	public boolean setStatValue(String name, Expression value, Context context) {
 		switch (name) {
-			case "known" -> isKnown = value;
-			case "visited" -> hasVisited = value;
+			case "visited" -> {
+				this.hasVisited = value.getValueBoolean(context);
+				return true;
+			}
 		}
-	}
-
-	@Override
-	public void setStateInteger(String name, int value) {
-
-	}
-
-	@Override
-	public void setStateFloat(String name, float value) {
-
-	}
-
-	@Override
-	public void setStateString(String name, String value) {
-
-	}
-
-	@Override
-	public void setStateStringSet(String name, Set<String> value) {
-
+		return false;
 	}
 
 	@Override

@@ -117,28 +117,8 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	@Override
-	public void setStateBoolean(String name, boolean value) {
-
-	}
-
-	@Override
-	public void setStateInteger(String name, int value) {
-
-	}
-
-	@Override
-	public void setStateFloat(String name, float value) {
-
-	}
-
-	@Override
-	public void setStateString(String name, String value) {
-
-	}
-
-	@Override
-	public void setStateStringSet(String name, Set<String> value) {
-
+	public boolean setStatValue(String name, Expression value, Context context) {
+		return false;
 	}
 
 	@Override

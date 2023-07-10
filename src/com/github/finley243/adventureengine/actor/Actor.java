@@ -521,7 +521,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				action.add(new ActionTalk(this));
 			}
 		} else if (isDead()) {
-			action.addAll(inventory.getExternalActions(this, null, subject, false, true, true));
+			action.addAll(inventory.getExternalActions(this, null, subject, false, true, false));
 		}
 		return action;
 	}
@@ -861,42 +861,38 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public void setStateBoolean(String name, boolean value) {
+	public boolean setStatValue(String name, Expression value, Context context) {
 		switch (name) {
-			case "known" -> isKnown = value;
-			case "enabled" -> setEnabled(value);
-			case "player_controlled" -> playerControlled = value;
-		}
-	}
-
-	@Override
-	public void setStateInteger(String name, int value) {
-		switch (name) {
-			case "hp" -> HP = value;
-			case "money" -> money = value;
-		}
-	}
-
-	@Override
-	public void setStateFloat(String name, float value) {
-
-	}
-
-	@Override
-	public void setStateString(String name, String value) {
-		switch (name) {
-			case "area" -> setArea(game().data().getArea(value));
+			case "known" -> {
+				isKnown = value.getValueBoolean(context);
+				return true;
+			}
+			case "enabled" -> {
+				setEnabled(value.getValueBoolean(context));
+				return true;
+			}
+			case "player_controlled" -> {
+				playerControlled = value.getValueBoolean(context);
+				return true;
+			}
+			case "hp" -> {
+				HP = value.getValueInteger(context);
+				return true;
+			}
+			case "money" -> {
+				money = value.getValueInteger(context);
+				return true;
+			}
+			case "area" -> {
+				setArea(game().data().getArea(value.getValueString(context)));
+				return true;
+			}
 			case "alert_state" -> {
-				if (targetingComponent != null) {
-					targetingComponent.setAlertState(LoadUtils.stringToEnum(value, TargetingComponent.AlertState.class));
-				}
+				targetingComponent.setAlertState(LoadUtils.stringToEnum(value.getValueString(context), TargetingComponent.AlertState.class));
+				return true;
 			}
 		}
-	}
-
-	@Override
-	public void setStateStringSet(String name, Set<String> value) {
-
+		return false;
 	}
 
 	@Override

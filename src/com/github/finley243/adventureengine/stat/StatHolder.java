@@ -10,15 +10,14 @@ public interface StatHolder {
 
     Expression getStatValue(String name, Context context);
 
-    void setStateBoolean(String name, boolean value);
-
-    void setStateInteger(String name, int value);
-
-    void setStateFloat(String name, float value);
-
-    void setStateString(String name, String value);
-
-    void setStateStringSet(String name, Set<String> value);
+    /**
+     * Sets a static stat with the given name to the given value
+     * @param name the name of the stat
+     * @param value an Expression representing the new value for the stat
+     * @param context the Context for evaluating the value expression
+     * @return true if the stat is set successfully, false otherwise
+     */
+    boolean setStatValue(String name, Expression value, Context context);
 
     void modStateInteger(String name, int amount);
 

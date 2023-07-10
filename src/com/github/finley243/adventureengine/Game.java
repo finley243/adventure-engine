@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
@@ -66,7 +67,8 @@ public class Game {
 
 		data().newGame();
 
-		data().getPlayer().setStateInteger("money", 50);
+		//data().getPlayer().setStateInteger("money", 50);
+		data().getPlayer().setStatValue("money", Expression.constant(50), new Context(this, data().getPlayer(), data().getPlayer()));
 
 		/*File saveFile = new File(GAMEFILES + "/save.aes");
 		SaveLoader.saveGame(saveFile, data());

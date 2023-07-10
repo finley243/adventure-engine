@@ -26,12 +26,9 @@ public class ScriptSetState extends Script {
     @Override
     protected void executeSuccess(Context context) {
         String stateValue = state.getValueString(context);
-        switch (expression.getDataType()) {
-            case BOOLEAN -> holder.getHolder(context).setStateBoolean(stateValue, expression.getValueBoolean(context));
-            case INTEGER -> holder.getHolder(context).setStateInteger(stateValue, expression.getValueInteger(context));
-            case FLOAT -> holder.getHolder(context).setStateFloat(stateValue, expression.getValueFloat(context));
-            case STRING -> holder.getHolder(context).setStateString(stateValue, expression.getValueString(context));
-            case STRING_SET -> holder.getHolder(context).setStateStringSet(stateValue, expression.getValueStringSet(context));
+        boolean success = holder.getHolder(context).setStatValue(stateValue, expression, context);
+        if (!success) {
+            context.game().log().print("ScriptSetState - stat " + stateValue + " on holder " + holder + " was not updated successfully");
         }
     }
 

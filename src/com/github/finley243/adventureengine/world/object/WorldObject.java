@@ -257,37 +257,25 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public void setStateBoolean(String name, boolean value) {
+	public boolean setStatValue(String name, Expression value, Context context) {
 		switch (name) {
-			case "known" -> isKnown = value;
-			case "enabled" -> setEnabled(value);
-			case "hidden" -> isHidden = value;
-			default -> localVars.put(name, new ExpressionConstantBoolean(value));
+			case "enabled" -> {
+				setEnabled(value.getValueBoolean(context));
+				return true;
+			}
+			case "hidden" -> {
+				this.isHidden = value.getValueBoolean(context);
+				return true;
+			}
+			case "area" -> {
+				setArea(game().data().getArea(value.getValueString(context)));
+				return true;
+			}
+			default -> {
+				localVars.put(name, Expression.convertToConstant(value, context));
+				return true;
+			}
 		}
-	}
-
-	@Override
-	public void setStateInteger(String name, int value) {
-		localVars.put(name, new ExpressionConstantInteger(value));
-	}
-
-	@Override
-	public void setStateFloat(String name, float value) {
-		localVars.put(name, new ExpressionConstantFloat(value));
-	}
-
-	@Override
-	public void setStateString(String name, String value) {
-		if ("area".equals(name)) {
-			setArea(game().data().getArea(value));
-		} else {
-			localVars.put(name, new ExpressionConstantString(value));
-		}
-	}
-
-	@Override
-	public void setStateStringSet(String name, Set<String> value) {
-		localVars.put(name, new ExpressionConstantStringSet(value));
 	}
 
 	@Override
