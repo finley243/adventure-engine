@@ -587,16 +587,20 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			return;
 		}
 		getEffectComponent().onStartRound();
-		getTargetingComponent().updateTurn();
-		getBehaviorComponent().update();
+		if (!playerControlled) {
+			getTargetingComponent().updateTurn();
+			getBehaviorComponent().update();
+		}
 		this.actionPointsUsed = 0;
 		this.blockedActions.clear();
 		this.endTurn = false;
 		Action lastAction = null;
 		int repeatActionCount = 0;
 		while (!endTurn) {
-			updatePursueTargets();
-			getTargetingComponent().update();
+			if (!playerControlled) {
+				updatePursueTargets();
+				getTargetingComponent().update();
+			}
 			List<Action> availableActions = availableActions();
 			for (Action action : availableActions) {
 				if (getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
@@ -628,7 +632,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 	
 	public void endTurn() {
-		// May cause issues
 		actionPointsUsed = 0;
 		endTurn = true;
 		if (!playerControlled && shouldIdle()) {
