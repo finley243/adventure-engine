@@ -63,11 +63,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final float armorMult;
     private final List<String> targetEffects;
     private final float hitChanceMult;
-    private final boolean canDodge;
+    private final String dodgeSkill;
     private final AttackHitChanceType hitChanceType;
     private final boolean isLoud;
 
-    public ActionAttack(ItemWeapon weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, String attackSkill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, boolean canDodge, AttackHitChanceType hitChanceType, boolean isLoud) {
+    public ActionAttack(ItemWeapon weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, String attackSkill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
         super(targets);
         this.weapon = weapon;
         this.targets = targets;
@@ -102,7 +102,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.armorMult = armorMult;
         this.targetEffects = targetEffects;
         this.hitChanceMult = hitChanceMult;
-        this.canDodge = canDodge;
+        this.dodgeSkill = dodgeSkill;
         this.hitChanceType = hitChanceType;
         this.isLoud = isLoud;
     }
@@ -137,8 +137,8 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return hitChanceMult;
     }
 
-    public boolean canDodge() {
-        return canDodge;
+    public String getDodgeSkill() {
+        return dodgeSkill;
     }
 
     public int getAmmoConsumed() {
@@ -161,10 +161,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     public float chance(Actor subject, AttackTarget target) {
         // TODO - Allow setting dodge/counter skill type in the attack definition
         if (hitChanceType == AttackHitChanceType.INDEPENDENT) {
-            return CombatHelper.calculateHitChance(subject, weapon, target, getLimb(), getAttackSkill(), "dodge", baseHitChanceMin, baseHitChanceMax, canDodge(), hitChanceMult());
+            return CombatHelper.calculateHitChance(subject, weapon, target, getLimb(), getAttackSkill(), getDodgeSkill(), baseHitChanceMin, baseHitChanceMax, hitChanceMult());
         } else {
-            if (canDodge()) {
-                return CombatHelper.calculateHitChanceDodgeOnly(subject, target, getAttackSkill(), "dodge");
+            if (getDodgeSkill() != null) {
+                return CombatHelper.calculateHitChanceDodgeOnly(subject, target, getAttackSkill(), getDodgeSkill());
             } else {
                 return 1.0f;
             }
