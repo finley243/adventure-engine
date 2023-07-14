@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.List;
@@ -15,8 +16,8 @@ public class BehaviorUse extends Behavior {
     private final String object;
     private final String component;
 
-    public BehaviorUse(Condition condition, int duration, List<Idle> idles, String object, String component) {
-        super(condition, duration, idles);
+    public BehaviorUse(Condition condition, Script eachRoundScript, int duration, List<Idle> idles, String object, String component) {
+        super(condition, eachRoundScript, duration, idles);
         this.object = object;
         this.component = component;
     }

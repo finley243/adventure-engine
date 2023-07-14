@@ -1122,6 +1122,7 @@ public class DataLoader {
             Behavior behavior;
             String type = LoadUtils.attribute(behaviorElement, "type", null);
             Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"));
+            Script eachRoundScript = loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptEachRound"));
             int duration = LoadUtils.attributeInt(behaviorElement, "duration", 0);
             List<Idle> idles = new ArrayList<>();
             List<Element> idleElements = LoadUtils.directChildrenWithName(behaviorElement, "idle");
@@ -1132,25 +1133,25 @@ public class DataLoader {
             switch (type) {
                 case "move" -> {
                     String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
-                    behavior = new BehaviorMove(condition, duration, idles, areaTarget);
+                    behavior = new BehaviorMove(condition, eachRoundScript, duration, idles, areaTarget);
                 }
                 case "use" -> {
                     String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
                     String componentTarget = LoadUtils.attribute(behaviorElement, "component", null);
-                    behavior = new BehaviorUse(condition, duration, idles, objectTarget, componentTarget);
+                    behavior = new BehaviorUse(condition, eachRoundScript, duration, idles, objectTarget, componentTarget);
                 }
                 case "guard" -> {
                     String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
-                    behavior = new BehaviorGuard(condition, duration, idles, guardTarget);
+                    behavior = new BehaviorGuard(condition, eachRoundScript, duration, idles, guardTarget);
                 }
                 case "sleep" -> {
                     String bedTarget = LoadUtils.attribute(behaviorElement, "bed", null);
-                    behavior = new BehaviorSleep(condition, idles, bedTarget);
+                    behavior = new BehaviorSleep(condition, eachRoundScript, idles, bedTarget);
                 }
                 case "procedure" -> {
                     List<Behavior> procedureBehaviors = loadBehaviors(behaviorElement);
                     boolean isCycle = LoadUtils.attributeBool(behaviorElement, "isCycle", false);
-                    behavior = new BehaviorProcedure(condition, isCycle, procedureBehaviors);
+                    behavior = new BehaviorProcedure(condition, eachRoundScript, isCycle, procedureBehaviors);
                 }
                 default -> behavior = null;
             }

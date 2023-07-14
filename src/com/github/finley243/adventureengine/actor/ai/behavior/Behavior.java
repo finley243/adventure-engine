@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -21,22 +22,31 @@ public abstract class Behavior {
     public static final float BEHAVIOR_MOVEMENT_UTILITY_COMBAT = 0.0f;
 
     private final Condition condition;
+    private final Script eachRoundScript;
     // If duration = 0, behavior will continue indefinitely until endCondition is met or until superseded by another behavior
     private final int duration;
     private final List<Idle> idles;
     private int turnsRemaining;
 
-    public Behavior(Condition condition, int duration, List<Idle> idles) {
+    public Behavior(Condition condition, Script eachRoundScript, int duration, List<Idle> idles) {
         this.condition = condition;
+        this.eachRoundScript = eachRoundScript;
         this.duration = duration;
         this.idles = idles;
         this.turnsRemaining = 0;
     }
 
+    public void triggerRoundScript(Actor subject) {
+        if (eachRoundScript != null) {
+            eachRoundScript.execute(new Context(subject.game(), subject, subject));
+        }
+    }
+
     // Whether the turnsRemaining counter should be counted down
     public abstract boolean isInTargetState(Actor subject);
 
-    public void update(Actor subject) {
+    public void updateTurn(Actor subject) {
+        triggerRoundScript(subject);
         if (duration > 0 && turnsRemaining > 0) {
             if (isInTargetState(subject)) {
                 turnsRemaining -= 1;
@@ -44,6 +54,13 @@ public abstract class Behavior {
                 // Reset counter if countdown condition is interrupted
                 turnsRemaining = duration;
             }
+        }
+    }
+
+    public void update(Actor subject) {
+        if (duration > 0 && turnsRemaining > 0 && !isInTargetState(subject)) {
+            // Reset counter if countdown condition is interrupted
+            turnsRemaining = duration;
         }
     }
 

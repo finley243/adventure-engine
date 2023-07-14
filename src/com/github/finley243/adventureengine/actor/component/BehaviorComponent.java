@@ -53,6 +53,14 @@ public class BehaviorComponent {
         return currentBehavior != null && currentBehavior.isGuarding(actor, object);
     }
 
+    public void updateTurn() {
+        if (behaviors.isEmpty()) return;
+        Behavior currentBehavior = currentBehavior();
+        if (currentBehavior != null) {
+            currentBehavior.updateTurn(actor);
+        }
+    }
+
     public void update() {
         if (behaviors.isEmpty()) return;
         Behavior currentBehavior = currentBehavior();

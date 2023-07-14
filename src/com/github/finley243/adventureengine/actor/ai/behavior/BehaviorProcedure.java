@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.ai.behavior;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -14,8 +15,8 @@ public class BehaviorProcedure extends Behavior {
     private final List<Behavior> stages;
     private int currentStage;
 
-    public BehaviorProcedure(Condition condition, boolean isCycle, List<Behavior> stages) {
-        super(condition, 0, null);
+    public BehaviorProcedure(Condition condition, Script eachRoundScript, boolean isCycle, List<Behavior> stages) {
+        super(condition, eachRoundScript, 0, null);
         if (stages.isEmpty()) throw new IllegalArgumentException("BehaviorCycle stages cannot be empty");
         if (stages.size() == 1) throw new IllegalArgumentException("BehaviorCycle cannot have 1 stage");
         for (Behavior behavior : stages) {
@@ -37,6 +38,12 @@ public class BehaviorProcedure extends Behavior {
         } else {
             return currentStage == stages.size() - 1 && isInTargetState(subject);
         }
+    }
+
+    @Override
+    public void updateTurn(Actor subject) {
+        triggerRoundScript(subject);
+        stages.get(currentStage).updateTurn(subject);
     }
 
     @Override

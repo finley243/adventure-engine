@@ -589,7 +589,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		getEffectComponent().onStartRound();
 		if (!playerControlled) {
 			getTargetingComponent().updateTurn();
-			getBehaviorComponent().update();
+			getBehaviorComponent().updateTurn();
 		}
 		this.actionPointsUsed = 0;
 		this.blockedActions.clear();
@@ -600,6 +600,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			if (!playerControlled) {
 				updatePursueTargets();
 				getTargetingComponent().update();
+				getBehaviorComponent().update();
 			}
 			List<Action> availableActions = availableActions();
 			for (Action action : availableActions) {
