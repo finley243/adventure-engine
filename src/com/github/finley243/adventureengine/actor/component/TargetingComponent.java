@@ -20,6 +20,7 @@ public class TargetingComponent {
 
     private static final AlertState DEFAULT_ALERT_STATE = AlertState.AWARE;
     private static final int TRESPASSING_TURNS_UNTIL_HOSTILE = 2;
+    private static final int DEDICATED_DETECTION_BARKS = 2;
 
     public enum DetectionState {
         DETECTING(true, 8),
@@ -131,22 +132,28 @@ public class TargetingComponent {
         }
     }
 
-    public void onVisibleAction(Action action, Actor subject) {
-        processDetectionEvent(subject, getActionDetectionChance(action, subject));
-        updateTargetArea(subject, subject.getArea());
+    public void onVisibleAction(Action action, Actor target) {
+        processDetectionEvent(target, getActionDetectionChance(action, target));
+        updateTargetArea(target, target.getArea());
         // TODO - Handle criminal action detection
     }
 
-    private void processDetectionEvent(Actor subject, float detectionChance) {
-        if (!detectedActors.containsKey(subject) || detectedActors.get(subject).state == DetectionState.DETECTING) {
+    private void processDetectionEvent(Actor target, float detectionChance) {
+        if (!detectedActors.containsKey(target) || detectedActors.get(target).state == DetectionState.DETECTING) {
             boolean detected = MathUtils.randomCheck(detectionChance);
             if (detected) {
-                if (!detectedActors.containsKey(subject)) {
-                    detectedActors.put(subject, new DetectedActor(DetectionState.DETECTING, subject.getArea()));
+                if (!detectedActors.containsKey(target)) {
+                    detectedActors.put(target, new DetectedActor(DetectionState.DETECTING, target.getArea()));
                 }
-                // TODO - Replace with detection phrase (different phrases depending on level of detection)
-                //subject.onDetectionUpdate(subject, detectedActors.get(subject).stateCounter, detectionThreshold());
-                updateState(subject);
+                int eventsUntilDetected = getStateTriggerValue(DetectionState.DETECTING) - detectedActors.get(target).stateCounter;
+                if (eventsUntilDetected <= DEDICATED_DETECTION_BARKS) {
+                    for (int i = 1; i <= DEDICATED_DETECTION_BARKS; i++) {
+                        actor.triggerBark("on_update_detection_" + i, target);
+                    }
+                } else {
+                    actor.triggerBark("on_update_detection", target);
+                }
+                updateState(target);
             }
         }
     }

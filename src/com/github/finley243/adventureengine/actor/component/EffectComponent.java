@@ -106,7 +106,7 @@ public class EffectComponent {
     /*public List<SaveData> saveState() {
         for (Effect effect : effects.keySet()) {
             if (effect.needsSaveData()) {
-                // TODO - Store effect parameters and timer list (only store temporary effects)
+
             }
         }
         return null;
