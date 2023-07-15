@@ -25,7 +25,7 @@ public class ScriptBark extends Script {
             // TODO - Add error log
             return;
         }
-        actorCast.triggerBark(trigger, context.getTarget());
+        actorCast.triggerBark(trigger, context);
     }
 
 }

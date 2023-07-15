@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -22,6 +23,10 @@ public class Context {
 
     public Context(Game game, Actor subject, Actor target) {
         this(game, subject, target, null, null, null, new HashMap<>());
+    }
+
+    public Context(Game game, Actor subject, Actor target, Map<String, Expression> parameters) {
+        this(game, subject, target, null, null, null, parameters);
     }
 
     public Context(Game game, Actor subject, Actor target, WorldObject parentObject) {
@@ -119,6 +124,38 @@ public class Context {
 
     public Map<String, Variable> getParameters() {
         return parameters;
+    }
+
+    public Map<String, Noun> getContextNounMap() {
+        Map<String, Noun> nounMap = new HashMap<>();
+        if (this.getSubject() != null) {
+            nounMap.put("actor", this.getSubject());
+        }
+        if (this.getTarget() != null) {
+            nounMap.put("target", this.getTarget());
+        }
+        if (this.getParentObject() != null) {
+            nounMap.put("object", this.getParentObject());
+        }
+        if (this.getParentItem() != null) {
+            nounMap.put("item", this.getParentItem());
+        }
+        for (Map.Entry<String, Context.Variable> entry : this.getParameters().entrySet()) {
+            if (entry.getValue().getExpression().getDataType() == Expression.DataType.NOUN) {
+                nounMap.put(entry.getKey(), entry.getValue().getExpression().getValueNoun(this));
+            }
+        }
+        return nounMap;
+    }
+
+    public Map<String, String> getTextVarMap() {
+        Map<String, String> textVarValues = new HashMap<>();
+        for (Map.Entry<String, Context.Variable> entry : this.getParameters().entrySet()) {
+            if (entry.getValue().getExpression().getDataType() == Expression.DataType.STRING) {
+                textVarValues.put(entry.getKey(), entry.getValue().getExpression().getValueString(this));
+            }
+        }
+        return textVarValues;
     }
 
     public static class Variable {
