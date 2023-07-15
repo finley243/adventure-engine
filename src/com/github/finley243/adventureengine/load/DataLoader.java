@@ -1016,11 +1016,14 @@ public class DataLoader {
         switch (type) {
             case "inventory" -> {
                 LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
-                boolean inventoryIsExposed = LoadUtils.attributeBool(componentElement, "exposed", false);
+                String takePrompt = LoadUtils.singleTag(componentElement, "takePrompt", null);
+                String takePhrase = LoadUtils.singleTag(componentElement, "takePhrase", null);
+                String storePrompt = LoadUtils.singleTag(componentElement, "storePrompt", null);
+                String storePhrase = LoadUtils.singleTag(componentElement, "storePhrase", null);
                 boolean enableTake = LoadUtils.attributeBool(componentElement, "enableTake", true);
                 boolean enableStore = LoadUtils.attributeBool(componentElement, "enableStore", true);
                 List<ActionCustom.CustomActionHolder> perItemActions = loadCustomActions(componentElement, "itemAction");
-                return new ObjectComponentTemplateInventory(game, startEnabled, actionsRestricted, name, lootTable, inventoryIsExposed, enableTake, enableStore, perItemActions);
+                return new ObjectComponentTemplateInventory(game, startEnabled, actionsRestricted, name, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
                 Expression networkID = loadExpressionOrAttribute(componentElement, "networkID", "string");

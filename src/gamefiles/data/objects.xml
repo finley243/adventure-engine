@@ -39,6 +39,10 @@
     <object id="garbage_bin">
         <name>garbage bin</name>
         <component id="inventory" type="inventory">
+            <takePrompt>Take</takePrompt>
+            <takePhrase>takeFrom</takePhrase>
+            <storePrompt>Store</storePrompt>
+            <storePhrase>storeIn</storePhrase>
             <inventory>
                 <table countMin="0" countMax="3">junk_random</table>
             </inventory>
@@ -47,6 +51,10 @@
     <object id="store_shelf_snacks">
         <name>snacks shelf</name>
         <component id="inventory" type="inventory">
+            <takePrompt>Take</takePrompt>
+            <takePhrase>takeFrom</takePhrase>
+            <storePrompt>Place</storePrompt>
+            <storePhrase>placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -55,6 +63,10 @@
     <object id="store_shelf_meals">
         <name>meal shelf</name>
         <component id="inventory" type="inventory">
+            <takePrompt>Take</takePrompt>
+            <takePhrase>takeFrom</takePhrase>
+            <storePrompt>Place</storePrompt>
+            <storePhrase>placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -63,6 +75,10 @@
     <object id="store_shelf_alcohol">
         <name>alcohol shelf</name>
         <component id="inventory" type="inventory">
+            <takePrompt>Take</takePrompt>
+            <takePhrase>takeFrom</takePhrase>
+            <storePrompt>Place</storePrompt>
+            <storePhrase>placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -71,6 +87,10 @@
     <object id="store_shelf_medicine">
         <name>medicine shelf</name>
         <component id="inventory" type="inventory">
+            <takePrompt>Take</takePrompt>
+            <takePhrase>takeFrom</takePhrase>
+            <storePrompt>Place</storePrompt>
+            <storePhrase>placeOn</storePhrase>
             <inventory>
                 <table>store_snacks</table>
             </inventory>
@@ -79,6 +99,10 @@
     <object id="store_cooler_soft_drinks">
         <name>soft drinks cooler</name>
         <component id="inventory" type="inventory">
+            <takePrompt>Take</takePrompt>
+            <takePhrase>takeFrom</takePhrase>
+            <storePrompt>Store</storePrompt>
+            <storePhrase>storeIn</storePhrase>
             <inventory>
                 <table>store_soft_drinks</table>
             </inventory>
@@ -87,6 +111,10 @@
     <object id="store_cooler_alcohol">
         <name>alcohol cooler</name>
         <component id="inventory" type="inventory">
+            <takePrompt>Take</takePrompt>
+            <takePhrase>takeFrom</takePhrase>
+            <storePrompt>Store</storePrompt>
+            <storePhrase>storeIn</storePhrase>
             <inventory>
                 <table>store_soft_drinks</table>
             </inventory>

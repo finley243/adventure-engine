@@ -32,6 +32,7 @@ sell:$_actor sell$s_actor $item
 sit:$_actor sit$s_actor in $object
 stand:$_actor stand$s_actor up
 storeIn:$_actor put$s_actor $item in $inventory
+placeOn:$_actor put$s_actor $item on $inventory
 takeCover:$_actor take$s_actor cover behind $object
 leaveCover:$_actor emerge$s_actor from behind $object
 takeElevatorDown:$_actor take$s_actor $elevator down

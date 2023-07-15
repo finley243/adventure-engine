@@ -9,15 +9,21 @@ import java.util.List;
 public class ObjectComponentTemplateInventory extends ObjectComponentTemplate {
 
     private final LootTable lootTable;
-    private final boolean isExposed;
+    private final String takePrompt;
+    private final String takePhrase;
+    private final String storePrompt;
+    private final String storePhrase;
     private final boolean enableTake;
     private final boolean enableStore;
     private final List<ActionCustom.CustomActionHolder> perItemActions;
 
-    public ObjectComponentTemplateInventory(Game game, boolean startEnabled, boolean actionsRestricted, String name, LootTable lootTable, boolean isExposed, boolean enableTake, boolean enableStore, List<ActionCustom.CustomActionHolder> perItemActions) {
+    public ObjectComponentTemplateInventory(Game game, boolean startEnabled, boolean actionsRestricted, String name, LootTable lootTable, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore, List<ActionCustom.CustomActionHolder> perItemActions) {
         super(game, startEnabled, actionsRestricted, name);
         this.lootTable = lootTable;
-        this.isExposed = isExposed;
+        this.takePrompt = takePrompt;
+        this.takePhrase = takePhrase;
+        this.storePrompt = storePrompt;
+        this.storePhrase = storePhrase;
         this.enableTake = enableTake;
         this.enableStore = enableStore;
         this.perItemActions = perItemActions;
@@ -27,8 +33,20 @@ public class ObjectComponentTemplateInventory extends ObjectComponentTemplate {
         return lootTable;
     }
 
-    public boolean isExposed() {
-        return isExposed;
+    public String getTakePrompt() {
+        return takePrompt;
+    }
+
+    public String getTakePhrase() {
+        return takePhrase;
+    }
+
+    public String getStorePrompt() {
+        return storePrompt;
+    }
+
+    public String getStorePhrase() {
+        return storePhrase;
     }
 
     public boolean enableTake() {

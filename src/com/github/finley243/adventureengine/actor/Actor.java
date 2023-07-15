@@ -521,7 +521,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				action.add(new ActionTalk(this));
 			}
 		} else if (isDead()) {
-			action.addAll(inventory.getExternalActions(this, null, subject, false, true, false));
+			action.addAll(inventory.getExternalActions(this, null, subject, "Take", "takeFrom", null, null, true, false));
 		}
 		return action;
 	}

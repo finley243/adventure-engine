@@ -14,15 +14,17 @@ public class ActionInventoryStoreAll extends Action {
     private final String name;
     private final Inventory inventory;
     private final Item item;
-    private final boolean isExposed;
+    private final String prompt;
+    private final String phrase;
 
-    public ActionInventoryStoreAll(Noun owner, String name, Inventory inventory, Item item, boolean isExposed) {
+    public ActionInventoryStoreAll(Noun owner, String name, Inventory inventory, Item item, String prompt, String phrase) {
         if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionInventoryStoreAll on item with state");
         this.owner = owner;
         this.name = name;
         this.inventory = inventory;
         this.item = item;
-        this.isExposed = isExposed;
+        this.prompt = prompt;
+        this.phrase = phrase;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class ActionInventoryStoreAll extends Action {
         subject.getInventory().removeItems(item.getTemplateID(), count);
         inventory.addItems(item.getTemplateID(), count);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get((isExposed ? "placeOn" : "storeIn")), context, this, null, subject, null));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
     }
 
     @Override
@@ -47,7 +49,7 @@ public class ActionInventoryStoreAll extends Action {
         } else {
             menuPath = new String[]{LangUtils.titleCase(owner.getName()), LangUtils.titleCase(name), "Transfer", Inventory.getItemNameFormatted(item, subject.getInventory())};
         }
-        return new MenuChoice((isExposed ? "Place all" : "Store all"), canChoose(subject).canChoose(), menuPath, new String[]{"store all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName(), "place all " + LangUtils.pluralizeNoun(item.getName()) + " on " + owner.getName(), "put all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName(), "put all " + LangUtils.pluralizeNoun(item.getName()) + " on " + owner.getName()});
+        return new MenuChoice(prompt + " all", canChoose(subject).canChoose(), menuPath, new String[]{prompt + " all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName(), prompt + " all " + LangUtils.pluralizeNoun(item.getName()) + " in " + owner.getName()});
     }
 
     @Override

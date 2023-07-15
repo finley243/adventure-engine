@@ -14,13 +14,17 @@ public class ActionInventoryTakeAll extends Action {
     private final String name;
     private final Inventory inventory;
     private final Item item;
+    private final String prompt;
+    private final String phrase;
 
-    public ActionInventoryTakeAll(Noun owner, String name, Inventory inventory, Item item) {
+    public ActionInventoryTakeAll(Noun owner, String name, Inventory inventory, Item item, String prompt, String phrase) {
         if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionInventoryTakeAll on item with state");
         this.owner = owner;
         this.name = name;
         this.inventory = inventory;
         this.item = item;
+        this.prompt = prompt;
+        this.phrase = phrase;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class ActionInventoryTakeAll extends Action {
         inventory.removeItems(item.getTemplateID(), count);
         subject.getInventory().addItems(item.getTemplateID(), count);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, null, subject, null));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
     }
 
     @Override
@@ -45,7 +49,7 @@ public class ActionInventoryTakeAll extends Action {
         } else {
             menuPath = new String[]{LangUtils.titleCase(owner.getName()), LangUtils.titleCase(name), Inventory.getItemNameFormatted(item, inventory)};
         }
-        return new MenuChoice("Take all", canChoose(subject).canChoose(), menuPath, new String[]{"take everything from " + owner.getName(), "pick up everything from " + owner.getName(), "pickup everything from " + owner.getName(), "take all items from " + owner.getName(), "pick up all items from " + owner.getName(), "pickup all items from " + owner.getName()});
+        return new MenuChoice(prompt + " all", canChoose(subject).canChoose(), menuPath, new String[]{prompt + " all " + LangUtils.pluralizeNoun(item.getName()) + " from " + owner.getName()});
     }
 
     @Override

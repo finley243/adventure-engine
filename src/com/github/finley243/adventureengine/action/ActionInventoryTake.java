@@ -17,12 +17,16 @@ public class ActionInventoryTake extends Action {
     private final String name;
     private final Inventory inventory;
     private final Item item;
+    private final String prompt;
+    private final String phrase;
 
-    public ActionInventoryTake(Noun owner, String name, Inventory inventory, Item item) {
+    public ActionInventoryTake(Noun owner, String name, Inventory inventory, Item item, String prompt, String phrase) {
         this.owner = owner;
         this.name = name;
         this.inventory = inventory;
         this.item = item;
+        this.prompt = prompt;
+        this.phrase = phrase;
     }
 
     @Override
@@ -30,7 +34,7 @@ public class ActionInventoryTake extends Action {
         inventory.removeItem(item);
         subject.getInventory().addItem(item);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("inventory", owner).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("takeFrom"), context, this, null, subject, null));
+        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
     }
 
     @Override
@@ -46,7 +50,7 @@ public class ActionInventoryTake extends Action {
         } else {
             menuPath = new String[]{LangUtils.titleCase(owner.getName()), LangUtils.titleCase(name), Inventory.getItemNameFormatted(item, inventory)};
         }
-        return new MenuChoice("Take", canChoose(subject).canChoose(), menuPath, new String[]{"take " + item.getName() + " from " + owner.getName(), "pick up " + item.getName() + " from " + owner.getName(), "pickup " + item.getName() + " from " + owner.getName()});
+        return new MenuChoice(prompt, canChoose(subject).canChoose(), menuPath, new String[]{prompt + " " + item.getName() + " from " + owner.getName()});
     }
 
     @Override

@@ -18,7 +18,6 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import org.checkerframework.checker.units.qual.C;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

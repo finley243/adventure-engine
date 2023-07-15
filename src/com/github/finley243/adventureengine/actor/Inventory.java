@@ -217,46 +217,46 @@ public class Inventory {
 		return actions;
 	}
 
-	public List<Action> getExternalActions(Noun owner, String name, Actor subject, boolean isExposed, boolean enableTake, boolean enableStore) {
+	public List<Action> getExternalActions(Noun owner, String name, Actor subject, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore) {
 		List<Action> actions = new ArrayList<>();
 		if (enableTake) {
-			actions.addAll(getTakeActions(owner, name));
+			actions.addAll(getTakeActions(owner, name, takePrompt, takePhrase));
 		}
 		if (subject != null && enableStore) {
-			actions.addAll(subject.getInventory().getStoreActions(owner, name, this, isExposed));
+			actions.addAll(subject.getInventory().getStoreActions(owner, name, this, storePrompt, storePhrase));
 		}
 		return actions;
 	}
 
-	private List<Action> getTakeActions(Noun owner, String name) {
+	private List<Action> getTakeActions(Noun owner, String name, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryTake(owner, name, this, item));
+				actions.add(new ActionInventoryTake(owner, name, this, item, prompt, phrase));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = ItemFactory.create(game, current);
-			actions.add(new ActionInventoryTake(owner, name, this, item));
+			actions.add(new ActionInventoryTake(owner, name, this, item, prompt, phrase));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryTakeAll(owner, name, this, item));
+				actions.add(new ActionInventoryTakeAll(owner, name, this, item, prompt, phrase));
 			}
 		}
 		return actions;
 	}
 
-	private List<Action> getStoreActions(Noun owner, String name, Inventory other, boolean isExposed) {
+	private List<Action> getStoreActions(Noun owner, String name, Inventory other, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryStore(owner, name, other, item, isExposed));
+				actions.add(new ActionInventoryStore(owner, name, other, item, prompt, phrase));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = ItemFactory.create(game, current);
-			actions.add(new ActionInventoryStore(owner, name, other, item, isExposed));
+			actions.add(new ActionInventoryStore(owner, name, other, item, prompt, phrase));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryStoreAll(owner, name, other, item, isExposed));
+				actions.add(new ActionInventoryStoreAll(owner, name, other, item, prompt, phrase));
 			}
 		}
 		return actions;
