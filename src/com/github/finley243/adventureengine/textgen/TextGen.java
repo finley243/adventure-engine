@@ -159,8 +159,7 @@ public class TextGen {
 				usePronouns.put(objectKey, true);
 			} else if (tokenName.endsWith("'s") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 2))) {
 				String objectKey = tokenName.substring(0, tokenName.length() - 2);
-				// TODO - Add plural noun support
-				builder.append(usePronouns.get(objectKey) ? context.getObjects().get(objectKey).getPronoun().possessive : LangUtils.possessive(context.getObjects().get(objectKey).getFormattedName(), false));
+				builder.append(usePronouns.get(objectKey) ? context.getObjects().get(objectKey).getPronoun().possessive : LangUtils.possessive(context.getObjects().get(objectKey).getFormattedName(), context.getObjects().get(objectKey).isPlural()));
 				usePronouns.put(objectKey, true);
 			} else if (tokenName.endsWith("_self") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 5))) {
 				String objectKey = tokenName.substring(0, tokenName.length() - 5);
