@@ -16,6 +16,8 @@ public interface Noun {
 	boolean isKnown();
 	
 	boolean isProperName();
+
+	boolean isPlural();
 	
 	Pronoun getPronoun();
 

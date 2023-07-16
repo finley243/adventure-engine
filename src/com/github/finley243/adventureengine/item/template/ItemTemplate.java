@@ -76,6 +76,11 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	public boolean isProperName() {
 		return false;
 	}
+
+	@Override
+	public boolean isPlural() {
+		return false;
+	}
 	
 	@Override
 	public Pronoun getPronoun() {

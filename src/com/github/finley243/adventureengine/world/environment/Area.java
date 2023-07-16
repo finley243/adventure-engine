@@ -343,7 +343,16 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	@Override
 	public boolean isProperName() {
-		return getLandmark().isProperName();
+		if (landmarkID != null) {
+			return getLandmark().isProperName();
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isPlural() {
+		return false;
 	}
 
 	@Override

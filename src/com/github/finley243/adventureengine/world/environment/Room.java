@@ -126,6 +126,11 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
+	public boolean isPlural() {
+		return false;
+	}
+
+	@Override
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
 	}

@@ -173,6 +173,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public boolean isProperName() {
 		return getTemplate().isProperName();
 	}
+
+	@Override
+	public boolean isPlural() {
+		return false;
+	}
 	
 	@Override
 	public Pronoun getPronoun() {

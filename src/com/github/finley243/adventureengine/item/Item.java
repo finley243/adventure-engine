@@ -62,6 +62,11 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
+	public boolean isPlural() {
+		return false;
+	}
+
+	@Override
 	public TextContext.Pronoun getPronoun() {
 		return getTemplate().getPronoun();
 	}

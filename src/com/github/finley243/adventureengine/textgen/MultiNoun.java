@@ -88,6 +88,11 @@ public class MultiNoun implements Noun {
     }
 
     @Override
+    public boolean isPlural() {
+        return true;
+    }
+
+    @Override
     public TextContext.Pronoun getPronoun() {
         if (nouns.size() == 1) {
             return TextContext.Pronoun.IT;

@@ -92,6 +92,11 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
+	public boolean isPlural() {
+		return false;
+	}
+
+	@Override
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
 	}
