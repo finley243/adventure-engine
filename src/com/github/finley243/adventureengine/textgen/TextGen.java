@@ -4,6 +4,8 @@ import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TextGen {
 
@@ -43,10 +45,6 @@ public class TextGen {
 		}
 		return sentence;
 	}
-	
-	public static void clearContext() {
-		lastContext = null;
-	}
 
 	public static String generateVarsOnly(String line, Map<String, String> vars) {
 		List<String> varTags = new ArrayList<>(vars.keySet());
@@ -56,6 +54,10 @@ public class TextGen {
 			line = line.replace("$" + varTag, vars.get(varTag));
 		}
 		return line;
+	}
+	
+	public static void clearContext() {
+		lastContext = null;
 	}
 
 	private static String determineContext(String line, TextContext context) {
@@ -138,65 +140,64 @@ public class TextGen {
 	}
 
 	private static String populateFromContext(String line, TextContext context, Map<String, Boolean> usePronouns) {
-		Map<String, Noun> objects = context.getObjects();
-
-		List<String> objectTags = new ArrayList<>(objects.keySet());
-		objectTags.sort(Comparator.comparingInt(String::length));
-		Collections.reverse(objectTags);
-
-		for (String objectTag : objectTags) {
-			// Reflexive
-			line = line.replace("$" + objectTag + "_self", objects.get(objectTag).getPronoun().reflexive);
-			// Object name (no articles/pronouns)
-			line = line.replace("$" + objectTag + "_name", objects.get(objectTag).getName());
-			// Object
-			line = populatePronoun(line, usePronouns.get(objectTag), objects.get(objectTag).getFormattedName(), objects.get(objectTag).getPronoun().object
-					, objects.get(objectTag).getPronoun().possessive, "$" + objectTag, "$" + objectTag + "'s");
-			// Subject
-			line = populatePronoun(line, usePronouns.get(objectTag), objects.get(objectTag).getFormattedName(), objects.get(objectTag).getPronoun().subject
-					, objects.get(objectTag).getPronoun().possessive, "$_" + objectTag, "$" + objectTag + "'s");
-		}
-
-		List<String> varTags = new ArrayList<>(context.getVars().keySet());
-		varTags.sort(Comparator.comparingInt(String::length));
-		Collections.reverse(varTags);
-		for (String varTag : varTags) {
-			line = line.replace("$" + varTag, context.getVars().get(varTag));
-		}
-
-		for (String objectTag : objectTags) {
-			line = line.replace(VERB_S + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "s" : ""));
-			line = line.replace(VERB_ES + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "es" : ""));
-			line = line.replace(VERB_IES + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "ies" : "y"));
-			line = line.replace(VERB_DO_NOT + "_" + objectTag,
-					(!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "doesn't" : "don't"));
-			line = line.replace(VERB_BE_NOT + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "isn't"
-					: (objects.get(objectTag).getPronoun() == Pronoun.I ? "am not" : "aren't")));
-			line = line.replace(VERB_BE + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "is"
-					: (objects.get(objectTag).getPronoun() == Pronoun.I ? "am" : "are")));
-			line = line.replace(VERB_HAVE + "_" + objectTag, (!usePronouns.get(objectTag) || objects.get(objectTag).getPronoun().thirdPersonVerb ? "has" : "have"));
-		}
-		return line;
-	}
-
-	private static String populatePronoun(String line, boolean usePronoun, String formattedName, String pronoun,
-			String possessive, String pronounKey, String possessiveKey) {
-		if (usePronoun) {
-			line = line.replace(possessiveKey, possessive);
-		} else {
-			int indexOf = line.indexOf(pronounKey);
-			int indexOfPossessive = line.indexOf(possessiveKey);
-			boolean possessiveFirst = (indexOfPossessive != -1) && ((indexOf == -1) || (indexOf > indexOfPossessive));
-			if (possessiveFirst) {
-				line = line.replaceFirst("\\" + possessiveKey, LangUtils.possessive(formattedName, false));
+		Pattern tokenPattern = Pattern.compile("\\$[a-zA-Z0-9_']+");
+		Matcher tokenMatcher = tokenPattern.matcher(line);
+		StringBuilder builder = new StringBuilder();
+		int lastEnd = 0;
+		while (tokenMatcher.find()) {
+			int start = tokenMatcher.start();
+			String tokenName = tokenMatcher.group().substring(1);
+			builder.append(line, lastEnd, start);
+			if (context.getVars().containsKey(tokenName)) {
+				builder.append(context.getVars().get(tokenName));
+			} else if (context.getObjects().containsKey(tokenName)) {
+				builder.append(usePronouns.get(tokenName) ? context.getObjects().get(tokenName).getPronoun().object : context.getObjects().get(tokenName).getFormattedName());
+				usePronouns.put(tokenName, true);
+			} else if (tokenName.startsWith("_") && context.getObjects().containsKey(tokenName.substring(1))) {
+				String objectKey = tokenName.substring(1);
+				builder.append(usePronouns.get(objectKey) ? context.getObjects().get(objectKey).getPronoun().subject : context.getObjects().get(objectKey).getFormattedName());
+				usePronouns.put(objectKey, true);
+			} else if (tokenName.endsWith("'s") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 2))) {
+				String objectKey = tokenName.substring(0, tokenName.length() - 2);
+				// TODO - Add plural noun support
+				builder.append(usePronouns.get(objectKey) ? context.getObjects().get(objectKey).getPronoun().possessive : LangUtils.possessive(context.getObjects().get(objectKey).getFormattedName(), false));
+				usePronouns.put(objectKey, true);
+			} else if (tokenName.endsWith("_self") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 5))) {
+				String objectKey = tokenName.substring(0, tokenName.length() - 5);
+				builder.append(context.getObjects().get(objectKey).getPronoun().reflexive);
+			} else if (tokenName.endsWith("_name") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 5))) {
+				String objectKey = tokenName.substring(0, tokenName.length() - 5);
+				builder.append(context.getObjects().get(objectKey).getName());
+			} else if (tokenName.startsWith("s_") && context.getObjects().containsKey(tokenName.substring(2))) {
+				String objectKey = tokenName.substring(2);
+				builder.append(!usePronouns.get(objectKey) || context.getObjects().get(objectKey).getPronoun().thirdPersonVerb ? "s" : "");
+			} else if (tokenName.startsWith("es_") && context.getObjects().containsKey(tokenName.substring(3))) {
+				String objectKey = tokenName.substring(3);
+				builder.append(!usePronouns.get(objectKey) || context.getObjects().get(objectKey).getPronoun().thirdPersonVerb ? "es" : "");
+			} else if (tokenName.startsWith("ies_") && context.getObjects().containsKey(tokenName.substring(4))) {
+				String objectKey = tokenName.substring(4);
+				builder.append(!usePronouns.get(objectKey) || context.getObjects().get(objectKey).getPronoun().thirdPersonVerb ? "ies" : "y");
+			} else if (tokenName.startsWith("doesn't_") && context.getObjects().containsKey(tokenName.substring(8))) {
+				String objectKey = tokenName.substring(8);
+				builder.append(!usePronouns.get(objectKey) || context.getObjects().get(objectKey).getPronoun().thirdPersonVerb ? "doesn't" : "don't");
+			} else if (tokenName.startsWith("is_") && context.getObjects().containsKey(tokenName.substring(3))) {
+				String objectKey = tokenName.substring(3);
+				builder.append(!usePronouns.get(objectKey) || context.getObjects().get(objectKey).getPronoun().thirdPersonVerb ? "is"
+						: (context.getObjects().get(objectKey).getPronoun() == Pronoun.I ? "am" : "are"));
+			} else if (tokenName.startsWith("isn't_") && context.getObjects().containsKey(tokenName.substring(6))) {
+				String objectKey = tokenName.substring(6);
+				builder.append(!usePronouns.get(objectKey) || context.getObjects().get(objectKey).getPronoun().thirdPersonVerb ? "isn't"
+						: (context.getObjects().get(objectKey).getPronoun() == Pronoun.I ? "am not" : "aren't"));
+			} else if (tokenName.startsWith("has_") && context.getObjects().containsKey(tokenName.substring(4))) {
+				String objectKey = tokenName.substring(4);
+				builder.append(!usePronouns.get(objectKey) || context.getObjects().get(objectKey).getPronoun().thirdPersonVerb ? "has" : "have");
+			} else {
+				builder.append("$").append(tokenName);
 			}
-			line = line.replace(possessiveKey, possessive);
-			if (!possessiveFirst) {
-				line = line.replaceFirst("\\" + pronounKey, formattedName);
-			}
+			lastEnd = tokenMatcher.end();
 		}
-		line = line.replace(pronounKey, pronoun);
-		return line;
+		builder.append(line.substring(lastEnd));
+		return builder.toString();
 	}
 
 	// Returns whether there is a matching (and used) pronoun in context that is below the given index
