@@ -152,7 +152,9 @@ public class TextGen {
 		}
 		for (int i = 0; i < tokens.size(); i++) {
 			TextToken currentToken = tokens.get(i);
-			if (currentToken.isVerb) {
+			if (currentToken.isVerb && currentToken.value.equals("is") && line.substring(currentToken.start - 6, currentToken.start).equals("there ")) {
+				currentToken.subject = tokens.get(i + 1).value;
+			} else if (currentToken.isVerb) {
 				for (int j = i - 1; j >= 0; j--) {
 					if (tokens.get(j).isSubject) {
 						currentToken.subject = tokens.get(j).value;
