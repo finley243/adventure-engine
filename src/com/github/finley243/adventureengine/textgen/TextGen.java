@@ -87,7 +87,7 @@ public class TextGen {
 				usePronounsMap.put(objectTag, true);
 			}
 		}
-		return populateFromContextTEMP(line, context, usePronounsMap);
+		return populateFromContext(line, context, usePronounsMap);
 	}
 
 	private static String chooseRandoms(String line) {
