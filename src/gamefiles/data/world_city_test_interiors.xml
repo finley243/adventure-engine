@@ -36,7 +36,7 @@
                 <behaviors>
                     <behavior type="move" area="wilsons_corner_store_counter">
                         <idle>
-                            <phrase>$_actor {yawn$s_actor|stretch$es_actor|tap$s_actor $actor's fingers rhythmically on the counter|look$s_actor across the store|check$s_actor something under the counter, then straighten$s_actor back up|glance$s_actor out the window}</phrase>
+                            <phrase>$actor {yawn$s|stretch$es|tap$s $actor's fingers rhythmically on the counter|look$s across the store|check$s something under the counter, then straighten$s back up|glance$s out the window}</phrase>
                         </idle>
                     </behavior>
                 </behaviors>
