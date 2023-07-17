@@ -51,8 +51,8 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public boolean isPlural() {
-		return false;
+	public int pluralCount() {
+		return 1;
 	}
 
 	@Override

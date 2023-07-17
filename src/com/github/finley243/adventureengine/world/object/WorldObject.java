@@ -83,8 +83,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public boolean isPlural() {
-		return false;
+	public int pluralCount() {
+		return 1;
 	}
 
 	@Override

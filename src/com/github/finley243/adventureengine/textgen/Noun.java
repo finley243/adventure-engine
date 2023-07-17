@@ -15,7 +15,7 @@ public interface Noun {
 	
 	boolean isProperName();
 
-	boolean isPlural();
+	int pluralCount();
 	
 	Pronoun getPronoun();
 

@@ -175,13 +175,13 @@ public class TextGen {
 				builder.append(context.getVars().get(tokenName));
 			} else if (context.getObjects().containsKey(tokenName)) {
 				Noun object = context.getObjects().get(tokenName);
-				builder.append(usePronouns.get(tokenName) ? (token.isSubject ? object.getPronoun().subject : object.getPronoun().object) : formatNoun(object.getName(), object.isProperName(), object.isKnown(), object.isPlural()));
+				builder.append(usePronouns.get(tokenName) ? (token.isSubject ? object.getPronoun().subject : object.getPronoun().object) : formatNoun(object.getName(), object.isProperName(), object.isKnown(), object.pluralCount()));
 				token.usedPronoun = usePronouns.get(tokenName);
 				usePronouns.put(tokenName, true);
 			} else if (tokenName.endsWith("'s") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 2))) {
 				String objectKey = tokenName.substring(0, tokenName.length() - 2);
 				Noun object = context.getObjects().get(objectKey);
-				builder.append(usePronouns.get(objectKey) ? object.getPronoun().possessive : LangUtils.possessive(formatNoun(object.getName(), object.isProperName(), object.isKnown(), object.isPlural()), object.isPlural()));
+				builder.append(usePronouns.get(objectKey) ? object.getPronoun().possessive : LangUtils.possessive(formatNoun(object.getName(), object.isProperName(), object.isKnown(), object.pluralCount()), object.pluralCount() > 1));
 				token.usedPronoun = usePronouns.get(objectKey);
 				usePronouns.put(objectKey, true);
 			} else if (tokenName.endsWith("_self") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 5))) {
@@ -193,35 +193,35 @@ public class TextGen {
 			} else if (tokenName.equals("s")) {
 				Noun subject = context.getObjects().get(token.subjectToken.value);
 				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.isPlural() ? "" : "s");
+					builder.append(subject.pluralCount() > 1 ? "" : "s");
 				} else {
 					builder.append(subject.getPronoun().thirdPersonVerb ? "s" : "");
 				}
 			} else if (tokenName.equals("es")) {
 				Noun subject = context.getObjects().get(token.subjectToken.value);
 				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.isPlural() ? "" : "es");
+					builder.append(subject.pluralCount() > 1 ? "" : "es");
 				} else {
 					builder.append(subject.getPronoun().thirdPersonVerb ? "es" : "");
 				}
 			} else if (tokenName.equals("ies")) {
 				Noun subject = context.getObjects().get(token.subjectToken.value);
 				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.isPlural() ? "y" : "ies");
+					builder.append(subject.pluralCount() > 1 ? "y" : "ies");
 				} else {
 					builder.append(subject.getPronoun().thirdPersonVerb ? "ies" : "y");
 				}
 			} else if (tokenName.equals("doesn't")) {
 				Noun subject = context.getObjects().get(token.subjectToken.value);
 				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.isPlural() ? "don't" : "doesn't");
+					builder.append(subject.pluralCount() > 1 ? "don't" : "doesn't");
 				} else {
 					builder.append(subject.getPronoun().thirdPersonVerb ? "doesn't" : "don't");
 				}
 			} else if (tokenName.equals("is")) {
 				Noun subject = context.getObjects().get(token.subjectToken.value);
 				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.isPlural() ? "are" : "is");
+					builder.append(subject.pluralCount() > 1 ? "are" : "is");
 				} else {
 					builder.append(subject.getPronoun().thirdPersonVerb ? "is"
 							: (subject.getPronoun() == Pronoun.I ? "am" : "are"));
@@ -229,7 +229,7 @@ public class TextGen {
 			} else if (tokenName.equals("isn't")) {
 				Noun subject = context.getObjects().get(token.subjectToken.value);
 				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.isPlural() ? "aren't" : "isn't");
+					builder.append(subject.pluralCount() > 1 ? "aren't" : "isn't");
 				} else {
 					builder.append(subject.getPronoun().thirdPersonVerb ? "isn't"
 							: (subject.getPronoun() == Pronoun.I ? "am not" : "aren't"));
@@ -237,7 +237,7 @@ public class TextGen {
 			} else if (tokenName.equals("has")) {
 				Noun subject = context.getObjects().get(token.subjectToken.value);
 				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.isPlural() ? "have" : "has");
+					builder.append(subject.pluralCount() > 1 ? "have" : "has");
 				} else {
 					builder.append(subject.getPronoun().thirdPersonVerb ? "has" : "have");
 				}
@@ -250,10 +250,10 @@ public class TextGen {
 		return builder.toString();
 	}
 
-	private static String formatNoun(String name, boolean isProper, boolean isDefinite, boolean isPlural) {
+	private static String formatNoun(String name, boolean isProper, boolean isDefinite, int pluralCount) {
 		if (isProper) {
 			return name;
-		} else if (!isPlural) {
+		} else if (pluralCount == 1) {
 			if (!isDefinite) {
 				boolean startsWithVowel = "aeiou".indexOf(name.charAt(0)) >= 0;
 				if (startsWithVowel) {
@@ -266,7 +266,13 @@ public class TextGen {
 			}
 		} else {
 			if (!isDefinite) {
-				return "some " + name;
+				if (pluralCount == 2) {
+					return "a couple of " + name;
+				} else if (pluralCount <= 5) {
+					return "several " + name;
+				} else {
+					return "some " + name;
+				}
 			} else {
 				return "the " + name;
 			}

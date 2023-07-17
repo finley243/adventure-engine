@@ -83,8 +83,8 @@ public class MultiNoun implements Noun {
     }
 
     @Override
-    public boolean isPlural() {
-        return nouns.size() > 1;
+    public int pluralCount() {
+        return nouns.size();
     }
 
     @Override

@@ -68,8 +68,8 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	}
 
 	@Override
-	public boolean isPlural() {
-		return false;
+	public int pluralCount() {
+		return 1;
 	}
 	
 	@Override

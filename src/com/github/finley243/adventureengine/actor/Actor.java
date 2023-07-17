@@ -162,8 +162,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public boolean isPlural() {
-		return false;
+	public int pluralCount() {
+		return 1;
 	}
 	
 	@Override

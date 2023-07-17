@@ -32,8 +32,8 @@ public class PluralNoun implements Noun {
     }
 
     @Override
-    public boolean isPlural() {
-        return true;
+    public int pluralCount() {
+        return count;
     }
 
     @Override
