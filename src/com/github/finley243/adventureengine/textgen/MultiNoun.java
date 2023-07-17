@@ -89,7 +89,7 @@ public class MultiNoun implements Noun {
 
     @Override
     public boolean isPlural() {
-        return true;
+        return nouns.size() > 1;
     }
 
     @Override
