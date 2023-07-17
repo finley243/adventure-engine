@@ -133,15 +133,15 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	public String getRelativeName() {
 		if (landmarkID != null) {
-			return "near " + getLandmark().getFormattedName();
+			return "near";
 		} else {
 			return switch (nameType) {
-				case IN -> "in " + getFormattedName();
-				case ON -> "on " + getFormattedName();
-				case NEAR -> "near " + getFormattedName();
-				case FRONT -> "in front of " + getFormattedName();
-				case SIDE -> "beside " + getFormattedName();
-				case BEHIND -> "behind " + getFormattedName();
+				case IN -> "in";
+				case ON -> "on";
+				case NEAR -> "near";
+				case FRONT -> "in front of";
+				case SIDE -> "beside";
+				case BEHIND -> "behind";
 			};
 		}
 	}

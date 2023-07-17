@@ -206,7 +206,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
         int damage = damage();
-        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).build());
+        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).put("area", getArea()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), Phrases.get(getHitPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
         target.damage(damageData, new Context(subject.game(), subject, target, getWeapon()));
@@ -215,20 +215,20 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
-        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).build());
+        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).put("area", getArea()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), Phrases.get(getMissPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
         subject.triggerScript("on_attack_failure", new Context(subject.game(), subject, target));
     }
 
     @Override
     public void onSuccessOverall(Actor subject, int repeatActionCount) {
-        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeapon()).build());
+        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeapon()).put("area", getArea()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getHitOverallPhrase(repeatActionCount)), Phrases.get(getHitOverallPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, null));
     }
 
     @Override
     public void onFailOverall(Actor subject, int repeatActionCount) {
-        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "inArea", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeapon()).build());
+        TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeapon()).put("area", getArea()).build());
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(getMissOverallPhrase(repeatActionCount)), Phrases.get(getMissOverallPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, null));
     }
 

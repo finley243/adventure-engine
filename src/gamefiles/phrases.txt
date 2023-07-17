@@ -3,7 +3,7 @@ consume:$actor consume$s $item
 die:$actor fall$s over dead
 drink:$actor drink$s $item
 drop:$actor drop$s $item
-forceDrop:$actor drop$s $item and $item lands $inArea
+forceDrop:$actor drop$s $item and $item lands $relativeTo $area
 eat:$actor eat$s $item
 equip:$actor equip$s $item
 exitElevator:$actor exit$s $elevator
@@ -60,10 +60,10 @@ rangedAutoHit:$actor fire$s a spray of bullets from $actor's $weapon_name at $ta
 rangedAutoHitRepeat:$actor fire$s another spray at $target, and they hit $target
 rangedAutoMiss:$actor fire$s a spray of bullets from $actor's $weapon_name at $target, but $actor miss$es
 rangedAutoMissRepeat:$actor fire$s another spray at $target, but $actor miss$es
-grenadeHit:$actor throw$s $weapon $inArea and $weapon explode$s
-grenadeHitRepeat:$actor throw$s $weapon $inArea and $weapon explode$s
-grenadeMiss:$actor {tr$ies to throw|throw$s} $weapon $inArea but $actor miss$es
-grenadeMissRepeat:$actor {tr$ies to throw|throw$s} $weapon $inArea but $actor miss$es
+grenadeHit:$actor throw$s $weapon $relativeTo $area and $weapon explode$s
+grenadeHitRepeat:$actor throw$s $weapon $relativeTo $area and $weapon explode$s
+grenadeMiss:$actor {tr$ies to throw|throw$s} $weapon $relativeTo $area but $actor miss$es
+grenadeMissRepeat:$actor {tr$ies to throw|throw$s} $weapon $relativeTo $area but $actor miss$es
 getUp:$actor get$s up from $object
 lieDown:$actor lie$s down in $object
 sleep:after a brief moment, $actor fall$s asleep
