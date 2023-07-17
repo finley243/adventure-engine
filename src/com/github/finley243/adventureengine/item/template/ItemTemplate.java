@@ -76,11 +76,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
 	}
-
-	@Override
-	public boolean forcePronoun() {
-		return false;
-	}
 	
 	public Scene getDescription() {
 		return description;

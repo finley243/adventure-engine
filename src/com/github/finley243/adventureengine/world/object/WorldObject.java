@@ -93,11 +93,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public boolean forcePronoun() {
-		return false;
-	}
-
-	@Override
 	public boolean canBeAttacked() {
 		return getTemplate().getMaxHP() > 0 && HP > 0;
 	}

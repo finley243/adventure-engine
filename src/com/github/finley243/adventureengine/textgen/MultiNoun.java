@@ -79,7 +79,7 @@ public class MultiNoun implements Noun {
 
     @Override
     public boolean isProperName() {
-        return false;
+        return true;
     }
 
     @Override
@@ -93,11 +93,6 @@ public class MultiNoun implements Noun {
             return TextContext.Pronoun.IT;
         }
         return TextContext.Pronoun.THEY;
-    }
-
-    @Override
-    public boolean forcePronoun() {
-        return false;
     }
 
 }

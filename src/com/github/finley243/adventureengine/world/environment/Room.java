@@ -126,11 +126,6 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public boolean forcePronoun() {
-		return false;
-	}
-
-	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "visited" -> new ExpressionConstantBoolean(hasVisited());

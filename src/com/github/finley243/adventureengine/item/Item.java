@@ -60,11 +60,6 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 		return getTemplate().getPronoun();
 	}
 
-	@Override
-	public boolean forcePronoun() {
-		return getTemplate().forcePronoun();
-	}
-
 	public Scene getDescription() {
 		return getTemplate().getDescription();
 	}

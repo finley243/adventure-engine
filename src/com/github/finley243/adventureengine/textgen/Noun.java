@@ -19,6 +19,4 @@ public interface Noun {
 	
 	Pronoun getPronoun();
 
-	boolean forcePronoun();
-
 }

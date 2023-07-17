@@ -349,11 +349,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public Pronoun getPronoun() {
 		return Pronoun.IT;
 	}
-
-	@Override
-	public boolean forcePronoun() {
-		return false;
-	}
 	
 	public Room getRoom() {
 		return game().data().getRoom(roomID);
