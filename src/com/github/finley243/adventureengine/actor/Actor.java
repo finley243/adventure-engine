@@ -147,19 +147,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public String getFormattedName() {
-		String statePrefix = "";
-		if (isDead()) {
-			statePrefix = "dead ";
-		}
-		if (!isProperName()) {
-			return LangUtils.addArticle(statePrefix + getName(), !isKnown());
-		} else {
-			return statePrefix + getName();
-		}
-	}
-
-	@Override
 	public void setKnown() {
 		isKnown = true;
 	}

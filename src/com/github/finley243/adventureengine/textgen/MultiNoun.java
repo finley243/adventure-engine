@@ -17,11 +17,6 @@ public class MultiNoun implements Noun {
 
     @Override
     public String getName() {
-        return getFormattedName();
-    }
-
-    @Override
-    public String getFormattedName() {
         Map<String, Integer> uniqueNamesCount = new HashMap<>();
         Map<String, Boolean> uniqueNamesKnown = new HashMap<>();
         Map<String, Boolean> uniqueNamesProper = new HashMap<>();

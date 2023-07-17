@@ -17,15 +17,6 @@ public class PluralNoun implements Noun {
     }
 
     @Override
-    public String getFormattedName() {
-        if (isKnown()) {
-            return "the " + getName();
-        } else {
-            return count + " " + getName();
-        }
-    }
-
-    @Override
     public void setKnown() {
         noun.setKnown();
     }

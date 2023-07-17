@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.world.environment;
 
-import java.util.*;
-
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
@@ -13,11 +11,12 @@ import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.*;
-import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
-import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+
+import java.util.*;
 
 /**
  * Represents a self-contained space (e.g. an actual room) that contains smaller areas
@@ -99,15 +98,6 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public String getName() {
 		return name;
-	}
-
-	@Override
-	public String getFormattedName() {
-		if (!isProperName()) {
-			return LangUtils.addArticle(getName(), !isKnown);
-		} else {
-			return getName();
-		}
 	}
 
 	@Override

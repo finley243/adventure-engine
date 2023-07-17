@@ -9,13 +9,12 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantInteger;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.expression.ExpressionConstantStringSet;
-import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.*;
-import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
-import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,15 +52,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	@Override
 	public String getName() {
 		return name;
-	}
-	
-	@Override
-	public String getFormattedName() {
-		if (!isProperName()) {
-			return LangUtils.addArticle(getName(), true);
-		} else {
-			return getName();
-		}
 	}
 
 	@Override

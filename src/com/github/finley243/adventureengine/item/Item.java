@@ -11,14 +11,12 @@ import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.stat.*;
-import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.TextContext;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
@@ -33,15 +31,6 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public String getName() {
 		return getTemplate().getName();
-	}
-
-	@Override
-	public String getFormattedName() {
-		if(!isProperName()) {
-			return LangUtils.addArticle(getName(), !isKnown());
-		} else {
-			return getName();
-		}
 	}
 
 	@Override

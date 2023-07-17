@@ -174,11 +174,13 @@ public class TextGen {
 			if (context.getVars().containsKey(tokenName)) {
 				builder.append(context.getVars().get(tokenName));
 			} else if (context.getObjects().containsKey(tokenName)) {
-				builder.append(usePronouns.get(tokenName) ? (token.isSubject ? context.getObjects().get(tokenName).getPronoun().subject : context.getObjects().get(tokenName).getPronoun().object) : context.getObjects().get(tokenName).getFormattedName());
+				Noun object = context.getObjects().get(tokenName);
+				builder.append(usePronouns.get(tokenName) ? (token.isSubject ? object.getPronoun().subject : object.getPronoun().object) : formatNoun(object.getName(), object.isProperName(), object.isKnown(), object.isPlural()));
 				usePronouns.put(tokenName, true);
 			} else if (tokenName.endsWith("'s") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 2))) {
 				String objectKey = tokenName.substring(0, tokenName.length() - 2);
-				builder.append(usePronouns.get(objectKey) ? context.getObjects().get(objectKey).getPronoun().possessive : LangUtils.possessive(context.getObjects().get(objectKey).getFormattedName(), context.getObjects().get(objectKey).isPlural()));
+				Noun object = context.getObjects().get(objectKey);
+				builder.append(usePronouns.get(objectKey) ? object.getPronoun().possessive : LangUtils.possessive(formatNoun(object.getName(), object.isProperName(), object.isKnown(), object.isPlural()), object.isPlural()));
 				usePronouns.put(objectKey, true);
 			} else if (tokenName.endsWith("_self") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 5))) {
 				String objectKey = tokenName.substring(0, tokenName.length() - 5);
@@ -237,6 +239,29 @@ public class TextGen {
 		}
 		builder.append(line.substring(lastEnd));
 		return builder.toString();
+	}
+
+	private static String formatNoun(String name, boolean isProper, boolean isDefinite, boolean isPlural) {
+		if (isProper) {
+			return name;
+		} else if (!isPlural) {
+			if (!isDefinite) {
+				boolean startsWithVowel = "aeiou".indexOf(name.charAt(0)) >= 0;
+				if (startsWithVowel) {
+					return "an " + name;
+				} else {
+					return "a " + name;
+				}
+			} else {
+				return "the " + name;
+			}
+		} else {
+			if (!isDefinite) {
+				return "some " + name;
+			} else {
+				return "the " + name;
+			}
+		}
 	}
 
 	// Returns whether there is a matching (and used) pronoun in context that is below the given index

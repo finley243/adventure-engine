@@ -8,8 +8,6 @@ import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 public interface Noun {
 	
 	String getName();
-	
-	String getFormattedName();
 
 	void setKnown();
 
