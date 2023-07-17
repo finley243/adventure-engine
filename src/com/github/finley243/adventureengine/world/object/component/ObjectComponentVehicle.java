@@ -37,7 +37,11 @@ public class ObjectComponentVehicle extends ObjectComponent {
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         WorldObject objectOverride = getObjectOverride();
-        actions.addAll(getObject().getArea().getMoveActions(subject, getTemplateVehicle().getVehicleType(), objectOverride == null ? getObject() : objectOverride, getTemplateVehicle().getMoveMenuName()));
+        if (objectOverride != null) {
+            actions.addAll(objectOverride.getArea().getMoveActions(subject, getTemplateVehicle().getVehicleType(), objectOverride, getTemplateVehicle().getMoveMenuName()));
+        } else {
+            actions.addAll(getObject().getArea().getMoveActions(subject, getTemplateVehicle().getVehicleType(), getObject(), getTemplateVehicle().getMoveMenuName()));
+        }
         return actions;
     }
 
