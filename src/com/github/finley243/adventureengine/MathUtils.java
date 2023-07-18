@@ -10,15 +10,17 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MathUtils {
 
     public static float chanceLinear(int value, int valueMin, int valueMax, float chanceMin, float chanceMax) {
+        value = bound(value, valueMin, valueMax);
         return ((float) (value - valueMin) / (float) (valueMax - valueMin)) * (chanceMax - chanceMin) + chanceMin;
     }
 
     public static float chanceLog(int value, int valueMin, int valueMax, float chanceMin, float chanceMax) {
+        value = bound(value, valueMin, valueMax);
         return linearToLog(value, valueMin, valueMax, chanceMin, chanceMax);
     }
 
     public static float linearToLog(float linValue, float linMin, float linMax, float logMin, float logMax) {
-        //return (float) Math.exp(((linValue - linMin)/(linMax - linMin)) * (Math.log(logMax) - Math.log(logMin)) + Math.log(logMin));
+        linValue = bound(linValue, linMin, linMax);
         return (float) (((Math.log(linValue) - Math.log(linMin))/(Math.log(linMax) - Math.log(linMin))) * (logMax - logMin) + logMin);
     }
 
