@@ -23,7 +23,7 @@ public class ExpressionTimeRange extends Expression {
 
     @Override
     public boolean getValueBoolean(Context context) {
-        return context.game().data().time().isInRange(hours1, minutes1, hours2, minutes2);
+        return context.game().data().dateTime().isInRange(hours1, minutes1, hours2, minutes2);
     }
 
 }

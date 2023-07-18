@@ -343,6 +343,18 @@ public class DataLoader {
                 int minutes2 = LoadUtils.attributeInt(timeEndElement, "minutes", 0);
                 return new ExpressionTimeRange(hours1, minutes1, hours2, minutes2);
             }
+            case "year" -> {
+                return new ExpressionYear();
+            }
+            case "month" -> {
+                return new ExpressionMonth();
+            }
+            case "day" -> {
+                return new ExpressionDay();
+            }
+            case "weekday" -> {
+                return new ExpressionWeekday();
+            }
             case "isCombatant" -> {
                 StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "actor"));
                 StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "target"));
@@ -400,6 +412,11 @@ public class DataLoader {
                 Expression expression1 = loadExpressionOrAttribute(expressionElement, "value1", null);
                 Expression expression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
                 return new ExpressionDivide(expression1, expression2);
+            }
+            case "modulo" -> {
+                Expression expression1 = loadExpressionOrAttribute(expressionElement, "value1", null);
+                Expression expression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
+                return new ExpressionModulo(expression1, expression2);
             }
             case "power" -> {
                 Expression expressionBase = loadExpressionOrAttribute(expressionElement, "base", null);

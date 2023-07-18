@@ -63,6 +63,18 @@ public class DateTimeController {
         } else return crossZero && (minutes >= totalMinutes1 || minutes <= totalMinutes2);
     }
 
+    public int getDay() {
+        return day;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
     public int getMinutesComponent() {
         return minutes % 60;
     }
@@ -93,7 +105,7 @@ public class DateTimeController {
         };
     }
 
-    public String getWeekdayName() {
+    public String getWeekday() {
         return switch (weekday) {
             case 1 -> "monday";
             case 2 -> "tuesday";
@@ -126,7 +138,7 @@ public class DateTimeController {
                 result.append(" AM");
             }
         }
-        result.append(" - ").append(getWeekdayName().toUpperCase()).append(", ");
+        result.append(" - ").append(getWeekday().toUpperCase()).append(", ");
         result.append(month).append("/").append(day).append("/").append(year);
         return result.toString();
     }

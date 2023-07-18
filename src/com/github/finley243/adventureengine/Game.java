@@ -141,7 +141,7 @@ public class Game {
 			}
 		}
 		data().getPlayer().takeTurn();
-		data().time().onNextRound();
+		data().dateTime().onNextRound();
 	}
 	
 	private void sleep(int millis) {

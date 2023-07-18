@@ -72,7 +72,7 @@ public class Data {
 		this.time = new DateTimeController();
 	}
 
-	public DateTimeController time() {
+	public DateTimeController dateTime() {
 		return time;
 	}
 
@@ -148,7 +148,7 @@ public class Data {
 				state.add(new SaveData(SaveData.DataType.VARIABLE, variable, null, globalIntegers.get(variable)));
 			}
 		}
-		state.addAll(time().saveState());
+		state.addAll(dateTime().saveState());
 		return state;
 	}
 

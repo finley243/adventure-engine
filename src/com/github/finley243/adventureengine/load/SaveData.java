@@ -105,7 +105,7 @@ public class SaveData implements Serializable {
                 ItemTemplate itemTemplate = data.getItemTemplate(id);
                 itemTemplate.loadState(this);
             }
-            case TIME -> data.time().loadState(this);
+            case TIME -> data.dateTime().loadState(this);
         }
     }
 
