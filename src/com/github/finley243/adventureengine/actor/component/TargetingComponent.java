@@ -126,7 +126,7 @@ public class TargetingComponent {
     }
 
     public void updateTargetArea(Actor target, Area area) {
-        if(detectedActors.containsKey(target)) {
+        if (detectedActors.containsKey(target)) {
             DetectedActor combatant = detectedActors.get(target);
             combatant.lastKnownArea = area;
             if (combatant.areaTarget != null) {
@@ -158,6 +158,16 @@ public class TargetingComponent {
                 }
                 updateState(target);
             }
+        } else if (detectedActors.get(target).state == DetectionState.PASSIVE && actorIsTrespassing(target)) {
+            detectedActors.get(target).state = DetectionState.TRESPASSING;
+            detectedActors.get(target).stateCounter = 0;
+            actor.triggerScript("on_target_trespassing_start", new Context(actor.game(), actor, target));
+            actor.triggerBark("on_target_trespassing_start", new Context(actor.game(), actor, target));
+        } else if (detectedActors.get(target).state == DetectionState.TRESPASSING && !actorIsTrespassing(target)) {
+            detectedActors.get(target).state = DetectionState.PASSIVE;
+            detectedActors.get(target).stateCounter = 0;
+            actor.triggerScript("on_target_trespassing_end", new Context(actor.game(), actor, target));
+            actor.triggerBark("on_target_trespassing_end", new Context(actor.game(), actor, target));
         }
     }
 
@@ -172,8 +182,7 @@ public class TargetingComponent {
                         actor.triggerScript("on_detect_dead", new Context(actor.game(), actor, target));
                         actor.triggerBark("on_detect_dead", new Context(actor.game(), actor, target));
                         detectedActors.get(target).state = DetectionState.DEAD;
-                    } else if ((target.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getRoom().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
-                        (target.getArea().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST)) {
+                    } else if (actorIsTrespassing(target)) {
                         // TODO - Limit trespassing response to allies of owner faction (and possibly just enforcers)
                         actor.triggerScript("on_detect_target_trespassing", new Context(actor.game(), actor, target));
                         actor.triggerBark("on_detect_target_trespassing", new Context(actor.game(), actor, target));
@@ -194,6 +203,11 @@ public class TargetingComponent {
                 }
             }
         }
+    }
+
+    private boolean actorIsTrespassing(Actor target) {
+        return (target.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getRoom().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
+                (target.getArea().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST);
     }
 
     public void addCombatant(Actor target) {
