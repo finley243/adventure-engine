@@ -427,6 +427,22 @@ public class DataLoader {
                 Expression chance = loadExpressionOrAttribute(expressionElement, "chance", "float");
                 return new ExpressionRandomChance(chance);
             }
+            case "scaleLinear" -> {
+                Expression input = loadExpressionOrAttribute(expressionElement, "input", "int");
+                Expression inputMin = loadExpressionOrAttribute(expressionElement, "inputMin", "int");
+                Expression inputMax = loadExpressionOrAttribute(expressionElement, "inputMax", "int");
+                Expression outputMin = loadExpressionOrAttribute(expressionElement, "outputMin", "float");
+                Expression outputMax = loadExpressionOrAttribute(expressionElement, "outputMax", "float");
+                return new ExpressionScaleLinear(input, inputMin, inputMax, outputMin, outputMax);
+            }
+            case "scaleLog" -> {
+                Expression input = loadExpressionOrAttribute(expressionElement, "input", "int");
+                Expression inputMin = loadExpressionOrAttribute(expressionElement, "inputMin", "int");
+                Expression inputMax = loadExpressionOrAttribute(expressionElement, "inputMax", "int");
+                Expression outputMin = loadExpressionOrAttribute(expressionElement, "outputMin", "float");
+                Expression outputMax = loadExpressionOrAttribute(expressionElement, "outputMax", "float");
+                return new ExpressionScaleLog(input, inputMin, inputMax, outputMin, outputMax);
+            }
             case "hasVariable" -> {
                 String variableName = LoadUtils.attribute(expressionElement, "name", null);
                 return new ExpressionHasVariable(variableName);
