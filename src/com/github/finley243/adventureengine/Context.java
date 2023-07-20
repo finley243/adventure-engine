@@ -98,6 +98,24 @@ public class Context {
         }
     }
 
+    public Context(Context context, Map<String, Expression> addedParameters, Item parentItem) {
+        this.game = context.game;
+        this.subject = context.subject;
+        this.target = context.target;
+        this.parentObject = context.parentObject;
+        this.parentItem = parentItem;
+        this.parentArea = context.parentArea;
+        this.parameters = new HashMap<>();
+        this.parameters.putAll(context.parameters);
+        for (Map.Entry<String, Expression> parameter : addedParameters.entrySet()) {
+            if (this.parameters.containsKey(parameter.getKey())) {
+                this.parameters.get(parameter.getKey()).setExpression(parameter.getValue());
+            } else {
+                this.parameters.put(parameter.getKey(), new Variable(parameter.getValue()));
+            }
+        }
+    }
+
     public Game game() {
         return game;
     }

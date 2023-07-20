@@ -661,6 +661,11 @@ public class DataLoader {
                 Script iteratedScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "script"));
                 return new ScriptIterator(condition, localParameters, setExpression, iteratorParameterName, iteratedScript);
             }
+            case "inventoryIterator" -> {
+                Expression inventoryExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "inv"), "inventory");
+                Script iteratedScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "script"));
+                return new ScriptInventoryIterator(condition, localParameters, inventoryExpression, iteratedScript);
+            }
             case "select" -> {
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, localParameters, subScriptsSelect, true);
