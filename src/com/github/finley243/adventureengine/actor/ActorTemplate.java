@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
@@ -35,8 +36,11 @@ public class ActorTemplate extends GameInstanced {
 
 	private final Map<String, Script> scripts;
 	private final Map<String, Bark> barks;
+
+	private final List<ActionCustom.CustomActionHolder> customActions;
+	private final List<ActionCustom.CustomActionHolder> customInventoryActions;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -66,6 +70,8 @@ public class ActorTemplate extends GameInstanced {
 		this.dialogueStart = dialogueStart;
 		this.scripts = scripts;
 		this.barks = barks;
+		this.customActions = customActions;
+		this.customInventoryActions = customInventoryActions;
 	}
 
 	// TODO - Find a better way to inherit values from parent
@@ -173,6 +179,14 @@ public class ActorTemplate extends GameInstanced {
 		} else {
 			return null;
 		}
+	}
+
+	public List<ActionCustom.CustomActionHolder> getCustomActions() {
+		return customActions;
+	}
+
+	public List<ActionCustom.CustomActionHolder> getCustomInventoryActions() {
+		return customInventoryActions;
 	}
 	
 }

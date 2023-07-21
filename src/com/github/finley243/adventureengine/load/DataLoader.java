@@ -216,7 +216,10 @@ public class DataLoader {
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
         }
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, startingEffects, lootTable, dialogueStart, scripts, barks);
+        List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(actorElement, "action");
+        List<ActionCustom.CustomActionHolder> customInventoryActions = loadCustomActions(actorElement, "itemAction");
+
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }
 
     private static List<Limb> loadLimbs(Element element) {

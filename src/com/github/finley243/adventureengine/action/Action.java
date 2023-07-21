@@ -57,6 +57,10 @@ public abstract class Action {
 		return ActionDetectionChance.NONE;
 	}
 
+	public boolean canShow(Actor subject) {
+		return true;
+	}
+
 	public record CanChooseResult(boolean canChoose, String reason) {}
 
 }

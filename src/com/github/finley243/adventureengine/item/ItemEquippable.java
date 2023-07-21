@@ -83,10 +83,7 @@ public class ItemEquippable extends Item {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionItemUnequip(this));
 		for (ActionCustom.CustomActionHolder equippedAction : getEquippableTemplate().getEquippedActions()) {
-			ActionCustom action = new ActionCustom(game(), null, this, null, equippedAction.action(), equippedAction.parameters(), new String[] {Inventory.getItemNameFormatted(this, subject.getInventory())}, false);
-			if (action.canShow(subject)) {
-				actions.add(action);
-			}
+			actions.add(new ActionCustom(game(), null, null, this, null, equippedAction.action(), equippedAction.parameters(), new String[] {Inventory.getItemNameFormatted(this, subject.getInventory())}, false));
 		}
 		return actions;
 	}

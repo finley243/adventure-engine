@@ -173,10 +173,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				}
 			}
 			for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-				ActionCustom action = new ActionCustom(game(), this, null, null, customAction.action(), customAction.parameters(), new String[] {LangUtils.titleCase(this.getName())}, false);
-				if (action.canShow(subject)) {
-					actions.add(action);
-				}
+				actions.add(new ActionCustom(game(), null, this, null, null, customAction.action(), customAction.parameters(), new String[] {LangUtils.titleCase(this.getName())}, false));
 			}
 		}
 		return actions;
@@ -194,10 +191,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	public List<Action> networkActions(Actor subject, String[] menuPath) {
 		List<Action> actions = new ArrayList<>();
 		for (ActionCustom.CustomActionHolder networkAction : getTemplate().getNetworkActions()) {
-			ActionCustom action = new ActionCustom(game(), this, null, null, networkAction.action(), networkAction.parameters(), menuPath, false);
-			if (action.canShow(subject)) {
-				actions.add(action);
-			}
+			actions.add(new ActionCustom(game(), null, this, null, null, networkAction.action(), networkAction.parameters(), menuPath, false));
 		}
 		return actions;
 	}

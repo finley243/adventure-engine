@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.*;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionEnd;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
@@ -502,15 +503,24 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public List<Action> localActions(Actor subject) {
-		List<Action> action = new ArrayList<>();
+		List<Action> actions = new ArrayList<>();
 		if (isActive()) {
 			if (getTemplate().getDialogueStart() != null) {
-				action.add(new ActionTalk(this));
+				actions.add(new ActionTalk(this));
 			}
 		} else if (isDead()) {
-			action.addAll(inventory.getExternalActions(this, null, subject, "Take", "takeFrom", null, null, true, false));
+			actions.addAll(inventory.getExternalActions(this, null, subject, "Take", "takeFrom", null, null, true, false));
 		}
-		return action;
+		for (ActionCustom.CustomActionHolder actionHolder : getTemplate().getCustomActions()) {
+			actions.add(new ActionCustom(game(), this, null, null, null, actionHolder.action(), actionHolder.parameters(), new String[] {LangUtils.titleCase(this.getName())}, false));
+		}
+		for (ActionCustom.CustomActionHolder inventoryActionHolder : getTemplate().getCustomInventoryActions()) {
+			for (Item item : inventory.getItems()) {
+				String[] menuPath = new String[] {LangUtils.titleCase(getName()), "Inventory", Inventory.getItemNameFormatted(item, inventory)};
+				actions.add(new ActionCustom(game(), this, null, item, null, inventoryActionHolder.action(), inventoryActionHolder.parameters(), menuPath, false));
+			}
+		}
+		return actions;
 	}
 
 	@Override
@@ -551,6 +561,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			actions.addAll(item.inventoryActions(this));
 		}
 		actions.addAll(equipmentComponent.getEquippedActions());
+		actions.add(new ActionEnd());
+		actions.removeIf(action -> !action.canShow(this));
 		for (Action currentAction : actions) {
 			boolean isBlocked = false;
 			for (Action blockedAction : blockedActions.keySet()) {
@@ -563,7 +575,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				currentAction.setDisabled(true, "Repeat turn limit reached");
 			}
 		}
-		actions.add(new ActionEnd());
 		return actions;
 	}
 	

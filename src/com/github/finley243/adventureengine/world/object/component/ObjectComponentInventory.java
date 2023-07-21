@@ -38,7 +38,7 @@ public class ObjectComponentInventory extends ObjectComponent {
                 } else {
                     menuPath = new String[] {LangUtils.titleCase(getObject().getName()), Inventory.getItemNameFormatted(item, inventory)};
                 }
-                actions.add(new ActionCustom(getObject().game(), getObject(), item, null, customAction.action(), customAction.parameters(), menuPath, false));
+                actions.add(new ActionCustom(getObject().game(), null, getObject(), item, null, customAction.action(), customAction.parameters(), menuPath, false));
             }
         }
         return actions;
