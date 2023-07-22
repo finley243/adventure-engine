@@ -674,6 +674,11 @@ public class DataLoader {
                 Expression modifyGlobalExpression = loadExpressionOrAttribute(scriptElement, "value", null);
                 return new ScriptModifyGlobal(condition, localParameters, modifyGlobalID, modifyGlobalExpression);
             }
+            case "setVariable" -> {
+                Expression setVariableName = loadExpressionOrAttribute(scriptElement, "name", "string");
+                Expression setVariableValue = loadExpressionOrAttribute(scriptElement, "value", null);
+                return new ScriptSetVariable(condition, localParameters, setVariableName, setVariableValue);
+            }
             case "iterator" -> {
                 Expression setExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "set"), "stringSet");
                 String iteratorParameterName = LoadUtils.attribute(scriptElement, "itrName", null);

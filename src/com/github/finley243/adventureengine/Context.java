@@ -144,6 +144,14 @@ public class Context {
         return parameters;
     }
 
+    public void setParameter(String name, Expression value) {
+        if (parameters.containsKey(name)) {
+            parameters.get(name).setExpression(value);
+        } else {
+            parameters.put(name, new Variable(value));
+        }
+    }
+
     public Map<String, Noun> getContextNounMap() {
         Map<String, Noun> nounMap = new HashMap<>();
         if (this.getSubject() != null) {
