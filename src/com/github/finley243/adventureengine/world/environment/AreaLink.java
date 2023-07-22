@@ -66,4 +66,33 @@ public class AreaLink {
         return distance;
     }
 
+    public static DistanceCategory combinedDistance(DistanceCategory distance1, DistanceCategory distance2) {
+        if (distance1 == null || distance2 == null) throw new IllegalArgumentException("One or more provided distances is null");
+        switch (distance1) {
+            case NEAR -> {
+                return switch (distance2) {
+                    case NEAR -> DistanceCategory.CLOSE;
+                    case CLOSE, FAR -> DistanceCategory.FAR;
+                    case DISTANT -> DistanceCategory.DISTANT;
+                };
+            }
+            case CLOSE -> {
+                return switch (distance2) {
+                    case NEAR, CLOSE, FAR -> DistanceCategory.FAR;
+                    case DISTANT -> DistanceCategory.DISTANT;
+                };
+            }
+            case FAR -> {
+                return switch (distance2) {
+                    case NEAR, CLOSE -> DistanceCategory.FAR;
+                    case FAR, DISTANT -> DistanceCategory.DISTANT;
+                };
+            }
+            case DISTANT -> {
+                return DistanceCategory.DISTANT;
+            }
+        }
+        return null;
+    }
+
 }
