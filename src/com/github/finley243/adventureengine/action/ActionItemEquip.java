@@ -41,6 +41,9 @@ public class ActionItemEquip extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
+        if (subject.getEquipmentComponent().isSlotBlocked(slots)) {
+            return new CanChooseResult(false, "Equipping this item is blocked");
+        }
         if (!subject.getEquipmentComponent().isSlotEmpty(slots)) {
             return new CanChooseResult(false, "Another item is already equipped");
         }

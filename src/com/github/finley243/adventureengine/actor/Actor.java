@@ -869,6 +869,16 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public boolean setStatValue(String name, Expression value, Context context) {
+		if (name.startsWith("equip_slot_block_")) {
+			for (String slot : getEquipSlots().keySet()) {
+				if (name.equals("equip_slot_block_" + slot)) {
+					getEquipmentComponent().setSlotBlocked(slot, value.getValueBoolean(context));
+					return true;
+				}
+			}
+			game().log().print("Actor " + this + " - setStatValue " + name + " references an invalid equip slot");
+			return false;
+		}
 		switch (name) {
 			case "known" -> {
 				isKnown = value.getValueBoolean(context);
@@ -917,14 +927,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
-		// TODO - Possibly remove this check (superseded by ID-based retrieval)
-		if (name.startsWith("equipped_")) {
-			for (String slot : getTemplate().getEquipSlots().keySet()) {
-				if (name.equals("equipped_" + slot)) {
-					return equipmentComponent.getEquippedItemInSlot(slot);
-				}
-			}
-		}
 		return switch (name) {
 			case "equipped_item" -> equipmentComponent.getEquippedItemInSlot(ID);
 			case "using_object" -> getUsingObject();

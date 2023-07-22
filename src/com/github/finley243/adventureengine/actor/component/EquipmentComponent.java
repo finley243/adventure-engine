@@ -14,9 +14,34 @@ public class EquipmentComponent {
     private final Actor actor;
     private final Map<String, ItemEquippable> equipped;
 
+    private final Set<String> blockedSlots;
+
     public EquipmentComponent(Actor actor) {
         this.actor = actor;
         this.equipped = new HashMap<>();
+        this.blockedSlots = new HashSet<>();
+    }
+
+    public void setSlotBlocked(String slot, boolean blocked) {
+        if (!actor.getEquipSlots().containsKey(slot)) throw new UnsupportedOperationException("Specified equip slot does not exist on actor: " + actor + ", " + slot);
+        if (blocked) {
+            blockedSlots.add(slot);
+        } else {
+            blockedSlots.remove(slot);
+        }
+    }
+
+    public boolean isSlotBlocked(String slot) {
+        return blockedSlots.contains(slot);
+    }
+
+    public boolean isSlotBlocked(Set<String> slots) {
+        for (String slot : slots) {
+            if (isSlotBlocked(slot)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isSlotEmpty(String slot) {
