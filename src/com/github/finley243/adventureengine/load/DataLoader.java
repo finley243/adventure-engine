@@ -935,17 +935,7 @@ public class DataLoader {
             game.data().addArea(area.getID(), area);
         }
 
-        Map<String, RoomLink> linkedRooms = new HashMap<>();
-        List<Element> linkElements = LoadUtils.directChildrenWithName(roomElement, "roomLink");
-        for (Element linkElement : linkElements) {
-            String linkRoomID = LoadUtils.attribute(linkElement, "room", null);
-            AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
-            AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.FAR);
-            RoomLink link = new RoomLink(linkRoomID, linkDirection, linkDistance);
-            linkedRooms.put(linkRoomID, link);
-        }
-
-        return new Room(game, roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, areas, linkedRooms, roomScripts);
+        return new Room(game, roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, areas, roomScripts);
     }
 
     private static Area loadArea(Game game, Element areaElement, String roomID) {

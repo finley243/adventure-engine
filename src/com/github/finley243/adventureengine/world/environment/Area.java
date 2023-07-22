@@ -256,12 +256,9 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		visibleAreas.add(this);
 		for (AreaLink link : linkedAreas.values()) {
 			if (game().data().getLinkType(link.getType()).isVisible()) {
-					Area area = game().data().getArea(link.getAreaID());
-					visibleAreas.add(area);
+				Area area = game().data().getArea(link.getAreaID());
+				visibleAreas.add(area);
 			}
-		}
-		for (RoomLink roomLink : getRoom().getLinkedRooms().values()) {
-			visibleAreas.addAll(game().data().getRoom(roomLink.getRoomID()).getAreas());
 		}
 		return visibleAreas;
 	}
@@ -274,9 +271,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 				visibleAreaIDs.add(link.getAreaID());
 			}
 		}
-		for (RoomLink roomLink : getRoom().getLinkedRooms().values()) {
-			visibleAreaIDs.addAll(game().data().getRoom(roomLink.getRoomID()).getAreaIDs());
-		}
 		return visibleAreaIDs;
 	}
 
@@ -284,9 +278,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		if (linkedAreas.containsKey(areaID)) {
 			AreaLink link = linkedAreas.get(areaID);
 			return game().data().getLinkType(link.getType()).isVisible();
-		} else {
-			return getRoom().getLinkedRooms().containsKey(game().data().getArea(areaID).getRoom().getID());
 		}
+		return false;
 	}
 
 	public AreaLink.DistanceCategory getDistanceTo(String areaID) {
@@ -306,11 +299,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		for (AreaLink link : linkedAreas.values()) {
 			if (isVisible(subject, link.getAreaID()) && ranges.contains(link.getDistance())) {
 				areas.add(game().data().getArea(link.getAreaID()));
-			}
-		}
-		for (RoomLink roomLink : getRoom().getLinkedRooms().values()) {
-			if (ranges.contains(roomLink.getDistance())) {
-				areas.addAll(game().data().getRoom(roomLink.getRoomID()).getAreas());
 			}
 		}
 		return areas;
