@@ -204,6 +204,7 @@ public class DataLoader {
             int value = LoadUtils.attributeInt(skillElement, "value", 0);
             skills.put(skill, value);
         }
+        Set<String> tags = LoadUtils.setOfTags(actorElement, "tag");
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
         List<String> startingEffects = LoadUtils.listOfTags(actorElement, "startEffect");
 
@@ -219,7 +220,7 @@ public class DataLoader {
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(actorElement, "action");
         List<ActionCustom.CustomActionHolder> customInventoryActions = loadCustomActions(actorElement, "itemAction");
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, tags, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }
 
     private static List<Limb> loadLimbs(Element element) {

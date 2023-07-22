@@ -83,6 +83,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Set<AreaTarget> areaTargets;
 	private int sleepCounter;
 	private boolean playerControlled;
+	private final StatStringSet tags;
 
 	public Actor(Game game, String ID, Area area, String templateID, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControlled) {
 		super(game, ID);
@@ -109,6 +110,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.blockedActions = new HashMap<>();
 		this.startDisabled = startDisabled;
 		this.playerControlled = playerControlled;
+		this.tags = new StatStringSet("tags", this);
 		setEnabled(!startDisabled);
 	}
 
@@ -784,6 +786,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public StatStringSet getStatStringSet(String name) {
 		if ("equipment_effects".equals(name)) {
 			return equipmentEffects;
+		} else if ("tags".equals(name)) {
+			return tags;
 		}
 		return null;
 	}
@@ -851,6 +855,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "area" -> new ExpressionConstantString(getArea().getID());
 			case "room" -> new ExpressionConstantString(getArea().getRoom().getID());
 			case "equipment_effects" -> new ExpressionConstantStringSet(equipmentEffects.value(new HashSet<>(), context));
+			case "tags" -> new ExpressionConstantStringSet(tags.value(getTemplate().getTags(), context));
 			default -> null;
 		};
 	}
