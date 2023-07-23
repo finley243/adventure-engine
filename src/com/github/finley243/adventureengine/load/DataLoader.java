@@ -1251,6 +1251,7 @@ public class DataLoader {
         String missOverallPhraseAudible = LoadUtils.singleTag(attackTypeElement, "missOverallPhraseAudible", null);
         String missOverallPhraseRepeatAudible = LoadUtils.singleTag(attackTypeElement, "missOverallPhraseRepeatAudible", null);
         int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
+        int actionPoints = LoadUtils.attributeInt(attackTypeElement, "actionPoints", 1);
         WeaponAttackType.WeaponConsumeType weaponConsumeType = LoadUtils.attributeEnum(attackTypeElement, "weaponConsumeType", WeaponAttackType.WeaponConsumeType.class, WeaponAttackType.WeaponConsumeType.NONE);
         String skillOverride = LoadUtils.attribute(attackTypeElement, "skill", null);
         Float baseHitChanceMin = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMin", null);
@@ -1268,7 +1269,7 @@ public class DataLoader {
         String dodgeSkill = LoadUtils.attribute(attackTypeElement, "dodgeSkill", null);
         ActionAttack.AttackHitChanceType hitChanceType = LoadUtils.attributeEnum(attackTypeElement, "hitChanceType", ActionAttack.AttackHitChanceType.class, ActionAttack.AttackHitChanceType.INDEPENDENT);
         Boolean isLoudOverride = LoadUtils.attributeBool(attackTypeElement, "isLoudOverride", null);
-        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, ammoConsumed, weaponConsumeType, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChanceMult, dodgeSkill, hitChanceType, isLoudOverride);
+        return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, ammoConsumed, actionPoints, weaponConsumeType, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChanceMult, dodgeSkill, hitChanceType, isLoudOverride);
     }
 
     private static Network loadNetwork(Element networkElement) {

@@ -55,6 +55,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final float baseHitChanceMin;
     private final float baseHitChanceMax;
     private final int ammoConsumed;
+    private final int actionPoints;
     private final WeaponAttackType.WeaponConsumeType weaponConsumeType;
     private final Set<AreaLink.DistanceCategory> ranges;
     private final int rate;
@@ -67,7 +68,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final AttackHitChanceType hitChanceType;
     private final boolean isLoud;
 
-    public ActionAttack(ItemWeapon weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, String attackSkill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
+    public ActionAttack(ItemWeapon weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, String attackSkill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
         super(targets);
         this.weapon = weapon;
         this.targets = targets;
@@ -94,6 +95,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.baseHitChanceMin = baseHitChanceMin;
         this.baseHitChanceMax = baseHitChanceMax;
         this.ammoConsumed = ammoConsumed;
+        this.actionPoints = actionPoints;
         this.weaponConsumeType = weaponConsumeType;
         this.ranges = ranges;
         this.rate = rate;
@@ -240,6 +242,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public boolean isRepeatMatch(Action action) {
         return action instanceof ActionAttack && ((ActionAttack) action).getWeapon() == this.getWeapon();
+    }
+
+    @Override
+    public int actionPoints(Actor subject) {
+        return actionPoints;
     }
 
     @Override
