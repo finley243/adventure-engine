@@ -169,6 +169,8 @@ public class DataLoader {
         String faction = LoadUtils.attribute(actorElement, "faction", null);
         Boolean isEnforcer = LoadUtils.attributeBool(actorElement, "isEnforcer", null);
 
+        Integer actionPoints = LoadUtils.attributeInt(actorElement, "actionPoints", null);
+        Integer movePoints = LoadUtils.attributeInt(actorElement, "movePoints", null);
         Integer hp = LoadUtils.attributeInt(actorElement, "hp", null);
         Map<String, Integer> damageResistances = new HashMap<>();
         Map<String, Float> damageMults = new HashMap<>();
@@ -220,7 +222,7 @@ public class DataLoader {
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(actorElement, "action");
         List<ActionCustom.CustomActionHolder> customInventoryActions = loadCustomActions(actorElement, "itemAction");
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, tags, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, tags, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }
 
     private static List<Limb> loadLimbs(Element element) {

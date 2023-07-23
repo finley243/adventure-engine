@@ -40,8 +40,6 @@ import java.util.*;
 public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget {
 
 	public static final boolean SHOW_HP_CHANGES = true;
-	public static final int ACTIONS_PER_TURN = 3;
-	public static final int MOVES_PER_TURN = 2;
 	public static final int ATTRIBUTE_MIN = 1;
 	public static final int ATTRIBUTE_MAX = 10;
 	public static final int SKILL_MIN = 1;
@@ -50,6 +48,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public static final int MAX_DAMAGE_RESIST = 1000;
 	public static final float MAX_DAMAGE_MULT = 0.9f;
 	public static final int MAX_ACTION_POINTS = 10;
+	public static final int MAX_MOVE_POINTS = 10;
 
 	private final String templateID;
 	private boolean isKnown;
@@ -66,6 +65,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private boolean isSleeping;
 	private boolean endTurn;
 	private final StatInt actionPoints;
+	private final StatInt movePoints;
 	private int actionPointsUsed;
 	private final StatBoolean canMove;
 	private final StatBoolean canDodge;
@@ -98,6 +98,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.damageResistance = new HashMap<>();
 		this.damageMult = new HashMap<>();
 		this.actionPoints = new StatInt("action_points", this);
+		this.movePoints = new StatInt("move_points", this);
 		this.canMove = new StatBoolean("can_move", this, false);
 		this.canDodge = new StatBoolean("can_dodge", this, false);
 		this.inventory = new Inventory(game, this);
@@ -304,7 +305,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public int getActionPoints() {
-		return actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS, new Context(game(), this, this));
+		return actionPoints.value(getTemplate().getActionPoints(), 0, MAX_ACTION_POINTS, new Context(game(), this, this));
+	}
+
+	public int getMovePoints() {
+		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, new Context(game(), this, this));
 	}
 	
 	public void heal(int amount) {
@@ -750,6 +755,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return switch (name) {
 			case "max_hp" -> maxHP;
 			case "action_points" -> actionPoints;
+			case "move_points" -> movePoints;
 			default -> null;
 		};
 	}
@@ -838,7 +844,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return switch (name) {
 			case "max_hp" -> new ExpressionConstantInteger(maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, context));
 			case "hp" -> new ExpressionConstantInteger(HP);
-			case "action_points" -> new ExpressionConstantInteger(actionPoints.value(ACTIONS_PER_TURN, 0, MAX_ACTION_POINTS, context));
+			case "action_points" -> new ExpressionConstantInteger(actionPoints.value(getTemplate().getActionPoints(), 0, MAX_ACTION_POINTS, context));
+			case "move_points" -> new ExpressionConstantInteger(movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, context));
 			case "money" -> new ExpressionConstantInteger(money);
 			case "hp_proportion" -> new ExpressionConstantFloat(((float) HP) / ((float) getMaxHP()));
 			case "enabled" -> new ExpressionConstantBoolean(isEnabled);

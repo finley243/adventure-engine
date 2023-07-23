@@ -20,6 +20,9 @@ public class ActorTemplate extends GameInstanced {
 	private final String faction;
 	private final Boolean isEnforcer;
 
+	private final Integer actionPoints;
+	private final Integer movePoints;
+
 	private final Integer maxHP;
 	private final Map<String, Integer> damageResistance;
 	private final Map<String, Float> damageMult;
@@ -40,7 +43,7 @@ public class ActorTemplate extends GameInstanced {
 	private final List<ActionCustom.CustomActionHolder> customActions;
 	private final List<ActionCustom.CustomActionHolder> customInventoryActions;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<String> tags, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer actionPoints, Integer movePoints, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<String> tags, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -48,6 +51,8 @@ public class ActorTemplate extends GameInstanced {
 			if (pronoun == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: pronoun");
 			if (faction == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: faction");
 			if (isEnforcer == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: isEnforcer");
+			if (actionPoints == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: actionPoints");
+			if (movePoints == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: movesPerTurn");
 			if (maxHP == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: maxHP");
 			if (equipSlots.isEmpty()) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: equipSlots");
 			if (lootTable == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: lootTable");
@@ -58,6 +63,8 @@ public class ActorTemplate extends GameInstanced {
 		this.pronoun = pronoun;
 		this.faction = faction;
 		this.isEnforcer = isEnforcer;
+		this.actionPoints = actionPoints;
+		this.movePoints = movePoints;
 		this.maxHP = maxHP;
 		this.damageResistance = damageResistance;
 		this.damageMult = damageMult;
@@ -94,6 +101,14 @@ public class ActorTemplate extends GameInstanced {
 
 	public boolean isEnforcer() {
 		return isEnforcer != null ? isEnforcer : game().data().getActorTemplate(parentID).isEnforcer();
+	}
+
+	public int getActionPoints() {
+		return actionPoints != null ? actionPoints : game().data().getActorTemplate(parentID).getActionPoints();
+	}
+
+	public int getMovePoints() {
+		return movePoints != null ? movePoints : game().data().getActorTemplate(parentID).getMovePoints();
 	}
 	
 	public int getMaxHP() {

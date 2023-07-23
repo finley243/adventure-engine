@@ -76,6 +76,30 @@ public class ActionCustom extends Action {
     }
 
     @Override
+    public int repeatCount(Actor subject) {
+        if (isMove) {
+            return subject.getMovePoints();
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean isRepeatMatch(Action action) {
+        if (isMove) {
+            return action instanceof ActionCustom actionCustom && actionCustom.isMove;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isBlockedMatch(Action action) {
+        if (isMove) {
+            return action instanceof ActionCustom actionCustom && actionCustom.isMove;
+        }
+        return false;
+    }
+
+    @Override
     public float utility(Actor subject) {
         if (isMove) {
             return UtilityUtils.getMovementUtility(subject, area) * UtilityUtils.MOVE_UTILITY_MULTIPLIER;

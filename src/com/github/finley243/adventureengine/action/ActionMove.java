@@ -22,7 +22,7 @@ public abstract class ActionMove extends Action {
 
     @Override
     public int repeatCount(Actor subject) {
-        return Actor.MOVES_PER_TURN;
+        return subject.getMovePoints();
     }
 
     @Override
