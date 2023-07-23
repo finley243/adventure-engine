@@ -8,8 +8,8 @@
     </object>
     <object id="door_locked">
         <name>door</name>
-        <component id="door_link" type="link" movable="true" visible="false">
-            <condition invert="true" type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+        <component id="door_link" type="link" movable="true" visible="true">
+            <conditionMovable invert="true" type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
         </component>
         <localVar name="locked" dataType="boolean" value="true"/>
         <localVar name="lock_keys" dataType="stringSet"/>

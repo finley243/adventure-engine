@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -46,7 +45,7 @@ public class ActionMoveLink extends ActionMove {
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
-		if (linkComponent.getCondition() != null && !linkComponent.getCondition().isMet(new Context(subject.game(), subject, subject, linkComponent.getObject()))) {
+		if (!linkComponent.movableConditionIsMet(subject)) {
 			// TODO - Add custom condition reason text
 			return new CanChooseResult(false, "LINK CONDITION NOT MET");
 		}

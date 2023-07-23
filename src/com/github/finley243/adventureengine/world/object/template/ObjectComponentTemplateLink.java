@@ -5,19 +5,25 @@ import com.github.finley243.adventureengine.condition.Condition;
 
 public class ObjectComponentTemplateLink extends ObjectComponentTemplate {
 
-    private final Condition condition;
+    private final Condition conditionMovable;
+    private final Condition conditionVisible;
     private final boolean isMovable;
     private final boolean isVisible;
 
-    public ObjectComponentTemplateLink(Game game, boolean startEnabled, boolean actionsRestricted, String name, Condition condition, boolean isMovable, boolean isVisible) {
+    public ObjectComponentTemplateLink(Game game, boolean startEnabled, boolean actionsRestricted, String name, Condition conditionMovable, Condition conditionVisible, boolean isMovable, boolean isVisible) {
         super(game, startEnabled, actionsRestricted, name);
-        this.condition = condition;
+        this.conditionMovable = conditionMovable;
+        this.conditionVisible = conditionVisible;
         this.isMovable = isMovable;
         this.isVisible = isVisible;
     }
 
-    public Condition getCondition() {
-        return condition;
+    public Condition getConditionMovable() {
+        return conditionMovable;
+    }
+
+    public Condition getConditionVisible() {
+        return conditionVisible;
     }
 
     public boolean isMovable() {

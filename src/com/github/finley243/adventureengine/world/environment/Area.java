@@ -20,6 +20,7 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
 
 import java.util.*;
 
@@ -258,12 +259,51 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			if (game().data().getLinkType(link.getType()).isVisible()) {
 				Area area = game().data().getArea(link.getAreaID());
 				visibleAreas.add(area);
+				for (WorldObject object : area.getObjects()) {
+					for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
+						if (linkComponent.isVisible() && linkComponent.visibleConditionIsMet(game().data().getPlayer())) {
+							visibleAreas.addAll(linkComponent.getLinkedObject().getArea().getLineOfSightAreasNoLinks());
+						}
+					}
+				}
+			}
+		}
+		return visibleAreas;
+	}
+
+	// Prevents infinite recursion between linked areas
+	private Set<Area> getLineOfSightAreasNoLinks() {
+		Set<Area> visibleAreas = new HashSet<>();
+		visibleAreas.add(this);
+		for (AreaLink link : linkedAreas.values()) {
+			if (game().data().getLinkType(link.getType()).isVisible()) {
+				Area area = game().data().getArea(link.getAreaID());
+				visibleAreas.add(area);
 			}
 		}
 		return visibleAreas;
 	}
 
 	public Set<String> getLineOfSightAreaIDs() {
+		Set<String> visibleAreaIDs = new HashSet<>();
+		visibleAreaIDs.add(this.getID());
+		for (AreaLink link : linkedAreas.values()) {
+			if (game().data().getLinkType(link.getType()).isVisible()) {
+				visibleAreaIDs.add(link.getAreaID());
+				for (WorldObject object : game().data().getArea(link.getAreaID()).getObjects()) {
+					for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
+						if (linkComponent.isVisible() && linkComponent.visibleConditionIsMet(game().data().getPlayer())) {
+							visibleAreaIDs.addAll(linkComponent.getLinkedObject().getArea().getLineOfSightAreaIDsNoLinks());
+						}
+					}
+				}
+			}
+		}
+		return visibleAreaIDs;
+	}
+
+	// Prevents infinite recursion between linked areas
+	private Set<String> getLineOfSightAreaIDsNoLinks() {
 		Set<String> visibleAreaIDs = new HashSet<>();
 		visibleAreaIDs.add(this.getID());
 		for (AreaLink link : linkedAreas.values()) {

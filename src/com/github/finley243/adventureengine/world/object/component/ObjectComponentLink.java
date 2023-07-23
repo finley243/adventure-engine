@@ -4,9 +4,9 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionMoveLink;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.LoadUtils;
+import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -25,8 +25,12 @@ public class ObjectComponentLink extends ObjectComponent {
         return (ObjectComponentTemplateLink) getTemplate();
     }
 
-    public Condition getCondition() {
-        return getTemplateLink().getCondition();
+    public boolean movableConditionIsMet(Actor subject) {
+        return getTemplateLink().getConditionMovable() == null || getTemplateLink().getConditionMovable().isMet(new Context(getObject().game(), subject, subject, getObject()));
+    }
+
+    public boolean visibleConditionIsMet(Actor subject) {
+        return getTemplateLink().getConditionVisible() == null || getTemplateLink().getConditionVisible().isMet(new Context(getObject().game(), subject, subject, getObject()));
     }
 
     public WorldObject getLinkedObject() {
@@ -57,6 +61,27 @@ public class ObjectComponentLink extends ObjectComponent {
         }
         String directionString = directionExpression.getValueString(context);
         return LoadUtils.stringToEnum(directionString, AreaLink.CompassDirection.class);
+    }
+
+    public boolean isVisible() {
+        return getTemplateLink().isVisible();
+    }
+
+    public boolean isMovable() {
+        return getTemplateLink().isMovable();
+    }
+
+    public AreaLink.DistanceCategory getDistanceThrough(Area originArea, Area targetArea) {
+        WorldObject linkedObject = getLinkedObject();
+        AreaLink.DistanceCategory distanceOriginToLink = getObject().getArea().getDistanceTo(linkedObject.getArea().getID());
+        AreaLink.DistanceCategory distanceLinkToTarget = linkedObject.getArea().getDistanceTo(targetArea.getID());
+        if (distanceOriginToLink == null) {
+            return null;
+        }
+        if (distanceLinkToTarget == null) {
+            return null;
+        }
+        return AreaLink.combinedDistance(distanceOriginToLink, distanceLinkToTarget);
     }
 
     @Override

@@ -1069,10 +1069,11 @@ public class DataLoader {
                 return new ObjectComponentTemplateNetwork(game, startEnabled, actionsRestricted, name, networkID);
             }
             case "link" -> {
-                Condition linkCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "condition"));
+                Condition movableCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "conditionMovable"));
+                Condition visibleCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "conditionVisible"));
                 boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
                 boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
-                return new ObjectComponentTemplateLink(game, startEnabled, actionsRestricted, name, linkCondition, linkIsMovable, linkIsVisible);
+                return new ObjectComponentTemplateLink(game, startEnabled, actionsRestricted, name, movableCondition, visibleCondition, linkIsMovable, linkIsVisible);
             }
             case "usable" -> {
                 String usableStartPhrase = LoadUtils.singleTag(componentElement, "startPhrase", null);
