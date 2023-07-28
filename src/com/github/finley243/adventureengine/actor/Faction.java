@@ -1,30 +1,28 @@
 package com.github.finley243.adventureengine.actor;
 
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
+
 import java.util.Map;
 
-public class Faction {
+public class Faction extends GameInstanced {
 
 	public enum FactionRelation {
-		HOSTILE, NEUTRAL, ASSIST
+		HOSTILE, NEUTRAL, ALLY
 	}
 	
-	private final String ID;
 	private final FactionRelation defaultRelation;
 	private final Map<String, FactionRelation> relations;
 	
-	public Faction(String ID, FactionRelation defaultRelation, Map<String, FactionRelation> relations) {
-		this.ID = ID;
+	public Faction(Game game, String ID, FactionRelation defaultRelation, Map<String, FactionRelation> relations) {
+		super(game, ID);
 		this.defaultRelation = defaultRelation;
 		this.relations = relations;
 	}
 	
-	public String getID() {
-		return ID;
-	}
-	
 	public FactionRelation getRelationTo(String factionID) {
-		if (factionID.equals(this.ID)) {
-			return FactionRelation.ASSIST;
+		if (factionID.equals(this.getID())) {
+			return FactionRelation.ALLY;
 		} else {
 			return relations.getOrDefault(factionID, defaultRelation);
 		}

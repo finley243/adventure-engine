@@ -29,6 +29,10 @@ import java.util.*;
  */
 public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
+	public enum RestrictionType {
+		PUBLIC, PRIVATE, HOSTILE
+	}
+
 	public enum AreaNameType {
 		IN, ON, NEAR, FRONT, SIDE, BEHIND
 	}
@@ -44,8 +48,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	private final Scene description;
 
 	private final String ownerFaction;
-	// Whether members and allies of ownerFaction should react negatively to non-allies in area
-	private final boolean isPrivate;
+	private final RestrictionType restrictionType;
+	private final Boolean allowAllies;
 	
 	// All areas that can be accessed when in this area (key is areaID)
 	private final Map<String, AreaLink> linkedAreas;
@@ -61,7 +65,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	private final StatStringSet effects;
 	
-	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, boolean isPrivate, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
+	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game, ID);
 		if (landmarkID == null && name == null) throw new IllegalArgumentException("Landmark and name cannot both be null: " + ID);
 		this.landmarkID = landmarkID;
@@ -70,7 +74,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		this.description = description;
 		this.roomID = roomID;
 		this.ownerFaction = ownerFaction;
-		this.isPrivate = isPrivate;
+		this.restrictionType = restrictionType;
+		this.allowAllies = allowAllies;
 		this.linkedAreas = linkedAreas;
 		this.objects = new HashSet<>();
 		this.actors = new HashSet<>();
@@ -101,8 +106,14 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return ownerFaction;
 	}
 
-	public boolean isPrivate() {
-		return isPrivate;
+	public RestrictionType getRestrictionType() {
+		if (restrictionType == null) return getRoom().getRestrictionType();
+		return restrictionType;
+	}
+
+	public boolean allowAllies() {
+		if (allowAllies == null) return getRoom().allowAllies();
+		return allowAllies;
 	}
 
 	public void setKnown() {

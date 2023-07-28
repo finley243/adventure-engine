@@ -159,7 +159,11 @@ public class TargetingComponent {
                 updateState(target);
             }
         } else if (detectedActors.get(target).state == DetectionState.PASSIVE && actorIsTrespassing(target)) {
-            detectedActors.get(target).state = DetectionState.TRESPASSING;
+            if (target.getArea().getRestrictionType() == Area.RestrictionType.HOSTILE) {
+                detectedActors.get(target).state = DetectionState.HOSTILE;
+            } else {
+                detectedActors.get(target).state = DetectionState.TRESPASSING;
+            }
             detectedActors.get(target).stateCounter = 0;
             actor.triggerScript("on_target_trespassing_start", new Context(actor.game(), actor, target));
             actor.triggerBark("on_target_trespassing_start", new Context(actor.game(), actor, target));
@@ -177,20 +181,25 @@ public class TargetingComponent {
             detectedActors.get(target).stateCounter = 0;
             switch (detectedActors.get(target).state) {
                 case DETECTING -> {
+                    boolean isTrespassing = actorIsTrespassing(target);
                     if (actor.isDead()) {
                         // TODO - Limit response to actors in allied faction?
                         actor.triggerScript("on_detect_dead", new Context(actor.game(), actor, target));
                         actor.triggerBark("on_detect_dead", new Context(actor.game(), actor, target));
                         detectedActors.get(target).state = DetectionState.DEAD;
-                    } else if (actorIsTrespassing(target)) {
+                    } else if (isTrespassing && target.getArea().getRestrictionType() == Area.RestrictionType.PRIVATE) {
                         // TODO - Limit trespassing response to allies of owner faction (and possibly just enforcers)
                         actor.triggerScript("on_detect_target_trespassing", new Context(actor.game(), actor, target));
                         actor.triggerBark("on_detect_target_trespassing", new Context(actor.game(), actor, target));
                         // TODO - Make actor follow trespasser until they leave the area?
                         detectedActors.get(target).state = DetectionState.TRESPASSING;
+                    } else if (isTrespassing && target.getArea().getRestrictionType() == Area.RestrictionType.HOSTILE) {
+                        actor.triggerScript("on_detect_target_hostile_area", new Context(actor.game(), actor, target));
+                        actor.triggerBark("on_detect_target_hostile_area", new Context(actor.game(), actor, target));
+                        detectedActors.get(target).state = DetectionState.HOSTILE;
                     } else if (actor.getFaction().getRelationTo(target.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
-                        actor.triggerScript("on_detect_target_hostile", new Context(actor.game(), actor, target));
-                        actor.triggerBark("on_detect_target_hostile", new Context(actor.game(), actor, target));
+                        actor.triggerScript("on_detect_target_hostile_faction", new Context(actor.game(), actor, target));
+                        actor.triggerBark("on_detect_target_hostile_faction", new Context(actor.game(), actor, target));
                         detectedActors.get(target).state = DetectionState.HOSTILE;
                     } else {
                         detectedActors.get(target).state = DetectionState.PASSIVE;
@@ -206,8 +215,15 @@ public class TargetingComponent {
     }
 
     private boolean actorIsTrespassing(Actor target) {
-        return (target.getArea().getRoom().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getRoom().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST) ||
-                (target.getArea().getOwnerFaction() != null && actor.game().data().getFaction(target.getArea().getOwnerFaction()).getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ASSIST);
+        Area area = target.getArea();
+        if (area.getRestrictionType() == Area.RestrictionType.PUBLIC || area.getOwnerFaction() == null) {
+            return false;
+        }
+        Faction areaFaction = actor.game().data().getFaction(area.getOwnerFaction());
+        if (target.getFaction().equals(areaFaction)) {
+            return true;
+        }
+        return area.allowAllies() && areaFaction.getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ALLY;
     }
 
     public void addCombatant(Actor target) {

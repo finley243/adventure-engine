@@ -59,7 +59,7 @@ public class DataLoader {
                             Element currentElement = (Element) currentChild;
                             switch (currentChild.getNodeName()) {
                                 case "faction" -> {
-                                    Faction faction = loadFaction(currentElement);
+                                    Faction faction = loadFaction(game, currentElement);
                                     game.data().addFaction(faction.getID(), faction);
                                 }
                                 case "scene" -> {
@@ -704,12 +704,12 @@ public class DataLoader {
         }
     }
 
-    private static Faction loadFaction(Element factionElement) {
+    private static Faction loadFaction(Game game, Element factionElement) {
         if (factionElement == null) return null;
         String id = factionElement.getAttribute("id");
         Faction.FactionRelation defaultRelation = LoadUtils.attributeEnum(factionElement, "default", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
         Map<String, Faction.FactionRelation> relations = loadFactionRelations(factionElement);
-        return new Faction(id, defaultRelation, relations);
+        return new Faction(game, id, defaultRelation, relations);
     }
 
     private static Map<String, Faction.FactionRelation> loadFactionRelations(Element factionElement) {
@@ -927,6 +927,8 @@ public class DataLoader {
         boolean roomNameIsProper = LoadUtils.attributeBool(roomNameElement, "proper", false);
         Scene roomDescription = loadScene(game, LoadUtils.singleChildWithName(roomElement, "description"));
         String roomOwnerFaction = LoadUtils.attribute(roomElement, "faction", null);
+        Area.RestrictionType restrictionType = LoadUtils.attributeEnum(roomElement, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
+        boolean allowAllies = LoadUtils.attributeBool(roomElement, "allowAllies", false);
         Map<String, Script> roomScripts = loadScriptsWithTriggers(roomElement);
 
         List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
@@ -937,7 +939,7 @@ public class DataLoader {
             game.data().addArea(area.getID(), area);
         }
 
-        return new Room(game, roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, areas, roomScripts);
+        return new Room(game, roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, restrictionType, allowAllies, areas, roomScripts);
     }
 
     private static Area loadArea(Game game, Element areaElement, String roomID) {
@@ -948,9 +950,9 @@ public class DataLoader {
         String name = (nameElement == null ? null : nameElement.getTextContent());
         Area.AreaNameType nameType = LoadUtils.attributeEnum(nameElement, "type", Area.AreaNameType.class, Area.AreaNameType.IN);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(areaElement, "description"));
-        Element areaOwnerElement = LoadUtils.singleChildWithName(areaElement, "owner");
-        String areaOwnerFaction = (areaOwnerElement != null ? areaOwnerElement.getTextContent() : null);
-        boolean areaIsPrivate = LoadUtils.attributeBool(areaOwnerElement, "private", false);
+        String areaOwnerFaction = LoadUtils.attribute(areaElement, "faction", null);
+        Area.RestrictionType restrictionType = LoadUtils.attributeEnum(areaElement, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
+        boolean allowAllies = LoadUtils.attributeBool(areaElement, "allowAllies", false);
 
         List<Element> linkElements = LoadUtils.directChildrenWithName(areaElement, "link");
         Map<String, AreaLink> linkSet = new HashMap<>();
@@ -966,7 +968,7 @@ public class DataLoader {
 
         Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
 
-        Area area = new Area(game, areaID, landmarkID, name, nameType, description, roomID, areaOwnerFaction, areaIsPrivate, linkSet, areaScripts);
+        Area area = new Area(game, areaID, landmarkID, name, nameType, description, roomID, areaOwnerFaction, restrictionType, allowAllies, linkSet, areaScripts);
 
         List<Element> objectElements = LoadUtils.directChildrenWithName(areaElement, "object");
         for (Element objectElement : objectElements) {
