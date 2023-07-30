@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.ui;
 
+import com.github.finley243.adventureengine.event.ui.NumericMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.google.common.eventbus.Subscribe;
@@ -11,5 +12,8 @@ public interface UserInterface {
 
 	@Subscribe
 	void onMenuEvent(RenderMenuEvent event);
+
+	@Subscribe
+	void onNumericMenuEvent(NumericMenuEvent event);
 	
 }

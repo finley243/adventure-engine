@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.ui;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
+import com.github.finley243.adventureengine.event.ui.NumericMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.ConsoleUtils;
@@ -75,4 +76,10 @@ public class ConsoleParserInterface implements UserInterface {
             }
         }
     }
+
+    @Override
+    public void onNumericMenuEvent(NumericMenuEvent event) {
+
+    }
+
 }

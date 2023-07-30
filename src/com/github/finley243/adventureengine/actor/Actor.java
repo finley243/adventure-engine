@@ -70,6 +70,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final StatBoolean canMove;
 	private final StatBoolean canDodge;
 	private final Map<Action, Integer> blockedActions;
+	private final Map<String, Integer> attributesBase;
+	private final Map<String, Integer> skillsBase;
 	private final Map<String, StatInt> attributes;
 	private final Map<String, StatInt> skills;
 	private final EffectComponent effectComponent;
@@ -104,6 +106,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.inventory = new Inventory(game, this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		this.equipmentEffects = new StatStringSet("equipment_effects", this);
+		this.attributesBase = new HashMap<>();
+		this.skillsBase = new HashMap<>();
 		this.attributes = new HashMap<>();
 		this.skills = new HashMap<>();
 		this.effectComponent = new EffectComponent(game, this, new Context(game, this, this));
@@ -124,9 +128,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			this.damageMult.put(damageType, new StatFloat("damage_mult_" + damageType, this));
 		}
 		for (String attribute : game().data().getAttributeIDs()) {
+			this.attributesBase.put(attribute, getTemplate().getAttribute(attribute));
 			this.attributes.put(attribute, new StatInt("attribute_" + attribute, this));
 		}
 		for (String skill : game().data().getSkillIDs()) {
+			this.skillsBase.put(skill, getTemplate().getSkill(skill));
 			this.skills.put(skill, new StatInt("skill_" + skill, this));
 		}
 		if (getTemplate().getLootTable() != null) {
@@ -226,11 +232,35 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 	
 	public int getAttribute(String attribute, Context context) {
-		return attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context);
+		return attributes.get(attribute).value(attributesBase.get(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context);
+	}
+
+	public int getAttributeBase(String attribute) {
+		return attributesBase.get(attribute);
+	}
+
+	public void setAttributeBase(String attribute, int value) {
+		if (!game().data().getAttributeIDs().contains(attribute)) {
+			game().log().print("Actor " + this + " - attempted to set base attribute that does not exist: " + attribute);
+		} else {
+			attributesBase.put(attribute, value);
+		}
 	}
 
 	public int getSkill(String skill, Context context) {
-		return skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX, context);
+		return skills.get(skill).value(skillsBase.get(skill), SKILL_MIN, SKILL_MAX, context);
+	}
+
+	public int getSkillBase(String skill) {
+		return skillsBase.get(skill);
+	}
+
+	public void setSkillBase(String skill, int value) {
+		if (!game().data().getSkillIDs().contains(skill)) {
+			game().log().print("Actor " + this + " - attempted to set base skill that does not exist: " + skill);
+		} else {
+			skillsBase.put(skill, value);
+		}
 	}
 	
 	public Scene getDialogueStart() {
@@ -342,11 +372,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			effectComponent.addEffect(effectID);
 		}
 		int amount = damage.getAmount();
-		amount -= getEquipmentComponent().getDamageResistanceMain(damage.getType()) * damage.getArmorMult();
+		amount -= Math.round(getEquipmentComponent().getDamageResistanceMain(damage.getType()) * damage.getArmorMult());
 		// TODO - Add additional armor mult for damage mults (part of the Damage object, affects by weapons/attacks/etc.)
-		amount -= amount * getEquipmentComponent().getDamageMultMain(damage.getType());
-		amount -= getDamageResistance(damage.getType(), context) * damage.getArmorMult();
-		amount -= getDamageMult(damage.getType(), context);
+		amount -= Math.round(amount * getEquipmentComponent().getDamageMultMain(damage.getType()));
+		amount -= Math.round(getDamageResistance(damage.getType(), context) * damage.getArmorMult());
+		amount -= Math.round(getDamageMult(damage.getType(), context));
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;
@@ -811,7 +841,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		} else if (name.startsWith("attribute_")) {
 			for (String attribute : game().data().getAttributeIDs()) {
 				if (name.equals("attribute_" + attribute)) {
-					return new ExpressionConstantInteger(attributes.get(attribute).value(getTemplate().getAttribute(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context));
+					return new ExpressionConstantInteger(getAttribute(attribute, context));
 				}
 			}
 			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid attribute");
@@ -819,7 +849,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		} else if (name.startsWith("skill_")) {
 			for (String skill : game().data().getSkillIDs()) {
 				if (name.equals("skill_" + skill)) {
-					return new ExpressionConstantInteger(skills.get(skill).value(getTemplate().getSkill(skill), SKILL_MIN, SKILL_MAX, context));
+					return new ExpressionConstantInteger(getSkill(skill, context));
 				}
 			}
 			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid skill");
