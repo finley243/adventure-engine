@@ -9,6 +9,10 @@ import com.google.common.eventbus.Subscribe;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,9 +29,9 @@ public class GraphicalInterfaceNested implements UserInterface {
 
 	private final JFrame window;
 	private final CardLayout cardLayout;
-	private final JTextArea textPanel;
+	private final JTextPane textPanel;
 	private final JTextArea areaPanel;
-	private final JTextArea historyPanel;
+	private final JTextPane historyPanel;
 	private final JPanel menuPanel;
 	private final JPanel choicePanel;
 	private final JPanel numericPanel;
@@ -37,14 +41,14 @@ public class GraphicalInterfaceNested implements UserInterface {
 		this.window = new JFrame(game.data().getConfig("gameName"));
 		this.cardLayout = new CardLayout();
 		JTabbedPane tabPane = new JTabbedPane();
-		this.textPanel = new JTextArea();
+		this.textPanel = new JTextPane();
 		this.areaPanel = new JTextArea();
 		JScrollPane textScroll = new JScrollPane(textPanel);
 
 		this.menuPanel = new JPanel();
 		menuPanel.setLayout(cardLayout);
 
-		this.historyPanel = new JTextArea();
+		this.historyPanel = new JTextPane();
 		JScrollPane historyScroll = new JScrollPane(historyPanel);
 		this.choicePanel = new JPanel();
 		menuPanel.add(choicePanel, CHOICE_PANEL);
@@ -61,14 +65,8 @@ public class GraphicalInterfaceNested implements UserInterface {
 		tabPane.addTab("History", historyScroll);
 		window.getContentPane().add(tabPane, BorderLayout.CENTER);
 		textPanel.setEditable(false);
-		textPanel.setLineWrap(true);
-		textPanel.setWrapStyleWord(true);
-		textPanel.setFont(textPanel.getFont().deriveFont(14f));
 		textPanel.setVisible(true);
 		historyPanel.setEditable(false);
-		historyPanel.setLineWrap(true);
-		historyPanel.setWrapStyleWord(true);
-		historyPanel.setFont(historyPanel.getFont().deriveFont(14f));
 		historyPanel.setVisible(true);
 
 		areaPanel.setEditable(false);
@@ -90,9 +88,18 @@ public class GraphicalInterfaceNested implements UserInterface {
 	@Override
 	public void onTextEvent(RenderTextEvent e) {
 		SwingUtilities.invokeLater(() -> {
-			textPanel.append(e.getText() + "\n");
+			StyledDocument doc = textPanel.getStyledDocument();
+			StyledDocument historyDoc = historyPanel.getStyledDocument();
+			SimpleAttributeSet attributes = new SimpleAttributeSet();
+			StyleConstants.setForeground(attributes, Color.BLACK);
+			StyleConstants.setFontSize(attributes, 14);
+			try {
+				doc.insertString(doc.getLength(), e.getText() + "\n", attributes);
+				historyDoc.insertString(historyDoc.getLength(), e.getText() + "\n", attributes);
+			} catch (BadLocationException ex) {
+				throw new RuntimeException(ex);
+			}
 			textPanel.repaint();
-			historyPanel.append(e.getText() + "\n");
 			historyPanel.repaint();
 			window.repaint();
 		});
@@ -233,7 +240,6 @@ public class GraphicalInterfaceNested implements UserInterface {
 	@Subscribe
 	public void onMenuSelectEvent(MenuSelectEvent e) {
 		SwingUtilities.invokeLater(() -> {
-
 			choicePanel.removeAll();
 			choicePanel.repaint();
 		});

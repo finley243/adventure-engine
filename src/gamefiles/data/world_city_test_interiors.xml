@@ -5,9 +5,7 @@
     <room id="wilsons_corner_store">
         <name>Wilson's corner store</name>
         <description>
-            <line>
-                <text>The store is small, with no wasted space. Just south of the entrance is the checkout counter, and to the north are aisles stocked with various goods. Behind them is a row of coolers, their bright lights illuminating the back of the store.</text>
-            </line>
+            <line>The store is small, with no wasted space. Just south of the entrance is the checkout counter, and to the north are aisles stocked with various goods. Behind them is a row of coolers, their bright lights illuminating the back of the store.</line>
         </description>
         <area id="wilsons_corner_store_entrance" landmark="wilsons_corner_store_door_exit">
             <link type="basic" dist="CLOSE" dir="S" area="wilsons_corner_store_counter"/>
@@ -53,9 +51,7 @@
         <area id="wilsons_corner_store_coolers">
             <name type="near">coolers</name>
             <description>
-                <line>
-                    <text>Behind the aisles, a row of illuminated coolers cast a cool white glow across the linoleum floor. The air is colder here than in the rest of the store, and a low hum echoes off the walls. </text>
-                </line>
+                <line>Behind the aisles, a row of illuminated coolers cast a cool white glow across the linoleum floor. The air is colder here than in the rest of the store, and a low hum echoes off the walls.</line>
             </description>
             <link type="basic" dist="FAR" dir="S" area="wilsons_corner_store_entrance"/>
             <link type="basic" dist="CLOSE" dir="S" area="wilsons_corner_store_aisle"/>
