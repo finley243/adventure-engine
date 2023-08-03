@@ -21,7 +21,7 @@ import java.util.Map;
 public class MenuManager {
 
 	private NumericMenuConfirmEvent numericMenuReturn;
-	private boolean isSceneMenu;
+	private boolean isSceneMenuOpen;
 	private ProvideActionsEvent actionMenuEvent;
 	private List<SceneChoice> sceneChoices;
 	private Scene currentScene;
@@ -36,13 +36,14 @@ public class MenuManager {
 	}*/
 	
 	public void actionMenu(ProvideActionsEvent e) {
-		isSceneMenu = false;
 		actionMenuEvent = e;
-		List<MenuChoice> menuChoices = new ArrayList<>();
-		for (Action action : e.actions()) {
-			menuChoices.add(action.getMenuChoices(e.subject()));
+		if (!isSceneMenuOpen) {
+			List<MenuChoice> menuChoices = new ArrayList<>();
+			for (Action action : e.actions()) {
+				menuChoices.add(action.getMenuChoices(e.subject()));
+			}
+			startChoiceMenu(e.subject().game(), menuChoices, false);
 		}
-		startChoiceMenu(e.subject().game(), menuChoices, false);
 	}
 
 	public void attributeMenu(Game game, Actor actor, int points) {
@@ -70,7 +71,7 @@ public class MenuManager {
 	}
 
 	public void sceneMenu(Context context, Scene scene) {
-		isSceneMenu = true;
+		isSceneMenuOpen = true;
 		context.game().eventBus().post(new TextClearEvent());
 		sceneMenu(context, scene, null);
 	}
@@ -98,6 +99,8 @@ public class MenuManager {
 			sceneMenu(context, context.game().data().getScene(redirect), scene.getID());
 		} else if (showChoices) {
 			startSceneChoiceMenu(context, scene.getChoices());
+		} else {
+			closeSceneMenu();
 		}
 	}
 
@@ -155,13 +158,20 @@ public class MenuManager {
 			}
 		}
 		if (validChoices.isEmpty()) {
+			closeSceneMenu();
 			return;
 		}
+		sceneChoices = validChoices;
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		for (SceneChoice choice : validChoices) {
 			menuChoices.add(new MenuChoice(choice.getPrompt(), true, new String[]{}));
 		}
 		startChoiceMenu(context.game(), menuChoices, true);
+	}
+
+	private void closeSceneMenu() {
+		isSceneMenuOpen = false;
+		actionMenuEvent.subject().resumeTurn(actionMenuEvent);
 	}
 
 	/*private void waitForContinue(Game game) {
@@ -196,7 +206,7 @@ public class MenuManager {
 	
 	@Subscribe
 	public void onMenuSelectEvent(MenuSelectEvent e) {
-		if (isSceneMenu) {
+		if (isSceneMenuOpen) {
 			onSceneMenuInput(e.getIndex());
 		} else {
 			onActionMenuInput(e.getIndex());

@@ -650,6 +650,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		chooseAction(new ProvideActionsEvent(availableActions, this, lastAction, repeatActionCount));
 	}
 
+	// Called when action menu was previously blocked by another open menu
+	public void resumeTurn(ProvideActionsEvent e) {
+		nextAction(e.lastAction(), e.actionRepeatCount());
+	}
+
 	public void onSelectAction(SelectActionEvent e) {
 		actionPointsUsed += e.action().actionPoints(this);
 		boolean actionIsBlocked = false;
