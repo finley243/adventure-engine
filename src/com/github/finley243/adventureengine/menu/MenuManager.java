@@ -5,6 +5,8 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.ProvideActionsEvent;
+import com.github.finley243.adventureengine.event.SelectActionEvent;
 import com.github.finley243.adventureengine.event.ui.*;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.Scene.SceneType;
@@ -18,25 +20,29 @@ import java.util.Map;
 
 public class MenuManager {
 
-	private int index;
 	private NumericMenuConfirmEvent numericMenuReturn;
+	private boolean isSceneMenu;
+	private ProvideActionsEvent actionMenuEvent;
+	private List<SceneChoice> sceneChoices;
+	private Scene currentScene;
+	private Context currentSceneContext;
 	
 	public MenuManager() {
-		this.index = -1;
 		this.numericMenuReturn = null;
 	}
 
-	public void pauseMenu(Game game) {
+	/*public void pauseMenu(Game game) {
 		waitForContinue(game);
-	}
+	}*/
 	
-	public Action actionMenu(List<Action> actions, Actor subject) {
+	public void actionMenu(ProvideActionsEvent e) {
+		isSceneMenu = false;
+		actionMenuEvent = e;
 		List<MenuChoice> menuChoices = new ArrayList<>();
-		for (Action action : actions) {
-			menuChoices.add(action.getMenuChoices(subject));
+		for (Action action : e.actions()) {
+			menuChoices.add(action.getMenuChoices(e.subject()));
 		}
-		int actionIndex = getMenuInput(subject.game(), menuChoices, false);
-		return actions.get(actionIndex);
+		startChoiceMenu(e.subject().game(), menuChoices, false);
 	}
 
 	public void attributeMenu(Game game, Actor actor, int points) {
@@ -64,17 +70,19 @@ public class MenuManager {
 	}
 
 	public void sceneMenu(Context context, Scene scene) {
+		isSceneMenu = true;
 		context.game().eventBus().post(new TextClearEvent());
 		sceneMenu(context, scene, null);
 	}
 
 	private void sceneMenu(Context context, Scene scene, String lastSceneID) {
+		currentScene = scene;
+		currentSceneContext = context;
 		scene.setTriggered();
 		List<SceneLine> lines = selectValidLines(context, scene.getType(), scene.getLines(), lastSceneID);
 		boolean showChoices = true;
 		String redirect = null;
 		for (SceneLine line : lines) {
-			//waitForContinue(context.game());
 			if (scene.getType() != SceneType.SEQUENTIAL || line.shouldShow(context, lastSceneID)) {
 				SceneLineResult lineResult = executeLine(context, line, lastSceneID);
 				if (lineResult.exit) {
@@ -89,11 +97,12 @@ public class MenuManager {
 		if (redirect != null) {
 			sceneMenu(context, context.game().data().getScene(redirect), scene.getID());
 		} else if (showChoices) {
-			SceneChoice selectedChoice = executeChoice(context, scene.getChoices());
-			if (selectedChoice != null) {
-				sceneMenu(context, context.game().data().getScene(selectedChoice.getLinkedId()), scene.getID());
-			}
+			startSceneChoiceMenu(context, scene.getChoices());
 		}
+	}
+
+	public void onSelectSceneChoice(SceneChoice selectedChoice, Context context, Scene scene) {
+		sceneMenu(context, context.game().data().getScene(selectedChoice.getLinkedId()), scene.getID());
 	}
 
 	private List<SceneLine> selectValidLines(Context context, SceneType type, List<SceneLine> lines, String lastSceneID) {
@@ -138,7 +147,7 @@ public class MenuManager {
 		return new SceneLineResult(line.shouldExit(), line.getRedirectID());
 	}
 
-	private SceneChoice executeChoice(Context context, List<SceneChoice> choices) {
+	private void startSceneChoiceMenu(Context context, List<SceneChoice> choices) {
 		List<SceneChoice> validChoices = new ArrayList<>();
 		for (SceneChoice choice : choices) {
 			if (context.game().data().getScene(choice.getLinkedId()).canChoose(context)) {
@@ -146,38 +155,34 @@ public class MenuManager {
 			}
 		}
 		if (validChoices.isEmpty()) {
-			return null;
+			return;
 		}
-		//context.game().eventBus().post(new RenderTextEvent(""));
-		SceneChoice selectedChoice = sceneMenuInput(context.game(), validChoices);
-		context.game().eventBus().post(new TextClearEvent());
-		//context.game().eventBus().post(new RenderTextEvent(selectedChoice.getPrompt()));
-		//context.game().eventBus().post(new RenderTextEvent(""));
-		return selectedChoice;
-	}
-	
-	private SceneChoice sceneMenuInput(Game game, List<SceneChoice> choices) {
 		List<MenuChoice> menuChoices = new ArrayList<>();
-		for (SceneChoice choice : choices) {
+		for (SceneChoice choice : validChoices) {
 			menuChoices.add(new MenuChoice(choice.getPrompt(), true, new String[]{}));
 		}
-		int selectionIndex = getMenuInput(game, menuChoices, true);
-		return choices.get(selectionIndex);
+		startChoiceMenu(context.game(), menuChoices, true);
 	}
 
-	private void waitForContinue(Game game) {
+	/*private void waitForContinue(Game game) {
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		menuChoices.add(new MenuChoice("Continue", true, new String[] {"continue"}));
 		getMenuInput(game, menuChoices, true);
+	}*/
+
+	private void startChoiceMenu(Game game, List<MenuChoice> menuChoices, boolean forcePrompts) {
+		game.eventBus().post(new RenderMenuEvent(menuChoices, forcePrompts));
 	}
 
-	private synchronized int getMenuInput(Game game, List<MenuChoice> menuChoices, boolean forcePrompts) {
-		this.index = -1;
-		game.eventBus().post(new RenderMenuEvent(menuChoices, forcePrompts));
-		while (this.index == -1) {
-			game.threadControl().pause();
-		}
-		return this.index;
+	private void onActionMenuInput(int choiceIndex) {
+		Action selectedAction = actionMenuEvent.actions().get(choiceIndex);
+		actionMenuEvent.subject().onSelectAction(new SelectActionEvent(selectedAction, actionMenuEvent.lastAction(), actionMenuEvent.actionRepeatCount()));
+	}
+
+	private void onSceneMenuInput(int choiceIndex) {
+		currentSceneContext.game().eventBus().post(new TextClearEvent());
+		SceneChoice selectedChoice = sceneChoices.get(choiceIndex);
+		onSelectSceneChoice(selectedChoice, currentSceneContext, currentScene);
 	}
 
 	private synchronized Map<String, Integer> waitForNumericMenuConfirm(Game game, List<NumericMenuField> menuFields, int points) {
@@ -191,7 +196,11 @@ public class MenuManager {
 	
 	@Subscribe
 	public void onMenuSelectEvent(MenuSelectEvent e) {
-		this.index = e.getIndex();
+		if (isSceneMenu) {
+			onSceneMenuInput(e.getIndex());
+		} else {
+			onActionMenuInput(e.getIndex());
+		}
 	}
 
 	@Subscribe

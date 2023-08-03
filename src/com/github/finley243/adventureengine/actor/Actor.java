@@ -11,8 +11,7 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.combat.Damage;
-import com.github.finley243.adventureengine.event.PlayerDeathEvent;
-import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.event.*;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.expression.*;
@@ -348,9 +347,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		HP += amount;
 		TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 		if (SHOW_HP_CHANGES) {
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor gain$s_actor $amount HP", textContext, null, null, this, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$actor gain$s $amount HP", textContext, null, null, this, null));
 		}
-		game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", textContext, null, null, this, null));
+		game().eventBus().post(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
 	}
 
 	@Override
@@ -385,9 +384,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", textContext, null, null, this, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, null, null, this, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", textContext, null, null, this, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
 		}
 	}
 
@@ -396,15 +395,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			effectComponent.addEffect(effectID);
 		}
 		int amount = damage.getAmount();
-		amount -= getEquipmentComponent().getDamageResistanceLimb(limb.getID(), damage.getType()) * damage.getArmorMult();
-		amount -= amount * getEquipmentComponent().getDamageMultLimb(limb.getID(), damage.getType());
-		amount -= getDamageResistance(damage.getType(), context) * damage.getArmorMult();
-		amount -= getDamageMult(damage.getType(), context);
+		amount -= Math.round(getEquipmentComponent().getDamageResistanceLimb(limb.getID(), damage.getType()) * damage.getArmorMult());
+		amount -= Math.round(amount * getEquipmentComponent().getDamageMultLimb(limb.getID(), damage.getType()));
+		amount -= Math.round(getDamageResistance(damage.getType(), context) * damage.getArmorMult());
+		amount -= Math.round(getDamageMult(damage.getType(), context));
 		if (amount < 0) amount = 0;
 		if (amount > 0) {
 			limb.applyEffects(this);
 		}
-		amount *= limb.getDamageMult();
+		amount = Math.round(amount * limb.getDamageMult());
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;
@@ -413,9 +412,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$_actor lose$s_actor $amount HP", textContext, null, null, this, null));
+				game().eventBus().post(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, null, null, this, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$_actor $is_actor $condition", textContext, null, null, this, null));
+			game().eventBus().post(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
 		}
 	}
 	
@@ -616,9 +615,13 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 	
 	public void takeTurn() {
-		if (!isEnabled() || isDead()) return;
+		if (!isEnabled() || isDead()) {
+			game().onEndTurn(new EndTurnEvent(this));
+			return;
+		}
 		if (isSleeping()) {
 			updateSleep();
+			game().onEndTurn(new EndTurnEvent(this));
 			return;
 		}
 		getEffectComponent().onStartRound();
@@ -629,41 +632,49 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.actionPointsUsed = 0;
 		this.blockedActions.clear();
 		this.endTurn = false;
-		Action lastAction = null;
-		int repeatActionCount = 0;
-		while (!endTurn) {
-			if (!playerControlled) {
-				updatePursueTargets();
-				getTargetingComponent().update();
-				getBehaviorComponent().update();
+		nextAction(null, 0);
+	}
+
+	private void nextAction(Action lastAction, int repeatActionCount) {
+		if (!playerControlled) {
+			updatePursueTargets();
+			getTargetingComponent().update();
+			getBehaviorComponent().update();
+		}
+		List<Action> availableActions = availableActions();
+		for (Action action : availableActions) {
+			if (getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
+				action.setDisabled(true, "Not enough action points");
 			}
-			List<Action> availableActions = availableActions();
-			for (Action action : availableActions) {
-				if (getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
-					action.setDisabled(true, "Not enough action points");
-				}
+		}
+		chooseAction(new ProvideActionsEvent(availableActions, this, lastAction, repeatActionCount));
+	}
+
+	public void onSelectAction(SelectActionEvent e) {
+		actionPointsUsed += e.action().actionPoints(this);
+		boolean actionIsBlocked = false;
+		for (Action repeatAction : blockedActions.keySet()) {
+			if (repeatAction.isRepeatMatch(e.action())) {
+				int countRemaining = blockedActions.get(repeatAction) - 1;
+				blockedActions.put(repeatAction, countRemaining);
+				actionIsBlocked = true;
+				break;
 			}
-			Action chosenAction = chooseAction(availableActions);
-			actionPointsUsed += chosenAction.actionPoints(this);
-			boolean actionIsBlocked = false;
-			for (Action repeatAction : blockedActions.keySet()) {
-				if (repeatAction.isRepeatMatch(chosenAction)) {
-					int countRemaining = blockedActions.get(repeatAction) - 1;
-					blockedActions.put(repeatAction, countRemaining);
-					actionIsBlocked = true;
-					break;
-				}
-			}
-			if (!actionIsBlocked && chosenAction.repeatCount(this) > 0) {
-				blockedActions.put(chosenAction, chosenAction.repeatCount(this) - 1);
-			}
-			if (lastAction != null && chosenAction.isRepeatMatch(lastAction)) {
-				repeatActionCount += 1;
-			} else {
-				repeatActionCount = 0;
-			}
-			chosenAction.choose(this, repeatActionCount);
-			lastAction = chosenAction;
+		}
+		if (!actionIsBlocked && e.action().repeatCount(this) > 0) {
+			blockedActions.put(e.action(), e.action().repeatCount(this) - 1);
+		}
+		int repeatActionCount = e.repeatActionCount();
+		if (e.lastAction() != null && e.action().isRepeatMatch(e.lastAction())) {
+			repeatActionCount += 1;
+		} else {
+			repeatActionCount = 0;
+		}
+		e.action().choose(this, repeatActionCount);
+		if (endTurn) {
+			game().onEndTurn(new EndTurnEvent(this));
+		} else {
+			nextAction(e.action(), repeatActionCount);
 		}
 	}
 	
@@ -674,14 +685,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			playIdle();
 		}
 	}
-	
-	public Action chooseAction(List<Action> actions) {
-		if (playerControlled) {
-			return game().menuManager().actionMenu(actions, this);
-		} else {
-			return UtilityUtils.selectActionByUtility(this, actions, 1);
+
+	public void chooseAction(ProvideActionsEvent e) {
+        if (playerControlled) {
+            game().menuManager().actionMenu(e);
+        } else {
+			Action chosenAction = UtilityUtils.selectActionByUtility(this, e.actions(), 1);
+			onSelectAction(new SelectActionEvent(chosenAction, e.lastAction(), e.actionRepeatCount()));
 		}
-	}
+    }
 
 	private void playIdle() {
 		if (getBehaviorComponent() != null) {

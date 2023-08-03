@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.EndTurnEvent;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -23,6 +24,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Game {
@@ -40,7 +43,9 @@ public class Game {
 
 	private final Data data;
 
-	private boolean continueGameLoop;
+	private boolean continueGame;
+	private List<Actor> turnOrder;
+	private int currentTurnIndex;
 
 	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException, GameDataException {
@@ -79,7 +84,9 @@ public class Game {
 		}
 		System.out.println("Loaded Game");*/
 
-		startGameLoop();
+		//startGameLoop();
+		continueGame = true;
+		startRound();
 	}
 
 	public EventBus eventBus() {
@@ -103,18 +110,67 @@ public class Game {
 	}
 	
 	/** Simple game loop that runs nextRound until continueGameLoop is false */
-	private void startGameLoop() {
-		continueGameLoop = true;
-		while (continueGameLoop) {
+	/*private void startGameLoop() {
+		continueGame = true;
+		while (continueGame) {
 			nextRound();
 			if (data().getPlayer().isActive()) {
 				sleep(800);
 			}
 		}
+	}*/
+
+	private void startRound() {
+		if (!continueGame) return;
+		eventBus.post(new TextClearEvent());
+		TextGen.clearContext();
+		for (Timer timer : data().getTimers()) {
+			timer.update();
+			if (timer.shouldRemove()) {
+				data().removeTimer(timer.getID());
+			}
+		}
+		for (Area area : data().getAreas()) {
+			area.onStartRound();
+		}
+		for (WorldObject object : data().getObjects()) {
+			object.onStartRound();
+		}
+		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
+		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
+		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
+		for (Actor visibleActor : data().getPlayer().getVisibleActors()) {
+			visibleActor.triggerScript("on_player_visible_round", new Context(this, visibleActor, data().getPlayer()));
+		}
+		data().dateTime().onNextRound();
+		this.turnOrder = computeTurnOrder();
+		this.currentTurnIndex = 0;
+		nextTurn();
+	}
+
+	private void nextTurn() {
+		turnOrder.get(currentTurnIndex).takeTurn();
+	}
+
+	public void onEndTurn(EndTurnEvent e) {
+		if (turnOrder.get(currentTurnIndex).equals(e.actor())) {
+			currentTurnIndex += 1;
+			if (currentTurnIndex >= turnOrder.size()) {
+				startRound();
+			} else {
+				nextTurn();
+			}
+		}
+	}
+
+	private List<Actor> computeTurnOrder() {
+		List<Actor> actors = new ArrayList<>(data().getActors());
+		actors.sort((a1, a2) -> a2.getAttribute("agility", new Context(this, a2, a2)) - a1.getAttribute("agility", new Context(this, a1, a1)));
+		return actors;
 	}
 	
 	/** Executes a single round of the game (every actor takes a turn) */
-	private void nextRound() {
+	/*private void nextRound() {
 		eventBus.post(new TextClearEvent());
 		TextGen.clearContext();
 		for (Timer timer : data().getTimers()) {
@@ -142,7 +198,7 @@ public class Game {
 		}
 		data().getPlayer().takeTurn();
 		data().dateTime().onNextRound();
-	}
+	}*/
 	
 	private void sleep(int millis) {
 		try {
@@ -155,7 +211,7 @@ public class Game {
 	/** Ends the game loop, triggered when the player dies */
 	@Subscribe
 	private void onPlayerDeath(PlayerDeathEvent e) {
-		continueGameLoop = false;
+		continueGame = false;
 	}
 	
 }

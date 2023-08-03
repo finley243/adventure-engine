@@ -16,6 +16,13 @@ public class MapBuilder<K, V> {
         return this;
     }
 
+    public MapBuilder<K, V> putIf(boolean condition, K key, V value) {
+        if (condition) {
+            map.put(key, value);
+        }
+        return this;
+    }
+
     public Map<K, V> build() {
         return map;
     }
