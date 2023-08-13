@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.TextContext;
@@ -27,6 +28,7 @@ public class ActionItemConsume extends Action {
 		for (String effect : item.getEffects()) {
 			subject.getEffectComponent().addEffect(effect);
 		}
+		subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
 	}
 	
 	@Override

@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
+import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -36,6 +37,7 @@ public class ActionObjectUseStart extends Action {
 		subject.setUsingObject(component);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase()), context, this, null, subject, null));
+		subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
 	}
 
 	@Override

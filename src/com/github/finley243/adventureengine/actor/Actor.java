@@ -676,10 +676,13 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			repeatActionCount = 0;
 		}
 		e.action().choose(this, repeatActionCount);
+	}
+
+	public void onCompleteAction(CompleteActionEvent e) {
 		if (endTurn) {
 			game().onEndTurn(new EndTurnEvent(this));
 		} else {
-			nextAction(e.action(), repeatActionCount);
+			nextAction(e.action(), e.repeatActionCount());
 		}
 	}
 	

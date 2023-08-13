@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action.network;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.network.NetworkNodeData;
 import com.github.finley243.adventureengine.scene.SceneManager;
@@ -23,6 +24,7 @@ public class ActionNetworkReadData extends NetworkAction {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         SceneManager.trigger(new Context(subject.game(), subject, subject, object), subject.game().data().getScene(node.getSceneID()));
+        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
     }
 
     @Override

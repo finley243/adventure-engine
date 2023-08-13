@@ -20,6 +20,10 @@ import java.util.Map;
 
 public class MenuManager {
 
+	public enum MenuType {
+		ACTION, SCENE, ATTRIBUTE, SKILL
+	}
+
 	private NumericMenuConfirmEvent numericMenuReturn;
 	private boolean isSceneMenuOpen;
 	private ProvideActionsEvent actionMenuEvent;

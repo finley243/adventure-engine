@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action.network;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -20,6 +21,7 @@ public class ActionNetworkBreach extends NetworkAction {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         node.setBreached(true);
+        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
     }
 
     @Override

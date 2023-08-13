@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.item.ItemMod;
 import com.github.finley243.adventureengine.menu.MenuChoice;
@@ -21,6 +22,7 @@ public class ActionModRemove extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         weapon.removeMod(mod);
         subject.getInventory().addItem(mod);
+        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
     }
 
     @Override

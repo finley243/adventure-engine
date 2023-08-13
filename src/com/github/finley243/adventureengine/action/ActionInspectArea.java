@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -29,6 +30,7 @@ public class ActionInspectArea extends Action {
         }
         area.getRoom().triggerScript("on_inspect", subject, subject);
         area.triggerScript("on_inspect", subject, subject);
+        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
     }
 
     @Override

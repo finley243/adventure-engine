@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -20,6 +21,7 @@ public class ActionInspectObject extends Action {
 		Context context = new Context(subject.game(), subject, subject, object);
 		SceneManager.trigger(context, object.getDescription());
 		object.triggerScript("on_inspect", context);
+		subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
 	}
 
 	@Override

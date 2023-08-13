@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 
@@ -16,6 +17,7 @@ public class ActionTalk extends Action {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.game().menuManager().sceneMenu(new Context(target.game(), target, target), target.getDialogueStart());
+		subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
 	}
 
 	@Override
