@@ -3,8 +3,8 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
+import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -19,7 +19,7 @@ public class ActionInspectObject extends Action {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		Context context = new Context(subject.game(), subject, subject, object);
-		SceneManager.trigger(context, object.getDescription());
+		subject.game().eventQueue().addToFront(new SceneEvent(object.getDescription(), null, context));
 		object.triggerScript("on_inspect", context);
 		subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
 	}

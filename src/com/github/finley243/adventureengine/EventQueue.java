@@ -1,6 +1,10 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.event.QueuedEvent;
+import com.github.finley243.adventureengine.event.SceneChoiceEvent;
+import com.github.finley243.adventureengine.event.SceneEvent;
+import com.github.finley243.adventureengine.event.SceneLineEvent;
+import com.github.finley243.adventureengine.scene.Scene;
 
 import java.util.*;
 
@@ -18,6 +22,15 @@ public class EventQueue {
         if (queue.isEmpty()) return;
         QueuedEvent currentEvent = queue.removeFirst();
         currentEvent.execute(game);
+    }
+
+    // Removes all SceneLineEvent/SceneChoiceEvent from the given scene until reaching a non-matching event
+    // Intended for use when a line causes an exit or redirect
+    public void removeQueuedScene(Scene scene) {
+        while (queue.peekFirst() instanceof SceneLineEvent sceneLineEvent && sceneLineEvent.getScene().equals(scene) ||
+                queue.peekFirst() instanceof SceneChoiceEvent sceneChoiceEvent && sceneChoiceEvent.getScene().equals(scene)) {
+            queue.removeFirst();
+        }
     }
 
     public void addToFront(QueuedEvent event) {

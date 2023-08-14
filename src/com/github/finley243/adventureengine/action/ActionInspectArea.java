@@ -3,9 +3,13 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
+import com.github.finley243.adventureengine.event.QueuedEvent;
+import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
-import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.world.environment.Area;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActionInspectArea extends Action {
 
@@ -17,17 +21,19 @@ public class ActionInspectArea extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
+        List<QueuedEvent> sceneEvents = new ArrayList<>();
         if (area.getRoom().getDescription() != null) {
-            SceneManager.trigger(new Context(subject.game(), subject, subject), area.getRoom().getDescription());
+            sceneEvents.add(new SceneEvent(area.getRoom().getDescription(), null, new Context(subject.game(), subject, subject)));
             area.getRoom().setKnown();
             for (Area area : area.getRoom().getAreas()) {
                 area.setKnown();
             }
         }
         if (area.getDescription() != null) {
-            SceneManager.trigger(new Context(subject.game(), subject, subject), area.getDescription());
+            sceneEvents.add(new SceneEvent(area.getDescription(), null, new Context(subject.game(), subject, subject)));
             area.setKnown();
         }
+        subject.game().eventQueue().addAllToFront(sceneEvents);
         area.getRoom().triggerScript("on_inspect", subject, subject);
         area.triggerScript("on_inspect", subject, subject);
         subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));

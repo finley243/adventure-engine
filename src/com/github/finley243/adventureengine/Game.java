@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.EndTurnEvent;
 import com.github.finley243.adventureengine.event.PlayerDeathEvent;
+import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.handler.PerceptionHandler;
@@ -88,6 +89,8 @@ public class Game {
 
 		//startGameLoop();
 		continueGame = true;
+		//eventQueue.addToEnd(new SceneEvent(data.getScene("cornerstore_shopkeeper_start"), null, new Context(this, data.getPlayer(), data.getActor("frank_wilson"))));
+		//eventQueue.executeNext();
 		startRound();
 	}
 

@@ -20,7 +20,6 @@ import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.scene.SceneManager;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -196,17 +195,19 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		area.addActor(this);
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
+			List<QueuedEvent> sceneEvents = new ArrayList<>();
 			if (isNewRoom && getArea().getRoom().getDescription() != null) {
-				SceneManager.trigger(new Context(game(), this, this), getArea().getRoom().getDescription());
+				sceneEvents.add(new SceneEvent(getArea().getRoom().getDescription(), null, new Context(game(), this, this)));
 				getArea().getRoom().setKnown();
 				for (Area areaInRoom : getArea().getRoom().getAreas()) {
 					areaInRoom.setKnown();
 				}
 			}
 			if (isNewArea && getArea().getDescription() != null) {
-				SceneManager.trigger(new Context(game(), this, this), getArea().getDescription());
+				sceneEvents.add(new SceneEvent(getArea().getDescription(), null, new Context(game(), this, this)));
 				getArea().setKnown();
 			}
+			game().eventQueue().addAllToFront(sceneEvents);
 			if (isNewRoom) {
 				getArea().getRoom().triggerScript("on_player_enter", this, this);
 			}
