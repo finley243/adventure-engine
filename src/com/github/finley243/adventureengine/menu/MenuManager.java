@@ -139,7 +139,7 @@ public class MenuManager {
 		if (line.getText() != null) {
 			context.game().eventBus().post(new RenderTextEvent(line.getText()));
 		}
-		line.trigger(context);
+		line.setTriggered();
 		if (line.getSubLines() != null) {
 			List<SceneLine> lines = selectValidLines(context, line.getType(), line.getSubLines(), lastSceneID);
 			for (SceneLine subLine : lines) {

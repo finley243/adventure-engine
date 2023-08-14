@@ -23,9 +23,8 @@ public abstract class Script {
 	/**
 	 * Execute the script if the conditions are met
 	 * @param context Contains the contextual references (subject, target, etc.)
-	 * @return Whether the script was executed
 	 */
-	public boolean execute(Context context) {
+	public void execute(Context context) {
 		if (canExecute(context)) {
 			Map<String, Expression> localParametersComputed = new HashMap<>();
 			for (Map.Entry<String, Expression> entry : localParameters.entrySet()) {
@@ -33,9 +32,8 @@ public abstract class Script {
 			}
 			Context localContext = new Context(context, localParametersComputed);
 			executeSuccess(localContext);
-			return true;
 		} else {
-			return false;
+			context.game().eventQueue().executeNext();
 		}
 	}
 
@@ -46,7 +44,7 @@ public abstract class Script {
 	 */
 	protected abstract void executeSuccess(Context context);
 
-	private boolean canExecute(Context context) {
+	protected boolean canExecute(Context context) {
 		return condition == null || condition.isMet(context);
 	}
 

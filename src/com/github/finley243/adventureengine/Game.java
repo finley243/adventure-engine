@@ -37,6 +37,7 @@ public class Game {
 	public static final String CONFIG_FILE = "/config.xml";
 
 	private final EventBus eventBus;
+	private final EventQueue eventQueue;
 	private final ThreadControl threadControl;
 	private final MenuManager menuManager;
 	private final DebugLogger debugLogger;
@@ -50,6 +51,7 @@ public class Game {
 	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException, GameDataException {
 		eventBus = new EventBus();
+		eventQueue = new EventQueue(this);
 		threadControl = new ThreadControl();
 		menuManager = new MenuManager();
 		debugLogger = new DebugLogger(GAMEFILES + LOG_DIRECTORY);
@@ -91,6 +93,10 @@ public class Game {
 
 	public EventBus eventBus() {
 		return eventBus;
+	}
+
+	public EventQueue eventQueue() {
+		return eventQueue;
 	}
 
 	public ThreadControl threadControl() {
@@ -152,8 +158,8 @@ public class Game {
 		turnOrder.get(currentTurnIndex).takeTurn();
 	}
 
-	public void onEndTurn(EndTurnEvent e) {
-		if (turnOrder.get(currentTurnIndex).equals(e.actor())) {
+	public void onEndTurn(Actor actor) {
+		if (turnOrder.get(currentTurnIndex).equals(actor)) {
 			currentTurnIndex += 1;
 			if (currentTurnIndex >= turnOrder.size()) {
 				startRound();

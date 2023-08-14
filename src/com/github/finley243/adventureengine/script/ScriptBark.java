@@ -26,6 +26,7 @@ public class ScriptBark extends Script {
             return;
         }
         actorCast.triggerBark(trigger, context);
+        context.game().eventQueue().executeNext();
     }
 
 }

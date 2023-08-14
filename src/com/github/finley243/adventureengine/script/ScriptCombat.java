@@ -25,6 +25,7 @@ public class ScriptCombat extends Script{
             return;
         }
         actorCast.getTargetingComponent().addCombatant(targetCast);
+        context.game().eventQueue().executeNext();
     }
 
 }

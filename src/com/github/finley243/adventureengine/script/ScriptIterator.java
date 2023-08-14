@@ -3,9 +3,13 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.event.QueuedEvent;
+import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,10 +29,13 @@ public class ScriptIterator extends Script {
     @Override
     protected void executeSuccess(Context context) {
         Set<String> stringSet = setExpression.getValueStringSet(context);
+        List<QueuedEvent> scriptEvents = new ArrayList<>();
         for (String currentString : stringSet) {
             Expression iteratorParameter = new ExpressionConstantString(currentString);
-            iteratedScript.execute(new Context(context, new MapBuilder<String, Expression>().put(iteratorParameterName, iteratorParameter).build()));
+            scriptEvents.add(new ScriptEvent(iteratedScript, new Context(context, new MapBuilder<String, Expression>().put(iteratorParameterName, iteratorParameter).build())));
         }
+        context.game().eventQueue().addAllToFront(scriptEvents);
+        context.game().eventQueue().executeNext();
     }
 
 }

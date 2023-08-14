@@ -83,6 +83,7 @@ public class ScriptTransferItem extends Script {
                 }
             }
         }
+        context.game().eventQueue().executeNext();
     }
 
 }

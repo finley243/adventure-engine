@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
+import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -54,7 +55,7 @@ public class ActionCustom extends Action {
             Map<String, Expression> combinedParameters = new HashMap<>();
             combinedParameters.putAll(getTemplate().getParameters());
             combinedParameters.putAll(parameters);
-            getTemplate().getScript().execute(new Context(subject.game(), subject, actor, object, item, area, combinedParameters));
+            game.eventQueue().addToFront(new ScriptEvent(getTemplate().getScript(), new Context(subject.game(), subject, actor, object, item, area, combinedParameters)));
         }
         subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
     }

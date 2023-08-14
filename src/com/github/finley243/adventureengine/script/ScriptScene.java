@@ -34,6 +34,7 @@ public class ScriptScene extends Script {
         } else {
             SceneManager.triggerFromIDs(new Context(context, actorCast, actorCast), scenes.getValueStringSet(context));
         }
+        context.game().eventQueue().executeNext();
     }
 
 }

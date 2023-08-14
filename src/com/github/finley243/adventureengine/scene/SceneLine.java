@@ -64,11 +64,12 @@ public class SceneLine {
                 && !(fromSceneID != null && !fromSceneID.equals(lastTopicID));
     }
     
-    public void trigger(Context context) {
+    public void setTriggered() {
     	hasTriggered = true;
-        if (script != null) {
-            script.execute(context);
-        }
+    }
+
+    public Script getScript() {
+        return script;
     }
     
     public boolean shouldExit() {

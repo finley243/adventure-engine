@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.component;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.stat.MutableStatHolder;
 
 import java.util.*;
@@ -25,7 +26,7 @@ public class EffectComponent {
         Effect effect = game.data().getEffect(effectID);
         if (effect.getConditionAdd() == null || effect.getConditionAdd().isMet(scriptContext)) {
             if (effect.getScriptAdd() != null) {
-                effect.getScriptAdd().execute(scriptContext);
+                game.eventQueue().addToFront(new ScriptEvent(effect.getScriptAdd(), scriptContext));
             }
             if (effect.isInstant()) {
                 effect.start(statHolder);
@@ -51,7 +52,7 @@ public class EffectComponent {
                 effect.end(statHolder);
             }
             if (effect.getScriptRemove() != null) {
-                effect.getScriptRemove().execute(scriptContext);
+                game.eventQueue().addToFront(new ScriptEvent(effect.getScriptRemove(), scriptContext));
             }
             effects.get(effectID).remove(0);
             if (effects.get(effectID).isEmpty()) {
@@ -74,7 +75,7 @@ public class EffectComponent {
                     effect.start(statHolder);
                 }
                 if (effect.getScriptRound() != null) {
-                    effect.getScriptRound().execute(scriptContext);
+                    game.eventQueue().addToFront(new ScriptEvent(effect.getScriptRound(), scriptContext));
                 }
                 if (instance.isActive) {
                     effect.eachRound(statHolder);
@@ -91,7 +92,7 @@ public class EffectComponent {
                     if (currentInstance.turnsRemaining == 0 || (effect.getConditionRemove() != null && effect.getConditionRemove().isMet(scriptContext))) {
                         effect.end(statHolder);
                         if (effect.getScriptRemove() != null) {
-                            effect.getScriptRemove().execute(scriptContext);
+                            game.eventQueue().addToFront(new ScriptEvent(effect.getScriptRemove(), scriptContext));
                         }
                         instanceItr.remove();
                         if (effectInstances.isEmpty()) {

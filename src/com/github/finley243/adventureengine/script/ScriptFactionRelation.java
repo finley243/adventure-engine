@@ -23,6 +23,7 @@ public class ScriptFactionRelation extends Script {
 	@Override
 	public void executeSuccess(Context context) {
 		context.game().data().getFaction(targetFaction).setRelation(relationFaction, relation);
+		context.game().eventQueue().executeNext();
 	}
 
 }

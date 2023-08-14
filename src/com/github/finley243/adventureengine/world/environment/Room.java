@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
@@ -174,7 +175,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
-			scripts.get(entryPoint).execute(new Context(game(), subject, target));
+			game().eventQueue().addToFront(new ScriptEvent(scripts.get(entryPoint), new Context(game(), subject, target)));
 		}
 	}
 

@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.expression.ExpressionConstantStringSet;
@@ -462,7 +463,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
-			scripts.get(entryPoint).execute(new Context(game(), subject, target));
+			game().eventQueue().addToFront(new ScriptEvent(scripts.get(entryPoint), new Context(game(), subject, target)));
 		}
 	}
 

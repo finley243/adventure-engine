@@ -616,12 +616,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	
 	public void takeTurn() {
 		if (!isEnabled() || isDead()) {
-			game().onEndTurn(new EndTurnEvent(this));
+			game().eventQueue().addToEnd(new EndTurnEvent(this));
+			game().eventQueue().executeNext();
 			return;
 		}
 		if (isSleeping()) {
 			updateSleep();
-			game().onEndTurn(new EndTurnEvent(this));
+			game().eventQueue().addToEnd(new EndTurnEvent(this));
+			game().eventQueue().executeNext();
 			return;
 		}
 		getEffectComponent().onStartRound();
@@ -680,7 +682,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public void onCompleteAction(CompleteActionEvent e) {
 		if (endTurn) {
-			game().onEndTurn(new EndTurnEvent(this));
+			game().eventQueue().addToEnd(new EndTurnEvent(this));
+			game().eventQueue().executeNext();
 		} else {
 			nextAction(e.action(), e.repeatActionCount());
 		}
@@ -995,7 +998,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public boolean triggerScript(String trigger, Context context) {
 		Script script = getTemplate().getScript(trigger);
 		if (script != null) {
-			script.execute(context);
+			game().eventQueue().addToFront(new ScriptEvent(script, context));
 			return true;
 		} else {
 			return false;

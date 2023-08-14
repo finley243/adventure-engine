@@ -2,8 +2,11 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.event.QueuedEvent;
+import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,16 +24,21 @@ public class ScriptCompound extends Script {
 
     @Override
     public void executeSuccess(Context context) {
-        for (Script current : subScripts) {
-            if (select) {
-                boolean wasExecuted = current.execute(context);
-                if(wasExecuted) {
+        if (select) {
+            for (Script current : subScripts) {
+                if (current.canExecute(context)) {
+                    context.game().eventQueue().addToFront(new ScriptEvent(current, context));
                     break;
                 }
-            } else {
-                current.execute(context);
             }
+        } else {
+            List<QueuedEvent> scriptEvents = new ArrayList<>();
+            for (Script current : subScripts) {
+                scriptEvents.add(new ScriptEvent(current, context));
+            }
+            context.game().eventQueue().addAllToFront(scriptEvents);
         }
+        context.game().eventQueue().executeNext();
     }
 
 }

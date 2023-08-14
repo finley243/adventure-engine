@@ -31,6 +31,7 @@ public class ScriptSetGlobal extends Script {
             default ->
                     throw new UnsupportedOperationException("No globals for provided data type: " + expression.getDataType());
         }
+        context.game().eventQueue().executeNext();
     }
 
 }

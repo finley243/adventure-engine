@@ -30,6 +30,7 @@ public class ScriptSetState extends Script {
         if (!success) {
             context.game().log().print("ScriptSetState - stat " + stateValue + " on holder " + holder + " was not updated successfully");
         }
+        context.game().eventQueue().executeNext();
     }
 
 }

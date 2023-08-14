@@ -30,6 +30,7 @@ public class ScriptTimerStart extends Script {
     protected void executeSuccess(Context context) {
         Timer timer = new Timer(context.game(), timerID.getValueString(context), timerDuration.getValueInteger(context), timerScriptExpire, timerScriptUpdate, context);
         context.game().data().addTimer(timer.getID(), timer);
+        context.game().eventQueue().executeNext();
     }
 
 }

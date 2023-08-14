@@ -32,6 +32,7 @@ public class ScriptModifyState extends Script {
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType());
         }
+        context.game().eventQueue().executeNext();
     }
 
 }

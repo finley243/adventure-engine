@@ -23,6 +23,7 @@ public class ScriptSetVariable extends Script {
     protected void executeSuccess(Context context) {
         String variableNameString = variableName.getValueString(context);
         context.setParameter(variableNameString, variableValue);
+        context.game().eventQueue().executeNext();
     }
 
 }
