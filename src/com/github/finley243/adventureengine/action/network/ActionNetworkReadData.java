@@ -22,8 +22,9 @@ public class ActionNetworkReadData extends NetworkAction {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        subject.game().eventQueue().addToFront(new SceneEvent(subject.game().data().getScene(node.getSceneID()), null, new Context(subject.game(), subject, subject, object)));
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new SceneEvent(subject.game().data().getScene(node.getSceneID()), null, new Context(subject.game(), subject, subject, object)));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
+        subject.game().eventQueue().executeNext();
     }
 
     @Override

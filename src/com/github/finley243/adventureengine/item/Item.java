@@ -67,7 +67,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if(getTemplate().getScripts().containsKey(entryPoint)) {
-			game().eventQueue().addToFront(new ScriptEvent(getTemplate().getScripts().get(entryPoint), new Context(game(), subject, target, this)));
+			game().eventQueue().addToEnd(new ScriptEvent(getTemplate().getScripts().get(entryPoint), new Context(game(), subject, target, this)));
 		}
 	}
 

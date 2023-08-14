@@ -46,7 +46,7 @@ public class ActionWeaponReload extends Action {
 		}
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("weapon", weapon).build());
 		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, this, null, subject, null));
-		subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
 
 	@Override

@@ -21,7 +21,8 @@ public class ActionNetworkBreach extends NetworkAction {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         node.setBreached(true);
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
+        subject.game().eventQueue().executeNext();
     }
 
     @Override

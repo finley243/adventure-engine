@@ -21,7 +21,7 @@ public class ActionSleep extends Action {
         subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("sleep"), context, this, null, subject, null));
         subject.startSleep(SLEEP_DURATION);
         subject.endTurn();
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     @Override

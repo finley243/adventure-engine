@@ -21,10 +21,6 @@ public class SceneEvent implements QueuedEvent {
         this.context = context;
     }
 
-    public Scene getScene() {
-        return scene;
-    }
-
     @Override
     public void execute(Game game) {
         scene.setTriggered();
@@ -55,7 +51,7 @@ public class SceneEvent implements QueuedEvent {
             }
         }
         if (!scene.getChoices().isEmpty()) {
-            sceneEvents.add(new SceneChoiceEvent(scene, scene.getChoices(), context));
+            sceneEvents.add(new SceneChoiceMenuEvent(scene, scene.getChoices(), context));
         }
         game.eventQueue().addAllToFront(sceneEvents);
         game.eventQueue().executeNext();

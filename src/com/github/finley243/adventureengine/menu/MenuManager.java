@@ -3,9 +3,7 @@ package com.github.finley243.adventureengine.menu;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.ProvideActionsEvent;
-import com.github.finley243.adventureengine.event.SceneChoiceEvent;
-import com.github.finley243.adventureengine.event.SelectActionEvent;
+import com.github.finley243.adventureengine.event.*;
 import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
 import com.github.finley243.adventureengine.event.ui.NumericMenuConfirmEvent;
 import com.github.finley243.adventureengine.event.ui.NumericMenuEvent;
@@ -20,12 +18,10 @@ import java.util.Map;
 public class MenuManager {
 
 	private NumericMenuConfirmEvent numericMenuReturn;
-	private boolean isSceneMenuOpen;
-	private ProvideActionsEvent actionMenuEvent;
-	private SceneChoiceEvent sceneChoiceEvent;
-	private List<SceneChoice> sceneChoices;
+	private ChoiceMenuEvent choiceMenuEvent;
 	
 	public MenuManager() {
+		this.choiceMenuEvent = null;
 		this.numericMenuReturn = null;
 	}
 
@@ -33,15 +29,13 @@ public class MenuManager {
 		waitForContinue(game);
 	}*/
 	
-	public void actionMenu(ProvideActionsEvent e) {
-		actionMenuEvent = e;
-		if (!isSceneMenuOpen) {
-			List<MenuChoice> menuChoices = new ArrayList<>();
-			for (Action action : e.actions()) {
-				menuChoices.add(action.getMenuChoices(e.subject()));
-			}
-			startChoiceMenu(e.subject().game(), menuChoices, false);
+	public void actionChoiceMenu(ActionChoiceMenuEvent event, Game game, Actor actor, List<Action> actions) {
+		this.choiceMenuEvent = event;
+		List<MenuChoice> menuChoices = new ArrayList<>();
+		for (Action action : actions) {
+			menuChoices.add(action.getMenuChoices(actor));
 		}
+		startChoiceMenu(game, menuChoices, false);
 	}
 
 	public void attributeMenu(Game game, Actor actor, int points) {
@@ -68,42 +62,17 @@ public class MenuManager {
 		}
 	}
 
-	public void sceneChoiceMenu(SceneChoiceEvent sceneChoiceEvent) {
-		isSceneMenuOpen = true;
-		this.sceneChoiceEvent = sceneChoiceEvent;
-		List<SceneChoice> validChoices = new ArrayList<>();
-		for (SceneChoice choice : sceneChoiceEvent.getChoices()) {
-			if (sceneChoiceEvent.getContext().game().data().getScene(choice.getLinkedId()).canChoose(sceneChoiceEvent.getContext())) {
-				validChoices.add(choice);
-			}
-		}
-		if (validChoices.isEmpty()) {
-			isSceneMenuOpen = false;
-			sceneChoiceEvent.getContext().game().eventQueue().executeNext();
-			return;
-		}
-		sceneChoices = validChoices;
+	public void sceneChoiceMenu(SceneChoiceMenuEvent event, Game game, List<SceneChoice> validChoices) {
+		this.choiceMenuEvent = event;
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		for (SceneChoice choice : validChoices) {
 			menuChoices.add(new MenuChoice(choice.getPrompt(), true, new String[]{}));
 		}
-		startChoiceMenu(sceneChoiceEvent.getContext().game(), menuChoices, true);
+		startChoiceMenu(game, menuChoices, true);
 	}
 
 	private void startChoiceMenu(Game game, List<MenuChoice> menuChoices, boolean forcePrompts) {
 		game.eventBus().post(new RenderMenuEvent(menuChoices, forcePrompts));
-	}
-
-	private void onActionMenuInput(int choiceIndex) {
-		Action selectedAction = actionMenuEvent.actions().get(choiceIndex);
-		actionMenuEvent.subject().onSelectAction(new SelectActionEvent(selectedAction, actionMenuEvent.lastAction(), actionMenuEvent.actionRepeatCount()));
-	}
-
-	private void onSceneMenuInput(int choiceIndex) {
-		SceneChoice selectedChoice = sceneChoices.get(choiceIndex);
-		sceneChoices = null;
-		isSceneMenuOpen = false;
-		sceneChoiceEvent.onMenuInput(selectedChoice);
 	}
 
 	private synchronized Map<String, Integer> waitForNumericMenuConfirm(Game game, List<NumericMenuField> menuFields, int points) {
@@ -117,11 +86,7 @@ public class MenuManager {
 	
 	@Subscribe
 	public void onMenuSelectEvent(MenuSelectEvent e) {
-		if (isSceneMenuOpen) {
-			onSceneMenuInput(e.getIndex());
-		} else {
-			onActionMenuInput(e.getIndex());
-		}
+		choiceMenuEvent.onChoiceMenuInput(e.getIndex());
 	}
 
 	@Subscribe

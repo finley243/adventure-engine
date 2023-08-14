@@ -463,7 +463,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
-			game().eventQueue().addToFront(new ScriptEvent(scripts.get(entryPoint), new Context(game(), subject, target)));
+			game().eventQueue().addToEnd(new ScriptEvent(scripts.get(entryPoint), new Context(game(), subject, target)));
 		}
 	}
 

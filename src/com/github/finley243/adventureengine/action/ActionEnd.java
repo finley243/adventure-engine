@@ -11,7 +11,7 @@ public class ActionEnd extends Action {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.endTurn();
-		subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
 
 	@Override

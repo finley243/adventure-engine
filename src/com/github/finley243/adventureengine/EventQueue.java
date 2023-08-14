@@ -1,8 +1,7 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.event.QueuedEvent;
-import com.github.finley243.adventureengine.event.SceneChoiceEvent;
-import com.github.finley243.adventureengine.event.SceneEvent;
+import com.github.finley243.adventureengine.event.SceneChoiceMenuEvent;
 import com.github.finley243.adventureengine.event.SceneLineEvent;
 import com.github.finley243.adventureengine.scene.Scene;
 
@@ -28,7 +27,7 @@ public class EventQueue {
     // Intended for use when a line causes an exit or redirect
     public void removeQueuedScene(Scene scene) {
         while (queue.peekFirst() instanceof SceneLineEvent sceneLineEvent && sceneLineEvent.getScene().equals(scene) ||
-                queue.peekFirst() instanceof SceneChoiceEvent sceneChoiceEvent && sceneChoiceEvent.getScene().equals(scene)) {
+                queue.peekFirst() instanceof SceneChoiceMenuEvent sceneChoiceMenuEvent && sceneChoiceMenuEvent.getScene().equals(scene)) {
             queue.removeFirst();
         }
     }

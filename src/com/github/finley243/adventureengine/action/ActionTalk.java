@@ -17,8 +17,8 @@ public class ActionTalk extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.game().eventQueue().addToFront(new SceneEvent(target.getDialogueStart(), null, new Context(target.game(), target, target)));
-		subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+		subject.game().eventQueue().addToEnd(new SceneEvent(target.getDialogueStart(), null, new Context(target.game(), target, target)));
+		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
 
 	@Override

@@ -223,7 +223,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	public void triggerScript(String entryPoint, Context context) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
-			game().eventQueue().addToFront(new ScriptEvent(getTemplate().getScripts().get(entryPoint), context));
+			game().eventQueue().addToEnd(new ScriptEvent(getTemplate().getScripts().get(entryPoint), context));
 		}
 	}
 

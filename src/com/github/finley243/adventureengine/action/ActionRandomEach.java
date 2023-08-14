@@ -33,7 +33,7 @@ public abstract class ActionRandomEach<T> extends Action {
             }
         }
         onEnd(subject, repeatActionCount);
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     public String getChanceTag(Actor subject) {

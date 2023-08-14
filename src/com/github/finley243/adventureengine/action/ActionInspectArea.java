@@ -21,22 +21,20 @@ public class ActionInspectArea extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        List<QueuedEvent> sceneEvents = new ArrayList<>();
         if (area.getRoom().getDescription() != null) {
-            sceneEvents.add(new SceneEvent(area.getRoom().getDescription(), null, new Context(subject.game(), subject, subject)));
+            subject.game().eventQueue().addToEnd(new SceneEvent(area.getRoom().getDescription(), null, new Context(subject.game(), subject, subject)));
             area.getRoom().setKnown();
             for (Area area : area.getRoom().getAreas()) {
                 area.setKnown();
             }
         }
         if (area.getDescription() != null) {
-            sceneEvents.add(new SceneEvent(area.getDescription(), null, new Context(subject.game(), subject, subject)));
+            subject.game().eventQueue().addToEnd(new SceneEvent(area.getDescription(), null, new Context(subject.game(), subject, subject)));
             area.setKnown();
         }
-        subject.game().eventQueue().addAllToFront(sceneEvents);
         area.getRoom().triggerScript("on_inspect", subject, subject);
         area.triggerScript("on_inspect", subject, subject);
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     @Override

@@ -21,7 +21,7 @@ public class ActionModInstall extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.getInventory().removeItem(mod);
         weapon.installMod(mod);
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     @Override

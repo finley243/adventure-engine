@@ -22,7 +22,7 @@ public class ActionModRemove extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         weapon.removeMod(mod);
         subject.getInventory().addItem(mod);
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     @Override

@@ -28,7 +28,7 @@ public class ActionItemConsume extends Action {
 		for (String effect : item.getEffects()) {
 			subject.getEffectComponent().addEffect(effect);
 		}
-		subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
 	
 	@Override

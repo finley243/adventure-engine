@@ -19,7 +19,7 @@ public abstract class ActionRandom extends Action {
             }
         }
         onEnd(subject, repeatActionCount);
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     public String getChanceTag(Actor subject) {

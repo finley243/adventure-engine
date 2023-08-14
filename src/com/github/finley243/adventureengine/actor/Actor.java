@@ -195,19 +195,17 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		area.addActor(this);
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
-			List<QueuedEvent> sceneEvents = new ArrayList<>();
 			if (isNewRoom && getArea().getRoom().getDescription() != null) {
-				sceneEvents.add(new SceneEvent(getArea().getRoom().getDescription(), null, new Context(game(), this, this)));
+				game().eventQueue().addToEnd(new SceneEvent(getArea().getRoom().getDescription(), null, new Context(game(), this, this)));
 				getArea().getRoom().setKnown();
 				for (Area areaInRoom : getArea().getRoom().getAreas()) {
 					areaInRoom.setKnown();
 				}
 			}
 			if (isNewArea && getArea().getDescription() != null) {
-				sceneEvents.add(new SceneEvent(getArea().getDescription(), null, new Context(game(), this, this)));
+				game().eventQueue().addToEnd(new SceneEvent(getArea().getDescription(), null, new Context(game(), this, this)));
 				getArea().setKnown();
 			}
-			game().eventQueue().addAllToFront(sceneEvents);
 			if (isNewRoom) {
 				getArea().getRoom().triggerScript("on_player_enter", this, this);
 			}
@@ -610,6 +608,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 			if (isBlocked) {
 				currentAction.setDisabled(true, "Repeat turn limit reached");
+			} else if (getActionPoints() - actionPointsUsed < currentAction.actionPoints(this)) {
+				currentAction.setDisabled(true, "Not enough action points");
 			}
 		}
 		return actions;
@@ -638,55 +638,48 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		nextAction(null, 0);
 	}
 
+	public boolean isPlayerControlled() {
+		return playerControlled;
+	}
+
 	private void nextAction(Action lastAction, int repeatActionCount) {
 		if (!playerControlled) {
 			updatePursueTargets();
 			getTargetingComponent().update();
 			getBehaviorComponent().update();
 		}
-		List<Action> availableActions = availableActions();
-		for (Action action : availableActions) {
-			if (getActionPoints() - actionPointsUsed < action.actionPoints(this)) {
-				action.setDisabled(true, "Not enough action points");
-			}
-		}
-		chooseAction(new ProvideActionsEvent(availableActions, this, lastAction, repeatActionCount));
+		game().eventQueue().addToEnd(new ActionChoiceMenuEvent(this, lastAction, repeatActionCount));
+		game().eventQueue().executeNext();
 	}
 
-	// Called when action menu was previously blocked by another open menu
-	public void resumeTurn(ProvideActionsEvent e) {
-		nextAction(e.lastAction(), e.actionRepeatCount());
-	}
-
-	public void onSelectAction(SelectActionEvent e) {
-		actionPointsUsed += e.action().actionPoints(this);
+	public void onSelectAction(Action action, Action lastAction, int repeatActionCount) {
+		actionPointsUsed += action.actionPoints(this);
 		boolean actionIsBlocked = false;
 		for (Action repeatAction : blockedActions.keySet()) {
-			if (repeatAction.isRepeatMatch(e.action())) {
+			if (repeatAction.isRepeatMatch(action)) {
 				int countRemaining = blockedActions.get(repeatAction) - 1;
 				blockedActions.put(repeatAction, countRemaining);
 				actionIsBlocked = true;
 				break;
 			}
 		}
-		if (!actionIsBlocked && e.action().repeatCount(this) > 0) {
-			blockedActions.put(e.action(), e.action().repeatCount(this) - 1);
+		if (!actionIsBlocked && action.repeatCount(this) > 0) {
+			blockedActions.put(action, action.repeatCount(this) - 1);
 		}
-		int repeatActionCount = e.repeatActionCount();
-		if (e.lastAction() != null && e.action().isRepeatMatch(e.lastAction())) {
+		if (lastAction != null && action.isRepeatMatch(lastAction)) {
 			repeatActionCount += 1;
 		} else {
 			repeatActionCount = 0;
 		}
-		e.action().choose(this, repeatActionCount);
+		action.choose(this, repeatActionCount);
 	}
 
-	public void onCompleteAction(CompleteActionEvent e) {
+	public void onCompleteAction(Action action, int repeatActionCount) {
 		if (endTurn) {
 			game().eventQueue().addToEnd(new EndTurnEvent(this));
 			game().eventQueue().executeNext();
 		} else {
-			nextAction(e.action(), e.repeatActionCount());
+			nextAction(action, repeatActionCount);
 		}
 	}
 	
@@ -698,14 +691,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 
-	public void chooseAction(ProvideActionsEvent e) {
-        if (playerControlled) {
-            game().menuManager().actionMenu(e);
-        } else {
-			Action chosenAction = UtilityUtils.selectActionByUtility(this, e.actions(), 1);
-			onSelectAction(new SelectActionEvent(chosenAction, e.lastAction(), e.actionRepeatCount()));
-		}
-    }
+	public Action chooseAIAction(List<Action> actions) {
+		return UtilityUtils.selectActionByUtility(this, actions, 1);
+	}
 
 	private void playIdle() {
 		if (getBehaviorComponent() != null) {
@@ -999,7 +987,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public boolean triggerScript(String trigger, Context context) {
 		Script script = getTemplate().getScript(trigger);
 		if (script != null) {
-			game().eventQueue().addToFront(new ScriptEvent(script, context));
+			game().eventQueue().addToEnd(new ScriptEvent(script, context));
 			return true;
 		} else {
 			return false;

@@ -55,9 +55,9 @@ public class ActionCustom extends Action {
             Map<String, Expression> combinedParameters = new HashMap<>();
             combinedParameters.putAll(getTemplate().getParameters());
             combinedParameters.putAll(parameters);
-            game.eventQueue().addToFront(new ScriptEvent(getTemplate().getScript(), new Context(subject.game(), subject, actor, object, item, area, combinedParameters)));
+            game.eventQueue().addToEnd(new ScriptEvent(getTemplate().getScript(), new Context(subject.game(), subject, actor, object, item, area, combinedParameters)));
         }
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     @Override

@@ -18,9 +18,9 @@ public class ActionInspectItem extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        subject.game().eventQueue().addToFront(new SceneEvent(item.getDescription(), null, new Context(subject.game(), subject, subject, item)));
+        subject.game().eventQueue().addToEnd(new SceneEvent(item.getDescription(), null, new Context(subject.game(), subject, subject, item)));
         item.triggerScript("on_inspect", subject, subject);
-        subject.onCompleteAction(new CompleteActionEvent(this, repeatActionCount));
+        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     @Override
