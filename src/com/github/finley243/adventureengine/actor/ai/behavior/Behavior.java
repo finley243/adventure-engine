@@ -39,7 +39,7 @@ public abstract class Behavior {
 
     public void triggerRoundScript(Actor subject) {
         if (eachRoundScript != null) {
-            subject.game().eventQueue().addToFront(new ScriptEvent(eachRoundScript, new Context(subject.game(), subject, subject)));
+            subject.game().eventQueue().addToEnd(new ScriptEvent(eachRoundScript, new Context(subject.game(), subject, subject)));
         }
     }
 

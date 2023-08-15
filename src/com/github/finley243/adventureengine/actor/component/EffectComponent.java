@@ -26,7 +26,7 @@ public class EffectComponent {
         Effect effect = game.data().getEffect(effectID);
         if (effect.getConditionAdd() == null || effect.getConditionAdd().isMet(scriptContext)) {
             if (effect.getScriptAdd() != null) {
-                game.eventQueue().addToFront(new ScriptEvent(effect.getScriptAdd(), scriptContext));
+                game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptAdd(), scriptContext));
             }
             if (effect.isInstant()) {
                 effect.start(statHolder);
@@ -52,7 +52,7 @@ public class EffectComponent {
                 effect.end(statHolder);
             }
             if (effect.getScriptRemove() != null) {
-                game.eventQueue().addToFront(new ScriptEvent(effect.getScriptRemove(), scriptContext));
+                game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptRemove(), scriptContext));
             }
             effects.get(effectID).remove(0);
             if (effects.get(effectID).isEmpty()) {
@@ -75,7 +75,7 @@ public class EffectComponent {
                     effect.start(statHolder);
                 }
                 if (effect.getScriptRound() != null) {
-                    game.eventQueue().addToFront(new ScriptEvent(effect.getScriptRound(), scriptContext));
+                    game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptRound(), scriptContext));
                 }
                 if (instance.isActive) {
                     effect.eachRound(statHolder);
@@ -92,7 +92,7 @@ public class EffectComponent {
                     if (currentInstance.turnsRemaining == 0 || (effect.getConditionRemove() != null && effect.getConditionRemove().isMet(scriptContext))) {
                         effect.end(statHolder);
                         if (effect.getScriptRemove() != null) {
-                            game.eventQueue().addToFront(new ScriptEvent(effect.getScriptRemove(), scriptContext));
+                            game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptRemove(), scriptContext));
                         }
                         instanceItr.remove();
                         if (effectInstances.isEmpty()) {
