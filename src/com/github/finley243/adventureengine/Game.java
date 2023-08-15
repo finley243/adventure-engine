@@ -1,12 +1,8 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.EndTurnEvent;
-import com.github.finley243.adventureengine.event.PlayerDeathEvent;
-import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.handler.PerceptionHandler;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.ThreadControl;
@@ -19,7 +15,6 @@ import com.github.finley243.adventureengine.ui.UserInterface;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -62,15 +57,12 @@ public class Game {
 		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
 
-		PerceptionHandler perceptionHandler = new PerceptionHandler();
 		UserInterface userInterface = switch (data.getConfig("interfaceType")) {
 			case "graphicalChoice" -> new GraphicalInterfaceNested(this);
 			case "consoleParser" -> new ConsoleParserInterface(this);
 			case "consoleChoice", default -> new ConsoleInterface(this);
 		};
-		eventBus().register(perceptionHandler);
 		eventBus().register(userInterface);
-		eventBus().register(this);
 
 		data().newGame();
 
@@ -218,8 +210,7 @@ public class Game {
 	}
 	
 	/** Ends the game loop, triggered when the player dies */
-	@Subscribe
-	private void onPlayerDeath(PlayerDeathEvent e) {
+	public void onPlayerDeath() {
 		continueGame = false;
 	}
 	

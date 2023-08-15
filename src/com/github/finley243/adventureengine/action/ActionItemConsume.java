@@ -24,7 +24,7 @@ public class ActionItemConsume extends Action {
 		subject.getInventory().removeItem(item);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
 		String phrase = item.getConsumePhrase();
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
+		subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
 		for (String effect : item.getEffects()) {
 			subject.getEffectComponent().addEffect(effect);
 		}

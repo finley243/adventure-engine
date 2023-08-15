@@ -33,7 +33,7 @@ public class ScriptSensoryEvent extends Script {
         TextContext textContext = new TextContext(contextVars, contextNouns);
         String phraseString = (phrase == null ? null : phrase.getValueString(context));
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString(context));
-        context.game().eventBus().post(new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, false, null, null, context.getSubject(), context.getTarget()));
+        context.game().eventQueue().addToFront(new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, false, null, null, context.getSubject(), context.getTarget()));
         context.game().eventQueue().executeNext();
     }
 

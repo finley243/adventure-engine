@@ -35,8 +35,8 @@ public class ActionMoveLink extends ActionMove {
 		Area lastArea = subject.getArea();
 		Area area = getDestinationArea();
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("door", linkComponent.getObject()).put("room", area.getRoom()).build());
-		subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("moveThrough"), context, this, null, subject, null));
-		subject.game().eventBus().post(new SensoryEvent(area, Phrases.get("moveThroughReverse"), context, this, null, subject, null));
+		subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get("moveThrough"), context, this, null, subject, null));
+		subject.game().eventQueue().addToEnd(new SensoryEvent(area, Phrases.get("moveThroughReverse"), context, this, null, subject, null));
 		subject.setArea(area);
 		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}

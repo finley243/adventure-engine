@@ -346,9 +346,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		HP += amount;
 		TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 		if (SHOW_HP_CHANGES) {
-			game().eventBus().post(new SensoryEvent(getArea(), "$actor gain$s $amount HP", textContext, null, null, this, null));
+			game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor gain$s $amount HP", textContext, null, null, this, null));
 		}
-		game().eventBus().post(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
+		game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
 	}
 
 	@Override
@@ -383,9 +383,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, null, null, this, null));
+				game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, null, null, this, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
+			game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
 		}
 	}
 
@@ -411,16 +411,16 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventBus().post(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, null, null, this, null));
+				game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, null, null, this, null));
 			}
-			game().eventBus().post(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
+			game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
 		}
 	}
 	
 	public void kill() {
 		triggerScript("on_death", new Context(game(), this, this));
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
-		game().eventBus().post(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
+		game().eventQueue().addToEnd(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
 		// TODO - Enable held item dropping on death for new equipment system
 		/*if (equipmentComponent.hasEquippedItem()) {
 			Item item = equipmentComponent.getEquippedItem();
@@ -430,7 +430,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		isDead = true;
 		HP = 0;
 		if (isPlayer()) {
-			game().eventBus().post(new PlayerDeathEvent());
+			game().onPlayerDeath();
 		}
 	}
 
@@ -995,12 +995,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public void triggerBark(String trigger, Context context) {
-		if (isActive()) {
-			Bark bark = getTemplate().getBark(trigger);
-			if (bark != null) {
-				bark.trigger(context);
-			}
-		}
+		game().eventQueue().addToEnd(new BarkEvent(this, trigger, context));
+	}
+
+	public Bark getBark(String trigger) {
+		return getTemplate().getBark(trigger);
 	}
 
 	public void loadState(SaveData saveData) {

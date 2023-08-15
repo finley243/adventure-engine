@@ -33,7 +33,7 @@ public class ActionItemEquip extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.getEquipmentComponent().equip(item, slots);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
-        subject.game().eventBus().post(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, this, null, subject, null));
+        subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, this, null, subject, null));
         subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
