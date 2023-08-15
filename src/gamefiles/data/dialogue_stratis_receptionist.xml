@@ -25,13 +25,13 @@
         <line>
             <line>"Certainly. The room number is 508, on the fifth floor. You can use those elevators over there. Here's your keycard."</line>
             <line>He hands you a white keycard with the Stratis Hotel logo.</line>
-            <script type="all">
+            <scriptPost type="all">
                 <script type="transferItem" item="stratis_room_key">
                     <toInv holder="player"/>
                 </script>
                 <script type="modifyState" stat="money" holder="player" value="-300"/>
                 <script type="setGlobal" globalID="purchased_stratis_room" value="true"/>
-            </script>
+            </scriptPost>
         </line>
         <line redirect="stratis_receptionist_main">"Enjoy your stay. Is there anything else I can do for you?"</line>
     </scene>
@@ -58,10 +58,10 @@
         <line exit="true">
             <line>The receptionist smirks.</line>
             <line>"You think you're the first to try that here?"</line>
-            <script type="combat">
+            <scriptPost type="combat">
                 <actor holder="target"/>
                 <target holder="player"/>
-            </script>
+            </scriptPost>
         </line>
     </scene>
     <scene id="stratis_receptionist_end">

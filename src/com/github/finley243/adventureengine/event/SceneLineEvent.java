@@ -45,8 +45,8 @@ public class SceneLineEvent implements QueuedEvent {
             if (line.getText() != null) {
                 game.eventBus().post(new RenderTextEvent(line.getText()));
             }
-            if (line.getScript() != null) {
-                eventsToAdd.add(new ScriptEvent(line.getScript(), context));
+            if (line.getScriptPre() != null) {
+                eventsToAdd.add(new ScriptEvent(line.getScriptPre(), context));
             }
             if (line.getSubLines() != null) {
                 switch (line.getType()) {
@@ -74,6 +74,9 @@ public class SceneLineEvent implements QueuedEvent {
                         eventsToAdd.add(new SceneLineEvent(scene, selectedLine, lastSceneID, context, true));
                     }
                 }
+            }
+            if (line.getScriptPost() != null) {
+                eventsToAdd.add(new ScriptEvent(line.getScriptPost(), context));
             }
             game.eventQueue().addAllToFront(eventsToAdd);
         }

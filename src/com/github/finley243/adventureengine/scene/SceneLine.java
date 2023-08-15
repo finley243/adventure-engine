@@ -16,7 +16,8 @@ public class SceneLine {
     private final Scene.SceneType type;
     private final List<SceneLine> subLines;
     private final Condition condition;
-    private final Script script;
+    private final Script scriptPre;
+    private final Script scriptPost;
 
     private final boolean once;
     private final boolean exit;
@@ -25,12 +26,13 @@ public class SceneLine {
     // If non-null, will only play if the previous scene matches this ID
     private final String fromSceneID;
 
-    private SceneLine(Scene.SceneType type, List<SceneLine> subLines, String text, Condition condition, Script script, boolean once, boolean exit, String redirectID, String fromSceneID) {
+    private SceneLine(Scene.SceneType type, List<SceneLine> subLines, String text, Condition condition, Script scriptPre, Script scriptPost, boolean once, boolean exit, String redirectID, String fromSceneID) {
         this.type = type;
         this.subLines = subLines;
         this.text = text;
         this.condition = condition;
-        this.script = script;
+        this.scriptPre = scriptPre;
+        this.scriptPost = scriptPost;
         this.once = once;
         this.exit = exit;
         this.redirectID = redirectID;
@@ -38,12 +40,12 @@ public class SceneLine {
         this.hasTriggered = false;
     }
 
-    public SceneLine(Scene.SceneType type, List<SceneLine> subLines, Condition condition, Script script, boolean once, boolean exit, String redirectID, String fromSceneID) {
-        this(type, subLines, null, condition, script, once, exit, redirectID, fromSceneID);
+    public SceneLine(Scene.SceneType type, List<SceneLine> subLines, Condition condition, Script scriptPre, Script scriptPost, boolean once, boolean exit, String redirectID, String fromSceneID) {
+        this(type, subLines, null, condition, scriptPre, scriptPost, once, exit, redirectID, fromSceneID);
     }
 
     public SceneLine(String text, boolean once, boolean exit, String redirectID, String fromSceneID) {
-        this(null, null, text, null, null, once, exit, redirectID, fromSceneID);
+        this(null, null, text, null, null, null, once, exit, redirectID, fromSceneID);
     }
 
     public Scene.SceneType getType() {
@@ -68,8 +70,12 @@ public class SceneLine {
     	hasTriggered = true;
     }
 
-    public Script getScript() {
-        return script;
+    public Script getScriptPre() {
+        return scriptPre;
+    }
+
+    public Script getScriptPost() {
+        return scriptPost;
     }
     
     public boolean shouldExit() {

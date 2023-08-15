@@ -286,13 +286,14 @@ public class DataLoader {
                 case "all", default -> Scene.SceneType.SEQUENTIAL;
             };
             Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
-            Script script = loadScript(LoadUtils.singleChildWithName(lineElement, "script"));
+            Script scriptPre = loadScript(LoadUtils.singleChildWithName(lineElement, "scriptPre"));
+            Script scriptPost = loadScript(LoadUtils.singleChildWithName(lineElement, "scriptPost"));
             List<SceneLine> subLines = new ArrayList<>();
             for (Element subLineElement : LoadUtils.directChildrenWithName(lineElement, "line")) {
                 SceneLine subLine = loadSceneLine(subLineElement);
                 subLines.add(subLine);
             }
-            return new SceneLine(type, subLines, condition, script, once, exit, redirect, from);
+            return new SceneLine(type, subLines, condition, scriptPre, scriptPost, once, exit, redirect, from);
         }
     }
 
