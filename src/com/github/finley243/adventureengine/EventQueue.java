@@ -20,6 +20,7 @@ public class EventQueue {
     public void executeNext() {
         if (queue.isEmpty()) return;
         QueuedEvent currentEvent = queue.removeFirst();
+        //System.out.println("Execute: " + currentEvent);
         currentEvent.execute(game);
     }
 
@@ -33,16 +34,20 @@ public class EventQueue {
     }
 
     public void addToFront(QueuedEvent event) {
+        //System.out.println("Add to queue (FRONT): " + event);
         queue.addFirst(event);
     }
 
     public void addAllToFront(List<QueuedEvent> events) {
+        //System.out.println("Add to queue (MULTIPLE, FRONT):");
         for (int i = events.size() - 1; i >= 0; i--) {
+            //System.out.println(" - " + events.get(i));
             queue.addFirst(events.get(i));
         }
     }
 
     public void addToEnd(QueuedEvent event) {
+        //System.out.println("Add to queue: " + event);
         queue.addLast(event);
     }
 

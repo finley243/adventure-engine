@@ -76,18 +76,12 @@ public class MenuManager {
 	
 	@Subscribe
 	public void onMenuSelectEvent(ChoiceMenuInputEvent e) {
-		if (choiceMenuEvent != null) {
-			choiceMenuEvent.onChoiceMenuInput(e.getIndex());
-			choiceMenuEvent = null;
-		}
+		choiceMenuEvent.onChoiceMenuInput(e.getIndex());
 	}
 
 	@Subscribe
 	public void onNumericMenuConfirmEvent(NumericMenuInputEvent e) {
-		if (numericMenuEvent != null) {
-			numericMenuEvent.onNumericMenuInput(e.getValues());
-			numericMenuEvent = null;
-		}
+		numericMenuEvent.onNumericMenuInput(e.getValues());
 	}
 	
 }
