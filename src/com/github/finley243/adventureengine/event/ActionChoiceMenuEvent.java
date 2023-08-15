@@ -1,14 +1,9 @@
 package com.github.finley243.adventureengine.event;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.ui.TextClearEvent;
-import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.scene.SceneChoice;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ActionChoiceMenuEvent implements QueuedEvent, ChoiceMenuEvent {
