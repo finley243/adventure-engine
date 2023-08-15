@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine.ui;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
-import com.github.finley243.adventureengine.event.ui.NumericMenuEvent;
-import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
+import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
+import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
+import com.github.finley243.adventureengine.event.ui.RenderChoiceMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.menu.ConsoleUtils;
 import com.github.finley243.adventureengine.menu.MenuChoice;
@@ -25,7 +25,7 @@ public class ConsoleInterface implements UserInterface {
 	}
 	
 	@Override
-	public void onMenuEvent(RenderMenuEvent e) {
+	public void onMenuEvent(RenderChoiceMenuEvent e) {
 		List<MenuChoice> validChoices = new ArrayList<>();
 		for (MenuChoice choice : e.getMenuChoices()) {
 			if(choice.isEnabled()) {
@@ -37,11 +37,11 @@ public class ConsoleInterface implements UserInterface {
 		}
 		int response = ConsoleUtils.intInRange(1, validChoices.size());
 		System.out.println();
-		game.eventBus().post(new MenuSelectEvent(validChoices.get(response - 1).getIndex()));
+		game.eventBus().post(new ChoiceMenuInputEvent(validChoices.get(response - 1).getIndex()));
 	}
 
 	@Override
-	public void onNumericMenuEvent(NumericMenuEvent event) {
+	public void onNumericMenuEvent(RenderNumericMenuEvent event) {
 
 	}
 

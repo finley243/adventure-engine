@@ -4,25 +4,24 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.*;
-import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
-import com.github.finley243.adventureengine.event.ui.NumericMenuConfirmEvent;
-import com.github.finley243.adventureengine.event.ui.NumericMenuEvent;
-import com.github.finley243.adventureengine.event.ui.RenderMenuEvent;
+import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
+import com.github.finley243.adventureengine.event.ui.NumericMenuInputEvent;
+import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
+import com.github.finley243.adventureengine.event.ui.RenderChoiceMenuEvent;
 import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MenuManager {
 
-	private NumericMenuConfirmEvent numericMenuReturn;
 	private ChoiceMenuEvent choiceMenuEvent;
+	private NumericMenuEvent numericMenuEvent;
 	
 	public MenuManager() {
 		this.choiceMenuEvent = null;
-		this.numericMenuReturn = null;
+		this.numericMenuEvent = null;
 	}
 
 	/*public void pauseMenu(Game game) {
@@ -38,30 +37,6 @@ public class MenuManager {
 		startChoiceMenu(game, menuChoices, false);
 	}
 
-	public void attributeMenu(Game game, Actor actor, int points) {
-		List<NumericMenuField> menuFields = new ArrayList<>();
-		for (String attribute : game.data().getAttributeIDs()) {
-			int actorBase = actor.getAttributeBase(attribute);
-			menuFields.add(new NumericMenuField(attribute, game.data().getAttribute(attribute).name(), actorBase, Actor.ATTRIBUTE_MAX, actorBase));
-		}
-		Map<String, Integer> changedValues = waitForNumericMenuConfirm(game, menuFields, points);
-		for (Map.Entry<String, Integer> changedEntry : changedValues.entrySet()) {
-			actor.setAttributeBase(changedEntry.getKey(), changedEntry.getValue());
-		}
-	}
-
-	public void skillMenu(Game game, Actor actor, int points) {
-		List<NumericMenuField> menuFields = new ArrayList<>();
-		for (String skill : game.data().getSkillIDs()) {
-			int actorBase = actor.getSkillBase(skill);
-			menuFields.add(new NumericMenuField(skill, game.data().getSkill(skill).name(), actorBase, Actor.SKILL_MAX, actorBase));
-		}
-		Map<String, Integer> changedValues = waitForNumericMenuConfirm(game, menuFields, points);
-		for (Map.Entry<String, Integer> changedEntry : changedValues.entrySet()) {
-			actor.setSkillBase(changedEntry.getKey(), changedEntry.getValue());
-		}
-	}
-
 	public void sceneChoiceMenu(SceneChoiceMenuEvent event, Game game, List<SceneChoice> validChoices) {
 		this.choiceMenuEvent = event;
 		List<MenuChoice> menuChoices = new ArrayList<>();
@@ -71,27 +46,48 @@ public class MenuManager {
 		startChoiceMenu(game, menuChoices, true);
 	}
 
-	private void startChoiceMenu(Game game, List<MenuChoice> menuChoices, boolean forcePrompts) {
-		game.eventBus().post(new RenderMenuEvent(menuChoices, forcePrompts));
+	public void attributeMenu(AttributeMenuEvent event, Game game, Actor actor, int points) {
+		this.numericMenuEvent = event;
+		List<NumericMenuField> menuFields = new ArrayList<>();
+		for (String attribute : game.data().getAttributeIDs()) {
+			int actorBase = actor.getAttributeBase(attribute);
+			menuFields.add(new NumericMenuField(attribute, game.data().getAttribute(attribute).name(), actorBase, Actor.ATTRIBUTE_MAX, actorBase));
+		}
+		startNumericMenu(game, menuFields, points);
 	}
 
-	private synchronized Map<String, Integer> waitForNumericMenuConfirm(Game game, List<NumericMenuField> menuFields, int points) {
-		this.numericMenuReturn = null;
-		game.eventBus().post(new NumericMenuEvent(menuFields, points));
-		while (numericMenuReturn == null) {
-			game.threadControl().pause();
+	public void skillMenu(SkillMenuEvent event, Game game, Actor actor, int points) {
+		this.numericMenuEvent = event;
+		List<NumericMenuField> menuFields = new ArrayList<>();
+		for (String skill : game.data().getSkillIDs()) {
+			int actorBase = actor.getSkillBase(skill);
+			menuFields.add(new NumericMenuField(skill, game.data().getSkill(skill).name(), actorBase, Actor.SKILL_MAX, actorBase));
 		}
-		return numericMenuReturn.getChangedValues();
+		startNumericMenu(game, menuFields, points);
+	}
+
+	private void startChoiceMenu(Game game, List<MenuChoice> menuChoices, boolean forcePrompts) {
+		game.eventBus().post(new RenderChoiceMenuEvent(menuChoices, forcePrompts));
+	}
+
+	private void startNumericMenu(Game game, List<NumericMenuField> menuFields, int points) {
+		game.eventBus().post(new RenderNumericMenuEvent(menuFields, points));
 	}
 	
 	@Subscribe
-	public void onMenuSelectEvent(MenuSelectEvent e) {
-		choiceMenuEvent.onChoiceMenuInput(e.getIndex());
+	public void onMenuSelectEvent(ChoiceMenuInputEvent e) {
+		if (choiceMenuEvent != null) {
+			choiceMenuEvent.onChoiceMenuInput(e.getIndex());
+			choiceMenuEvent = null;
+		}
 	}
 
 	@Subscribe
-	public void onNumericMenuConfirmEvent(NumericMenuConfirmEvent e) {
-		this.numericMenuReturn = e;
+	public void onNumericMenuConfirmEvent(NumericMenuInputEvent e) {
+		if (numericMenuEvent != null) {
+			numericMenuEvent.onNumericMenuInput(e.getValues());
+			numericMenuEvent = null;
+		}
 	}
 	
 }

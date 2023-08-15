@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.event.ui.MenuSelectEvent;
+import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
 
 public class ChoiceButtonListener implements ActionListener {
 
@@ -18,8 +18,7 @@ public class ChoiceButtonListener implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		game.eventBus().post(new MenuSelectEvent(index));
-		game.threadControl().unpause();
+		game.eventBus().post(new ChoiceMenuInputEvent(index));
 	}
 
 }

@@ -4,13 +4,13 @@ import com.github.finley243.adventureengine.menu.MenuChoice;
 
 import java.util.List;
 
-public class RenderMenuEvent {
+public class RenderChoiceMenuEvent {
 
 	private final List<MenuChoice> menuChoices;
 	// If true, will use a prompt-based system even with a parser interface (primarily for dialogue)
 	private final boolean forcePrompts;
 	
-	public RenderMenuEvent(List<MenuChoice> menuChoices, boolean forcePrompts) {
+	public RenderChoiceMenuEvent(List<MenuChoice> menuChoices, boolean forcePrompts) {
 		this.menuChoices = menuChoices;
 		this.forcePrompts = forcePrompts;
 		for (int i = 0; i < menuChoices.size(); i++) {

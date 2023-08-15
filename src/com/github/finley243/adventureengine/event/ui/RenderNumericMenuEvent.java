@@ -4,12 +4,12 @@ import com.github.finley243.adventureengine.menu.NumericMenuField;
 
 import java.util.List;
 
-public class NumericMenuEvent {
+public class RenderNumericMenuEvent {
 
     private final List<NumericMenuField> numericFields;
     private final int points;
 
-    public NumericMenuEvent(List<NumericMenuField> numericFields, int points) {
+    public RenderNumericMenuEvent(List<NumericMenuField> numericFields, int points) {
         this.numericFields = numericFields;
         this.points = points;
     }

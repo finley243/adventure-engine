@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
-import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
@@ -34,7 +33,6 @@ public class Game {
 
 	private final EventBus eventBus;
 	private final EventQueue eventQueue;
-	private final ThreadControl threadControl;
 	private final MenuManager menuManager;
 	private final DebugLogger debugLogger;
 
@@ -48,7 +46,6 @@ public class Game {
 	public Game() throws ParserConfigurationException, SAXException, IOException, GameDataException {
 		eventBus = new EventBus();
 		eventQueue = new EventQueue(this);
-		threadControl = new ThreadControl();
 		menuManager = new MenuManager();
 		debugLogger = new DebugLogger(GAMEFILES + LOG_DIRECTORY);
 		eventBus().register(menuManager);
@@ -92,10 +89,6 @@ public class Game {
 
 	public EventQueue eventQueue() {
 		return eventQueue;
-	}
-
-	public ThreadControl threadControl() {
-		return threadControl;
 	}
 
 	public MenuManager menuManager() {

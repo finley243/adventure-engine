@@ -4,18 +4,14 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.ui.*;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.NumericMenuField;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.google.common.eventbus.Subscribe;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +111,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 	}
 
 	@Override
-	public void onMenuEvent(RenderMenuEvent e) {
+	public void onMenuEvent(RenderChoiceMenuEvent e) {
 		SwingUtilities.invokeLater(() -> {
 			cardLayout.show(menuPanel, CHOICE_PANEL);
 			choicePanel.removeAll();
@@ -181,7 +177,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 	}
 
 	@Override
-	public void onNumericMenuEvent(NumericMenuEvent event) {
+	public void onNumericMenuEvent(RenderNumericMenuEvent event) {
 		SwingUtilities.invokeLater(() -> {
 			int initialSum = 0;
 			for (NumericMenuField numericField : event.getNumericFields()) {
@@ -230,15 +226,14 @@ public class GraphicalInterfaceNested implements UserInterface {
 				for (Map.Entry<String, JSpinner> entry : spinners.entrySet()) {
 					changedValues.put(entry.getKey(), (Integer) entry.getValue().getValue());
 				}
-				game.eventBus().post(new NumericMenuConfirmEvent(changedValues));
-				game.threadControl().unpause();
+				game.eventBus().post(new NumericMenuInputEvent(changedValues));
             });
 			numericPanel.add(buttonConfirm);
 		});
 	}
 	
 	@Subscribe
-	public void onMenuSelectEvent(MenuSelectEvent e) {
+	public void onMenuSelectEvent(ChoiceMenuInputEvent e) {
 		SwingUtilities.invokeLater(() -> {
 			choicePanel.removeAll();
 			choicePanel.repaint();
@@ -246,7 +241,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 	}
 
 	@Subscribe
-	public void onNumericMenuConfirmEvent(NumericMenuConfirmEvent e) {
+	public void onNumericMenuConfirmEvent(NumericMenuInputEvent e) {
 		SwingUtilities.invokeLater(() -> {
 			numericPanel.removeAll();
 			numericPanel.repaint();
