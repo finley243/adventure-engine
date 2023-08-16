@@ -47,12 +47,13 @@ public class Game {
 		eventBus = new EventBus();
 		eventQueue = new EventQueue(this);
 		menuManager = new MenuManager();
-		debugLogger = new DebugLogger(GAMEFILES + LOG_DIRECTORY);
 		eventBus().register(menuManager);
 		data = new Data(this);
 
 		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
+
+		debugLogger = new DebugLogger(GAMEFILES + LOG_DIRECTORY, data.getConfig("enableDebugLog").equalsIgnoreCase("true"));
 
 		UserInterface userInterface = switch (data.getConfig("interfaceType")) {
 			case "graphicalChoice" -> new GraphicalInterfaceNested(this);

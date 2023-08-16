@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class ConfigLoader {
 
-	private static final String[] CONFIG_LIST = new String[] {"playerStats", "playerID", "playerStartArea", "gameName", "defaultDamageType", "startTimeHours", "startTimeMinutes", "startDateYear", "startDateMonth", "startDateDay", "startDateWeekday", "interfaceType", "defaultLinkType"};
+	private static final String[] CONFIG_LIST = new String[] {"playerStats", "playerID", "playerStartArea", "gameName", "defaultDamageType", "startTimeHours", "startTimeMinutes", "startDateYear", "startDateMonth", "startDateDay", "startDateWeekday", "interfaceType", "enableDebugLog", "defaultLinkType"};
 	
 	public static void loadConfig(Game game, File file) throws ParserConfigurationException, SAXException, IOException, GameDataException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

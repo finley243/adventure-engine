@@ -1,6 +1,7 @@
 <config>
     <gameName>AdventureEngine</gameName>
     <interfaceType>graphicalChoice</interfaceType>
+    <enableDebugLog>false</enableDebugLog>
     <playerStats>player</playerStats>
     <playerID>player</playerID>
     <playerStartArea>wilsons_corner_store_counter</playerStartArea>
