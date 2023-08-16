@@ -640,6 +640,16 @@ public class DataLoader {
                 Expression area = loadExpression(LoadUtils.singleChildWithName(scriptElement, "area"), "string");
                 return new ScriptSensoryEvent(condition, localParameters, phrase, phraseAudible, area);
             }
+            case "skillMenu" -> {
+                StatHolderReference actorReference = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
+                Expression points = loadExpressionOrAttribute(scriptElement, "points", "int");
+                return new ScriptSkillMenu(condition, localParameters, actorReference, points);
+            }
+            case "attributeMenu" -> {
+                StatHolderReference actorReference = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
+                Expression points = loadExpressionOrAttribute(scriptElement, "points", "int");
+                return new ScriptAttributeMenu(condition, localParameters, actorReference, points);
+            }
             case "bark" -> {
                 StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
                 String barkTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
