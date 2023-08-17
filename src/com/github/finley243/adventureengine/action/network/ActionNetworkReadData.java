@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SceneEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.network.NetworkNodeData;
@@ -25,11 +24,6 @@ public class ActionNetworkReadData extends NetworkAction {
         subject.game().eventQueue().addToEnd(new SceneEvent(subject.game().data().getScene(node.getSceneID()), null, new Context(subject.game(), subject, subject, object)));
         subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
         subject.game().eventQueue().executeNext();
-    }
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        return ActionCategory.NETWORK;
     }
 
     @Override

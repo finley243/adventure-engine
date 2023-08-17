@@ -4,11 +4,8 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SceneEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
-import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 
 public class ActionTalk extends Action {
 
@@ -41,11 +38,6 @@ public class ActionTalk extends Action {
 			return new CanChooseResult(false, "DIALOGUE SCENE CONDITION NOT MET");
 		}
 		return new CanChooseResult(true, null);
-	}
-
-	@Override
-	public ActionCategory getCategory(Actor subject) {
-		return ActionCategory.ACTOR;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandomEach;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -12,10 +13,9 @@ import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
-import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -110,11 +110,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     public abstract void consumeAmmo(Actor subject);
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        return ActionCategory.ATTACK;
-    }
 
     @Override
     public String getPrompt(Actor subject) {

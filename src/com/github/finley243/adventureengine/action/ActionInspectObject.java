@@ -4,12 +4,8 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SceneEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
-import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
-import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInspectObject extends Action {
@@ -31,11 +27,6 @@ public class ActionInspectObject extends Action {
 	@Override
 	public int actionPoints(Actor subject) {
 		return 0;
-	}
-
-	@Override
-	public ActionCategory getCategory(Actor subject) {
-		return ActionCategory.OBJECT;
 	}
 
 	@Override

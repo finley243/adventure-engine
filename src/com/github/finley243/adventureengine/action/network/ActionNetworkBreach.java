@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action.network;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.network.NetworkNode;
@@ -35,11 +34,6 @@ public class ActionNetworkBreach extends NetworkAction {
             return new CanChooseResult(false, "Node already breached");
         }
         return new CanChooseResult(true, null);
-    }
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        return ActionCategory.NETWORK;
     }
 
     @Override

@@ -2,18 +2,15 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.item.ItemWeapon;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.item.ItemEquippable;
+import com.github.finley243.adventureengine.textgen.TextContext;
 
 public class ActionItemUnequip extends Action {
 
@@ -29,11 +26,6 @@ public class ActionItemUnequip extends Action {
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
         subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get("unequip"), context, this, null, subject, null));
         subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
-    }
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        return ActionCategory.INVENTORY;
     }
 
     @Override

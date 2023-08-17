@@ -2,16 +2,14 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.item.ItemConsumable;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.item.ItemConsumable;
+import com.github.finley243.adventureengine.textgen.TextContext;
 
 public class ActionItemConsume extends Action {
 
@@ -31,11 +29,6 @@ public class ActionItemConsume extends Action {
 			subject.getEffectComponent().addEffect(effect);
 		}
 		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
-	}
-
-	@Override
-	public ActionCategory getCategory(Actor subject) {
-		return ActionCategory.INVENTORY;
 	}
 
 	@Override

@@ -1,20 +1,17 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
-import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
-import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionItemTake extends Action {
@@ -48,11 +45,6 @@ public class ActionItemTake extends Action {
 	@Override
 	public int actionPoints(Actor subject) {
 		return 0;
-	}
-
-	@Override
-	public ActionCategory getCategory(Actor subject) {
-		return ActionCategory.ITEM_WORLD;
 	}
 
 	@Override

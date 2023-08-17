@@ -3,8 +3,8 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.script.Script;
 
 import java.util.Map;
 

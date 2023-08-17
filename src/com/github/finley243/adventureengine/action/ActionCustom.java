@@ -6,13 +6,11 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.ScriptEvent;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
-import com.github.finley243.adventureengine.menu.action.MenuDataAttackArea;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextGen;
-import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -49,11 +47,6 @@ public class ActionCustom extends Action {
 
     public ActionTemplate getTemplate() {
         return game.data().getActionTemplate(template);
-    }
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        return ActionCategory.OBJECT;
     }
 
     @Override

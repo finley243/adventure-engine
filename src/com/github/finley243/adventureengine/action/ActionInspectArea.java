@@ -3,16 +3,10 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
-import com.github.finley243.adventureengine.event.QueuedEvent;
 import com.github.finley243.adventureengine.event.SceneEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataArea;
-import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.world.environment.Area;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ActionInspectArea extends Action {
 
@@ -50,11 +44,6 @@ public class ActionInspectArea extends Action {
             return new CanChooseResult(false, "Nothing to see");
         }
         return new CanChooseResult(true, null);
-    }
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        return ActionCategory.AREA;
     }
 
     @Override

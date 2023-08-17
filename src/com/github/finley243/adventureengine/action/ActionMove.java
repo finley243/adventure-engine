@@ -2,9 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.menu.action.MenuData;
-import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public abstract class ActionMove extends Action {
@@ -21,11 +18,6 @@ public abstract class ActionMove extends Action {
             return new CanChooseResult(false, "You cannot move");
         }
         return new CanChooseResult(true, null);
-    }
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        return ActionCategory.MOVE;
     }
 
     @Override

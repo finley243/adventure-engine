@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
 
@@ -24,11 +23,6 @@ public class ActionEnd extends Action {
 	@Override
 	public int actionPoints(Actor subject) {
 		return 0;
-	}
-
-	@Override
-	public ActionCategory getCategory(Actor subject) {
-		return ActionCategory.END_TURN;
 	}
 
 	@Override

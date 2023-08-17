@@ -1,11 +1,9 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
-import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.item.ItemMod;
-import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
 
@@ -41,11 +39,6 @@ public class ActionModInstall extends Action {
     @Override
     public boolean canShow(Actor subject) {
         return super.canShow(subject) && weapon.hasModSlots();
-    }
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        return ActionCategory.INVENTORY_COMBINE;
     }
 
     @Override

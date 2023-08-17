@@ -4,13 +4,11 @@ import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.action.MenuData;
-import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.TextContext;
 
 public class ActionSleep extends Action {
 
@@ -25,11 +23,6 @@ public class ActionSleep extends Action {
         subject.startSleep(SLEEP_DURATION);
         subject.endTurn();
         subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
-    }
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        return ActionCategory.SELF;
     }
 
     @Override

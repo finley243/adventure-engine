@@ -5,12 +5,14 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
-import com.github.finley243.adventureengine.textgen.*;
-import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.Phrases;
+import com.github.finley243.adventureengine.textgen.PluralNoun;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInventoryStoreAll extends Action {
@@ -45,15 +47,6 @@ public class ActionInventoryStoreAll extends Action {
     @Override
     public int actionPoints(Actor subject) {
         return 0;
-    }
-
-    @Override
-    public ActionCategory getCategory(Actor subject) {
-        if (owner instanceof Actor) {
-            return ActionCategory.ACTOR_INV;
-        } else {
-            return ActionCategory.OBJECT_INV;
-        }
     }
 
     @Override
