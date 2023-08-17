@@ -40,7 +40,8 @@ public class MenuManager {
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		Map<String, MenuCategory> categoryMap = new HashMap<>();
 		for (Action action : actions) {
-			String parentCategory = null;
+			if (!action.canShow(actor)) continue;
+			String parentCategory;
 			String promptOverride = null;
 			switch (action.getMenuData(actor)) {
 				case MenuDataSelf dataSelf -> parentCategory = null;
@@ -90,7 +91,6 @@ public class MenuManager {
 					}
 					parentCategory = "item_" + itemID;
 				}
-				// TODO - Fix null stateless items (causing actions to be added to a single incorrect category)
 				case MenuDataInventory dataInventory -> {
 					String itemID = dataInventory.item.getID();
 					String itemName = LangUtils.titleCase(dataInventory.item.getName());

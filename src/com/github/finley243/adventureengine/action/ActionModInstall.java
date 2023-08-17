@@ -39,6 +39,11 @@ public class ActionModInstall extends Action {
     }
 
     @Override
+    public boolean canShow(Actor subject) {
+        return super.canShow(subject) && weapon.hasModSlots();
+    }
+
+    @Override
     public ActionCategory getCategory(Actor subject) {
         return ActionCategory.INVENTORY_COMBINE;
     }

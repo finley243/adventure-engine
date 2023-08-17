@@ -10,10 +10,7 @@ public class ItemFactory {
 	}
 	
 	public static Item create(Game game, ItemTemplate stats) {
-		String ID = null;
-		if (stats.hasState()) {
-			ID = stats.generateInstanceID();
-		}
+		String ID = stats.generateInstanceID();
 		return create(game, stats, ID);
 	}
 

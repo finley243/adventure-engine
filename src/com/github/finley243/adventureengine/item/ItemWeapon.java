@@ -206,6 +206,10 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return getWeaponTemplate().getModSlots().containsKey(modSlot) && (!mods.containsKey(modSlot) || mods.get(modSlot).size() < getWeaponTemplate().getModSlots().get(modSlot));
 	}
 
+	public boolean hasModSlots() {
+		return !getWeaponTemplate().getModSlots().isEmpty();
+	}
+
 	public void installMod(ItemMod mod) {
 		for (String effectID : mod.getEffects()) {
 			effectComponent.addEffect(effectID);

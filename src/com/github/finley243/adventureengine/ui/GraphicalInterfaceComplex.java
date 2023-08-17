@@ -206,7 +206,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 				String parentCategory = parentCategories.getOrDefault(categoryID, TOP_LEVEL_MENU);
 				List<ActionData> actionData = actions.getOrDefault(categoryID, List.of());
 				List<CategoryData> categoryData = categories.getOrDefault(categoryID, List.of());
-				System.out.println("CATEGORY: " + categoryID + " - PARENT: " + parentCategory + " - ACTIONS: " + actionData.size());
+				//System.out.println("CATEGORY: " + categoryID + " - PARENT: " + parentCategory + " - ACTIONS: " + actionData.size());
 				JPanel categoryPanel = getMenuPanel(parentCategory, categoryData, actionData);
 				switchPanel.add(categoryPanel, categoryID);
 				validPanels.add(categoryID);
