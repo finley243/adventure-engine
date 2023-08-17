@@ -7,6 +7,8 @@ import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.*;
 
 public class ActionItemDropAll extends Action {
@@ -32,10 +34,20 @@ public class ActionItemDropAll extends Action {
 	public int actionPoints(Actor subject) {
 		return 0;
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Drop all", canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"drop all " + LangUtils.pluralizeNoun(item.getName())});
+	public ActionCategory getCategory(Actor subject) {
+		return ActionCategory.INVENTORY;
+	}
+
+	@Override
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataInventory(item);
+	}
+
+	@Override
+	public String getPrompt(Actor subject) {
+		return "Drop All";
 	}
 
 	@Override

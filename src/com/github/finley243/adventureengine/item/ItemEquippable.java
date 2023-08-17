@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
 import com.github.finley243.adventureengine.item.template.EquippableTemplate;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.stat.StatHolder;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class ItemEquippable extends Item {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionItemUnequip(this));
 		for (ActionCustom.CustomActionHolder equippedAction : getEquippableTemplate().getEquippedActions()) {
-			actions.add(new ActionCustom(game(), null, null, this, null, equippedAction.action(), equippedAction.parameters(), new String[] {Inventory.getItemNameFormatted(this, subject.getInventory())}, false));
+			actions.add(new ActionCustom(game(), null, null, this, null, equippedAction.action(), equippedAction.parameters(), new MenuDataInventory(this), false));
 		}
 		return actions;
 	}

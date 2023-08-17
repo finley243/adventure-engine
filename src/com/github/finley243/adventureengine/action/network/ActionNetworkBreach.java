@@ -3,6 +3,8 @@ package com.github.finley243.adventureengine.action.network;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -10,12 +12,10 @@ public class ActionNetworkBreach extends NetworkAction {
 
     private final NetworkNode node;
     private final WorldObject object;
-    private final String[] menuPath;
 
-    public ActionNetworkBreach(NetworkNode node, WorldObject object, String[] menuPath) {
+    public ActionNetworkBreach(NetworkNode node, WorldObject object) {
         this.node = node;
         this.object = object;
-        this.menuPath = menuPath;
     }
 
     @Override
@@ -38,8 +38,18 @@ public class ActionNetworkBreach extends NetworkAction {
     }
 
     @Override
-    public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Breach Node", canChoose(subject).canChoose(), menuPath, new String[]{"breach " + node.getName()});
+    public ActionCategory getCategory(Actor subject) {
+        return ActionCategory.NETWORK;
+    }
+
+    @Override
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataNetwork(node);
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
+        return "Breach Node";
     }
 
     @Override

@@ -5,6 +5,9 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataActor;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 
 public class ActionTalk extends Action {
@@ -39,10 +42,20 @@ public class ActionTalk extends Action {
 		}
 		return new CanChooseResult(true, null);
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Talk", canChoose(subject).canChoose(), new String[]{LangUtils.titleCase(target.getName())}, new String[]{"talk to " + target.getName(), "talk " + target.getName(), "talk with " + target.getName(), "speak to " + target.getName(), "speak with " + target.getName()});
+	public ActionCategory getCategory(Actor subject) {
+		return ActionCategory.ACTOR;
+	}
+
+	@Override
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataActor(target);
+	}
+
+	@Override
+	public String getPrompt(Actor subject) {
+		return "Talk";
 	}
 
 	@Override

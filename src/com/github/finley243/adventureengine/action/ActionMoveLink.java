@@ -5,6 +5,9 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataMove;
+import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.MapBuilder;
@@ -58,16 +61,15 @@ public class ActionMoveLink extends ActionMove {
 	public float utility(Actor subject) {
 		return UtilityUtils.getMovementUtility(subject, getDestinationArea()) * UtilityUtils.MOVE_UTILITY_MULTIPLIER;
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		String[] menuPath;
-		if (linkComponent.getName() != null) {
-			menuPath = new String[] {LangUtils.titleCase(linkComponent.getObject().getName()), LangUtils.titleCase(linkComponent.getName())};
-		} else {
-			menuPath = new String[] {LangUtils.titleCase(linkComponent.getObject().getName())};
-		}
-		return new MenuChoice("(" + linkComponent.getDirection() + ") " + "Enter", canChoose(subject).canChoose(), menuPath, new String[]{"enter " + linkComponent.getObject().getName(), "go through " + linkComponent.getObject().getName(), "move through " + linkComponent.getObject().getName()});
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataObject(linkComponent.getObject());
+	}
+
+	@Override
+	public String getPrompt(Actor subject) {
+		return "Enter";
 	}
 
 	@Override

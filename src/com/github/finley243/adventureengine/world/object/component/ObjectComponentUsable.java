@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
+import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -118,7 +119,7 @@ public class ObjectComponentUsable extends ObjectComponent {
             } else {
                 menuPath = new String[] {LangUtils.titleCase(getObject().getName())};
             }
-            actions.add(new ActionCustom(getObject().game(), null, getObject(), null, null, usingAction.action(), usingAction.parameters(), menuPath, false));
+            actions.add(new ActionCustom(getObject().game(), null, getObject(), null, null, usingAction.action(), usingAction.parameters(), new MenuDataObject(getObject()), false));
         }
         return actions;
     }

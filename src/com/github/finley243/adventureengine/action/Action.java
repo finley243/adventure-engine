@@ -2,11 +2,16 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
 
 /**
  * An action that an actor can take
  */
 public abstract class Action {
+
+	public enum ActionCategory {
+		END_TURN, SELF, MOVE, AREA, ACTOR, OBJECT, ITEM_WORLD, INVENTORY, INVENTORY_COMBINE, OBJECT_INV, ACTOR_INV, NETWORK, ATTACK
+	}
 
 	public enum ActionDetectionChance {
 		HIGH, LOW, NONE
@@ -19,7 +24,11 @@ public abstract class Action {
 
 	public abstract void choose(Actor subject, int repeatActionCount);
 
-	public abstract MenuChoice getMenuChoices(Actor subject);
+	public abstract ActionCategory getCategory(Actor subject);
+
+	public abstract MenuData getMenuData(Actor subject);
+
+	public abstract String getPrompt(Actor subject);
 
 	public CanChooseResult canChoose(Actor subject) {
 		if (disabled) {

@@ -22,9 +22,9 @@ public class NetworkNodeData extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Actor subject, WorldObject object, String[] menuPath) {
+    protected List<Action> breachedActions(Actor subject, WorldObject object) {
         List<Action> actions = new ArrayList<>();
-        actions.add(new ActionNetworkReadData(this, object, menuPath));
+        actions.add(new ActionNetworkReadData(this, object));
         return actions;
     }
 

@@ -111,7 +111,13 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     public abstract void consumeAmmo(Actor subject);
 
-    public String getPrompt() {
+    @Override
+    public ActionCategory getCategory(Actor subject) {
+        return ActionCategory.ATTACK;
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
         return prompt;
     }
 

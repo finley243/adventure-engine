@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -93,7 +94,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 			actions.add(new ActionInspectItem(this));
 		}
 		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-			actions.add(new ActionCustom(game(), null, null, this, null, customAction.action(), customAction.parameters(), new String[] {"Inventory", Inventory.getItemNameFormatted(this, subject.getInventory())}, false));
+			actions.add(new ActionCustom(game(), null, null, this, null, customAction.action(), customAction.parameters(), new MenuDataInventory(this), false));
 		}
 		return actions;
 	}

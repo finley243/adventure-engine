@@ -1,25 +1,24 @@
 package com.github.finley243.adventureengine.menu;
 
-import com.github.finley243.adventureengine.textgen.LangUtils;
+import com.github.finley243.adventureengine.action.Action;
 
 public class MenuChoice implements Comparable<MenuChoice> {
 
     private int index;
     private final String prompt;
-    private final boolean enabled;
-    // TODO - Find way to store unique IDs alongside display names for category, to allow displaying multiple items with the same name
-    private final String[] path;
-    private final String[] parserPrompts;
+    private final Action.CanChooseResult canChooseData;
+    private final String parentCategory;
+    private final String parserPrompt;
 
-    public MenuChoice(String prompt, boolean enabled, String[] path, String[] parserPrompts) {
+    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, String parentCategory, String parserPrompt) {
         this.prompt = prompt;
-        this.enabled = enabled;
-        this.path = path;
-        this.parserPrompts = parserPrompts;
+        this.canChooseData = canChooseData;
+        this.parentCategory = parentCategory;
+        this.parserPrompt = parserPrompt;
     }
 
-    public MenuChoice(String prompt, boolean enabled, String[] parserPrompts) {
-        this(prompt, enabled, new String[0], parserPrompts);
+    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, String parserPrompt) {
+        this(prompt, canChooseData, null, parserPrompt);
     }
 
     public void setIndex(int index) {
@@ -35,33 +34,36 @@ public class MenuChoice implements Comparable<MenuChoice> {
     }
 
     public String getFullPrompt() {
-        StringBuilder fullPrompt = new StringBuilder();
+        /*StringBuilder fullPrompt = new StringBuilder();
         for (String current : path) {
             fullPrompt.append(LangUtils.titleCase(current)).append(" - ");
         }
         fullPrompt.append(prompt);
-        return fullPrompt.toString();
+        return fullPrompt.toString();*/
+        return prompt;
     }
 
     public boolean isEnabled() {
-        return enabled;
+        return canChooseData.canChoose();
     }
 
-    public String[] getPath() {
-        return path;
+    public String getDisabledReason() {
+        return canChooseData.reason();
     }
 
-    public String[] getParserPrompts() {
-        return parserPrompts;
+    public String getParentCategory() {
+        return parentCategory;
+    }
+
+    public String getParserPrompt() {
+        return parserPrompt;
     }
 
     private String sortingString() {
-        StringBuilder builder = new StringBuilder();
-        for (String current : path) {
-            builder.append(current);
+        if (parentCategory == null) {
+            return prompt;
         }
-        builder.append(prompt);
-        return builder.toString();
+        return parentCategory + prompt;
     }
 
     @Override

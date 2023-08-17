@@ -5,6 +5,9 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -25,8 +28,18 @@ public class ActionSleep extends Action {
     }
 
     @Override
-    public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Sleep", canChoose(subject).canChoose(), new String[]{"sleep", "go to sleep", "fall asleep"});
+    public ActionCategory getCategory(Actor subject) {
+        return ActionCategory.SELF;
+    }
+
+    @Override
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataSelf();
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
+        return "Sleep";
     }
 
 }

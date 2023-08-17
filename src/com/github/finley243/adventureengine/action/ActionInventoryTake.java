@@ -6,11 +6,15 @@ import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
+import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInventoryTake extends Action {
 
@@ -45,14 +49,27 @@ public class ActionInventoryTake extends Action {
     }
 
     @Override
-    public MenuChoice getMenuChoices(Actor subject) {
-        String[] menuPath;
-        if (name == null) {
-            menuPath = new String[]{LangUtils.titleCase(owner.getName()), Inventory.getItemNameFormatted(item, inventory)};
+    public ActionCategory getCategory(Actor subject) {
+        if (owner instanceof Actor) {
+            return ActionCategory.ACTOR_INV;
         } else {
-            menuPath = new String[]{LangUtils.titleCase(owner.getName()), LangUtils.titleCase(name), Inventory.getItemNameFormatted(item, inventory)};
+            return ActionCategory.OBJECT_INV;
         }
-        return new MenuChoice(prompt, canChoose(subject).canChoose(), menuPath, new String[]{prompt + " " + item.getName() + " from " + owner.getName()});
+    }
+
+    @Override
+    public MenuData getMenuData(Actor subject) {
+        if (owner instanceof Actor actor) {
+            return new MenuDataActorInventory(actor, item, false);
+        } else {
+            WorldObject object = (WorldObject) owner;
+            return new MenuDataObjectInventory(object, item, false);
+        }
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
+        return prompt;
     }
 
     @Override

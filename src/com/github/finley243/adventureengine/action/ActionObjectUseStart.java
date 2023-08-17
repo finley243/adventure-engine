@@ -6,6 +6,9 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.MapBuilder;
@@ -47,16 +50,20 @@ public class ActionObjectUseStart extends Action {
 		}
 		return 0.0f;
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		String[] menuPath;
-		if (component.getName() != null) {
-			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName()), LangUtils.titleCase(component.getName())};
-		} else {
-			menuPath = new String[] {LangUtils.titleCase(component.getObject().getName())};
-		}
-		return new MenuChoice(component.getStartPrompt(), canChoose(subject).canChoose(), menuPath, new String[]{component.getStartPrompt().toLowerCase()});
+	public ActionCategory getCategory(Actor subject) {
+		return ActionCategory.OBJECT;
+	}
+
+	@Override
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataObject(component.getObject());
+	}
+
+	@Override
+	public String getPrompt(Actor subject) {
+		return component.getStartPrompt();
 	}
 
 	@Override

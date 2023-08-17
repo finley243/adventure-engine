@@ -35,7 +35,7 @@ public class Network {
         } else {
             menuPath = new String[] {LangUtils.titleCase(object.getName())};
         }
-        return new ArrayList<>(topNode.actions(subject, object, menuPath));
+        return new ArrayList<>(topNode.actions(subject, object));
     }
 
     @Override

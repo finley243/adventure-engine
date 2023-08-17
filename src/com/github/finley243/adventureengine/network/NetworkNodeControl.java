@@ -17,8 +17,8 @@ public class NetworkNodeControl extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Actor subject, WorldObject object, String[] menuPath) {
-        return new ArrayList<>(subject.game().data().getObject(objectID).networkActions(subject, menuPath));
+    protected List<Action> breachedActions(Actor subject, WorldObject object) {
+        return new ArrayList<>(subject.game().data().getObject(objectID).networkActions(subject, this));
     }
 
 }

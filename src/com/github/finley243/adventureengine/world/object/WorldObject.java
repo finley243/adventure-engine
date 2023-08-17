@@ -12,6 +12,9 @@ import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
+import com.github.finley243.adventureengine.menu.action.MenuDataObject;
+import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -25,6 +28,7 @@ import com.github.finley243.adventureengine.world.object.component.ObjectCompone
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
+import org.w3c.dom.Node;
 
 import java.util.*;
 
@@ -174,7 +178,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				}
 			}
 			for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-				actions.add(new ActionCustom(game(), null, this, null, null, customAction.action(), customAction.parameters(), new String[] {LangUtils.titleCase(this.getName())}, false));
+				actions.add(new ActionCustom(game(), null, this, null, null, customAction.action(), customAction.parameters(), new MenuDataObject(this), false));
 			}
 		}
 		return actions;
@@ -189,10 +193,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return actions;
 	}
 
-	public List<Action> networkActions(Actor subject, String[] menuPath) {
+	public List<Action> networkActions(Actor subject, NetworkNode node) {
 		List<Action> actions = new ArrayList<>();
 		for (ActionCustom.CustomActionHolder networkAction : getTemplate().getNetworkActions()) {
-			actions.add(new ActionCustom(game(), null, this, null, null, networkAction.action(), networkAction.parameters(), menuPath, false));
+			actions.add(new ActionCustom(game(), null, this, null, null, networkAction.action(), networkAction.parameters(), new MenuDataNetwork(node), false));
 		}
 		return actions;
 	}

@@ -8,6 +8,9 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -36,10 +39,20 @@ public class ActionItemTakeAll extends Action {
 	public int actionPoints(Actor subject) {
 		return 0;
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Take all", canChoose(subject).canChoose(), new String[]{"Ground", Inventory.getItemNameFormatted(item, area.getInventory())}, new String[]{"take all " + LangUtils.pluralizeNoun(item.getName()), "pick up all " + LangUtils.pluralizeNoun(item.getName()), "pickup all " + LangUtils.pluralizeNoun(item.getName())});
+	public ActionCategory getCategory(Actor subject) {
+		return ActionCategory.ITEM_WORLD;
+	}
+
+	@Override
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataItemWorld(item);
+	}
+
+	@Override
+	public String getPrompt(Actor subject) {
+		return "Take All";
 	}
 
 	@Override

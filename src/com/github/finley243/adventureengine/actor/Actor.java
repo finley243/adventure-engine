@@ -19,6 +19,8 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.menu.action.MenuDataActor;
+import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.*;
@@ -547,12 +549,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			actions.addAll(inventory.getExternalActions(this, null, subject, "Take", "takeFrom", null, null, true, false));
 		}
 		for (ActionCustom.CustomActionHolder actionHolder : getTemplate().getCustomActions()) {
-			actions.add(new ActionCustom(game(), this, null, null, null, actionHolder.action(), actionHolder.parameters(), new String[] {LangUtils.titleCase(this.getName())}, false));
+			actions.add(new ActionCustom(game(), this, null, null, null, actionHolder.action(), actionHolder.parameters(), new MenuDataActor(this), false));
 		}
 		for (ActionCustom.CustomActionHolder inventoryActionHolder : getTemplate().getCustomInventoryActions()) {
 			for (Item item : inventory.getItems()) {
 				String[] menuPath = new String[] {LangUtils.titleCase(getName()), "Inventory", Inventory.getItemNameFormatted(item, inventory)};
-				actions.add(new ActionCustom(game(), this, null, item, null, inventoryActionHolder.action(), inventoryActionHolder.parameters(), menuPath, false));
+				actions.add(new ActionCustom(game(), this, null, item, null, inventoryActionHolder.action(), inventoryActionHolder.parameters(), new MenuDataActorInventory(this, item, false), false));
 			}
 		}
 		return actions;

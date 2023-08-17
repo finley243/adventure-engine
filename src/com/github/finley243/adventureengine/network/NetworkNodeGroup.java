@@ -18,10 +18,10 @@ public class NetworkNodeGroup extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Actor subject, WorldObject object, String[] menuPath) {
+    protected List<Action> breachedActions(Actor subject, WorldObject object) {
         List<Action> actions = new ArrayList<>();
         for (NetworkNode childNode : childNodes) {
-            actions.addAll(childNode.actions(subject, object, menuPath));
+            actions.addAll(childNode.actions(subject, object));
         }
         return actions;
     }

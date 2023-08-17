@@ -5,6 +5,8 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.network.NetworkNodeData;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -12,12 +14,10 @@ public class ActionNetworkReadData extends NetworkAction {
 
     private final NetworkNodeData node;
     private final WorldObject object;
-    private final String[] menuPath;
 
-    public ActionNetworkReadData(NetworkNodeData node, WorldObject object, String[] menuPath) {
+    public ActionNetworkReadData(NetworkNodeData node, WorldObject object) {
         this.node = node;
         this.object = object;
-        this.menuPath = menuPath;
     }
 
     @Override
@@ -28,8 +28,18 @@ public class ActionNetworkReadData extends NetworkAction {
     }
 
     @Override
-    public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Read", canChoose(subject).canChoose(), menuPath, new String[]{"read data from " + node.getName()});
+    public ActionCategory getCategory(Actor subject) {
+        return ActionCategory.NETWORK;
+    }
+
+    @Override
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataNetwork(node);
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
+        return "Read Data";
     }
 
     @Override

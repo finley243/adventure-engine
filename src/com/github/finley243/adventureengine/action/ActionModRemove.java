@@ -6,6 +6,9 @@ import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.item.ItemMod;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
+import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 
 public class ActionModRemove extends Action {
@@ -26,8 +29,18 @@ public class ActionModRemove extends Action {
     }
 
     @Override
-    public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Remove", canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(weapon, subject.getInventory()), "Mods", LangUtils.titleCase(mod.getName())}, new String[]{"remove " + mod.getName() + " from " + weapon.getName()});
+    public ActionCategory getCategory(Actor subject) {
+        return ActionCategory.INVENTORY_COMBINE;
+    }
+
+    @Override
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataInventoryCombine(weapon, mod);
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
+        return "Remove";
     }
 
 }

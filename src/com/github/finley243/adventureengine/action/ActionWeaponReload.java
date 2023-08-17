@@ -6,6 +6,9 @@ import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.item.ItemAmmo;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
 import com.github.finley243.adventureengine.textgen.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -81,10 +84,20 @@ public class ActionWeaponReload extends Action {
 			}
 		}
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(LangUtils.titleCase(ammoType.getName()), canChoose(subject).canChoose(), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), "Reload (" + weapon.getAmmoRemaining() + "/" + weapon.getClipSize() + ")"}, new String[]{"reload " + weapon.getName() + " with " + LangUtils.pluralizeNoun(ammoType.getName())});
+	public ActionCategory getCategory(Actor subject) {
+		return ActionCategory.INVENTORY_COMBINE;
+	}
+
+	@Override
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataInventoryCombine(weapon, ammoType);
+	}
+
+	@Override
+	public String getPrompt(Actor subject) {
+		return "Reload";
 	}
 
 	@Override

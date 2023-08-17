@@ -8,6 +8,8 @@ import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -56,7 +58,17 @@ public class ActionItemEquip extends Action {
     }
 
     @Override
-    public MenuChoice getMenuChoices(Actor subject) {
+    public ActionCategory getCategory(Actor subject) {
+        return ActionCategory.INVENTORY;
+    }
+
+    @Override
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataInventory(item);
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
         StringBuilder slotLabel = new StringBuilder();
         boolean first = true;
         for (String slot : slots) {
@@ -67,7 +79,7 @@ public class ActionItemEquip extends Action {
             }
             slotLabel.append(LangUtils.titleCase(subject.getEquipSlots().get(slot).name()));
         }
-        return new MenuChoice("Equip (" + slotLabel + ")", canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"equip " + item.getName(), "put on " + item.getName()});
+        return "Equip (" + slotLabel + ")";
     }
 
     @Override

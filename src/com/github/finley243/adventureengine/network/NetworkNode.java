@@ -44,19 +44,19 @@ public abstract class NetworkNode {
         this.isBreached = state;
     }
 
-    public List<Action> actions(Actor subject, WorldObject object, String[] menuPath) {
+    public List<Action> actions(Actor subject, WorldObject object) {
         List<Action> actions = new ArrayList<>();
-        String[] currentNodePath = Arrays.copyOf(menuPath, menuPath.length + 1);
-        currentNodePath[currentNodePath.length - 1] = getName();
+        /*String[] currentNodePath = Arrays.copyOf(menuPath, menuPath.length + 1);
+        currentNodePath[currentNodePath.length - 1] = getName();*/
         if (isBreached()) {
-            actions.addAll(breachedActions(subject, object, currentNodePath));
+            actions.addAll(breachedActions(subject, object));
         } else {
-            actions.add(new ActionNetworkBreach(this, object, currentNodePath));
+            actions.add(new ActionNetworkBreach(this, object));
         }
         return actions;
     }
 
-    protected abstract List<Action> breachedActions(Actor subject, WorldObject object, String[] menuPath);
+    protected abstract List<Action> breachedActions(Actor subject, WorldObject object);
 
     @Override
     public boolean equals(Object o) {

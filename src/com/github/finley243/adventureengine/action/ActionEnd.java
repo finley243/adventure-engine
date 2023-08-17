@@ -3,6 +3,8 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
 
 public class ActionEnd extends Action {
 
@@ -23,10 +25,20 @@ public class ActionEnd extends Action {
 	public int actionPoints(Actor subject) {
 		return 0;
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("End turn", canChoose(subject).canChoose(), new String[]{"end turn", "end", "wait"});
+	public ActionCategory getCategory(Actor subject) {
+		return ActionCategory.END_TURN;
+	}
+
+	@Override
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataSelf();
+	}
+
+	@Override
+	public String getPrompt(Actor subject) {
+		return "End Turn";
 	}
 
 	@Override

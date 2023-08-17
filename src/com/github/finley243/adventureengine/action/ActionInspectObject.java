@@ -5,6 +5,10 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
+import com.github.finley243.adventureengine.menu.action.MenuDataObject;
+import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -28,10 +32,20 @@ public class ActionInspectObject extends Action {
 	public int actionPoints(Actor subject) {
 		return 0;
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice("Inspect", canChoose(subject).canChoose(), new String[]{LangUtils.titleCase(object.getName())}, new String[]{"inspect " + object.getName(), "examine " + object.getName(), "look at " + object.getName()});
+	public ActionCategory getCategory(Actor subject) {
+		return ActionCategory.OBJECT;
+	}
+
+	@Override
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataObject(object);
+	}
+
+	@Override
+	public String getPrompt(Actor subject) {
+		return "Inspect";
 	}
 
 	@Override

@@ -1,16 +1,14 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
-import com.github.finley243.adventureengine.ui.ConsoleInterface;
-import com.github.finley243.adventureengine.ui.ConsoleParserInterface;
-import com.github.finley243.adventureengine.ui.GraphicalInterfaceNested;
-import com.github.finley243.adventureengine.ui.UserInterface;
+import com.github.finley243.adventureengine.ui.*;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.google.common.eventbus.EventBus;
@@ -56,7 +54,7 @@ public class Game {
 		debugLogger = new DebugLogger(GAMEFILES + LOG_DIRECTORY, data.getConfig("enableDebugLog").equalsIgnoreCase("true"));
 
 		UserInterface userInterface = switch (data.getConfig("interfaceType")) {
-			case "graphicalChoice" -> new GraphicalInterfaceNested(this);
+			case "graphicalChoice" -> new GraphicalInterfaceComplex(this);
 			case "consoleParser" -> new ConsoleParserInterface(this);
 			case "consoleChoice", default -> new ConsoleInterface(this);
 		};

@@ -42,9 +42,7 @@ public class ConsoleParserInterface implements UserInterface {
             game.eventBus().post(new ChoiceMenuInputEvent(validChoices.get(response - 1).getIndex()));
         } else {
             for (MenuChoice menuChoice : validChoices) {
-                for (String parserPrompt : menuChoice.getParserPrompts()) {
-                    System.out.println("PROMPT: " + parserPrompt);
-                }
+                System.out.println("PROMPT: " + menuChoice.getParserPrompt());
             }
             while (true) {
                 String response = ConsoleUtils.stringInput();
@@ -64,12 +62,10 @@ public class ConsoleParserInterface implements UserInterface {
                 }
                 String processedResponse = builder.toString();
                 for (MenuChoice menuChoice : validChoices) {
-                    for (String parserPrompt : menuChoice.getParserPrompts()) {
-                        if (parserPrompt.equalsIgnoreCase(processedResponse)) {
-                            System.out.println();
-                            game.eventBus().post(new ChoiceMenuInputEvent(menuChoice.getIndex()));
-                            return;
-                        }
+                    if (menuChoice.getParserPrompt().equalsIgnoreCase(processedResponse)) {
+                        System.out.println();
+                        game.eventBus().post(new ChoiceMenuInputEvent(menuChoice.getIndex()));
+                        return;
                     }
                 }
                 System.out.println("Command not recognized. Try again.");

@@ -8,6 +8,8 @@ import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataAttackArea;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -26,10 +28,10 @@ public class ActionCustom extends Action {
     private final Area area;
     private final String template;
     private final Map<String, Expression> parameters;
-    private final String[] menuPath;
+    private final MenuData menuData;
     private final boolean isMove;
 
-    public ActionCustom(Game game, Actor actor, WorldObject object, Item item, Area area, String template, Map<String, Expression> parameters, String[] menuPath, boolean isMove) {
+    public ActionCustom(Game game, Actor actor, WorldObject object, Item item, Area area, String template, Map<String, Expression> parameters, MenuData menuData, boolean isMove) {
         this.game = game;
         this.actor = actor;
         this.object = object;
@@ -37,7 +39,7 @@ public class ActionCustom extends Action {
         this.area = area;
         this.template = template;
         this.parameters = parameters;
-        this.menuPath = menuPath;
+        this.menuData = menuData;
         this.isMove = isMove;
     }
 
@@ -47,6 +49,32 @@ public class ActionCustom extends Action {
 
     public ActionTemplate getTemplate() {
         return game.data().getActionTemplate(template);
+    }
+
+    @Override
+    public ActionCategory getCategory(Actor subject) {
+        return ActionCategory.OBJECT;
+    }
+
+    @Override
+    public MenuData getMenuData(Actor subject) {
+        return menuData;
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
+        Map<String, String> contextVars = new HashMap<>();
+        for (Map.Entry<String, Expression> entry : getTemplate().getParameters().entrySet()) {
+            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, parameters)));
+            }
+        }
+        for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
+            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, parameters)));
+            }
+        }
+        return LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
     }
 
     @Override
@@ -108,23 +136,6 @@ public class ActionCustom extends Action {
             return UtilityUtils.getMovementUtility(subject, area) * UtilityUtils.MOVE_UTILITY_MULTIPLIER;
         }
         return 0.0f;
-    }
-
-    @Override
-    public MenuChoice getMenuChoices(Actor subject) {
-        Map<String, String> contextVars = new HashMap<>();
-        for (Map.Entry<String, Expression> entry : getTemplate().getParameters().entrySet()) {
-            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, parameters)));
-            }
-        }
-        for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
-            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, parameters)));
-            }
-        }
-        String promptWithVars = LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
-        return new MenuChoice(promptWithVars, canChoose(subject).canChoose(), menuPath, new String[]{getTemplate().getPrompt()});
     }
 
     @Override

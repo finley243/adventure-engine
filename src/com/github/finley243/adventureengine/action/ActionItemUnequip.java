@@ -7,6 +7,9 @@ import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -29,8 +32,18 @@ public class ActionItemUnequip extends Action {
     }
 
     @Override
-    public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice("Unequip", canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"unequip " + item.getName(), "take off " + item.getName()});
+    public ActionCategory getCategory(Actor subject) {
+        return ActionCategory.INVENTORY;
+    }
+
+    @Override
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataInventory(item);
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
+        return "Unequip";
     }
 
     @Override

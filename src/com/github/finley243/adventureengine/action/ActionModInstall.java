@@ -6,6 +6,8 @@ import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.item.ItemMod;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
 
 public class ActionModInstall extends Action {
 
@@ -37,8 +39,18 @@ public class ActionModInstall extends Action {
     }
 
     @Override
-    public MenuChoice getMenuChoices(Actor subject) {
-        return new MenuChoice(Inventory.getItemNameFormatted(weapon, subject.getInventory()), canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(mod, subject.getInventory()), "Install"}, new String[]{"install " + mod.getName() + " on " + weapon.getName()});
+    public ActionCategory getCategory(Actor subject) {
+        return ActionCategory.INVENTORY_COMBINE;
+    }
+
+    @Override
+    public MenuData getMenuData(Actor subject) {
+        return new MenuDataInventoryCombine(weapon, mod);
+    }
+
+    @Override
+    public String getPrompt(Actor subject) {
+        return "Install";
     }
 
 }

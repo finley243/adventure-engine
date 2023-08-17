@@ -4,6 +4,9 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataAttack;
+import com.github.finley243.adventureengine.menu.action.MenuDataAttackArea;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -57,10 +60,10 @@ public class ActionAttackBasic extends ActionAttack {
 		}
 		return new CanChooseResult(true, null);
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		return new MenuChoice(LangUtils.titleCase(((Noun) target).getName()) + " (" + getChanceTag(subject) + ")", canChoose(subject).canChoose(), new String[]{"Attack", LangUtils.titleCase(weapon.getName()), LangUtils.titleCase(getPrompt())}, new String[]{getPrompt().toLowerCase() + " " + ((Noun) target).getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " at " + ((Noun) target).getName() + " with " + weapon.getName(), getPrompt().toLowerCase() + " " + weapon.getName() + " at " + ((Noun) target).getName(), getPrompt().toLowerCase() + " with " + weapon.getName() + " at " + ((Noun) target).getName()});
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataAttack(target, weapon);
 	}
 
 }

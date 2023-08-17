@@ -6,6 +6,8 @@ import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -30,11 +32,20 @@ public class ActionItemConsume extends Action {
 		}
 		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
-	
+
 	@Override
-	public MenuChoice getMenuChoices(Actor subject) {
-		String prompt = item.getConsumePrompt();
-		return new MenuChoice(prompt, canChoose(subject).canChoose(), new String[]{"Inventory", Inventory.getItemNameFormatted(item, subject.getInventory())}, new String[]{"consume " + item.getName(), "use " + item.getName(), prompt.toLowerCase() + " " + item.getName()});
+	public ActionCategory getCategory(Actor subject) {
+		return ActionCategory.INVENTORY;
+	}
+
+	@Override
+	public MenuData getMenuData(Actor subject) {
+		return new MenuDataInventory(item);
+	}
+
+	@Override
+	public String getPrompt(Actor subject) {
+		return item.getConsumePrompt();
 	}
 
 	@Override
