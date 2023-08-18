@@ -26,7 +26,7 @@ public class ActionModRemove extends Action {
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuDataInventoryCombine(weapon, mod);
+        return new MenuDataInventoryCombine(weapon, subject.getInventory(), mod, subject.getInventory());
     }
 
     @Override

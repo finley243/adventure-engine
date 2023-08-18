@@ -33,12 +33,6 @@ public class ObjectComponentInventory extends ObjectComponent {
         actions.addAll(inventory.getExternalActions(getObject(), getTemplateInventory().getName(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
         for (ActionCustom.CustomActionHolder customAction : getTemplateInventory().getPerItemActions()) {
             for (Item item : inventory.getItems()) {
-                String[] menuPath;
-                if (getTemplate().getName() != null) {
-                    menuPath = new String[] {LangUtils.titleCase(getObject().getName()), LangUtils.titleCase(getTemplate().getName()), Inventory.getItemNameFormatted(item, inventory)};
-                } else {
-                    menuPath = new String[] {LangUtils.titleCase(getObject().getName()), Inventory.getItemNameFormatted(item, inventory)};
-                }
                 actions.add(new ActionCustom(getObject().game(), null, getObject(), item, null, customAction.action(), customAction.parameters(), new MenuDataObjectInventory(getObject(), item, false), false));
             }
         }

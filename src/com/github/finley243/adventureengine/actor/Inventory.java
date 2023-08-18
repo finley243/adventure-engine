@@ -287,15 +287,4 @@ public class Inventory {
 		return state;
 	}
 
-	public static String getItemNameFormatted(Item item, Inventory inventory) {
-		if (item.hasState() && inventory.itemCount(item.getTemplateID()) > 1) {
-			int instanceIndex = inventory.items.get(item.getTemplateID()).indexOf(item) + 1;
-			return LangUtils.titleCase(item.getName()) + " (" + instanceIndex + ")";
-		} else if (inventory.itemCount(item) > 1) {
-			return LangUtils.titleCase(item.getName()) + " x" + inventory.itemCount(item);
-		} else {
-			return LangUtils.titleCase(item.getName());
-		}
-	}
-
 }

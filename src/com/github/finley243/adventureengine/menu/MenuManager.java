@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.*;
 import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
 import com.github.finley243.adventureengine.event.ui.NumericMenuInputEvent;
@@ -86,16 +87,18 @@ public class MenuManager {
 				case MenuDataItemWorld dataItemWorld -> {
 					String itemID = dataItemWorld.item.getID();
 					String itemName = LangUtils.titleCase(dataItemWorld.item.getName());
+					int itemCount = dataItemWorld.inv.itemCount(dataItemWorld.item);
 					if (!categoryMap.containsKey("item_" + itemID)) {
-						categoryMap.put("item_" + itemID, new MenuCategory("item_" + itemID, null, itemName));
+						categoryMap.put("item_" + itemID, new MenuCategory("item_" + itemID, null, itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
 					}
 					parentCategory = "item_" + itemID;
 				}
 				case MenuDataInventory dataInventory -> {
 					String itemID = dataInventory.item.getID();
 					String itemName = LangUtils.titleCase(dataInventory.item.getName());
+					int itemCount = dataInventory.inv.itemCount(dataInventory.item);
 					if (!categoryMap.containsKey("inv_item_" + itemID)) {
-						categoryMap.put("inv_item_" + itemID, new MenuCategory("inv_item_" + itemID, "inventory", itemName));
+						categoryMap.put("inv_item_" + itemID, new MenuCategory("inv_item_" + itemID, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
 					}
 					if (!categoryMap.containsKey("inventory")) {
 						categoryMap.put("inventory", new MenuCategory("inventory", null, "Inventory"));
@@ -105,9 +108,11 @@ public class MenuManager {
 				case MenuDataInventoryCombine dataInventoryCombine -> {
 					String itemID = dataInventoryCombine.item.getID();
 					String itemName = LangUtils.titleCase(dataInventoryCombine.item.getName());
+					int itemCount = dataInventoryCombine.inv.itemCount(dataInventoryCombine.item);
 					String combinedItemName = dataInventoryCombine.combinedItem.getName();
+					int combinedItemCount = dataInventoryCombine.combinedInv.itemCount(dataInventoryCombine.combinedItem);
 					if (!categoryMap.containsKey("inv_item_" + itemID)) {
-						categoryMap.put("inv_item_" + itemID, new MenuCategory("inv_item_" + itemID, "inventory", itemName));
+						categoryMap.put("inv_item_" + itemID, new MenuCategory("inv_item_" + itemID, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
 					}
 					if (!categoryMap.containsKey("inventory")) {
 						categoryMap.put("inventory", new MenuCategory("inventory", null, "Inventory"));
@@ -117,7 +122,7 @@ public class MenuManager {
 						categoryMap.put(combineCategory, new MenuCategory(combineCategory, "inv_item_" + itemID, action.getPrompt(actor)));
 					}
 					parentCategory = combineCategory;
-					promptOverride = LangUtils.titleCase(combinedItemName);
+					promptOverride = LangUtils.titleCase(combinedItemName + (combinedItemCount > 1 ? " (" + combinedItemCount + ")" : ""));
 				}
 				case MenuDataObjectInventory dataObjectInventory -> {
 					String objectID = dataObjectInventory.object.getID();

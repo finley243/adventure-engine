@@ -35,7 +35,7 @@ public class ActionItemDrop extends Action {
 
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataInventory(item);
+		return new MenuDataInventory(item, subject.getInventory());
 	}
 
 	@Override

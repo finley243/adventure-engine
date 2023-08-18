@@ -41,7 +41,7 @@ public class ActionItemTakeAll extends Action {
 
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataItemWorld(item);
+		return new MenuDataItemWorld(item, area.getInventory());
 	}
 
 	@Override

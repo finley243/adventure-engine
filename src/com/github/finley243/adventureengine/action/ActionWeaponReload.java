@@ -87,7 +87,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public MenuData getMenuData(Actor subject) {
-		return new MenuDataInventoryCombine(weapon, ammoType);
+		return new MenuDataInventoryCombine(weapon, subject.getInventory(), ammoType, subject.getInventory());
 	}
 
 	@Override

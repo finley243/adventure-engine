@@ -1,7 +1,10 @@
 package com.github.finley243.adventureengine.ui;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.event.ui.*;
+import com.github.finley243.adventureengine.event.ui.RenderChoiceMenuEvent;
+import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
+import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.google.common.eventbus.Subscribe;
@@ -13,8 +16,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class GraphicalInterfaceComplex implements UserInterface {
 
@@ -22,6 +25,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 
 	private final Game game;
 
+	private final JFrame window;
 	private final JTextPane textPanel;
 	private final JPanel detailsPanel;
 	private final JPanel switchPanel;
@@ -34,7 +38,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 		this.validPanels = new HashSet<>();
 		lastPanel = TOP_LEVEL_MENU;
 
-		JFrame window = new JFrame(game.data().getConfig("gameName"));
+		this.window = new JFrame(game.data().getConfig("gameName"));
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setPreferredSize(new Dimension(600, 700));
 		window.setLayout(new GridBagLayout());
@@ -78,7 +82,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 		}
 	}
 
-	private JPanel getMenuPanel(String parentCategory, List<CategoryData> categories, List<ActionData> actions) {
+	private JPanel getMenuPanel(String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions) {
 		JPanel menuPanel = new JPanel();
 		menuPanel.setLayout(new GridBagLayout());
 		int layoutIndex = 0;
@@ -87,12 +91,12 @@ public class GraphicalInterfaceComplex implements UserInterface {
 			menuPanel.add(backButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
 			layoutIndex++;
 		}
-		for (CategoryData category : categories) {
+		for (MenuCategory category : categories) {
 			JButton categoryButton = getCategoryButton(category);
 			menuPanel.add(categoryButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
 			layoutIndex++;
 		}
-		for (ActionData action : actions) {
+		for (MenuChoice action : actions) {
 			JButton actionButton = getActionButton(action);
 			menuPanel.add(actionButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
 			layoutIndex++;
@@ -108,9 +112,11 @@ public class GraphicalInterfaceComplex implements UserInterface {
 		});
 	}
 
-	private JButton getActionButton(ActionData action) {
-		JButton actionButton = new JButton(action.prompt());
-		actionButton.addActionListener(new ChoiceButtonListener(game, action.index()));
+	private JButton getActionButton(MenuChoice action) {
+		JButton actionButton = new JButton(action.getPrompt());
+		actionButton.setToolTipText(action.getDisabledReason());
+		actionButton.setHorizontalAlignment(SwingConstants.LEFT);
+		actionButton.addActionListener(new ChoiceButtonListener(game, action.getIndex()));
 		actionButton.addActionListener(e -> clearMenu());
 		actionButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -123,19 +129,21 @@ public class GraphicalInterfaceComplex implements UserInterface {
 				//((JLabel) detailsPanel.getComponent(0)).setText("");
 			}
 		});
-		actionButton.setEnabled(action.enable());
+		actionButton.setEnabled(action.isEnabled());
 		return actionButton;
 	}
 
 	private JButton getBackButton(String parentCategory) {
 		JButton backButton = new JButton("<- Back");
+		backButton.setHorizontalAlignment(SwingConstants.RIGHT);
 		backButton.addActionListener(e -> SwingUtilities.invokeLater(() -> switchToPanel(parentCategory)));
 		return backButton;
 	}
 
-	private JButton getCategoryButton(CategoryData category) {
-		JButton categoryButton = new JButton(category.prompt() + " ->");
-		categoryButton.addActionListener(e -> switchToPanel(category.ID()));
+	private JButton getCategoryButton(MenuCategory category) {
+		JButton categoryButton = new JButton(category.getName() + " ->");
+		categoryButton.setHorizontalAlignment(SwingConstants.LEFT);
+		categoryButton.addActionListener(e -> switchToPanel(category.getCategoryID()));
 		return categoryButton;
 	}
 
@@ -170,30 +178,30 @@ public class GraphicalInterfaceComplex implements UserInterface {
 	@Override
 	public void onMenuEvent(RenderChoiceMenuEvent event) {
 		SwingUtilities.invokeLater(() -> {
-			List<ActionData> topLevelActions = new ArrayList<>();
-			List<CategoryData> topLevelCategories = new ArrayList<>();
-			Map<String, List<ActionData>> actions = new HashMap<>();
-			Map<String, List<CategoryData>> categories = new HashMap<>();
+			List<MenuChoice> topLevelActions = new ArrayList<>();
+			List<MenuCategory> topLevelCategories = new ArrayList<>();
+			Map<String, List<MenuChoice>> actions = new HashMap<>();
+			Map<String, List<MenuCategory>> categories = new HashMap<>();
 			Map<String, String> parentCategories = new HashMap<>();
 			for (MenuChoice choice : event.getMenuChoices()) {
 				if (choice.getParentCategory() == null) {
-					topLevelActions.add(new ActionData(choice.getIndex(), choice.getPrompt(), choice.isEnabled()));
+					topLevelActions.add(choice);
 				} else {
 					if (!actions.containsKey(choice.getParentCategory())) {
 						actions.put(choice.getParentCategory(), new ArrayList<>());
 					}
-					actions.get(choice.getParentCategory()).add(new ActionData(choice.getIndex(), choice.getPrompt(), choice.isEnabled()));
+					actions.get(choice.getParentCategory()).add(choice);
 				}
 			}
 			for (MenuCategory category : event.getMenuCategories()) {
 				if (category.getParentCategory() == null) {
-					topLevelCategories.add(new CategoryData(category.getCategoryID(), category.getName()));
+					topLevelCategories.add(category);
 				} else {
 					parentCategories.put(category.getCategoryID(), category.getParentCategory());
 					if (!categories.containsKey(category.getParentCategory())) {
 						categories.put(category.getParentCategory(), new ArrayList<>());
 					}
-					categories.get(category.getParentCategory()).add(new CategoryData(category.getCategoryID(), category.getName()));
+					categories.get(category.getParentCategory()).add(category);
 				}
 			}
 			JPanel topLevelPanel = getMenuPanel(null, topLevelCategories, topLevelActions);
@@ -204,13 +212,14 @@ public class GraphicalInterfaceComplex implements UserInterface {
 			combinedCategories.addAll(categories.keySet());
 			for (String categoryID : combinedCategories) {
 				String parentCategory = parentCategories.getOrDefault(categoryID, TOP_LEVEL_MENU);
-				List<ActionData> actionData = actions.getOrDefault(categoryID, List.of());
-				List<CategoryData> categoryData = categories.getOrDefault(categoryID, List.of());
+				List<MenuChoice> actionData = actions.getOrDefault(categoryID, List.of());
+				List<MenuCategory> categoryData = categories.getOrDefault(categoryID, List.of());
 				//System.out.println("CATEGORY: " + categoryID + " - PARENT: " + parentCategory + " - ACTIONS: " + actionData.size());
 				JPanel categoryPanel = getMenuPanel(parentCategory, categoryData, actionData);
 				switchPanel.add(categoryPanel, categoryID);
 				validPanels.add(categoryID);
 			}
+			window.pack();
 			switchToPanel(lastPanel);
 		});
 	}
@@ -224,23 +233,5 @@ public class GraphicalInterfaceComplex implements UserInterface {
 	public void onTextClearEvent(TextClearEvent e) {
 		SwingUtilities.invokeLater(() -> textPanel.setText(null));
 	}
-
-	/*@Subscribe
-	public void onMenuSelectEvent(ChoiceMenuInputEvent e) {
-		SwingUtilities.invokeLater(() -> {
-			clearMenu();
-			switchPanel.repaint();
-		});
-	}*/
-
-	/*@Subscribe
-	public void onNumericMenuConfirmEvent(NumericMenuInputEvent e) {
-		SwingUtilities.invokeLater(this::clearMenu);
-	}*/
-
-	// TODO - Delete these private records and switch to MenuChoice and MenuCategory classes
-	private record ActionData(int index, String prompt, boolean enable) {}
-
-	private record CategoryData(String ID, String prompt) {}
 	
 }

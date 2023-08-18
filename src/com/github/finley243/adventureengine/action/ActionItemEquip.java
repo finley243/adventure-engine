@@ -43,21 +43,21 @@ public class ActionItemEquip extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
+        if (item.getEquippedActor() != null) {
+            return new CanChooseResult(false, "Already equipped");
+        }
         if (subject.getEquipmentComponent().isSlotBlocked(slots)) {
             return new CanChooseResult(false, "Equipping this item is blocked");
         }
         if (!subject.getEquipmentComponent().isSlotEmpty(slots)) {
             return new CanChooseResult(false, "Another item is already equipped");
         }
-        if (item.getEquippedActor() != null) {
-            return new CanChooseResult(false, "Already equipped");
-        }
         return new CanChooseResult(true, null);
     }
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuDataInventory(item);
+        return new MenuDataInventory(item, subject.getInventory());
     }
 
     @Override
