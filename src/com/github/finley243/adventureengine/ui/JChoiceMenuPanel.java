@@ -11,8 +11,6 @@ import java.util.List;
 
 public class JChoiceMenuPanel extends JPanel {
 
-    private static final Font BUTTON_FONT = new Font("Arial", Font.PLAIN, 12);
-
     private final Game game;
     private final JSwitchPanel switchPanel;
 
@@ -36,47 +34,28 @@ public class JChoiceMenuPanel extends JPanel {
             add(actionButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
             layoutIndex++;
         }
+        setBackground(new Color(20, 20, 20));
     }
 
     private JButton getActionButton(MenuChoice action) {
-        JButton actionButton = new JChoiceButton(action.getPrompt());
-        actionButton.setFont(BUTTON_FONT);
-        actionButton.setBackground(Color.white);
-        actionButton.setForeground(Color.DARK_GRAY);
+        JChoiceButton actionButton = new JChoiceButton(action.getPrompt(), action.getActionPoints(), action.getDisabledReason());
         actionButton.setToolTipText(action.getDisabledReason());
         actionButton.setHorizontalAlignment(SwingConstants.LEFT);
         actionButton.addActionListener(new ChoiceButtonListener(game, action.getIndex()));
         actionButton.addActionListener(e -> switchPanel.clear());
-        actionButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                //((JLabel) detailsPanel.getComponent(0)).setText(action.prompt());
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                //((JLabel) detailsPanel.getComponent(0)).setText("");
-            }
-        });
         actionButton.setEnabled(action.isEnabled());
         return actionButton;
     }
 
     private JButton getBackButton(String parentCategory) {
-        JButton backButton = new JChoiceButton("<- Back");
-        backButton.setFont(BUTTON_FONT);
-        backButton.setBackground(Color.white);
-        backButton.setForeground(Color.DARK_GRAY);
+        JChoiceButton backButton = new JChoiceButton("<- Back", -1, null);
         backButton.setHorizontalAlignment(SwingConstants.RIGHT);
         backButton.addActionListener(e -> SwingUtilities.invokeLater(() -> switchPanel.switchToPanel(parentCategory)));
         return backButton;
     }
 
     private JButton getCategoryButton(MenuCategory category) {
-        JButton categoryButton = new JChoiceButton(category.getName() + " ->");
-        categoryButton.setFont(BUTTON_FONT);
-        categoryButton.setBackground(Color.white);
-        categoryButton.setForeground(Color.DARK_GRAY);
+        JChoiceButton categoryButton = new JChoiceButton(category.getName() + " ->", -1, null);
         categoryButton.setHorizontalAlignment(SwingConstants.LEFT);
         categoryButton.addActionListener(e -> switchPanel.switchToPanel(category.getCategoryID()));
         return categoryButton;

@@ -7,18 +7,20 @@ public class MenuChoice implements Comparable<MenuChoice> {
     private int index;
     private final String prompt;
     private final Action.CanChooseResult canChooseData;
+    private final int actionPoints;
     private final String parentCategory;
     private final String parserPrompt;
 
-    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, String parentCategory, String parserPrompt) {
+    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, int actionPoints, String parentCategory, String parserPrompt) {
         this.prompt = prompt;
         this.canChooseData = canChooseData;
+        this.actionPoints = actionPoints;
         this.parentCategory = parentCategory;
         this.parserPrompt = parserPrompt;
     }
 
-    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, String parserPrompt) {
-        this(prompt, canChooseData, null, parserPrompt);
+    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, int actionPoints, String parserPrompt) {
+        this(prompt, canChooseData, actionPoints, null, parserPrompt);
     }
 
     public void setIndex(int index) {
@@ -39,6 +41,10 @@ public class MenuChoice implements Comparable<MenuChoice> {
 
     public String getDisabledReason() {
         return canChooseData.reason();
+    }
+
+    public int getActionPoints() {
+        return actionPoints;
     }
 
     public String getParentCategory() {
