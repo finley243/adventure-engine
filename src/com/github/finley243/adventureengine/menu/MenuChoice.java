@@ -33,16 +33,6 @@ public class MenuChoice implements Comparable<MenuChoice> {
         return prompt;
     }
 
-    public String getFullPrompt() {
-        /*StringBuilder fullPrompt = new StringBuilder();
-        for (String current : path) {
-            fullPrompt.append(LangUtils.titleCase(current)).append(" - ");
-        }
-        fullPrompt.append(prompt);
-        return fullPrompt.toString();*/
-        return prompt;
-    }
-
     public boolean isEnabled() {
         return canChooseData.canChoose();
     }

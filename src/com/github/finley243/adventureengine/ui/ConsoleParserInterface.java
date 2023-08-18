@@ -35,7 +35,7 @@ public class ConsoleParserInterface implements UserInterface {
         }
         if (event.shouldForcePrompts()) {
             for(int i = 0; i < validChoices.size(); i++) {
-                System.out.println((i + 1) + ") " + validChoices.get(i).getFullPrompt());
+                System.out.println((i + 1) + ") " + validChoices.get(i).getPrompt());
             }
             int response = ConsoleUtils.intInRange(1, validChoices.size());
             System.out.println();

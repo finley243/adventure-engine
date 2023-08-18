@@ -28,12 +28,12 @@ public class ConsoleInterface implements UserInterface {
 	public void onMenuEvent(RenderChoiceMenuEvent e) {
 		List<MenuChoice> validChoices = new ArrayList<>();
 		for (MenuChoice choice : e.getMenuChoices()) {
-			if(choice.isEnabled()) {
+			if (choice.isEnabled()) {
 				validChoices.add(choice);
 			}
 		}
 		for (int i = 0; i < validChoices.size(); i++) {
-			System.out.println((i + 1) + ") " + validChoices.get(i).getFullPrompt());
+			System.out.println((i + 1) + ") " + validChoices.get(i).getPrompt());
 		}
 		int response = ConsoleUtils.intInRange(1, validChoices.size());
 		System.out.println();
