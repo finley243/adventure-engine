@@ -11,7 +11,7 @@ import java.util.List;
 
 public class JChoiceMenuPanel extends JPanel {
 
-    private static final Font BUTTON_FONT = new Font("Futura Round Medium", Font.PLAIN, 18);
+    private static final Font BUTTON_FONT = new Font("Arial", Font.PLAIN, 12);
 
     private final Game game;
     private final JSwitchPanel switchPanel;
@@ -39,7 +39,7 @@ public class JChoiceMenuPanel extends JPanel {
     }
 
     private JButton getActionButton(MenuChoice action) {
-        JButton actionButton = new JButton(action.getPrompt());
+        JButton actionButton = new JChoiceButton(action.getPrompt());
         actionButton.setFont(BUTTON_FONT);
         actionButton.setBackground(Color.white);
         actionButton.setForeground(Color.DARK_GRAY);
@@ -63,7 +63,7 @@ public class JChoiceMenuPanel extends JPanel {
     }
 
     private JButton getBackButton(String parentCategory) {
-        JButton backButton = new JButton("<- Back");
+        JButton backButton = new JChoiceButton("<- Back");
         backButton.setFont(BUTTON_FONT);
         backButton.setBackground(Color.white);
         backButton.setForeground(Color.DARK_GRAY);
@@ -73,7 +73,7 @@ public class JChoiceMenuPanel extends JPanel {
     }
 
     private JButton getCategoryButton(MenuCategory category) {
-        JButton categoryButton = new JButton(category.getName() + " ->");
+        JButton categoryButton = new JChoiceButton(category.getName() + " ->");
         categoryButton.setFont(BUTTON_FONT);
         categoryButton.setBackground(Color.white);
         categoryButton.setForeground(Color.DARK_GRAY);
