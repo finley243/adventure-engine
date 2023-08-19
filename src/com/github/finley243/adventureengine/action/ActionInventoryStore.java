@@ -49,10 +49,10 @@ public class ActionInventoryStore extends Action {
     @Override
     public MenuData getMenuData(Actor subject) {
         if (owner instanceof Actor actor) {
-            return new MenuDataActorInventory(actor, item, true);
+            return new MenuDataActorInventory(actor, item, true, true);
         } else {
             WorldObject object = (WorldObject) owner;
-            return new MenuDataObjectInventory(object, item, true);
+            return new MenuDataObjectInventory(object, item, name, true, true);
         }
     }
 

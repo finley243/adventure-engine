@@ -15,7 +15,7 @@ public class JChoiceButton extends JPanel {
     public static final Color BACKGROUND_CLICK = new Color(151, 207, 247);
     public static final Color BACKGROUND_DISABLED = new Color(204, 204, 204);
     public static final Color TEXT = new Color(20, 20, 20);
-    public static final Color TEXT_ERROR = new Color(255, 49, 46);
+    public static final Color TEXT_ERROR = new Color(209, 32, 29);
 
     public static final Font FONT_MAIN = new Font("Arial", Font.PLAIN, 12);
     public static final Font FONT_ACTION_POINTS = new Font("Arial", Font.PLAIN, 12);

@@ -553,7 +553,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		for (ActionCustom.CustomActionHolder inventoryActionHolder : getTemplate().getCustomInventoryActions()) {
 			for (Item item : inventory.getItems()) {
-				actions.add(new ActionCustom(game(), this, null, item, null, inventoryActionHolder.action(), inventoryActionHolder.parameters(), new MenuDataActorInventory(this, item, false), false));
+				actions.add(new ActionCustom(game(), this, null, item, null, inventoryActionHolder.action(), inventoryActionHolder.parameters(), new MenuDataActorInventory(this, item, false, false), false));
 			}
 		}
 		return actions;

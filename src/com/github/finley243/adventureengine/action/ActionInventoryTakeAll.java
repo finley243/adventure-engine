@@ -52,10 +52,10 @@ public class ActionInventoryTakeAll extends Action {
     @Override
     public MenuData getMenuData(Actor subject) {
         if (owner instanceof Actor actor) {
-            return new MenuDataActorInventory(actor, item, false);
+            return new MenuDataActorInventory(actor, item, true, false);
         } else {
             WorldObject object = (WorldObject) owner;
-            return new MenuDataObjectInventory(object, item, false);
+            return new MenuDataObjectInventory(object, item, name, true, false);
         }
     }
 

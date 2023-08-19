@@ -1,5 +1,8 @@
 package com.github.finley243.adventureengine.menu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MenuCategory {
 
     public enum CategoryType {
@@ -11,11 +14,16 @@ public class MenuCategory {
     private final String parentCategory;
     private final String name;
 
+    private final List<MenuChoice> choices;
+    private final List<MenuCategory> subCategories;
+
     public MenuCategory(CategoryType type, String categoryID, String parentCategory, String name) {
         this.type = type;
         this.categoryID = categoryID;
         this.parentCategory = parentCategory;
         this.name = name;
+        this.choices = new ArrayList<>();
+        this.subCategories = new ArrayList<>();
     }
 
     public CategoryType getType() {
@@ -32,6 +40,22 @@ public class MenuCategory {
 
     public String getName() {
         return name;
+    }
+
+    public void addChoice(MenuChoice choice) {
+        choices.add(choice);
+    }
+
+    public void addSubCategory(MenuCategory category) {
+        subCategories.add(category);
+    }
+
+    public List<MenuChoice> getChoices() {
+        return choices;
+    }
+
+    public List<MenuCategory> getSubCategories() {
+        return subCategories;
     }
 
 }

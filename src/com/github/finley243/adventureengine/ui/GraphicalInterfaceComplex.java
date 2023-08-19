@@ -19,7 +19,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 	private final Game game;
 
 	private final JFrame window;
-	private final JTextPane textPanel;
+	private final JGameTextPanel textPanel;
 	private final JPanel detailsPanel;
 	private final JSwitchPanel switchPanel;
 
@@ -31,8 +31,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 		window.setPreferredSize(new Dimension(600, 700));
 		window.setLayout(new GridBagLayout());
 
-		this.textPanel = new JTextPane();
-		textPanel.setEditable(false);
+		this.textPanel = new JGameTextPanel();
 		window.getContentPane().add(textPanel, generateConstraints(0, 0, 3, 1, 1, 1.5));
 
 		this.detailsPanel = getDetailsPanel();
@@ -72,18 +71,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 
 	@Override
 	public void onTextEvent(RenderTextEvent e) {
-		SwingUtilities.invokeLater(() -> {
-			StyledDocument doc = textPanel.getStyledDocument();
-			SimpleAttributeSet attributes = new SimpleAttributeSet();
-			StyleConstants.setForeground(attributes, Color.BLACK);
-			StyleConstants.setFontSize(attributes, 14);
-			try {
-				doc.insertString(doc.getLength(), e.getText() + "\n", attributes);
-			} catch (BadLocationException ex) {
-				throw new RuntimeException(ex);
-			}
-			textPanel.repaint();
-		});
+		SwingUtilities.invokeLater(() -> textPanel.appendLine(e.getText()));
 	}
 
 	@Override
@@ -98,7 +86,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 
 	@Subscribe
 	public void onTextClearEvent(TextClearEvent e) {
-		SwingUtilities.invokeLater(() -> textPanel.setText(null));
+		SwingUtilities.invokeLater(textPanel::clearText);
 	}
 	
 }

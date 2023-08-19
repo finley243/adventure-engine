@@ -5,12 +5,11 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.*;
 import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
 import com.github.finley243.adventureengine.event.ui.NumericMenuInputEvent;
-import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderChoiceMenuEvent;
+import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
 import com.github.finley243.adventureengine.menu.action.*;
 import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -45,188 +44,173 @@ public class MenuManager {
 			String parentCategory;
 			String promptOverride = null;
 			switch (action.getMenuData(actor)) {
-				case MenuDataSelf dataSelf -> parentCategory = null;
-				case MenuDataMove dataMove -> {
-					String areaID = dataMove.destination.getID();
-					String areaName = LangUtils.titleCase(dataMove.destination.getRelativeName() + " " + dataMove.destination.getName());
-					if (!categoryMap.containsKey("area_" + areaID)) {
-						categoryMap.put("area_" + areaID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "area_" + areaID, "areas", areaName));
-					}
+				case MenuDataSelf data -> parentCategory = null;
+				case MenuDataMove data -> {
+					String areaName = LangUtils.titleCase(data.destination.getRelativeName() + " " + data.destination.getName());
 					if (!categoryMap.containsKey("areas")) {
 						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, "Areas"));
 					}
-					parentCategory = "area_" + areaID;
-				}
-				case MenuDataArea dataArea -> {
-					String areaID = dataArea.destination.getID();
-					String areaName = LangUtils.titleCase(dataArea.destination.getRelativeName() + " " + dataArea.destination.getName());
-					if (!categoryMap.containsKey("area_" + areaID)) {
-						categoryMap.put("area_" + areaID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "area_" + areaID, "areas", areaName));
+					String areaCategory = "area_" + data.destination.getID();
+					if (!categoryMap.containsKey(areaCategory)) {
+						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", areaName));
 					}
+					parentCategory = areaCategory;
+				}
+				case MenuDataArea data -> {
+					String areaName = LangUtils.titleCase(data.destination.getRelativeName() + " " + data.destination.getName());
 					if (!categoryMap.containsKey("areas")) {
 						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, "Areas"));
 					}
-					parentCategory = "area_" + areaID;
+					String areaCategory = "area_" + data.destination.getID();
+					if (!categoryMap.containsKey(areaCategory)) {
+						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", areaName));
+					}
+					parentCategory = areaCategory;
 				}
-				case MenuDataActor dataActor -> {
-					String actorID = dataActor.actor.getID();
-					String actorName = LangUtils.titleCase(dataActor.actor.getName());
-					if (!categoryMap.containsKey("actor_" + actorID)) {
-						categoryMap.put("actor_" + actorID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "actor_" + actorID, null, actorName));
+				case MenuDataActor data -> {
+					String actorName = LangUtils.titleCase(data.actor.getName());
+					String actorCategory = "actor_" + data.actor.getID();
+					if (!categoryMap.containsKey(actorCategory)) {
+						categoryMap.put(actorCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, actorCategory, null, actorName));
 					}
-					parentCategory = "actor_" + actorID;
+					parentCategory = actorCategory;
 				}
-				case MenuDataObject dataObject -> {
-					String objectID = dataObject.object.getID();
-					String objectName = LangUtils.titleCase(dataObject.object.getName());
-					if (!categoryMap.containsKey("object_" + objectID)) {
-						categoryMap.put("object_" + objectID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "object_" + objectID, null, objectName));
-					}
-					parentCategory = "object_" + objectID;
-				}
-				case MenuDataItemWorld dataItemWorld -> {
-					String itemID = dataItemWorld.item.getID();
-					String itemName = LangUtils.titleCase(dataItemWorld.item.getName());
-					int itemCount = dataItemWorld.inv.itemCount(dataItemWorld.item);
-					if (!categoryMap.containsKey("item_" + itemID)) {
-						categoryMap.put("item_" + itemID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "item_" + itemID, null, itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
-					}
-					parentCategory = "item_" + itemID;
-				}
-				case MenuDataInventory dataInventory -> {
-					String itemID = dataInventory.item.getID();
-					String itemName = LangUtils.titleCase(dataInventory.item.getName());
-					int itemCount = dataInventory.inv.itemCount(dataInventory.item);
-					if (!categoryMap.containsKey("inv_item_" + itemID)) {
-						categoryMap.put("inv_item_" + itemID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "inv_item_" + itemID, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
-					}
-					if (!categoryMap.containsKey("inventory")) {
-						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, "Inventory"));
-					}
-					parentCategory = "inv_item_" + itemID;
-				}
-				case MenuDataInventoryCombine dataInventoryCombine -> {
-					String itemID = dataInventoryCombine.item.getID();
-					String itemName = LangUtils.titleCase(dataInventoryCombine.item.getName());
-					int itemCount = dataInventoryCombine.inv.itemCount(dataInventoryCombine.item);
-					String combinedItemName = dataInventoryCombine.combinedItem.getName();
-					int combinedItemCount = dataInventoryCombine.combinedInv.itemCount(dataInventoryCombine.combinedItem);
-					if (!categoryMap.containsKey("inv_item_" + itemID)) {
-						categoryMap.put("inv_item_" + itemID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "inv_item_" + itemID, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
-					}
-					if (!categoryMap.containsKey("inventory")) {
-						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, "Inventory"));
-					}
-					String combineCategory = "inv_item_" + itemID + "_combine_" + action.getPrompt(actor);
-					if (!categoryMap.containsKey(combineCategory)) {
-						categoryMap.put(combineCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, combineCategory, "inv_item_" + itemID, action.getPrompt(actor)));
-					}
-					parentCategory = combineCategory;
-					promptOverride = LangUtils.titleCase(combinedItemName + (combinedItemCount > 1 ? " (" + combinedItemCount + ")" : ""));
-				}
-				case MenuDataObjectInventory dataObjectInventory -> {
-					String objectID = dataObjectInventory.object.getID();
-					String objectName = LangUtils.titleCase(dataObjectInventory.object.getName());
-					String itemID = dataObjectInventory.item.getID();
-					String itemName = LangUtils.titleCase(dataObjectInventory.item.getName());
-					String objectCategory = "object_" + objectID;
+				case MenuDataObject data -> {
+					String objectName = LangUtils.titleCase(data.object.getName());
+					String objectCategory = "object_" + data.object.getID();
 					if (!categoryMap.containsKey(objectCategory)) {
 						categoryMap.put(objectCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, objectCategory, null, objectName));
 					}
-					String itemCategory = "object_" + objectID + "_inv_" + itemID;
+					parentCategory = objectCategory;
+				}
+				case MenuDataItemWorld data -> {
+					String itemName = LangUtils.titleCase(data.item.getName());
+					int itemCount = data.inv.itemCount(data.item);
+					String itemCategory = "item_" + data.item.getID();
+					if (!categoryMap.containsKey(itemCategory)) {
+						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, null, itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
+					}
+					parentCategory = itemCategory;
+				}
+				case MenuDataInventory data -> {
+					String itemName = LangUtils.titleCase(data.item.getName());
+					int itemCount = data.inv.itemCount(data.item);
+					if (!categoryMap.containsKey("inventory")) {
+						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, "Inventory"));
+					}
+					String invItemCategory = "inv_item_" + data.item.getID();
+					if (!categoryMap.containsKey(invItemCategory)) {
+						categoryMap.put(invItemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, invItemCategory, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
+					}
+					parentCategory = invItemCategory;
+				}
+				case MenuDataInventoryCombine data -> {
+					String itemName = LangUtils.titleCase(data.item.getName());
+					int itemCount = data.inv.itemCount(data.item);
+					String combinedItemName = LangUtils.titleCase(data.combinedItem.getName());
+					int combinedItemCount = data.combinedInv.itemCount(data.combinedItem);
+					if (!categoryMap.containsKey("inventory")) {
+						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, "Inventory"));
+					}
+					String invItemCategory = "inv_item_" + data.item.getID();
+					if (!categoryMap.containsKey(invItemCategory)) {
+						categoryMap.put(invItemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, invItemCategory, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
+					}
+					String combineCategory = "inv_item_" + data.item.getID() + "_combine_" + action.getPrompt(actor);
+					if (!categoryMap.containsKey(combineCategory)) {
+						categoryMap.put(combineCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, combineCategory, invItemCategory, action.getPrompt(actor)));
+					}
+					parentCategory = combineCategory;
+					promptOverride = combinedItemName + (combinedItemCount > 1 ? " (" + combinedItemCount + ")" : "");
+				}
+				case MenuDataObjectInventory data -> {
+					String objectName = LangUtils.titleCase(data.object.getName());
+					String itemName = LangUtils.titleCase(data.item.getName());
+					String objectCategory = "object_" + data.object.getID();
+					if (!categoryMap.containsKey(objectCategory)) {
+						categoryMap.put(objectCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, objectCategory, null, objectName));
+					}
+					String itemCategory = "object_" + data.object.getID() + "_inv_" + data.item.getID();
 					if (!categoryMap.containsKey(itemCategory)) {
 						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, objectCategory, itemName));
 					}
 					parentCategory = itemCategory;
 				}
-				case MenuDataActorInventory dataActorInventory -> {
-					String actorID = dataActorInventory.actor.getID();
-					String actorName = LangUtils.titleCase(dataActorInventory.actor.getName());
-					String itemID = dataActorInventory.item.getID();
-					String itemName = LangUtils.titleCase(dataActorInventory.item.getName());
-					String actorCategory = "actor_" + actorID;
+				case MenuDataActorInventory data -> {
+					String actorName = LangUtils.titleCase(data.actor.getName());
+					String itemName = LangUtils.titleCase(data.item.getName());
+					String actorCategory = "actor_" + data.actor.getID();
 					if (!categoryMap.containsKey(actorCategory)) {
 						categoryMap.put(actorCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, actorCategory, null, actorName));
 					}
-					String itemCategory = "actor_" + actorID + "_inv_" + itemID;
+					String itemCategory = "actor_" + data.actor.getID() + "_inv_" + data.item.getID();
 					if (!categoryMap.containsKey(itemCategory)) {
 						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, actorCategory, itemName));
 					}
 					parentCategory = itemCategory;
 				}
-				case MenuDataNetwork dataNetwork -> {
-					String nodeID = dataNetwork.node.getID();
-					String nodeName = dataNetwork.node.getName();
-					if (!categoryMap.containsKey("network_" + nodeID)) {
-						categoryMap.put("network_" + nodeID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "network_" + nodeID, null, nodeName));
+				case MenuDataNetwork data -> {
+					String nodeName = data.node.getName();
+					String nodeCategory = "network_" + data.node.getID();
+					if (!categoryMap.containsKey(nodeCategory)) {
+						categoryMap.put(nodeCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, nodeCategory, null, nodeName));
 					}
-					parentCategory = "network_" + nodeID;
+					parentCategory = nodeCategory;
 				}
-				case MenuDataAttack dataAttack -> {
-					String targetID = ((GameInstanced) dataAttack.target).getID();
-					String targetName = LangUtils.titleCase(((Noun) dataAttack.target).getName());
-					String weaponID = dataAttack.weapon.getID();
-					String weaponName = LangUtils.titleCase(dataAttack.weapon.getName());
+				case MenuDataAttack data -> {
+					String targetName = LangUtils.titleCase(((Noun) data.target).getName());
+					String weaponName = LangUtils.titleCase(data.weapon.getName());
 					if (!categoryMap.containsKey("attack")) {
 						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, "Attack"));
 					}
-					String weaponCategory = "attack_weapon_" + weaponID;
+					String weaponCategory = "attack_weapon_" + data.weapon.getID();
 					if (!categoryMap.containsKey(weaponCategory)) {
 						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", weaponName));
 					}
-					String targetCategory = "attack_weapon" + weaponID + "_target_" + targetID;
+					String targetCategory = "attack_weapon" + data.weapon.getID() + "_target_" + ((GameInstanced) data.target).getID();
 					if (!categoryMap.containsKey(targetCategory)) {
 						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, targetName));
 					}
 					parentCategory = targetCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
 				}
-				case MenuDataAttackTargeted dataAttackTargeted -> {
-					String targetID = ((GameInstanced) dataAttackTargeted.target).getID();
-					String targetName = LangUtils.titleCase(((Noun) dataAttackTargeted.target).getName());
-					String weaponID = dataAttackTargeted.weapon.getID();
-					String weaponName = LangUtils.titleCase(dataAttackTargeted.weapon.getName());
-					String limbID = dataAttackTargeted.limb.getID();
-					String limbName = LangUtils.titleCase(dataAttackTargeted.limb.getName());
+				case MenuDataAttackTargeted data -> {
+					String targetName = LangUtils.titleCase(((Noun) data.target).getName());
+					String weaponName = LangUtils.titleCase(data.weapon.getName());
+					String limbName = LangUtils.titleCase(data.limb.getName());
 					if (!categoryMap.containsKey("attack")) {
 						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, "Attack"));
 					}
-					String weaponCategory = "attack_weapon_" + weaponID;
+					String weaponCategory = "attack_weapon_" + data.weapon.getID();
 					if (!categoryMap.containsKey(weaponCategory)) {
 						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", weaponName));
 					}
-					String targetCategory = "attack_weapon" + weaponID + "_target_" + targetID;
+					String targetCategory = "attack_weapon" + data.weapon.getID() + "_target_" + ((GameInstanced) data.target).getID();
 					if (!categoryMap.containsKey(targetCategory)) {
 						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, targetName));
 					}
-					String allLimbsCategory = "attack_weapon" + weaponID + "_target_" + targetID + "_limb";
-					if (!categoryMap.containsKey(allLimbsCategory)) {
-						categoryMap.put(allLimbsCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, allLimbsCategory, targetCategory, "Limbs"));
-					}
-					String limbCategory = "attack_weapon" + weaponID + "_target_" + targetID + "_limb_" + limbID;
+					String limbCategory = "attack_weapon" + data.weapon.getID() + "_target_" + ((GameInstanced) data.target).getID() + "_limb_" + data.limb.getID();
 					if (!categoryMap.containsKey(limbCategory)) {
-						categoryMap.put(limbCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, limbCategory, allLimbsCategory, limbName));
+						categoryMap.put(limbCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, limbCategory, targetCategory, limbName));
 					}
 					parentCategory = limbCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
 				}
-				case MenuDataAttackArea dataAttackArea -> {
-					String targetID = dataAttackArea.target.getID();
-					String targetName = LangUtils.titleCase(dataAttackArea.target.getName());
-					String weaponID = dataAttackArea.weapon.getID();
-					String weaponName = LangUtils.titleCase(dataAttackArea.weapon.getName());
+				case MenuDataAttackArea data -> {
+					String targetName = LangUtils.titleCase(data.target.getName());
+					String weaponName = LangUtils.titleCase(data.weapon.getName());
 					if (!categoryMap.containsKey("attack")) {
 						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, "Attack"));
 					}
-					String weaponCategory = "attack_weapon_" + weaponID;
+					String weaponCategory = "attack_weapon_" + data.weapon.getID();
 					if (!categoryMap.containsKey(weaponCategory)) {
 						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", weaponName));
 					}
-					String areaCategory = "attack_weapon" + weaponID + "_target_area";
+					String areaCategory = "attack_weapon" + data.weapon.getID() + "_target_area";
 					if (!categoryMap.containsKey(areaCategory)) {
 						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, weaponCategory, "Area"));
 					}
-					String targetCategory = "attack_weapon" + weaponID + "_target_area_" + targetID;
+					String targetCategory = "attack_weapon" + data.weapon.getID() + "_target_area_" + data.target.getID();
 					if (!categoryMap.containsKey(targetCategory)) {
 						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, areaCategory, targetName));
 					}
