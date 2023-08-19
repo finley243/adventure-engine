@@ -6,59 +6,54 @@ import com.github.finley243.adventureengine.menu.MenuChoice;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
+import java.util.Comparator;
 import java.util.List;
 
 public class JChoiceMenuPanel extends JPanel {
 
     private final Game game;
+    private final JPanel innerPanel;
     private final JSwitchPanel switchPanel;
 
     public JChoiceMenuPanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions) {
         this.game = game;
         this.switchPanel = switchPanel;
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
+        this.innerPanel = new JPanel();
+        innerPanel.setLayout(new GridBagLayout());
         int layoutIndex = 0;
         if (parentCategory != null) {
-            JButton backButton = getBackButton(parentCategory);
-            add(backButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
+            JComponent backButton = getBackButton(parentCategory);
+            innerPanel.add(backButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
             layoutIndex++;
         }
+        categories.sort(Comparator.comparing(MenuCategory::getName));
         for (MenuCategory category : categories) {
-            JButton categoryButton = getCategoryButton(category);
-            add(categoryButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
+            JComponent categoryButton = getCategoryButton(category);
+            innerPanel.add(categoryButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
             layoutIndex++;
         }
+        actions.sort(Comparator.comparing(MenuChoice::getPrompt));
         for (MenuChoice action : actions) {
-            JButton actionButton = getActionButton(action);
-            add(actionButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
+            JComponent actionButton = getActionButton(action);
+            innerPanel.add(actionButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));
             layoutIndex++;
         }
-        setBackground(new Color(20, 20, 20));
+        add(innerPanel, BorderLayout.PAGE_START);
     }
 
-    private JButton getActionButton(MenuChoice action) {
-        JChoiceButton actionButton = new JChoiceButton(action.getPrompt(), action.getActionPoints(), action.getDisabledReason());
-        actionButton.setToolTipText(action.getDisabledReason());
-        actionButton.setHorizontalAlignment(SwingConstants.LEFT);
-        actionButton.addActionListener(new ChoiceButtonListener(game, action.getIndex()));
-        actionButton.addActionListener(e -> switchPanel.clear());
+    private JComponent getActionButton(MenuChoice action) {
+        JChoiceButton actionButton = new JChoiceButton(action.getPrompt(), action.getActionPoints(), action.getDisabledReason(), game, action.getIndex(), switchPanel);
         actionButton.setEnabled(action.isEnabled());
         return actionButton;
     }
 
-    private JButton getBackButton(String parentCategory) {
-        JChoiceButton backButton = new JChoiceButton("<- Back", -1, null);
-        backButton.setHorizontalAlignment(SwingConstants.RIGHT);
-        backButton.addActionListener(e -> SwingUtilities.invokeLater(() -> switchPanel.switchToPanel(parentCategory)));
-        return backButton;
+    private JComponent getBackButton(String parentCategory) {
+        return new JBackButton(switchPanel, parentCategory);
     }
 
-    private JButton getCategoryButton(MenuCategory category) {
-        JChoiceButton categoryButton = new JChoiceButton(category.getName() + " ->", -1, null);
-        categoryButton.setHorizontalAlignment(SwingConstants.LEFT);
-        categoryButton.addActionListener(e -> switchPanel.switchToPanel(category.getCategoryID()));
-        return categoryButton;
+    private JComponent getCategoryButton(MenuCategory category) {
+        return new JCategoryButton(category.getName(), null, switchPanel, category.getCategoryID());
     }
 
     private GridBagConstraints generateConstraints(int x, int y, int sx, int sy, double wx, double wy) {
@@ -69,7 +64,8 @@ public class JChoiceMenuPanel extends JPanel {
         constraints.gridheight = sy;
         constraints.weightx = wx;
         constraints.weighty = wy;
-        constraints.fill = GridBagConstraints.BOTH;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(1, 2, 1, 2);
         constraints.anchor = GridBagConstraints.NORTH;
         return constraints;
     }

@@ -50,10 +50,10 @@ public class MenuManager {
 					String areaID = dataMove.destination.getID();
 					String areaName = LangUtils.titleCase(dataMove.destination.getRelativeName() + " " + dataMove.destination.getName());
 					if (!categoryMap.containsKey("area_" + areaID)) {
-						categoryMap.put("area_" + areaID, new MenuCategory("area_" + areaID, "areas", areaName));
+						categoryMap.put("area_" + areaID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "area_" + areaID, "areas", areaName));
 					}
 					if (!categoryMap.containsKey("areas")) {
-						categoryMap.put("areas", new MenuCategory("areas", null, "Areas"));
+						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, "Areas"));
 					}
 					parentCategory = "area_" + areaID;
 				}
@@ -61,10 +61,10 @@ public class MenuManager {
 					String areaID = dataArea.destination.getID();
 					String areaName = LangUtils.titleCase(dataArea.destination.getRelativeName() + " " + dataArea.destination.getName());
 					if (!categoryMap.containsKey("area_" + areaID)) {
-						categoryMap.put("area_" + areaID, new MenuCategory("area_" + areaID, "areas", areaName));
+						categoryMap.put("area_" + areaID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "area_" + areaID, "areas", areaName));
 					}
 					if (!categoryMap.containsKey("areas")) {
-						categoryMap.put("areas", new MenuCategory("areas", null, "Areas"));
+						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, "Areas"));
 					}
 					parentCategory = "area_" + areaID;
 				}
@@ -72,7 +72,7 @@ public class MenuManager {
 					String actorID = dataActor.actor.getID();
 					String actorName = LangUtils.titleCase(dataActor.actor.getName());
 					if (!categoryMap.containsKey("actor_" + actorID)) {
-						categoryMap.put("actor_" + actorID, new MenuCategory("actor_" + actorID, null, actorName));
+						categoryMap.put("actor_" + actorID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "actor_" + actorID, null, actorName));
 					}
 					parentCategory = "actor_" + actorID;
 				}
@@ -80,7 +80,7 @@ public class MenuManager {
 					String objectID = dataObject.object.getID();
 					String objectName = LangUtils.titleCase(dataObject.object.getName());
 					if (!categoryMap.containsKey("object_" + objectID)) {
-						categoryMap.put("object_" + objectID, new MenuCategory("object_" + objectID, null, objectName));
+						categoryMap.put("object_" + objectID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "object_" + objectID, null, objectName));
 					}
 					parentCategory = "object_" + objectID;
 				}
@@ -89,7 +89,7 @@ public class MenuManager {
 					String itemName = LangUtils.titleCase(dataItemWorld.item.getName());
 					int itemCount = dataItemWorld.inv.itemCount(dataItemWorld.item);
 					if (!categoryMap.containsKey("item_" + itemID)) {
-						categoryMap.put("item_" + itemID, new MenuCategory("item_" + itemID, null, itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
+						categoryMap.put("item_" + itemID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "item_" + itemID, null, itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
 					}
 					parentCategory = "item_" + itemID;
 				}
@@ -98,10 +98,10 @@ public class MenuManager {
 					String itemName = LangUtils.titleCase(dataInventory.item.getName());
 					int itemCount = dataInventory.inv.itemCount(dataInventory.item);
 					if (!categoryMap.containsKey("inv_item_" + itemID)) {
-						categoryMap.put("inv_item_" + itemID, new MenuCategory("inv_item_" + itemID, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
+						categoryMap.put("inv_item_" + itemID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "inv_item_" + itemID, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
 					}
 					if (!categoryMap.containsKey("inventory")) {
-						categoryMap.put("inventory", new MenuCategory("inventory", null, "Inventory"));
+						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, "Inventory"));
 					}
 					parentCategory = "inv_item_" + itemID;
 				}
@@ -112,14 +112,14 @@ public class MenuManager {
 					String combinedItemName = dataInventoryCombine.combinedItem.getName();
 					int combinedItemCount = dataInventoryCombine.combinedInv.itemCount(dataInventoryCombine.combinedItem);
 					if (!categoryMap.containsKey("inv_item_" + itemID)) {
-						categoryMap.put("inv_item_" + itemID, new MenuCategory("inv_item_" + itemID, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
+						categoryMap.put("inv_item_" + itemID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "inv_item_" + itemID, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : "")));
 					}
 					if (!categoryMap.containsKey("inventory")) {
-						categoryMap.put("inventory", new MenuCategory("inventory", null, "Inventory"));
+						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, "Inventory"));
 					}
 					String combineCategory = "inv_item_" + itemID + "_combine_" + action.getPrompt(actor);
 					if (!categoryMap.containsKey(combineCategory)) {
-						categoryMap.put(combineCategory, new MenuCategory(combineCategory, "inv_item_" + itemID, action.getPrompt(actor)));
+						categoryMap.put(combineCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, combineCategory, "inv_item_" + itemID, action.getPrompt(actor)));
 					}
 					parentCategory = combineCategory;
 					promptOverride = LangUtils.titleCase(combinedItemName + (combinedItemCount > 1 ? " (" + combinedItemCount + ")" : ""));
@@ -131,11 +131,11 @@ public class MenuManager {
 					String itemName = LangUtils.titleCase(dataObjectInventory.item.getName());
 					String objectCategory = "object_" + objectID;
 					if (!categoryMap.containsKey(objectCategory)) {
-						categoryMap.put(objectCategory, new MenuCategory(objectCategory, null, objectName));
+						categoryMap.put(objectCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, objectCategory, null, objectName));
 					}
 					String itemCategory = "object_" + objectID + "_inv_" + itemID;
 					if (!categoryMap.containsKey(itemCategory)) {
-						categoryMap.put(itemCategory, new MenuCategory(itemCategory, objectCategory, itemName));
+						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, objectCategory, itemName));
 					}
 					parentCategory = itemCategory;
 				}
@@ -146,11 +146,11 @@ public class MenuManager {
 					String itemName = LangUtils.titleCase(dataActorInventory.item.getName());
 					String actorCategory = "actor_" + actorID;
 					if (!categoryMap.containsKey(actorCategory)) {
-						categoryMap.put(actorCategory, new MenuCategory(actorCategory, null, actorName));
+						categoryMap.put(actorCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, actorCategory, null, actorName));
 					}
 					String itemCategory = "actor_" + actorID + "_inv_" + itemID;
 					if (!categoryMap.containsKey(itemCategory)) {
-						categoryMap.put(itemCategory, new MenuCategory(itemCategory, actorCategory, itemName));
+						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, actorCategory, itemName));
 					}
 					parentCategory = itemCategory;
 				}
@@ -158,7 +158,7 @@ public class MenuManager {
 					String nodeID = dataNetwork.node.getID();
 					String nodeName = dataNetwork.node.getName();
 					if (!categoryMap.containsKey("network_" + nodeID)) {
-						categoryMap.put("network_" + nodeID, new MenuCategory("network_" + nodeID, null, nodeName));
+						categoryMap.put("network_" + nodeID, new MenuCategory(MenuCategory.CategoryType.GENERIC, "network_" + nodeID, null, nodeName));
 					}
 					parentCategory = "network_" + nodeID;
 				}
@@ -168,15 +168,15 @@ public class MenuManager {
 					String weaponID = dataAttack.weapon.getID();
 					String weaponName = LangUtils.titleCase(dataAttack.weapon.getName());
 					if (!categoryMap.containsKey("attack")) {
-						categoryMap.put("attack", new MenuCategory("attack", null, "Attack"));
+						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, "Attack"));
 					}
 					String weaponCategory = "attack_weapon_" + weaponID;
 					if (!categoryMap.containsKey(weaponCategory)) {
-						categoryMap.put(weaponCategory, new MenuCategory(weaponCategory, "attack", weaponName));
+						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", weaponName));
 					}
 					String targetCategory = "attack_weapon" + weaponID + "_target_" + targetID;
 					if (!categoryMap.containsKey(targetCategory)) {
-						categoryMap.put(targetCategory, new MenuCategory(targetCategory, weaponCategory, targetName));
+						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, targetName));
 					}
 					parentCategory = targetCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
@@ -189,23 +189,23 @@ public class MenuManager {
 					String limbID = dataAttackTargeted.limb.getID();
 					String limbName = LangUtils.titleCase(dataAttackTargeted.limb.getName());
 					if (!categoryMap.containsKey("attack")) {
-						categoryMap.put("attack", new MenuCategory("attack", null, "Attack"));
+						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, "Attack"));
 					}
 					String weaponCategory = "attack_weapon_" + weaponID;
 					if (!categoryMap.containsKey(weaponCategory)) {
-						categoryMap.put(weaponCategory, new MenuCategory(weaponCategory, "attack", weaponName));
+						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", weaponName));
 					}
 					String targetCategory = "attack_weapon" + weaponID + "_target_" + targetID;
 					if (!categoryMap.containsKey(targetCategory)) {
-						categoryMap.put(targetCategory, new MenuCategory(targetCategory, weaponCategory, targetName));
+						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, targetName));
 					}
 					String allLimbsCategory = "attack_weapon" + weaponID + "_target_" + targetID + "_limb";
 					if (!categoryMap.containsKey(allLimbsCategory)) {
-						categoryMap.put(allLimbsCategory, new MenuCategory(allLimbsCategory, targetCategory, "Limbs"));
+						categoryMap.put(allLimbsCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, allLimbsCategory, targetCategory, "Limbs"));
 					}
 					String limbCategory = "attack_weapon" + weaponID + "_target_" + targetID + "_limb_" + limbID;
 					if (!categoryMap.containsKey(limbCategory)) {
-						categoryMap.put(limbCategory, new MenuCategory(limbCategory, allLimbsCategory, limbName));
+						categoryMap.put(limbCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, limbCategory, allLimbsCategory, limbName));
 					}
 					parentCategory = limbCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
@@ -216,19 +216,19 @@ public class MenuManager {
 					String weaponID = dataAttackArea.weapon.getID();
 					String weaponName = LangUtils.titleCase(dataAttackArea.weapon.getName());
 					if (!categoryMap.containsKey("attack")) {
-						categoryMap.put("attack", new MenuCategory("attack", null, "Attack"));
+						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, "Attack"));
 					}
 					String weaponCategory = "attack_weapon_" + weaponID;
 					if (!categoryMap.containsKey(weaponCategory)) {
-						categoryMap.put(weaponCategory, new MenuCategory(weaponCategory, "attack", weaponName));
+						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", weaponName));
 					}
 					String areaCategory = "attack_weapon" + weaponID + "_target_area";
 					if (!categoryMap.containsKey(areaCategory)) {
-						categoryMap.put(areaCategory, new MenuCategory(areaCategory, weaponCategory, "Area"));
+						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, weaponCategory, "Area"));
 					}
 					String targetCategory = "attack_weapon" + weaponID + "_target_area_" + targetID;
 					if (!categoryMap.containsKey(targetCategory)) {
-						categoryMap.put(targetCategory, new MenuCategory(targetCategory, areaCategory, targetName));
+						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, areaCategory, targetName));
 					}
 					parentCategory = targetCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";

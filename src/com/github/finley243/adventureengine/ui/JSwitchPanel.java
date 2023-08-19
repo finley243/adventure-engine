@@ -23,9 +23,6 @@ public class JSwitchPanel extends JPanel {
         this.cardLayout = new CardLayout();
         this.validPanels = new HashSet<>();
         setLayout(cardLayout);
-        /*for (String font : GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()) {
-            System.out.println("Font: " + font);
-        }*/
     }
 
     public void clear() {
@@ -67,8 +64,8 @@ public class JSwitchPanel extends JPanel {
         combinedCategories.addAll(categories.keySet());
         for (String categoryID : combinedCategories) {
             String parentCategory = parentCategories.getOrDefault(categoryID, TOP_LEVEL_MENU);
-            List<MenuChoice> actionData = actions.getOrDefault(categoryID, List.of());
-            List<MenuCategory> categoryData = categories.getOrDefault(categoryID, List.of());
+            List<MenuChoice> actionData = actions.getOrDefault(categoryID, new ArrayList<>());
+            List<MenuCategory> categoryData = categories.getOrDefault(categoryID, new ArrayList<>());
             JPanel categoryPanel = new JChoiceMenuPanel(game, this, parentCategory, categoryData, actionData);
             addChoicePanel(categoryPanel, categoryID);
         }
