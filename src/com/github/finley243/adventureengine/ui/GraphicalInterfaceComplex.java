@@ -76,7 +76,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 
 	@Override
 	public void onMenuEvent(RenderChoiceMenuEvent event) {
-		SwingUtilities.invokeLater(() -> switchPanel.loadMenu(event.getMenuChoices(), event.getMenuCategories()));
+		SwingUtilities.invokeLater(() -> switchPanel.loadMenu(event.getMenuChoices(), event.getMenuCategories(), event.getEndTurnIndex()));
 	}
 
 	@Override

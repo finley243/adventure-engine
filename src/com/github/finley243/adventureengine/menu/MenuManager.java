@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.menu;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionEnd;
 import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.*;
@@ -39,8 +40,14 @@ public class MenuManager {
 		this.choiceMenuEvent = event;
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		Map<String, MenuCategory> categoryMap = new HashMap<>();
-		for (Action action : actions) {
+		int endTurnIndex = -1;
+		for (int i = 0; i < actions.size(); i++) {
+			Action action = actions.get(i);
 			if (!action.canShow(actor)) continue;
+			if (action instanceof ActionEnd) {
+				endTurnIndex = i;
+				continue;
+			}
 			String parentCategory;
 			String promptOverride = null;
 			switch (action.getMenuData(actor)) {
@@ -223,7 +230,7 @@ public class MenuManager {
 			menuChoices.add(new MenuChoice((promptOverride != null ? promptOverride : action.getPrompt(actor)), action.canChoose(actor), action.actionPoints(actor), parentCategory, prompt));
 		}
 		List<MenuCategory> menuCategories = new ArrayList<>(categoryMap.values());
-		startChoiceMenu(game, menuChoices, menuCategories, false);
+		startChoiceMenu(game, menuChoices, menuCategories, endTurnIndex, false);
 	}
 
 	public void sceneChoiceMenu(SceneChoiceMenuEvent event, Game game, List<SceneChoice> validChoices) {
@@ -232,7 +239,7 @@ public class MenuManager {
 		for (SceneChoice choice : validChoices) {
 			menuChoices.add(new MenuChoice(choice.getPrompt(), new Action.CanChooseResult(true, null), -1, null));
 		}
-		startChoiceMenu(game, menuChoices, new ArrayList<>(), true);
+		startChoiceMenu(game, menuChoices, new ArrayList<>(), -1, true);
 	}
 
 	public void attributeMenu(AttributeMenuEvent event, Game game, Actor actor, int points) {
@@ -255,8 +262,8 @@ public class MenuManager {
 		startNumericMenu(game, menuFields, points);
 	}
 
-	private void startChoiceMenu(Game game, List<MenuChoice> menuChoices, List<MenuCategory> menuCategories, boolean forcePrompts) {
-		game.eventBus().post(new RenderChoiceMenuEvent(menuChoices, menuCategories, forcePrompts));
+	private void startChoiceMenu(Game game, List<MenuChoice> menuChoices, List<MenuCategory> menuCategories, int endTurnIndex, boolean forcePrompts) {
+		game.eventBus().post(new RenderChoiceMenuEvent(menuChoices, menuCategories, endTurnIndex, forcePrompts));
 	}
 
 	private void startNumericMenu(Game game, List<NumericMenuField> menuFields, int points) {
