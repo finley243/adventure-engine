@@ -17,6 +17,8 @@ public class JSwitchPanel extends JPanel {
     private final JPanel innerPanel;
     private final CardLayout cardLayout;
 
+    private JChoiceButton endTurnButton;
+
     private final Game game;
     private final Set<String> validPanels;
     private String lastPanel;
@@ -38,6 +40,9 @@ public class JSwitchPanel extends JPanel {
     public void clear() {
         innerPanel.removeAll();
         validPanels.clear();
+        if (endTurnButton != null) {
+            remove(endTurnButton);
+        }
     }
 
     public void loadMenu(List<MenuChoice> menuChoices, List<MenuCategory> menuCategories, int endTurnIndex) {
@@ -109,9 +114,9 @@ public class JSwitchPanel extends JPanel {
 
     private void addEndTurnButton(int index) {
         JChoiceButton endTurnButton = new JChoiceButton("End Turn", -1, null, game, index, this);
-        endTurnButton.setEnabled(index != -1);
+        endTurnButton.setEnabled(index > -1);
         add(endTurnButton, BorderLayout.PAGE_END);
-        repaint();
+        this.endTurnButton = endTurnButton;
     }
 
 }
