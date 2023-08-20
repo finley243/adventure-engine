@@ -116,6 +116,7 @@ public class JSwitchPanel extends JPanel {
         JChoiceButton endTurnButton = new JChoiceButton("End Turn", -1, null, game, index, this);
         endTurnButton.setEnabled(index > -1);
         add(endTurnButton, BorderLayout.PAGE_END);
+        endTurnButton.setVisible(true);
         this.endTurnButton = endTurnButton;
     }
 
