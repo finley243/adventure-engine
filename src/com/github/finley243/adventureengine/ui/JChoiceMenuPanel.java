@@ -13,19 +13,15 @@ public class JChoiceMenuPanel extends JPanel {
 
     private final Game game;
     private final JPanel innerPanel;
-    private final JChoiceButton endTurnButton;
     private final JSwitchPanel switchPanel;
 
-    public JChoiceMenuPanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
+    public JChoiceMenuPanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions) {
         this.game = game;
         this.switchPanel = switchPanel;
         setLayout(new BorderLayout());
         this.innerPanel = new JPanel();
         innerPanel.setLayout(new GridBagLayout());
         int layoutIndex = 0;
-        this.endTurnButton = new JChoiceButton("End Turn", -1, null, game, endTurnIndex, switchPanel);
-        endTurnButton.setEnabled(endTurnIndex != -1);
-        add(endTurnButton, BorderLayout.PAGE_END);
         if (parentCategory != null) {
             JComponent backButton = getBackButton(parentCategory);
             innerPanel.add(backButton, generateConstraints(0, layoutIndex, 1, 1, 1, 0));

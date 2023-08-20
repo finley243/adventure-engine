@@ -20,7 +20,8 @@ public class GraphicalInterfaceComplex implements UserInterface {
 
 	private final JFrame window;
 	private final JGameTextPanel textPanel;
-	private final JPanel detailsPanel;
+	private final JPanel lowerPanel;
+	private final JDetailsPanel detailsPanel;
 	private final JSwitchPanel switchPanel;
 
 	public GraphicalInterfaceComplex(Game game) {
@@ -28,33 +29,27 @@ public class GraphicalInterfaceComplex implements UserInterface {
 
 		this.window = new JFrame(game.data().getConfig("gameName"));
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setPreferredSize(new Dimension(600, 700));
-		window.setLayout(new GridBagLayout());
+		window.setMinimumSize(new Dimension(500, 600));
+		window.setPreferredSize(new Dimension(500, 600));
+		window.setLayout(new GridLayout(2, 1));
 
 		this.textPanel = new JGameTextPanel();
-		window.getContentPane().add(textPanel, generateConstraints(0, 0, 3, 1, 1, 1.5));
+		//window.add(textPanel, generateConstraints(0, 0, 2, 1, 1, 1));
+		window.add(textPanel);
 
-		this.detailsPanel = getDetailsPanel();
-		window.getContentPane().add(detailsPanel, generateConstraints(1, 1, 1, 1, 1, 1));
+		this.lowerPanel = new JPanel();
+		lowerPanel.setLayout(new GridBagLayout());
+		window.add(lowerPanel);
+
+		this.detailsPanel = new JDetailsPanel();
+		lowerPanel.add(detailsPanel, generateConstraints(1, 0, 1, 1, 0, 0));
 
 		this.switchPanel = new JSwitchPanel(game);
-		JScrollPane menuScrollPane = new JScrollPane(switchPanel);
-		menuScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		window.getContentPane().add(menuScrollPane, generateConstraints(0, 1, 1, 1, 1, 1));
+		lowerPanel.add(switchPanel, generateConstraints(0, 0, 1, 1, 1, 1));
 
 		window.pack();
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
-	}
-
-	private JPanel getDetailsPanel() {
-		JPanel detailsPanel = new JPanel();
-		JLabel detailsLabel = new JLabel();
-		detailsLabel.setPreferredSize(new Dimension(100, 30));
-		detailsLabel.setFont(detailsLabel.getFont().deriveFont(Font.BOLD, 16));
-		detailsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		detailsPanel.add(detailsLabel);
-		return detailsPanel;
 	}
 
 	private GridBagConstraints generateConstraints(int x, int y, int sx, int sy, double wx, double wy) {

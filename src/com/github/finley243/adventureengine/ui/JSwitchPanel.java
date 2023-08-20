@@ -13,20 +13,30 @@ public class JSwitchPanel extends JPanel {
 
     private static final String TOP_LEVEL_MENU = "TOPLEVEL";
 
-    private final Game game;
+    private final JScrollPane scrollPane;
+    private final JPanel innerPanel;
     private final CardLayout cardLayout;
+
+    private final Game game;
     private final Set<String> validPanels;
     private String lastPanel;
 
     public JSwitchPanel(Game game) {
         this.game = game;
-        this.cardLayout = new CardLayout();
         this.validPanels = new HashSet<>();
-        setLayout(cardLayout);
+        this.innerPanel = new JPanel();
+        this.cardLayout = new CardLayout();
+        innerPanel.setLayout(cardLayout);
+        this.scrollPane = new JScrollPane(innerPanel);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(5);
+        setLayout(new BorderLayout());
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     public void clear() {
-        removeAll();
+        innerPanel.removeAll();
         validPanels.clear();
     }
 
@@ -57,7 +67,7 @@ public class JSwitchPanel extends JPanel {
                 categories.get(category.getParentCategory()).add(category);
             }
         }
-        JPanel topLevelPanel = new JChoiceMenuPanel(game, this, null, topLevelCategories, topLevelActions, endTurnIndex);
+        JPanel topLevelPanel = new JChoiceMenuPanel(game, this, null, topLevelCategories, topLevelActions);
         addChoicePanelTopLevel(topLevelPanel);
         Set<String> combinedCategories = new HashSet<>();
         combinedCategories.addAll(actions.keySet());
@@ -66,19 +76,20 @@ public class JSwitchPanel extends JPanel {
             String parentCategory = parentCategories.getOrDefault(categoryID, TOP_LEVEL_MENU);
             List<MenuChoice> actionData = actions.getOrDefault(categoryID, new ArrayList<>());
             List<MenuCategory> categoryData = categories.getOrDefault(categoryID, new ArrayList<>());
-            JPanel categoryPanel = new JChoiceMenuPanel(game, this, parentCategory, categoryData, actionData, endTurnIndex);
+            JPanel categoryPanel = new JChoiceMenuPanel(game, this, parentCategory, categoryData, actionData);
             addChoicePanel(categoryPanel, categoryID);
         }
+        addEndTurnButton(endTurnIndex);
         switchToPanel(lastPanel);
     }
 
     public void switchToPanel(String panelID) {
         if (validPanels.contains(panelID)) {
-            cardLayout.show(this, panelID);
+            cardLayout.show(innerPanel, panelID);
             lastPanel = panelID;
             requestFocusInWindow();
         } else {
-            cardLayout.show(this, TOP_LEVEL_MENU);
+            cardLayout.show(innerPanel, TOP_LEVEL_MENU);
             lastPanel = TOP_LEVEL_MENU;
             requestFocusInWindow();
         }
@@ -86,14 +97,21 @@ public class JSwitchPanel extends JPanel {
 
     private void addChoicePanel(JPanel panel, String panelID) {
         if (validPanels.contains(panelID)) throw new IllegalArgumentException("Panel with ID " + panelID + " already exists");
-        add(panel, panelID);
+        innerPanel.add(panel, panelID);
         validPanels.add(panelID);
     }
 
     private void addChoicePanelTopLevel(JPanel panel) {
         if (validPanels.contains(TOP_LEVEL_MENU)) throw new IllegalArgumentException("Top-level panel already exists");
-        add(panel, TOP_LEVEL_MENU);
+        innerPanel.add(panel, TOP_LEVEL_MENU);
         validPanels.add(TOP_LEVEL_MENU);
+    }
+
+    private void addEndTurnButton(int index) {
+        JChoiceButton endTurnButton = new JChoiceButton("End Turn", -1, null, game, index, this);
+        endTurnButton.setEnabled(index != -1);
+        add(endTurnButton, BorderLayout.PAGE_END);
+        repaint();
     }
 
 }
