@@ -8,19 +8,21 @@ public class MenuChoice implements Comparable<MenuChoice> {
     private final String prompt;
     private final Action.CanChooseResult canChooseData;
     private final int actionPoints;
+    private final boolean showOnRight;
     private final String parentCategory;
     private final String parserPrompt;
 
-    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, int actionPoints, String parentCategory, String parserPrompt) {
+    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, int actionPoints, boolean showOnRight, String parentCategory, String parserPrompt) {
         this.prompt = prompt;
         this.canChooseData = canChooseData;
         this.actionPoints = actionPoints;
+        this.showOnRight = showOnRight;
         this.parentCategory = parentCategory;
         this.parserPrompt = parserPrompt;
     }
 
-    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, int actionPoints, String parserPrompt) {
-        this(prompt, canChooseData, actionPoints, null, parserPrompt);
+    public MenuChoice(String prompt, Action.CanChooseResult canChooseData, int actionPoints, boolean showOnRight, String parserPrompt) {
+        this(prompt, canChooseData, actionPoints, showOnRight, null, parserPrompt);
     }
 
     public void setIndex(int index) {
@@ -45,6 +47,10 @@ public class MenuChoice implements Comparable<MenuChoice> {
 
     public int getActionPoints() {
         return actionPoints;
+    }
+
+    public boolean showOnRight() {
+        return showOnRight;
     }
 
     public String getParentCategory() {

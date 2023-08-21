@@ -9,13 +9,17 @@ public class MenuCategory {
     private final CategoryType type;
     private final String categoryID;
     private final String parentCategory;
+    private final boolean showDetails;
+    private final boolean showOnRight;
     private final String name;
     private final String description;
 
-    public MenuCategory(CategoryType type, String categoryID, String parentCategory, String name, String description) {
+    public MenuCategory(CategoryType type, String categoryID, String parentCategory, boolean showDetails, boolean showOnRight, String name, String description) {
         this.type = type;
         this.categoryID = categoryID;
         this.parentCategory = parentCategory;
+        this.showDetails = showDetails;
+        this.showOnRight = showOnRight;
         this.name = name;
         this.description = description;
     }
@@ -30,6 +34,14 @@ public class MenuCategory {
 
     public String getParentCategory() {
         return parentCategory;
+    }
+
+    public boolean showDetails() {
+        return showDetails;
+    }
+
+    public boolean showOnRight() {
+        return showOnRight;
     }
 
     public String getName() {

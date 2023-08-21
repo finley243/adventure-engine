@@ -11,7 +11,7 @@ public class JDetailsPanel extends JPanel {
 
     public JDetailsPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(GraphicalInterfaceComplex.COLOR_BORDER), BorderFactory.createEmptyBorder(5, 5, 5, 5))));
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(GraphicalInterfaceComplex.COLOR_BORDER), BorderFactory.createEmptyBorder(5, 5, 5, 5))));
         setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         this.title = new JTextPane();
         //title.setPreferredSize(new Dimension(170, 0));

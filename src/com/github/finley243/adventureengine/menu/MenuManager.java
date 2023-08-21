@@ -51,27 +51,28 @@ public class MenuManager {
 			}
 			String parentCategory;
 			String promptOverride = null;
+			boolean showOnRight = false;
 			switch (action.getMenuData(actor)) {
 				case MenuDataSelf data -> parentCategory = null;
 				case MenuDataMove data -> {
 					String areaName = LangUtils.titleCase(data.destination.getRelativeName() + " " + data.destination.getName());
 					if (!categoryMap.containsKey("areas")) {
-						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, "Areas", null));
+						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, false, false, "Areas", null));
 					}
 					String areaCategory = "area_" + data.destination.getID();
 					if (!categoryMap.containsKey(areaCategory)) {
-						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", areaName, null));
+						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", false, false, areaName, null));
 					}
 					parentCategory = areaCategory;
 				}
 				case MenuDataArea data -> {
 					String areaName = LangUtils.titleCase(data.destination.getRelativeName() + " " + data.destination.getName());
 					if (!categoryMap.containsKey("areas")) {
-						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, "Areas", null));
+						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, false, false, "Areas", null));
 					}
 					String areaCategory = "area_" + data.destination.getID();
 					if (!categoryMap.containsKey(areaCategory)) {
-						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", areaName, null));
+						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", false, false, areaName, null));
 					}
 					parentCategory = areaCategory;
 				}
@@ -79,7 +80,7 @@ public class MenuManager {
 					String actorName = LangUtils.titleCase(data.actor.getName());
 					String actorCategory = "actor_" + data.actor.getID();
 					if (!categoryMap.containsKey(actorCategory)) {
-						categoryMap.put(actorCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, actorCategory, null, actorName, null));
+						categoryMap.put(actorCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, actorCategory, null, false, false, actorName, null));
 					}
 					parentCategory = actorCategory;
 				}
@@ -87,7 +88,7 @@ public class MenuManager {
 					String objectName = LangUtils.titleCase(data.object.getName());
 					String objectCategory = "object_" + data.object.getID();
 					if (!categoryMap.containsKey(objectCategory)) {
-						categoryMap.put(objectCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, objectCategory, null, objectName, null));
+						categoryMap.put(objectCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, objectCategory, null, false, false, objectName, null));
 					}
 					parentCategory = objectCategory;
 				}
@@ -96,7 +97,7 @@ public class MenuManager {
 					int itemCount = data.inv.itemCount(data.item);
 					String itemCategory = "item_" + data.item.getID();
 					if (!categoryMap.containsKey(itemCategory)) {
-						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, null, itemName + (itemCount > 1 ? " (" + itemCount + ")" : ""), null));
+						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, null, false, false, itemName + (itemCount > 1 ? " (" + itemCount + ")" : ""), null));
 					}
 					parentCategory = itemCategory;
 				}
@@ -104,12 +105,12 @@ public class MenuManager {
 					String itemName = LangUtils.titleCase(data.item.getName());
 					int itemCount = data.inv.itemCount(data.item);
 					if (!categoryMap.containsKey("inventory")) {
-						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, "Inventory", null));
+						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, true, false, "Inventory", null));
 					}
 					String invItemCategory = "inv_item_" + data.item.getID();
 					if (!categoryMap.containsKey(invItemCategory)) {
 						String itemDescription = "This is an item.\n\nValue: " + data.item.getSubHolder("template", null).getStatValue("price", new Context(game, game.data().getPlayer(), game.data().getPlayer())).getValueInteger(new Context(game, game.data().getPlayer(), game.data().getPlayer()));
-						categoryMap.put(invItemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, invItemCategory, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : ""), itemDescription));
+						categoryMap.put(invItemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, invItemCategory, "inventory", false, false, itemName + (itemCount > 1 ? " (" + itemCount + ")" : ""), itemDescription));
 					}
 					parentCategory = invItemCategory;
 				}
@@ -119,15 +120,15 @@ public class MenuManager {
 					String combinedItemName = LangUtils.titleCase(data.combinedItem.getName());
 					int combinedItemCount = data.combinedInv.itemCount(data.combinedItem);
 					if (!categoryMap.containsKey("inventory")) {
-						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, "Inventory", null));
+						categoryMap.put("inventory", new MenuCategory(MenuCategory.CategoryType.INVENTORY, "inventory", null, true, false, "Inventory", null));
 					}
 					String invItemCategory = "inv_item_" + data.item.getID();
 					if (!categoryMap.containsKey(invItemCategory)) {
-						categoryMap.put(invItemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, invItemCategory, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : ""), null));
+						categoryMap.put(invItemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, invItemCategory, "inventory", false, false, itemName + (itemCount > 1 ? " (" + itemCount + ")" : ""), null));
 					}
 					String combineCategory = "inv_item_" + data.item.getID() + "_combine_" + action.getPrompt(actor);
 					if (!categoryMap.containsKey(combineCategory)) {
-						categoryMap.put(combineCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, combineCategory, invItemCategory, action.getPrompt(actor), null));
+						categoryMap.put(combineCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, combineCategory, invItemCategory, false, false, action.getPrompt(actor), null));
 					}
 					parentCategory = combineCategory;
 					promptOverride = combinedItemName + (combinedItemCount > 1 ? " (" + combinedItemCount + ")" : "");
@@ -137,32 +138,46 @@ public class MenuManager {
 					String itemName = LangUtils.titleCase(data.item.getName());
 					String objectCategory = "object_" + data.object.getID();
 					if (!categoryMap.containsKey(objectCategory)) {
-						categoryMap.put(objectCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, objectCategory, null, objectName, null));
+						categoryMap.put(objectCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, objectCategory, null, false, false, objectName, null));
 					}
-					String itemCategory = "object_" + data.object.getID() + "_inv_" + data.item.getID();
+					String inventoryCategory = "object_ " + data.object.getID() + (data.inventoryName != null ? "_inv_" + data.inventoryName : "_inv");
+					if (!categoryMap.containsKey(inventoryCategory)) {
+						categoryMap.put(inventoryCategory, new MenuCategory(MenuCategory.CategoryType.INVENTORY_TRANSFER, inventoryCategory, objectCategory, true, false, (data.inventoryName != null ? LangUtils.titleCase(data.inventoryName) : "Inventory"), null));
+					}
+					/*String itemCategory = "object_" + data.object.getID() + "_inv_" + data.item.getID();
 					if (!categoryMap.containsKey(itemCategory)) {
-						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, objectCategory, itemName, null));
+						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, inventoryCategory, false, !data.isStoreAction, itemName, null));
 					}
-					parentCategory = itemCategory;
+					parentCategory = itemCategory;*/
+					promptOverride = itemName + " (" + action.getPrompt(actor) + ")";
+					showOnRight = !data.isStoreAction;
+					parentCategory = inventoryCategory;
 				}
 				case MenuDataActorInventory data -> {
 					String actorName = LangUtils.titleCase(data.actor.getName());
 					String itemName = LangUtils.titleCase(data.item.getName());
 					String actorCategory = "actor_" + data.actor.getID();
 					if (!categoryMap.containsKey(actorCategory)) {
-						categoryMap.put(actorCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, actorCategory, null, actorName, null));
+						categoryMap.put(actorCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, actorCategory, null, false, false, actorName, null));
 					}
-					String itemCategory = "actor_" + data.actor.getID() + "_inv_" + data.item.getID();
+					String inventoryCategory = "actor_ " + data.actor.getID() + "_inv";
+					if (!categoryMap.containsKey(inventoryCategory)) {
+						categoryMap.put(inventoryCategory, new MenuCategory(MenuCategory.CategoryType.INVENTORY_TRANSFER, inventoryCategory, actorCategory, true, false, "Inventory", null));
+					}
+					/*String itemCategory = "actor_" + data.actor.getID() + "_inv_" + data.item.getID();
 					if (!categoryMap.containsKey(itemCategory)) {
-						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, actorCategory, itemName, null));
+						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, actorCategory, false, !data.isStoreAction, itemName, null));
 					}
-					parentCategory = itemCategory;
+					parentCategory = itemCategory;*/
+					promptOverride = itemName + " (" + action.getPrompt(actor) + ")";
+					showOnRight = !data.isStoreAction;
+					parentCategory = inventoryCategory;
 				}
 				case MenuDataNetwork data -> {
 					String nodeName = data.node.getName();
 					String nodeCategory = "network_" + data.node.getID();
 					if (!categoryMap.containsKey(nodeCategory)) {
-						categoryMap.put(nodeCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, nodeCategory, null, nodeName, null));
+						categoryMap.put(nodeCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, nodeCategory, null, false, false, nodeName, null));
 					}
 					parentCategory = nodeCategory;
 				}
@@ -170,15 +185,15 @@ public class MenuManager {
 					String targetName = LangUtils.titleCase(((Noun) data.target).getName());
 					String weaponName = LangUtils.titleCase(data.weapon.getName());
 					if (!categoryMap.containsKey("attack")) {
-						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, "Attack", null));
+						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, false, false, "Attack", null));
 					}
 					String weaponCategory = "attack_weapon_" + data.weapon.getID();
 					if (!categoryMap.containsKey(weaponCategory)) {
-						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", weaponName, null));
+						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", false, false, weaponName, null));
 					}
 					String targetCategory = "attack_weapon" + data.weapon.getID() + "_target_" + ((GameInstanced) data.target).getID();
 					if (!categoryMap.containsKey(targetCategory)) {
-						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, targetName, null));
+						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, false, false, targetName, null));
 					}
 					parentCategory = targetCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
@@ -188,19 +203,19 @@ public class MenuManager {
 					String weaponName = LangUtils.titleCase(data.weapon.getName());
 					String limbName = LangUtils.titleCase(data.limb.getName());
 					if (!categoryMap.containsKey("attack")) {
-						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, "Attack", null));
+						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, false, false, "Attack", null));
 					}
 					String weaponCategory = "attack_weapon_" + data.weapon.getID();
 					if (!categoryMap.containsKey(weaponCategory)) {
-						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", weaponName, null));
+						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", false, false, weaponName, null));
 					}
 					String targetCategory = "attack_weapon" + data.weapon.getID() + "_target_" + ((GameInstanced) data.target).getID();
 					if (!categoryMap.containsKey(targetCategory)) {
-						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, targetName, null));
+						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, false, false, targetName, null));
 					}
 					String limbCategory = "attack_weapon" + data.weapon.getID() + "_target_" + ((GameInstanced) data.target).getID() + "_limb_" + data.limb.getID();
 					if (!categoryMap.containsKey(limbCategory)) {
-						categoryMap.put(limbCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, limbCategory, targetCategory, limbName, null));
+						categoryMap.put(limbCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, limbCategory, targetCategory, false, false, limbName, null));
 					}
 					parentCategory = limbCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
@@ -209,19 +224,19 @@ public class MenuManager {
 					String targetName = LangUtils.titleCase(data.target.getName());
 					String weaponName = LangUtils.titleCase(data.weapon.getName());
 					if (!categoryMap.containsKey("attack")) {
-						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, "Attack", null));
+						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", null, false, false, "Attack", null));
 					}
 					String weaponCategory = "attack_weapon_" + data.weapon.getID();
 					if (!categoryMap.containsKey(weaponCategory)) {
-						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", weaponName, null));
+						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", false, false, weaponName, null));
 					}
 					String areaCategory = "attack_weapon" + data.weapon.getID() + "_target_area";
 					if (!categoryMap.containsKey(areaCategory)) {
-						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, weaponCategory, "Area", null));
+						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, weaponCategory, false, false, "Area", null));
 					}
 					String targetCategory = "attack_weapon" + data.weapon.getID() + "_target_area_" + data.target.getID();
 					if (!categoryMap.containsKey(targetCategory)) {
-						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, areaCategory, targetName, null));
+						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, areaCategory, false, false, targetName, null));
 					}
 					parentCategory = targetCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
@@ -229,7 +244,7 @@ public class MenuManager {
 				default -> throw new IllegalStateException("Unexpected menu data: " + action.getMenuData(actor));
 			}
 			String prompt = action.getPrompt(actor);
-			menuChoices.add(new MenuChoice((promptOverride != null ? promptOverride : action.getPrompt(actor)), action.canChoose(actor), action.actionPoints(actor), parentCategory, prompt));
+			menuChoices.add(new MenuChoice((promptOverride != null ? promptOverride : action.getPrompt(actor)), action.canChoose(actor), action.actionPoints(actor), showOnRight, parentCategory, prompt));
 		}
 		List<MenuCategory> menuCategories = new ArrayList<>(categoryMap.values());
 		startChoiceMenu(game, menuChoices, menuCategories, endTurnIndex, false);
@@ -239,7 +254,7 @@ public class MenuManager {
 		this.choiceMenuEvent = event;
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		for (SceneChoice choice : validChoices) {
-			menuChoices.add(new MenuChoice(choice.getPrompt(), new Action.CanChooseResult(true, null), -1, null));
+			menuChoices.add(new MenuChoice(choice.getPrompt(), new Action.CanChooseResult(true, null), -1, false, null));
 		}
 		startChoiceMenu(game, menuChoices, new ArrayList<>(), -1, true);
 	}

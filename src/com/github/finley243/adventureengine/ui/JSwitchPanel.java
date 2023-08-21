@@ -35,6 +35,7 @@ public class JSwitchPanel extends JPanel {
     public void loadMenu(List<MenuChoice> menuChoices, List<MenuCategory> menuCategories, int endTurnIndex) {
         List<MenuChoice> topLevelActions = new ArrayList<>();
         List<MenuCategory> topLevelCategories = new ArrayList<>();
+        Map<String, MenuCategory> categoryByID = new HashMap<>();
         Map<String, List<MenuChoice>> actions = new HashMap<>();
         Map<String, List<MenuCategory>> categories = new HashMap<>();
         Map<String, String> parentCategories = new HashMap<>();
@@ -58,6 +59,7 @@ public class JSwitchPanel extends JPanel {
                 }
                 categories.get(category.getParentCategory()).add(category);
             }
+            categoryByID.put(category.getCategoryID(), category);
         }
         JPanel topLevelPanel = new JChoiceMenuPanel(game, this, null, topLevelCategories, topLevelActions, endTurnIndex);
         addChoicePanel(topLevelPanel, TOP_LEVEL_MENU);
@@ -68,7 +70,14 @@ public class JSwitchPanel extends JPanel {
             String parentCategory = parentCategories.getOrDefault(categoryID, TOP_LEVEL_MENU);
             List<MenuChoice> actionData = actions.getOrDefault(categoryID, new ArrayList<>());
             List<MenuCategory> categoryData = categories.getOrDefault(categoryID, new ArrayList<>());
-            JPanel categoryPanel = new JChoiceMenuDetailsPanel(game, this, parentCategory, categoryData, actionData, endTurnIndex);
+            JPanel categoryPanel;
+            if (categoryByID.get(categoryID).getType() == MenuCategory.CategoryType.INVENTORY_TRANSFER) {
+                categoryPanel = new JChoiceMenuDetailsDoublePanel(game, this, parentCategory, categoryData, actionData, endTurnIndex);
+            } else if (categoryByID.get(categoryID).showDetails()) {
+                categoryPanel = new JChoiceMenuDetailsPanel(game, this, parentCategory, categoryData, actionData, endTurnIndex);
+            } else {
+                categoryPanel = new JChoiceMenuPanel(game, this, parentCategory, categoryData, actionData, endTurnIndex);
+            }
             addChoicePanel(categoryPanel, categoryID);
         }
         switchToPanel(lastPanel);
