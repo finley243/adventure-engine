@@ -12,6 +12,8 @@ import java.util.*;
 
 public class JSwitchPanel extends JPanel {
 
+    private static final int SCROLL_BAR_WIDTH_REMOVED = 8;
+    private static final int SCROLL_INCREMENT = 5;
     private static final String TOP_LEVEL_MENU = "TOPLEVEL";
 
     private final JPanel innerPanel;
@@ -29,8 +31,11 @@ public class JSwitchPanel extends JPanel {
         this.innerPanel = new JPanel();
         this.cardLayout = new CardLayout();
         innerPanel.setLayout(cardLayout);
+        innerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
+        innerPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         add(innerPanel, BorderLayout.CENTER);
     }
 
@@ -102,63 +107,21 @@ public class JSwitchPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(5);
-        scrollPane.getVerticalScrollBar().setUI(new SwitchPanelScrollUI());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_INCREMENT);
+        scrollPane.getVerticalScrollBar().setUI(new CustomScrollUI(false, 4, 1));
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(scrollPane.getVerticalScrollBar().getPreferredSize().width - 10, scrollPane.getVerticalScrollBar().getPreferredSize().height));
+        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(scrollPane.getVerticalScrollBar().getPreferredSize().width - SCROLL_BAR_WIDTH_REMOVED, scrollPane.getVerticalScrollBar().getPreferredSize().height));
         innerPanel.add(scrollPane, panelID);
         validPanels.add(panelID);
     }
 
     private void addEndTurnButton(int index) {
-        JChoiceButton endTurnButton = new JChoiceButton("End Turn", -1, null, game, index, this);
+        JChoiceButton endTurnButton = new JChoiceButton(GraphicalInterfaceComplex.LABEL_END_TURN, -1, null, game, index, this);
         endTurnButton.setEnabled(index > -1);
+        //endTurnButton.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(4, 0, 0, 0), endTurnButton.getBorder()));
         add(endTurnButton, BorderLayout.PAGE_END);
         endTurnButton.setVisible(true);
         this.endTurnButton = endTurnButton;
-    }
-
-    private static class SwitchPanelScrollUI extends BasicScrollBarUI {
-        public static final Color COLOR = new Color(204, 204, 204);
-        public static final Color COLOR_HOVER = new Color(204, 204, 204);
-        public static final int WIDTH = 5;
-        public static final int VERTICAL_PADDING = 1;
-
-        @Override
-        protected JButton createDecreaseButton(int orientation) {
-            return new Invisible();
-        }
-
-        @Override
-        protected JButton createIncreaseButton(int orientation) {
-            return new Invisible();
-        }
-
-        @Override
-        protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {}
-
-        @Override
-        protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
-            Graphics2D graphics2D = (Graphics2D) g.create();
-            graphics2D.setColor(isThumbRollover() ? COLOR_HOVER : COLOR);
-            int height = Math.max(thumbBounds.height, WIDTH);
-            // Centered scroll bar
-            /*int x = Math.round(((float) (thumbBounds.width - WIDTH)) / 2) + thumbBounds.x;
-            graphics2D.fillRect(x, thumbBounds.y + VERTICAL_PADDING, WIDTH, height - (2 * VERTICAL_PADDING));*/
-            // Right aligned scroll bar
-            int x = thumbBounds.width - WIDTH + thumbBounds.x;
-            graphics2D.fillRect(x, thumbBounds.y + VERTICAL_PADDING, WIDTH, height - (2 * VERTICAL_PADDING));
-            graphics2D.dispose();
-        }
-
-        private static class Invisible extends JButton {
-            private Invisible() {
-                setPreferredSize(new Dimension());
-                setOpaque(false);
-                setFocusable(false);
-                setBorder(BorderFactory.createEmptyBorder());
-            }
-        }
     }
 
 }

@@ -5,29 +5,25 @@ import java.awt.*;
 
 public class JDetailsPanel extends JPanel {
 
-    public static final Color TEXT = new Color(20, 20, 20);
-
-    public static final Font FONT_TITLE = new Font("Arial", Font.BOLD, 16);
-    public static final Font FONT_DESCRIPTION = new Font("Arial", Font.PLAIN, 12);
-
     private final JLabel title;
     private final JTextArea description;
 
     public JDetailsPanel() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TEXT), BorderFactory.createEmptyBorder(5, 5, 5, 5))));
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 0, 5, 5), BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(GraphicalInterfaceComplex.COLOR_BORDER), BorderFactory.createEmptyBorder(5, 5, 5, 5))));
+        setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         this.title = new JLabel();
         title.setAlignmentX(CENTER_ALIGNMENT);
-        title.setFont(FONT_TITLE);
-        title.setForeground(TEXT);
+        title.setFont(GraphicalInterfaceComplex.FONT_DETAILS_TITLE);
+        title.setForeground(GraphicalInterfaceComplex.COLOR_TEXT);
         title.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
         this.description = new JTextArea();
-        description.setPreferredSize(new Dimension(200, 200));
+        description.setPreferredSize(new Dimension(180, 200));
         description.setEditable(false);
         description.setHighlighter(null);
         description.setLineWrap(true);
         description.setWrapStyleWord(true);
-        description.setFont(FONT_DESCRIPTION);
+        description.setFont(GraphicalInterfaceComplex.FONT_DETAILS_DESCRIPTION);
         description.setOpaque(false);
         add(title);
         add(description);

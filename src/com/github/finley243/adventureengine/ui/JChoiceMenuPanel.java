@@ -21,6 +21,8 @@ public class JChoiceMenuPanel extends JPanel {
         setLayout(new BorderLayout());
         this.innerPanel = new JPanel();
         innerPanel.setLayout(new GridBagLayout());
+        setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
+        innerPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         int layoutIndex = 0;
         if (parentCategory != null) {
             JComponent backButton = getBackButton(parentCategory);
