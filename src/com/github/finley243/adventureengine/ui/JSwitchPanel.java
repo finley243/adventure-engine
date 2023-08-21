@@ -17,11 +17,12 @@ public class JSwitchPanel extends JPanel {
 
     private final Game game;
     private final Set<String> validPanels;
-    private String lastPanel;
+    private final Deque<String> panelStack;
 
     public JSwitchPanel(Game game) {
         this.game = game;
         this.validPanels = new HashSet<>();
+        this.panelStack = new ArrayDeque<>();
         this.cardLayout = new CardLayout();
         setLayout(cardLayout);
         setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
@@ -80,17 +81,36 @@ public class JSwitchPanel extends JPanel {
             }
             addChoicePanel(categoryPanel, categoryID);
         }
-        switchToPanel(lastPanel);
+        switchToLastPanel();
         validate();
+    }
+
+    public void switchToLastPanel() {
+        while (!panelStack.isEmpty()) {
+            String lastPanel = panelStack.peek();
+            if (validPanels.contains(lastPanel)) {
+                cardLayout.show(this, lastPanel);
+                return;
+            }
+            panelStack.pop();
+        }
+        cardLayout.show(this, TOP_LEVEL_MENU);
+        panelStack.push(TOP_LEVEL_MENU);
+    }
+
+    public void switchToParentPanel() {
+        panelStack.pop(); // Current panel
+        switchToLastPanel();
     }
 
     public void switchToPanel(String panelID) {
         if (validPanels.contains(panelID)) {
             cardLayout.show(this, panelID);
-            lastPanel = panelID;
+            panelStack.push(panelID);
         } else {
             cardLayout.show(this, TOP_LEVEL_MENU);
-            lastPanel = TOP_LEVEL_MENU;
+            panelStack.clear();
+            panelStack.push(TOP_LEVEL_MENU);
         }
         requestFocusInWindow();
     }

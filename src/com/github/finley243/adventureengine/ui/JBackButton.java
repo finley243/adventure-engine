@@ -11,13 +11,11 @@ public class JBackButton extends JPanel {
     private final JLabel labelArrow;
 
     private final JSwitchPanel switchPanel;
-    private final String parentCategory;
 
     private boolean mouseHovering;
 
-    public JBackButton(JSwitchPanel switchPanel, String parentCategory) {
+    public JBackButton(JSwitchPanel switchPanel) {
         this.switchPanel = switchPanel;
-        this.parentCategory = parentCategory;
         setLayout(new BorderLayout());
         this.labelMain = new JLabel(GraphicalInterfaceComplex.LABEL_BACK);
         add(labelMain, BorderLayout.LINE_END);
@@ -73,7 +71,7 @@ public class JBackButton extends JPanel {
     }
 
     private void onPressed() {
-        switchPanel.switchToPanel(parentCategory);
+        switchPanel.switchToParentPanel();
     }
 
     @Override

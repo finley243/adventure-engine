@@ -78,7 +78,7 @@ public class JChoiceMenuDetailsDoublePanel extends JPanel {
         int layoutIndexLeft = 0;
         int layoutIndexRight = 0;
         if (parentCategory != null) {
-            JComponent backButton = getBackButton(parentCategory);
+            JComponent backButton = getBackButton();
             listPanelLeft.add(backButton, generateConstraintsButtons(0, layoutIndexLeft, 1, 1, 1, 0));
             layoutIndexLeft++;
         }
@@ -147,8 +147,8 @@ public class JChoiceMenuDetailsDoublePanel extends JPanel {
         return actionButton;
     }
 
-    private JComponent getBackButton(String parentCategory) {
-        return new JBackButton(switchPanel, parentCategory);
+    private JComponent getBackButton() {
+        return new JBackButton(switchPanel);
     }
 
     private JComponent getCategoryButton(MenuCategory category) {

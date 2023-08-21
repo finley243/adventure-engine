@@ -45,7 +45,7 @@ public class JChoiceMenuPanel extends JPanel {
         this.endTurnButton = getEndTurnButton(endTurnIndex);
         int layoutIndex = 0;
         if (parentCategory != null) {
-            JComponent backButton = getBackButton(parentCategory);
+            JComponent backButton = getBackButton();
             listPanel.add(backButton, generateConstraintsButtons(0, layoutIndex, 1, 1, 1, 0));
             layoutIndex++;
         }
@@ -91,8 +91,8 @@ public class JChoiceMenuPanel extends JPanel {
         return actionButton;
     }
 
-    private JComponent getBackButton(String parentCategory) {
-        return new JBackButton(switchPanel, parentCategory);
+    private JComponent getBackButton() {
+        return new JBackButton(switchPanel);
     }
 
     private JComponent getCategoryButton(MenuCategory category) {
