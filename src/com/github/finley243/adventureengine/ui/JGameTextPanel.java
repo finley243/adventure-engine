@@ -15,6 +15,8 @@ public class JGameTextPanel extends JPanel {
         setLayout(new BorderLayout());
         this.textPane = new JTextPane();
         textPane.setEditable(false);
+        textPane.setHighlighter(null);
+        textPane.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         add(textPane, BorderLayout.CENTER);
     }
 
