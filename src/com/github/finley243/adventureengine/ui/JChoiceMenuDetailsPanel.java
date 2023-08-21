@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
 
-public class JChoiceMenuPanel extends JPanel {
+public class JChoiceMenuDetailsPanel extends JPanel {
 
     private static final int SCROLL_BAR_WIDTH_REMOVED = 8;
     private static final int SCROLL_INCREMENT = 5;
@@ -21,10 +21,12 @@ public class JChoiceMenuPanel extends JPanel {
     private final JPanel listPanel;
     private final JChoiceButton endTurnButton;
 
+    private final JPanel detailsPanel;
+
     private final Game game;
     private final JSwitchPanel switchPanel;
 
-    public JChoiceMenuPanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
+    public JChoiceMenuDetailsPanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
         this.game = game;
         this.switchPanel = switchPanel;
         setLayout(new GridBagLayout());
@@ -43,6 +45,7 @@ public class JChoiceMenuPanel extends JPanel {
         listPanel.setLayout(new GridBagLayout());
         listPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         this.endTurnButton = getEndTurnButton(endTurnIndex);
+        this.detailsPanel = new JDetailsPanel();
         int layoutIndex = 0;
         if (parentCategory != null) {
             JComponent backButton = getBackButton(parentCategory);
@@ -65,6 +68,7 @@ public class JChoiceMenuPanel extends JPanel {
         buttonPanel.add(buttonScrollPane, BorderLayout.CENTER);
         buttonPanel.add(endTurnButton, BorderLayout.PAGE_END);
         add(buttonPanel, generateConstraintsPanels(0, 0, 1, 1, 1, 1));
+        add(detailsPanel, generateConstraintsPanels(1, 0, 1, 1, 0, 0));
     }
 
     private JScrollPane getScrollPane(JPanel viewPanel) {

@@ -40,8 +40,6 @@ public class GraphicalInterfaceComplex implements UserInterface {
 
 	private final JFrame window;
 	private final JGameTextPanel textPanel;
-	private final JPanel lowerPanel;
-	private final JDetailsPanel detailsPanel;
 	private final JSwitchPanel switchPanel;
 
 	public GraphicalInterfaceComplex(Game game) {
@@ -55,34 +53,14 @@ public class GraphicalInterfaceComplex implements UserInterface {
 		window.setBackground(COLOR_BACKGROUND);
 
 		this.textPanel = new JGameTextPanel();
-		//window.add(textPanel, generateConstraints(0, 0, 2, 1, 1, 1));
 		window.add(textPanel);
 
-		this.lowerPanel = new JPanel();
-		lowerPanel.setLayout(new GridBagLayout());
-		window.add(lowerPanel);
-
-		this.detailsPanel = new JDetailsPanel();
-		lowerPanel.add(detailsPanel, generateConstraints(1, 0, 1, 1, 0, 0));
-
 		this.switchPanel = new JSwitchPanel(game);
-		lowerPanel.add(switchPanel, generateConstraints(0, 0, 1, 1, 1, 1));
+		window.add(switchPanel);
 
 		window.pack();
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
-	}
-
-	private GridBagConstraints generateConstraints(int x, int y, int sx, int sy, double wx, double wy) {
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.gridx = x;
-		constraints.gridy = y;
-		constraints.gridwidth = sx;
-		constraints.gridheight = sy;
-		constraints.weightx = wx;
-		constraints.weighty = wy;
-		constraints.fill = GridBagConstraints.BOTH;
-		return constraints;
 	}
 
 	@Override

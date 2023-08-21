@@ -18,7 +18,8 @@ public class JDetailsPanel extends JPanel {
         title.setForeground(GraphicalInterfaceComplex.COLOR_TEXT);
         title.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
         this.description = new JTextArea();
-        description.setPreferredSize(new Dimension(180, 200));
+        description.setPreferredSize(new Dimension(170, 200));
+        description.setMinimumSize(new Dimension(170, 200));
         description.setEditable(false);
         description.setHighlighter(null);
         description.setLineWrap(true);
@@ -27,7 +28,7 @@ public class JDetailsPanel extends JPanel {
         description.setOpaque(false);
         add(title);
         add(description);
-        setContent("Name", "Description goes here.\n\nCapable of displaying multiple lines.\n\nThese lines can be as long as you want, as the details panel will automatically wrap words to the next line.");
+        setContent("Name", "Description goes here.\n\nThese lines can be as long as you want, as the details panel will automatically wrap words to the next line.\n\nStat A: 30\nStat B: 15");
     }
 
     public void clear() {
