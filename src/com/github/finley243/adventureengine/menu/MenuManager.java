@@ -108,7 +108,7 @@ public class MenuManager {
 					}
 					String invItemCategory = "inv_item_" + data.item.getID();
 					if (!categoryMap.containsKey(invItemCategory)) {
-						String itemDescription = "Value: " + data.item.getStatValue("price", new Context(game, game.data().getPlayer(), game.data().getPlayer())) + "\nThis is an item.";
+						String itemDescription = "This is an item.\n\nValue: " + data.item.getSubHolder("template", null).getStatValue("price", new Context(game, game.data().getPlayer(), game.data().getPlayer())).getValueInteger(new Context(game, game.data().getPlayer(), game.data().getPlayer()));
 						categoryMap.put(invItemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, invItemCategory, "inventory", itemName + (itemCount > 1 ? " (" + itemCount + ")" : ""), itemDescription));
 					}
 					parentCategory = invItemCategory;

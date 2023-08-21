@@ -6,6 +6,8 @@ import com.github.finley243.adventureengine.menu.MenuChoice;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class JChoiceMenuDetailsPanel extends JPanel {
     private final JPanel listPanel;
     private final JChoiceButton endTurnButton;
 
-    private final JPanel detailsPanel;
+    private final JDetailsPanel detailsPanel;
 
     private final Game game;
     private final JSwitchPanel switchPanel;
@@ -55,6 +57,19 @@ public class JChoiceMenuDetailsPanel extends JPanel {
         categories.sort(Comparator.comparing(MenuCategory::getName));
         for (MenuCategory category : categories) {
             JComponent categoryButton = getCategoryButton(category);
+            categoryButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    super.mouseEntered(e);
+                    detailsPanel.setContent(category.getName(), category.getDescription());
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    super.mouseExited(e);
+                    detailsPanel.clear();
+                }
+            });
             listPanel.add(categoryButton, generateConstraintsButtons(0, layoutIndex, 1, 1, 1, 0));
             layoutIndex++;
         }
