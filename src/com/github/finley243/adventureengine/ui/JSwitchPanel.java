@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -29,6 +30,7 @@ public class JSwitchPanel extends JPanel {
         this.cardLayout = new CardLayout();
         innerPanel.setLayout(cardLayout);
         setLayout(new BorderLayout());
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         add(innerPanel, BorderLayout.CENTER);
     }
 
@@ -101,6 +103,9 @@ public class JSwitchPanel extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getVerticalScrollBar().setUnitIncrement(5);
+        scrollPane.getVerticalScrollBar().setUI(new SwitchPanelScrollUI());
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(scrollPane.getVerticalScrollBar().getPreferredSize().width - 10, scrollPane.getVerticalScrollBar().getPreferredSize().height));
         innerPanel.add(scrollPane, panelID);
         validPanels.add(panelID);
     }
@@ -111,6 +116,49 @@ public class JSwitchPanel extends JPanel {
         add(endTurnButton, BorderLayout.PAGE_END);
         endTurnButton.setVisible(true);
         this.endTurnButton = endTurnButton;
+    }
+
+    private static class SwitchPanelScrollUI extends BasicScrollBarUI {
+        public static final Color COLOR = new Color(204, 204, 204);
+        public static final Color COLOR_HOVER = new Color(204, 204, 204);
+        public static final int WIDTH = 5;
+        public static final int VERTICAL_PADDING = 1;
+
+        @Override
+        protected JButton createDecreaseButton(int orientation) {
+            return new Invisible();
+        }
+
+        @Override
+        protected JButton createIncreaseButton(int orientation) {
+            return new Invisible();
+        }
+
+        @Override
+        protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {}
+
+        @Override
+        protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+            Graphics2D graphics2D = (Graphics2D) g.create();
+            graphics2D.setColor(isThumbRollover() ? COLOR_HOVER : COLOR);
+            int height = Math.max(thumbBounds.height, WIDTH);
+            // Centered scroll bar
+            /*int x = Math.round(((float) (thumbBounds.width - WIDTH)) / 2) + thumbBounds.x;
+            graphics2D.fillRect(x, thumbBounds.y + VERTICAL_PADDING, WIDTH, height - (2 * VERTICAL_PADDING));*/
+            // Right aligned scroll bar
+            int x = thumbBounds.width - WIDTH + thumbBounds.x;
+            graphics2D.fillRect(x, thumbBounds.y + VERTICAL_PADDING, WIDTH, height - (2 * VERTICAL_PADDING));
+            graphics2D.dispose();
+        }
+
+        private static class Invisible extends JButton {
+            private Invisible() {
+                setPreferredSize(new Dimension());
+                setOpaque(false);
+                setFocusable(false);
+                setBorder(BorderFactory.createEmptyBorder());
+            }
+        }
     }
 
 }

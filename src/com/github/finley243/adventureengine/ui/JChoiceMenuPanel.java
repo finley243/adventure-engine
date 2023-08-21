@@ -65,7 +65,7 @@ public class JChoiceMenuPanel extends JPanel {
         constraints.weightx = wx;
         constraints.weighty = wy;
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets(1, 2, 1, 2);
+        constraints.insets = new Insets(1, 0, 1, 0);
         constraints.anchor = GridBagConstraints.NORTH;
         return constraints;
     }
