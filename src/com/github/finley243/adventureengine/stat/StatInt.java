@@ -10,13 +10,17 @@ import java.util.List;
 public class StatInt extends Stat {
 
     private final List<StatIntMod> mods;
+    private final int min;
+    private final int max;
 
-    public StatInt(String name, MutableStatHolder target) {
+    public StatInt(String name, MutableStatHolder target, int min, int max) {
         super(name, target);
         this.mods = new ArrayList<>();
+        this.min = min;
+        this.max = max;
     }
 
-    public int value(int base, int min, int max, Context context) {
+    public int value(int base, Context context) {
         int add = 0;
         float mult = 0.0f;
         for (StatIntMod mod : mods) {

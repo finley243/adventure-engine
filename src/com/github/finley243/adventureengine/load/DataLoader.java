@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.actor.ai.behavior.*;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
-import com.github.finley243.adventureengine.condition.*;
+import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.effect.*;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.item.Item;
@@ -25,8 +25,12 @@ import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
+import com.github.finley243.adventureengine.stat.StatParameters;
 import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.world.environment.*;
+import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
+import com.github.finley243.adventureengine.world.environment.LinkType;
+import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
@@ -58,6 +62,10 @@ public class DataLoader {
                         if (currentChild.getNodeType() == Node.ELEMENT_NODE) {
                             Element currentElement = (Element) currentChild;
                             switch (currentChild.getNodeName()) {
+                                case "statParameters" -> {
+                                    StatParameters statParameters = loadStatParameters(game, currentElement);
+                                    game.data().addStatParameters(statParameters.getID(), statParameters);
+                                }
                                 case "faction" -> {
                                     Faction faction = loadFaction(game, currentElement);
                                     game.data().addFaction(faction.getID(), faction);
@@ -157,6 +165,33 @@ public class DataLoader {
         String ID = LoadUtils.attribute(element, "id", null);
         String name = element.getTextContent();
         return new Skill(ID, name);
+    }
+
+    private static StatParameters loadStatParameters(Game game, Element parametersElement) {
+        String ID = LoadUtils.attribute(parametersElement, "id", null);
+        Map<String, StatParameters.StatData> parameters = new HashMap<>();
+        for (Element statElement : LoadUtils.directChildrenWithName(parametersElement, "stat")) {
+            String name = LoadUtils.attribute(statElement, "name", null);
+            String dataTypeString = LoadUtils.attribute(statElement, "dataType", null);
+            Expression.DataType dataType = switch (dataTypeString) {
+                case "boolean" -> Expression.DataType.BOOLEAN;
+                case "int" -> Expression.DataType.INTEGER;
+                case "float" -> Expression.DataType.FLOAT;
+                case "string" -> Expression.DataType.STRING;
+                case "stringSet" -> Expression.DataType.STRING_SET;
+                case null, default -> null;
+            };
+            boolean mutable = LoadUtils.attributeBool(statElement, "mutable", true);
+            Boolean booleanPriority = LoadUtils.attributeBool(statElement, "booleanPriority", null);
+            Integer minInt = LoadUtils.attributeInt(statElement, "minInt", null);
+            Integer maxInt = LoadUtils.attributeInt(statElement, "maxInt", null);
+            Float minFloat = LoadUtils.attributeFloat(statElement, "minFloat", null);
+            Float maxFloat = LoadUtils.attributeFloat(statElement, "maxFloat", null);
+            String minStat = LoadUtils.attribute(statElement, "minStat", null);
+            String maxStat = LoadUtils.attribute(statElement, "maxStat", null);
+            parameters.put(name, new StatParameters.StatData(dataType, mutable, booleanPriority, minInt, maxInt, minFloat, maxFloat, minStat, maxStat));
+        }
+        return new StatParameters(game, ID, parameters);
     }
 
     private static ActorTemplate loadActor(Game game, Element actorElement) {

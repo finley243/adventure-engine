@@ -35,12 +35,6 @@ public class Effect extends GameInstanced {
 		this.scriptRemove = scriptRemove;
 		this.scriptRound = scriptRound;
 	}
-	
-	public void start(MutableStatHolder target) {}
-	
-	public void end(MutableStatHolder target) {}
-	
-	public void eachRound(MutableStatHolder target) {}
 
 	public void start(MutableStatController controller) {}
 

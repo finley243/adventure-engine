@@ -26,7 +26,7 @@ public class ScriptSetState extends Script {
     @Override
     protected void executeSuccess(Context context) {
         String stateValue = state.getValueString(context);
-        boolean success = holder.getHolder(context).setStatValue(stateValue, expression, context);
+        boolean success = holder.getHolder(context).getStatController().setValue(stateValue, expression, context);
         if (!success) {
             context.game().log().print("ScriptSetState - stat " + stateValue + " on holder " + holder + " was not updated successfully");
         }

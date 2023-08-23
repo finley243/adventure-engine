@@ -21,22 +21,6 @@ public class EffectStatAddFloat extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
-        StatFloat statFloat = target.getStatFloat(stat);
-        if(statFloat != null) {
-            statFloat.addMod(new StatFloat.StatFloatMod(statCondition, amount, 0.0f));
-        }
-    }
-
-    @Override
-    public void end(MutableStatHolder target) {
-        StatFloat statFloat = target.getStatFloat(stat);
-        if(statFloat != null) {
-            statFloat.removeMod(new StatFloat.StatFloatMod(statCondition, amount, 0.0f));
-        }
-    }
-
-    @Override
     public void start(MutableStatController controller) {
         StatFloat statFloat = controller.getStatFloat(stat);
         if(statFloat != null) {

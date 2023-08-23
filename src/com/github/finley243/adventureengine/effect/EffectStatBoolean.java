@@ -21,16 +21,6 @@ public class EffectStatBoolean extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
-        target.getStatBoolean(stat).addMod(new StatBoolean.StatBooleanMod(statCondition, value));
-    }
-
-    @Override
-    public void end(MutableStatHolder target) {
-        target.getStatBoolean(stat).removeMod(new StatBoolean.StatBooleanMod(statCondition, value));
-    }
-
-    @Override
     public void start(MutableStatController controller) {
         controller.getStatBoolean(stat).addMod(new StatBoolean.StatBooleanMod(statCondition, value));
     }

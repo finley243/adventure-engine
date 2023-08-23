@@ -18,27 +18,6 @@ public class EffectCompound extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
-        for (Effect subEffect : subEffects) {
-            subEffect.start(target);
-        }
-    }
-
-    @Override
-    public void end(MutableStatHolder target) {
-        for (Effect subEffect : subEffects) {
-            subEffect.end(target);
-        }
-    }
-
-    @Override
-    public void eachRound(MutableStatHolder target) {
-        for (Effect subEffect : subEffects) {
-            subEffect.eachRound(target);
-        }
-    }
-
-    @Override
     public void start(MutableStatController controller) {
         for (Effect subEffect : subEffects) {
             subEffect.start(controller);

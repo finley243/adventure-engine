@@ -22,32 +22,6 @@ public class EffectStatMult extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
-        StatInt statInt = target.getStatInt(stat);
-        if(statInt != null) {
-            statInt.addMod(new StatInt.StatIntMod(statCondition, 0, amount));
-        } else {
-            StatFloat statFloat = target.getStatFloat(stat);
-            if(statFloat != null) {
-                statFloat.addMod(new StatFloat.StatFloatMod(statCondition, 0.0f, amount));
-            }
-        }
-    }
-
-    @Override
-    public void end(MutableStatHolder target) {
-        StatInt statInt = target.getStatInt(stat);
-        if(statInt != null) {
-            statInt.removeMod(new StatInt.StatIntMod(statCondition, 0, amount));
-        } else {
-            StatFloat statFloat = target.getStatFloat(stat);
-            if(statFloat != null) {
-                statFloat.removeMod(new StatFloat.StatFloatMod(statCondition, 0.0f, amount));
-            }
-        }
-    }
-
-    @Override
     public void start(MutableStatController controller) {
         StatInt statInt = controller.getStatInteger(stat);
         if (statInt != null) {

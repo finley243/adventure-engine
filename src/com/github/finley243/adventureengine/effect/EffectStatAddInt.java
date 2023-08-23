@@ -21,22 +21,6 @@ public class EffectStatAddInt extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
-        StatInt statInt = target.getStatInt(stat);
-        if(statInt != null) {
-            statInt.addMod(new StatInt.StatIntMod(statCondition, amount, 0.0f));
-        }
-    }
-
-    @Override
-    public void end(MutableStatHolder target) {
-        StatInt statInt = target.getStatInt(stat);
-        if(statInt != null) {
-            statInt.removeMod(new StatInt.StatIntMod(statCondition, amount, 0.0f));
-        }
-    }
-
-    @Override
     public void start(MutableStatController controller) {
         StatInt statInt = controller.getStatInteger(stat);
         if(statInt != null) {

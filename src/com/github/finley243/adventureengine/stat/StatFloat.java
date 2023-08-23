@@ -9,13 +9,17 @@ import java.util.List;
 public class StatFloat extends Stat {
 
     private final List<StatFloatMod> mods;
+    private final float min;
+    private final float max;
 
-    public StatFloat(String name, MutableStatHolder target) {
+    public StatFloat(String name, MutableStatHolder target, float min, float max) {
         super(name, target);
         this.mods = new ArrayList<>();
+        this.min = min;
+        this.max = max;
     }
 
-    public float value(float base, float min, float max, Context context) {
+    public float value(float base, Context context) {
         float add = 0.0f;
         float mult = 0.0f;
         for (StatFloatMod mod : mods) {

@@ -16,27 +16,36 @@ public class MutableStatController extends StatController {
     private final Map<String, StatString> stringStats;
     private final Map<String, StatStringSet> stringSetStats;
 
-    private final Context scriptContext;
     private final Map<String, List<EffectData>> effects;
 
-    public MutableStatController(Game game, Map<String, StatData> dataTypes, Context scriptContext) {
-        super(game, dataTypes);
+    public MutableStatController(Game game, String statParameters, Context defaultContext, MutableStatHolder holder) {
+        super(game, statParameters, defaultContext);
         this.booleanStats = new HashMap<>();
         this.integerStats = new HashMap<>();
         this.floatStats = new HashMap<>();
         this.stringStats = new HashMap<>();
         this.stringSetStats = new HashMap<>();
-        this.scriptContext = scriptContext;
         this.effects = new HashMap<>();
+        for (String statName : getStatParameters().getStats()) {
+            StatParameters.StatData data = getStatParameters().getParameter(statName);
+            if (!data.mutable()) continue;
+            switch (data.dataType()) {
+                case BOOLEAN -> booleanStats.put(statName, new StatBoolean(statName, holder, data.booleanPriority()));
+                case INTEGER -> integerStats.put(statName, new StatInt(statName, holder, data.minInt(), data.maxInt()));
+                case FLOAT -> floatStats.put(statName, new StatFloat(statName, holder, data.minFloat(), data.maxFloat()));
+                case STRING -> stringStats.put(statName, new StatString(statName, holder));
+                case STRING_SET -> stringSetStats.put(statName, new StatStringSet(statName, holder));
+            }
+        }
     }
 
     @Override
     public Expression getValue(String name, Context context) {
-        if (context == null) context = scriptContext;
-        return switch (statData.get(name).dataType()) {
+        if (context == null) context = defaultContext;
+        return switch (getStatParameters().getParameter(name).dataType()) {
             case BOOLEAN -> (booleanStats.containsKey(name) ? Expression.constant(booleanStats.get(name).value(super.getValue(name, context).getValueBoolean(context), context)) : super.getValue(name, context));
-            case INTEGER -> (integerStats.containsKey(name) ? Expression.constant(integerStats.get(name).value(super.getValue(name, context).getValueInteger(context), statData.get(name).minInt(), statData.get(name).maxInt(), context)) : super.getValue(name, context));
-            case FLOAT -> (floatStats.containsKey(name) ? Expression.constant(floatStats.get(name).value(super.getValue(name, context).getValueFloat(context), statData.get(name).minFloat(), statData.get(name).maxFloat(), context)) : super.getValue(name, context));
+            case INTEGER -> (integerStats.containsKey(name) ? Expression.constant(integerStats.get(name).value(super.getValue(name, context).getValueInteger(context), context)) : super.getValue(name, context));
+            case FLOAT -> (floatStats.containsKey(name) ? Expression.constant(floatStats.get(name).value(super.getValue(name, context).getValueFloat(context), context)) : super.getValue(name, context));
             case STRING -> (stringStats.containsKey(name) ? Expression.constant(stringStats.get(name).value(super.getValue(name, context).getValueString(context), context)) : super.getValue(name, context));
             case STRING_SET -> (stringSetStats.containsKey(name) ? Expression.constant(stringSetStats.get(name).value(super.getValue(name, context).getValueStringSet(context), context)) : super.getValue(name, context));
             case null, default -> null;
@@ -65,9 +74,9 @@ public class MutableStatController extends StatController {
 
     public void addEffect(String effectID) {
         Effect effect = game.data().getEffect(effectID);
-        if (effect.getConditionAdd() == null || effect.getConditionAdd().isMet(scriptContext)) {
+        if (effect.getConditionAdd() == null || effect.getConditionAdd().isMet(defaultContext)) {
             if (effect.getScriptAdd() != null) {
-                game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptAdd(), scriptContext));
+                game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptAdd(), defaultContext));
             }
             if (effect.isInstant()) {
                 effect.start(this);
@@ -93,7 +102,7 @@ public class MutableStatController extends StatController {
                 effect.end(this);
             }
             if (effect.getScriptRemove() != null) {
-                game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptRemove(), scriptContext));
+                game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptRemove(), defaultContext));
             }
             effects.get(effectID).remove(0);
             if (effects.get(effectID).isEmpty()) {
@@ -108,15 +117,15 @@ public class MutableStatController extends StatController {
             String effectID = itr.next();
             Effect effect = game.data().getEffect(effectID);
             for (EffectData instance : effects.get(effectID)) {
-                if (instance.isActive && effect.getConditionActive() != null && !effect.getConditionActive().isMet(scriptContext)) {
+                if (instance.isActive && effect.getConditionActive() != null && !effect.getConditionActive().isMet(defaultContext)) {
                     instance.isActive = false;
                     effect.end(this);
-                } else if (!instance.isActive && effect.getConditionActive() != null && effect.getConditionActive().isMet(scriptContext)) {
+                } else if (!instance.isActive && effect.getConditionActive() != null && effect.getConditionActive().isMet(defaultContext)) {
                     instance.isActive = true;
                     effect.start(this);
                 }
                 if (effect.getScriptRound() != null) {
-                    game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptRound(), scriptContext));
+                    game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptRound(), defaultContext));
                 }
                 if (instance.isActive) {
                     effect.eachRound(this);
@@ -130,10 +139,10 @@ public class MutableStatController extends StatController {
                     if (effect.getDuration() != -1) {
                         currentInstance.turnsRemaining -= 1;
                     }
-                    if (currentInstance.turnsRemaining == 0 || (effect.getConditionRemove() != null && effect.getConditionRemove().isMet(scriptContext))) {
+                    if (currentInstance.turnsRemaining == 0 || (effect.getConditionRemove() != null && effect.getConditionRemove().isMet(defaultContext))) {
                         effect.end(this);
                         if (effect.getScriptRemove() != null) {
-                            game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptRemove(), scriptContext));
+                            game.eventQueue().addToEnd(new ScriptEvent(effect.getScriptRemove(), defaultContext));
                         }
                         instanceItr.remove();
                         if (effectInstances.isEmpty()) {
