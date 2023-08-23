@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.effect;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.stat.MutableStatController;
 import com.github.finley243.adventureengine.stat.MutableStatHolder;
 import com.github.finley243.adventureengine.stat.StatInt;
 
@@ -30,6 +31,22 @@ public class EffectStatAddInt extends Effect {
     @Override
     public void end(MutableStatHolder target) {
         StatInt statInt = target.getStatInt(stat);
+        if(statInt != null) {
+            statInt.removeMod(new StatInt.StatIntMod(statCondition, amount, 0.0f));
+        }
+    }
+
+    @Override
+    public void start(MutableStatController controller) {
+        StatInt statInt = controller.getStatInteger(stat);
+        if(statInt != null) {
+            statInt.addMod(new StatInt.StatIntMod(statCondition, amount, 0.0f));
+        }
+    }
+
+    @Override
+    public void end(MutableStatController controller) {
+        StatInt statInt = controller.getStatInteger(stat);
         if(statInt != null) {
             statInt.removeMod(new StatInt.StatIntMod(statCondition, amount, 0.0f));
         }

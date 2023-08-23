@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.effect;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.stat.MutableStatController;
 import com.github.finley243.adventureengine.stat.MutableStatHolder;
 
 import java.util.List;
@@ -36,4 +37,26 @@ public class EffectCompound extends Effect {
             subEffect.eachRound(target);
         }
     }
+
+    @Override
+    public void start(MutableStatController controller) {
+        for (Effect subEffect : subEffects) {
+            subEffect.start(controller);
+        }
+    }
+
+    @Override
+    public void end(MutableStatController controller) {
+        for (Effect subEffect : subEffects) {
+            subEffect.end(controller);
+        }
+    }
+
+    @Override
+    public void eachRound(MutableStatController controller) {
+        for (Effect subEffect : subEffects) {
+            subEffect.eachRound(controller);
+        }
+    }
+
 }
