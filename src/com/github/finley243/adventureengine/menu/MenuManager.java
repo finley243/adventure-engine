@@ -55,7 +55,7 @@ public class MenuManager {
 			switch (action.getMenuData(actor)) {
 				case MenuDataSelf data -> parentCategory = null;
 				case MenuDataMove data -> {
-					String areaName = LangUtils.titleCase(data.destination.getRelativeName() + " " + data.destination.getName());
+					String areaName = LangUtils.titleCase(data.destination.getRelativeName() + " " + data.destination.getName() + (data.direction != null ? " (" + data.direction + ")" : ""));
 					if (!categoryMap.containsKey("areas")) {
 						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, false, false, "Areas", null));
 					}

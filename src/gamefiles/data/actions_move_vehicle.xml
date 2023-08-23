@@ -1,6 +1,6 @@
 <data>
     <action id="drive">
-        <prompt>$areaName ($dir)</prompt>
+        <prompt>Drive</prompt>
         <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
         <script>
             <script type="sensoryEvent">
@@ -20,7 +20,7 @@
         </script>
     </action>
     <action id="drive_corner">
-        <prompt>Around corner ($dir)</prompt>
+        <prompt>Drive</prompt>
         <script>
             <script type="sensoryEvent">
                 <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
