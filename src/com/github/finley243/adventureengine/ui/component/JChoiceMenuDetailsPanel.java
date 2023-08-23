@@ -1,8 +1,9 @@
-package com.github.finley243.adventureengine.ui;
+package com.github.finley243.adventureengine.ui.component;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,76 +12,48 @@ import java.awt.event.MouseEvent;
 import java.util.Comparator;
 import java.util.List;
 
-public class JChoiceMenuDetailsDoublePanel extends JPanel {
+public class JChoiceMenuDetailsPanel extends JPanel {
 
     private static final int SCROLL_BAR_WIDTH_REMOVED = 8;
     private static final int SCROLL_INCREMENT = 5;
 
     // buttonPanel contains buttonScrollPane (which contains buttonInnerPanel, which itself contains listPanel) and endTurnButton
-    private final JPanel buttonPanelLeft;
-    private final JScrollPane buttonScrollPaneLeft;
-    private final JPanel buttonInnerPanelLeft;
-    private final JPanel listPanelLeft;
+    private final JPanel buttonPanel;
+    private final JScrollPane buttonScrollPane;
+    private final JPanel buttonInnerPanel;
+    private final JPanel listPanel;
     private final JChoiceButton endTurnButton;
-
-    private final JPanel buttonPanelRight;
-    private final JScrollPane buttonScrollPaneRight;
-    private final JPanel buttonInnerPanelRight;
-    private final JPanel listPanelRight;
 
     private final JDetailsPanel detailsPanel;
 
     private final Game game;
     private final JSwitchPanel switchPanel;
 
-    public JChoiceMenuDetailsDoublePanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
+    public JChoiceMenuDetailsPanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
         this.game = game;
         this.switchPanel = switchPanel;
         setLayout(new GridBagLayout());
         setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-
-        this.buttonPanelLeft = new JPanel();
-        buttonPanelLeft.setLayout(new BorderLayout());
-        buttonPanelLeft.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        buttonPanelLeft.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.buttonInnerPanelLeft = new JPanel();
-        buttonInnerPanelLeft.setLayout(new BorderLayout());
-        buttonInnerPanelLeft.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.buttonScrollPaneLeft = getScrollPane(buttonInnerPanelLeft);
-        buttonScrollPaneLeft.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
-        buttonScrollPaneLeft.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.listPanelLeft = new JPanel();
-        listPanelLeft.setLayout(new GridBagLayout());
-        listPanelLeft.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
+        this.buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BorderLayout());
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        buttonPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
+        this.buttonInnerPanel = new JPanel();
+        buttonInnerPanel.setLayout(new BorderLayout());
+        buttonInnerPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
+        this.buttonScrollPane = getScrollPane(buttonInnerPanel);
+        buttonScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
+        buttonScrollPane.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
+        this.listPanel = new JPanel();
+        listPanel.setLayout(new GridBagLayout());
+        listPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         this.endTurnButton = getEndTurnButton(endTurnIndex);
-        buttonInnerPanelLeft.add(listPanelLeft, BorderLayout.PAGE_START);
-        buttonPanelLeft.add(buttonScrollPaneLeft, BorderLayout.CENTER);
-        buttonPanelLeft.add(endTurnButton, BorderLayout.PAGE_END);
-
         this.detailsPanel = new JDetailsPanel();
-
-        this.buttonPanelRight = new JPanel();
-        buttonPanelRight.setLayout(new BorderLayout());
-        buttonPanelRight.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        buttonPanelRight.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.buttonInnerPanelRight = new JPanel();
-        buttonInnerPanelRight.setLayout(new BorderLayout());
-        buttonInnerPanelRight.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.buttonScrollPaneRight = getScrollPane(buttonInnerPanelRight);
-        buttonScrollPaneRight.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
-        buttonScrollPaneRight.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.listPanelRight = new JPanel();
-        listPanelRight.setLayout(new GridBagLayout());
-        listPanelRight.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        buttonInnerPanelRight.add(listPanelRight, BorderLayout.PAGE_START);
-        buttonPanelRight.add(buttonScrollPaneRight, BorderLayout.CENTER);
-
-        int layoutIndexLeft = 0;
-        int layoutIndexRight = 0;
+        int layoutIndex = 0;
         if (parentCategory != null) {
             JComponent backButton = getBackButton();
-            listPanelLeft.add(backButton, generateConstraintsButtons(0, layoutIndexLeft, 1, 1, 1, 0));
-            layoutIndexLeft++;
+            listPanel.add(backButton, generateConstraintsButtons(0, layoutIndex, 1, 1, 1, 0));
+            layoutIndex++;
         }
         categories.sort(Comparator.comparing(MenuCategory::getName));
         for (MenuCategory category : categories) {
@@ -95,32 +68,23 @@ public class JChoiceMenuDetailsDoublePanel extends JPanel {
                 @Override
                 public void mouseExited(MouseEvent e) {
                     super.mouseExited(e);
-                    detailsPanel.clear();
+                    //detailsPanel.clear();
                 }
             });
-            if (category.showOnRight()) {
-                listPanelRight.add(categoryButton, generateConstraintsButtons(0, layoutIndexRight, 1, 1, 1, 0));
-                layoutIndexRight++;
-            } else {
-                listPanelLeft.add(categoryButton, generateConstraintsButtons(0, layoutIndexLeft, 1, 1, 1, 0));
-                layoutIndexLeft++;
-            }
+            listPanel.add(categoryButton, generateConstraintsButtons(0, layoutIndex, 1, 1, 1, 0));
+            layoutIndex++;
         }
         actions.sort(Comparator.comparing(MenuChoice::getPrompt));
         for (MenuChoice action : actions) {
             JComponent actionButton = getActionButton(action);
-            if (action.showOnRight()) {
-                listPanelRight.add(actionButton, generateConstraintsButtons(0, layoutIndexRight, 1, 1, 1, 0));
-                layoutIndexRight++;
-            } else {
-                listPanelLeft.add(actionButton, generateConstraintsButtons(0, layoutIndexLeft, 1, 1, 1, 0));
-                layoutIndexLeft++;
-            }
+            listPanel.add(actionButton, generateConstraintsButtons(0, layoutIndex, 1, 1, 1, 0));
+            layoutIndex++;
         }
-
-        add(buttonPanelLeft, generateConstraintsPanels(0, 0, 1, 1, 1, 1));
+        buttonInnerPanel.add(listPanel, BorderLayout.PAGE_START);
+        buttonPanel.add(buttonScrollPane, BorderLayout.CENTER);
+        buttonPanel.add(endTurnButton, BorderLayout.PAGE_END);
+        add(buttonPanel, generateConstraintsPanels(0, 0, 1, 1, 1, 1));
         add(detailsPanel, generateConstraintsPanels(1, 0, 1, 1, 0, 0));
-        add(buttonPanelRight, generateConstraintsPanels(2, 0, 1, 1, 1, 1));
     }
 
     private JScrollPane getScrollPane(JPanel viewPanel) {

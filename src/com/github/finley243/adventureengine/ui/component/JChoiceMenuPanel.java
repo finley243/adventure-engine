@@ -1,17 +1,16 @@
-package com.github.finley243.adventureengine.ui;
+package com.github.finley243.adventureengine.ui.component;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Comparator;
 import java.util.List;
 
-public class JChoiceMenuDetailsPanel extends JPanel {
+public class JChoiceMenuPanel extends JPanel {
 
     private static final int SCROLL_BAR_WIDTH_REMOVED = 8;
     private static final int SCROLL_INCREMENT = 5;
@@ -23,19 +22,16 @@ public class JChoiceMenuDetailsPanel extends JPanel {
     private final JPanel listPanel;
     private final JChoiceButton endTurnButton;
 
-    private final JDetailsPanel detailsPanel;
-
     private final Game game;
     private final JSwitchPanel switchPanel;
 
-    public JChoiceMenuDetailsPanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
+    public JChoiceMenuPanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
         this.game = game;
         this.switchPanel = switchPanel;
         setLayout(new GridBagLayout());
         setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         this.buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         buttonPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         this.buttonInnerPanel = new JPanel();
         buttonInnerPanel.setLayout(new BorderLayout());
@@ -47,7 +43,6 @@ public class JChoiceMenuDetailsPanel extends JPanel {
         listPanel.setLayout(new GridBagLayout());
         listPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         this.endTurnButton = getEndTurnButton(endTurnIndex);
-        this.detailsPanel = new JDetailsPanel();
         int layoutIndex = 0;
         if (parentCategory != null) {
             JComponent backButton = getBackButton();
@@ -57,19 +52,6 @@ public class JChoiceMenuDetailsPanel extends JPanel {
         categories.sort(Comparator.comparing(MenuCategory::getName));
         for (MenuCategory category : categories) {
             JComponent categoryButton = getCategoryButton(category);
-            categoryButton.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    super.mouseEntered(e);
-                    detailsPanel.setContent(category.getName(), category.getDescription());
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    super.mouseExited(e);
-                    detailsPanel.clear();
-                }
-            });
             listPanel.add(categoryButton, generateConstraintsButtons(0, layoutIndex, 1, 1, 1, 0));
             layoutIndex++;
         }
@@ -83,7 +65,6 @@ public class JChoiceMenuDetailsPanel extends JPanel {
         buttonPanel.add(buttonScrollPane, BorderLayout.CENTER);
         buttonPanel.add(endTurnButton, BorderLayout.PAGE_END);
         add(buttonPanel, generateConstraintsPanels(0, 0, 1, 1, 1, 1));
-        add(detailsPanel, generateConstraintsPanels(1, 0, 1, 1, 0, 0));
     }
 
     private JScrollPane getScrollPane(JPanel viewPanel) {

@@ -1,4 +1,6 @@
-package com.github.finley243.adventureengine.ui;
+package com.github.finley243.adventureengine.ui.component;
+
+import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
 
 import javax.swing.*;
 import javax.swing.text.*;

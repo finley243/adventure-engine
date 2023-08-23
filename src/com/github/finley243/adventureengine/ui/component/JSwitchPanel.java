@@ -1,8 +1,9 @@
-package com.github.finley243.adventureengine.ui;
+package com.github.finley243.adventureengine.ui.component;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +26,7 @@ public class JSwitchPanel extends JPanel {
         this.panelStack = new ArrayDeque<>();
         this.cardLayout = new CardLayout();
         setLayout(cardLayout);
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
     }
 

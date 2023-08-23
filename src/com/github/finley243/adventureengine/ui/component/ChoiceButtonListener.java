@@ -1,4 +1,4 @@
-package com.github.finley243.adventureengine.ui;
+package com.github.finley243.adventureengine.ui.component;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
