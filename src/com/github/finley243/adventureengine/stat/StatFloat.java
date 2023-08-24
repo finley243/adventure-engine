@@ -9,10 +9,10 @@ import java.util.List;
 public class StatFloat extends Stat {
 
     private final List<StatFloatMod> mods;
-    private final float min;
-    private final float max;
+    private final Float min;
+    private final Float max;
 
-    public StatFloat(String name, MutableStatHolder target, float min, float max) {
+    public StatFloat(String name, MutableStatHolder target, Float min, Float max) {
         super(name, target);
         this.mods = new ArrayList<>();
         this.min = min;
@@ -29,7 +29,13 @@ public class StatFloat extends Stat {
             }
         }
         float computedValue = (base * (mult + 1.0f)) + add;
-        return Math.min(Math.max(computedValue, min), max);
+        if (min != null) {
+            computedValue = Math.max(min, computedValue);
+        }
+        if (max != null) {
+            computedValue = Math.min(max, computedValue);
+        }
+        return computedValue;
     }
 
     public void addMod(StatFloatMod mod) {

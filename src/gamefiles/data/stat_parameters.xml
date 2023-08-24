@@ -1,0 +1,21 @@
+<data>
+    <statParameters id="actor">
+        <stat name=""/>
+    </statParameters>
+    <statParameters id="item">
+        <stat name="value" dataType="int" minInt="0"/>
+    </statParameters>
+    <statParameters id="weapon">
+        <stat name="weapon_class" dataType="string"/>
+        <stat name="damage" dataType="int"/>
+        <stat name="rate" dataType="int"/>
+        <stat name="crit_damage" dataType="int"/>
+        <stat name="crit_chance" dataType="float" minFloat="0.0" maxFloat="1.0"/>
+        <stat name="clip_size" dataType="int"/>
+        <stat name="reload_action_points" dataType="int" minInt="0"/>
+        <stat name="armor_mult" dataType="float"/>
+        <stat name="silenced" dataType="boolean"/>
+        <stat name="damage_type" dataType="string"/>
+        <stat name="target_effects" dataType="stringSet"/>
+    </statParameters>
+</data>

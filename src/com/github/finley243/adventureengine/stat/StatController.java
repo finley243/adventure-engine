@@ -13,60 +13,75 @@ public class StatController {
     protected final Game game;
 
     private final String statParameters;
+    private final boolean immutable;
 
     // Overrides replace a template value
-    private final Map<String, Boolean> booleanOverride;
-    private final Map<String, Integer> integerOverride;
-    private final Map<String, Float> floatOverride;
-    private final Map<String, String> stringOverride;
-    private final Map<String, Set<String>> stringSetOverride;
+    private final Map<String, Boolean> booleanMap;
+    private final Map<String, Integer> integerMap;
+    private final Map<String, Float> floatMap;
+    private final Map<String, String> stringMap;
+    private final Map<String, Set<String>> stringSetMap;
 
     protected final Context defaultContext;
 
-    private StatTemplateController template;
+    private StatController parent;
 
-    public StatController(Game game, String statParameters, Context defaultContext) {
+    public StatController(Game game, String statParameters, Context defaultContext, boolean immutable) {
         this.game = game;
         this.statParameters = statParameters;
         this.defaultContext = defaultContext;
-        this.booleanOverride = new HashMap<>();
-        this.integerOverride = new HashMap<>();
-        this.floatOverride = new HashMap<>();
-        this.stringOverride = new HashMap<>();
-        this.stringSetOverride = new HashMap<>();
+        this.immutable = immutable;
+        this.booleanMap = new HashMap<>();
+        this.integerMap = new HashMap<>();
+        this.floatMap = new HashMap<>();
+        this.stringMap = new HashMap<>();
+        this.stringSetMap = new HashMap<>();
     }
 
-    public void setTemplate(StatTemplateController template) {
-        this.template = template;
+    public StatController(Game game, String statParameters, Context defaultContext, boolean immutable, Map<String, Boolean> booleanMap, Map<String, Integer> integerMap, Map<String, Float> floatMap, Map<String, String> stringMap, Map<String, Set<String>> stringSetMap) {
+        this.game = game;
+        this.statParameters = statParameters;
+        this.defaultContext = defaultContext;
+        this.immutable = immutable;
+        this.booleanMap = booleanMap;
+        this.integerMap = integerMap;
+        this.floatMap = floatMap;
+        this.stringMap = stringMap;
+        this.stringSetMap = stringSetMap;
+    }
+
+    public void setParent(StatController parent) {
+        this.parent = parent;
     }
 
     /**
-     * Sets a static stat with the given name to the given value
+     * Sets a stat with the given name to the given value
      * @param name the name of the stat
      * @param value an Expression representing the new value for the stat
      * @param context the Context for evaluating the value expression
      * @return true if the stat is set successfully, false otherwise
      */
     public boolean setValue(String name, Expression value, Context context) {
-        if (!getStatParameters().hasStat(name) || value == null || getStatParameters().getParameter(name).dataType() != value.getDataType()) return false;
+        if (immutable || !getStatParameters().hasStat(name) || value == null || getStatParameters().getParameter(name).dataType() != value.getDataType()) return false;
         if (context == null) context = defaultContext;
         switch (getStatParameters().getParameter(name).dataType()) {
-            case BOOLEAN -> booleanOverride.put(name, value.getValueBoolean(context));
-            case INTEGER -> integerOverride.put(name, getBoundedInteger(getStatParameters().getParameter(name), value.getValueInteger(context), context));
-            case FLOAT -> floatOverride.put(name, getBoundedFloat(getStatParameters().getParameter(name), value.getValueFloat(context), context));
-            case STRING -> stringOverride.put(name, value.getValueString(context));
-            case STRING_SET -> stringSetOverride.put(name, value.getValueStringSet(context));
+            case BOOLEAN -> booleanMap.put(name, value.getValueBoolean(context));
+            case INTEGER -> integerMap.put(name, getBoundedInteger(getStatParameters().getParameter(name), value.getValueInteger(context), context));
+            case FLOAT -> floatMap.put(name, getBoundedFloat(getStatParameters().getParameter(name), value.getValueFloat(context), context));
+            case STRING -> stringMap.put(name, value.getValueString(context));
+            case STRING_SET -> stringSetMap.put(name, value.getValueStringSet(context));
         }
         return true;
     }
 
     public Expression getValue(String name, Context context) {
+        if (!getStatParameters().hasStat(name)) return null;
         return switch (getStatParameters().getParameter(name).dataType()) {
-            case BOOLEAN -> Expression.constant(booleanOverride.getOrDefault(name, template.getBoolean(name)));
-            case INTEGER -> Expression.constant(integerOverride.getOrDefault(name, template.getInteger(name)));
-            case FLOAT -> Expression.constant(floatOverride.getOrDefault(name, template.getFloat(name)));
-            case STRING -> Expression.constant(stringOverride.getOrDefault(name, template.getString(name)));
-            case STRING_SET -> Expression.constant(stringSetOverride.getOrDefault(name, template.getStringSet(name)));
+            case BOOLEAN -> booleanMap.containsKey(name) || parent == null ? Expression.constant(booleanMap.get(name)) : parent.getValue(name, context);
+            case INTEGER -> integerMap.containsKey(name) || parent == null ? Expression.constant(integerMap.get(name)) : parent.getValue(name, context);
+            case FLOAT -> floatMap.containsKey(name) || parent == null ? Expression.constant(floatMap.get(name)) : parent.getValue(name, context);
+            case STRING -> stringMap.containsKey(name) || parent == null ? Expression.constant(stringMap.get(name)) : parent.getValue(name, context);
+            case STRING_SET -> stringSetMap.containsKey(name) || parent == null ? Expression.constant(stringSetMap.get(name)) : parent.getValue(name, context);
             case null, default -> null;
         };
     }

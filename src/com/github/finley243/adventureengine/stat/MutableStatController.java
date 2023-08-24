@@ -19,7 +19,7 @@ public class MutableStatController extends StatController {
     private final Map<String, List<EffectData>> effects;
 
     public MutableStatController(Game game, String statParameters, Context defaultContext, MutableStatHolder holder) {
-        super(game, statParameters, defaultContext);
+        super(game, statParameters, defaultContext, false);
         this.booleanStats = new HashMap<>();
         this.integerStats = new HashMap<>();
         this.floatStats = new HashMap<>();
@@ -41,6 +41,7 @@ public class MutableStatController extends StatController {
 
     @Override
     public Expression getValue(String name, Context context) {
+        if (!getStatParameters().hasStat(name)) return null;
         if (context == null) context = defaultContext;
         return switch (getStatParameters().getParameter(name).dataType()) {
             case BOOLEAN -> (booleanStats.containsKey(name) ? Expression.constant(booleanStats.get(name).value(super.getValue(name, context).getValueBoolean(context), context)) : super.getValue(name, context));
