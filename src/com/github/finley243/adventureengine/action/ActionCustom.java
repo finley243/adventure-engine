@@ -87,9 +87,11 @@ public class ActionCustom extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        if (getTemplate().getConditionSelect() != null && !getTemplate().getConditionSelect().isMet(new Context(subject.game(), subject, actor, object, item, area, parameters))) {
-            // TODO - Add custom condition reason text
-            return new CanChooseResult(false, "CUSTOM CONDITION NOT MET");
+        Context conditionContext = new Context(subject.game(), subject, actor, object, item, area, parameters);
+        for (ActionTemplate.ConditionWithMessage customCondition : getTemplate().getSelectConditions()) {
+            if (!customCondition.condition().isMet(conditionContext)) {
+                return new CanChooseResult(false, customCondition.message());
+            }
         }
         return new CanChooseResult(true, null);
     }
@@ -133,7 +135,7 @@ public class ActionCustom extends Action {
 
     @Override
     public boolean canShow(Actor subject) {
-        return getTemplate().getConditionShow() == null || getTemplate().getConditionShow().isMet(new Context(subject.game(), subject, actor, object, item, area, parameters));
+        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(new Context(subject.game(), subject, actor, object, item, area, parameters));
     }
 
     public record CustomActionHolder(String action, Map<String, Expression> parameters) {}

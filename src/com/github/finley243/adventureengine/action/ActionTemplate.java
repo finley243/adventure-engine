@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.Script;
 
+import java.util.List;
 import java.util.Map;
 
 public class ActionTemplate extends GameInstanced {
@@ -13,19 +14,19 @@ public class ActionTemplate extends GameInstanced {
     private final String prompt;
     private final Map<String, Expression> parameters;
     private final int actionPoints;
-    // The condition under which the action can be selected
-    private final Condition conditionSelect;
+    // The conditions under which the action can be selected
+    private final List<ConditionWithMessage> selectConditions;
     // The condition under which the action will be added to the list of possible actions
-    private final Condition conditionShow;
+    private final Condition showCondition;
     private final Script script;
 
-    public ActionTemplate(Game game, String ID, String prompt, Map<String, Expression> parameters, int actionPoints, Condition conditionSelect, Condition conditionShow, Script script) {
+    public ActionTemplate(Game game, String ID, String prompt, Map<String, Expression> parameters, int actionPoints, List<ConditionWithMessage> selectConditions, Condition showCondition, Script script) {
         super(game, ID);
         this.prompt = prompt;
         this.parameters = parameters;
         this.actionPoints = actionPoints;
-        this.conditionSelect = conditionSelect;
-        this.conditionShow = conditionShow;
+        this.selectConditions = selectConditions;
+        this.showCondition = showCondition;
         this.script = script;
     }
 
@@ -41,16 +42,18 @@ public class ActionTemplate extends GameInstanced {
         return actionPoints;
     }
 
-    public Condition getConditionSelect() {
-        return conditionSelect;
+    public List<ConditionWithMessage> getSelectConditions() {
+        return selectConditions;
     }
 
-    public Condition getConditionShow() {
-        return conditionShow;
+    public Condition getShowCondition() {
+        return showCondition;
     }
 
     public Script getScript() {
         return script;
     }
+
+    public record ConditionWithMessage(Condition condition, String message) {}
 
 }

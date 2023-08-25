@@ -1,12 +1,13 @@
 <data>
     <action id="lock_pick">
         <prompt>Pick lock</prompt>
-        <condition type="and">
-            <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
-            <value type="compare" comparator="GREATER_EQUAL">
-                <value1 type="stat" dataType="int" stat="skill_lockpick" holder="subject"/>
-                <value2 type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
-            </value>
+        <condition type="stat" dataType="boolean" stat="locked" holder="parentObject">
+            <blockMessage>Unlocked</blockMessage>
+        </condition>
+        <condition type="compare" comparator="GREATER_EQUAL">
+            <blockMessage>Higher lockpick skill required</blockMessage>
+            <value1 type="stat" dataType="int" stat="skill_lockpick" holder="subject"/>
+            <value2 type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
         </condition>
         <script>
             <script type="setState" stat="locked" holder="parentObject" value="false"/>
@@ -20,12 +21,13 @@
     </action>
     <action id="lock_key">
         <prompt>Unlock</prompt>
-        <condition type="and">
-            <value type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
-            <value type="inventoryContains" requireAll="false">
-                <inv type="stat" dataType="inventory" holder="subject"/>
-                <item type="stat" dataType="stringSet" stat="lock_keys" holder="parentObject"/>
-            </value>
+        <condition type="stat" dataType="boolean" stat="locked" holder="parentObject">
+            <blockMessage>Unlocked</blockMessage>
+        </condition>
+        <condition type="inventoryContains" requireAll="false">
+            <blockMessage>No valid key in inventory</blockMessage>
+            <inv type="stat" dataType="inventory" holder="subject"/>
+            <item type="stat" dataType="stringSet" stat="lock_keys" holder="parentObject"/>
         </condition>
         <script>
             <script type="setState" stat="locked" holder="parentObject" value="false"/>
@@ -53,6 +55,7 @@
             </value>
         </parameter>
         <condition type="compare" comparator="GREATER_EQUAL">
+            <blockMessage>Not enough credits</blockMessage>
             <value1 type="stat" dataType="int" stat="money" holder="subject"/>
             <value2 type="stat" dataType="int" holder="itemTemplate" stat="price">
                 <holderID type="parameter" name="itemID"/>

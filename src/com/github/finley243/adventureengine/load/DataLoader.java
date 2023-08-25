@@ -1121,10 +1121,15 @@ public class DataLoader {
             parameters.put(parameterName, parameterValue);
         }
         int actionPoints = LoadUtils.attributeInt(actionElement, "actionPoints", 0);
-        Condition conditionSelect = loadCondition(LoadUtils.singleChildWithName(actionElement, "condition"));
-        Condition conditionShow = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
+        List<ActionTemplate.ConditionWithMessage> selectConditions = new ArrayList<>();
+        for (Element conditionElement : LoadUtils.directChildrenWithName(actionElement, "condition")) {
+            Condition condition = loadCondition(conditionElement);
+            String blockMessage = LoadUtils.singleTag(conditionElement, "blockMessage", null);
+            selectConditions.add(new ActionTemplate.ConditionWithMessage(condition, blockMessage));
+        }
+        Condition showCondition = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
         Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
-        return new ActionTemplate(game, ID, prompt, parameters, actionPoints, conditionSelect, conditionShow, script);
+        return new ActionTemplate(game, ID, prompt, parameters, actionPoints, selectConditions, showCondition, script);
     }
 
     private static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name) {
