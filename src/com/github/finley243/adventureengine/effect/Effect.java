@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.MutableStatController;
 import com.github.finley243.adventureengine.stat.MutableStatHolder;
 
 /**
@@ -35,12 +34,12 @@ public class Effect extends GameInstanced {
 		this.scriptRemove = scriptRemove;
 		this.scriptRound = scriptRound;
 	}
-
-	public void start(MutableStatController controller) {}
-
-	public void end(MutableStatController controller) {}
-
-	public void eachRound(MutableStatController controller) {}
+	
+	public void start(MutableStatHolder target) {}
+	
+	public void end(MutableStatHolder target) {}
+	
+	public void eachRound(MutableStatHolder target) {}
 
 	public boolean manualRemoval() {
 		return manualRemoval;

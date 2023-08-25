@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.ArrayList;
@@ -9,17 +10,13 @@ import java.util.List;
 public class StatInt extends Stat {
 
     private final List<StatIntMod> mods;
-    private final Integer min;
-    private final Integer max;
 
-    public StatInt(String name, MutableStatHolder target, Integer min, Integer max) {
+    public StatInt(String name, MutableStatHolder target) {
         super(name, target);
         this.mods = new ArrayList<>();
-        this.min = min;
-        this.max = max;
     }
 
-    public int value(int base, Context context) {
+    public int value(int base, int min, int max, Context context) {
         int add = 0;
         float mult = 0.0f;
         for (StatIntMod mod : mods) {
@@ -29,13 +26,7 @@ public class StatInt extends Stat {
             }
         }
         int computedValue = Math.round(base * (mult + 1.0f)) + add;
-        if (min != null) {
-            computedValue = Math.max(min, computedValue);
-        }
-        if (max != null) {
-            computedValue = Math.min(max, computedValue);
-        }
-        return computedValue;
+        return MathUtils.bound(computedValue, min, max);
     }
 
     public void addMod(StatIntMod mod) {

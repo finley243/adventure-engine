@@ -15,7 +15,6 @@ import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.network.Network;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.stat.StatParameters;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -36,8 +35,7 @@ public class Data {
 	private final DateTimeController time;
 	
 	private final Map<String, String> config = new HashMap<>();
-
-	private final Map<String, StatParameters> statParameters = new HashMap<>();
+	
 	private final Map<String, Area> areas = new HashMap<>();
 	private final Map<String, Room> rooms = new HashMap<>();
 	private final Map<String, Actor> actors = new HashMap<>();
@@ -93,7 +91,6 @@ public class Data {
 
 	public void reset() throws ParserConfigurationException, IOException, SAXException, GameDataException {
 		time.reset(this);
-		statParameters.clear();
 		areas.clear();
 		rooms.clear();
 		actors.clear();
@@ -183,16 +180,6 @@ public class Data {
 	
 	public String getConfig(String id) {
 		return config.get(id);
-	}
-
-	public void addStatParameters(String id, StatParameters value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add stat parameters with blank ID");
-		if(statParameters.containsKey(id)) throw new IllegalArgumentException("Cannot add stat parameters with existing ID: " + id);
-		statParameters.put(id, value);
-	}
-
-	public StatParameters getStatParameters(String id) {
-		return statParameters.get(id);
 	}
 	
 	public void addArea(String id, Area value) {

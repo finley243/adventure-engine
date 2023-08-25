@@ -27,16 +27,8 @@ public class ScriptModifyState extends Script {
     protected void executeSuccess(Context context) {
         String stateValue = state.getValueString(context);
         switch (expression.getDataType()) {
-            case INTEGER -> {
-                int initialValue = holder.getHolder(context).getStatController().getValue(stateValue, context).getValueInteger(context);
-                int modifiedValue = initialValue + expression.getValueInteger(context);
-                holder.getHolder(context).getStatController().setValue(stateValue, Expression.constant(modifiedValue), context);
-            }
-            case FLOAT -> {
-                float initialValue = holder.getHolder(context).getStatController().getValue(stateValue, context).getValueFloat(context);
-                float modifiedValue = initialValue + expression.getValueFloat(context);
-                holder.getHolder(context).getStatController().setValue(stateValue, Expression.constant(modifiedValue), context);
-            }
+            case INTEGER -> holder.getHolder(context).modStateInteger(stateValue, expression.getValueInteger(context));
+            case FLOAT -> holder.getHolder(context).modStateFloat(stateValue, expression.getValueFloat(context));
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType());
         }
