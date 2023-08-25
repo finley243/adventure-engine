@@ -269,30 +269,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public void modStateInteger(String name, int amount) {
-		Context context = new Context(game(), this);
-		int valueOld = 0;
-		if (localVars.containsKey(name)) {
-			valueOld = localVars.get(name).getValueInteger(context);
-		} else if (getTemplate().getLocalVarsDefault().containsKey(name)) {
-			valueOld = getTemplate().getLocalVarsDefault().get(name).getValueInteger(context);
-		}
-		localVars.put(name, new ExpressionConstantInteger(valueOld + amount));
-	}
-
-	@Override
-	public void modStateFloat(String name, float amount) {
-		Context context = new Context(game(), this);
-		float valueOld = 0;
-		if (localVars.containsKey(name)) {
-			valueOld = localVars.get(name).getValueFloat(context);
-		} else if (getTemplate().getLocalVarsDefault().containsKey(name)) {
-			valueOld = getTemplate().getLocalVarsDefault().get(name).getValueFloat(context);
-		}
-		localVars.put(name, new ExpressionConstantFloat(valueOld + amount));
-	}
-
-	@Override
 	public Inventory getInventory() {
 		return null;
 	}

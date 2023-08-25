@@ -88,16 +88,6 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public void modStateInteger(String name, int amount) {
-
-	}
-
-	@Override
-	public void modStateFloat(String name, float amount) {
-
-	}
-
-	@Override
 	public Inventory getInventory() {
 		return null;
 	}

@@ -963,19 +963,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public void modStateInteger(String name, int amount) {
-		switch (name) {
-			case "heal" -> heal(amount);
-			case "money" -> money += amount;
-		}
-	}
-
-	@Override
-	public void modStateFloat(String name, float amount) {
-
-	}
-
-	@Override
 	public StatHolder getSubHolder(String name, String ID) {
 		return switch (name) {
 			case "equipped_item" -> equipmentComponent.getEquippedItemInSlot(ID);

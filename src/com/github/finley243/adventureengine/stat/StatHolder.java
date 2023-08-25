@@ -4,8 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 
-import java.util.Set;
-
 public interface StatHolder {
 
     Expression getStatValue(String name, Context context);
@@ -18,10 +16,6 @@ public interface StatHolder {
      * @return true if the stat is set successfully, false otherwise
      */
     boolean setStatValue(String name, Expression value, Context context);
-
-    void modStateInteger(String name, int amount);
-
-    void modStateFloat(String name, float amount);
 
     Inventory getInventory();
 

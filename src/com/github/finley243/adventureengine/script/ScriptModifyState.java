@@ -27,8 +27,22 @@ public class ScriptModifyState extends Script {
     protected void executeSuccess(Context context) {
         String stateValue = state.getValueString(context);
         switch (expression.getDataType()) {
-            case INTEGER -> holder.getHolder(context).modStateInteger(stateValue, expression.getValueInteger(context));
-            case FLOAT -> holder.getHolder(context).modStateFloat(stateValue, expression.getValueFloat(context));
+            case INTEGER -> {
+                Expression oldValueExpression = holder.getHolder(context).getStatValue(stateValue, context);
+                if (oldValueExpression == null) throw new UnsupportedOperationException("Expression " + stateValue + " does not exist on holder");
+                if (oldValueExpression.getDataType() != Expression.DataType.INTEGER) throw new UnsupportedOperationException("Expression " + stateValue + " is not a float");
+                int oldValue = oldValueExpression.getValueInteger(context);
+                Expression newValueExpression = Expression.constant(oldValue + expression.getValueInteger(context));
+                holder.getHolder(context).setStatValue(stateValue, newValueExpression, context);
+            }
+            case FLOAT -> {
+                Expression oldValueExpression = holder.getHolder(context).getStatValue(stateValue, context);
+                if (oldValueExpression == null) throw new UnsupportedOperationException("Expression " + stateValue + " does not exist on holder");
+                if (oldValueExpression.getDataType() != Expression.DataType.FLOAT) throw new UnsupportedOperationException("Expression " + stateValue + " is not a float");
+                float oldValue = oldValueExpression.getValueFloat(context);
+                Expression newValueExpression = Expression.constant(oldValue + expression.getValueFloat(context));
+                holder.getHolder(context).setStatValue(stateValue, newValueExpression, context);
+            }
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType());
         }

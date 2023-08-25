@@ -418,16 +418,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public void modStateInteger(String name, int amount) {
-
-	}
-
-	@Override
-	public void modStateFloat(String name, float amount) {
-
-	}
-
-	@Override
 	public StatInt getStatInt(String name) {
 		return null;
 	}

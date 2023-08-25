@@ -338,15 +338,6 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	@Override
-	public void modStateInteger(String name, int amount) {
-		if ("ammo".equals(name)) {
-			ammoCount = MathUtils.bound(ammoCount + amount, 0, getClipSize());
-		} else {
-			super.modStateInteger(name, amount);
-		}
-	}
-
-	@Override
 	public StatHolder getSubHolder(String name, String ID) {
 		if ("ammo_type".equals(name)) {
 			return ammoType;
