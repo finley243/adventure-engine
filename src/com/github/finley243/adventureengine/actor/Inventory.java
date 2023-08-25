@@ -2,15 +2,17 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
-import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.textgen.LangUtils;
-import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.item.ItemFactory;
+import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Inventory {
 
@@ -19,7 +21,7 @@ public class Inventory {
 	private final Actor actor;
 	// Keys are statsIDs, values are lists of items with the corresponding statsID
 	private final Map<String, List<Item>> items;
-	private final Map<String, Integer> itemsStateless;
+	private final Map<String, StatelessItemStack> itemsStateless;
 
 	public Inventory(Game game, Actor actor) {
 		this.game = game;
@@ -30,29 +32,31 @@ public class Inventory {
 
 	public void addItem(Item item) {
 		if (item.hasState()) {
+			if (item.getInventory() != null) throw new UnsupportedOperationException("Cannot add item " + item + " to inventory because it is still located in another inventory");
 			if (!items.containsKey(item.getTemplateID())) {
 				items.put(item.getTemplateID(), new ArrayList<>());
 			}
 			items.get(item.getTemplateID()).add(item);
+			item.setInventory(this);
 		} else {
-			int currentCount = itemsStateless.getOrDefault(item.getTemplateID(), 0);
-			itemsStateless.put(item.getTemplateID(), currentCount + 1);
+			if (!itemsStateless.containsKey(item.getTemplateID())) {
+				Item instanceToAdd = item;
+				if (item.getInventory() != null) {
+					instanceToAdd = ItemFactory.create(game, item.getTemplateID());
+				}
+				itemsStateless.put(item.getTemplateID(), new StatelessItemStack(instanceToAdd, 1));
+				instanceToAdd.setInventory(this);
+			} else {
+				itemsStateless.get(item.getTemplateID()).count += 1;
+			}
 		}
 	}
 
 	public void addItems(String itemID, int count) {
 		if (count <= 0) throw new IllegalArgumentException("Cannot add non-positive number of Items: " + itemID);
-		if (game.data().getItemTemplate(itemID).hasState()) {
-			if (!items.containsKey(itemID)) {
-				items.put(itemID, new ArrayList<>());
-			}
-			for (int i = 0; i < count; i++) {
-				Item itemInstance = ItemFactory.create(game, itemID);
-				items.get(itemID).add(itemInstance);
-			}
-		} else {
-			int currentCount = itemsStateless.getOrDefault(itemID, 0);
-			itemsStateless.put(itemID, currentCount + count);
+		for (int i = 0; i < count; i++) {
+			Item instance = ItemFactory.create(game, itemID);
+			addItem(instance);
 		}
 	}
 
@@ -71,13 +75,14 @@ public class Inventory {
 	}
 
 	public boolean hasItems(String itemID, int count) {
+		int totalCount = 0;
 		if (itemsStateless.containsKey(itemID)) {
-			return itemsStateless.get(itemID) >= count;
-		} else if (items.containsKey(itemID)) {
-			return items.get(itemID).size() >= count;
-		} else {
-			return false;
+			totalCount += itemsStateless.get(itemID).count;
 		}
+		if (items.containsKey(itemID)) {
+			totalCount += items.get(itemID).size();
+		}
+		return totalCount >= count;
 	}
 
 	public boolean hasItemWithTag(String tag) {
@@ -96,27 +101,23 @@ public class Inventory {
 
 	// TODO - Possibly change behavior to return count of stated items with the same template, rather than count of instance
 	public int itemCount(Item item) {
-		if (item.hasState()) {
-			if (items.containsKey(item.getTemplateID()) && items.get(item.getTemplateID()).contains(item)) {
-				return 1;
-			} else {
-				return 0;
-			}
-		} else {
-			return itemsStateless.getOrDefault(item.getTemplateID(), 0);
+		if (item.hasState() && items.containsKey(item.getTemplateID()) && items.get(item.getTemplateID()).contains(item)) {
+			return 1;
+		} else if (!item.hasState() && itemsStateless.containsKey(item.getTemplateID())) {
+			return itemsStateless.get(item.getTemplateID()).count;
 		}
+		return 0;
 	}
 
 	public int itemCount(String itemID) {
-		if (game.data().getItemTemplate(itemID).hasState()) {
-			if (items.containsKey(itemID)) {
-				return items.get(itemID).size();
-			} else {
-				return 0;
-			}
-		} else {
-			return itemsStateless.getOrDefault(itemID, 0);
+		int totalCount = 0;
+		if (items.containsKey(itemID)) {
+			totalCount += items.get(itemID).size();
 		}
+		if (itemsStateless.containsKey(itemID)) {
+			totalCount += itemsStateless.get(itemID).count;
+		}
+		return totalCount;
 	}
 
 	public void removeItem(Item item) {
@@ -126,6 +127,9 @@ public class Inventory {
 				if (items.get(item.getTemplateID()).isEmpty()) {
 					items.remove(item.getTemplateID());
 				}
+				if (wasRemoved) {
+					item.setInventory(null);
+				}
 				if (wasRemoved && actor != null) {
 					if (item instanceof ItemEquippable) {
 						actor.getEquipmentComponent().unequip((ItemEquippable) item);
@@ -134,9 +138,10 @@ public class Inventory {
 			}
 		} else {
 			if (itemsStateless.containsKey(item.getTemplateID())) {
-				int count = itemsStateless.get(item.getTemplateID());
+				int count = itemsStateless.get(item.getTemplateID()).count;
 				int newCount = count - 1;
 				if (newCount <= 0) {
+					itemsStateless.get(item.getTemplateID()).instance.setInventory(null);
 					itemsStateless.remove(item.getTemplateID());
 					if (actor != null) {
 						if (item instanceof ItemEquippable) {
@@ -144,7 +149,7 @@ public class Inventory {
 						}
 					}
 				} else {
-					itemsStateless.put(item.getTemplateID(), newCount);
+					itemsStateless.get(item.getTemplateID()).count = newCount;
 				}
 			}
 		}
@@ -152,25 +157,33 @@ public class Inventory {
 
 	public void removeItems(String itemID, int count) {
 		if (count <= 0) throw new IllegalArgumentException("Cannot remove non-positive number of items: " + itemID);
+		int countRemaining = count;
 		if (itemsStateless.containsKey(itemID)) {
-			int currentCount = itemsStateless.get(itemID);
+			int currentCount = itemsStateless.get(itemID).count;
 			int newCount = currentCount - count;
+			countRemaining -= Math.max(0, currentCount - countRemaining);
 			if (newCount <= 0) {
+				itemsStateless.get(itemID).instance.setInventory(null);
 				itemsStateless.remove(itemID);
 			} else {
-				itemsStateless.put(itemID, newCount);
+				itemsStateless.get(itemID).count = newCount;
 			}
-		} else if (items.containsKey(itemID)) {
-			for (int i = 0; i < count; i++) {
+		}
+		if (countRemaining > 0 && items.containsKey(itemID)) {
+			for (int i = 0; i < countRemaining; i++) {
 				if (!items.get(itemID).isEmpty()) {
-					items.get(itemID).remove(items.get(itemID).size() - 1);
+					int lastIndex = items.get(itemID).size() - 1;
+					items.get(itemID).get(lastIndex).setInventory(null);
+					items.get(itemID).remove(lastIndex);
 				}
 			}
 		}
 	}
 	
 	public void clear() {
-		// TODO - Find way to remove unreferenced items from Data (a "clean" cycle when saving or loading?)
+		for (Item item : getItems()) {
+			item.setInventory(null);
+		}
 		items.clear();
 		itemsStateless.clear();
 	}
@@ -183,7 +196,7 @@ public class Inventory {
 			}
 		}
 		for (String itemID : itemsStateless.keySet()) {
-			itemMap.put(ItemFactory.create(game, itemID), itemsStateless.get(itemID));
+			itemMap.put(itemsStateless.get(itemID).instance, itemsStateless.get(itemID).count);
 		}
 		return itemMap;
 	}
@@ -194,7 +207,7 @@ public class Inventory {
 			uniqueItems.addAll(current);
 		}
 		for (String current : itemsStateless.keySet()) {
-			Item item = ItemFactory.create(game, current);
+			Item item = itemsStateless.get(current).instance;
 			uniqueItems.add(item);
 		}
 		return uniqueItems;
@@ -281,10 +294,21 @@ public class Inventory {
 				state.add(new SaveData(null, null, "item", item.getID()));
 			}
 		}
-		for (String itemType : itemsStateless.keySet()) {
-			state.add(new SaveData(null, null, "itemStateless", itemType, itemsStateless.get(itemType)));
+		for (StatelessItemStack stack : itemsStateless.values()) {
+			//state.add(new SaveData(null, null, "itemStateless", itemType, itemsStateless.get(itemType)));
+			state.add(new SaveData(null, null, "item", stack.instance.getID(), stack.count));
 		}
 		return state;
+	}
+
+	private static class StatelessItemStack {
+		public Item instance;
+		public int count;
+
+		public StatelessItemStack(Item instance, int count) {
+			this.instance = instance;
+			this.count = count;
+		}
 	}
 
 }

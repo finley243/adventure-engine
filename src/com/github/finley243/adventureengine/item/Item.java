@@ -22,12 +22,14 @@ import java.util.List;
 
 public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
+	private Inventory currentInventory;
 	private boolean isKnown;
 	private final String templateID;
 
 	public Item(Game game, String ID, String templateID) {
 		super(game, ID);
 		this.templateID = templateID;
+		this.currentInventory = null;
 	}
 
 	@Override
@@ -112,9 +114,13 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 		return false;
 	}
 
+	public void setInventory(Inventory inventory) {
+		this.currentInventory = inventory;
+	}
+
 	@Override
 	public Inventory getInventory() {
-		return null;
+		return currentInventory;
 	}
 
 	@Override
@@ -137,16 +143,12 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public boolean equals(Object o) {
-		return o instanceof Item otherItem && getTemplate().equals(otherItem.getTemplate()) && (!getTemplate().hasState() || getID().equals(otherItem.getID()));
+		return o instanceof Item otherItem && getTemplate().equals(otherItem.getTemplate()) && getID().equals(otherItem.getID());
 	}
 
 	@Override
 	public int hashCode() {
-		if (getTemplate().hasState()) {
-			return (31 * getTemplate().hashCode()) + getID().hashCode();
-		} else {
-			return getTemplate().hashCode();
-		}
+		return (31 * getTemplate().hashCode()) + getID().hashCode();
 	}
 	
 }
