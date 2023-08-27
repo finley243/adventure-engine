@@ -273,7 +273,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 				Area area = game().data().getArea(link.getAreaID());
 				visibleAreas.add(area);
 				for (WorldObject object : area.getObjects()) {
-					for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
+					for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
 						if (linkComponent.isVisible() && linkComponent.visibleConditionIsMet(game().data().getPlayer())) {
 							visibleAreas.addAll(linkComponent.getLinkedObject().getArea().getLineOfSightAreasNoLinks());
 						}
@@ -304,7 +304,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			if (game().data().getLinkType(link.getType()).isVisible()) {
 				visibleAreaIDs.add(link.getAreaID());
 				for (WorldObject object : game().data().getArea(link.getAreaID()).getObjects()) {
-					for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
+					for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
 						if (linkComponent.isVisible() && linkComponent.visibleConditionIsMet(game().data().getPlayer())) {
 							visibleAreaIDs.addAll(linkComponent.getLinkedObject().getArea().getLineOfSightAreaIDsNoLinks());
 						}

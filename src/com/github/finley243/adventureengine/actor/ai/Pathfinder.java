@@ -44,11 +44,8 @@ public class Pathfinder {
 			}
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(vehicleType));
 			for (WorldObject object : pathEnd.getObjects()) {
-				List<ObjectComponentLink> linkComponents = object.getLinkComponents();
-				if (!linkComponents.isEmpty()) {
-					for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
-						linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
-					}
+				for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
+					linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
 				}
 			}
 			Collections.shuffle(linkedAreasGlobal);
@@ -106,11 +103,8 @@ public class Pathfinder {
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(null));
 			if (throughExits) {
 				for (WorldObject object : pathEnd.getObjects()) {
-					List<ObjectComponentLink> linkComponents = object.getLinkComponents();
-					if (!linkComponents.isEmpty()) {
-						for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
-							linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
-						}
+					for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
+						linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
 					}
 				}
 			}
@@ -143,11 +137,8 @@ public class Pathfinder {
 			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas(null));
 			if (throughExits) {
 				for (WorldObject object : currentArea.getObjects()) {
-					List<ObjectComponentLink> linkComponents = object.getLinkComponents();
-					if (!linkComponents.isEmpty()) {
-						for (ObjectComponentLink linkComponent : object.getLinkComponents()) {
-							linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
-						}
+					for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
+						linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
 					}
 				}
 			}

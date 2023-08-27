@@ -10,14 +10,15 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.event.ScriptEvent;
-import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
+import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolder;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -25,12 +26,13 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentFactory;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
-import org.w3c.dom.Node;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An object that can exist in the game world
@@ -45,6 +47,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private Area area;
 	private int HP;
 	private final Map<String, ObjectComponent> components;
+	private final Map<Class<? extends ObjectComponent>, List<ObjectComponent>> componentsByType;
 	private final Map<String, Expression> localVars;
 
 	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Expression> localVarsDefault) {
@@ -55,6 +58,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.area = area;
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
+		this.componentsByType = new HashMap<>();
 		this.localVars = localVarsDefault;
 		setEnabled(!startDisabled);
 	}
@@ -159,10 +163,12 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		for (Map.Entry<String, ObjectComponentTemplate> componentEntry : getTemplate().getComponents().entrySet()) {
 			ObjectComponent component = ObjectComponentFactory.create(componentEntry.getValue(), componentEntry.getKey(), this);
 			components.put(componentEntry.getKey(), component);
-			if (component != null) {
-				component.onNewGameInit();
+			if (!componentsByType.containsKey(component.getClass())) {
+				componentsByType.put(component.getClass(), new ArrayList<>());
 			}
-		}
+			componentsByType.get(component.getClass()).add(component);
+            component.onNewGameInit();
+        }
 		this.HP = getTemplate().getMaxHP();
 	}
 
@@ -214,15 +220,16 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return components.get(componentID);
 	}
 
-	// TODO - This may need to be optimized (possibly store a separate set of link components?)
-	public List<ObjectComponentLink> getLinkComponents() {
-		List<ObjectComponentLink> linkComponents = new ArrayList<>();
-		for (ObjectComponent component : components.values()) {
-			if (component instanceof ObjectComponentLink) {
-				linkComponents.add((ObjectComponentLink) component);
+	public <T extends ObjectComponent> List<T> getComponentsOfType(Class<T> componentClass) {
+		List<ObjectComponent> uncastComponents = componentsByType.get(componentClass);
+		if (uncastComponents == null) return new ArrayList<>();
+		List<T> castComponents = new ArrayList<>(uncastComponents.size());
+		for (ObjectComponent component : uncastComponents) {
+			if (componentClass.isInstance(component)) {
+				castComponents.add(componentClass.cast(component));
 			}
 		}
-		return linkComponents;
+		return castComponents;
 	}
 
 	public void triggerScript(String entryPoint, Context context) {

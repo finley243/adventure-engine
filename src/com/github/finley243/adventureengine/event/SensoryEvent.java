@@ -102,7 +102,7 @@ public class SensoryEvent implements QueuedEvent {
 				actors.addAll(origin.getRoom().getActors());
 				if (isLoud()) {
 					for (WorldObject areaObject : origin.getRoom().getObjects()) {
-						for (ObjectComponentLink linkComponent : areaObject.getLinkComponents()) {
+						for (ObjectComponentLink linkComponent : areaObject.getComponentsOfType(ObjectComponentLink.class)) {
 							actors.addAll(linkComponent.getLinkedObject().getArea().getRoom().getActors());
 						}
 					}
