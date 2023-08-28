@@ -86,13 +86,8 @@ public class Inventory {
 	}
 
 	public boolean hasItemWithTag(String tag) {
-		for (String current : items.keySet()) {
-			if (game.data().getItemTemplate(current).getTags().contains(tag)) {
-				return true;
-			}
-		}
-		for (String current : itemsStateless.keySet()) {
-			if (game.data().getItemTemplate(current).getTags().contains(tag)) {
+		for (Item item : getItems()) {
+			if (item.getTags().contains(tag)) {
 				return true;
 			}
 		}
@@ -279,7 +274,7 @@ public class Inventory {
 		if (data.getParameter().equals("inventory")) {
 			for (SaveData subData : data.getValueMulti()) {
 				switch (subData.getParameter()) {
-					case "item" -> addItem(game.data().getItemState(subData.getValueString()));
+					case "item" -> addItem(game.data().getItemInstance(subData.getValueString()));
 					case "itemStateless" ->
 							addItems(subData.getValueString(), subData.getValueInt());
 				}

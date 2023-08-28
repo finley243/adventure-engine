@@ -41,8 +41,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 		this.generatedCount = 1;
 	}
 
-	public abstract boolean hasState();
-
 	public String generateInstanceID() {
 		String newID = getID() + "_" + generatedCount;
 		generatedCount += 1;

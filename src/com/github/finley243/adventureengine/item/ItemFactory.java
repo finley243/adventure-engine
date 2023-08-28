@@ -29,8 +29,8 @@ public class ItemFactory {
 			case MiscTemplate ignored -> new ItemMisc(game, ID, stats.getID());
 			default -> null;
 		};
-		if (item != null && stats.hasState()) {
-			game.data().addItemState(ID, item);
+		if (item != null) {
+			game.data().addItemInstance(ID, item);
 		}
 		return item;
 	}

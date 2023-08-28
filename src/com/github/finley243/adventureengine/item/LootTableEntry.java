@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
+import com.github.finley243.adventureengine.actor.Inventory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,52 +30,45 @@ public class LootTableEntry {
 		this.modChance = modChance;
 	}
 
-	public Map<Item, Integer> generateItems(Game game) {
-		Map<Item, Integer> items = new HashMap<>();
+	public void generateItems(Game game, Inventory inventory) {
 		int count = ThreadLocalRandom.current().nextInt(countMin, countMax + 1);
 		if (MathUtils.randomCheck(chance)) {
 			if (isLootTable) {
 				LootTable table = game.data().getLootTable(referenceID);
 				for (int i = 0; i < count; i++) {
-					Map<Item, Integer> tableItems = table.generateItems(game);
-					for (Item tableItem : tableItems.keySet()) {
-						if (items.containsKey(tableItem)) {
-							int currentCount = items.get(tableItem);
-							items.put(tableItem, currentCount + tableItems.get(tableItem));
-						} else {
-							items.put(tableItem, tableItems.get(tableItem));
-						}
-					}
+					table.generateItems(game, inventory);
 				}
 			} else {
-				if (game.data().getItemTemplate(referenceID).hasState()) {
-					for (int i = 0; i < count; i++) {
-						Item itemInstance = ItemFactory.create(game, referenceID);
-						// TODO - Expand to other types of items besides weapons
-						if (modReference != null && itemInstance instanceof ItemWeapon weapon && MathUtils.randomCheck(modChance)) {
-							Map<Item, Integer> modItems;
-							if (modIsTable) {
-								modItems = game.data().getLootTable(modReference).generateItems(game);
-							} else {
-								modItems = new HashMap<>();
-								modItems.put(ItemFactory.create(game, modReference), 1);
-							}
-							for (Map.Entry<Item, Integer> entry : modItems.entrySet()) {
-								if (entry.getKey() instanceof ItemMod mod && weapon.canInstallMod(mod)) {
-									for (int j = 0; j < entry.getValue(); j++) {
-										weapon.installMod(mod);
+				for (int i = 0; i < count; i++) {
+					Item itemInstance = ItemFactory.create(game, referenceID);
+					// TODO - Expand to other types of items besides weapons
+					if (modReference != null && itemInstance instanceof ItemWeapon weapon && MathUtils.randomCheck(modChance)) {
+						if (modIsTable) {
+							Inventory modInventory = new Inventory(game, null);
+							game.data().getLootTable(modReference).generateItems(game, inventory);
+							for (Map.Entry<Item, Integer> entry : modInventory.getItemMap().entrySet()) {
+								Item modItem = entry.getKey();
+								int modCount = entry.getValue();
+								if (modItem instanceof ItemMod mod) {
+									for (int j = 0; j < modCount; j++) {
+										if (weapon.canInstallMod(mod)) {
+											weapon.installMod(mod);
+										}
 									}
 								}
 							}
+							modInventory.clear();
+						} else {
+							Item modItem = ItemFactory.create(game, modReference);
+							if (modItem instanceof ItemMod mod) {
+								weapon.installMod(mod);
+							}
 						}
-						items.put(itemInstance, 1);
 					}
-				} else {
-					items.put(ItemFactory.create(game, referenceID), count);
+					inventory.addItem(itemInstance);
 				}
 			}
 		}
-		return items;
 	}
 	
 }

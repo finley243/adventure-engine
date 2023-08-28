@@ -43,7 +43,7 @@ public class ObjectComponentInventory extends ObjectComponent {
     public void onNewGameInit() {
         super.onNewGameInit();
         if (getTemplateInventory().getLootTable() != null) {
-            inventory.addItems(getTemplateInventory().getLootTable().generateItems(getObject().game()));
+            getTemplateInventory().getLootTable().generateItems(getObject().game(), inventory);
         }
     }
 

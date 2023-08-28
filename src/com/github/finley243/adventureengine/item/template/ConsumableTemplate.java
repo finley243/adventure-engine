@@ -22,11 +22,6 @@ public class ConsumableTemplate extends ItemTemplate {
 		this.consumePhrase = consumePhrase;
 		this.effects = effects;
 	}
-
-	@Override
-	public boolean hasState() {
-		return false;
-	}
 	
 	public String getConsumePrompt() {
 		return consumePrompt;

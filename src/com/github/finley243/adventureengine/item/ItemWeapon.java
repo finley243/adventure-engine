@@ -233,6 +233,11 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	@Override
+	public boolean hasState() {
+		return hasModSlots() || usesAmmo();
+	}
+
+	@Override
 	public List<Action> equippedActions(Actor subject) {
 		List<Action> actions = super.equippedActions(subject);
 		for (String attackType : getAttackTypes()) {

@@ -22,11 +22,6 @@ public class ModTemplate extends ItemTemplate {
     }
 
     @Override
-    public boolean hasState() {
-        return false;
-    }
-
-    @Override
     public Set<String> getTags() {
         Set<String> tags = new HashSet<>();
         tags.add("mod");

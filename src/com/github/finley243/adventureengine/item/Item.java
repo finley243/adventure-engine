@@ -19,6 +19,7 @@ import com.github.finley243.adventureengine.textgen.TextContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
@@ -39,14 +40,12 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public void setKnown() {
-		if (getTemplate().hasState()) {
-			isKnown = true;
-		}
+		isKnown = true;
 	}
 
 	@Override
 	public boolean isKnown() {
-		return getTemplate().hasState() && isKnown;
+		return hasState() && isKnown;
 	}
 
 	@Override
@@ -83,7 +82,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	}
 
 	public boolean hasState() {
-		return getTemplate().hasState();
+		return false;
 	}
 	
 	public List<Action> inventoryActions(Actor subject) {
@@ -99,6 +98,10 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 			actions.add(new ActionCustom(game(), null, null, this, null, customAction.action(), customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
 		}
 		return actions;
+	}
+
+	public Set<String> getTags() {
+		return getTemplate().getTags();
 	}
 
 	@Override
@@ -135,7 +138,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	public List<SaveData> saveState() {
 		List<SaveData> state = new ArrayList<>();
-		if(getTemplate().hasState()) {
+		if(hasState()) {
 			state.add(new SaveData(SaveData.DataType.ITEM_INSTANCE, this.getID(), null, this.getTemplate().getID()));
 		}
 		return state;

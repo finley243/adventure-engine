@@ -268,14 +268,13 @@ public class Data {
 		return itemTemplates.get(id);
 	}
 
-	public void addItemState(String id, Item value) {
+	public void addItemInstance(String id, Item value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add item state with blank ID");
 		if(itemStates.containsKey(id)) throw new IllegalArgumentException("Cannot add item state with existing ID: " + id);
-		if(!value.hasState()) throw new UnsupportedOperationException("Cannot add item state for stateless item: " + value.getTemplateID());
 		itemStates.put(id, value);
 	}
 
-	public Item getItemState(String id) {
+	public Item getItemInstance(String id) {
 		return itemStates.get(id);
 	}
 	

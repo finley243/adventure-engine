@@ -30,7 +30,7 @@ public class StatHolderReference {
         return switch (holderType) {
             case "object" -> context.game().data().getObject(holderIDValue);
             case "parentObject" -> context.getParentObject();
-            case "item" -> context.game().data().getItemState(holderIDValue);
+            case "item" -> context.game().data().getItemInstance(holderIDValue);
             case "itemTemplate" -> context.game().data().getItemTemplate(holderIDValue);
             case "parentItem" -> context.getParentItem();
             case "area" -> context.game().data().getArea(holderIDValue);

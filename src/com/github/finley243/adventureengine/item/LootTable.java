@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
+import com.github.finley243.adventureengine.actor.Inventory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,27 +24,17 @@ public class LootTable {
 		return ID;
 	}
 
-	public Map<Item, Integer> generateItems(Game game) {
-		Map<Item, Integer> generatedItems = new HashMap<>();
+	public void generateItems(Game game, Inventory inventory) {
 		if (useAll) {
 			for (LootTableEntry entry : entries) {
-				Map<Item, Integer> entryItems = entry.generateItems(game);
-				for (Item entryItem : entryItems.keySet()) {
-					if (generatedItems.containsKey(entryItem)) {
-						int currentCount = generatedItems.get(entryItem);
-						generatedItems.put(entryItem, currentCount + entryItems.get(entryItem));
-					} else {
-						generatedItems.put(entryItem, entryItems.get(entryItem));
-					}
-				}
+				entry.generateItems(game, inventory);
 			}
 		} else {
 			LootTableEntry randomEntry = MathUtils.selectRandomFromList(entries);
 			if (randomEntry != null) {
-				generatedItems.putAll(randomEntry.generateItems(game));
+				randomEntry.generateItems(game, inventory);
 			}
 		}
-		return generatedItems;
 	}
 
 }

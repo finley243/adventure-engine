@@ -21,11 +21,6 @@ public class AmmoTemplate extends ItemTemplate {
         this.isReusable = isReusable;
     }
 
-    @Override
-    public boolean hasState() {
-        return false;
-    }
-
     public List<String> getWeaponEffects() {
         return weaponEffects;
     }

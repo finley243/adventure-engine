@@ -49,7 +49,7 @@ public class ScriptTransferItem extends Script {
         switch (transferType) {
             case INSTANCE -> {
                 String itemIDValue = itemID.getValueString(context);
-                Item itemState = context.game().data().getItemState(itemIDValue);
+                Item itemState = context.game().data().getItemInstance(itemIDValue);
                 inventoryOrigin.getValueInventory(context).removeItem(itemState);
                 if (inventoryTarget != null) {
                     inventoryTarget.getValueInventory(context).addItem(itemState);

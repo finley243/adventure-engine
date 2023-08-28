@@ -22,11 +22,6 @@ public class EquippableTemplate extends ItemTemplate {
 		this.equippedEffects = equippedEffects;
 		this.equippedActions = equippedActions;
 	}
-
-	@Override
-	public boolean hasState() {
-		return true;
-	}
 	
 	public Set<Set<String>> getSlots() {
 		return slots;
