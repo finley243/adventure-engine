@@ -273,10 +273,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 				Area area = game().data().getArea(link.getAreaID());
 				visibleAreas.add(area);
 				for (WorldObject object : area.getObjects()) {
-					for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
-						if (linkComponent.isVisible() && linkComponent.visibleConditionIsMet(game().data().getPlayer())) {
-							visibleAreas.addAll(linkComponent.getLinkedObject().getArea().getLineOfSightAreasNoLinks());
-						}
+					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+					if (linkComponent == null) continue;
+					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible(game().data().getPlayer())) {
+						visibleAreas.addAll(objectLinkedArea.getLineOfSightAreasNoLinks());
 					}
 				}
 			}
@@ -304,10 +304,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			if (game().data().getLinkType(link.getType()).isVisible()) {
 				visibleAreaIDs.add(link.getAreaID());
 				for (WorldObject object : game().data().getArea(link.getAreaID()).getObjects()) {
-					for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
-						if (linkComponent.isVisible() && linkComponent.visibleConditionIsMet(game().data().getPlayer())) {
-							visibleAreaIDs.addAll(linkComponent.getLinkedObject().getArea().getLineOfSightAreaIDsNoLinks());
-						}
+					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+					if (linkComponent == null) continue;
+					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible(game().data().getPlayer())) {
+						visibleAreaIDs.addAll(objectLinkedArea.getLineOfSightAreaIDsNoLinks());
 					}
 				}
 			}

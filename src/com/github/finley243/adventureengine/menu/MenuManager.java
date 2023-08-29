@@ -140,9 +140,9 @@ public class MenuManager {
 					if (!categoryMap.containsKey(objectCategory)) {
 						categoryMap.put(objectCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, objectCategory, null, false, false, objectName, null));
 					}
-					String inventoryCategory = "object_ " + data.object.getID() + (data.inventoryName != null ? "_inv_" + data.inventoryName : "_inv");
+					String inventoryCategory = "object_ " + data.object.getID() + "_inv";
 					if (!categoryMap.containsKey(inventoryCategory)) {
-						categoryMap.put(inventoryCategory, new MenuCategory(MenuCategory.CategoryType.INVENTORY_TRANSFER, inventoryCategory, objectCategory, true, false, (data.inventoryName != null ? LangUtils.titleCase(data.inventoryName) : "Inventory"), null));
+						categoryMap.put(inventoryCategory, new MenuCategory(MenuCategory.CategoryType.INVENTORY_TRANSFER, inventoryCategory, objectCategory, true, false, "Inventory", null));
 					}
 					/*String itemCategory = "object_" + data.object.getID() + "_inv_" + data.item.getID();
 					if (!categoryMap.containsKey(itemCategory)) {

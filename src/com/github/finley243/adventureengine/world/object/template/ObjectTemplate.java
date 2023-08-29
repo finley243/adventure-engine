@@ -9,7 +9,6 @@ import com.github.finley243.adventureengine.script.Script;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ObjectTemplate extends GameInstanced {
 
@@ -22,10 +21,10 @@ public class ObjectTemplate extends GameInstanced {
     private final Map<String, Script> scripts;
     private final List<ActionCustom.CustomActionHolder> customActions;
     private final List<ActionCustom.CustomActionHolder> networkActions;
-    private final Map<String, ObjectComponentTemplate> components;
+    private final List<ObjectComponentTemplate> components;
     private final Map<String, Expression> localVarsDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Float> damageMults, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, Map<String, ObjectComponentTemplate> components, Map<String, Expression> localVarsDefault) {
+    public ObjectTemplate(Game game, String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Float> damageMults, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, List<ObjectComponentTemplate> components, Map<String, Expression> localVarsDefault) {
         super(game, ID);
         this.name = name;
         this.isProperName = isProperName;
@@ -76,7 +75,7 @@ public class ObjectTemplate extends GameInstanced {
         return networkActions;
     }
 
-    public Map<String, ObjectComponentTemplate> getComponents() {
+    public List<ObjectComponentTemplate> getComponents() {
         return components;
     }
 

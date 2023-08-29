@@ -17,15 +17,13 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 public class ActionInventoryStore extends Action {
 
     private final Noun owner;
-    private final String name;
     private final Inventory inventory;
     private final Item item;
     private final String prompt;
     private final String phrase;
 
-    public ActionInventoryStore(Noun owner, String name, Inventory inventory, Item item, String prompt, String phrase) {
+    public ActionInventoryStore(Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
         this.owner = owner;
-        this.name = name;
         this.inventory = inventory;
         this.item = item;
         this.prompt = prompt;
@@ -52,7 +50,7 @@ public class ActionInventoryStore extends Action {
             return new MenuDataActorInventory(actor, item, true, true);
         } else {
             WorldObject object = (WorldObject) owner;
-            return new MenuDataObjectInventory(object, item, name, true, true);
+            return new MenuDataObjectInventory(object, item, true, true);
         }
     }
 

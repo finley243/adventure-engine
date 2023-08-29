@@ -23,8 +23,8 @@ public class ObjectComponentUsable extends ObjectComponent {
 
     private Actor user;
 
-    public ObjectComponentUsable(String ID, WorldObject object, ObjectComponentTemplate template) {
-        super(ID, object, template);
+    public ObjectComponentUsable(WorldObject object, ObjectComponentTemplate template) {
+        super(object, template);
     }
 
     private ObjectComponentTemplateUsable getTemplateUsable() {
@@ -106,19 +106,13 @@ public class ObjectComponentUsable extends ObjectComponent {
     public List<Action> getUsingActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionObjectUseEnd(this));
-        for (String exposedComponentID : getTemplateUsable().getComponentsExposed()) {
-            ObjectComponent component = getObject().getComponent(exposedComponentID);
+        for (String exposedComponentName : getTemplateUsable().getComponentsExposed()) {
+            ObjectComponent component = getObject().getComponentOfType(ObjectComponentFactory.getClassFromName(exposedComponentName));
             if (component.isEnabled()) {
                 actions.addAll(component.getActions(subject));
             }
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsingActions()) {
-            String[] menuPath;
-            if (getTemplate().getName() != null) {
-                menuPath = new String[] {LangUtils.titleCase(getObject().getName()), LangUtils.titleCase(getTemplate().getName())};
-            } else {
-                menuPath = new String[] {LangUtils.titleCase(getObject().getName())};
-            }
             actions.add(new ActionCustom(getObject().game(), null, getObject(), null, null, usingAction.action(), usingAction.parameters(), new MenuDataObject(getObject()), false));
         }
         return actions;

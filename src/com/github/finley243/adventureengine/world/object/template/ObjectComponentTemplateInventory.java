@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.object.template;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.item.LootTable;
 
@@ -17,8 +16,8 @@ public class ObjectComponentTemplateInventory extends ObjectComponentTemplate {
     private final boolean enableStore;
     private final List<ActionCustom.CustomActionHolder> perItemActions;
 
-    public ObjectComponentTemplateInventory(Game game, boolean startEnabled, boolean actionsRestricted, String name, LootTable lootTable, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore, List<ActionCustom.CustomActionHolder> perItemActions) {
-        super(game, startEnabled, actionsRestricted, name);
+    public ObjectComponentTemplateInventory(boolean startEnabled, boolean actionsRestricted, LootTable lootTable, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore, List<ActionCustom.CustomActionHolder> perItemActions) {
+        super(startEnabled, actionsRestricted);
         this.lootTable = lootTable;
         this.takePrompt = takePrompt;
         this.takePhrase = takePhrase;

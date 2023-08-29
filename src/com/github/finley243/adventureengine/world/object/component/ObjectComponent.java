@@ -19,14 +19,10 @@ import java.util.Set;
 public abstract class ObjectComponent implements StatHolder {
 
     private boolean isEnabled;
-    private final String ID;
     private final WorldObject object;
     private final ObjectComponentTemplate template;
 
-    public ObjectComponent(String ID, WorldObject object, ObjectComponentTemplate template) {
-        if (ID == null) throw new IllegalArgumentException("ObjectComponent ID cannot be null");
-        if (ID.isEmpty()) throw new IllegalArgumentException("ObjectComponent ID cannot be empty");
-        this.ID = ID;
+    public ObjectComponent(WorldObject object, ObjectComponentTemplate template) {
         this.object = object;
         this.template = template;
     }
@@ -37,16 +33,8 @@ public abstract class ObjectComponent implements StatHolder {
 
     public abstract List<Action> getActions(Actor subject);
 
-    public String getName() {
-        return getTemplate().getName();
-    }
-
     public boolean actionsRestricted() {
         return getTemplate().actionsRestricted();
-    }
-
-    public String getID() {
-        return ID;
     }
 
     public WorldObject getObject() {
@@ -73,7 +61,6 @@ public abstract class ObjectComponent implements StatHolder {
     public Expression getStatValue(String name, Context context) {
         return switch (name) {
             case "enabled" -> new ExpressionConstantBoolean(isEnabled());
-            case "id" -> new ExpressionConstantString(getID());
             default -> null;
         };
     }
@@ -109,7 +96,7 @@ public abstract class ObjectComponent implements StatHolder {
         } else if (!(component.getClass().equals(this.getClass()))) {
             return false;
         } else {
-            return component.getObject().equals(this.getObject()) && component.getID().equals(this.getID());
+            return component.getObject().equals(this.getObject());
         }
     }
 

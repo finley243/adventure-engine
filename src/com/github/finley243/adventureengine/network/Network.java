@@ -28,13 +28,7 @@ public class Network {
         return name;
     }
 
-    public List<Action> networkActions(Actor subject, WorldObject object, String componentName) {
-        String[] menuPath;
-        if (componentName != null) {
-            menuPath = new String[] {LangUtils.titleCase(object.getName()), LangUtils.titleCase(componentName)};
-        } else {
-            menuPath = new String[] {LangUtils.titleCase(object.getName())};
-        }
+    public List<Action> networkActions(Actor subject, WorldObject object) {
         return new ArrayList<>(topNode.actions(subject, object));
     }
 

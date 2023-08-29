@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.object.template;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.ActionCustom;
 
 import java.util.List;
@@ -21,8 +20,8 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
     private final Set<String> componentsExposed;
     private final List<ActionCustom.CustomActionHolder> usingActions;
 
-    public ObjectComponentTemplateUsable(Game game, boolean startEnabled, boolean actionsRestricted, String name, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, boolean userCanPerformLocalActions, boolean userCanPerformParentActions, Set<String> componentsExposed, List<ActionCustom.CustomActionHolder> usingActions) {
-        super(game, startEnabled, actionsRestricted, name);
+    public ObjectComponentTemplateUsable(boolean startEnabled, boolean actionsRestricted, String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, boolean userCanPerformLocalActions, boolean userCanPerformParentActions, Set<String> componentsExposed, List<ActionCustom.CustomActionHolder> usingActions) {
+        super(startEnabled, actionsRestricted);
         this.startPhrase = startPhrase;
         this.endPhrase = endPhrase;
         this.startPrompt = startPrompt;

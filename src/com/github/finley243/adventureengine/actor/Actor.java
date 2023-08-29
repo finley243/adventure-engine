@@ -546,7 +546,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				actions.add(new ActionTalk(this));
 			}
 		} else if (isDead()) {
-			actions.addAll(inventory.getExternalActions(this, null, subject, "Take", "takeFrom", null, null, true, false));
+			actions.addAll(inventory.getExternalActions(this, subject, "Take", "takeFrom", null, null, true, false));
 		}
 		for (ActionCustom.CustomActionHolder actionHolder : getTemplate().getCustomActions()) {
 			actions.add(new ActionCustom(game(), this, null, null, null, actionHolder.action(), actionHolder.parameters(), new MenuDataActor(this), false));
@@ -1039,7 +1039,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equipped_apparel", item.getID()));
 		}
 		if (usingObject != null) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "using_object", usingObject.getID()));
+			//state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "using_object", usingObject.getObject().getID()));
 		}
 		if (actionPointsUsed != 0) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "action_points_used", actionPointsUsed));

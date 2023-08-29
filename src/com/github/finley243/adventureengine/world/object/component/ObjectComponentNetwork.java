@@ -13,8 +13,8 @@ import java.util.List;
 
 public class ObjectComponentNetwork extends ObjectComponent {
 
-    public ObjectComponentNetwork(String ID, WorldObject object, ObjectComponentTemplate template) {
-        super(ID, object, template);
+    public ObjectComponentNetwork(WorldObject object, ObjectComponentTemplate template) {
+        super(object, template);
     }
 
     private ObjectComponentTemplateNetwork getTemplateNetwork() {
@@ -24,7 +24,7 @@ public class ObjectComponentNetwork extends ObjectComponent {
     @Override
     public List<Action> getActions(Actor subject) {
         Network network = subject.game().data().getNetwork(getTemplateNetwork().getNetworkID().getValueString(new Context(subject.game(), subject, subject, getObject())));
-        return new ArrayList<>(network.networkActions(subject, getObject(), getTemplate().getName()));
+        return new ArrayList<>(network.networkActions(subject, getObject()));
     }
 
 }

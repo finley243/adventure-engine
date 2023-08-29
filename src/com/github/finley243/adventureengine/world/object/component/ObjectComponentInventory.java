@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateInventory;
@@ -18,8 +17,8 @@ public class ObjectComponentInventory extends ObjectComponent {
 
     private final Inventory inventory;
 
-    public ObjectComponentInventory(String ID, WorldObject object, ObjectComponentTemplate template) {
-        super(ID, object, template);
+    public ObjectComponentInventory(WorldObject object, ObjectComponentTemplate template) {
+        super(object, template);
         this.inventory = new Inventory(object.game(), null);
     }
 
@@ -30,10 +29,10 @@ public class ObjectComponentInventory extends ObjectComponent {
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-        actions.addAll(inventory.getExternalActions(getObject(), getTemplateInventory().getName(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
+        actions.addAll(inventory.getExternalActions(getObject(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
         for (ActionCustom.CustomActionHolder customAction : getTemplateInventory().getPerItemActions()) {
             for (Item item : inventory.getItems()) {
-                actions.add(new ActionCustom(getObject().game(), null, getObject(), item, null, customAction.action(), customAction.parameters(), new MenuDataObjectInventory(getObject(), item, getName(), false, false), false));
+                actions.add(new ActionCustom(getObject().game(), null, getObject(), item, null, customAction.action(), customAction.parameters(), new MenuDataObjectInventory(getObject(), item, false, false), false));
             }
         }
         return actions;

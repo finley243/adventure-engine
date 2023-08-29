@@ -11,7 +11,7 @@ import com.github.finley243.adventureengine.actor.ai.behavior.*;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
-import com.github.finley243.adventureengine.condition.*;
+import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.effect.*;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.item.Item;
@@ -26,7 +26,10 @@ import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.world.environment.*;
+import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
+import com.github.finley243.adventureengine.world.environment.LinkType;
+import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.*;
 import org.w3c.dom.Document;
@@ -1030,11 +1033,10 @@ public class DataLoader {
         Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(objectElement, "action");
         List<ActionCustom.CustomActionHolder> networkActions = loadCustomActions(objectElement, "networkAction");
-        Map<String, ObjectComponentTemplate> components = new HashMap<>();
+        List<ObjectComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
-            String componentID = LoadUtils.attribute(componentElement, "id", null);
-            ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(game, componentElement);
-            components.put(componentID, componentTemplate);
+            ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(componentElement);
+            components.add(componentTemplate);
         }
         Map<String, Expression> localVarsDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
@@ -1060,11 +1062,10 @@ public class DataLoader {
         return new WorldObject(game, id, template, area, startDisabled, startHidden, localVarsDefault);
     }
 
-    private static ObjectComponentTemplate loadObjectComponentTemplate(Game game, Element componentElement) throws GameDataException {
+    private static ObjectComponentTemplate loadObjectComponentTemplate(Element componentElement) throws GameDataException {
         String type = LoadUtils.attribute(componentElement, "type", null);
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
         boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "restricted", false);
-        String name = LoadUtils.singleTag(componentElement, "name", null);
         switch (type) {
             case "inventory" -> {
                 LootTable lootTable = loadLootTable(LoadUtils.singleChildWithName(componentElement, "inventory"), true);
@@ -1075,18 +1076,22 @@ public class DataLoader {
                 boolean enableTake = LoadUtils.attributeBool(componentElement, "enableTake", true);
                 boolean enableStore = LoadUtils.attributeBool(componentElement, "enableStore", true);
                 List<ActionCustom.CustomActionHolder> perItemActions = loadCustomActions(componentElement, "itemAction");
-                return new ObjectComponentTemplateInventory(game, startEnabled, actionsRestricted, name, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
+                return new ObjectComponentTemplateInventory(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
                 Expression networkID = loadExpressionOrAttribute(componentElement, "networkID", "string");
-                return new ObjectComponentTemplateNetwork(game, startEnabled, actionsRestricted, name, networkID);
+                return new ObjectComponentTemplateNetwork(startEnabled, actionsRestricted, networkID);
             }
             case "link" -> {
-                Condition movableCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "conditionMovable"));
-                Condition visibleCondition = loadCondition(LoadUtils.singleChildWithName(componentElement, "conditionVisible"));
-                boolean linkIsMovable = LoadUtils.attributeBool(componentElement, "movable", true);
-                boolean linkIsVisible = LoadUtils.attributeBool(componentElement, "visible", false);
-                return new ObjectComponentTemplateLink(game, startEnabled, actionsRestricted, name, movableCondition, visibleCondition, linkIsMovable, linkIsVisible);
+                Map<String, ObjectComponentTemplateLink.ObjectLinkData> linkData = new HashMap<>();
+                for (Element linkDataElement : LoadUtils.directChildrenWithName(componentElement, "link")) {
+                    String linkID = LoadUtils.attribute(linkDataElement, "id", null);
+                    String moveAction = LoadUtils.attribute(linkDataElement, "moveAction", null);
+                    Condition conditionVisible = loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"));
+                    boolean isVisible = LoadUtils.attributeBool(linkDataElement, "visible", false);
+                    linkData.put(linkID, new ObjectComponentTemplateLink.ObjectLinkData(moveAction, conditionVisible, isVisible));
+                }
+                return new ObjectComponentTemplateLink(startEnabled, actionsRestricted, linkData);
             }
             case "usable" -> {
                 String usableStartPhrase = LoadUtils.singleTag(componentElement, "startPhrase", null);
@@ -1100,12 +1105,12 @@ public class DataLoader {
                 boolean userCanPerformParentActions = LoadUtils.attributeBool(componentElement, "parentActions", true);
                 Set<String> componentsExposed = LoadUtils.setOfTags(componentElement, "exposedComponent");
                 List<ActionCustom.CustomActionHolder> usingActions = loadCustomActions(componentElement, "usingAction");
-                return new ObjectComponentTemplateUsable(game, startEnabled, actionsRestricted, name, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, componentsExposed, usingActions);
+                return new ObjectComponentTemplateUsable(startEnabled, actionsRestricted, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, componentsExposed, usingActions);
             }
             case "vehicle" -> {
                 String vehicleType = LoadUtils.attribute(componentElement, "vehicleType", null);
                 String moveMenuName = LoadUtils.singleTag(componentElement, "moveMenuName", null);
-                return new ObjectComponentTemplateVehicle(game, startEnabled, actionsRestricted, name, vehicleType, moveMenuName);
+                return new ObjectComponentTemplateVehicle(startEnabled, actionsRestricted, vehicleType, moveMenuName);
             }
             default -> throw new GameDataException("ObjectComponentTemplate has invalid or missing type");
         }

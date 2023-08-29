@@ -46,8 +46,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Area defaultArea;
 	private Area area;
 	private int HP;
-	private final Map<String, ObjectComponent> components;
-	private final Map<Class<? extends ObjectComponent>, List<ObjectComponent>> componentsByType;
+	private final Map<Class<? extends ObjectComponent>, ObjectComponent> components;
 	private final Map<String, Expression> localVars;
 
 	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Expression> localVarsDefault) {
@@ -58,7 +57,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.area = area;
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
-		this.componentsByType = new HashMap<>();
 		this.localVars = localVarsDefault;
 		setEnabled(!startDisabled);
 	}
@@ -109,8 +107,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public void damage(Damage damage, Context context) {
 		int amount = damage.getAmount();
-		amount -= getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult();
-		amount -= amount * getTemplate().getDamageMult(damage.getType());
+		amount -= Math.round(getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult());
+		amount -= Math.round(amount * getTemplate().getDamageMult(damage.getType()));
 		HP -= amount;
 		if (HP <= 0) {
 			HP = 0;
@@ -160,13 +158,12 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	public void onNewGameInit() {
-		for (Map.Entry<String, ObjectComponentTemplate> componentEntry : getTemplate().getComponents().entrySet()) {
-			ObjectComponent component = ObjectComponentFactory.create(componentEntry.getValue(), componentEntry.getKey(), this);
-			components.put(componentEntry.getKey(), component);
-			if (!componentsByType.containsKey(component.getClass())) {
-				componentsByType.put(component.getClass(), new ArrayList<>());
+		for (ObjectComponentTemplate componentTemplate : getTemplate().getComponents()) {
+			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, this);
+			if (components.containsKey(component.getClass())) {
+				throw new UnsupportedOperationException("Object " + this + " already contains a component of type " + component.getClass());
 			}
-			componentsByType.get(component.getClass()).add(component);
+			components.put(component.getClass(), component);
             component.onNewGameInit();
         }
 		this.HP = getTemplate().getMaxHP();
@@ -216,20 +213,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return false;
 	}
 
-	public ObjectComponent getComponent(String componentID) {
-		return components.get(componentID);
-	}
-
-	public <T extends ObjectComponent> List<T> getComponentsOfType(Class<T> componentClass) {
-		List<ObjectComponent> uncastComponents = componentsByType.get(componentClass);
-		if (uncastComponents == null) return new ArrayList<>();
-		List<T> castComponents = new ArrayList<>(uncastComponents.size());
-		for (ObjectComponent component : uncastComponents) {
-			if (componentClass.isInstance(component)) {
-				castComponents.add(componentClass.cast(component));
-			}
-		}
-		return castComponents;
+	public <T extends ObjectComponent> T getComponentOfType(Class<T> componentClass) {
+		ObjectComponent uncastComponents = components.get(componentClass);
+		return componentClass.cast(uncastComponents);
 	}
 
 	public void triggerScript(String entryPoint, Context context) {
@@ -283,7 +269,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
 		return switch (name) {
-			case "component" -> getComponent(ID);
+			//case "component" -> getComponent(ID);
 			case "area" -> getArea();
 			default -> null;
 		};

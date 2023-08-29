@@ -1,15 +1,13 @@
 package com.github.finley243.adventureengine.world.object.template;
 
-import com.github.finley243.adventureengine.Game;
-
 public class ObjectComponentTemplateVehicle extends ObjectComponentTemplate {
 
     private final String vehicleType;
     // Menu category under which move actions will be placed
     private final String moveMenuName;
 
-    public ObjectComponentTemplateVehicle(Game game, boolean startEnabled, boolean actionsRestricted, String name, String vehicleType, String moveMenuName) {
-        super(game, startEnabled, actionsRestricted, name);
+    public ObjectComponentTemplateVehicle(boolean startEnabled, boolean actionsRestricted, String vehicleType, String moveMenuName) {
+        super(startEnabled, actionsRestricted);
         this.vehicleType = vehicleType;
         this.moveMenuName = moveMenuName;
     }

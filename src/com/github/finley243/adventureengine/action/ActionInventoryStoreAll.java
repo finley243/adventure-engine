@@ -18,16 +18,14 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 public class ActionInventoryStoreAll extends Action {
 
     private final Noun owner;
-    private final String name;
     private final Inventory inventory;
     private final Item item;
     private final String prompt;
     private final String phrase;
 
-    public ActionInventoryStoreAll(Noun owner, String name, Inventory inventory, Item item, String prompt, String phrase) {
+    public ActionInventoryStoreAll(Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
         if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionInventoryStoreAll on item with state");
         this.owner = owner;
-        this.name = name;
         this.inventory = inventory;
         this.item = item;
         this.prompt = prompt;
@@ -55,7 +53,7 @@ public class ActionInventoryStoreAll extends Action {
             return new MenuDataActorInventory(actor, item, true, true);
         } else {
             WorldObject object = (WorldObject) owner;
-            return new MenuDataObjectInventory(object, item, name, true, true);
+            return new MenuDataObjectInventory(object, item, true, true);
         }
     }
 

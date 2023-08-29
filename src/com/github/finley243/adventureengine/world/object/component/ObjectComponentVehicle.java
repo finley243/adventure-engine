@@ -13,8 +13,8 @@ import java.util.List;
 
 public class ObjectComponentVehicle extends ObjectComponent {
 
-    public ObjectComponentVehicle(String ID, WorldObject object, ObjectComponentTemplate template) {
-        super(ID, object, template);
+    public ObjectComponentVehicle(WorldObject object, ObjectComponentTemplate template) {
+        super(object, template);
     }
 
     private ObjectComponentTemplateVehicle getTemplateVehicle() {
@@ -23,10 +23,10 @@ public class ObjectComponentVehicle extends ObjectComponent {
 
     public WorldObject getObjectOverride() {
         Context context = new Context(getObject().game(), getObject());
-        Expression objectOverrideExpression = getObject().getStatValue(getID() + "_object_override", context);
+        Expression objectOverrideExpression = getObject().getStatValue("vehicle_object_override", context);
         if (objectOverrideExpression == null) return null;
         if (objectOverrideExpression.getDataType() != Expression.DataType.STRING) {
-            getObject().game().log().print("ObjectComponentVehicle " + getObject() + "/" + this + " - object override local variable is not a string");
+            getObject().game().log().print("ObjectComponentVehicle " + getObject() + " - object override local variable is not a string");
             return null;
         }
         String objectOverrideID = objectOverrideExpression.getValueString(context);

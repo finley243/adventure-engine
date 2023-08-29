@@ -44,9 +44,9 @@ public class Pathfinder {
 			}
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(vehicleType));
 			for (WorldObject object : pathEnd.getObjects()) {
-				for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
-					linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
-				}
+				ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+				if (linkComponent == null) continue;
+				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
 			}
 			Collections.shuffle(linkedAreasGlobal);
 			for (Area linkedArea : linkedAreasGlobal) {
@@ -103,9 +103,9 @@ public class Pathfinder {
 			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(null));
 			if (throughExits) {
 				for (WorldObject object : pathEnd.getObjects()) {
-					for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
-						linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
-					}
+					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+					if (linkComponent == null) continue;
+					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
 				}
 			}
 			for (Area linkedArea : linkedAreasGlobal) {
@@ -137,9 +137,9 @@ public class Pathfinder {
 			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas(null));
 			if (throughExits) {
 				for (WorldObject object : currentArea.getObjects()) {
-					for (ObjectComponentLink linkComponent : object.getComponentsOfType(ObjectComponentLink.class)) {
-						linkedAreasGlobal.add(linkComponent.getLinkedObject().getArea());
-					}
+					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+					if (linkComponent == null) continue;
+					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
 				}
 			}
 			Collections.shuffle(linkedAreasGlobal);
