@@ -36,4 +36,30 @@
             </script>
         </script>
     </action>
+    <action id="move_door">
+        <prompt>Enter</prompt>
+        <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
+        <condition invert="true" type="stat" dataType="boolean" stat="locked" holder="parentObject">
+            <blockMessage>Locked</blockMessage>
+        </condition>
+        <script>
+            <script type="sensoryEvent">
+                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
+                <parameter name="door" dataType="noun" type="stat" holder="parentObject"/>
+                <phrase>moveThrough</phrase>
+                <area type="stat" dataType="string" stat="id" holder="area">
+                    <parentHolder holder="subject"/>
+                </area>
+            </script>
+            <script type="sensoryEvent">
+                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
+                <parameter name="door" dataType="noun" type="stat" holder="parentObject"/>
+                <phrase>moveThroughReverse</phrase>
+                <area type="stat" dataType="string" holder="parentArea" stat="id"/>
+            </script>
+            <script type="setState" stat="area" holder="subject">
+                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
+            </script>
+        </script>
+    </action>
 </data>

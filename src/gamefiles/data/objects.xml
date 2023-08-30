@@ -1,15 +1,19 @@
 <data>
     <object id="door_basic">
         <name>door</name>
-        <component id="door_link" type="link" movable="true" visible="false"/>
+        <component type="link">
+            <link id="door_link" moveAction="move_door" visible="false"/>
+        </component>
     </object>
     <object id="door_fake">
         <name>door</name>
     </object>
     <object id="door_locked">
         <name>door</name>
-        <component id="door_link" type="link" movable="true" visible="true">
-            <conditionMovable invert="true" type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+        <component type="link">
+            <link id="door_link" moveAction="move_door" visible="false">
+                <conditionMovable invert="true" type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+            </link>
         </component>
         <localVar name="locked" dataType="boolean" value="true"/>
         <localVar name="lock_keys" dataType="stringSet"/>
@@ -19,7 +23,7 @@
     </object>
     <object id="chair_plastic">
         <name>plastic chair</name>
-        <component id="chair" type="usable">
+        <component type="usable">
             <startPhrase>sit</startPhrase>
             <endPhrase>getUp</endPhrase>
             <startPrompt>Sit</startPrompt>
@@ -38,7 +42,7 @@
     </object>
     <object id="garbage_bin">
         <name>garbage bin</name>
-        <component id="inventory" type="inventory">
+        <component type="inventory">
             <takePrompt>Take</takePrompt>
             <takePhrase>takeFrom</takePhrase>
             <storePrompt>Store</storePrompt>
@@ -50,7 +54,7 @@
     </object>
     <object id="store_shelf_snacks">
         <name>snacks shelf</name>
-        <component id="inventory" type="inventory">
+        <component type="inventory">
             <takePrompt>Take</takePrompt>
             <takePhrase>takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
@@ -62,7 +66,7 @@
     </object>
     <object id="store_shelf_meals">
         <name>meal shelf</name>
-        <component id="inventory" type="inventory">
+        <component type="inventory">
             <takePrompt>Take</takePrompt>
             <takePhrase>takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
@@ -74,7 +78,7 @@
     </object>
     <object id="store_shelf_alcohol">
         <name>alcohol shelf</name>
-        <component id="inventory" type="inventory">
+        <component type="inventory">
             <takePrompt>Take</takePrompt>
             <takePhrase>takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
@@ -86,7 +90,7 @@
     </object>
     <object id="store_shelf_medicine">
         <name>medicine shelf</name>
-        <component id="inventory" type="inventory">
+        <component type="inventory">
             <takePrompt>Take</takePrompt>
             <takePhrase>takeFrom</takePhrase>
             <storePrompt>Place</storePrompt>
@@ -98,7 +102,7 @@
     </object>
     <object id="store_cooler_soft_drinks">
         <name>soft drinks cooler</name>
-        <component id="inventory" type="inventory">
+        <component type="inventory">
             <takePrompt>Take</takePrompt>
             <takePhrase>takeFrom</takePhrase>
             <storePrompt>Store</storePrompt>
@@ -110,7 +114,7 @@
     </object>
     <object id="store_cooler_alcohol">
         <name>alcohol cooler</name>
-        <component id="inventory" type="inventory">
+        <component type="inventory">
             <takePrompt>Take</takePrompt>
             <takePhrase>takeFrom</takePhrase>
             <storePrompt>Store</storePrompt>
@@ -133,27 +137,27 @@
     </object>
     <object id="motorcycle">
         <name>motorcycle</name>
-        <component id="controller" type="vehicle" restricted="true" vehicleType="motorcycle">
+        <component type="vehicle" restricted="true" vehicleType="motorcycle">
             <moveMenuName>Drive</moveMenuName>
         </component>
-        <component id="seat" type="usable">
+        <component type="usable">
             <startPhrase>sit</startPhrase>
             <endPhrase>getUp</endPhrase>
             <startPrompt>Sit</startPrompt>
             <endPrompt>Stand</endPrompt>
-            <exposedComponent>controller</exposedComponent>
+            <exposedComponent>vehicle</exposedComponent>
         </component>
     </object>
     <object id="network_port">
         <name>network port</name>
-        <component id="port" type="usable">
+        <component type="usable">
             <startPhrase>jackIn</startPhrase>
             <endPhrase>jackOut</endPhrase>
             <startPrompt>Jack In</startPrompt>
             <endPrompt>Jack Out</endPrompt>
             <exposedComponent>network</exposedComponent>
         </component>
-        <component id="network" type="network" restricted="true">
+        <component type="network" restricted="true">
             <networkID type="stat" dataType="string" holder="parentObject" stat="networkID"/>
         </component>
     </object>
