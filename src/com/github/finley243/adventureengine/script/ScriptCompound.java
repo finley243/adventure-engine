@@ -41,4 +41,9 @@ public class ScriptCompound extends Script {
         context.game().eventQueue().executeNext();
     }
 
+    @Override
+    protected boolean generateInnerContext() {
+        return true;
+    }
+
 }

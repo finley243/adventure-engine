@@ -79,10 +79,12 @@
                     </else>
                 </value>
             </script>
-            <script type="sensoryEvent">
-                <parameter name="item" type="stat" dataType="noun" holder="itemTemplate">
+            <script type="setVariable" name="item">
+                <value dataType="noun" type="stat" holder="itemTemplate">
                     <holderID type="parameter" name="itemID"/>
-                </parameter>
+                </value>
+            </script>
+            <script type="sensoryEvent">
                 <phrase>vendingMachineBuy</phrase>
                 <area type="stat" dataType="string" stat="id" holder="area">
                     <parentHolder holder="subject"/>

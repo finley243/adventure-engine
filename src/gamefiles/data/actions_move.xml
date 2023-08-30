@@ -3,8 +3,10 @@
         <prompt>Move</prompt>
         <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
         <script>
+            <script type="setVariable" name="area">
+                <value dataType="noun" type="stat" holder="parentArea"/>
+            </script>
             <script type="sensoryEvent">
-                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
                 <phrase>moveTo</phrase>
                 <area type="buildStringSet">
                     <value type="stat" dataType="string" stat="id" holder="area">
@@ -21,8 +23,10 @@
     <action id="move_corner">
         <prompt>Move</prompt>
         <script>
+            <script type="setVariable" name="area">
+                <value dataType="noun" type="stat" holder="parentArea"/>
+            </script>
             <script type="sensoryEvent">
-                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
                 <phrase>moveCorner</phrase>
                 <area type="buildStringSet">
                     <value type="stat" dataType="string" stat="id" holder="area">
@@ -43,17 +47,19 @@
             <blockMessage>Locked</blockMessage>
         </condition>
         <script>
+            <script type="setVariable" name="area">
+                <value dataType="noun" type="stat" holder="parentArea"/>
+            </script>
+            <script type="setVariable" name="door">
+                <value dataType="noun" type="stat" holder="parentObject"/>
+            </script>
             <script type="sensoryEvent">
-                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
-                <parameter name="door" dataType="noun" type="stat" holder="parentObject"/>
                 <phrase>moveThrough</phrase>
                 <area type="stat" dataType="string" stat="id" holder="area">
                     <parentHolder holder="subject"/>
                 </area>
             </script>
             <script type="sensoryEvent">
-                <parameter name="area" dataType="noun" type="stat" holder="parentArea"/>
-                <parameter name="door" dataType="noun" type="stat" holder="parentObject"/>
                 <phrase>moveThroughReverse</phrase>
                 <area type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>

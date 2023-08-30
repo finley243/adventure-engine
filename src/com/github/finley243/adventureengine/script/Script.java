@@ -26,11 +26,17 @@ public abstract class Script {
 	 */
 	public void execute(Context context) {
 		if (canExecute(context)) {
-			Map<String, Expression> localParametersComputed = new HashMap<>();
-			for (Map.Entry<String, Expression> entry : localParameters.entrySet()) {
-				localParametersComputed.put(entry.getKey(), Expression.convertToConstant(entry.getValue(), context));
+			Context localContext;
+			if (generateInnerContext()) {
+				/*Map<String, Expression> localParametersComputed = new HashMap<>();
+				for (Map.Entry<String, Expression> entry : localParameters.entrySet()) {
+					localParametersComputed.put(entry.getKey(), Expression.convertToConstant(entry.getValue(), context));
+				}
+				localContext = new Context(context, localParametersComputed);*/
+				localContext = new Context(context);
+			} else {
+				localContext = context;
 			}
-			Context localContext = new Context(context, localParametersComputed);
 			executeSuccess(localContext);
 		} else {
 			context.game().eventQueue().executeNext();
@@ -46,6 +52,10 @@ public abstract class Script {
 
 	protected boolean canExecute(Context context) {
 		return condition == null || condition.isMet(context);
+	}
+
+	protected boolean generateInnerContext() {
+		return false;
 	}
 
 }

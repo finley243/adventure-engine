@@ -21,4 +21,10 @@ public class ScriptExternal extends Script {
         context.game().eventQueue().addToFront(new ScriptEvent(context.game().data().getScript(scriptID), context));
         context.game().eventQueue().executeNext();
     }
+
+    @Override
+    protected boolean generateInnerContext() {
+        return true;
+    }
+
 }

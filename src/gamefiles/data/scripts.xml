@@ -1,11 +1,9 @@
 <data>
     <script id="drop_equipped">
-        <script external="drop_equipped_specified_slot">
-            <parameter name="equippedSlot" value="hand_main"/>
-        </script>
-        <script external="drop_equipped_specified_slot">
-            <parameter name="equippedSlot" value="hand_off"/>
-        </script>
+        <script type="setVariable" name="equippedSlot" value="hand_main"/>
+        <script external="drop_equipped_specified_slot"/>
+        <script type="setVariable" name="equippedSlot" value="hand_off"/>
+        <script external="drop_equipped_specified_slot"/>
     </script>
     <script id="drop_equipped_specified_slot">
         <condition type="stat" holder="subject">
@@ -14,13 +12,17 @@
                 <value type="parameter" dataType="string" name="equippedSlot"/>
             </stat>
         </condition>
-        <parameter name="dropAreaID" type="stat" dataType="string" stat="id" holder="area">
-            <parentHolder holder="subject"/>
-        </parameter>
-        <parameter name="equippedItemID" type="stat" dataType="string" stat="id" holder="equipped_item">
-            <holderID type="parameter" dataType="string" name="equippedSlot"/>
-            <parentHolder holder="subject"/>
-        </parameter>
+        <script type="setVariable" name="dropAreaID">
+            <value type="stat" dataType="string" stat="id" holder="area">
+                <parentHolder holder="subject"/>
+            </value>
+        </script>
+        <script type="setVariable" name="equippedItemID">
+            <value type="stat" dataType="string" stat="id" holder="equipped_item">
+                <holderID type="parameter" dataType="string" name="equippedSlot"/>
+                <parentHolder holder="subject"/>
+            </value>
+        </script>
         <script type="transferItem" transferType="instance">
             <fromInv holder="subject"/>
             <toInv holder="area">
@@ -28,16 +30,22 @@
             </toInv>
             <item type="parameter" name="equippedItemID"/>
         </script>
-        <script type="sensoryEvent">
-            <parameter name="item" type="stat" dataType="noun" holder="item">
+        <script type="setVariable" name="item">
+            <value type="stat" dataType="noun" holder="item">
                 <holderID type="parameter" name="equippedItemID"/>
-            </parameter>
-            <parameter name="area" type="stat" dataType="noun" holder="area">
+            </value>
+        </script>
+        <script type="setVariable" name="area">
+            <value type="stat" dataType="noun" holder="area">
                 <holderID type="parameter" name="dropAreaID"/>
-            </parameter>
-            <parameter name="relativeTo" type="stat" dataType="string" holder="area" stat="relative_name">
+            </value>
+        </script>
+        <script type="setVariable" name="relativeTo">
+            <value type="stat" dataType="string" holder="area" stat="relative_name">
                 <holderID type="parameter" name="dropAreaID"/>
-            </parameter>
+            </value>
+        </script>
+        <script type="sensoryEvent">
             <phrase>drop</phrase>
             <area type="stat" stat="id" holder="area">
                 <parentHolder holder="subject"/>
@@ -45,12 +53,10 @@
         </script>
     </script>
     <script id="drop_equipped_force">
-        <script external="drop_equipped_force_specified_slot">
-            <parameter name="equippedSlot" value="hand_main"/>
-        </script>
-        <script external="drop_equipped_force_specified_slot">
-            <parameter name="equippedSlot" value="hand_off"/>
-        </script>
+        <script type="setVariable" name="equippedSlot" value="hand_main"/>
+        <script external="drop_equipped_force_specified_slot"/>
+        <script type="setVariable" name="equippedSlot" value="hand_off"/>
+        <script external="drop_equipped_force_specified_slot"/>
     </script>
     <script id="drop_equipped_force_specified_slot">
         <condition type="stat" holder="subject">
@@ -59,15 +65,19 @@
                 <value type="parameter" dataType="string" name="equippedSlot"/>
             </stat>
         </condition>
-        <parameter name="dropAreaID" type="randomStringFromSet" dataType="string">
-            <set type="stat" stat="movable_areas" holder="area">
+        <script type="setVariable" name="dropAreaID">
+            <value type="randomStringFromSet" dataType="string">
+                <set type="stat" stat="movable_areas" holder="area">
+                    <parentHolder holder="subject"/>
+                </set>
+            </value>
+        </script>
+        <script type="setVariable" name="equippedItemID">
+            <value type="stat" dataType="string" stat="id" holder="equipped_item">
+                <holderID type="parameter" dataType="string" name="equippedSlot"/>
                 <parentHolder holder="subject"/>
-            </set>
-        </parameter>
-        <parameter name="equippedItemID" type="stat" dataType="string" stat="id" holder="equipped_item">
-            <holderID type="parameter" dataType="string" name="equippedSlot"/>
-            <parentHolder holder="subject"/>
-        </parameter>
+            </value>
+        </script>
         <script type="transferItem" transferType="instance">
             <fromInv holder="subject"/>
             <toInv holder="area">
@@ -75,16 +85,22 @@
             </toInv>
             <item type="parameter" name="equippedItemID"/>
         </script>
-        <script type="sensoryEvent">
-            <parameter name="item" type="stat" dataType="noun" holder="item">
+        <script type="setVariable" name="item">
+            <value type="stat" dataType="noun" holder="item">
                 <holderID type="parameter" name="equippedItemID"/>
-            </parameter>
-            <parameter name="area" type="stat" dataType="noun" holder="area">
+            </value>
+        </script>
+        <script type="setVariable" name="area">
+            <value type="stat" dataType="noun" holder="area">
                 <holderID type="parameter" name="dropAreaID"/>
-            </parameter>
-            <parameter name="relativeTo" type="stat" dataType="string" holder="area" stat="relative_name">
+            </value>
+        </script>
+        <script type="setVariable" name="relativeTo">
+            <value type="stat" dataType="string" holder="area" stat="relative_name">
                 <holderID type="parameter" name="dropAreaID"/>
-            </parameter>
+            </value>
+        </script>
+        <script type="sensoryEvent">
             <phrase>forceDrop</phrase>
             <area type="stat" stat="id" holder="area">
                 <parentHolder holder="subject"/>
