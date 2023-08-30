@@ -14,18 +14,17 @@ import java.util.List;
 public class BehaviorUse extends Behavior {
 
     private final String object;
-    // TODO - Change to specify a slot for new single-component slot system
-    private final String component;
+    private final String slot;
 
-    public BehaviorUse(Condition condition, Script eachRoundScript, int duration, List<Idle> idles, String object, String component) {
+    public BehaviorUse(Condition condition, Script eachRoundScript, int duration, List<Idle> idles, String object, String slot) {
         super(condition, eachRoundScript, duration, idles);
         this.object = object;
-        this.component = component;
+        this.slot = slot;
     }
 
     @Override
     public boolean isInTargetState(Actor subject) {
-        return subject.isUsingObject() && subject.getUsingObject().getObject().getID().equals(object);
+        return subject.isUsingObject() && subject.getUsingObject().object().getID().equals(object) && subject.getUsingObject().slot().equals(slot);
     }
 
     @Override
@@ -35,9 +34,9 @@ public class BehaviorUse extends Behavior {
 
     @Override
     public float actionUtilityOverride(Actor subject, Action action) {
-        if (action instanceof ActionObjectUseStart actionUseStart && actionUseStart.getComponent().getObject().getID().equals(object)) {
+        if (action instanceof ActionObjectUseStart actionUseStart && actionUseStart.getComponent().getObject().getID().equals(object) && actionUseStart.getSlotID().equals(slot)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
-        } else if(action instanceof ActionObjectUseEnd actionUseEnd && actionUseEnd.getComponent().getObject().getID().equals(object)) {
+        } else if(action instanceof ActionObjectUseEnd actionUseEnd && actionUseEnd.getComponent().getObject().getID().equals(object) && actionUseEnd.getSlotID().equals(slot)) {
             return 0.0f;
         }
         return -1.0f;

@@ -81,7 +81,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final TargetingComponent targetingComponent;
 	private final BehaviorComponent behaviorComponent;
 	private int money;
-	private ObjectComponentUsable usingObject;
+	private ObjectComponentUsable.ObjectUserData usingObject;
 	private final Set<AreaTarget> areaTargets;
 	private int sleepCounter;
 	private boolean playerControlled;
@@ -280,7 +280,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public boolean canPerformLocalActions() {
 		if (isUsingObject()) {
-			return getUsingObject().userCanPerformLocalActions();
+			return getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanPerformLocalActions(getUsingObject().slot());
 		}
 		return true;
 	}
@@ -290,7 +290,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public boolean isInCover() {
-		return isUsingObject() && getUsingObject().userIsInCover();
+		if (isUsingObject()) {
+			return getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userIsInCover(getUsingObject().slot());
+		}
+		return false;
 	}
 
 	public List<Limb> getLimbs() {
@@ -514,11 +517,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 	
-	public void setUsingObject(ObjectComponentUsable object) {
-		this.usingObject = object;
+	public void setUsingObject(ObjectComponentUsable.ObjectUserData objectUserData) {
+		this.usingObject = objectUserData;
 	}
 
-	public ObjectComponentUsable getUsingObject() {
+	public ObjectComponentUsable.ObjectUserData getUsingObject() {
 		return usingObject;
 	}
 	
@@ -572,15 +575,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 			actions.addAll(getArea().getItemActions());
 			for (WorldObject object : getArea().getObjects()) {
-				if (!object.isHidden() && (!isUsingObject() || !object.equals(getUsingObject().getObject()))) {
+				if (!object.isHidden() && (!isUsingObject() || !object.equals(getUsingObject().object()))) {
 					actions.addAll(object.localActions(this));
 				}
 			}
 		}
 		if (isUsingObject()) {
-			actions.addAll(getUsingObject().getUsingActions(this));
-			if (getUsingObject().userCanPerformParentActions()) {
-				actions.addAll(getUsingObject().getObject().localActions(this));
+			actions.addAll(getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).getUsingActions(getUsingObject().slot(), this));
+			if (getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanPerformParentActions(getUsingObject().slot())) {
+				actions.addAll(getUsingObject().object().localActions(this));
 			}
 		}
 		for (Actor visibleActor : getVisibleActors()) {
@@ -721,7 +724,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public Set<Area> getVisibleAreas() {
-		if (isUsingObject() && !getUsingObject().userCanSeeOtherAreas()) {
+		if (isUsingObject() && !getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanSeeOtherAreas(getUsingObject().slot())) {
 			return Set.of(getArea());
 		} else {
 			return getArea().getLineOfSightAreas();
@@ -966,7 +969,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public StatHolder getSubHolder(String name, String ID) {
 		return switch (name) {
 			case "equipped_item" -> equipmentComponent.getEquippedItemInSlot(ID);
-			case "using_object" -> getUsingObject();
+			case "using_object" -> getUsingObject().object();
 			case "area" -> getArea();
 			default -> null;
 		};

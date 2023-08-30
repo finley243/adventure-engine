@@ -1094,18 +1094,23 @@ public class DataLoader {
                 return new ObjectComponentTemplateLink(startEnabled, actionsRestricted, linkData);
             }
             case "usable" -> {
-                String usableStartPhrase = LoadUtils.singleTag(componentElement, "startPhrase", null);
-                String usableEndPhrase = LoadUtils.singleTag(componentElement, "endPhrase", null);
-                String usableStartPrompt = LoadUtils.singleTag(componentElement, "startPrompt", null);
-                String usableEndPrompt = LoadUtils.singleTag(componentElement, "endPrompt", null);
-                boolean userIsInCover = LoadUtils.attributeBool(componentElement, "cover", false);
-                boolean userIsHidden = LoadUtils.attributeBool(componentElement, "hidden", false);
-                boolean userCanSeeOtherAreas = LoadUtils.attributeBool(componentElement, "seeOtherAreas", true);
-                boolean userCanPerformLocalActions = LoadUtils.attributeBool(componentElement, "localActions", true);
-                boolean userCanPerformParentActions = LoadUtils.attributeBool(componentElement, "parentActions", true);
-                Set<String> componentsExposed = LoadUtils.setOfTags(componentElement, "exposedComponent");
-                List<ActionCustom.CustomActionHolder> usingActions = loadCustomActions(componentElement, "usingAction");
-                return new ObjectComponentTemplateUsable(startEnabled, actionsRestricted, usableStartPhrase, usableEndPhrase, usableStartPrompt, usableEndPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, componentsExposed, usingActions);
+                Map<String, ObjectComponentTemplateUsable.UsableSlotData> usableSlotData = new HashMap<>();
+                for (Element slotElement : LoadUtils.directChildrenWithName(componentElement, "slot")) {
+                    String slotID = LoadUtils.attribute(slotElement, "id", null);
+                    String startPhrase = LoadUtils.singleTag(slotElement, "startPhrase", null);
+                    String endPhrase = LoadUtils.singleTag(slotElement, "endPhrase", null);
+                    String startPrompt = LoadUtils.singleTag(slotElement, "startPrompt", null);
+                    String endPrompt = LoadUtils.singleTag(slotElement, "endPrompt", null);
+                    boolean userIsInCover = LoadUtils.attributeBool(slotElement, "cover", false);
+                    boolean userIsHidden = LoadUtils.attributeBool(slotElement, "hidden", false);
+                    boolean userCanSeeOtherAreas = LoadUtils.attributeBool(slotElement, "seeOtherAreas", true);
+                    boolean userCanPerformLocalActions = LoadUtils.attributeBool(slotElement, "localActions", true);
+                    boolean userCanPerformParentActions = LoadUtils.attributeBool(slotElement, "parentActions", true);
+                    Set<String> componentsExposed = LoadUtils.setOfTags(slotElement, "exposedComponent");
+                    List<ActionCustom.CustomActionHolder> usingActions = loadCustomActions(slotElement, "usingAction");
+                    usableSlotData.put(slotID, new ObjectComponentTemplateUsable.UsableSlotData(startPhrase, endPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, componentsExposed, usingActions));
+                }
+                return new ObjectComponentTemplateUsable(startEnabled, actionsRestricted, usableSlotData);
             }
             case "vehicle" -> {
                 String vehicleType = LoadUtils.attribute(componentElement, "vehicleType", null);
@@ -1209,8 +1214,8 @@ public class DataLoader {
             }
             case "use" -> {
                 String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
-                String componentTarget = LoadUtils.attribute(behaviorElement, "component", null);
-                return new BehaviorUse(condition, eachRoundScript, duration, idles, objectTarget, componentTarget);
+                String slotTarget = LoadUtils.attribute(behaviorElement, "slot", null);
+                return new BehaviorUse(condition, eachRoundScript, duration, idles, objectTarget, slotTarget);
             }
             case "guard" -> {
                 String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);

@@ -15,30 +15,36 @@ import com.github.finley243.adventureengine.world.object.component.ObjectCompone
 public class ActionObjectUseEnd extends Action {
 
 	private final ObjectComponentUsable component;
+	private final String slotID;
 
-	public ActionObjectUseEnd(ObjectComponentUsable component) {
+	public ActionObjectUseEnd(ObjectComponentUsable component, String slotID) {
 		this.component = component;
+		this.slotID = slotID;
 	}
 
 	public ObjectComponentUsable getComponent() {
 		return component;
 	}
+
+	public String getSlotID() {
+		return slotID;
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		if (component.userIsInCover()) {
+		if (component.userIsInCover(slotID)) {
 			subject.triggerScript("on_leave_cover", new Context(subject.game(), subject, subject, getComponent().getObject()));
 		}
-		component.removeUser();
+		component.removeUser(slotID);
 		subject.setUsingObject(null);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
-		subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase()), context, this, null, subject, null));
+		subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, this, null, subject, null));
 		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
 
 	@Override
 	public float utility(Actor subject) {
-		if (component.userIsInCover()) {
+		if (component.userIsInCover(slotID)) {
 			return 0.3f;
 		}
 		return 0.0f;
@@ -51,7 +57,7 @@ public class ActionObjectUseEnd extends Action {
 
 	@Override
 	public String getPrompt(Actor subject) {
-		return component.getEndPrompt();
+		return component.getEndPrompt(slotID);
 	}
 
 	@Override

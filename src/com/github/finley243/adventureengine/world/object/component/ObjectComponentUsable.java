@@ -17,79 +17,84 @@ import com.github.finley243.adventureengine.world.object.template.ObjectComponen
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateUsable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ObjectComponentUsable extends ObjectComponent {
 
-    private Actor user;
+    private final Map<String, Actor> users;
 
     public ObjectComponentUsable(WorldObject object, ObjectComponentTemplate template) {
         super(object, template);
+        this.users = new HashMap<>();
     }
 
     private ObjectComponentTemplateUsable getTemplateUsable() {
         return (ObjectComponentTemplateUsable) getTemplate();
     }
 
-    public String getStartPhrase() {
-        return getTemplateUsable().getStartPhrase();
+    public String getStartPhrase(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).startPhrase();
     }
 
-    public String getEndPhrase() {
-        return getTemplateUsable().getEndPhrase();
+    public String getEndPhrase(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).endPhrase();
     }
 
-    public String getStartPrompt() {
-        return getTemplateUsable().getStartPrompt();
+    public String getStartPrompt(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).startPrompt();
     }
 
-    public String getEndPrompt() {
-        return getTemplateUsable().getEndPrompt();
+    public String getEndPrompt(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).endPrompt();
     }
 
-    public boolean userIsInCover() {
-        return getTemplateUsable().userIsInCover();
+    public boolean userIsInCover(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).userIsInCover();
     }
 
-    public boolean userIsHidden() {
-        return getTemplateUsable().userIsHidden();
+    public boolean userIsHidden(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).userIsHidden();
     }
 
-    public boolean userCanSeeOtherAreas() {
-        return getTemplateUsable().userCanSeeOtherAreas();
+    public boolean userCanSeeOtherAreas(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).userCanSeeOtherAreas();
     }
 
-    public boolean userCanPerformLocalActions() {
-        return getTemplateUsable().userCanPerformLocalActions();
+    public boolean userCanPerformLocalActions(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).userCanPerformLocalActions();
     }
 
-    public boolean userCanPerformParentActions() {
-        return getTemplateUsable().userCanPerformParentActions();
+    public boolean userCanPerformParentActions(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).userCanPerformParentActions();
     }
 
-    public Actor getUser() {
-        return user;
+    public Actor getUser(String slotID) {
+        return users.get(slotID);
     }
 
-    public void setUser(Actor user) {
-        this.user = user;
+    public void setUser(String slotID, Actor user) {
+        users.put(slotID, user);
     }
 
-    public void removeUser() {
-        this.user = null;
+    public void removeUser(String slotID) {
+        users.remove(slotID);
     }
 
     @Override
     public void onSetObjectEnabled(boolean enable) {
-        if (!enable && user != null) {
-            user.setUsingObject(null);
-            removeUser();
+        if (!enable) {
+            for (String activeSlot : users.keySet()) {
+                users.get(activeSlot).setUsingObject(null);
+                removeUser(activeSlot);
+            }
         }
     }
 
     @Override
     public void onSetObjectArea(Area area) {
-        if (user != null) {
+        for (Actor user : users.values()) {
             user.setArea(area);
         }
     }
@@ -97,22 +102,24 @@ public class ObjectComponentUsable extends ObjectComponent {
     @Override
     public List<Action> getActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
-        if (user == null && (!subject.isUsingObject() || !subject.getUsingObject().equals(this))) {
-            actions.add(new ActionObjectUseStart(this));
+        for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
+            if (!users.containsKey(slotID) && (!subject.isUsingObject() || !subject.getUsingObject().equals(this))) {
+                actions.add(new ActionObjectUseStart(this, slotID));
+            }
         }
         return actions;
     }
 
-    public List<Action> getUsingActions(Actor subject) {
+    public List<Action> getUsingActions(String slotID, Actor subject) {
         List<Action> actions = new ArrayList<>();
-        actions.add(new ActionObjectUseEnd(this));
-        for (String exposedComponentName : getTemplateUsable().getComponentsExposed()) {
+        actions.add(new ActionObjectUseEnd(this, slotID));
+        for (String exposedComponentName : getTemplateUsable().getUsableSlotData().get(slotID).componentsExposed()) {
             ObjectComponent component = getObject().getComponentOfType(ObjectComponentFactory.getClassFromName(exposedComponentName));
             if (component.isEnabled()) {
                 actions.addAll(component.getActions(subject));
             }
         }
-        for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsingActions()) {
+        for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsableSlotData().get(slotID).usingActions()) {
             actions.add(new ActionCustom(getObject().game(), null, getObject(), null, null, usingAction.action(), usingAction.parameters(), new MenuDataObject(getObject()), false));
         }
         return actions;
@@ -120,8 +127,13 @@ public class ObjectComponentUsable extends ObjectComponent {
 
     @Override
     public Expression getStatValue(String name, Context context) {
-        if ("has_user".equals(name)) {
-            return new ExpressionConstantBoolean(getUser() != null);
+        if (name.startsWith("has_user_")) {
+            for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
+                if (name.equals("has_user_" + slotID)) {
+                    return Expression.constant(getUser(slotID) != null);
+                }
+            }
+            return null;
         }
         return super.getStatValue(name, context);
     }
@@ -129,9 +141,11 @@ public class ObjectComponentUsable extends ObjectComponent {
     @Override
     public StatHolder getSubHolder(String name, String ID) {
         if ("user".equals(name)) {
-            return getUser();
+            return getUser(ID);
         }
         return super.getSubHolder(name, ID);
     }
+
+    public record ObjectUserData(WorldObject object, String slot) {}
 
 }

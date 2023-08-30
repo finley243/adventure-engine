@@ -24,10 +24,12 @@
     <object id="chair_plastic">
         <name>plastic chair</name>
         <component type="usable">
-            <startPhrase>sit</startPhrase>
-            <endPhrase>getUp</endPhrase>
-            <startPrompt>Sit</startPrompt>
-            <endPrompt>Stand</endPrompt>
+            <slot id="seat">
+                <startPhrase>sit</startPhrase>
+                <endPhrase>getUp</endPhrase>
+                <startPrompt>Sit</startPrompt>
+                <endPrompt>Stand</endPrompt>
+            </slot>
         </component>
     </object>
     <object id="counter">
@@ -141,21 +143,25 @@
             <moveMenuName>Drive</moveMenuName>
         </component>
         <component type="usable">
-            <startPhrase>sit</startPhrase>
-            <endPhrase>getUp</endPhrase>
-            <startPrompt>Sit</startPrompt>
-            <endPrompt>Stand</endPrompt>
-            <exposedComponent>vehicle</exposedComponent>
+            <slot id="seat">
+                <startPhrase>sit</startPhrase>
+                <endPhrase>getUp</endPhrase>
+                <startPrompt>Sit</startPrompt>
+                <endPrompt>Stand</endPrompt>
+                <exposedComponent>vehicle</exposedComponent>
+            </slot>
         </component>
     </object>
     <object id="network_port">
         <name>network port</name>
         <component type="usable">
-            <startPhrase>jackIn</startPhrase>
-            <endPhrase>jackOut</endPhrase>
-            <startPrompt>Jack In</startPrompt>
-            <endPrompt>Jack Out</endPrompt>
-            <exposedComponent>network</exposedComponent>
+            <slot id="port">
+                <startPhrase>jackIn</startPhrase>
+                <endPhrase>jackOut</endPhrase>
+                <startPrompt>Jack In</startPrompt>
+                <endPrompt>Jack Out</endPrompt>
+                <exposedComponent>network</exposedComponent>
+            </slot>
         </component>
         <component type="network" restricted="true">
             <networkID type="stat" dataType="string" holder="parentObject" stat="networkID"/>
