@@ -27,4 +27,9 @@ public class ObjectComponentNetwork extends ObjectComponent {
         return new ArrayList<>(network.networkActions(subject, getObject()));
     }
 
+    @Override
+    protected String getStatName() {
+        return "network";
+    }
+
 }

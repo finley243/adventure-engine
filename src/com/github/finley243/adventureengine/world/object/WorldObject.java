@@ -26,6 +26,7 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentFactory;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentInventory;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
@@ -226,6 +227,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public Expression getStatValue(String name, Context context) {
+		for (ObjectComponent component : components.values()) {
+			Expression componentValue = component.getStatValue(name, context);
+			if (componentValue != null) return componentValue;
+		}
 		return switch (name) {
 			case "enabled" -> new ExpressionConstantBoolean(isEnabled);
 			case "hidden" -> new ExpressionConstantBoolean(isHidden);
@@ -241,6 +246,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public boolean setStatValue(String name, Expression value, Context context) {
+		for (ObjectComponent component : components.values()) {
+			boolean success = component.setStatValue(name, value, context);
+			if (success) return true;
+		}
 		switch (name) {
 			case "enabled" -> {
 				setEnabled(value.getValueBoolean(context));
@@ -263,13 +272,16 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	@Override
 	public Inventory getInventory() {
+		ObjectComponentInventory inventoryComponent = getComponentOfType(ObjectComponentInventory.class);
+		if (inventoryComponent != null) {
+			return inventoryComponent.getInventory();
+		}
 		return null;
 	}
 
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
 		return switch (name) {
-			//case "component" -> getComponent(ID);
 			case "area" -> getArea();
 			default -> null;
 		};

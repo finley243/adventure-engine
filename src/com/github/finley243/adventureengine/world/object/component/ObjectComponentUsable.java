@@ -126,6 +126,11 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     @Override
+    protected String getStatName() {
+        return "usable";
+    }
+
+    @Override
     public Expression getStatValue(String name, Context context) {
         if (name.startsWith("has_user_")) {
             for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {

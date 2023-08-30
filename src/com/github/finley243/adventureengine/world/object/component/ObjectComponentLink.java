@@ -115,4 +115,9 @@ public class ObjectComponentLink extends ObjectComponent {
         return actions;
     }
 
+    @Override
+    protected String getStatName() {
+        return "link";
+    }
+
 }

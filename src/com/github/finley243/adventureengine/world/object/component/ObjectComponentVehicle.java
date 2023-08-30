@@ -45,4 +45,9 @@ public class ObjectComponentVehicle extends ObjectComponent {
         return actions;
     }
 
+    @Override
+    protected String getStatName() {
+        return "vehicle";
+    }
+
 }

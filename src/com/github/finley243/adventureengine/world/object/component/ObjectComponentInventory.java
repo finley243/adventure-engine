@@ -47,6 +47,11 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
+    protected String getStatName() {
+        return "inventory";
+    }
+
+    @Override
     public Inventory getInventory() {
         return inventory;
     }

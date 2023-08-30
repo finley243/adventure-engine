@@ -57,21 +57,20 @@ public abstract class ObjectComponent implements StatHolder {
 
     public void onSetObjectArea(Area area) {}
 
+    protected abstract String getStatName();
+
     @Override
     public Expression getStatValue(String name, Context context) {
-        return switch (name) {
-            case "enabled" -> new ExpressionConstantBoolean(isEnabled());
-            default -> null;
-        };
+        if ((getStatName() + "_enabled").equals(name)) {
+            return Expression.constant(isEnabled());
+        }
+        return null;
     }
 
     @Override
     public boolean setStatValue(String name, Expression value, Context context) {
-        switch (name) {
-            case "enabled" -> {
-                setEnabled(value.getValueBoolean(context));
-                return true;
-            }
+        if ((getStatName() + "_enabled").equals(name)) {
+            setEnabled(value.getValueBoolean(context));
         }
         return false;
     }
