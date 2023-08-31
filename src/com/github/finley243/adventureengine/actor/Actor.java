@@ -344,17 +344,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public int getMovePoints() {
 		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, new Context(game(), this, this));
 	}
-	
-	public void heal(int amount) {
-		if (amount < 0) throw new IllegalArgumentException();
-		amount = Math.min(amount, getMaxHP() - HP);
-		HP += amount;
-		TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
-		if (SHOW_HP_CHANGES) {
-			game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor gain$s $amount HP", textContext, null, null, this, null));
-		}
-		game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
-	}
 
 	@Override
 	public boolean canBeAttacked() {
@@ -946,7 +935,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				return true;
 			}
 			case "hp" -> {
-				HP = value.getValueInteger(context);
+				HP = MathUtils.bound(value.getValueInteger(context), 0, getMaxHP());
 				return true;
 			}
 			case "money" -> {
