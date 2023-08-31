@@ -3,9 +3,6 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.expression.Expression;
-
-import java.util.Map;
 
 public class ScriptFactionRelation extends Script {
 
@@ -13,8 +10,8 @@ public class ScriptFactionRelation extends Script {
 	private final String relationFaction;
 	private final FactionRelation relation;
 	
-	public ScriptFactionRelation(Condition condition, Map<String, Expression> localParameters, String targetFaction, String relationFaction, FactionRelation relation) {
-		super(condition, localParameters);
+	public ScriptFactionRelation(Condition condition, String targetFaction, String relationFaction, FactionRelation relation) {
+		super(condition);
 		this.targetFaction = targetFaction;
 		this.relationFaction = relationFaction;
 		this.relation = relation;

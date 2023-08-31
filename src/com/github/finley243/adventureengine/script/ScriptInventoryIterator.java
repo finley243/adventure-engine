@@ -7,7 +7,6 @@ import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.QueuedEvent;
 import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.item.Item;
 
 import java.util.ArrayList;
@@ -19,8 +18,8 @@ public class ScriptInventoryIterator extends Script {
     private final Expression inventoryExpression;
     private final Script iteratedScript;
 
-    public ScriptInventoryIterator(Condition condition, Map<String, Expression> localParameters, Expression inventoryExpression, Script iteratedScript) {
-        super(condition, localParameters);
+    public ScriptInventoryIterator(Condition condition, Expression inventoryExpression, Script iteratedScript) {
+        super(condition);
         if (inventoryExpression.getDataType() != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptInventoryIterator inventory expression is not an inventory");
         this.inventoryExpression = inventoryExpression;
         this.iteratedScript = iteratedScript;
@@ -32,15 +31,11 @@ public class ScriptInventoryIterator extends Script {
         Map<Item, Integer> itemMap = inventory.getItemMap();
         List<QueuedEvent> scriptEvents = new ArrayList<>();
         for (Map.Entry<Item, Integer> itemEntry : itemMap.entrySet()) {
-            scriptEvents.add(new ScriptEvent(iteratedScript, new Context(context, new MapBuilder<String, Expression>().put("count", Expression.constant(itemEntry.getValue())).build(), itemEntry.getKey())));
+            Context innerContext = new Context(context);
+            scriptEvents.add(new ScriptEvent(iteratedScript, new Context(innerContext, new MapBuilder<String, Expression>().put("count", Expression.constant(itemEntry.getValue())).build(), itemEntry.getKey())));
         }
         context.game().eventQueue().addAllToFront(scriptEvents);
         context.game().eventQueue().executeNext();
-    }
-
-    @Override
-    protected boolean generateInnerContext() {
-        return true;
     }
 
 }

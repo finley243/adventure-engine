@@ -3,18 +3,15 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
-
-import java.util.Map;
 
 public class ScriptCombat extends Script{
 
     private final StatHolderReference actor;
     private final StatHolderReference target;
 
-    public ScriptCombat(Condition condition, Map<String, Expression> localParameters, StatHolderReference actor, StatHolderReference target) {
-        super(condition, localParameters);
+    public ScriptCombat(Condition condition, StatHolderReference actor, StatHolderReference target) {
+        super(condition);
         this.actor = actor;
         this.target = target;
     }

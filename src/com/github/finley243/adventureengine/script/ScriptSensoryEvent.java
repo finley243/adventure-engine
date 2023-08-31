@@ -18,8 +18,8 @@ public class ScriptSensoryEvent extends Script {
     private final Expression phraseAudible;
     private final Expression area;
 
-    public ScriptSensoryEvent(Condition condition, Map<String, Expression> localParameters, Expression phrase, Expression phraseAudible, Expression area) {
-        super(condition, localParameters);
+    public ScriptSensoryEvent(Condition condition, Expression phrase, Expression phraseAudible, Expression area) {
+        super(condition);
         this.phrase = phrase;
         this.phraseAudible = phraseAudible;
         this.area = area;

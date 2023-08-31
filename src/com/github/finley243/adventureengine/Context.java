@@ -19,14 +19,14 @@ public class Context {
     private final WorldObject parentObject;
     private final Item parentItem;
     private final Area parentArea;
-    private final Map<String, Variable> parameters;
+    private final Map<String, Variable> localVariables;
 
     public Context(Game game, Actor subject, Actor target) {
         this(game, subject, target, null, null, null, new HashMap<>());
     }
 
-    public Context(Game game, Actor subject, Actor target, Map<String, Expression> parameters) {
-        this(game, subject, target, null, null, null, parameters);
+    public Context(Game game, Actor subject, Actor target, Map<String, Expression> localVariables) {
+        this(game, subject, target, null, null, null, localVariables);
     }
 
     public Context(Game game, Actor subject, Actor target, WorldObject parentObject) {
@@ -41,8 +41,8 @@ public class Context {
         this(game, subject, target, null, parentItem, null, new HashMap<>());
     }
 
-    public Context(Game game, Actor subject, Actor target, Item parentItem, Map<String, Expression> parameters) {
-        this(game, subject, target, null, parentItem, null, parameters);
+    public Context(Game game, Actor subject, Actor target, Item parentItem, Map<String, Expression> localVariables) {
+        this(game, subject, target, null, parentItem, null, localVariables);
     }
 
     public Context(Game game, Item parentItem) {
@@ -57,16 +57,16 @@ public class Context {
         this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, null, new HashMap<>());
     }
 
-    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Map<String, Expression> parameters) {
+    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Map<String, Expression> localVariables) {
         this.game = game;
         this.subject = subject;
         this.target = target;
         this.parentObject = parentObject;
         this.parentItem = parentItem;
         this.parentArea = parentArea;
-        this.parameters = new HashMap<>();
-        for (Map.Entry<String, Expression> parameter : parameters.entrySet()) {
-            this.parameters.put(parameter.getKey(), new Variable(parameter.getValue()));
+        this.localVariables = new HashMap<>();
+        for (Map.Entry<String, Expression> parameter : localVariables.entrySet()) {
+            this.localVariables.put(parameter.getKey(), new Variable(parameter.getValue()));
         }
     }
 
@@ -77,7 +77,7 @@ public class Context {
         this.parentObject = context.parentObject;
         this.parentItem = context.parentItem;
         this.parentArea = context.parentArea;
-        this.parameters = new HashMap<>(context.parameters);
+        this.localVariables = new HashMap<>(context.localVariables);
     }
 
     public Context(Context context, Map<String, Expression> addedParameters) {
@@ -87,13 +87,13 @@ public class Context {
         this.parentObject = context.parentObject;
         this.parentItem = context.parentItem;
         this.parentArea = context.parentArea;
-        this.parameters = new HashMap<>();
-        this.parameters.putAll(context.parameters);
+        this.localVariables = new HashMap<>();
+        this.localVariables.putAll(context.localVariables);
         for (Map.Entry<String, Expression> parameter : addedParameters.entrySet()) {
-            if (this.parameters.containsKey(parameter.getKey())) {
-                this.parameters.get(parameter.getKey()).setExpression(parameter.getValue());
+            if (this.localVariables.containsKey(parameter.getKey())) {
+                this.localVariables.get(parameter.getKey()).setExpression(parameter.getValue());
             } else {
-                this.parameters.put(parameter.getKey(), new Variable(parameter.getValue()));
+                this.localVariables.put(parameter.getKey(), new Variable(parameter.getValue()));
             }
         }
     }
@@ -105,7 +105,7 @@ public class Context {
         this.parentObject = context.parentObject;
         this.parentItem = context.parentItem;
         this.parentArea = context.parentArea;
-        this.parameters = new HashMap<>(context.parameters);
+        this.localVariables = new HashMap<>(context.localVariables);
     }
 
     public Context(Context context, Map<String, Expression> addedParameters, Item parentItem) {
@@ -115,13 +115,13 @@ public class Context {
         this.parentObject = context.parentObject;
         this.parentItem = parentItem;
         this.parentArea = context.parentArea;
-        this.parameters = new HashMap<>();
-        this.parameters.putAll(context.parameters);
+        this.localVariables = new HashMap<>();
+        this.localVariables.putAll(context.localVariables);
         for (Map.Entry<String, Expression> parameter : addedParameters.entrySet()) {
-            if (this.parameters.containsKey(parameter.getKey())) {
-                this.parameters.get(parameter.getKey()).setExpression(parameter.getValue());
+            if (this.localVariables.containsKey(parameter.getKey())) {
+                this.localVariables.get(parameter.getKey()).setExpression(parameter.getValue());
             } else {
-                this.parameters.put(parameter.getKey(), new Variable(parameter.getValue()));
+                this.localVariables.put(parameter.getKey(), new Variable(parameter.getValue()));
             }
         }
     }
@@ -150,15 +150,15 @@ public class Context {
         return parentArea;
     }
 
-    public Map<String, Variable> getParameters() {
-        return parameters;
+    public Map<String, Variable> getLocalVariables() {
+        return localVariables;
     }
 
     public void setParameter(String name, Expression value) {
-        if (parameters.containsKey(name)) {
-            parameters.get(name).setExpression(value);
+        if (localVariables.containsKey(name)) {
+            localVariables.get(name).setExpression(value);
         } else {
-            parameters.put(name, new Variable(value));
+            localVariables.put(name, new Variable(value));
         }
     }
 
@@ -176,7 +176,7 @@ public class Context {
         if (this.getParentItem() != null) {
             nounMap.put("item", this.getParentItem());
         }
-        for (Map.Entry<String, Context.Variable> entry : this.getParameters().entrySet()) {
+        for (Map.Entry<String, Context.Variable> entry : this.getLocalVariables().entrySet()) {
             if (entry.getValue().getExpression().getDataType() == Expression.DataType.NOUN) {
                 nounMap.put(entry.getKey(), entry.getValue().getExpression().getValueNoun(this));
             }
@@ -186,7 +186,7 @@ public class Context {
 
     public Map<String, String> getTextVarMap() {
         Map<String, String> textVarValues = new HashMap<>();
-        for (Map.Entry<String, Context.Variable> entry : this.getParameters().entrySet()) {
+        for (Map.Entry<String, Context.Variable> entry : this.getLocalVariables().entrySet()) {
             if (entry.getValue().getExpression().getDataType() == Expression.DataType.STRING) {
                 textVarValues.put(entry.getKey(), entry.getValue().getExpression().getValueString(this));
             }
@@ -194,6 +194,12 @@ public class Context {
         return textVarValues;
     }
 
+    /**
+     * The Variable class is a container that stores a single Expression. The purpose is to allow the value of a local
+     * variable that was first declared in an outer scope to be modified within an inner scope. Thus, a Variable can
+     * be set to reference a different Expression object, and any contexts that have access to the Variable automatically
+     * have access to the new Expression.
+     */
     public static class Variable {
         private Expression expression;
 

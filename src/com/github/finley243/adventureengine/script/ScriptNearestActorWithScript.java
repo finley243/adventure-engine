@@ -8,14 +8,13 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ScriptNearestActorWithScript extends Script {
 
     private final Expression trigger;
 
-    public ScriptNearestActorWithScript(Condition condition, Map<String, Expression> localParameters, Expression trigger) {
-        super(condition, localParameters);
+    public ScriptNearestActorWithScript(Condition condition, Expression trigger) {
+        super(condition);
         if (trigger == null) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is null");
         if (trigger.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is not a string");
         this.trigger = trigger;

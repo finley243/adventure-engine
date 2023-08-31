@@ -3,8 +3,8 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.item.Item;
 
 import java.util.Map;
 
@@ -23,8 +23,8 @@ public class ScriptTransferItem extends Script {
     private final TransferItemsType transferType;
     private final Expression count;
 
-    public ScriptTransferItem(Condition condition, Map<String, Expression> localParameters, Expression inventoryOrigin, Expression inventoryTarget, Expression itemID, TransferItemsType transferType, Expression count) {
-        super(condition, localParameters);
+    public ScriptTransferItem(Condition condition, Expression inventoryOrigin, Expression inventoryTarget, Expression itemID, TransferItemsType transferType, Expression count) {
+        super(condition);
         switch (transferType) {
             case INSTANCE, TYPE, ALL -> {
                 if (inventoryOrigin == null) throw new IllegalArgumentException("ScriptTransferItem of type " + transferType + " must specify an origin inventory");

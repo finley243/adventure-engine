@@ -2,10 +2,8 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.stat.StatHolderReference;
 import com.github.finley243.adventureengine.expression.Expression;
-
-import java.util.Map;
+import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 public class ScriptModifyState extends Script {
 
@@ -13,8 +11,8 @@ public class ScriptModifyState extends Script {
     private final Expression state;
     private final Expression expression;
 
-    public ScriptModifyState(Condition condition, Map<String, Expression> localParameters, StatHolderReference holder, Expression state, Expression expression) {
-        super(condition, localParameters);
+    public ScriptModifyState(Condition condition, StatHolderReference holder, Expression state, Expression expression) {
+        super(condition);
         if (holder == null) throw new IllegalArgumentException("ScriptModifyState stat holder is null");
         if (state == null) throw new IllegalArgumentException("ScriptModifyState state name is null");
         if (state.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyState state name is not a string");

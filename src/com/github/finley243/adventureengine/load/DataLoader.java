@@ -598,20 +598,14 @@ public class DataLoader {
         if (scriptElement == null) return null;
         String type = scriptElement.getAttribute("type");
         Condition condition = loadCondition(LoadUtils.singleChildWithName(scriptElement, "condition"));
-        Map<String, Expression> localParameters = new HashMap<>();
-        for (Element parameterElement : LoadUtils.directChildrenWithName(scriptElement, "parameter")) {
-            String parameterName = LoadUtils.attribute(parameterElement, "name", null);
-            Expression parameterValue = loadExpression(parameterElement, null);
-            localParameters.put(parameterName, parameterValue);
-        }
         if (scriptElement.hasAttribute("external")) {
             String externalID = LoadUtils.attribute(scriptElement, "external", null);
-            return new ScriptExternal(condition, localParameters, externalID);
+            return new ScriptExternal(condition, externalID);
         }
         switch (type) {
             case "external" -> {
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
-                return new ScriptExternal(condition, localParameters, scriptID);
+                return new ScriptExternal(condition, scriptID);
             }
             case "transferItem" -> {
                 Expression transferItemInvOrigin = loadExpression(LoadUtils.singleChildWithName(scriptElement, "fromInv"), "inventory");
@@ -619,101 +613,101 @@ public class DataLoader {
                 Expression transferItemID = loadExpressionOrAttribute(scriptElement, "item", "string");
                 ScriptTransferItem.TransferItemsType transferType = LoadUtils.attributeEnum(scriptElement, "transferType", ScriptTransferItem.TransferItemsType.class, ScriptTransferItem.TransferItemsType.COUNT);
                 Expression transferItemCount = loadExpressionOrAttribute(scriptElement, "count", "int", new ExpressionConstantInteger(1));
-                return new ScriptTransferItem(condition, localParameters, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferType, transferItemCount);
+                return new ScriptTransferItem(condition, transferItemInvOrigin, transferItemInvTarget, transferItemID, transferType, transferItemCount);
             }
             case "scene" -> {
                 StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
                 Expression scenes = loadExpressionOrAttribute(scriptElement, "scene", "string");
-                return new ScriptScene(condition, localParameters, actorRef, scenes);
+                return new ScriptScene(condition, actorRef, scenes);
             }
             case "combat" -> {
                 StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
                 StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "target"));
-                return new ScriptCombat(condition, localParameters, actorRef, targetRef);
+                return new ScriptCombat(condition, actorRef, targetRef);
             }
             case "factionRelation" -> {
                 String targetFaction = LoadUtils.attribute(scriptElement, "targetFaction", null);
                 String relationFaction = LoadUtils.attribute(scriptElement, "relationFaction", null);
                 Faction.FactionRelation relation = LoadUtils.attributeEnum(scriptElement, "relation", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
-                return new ScriptFactionRelation(condition, localParameters, targetFaction, relationFaction, relation);
+                return new ScriptFactionRelation(condition, targetFaction, relationFaction, relation);
             }
             case "sensoryEvent" -> {
                 Expression phrase = loadExpression(LoadUtils.singleChildWithName(scriptElement, "phrase"), "string");
                 Expression phraseAudible = loadExpression(LoadUtils.singleChildWithName(scriptElement, "phraseAudible"), "string");
                 Expression area = loadExpression(LoadUtils.singleChildWithName(scriptElement, "area"), "string");
-                return new ScriptSensoryEvent(condition, localParameters, phrase, phraseAudible, area);
+                return new ScriptSensoryEvent(condition, phrase, phraseAudible, area);
             }
             case "skillMenu" -> {
                 StatHolderReference actorReference = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
                 Expression points = loadExpressionOrAttribute(scriptElement, "points", "int");
-                return new ScriptSkillMenu(condition, localParameters, actorReference, points);
+                return new ScriptSkillMenu(condition, actorReference, points);
             }
             case "attributeMenu" -> {
                 StatHolderReference actorReference = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
                 Expression points = loadExpressionOrAttribute(scriptElement, "points", "int");
-                return new ScriptAttributeMenu(condition, localParameters, actorReference, points);
+                return new ScriptAttributeMenu(condition, actorReference, points);
             }
             case "bark" -> {
                 StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
                 String barkTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
-                return new ScriptBark(condition, localParameters, actorRef, barkTrigger);
+                return new ScriptBark(condition, actorRef, barkTrigger);
             }
             case "nearestActorScript" -> {
                 Expression nearestTrigger = loadExpressionOrAttribute(scriptElement, "trigger", "string");
-                return new ScriptNearestActorWithScript(condition, localParameters, nearestTrigger);
+                return new ScriptNearestActorWithScript(condition, nearestTrigger);
             }
             case "timerStart" -> {
                 Expression timerID = loadExpressionOrAttribute(scriptElement, "timerID", "string");
                 Expression timerDuration = loadExpressionOrAttribute(scriptElement, "duration", "int");
                 Script timerScriptExpire = loadScript(LoadUtils.singleChildWithName(scriptElement, "scriptExpire"));
                 Script timerScriptUpdate = loadScript(LoadUtils.singleChildWithName(scriptElement, "scriptUpdate"));
-                return new ScriptTimerStart(condition, localParameters, timerID, timerDuration, timerScriptExpire, timerScriptUpdate);
+                return new ScriptTimerStart(condition, timerID, timerDuration, timerScriptExpire, timerScriptUpdate);
             }
             case "setState" -> {
                 StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
                 Expression setStateName = loadExpressionOrAttribute(scriptElement, "stat", "string");
                 Expression setStateExpression = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptSetState(condition, localParameters, setStateHolder, setStateName, setStateExpression);
+                return new ScriptSetState(condition, setStateHolder, setStateName, setStateExpression);
             }
             case "modifyState" -> {
                 StatHolderReference modifyStateHolder = loadStatHolderReference(scriptElement);
                 Expression modifyStateName = loadExpressionOrAttribute(scriptElement, "stat", "string");
                 Expression modifyStateExpression = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptModifyState(condition, localParameters, modifyStateHolder, modifyStateName, modifyStateExpression);
+                return new ScriptModifyState(condition, modifyStateHolder, modifyStateName, modifyStateExpression);
             }
             case "setGlobal" -> {
                 Expression setGlobalID = loadExpressionOrAttribute(scriptElement, "globalID", "string");
                 Expression setGlobalExpression = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptSetGlobal(condition, localParameters, setGlobalID, setGlobalExpression);
+                return new ScriptSetGlobal(condition, setGlobalID, setGlobalExpression);
             }
             case "modifyGlobal" -> {
                 Expression modifyGlobalID = loadExpressionOrAttribute(scriptElement, "globalID", "string");
                 Expression modifyGlobalExpression = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptModifyGlobal(condition, localParameters, modifyGlobalID, modifyGlobalExpression);
+                return new ScriptModifyGlobal(condition, modifyGlobalID, modifyGlobalExpression);
             }
             case "setVariable" -> {
                 Expression setVariableName = loadExpressionOrAttribute(scriptElement, "name", "string");
                 Expression setVariableValue = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptSetVariable(condition, localParameters, setVariableName, setVariableValue);
+                return new ScriptSetVariable(condition, setVariableName, setVariableValue);
             }
             case "iterator" -> {
                 Expression setExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "set"), "stringSet");
                 String iteratorParameterName = LoadUtils.attribute(scriptElement, "itrName", null);
                 Script iteratedScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "script"));
-                return new ScriptIterator(condition, localParameters, setExpression, iteratorParameterName, iteratedScript);
+                return new ScriptIterator(condition, setExpression, iteratorParameterName, iteratedScript);
             }
             case "inventoryIterator" -> {
                 Expression inventoryExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "inv"), "inventory");
                 Script iteratedScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "script"));
-                return new ScriptInventoryIterator(condition, localParameters, inventoryExpression, iteratedScript);
+                return new ScriptInventoryIterator(condition, inventoryExpression, iteratedScript);
             }
             case "select" -> {
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
-                return new ScriptCompound(condition, localParameters, subScriptsSelect, true);
+                return new ScriptCompound(condition, subScriptsSelect, true);
             }
             case "all", default -> {
                 List<Script> subScriptsSequence = loadSubScripts(scriptElement);
-                return new ScriptCompound(condition, localParameters, subScriptsSequence, false);
+                return new ScriptCompound(condition, subScriptsSequence, false);
             }
         }
     }

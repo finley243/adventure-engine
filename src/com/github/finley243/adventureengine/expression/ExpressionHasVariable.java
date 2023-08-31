@@ -17,7 +17,7 @@ public class ExpressionHasVariable extends Expression {
 
     @Override
     public boolean getValueBoolean(Context context) {
-        return context.getParameters().containsKey(variableName);
+        return context.getLocalVariables().containsKey(variableName);
     }
 
 }

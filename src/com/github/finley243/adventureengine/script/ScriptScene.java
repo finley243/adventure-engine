@@ -10,7 +10,6 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class ScriptScene extends Script {
@@ -18,8 +17,8 @@ public class ScriptScene extends Script {
     private final StatHolderReference actor;
     private final Expression scenes;
 
-    public ScriptScene(Condition condition, Map<String, Expression> localParameters, StatHolderReference actor, Expression scenes) {
-        super(condition, localParameters);
+    public ScriptScene(Condition condition, StatHolderReference actor, Expression scenes) {
+        super(condition);
         if (scenes == null) throw new IllegalArgumentException("ScriptScene scenes is null");
         if (scenes.getDataType() != Expression.DataType.STRING && scenes.getDataType() != Expression.DataType.STRING_SET) throw new IllegalArgumentException("ScriptScene scenes is not a string or string set");
         this.actor = actor;

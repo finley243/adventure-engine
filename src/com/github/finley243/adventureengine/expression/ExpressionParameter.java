@@ -23,37 +23,37 @@ public class ExpressionParameter extends Expression {
 
     @Override
     public boolean getValueBoolean(Context context) {
-        return context.getParameters().get(name).getExpression().getValueBoolean(context);
+        return context.getLocalVariables().get(name).getExpression().getValueBoolean(context);
     }
 
     @Override
     public int getValueInteger(Context context) {
-        return context.getParameters().get(name).getExpression().getValueInteger(context);
+        return context.getLocalVariables().get(name).getExpression().getValueInteger(context);
     }
 
     @Override
     public float getValueFloat(Context context) {
-        return context.getParameters().get(name).getExpression().getValueFloat(context);
+        return context.getLocalVariables().get(name).getExpression().getValueFloat(context);
     }
 
     @Override
     public String getValueString(Context context) {
-        return context.getParameters().get(name).getExpression().getValueString(context);
+        return context.getLocalVariables().get(name).getExpression().getValueString(context);
     }
 
     @Override
     public Set<String> getValueStringSet(Context context) {
-        return context.getParameters().get(name).getExpression().getValueStringSet(context);
+        return context.getLocalVariables().get(name).getExpression().getValueStringSet(context);
     }
 
     @Override
     public Inventory getValueInventory(Context context) {
-        return context.getParameters().get(name).getExpression().getValueInventory(context);
+        return context.getLocalVariables().get(name).getExpression().getValueInventory(context);
     }
 
     @Override
     public Noun getValueNoun(Context context) {
-        return context.getParameters().get(name).getExpression().getValueNoun(context);
+        return context.getLocalVariables().get(name).getExpression().getValueNoun(context);
     }
 
 }

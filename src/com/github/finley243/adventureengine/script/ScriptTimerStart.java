@@ -5,8 +5,6 @@ import com.github.finley243.adventureengine.Timer;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
-import java.util.Map;
-
 public class ScriptTimerStart extends Script {
 
     private final Expression timerID;
@@ -14,8 +12,8 @@ public class ScriptTimerStart extends Script {
     private final Script timerScriptExpire;
     private final Script timerScriptUpdate;
 
-    public ScriptTimerStart(Condition condition, Map<String, Expression> localParameters, Expression timerID, Expression timerDuration, Script timerScriptExpire, Script timerScriptUpdate) {
-        super(condition, localParameters);
+    public ScriptTimerStart(Condition condition, Expression timerID, Expression timerDuration, Script timerScriptExpire, Script timerScriptUpdate) {
+        super(condition);
         if (timerID == null) throw new IllegalArgumentException("ScriptTimerStart timerID is null");
         if (timerID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTimerStart timerID is not a string");
         if (timerDuration == null) throw new IllegalArgumentException("ScriptTimerStart timerDuration is null");

@@ -4,15 +4,13 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
-import java.util.Map;
-
 public class ScriptSetGlobal extends Script {
 
     private final Expression globalID;
     private final Expression expression;
 
-    public ScriptSetGlobal(Condition condition, Map<String, Expression> localParameters, Expression globalID, Expression expression) {
-        super(condition, localParameters);
+    public ScriptSetGlobal(Condition condition, Expression globalID, Expression expression) {
+        super(condition);
         if (globalID == null) throw new IllegalArgumentException("ScriptSetGlobal globalID is null");
         if (globalID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetGlobal globalID is not a string");
         this.globalID = globalID;
