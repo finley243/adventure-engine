@@ -30,6 +30,7 @@ public class SkillMenuEvent implements QueuedEvent, NumericMenuEvent {
         for (Map.Entry<String, Integer> entry : values.entrySet()) {
             actor.setSkillBase(entry.getKey(), entry.getValue());
         }
+        actor.game().eventQueue().startExecution();
     }
 
 }

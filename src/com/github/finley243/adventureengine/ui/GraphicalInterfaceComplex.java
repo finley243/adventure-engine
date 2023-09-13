@@ -27,6 +27,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 	public static final Color COLOR_SCROLL_BAR_HOVER = new Color(204, 204, 204);
 
 	public static final Font FONT_TEXT = new Font("Arial", Font.PLAIN, 14);
+	public static final Font FONT_LABEL = new Font("Arial", Font.BOLD, 12);
 	public static final Font FONT_BUTTON = new Font("Arial", Font.PLAIN, 12);
 	public static final Font FONT_BUTTON_SYMBOL = new Font("Arial", Font.PLAIN, 12);
 	public static final Font FONT_BUTTON_DESCRIPTION = new Font("Arial", Font.PLAIN, 12);

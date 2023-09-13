@@ -30,6 +30,7 @@ public class AttributeMenuEvent implements QueuedEvent, NumericMenuEvent {
         for (Map.Entry<String, Integer> entry : values.entrySet()) {
             actor.setAttributeBase(entry.getKey(), entry.getValue());
         }
+        actor.game().eventQueue().startExecution();
     }
 
 }
