@@ -35,7 +35,6 @@ public class ScriptInventoryIterator extends Script {
             scriptEvents.add(new ScriptEvent(iteratedScript, new Context(innerContext, new MapBuilder<String, Expression>().put("count", Expression.constant(itemEntry.getValue())).build(), itemEntry.getKey())));
         }
         context.game().eventQueue().addAllToFront(scriptEvents);
-        context.game().eventQueue().executeNext();
     }
 
 }

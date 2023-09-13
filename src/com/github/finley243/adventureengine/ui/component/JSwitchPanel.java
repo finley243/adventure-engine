@@ -1,8 +1,10 @@
 package com.github.finley243.adventureengine.ui.component;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.event.ui.NumericMenuInputEvent;
 import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
+import com.github.finley243.adventureengine.menu.NumericMenuField;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
 
 import javax.swing.*;
@@ -85,6 +87,63 @@ public class JSwitchPanel extends JPanel {
         }
         switchToLastPanel();
         validate();
+    }
+
+    public void loadNumericMenu(List<NumericMenuField> numericFields, int points) {
+        JPanel numericPanel = new JPanel();
+        int initialSum = 0;
+        for (NumericMenuField numericField : numericFields) {
+            initialSum += numericField.getInitial();
+        }
+        final int maxTotal = points + initialSum;
+        Map<String, JSpinner> spinners = new HashMap<>();
+        for (NumericMenuField numericField : numericFields) {
+            JPanel spinnerPanel = new JPanel();
+            spinnerPanel.setLayout(new BoxLayout(spinnerPanel, BoxLayout.X_AXIS));
+            SpinnerNumberModel spinnerModel = new SpinnerNumberModel(numericField.getInitial(), numericField.getMin(), numericField.getMax(), 1) {
+                @Override
+                public Object getNextValue() {
+                    int currentTotal = 0;
+                    for (JSpinner currentSpinner : spinners.values()) {
+                        currentTotal += (int) currentSpinner.getValue();
+                    }
+                    if (currentTotal >= maxTotal) {
+                        return getValue();
+                    }
+                    return super.getNextValue();
+                }
+            };
+            JLabel spinnerLabel = new JLabel(numericField.getName());
+            JSpinner spinner = new JSpinner(spinnerModel);
+				/*spinner.addChangeListener(e -> {
+					int currentTotal = 0;
+					for (JSpinner currentSpinner : spinners.values()) {
+						currentTotal += (int) currentSpinner.getValue();
+					}
+					if (currentTotal >= maxTotal) {
+						for (JSpinner currentSpinner : spinners.values()) {
+							currentSpinner.getModel()
+						}
+					}
+				});*/
+            spinnerPanel.add(spinnerLabel);
+            spinnerPanel.add(spinner);
+            numericPanel.add(spinnerPanel);
+            spinners.put(numericField.getID(), spinner);
+        }
+        JButton buttonConfirm = new JButton("Confirm");
+        buttonConfirm.addActionListener(e -> {
+            Map<String, Integer> changedValues = new HashMap<>();
+            for (Map.Entry<String, JSpinner> entry : spinners.entrySet()) {
+                changedValues.put(entry.getKey(), (Integer) entry.getValue().getValue());
+            }
+            clear();
+            game.eventBus().post(new NumericMenuInputEvent(changedValues));
+        });
+        numericPanel.add(buttonConfirm);
+        addChoicePanel(numericPanel, TOP_LEVEL_MENU);
+        switchToPanel(TOP_LEVEL_MENU);
+        System.out.println("DONE");
     }
 
     public void switchToLastPanel() {

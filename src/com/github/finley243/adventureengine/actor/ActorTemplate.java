@@ -82,7 +82,6 @@ public class ActorTemplate extends GameInstanced {
 		this.customInventoryActions = customInventoryActions;
 	}
 
-	// TODO - Find a better way to inherit values from parent
 	public String getName() {
 		return name != null ? name : game().data().getActorTemplate(parentID).getName();
 	}

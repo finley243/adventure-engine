@@ -22,7 +22,6 @@ public class ScriptSetVariable extends Script {
         String variableNameString = variableName.getValueString(context);
         Expression valueToConstant = Expression.convertToConstant(variableValue, context);
         context.setParameter(variableNameString, valueToConstant);
-        context.game().eventQueue().executeNext();
     }
 
 }

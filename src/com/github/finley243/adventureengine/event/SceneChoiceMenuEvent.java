@@ -35,7 +35,6 @@ public class SceneChoiceMenuEvent implements QueuedEvent, ChoiceMenuEvent {
             }
         }
         if (validChoices.isEmpty()) {
-            game.eventQueue().executeNext();
             return;
         }
         this.validChoices = validChoices;
@@ -43,10 +42,15 @@ public class SceneChoiceMenuEvent implements QueuedEvent, ChoiceMenuEvent {
     }
 
     @Override
+    public boolean continueAfterExecution() {
+        return validChoices.isEmpty();
+    }
+
+    @Override
     public void onChoiceMenuInput(int menuIndex) {
         context.game().eventBus().post(new TextClearEvent());
         context.game().eventQueue().addToFront(new SceneEvent(context.game().data().getScene(validChoices.get(menuIndex).getLinkedID()), scene.getID(), context));
-        context.game().eventQueue().executeNext();
+        context.game().eventQueue().startExecution();
     }
 
 }

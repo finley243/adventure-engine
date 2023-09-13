@@ -43,7 +43,6 @@ public class ScriptNearestActorWithScript extends Script {
             boolean executed = nearActor.triggerScript(triggerValue, context);
             if (executed) break;
         }
-        context.game().eventQueue().executeNext();
     }
 
 }

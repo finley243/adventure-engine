@@ -16,4 +16,9 @@ public class EndTurnEvent implements QueuedEvent {
         game.onEndTurn(actor);
     }
 
+    @Override
+    public boolean continueAfterExecution() {
+        return true;
+    }
+
 }

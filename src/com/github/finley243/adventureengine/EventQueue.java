@@ -17,11 +17,14 @@ public class EventQueue {
         this.queue = new ArrayDeque<>();
     }
 
-    public void executeNext() {
-        if (queue.isEmpty()) return;
-        QueuedEvent currentEvent = queue.removeFirst();
-        //System.out.println("Execute: " + currentEvent);
-        currentEvent.execute(game);
+    public void startExecution() {
+        boolean continueQueue = true;
+        while (continueQueue && !queue.isEmpty()) {
+            QueuedEvent currentEvent = queue.removeFirst();
+            //System.out.println("Execute: " + currentEvent);
+            currentEvent.execute(game);
+            continueQueue = currentEvent.continueAfterExecution();
+        }
     }
 
     // Removes all SceneLineEvent/SceneChoiceEvent from the given scene until reaching a non-matching event

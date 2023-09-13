@@ -40,7 +40,6 @@ public class ScriptScene extends Script {
             Scene selectedScene = selectScene(context, sceneValues);
             context.game().eventQueue().addToFront(new SceneEvent(selectedScene, null, new Context(context, actorCast, actorCast)));
         }
-        context.game().eventQueue().executeNext();
     }
 
     private static Scene selectScene(Context context, Set<Scene> scenes) {

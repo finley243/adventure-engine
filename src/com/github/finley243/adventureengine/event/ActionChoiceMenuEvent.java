@@ -23,7 +23,6 @@ public class ActionChoiceMenuEvent implements QueuedEvent, ChoiceMenuEvent {
     public void execute(Game game) {
         actionChoices = actor.availableActions();
         if (actionChoices.isEmpty()) {
-            game.eventQueue().executeNext();
             return;
         }
         if (actor.isPlayerControlled()) {
@@ -31,14 +30,18 @@ public class ActionChoiceMenuEvent implements QueuedEvent, ChoiceMenuEvent {
         } else {
             Action selectedAction = actor.chooseAIAction(actionChoices);
             actor.onSelectAction(selectedAction, lastAction, repeatActionCount);
-            game.eventQueue().executeNext();
         }
+    }
+
+    @Override
+    public boolean continueAfterExecution() {
+        return actionChoices.isEmpty() || !actor.isPlayerControlled();
     }
 
     @Override
     public void onChoiceMenuInput(int menuIndex) {
         actor.onSelectAction(actionChoices.get(menuIndex), lastAction, repeatActionCount);
-        actor.game().eventQueue().executeNext();
+        actor.game().eventQueue().startExecution();
     }
 
 }

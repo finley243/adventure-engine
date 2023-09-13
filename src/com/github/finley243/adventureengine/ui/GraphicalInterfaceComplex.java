@@ -77,7 +77,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 
 	@Override
 	public void onNumericMenuEvent(RenderNumericMenuEvent event) {
-
+		SwingUtilities.invokeLater(() -> switchPanel.loadNumericMenu(event.getNumericFields(), event.getPoints()));
 	}
 
 	@Subscribe

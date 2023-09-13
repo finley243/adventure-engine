@@ -122,7 +122,10 @@ public class SensoryEvent implements QueuedEvent {
 			}
 			actor.onSensoryEvent(this, actorCanSeeEvent);
 		}
-		game.eventQueue().executeNext();
+	}
+
+	public boolean continueAfterExecution() {
+		return true;
 	}
 
 }

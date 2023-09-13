@@ -37,7 +37,6 @@ public class ScriptCompound extends Script {
             }
             context.game().eventQueue().addAllToFront(scriptEvents);
         }
-        context.game().eventQueue().executeNext();
     }
 
 }

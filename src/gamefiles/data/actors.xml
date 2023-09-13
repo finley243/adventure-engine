@@ -47,10 +47,10 @@
     </actor>
     <actor id="player" parent="default" hp="50" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>
-        <skill key="HANDGUNS" value="5"/>
-        <skill key="MELEE" value="5"/>
-        <skill key="THROWING" value="5"/>
-        <skill key="INTIMIDATION" value="6"/>
+        <skill key="handguns" value="5"/>
+        <skill key="melee" value="5"/>
+        <skill key="throwing" value="5"/>
+        <skill key="intimidation" value="6"/>
         <inventory>
             <item>wilsons_corner_store_key</item>
             <item count="2">pistol_heavy</item>
@@ -64,6 +64,12 @@
             <item count="50">ammo_rifle</item>
             <item>mag_extended_pistol</item>
         </inventory>
+        <!--TEMPORARY SCRIPT - REMOVE WHEN DONE WITH TESTING-->
+        <script trigger="on_reload">
+            <script type="attributeMenu" points="3">
+                <actor holder="player"/>
+            </script>
+        </script>
     </actor>
     <actor id="stratis_receptionist" parent="default" hp="40" faction="stratis_hotel_staff" dialogueStart="stratis_receptionist_start">
         <name proper="false" pronoun="HE">receptionist</name>

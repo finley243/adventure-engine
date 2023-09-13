@@ -21,4 +21,9 @@ public class CompleteActionEvent implements QueuedEvent {
         actor.onCompleteAction(action, repeatActionCount);
     }
 
+    @Override
+    public boolean continueAfterExecution() {
+        return true;
+    }
+
 }

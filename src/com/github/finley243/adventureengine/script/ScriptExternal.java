@@ -17,7 +17,6 @@ public class ScriptExternal extends Script {
     protected void executeSuccess(Context context) {
         Context innerContext = new Context(context);
         context.game().eventQueue().addToFront(new ScriptEvent(context.game().data().getScript(scriptID), innerContext));
-        context.game().eventQueue().executeNext();
     }
 
 }

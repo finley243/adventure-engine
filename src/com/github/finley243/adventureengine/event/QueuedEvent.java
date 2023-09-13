@@ -6,4 +6,6 @@ public interface QueuedEvent {
 
     void execute(Game game);
 
+    boolean continueAfterExecution();
+
 }

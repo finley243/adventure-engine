@@ -35,7 +35,6 @@ public class ScriptIterator extends Script {
             scriptEvents.add(new ScriptEvent(iteratedScript, new Context(innerContext, new MapBuilder<String, Expression>().put(iteratorParameterName, iteratorParameter).build())));
         }
         context.game().eventQueue().addAllToFront(scriptEvents);
-        context.game().eventQueue().executeNext();
     }
 
 }

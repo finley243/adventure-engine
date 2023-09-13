@@ -21,6 +21,11 @@ public class AttributeMenuEvent implements QueuedEvent, NumericMenuEvent {
     }
 
     @Override
+    public boolean continueAfterExecution() {
+        return false;
+    }
+
+    @Override
     public void onNumericMenuInput(Map<String, Integer> values) {
         for (Map.Entry<String, Integer> entry : values.entrySet()) {
             actor.setAttributeBase(entry.getKey(), entry.getValue());

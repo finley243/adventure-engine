@@ -416,11 +416,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
 		game().eventQueue().addToEnd(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
 		// TODO - Enable held item dropping on death for new equipment system
-		/*if (equipmentComponent.hasEquippedItem()) {
-			Item item = equipmentComponent.getEquippedItem();
-			inventory.removeItem(item);
-			getArea().getInventory().addItem(item);
-		}*/
 		isDead = true;
 		HP = 0;
 		if (isPlayer()) {
@@ -611,13 +606,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void takeTurn() {
 		if (!isEnabled() || isDead()) {
 			game().eventQueue().addToEnd(new EndTurnEvent(this));
-			game().eventQueue().executeNext();
 			return;
 		}
 		if (isSleeping()) {
 			updateSleep();
 			game().eventQueue().addToEnd(new EndTurnEvent(this));
-			game().eventQueue().executeNext();
 			return;
 		}
 		getEffectComponent().onStartRound();
@@ -642,7 +635,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			getBehaviorComponent().update();
 		}
 		game().eventQueue().addToEnd(new ActionChoiceMenuEvent(this, lastAction, repeatActionCount));
-		game().eventQueue().executeNext();
 	}
 
 	public void onSelectAction(Action action, Action lastAction, int repeatActionCount) {
@@ -670,7 +662,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void onCompleteAction(Action action, int repeatActionCount) {
 		if (endTurn) {
 			game().eventQueue().addToEnd(new EndTurnEvent(this));
-			game().eventQueue().executeNext();
 		} else {
 			nextAction(action, repeatActionCount);
 		}

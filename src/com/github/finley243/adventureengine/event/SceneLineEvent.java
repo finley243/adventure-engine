@@ -80,7 +80,11 @@ public class SceneLineEvent implements QueuedEvent {
             }
             game.eventQueue().addAllToFront(eventsToAdd);
         }
-        game.eventQueue().executeNext();
+    }
+
+    @Override
+    public boolean continueAfterExecution() {
+        return true;
     }
 
 }

@@ -21,8 +21,6 @@ public abstract class Script {
 	public void execute(Context context) {
 		if (canExecute(context)) {
 			executeSuccess(context);
-		} else {
-			context.game().eventQueue().executeNext();
 		}
 	}
 

@@ -19,4 +19,9 @@ public class ScriptEvent implements QueuedEvent {
         script.execute(context);
     }
 
+    @Override
+    public boolean continueAfterExecution() {
+        return true;
+    }
+
 }

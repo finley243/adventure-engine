@@ -162,7 +162,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public float chance(Actor subject, AttackTarget target) {
-        // TODO - Allow setting dodge/counter skill type in the attack definition
         if (hitChanceType == AttackHitChanceType.INDEPENDENT) {
             return CombatHelper.calculateHitChance(subject, weapon, target, getLimb(), getAttackSkill(), getDodgeSkill(), baseHitChanceMin, baseHitChanceMax, hitChanceMult());
         } else {

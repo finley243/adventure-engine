@@ -25,7 +25,11 @@ public class BarkEvent implements QueuedEvent {
                 bark.trigger(context);
             }
         }
-        game.eventQueue().executeNext();
+    }
+
+    @Override
+    public boolean continueAfterExecution() {
+        return true;
     }
 
 }

@@ -54,7 +54,11 @@ public class SceneEvent implements QueuedEvent {
             sceneEvents.add(new SceneChoiceMenuEvent(scene, scene.getChoices(), context));
         }
         game.eventQueue().addAllToFront(sceneEvents);
-        game.eventQueue().executeNext();
+    }
+
+    @Override
+    public boolean continueAfterExecution() {
+        return true;
     }
 
 }

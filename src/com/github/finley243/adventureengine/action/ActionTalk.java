@@ -33,10 +33,6 @@ public class ActionTalk extends Action {
 		if (target.isInCombat()) {
 			return new CanChooseResult(false, "Target is in combat");
 		}
-		if (!target.getDialogueStart().canChoose(new Context(target.game(), target, target))) {
-			// TODO - Add custom condition reason text
-			return new CanChooseResult(false, "DIALOGUE SCENE CONDITION NOT MET");
-		}
 		return new CanChooseResult(true, null);
 	}
 

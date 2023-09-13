@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
@@ -139,6 +138,7 @@ public class Game {
 		this.turnOrder = computeTurnOrder();
 		this.currentTurnIndex = 0;
 		nextTurn();
+		eventQueue.startExecution();
 	}
 
 	private void nextTurn() {
