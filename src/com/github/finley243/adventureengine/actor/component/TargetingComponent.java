@@ -317,7 +317,7 @@ public class TargetingComponent {
             case TRESPASSING -> {
                 return TRESPASSING_TURNS_UNTIL_HOSTILE;
             }
-            case HOSTILE, PASSIVE, DEAD, default -> {
+            default -> { // HOSTILE, PASSIVE, DEAD
                 return -1;
             }
         }

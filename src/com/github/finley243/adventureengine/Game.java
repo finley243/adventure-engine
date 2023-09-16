@@ -55,7 +55,7 @@ public class Game {
 		UserInterface userInterface = switch (data.getConfig("interfaceType")) {
 			case "graphicalChoice" -> new GraphicalInterfaceComplex(this);
 			case "consoleParser" -> new ConsoleParserInterface(this);
-			case "consoleChoice", default -> new ConsoleInterface(this);
+            default -> new ConsoleInterface(this); // "consoleChoice"
 		};
 		eventBus().register(userInterface);
 

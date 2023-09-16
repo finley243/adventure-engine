@@ -253,7 +253,7 @@ public class DataLoader {
         Scene.SceneType type = switch (LoadUtils.attribute(sceneElement, "type", "all")) {
             case "random" -> Scene.SceneType.RANDOM;
             case "select" -> Scene.SceneType.SELECTOR;
-            case "all", default -> Scene.SceneType.SEQUENTIAL;
+            default -> Scene.SceneType.SEQUENTIAL; // "all"
         };
         Condition condition = loadCondition(LoadUtils.singleChildWithName(sceneElement, "condition"));
         boolean once = LoadUtils.attributeBool(sceneElement, "once", false);
@@ -286,7 +286,7 @@ public class DataLoader {
             Scene.SceneType type = switch (LoadUtils.attribute(lineElement, "type", "all")) {
                 case "random" -> Scene.SceneType.RANDOM;
                 case "select" -> Scene.SceneType.SELECTOR;
-                case "all", default -> Scene.SceneType.SEQUENTIAL;
+                default -> Scene.SceneType.SEQUENTIAL; // "all"
             };
             Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
             Script scriptPre = loadScript(LoadUtils.singleChildWithName(lineElement, "scriptPre"));
@@ -705,7 +705,7 @@ public class DataLoader {
                 List<Script> subScriptsSelect = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSelect, true);
             }
-            case "all", default -> {
+            default -> { // "all"
                 List<Script> subScriptsSequence = loadSubScripts(scriptElement);
                 return new ScriptCompound(condition, subScriptsSequence, false);
             }
@@ -888,7 +888,7 @@ public class DataLoader {
                 List<Effect> compoundEffects = loadEffects(game, effectElement);
                 return new EffectCompound(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, compoundEffects);
             }
-            case "basic", null, default -> {
+            case null, default -> { // "basic"
                 return new Effect(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
             }
         }

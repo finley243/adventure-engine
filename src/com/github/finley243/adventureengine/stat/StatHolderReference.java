@@ -40,7 +40,7 @@ public class StatHolderReference {
             case "actor" -> context.game().data().getActor(holderIDValue);
             case "player" -> context.game().data().getPlayer();
             case "target" -> context.getTarget();
-            case "subject", default -> context.getSubject();
+            default -> context.getSubject(); // "subject"
         };
     }
 
