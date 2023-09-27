@@ -22,6 +22,7 @@ public class JDetailsPanel extends JPanel {
         title.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         title.setEditable(false);
         title.setHighlighter(null);
+        title.setFocusable(false);
         SimpleAttributeSet attributes = new SimpleAttributeSet();
         StyleConstants.setSpaceBelow(attributes, 0.2f);
         StyleConstants.setSpaceAbove(attributes, 0.2f);
@@ -32,6 +33,7 @@ public class JDetailsPanel extends JPanel {
         description.setMinimumSize(new Dimension(170, 200));
         description.setEditable(false);
         description.setHighlighter(null);
+        description.setFocusable(false);
         description.setFont(GraphicalInterfaceComplex.FONT_DETAILS_DESCRIPTION);
         description.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         add(title, generateConstraintsPanels(0, 0, 1, 1, 0, 0));
