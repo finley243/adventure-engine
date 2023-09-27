@@ -26,6 +26,7 @@ public class JGameTextPanel extends JPanel {
         this.textPane = new JTextPane();
         textPane.setEditable(false);
         textPane.setHighlighter(null);
+        textPane.setFocusable(false);
         textPane.setBorder(BorderFactory.createEmptyBorder(7, 10, 5, 10));
         textPane.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         this.scrollPane = new JScrollPane(textPane);
