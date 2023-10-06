@@ -3,40 +3,46 @@
         <prompt>Move</prompt>
         <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
         <script>
+            <script type="setVariable" name="origin_id">
+                <value type="stat" dataType="string" stat="id" holder="area">
+                    <parentHolder holder="subject"/>
+                </value>
+            </script>
             <script type="setVariable" name="area">
                 <value dataType="noun" type="stat" holder="parentArea"/>
             </script>
-            <script type="sensoryEvent">
-                <phrase>moveTo</phrase>
-                <area type="buildStringSet">
-                    <value type="stat" dataType="string" stat="id" holder="area">
-                        <parentHolder holder="subject"/>
-                    </value>
-                    <value type="stat" dataType="string" holder="parentArea" stat="id"/>
-                </area>
-            </script>
             <script type="setState" stat="area" holder="subject">
                 <value type="stat" dataType="string" holder="parentArea" stat="id"/>
+            </script>
+            <script type="sensoryEvent">
+                <phrase type="stat" dataType="string" holder="parentArea" stat="move_phrase"/>
+                <area type="buildStringSet">
+                    <value type="parameter" dataType="string" name="origin_id"/>
+                    <value type="stat" dataType="string" holder="parentArea" stat="id"/>
+                </area>
             </script>
         </script>
     </action>
     <action id="move_corner">
         <prompt>Move</prompt>
         <script>
+            <script type="setVariable" name="origin_id">
+                <value type="stat" dataType="string" stat="id" holder="area">
+                    <parentHolder holder="subject"/>
+                </value>
+            </script>
             <script type="setVariable" name="area">
                 <value dataType="noun" type="stat" holder="parentArea"/>
+            </script>
+            <script type="setState" stat="area" holder="subject">
+                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
             <script type="sensoryEvent">
                 <phrase>moveCorner</phrase>
                 <area type="buildStringSet">
-                    <value type="stat" dataType="string" stat="id" holder="area">
-                        <parentHolder holder="subject"/>
-                    </value>
+                    <value type="parameter" dataType="string" name="origin_id"/>
                     <value type="stat" dataType="string" holder="parentArea" stat="id"/>
                 </area>
-            </script>
-            <script type="setState" stat="area" holder="subject">
-                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
         </script>
     </action>
@@ -47,24 +53,57 @@
             <blockMessage>Locked</blockMessage>
         </condition>
         <script>
+            <script type="setVariable" name="origin_id">
+                <value type="stat" dataType="string" stat="id" holder="area">
+                    <parentHolder holder="subject"/>
+                </value>
+            </script>
             <script type="setVariable" name="area">
                 <value dataType="noun" type="stat" holder="parentArea"/>
+            </script>
+            <script type="setVariable" name="room_origin">
+                <value dataType="string" type="stat" stat="id" holder="room">
+                    <parentHolder holder="area">
+                        <parentHolder holder="subject"/>
+                    </parentHolder>
+                </value>
+            </script>
+            <script type="setVariable" name="room_target">
+                <value dataType="string" type="stat" stat="id" holder="room">
+                    <parentHolder holder="parentArea"/>
+                </value>
+            </script>
+            <script type="setVariable" name="area_origin">
+                <value type="conditional" dataType="noun">
+                    <if>
+                        <condition type="compare" equality="NOT_EQUAL">
+                            <value1 type="parameter" dataType="string" name="room_origin"/>
+                            <value2 type="parameter" dataType="string" name="room_target"/>
+                        </condition>
+                        <value type="stat" dataType="noun" holder="room">
+                            <parentHolder holder="area">
+                                <parentHolder holder="subject"/>
+                            </parentHolder>
+                        </value>
+                    </if>
+                    <else type="stat" dataType="noun" holder="area">
+                        <parentHolder holder="subject"/>
+                    </else>
+                </value>
             </script>
             <script type="setVariable" name="door">
                 <value dataType="noun" type="stat" holder="parentObject"/>
             </script>
+            <script type="setState" stat="area" holder="subject">
+                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
+            </script>
             <script type="sensoryEvent">
                 <phrase>moveThrough</phrase>
-                <area type="stat" dataType="string" stat="id" holder="area">
-                    <parentHolder holder="subject"/>
-                </area>
+                <area type="parameter" dataType="string" name="origin_id"/>
             </script>
             <script type="sensoryEvent">
                 <phrase>moveThroughReverse</phrase>
                 <area type="stat" dataType="string" holder="parentArea" stat="id"/>
-            </script>
-            <script type="setState" stat="area" holder="subject">
-                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
         </script>
     </action>

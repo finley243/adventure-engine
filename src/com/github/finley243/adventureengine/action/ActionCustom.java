@@ -59,12 +59,12 @@ public class ActionCustom extends Action {
         Map<String, String> contextVars = new HashMap<>();
         for (Map.Entry<String, Expression> entry : getTemplate().getParameters().entrySet()) {
             if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, parameters)));
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, this, parameters)));
             }
         }
         for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
             if (entry.getValue().getDataType() == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, parameters)));
+                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, this, parameters)));
             }
         }
         return LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
@@ -76,7 +76,7 @@ public class ActionCustom extends Action {
             Map<String, Expression> combinedParameters = new HashMap<>();
             combinedParameters.putAll(getTemplate().getParameters());
             combinedParameters.putAll(parameters);
-            game.eventQueue().addToEnd(new ScriptEvent(getTemplate().getScript(), new Context(subject.game(), subject, actor, object, item, area, combinedParameters)));
+            game.eventQueue().addToEnd(new ScriptEvent(getTemplate().getScript(), new Context(subject.game(), subject, actor, object, item, area, this, combinedParameters)));
         }
         subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
@@ -87,7 +87,7 @@ public class ActionCustom extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        Context conditionContext = new Context(subject.game(), subject, actor, object, item, area, parameters);
+        Context conditionContext = new Context(subject.game(), subject, actor, object, item, area, this, parameters);
         for (ActionTemplate.ConditionWithMessage customCondition : getTemplate().getSelectConditions()) {
             if (!customCondition.condition().isMet(conditionContext)) {
                 return new CanChooseResult(false, customCondition.message());
@@ -135,7 +135,7 @@ public class ActionCustom extends Action {
 
     @Override
     public boolean canShow(Actor subject) {
-        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(new Context(subject.game(), subject, actor, object, item, area, parameters));
+        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(new Context(subject.game(), subject, actor, object, item, area, this, parameters));
     }
 
     public record CustomActionHolder(String action, Map<String, Expression> parameters) {}

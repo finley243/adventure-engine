@@ -209,7 +209,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
         int damage = damage();
         TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
-        subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), Phrases.get(getHitPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
+        subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), Phrases.get(getHitPhraseAudible(repeatActionCount)), attackContext, isLoud, null, null, subject, (target instanceof Actor ? (Actor) target : null)));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
         target.damage(damageData, new Context(subject.game(), subject, target, getWeapon()));
         subject.triggerScript("on_attack_success", new Context(subject.game(), subject, target));
@@ -218,7 +218,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
         TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
-        subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), Phrases.get(getMissPhraseAudible(repeatActionCount)), attackContext, isLoud, this, null, subject, (target instanceof Actor ? (Actor) target : null)));
+        subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), Phrases.get(getMissPhraseAudible(repeatActionCount)), attackContext, isLoud, null, null, subject, (target instanceof Actor ? (Actor) target : null)));
         subject.triggerScript("on_attack_failure", new Context(subject.game(), subject, target));
     }
 

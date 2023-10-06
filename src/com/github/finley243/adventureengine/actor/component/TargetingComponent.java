@@ -202,6 +202,8 @@ public class TargetingComponent {
                         actor.triggerBark("on_detect_target_hostile_faction", new Context(actor.game(), actor, target));
                         detectedActors.get(target).state = DetectionState.HOSTILE;
                     } else {
+                        actor.triggerScript("on_detect_target_passive", new Context(actor.game(), actor, target));
+                        actor.triggerBark("on_detect_target_passive", new Context(actor.game(), actor, target));
                         detectedActors.get(target).state = DetectionState.PASSIVE;
                     }
                 }

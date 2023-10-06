@@ -45,7 +45,7 @@
         <damageResistance type="electrical" value="0"/>
         <inventory/>
     </actor>
-    <actor id="player" parent="default" hp="50" faction="player">
+    <actor id="player" parent="default" hp="70" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>
         <skill key="handguns" value="5"/>
         <skill key="melee" value="5"/>
@@ -64,12 +64,6 @@
             <item count="50">ammo_rifle</item>
             <item>mag_extended_pistol</item>
         </inventory>
-        <!--TEMPORARY SCRIPT - REMOVE WHEN DONE WITH TESTING-->
-        <script trigger="on_reload">
-            <script type="skillMenu" points="3">
-                <actor holder="player"/>
-            </script>
-        </script>
     </actor>
     <actor id="stratis_receptionist" parent="default" hp="40" faction="stratis_hotel_staff" dialogueStart="stratis_receptionist_start">
         <name proper="false" pronoun="HE">receptionist</name>
@@ -124,7 +118,11 @@
         <name proper="false" pronoun="HE">shopkeeper</name>
         <inventory>
             <item>wilsons_corner_store_key</item>
-            <item>pistol_heavy</item>
+            <!--<item>pistol_heavy</item>-->
+            <item>katana</item>
         </inventory>
+        <bark trigger="on_detect_target_passive">
+            <visible>$actor turn$s to look at $target</visible>
+        </bark>
     </actor>
 </data>

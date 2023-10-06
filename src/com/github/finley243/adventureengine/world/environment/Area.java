@@ -69,7 +69,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	
 	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game, ID);
-		if (landmarkID == null && name == null) throw new IllegalArgumentException("Landmark and name cannot both be null: " + ID);
 		this.landmarkID = landmarkID;
 		this.name = name;
 		this.nameType = nameType;
@@ -94,8 +93,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public String getName() {
 		if (landmarkID != null) {
 			return getLandmark().getName();
-		} else {
+		} else if (name != null) {
 			return name;
+		} else {
+			return getRoom().getName();
 		}
 	}
 	
@@ -121,33 +122,35 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public void setKnown() {
 		if (landmarkID != null) {
 			getLandmark().setKnown();
-		} else {
-			isKnown = true;
+		} else if (name == null) {
+			getRoom().setKnown();
 		}
+		isKnown = true;
 	}
 
 	@Override
 	public boolean isKnown() {
 		if (landmarkID != null) {
 			return getLandmark().isKnown();
+		} else if (name == null) {
+			return getRoom().isKnown();
 		} else {
 			return isKnown;
 		}
 	}
 
 	public String getRelativeName() {
-		if (landmarkID != null) {
-			return "near";
-		} else {
-			return switch (nameType) {
-				case IN -> "in";
-				case ON -> "on";
-				case NEAR -> "near";
-				case FRONT -> "in front of";
-				case SIDE -> "beside";
-				case BEHIND -> "behind";
-			};
+		if (name == null && landmarkID == null) {
+			return getRoom().getRelativeName();
 		}
+		return switch (nameType) {
+			case IN -> "in";
+			case ON -> "on";
+			case NEAR -> "near";
+			case FRONT -> "in front of";
+			case SIDE -> "beside";
+			case BEHIND -> "behind";
+		};
 	}
 
 	public AreaLink.CompassDirection getRelativeDirection(Area origin) {
@@ -157,19 +160,18 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return null;
 	}
 
-	public String getMovePhrase() {
-		if (landmarkID != null) {
-			return "moveToward";
-		} else {
-			return switch (nameType) {
-				case IN -> "moveTo";
-				case ON -> "moveOnto";
-				case FRONT -> "moveFront";
-				case BEHIND -> "moveBehind";
-				case SIDE -> "moveBeside";
-				case NEAR -> "moveToward";
-			};
+	public String getMovePhrase(Actor subject) {
+		if (name == null && landmarkID == null) {
+			return getRoom().getMovePhrase(subject);
 		}
+		return switch (nameType) {
+			case IN -> "moveTo";
+			case ON -> "moveOnto";
+			case FRONT -> "moveFront";
+			case BEHIND -> "moveBehind";
+			case SIDE -> "moveBeside";
+			case NEAR -> "moveToward";
+		};
 	}
 
 	public void onNewGameInit() {
@@ -218,6 +220,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return targets;
 	}
 
+	@Override
 	public Inventory getInventory() {
 		return itemInventory;
 	}
@@ -239,7 +242,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
 				String actionTemplate = vehicleType == null ? game().data().getLinkType(link.getType()).getActorMoveAction() : game().data().getLinkType(link.getType()).getVehicleMoveAction(vehicleType);
-				moveActions.add(new ActionCustom(game(), null, vehicleObject, null, game().data().getArea(link.getAreaID()), actionTemplate, new MapBuilder<String, Expression>().put("dir", new ExpressionConstantString(link.getDirection().toString())).build(), new MenuDataMove(game().data().getArea(link.getAreaID()), link.getDirection()), true));
+				moveActions.add(new ActionCustom(game(), null, vehicleObject, null, game().data().getArea(link.getAreaID()), actionTemplate, new MapBuilder<String, Expression>().put("dir", Expression.constant(link.getDirection().toString())).put("dir_name", Expression.constant(link.getDirection().name)).build(), new MenuDataMove(game().data().getArea(link.getAreaID()), link.getDirection()), true));
 			}
 		}
 		return moveActions;
@@ -284,7 +287,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return visibleAreas;
 	}
 
-	// Prevents infinite recursion between linked areas
+	// Called by getLineOfSightAreas, prevents infinite recursion between linked areas
 	private Set<Area> getLineOfSightAreasNoLinks() {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
@@ -315,7 +318,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return visibleAreaIDs;
 	}
 
-	// Prevents infinite recursion between linked areas
+	// Called by getLineOfSightAreaIDs, prevents infinite recursion between linked areas
 	private Set<String> getLineOfSightAreaIDsNoLinks() {
 		Set<String> visibleAreaIDs = new HashSet<>();
 		visibleAreaIDs.add(this.getID());
@@ -373,6 +376,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public boolean isProperName() {
 		if (landmarkID != null) {
 			return getLandmark().isProperName();
+		} else if (name == null) {
+			return getRoom().isProperName();
 		} else {
 			return false;
 		}
@@ -404,7 +409,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			case "id" -> new ExpressionConstantString(getID());
 			case "name" -> new ExpressionConstantString(getName());
 			case "relative_name" -> new ExpressionConstantString(getRelativeName());
-			case "move_phrase" -> new ExpressionConstantString(getMovePhrase());
+			case "move_phrase" -> new ExpressionConstantString(getMovePhrase(context.getSubject()));
 			case "room" -> new ExpressionConstantString(roomID);
 			case "visible_areas" -> new ExpressionConstantStringSet(getLineOfSightAreaIDs());
 			case "movable_areas" -> new ExpressionConstantStringSet(getMovableAreaIDs(null));

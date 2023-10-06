@@ -43,10 +43,19 @@ public class ExpressionCompare extends Expression {
             }
             return comparatorCheckFloat(value1, value2, comparator);
         } else if (expression1.getDataType() == Expression.DataType.BOOLEAN) {
+            if (comparator == Comparator.NOT_EQUAL) {
+                return expression1.getValueBoolean(context) != expression2.getValueBoolean(context);
+            }
             return expression1.getValueBoolean(context) == expression2.getValueBoolean(context);
         } else if (expression1.getDataType() == Expression.DataType.STRING) {
+            if (comparator == Comparator.NOT_EQUAL) {
+                return !expression1.getValueString(context).equals(expression2.getValueString(context));
+            }
             return expression1.getValueString(context).equals(expression2.getValueString(context));
         } else if (expression1.getDataType() == Expression.DataType.STRING_SET) {
+            if (comparator == Comparator.NOT_EQUAL) {
+                return !expression1.getValueStringSet(context).equals(expression2.getValueStringSet(context));
+            }
             return expression1.getValueStringSet(context).equals(expression2.getValueStringSet(context));
         }
         return false;

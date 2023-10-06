@@ -1,9 +1,9 @@
 <data>
     <room id="sinclair_tech_store">
-        <name>Argon Electronics</name>
+        <name proper="true">Argon Electronics</name>
     </room>
     <room id="wilsons_corner_store">
-        <name>Wilson's corner store</name>
+        <name proper="true">Wilson's corner store</name>
         <description>
             <line>The store is small, with no wasted space. Just south of the entrance is the checkout counter, and to the north are aisles stocked with various goods. Behind them is a row of coolers, their bright lights illuminating the back of the store.</line>
         </description>
@@ -67,6 +67,6 @@
         <name>apartments</name>
     </room>
     <room id="archer_apartments_23">
-        <name>apartment 23</name>
+        <name proper="true">apartment 23</name>
     </room>
 </data>

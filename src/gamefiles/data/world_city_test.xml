@@ -1,25 +1,23 @@
 <data>
     <room id="street_sinclair_fifth_sixth">
-        <name proper="true">Sinclair Street</name>
-        <area id="sinclair_tech_store_front" landmark="sinclair_tech_store_exterior_door">
+        <name proper="true" type="on">Sinclair Street</name>
+        <area id="sinclair_tech_store_front">
             <object id="sinclair_tech_store_exterior_door" template="door_fake"/>
         </area>
     </room>
     <room id="street_archer_fifth_sixth">
-        <name proper="true">Archer Street</name>
+        <name proper="true" type="on">Archer Street</name>
         <area id="wilsons_corner_store_side">
-            <name type="side">corner store</name>
             <link type="corner" dist="CLOSE" dir="NW" area="wilsons_corner_store_front"/>
             <link type="basic" dist="CLOSE" dir="E" area="archer_apartments_exterior"/>
             <object id="wilsons_corner_store_exterior_vending_machine" template="vending_machine_nitron"/>
         </area>
-        <area id="archer_apartments_exterior" landmark="archer_apartments_exterior_door">
+        <area id="archer_apartments_exterior">
             <link type="basic" dist="CLOSE" dir="W" area="wilsons_corner_store_side"/>
             <link type="basic" dist="CLOSE" dir="E" area="archer_burger_restaurant_front"/>
             <object id="archer_apartments_exterior_door" template="door_fake"/>
         </area>
         <area id="archer_burger_restaurant_front">
-            <name type="front">BigBurger</name>
             <link type="basic" dist="CLOSE" dir="W" area="archer_apartments_exterior"/>
             <link type="corner" dist="CLOSE" dir="NE" area="sixth_burger_restaurant_side"/>
             <object id="archer_burger_restaurant_exterior_door" template="door_fake"/>
@@ -27,8 +25,8 @@
         </area>
     </room>
     <room id="street_fifth_sinclair_archer">
-        <name proper="true">5th Avenue</name>
-        <area id="wilsons_corner_store_front" landmark="wilsons_corner_store_exterior_door">
+        <name proper="true" type="on">5th Avenue</name>
+        <area id="wilsons_corner_store_front">
             <link type="corner" dist="CLOSE" dir="SE" area="wilsons_corner_store_side"/>
             <object id="wilsons_corner_store_exterior_door" template="door_basic">
                 <localVar name="door_link_object" dataType="string" value="wilsons_corner_store_door_exit"/>
@@ -38,9 +36,8 @@
         </area>
     </room>
     <room id="street_sixth_sinclair_archer">
-        <name proper="true">6th Avenue</name>
+        <name proper="true" type="on">6th Avenue</name>
         <area id="sixth_burger_restaurant_side">
-            <name type="side">BigBurger</name>
             <link type="corner" dist="CLOSE" dir="SW" area="archer_burger_restaurant_front"/>
         </area>
     </room>

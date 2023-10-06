@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine;
 
+import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -19,34 +20,35 @@ public class Context {
     private final WorldObject parentObject;
     private final Item parentItem;
     private final Area parentArea;
+    private final Action parentAction;
     private final Map<String, Variable> localVariables;
 
     public Context(Game game, Actor subject, Actor target) {
-        this(game, subject, target, null, null, null, new HashMap<>());
+        this(game, subject, target, null, null, null, null, new HashMap<>());
     }
 
     public Context(Game game, Actor subject, Actor target, Map<String, Expression> localVariables) {
-        this(game, subject, target, null, null, null, localVariables);
+        this(game, subject, target, null, null, null, null, localVariables);
     }
 
     public Context(Game game, Actor subject, Actor target, WorldObject parentObject) {
-        this(game, subject, target, parentObject, null, null, new HashMap<>());
+        this(game, subject, target, parentObject, null, null, null, new HashMap<>());
     }
 
     public Context(Game game, WorldObject parentObject) {
-        this(game, null, null, parentObject, null, null, new HashMap<>());
+        this(game, null, null, parentObject, null, null, null, new HashMap<>());
     }
 
     public Context(Game game, Actor subject, Actor target, Item parentItem) {
-        this(game, subject, target, null, parentItem, null, new HashMap<>());
+        this(game, subject, target, null, parentItem, null, null, new HashMap<>());
     }
 
     public Context(Game game, Actor subject, Actor target, Item parentItem, Map<String, Expression> localVariables) {
-        this(game, subject, target, null, parentItem, null, localVariables);
+        this(game, subject, target, null, parentItem, null, null, localVariables);
     }
 
     public Context(Game game, Item parentItem) {
-        this(game, null, null, null, parentItem, null, new HashMap<>());
+        this(game, null, null, null, parentItem, null, null, new HashMap<>());
     }
 
     public Context(Game game, Actor subject, AttackTarget attackTarget) {
@@ -54,16 +56,17 @@ public class Context {
     }
 
     public Context(Game game, Actor subject, AttackTarget attackTarget, Item parentItem) {
-        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, null, new HashMap<>());
+        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, null, null, new HashMap<>());
     }
 
-    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Map<String, Expression> localVariables) {
+    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Action parentAction, Map<String, Expression> localVariables) {
         this.game = game;
         this.subject = subject;
         this.target = target;
         this.parentObject = parentObject;
         this.parentItem = parentItem;
         this.parentArea = parentArea;
+        this.parentAction = parentAction;
         this.localVariables = new HashMap<>();
         for (Map.Entry<String, Expression> parameter : localVariables.entrySet()) {
             this.localVariables.put(parameter.getKey(), new Variable(parameter.getValue()));
@@ -77,6 +80,7 @@ public class Context {
         this.parentObject = context.parentObject;
         this.parentItem = context.parentItem;
         this.parentArea = context.parentArea;
+        this.parentAction = context.parentAction;
         this.localVariables = new HashMap<>(context.localVariables);
     }
 
@@ -87,6 +91,7 @@ public class Context {
         this.parentObject = context.parentObject;
         this.parentItem = context.parentItem;
         this.parentArea = context.parentArea;
+        this.parentAction = context.parentAction;
         this.localVariables = new HashMap<>();
         this.localVariables.putAll(context.localVariables);
         for (Map.Entry<String, Expression> parameter : addedParameters.entrySet()) {
@@ -105,6 +110,7 @@ public class Context {
         this.parentObject = context.parentObject;
         this.parentItem = context.parentItem;
         this.parentArea = context.parentArea;
+        this.parentAction = context.parentAction;
         this.localVariables = new HashMap<>(context.localVariables);
     }
 
@@ -115,6 +121,7 @@ public class Context {
         this.parentObject = context.parentObject;
         this.parentItem = parentItem;
         this.parentArea = context.parentArea;
+        this.parentAction = context.parentAction;
         this.localVariables = new HashMap<>();
         this.localVariables.putAll(context.localVariables);
         for (Map.Entry<String, Expression> parameter : addedParameters.entrySet()) {
@@ -148,6 +155,10 @@ public class Context {
 
     public Area getParentArea() {
         return parentArea;
+    }
+
+    public Action getParentAction() {
+        return parentAction;
     }
 
     public Map<String, Variable> getLocalVariables() {

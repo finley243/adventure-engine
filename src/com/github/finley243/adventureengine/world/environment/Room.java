@@ -25,6 +25,7 @@ import java.util.*;
 public class Room extends GameInstanced implements Noun, StatHolder {
 
 	private final String name;
+	private final Area.AreaNameType nameType;
 	private final boolean isProperName;
 	private boolean isKnown;
 	private final Scene description;
@@ -37,9 +38,10 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 
 	private boolean hasVisited;
 
-	public Room(Game game, String ID, String name, boolean isProperName, Scene description, String ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Set<Area> areas, Map<String, Script> scripts) {
+	public Room(Game game, String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, String ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Set<Area> areas, Map<String, Script> scripts) {
 		super(game, ID);
 		this.name = name;
+		this.nameType = nameType;
 		this.isProperName = isProperName;
 		this.description = description;
 		this.ownerFaction = ownerFaction;
@@ -60,6 +62,38 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 			areaIDs.add(area.getID());
 		}
 		return areaIDs;
+	}
+
+	public String getRelativeName() {
+		return switch (nameType) {
+			case IN -> "in";
+			case ON -> "on";
+			case NEAR -> "near";
+			case FRONT -> "in front of";
+			case SIDE -> "beside";
+			case BEHIND -> "behind";
+		};
+	}
+
+	public String getMovePhrase(Actor subject) {
+		if (subject.getArea().getRoom().equals(this)) {
+			return switch (nameType) {
+				case IN -> "moveInWithin";
+				case ON -> "moveOnWithin";
+				case FRONT -> "moveFrontWithin";
+				case BEHIND -> "moveBehindWithin";
+				case SIDE -> "moveBesideWithin";
+				case NEAR -> "moveNearWithin";
+			};
+		}
+		return switch (nameType) {
+			case IN -> "moveTo";
+			case ON -> "moveOnto";
+			case FRONT -> "moveFront";
+			case BEHIND -> "moveBehind";
+			case SIDE -> "moveBeside";
+			case NEAR -> "moveToward";
+		};
 	}
 	
 	public Scene getDescription() {

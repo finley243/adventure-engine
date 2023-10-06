@@ -11,14 +11,20 @@ meleeHit:$actor swing$s $actor's $weapon_name at $target and $weapon hit$s $targ
 meleeHitRepeat:$actor take$s another swing at $target and $weapon hit$s $target
 meleeMiss:$actor tr$ies to hit $target with $actor's $weapon_name, but $actor miss$es
 meleeMissRepeat:$actor tr$ies to hit $target again, but $actor miss$es
-moveThrough:$actor go$es through $door
-moveThroughReverse:$actor come$s through $door
+moveThrough:$actor go$es through $door to $area
+moveThroughReverse:$actor come$s through $door from $area_origin
 moveToward:$actor move$s toward $area
 moveTo:$actor move$s to $area
 moveOnto:$actor move$s onto $area
 moveFront:$actor move$s in front of $area
 moveBehind:$actor move$s behind $area
 moveBeside:$actor move$s beside $area
+moveInWithin:$actor move$s $dir_name
+moveOnWithin:$actor move$s $dir_name on $area
+moveFrontWithin:$actor move$s $dir_name in front of $area
+moveBehindWithin:$actor move$s $dir_name behind $area
+moveBesideWithin:$actor move$s $dir_name beside $area
+moveNearWithin:$actor move$s $dir_name near $area
 moveCorner:$actor turn$s around the corner to $area
 driveTo:$actor drive$s $vehicle to $area
 driveCorner:$actor drive$s $vehicle around the corner to $area

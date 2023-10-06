@@ -933,6 +933,7 @@ public class DataLoader {
         Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
         String roomName = roomNameElement.getTextContent();
         boolean roomNameIsProper = LoadUtils.attributeBool(roomNameElement, "proper", false);
+        Area.AreaNameType roomNameType = LoadUtils.attributeEnum(roomNameElement, "type", Area.AreaNameType.class, Area.AreaNameType.IN);
         Scene roomDescription = loadScene(game, LoadUtils.singleChildWithName(roomElement, "description"));
         String roomOwnerFaction = LoadUtils.attribute(roomElement, "faction", null);
         Area.RestrictionType restrictionType = LoadUtils.attributeEnum(roomElement, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
@@ -947,7 +948,7 @@ public class DataLoader {
             game.data().addArea(area.getID(), area);
         }
 
-        return new Room(game, roomID, roomName, roomNameIsProper, roomDescription, roomOwnerFaction, restrictionType, allowAllies, areas, roomScripts);
+        return new Room(game, roomID, roomName, roomNameType, roomNameIsProper, roomDescription, roomOwnerFaction, restrictionType, allowAllies, areas, roomScripts);
     }
 
     private static Area loadArea(Game game, Element areaElement, String roomID) {
@@ -956,7 +957,7 @@ public class DataLoader {
         String landmarkID = LoadUtils.attribute(areaElement, "landmark", null);
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = (nameElement == null ? null : nameElement.getTextContent());
-        Area.AreaNameType nameType = LoadUtils.attributeEnum(nameElement, "type", Area.AreaNameType.class, Area.AreaNameType.IN);
+        Area.AreaNameType nameType = LoadUtils.attributeEnum(nameElement, "type", Area.AreaNameType.class, (landmarkID != null ? Area.AreaNameType.NEAR : Area.AreaNameType.IN));
         Scene description = loadScene(game, LoadUtils.singleChildWithName(areaElement, "description"));
         String areaOwnerFaction = LoadUtils.attribute(areaElement, "faction", null);
         Area.RestrictionType restrictionType = LoadUtils.attributeEnum(areaElement, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);

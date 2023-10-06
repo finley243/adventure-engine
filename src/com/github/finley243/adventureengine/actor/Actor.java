@@ -472,16 +472,18 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void onSensoryEvent(SensoryEvent event, boolean visible) {
 		if (isActive() && isEnabled()) {
 			if (isPlayer()) {
-				if (visible) {
-					String text = event.getTextVisible();
-					if (text != null) {
-						game().eventBus().post(new RenderTextEvent(text));
-					}
-				} else if (event.getTextAudible() != null) {
-					String text = event.getTextAudible();
-					game().eventBus().post(new RenderTextEvent(text));
-				}
-			} else {
+                String text = null;
+                if (visible) {
+                    text = event.getTextVisible();
+                }
+				if (text == null) {
+                    text = event.getTextAudible();
+                }
+                if (text != null) {
+                    game().eventBus().post(new RenderTextEvent(text));
+                }
+            } else {
+				if (event.getSubject().equals(this)) return;
 				if (visible) { // Visible
 					if (event.isAction()) {
 						targetingComponent.onVisibleAction(event.getAction(), event.getSubject());
