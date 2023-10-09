@@ -328,6 +328,10 @@ public class DataLoader {
                 Expression statName = loadExpressionOrAttribute(expressionElement, "stat", "string");
                 return new ExpressionStat(statHolderReference, dataType, statName);
             }
+            case "statHolderType" -> {
+                StatHolderReference statHolderReference = loadStatHolderReference(expressionElement);
+                return new ExpressionStatHolderType(statHolderReference);
+            }
             case "global" -> {
                 Expression globalExpressionID = loadExpressionOrAttribute(expressionElement, "globalID", "string");
                 return new ExpressionGlobal(dataType, globalExpressionID);
