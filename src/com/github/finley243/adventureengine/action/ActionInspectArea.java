@@ -47,8 +47,13 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
+    public int actionPoints(Actor subject) {
+        return 0;
+    }
+
+    @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuDataArea(area);
+        return new MenuDataArea(area, true);
     }
 
     @Override

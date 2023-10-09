@@ -4,10 +4,12 @@ import com.github.finley243.adventureengine.world.environment.Area;
 
 public class MenuDataArea extends MenuData {
 
-    public final Area destination;
+    public final Area area;
+    public final boolean isCurrentArea;
 
-    public MenuDataArea(Area destination) {
-        this.destination = destination;
+    public MenuDataArea(Area area, boolean isCurrentArea) {
+        this.area = area;
+        this.isCurrentArea = isCurrentArea;
     }
 
 }

@@ -55,26 +55,27 @@ public class MenuManager {
 			switch (action.getMenuData(actor)) {
 				case MenuDataSelf data -> parentCategory = null;
 				case MenuDataMove data -> {
-					String areaName = LangUtils.titleCase(data.destination.getRelativeName() + " " + data.destination.getName() + (data.direction != null ? " (" + data.direction + ")" : ""));
-					if (!categoryMap.containsKey("areas")) {
-						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, false, false, "Areas", null));
+					String areaName = LangUtils.titleCase(/*data.destination.getRelativeName() + " " +*/ data.destination.getName());
+					if (!categoryMap.containsKey("move")) {
+						categoryMap.put("move", new MenuCategory(MenuCategory.CategoryType.AREA, "move", null, false, false, "Move", null));
 					}
-					String areaCategory = "area_" + data.destination.getID();
-					if (!categoryMap.containsKey(areaCategory)) {
-						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", false, false, areaName, null));
-					}
-					parentCategory = areaCategory;
+					parentCategory = "move";
+					promptOverride = action.getPrompt(actor) + " (" + areaName + (data.direction != null ? ", " + data.direction : "") + ")";
 				}
 				case MenuDataArea data -> {
-					String areaName = LangUtils.titleCase(data.destination.getRelativeName() + " " + data.destination.getName());
-					if (!categoryMap.containsKey("areas")) {
-						categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, false, false, "Areas", null));
+					String areaName = LangUtils.titleCase(data.area.getRelativeName() + " " + data.area.getName());
+					if (data.isCurrentArea) {
+						parentCategory = null;
+					} else {
+						if (!categoryMap.containsKey("areas")) {
+							categoryMap.put("areas", new MenuCategory(MenuCategory.CategoryType.AREA, "areas", null, false, false, "Areas", null));
+						}
+						String areaCategory = "area_" + data.area.getID();
+						if (!categoryMap.containsKey(areaCategory)) {
+							categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", false, false, areaName, null));
+						}
+						parentCategory = areaCategory;
 					}
-					String areaCategory = "area_" + data.destination.getID();
-					if (!categoryMap.containsKey(areaCategory)) {
-						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", false, false, areaName, null));
-					}
-					parentCategory = areaCategory;
 				}
 				case MenuDataActor data -> {
 					String actorName = LangUtils.titleCase(data.actor.getName());
