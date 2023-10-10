@@ -10,7 +10,6 @@
         <area id="wilsons_corner_store_entrance" landmark="wilsons_corner_store_door_exit">
             <link type="basic" dist="CLOSE" dir="S" area="wilsons_corner_store_counter"/>
             <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_aisle"/>
-            <link type="basic" dist="FAR" dir="N" area="wilsons_corner_store_coolers"/>
             <object id="wilsons_corner_store_door_exit" template="door_locked">
                 <localVar name="door_link_object" dataType="string" value="wilsons_corner_store_exterior_door"/>
                 <localVar name="door_link_dir" dataType="string" value="W"/>
@@ -27,8 +26,6 @@
         </area>
         <area id="wilsons_corner_store_counter" landmark="wilsons_corner_store_counter">
             <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_entrance"/>
-            <link type="basic" dist="FAR" dir="N" area="wilsons_corner_store_coolers"/>
-            <link type="basic" dist="FAR" dir="N" area="wilsons_corner_store_aisle"/>
             <object id="wilsons_corner_store_counter" template="counter"/>
             <actor id="frank_wilson" template="frank_wilson">
                 <behaviors>
@@ -44,7 +41,6 @@
             <name type="in">aisles</name>
             <link type="basic" dist="CLOSE" dir="S" area="wilsons_corner_store_entrance"/>
             <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_coolers"/>
-            <link type="basic" dist="FAR" dir="S" area="wilsons_corner_store_counter"/>
             <object id="wilsons_corner_store_shelf_medicine" template="store_shelf_medicine"/>
             <object id="wilsons_corner_store_shelf_snacks" template="store_shelf_snacks"/>
         </area>
@@ -53,9 +49,7 @@
             <description>
                 <line>Behind the aisles, a row of illuminated coolers cast a cool white glow across the linoleum floor. The air is colder here than in the rest of the store, and a low hum echoes off the walls.</line>
             </description>
-            <link type="basic" dist="FAR" dir="S" area="wilsons_corner_store_entrance"/>
             <link type="basic" dist="CLOSE" dir="S" area="wilsons_corner_store_aisle"/>
-            <link type="basic" dist="FAR" dir="S" area="wilsons_corner_store_counter"/>
             <object id="wilsons_corner_store_cooler_soft_drinks" template="store_cooler_soft_drinks"/>
             <object id="wilsons_corner_store_cooler_alcohol" template="store_cooler_alcohol"/>
         </area>
@@ -68,5 +62,61 @@
     </room>
     <room id="archer_apartments_23">
         <name proper="true">apartment 23</name>
+        <area id="apartment_0_0">
+            <link type="basic" dist="CLOSE" dir="N" area="apartment_0_1"/>
+            <link type="basic" dist="CLOSE" dir="E" area="apartment_1_0"/>
+        </area>
+        <area id="apartment_0_1">
+            <link type="basic" dist="CLOSE" dir="S" area="apartment_0_0"/>
+            <link type="basic" dist="CLOSE" dir="E" area="apartment_1_1"/>
+            <link type="basic" dist="CLOSE" dir="N" area="apartment_0_2"/>
+        </area>
+        <area id="apartment_0_2">
+            <link type="basic" dist="CLOSE" dir="S" area="apartment_0_1"/>
+            <link type="basic" dist="CLOSE" dir="E" area="apartment_1_2"/>
+            <link type="basic" dist="CLOSE" dir="N" area="apartment_0_3"/>
+        </area>
+        <area id="apartment_0_3">
+            <link type="basic" dist="CLOSE" dir="S" area="apartment_0_2"/>
+            <link type="basic" dist="CLOSE" dir="E" area="apartment_1_3"/>
+        </area>
+        <area id="apartment_1_0">
+            <link type="basic" dist="CLOSE" dir="N" area="apartment_1_1"/>
+            <link type="basic" dist="CLOSE" dir="W" area="apartment_0_0"/>
+            <link type="basic" dist="CLOSE" dir="E" area="apartment_2_0"/>
+        </area>
+        <area id="apartment_1_1">
+            <link type="basic" dist="CLOSE" dir="S" area="apartment_1_0"/>
+            <link type="basic" dist="CLOSE" dir="W" area="apartment_0_1"/>
+            <link type="basic" dist="CLOSE" dir="N" area="apartment_1_2"/>
+            <link type="basic" dist="CLOSE" dir="E" area="apartment_2_1"/>
+        </area>
+        <area id="apartment_1_2">
+            <link type="basic" dist="CLOSE" dir="S" area="apartment_1_1"/>
+            <link type="basic" dist="CLOSE" dir="W" area="apartment_0_2"/>
+            <link type="basic" dist="CLOSE" dir="N" area="apartment_1_3"/>
+        </area>
+        <area id="apartment_1_3">
+            <link type="basic" dist="CLOSE" dir="S" area="apartment_1_2"/>
+            <link type="basic" dist="CLOSE" dir="W" area="apartment_0_3"/>
+        </area>
+        <area id="apartment_2_0">
+            <link type="basic" dist="CLOSE" dir="N" area="apartment_2_1"/>
+            <link type="basic" dist="CLOSE" dir="W" area="apartment_1_0"/>
+            <link type="basic" dist="CLOSE" dir="E" area="apartment_3_0"/>
+        </area>
+        <area id="apartment_2_1">
+            <link type="basic" dist="CLOSE" dir="S" area="apartment_2_0"/>
+            <link type="basic" dist="CLOSE" dir="W" area="apartment_1_1"/>
+            <link type="basic" dist="CLOSE" dir="E" area="apartment_3_1"/>
+        </area>
+        <area id="apartment_3_0">
+            <link type="basic" dist="CLOSE" dir="N" area="apartment_3_1"/>
+            <link type="basic" dist="CLOSE" dir="W" area="apartment_2_0"/>
+        </area>
+        <area id="apartment_3_1">
+            <link type="basic" dist="CLOSE" dir="S" area="apartment_3_0"/>
+            <link type="basic" dist="CLOSE" dir="W" area="apartment_2_1"/>
+        </area>
     </room>
 </data>

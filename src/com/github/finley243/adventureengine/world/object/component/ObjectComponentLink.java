@@ -60,10 +60,10 @@ public class ObjectComponentLink extends ObjectComponent {
         return getTemplateLink().getLinkData().get(linkID).isVisible();
     }
 
-    public Set<Area> getLinkedAreasVisible(Actor subject) {
+    public Set<Area> getLinkedAreasVisible() {
         Set<Area> linkedAreas = new HashSet<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
-            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(new Context(getObject().game(), subject, subject, getObject())))) {
+            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(new Context(getObject().game(), getObject().game().data().getPlayer(), getObject().game().data().getPlayer(), getObject())))) {
                 linkedAreas.add(getLinkedObject(linkEntry.getKey()).getArea());
             }
         }

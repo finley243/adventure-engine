@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
@@ -61,7 +62,6 @@ public class Game {
 
 		data().newGame();
 
-		//data().getPlayer().setStateInteger("money", 50);
 		data().getPlayer().setStatValue("money", Expression.constant(50), new Context(this, data().getPlayer(), data().getPlayer()));
 
 		/*File saveFile = new File(GAMEFILES + "/save.aes");
@@ -74,10 +74,9 @@ public class Game {
 		}
 		System.out.println("Loaded Game");*/
 
-		//startGameLoop();
+		System.out.println(Pathfinder.getVisibleAreas(data().getArea("apartment_0_3"), data().getPlayer()));
+
 		continueGame = true;
-		//eventQueue.addToEnd(new SceneEvent(data.getScene("cornerstore_shopkeeper_start"), null, new Context(this, data.getPlayer(), data.getActor("frank_wilson"))));
-		//eventQueue.executeNext();
 		startRound();
 	}
 

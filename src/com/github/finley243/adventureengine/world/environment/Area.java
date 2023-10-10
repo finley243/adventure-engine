@@ -275,7 +275,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 				for (WorldObject object : area.getObjects()) {
 					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 					if (linkComponent == null) continue;
-					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible(game().data().getPlayer())) {
+					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible()) {
 						visibleAreas.addAll(objectLinkedArea.getLineOfSightAreasNoLinks());
 					}
 				}
@@ -306,7 +306,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 				for (WorldObject object : game().data().getArea(link.getAreaID()).getObjects()) {
 					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 					if (linkComponent == null) continue;
-					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible(game().data().getPlayer())) {
+					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible()) {
 						visibleAreaIDs.addAll(objectLinkedArea.getLineOfSightAreaIDsNoLinks());
 					}
 				}
@@ -325,6 +325,30 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			}
 		}
 		return visibleAreaIDs;
+	}
+
+	public boolean isVisible(Actor subject) {
+		return true;
+	}
+
+	public boolean hasObstructedLineOfSight(Actor subject) {
+		return false;
+	}
+
+	public boolean hasVisibleLinkTo(Area area) {
+		if (linkedAreas.containsKey(area.getID())) {
+			AreaLink link = linkedAreas.get(area.getID());
+			return game().data().getLinkType(link.getType()).isVisible();
+		}
+		return false;
+	}
+
+	public AreaLink.CompassDirection getLinkDirectionTo(Area area) {
+		if (linkedAreas.containsKey(area.getID())) {
+			AreaLink link = linkedAreas.get(area.getID());
+			return link.getDirection();
+		}
+		return null;
 	}
 
 	public boolean hasLineOfSightFrom(Area area) {
