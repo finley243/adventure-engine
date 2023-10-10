@@ -1,9 +1,6 @@
 package com.github.finley243.adventureengine.world.environment;
 
-import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.MapBuilder;
+import com.github.finley243.adventureengine.*;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
@@ -330,18 +327,20 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return visibleAreaIDs;
 	}
 
-	public boolean isVisible(Actor subject, String areaID) {
-		if (linkedAreas.containsKey(areaID)) {
-			AreaLink link = linkedAreas.get(areaID);
+	public boolean hasLineOfSightFrom(Area area) {
+		if (area.linkedAreas.containsKey(getID())) {
+			AreaLink link = area.linkedAreas.get(getID());
 			return game().data().getLinkType(link.getType()).isVisible();
 		}
 		return false;
 	}
 
-	public AreaLink.DistanceCategory getDistanceTo(String areaID) {
+	public AreaLink.DistanceCategory getLinearDistanceTo(String areaID) {
 		if (this.getID().equals(areaID)) return AreaLink.DistanceCategory.NEAR;
-		if (!linkedAreas.containsKey(areaID)) return null;
-		return linkedAreas.get(areaID).getDistance();
+		if (linkedAreas.containsKey(areaID)) {
+			return linkedAreas.get(areaID).getDistance();
+		}
+		return null;
 	}
 
 	public Set<Area> visibleAreasInRange(Actor subject, Set<AreaLink.DistanceCategory> ranges) {
@@ -353,7 +352,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			}
 		}
 		for (AreaLink link : linkedAreas.values()) {
-			if (isVisible(subject, link.getAreaID()) && ranges.contains(link.getDistance())) {
+			if (game().data().getArea(link.getAreaID()).hasLineOfSightFrom(this) && ranges.contains(link.getDistance())) {
 				areas.add(game().data().getArea(link.getAreaID()));
 			}
 		}
@@ -477,6 +476,15 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			state.add(new SaveData(SaveData.DataType.AREA, this.getID(), "is_known", isKnown()));
 		}
 		return state;
+	}
+
+	public static AreaLink.DistanceCategory pathLengthToDistance(int pathLength) {
+		for (AreaLink.DistanceCategory distance : AreaLink.DistanceCategory.values()) {
+			if (pathLength >= distance.minPathLength && (distance.maxPathLength == -1 || pathLength <= distance.maxPathLength)) {
+				return distance;
+			}
+		}
+		return null;
 	}
 	
 }

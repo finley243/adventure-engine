@@ -5,7 +5,18 @@ import com.github.finley243.adventureengine.Game;
 public class AreaLink {
 
     public enum DistanceCategory {
-        NEAR, CLOSE, FAR, DISTANT
+        NEAR(0, 0),
+        CLOSE(1, 1),
+        FAR(2, 4),
+        DISTANT(5, -1);
+
+        public final int minPathLength;
+        public final int maxPathLength;
+
+        DistanceCategory(int minPathLength, int maxPathLength) {
+            this.minPathLength = minPathLength;
+            this.maxPathLength = maxPathLength;
+        }
     }
 
     public enum CompassDirection {

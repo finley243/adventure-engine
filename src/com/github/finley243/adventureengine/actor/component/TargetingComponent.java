@@ -292,7 +292,7 @@ public class TargetingComponent {
     }
 
     public float getPassiveDetectionChance(Actor subject) {
-        AreaLink.DistanceCategory distance = actor.getArea().getDistanceTo(subject.getArea().getID());
+        AreaLink.DistanceCategory distance = actor.getArea().getLinearDistanceTo(subject.getArea().getID());
         if (subject.isDead()) {
             return switch (distance) {
                 case NEAR -> 0.95f;
@@ -338,9 +338,9 @@ public class TargetingComponent {
         return combinedRanges;
     }
 
-    private Set<Area> idealAreas(Area origin) {
+    private Set<Area> idealAreas(Area targetArea) {
         Set<AreaLink.DistanceCategory> idealDistances = idealDistances();
-        return origin.visibleAreasInRange(actor, idealDistances);
+        return targetArea.visibleAreasInRange(actor, idealDistances);
     }
 
     /*public void loadState(SaveData data) {

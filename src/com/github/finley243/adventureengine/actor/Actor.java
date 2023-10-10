@@ -717,7 +717,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		Set<Actor> visibleActors = new HashSet<>();
 		for (Area visibleArea : getVisibleAreas()) {
 			for (Actor actor : visibleArea.getActors()) {
-				if (actor != this && !actor.isInCover()) {
+				if (!actor.equals(this) && !actor.isInCover()) {
 					visibleActors.add(actor);
 				}
 			}
@@ -739,21 +739,18 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public Set<AttackTarget> getVisibleAttackTargets() {
 		Set<AttackTarget> attackTargets = new HashSet<>(getVisibleActors());
-		attackTargets.remove(this);
 		attackTargets.addAll(getVisibleObjects());
 		return attackTargets;
 	}
 
-	public boolean canSee(Actor target) {
-		return this.equals(target) || getVisibleActors().contains(target);
-	}
-
 	public boolean canSee(AttackTarget target) {
-		if (target instanceof Actor) {
-			return canSee((Actor) target);
-		} else {
-			return getVisibleAttackTargets().contains(target);
+		if (target == null) throw new IllegalArgumentException("Target is null");
+		if (this.equals(target)) {
+			return true;
 		}
+		Area targetArea = target.getArea();
+		if (targetArea == null) throw new IllegalArgumentException("Target area is null");
+		return targetArea.hasLineOfSightFrom(this.getArea());
 	}
 
 	@Override

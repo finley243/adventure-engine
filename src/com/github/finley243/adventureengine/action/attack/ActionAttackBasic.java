@@ -48,7 +48,7 @@ public class ActionAttackBasic extends ActionAttack {
 		if (weapon.usesAmmo() && weapon.getAmmoRemaining() < getAmmoConsumed()) {
 			return new CanChooseResult(false, "Not enough ammo");
 		}
-		if (!getRanges().contains(subject.getArea().getDistanceTo(target.getArea().getID()))) {
+		if (!getRanges().contains(subject.getArea().getLinearDistanceTo(target.getArea().getID()))) {
 			return new CanChooseResult(false, "Target outside range");
 		}
 		if (!subject.canSee(target)) {

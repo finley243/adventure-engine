@@ -46,10 +46,10 @@ public class ActionAttackArea extends ActionAttack {
         if (weapon.usesAmmo() && weapon.getAmmoRemaining() < getAmmoConsumed()) {
             return new CanChooseResult(false, "Not enough ammo");
         }
-        if (!getRanges().contains(subject.getArea().getDistanceTo(getArea().getID()))) {
+        if (!getRanges().contains(subject.getArea().getLinearDistanceTo(getArea().getID()))) {
             return new CanChooseResult(false, "Target area outside range");
         }
-        if (!subject.getArea().isVisible(subject, getArea().getID())) {
+        if (!getArea().hasLineOfSightFrom(subject.getArea())) {
             return new CanChooseResult(false, "Target area not visible");
         }
         return new CanChooseResult(true, null);

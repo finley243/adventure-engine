@@ -92,8 +92,8 @@ public class ObjectComponentLink extends ObjectComponent {
 
     public AreaLink.DistanceCategory getDistanceThrough(String linkID, Area originArea, Area targetArea) {
         WorldObject linkedObject = getLinkedObject(linkID);
-        AreaLink.DistanceCategory distanceOriginToLink = getObject().getArea().getDistanceTo(linkedObject.getArea().getID());
-        AreaLink.DistanceCategory distanceLinkToTarget = linkedObject.getArea().getDistanceTo(targetArea.getID());
+        AreaLink.DistanceCategory distanceOriginToLink = getObject().getArea().getLinearDistanceTo(linkedObject.getArea().getID());
+        AreaLink.DistanceCategory distanceLinkToTarget = linkedObject.getArea().getLinearDistanceTo(targetArea.getID());
         if (distanceOriginToLink == null) {
             return null;
         }
