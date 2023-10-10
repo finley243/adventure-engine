@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.action.ActionEnd;
 import com.github.finley243.adventureengine.action.ActionTalk;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.Idle;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
@@ -32,6 +33,7 @@ import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
 
@@ -709,7 +711,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (isUsingObject() && !getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanSeeOtherAreas(getUsingObject().slot())) {
 			return Set.of(getArea());
 		} else {
-			return getArea().getLineOfSightAreas();
+			//return getArea().getLineOfSightAreas();
+			return Pathfinder.getVisibleAreas(getArea(), this).keySet();
 		}
 	}
 
@@ -750,7 +753,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		Area targetArea = target.getArea();
 		if (targetArea == null) throw new IllegalArgumentException("Target area is null");
-		return targetArea.hasLineOfSightFrom(this.getArea());
+		return getVisibleAreas().contains(targetArea);
+		//return targetArea.hasLineOfSightFrom(this.getArea());
 	}
 
 	@Override

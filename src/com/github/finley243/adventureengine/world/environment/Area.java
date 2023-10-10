@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
@@ -272,20 +273,20 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			if (game().data().getLinkType(link.getType()).isVisible()) {
 				Area area = game().data().getArea(link.getAreaID());
 				visibleAreas.add(area);
-				for (WorldObject object : area.getObjects()) {
+				/*for (WorldObject object : area.getObjects()) {
 					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 					if (linkComponent == null) continue;
 					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible()) {
 						visibleAreas.addAll(objectLinkedArea.getLineOfSightAreasNoLinks());
 					}
-				}
+				}*/
 			}
 		}
 		return visibleAreas;
 	}
 
 	// Called by getLineOfSightAreas, prevents infinite recursion between linked areas
-	private Set<Area> getLineOfSightAreasNoLinks() {
+	/*private Set<Area> getLineOfSightAreasNoLinks() {
 		Set<Area> visibleAreas = new HashSet<>();
 		visibleAreas.add(this);
 		for (AreaLink link : linkedAreas.values()) {
@@ -295,7 +296,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			}
 		}
 		return visibleAreas;
-	}
+	}*/
 
 	public Set<String> getLineOfSightAreaIDs() {
 		Set<String> visibleAreaIDs = new HashSet<>();
@@ -303,20 +304,20 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		for (AreaLink link : linkedAreas.values()) {
 			if (game().data().getLinkType(link.getType()).isVisible()) {
 				visibleAreaIDs.add(link.getAreaID());
-				for (WorldObject object : game().data().getArea(link.getAreaID()).getObjects()) {
+				/*for (WorldObject object : game().data().getArea(link.getAreaID()).getObjects()) {
 					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 					if (linkComponent == null) continue;
 					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible()) {
 						visibleAreaIDs.addAll(objectLinkedArea.getLineOfSightAreaIDsNoLinks());
 					}
-				}
+				}*/
 			}
 		}
 		return visibleAreaIDs;
 	}
 
 	// Called by getLineOfSightAreaIDs, prevents infinite recursion between linked areas
-	private Set<String> getLineOfSightAreaIDsNoLinks() {
+	/*private Set<String> getLineOfSightAreaIDsNoLinks() {
 		Set<String> visibleAreaIDs = new HashSet<>();
 		visibleAreaIDs.add(this.getID());
 		for (AreaLink link : linkedAreas.values()) {
@@ -325,7 +326,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			}
 		}
 		return visibleAreaIDs;
-	}
+	}*/
 
 	public boolean isVisible(Actor subject) {
 		return true;
@@ -359,25 +360,33 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return false;
 	}
 
-	public AreaLink.DistanceCategory getLinearDistanceTo(String areaID) {
-		if (this.getID().equals(areaID)) return AreaLink.DistanceCategory.NEAR;
-		if (linkedAreas.containsKey(areaID)) {
-			return linkedAreas.get(areaID).getDistance();
+	// TODO - Distance should not be dependent on visibility of paths (should not require actor)
+	public AreaLink.DistanceCategory getLinearDistanceTo(Area area, Actor actor) {
+		if (linkedAreas.containsKey(area.getID())) {
+			return linkedAreas.get(area.getID()).getDistance();
 		}
-		return null;
+		Pathfinder.VisibleAreaData areaData = Pathfinder.getVisibleAreas(this, actor).get(area);
+		if (areaData == null) return null;
+		return areaData.distance();
 	}
 
 	public Set<Area> visibleAreasInRange(Actor subject, Set<AreaLink.DistanceCategory> ranges) {
 		Set<Area> areas = new HashSet<>();
-		if (ranges.contains(AreaLink.DistanceCategory.NEAR)) {
+		/*if (ranges.contains(AreaLink.DistanceCategory.NEAR)) {
 			areas.add(this);
 			if (ranges.size() == 1) {
 				return areas;
 			}
-		}
-		for (AreaLink link : linkedAreas.values()) {
+		}*/
+		/*for (AreaLink link : linkedAreas.values()) {
 			if (game().data().getArea(link.getAreaID()).hasLineOfSightFrom(this) && ranges.contains(link.getDistance())) {
 				areas.add(game().data().getArea(link.getAreaID()));
+			}
+		}*/
+		Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(this, subject);
+		for (Map.Entry<Area, Pathfinder.VisibleAreaData> entry : visibleAreas.entrySet()) {
+			if (ranges.contains(entry.getValue().distance())) {
+				areas.add(entry.getKey());
 			}
 		}
 		return areas;
@@ -434,7 +443,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			case "relative_name" -> new ExpressionConstantString(getRelativeName());
 			case "move_phrase" -> new ExpressionConstantString(getMovePhrase(context.getSubject()));
 			case "room" -> new ExpressionConstantString(roomID);
-			case "visible_areas" -> new ExpressionConstantStringSet(getLineOfSightAreaIDs());
+			//case "visible_areas" -> new ExpressionConstantStringSet(getLineOfSightAreaIDs());
 			case "movable_areas" -> new ExpressionConstantStringSet(getMovableAreaIDs(null));
 			default -> null;
 		};

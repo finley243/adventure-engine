@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -149,7 +150,7 @@ public class WeaponAttackType {
             }
             case SPREAD -> {
                 // Possibly switch to only areas visible to the subject?
-                for (Area target : subject.getArea().getLineOfSightAreas()) {
+                for (Area target : Pathfinder.getVisibleAreas(subject.getArea(), subject).keySet() /*subject.getArea().getLineOfSightAreas()*/) {
                     actions.add(new ActionAttackArea(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                 }
             }

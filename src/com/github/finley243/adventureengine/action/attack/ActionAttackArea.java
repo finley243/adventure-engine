@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
@@ -46,10 +47,10 @@ public class ActionAttackArea extends ActionAttack {
         if (weapon.usesAmmo() && weapon.getAmmoRemaining() < getAmmoConsumed()) {
             return new CanChooseResult(false, "Not enough ammo");
         }
-        if (!getRanges().contains(subject.getArea().getLinearDistanceTo(getArea().getID()))) {
+        if (!getRanges().contains(subject.getArea().getLinearDistanceTo(getArea(), subject))) {
             return new CanChooseResult(false, "Target area outside range");
         }
-        if (!getArea().hasLineOfSightFrom(subject.getArea())) {
+        if (!subject.getVisibleAreas().contains(getArea())) {
             return new CanChooseResult(false, "Target area not visible");
         }
         return new CanChooseResult(true, null);

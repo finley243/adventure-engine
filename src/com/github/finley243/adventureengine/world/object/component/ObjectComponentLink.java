@@ -90,7 +90,7 @@ public class ObjectComponentLink extends ObjectComponent {
         return linkedAreas;
     }
 
-    public AreaLink.DistanceCategory getDistanceThrough(String linkID, Area originArea, Area targetArea) {
+    /*public AreaLink.DistanceCategory getDistanceThrough(String linkID, Area originArea, Area targetArea) {
         WorldObject linkedObject = getLinkedObject(linkID);
         AreaLink.DistanceCategory distanceOriginToLink = getObject().getArea().getLinearDistanceTo(linkedObject.getArea().getID());
         AreaLink.DistanceCategory distanceLinkToTarget = linkedObject.getArea().getLinearDistanceTo(targetArea.getID());
@@ -101,7 +101,7 @@ public class ObjectComponentLink extends ObjectComponent {
             return null;
         }
         return AreaLink.combinedDistance(distanceOriginToLink, distanceLinkToTarget);
-    }
+    }*/
 
     @Override
     public List<Action> getActions(Actor subject) {
