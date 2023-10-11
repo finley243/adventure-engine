@@ -332,11 +332,11 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return true;
 	}
 
-	public boolean hasObstructedLineOfSight(Actor subject) {
+	public boolean hasLineOfSightObstruction(Actor subject) {
 		return false;
 	}
 
-	public boolean hasVisibleLinkTo(Area area) {
+	public boolean hasDirectVisibleLinkTo(Area area) {
 		if (linkedAreas.containsKey(area.getID())) {
 			AreaLink link = linkedAreas.get(area.getID());
 			return game().data().getLinkType(link.getType()).isVisible();
@@ -349,15 +349,15 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			AreaLink link = linkedAreas.get(area.getID());
 			return link.getDirection();
 		}
-		return null;
-	}
-
-	public boolean hasLineOfSightFrom(Area area) {
-		if (area.linkedAreas.containsKey(getID())) {
-			AreaLink link = area.linkedAreas.get(getID());
-			return game().data().getLinkType(link.getType()).isVisible();
+		for (WorldObject object : getObjects()) {
+			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+			if (linkComponent == null) continue;
+			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedAreasVisibleWithDirections();
+			if (visibleAreasWithDirections.containsKey(area)) {
+				return visibleAreasWithDirections.get(area);
+			}
 		}
-		return false;
+		return null;
 	}
 
 	// TODO - Distance should not be dependent on visibility of paths (should not require actor)

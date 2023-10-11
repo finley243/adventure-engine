@@ -69,13 +69,12 @@ public class Pathfinder {
 		List<Area> possiblyVisibleAreas = getPossiblyVisibleAreas(origin);
 		Map<Area, AreaPathData> visibleMap = new HashMap<>();
 		for (Area currentArea : possiblyVisibleAreas) {
-			if (!currentArea.isVisible(actor)) continue;
 			if (currentArea.equals(origin)) {
 				visibleAreas.put(currentArea, new VisibleAreaData(null, Area.pathLengthToDistance(0)));
 				visibleMap.put(currentArea, new AreaPathData(null, true, 0));
 			} else {
 				for (Area visibleArea : new HashSet<>(visibleMap.keySet())) {
-					if (!visibleArea.hasVisibleLinkTo(currentArea) || visibleArea.hasObstructedLineOfSight(actor)) continue;
+					if (!visibleArea.hasDirectVisibleLinkTo(currentArea) || visibleArea.hasLineOfSightObstruction(actor)) continue;
 					AreaLink.CompassDirection linkDirection = visibleArea.getLinkDirectionTo(currentArea);
 					AreaLink.CompassDirection currentOriginDirection = combinedDirection(visibleMap.get(visibleArea).direction, linkDirection);
 					int currentPathLength = visibleMap.get(visibleArea).minPathLength + 1;
@@ -100,6 +99,11 @@ public class Pathfinder {
 						visibleMap.remove(currentArea);
 					}
 				}
+			}
+		}
+		for (Area area : new HashSet<>(visibleAreas.keySet())) {
+			if (!area.isVisible(actor)) {
+				visibleAreas.remove(area);
 			}
 		}
 		return visibleAreas;

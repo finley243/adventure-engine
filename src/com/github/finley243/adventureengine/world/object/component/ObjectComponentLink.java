@@ -70,6 +70,16 @@ public class ObjectComponentLink extends ObjectComponent {
         return linkedAreas;
     }
 
+    public Map<Area, AreaLink.CompassDirection> getLinkedAreasVisibleWithDirections() {
+        Map<Area, AreaLink.CompassDirection> linkedAreas = new HashMap<>();
+        for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
+            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(new Context(getObject().game(), getObject().game().data().getPlayer(), getObject().game().data().getPlayer(), getObject())))) {
+                linkedAreas.put(getLinkedObject(linkEntry.getKey()).getArea(), getDirection(linkEntry.getKey()));
+            }
+        }
+        return linkedAreas;
+    }
+
     public Set<Area> getLinkedAreasAudible() {
         Set<Area> linkedAreas = new HashSet<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
