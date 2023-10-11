@@ -50,7 +50,7 @@ public class ActionAttackArea extends ActionAttack {
         if (!getRanges().contains(subject.getArea().getLinearDistanceTo(getArea()))) {
             return new CanChooseResult(false, "Target area outside range");
         }
-        if (!subject.getVisibleAreas().contains(getArea())) {
+        if (!getArea().isVisible(subject)) {
             return new CanChooseResult(false, "Target area not visible");
         }
         return new CanChooseResult(true, null);

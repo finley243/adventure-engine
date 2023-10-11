@@ -47,7 +47,7 @@ public class UtilityUtils {
 	}
 	
 	public static float getPursueTargetUtility(Actor subject, Actor target) {
-		if (!subject.canSee(target)) {
+		if (!target.isVisible(subject) || !subject.getLineOfSightActors().contains(target)) {
 			return PURSUE_TARGET_UTILITY_INVISIBLE;
 		} else if (subject.getEquipmentComponent().hasMeleeWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_MELEE;

@@ -52,7 +52,7 @@ public class ActionAttackLimb extends ActionAttack {
 		if (!getRanges().contains(subject.getArea().getLinearDistanceTo(target.getArea()))) {
 			return new CanChooseResult(false, "Target outside range");
 		}
-		if (!subject.canSee(target)) {
+		if (!target.isVisible(subject)) {
 			return new CanChooseResult(false, "Target not visible");
 		}
 		return new CanChooseResult(true, null);

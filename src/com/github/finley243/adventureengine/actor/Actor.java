@@ -33,7 +33,6 @@ import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
 
@@ -84,6 +83,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final BehaviorComponent behaviorComponent;
 	private int money;
 	private ObjectComponentUsable.ObjectUserData usingObject;
+	private final StatStringSet senseTypes;
 	private final Set<AreaTarget> areaTargets;
 	private int sleepCounter;
 	private boolean playerControlled;
@@ -96,6 +96,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.templateID = templateID;
 		this.targetingComponent = new TargetingComponent(this);
 		this.areaTargets = new HashSet<>();
+		this.senseTypes = new StatStringSet("sense_types", this);
 		this.startDead = startDead;
 		this.isDead = startDead;
 		this.maxHP = new StatInt("max_hp", this);
@@ -574,11 +575,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				actions.addAll(getUsingObject().object().localActions(this));
 			}
 		}
-		for (Actor visibleActor : getVisibleActors()) {
-			actions.addAll(visibleActor.visibleActions(this));
+		for (Actor visibleActor : getLineOfSightActors()) {
+			if (visibleActor.isVisible(this)) {
+				actions.addAll(visibleActor.visibleActions(this));
+			}
 		}
-		for (WorldObject visibleObject : getVisibleObjects()) {
-			actions.addAll(visibleObject.visibleActions(this));
+		for (WorldObject visibleObject : getLineOfSightObjects()) {
+			if (visibleObject.isVisible(this)) {
+				actions.addAll(visibleObject.visibleActions(this));
+			}
 		}
 		if (canMove(new Context(game(), this, this))) {
 			actions.addAll(getArea().getMoveActions(this, null, null));
@@ -707,18 +712,21 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 
-	public Set<Area> getVisibleAreas() {
+	public Map<Area, Pathfinder.VisibleAreaData> getVisibleAreas() {
 		if (isUsingObject() && !getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanSeeOtherAreas(getUsingObject().slot())) {
-			return Set.of(getArea());
+			return Map.of(getArea(), new Pathfinder.VisibleAreaData(null, Area.pathLengthToDistance(0)));
 		} else {
-			//return getArea().getLineOfSightAreas();
-			return Pathfinder.getVisibleAreas(getArea(), this).keySet();
+			return Pathfinder.getVisibleAreas(getArea(), this);
 		}
 	}
 
-	public Set<Actor> getVisibleActors() {
+	public boolean isVisible(Actor subject) {
+        return !(isInCover() && !getArea().equals(subject.getArea()));
+    }
+
+	public Set<Actor> getLineOfSightActors() {
 		Set<Actor> visibleActors = new HashSet<>();
-		for (Area visibleArea : getVisibleAreas()) {
+		for (Area visibleArea : getVisibleAreas().keySet()) {
 			for (Actor actor : visibleArea.getActors()) {
 				if (!actor.equals(this) && !actor.isInCover()) {
 					visibleActors.add(actor);
@@ -728,9 +736,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return visibleActors;
 	}
 
-	public Set<WorldObject> getVisibleObjects() {
+	public Set<WorldObject> getLineOfSightObjects() {
 		Set<WorldObject> visibleObjects = new HashSet<>();
-		for (Area visibleArea : getVisibleAreas()) {
+		for (Area visibleArea : getVisibleAreas().keySet()) {
 			for (WorldObject object : visibleArea.getObjects()) {
 				if (!object.isHidden()) {
 					visibleObjects.add(object);
@@ -740,21 +748,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return visibleObjects;
 	}
 
-	public Set<AttackTarget> getVisibleAttackTargets() {
-		Set<AttackTarget> attackTargets = new HashSet<>(getVisibleActors());
-		attackTargets.addAll(getVisibleObjects());
+	public Set<AttackTarget> getLineOfSightAttackTargets() {
+		Set<AttackTarget> attackTargets = new HashSet<>(getLineOfSightActors());
+		attackTargets.addAll(getLineOfSightObjects());
 		return attackTargets;
-	}
-
-	public boolean canSee(AttackTarget target) {
-		if (target == null) throw new IllegalArgumentException("Target is null");
-		if (this.equals(target)) {
-			return true;
-		}
-		Area targetArea = target.getArea();
-		if (targetArea == null) throw new IllegalArgumentException("Target area is null");
-		return getVisibleAreas().contains(targetArea);
-		//return targetArea.hasLineOfSightFrom(this.getArea());
 	}
 
 	@Override
@@ -821,6 +818,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public StatStringSet getStatStringSet(String name) {
 		if ("equipment_effects".equals(name)) {
 			return equipmentEffects;
+		} else if ("sense_types".equals(name)) {
+			return senseTypes;
 		} else if ("tags".equals(name)) {
 			return tags;
 		}
@@ -891,6 +890,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "area" -> new ExpressionConstantString(getArea().getID());
 			case "room" -> new ExpressionConstantString(getArea().getRoom().getID());
 			case "equipment_effects" -> new ExpressionConstantStringSet(equipmentEffects.value(new HashSet<>(), context));
+			case "sense_types" -> new ExpressionConstantStringSet(senseTypes.value(getTemplate().getSenseTypes(), context));
 			case "tags" -> new ExpressionConstantStringSet(tags.value(getTemplate().getTags(), context));
 			default -> null;
 		};

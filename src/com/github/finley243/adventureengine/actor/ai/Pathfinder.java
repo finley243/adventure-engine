@@ -77,7 +77,7 @@ public class Pathfinder {
 
 	public static Map<Area, VisibleAreaData> getLineOfSightAreas(Area origin) {
 		Map<Area, VisibleAreaData> visibleAreas = new HashMap<>();
-		List<Area> possiblyVisibleAreas = getPossiblyVisibleAreas(origin);
+		List<Area> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
 		Map<Area, AreaPathData> visibleMap = new HashMap<>();
 		for (Area currentArea : possiblyVisibleAreas) {
 			if (currentArea.equals(origin)) {
@@ -115,7 +115,7 @@ public class Pathfinder {
 		return visibleAreas;
 	}
 
-	private static List<Area> getPossiblyVisibleAreas(Area origin) {
+	private static List<Area> getPossiblyVisibleAreas(Area origin, int range) {
 		List<Area> possiblyVisibleAreas = new ArrayList<>();
 		Set<Area> possiblyVisibleAreaSet = new HashSet<>();
 		Queue<AreaQueueData> areaQueue = new LinkedList<>();
@@ -126,7 +126,7 @@ public class Pathfinder {
 			Area currentArea = currentAreaData.area();
 			int currentDistance = currentAreaData.distance();
 			possiblyVisibleAreas.add(currentArea);
-			if (currentDistance < MAX_VISIBLE_DISTANCE) {
+			if (currentDistance < range) {
 				for (Area linkedArea : currentArea.getDirectVisibleLinkedAreas()) {
 					if (!possiblyVisibleAreaSet.contains(linkedArea)) {
 						areaQueue.add(new AreaQueueData(linkedArea, currentDistance + 1));

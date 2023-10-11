@@ -66,10 +66,10 @@ public class TargetingComponent {
     }
 
     public void updateTurn() {
-        Set<Actor> visibleActors = actor.getVisibleActors();
+        Set<Actor> lineOfSightActors = actor.getLineOfSightActors();
         Set<Actor> actorsToRemove = new HashSet<>();
         for (Map.Entry<Actor, DetectedActor> entry : detectedActors.entrySet()) {
-            if (visibleActors.contains(entry.getKey())) {
+            if (lineOfSightActors.contains(entry.getKey()) && entry.getKey().isVisible(actor)) {
                 entry.getValue().lostVisualCounter = 0;
                 entry.getValue().lastKnownArea = entry.getKey().getArea();
                 if (entry.getValue().state.updateOnTurn) {
@@ -93,14 +93,17 @@ public class TargetingComponent {
     }
 
     public void update() {
-        for (Actor visibleActor : actor.getVisibleActors()) {
-            processDetectionEvent(visibleActor, getPassiveDetectionChance(visibleActor));
+        Set<Actor> lineOfSightActors = actor.getLineOfSightActors();
+        for (Actor lineOfSightActor : lineOfSightActors) {
+            if (lineOfSightActor.isVisible(actor)) {
+                processDetectionEvent(lineOfSightActor, getPassiveDetectionChance(lineOfSightActor));
+            }
         }
         boolean startedInCombat = false;
         for (Map.Entry<Actor, DetectedActor> entry : detectedActors.entrySet()) {
             if (entry.getValue().state == DetectionState.HOSTILE) {
                 startedInCombat = true;
-                if (actor.canSee(entry.getKey())) {
+                if (lineOfSightActors.contains(entry.getKey()) && entry.getKey().isVisible(actor)) {
                     entry.getValue().lastKnownArea = entry.getKey().getArea();
                 }
                 if (entry.getKey().isDead()) {

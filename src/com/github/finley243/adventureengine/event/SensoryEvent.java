@@ -4,14 +4,18 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Bark;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
+import org.checkerframework.checker.units.qual.A;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class SensoryEvent implements QueuedEvent {
@@ -94,31 +98,43 @@ public class SensoryEvent implements QueuedEvent {
 
 	@Override
 	public void execute(Game game) {
-		Set<Actor> actors = new HashSet<>();
-		Set<Room> visitedRooms = new HashSet<>();
-		// TODO - Adjust to account for direct links between areas in different rooms
+		Map<Area, Set<Area>> lineOfSightAreas = new HashMap<>(); // Key = origin, Value = line of sight areas
 		for (Area origin : getOrigins()) {
-			if (!visitedRooms.contains(origin.getRoom())) {
-				actors.addAll(origin.getRoom().getActors());
-				if (isLoud()) {
-					for (WorldObject areaObject : origin.getRoom().getObjects()) {
-						ObjectComponentLink linkComponent = areaObject.getComponentOfType(ObjectComponentLink.class);
-						if (linkComponent == null) continue;
-						for (Area audibleArea : linkComponent.getLinkedAreasAudible()) {
-							actors.addAll(audibleArea.getRoom().getActors());
-						}
-					}
+			lineOfSightAreas.put(origin, Pathfinder.getLineOfSightAreas(origin).keySet());
+		}
+		Map<Area, Set<Actor>> lineOfSightActors = new HashMap<>();
+		for (Area origin : getOrigins()) {
+			Set<Area> areas = lineOfSightAreas.get(origin);
+			Set<Actor> originActors = new HashSet<>();
+			for (Area area : areas) {
+				originActors.addAll(area.getActors());
+			}
+			lineOfSightActors.put(origin, originActors);
+		}
+		Map<Actor, ActorSenseData> reverseActorMap = new HashMap<>();
+		for (Map.Entry<Area, Set<Actor>> entry : lineOfSightActors.entrySet()) {
+			for (Actor actor : entry.getValue()) {
+				if (!reverseActorMap.containsKey(actor)) {
+					reverseActorMap.put(actor, new ActorSenseData());
 				}
-				visitedRooms.add(origin.getRoom());
+				reverseActorMap.get(actor).lineOfSightOrigins.add(entry.getKey());
 			}
 		}
-		for (Actor actor : actors) {
-			boolean actorCanSeeEvent = false;
-			for (Area origin : getOrigins()) {
-				if (actor.getVisibleAreas().contains(origin)) {
-					actorCanSeeEvent = true;
-					break;
+		// TODO - Add system for audible events (simple path length check?)
+		for (Actor actor : reverseActorMap.keySet()) {
+			boolean actorCanSeeEvent = true;
+			if (getSubject() != null) {
+				actorCanSeeEvent = getSubject().isVisible(actor);
+			}
+			if (actorCanSeeEvent) {
+				boolean hasVisibleOrigin = false;
+				for (Area origin : reverseActorMap.get(actor).lineOfSightOrigins) {
+					if (origin.isVisible(actor)) {
+						hasVisibleOrigin = true;
+						break;
+					}
 				}
+				actorCanSeeEvent = hasVisibleOrigin;
 			}
 			actor.onSensoryEvent(this, actorCanSeeEvent);
 		}
@@ -126,6 +142,14 @@ public class SensoryEvent implements QueuedEvent {
 
 	public boolean continueAfterExecution() {
 		return true;
+	}
+
+	private static class ActorSenseData {
+		public final Set<Area> lineOfSightOrigins;
+
+		public ActorSenseData() {
+			this.lineOfSightOrigins = new HashSet<>();
+		}
 	}
 
 }

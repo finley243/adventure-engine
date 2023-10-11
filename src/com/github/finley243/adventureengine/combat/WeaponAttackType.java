@@ -8,7 +8,6 @@ import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.item.ItemWeapon;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -133,15 +132,15 @@ public class WeaponAttackType {
         }
         switch (category) {
             case SINGLE -> {
-                for (AttackTarget target : subject.getVisibleAttackTargets()) {
-                    if (!target.equals(subject) && target.canBeAttacked()) {
+                for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
+                    if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         actions.add(new ActionAttackBasic(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                     }
                 }
             }
             case TARGETED -> {
-                for (Actor target : subject.getVisibleActors()) {
-                    if (!target.equals(subject) && target.canBeAttacked()) {
+                for (Actor target : subject.getLineOfSightActors()) {
+                    if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
                             actions.add(new ActionAttackLimb(weapon, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                         }
@@ -149,8 +148,7 @@ public class WeaponAttackType {
                 }
             }
             case SPREAD -> {
-                // Possibly switch to only areas visible to the subject?
-                for (Area target : Pathfinder.getVisibleAreas(subject.getArea(), subject).keySet() /*subject.getArea().getLineOfSightAreas()*/) {
+                for (Area target : subject.getVisibleAreas().keySet()) {
                     actions.add(new ActionAttackArea(weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                 }
             }

@@ -60,6 +60,7 @@ public class Data {
 	private final Map<String, DamageType> damageTypes = new HashMap<>();
 	private final Map<String, Attribute> attributes = new HashMap<>();
 	private final Map<String, Skill> skills = new HashMap<>();
+	private final Map<String, SenseType> senseTypes = new HashMap<>();
 
 	private final Map<String, Boolean> globalBooleans = new HashMap<>();
 	private final Map<String, Integer> globalIntegers = new HashMap<>();
@@ -113,6 +114,7 @@ public class Data {
 		damageTypes.clear();
 		attributes.clear();
 		skills.clear();
+		senseTypes.clear();
 		globalIntegers.clear();
 		globalFloats.clear();
 		globalBooleans.clear();
@@ -449,6 +451,20 @@ public class Data {
 
 	public Set<String> getSkillIDs() {
 		return skills.keySet();
+	}
+
+	public void addSenseType(String id, SenseType value) {
+		if (id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add sense type with blank ID");
+		if (senseTypes.containsKey(id)) throw new IllegalArgumentException("Cannot add sense type with existing ID: " + id);
+		senseTypes.put(id, value);
+	}
+
+	public SenseType getSenseType(String id) {
+		return senseTypes.get(id);
+	}
+
+	public Set<String> getSenseTypeIDs() {
+		return senseTypes.keySet();
 	}
 
 	public void setGlobalBoolean(String id, boolean value) {

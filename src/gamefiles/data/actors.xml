@@ -20,6 +20,7 @@
         <skill key="lockpick" value="4"/>
         <skill key="stealth" value="4"/>
         <skill key="dodge" value="4"/>
+        <senseType>vision_basic</senseType>
         <limb id="head" hitChance="0.5" damageMult="2.0" apparelSlot="head">
             <name>head</name>
         </limb>

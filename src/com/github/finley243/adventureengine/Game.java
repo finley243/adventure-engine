@@ -74,7 +74,7 @@ public class Game {
 		}
 		System.out.println("Loaded Game");*/
 
-		System.out.println(Pathfinder.getVisibleAreas(data().getArea("apartment_0_3"), data().getPlayer()));
+		System.out.println(Pathfinder.getLineOfSightAreas(data().getArea("apartment_0_3")));
 
 		continueGame = true;
 		startRound();
@@ -130,8 +130,10 @@ public class Game {
 		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
 		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
 		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
-		for (Actor visibleActor : data().getPlayer().getVisibleActors()) {
-			visibleActor.triggerScript("on_player_visible_round", new Context(this, visibleActor, data().getPlayer()));
+		for (Actor visibleActor : data().getPlayer().getLineOfSightActors()) {
+			if (visibleActor.isVisible(data().getPlayer())) {
+				visibleActor.triggerScript("on_player_visible_round", new Context(this, visibleActor, data().getPlayer()));
+			}
 		}
 		data().dateTime().onNextRound();
 		this.turnOrder = computeTurnOrder();

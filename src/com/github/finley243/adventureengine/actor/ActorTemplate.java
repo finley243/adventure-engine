@@ -30,6 +30,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Map<String, EquipSlot> equipSlots;
 	private final Map<String, Integer> attributes;
 	private final Map<String, Integer> skills;
+	private final Set<String> senseTypes;
 	private final Set<String> tags;
 
 	private final List<String> startingEffects;
@@ -43,7 +44,7 @@ public class ActorTemplate extends GameInstanced {
 	private final List<ActionCustom.CustomActionHolder> customActions;
 	private final List<ActionCustom.CustomActionHolder> customInventoryActions;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer actionPoints, Integer movePoints, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<String> tags, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer actionPoints, Integer movePoints, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<String> senseTypes, Set<String> tags, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -72,6 +73,7 @@ public class ActorTemplate extends GameInstanced {
 		this.equipSlots = equipSlots;
 		this.attributes = attributes;
 		this.skills = skills;
+		this.senseTypes = senseTypes;
 		this.tags = tags;
 		this.startingEffects = startingEffects;
 		this.lootTable = lootTable;
@@ -168,8 +170,18 @@ public class ActorTemplate extends GameInstanced {
 		}
 	}
 
+	public Set<String> getSenseTypes() {
+		if (!senseTypes.isEmpty()) {
+			return senseTypes;
+		} else if (parentID != null) {
+			return game().data().getActorTemplate(parentID).getSenseTypes();
+		} else {
+			return new HashSet<>();
+		}
+	}
+
 	public Set<String> getTags() {
-		if (!equipSlots.isEmpty()) {
+		if (!tags.isEmpty()) {
 			return tags;
 		} else if (parentID != null) {
 			return game().data().getActorTemplate(parentID).getTags();

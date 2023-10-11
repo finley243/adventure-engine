@@ -29,7 +29,10 @@ public class ExpressionIsVisible extends Expression {
             context.game().log().print("ExpressionIsVisible StatHolderReference target is not an Actor");
             return false;
         }
-        return actorCast.canSee(targetCast);
+        if (!targetCast.isVisible(actorCast)) {
+            return false;
+        }
+        return actorCast.getLineOfSightActors().contains(targetCast);
     }
 
 }

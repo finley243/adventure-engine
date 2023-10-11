@@ -25,7 +25,8 @@ public class ScriptNearestActorWithScript extends Script {
         // TODO - Improve efficiency of nearest actor check
         List<Actor> nearestActor = new ArrayList<>();
         List<Integer> nearestActorDist = new ArrayList<>();
-        for (Actor visibleActor : context.game().data().getPlayer().getVisibleActors()) {
+        for (Actor visibleActor : context.game().data().getPlayer().getLineOfSightActors()) {
+            if (!visibleActor.isVisible(context.game().data().getPlayer())) continue;
             // TODO - Replace with dedicated pathfinding function
             int distance = Pathfinder.findPath(visibleActor.getArea(), context.game().data().getPlayer().getArea(), null).size() - 1;
             int addAtIndex = nearestActor.size();

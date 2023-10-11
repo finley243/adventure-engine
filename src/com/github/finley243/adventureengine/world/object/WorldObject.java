@@ -214,6 +214,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return false;
 	}
 
+	public boolean isVisible(Actor subject) {
+        return !isHidden();
+    }
+
 	public <T extends ObjectComponent> T getComponentOfType(Class<T> componentClass) {
 		ObjectComponent uncastComponents = components.get(componentClass);
 		return componentClass.cast(uncastComponents);

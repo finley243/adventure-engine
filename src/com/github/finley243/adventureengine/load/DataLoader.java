@@ -135,6 +135,10 @@ public class DataLoader {
                                     Skill skill = loadSkill(currentElement);
                                     game.data().addSkill(skill.ID(), skill);
                                 }
+                                case "senseType" -> {
+                                    SenseType senseType = loadSenseType(currentElement);
+                                    game.data().addSenseType(senseType.ID(), senseType);
+                                }
                             }
                         }
                         currentChild = currentChild.getNextSibling();
@@ -160,6 +164,12 @@ public class DataLoader {
         String ID = LoadUtils.attribute(element, "id", null);
         String name = element.getTextContent();
         return new Skill(ID, name);
+    }
+
+    private static SenseType loadSenseType(Element element) {
+        String ID = LoadUtils.attribute(element, "id", null);
+        String name = element.getTextContent();
+        return new SenseType(ID, name);
     }
 
     private static ActorTemplate loadActor(Game game, Element actorElement) {
@@ -209,6 +219,7 @@ public class DataLoader {
             int value = LoadUtils.attributeInt(skillElement, "value", 0);
             skills.put(skill, value);
         }
+        Set<String> senseTypes = LoadUtils.setOfTags(actorElement, "senseType");
         Set<String> tags = LoadUtils.setOfTags(actorElement, "tag");
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
         List<String> startingEffects = LoadUtils.listOfTags(actorElement, "startEffect");
@@ -225,7 +236,7 @@ public class DataLoader {
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(actorElement, "action");
         List<ActionCustom.CustomActionHolder> customInventoryActions = loadCustomActions(actorElement, "itemAction");
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, tags, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, tags, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }
 
     private static List<Limb> loadLimbs(Element element) {
