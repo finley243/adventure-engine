@@ -292,7 +292,7 @@ public class TargetingComponent {
     }
 
     public float getPassiveDetectionChance(Actor subject) {
-        AreaLink.DistanceCategory distance = actor.getArea().getLinearDistanceTo(subject.getArea(), actor);
+        AreaLink.DistanceCategory distance = actor.getArea().getLinearDistanceTo(subject.getArea());
         if (subject.isDead()) {
             return switch (distance) {
                 case NEAR -> 0.95f;

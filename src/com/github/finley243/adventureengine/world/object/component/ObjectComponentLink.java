@@ -56,21 +56,22 @@ public class ObjectComponentLink extends ObjectComponent {
         return LoadUtils.stringToEnum(directionString, AreaLink.CompassDirection.class);
     }
 
-    public boolean isVisible(String linkID) {
-        return getTemplateLink().getLinkData().get(linkID).isVisible();
+    public boolean isLinkedAreaVisible(String linkID, Actor actor) {
+        ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
+        return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(new Context(getObject().game(), actor, actor, getObject())));
     }
 
-    public Set<Area> getLinkedAreasVisible() {
+    public Set<Area> getLinkedLineOfSightAreas() {
         Set<Area> linkedAreas = new HashSet<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
-            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(new Context(getObject().game(), getObject().game().data().getPlayer(), getObject().game().data().getPlayer(), getObject())))) {
+            if (linkEntry.getValue().isVisible()) {
                 linkedAreas.add(getLinkedObject(linkEntry.getKey()).getArea());
             }
         }
         return linkedAreas;
     }
 
-    public Map<Area, AreaLink.CompassDirection> getLinkedAreasVisibleWithDirections() {
+    public Map<Area, AreaLink.CompassDirection> getLinkedLineOfSightAreasWithDirections() {
         Map<Area, AreaLink.CompassDirection> linkedAreas = new HashMap<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
             if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(new Context(getObject().game(), getObject().game().data().getPlayer(), getObject().game().data().getPlayer(), getObject())))) {

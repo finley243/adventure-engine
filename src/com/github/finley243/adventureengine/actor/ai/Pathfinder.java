@@ -65,6 +65,17 @@ public class Pathfinder {
 	}
 
 	public static Map<Area, VisibleAreaData> getVisibleAreas(Area origin, Actor actor) {
+		Map<Area, VisibleAreaData> visibleAreas = getLineOfSightAreas(origin);
+		for (Area area : new HashSet<>(visibleAreas.keySet())) {
+			if (!area.isVisible(actor)) {
+				visibleAreas.remove(area);
+			}
+			// TODO - Check object link visibility condition, check path obstructions
+		}
+		return visibleAreas;
+	}
+
+	public static Map<Area, VisibleAreaData> getLineOfSightAreas(Area origin) {
 		Map<Area, VisibleAreaData> visibleAreas = new HashMap<>();
 		List<Area> possiblyVisibleAreas = getPossiblyVisibleAreas(origin);
 		Map<Area, AreaPathData> visibleMap = new HashMap<>();
@@ -74,7 +85,7 @@ public class Pathfinder {
 				visibleMap.put(currentArea, new AreaPathData(null, true, 0));
 			} else {
 				for (Area visibleArea : new HashSet<>(visibleMap.keySet())) {
-					if (!visibleArea.hasDirectVisibleLinkTo(currentArea) || visibleArea.hasLineOfSightObstruction(actor)) continue;
+					if (!visibleArea.hasDirectVisibleLinkTo(currentArea) || visibleArea.hasLineOfSightObstruction()) continue;
 					AreaLink.CompassDirection linkDirection = visibleArea.getLinkDirectionTo(currentArea);
 					AreaLink.CompassDirection currentOriginDirection = combinedDirection(visibleMap.get(visibleArea).direction, linkDirection);
 					int currentPathLength = visibleMap.get(visibleArea).minPathLength + 1;
@@ -101,11 +112,6 @@ public class Pathfinder {
 				}
 			}
 		}
-		for (Area area : new HashSet<>(visibleAreas.keySet())) {
-			if (!area.isVisible(actor)) {
-				visibleAreas.remove(area);
-			}
-		}
 		return visibleAreas;
 	}
 
@@ -121,20 +127,10 @@ public class Pathfinder {
 			int currentDistance = currentAreaData.distance();
 			possiblyVisibleAreas.add(currentArea);
 			if (currentDistance < MAX_VISIBLE_DISTANCE) {
-				for (Area linkedArea : currentArea.getLineOfSightAreas()) {
+				for (Area linkedArea : currentArea.getDirectVisibleLinkedAreas()) {
 					if (!possiblyVisibleAreaSet.contains(linkedArea)) {
 						areaQueue.add(new AreaQueueData(linkedArea, currentDistance + 1));
 						possiblyVisibleAreaSet.add(linkedArea);
-					}
-				}
-				for (WorldObject object : currentArea.getObjects()) {
-					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
-					if (linkComponent == null) continue;
-					for (Area linkedArea : linkComponent.getLinkedAreasVisible()) {
-						if (!possiblyVisibleAreaSet.contains(linkedArea)) {
-							areaQueue.add(new AreaQueueData(linkedArea, currentDistance + 1));
-							possiblyVisibleAreaSet.add(linkedArea);
-						}
 					}
 				}
 			}

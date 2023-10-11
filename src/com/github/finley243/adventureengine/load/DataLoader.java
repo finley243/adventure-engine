@@ -1113,8 +1113,7 @@ public class DataLoader {
             }
             case "vehicle" -> {
                 String vehicleType = LoadUtils.attribute(componentElement, "vehicleType", null);
-                String moveMenuName = LoadUtils.singleTag(componentElement, "moveMenuName", null);
-                return new ObjectComponentTemplateVehicle(startEnabled, actionsRestricted, vehicleType, moveMenuName);
+                return new ObjectComponentTemplateVehicle(startEnabled, actionsRestricted, vehicleType);
             }
             default -> throw new GameDataException("ObjectComponentTemplate has invalid or missing type");
         }

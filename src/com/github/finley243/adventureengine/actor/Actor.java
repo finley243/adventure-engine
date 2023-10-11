@@ -581,7 +581,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			actions.addAll(visibleObject.visibleActions(this));
 		}
 		if (canMove(new Context(game(), this, this))) {
-			actions.addAll(getArea().getMoveActions(this, null, null, "Move"));
+			actions.addAll(getArea().getMoveActions(this, null, null));
 		}
 		actions.addAll(getArea().getAreaActions(this));
 		for (Item item : inventory.getItems()) {

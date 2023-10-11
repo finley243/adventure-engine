@@ -139,9 +139,7 @@
     </object>
     <object id="motorcycle">
         <name>motorcycle</name>
-        <component type="vehicle" restricted="true" vehicleType="motorcycle">
-            <moveMenuName>Drive</moveMenuName>
-        </component>
+        <component type="vehicle" restricted="true" vehicleType="motorcycle"/>
         <component type="usable">
             <slot id="seat">
                 <startPhrase>sit</startPhrase>

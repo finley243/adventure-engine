@@ -117,6 +117,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return allowAllies;
 	}
 
+	@Override
 	public void setKnown() {
 		if (landmarkID != null) {
 			getLandmark().setKnown();
@@ -151,13 +152,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		};
 	}
 
-	public AreaLink.CompassDirection getRelativeDirection(Area origin) {
-		if (origin.linkedAreas.containsKey(this.getID())) {
-			return origin.linkedAreas.get(this.getID()).getDirection();
-		}
-		return null;
-	}
-
 	public String getMovePhrase(Actor subject) {
 		if (name == null && landmarkID == null) {
 			return getRoom().getMovePhrase(subject);
@@ -172,9 +166,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		};
 	}
 
-	public void onNewGameInit() {
-
-	}
+	public void onNewGameInit() {}
 	
 	public Set<WorldObject> getObjects(){
 		return objects;
@@ -235,7 +227,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return itemInventory.getAreaActions(this);
 	}
 
-	public List<Action> getMoveActions(Actor subject, String vehicleType, WorldObject vehicleObject, String menuCategory) {
+	public List<Action> getMoveActions(Actor subject, String vehicleType, WorldObject vehicleObject) {
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
@@ -266,80 +258,46 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return movableAreas;
 	}
 
-	public Set<Area> getLineOfSightAreas() {
-		Set<Area> visibleAreas = new HashSet<>();
-		visibleAreas.add(this);
-		for (AreaLink link : linkedAreas.values()) {
-			if (game().data().getLinkType(link.getType()).isVisible()) {
-				Area area = game().data().getArea(link.getAreaID());
-				visibleAreas.add(area);
-				/*for (WorldObject object : area.getObjects()) {
-					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
-					if (linkComponent == null) continue;
-					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible()) {
-						visibleAreas.addAll(objectLinkedArea.getLineOfSightAreasNoLinks());
-					}
-				}*/
-			}
-		}
-		return visibleAreas;
-	}
-
-	// Called by getLineOfSightAreas, prevents infinite recursion between linked areas
-	/*private Set<Area> getLineOfSightAreasNoLinks() {
-		Set<Area> visibleAreas = new HashSet<>();
-		visibleAreas.add(this);
-		for (AreaLink link : linkedAreas.values()) {
-			if (game().data().getLinkType(link.getType()).isVisible()) {
-				Area area = game().data().getArea(link.getAreaID());
-				visibleAreas.add(area);
-			}
-		}
-		return visibleAreas;
-	}*/
-
-	public Set<String> getLineOfSightAreaIDs() {
-		Set<String> visibleAreaIDs = new HashSet<>();
-		visibleAreaIDs.add(this.getID());
-		for (AreaLink link : linkedAreas.values()) {
-			if (game().data().getLinkType(link.getType()).isVisible()) {
-				visibleAreaIDs.add(link.getAreaID());
-				/*for (WorldObject object : game().data().getArea(link.getAreaID()).getObjects()) {
-					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
-					if (linkComponent == null) continue;
-					for (Area objectLinkedArea : linkComponent.getLinkedAreasVisible()) {
-						visibleAreaIDs.addAll(objectLinkedArea.getLineOfSightAreaIDsNoLinks());
-					}
-				}*/
-			}
-		}
-		return visibleAreaIDs;
-	}
-
-	// Called by getLineOfSightAreaIDs, prevents infinite recursion between linked areas
-	/*private Set<String> getLineOfSightAreaIDsNoLinks() {
-		Set<String> visibleAreaIDs = new HashSet<>();
-		visibleAreaIDs.add(this.getID());
-		for (AreaLink link : linkedAreas.values()) {
-			if (game().data().getLinkType(link.getType()).isVisible()) {
-				visibleAreaIDs.add(link.getAreaID());
-			}
-		}
-		return visibleAreaIDs;
-	}*/
-
 	public boolean isVisible(Actor subject) {
 		return true;
 	}
 
-	public boolean hasLineOfSightObstruction(Actor subject) {
+	public boolean hasLineOfSightObstruction() {
 		return false;
+	}
+
+	public ObstructionData getLineOfSightObstruction() {
+		return null;
+	}
+
+	public Set<Area> getDirectVisibleLinkedAreas() {
+		Set<Area> visibleAreas = new HashSet<>();
+		visibleAreas.add(this);
+		for (AreaLink link : linkedAreas.values()) {
+			if (game().data().getLinkType(link.getType()).isVisible()) {
+				Area area = game().data().getArea(link.getAreaID());
+				visibleAreas.add(area);
+			}
+		}
+		for (WorldObject object : getObjects()) {
+			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+			if (linkComponent == null) continue;
+			visibleAreas.addAll(linkComponent.getLinkedLineOfSightAreas());
+		}
+		return visibleAreas;
 	}
 
 	public boolean hasDirectVisibleLinkTo(Area area) {
 		if (linkedAreas.containsKey(area.getID())) {
 			AreaLink link = linkedAreas.get(area.getID());
 			return game().data().getLinkType(link.getType()).isVisible();
+		}
+		for (WorldObject object : getObjects()) {
+			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+			if (linkComponent == null) continue;
+			if (linkComponent.getLinkedLineOfSightAreas().contains(area)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -352,7 +310,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
-			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedAreasVisibleWithDirections();
+			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedLineOfSightAreasWithDirections();
 			if (visibleAreasWithDirections.containsKey(area)) {
 				return visibleAreasWithDirections.get(area);
 			}
@@ -360,29 +318,17 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return null;
 	}
 
-	// TODO - Distance should not be dependent on visibility of paths (should not require actor)
-	public AreaLink.DistanceCategory getLinearDistanceTo(Area area, Actor actor) {
+	public AreaLink.DistanceCategory getLinearDistanceTo(Area area) {
 		if (linkedAreas.containsKey(area.getID())) {
 			return linkedAreas.get(area.getID()).getDistance();
 		}
-		Pathfinder.VisibleAreaData areaData = Pathfinder.getVisibleAreas(this, actor).get(area);
+		Pathfinder.VisibleAreaData areaData = Pathfinder.getLineOfSightAreas(this).get(area);
 		if (areaData == null) return null;
 		return areaData.distance();
 	}
 
 	public Set<Area> visibleAreasInRange(Actor subject, Set<AreaLink.DistanceCategory> ranges) {
 		Set<Area> areas = new HashSet<>();
-		/*if (ranges.contains(AreaLink.DistanceCategory.NEAR)) {
-			areas.add(this);
-			if (ranges.size() == 1) {
-				return areas;
-			}
-		}*/
-		/*for (AreaLink link : linkedAreas.values()) {
-			if (game().data().getArea(link.getAreaID()).hasLineOfSightFrom(this) && ranges.contains(link.getDistance())) {
-				areas.add(game().data().getArea(link.getAreaID()));
-			}
-		}*/
 		Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(this, subject);
 		for (Map.Entry<Area, Pathfinder.VisibleAreaData> entry : visibleAreas.entrySet()) {
 			if (ranges.contains(entry.getValue().distance())) {
@@ -519,5 +465,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		}
 		return null;
 	}
+
+	public record ObstructionData(float hitChanceModifier, float detectionChanceModifier, boolean isTotalObstruction) {}
 	
 }
