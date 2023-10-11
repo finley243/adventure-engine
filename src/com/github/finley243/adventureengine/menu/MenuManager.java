@@ -245,7 +245,8 @@ public class MenuManager {
 				default -> throw new IllegalStateException("Unexpected menu data: " + action.getMenuData(actor));
 			}
 			String prompt = action.getPrompt(actor);
-			menuChoices.add(new MenuChoice((promptOverride != null ? promptOverride : action.getPrompt(actor)), action.canChoose(actor), action.actionPoints(actor), showOnRight, parentCategory, prompt));
+			int actionPoints = (actor.isRepeatAction(action) && action.repeatsUseNoActionPoints()) ? 0 : action.actionPoints(actor);
+			menuChoices.add(new MenuChoice((promptOverride != null ? promptOverride : action.getPrompt(actor)), action.canChoose(actor), actionPoints, showOnRight, parentCategory, prompt));
 		}
 		List<MenuCategory> menuCategories = new ArrayList<>(categoryMap.values());
 		startChoiceMenu(game, menuChoices, menuCategories, endTurnIndex, false);

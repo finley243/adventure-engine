@@ -27,6 +27,7 @@ import java.util.Set;
 public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     public static final boolean BLOCK_ALL_ATTACKS_BEYOND_RATE_LIMIT = true;
+    public static final boolean REPEATS_USE_NO_ACTION_POINTS = true;
 
     public enum AttackHitChanceType {
         INDEPENDENT, JOINT
@@ -246,6 +247,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public boolean isRepeatMatch(Action action) {
         return action instanceof ActionAttack actionAttack && actionAttack.getWeapon().equals(this.getWeapon()) && actionAttack.attackType.equals(this.attackType);
+    }
+
+    @Override
+    public boolean repeatsUseNoActionPoints() {
+        return REPEATS_USE_NO_ACTION_POINTS;
     }
 
     @Override

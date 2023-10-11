@@ -70,7 +70,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private int actionPointsUsed;
 	private final StatBoolean canMove;
 	private final StatBoolean canDodge;
-	private final Map<Action, Integer> blockedActions;
+	private final Map<Action, Integer> repeatActions;
 	private final Map<String, Integer> attributesBase;
 	private final Map<String, Integer> skillsBase;
 	private final Map<String, StatInt> attributes;
@@ -115,7 +115,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.skills = new HashMap<>();
 		this.effectComponent = new EffectComponent(game, this, new Context(game, this, this));
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
-		this.blockedActions = new HashMap<>();
+		this.repeatActions = new HashMap<>();
 		this.startDisabled = startDisabled;
 		this.playerControlled = playerControlled;
 		this.tags = new StatStringSet("tags", this);
@@ -596,11 +596,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		actions.add(new ActionEnd());
 		actions.removeIf(action -> !action.canShow(this));
 		for (Action currentAction : actions) {
+			boolean isRepeatMatch = false;
 			boolean isBlocked = false;
 			boolean isRepeatBlocked = false;
-			for (Action blockedAction : blockedActions.keySet()) {
-				if (blockedActions.get(blockedAction) <= 0) {
-					if (blockedAction.isRepeatMatch(currentAction)) {
+			for (Action blockedAction : repeatActions.keySet()) {
+				if (blockedAction.isRepeatMatch(currentAction)) {
+					isRepeatMatch = true;
+				}
+				if (repeatActions.get(blockedAction) <= 0) {
+					if (isRepeatMatch) {
 						isRepeatBlocked = true;
 						break;
 					} else if (blockedAction.isBlockedMatch(currentAction)) {
@@ -613,7 +617,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				currentAction.setDisabled(true, "Repeat limit reached");
 			} else if (isBlocked) {
 				currentAction.setDisabled(true, "Blocked");
-			} else if (getActionPoints() - actionPointsUsed < currentAction.actionPoints(this)) {
+			} else if (!(isRepeatMatch && currentAction.repeatsUseNoActionPoints()) && getActionPoints() - actionPointsUsed < currentAction.actionPoints(this)) {
 				currentAction.setDisabled(true, "Not enough action points");
 			}
 		}
@@ -636,7 +640,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			getBehaviorComponent().updateTurn();
 		}
 		this.actionPointsUsed = 0;
-		this.blockedActions.clear();
+		this.repeatActions.clear();
 		this.endTurn = false;
 		nextAction(null, 0);
 	}
@@ -654,19 +658,30 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		game().eventQueue().addToEnd(new ActionChoiceMenuEvent(this, lastAction, repeatActionCount));
 	}
 
-	public void onSelectAction(Action action, Action lastAction, int repeatActionCount) {
-		actionPointsUsed += action.actionPoints(this);
-		boolean actionIsBlocked = false;
-		for (Action repeatAction : blockedActions.keySet()) {
+	public boolean isRepeatAction(Action action) {
+		for (Action repeatAction : repeatActions.keySet()) {
 			if (repeatAction.isRepeatMatch(action)) {
-				int countRemaining = blockedActions.get(repeatAction) - 1;
-				blockedActions.put(repeatAction, countRemaining);
-				actionIsBlocked = true;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void onSelectAction(Action action, Action lastAction, int repeatActionCount) {
+		boolean isRepeatMatch = false;
+		for (Action repeatAction : repeatActions.keySet()) {
+			if (repeatAction.isRepeatMatch(action)) {
+				isRepeatMatch = true;
+				int countRemaining = repeatActions.get(repeatAction) - 1;
+				repeatActions.put(repeatAction, countRemaining);
 				break;
 			}
 		}
-		if (!actionIsBlocked && action.repeatCount(this) > 0) {
-			blockedActions.put(action, action.repeatCount(this) - 1);
+		if (!(isRepeatMatch && action.repeatsUseNoActionPoints())) {
+			actionPointsUsed += action.actionPoints(this);
+		}
+		if (!isRepeatMatch && action.repeatCount(this) > 0) {
+			repeatActions.put(action, action.repeatCount(this) - 1);
 		}
 		if (lastAction != null && action.isRepeatMatch(lastAction)) {
 			repeatActionCount += 1;

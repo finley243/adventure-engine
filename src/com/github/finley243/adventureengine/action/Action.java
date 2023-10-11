@@ -47,6 +47,10 @@ public abstract class Action {
 		return 0;
 	}
 
+	public boolean repeatsUseNoActionPoints() {
+		return false;
+	}
+
 	public boolean isRepeatMatch(Action action) {
 		return false;
 	}
