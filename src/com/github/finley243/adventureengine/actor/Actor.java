@@ -597,14 +597,22 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		actions.removeIf(action -> !action.canShow(this));
 		for (Action currentAction : actions) {
 			boolean isBlocked = false;
+			boolean isRepeatBlocked = false;
 			for (Action blockedAction : blockedActions.keySet()) {
-				if (!(blockedActions.get(blockedAction) > 0 && blockedAction.isRepeatMatch(currentAction)) && blockedAction.isBlockedMatch(currentAction)) {
-					isBlocked = true;
-					break;
+				if (blockedActions.get(blockedAction) <= 0) {
+					if (blockedAction.isRepeatMatch(currentAction)) {
+						isRepeatBlocked = true;
+						break;
+					} else if (blockedAction.isBlockedMatch(currentAction)) {
+						isBlocked = true;
+						break;
+					}
 				}
 			}
-			if (isBlocked) {
-				currentAction.setDisabled(true, "Repeat turn limit reached");
+			if (isRepeatBlocked) {
+				currentAction.setDisabled(true, "Repeat limit reached");
+			} else if (isBlocked) {
+				currentAction.setDisabled(true, "Blocked");
 			} else if (getActionPoints() - actionPointsUsed < currentAction.actionPoints(this)) {
 				currentAction.setDisabled(true, "Not enough action points");
 			}

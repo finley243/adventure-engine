@@ -26,10 +26,13 @@ import java.util.Set;
 
 public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
+    public static final boolean BLOCK_ALL_ATTACKS_BEYOND_RATE_LIMIT = true;
+
     public enum AttackHitChanceType {
         INDEPENDENT, JOINT
     }
 
+    private final WeaponAttackType attackType;
     private final Set<AttackTarget> targets;
     private final ItemWeapon weapon;
     private final Limb limb;
@@ -68,8 +71,9 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final AttackHitChanceType hitChanceType;
     private final boolean isLoud;
 
-    public ActionAttack(ItemWeapon weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, String attackSkill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
+    public ActionAttack(WeaponAttackType attackType, ItemWeapon weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, String attackSkill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
         super(targets);
+        this.attackType = attackType;
         this.weapon = weapon;
         this.targets = targets;
         this.limb = limb;
@@ -241,7 +245,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public boolean isRepeatMatch(Action action) {
-        return action instanceof ActionAttack && ((ActionAttack) action).getWeapon() == this.getWeapon();
+        return action instanceof ActionAttack actionAttack && actionAttack.getWeapon().equals(this.getWeapon()) && actionAttack.attackType.equals(this.attackType);
     }
 
     @Override
@@ -262,11 +266,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public boolean isBlockedMatch(Action action) {
-        if (action instanceof ActionAttack) {
-            return ((ActionAttack) action).getWeapon() == this.getWeapon();
-        } else {
-            return false;
+        if (BLOCK_ALL_ATTACKS_BEYOND_RATE_LIMIT) {
+            return action instanceof ActionAttack;
         }
+        return action instanceof ActionAttack actionAttack && actionAttack.getWeapon().equals(this.getWeapon()) && actionAttack.attackType.equals(this.attackType);
     }
 
     @Override

@@ -58,8 +58,8 @@ meleeHitLimb:$actor swing$s $actor's $weapon_name at $target's $limb and $weapon
 meleeHitLimbRepeat:$actor take$s another swing at $target's $limb and $actor's $weapon_name hit$s $target
 rangedHitLimb:$actor fire$s $actor's $weapon_name at $target's $limb and the bullet hits $target
 rangedHitLimbRepeat:$actor fire$s another shot at $target's $limb and the bullet hits $target
-meleeMissLimb:$actor swing$s $actor's $weapon_name at $target's $limb, but $weapon {{just|barely} misses|{swings|swipes} past} $target
-meleeMissLimbRepeat:$actor take$s another swing at $target's $limb, but $weapon {{just|barely} misses|{swings|swipes} past} $target
+meleeMissLimb:$actor swing$s $actor's $weapon_name at $target's $limb, but it {{just|barely} misses|{swings|swipes} past} $target
+meleeMissLimbRepeat:$actor take$s another swing at $target's $limb, but it {{just|barely} misses|{swings|swipes} past} $target
 rangedMissLimb:$actor fire$s $actor's $weapon_name at $target's $limb, but $actor miss$es
 rangedMissLimbRepeat:$actor fire$s another shot at $target's $limb, but $actor miss$es
 rangedAutoHit:$actor fire$s a spray of bullets from $actor's $weapon_name at $target, and they hit $target
