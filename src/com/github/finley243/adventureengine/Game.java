@@ -85,6 +85,7 @@ public class Game {
 				"\t\tsensoryEvent(phrase=\"forceDrop\", area=stat.subject.area.id);\n" +
 				"\t}\n" +
 				"}");
+		//ScriptParser.parseScripts("\"test\" \"'single quotes'\" \"\\\"escaped quotes\\\"\"");
 
 		continueGame = true;
 		startRound();
