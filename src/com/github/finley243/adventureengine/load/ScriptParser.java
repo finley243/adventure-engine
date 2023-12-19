@@ -2,10 +2,12 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptCompound;
 
-import java.sql.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +26,7 @@ public class ScriptParser {
         for (ScriptTokenFunction function : functions) {
             String functionName = null;
             Expression.DataType functionDataType = null;
-            List<String> functionParameters = new ArrayList<>();
+            Set<String> functionParameters = new HashSet<>();
             if (function.header().size() == 2) {
                 if (function.header().get(0).type != ScriptTokenType.NAME || !"func".equals(function.header().get(0).value)) throw new IllegalArgumentException("Function is missing function identifier");
                 if (function.header().get(1).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function has invalid name");
@@ -51,12 +53,16 @@ public class ScriptParser {
             for (int i = 0; i < function.parameterBlock().size(); i++) {
                 if (i % 2 == 0) {
                     if (function.parameterBlock().get(i).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function has invalid parameter block");
-                    functionParameters.add(function.parameterBlock().get(i).value);
+                    String parameterValue = function.parameterBlock().get(i).value;
+                    if (functionParameters.contains(parameterValue)) throw new IllegalArgumentException("Function has duplicate parameter");
+                    functionParameters.add(parameterValue);
                 } else {
                     if (function.parameterBlock().get(i).type != ScriptTokenType.COMMA) throw new IllegalArgumentException("Function has invalid parameter block");
                 }
             }
-
+            Script functionScript = generateScript(function.body());
+            // GENERATE SCRIPT OBJECTS
+            scripts.add(new ScriptData(functionName, functionDataType, functionParameters, functionScript));
         }
         return scripts;
     }
@@ -138,20 +144,17 @@ public class ScriptParser {
                 }
             } else { // currentSection == 2
                 if (current.type == ScriptTokenType.BRACKET_OPEN) {
-                    if (bracketDepth > 0) {
-                        body.add(current);
-                    }
+                    body.add(current);
                     bracketDepth += 1;
                 } else if (current.type == ScriptTokenType.BRACKET_CLOSE) {
                     bracketDepth -= 1;
+                    body.add(current);
                     if (bracketDepth == 0) {
                         currentSection = 3;
                         tokenFunctions.add(new ScriptTokenFunction(header, parameterBlock, body));
                         header = new ArrayList<>();
                         parameterBlock = new ArrayList<>();
                         body = new ArrayList<>();
-                    } else {
-                        body.add(current);
                     }
                 } else {
                     body.add(current);
@@ -164,7 +167,56 @@ public class ScriptParser {
         return tokenFunctions;
     }
 
-    public record ScriptData(String name, Expression.DataType returnType, Script script) {}
+    private static Script generateScript(List<ScriptToken> tokens) {
+        if (tokens.isEmpty()) return null;
+        if (tokens.get(0).type == ScriptTokenType.BRACKET_OPEN && tokens.get(tokens.size() - 1).type == ScriptTokenType.BRACKET_CLOSE) {
+            List<Script> scripts = new ArrayList<>();
+            List<ScriptToken> currentScriptTokens = new ArrayList<>();
+            int currentScriptIndex = 0;
+            int bracketDepth = 0;
+            int lastCloseBracketIndex = -1;
+            for (int i = 1; i < tokens.size() - 1; i++) {
+                currentScriptTokens.add(tokens.get(i));
+                currentScriptIndex += 1;
+                if (tokens.get(i).type == ScriptTokenType.END_LINE) {
+                    if (lastCloseBracketIndex != -1) {
+                        Script bracketScript = generateScript(currentScriptTokens.subList(0, lastCloseBracketIndex));
+                        scripts.add(bracketScript);
+                        Script currentScript = generateScript(currentScriptTokens);
+                        scripts.add(currentScript);
+                    } else {
+                        Script currentScript = generateScript(currentScriptTokens);
+                        scripts.add(currentScript);
+                    }
+                    currentScriptTokens.clear();
+                    currentScriptIndex = 0;
+                    lastCloseBracketIndex = -1;
+                } else if (tokens.get(i).type == ScriptTokenType.BRACKET_OPEN) {
+                    bracketDepth += 1;
+                } else if (tokens.get(i).type == ScriptTokenType.BRACKET_CLOSE) {
+                    bracketDepth -= 1;
+                    if (bracketDepth == 0) {
+                        lastCloseBracketIndex = currentScriptIndex - 1;
+                    }
+                }
+            }
+            // TODO - Allow for sequential, separated (non-chained) if-statements (requires checking for if/else keywords explicitly)
+            if (!currentScriptTokens.isEmpty()) {
+                if (lastCloseBracketIndex == currentScriptTokens.size() - 1) {
+                    Script bracketScript = generateScript(currentScriptTokens);
+                    scripts.add(bracketScript);
+                } else {
+                    throw new IllegalArgumentException("Script is improperly terminated");
+                }
+            }
+            return new ScriptCompound(null, scripts, false);
+        } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(0).value.equals("if")) {
+
+        }
+        return null;
+    }
+
+    public record ScriptData(String name, Expression.DataType returnType, Set<String> parameters, Script script) {}
 
     private static class ScriptToken {
         public final ScriptTokenType type;
