@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptCompound;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +25,7 @@ public class ScriptParser {
         List<ScriptToken> tokens = parseToTokens(scriptText);
         List<ScriptTokenFunction> functions = groupTokensToFunctions(tokens);
         for (ScriptTokenFunction function : functions) {
-            String functionName = null;
+            String functionName;
             Expression.DataType functionDataType = null;
             Set<String> functionParameters = new HashSet<>();
             if (function.header().size() == 2) {
@@ -34,16 +35,9 @@ public class ScriptParser {
             } else if (function.header().size() == 3) {
                 if (function.header().get(0).type != ScriptTokenType.NAME || !"func".equals(function.header().get(0).value)) throw new IllegalArgumentException("Function is missing function identifier");
                 if (function.header().get(1).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function has invalid data type");
-                switch (function.header().get(1).value) {
-                    case "void" -> functionDataType = null;
-                    case "int" -> functionDataType = Expression.DataType.INTEGER;
-                    case "float" -> functionDataType = Expression.DataType.FLOAT;
-                    case "boolean" -> functionDataType = Expression.DataType.BOOLEAN;
-                    case "string" -> functionDataType = Expression.DataType.STRING;
-                    case "stringSet" -> functionDataType = Expression.DataType.STRING_SET;
-                    case "inventory" -> functionDataType = Expression.DataType.INVENTORY;
-                    case "noun" -> functionDataType = Expression.DataType.NOUN;
-                    default -> throw new IllegalArgumentException("Function has invalid data type");
+                functionDataType = stringToDataType(function.header().get(1).value);
+                if (functionDataType == null && !function.header().get(1).value.equals("void")) {
+                    throw new IllegalArgumentException("Function has invalid data type");
                 }
                 if (function.header().get(2).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function has invalid name");
                 functionName = function.header().get(2).value;
@@ -170,50 +164,87 @@ public class ScriptParser {
     private static Script generateScript(List<ScriptToken> tokens) {
         if (tokens.isEmpty()) return null;
         if (tokens.get(0).type == ScriptTokenType.BRACKET_OPEN && tokens.get(tokens.size() - 1).type == ScriptTokenType.BRACKET_CLOSE) {
+            // Script block
             List<Script> scripts = new ArrayList<>();
             List<ScriptToken> currentScriptTokens = new ArrayList<>();
-            int currentScriptIndex = 0;
             int bracketDepth = 0;
-            int lastCloseBracketIndex = -1;
             for (int i = 1; i < tokens.size() - 1; i++) {
                 currentScriptTokens.add(tokens.get(i));
-                currentScriptIndex += 1;
-                if (tokens.get(i).type == ScriptTokenType.END_LINE) {
-                    if (lastCloseBracketIndex != -1) {
-                        Script bracketScript = generateScript(currentScriptTokens.subList(0, lastCloseBracketIndex));
-                        scripts.add(bracketScript);
-                        Script currentScript = generateScript(currentScriptTokens);
-                        scripts.add(currentScript);
-                    } else {
-                        Script currentScript = generateScript(currentScriptTokens);
-                        scripts.add(currentScript);
-                    }
+                if (bracketDepth == 0 && tokens.get(i).type == ScriptTokenType.END_LINE) {
+                    Script currentScript = generateScript(currentScriptTokens);
+                    scripts.add(currentScript);
                     currentScriptTokens.clear();
-                    currentScriptIndex = 0;
-                    lastCloseBracketIndex = -1;
                 } else if (tokens.get(i).type == ScriptTokenType.BRACKET_OPEN) {
                     bracketDepth += 1;
                 } else if (tokens.get(i).type == ScriptTokenType.BRACKET_CLOSE) {
                     bracketDepth -= 1;
-                    if (bracketDepth == 0) {
-                        lastCloseBracketIndex = currentScriptIndex - 1;
+                    if (bracketDepth == 0 && !(i + 1 < tokens.size() - 1 && tokens.get(i + 1).type == ScriptTokenType.NAME && tokens.get(i + 1).value.equals("else"))) {
+                        Script bracketScript = generateScript(currentScriptTokens);
+                        scripts.add(bracketScript);
+                        currentScriptTokens.clear();
                     }
                 }
             }
             // TODO - Allow for sequential, separated (non-chained) if-statements (requires checking for if/else keywords explicitly)
             if (!currentScriptTokens.isEmpty()) {
-                if (lastCloseBracketIndex == currentScriptTokens.size() - 1) {
-                    Script bracketScript = generateScript(currentScriptTokens);
-                    scripts.add(bracketScript);
-                } else {
-                    throw new IllegalArgumentException("Script is improperly terminated");
-                }
+                throw new IllegalArgumentException("Script is improperly terminated");
             }
             return new ScriptCompound(null, scripts, false);
+        } else if (tokens.get(0).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.get(tokens.size() - 1).type == ScriptTokenType.PARENTHESIS_CLOSE) {
+            // Expression block
+
         } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(0).value.equals("if")) {
+            // If statement
+            if (tokens.get(0).type != ScriptTokenType.PARENTHESIS_OPEN) {
+                throw new IllegalArgumentException("If statement condition is malformed");
+            }
+            List<ScriptToken> conditionTokens = new ArrayList<>();
+            int parenthesisDepth = 0;
+            int i = 1;
+            while (i < tokens.size()) {
+                conditionTokens.add(tokens.get(i));
+                if (tokens.get(i).type == ScriptTokenType.PARENTHESIS_OPEN) {
+                    parenthesisDepth += 1;
+                } else if (tokens.get(i).type == ScriptTokenType.PARENTHESIS_CLOSE) {
+                    parenthesisDepth -= 1;
+                    if (parenthesisDepth == 0) {
+                        break;
+                    }
+                }
+                i += 1;
+            }
+            if (conditionTokens.size() <= 2) {
+                throw new IllegalArgumentException("If statement condition is malformed");
+            }
+            Script condition = generateScript(conditionTokens);
+
+        } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(0).value.equals("var")) {
+            // Local variable definition
+
+        } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(0).value.equals("stat")) {
+            // Stat reference
+
+        } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.get(tokens.size() - 2).type == ScriptTokenType.PARENTHESIS_CLOSE) {
+            // Named function call
+
+        } else if (tokens.get(0).type == ScriptTokenType.NAME) {
+            // Local variable reference
 
         }
         return null;
+    }
+
+    private static Expression.DataType stringToDataType(String name) {
+        return switch (name) {
+            case "boolean" -> Expression.DataType.BOOLEAN;
+            case "int" -> Expression.DataType.INTEGER;
+            case "float" -> Expression.DataType.FLOAT;
+            case "string" -> Expression.DataType.STRING;
+            case "stringSet" -> Expression.DataType.STRING_SET;
+            case "inventory" -> Expression.DataType.INVENTORY;
+            case "noun" -> Expression.DataType.NOUN;
+            default -> null;
+        };
     }
 
     public record ScriptData(String name, Expression.DataType returnType, Set<String> parameters, Script script) {}
@@ -230,6 +261,11 @@ public class ScriptParser {
         public ScriptToken(ScriptTokenType type, String value) {
             this.type = type;
             this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return type.toString() + (value != null ? ":" + value : "");
         }
     }
 
