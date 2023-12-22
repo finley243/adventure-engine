@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class ScriptParser {
 
     private enum ScriptTokenType {
-        END_LINE, STRING, FLOAT, INTEGER, NAME, EQUALS, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE
+        END_LINE, STRING, FLOAT, INTEGER, NAME, EQUALS, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE
     }
 
     private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*\n|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|;|=|,|\\.|\\+|-|/|\\*|\\(|\\)|\\{|\\}";
@@ -27,7 +27,8 @@ public class ScriptParser {
         for (ScriptTokenFunction function : functions) {
             String functionName;
             Expression.DataType functionDataType = null;
-            Set<String> functionParameters = new HashSet<>();
+            Set<String> parameterNames = new HashSet<>();
+            Set<ScriptParameter> functionParameters = new HashSet<>();
             if (function.header().size() == 2) {
                 if (function.header().get(0).type != ScriptTokenType.NAME || !"func".equals(function.header().get(0).value)) throw new IllegalArgumentException("Function is missing function identifier");
                 if (function.header().get(1).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function has invalid name");
@@ -44,14 +45,84 @@ public class ScriptParser {
             } else {
                 throw new IllegalArgumentException("Function has malformed header");
             }
+            String parameterName = null;
+            boolean parameterHasDefault = false;
+            Expression parameterDefaultValue = null;
             for (int i = 0; i < function.parameterBlock().size(); i++) {
-                if (i % 2 == 0) {
-                    if (function.parameterBlock().get(i).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function has invalid parameter block");
-                    String parameterValue = function.parameterBlock().get(i).value;
-                    if (functionParameters.contains(parameterValue)) throw new IllegalArgumentException("Function has duplicate parameter");
-                    functionParameters.add(parameterValue);
+                ScriptToken currentToken = function.parameterBlock().get(i);
+                if (currentToken.type == ScriptTokenType.NAME) {
+                    if (parameterName == null) {
+                        parameterName = currentToken.value;
+                    } else if (parameterHasDefault) {
+                        throw new IllegalArgumentException("Function parameter default value cannot be a variable");
+                    } else {
+                        throw new IllegalArgumentException("Function has malformed parameter");
+                    }
+                } else if (currentToken.type == ScriptTokenType.COMMA) {
+                    if (i == function.parameterBlock().size() - 1) {
+                        throw new IllegalArgumentException("Function parameters contain trailing comma");
+                    }
+                    if (parameterName != null) {
+                        if (!parameterHasDefault || parameterDefaultValue != null) {
+                            parameterNames.add(parameterName);
+                            functionParameters.add(new ScriptParameter(parameterName, parameterDefaultValue));
+                            parameterName = null;
+                            parameterHasDefault = false;
+                            parameterDefaultValue = null;
+                        } else {
+                            throw new IllegalArgumentException("Function has malformed parameter");
+                        }
+                    } else {
+                        throw new IllegalArgumentException("Function has malformed parameter");
+                    }
+                } else if (currentToken.type == ScriptTokenType.EQUALS) {
+                    if (parameterName != null && !parameterHasDefault) {
+                        parameterHasDefault = true;
+                    } else {
+                        throw new IllegalArgumentException("Function has malformed parameter");
+                    }
+                } else if (currentToken.type == ScriptTokenType.STRING) {
+                    if (parameterName != null && parameterHasDefault) {
+                        parameterDefaultValue = Expression.constant(currentToken.value);
+                    } else {
+                        throw new IllegalArgumentException("Function has malformed parameter");
+                    }
+                } else if (currentToken.type == ScriptTokenType.INTEGER) {
+                    if (parameterName != null && parameterHasDefault) {
+                        int value = Integer.parseInt(currentToken.value);
+                        parameterDefaultValue = Expression.constant(value);
+                    } else {
+                        throw new IllegalArgumentException("Function has malformed parameter");
+                    }
+                } else if (currentToken.type == ScriptTokenType.FLOAT) {
+                    if (parameterName != null && parameterHasDefault) {
+                        float value = Float.parseFloat(currentToken.value);
+                        parameterDefaultValue = Expression.constant(value);
+                    } else {
+                        throw new IllegalArgumentException("Function has malformed parameter");
+                    }
+                } else if (currentToken.type == ScriptTokenType.BOOLEAN_TRUE) {
+                    if (parameterName != null && parameterHasDefault) {
+                        parameterDefaultValue = Expression.constant(true);
+                    } else {
+                        throw new IllegalArgumentException("Function has malformed parameter");
+                    }
+                } else if (currentToken.type == ScriptTokenType.BOOLEAN_FALSE) {
+                    if (parameterName != null && parameterHasDefault) {
+                        parameterDefaultValue = Expression.constant(false);
+                    } else {
+                        throw new IllegalArgumentException("Function has malformed parameter");
+                    }
                 } else {
-                    if (function.parameterBlock().get(i).type != ScriptTokenType.COMMA) throw new IllegalArgumentException("Function has invalid parameter block");
+                    throw new IllegalArgumentException("Function has illegal token in parameter block");
+                }
+            }
+            if (parameterName != null) {
+                if (!parameterHasDefault || parameterDefaultValue != null) {
+                    parameterNames.add(parameterName);
+                    functionParameters.add(new ScriptParameter(parameterName, parameterDefaultValue));
+                } else {
+                    throw new IllegalArgumentException("Function has malformed parameter");
                 }
             }
             Script functionScript = generateScript(function.body());
@@ -104,6 +175,10 @@ public class ScriptParser {
                 tokens.add(new ScriptToken(ScriptTokenType.BRACKET_OPEN));
             } else if (currentToken.equals("}")) {
                 tokens.add(new ScriptToken(ScriptTokenType.BRACKET_CLOSE));
+            } else if (currentToken.equals("true")) {
+                tokens.add(new ScriptToken(ScriptTokenType.BOOLEAN_TRUE));
+            } else if (currentToken.equals("false")) {
+                tokens.add(new ScriptToken(ScriptTokenType.BOOLEAN_FALSE));
             } else if (currentToken.matches("_?[a-zA-Z][a-zA-Z0-9_]*")) {
                 tokens.add(new ScriptToken(ScriptTokenType.NAME, currentToken));
             }
@@ -247,7 +322,7 @@ public class ScriptParser {
         };
     }
 
-    public record ScriptData(String name, Expression.DataType returnType, Set<String> parameters, Script script) {}
+    public record ScriptData(String name, Expression.DataType returnType, Set<ScriptParameter> parameters, Script script) {}
 
     private static class ScriptToken {
         public final ScriptTokenType type;
@@ -268,6 +343,8 @@ public class ScriptParser {
             return type.toString() + (value != null ? ":" + value : "");
         }
     }
+
+    private record ScriptParameter(String name, Expression defaultValue) {}
 
     private record ScriptTokenFunction(List<ScriptToken> header, List<ScriptToken> parameterBlock, List<ScriptToken> body) {}
 
