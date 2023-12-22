@@ -12,13 +12,13 @@ public class ScriptModifyGlobal extends Script {
     public ScriptModifyGlobal(Condition condition, Expression globalID, Expression expression) {
         super(condition);
         if (globalID == null) throw new IllegalArgumentException("ScriptModifyGlobal globalID is null");
-        if (globalID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyGlobal globalID is not a string");
         this.globalID = globalID;
         this.expression = expression;
     }
 
     @Override
     protected void executeSuccess(Context context) {
+        if (globalID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyGlobal globalID is not a string");
         String globalIDValue = globalID.getValueString(context);
         switch (expression.getDataType()) {
             case INTEGER -> {

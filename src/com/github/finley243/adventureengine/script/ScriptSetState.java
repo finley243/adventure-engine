@@ -15,7 +15,6 @@ public class ScriptSetState extends Script {
         super(condition);
         if (holder == null) throw new IllegalArgumentException("ScriptSetState stat holder is null");
         if (state == null) throw new IllegalArgumentException("ScriptSetState state name is null");
-        if (state.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetState state name is not a string");
         this.holder = holder;
         this.state = state;
         this.expression = expression;
@@ -23,6 +22,7 @@ public class ScriptSetState extends Script {
 
     @Override
     protected void executeSuccess(Context context) {
+        if (state.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetState state name is not a string");
         String stateValue = state.getValueString(context);
         boolean success = holder.getHolder(context).setStatValue(stateValue, expression, context);
         if (!success) {

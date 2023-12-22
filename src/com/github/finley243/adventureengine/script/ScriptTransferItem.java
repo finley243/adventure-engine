@@ -33,10 +33,6 @@ public class ScriptTransferItem extends Script {
                 if (inventoryOrigin == null && inventoryTarget == null) throw new IllegalArgumentException("ScriptTransferItem of type COUNT must specify either an origin or target inventory");
             }
         }
-        if (inventoryOrigin != null && inventoryOrigin.getDataType() != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryOrigin is not an inventory");
-        if (inventoryTarget != null && inventoryTarget.getDataType() != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryTarget is not an inventory");
-        if (itemID != null && itemID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem itemID is not a string");
-        if (count != null && count.getDataType() != Expression.DataType.INTEGER) throw new IllegalArgumentException("ScriptTransferItem count is not an integer");
         this.inventoryOrigin = inventoryOrigin;
         this.inventoryTarget = inventoryTarget;
         this.itemID = itemID;
@@ -46,6 +42,10 @@ public class ScriptTransferItem extends Script {
 
     @Override
     protected void executeSuccess(Context context) {
+        if (inventoryOrigin != null && inventoryOrigin.getDataType() != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryOrigin is not an inventory");
+        if (inventoryTarget != null && inventoryTarget.getDataType() != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryTarget is not an inventory");
+        if (itemID != null && itemID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem itemID is not a string");
+        if (count != null && count.getDataType() != Expression.DataType.INTEGER) throw new IllegalArgumentException("ScriptTransferItem count is not an integer");
         switch (transferType) {
             case INSTANCE -> {
                 String itemIDValue = itemID.getValueString(context);

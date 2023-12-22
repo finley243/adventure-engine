@@ -12,13 +12,13 @@ public class ScriptSetVariable extends Script {
     public ScriptSetVariable(Condition condition, Expression variableName, Expression variableValue) {
         super(condition);
         if (variableName == null) throw new IllegalArgumentException("ScriptSetVariable variableName is null");
-        if (variableName.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetVariable variableName is not a string");
         this.variableName = variableName;
         this.variableValue = variableValue;
     }
 
     @Override
     protected void executeSuccess(Context context) {
+        if (variableName.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetVariable variableName is not a string");
         String variableNameString = variableName.getValueString(context);
         Expression valueToConstant = Expression.convertToConstant(variableValue, context);
         context.setParameter(variableNameString, valueToConstant);

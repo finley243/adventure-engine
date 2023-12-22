@@ -20,13 +20,13 @@ public class ScriptScene extends Script {
     public ScriptScene(Condition condition, StatHolderReference actor, Expression scenes) {
         super(condition);
         if (scenes == null) throw new IllegalArgumentException("ScriptScene scenes is null");
-        if (scenes.getDataType() != Expression.DataType.STRING && scenes.getDataType() != Expression.DataType.STRING_SET) throw new IllegalArgumentException("ScriptScene scenes is not a string or string set");
         this.actor = actor;
         this.scenes = scenes;
     }
 
     @Override
     public void executeSuccess(Context context) {
+        if (scenes.getDataType() != Expression.DataType.STRING && scenes.getDataType() != Expression.DataType.STRING_SET) throw new IllegalArgumentException("ScriptScene scenes is not a string or string set");
         if (!(actor.getHolder(context) instanceof Actor actorCast)) {
             return;
         }

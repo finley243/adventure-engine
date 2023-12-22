@@ -15,13 +15,13 @@ public class ScriptSkillMenu extends Script {
     public ScriptSkillMenu(Condition condition, StatHolderReference actorReference, Expression points) {
         super(condition);
         if (points == null) throw new IllegalArgumentException("Points expression is null");
-        if (points.getDataType() != Expression.DataType.INTEGER) throw new IllegalArgumentException("Points expression is not an integer");
         this.actorReference = actorReference;
         this.points = points;
     }
 
     @Override
     protected void executeSuccess(Context context) {
+        if (points.getDataType() != Expression.DataType.INTEGER) throw new IllegalArgumentException("Points expression is not an integer");
         if (actorReference.getHolder(context) instanceof Actor actor) {
             int pointsValue = points.getValueInteger(context);
             context.game().eventQueue().addToFront(new SkillMenuEvent(actor, pointsValue));

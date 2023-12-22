@@ -12,13 +12,13 @@ public class ScriptSetGlobal extends Script {
     public ScriptSetGlobal(Condition condition, Expression globalID, Expression expression) {
         super(condition);
         if (globalID == null) throw new IllegalArgumentException("ScriptSetGlobal globalID is null");
-        if (globalID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetGlobal globalID is not a string");
         this.globalID = globalID;
         this.expression = expression;
     }
 
     @Override
     protected void executeSuccess(Context context) {
+        if (globalID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetGlobal globalID is not a string");
         String globalIDValue = globalID.getValueString(context);
         switch (expression.getDataType()) {
             case BOOLEAN -> context.game().data().setGlobalBoolean(globalIDValue, expression.getValueBoolean(context));

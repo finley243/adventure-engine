@@ -9,7 +9,6 @@ public class ExpressionRandomChance extends Expression {
 
     public ExpressionRandomChance(Expression chance) {
         if (chance == null) throw new IllegalArgumentException("ConditionRandom chance expression is null");
-        if (chance.getDataType() != Expression.DataType.FLOAT) throw new IllegalArgumentException("ConditionRandom chance expression is not a float");
         this.chance = chance;
     }
 
@@ -20,6 +19,7 @@ public class ExpressionRandomChance extends Expression {
 
     @Override
     public boolean getValueBoolean(Context context) {
+        if (chance.getDataType() != Expression.DataType.FLOAT) throw new IllegalArgumentException("ConditionRandom chance expression is not a float");
         return MathUtils.randomCheck(chance.getValueFloat(context));
     }
 

@@ -15,7 +15,6 @@ public class ScriptModifyState extends Script {
         super(condition);
         if (holder == null) throw new IllegalArgumentException("ScriptModifyState stat holder is null");
         if (state == null) throw new IllegalArgumentException("ScriptModifyState state name is null");
-        if (state.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyState state name is not a string");
         this.holder = holder;
         this.state = state;
         this.expression = expression;
@@ -23,6 +22,7 @@ public class ScriptModifyState extends Script {
 
     @Override
     protected void executeSuccess(Context context) {
+        if (state.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyState state name is not a string");
         String stateValue = state.getValueString(context);
         switch (expression.getDataType()) {
             case INTEGER -> {

@@ -15,7 +15,6 @@ public class ExpressionStat extends Expression {
     private final Expression stat;
 
     public ExpressionStat(StatHolderReference holder, String dataType, Expression stat) {
-        if (stat != null && stat.getDataType() != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         this.holder = holder;
         this.dataType = dataTypeFromString(dataType);
         this.stat = stat;
@@ -29,6 +28,7 @@ public class ExpressionStat extends Expression {
     @Override
     public boolean getValueBoolean(Context context) {
         if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
+        if (stat != null && stat.getDataType() != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         if (stat == null) return false;
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
@@ -46,6 +46,7 @@ public class ExpressionStat extends Expression {
     @Override
     public int getValueInteger(Context context) {
         if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
+        if (stat != null && stat.getDataType() != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         if (stat == null) return 0;
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
@@ -63,6 +64,7 @@ public class ExpressionStat extends Expression {
     @Override
     public float getValueFloat(Context context) {
         if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
+        if (stat != null && stat.getDataType() != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         if (stat == null) return 0.0f;
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
@@ -80,6 +82,7 @@ public class ExpressionStat extends Expression {
     @Override
     public String getValueString(Context context) {
         if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
+        if (stat != null && stat.getDataType() != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         if (stat == null) return null;
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
@@ -97,6 +100,7 @@ public class ExpressionStat extends Expression {
     @Override
     public Set<String> getValueStringSet(Context context) {
         if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
+        if (stat != null && stat.getDataType() != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         if (stat == null) return null;
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
@@ -114,12 +118,14 @@ public class ExpressionStat extends Expression {
     @Override
     public Inventory getValueInventory(Context context) {
         if (getDataType() != DataType.INVENTORY) throw new UnsupportedOperationException();
+        if (stat != null && stat.getDataType() != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         return holder.getHolder(context).getInventory();
     }
 
     @Override
     public Noun getValueNoun(Context context) {
         if (getDataType() != DataType.NOUN) throw new UnsupportedOperationException();
+        if (stat != null && stat.getDataType() != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         StatHolder statHolderObject = holder.getHolder(context);
         if (statHolderObject instanceof Noun) {
             return (Noun) statHolderObject;

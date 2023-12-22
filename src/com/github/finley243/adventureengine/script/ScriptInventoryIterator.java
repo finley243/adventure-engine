@@ -20,13 +20,13 @@ public class ScriptInventoryIterator extends Script {
 
     public ScriptInventoryIterator(Condition condition, Expression inventoryExpression, Script iteratedScript) {
         super(condition);
-        if (inventoryExpression.getDataType() != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptInventoryIterator inventory expression is not an inventory");
         this.inventoryExpression = inventoryExpression;
         this.iteratedScript = iteratedScript;
     }
 
     @Override
     protected void executeSuccess(Context context) {
+        if (inventoryExpression.getDataType() != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptInventoryIterator inventory expression is not an inventory");
         Inventory inventory = inventoryExpression.getValueInventory(context);
         Map<Item, Integer> itemMap = inventory.getItemMap();
         List<QueuedEvent> scriptEvents = new ArrayList<>();

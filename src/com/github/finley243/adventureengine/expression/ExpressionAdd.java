@@ -7,24 +7,26 @@ import java.util.List;
 public class ExpressionAdd extends Expression {
 
     private final List<Expression> expressions;
-    private final boolean isFloat;
+    private Boolean isFloat;
 
     public ExpressionAdd(List<Expression> expressions) {
         if (expressions.isEmpty()) throw new IllegalArgumentException("Expression list is empty");
         this.expressions = expressions;
-        boolean hasFloatVariable = false;
-        for (Expression expression : expressions) {
-            if (expression.getDataType() == DataType.FLOAT) {
-                hasFloatVariable = true;
-            } else if (expression.getDataType() != DataType.INTEGER) {
-                throw new IllegalArgumentException("Non-numeric expression provided to ExpressionAdd");
-            }
-        }
-        this.isFloat = hasFloatVariable;
     }
 
     @Override
     public DataType getDataType() {
+        if (isFloat == null) {
+            boolean hasFloatVariable = false;
+            for (Expression expression : expressions) {
+                if (expression.getDataType() == DataType.FLOAT) {
+                    hasFloatVariable = true;
+                } else if (expression.getDataType() != DataType.INTEGER) {
+                    throw new IllegalArgumentException("Non-numeric expression provided to ExpressionAdd");
+                }
+            }
+            isFloat = hasFloatVariable;
+        }
         if (isFloat) {
             return DataType.FLOAT;
         } else {

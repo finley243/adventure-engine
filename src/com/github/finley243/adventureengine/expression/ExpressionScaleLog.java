@@ -17,11 +17,6 @@ public class ExpressionScaleLog extends Expression {
         if (inputMax == null) throw new IllegalArgumentException("InputMax expression is null");
         if (outputMin == null) throw new IllegalArgumentException("OutputMin expression is null");
         if (outputMax == null) throw new IllegalArgumentException("OutputMax expression is null");
-        if (input.getDataType() != DataType.INTEGER && input.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("Input expression is not an int or float");
-        if (inputMin.getDataType() != DataType.INTEGER && inputMin.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("InputMin expression is not an int or float");
-        if (inputMax.getDataType() != DataType.INTEGER && inputMax.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("InputMax expression is not an int or float");
-        if (outputMin.getDataType() != DataType.INTEGER && outputMin.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("OutputMin expression is not an int or float");
-        if (outputMax.getDataType() != DataType.INTEGER && outputMax.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("OutputMax expression is not an int or float");
         this.input = input;
         this.inputMin = inputMin;
         this.inputMax = inputMax;
@@ -36,6 +31,11 @@ public class ExpressionScaleLog extends Expression {
 
     @Override
     public float getValueFloat(Context context) {
+        if (input.getDataType() != DataType.INTEGER && input.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("Input expression is not an int or float");
+        if (inputMin.getDataType() != DataType.INTEGER && inputMin.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("InputMin expression is not an int or float");
+        if (inputMax.getDataType() != DataType.INTEGER && inputMax.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("InputMax expression is not an int or float");
+        if (outputMin.getDataType() != DataType.INTEGER && outputMin.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("OutputMin expression is not an int or float");
+        if (outputMax.getDataType() != DataType.INTEGER && outputMax.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("OutputMax expression is not an int or float");
         float inputValue;
         float inputMinValue;
         float inputMaxValue;

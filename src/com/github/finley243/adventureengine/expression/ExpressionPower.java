@@ -9,12 +9,6 @@ public class ExpressionPower extends Expression {
 
     public ExpressionPower(Expression expressionBase, Expression expressionExponent) {
         if (expressionBase == null || expressionExponent == null) throw new IllegalArgumentException("Null expression");
-        if (!(expressionBase.getDataType() == DataType.FLOAT || expressionBase.getDataType() == DataType.INTEGER)) {
-            throw new IllegalArgumentException("Non-numeric expression provided to ExpressionPower");
-        }
-        if (!(expressionExponent.getDataType() == DataType.FLOAT || expressionExponent.getDataType() == DataType.INTEGER)) {
-            throw new IllegalArgumentException("Non-numeric expression provided to ExpressionPower");
-        }
         this.expressionBase = expressionBase;
         this.expressionExponent = expressionExponent;
     }
@@ -26,6 +20,12 @@ public class ExpressionPower extends Expression {
 
     @Override
     public float getValueFloat(Context context) {
+        if (!(expressionBase.getDataType() == DataType.FLOAT || expressionBase.getDataType() == DataType.INTEGER)) {
+            throw new IllegalArgumentException("Non-numeric expression provided to ExpressionPower");
+        }
+        if (!(expressionExponent.getDataType() == DataType.FLOAT || expressionExponent.getDataType() == DataType.INTEGER)) {
+            throw new IllegalArgumentException("Non-numeric expression provided to ExpressionPower");
+        }
         float valueBase;
         float valueExponent;
         if (expressionBase.getDataType() == DataType.INTEGER) {

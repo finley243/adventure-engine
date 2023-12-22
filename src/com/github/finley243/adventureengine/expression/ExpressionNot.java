@@ -8,7 +8,6 @@ public class ExpressionNot extends Expression {
 
     public ExpressionNot(Expression expression) {
         if (expression == null) throw new IllegalArgumentException("ExpressionNot expression is null");
-        if (expression.getDataType() != DataType.BOOLEAN) throw new IllegalArgumentException("ExpressionNot expression is not a boolean");
         this.expression = expression;
     }
 
@@ -19,6 +18,7 @@ public class ExpressionNot extends Expression {
 
     @Override
     public boolean getValueBoolean(Context context) {
+        if (expression.getDataType() != DataType.BOOLEAN) throw new IllegalArgumentException("ExpressionNot expression is not a boolean");
         return !expression.getValueBoolean(context);
     }
 

@@ -9,12 +9,6 @@ public class ExpressionModulo extends Expression {
 
     public ExpressionModulo(Expression expression1, Expression expression2) {
         if (expression1 == null || expression2 == null) throw new IllegalArgumentException("Null expression");
-        if (!(expression1.getDataType() == DataType.FLOAT || expression1.getDataType() == DataType.INTEGER)) {
-            throw new IllegalArgumentException("Non-numeric expression provided to ExpressionModulo");
-        }
-        if (!(expression2.getDataType() == DataType.FLOAT || expression2.getDataType() == DataType.INTEGER)) {
-            throw new IllegalArgumentException("Non-numeric expression provided to ExpressionModulo");
-        }
         this.expression1 = expression1;
         this.expression2 = expression2;
     }
@@ -26,6 +20,12 @@ public class ExpressionModulo extends Expression {
 
     @Override
     public float getValueFloat(Context context) {
+        if (!(expression1.getDataType() == DataType.FLOAT || expression1.getDataType() == DataType.INTEGER)) {
+            throw new IllegalArgumentException("Non-numeric expression provided to ExpressionModulo");
+        }
+        if (!(expression2.getDataType() == DataType.FLOAT || expression2.getDataType() == DataType.INTEGER)) {
+            throw new IllegalArgumentException("Non-numeric expression provided to ExpressionModulo");
+        }
         float value1;
         float value2;
         if (expression1.getDataType() == DataType.INTEGER) {

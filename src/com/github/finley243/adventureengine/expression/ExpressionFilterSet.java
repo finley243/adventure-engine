@@ -17,7 +17,6 @@ public class ExpressionFilterSet extends Expression {
         if (setExpression == null) throw new IllegalArgumentException("ExpressionFilterSet setExpression is null");
         if (parameterName == null) throw new IllegalArgumentException("ExpressionFilterSet parameterName is null");
         if (filterCondition == null) throw new IllegalArgumentException("ExpressionFilterSet filterCondition is null");
-        if (setExpression.getDataType() != DataType.STRING_SET) throw new IllegalArgumentException("ExpressionFilterSet setExpression is not a set");
         this.setExpression = setExpression;
         this.parameterName = parameterName;
         this.filterCondition = filterCondition;
@@ -30,6 +29,7 @@ public class ExpressionFilterSet extends Expression {
 
     @Override
     public Set<String> getValueStringSet(Context context) {
+        if (setExpression.getDataType() != DataType.STRING_SET) throw new IllegalArgumentException("ExpressionFilterSet setExpression is not a set");
         Set<String> originalValues = setExpression.getValueStringSet(context);
         Set<String> filteredValues = new HashSet<>();
         for (String currentValue : originalValues) {

@@ -16,12 +16,12 @@ public class ScriptNearestActorWithScript extends Script {
     public ScriptNearestActorWithScript(Condition condition, Expression trigger) {
         super(condition);
         if (trigger == null) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is null");
-        if (trigger.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is not a string");
         this.trigger = trigger;
     }
 
     @Override
     protected void executeSuccess(Context context) {
+        if (trigger.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is not a string");
         // TODO - Improve efficiency of nearest actor check
         List<Actor> nearestActor = new ArrayList<>();
         List<Integer> nearestActorDist = new ArrayList<>();

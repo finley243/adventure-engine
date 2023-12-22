@@ -14,7 +14,6 @@ public class ExpressionCompare extends Expression {
 
     public ExpressionCompare(Expression expression1, Expression expression2, Comparator comparator) {
         if (expression1 == null || expression2 == null) throw new IllegalArgumentException("One or more expressions is null");
-        if (!expression1.canCompareTo(expression2)) throw new IllegalArgumentException("Expressions cannot be compared");
         this.expression1 = expression1;
         this.expression2 = expression2;
         this.comparator = comparator;
@@ -27,6 +26,7 @@ public class ExpressionCompare extends Expression {
 
     @Override
     public boolean getValueBoolean(Context context) {
+        if (!expression1.canCompareTo(expression2)) throw new IllegalArgumentException("Expressions cannot be compared");
         if ((expression1.getDataType() == Expression.DataType.INTEGER || expression1.getDataType() == Expression.DataType.FLOAT) &&
                 (expression2.getDataType() == Expression.DataType.INTEGER || expression2.getDataType() == Expression.DataType.FLOAT)) {
             float value1;

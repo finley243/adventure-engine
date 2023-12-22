@@ -13,7 +13,6 @@ public class Condition {
 
 	public Condition(boolean invert, Expression expression) {
 		if (expression == null) throw new IllegalArgumentException("Condition expression is null");
-		if (expression.getDataType() != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("Condition expression is not a boolean");
 		this.invert = invert;
 		this.expression = expression;
 	}
@@ -23,6 +22,7 @@ public class Condition {
 	}
 
 	private boolean isMetInternal(Context context) {
+		if (expression.getDataType() != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("Condition expression is not a boolean");
 		return expression.getValueBoolean(context);
 	}
 

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.object.template;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ObjectComponentTemplateNetwork extends ObjectComponentTemplate {
@@ -9,12 +10,12 @@ public class ObjectComponentTemplateNetwork extends ObjectComponentTemplate {
     public ObjectComponentTemplateNetwork(boolean startEnabled, boolean actionsRestricted, Expression networkID) {
         super(startEnabled, actionsRestricted);
         if (networkID == null) throw new IllegalArgumentException("NetworkID expression is null");
-        if (networkID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("NetworkID expression is not a string");
         this.networkID = networkID;
     }
 
-    public Expression getNetworkID() {
-        return networkID;
+    public String getNetworkID(Context context) {
+        if (networkID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("NetworkID expression is not a string");
+        return networkID.getValueString(context);
     }
 
 }

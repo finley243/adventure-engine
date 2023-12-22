@@ -15,9 +15,7 @@ public class ScriptTimerStart extends Script {
     public ScriptTimerStart(Condition condition, Expression timerID, Expression timerDuration, Script timerScriptExpire, Script timerScriptUpdate) {
         super(condition);
         if (timerID == null) throw new IllegalArgumentException("ScriptTimerStart timerID is null");
-        if (timerID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTimerStart timerID is not a string");
         if (timerDuration == null) throw new IllegalArgumentException("ScriptTimerStart timerDuration is null");
-        if (timerDuration.getDataType() != Expression.DataType.INTEGER) throw new IllegalArgumentException("ScriptTimerStart timerDuration is not an integer");
         this.timerID = timerID;
         this.timerDuration = timerDuration;
         this.timerScriptExpire = timerScriptExpire;
@@ -26,6 +24,8 @@ public class ScriptTimerStart extends Script {
 
     @Override
     protected void executeSuccess(Context context) {
+        if (timerID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTimerStart timerID is not a string");
+        if (timerDuration.getDataType() != Expression.DataType.INTEGER) throw new IllegalArgumentException("ScriptTimerStart timerDuration is not an integer");
         Timer timer = new Timer(context.game(), timerID.getValueString(context), timerDuration.getValueInteger(context), timerScriptExpire, timerScriptUpdate, context);
         context.game().data().addTimer(timer.getID(), timer);
     }

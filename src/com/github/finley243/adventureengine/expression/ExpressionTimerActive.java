@@ -8,7 +8,6 @@ public class ExpressionTimerActive extends Expression {
 
     public ExpressionTimerActive(Expression timerID) {
         if (timerID == null) throw new IllegalArgumentException("ExpressionTimerActive timerID is null");
-        if (timerID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ExpressionTimerActive timerID is not a string");
         this.timerID = timerID;
     }
 
@@ -19,6 +18,7 @@ public class ExpressionTimerActive extends Expression {
 
     @Override
     public boolean getValueBoolean(Context context) {
+        if (timerID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ExpressionTimerActive timerID is not a string");
         return context.game().data().isTimerActive(timerID.getValueString(context));
     }
 
