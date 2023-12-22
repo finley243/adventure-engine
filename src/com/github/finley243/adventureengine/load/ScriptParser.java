@@ -1,10 +1,11 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptCompound;
 
 import javax.print.attribute.standard.MediaSize;
+import java.lang.foreign.AddressLayout;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -307,6 +308,74 @@ public class ScriptParser {
 
         }
         return null;
+    }
+
+    private static Expression generateExpression(List<ScriptToken> tokens, String dataType) {
+        if (tokens.isEmpty()) return null;
+        if (tokens.size() == 1) {
+            ScriptToken token = tokens.get(0);
+            if (token.type == ScriptTokenType.STRING) {
+                return Expression.constant(token.value);
+            } else if (token.type == ScriptTokenType.INTEGER) {
+                int value = Integer.parseInt(token.value);
+                return Expression.constant(value);
+            } else if (token.type == ScriptTokenType.FLOAT) {
+                float value = Float.parseFloat(token.value);
+                return Expression.constant(value);
+            } else if (token.type == ScriptTokenType.BOOLEAN_TRUE) {
+                return Expression.constant(true);
+            } else if (token.type == ScriptTokenType.BOOLEAN_FALSE) {
+                return Expression.constant(false);
+            } else if (token.type == ScriptTokenType.NAME) {
+                return new ExpressionParameter(dataType, token.value);
+            }
+        } else if (tokens.get(0).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.get(tokens.size() - 1).type == ScriptTokenType.PARENTHESIS_CLOSE) {
+            return generateExpression(tokens.subList(1, tokens.size() - 1), dataType);
+        } else {
+            int priorityOperator = getPriorityOperator(tokens);
+            if (priorityOperator != -1) {
+                Expression preOperator = generateExpression(tokens.subList(0, priorityOperator), dataType);
+                Expression postOperator = generateExpression(tokens.subList(priorityOperator + 1, tokens.size()), dataType);
+                return switch (tokens.get(priorityOperator).type) {
+                    case MULTIPLY -> new ExpressionMultiply(List.of(preOperator, postOperator));
+                    case DIVIDE -> new ExpressionDivide(preOperator, postOperator);
+                    case PLUS -> new ExpressionAdd(List.of(preOperator, postOperator));
+                    case MINUS -> new ExpressionSubtract(preOperator, postOperator);
+                    default -> null;
+                };
+            }
+            // TODO - Handle non-mathematical expressions
+        }
+        return null;
+    }
+
+    private static int getPriorityOperator(List<ScriptToken> tokens) {
+        int bracketDepth = 0;
+        int priorityOperator = -1;
+        for (int i = 0; i < tokens.size(); i++) {
+            ScriptToken currentToken = tokens.get(i);
+            if (currentToken.type == ScriptTokenType.PARENTHESIS_OPEN) {
+                bracketDepth += 1;
+            } else if (currentToken.type == ScriptTokenType.PARENTHESIS_CLOSE) {
+                bracketDepth -= 1;
+            } else if (bracketDepth == 0 && getOperationPriority(currentToken.type) > (priorityOperator == -1 ? -1 : getOperationPriority(tokens.get(priorityOperator).type))) {
+                priorityOperator = i;
+            }
+        }
+        return priorityOperator;
+    }
+
+    private static int getOperationPriority(ScriptTokenType tokenType) {
+        if (tokenType == ScriptTokenType.MULTIPLY) {
+            return 0;
+        } else if (tokenType == ScriptTokenType.DIVIDE) {
+            return 1;
+        } else if (tokenType == ScriptTokenType.PLUS) {
+            return 2;
+        } else if (tokenType == ScriptTokenType.MINUS) {
+            return 3;
+        }
+        return -1;
     }
 
     private static Expression.DataType stringToDataType(String name) {
