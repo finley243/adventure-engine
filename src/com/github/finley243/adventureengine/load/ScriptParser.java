@@ -195,7 +195,7 @@ public class ScriptParser {
 
         } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(0).value.equals("if")) {
             // If statement
-            if (tokens.get(0).type != ScriptTokenType.PARENTHESIS_OPEN) {
+            if (tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) {
                 throw new IllegalArgumentException("If statement condition is malformed");
             }
             List<ScriptToken> conditionTokens = new ArrayList<>();
