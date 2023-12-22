@@ -16,10 +16,10 @@ import java.util.regex.Pattern;
 public class ScriptParser {
 
     private enum ScriptTokenType {
-        END_LINE, STRING, FLOAT, INTEGER, NAME, EQUALS, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE
+        END_LINE, STRING, FLOAT, INTEGER, NAME, EQUALS, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE
     }
 
-    private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*\n|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|;|=|,|\\.|\\+|-|/|\\*|\\(|\\)|\\{|\\}";
+    private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*\n|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|;|=|,|\\.|\\+|-|/|\\*|%|\\(|\\)|\\{|\\}";
 
     public static List<ScriptData> parseScripts(String scriptText) {
         List<ScriptData> scripts = new ArrayList<>();
@@ -168,6 +168,8 @@ public class ScriptParser {
                 tokens.add(new ScriptToken(ScriptTokenType.DIVIDE));
             } else if (currentToken.equals("*")) {
                 tokens.add(new ScriptToken(ScriptTokenType.MULTIPLY));
+            } else if (currentToken.equals("%")) {
+                tokens.add(new ScriptToken(ScriptTokenType.MODULO));
             } else if (currentToken.equals("(")) {
                 tokens.add(new ScriptToken(ScriptTokenType.PARENTHESIS_OPEN));
             } else if (currentToken.equals(")")) {
@@ -339,6 +341,7 @@ public class ScriptParser {
                 return switch (tokens.get(priorityOperator).type) {
                     case MULTIPLY -> new ExpressionMultiply(List.of(preOperator, postOperator));
                     case DIVIDE -> new ExpressionDivide(preOperator, postOperator);
+                    case MODULO -> new ExpressionModulo(preOperator, postOperator);
                     case PLUS -> new ExpressionAdd(List.of(preOperator, postOperator));
                     case MINUS -> new ExpressionSubtract(preOperator, postOperator);
                     default -> null;
@@ -369,11 +372,13 @@ public class ScriptParser {
         if (tokenType == ScriptTokenType.MULTIPLY) {
             return 0;
         } else if (tokenType == ScriptTokenType.DIVIDE) {
-            return 1;
+            return 0;
+        } else if (tokenType == ScriptTokenType.MODULO) {
+            return 0;
         } else if (tokenType == ScriptTokenType.PLUS) {
-            return 2;
+            return 1;
         } else if (tokenType == ScriptTokenType.MINUS) {
-            return 3;
+            return 1;
         }
         return -1;
     }
