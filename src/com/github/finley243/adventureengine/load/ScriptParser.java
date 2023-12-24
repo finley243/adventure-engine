@@ -353,7 +353,8 @@ public class ScriptParser {
     private static int getPriorityOperator(List<ScriptToken> tokens) {
         int bracketDepth = 0;
         int priorityOperator = -1;
-        for (int i = 0; i < tokens.size(); i++) {
+        // Iterated in reverse order to make operators left-associative
+        for (int i = tokens.size() - 1; i >= 0; i--) {
             ScriptToken currentToken = tokens.get(i);
             if (currentToken.type == ScriptTokenType.PARENTHESIS_OPEN) {
                 bracketDepth += 1;
