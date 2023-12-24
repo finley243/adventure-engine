@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptCompound;
+import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -344,6 +345,15 @@ public class ScriptParser {
                     case MINUS -> new ExpressionSubtract(preOperator, postOperator);
                     default -> null;
                 };
+            }
+            if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(0).value.equals("stat") && tokens.get(1).type == ScriptTokenType.DOT) {
+                StatHolderReference parentHolder = null;
+                int bracketDepth = 0;
+                List<ScriptToken> stringExpression = new ArrayList<>();
+                for (int i = 2; i < tokens.size(); i++) {
+                    ScriptToken token = tokens.get(i);
+
+                }
             }
             // TODO - Handle non-mathematical expressions
         }
