@@ -17,7 +17,7 @@ public class ExpressionExternal extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return dataType;
     }
 

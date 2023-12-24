@@ -15,37 +15,37 @@ public class ExpressionGlobal extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return dataType;
     }
 
     @Override
     public boolean getValueBoolean(Context context) {
-        if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.BOOLEAN) throw new UnsupportedOperationException();
         return context.game().data().getGlobalBoolean(expressionID.getValueString(context));
     }
 
     @Override
     public int getValueInteger(Context context) {
-        if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.INTEGER) throw new UnsupportedOperationException();
         return context.game().data().getGlobalInteger(expressionID.getValueString(context));
     }
 
     @Override
     public float getValueFloat(Context context) {
-        if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.FLOAT) throw new UnsupportedOperationException();
         return context.game().data().getGlobalFloat(expressionID.getValueString(context));
     }
 
     @Override
     public String getValueString(Context context) {
-        if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.STRING) throw new UnsupportedOperationException();
         return context.game().data().getGlobalString(expressionID.getValueString(context));
     }
 
     @Override
     public Set<String> getValueStringSet(Context context) {
-        if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.STRING_SET) throw new UnsupportedOperationException();
         return context.game().data().getGlobalStringSet(expressionID.getValueString(context));
     }
 

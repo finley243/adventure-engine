@@ -37,12 +37,12 @@ public class ScriptSensoryEvent extends Script {
     }
 
     private Area[] getOriginAreas(Context context) {
-        if (area.getDataType() == Expression.DataType.STRING) {
+        if (area.getDataType(context) == Expression.DataType.STRING) {
             String areaID = area.getValueString(context);
             Area[] areaArray = new Area[1];
             areaArray[0] = context.game().data().getArea(areaID);
             return areaArray;
-        } else if (area.getDataType() == Expression.DataType.STRING_SET) {
+        } else if (area.getDataType(context) == Expression.DataType.STRING_SET) {
             Set<String> areaIDSet = area.getValueStringSet(context);
             Area[] areaArray = new Area[areaIDSet.size()];
             int index = 0;

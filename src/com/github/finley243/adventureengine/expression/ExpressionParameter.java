@@ -8,17 +8,15 @@ import java.util.Set;
 
 public class ExpressionParameter extends Expression {
 
-    private final DataType dataType;
     private final String name;
 
-    public ExpressionParameter(String dataType, String name) {
-        this.dataType = dataTypeFromString(dataType);
+    public ExpressionParameter(String name) {
         this.name = name;
     }
 
     @Override
-    public DataType getDataType() {
-        return dataType;
+    public DataType getDataType(Context context) {
+        return context.getLocalVariables().get(name).getExpression().getDataType(context);
     }
 
     @Override

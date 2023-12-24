@@ -12,7 +12,7 @@ public abstract class Expression {
         BOOLEAN, INTEGER, FLOAT, STRING, STRING_SET, INVENTORY, NOUN
     }
 
-    public abstract DataType getDataType();
+    public abstract DataType getDataType(Context context);
 
     public boolean getValueBoolean(Context context) {
         throw new UnsupportedOperationException("Invalid data type function: boolean");
@@ -42,18 +42,18 @@ public abstract class Expression {
         throw new UnsupportedOperationException("Invalid data type function: noun");
     }
 
-    public boolean canCompareTo(Expression other) {
-        if (this.getDataType() == DataType.STRING_SET || other.getDataType() == DataType.STRING_SET) {
+    public boolean canCompareTo(Expression other, Context context) {
+        if (this.getDataType(context) == DataType.STRING_SET || other.getDataType(context) == DataType.STRING_SET) {
             return false;
-        } else if (this.getDataType() == DataType.INVENTORY || other.getDataType() == DataType.INVENTORY) {
+        } else if (this.getDataType(context) == DataType.INVENTORY || other.getDataType(context) == DataType.INVENTORY) {
             return false;
-        } else if (this.getDataType() == DataType.NOUN || other.getDataType() == DataType.NOUN) {
+        } else if (this.getDataType(context) == DataType.NOUN || other.getDataType(context) == DataType.NOUN) {
             return false;
         }
-        if (this.getDataType() == DataType.INTEGER || this.getDataType() == DataType.FLOAT) {
-            return other.getDataType() == DataType.INTEGER || other.getDataType() == DataType.FLOAT;
+        if (this.getDataType(context) == DataType.INTEGER || this.getDataType(context) == DataType.FLOAT) {
+            return other.getDataType(context) == DataType.INTEGER || other.getDataType(context) == DataType.FLOAT;
         }
-        return this.getDataType() == other.getDataType();
+        return this.getDataType(context) == other.getDataType(context);
     }
 
     public static DataType dataTypeFromString(String name) {
@@ -70,7 +70,7 @@ public abstract class Expression {
     }
 
     public static Expression convertToConstant(Expression expression, Context context) {
-        return switch (expression.getDataType()) {
+        return switch (expression.getDataType(context)) {
             case BOOLEAN -> new ExpressionConstantBoolean(expression.getValueBoolean(context));
             case INTEGER -> new ExpressionConstantInteger(expression.getValueInteger(context));
             case FLOAT -> new ExpressionConstantFloat(expression.getValueFloat(context));

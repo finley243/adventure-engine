@@ -14,7 +14,7 @@ public class ExpressionRandomStringFromSet extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.STRING;
     }
 

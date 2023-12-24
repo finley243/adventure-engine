@@ -13,7 +13,7 @@ public class ExpressionConstantStringSet extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.STRING_SET;
     }
 

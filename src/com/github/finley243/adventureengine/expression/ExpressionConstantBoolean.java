@@ -11,7 +11,7 @@ public class ExpressionConstantBoolean extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.BOOLEAN;
     }
 

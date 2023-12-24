@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.Context;
 public class ExpressionMonth extends Expression {
 
     @Override
-    public Expression.DataType getDataType() {
+    public Expression.DataType getDataType(Context context) {
         return Expression.DataType.INTEGER;
     }
 

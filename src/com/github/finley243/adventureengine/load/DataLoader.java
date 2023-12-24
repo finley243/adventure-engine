@@ -353,7 +353,7 @@ public class DataLoader {
             }
             case "parameter" -> {
                 String parameterName = LoadUtils.attribute(expressionElement, "name", null);
-                return new ExpressionParameter(dataType, parameterName);
+                return new ExpressionParameter(parameterName);
             }
             case "timerActive" -> {
                 Expression timerID = loadExpressionOrAttribute(expressionElement, "timerID", "string");

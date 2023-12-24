@@ -21,13 +21,13 @@ public class ExpressionConditional extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return dataType;
     }
 
     @Override
     public boolean getValueBoolean(Context context) {
-        if (getDataType() != DataType.BOOLEAN) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.BOOLEAN) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
                 return pair.expression.getValueBoolean(context);
@@ -38,7 +38,7 @@ public class ExpressionConditional extends Expression {
 
     @Override
     public int getValueInteger(Context context) {
-        if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.INTEGER) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
                 return pair.expression.getValueInteger(context);
@@ -49,7 +49,7 @@ public class ExpressionConditional extends Expression {
 
     @Override
     public float getValueFloat(Context context) {
-        if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.FLOAT) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
                 return pair.expression.getValueFloat(context);
@@ -60,7 +60,7 @@ public class ExpressionConditional extends Expression {
 
     @Override
     public String getValueString(Context context) {
-        if (getDataType() != DataType.STRING) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.STRING) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
                 return pair.expression.getValueString(context);
@@ -71,7 +71,7 @@ public class ExpressionConditional extends Expression {
 
     @Override
     public Set<String> getValueStringSet(Context context) {
-        if (getDataType() != DataType.STRING_SET) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.STRING_SET) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
                 return pair.expression.getValueStringSet(context);
@@ -82,7 +82,7 @@ public class ExpressionConditional extends Expression {
 
     @Override
     public Inventory getValueInventory(Context context) {
-        if (getDataType() != DataType.INVENTORY) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.INVENTORY) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
                 return pair.expression.getValueInventory(context);
@@ -93,7 +93,7 @@ public class ExpressionConditional extends Expression {
 
     @Override
     public Noun getValueNoun(Context context) {
-        if (getDataType() != DataType.NOUN) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.NOUN) throw new UnsupportedOperationException();
         for (ConditionVariablePair pair : conditionVariablePairs) {
             if (pair.condition.isMet(context)) {
                 return pair.expression.getValueNoun(context);

@@ -33,7 +33,7 @@ public class ObjectComponentLink extends ObjectComponent {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - linked object local variable is missing");
             return null;
         }
-        if (linkedObjectExpression.getDataType() != Expression.DataType.STRING) {
+        if (linkedObjectExpression.getDataType(context) != Expression.DataType.STRING) {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - linked object local variable is not a string");
             return null;
         }
@@ -48,7 +48,7 @@ public class ObjectComponentLink extends ObjectComponent {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - direction local variable is missing");
             return null;
         }
-        if (directionExpression.getDataType() != Expression.DataType.STRING) {
+        if (directionExpression.getDataType(context) != Expression.DataType.STRING) {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - direction local variable is not a string");
             return null;
         }

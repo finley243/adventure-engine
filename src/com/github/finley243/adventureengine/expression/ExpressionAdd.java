@@ -15,13 +15,13 @@ public class ExpressionAdd extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         if (isFloat == null) {
             boolean hasFloatVariable = false;
             for (Expression expression : expressions) {
-                if (expression.getDataType() == DataType.FLOAT) {
+                if (expression.getDataType(context) == DataType.FLOAT) {
                     hasFloatVariable = true;
-                } else if (expression.getDataType() != DataType.INTEGER) {
+                } else if (expression.getDataType(context) != DataType.INTEGER) {
                     throw new IllegalArgumentException("Non-numeric expression provided to ExpressionAdd");
                 }
             }
@@ -36,7 +36,7 @@ public class ExpressionAdd extends Expression {
 
     @Override
     public int getValueInteger(Context context) {
-        if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.INTEGER) throw new UnsupportedOperationException();
         int sum = 0;
         for (Expression expression : expressions) {
             sum += expression.getValueInteger(context);
@@ -46,10 +46,10 @@ public class ExpressionAdd extends Expression {
 
     @Override
     public float getValueFloat(Context context) {
-        if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.FLOAT) throw new UnsupportedOperationException();
         float sum = 0.0f;
         for (Expression expression : expressions) {
-            if (expression.getDataType() == DataType.FLOAT) {
+            if (expression.getDataType(context) == DataType.FLOAT) {
                 sum += expression.getValueFloat(context);
             } else {
                 sum += expression.getValueInteger(context);

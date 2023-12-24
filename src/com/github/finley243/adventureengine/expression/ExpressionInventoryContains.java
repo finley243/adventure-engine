@@ -16,17 +16,17 @@ public class ExpressionInventoryContains extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.BOOLEAN;
     }
 
     @Override
     public boolean getValueBoolean(Context context) {
-        if (inventory.getDataType() != Expression.DataType.INVENTORY)
+        if (inventory.getDataType(context) != Expression.DataType.INVENTORY)
             throw new IllegalArgumentException("Expression inventory is not an inventory");
-        if (itemID.getDataType() != Expression.DataType.STRING && itemID.getDataType() != Expression.DataType.STRING_SET)
+        if (itemID.getDataType(context) != Expression.DataType.STRING && itemID.getDataType(context) != Expression.DataType.STRING_SET)
             throw new IllegalArgumentException("Expression itemID is not a string or string set");
-        if (itemID.getDataType() == Expression.DataType.STRING_SET) {
+        if (itemID.getDataType(context) == Expression.DataType.STRING_SET) {
             Inventory inventoryValue = inventory.getValueInventory(context);
             for (String item : itemID.getValueStringSet(context)) {
                 boolean hasItem = inventoryValue.hasItem(item);

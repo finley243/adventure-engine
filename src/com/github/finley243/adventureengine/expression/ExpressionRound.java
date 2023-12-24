@@ -11,7 +11,7 @@ public class ExpressionRound extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.INTEGER;
     }
 

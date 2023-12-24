@@ -18,7 +18,7 @@ public class ScriptSetVariable extends Script {
 
     @Override
     protected void executeSuccess(Context context) {
-        if (variableName.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetVariable variableName is not a string");
+        if (variableName.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetVariable variableName is not a string");
         String variableNameString = variableName.getValueString(context);
         Expression valueToConstant = Expression.convertToConstant(variableValue, context);
         context.setParameter(variableNameString, valueToConstant);

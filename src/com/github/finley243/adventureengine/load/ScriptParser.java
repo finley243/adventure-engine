@@ -4,8 +4,6 @@ import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptCompound;
 
-import javax.print.attribute.standard.MediaSize;
-import java.lang.foreign.AddressLayout;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -329,7 +327,7 @@ public class ScriptParser {
             } else if (token.type == ScriptTokenType.BOOLEAN_FALSE) {
                 return Expression.constant(false);
             } else if (token.type == ScriptTokenType.NAME) {
-                return new ExpressionParameter(dataType, token.value);
+                return new ExpressionParameter(token.value);
             }
         } else if (tokens.get(0).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.get(tokens.size() - 1).type == ScriptTokenType.PARENTHESIS_CLOSE) {
             return generateExpression(tokens.subList(1, tokens.size() - 1), dataType);

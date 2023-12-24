@@ -26,11 +26,11 @@ public class ScriptScene extends Script {
 
     @Override
     public void executeSuccess(Context context) {
-        if (scenes.getDataType() != Expression.DataType.STRING && scenes.getDataType() != Expression.DataType.STRING_SET) throw new IllegalArgumentException("ScriptScene scenes is not a string or string set");
+        if (scenes.getDataType(context) != Expression.DataType.STRING && scenes.getDataType(context) != Expression.DataType.STRING_SET) throw new IllegalArgumentException("ScriptScene scenes is not a string or string set");
         if (!(actor.getHolder(context) instanceof Actor actorCast)) {
             return;
         }
-        if (scenes.getDataType() == Expression.DataType.STRING) {
+        if (scenes.getDataType(context) == Expression.DataType.STRING) {
             context.game().eventQueue().addToFront(new SceneEvent(context.game().data().getScene(scenes.getValueString(context)), null, new Context(context, actorCast, actorCast)));
         } else {
             Set<Scene> sceneValues = new HashSet<>();

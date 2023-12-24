@@ -14,26 +14,26 @@ public class ExpressionPower extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.FLOAT;
     }
 
     @Override
     public float getValueFloat(Context context) {
-        if (!(expressionBase.getDataType() == DataType.FLOAT || expressionBase.getDataType() == DataType.INTEGER)) {
+        if (!(expressionBase.getDataType(context) == DataType.FLOAT || expressionBase.getDataType(context) == DataType.INTEGER)) {
             throw new IllegalArgumentException("Non-numeric expression provided to ExpressionPower");
         }
-        if (!(expressionExponent.getDataType() == DataType.FLOAT || expressionExponent.getDataType() == DataType.INTEGER)) {
+        if (!(expressionExponent.getDataType(context) == DataType.FLOAT || expressionExponent.getDataType(context) == DataType.INTEGER)) {
             throw new IllegalArgumentException("Non-numeric expression provided to ExpressionPower");
         }
         float valueBase;
         float valueExponent;
-        if (expressionBase.getDataType() == DataType.INTEGER) {
+        if (expressionBase.getDataType(context) == DataType.INTEGER) {
             valueBase = expressionBase.getValueInteger(context);
         } else {
             valueBase = expressionBase.getValueFloat(context);
         }
-        if (expressionExponent.getDataType() == DataType.INTEGER) {
+        if (expressionExponent.getDataType(context) == DataType.INTEGER) {
             valueExponent = expressionExponent.getValueInteger(context);
         } else {
             valueExponent = expressionExponent.getValueFloat(context);

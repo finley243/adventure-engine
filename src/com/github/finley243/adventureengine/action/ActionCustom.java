@@ -58,12 +58,12 @@ public class ActionCustom extends Action {
     public String getPrompt(Actor subject) {
         Map<String, String> contextVars = new HashMap<>();
         for (Map.Entry<String, Expression> entry : getTemplate().getParameters().entrySet()) {
-            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
+            if (entry.getValue().getDataType(new Context(subject.game(), subject, actor, object, item, area, this, parameters)) == Expression.DataType.STRING) {
                 contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, this, parameters)));
             }
         }
         for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
-            if (entry.getValue().getDataType() == Expression.DataType.STRING) {
+            if (entry.getValue().getDataType(new Context(subject.game(), subject, actor, object, item, area, this, parameters)) == Expression.DataType.STRING) {
                 contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, this, parameters)));
             }
         }

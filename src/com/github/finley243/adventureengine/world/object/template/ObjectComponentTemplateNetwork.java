@@ -14,7 +14,7 @@ public class ObjectComponentTemplateNetwork extends ObjectComponentTemplate {
     }
 
     public String getNetworkID(Context context) {
-        if (networkID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("NetworkID expression is not a string");
+        if (networkID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("NetworkID expression is not a string");
         return networkID.getValueString(context);
     }
 

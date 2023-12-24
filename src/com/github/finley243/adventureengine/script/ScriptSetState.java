@@ -22,7 +22,7 @@ public class ScriptSetState extends Script {
 
     @Override
     protected void executeSuccess(Context context) {
-        if (state.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetState state name is not a string");
+        if (state.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetState state name is not a string");
         String stateValue = state.getValueString(context);
         boolean success = holder.getHolder(context).setStatValue(stateValue, expression, context);
         if (!success) {

@@ -14,14 +14,14 @@ public class ExpressionSubtract extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
-        if (!(expression1.getDataType() == DataType.FLOAT || expression1.getDataType() == DataType.INTEGER)) {
+    public DataType getDataType(Context context) {
+        if (!(expression1.getDataType(context) == DataType.FLOAT || expression1.getDataType(context) == DataType.INTEGER)) {
             throw new IllegalArgumentException("Non-numeric expression provided to ExpressionSubtract");
         }
-        if (!(expression2.getDataType() == DataType.FLOAT || expression2.getDataType() == DataType.INTEGER)) {
+        if (!(expression2.getDataType(context) == DataType.FLOAT || expression2.getDataType(context) == DataType.INTEGER)) {
             throw new IllegalArgumentException("Non-numeric expression provided to ExpressionSubtract");
         }
-        if (expression1.getDataType() != DataType.INTEGER || expression2.getDataType() != DataType.INTEGER) {
+        if (expression1.getDataType(context) != DataType.INTEGER || expression2.getDataType(context) != DataType.INTEGER) {
             return DataType.FLOAT;
         } else {
             return DataType.INTEGER;
@@ -30,7 +30,7 @@ public class ExpressionSubtract extends Expression {
 
     @Override
     public int getValueInteger(Context context) {
-        if (getDataType() != DataType.INTEGER) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.INTEGER) throw new UnsupportedOperationException();
         int value1 = expression1.getValueInteger(context);
         int value2 = expression2.getValueInteger(context);
         return value1 - value2;
@@ -38,15 +38,15 @@ public class ExpressionSubtract extends Expression {
 
     @Override
     public float getValueFloat(Context context) {
-        if (getDataType() != DataType.FLOAT) throw new UnsupportedOperationException();
+        if (getDataType(context) != DataType.FLOAT) throw new UnsupportedOperationException();
         float value1;
         float value2;
-        if (expression1.getDataType() == DataType.INTEGER) {
+        if (expression1.getDataType(context) == DataType.INTEGER) {
             value1 = expression1.getValueInteger(context);
         } else {
             value1 = expression1.getValueFloat(context);
         }
-        if (expression2.getDataType() == DataType.INTEGER) {
+        if (expression2.getDataType(context) == DataType.INTEGER) {
             value2 = expression2.getValueInteger(context);
         } else {
             value2 = expression2.getValueFloat(context);

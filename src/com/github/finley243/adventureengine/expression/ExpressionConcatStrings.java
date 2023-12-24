@@ -13,7 +13,7 @@ public class ExpressionConcatStrings extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.STRING;
     }
 
@@ -21,7 +21,7 @@ public class ExpressionConcatStrings extends Expression {
     public String getValueString(Context context) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Expression expression : stringExpressions) {
-            if (expression.getDataType() != DataType.STRING) throw new IllegalArgumentException("Non-string expression provided to ExpressionConcatStrings");
+            if (expression.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("Non-string expression provided to ExpressionConcatStrings");
             stringBuilder.append(expression.getValueString(context));
         }
         return stringBuilder.toString();

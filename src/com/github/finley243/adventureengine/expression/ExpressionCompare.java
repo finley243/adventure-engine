@@ -20,39 +20,39 @@ public class ExpressionCompare extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.BOOLEAN;
     }
 
     @Override
     public boolean getValueBoolean(Context context) {
-        if (!expression1.canCompareTo(expression2)) throw new IllegalArgumentException("Expressions cannot be compared");
-        if ((expression1.getDataType() == Expression.DataType.INTEGER || expression1.getDataType() == Expression.DataType.FLOAT) &&
-                (expression2.getDataType() == Expression.DataType.INTEGER || expression2.getDataType() == Expression.DataType.FLOAT)) {
+        if (!expression1.canCompareTo(expression2, context)) throw new IllegalArgumentException("Expressions cannot be compared");
+        if ((expression1.getDataType(context) == Expression.DataType.INTEGER || expression1.getDataType(context) == Expression.DataType.FLOAT) &&
+                (expression2.getDataType(context) == Expression.DataType.INTEGER || expression2.getDataType(context) == Expression.DataType.FLOAT)) {
             float value1;
             float value2;
-            if (expression1.getDataType() == Expression.DataType.INTEGER) {
+            if (expression1.getDataType(context) == Expression.DataType.INTEGER) {
                 value1 = expression1.getValueInteger(context);
             } else {
                 value1 = expression1.getValueFloat(context);
             }
-            if (expression2.getDataType() == Expression.DataType.INTEGER) {
+            if (expression2.getDataType(context) == Expression.DataType.INTEGER) {
                 value2 = expression2.getValueInteger(context);
             } else {
                 value2 = expression2.getValueFloat(context);
             }
             return comparatorCheckFloat(value1, value2, comparator);
-        } else if (expression1.getDataType() == Expression.DataType.BOOLEAN) {
+        } else if (expression1.getDataType(context) == Expression.DataType.BOOLEAN) {
             if (comparator == Comparator.NOT_EQUAL) {
                 return expression1.getValueBoolean(context) != expression2.getValueBoolean(context);
             }
             return expression1.getValueBoolean(context) == expression2.getValueBoolean(context);
-        } else if (expression1.getDataType() == Expression.DataType.STRING) {
+        } else if (expression1.getDataType(context) == Expression.DataType.STRING) {
             if (comparator == Comparator.NOT_EQUAL) {
                 return !expression1.getValueString(context).equals(expression2.getValueString(context));
             }
             return expression1.getValueString(context).equals(expression2.getValueString(context));
-        } else if (expression1.getDataType() == Expression.DataType.STRING_SET) {
+        } else if (expression1.getDataType(context) == Expression.DataType.STRING_SET) {
             if (comparator == Comparator.NOT_EQUAL) {
                 return !expression1.getValueStringSet(context).equals(expression2.getValueStringSet(context));
             }

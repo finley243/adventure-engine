@@ -12,13 +12,13 @@ public class ExpressionTimerActive extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.BOOLEAN;
     }
 
     @Override
     public boolean getValueBoolean(Context context) {
-        if (timerID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ExpressionTimerActive timerID is not a string");
+        if (timerID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ExpressionTimerActive timerID is not a string");
         return context.game().data().isTimerActive(timerID.getValueString(context));
     }
 

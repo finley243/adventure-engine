@@ -11,13 +11,13 @@ public class ExpressionToString extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.STRING;
     }
 
     @Override
     public String getValueString(Context context) {
-        return switch (expression.getDataType()) {
+        return switch (expression.getDataType(context)) {
             case BOOLEAN -> Boolean.toString(expression.getValueBoolean(context));
             case INTEGER -> Integer.toString(expression.getValueInteger(context));
             case FLOAT -> Float.toString(expression.getValueFloat(context));

@@ -16,7 +16,7 @@ public class StatHolderReference {
     }
 
     public StatHolder getHolder(Context context) {
-        if (holderID != null && holderID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID must be a string");
+        if (holderID != null && holderID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID must be a string");
         if (parentReference != null) {
             String holderIDValue = holderID != null ? holderID.getValueString(context) : null;
             return parentReference.getHolder(context).getSubHolder(holderType, holderIDValue);

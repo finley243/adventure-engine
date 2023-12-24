@@ -13,13 +13,13 @@ public class ExpressionRandomChance extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.BOOLEAN;
     }
 
     @Override
     public boolean getValueBoolean(Context context) {
-        if (chance.getDataType() != Expression.DataType.FLOAT) throw new IllegalArgumentException("ConditionRandom chance expression is not a float");
+        if (chance.getDataType(context) != Expression.DataType.FLOAT) throw new IllegalArgumentException("ConditionRandom chance expression is not a float");
         return MathUtils.randomCheck(chance.getValueFloat(context));
     }
 

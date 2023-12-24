@@ -18,14 +18,14 @@ public class ExpressionLogicCompound extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.BOOLEAN;
     }
 
     @Override
     public boolean getValueBoolean(Context context) {
         for (Expression expression : expressions) {
-            if (expression.getDataType() != DataType.BOOLEAN) throw new IllegalArgumentException("Non-boolean expression provided to ExpressionLogicCompound");
+            if (expression.getDataType(context) != DataType.BOOLEAN) throw new IllegalArgumentException("Non-boolean expression provided to ExpressionLogicCompound");
             if (expression.getValueBoolean(context) != useAnd) {
                 return !useAnd;
             }

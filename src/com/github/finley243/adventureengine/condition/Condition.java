@@ -22,7 +22,7 @@ public class Condition {
 	}
 
 	private boolean isMetInternal(Context context) {
-		if (expression.getDataType() != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("Condition expression is not a boolean");
+		if (expression.getDataType(context) != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("Condition expression is not a boolean");
 		return expression.getValueBoolean(context);
 	}
 

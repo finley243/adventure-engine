@@ -14,14 +14,14 @@ public class ExpressionSetContains extends Expression {
     }
 
     @Override
-    public DataType getDataType() {
+    public DataType getDataType(Context context) {
         return DataType.BOOLEAN;
     }
 
     @Override
     public boolean getValueBoolean(Context context) {
-        if (expressionSet.getDataType() != Expression.DataType.STRING_SET) throw new IllegalArgumentException("Expression expressionSet is not a string set");
-        if (expressionString.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("Expression expressionString is not a string");
+        if (expressionSet.getDataType(context) != Expression.DataType.STRING_SET) throw new IllegalArgumentException("Expression expressionSet is not a string set");
+        if (expressionString.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("Expression expressionString is not a string");
         return expressionSet.getValueStringSet(context).contains(expressionString.getValueString(context));
     }
 

@@ -14,26 +14,26 @@ public class ExpressionDivide extends Expression {
     }
 
     @Override
-    public Expression.DataType getDataType() {
+    public Expression.DataType getDataType(Context context) {
         return DataType.FLOAT;
     }
 
     @Override
     public float getValueFloat(Context context) {
-        if (!(expression1.getDataType() == DataType.FLOAT || expression1.getDataType() == DataType.INTEGER)) {
+        if (!(expression1.getDataType(context) == DataType.FLOAT || expression1.getDataType(context) == DataType.INTEGER)) {
             throw new IllegalArgumentException("Non-numeric expression provided to ExpressionDivide");
         }
-        if (!(expression2.getDataType() == DataType.FLOAT || expression2.getDataType() == DataType.INTEGER)) {
+        if (!(expression2.getDataType(context) == DataType.FLOAT || expression2.getDataType(context) == DataType.INTEGER)) {
             throw new IllegalArgumentException("Non-numeric expression provided to ExpressionDivide");
         }
         float value1;
         float value2;
-        if (expression1.getDataType() == DataType.INTEGER) {
+        if (expression1.getDataType(context) == DataType.INTEGER) {
             value1 = expression1.getValueInteger(context);
         } else {
             value1 = expression1.getValueFloat(context);
         }
-        if (expression2.getDataType() == DataType.INTEGER) {
+        if (expression2.getDataType(context) == DataType.INTEGER) {
             value2 = expression2.getValueInteger(context);
         } else {
             value2 = expression2.getValueFloat(context);
