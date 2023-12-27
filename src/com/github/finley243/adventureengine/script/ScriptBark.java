@@ -7,22 +7,20 @@ import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 public class ScriptBark extends Script {
 
-    private final StatHolderReference actor;
+    private final StatHolderReference actorReference;
     private final String trigger;
 
-    public ScriptBark(Condition condition, StatHolderReference actor, String trigger) {
+    public ScriptBark(Condition condition, StatHolderReference actorReference, String trigger) {
         super(condition);
-        this.actor = actor;
+        this.actorReference = actorReference;
         this.trigger = trigger;
     }
 
     @Override
-    protected void executeSuccess(Context context) {
-        if (!(actor.getHolder(context) instanceof Actor actorCast)) {
-            // TODO - Add error log
-            return;
-        }
-        actorCast.triggerBark(trigger, context);
+    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+        if (!(actorReference.getHolder(context) instanceof Actor actor)) throw new IllegalArgumentException("Actor reference is not a valid actor");
+        actor.triggerBark(trigger, context);
+        sendReturn(new ScriptReturn(null, false, false, null));
     }
 
 }

@@ -2,40 +2,45 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.event.QueuedEvent;
-import com.github.finley243.adventureengine.event.ScriptEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class ScriptCompound extends Script {
+public class ScriptCompound extends Script implements ScriptReturnTarget {
 
     private final List<Script> subScripts;
-    // If true, only execute the first available script. If false, execute all scripts sequentially.
-    private final boolean select;
+
+    // TODO - Fix for recursive functions (values will be overwritten)
+    private final Deque<Script> scriptQueue;
+    private Context innerContext;
 
     public ScriptCompound(Condition condition, List<Script> subScripts, boolean select) {
         super(condition);
         this.subScripts = subScripts;
-        this.select = select;
+        this.scriptQueue = new ArrayDeque<>();
     }
 
     @Override
-    public void executeSuccess(Context context) {
-        Context innerContext = new Context(context);
-        if (select) {
-            for (Script current : subScripts) {
-                if (current.canExecute(innerContext)) {
-                    context.game().eventQueue().addToFront(new ScriptEvent(current, innerContext));
-                    break;
-                }
-            }
+    public void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+        scriptQueue.addAll(subScripts);
+        this.innerContext = new Context(context);
+        executeNextScript();
+    }
+
+    private void executeNextScript() {
+        Script currentScript = scriptQueue.removeFirst();
+        currentScript.execute(innerContext, this);
+    }
+
+    @Override
+    public void onScriptReturn(ScriptReturn scriptReturn) {
+        if (scriptReturn.error() != null) {
+            sendReturn(scriptReturn);
+        } else if (scriptReturn.isReturn()) {
+            sendReturn(scriptReturn);
+        } else if (scriptQueue.isEmpty()) {
+            sendReturn(new ScriptReturn(null, false, false, null));
         } else {
-            List<QueuedEvent> scriptEvents = new ArrayList<>();
-            for (Script current : subScripts) {
-                scriptEvents.add(new ScriptEvent(current, innerContext));
-            }
-            context.game().eventQueue().addAllToFront(scriptEvents);
+            executeNextScript();
         }
     }
 

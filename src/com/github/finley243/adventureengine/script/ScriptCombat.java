@@ -7,21 +7,21 @@ import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 public class ScriptCombat extends Script{
 
-    private final StatHolderReference actor;
-    private final StatHolderReference target;
+    private final StatHolderReference actorReference;
+    private final StatHolderReference targetReference;
 
-    public ScriptCombat(Condition condition, StatHolderReference actor, StatHolderReference target) {
+    public ScriptCombat(Condition condition, StatHolderReference actorReference, StatHolderReference targetReference) {
         super(condition);
-        this.actor = actor;
-        this.target = target;
+        this.actorReference = actorReference;
+        this.targetReference = targetReference;
     }
 
     @Override
-    public void executeSuccess(Context context) {
-        if (!(actor.getHolder(context) instanceof Actor actorCast) || !(target.getHolder(context) instanceof Actor targetCast)) {
-            return;
-        }
-        actorCast.getTargetingComponent().addCombatant(targetCast);
+    public void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+        if (!(actorReference.getHolder(context) instanceof Actor actor)) throw new IllegalArgumentException("Actor reference is not a valid actor");
+        if (!(targetReference.getHolder(context) instanceof Actor target)) throw new IllegalArgumentException("Target reference is not a valid actor");
+        actor.getTargetingComponent().addCombatant(target);
+        sendReturn(new ScriptReturn(null, false, false, null));
     }
 
 }

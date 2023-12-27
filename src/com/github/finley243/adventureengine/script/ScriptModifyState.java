@@ -21,7 +21,7 @@ public class ScriptModifyState extends Script {
     }
 
     @Override
-    protected void executeSuccess(Context context) {
+    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
         if (state.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyState state name is not a string");
         String stateValue = state.getValueString(context);
         switch (expression.getDataType(context)) {
@@ -44,6 +44,7 @@ public class ScriptModifyState extends Script {
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType(context));
         }
+        sendReturn(new ScriptReturn(null, false, false, null));
     }
 
 }

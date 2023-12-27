@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.SceneEvent;
+import com.github.finley243.adventureengine.event.ScriptResumeEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
@@ -25,11 +26,12 @@ public class ScriptScene extends Script {
     }
 
     @Override
-    public void executeSuccess(Context context) {
+    public void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
         if (scenes.getDataType(context) != Expression.DataType.STRING && scenes.getDataType(context) != Expression.DataType.STRING_SET) throw new IllegalArgumentException("ScriptScene scenes is not a string or string set");
         if (!(actor.getHolder(context) instanceof Actor actorCast)) {
             return;
         }
+        context.game().eventQueue().addToFront(new ScriptResumeEvent(returnTarget, new ScriptReturn(null, false, false, null)));
         if (scenes.getDataType(context) == Expression.DataType.STRING) {
             context.game().eventQueue().addToFront(new SceneEvent(context.game().data().getScene(scenes.getValueString(context)), null, new Context(context, actorCast, actorCast)));
         } else {
@@ -40,6 +42,7 @@ public class ScriptScene extends Script {
             Scene selectedScene = selectScene(context, sceneValues);
             context.game().eventQueue().addToFront(new SceneEvent(selectedScene, null, new Context(context, actorCast, actorCast)));
         }
+        context.game().eventQueue().startExecution();
     }
 
     private static Scene selectScene(Context context, Set<Scene> scenes) {

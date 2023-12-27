@@ -37,7 +37,7 @@ public class MenuManager {
 		waitForContinue(game);
 	}*/
 	
-	public void actionChoiceMenu(ActionChoiceMenuEvent event, Game game, Actor actor, List<Action> actions) {
+	public void actionChoiceMenu(ChoiceMenuEvent event, Game game, Actor actor, List<Action> actions) {
 		this.choiceMenuEvent = event;
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		Map<String, MenuCategory> categoryMap = new HashMap<>();
@@ -252,7 +252,7 @@ public class MenuManager {
 		startChoiceMenu(game, menuChoices, menuCategories, endTurnIndex, false);
 	}
 
-	public void sceneChoiceMenu(SceneChoiceMenuEvent event, Game game, List<SceneChoice> validChoices) {
+	public void sceneChoiceMenu(ChoiceMenuEvent event, Game game, List<SceneChoice> validChoices) {
 		this.choiceMenuEvent = event;
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		for (SceneChoice choice : validChoices) {
@@ -261,7 +261,7 @@ public class MenuManager {
 		startChoiceMenu(game, menuChoices, new ArrayList<>(), -1, true);
 	}
 
-	public void attributeMenu(AttributeMenuEvent event, Game game, Actor actor, int points) {
+	public void attributeMenu(NumericMenuEvent event, Game game, Actor actor, int points) {
 		this.numericMenuEvent = event;
 		List<NumericMenuField> menuFields = new ArrayList<>();
 		for (String attribute : game.data().getAttributeIDs()) {
@@ -271,7 +271,7 @@ public class MenuManager {
 		startNumericMenu(game, menuFields, points);
 	}
 
-	public void skillMenu(SkillMenuEvent event, Game game, Actor actor, int points) {
+	public void skillMenu(NumericMenuEvent event, Game game, Actor actor, int points) {
 		this.numericMenuEvent = event;
 		List<NumericMenuField> menuFields = new ArrayList<>();
 		for (String skill : game.data().getSkillIDs()) {

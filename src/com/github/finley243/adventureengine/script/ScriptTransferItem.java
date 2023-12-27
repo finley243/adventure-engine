@@ -41,7 +41,7 @@ public class ScriptTransferItem extends Script {
     }
 
     @Override
-    protected void executeSuccess(Context context) {
+    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
         if (inventoryOrigin != null && inventoryOrigin.getDataType(context) != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryOrigin is not an inventory");
         if (inventoryTarget != null && inventoryTarget.getDataType(context) != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryTarget is not an inventory");
         if (itemID != null && itemID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem itemID is not a string");
@@ -83,6 +83,7 @@ public class ScriptTransferItem extends Script {
                 }
             }
         }
+        sendReturn(new ScriptReturn(null, false, false, null));
     }
 
 }

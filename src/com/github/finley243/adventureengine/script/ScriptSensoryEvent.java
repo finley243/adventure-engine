@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.event.ScriptResumeEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -26,14 +27,16 @@ public class ScriptSensoryEvent extends Script {
     }
 
     @Override
-    protected void executeSuccess(Context context) {
+    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
         Area[] originAreas = getOriginAreas(context);
         Map<String, String> contextVars = context.getTextVarMap();
         Map<String, Noun> contextNouns = context.getContextNounMap();
         TextContext textContext = new TextContext(contextVars, contextNouns);
         String phraseString = (phrase == null ? null : phrase.getValueString(context));
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString(context));
+        context.game().eventQueue().addToFront(new ScriptResumeEvent(returnTarget, new ScriptReturn(null, false, false, null)));
         context.game().eventQueue().addToFront(new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, false, context.getParentAction(), null, context.getSubject(), context.getTarget()));
+        context.game().eventQueue().startExecution();
     }
 
     private Area[] getOriginAreas(Context context) {
