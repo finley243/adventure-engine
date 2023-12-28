@@ -17,10 +17,11 @@ public class ScriptBark extends Script {
     }
 
     @Override
-    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+    protected void executeSuccess(RuntimeStack runtimeStack) {
+        Context context = runtimeStack.getContext();
         if (!(actorReference.getHolder(context) instanceof Actor actor)) throw new IllegalArgumentException("Actor reference is not a valid actor");
         actor.triggerBark(trigger, context);
-        sendReturn(new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
     }
 
 }

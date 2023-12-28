@@ -21,14 +21,15 @@ public class ScriptSetState extends Script {
     }
 
     @Override
-    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+    protected void executeSuccess(RuntimeStack runtimeStack) {
+        Context context = runtimeStack.getContext();
         if (state.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetState state name is not a string");
         String stateValue = state.getValueString(context);
         boolean success = holder.getHolder(context).setStatValue(stateValue, expression, context);
         if (!success) {
             context.game().log().print("ScriptSetState - stat " + stateValue + " on holder " + holder + " was not updated successfully");
         }
-        sendReturn(new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
     }
 
 }

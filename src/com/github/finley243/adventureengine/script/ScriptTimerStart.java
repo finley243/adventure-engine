@@ -23,12 +23,13 @@ public class ScriptTimerStart extends Script {
     }
 
     @Override
-    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+    protected void executeSuccess(RuntimeStack runtimeStack) {
+        Context context = runtimeStack.getContext();
         if (timerID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTimerStart timerID is not a string");
         if (timerDuration.getDataType(context) != Expression.DataType.INTEGER) throw new IllegalArgumentException("ScriptTimerStart timerDuration is not an integer");
         Timer timer = new Timer(context.game(), timerID.getValueString(context), timerDuration.getValueInteger(context), timerScriptExpire, timerScriptUpdate, context);
         context.game().data().addTimer(timer.getID(), timer);
-        sendReturn(new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
     }
 
 }

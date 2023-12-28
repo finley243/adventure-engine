@@ -17,7 +17,8 @@ public class ScriptModifyGlobal extends Script {
     }
 
     @Override
-    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+    protected void executeSuccess(RuntimeStack runtimeStack) {
+        Context context = runtimeStack.getContext();
         if (globalID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyGlobal globalID is not a string");
         String globalIDValue = globalID.getValueString(context);
         switch (expression.getDataType(context)) {
@@ -32,7 +33,7 @@ public class ScriptModifyGlobal extends Script {
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType(context));
         }
-        sendReturn(new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
     }
 
 }

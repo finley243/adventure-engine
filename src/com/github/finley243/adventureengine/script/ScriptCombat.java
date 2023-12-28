@@ -17,11 +17,12 @@ public class ScriptCombat extends Script{
     }
 
     @Override
-    public void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+    public void executeSuccess(RuntimeStack runtimeStack) {
+        Context context = runtimeStack.getContext();
         if (!(actorReference.getHolder(context) instanceof Actor actor)) throw new IllegalArgumentException("Actor reference is not a valid actor");
         if (!(targetReference.getHolder(context) instanceof Actor target)) throw new IllegalArgumentException("Target reference is not a valid actor");
         actor.getTargetingComponent().addCombatant(target);
-        sendReturn(new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
     }
 
 }

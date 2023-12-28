@@ -9,38 +9,37 @@ public class ScriptCompound extends Script implements ScriptReturnTarget {
 
     private final List<Script> subScripts;
 
-    // TODO - Fix for recursive functions (values will be overwritten)
-    private final Deque<Script> scriptQueue;
-    private Context innerContext;
-
     public ScriptCompound(Condition condition, List<Script> subScripts, boolean select) {
         super(condition);
         this.subScripts = subScripts;
-        this.scriptQueue = new ArrayDeque<>();
     }
 
     @Override
-    public void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
-        scriptQueue.addAll(subScripts);
-        this.innerContext = new Context(context);
-        executeNextScript();
+    public void executeSuccess(RuntimeStack runtimeStack) {
+        Context innerContext = new Context(runtimeStack.getContext());
+        runtimeStack.addContext(innerContext, this);
+        executeNextScript(runtimeStack);
     }
 
-    private void executeNextScript() {
-        Script currentScript = scriptQueue.removeFirst();
-        currentScript.execute(innerContext, this);
+    private void executeNextScript(RuntimeStack runtimeStack) {
+        Script currentScript = subScripts.get(runtimeStack.getIndex());
+        runtimeStack.incrementIndex();
+        currentScript.execute(runtimeStack);
     }
 
     @Override
-    public void onScriptReturn(ScriptReturn scriptReturn) {
+    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturn scriptReturn) {
         if (scriptReturn.error() != null) {
-            sendReturn(scriptReturn);
+            runtimeStack.closeContext();
+            sendReturn(runtimeStack, scriptReturn);
         } else if (scriptReturn.isReturn()) {
-            sendReturn(scriptReturn);
-        } else if (scriptQueue.isEmpty()) {
-            sendReturn(new ScriptReturn(null, false, false, null));
+            runtimeStack.closeContext();
+            sendReturn(runtimeStack, scriptReturn);
+        } else if (runtimeStack.getIndex() >= subScripts.size()) {
+            runtimeStack.closeContext();
+            sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
         } else {
-            executeNextScript();
+            executeNextScript(runtimeStack);
         }
     }
 

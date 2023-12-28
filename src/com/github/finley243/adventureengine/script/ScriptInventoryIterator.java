@@ -4,8 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.event.QueuedEvent;
-import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 
@@ -16,50 +14,42 @@ public class ScriptInventoryIterator extends Script implements ScriptReturnTarge
     private final Expression inventoryExpression;
     private final Script iteratedScript;
 
-    // TODO - Fix for recursive functions (values will be overwritten)
-    private final Deque<Map.Entry<Item, Integer>> itemQueue;
-    private Context context;
-
     public ScriptInventoryIterator(Condition condition, Expression inventoryExpression, Script iteratedScript) {
         super(condition);
         this.inventoryExpression = inventoryExpression;
         this.iteratedScript = iteratedScript;
-        this.itemQueue = new ArrayDeque<>();
     }
 
     @Override
-    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
-        if (inventoryExpression.getDataType(context) != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptInventoryIterator inventory expression is not an inventory");
-        this.context = context;
-        itemQueue.clear();
-        Inventory inventory = inventoryExpression.getValueInventory(context);
+    protected void executeSuccess(RuntimeStack runtimeStack) {
+        if (inventoryExpression.getDataType(runtimeStack.getContext()) != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptInventoryIterator inventory expression is not an inventory");
+        Inventory inventory = inventoryExpression.getValueInventory(runtimeStack.getContext());
         Map<Item, Integer> itemMap = inventory.getItemMap();
-        itemQueue.addAll(itemMap.entrySet());
-        executeNextIteration();
-        /*List<QueuedEvent> scriptEvents = new ArrayList<>();
-        for (Map.Entry<Item, Integer> itemEntry : itemMap.entrySet()) {
-            Context innerContext = new Context(context);
-            scriptEvents.add(new ScriptEvent(iteratedScript, new Context(innerContext, new MapBuilder<String, Expression>().put("count", Expression.constant(itemEntry.getValue())).build(), itemEntry.getKey())));
-        }
-        context.game().eventQueue().addAllToFront(scriptEvents);*/
+        runtimeStack.addContextItemIterator(runtimeStack.getContext(), null, itemMap.entrySet());
+        executeNextIteration(runtimeStack);
     }
 
-    private void executeNextIteration() {
-        Map.Entry<Item, Integer> currentItem = itemQueue.removeFirst();
-        Context innerContext = new Context(context, new MapBuilder<String, Expression>().put("count", Expression.constant(currentItem.getValue())).build(), currentItem.getKey());
-        iteratedScript.execute(innerContext, this);
+    private void executeNextIteration(RuntimeStack runtimeStack) {
+        Map.Entry<Item, Integer> currentItem = runtimeStack.removeQueuedItem();
+        Context innerContext = new Context(runtimeStack.getContext(), new MapBuilder<String, Expression>().put("count", Expression.constant(currentItem.getValue())).build(), currentItem.getKey());
+        runtimeStack.addContext(innerContext, this);
+        iteratedScript.execute(runtimeStack);
     }
 
     @Override
-    public void onScriptReturn(ScriptReturn scriptReturn) {
+    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturn scriptReturn) {
+        runtimeStack.closeContext();
         if (scriptReturn.error() != null) {
-            sendReturn(scriptReturn);
+            runtimeStack.closeContext();
+            sendReturn(runtimeStack, scriptReturn);
         } else if (scriptReturn.isReturn()) {
-            sendReturn(scriptReturn);
-        } else if (itemQueue.isEmpty()) {
-            sendReturn(new ScriptReturn(null, false, false, null));
+            runtimeStack.closeContext();
+            sendReturn(runtimeStack, scriptReturn);
+        } else if (runtimeStack.itemQueueIsEmpty()) {
+            runtimeStack.closeContext();
+            sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
         } else {
-            executeNextIteration();
+            executeNextIteration(runtimeStack);
         }
     }
 

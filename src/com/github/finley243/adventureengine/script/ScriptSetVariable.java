@@ -17,12 +17,13 @@ public class ScriptSetVariable extends Script {
     }
 
     @Override
-    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+    protected void executeSuccess(RuntimeStack runtimeStack) {
+        Context context = runtimeStack.getContext();
         if (variableName.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetVariable variableName is not a string");
         String variableNameString = variableName.getValueString(context);
         Expression valueToConstant = Expression.convertToConstant(variableValue, context);
         context.setParameter(variableNameString, valueToConstant);
-        sendReturn(new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
     }
 
 }

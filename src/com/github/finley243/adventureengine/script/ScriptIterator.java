@@ -13,52 +13,45 @@ public class ScriptIterator extends Script implements ScriptReturnTarget {
     private final String iteratorParameterName;
     private final Script iteratedScript;
 
-    // TODO - Fix for recursive functions (values will be overwritten)
-    private final Deque<Expression> expressionQueue;
-    private Context context;
-
     public ScriptIterator(Condition condition, Expression setExpression, String iteratorParameterName, Script iteratedScript) {
         super(condition);
         this.setExpression = setExpression;
         this.iteratorParameterName = iteratorParameterName;
         this.iteratedScript = iteratedScript;
-        this.expressionQueue = new ArrayDeque<>();
     }
 
     @Override
-    protected void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
-        this.context = context;
-        expressionQueue.clear();
-        Set<String> stringSet = setExpression.getValueStringSet(context);
+    protected void executeSuccess(RuntimeStack runtimeStack) {
+        Set<String> stringSet = setExpression.getValueStringSet(runtimeStack.getContext());
+        List<Expression> expressions = new ArrayList<>(stringSet.size());
         for (String setValue : stringSet) {
-            expressionQueue.addLast(Expression.constant(setValue));
+            expressions.add(Expression.constant(setValue));
         }
-        executeNextIteration();
-        /*List<QueuedEvent> scriptEvents = new ArrayList<>();
-        for (String currentString : stringSet) {
-            Context innerContext = new Context(context);
-            Expression iteratorParameter = new ExpressionConstantString(currentString);
-            scriptEvents.add(new ScriptEvent(iteratedScript, new Context(innerContext, new MapBuilder<String, Expression>().put(iteratorParameterName, iteratorParameter).build())));
-        }
-        context.game().eventQueue().addAllToFront(scriptEvents);*/
+        runtimeStack.addContextExpressionIterator(runtimeStack.getContext(), null, expressions);
+        executeNextIteration(runtimeStack);
     }
 
-    private void executeNextIteration() {
-        Expression currentExpression = expressionQueue.removeFirst();
-        Context innerContext = new Context(context, new MapBuilder<String, Expression>().put(iteratorParameterName, currentExpression).build());
-        iteratedScript.execute(innerContext, this);
+    private void executeNextIteration(RuntimeStack runtimeStack) {
+        Expression currentExpression = runtimeStack.removeQueuedExpression();
+        Context innerContext = new Context(runtimeStack.getContext(), new MapBuilder<String, Expression>().put(iteratorParameterName, currentExpression).build());
+        runtimeStack.addContext(innerContext, this);
+        iteratedScript.execute(runtimeStack);
     }
 
     @Override
-    public void onScriptReturn(ScriptReturn scriptReturn) {
+    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturn scriptReturn) {
+        runtimeStack.closeContext();
         if (scriptReturn.error() != null) {
-            sendReturn(scriptReturn);
+            runtimeStack.closeContext();
+            sendReturn(runtimeStack, scriptReturn);
         } else if (scriptReturn.isReturn()) {
-            sendReturn(scriptReturn);
-        } else if (expressionQueue.isEmpty()) {
-            sendReturn(new ScriptReturn(null, false, false, null));
+            runtimeStack.closeContext();
+            sendReturn(runtimeStack, scriptReturn);
+        } else if (runtimeStack.expressionQueueIsEmpty()) {
+            runtimeStack.closeContext();
+            sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
         } else {
-            executeNextIteration();
+            executeNextIteration(runtimeStack);
         }
     }
 

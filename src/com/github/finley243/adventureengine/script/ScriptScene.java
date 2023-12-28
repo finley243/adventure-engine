@@ -26,12 +26,13 @@ public class ScriptScene extends Script {
     }
 
     @Override
-    public void executeSuccess(Context context, ScriptReturnTarget returnTarget) {
+    public void executeSuccess(RuntimeStack runtimeStack) {
+        Context context = runtimeStack.getContext();
         if (scenes.getDataType(context) != Expression.DataType.STRING && scenes.getDataType(context) != Expression.DataType.STRING_SET) throw new IllegalArgumentException("ScriptScene scenes is not a string or string set");
         if (!(actor.getHolder(context) instanceof Actor actorCast)) {
             return;
         }
-        context.game().eventQueue().addToFront(new ScriptResumeEvent(returnTarget, new ScriptReturn(null, false, false, null)));
+        context.game().eventQueue().addToFront(new ScriptResumeEvent(runtimeStack, new ScriptReturn(null, false, false, null)));
         if (scenes.getDataType(context) == Expression.DataType.STRING) {
             context.game().eventQueue().addToFront(new SceneEvent(context.game().data().getScene(scenes.getValueString(context)), null, new Context(context, actorCast, actorCast)));
         } else {

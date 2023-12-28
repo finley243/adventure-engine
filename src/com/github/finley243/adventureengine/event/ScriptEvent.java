@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.event;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.script.RuntimeStack;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptReturnTarget;
 
@@ -17,11 +18,13 @@ public class ScriptEvent implements QueuedEvent, ScriptReturnTarget {
 
     @Override
     public void execute(Game game) {
-        script.execute(context, this);
+        RuntimeStack runtimeStack = new RuntimeStack();
+        runtimeStack.addContext(context, this);
+        script.execute(runtimeStack);
     }
 
     @Override
-    public void onScriptReturn(Script.ScriptReturn scriptReturn) {
+    public void onScriptReturn(RuntimeStack runtimeStack, Script.ScriptReturn scriptReturn) {
         context.game().eventQueue().startExecution();
     }
 
