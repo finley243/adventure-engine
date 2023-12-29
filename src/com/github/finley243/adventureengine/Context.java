@@ -165,12 +165,16 @@ public class Context {
         return localVariables;
     }
 
-    public void setParameter(String name, Expression value) {
+    public void setLocalVariable(String name, Expression value) {
         if (localVariables.containsKey(name)) {
             localVariables.get(name).setExpression(value);
         } else {
             localVariables.put(name, new Variable(value));
         }
+    }
+
+    public void clearLocalVariables() {
+        localVariables.clear();
     }
 
     public Map<String, Noun> getContextNounMap() {

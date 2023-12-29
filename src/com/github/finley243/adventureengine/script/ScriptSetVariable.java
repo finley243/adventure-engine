@@ -22,7 +22,7 @@ public class ScriptSetVariable extends Script {
         if (variableName.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetVariable variableName is not a string");
         String variableNameString = variableName.getValueString(context);
         Expression valueToConstant = Expression.convertToConstant(variableValue, context);
-        context.setParameter(variableNameString, valueToConstant);
+        context.setLocalVariable(variableNameString, valueToConstant);
         sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
     }
 

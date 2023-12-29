@@ -15,6 +15,7 @@ public class ScriptExternal extends Script implements ScriptReturnTarget {
     @Override
     protected void executeSuccess(RuntimeStack runtimeStack) {
         Context innerContext = new Context(runtimeStack.getContext());
+        innerContext.clearLocalVariables();
         runtimeStack.addContext(innerContext, this);
         Script externalScript = runtimeStack.getContext().game().data().getScript(scriptID);
         externalScript.execute(runtimeStack);
