@@ -4,7 +4,7 @@
     <enableDebugLog>false</enableDebugLog>
     <playerStats>player</playerStats>
     <playerID>player</playerID>
-    <playerStartArea>wilsons_corner_store_counter</playerStartArea>
+    <playerStartArea>wilsons_corner_store_entrance</playerStartArea>
     <defaultDamageType>physical</defaultDamageType>
     <defaultLinkType>basic</defaultLinkType>
     <startTimeHours>8</startTimeHours>

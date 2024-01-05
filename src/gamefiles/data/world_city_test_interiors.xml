@@ -5,11 +5,11 @@
     <room id="wilsons_corner_store">
         <name proper="true">Wilson's corner store</name>
         <description>
-            <line>The store is small, with no wasted space. Just south of the entrance is the checkout counter, and to the north are aisles stocked with various goods. Behind them is a row of coolers, their bright lights illuminating the back of the store.</line>
+            <line>The store is small, with no wasted space. Near the entrance is the checkout counter. To the north are shelves stocked with various goods, with a row of coolers behind them, their bright lights illuminating the back of the store.</line>
         </description>
-        <area id="wilsons_corner_store_entrance" landmark="wilsons_corner_store_door_exit">
-            <link type="basic" dist="CLOSE" dir="S" area="wilsons_corner_store_counter"/>
-            <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_aisle"/>
+        <area id="wilsons_corner_store_entrance">
+            <name type="near">entrance</name>
+            <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_shelves"/>
             <object id="wilsons_corner_store_door_exit" template="door_locked">
                 <localVar name="door_link_object" dataType="string" value="wilsons_corner_store_exterior_door"/>
                 <localVar name="door_link_dir" dataType="string" value="W"/>
@@ -18,18 +18,10 @@
                     <value>wilsons_corner_store_key</value>
                 </localVar>
             </object>
-            <object id="wilsons_corner_store_gumball_machine" template="gumball_machine"/>
-            <object id="wilsons_corner_store_garbage_bin" template="garbage_bin"/>
-            <object id="wilsons_corner_store_network_port" template="network_port">
-                <localVar name="networkID" dataType="string" value="wilsons_corner_store"/>
-            </object>
-        </area>
-        <area id="wilsons_corner_store_counter" landmark="wilsons_corner_store_counter">
-            <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_entrance"/>
             <object id="wilsons_corner_store_counter" template="counter"/>
             <actor id="frank_wilson" template="frank_wilson">
                 <behaviors>
-                    <behavior type="move" area="wilsons_corner_store_counter">
+                    <behavior type="move" area="wilsons_corner_store_entrance">
                         <idle>
                             <phrase>$actor {yawn$s|stretch$es|tap$s $actor's fingers rhythmically on the counter|look$s across the store|check$s something under the counter, then straighten$s back up|glance$s out the window}</phrase>
                         </idle>
@@ -37,21 +29,17 @@
                 </behaviors>
             </actor>
         </area>
-        <area id="wilsons_corner_store_aisle">
-            <name type="in">aisles</name>
-            <link type="basic" dist="CLOSE" dir="S" area="wilsons_corner_store_entrance"/>
-            <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_coolers"/>
-            <object id="wilsons_corner_store_shelf_medicine" template="store_shelf_medicine"/>
-            <object id="wilsons_corner_store_shelf_snacks" template="store_shelf_snacks"/>
-        </area>
-        <area id="wilsons_corner_store_coolers">
-            <name type="near">coolers</name>
+        <area id="wilsons_corner_store_shelves">
+            <name type="in" plural="true">shelves</name>
             <description>
                 <line>Behind the aisles, a row of illuminated coolers cast a cool white glow across the linoleum floor. The air is colder here than in the rest of the store, and a low hum echoes off the walls.</line>
             </description>
-            <link type="basic" dist="CLOSE" dir="S" area="wilsons_corner_store_aisle"/>
-            <object id="wilsons_corner_store_cooler_soft_drinks" template="store_cooler_soft_drinks"/>
-            <object id="wilsons_corner_store_cooler_alcohol" template="store_cooler_alcohol"/>
+            <link type="basic" dist="CLOSE" dir="S" area="wilsons_corner_store_entrance"/>
+            <object id="wilsons_corner_store_shelf" template="store_shelf_snacks"/>
+            <object id="wilsons_corner_store_cooler" template="store_cooler_soft_drinks"/>
+            <object id="wilsons_corner_store_network_port" template="network_port">
+                <localVar name="networkID" dataType="string" value="wilsons_corner_store"/>
+            </object>
         </area>
     </room>
     <room id="archer_burger_restaurant">

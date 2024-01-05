@@ -40,6 +40,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	private final String landmarkID;
 	private final String name;
 	private final AreaNameType nameType;
+	private final boolean nameIsPlural;
 	private boolean isKnown;
 
 	// The room containing this area
@@ -65,11 +66,12 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	private final StatStringSet effects;
 	
-	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, Scene description, String roomID, String ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
+	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, String roomID, String ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
 		super(game, ID);
 		this.landmarkID = landmarkID;
 		this.name = name;
 		this.nameType = nameType;
+		this.nameIsPlural = nameIsPlural;
 		this.description = description;
 		this.roomID = roomID;
 		this.ownerFaction = ownerFaction;
@@ -363,6 +365,9 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	@Override
 	public int pluralCount() {
+		if (nameIsPlural) {
+			return 2;
+		}
 		return 1;
 	}
 

@@ -973,6 +973,7 @@ public class DataLoader {
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = (nameElement == null ? null : nameElement.getTextContent());
         Area.AreaNameType nameType = LoadUtils.attributeEnum(nameElement, "type", Area.AreaNameType.class, (landmarkID != null ? Area.AreaNameType.NEAR : Area.AreaNameType.IN));
+        boolean nameIsPlural = LoadUtils.attributeBool(nameElement, "plural", false);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(areaElement, "description"));
         String areaOwnerFaction = LoadUtils.attribute(areaElement, "faction", null);
         Area.RestrictionType restrictionType = LoadUtils.attributeEnum(areaElement, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
@@ -992,7 +993,7 @@ public class DataLoader {
 
         Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
 
-        Area area = new Area(game, areaID, landmarkID, name, nameType, description, roomID, areaOwnerFaction, restrictionType, allowAllies, linkSet, areaScripts);
+        Area area = new Area(game, areaID, landmarkID, name, nameType, nameIsPlural, description, roomID, areaOwnerFaction, restrictionType, allowAllies, linkSet, areaScripts);
 
         List<Element> objectElements = LoadUtils.directChildrenWithName(areaElement, "object");
         for (Element objectElement : objectElements) {
