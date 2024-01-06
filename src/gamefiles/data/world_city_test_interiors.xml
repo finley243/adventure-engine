@@ -41,8 +41,10 @@
                 <localVar name="door_link_dir" value="E"/>
             </object>
         </area>
+    </room>
+    <room id="wilsons_corner_store_backroom">
+        <name>backroom</name>
         <area id="wilsons_corner_store_backroom_area">
-            <name type="in">backroom</name>
             <object id="wilsons_corner_store_backroom_door_interior" template="door_basic">
                 <localVar name="door_link_object" value="wilsons_corner_store_backroom_door"/>
                 <localVar name="door_link_dir" value="W"/>
@@ -53,20 +55,6 @@
             </object>
         </area>
     </room>
-    <!--<room id="wilsons_corner_store_backroom">
-        <name>backroom of Wilson's corner store</name>
-        <area id="wilsons_corner_store_backroom_area">
-            <name type="in">backroom</name>
-            <object id="wilsons_corner_store_backroom_door_interior" template="door_basic">
-                <localVar name="door_link_object" value="wilsons_corner_store_backroom_door"/>
-                <localVar name="door_link_dir" value="W"/>
-            </object>
-            <object id="wilsons_corner_store_backroom_exit" template="door_basic">
-                <localVar name="door_link_object" value="wilsons_corner_store_exterior_backroom_door"/>
-                <localVar name="door_link_dir" value="E"/>
-            </object>
-        </area>
-    </room>-->
     <room id="archer_burger_restaurant">
         <name>BigBurger</name>
     </room>

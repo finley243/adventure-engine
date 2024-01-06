@@ -11,15 +11,15 @@
             <script type="setVariable" name="area">
                 <value dataType="noun" type="stat" holder="parentArea"/>
             </script>
-            <script type="setState" stat="area" holder="subject">
-                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
-            </script>
             <script type="sensoryEvent">
                 <phrase type="stat" dataType="string" holder="parentArea" stat="move_phrase"/>
                 <area type="buildStringSet">
                     <value type="parameter" dataType="string" name="origin_id"/>
                     <value type="stat" dataType="string" holder="parentArea" stat="id"/>
                 </area>
+            </script>
+            <script type="setState" stat="area" holder="subject">
+                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
         </script>
     </action>
@@ -34,15 +34,16 @@
             <script type="setVariable" name="area">
                 <value dataType="noun" type="stat" holder="parentArea"/>
             </script>
+            <script type="sensoryEvent">
+                <phrase>moveCorner</phrase>
+                <area type="parameter" dataType="string" name="origin_id"/>
+            </script>
             <script type="setState" stat="area" holder="subject">
                 <value type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
-            <script type="sensoryEvent">
+            <script type="sensoryEvent" detectSelf="false">
                 <phrase>moveCorner</phrase>
-                <area type="buildStringSet">
-                    <value type="parameter" dataType="string" name="origin_id"/>
-                    <value type="stat" dataType="string" holder="parentArea" stat="id"/>
-                </area>
+                <area type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>
         </script>
     </action>

@@ -1,27 +1,27 @@
 <data>
     <room id="street_corner_fifth_sinclair">
-        <name proper="false" type="on">intersection</name>
+        <name proper="false" type="in">intersection</name>
         <area id="street_corner_fifth_sinclair_1">
             <link type="basic" dist="CLOSE" dir="E" area="street_sinclair_fifth_sixth_1"/>
             <link type="basic" dist="CLOSE" dir="S" area="street_fifth_sinclair_archer_1"/>
         </area>
     </room>
     <room id="street_corner_fifth_archer">
-        <name proper="false" type="on">intersection</name>
+        <name proper="false" type="in">intersection</name>
         <area id="street_corner_fifth_archer_1">
             <link type="basic" dist="CLOSE" dir="E" area="street_archer_fifth_sixth_1"/>
             <link type="basic" dist="CLOSE" dir="N" area="street_fifth_sinclair_archer_2"/>
         </area>
     </room>
     <room id="street_corner_sixth_sinclair">
-        <name proper="false" type="on">intersection</name>
+        <name proper="false" type="in">intersection</name>
         <area id="street_corner_sixth_sinclair_1">
             <link type="basic" dist="CLOSE" dir="W" area="street_sinclair_fifth_sixth_2"/>
             <link type="basic" dist="CLOSE" dir="S" area="street_sixth_sinclair_archer_1"/>
         </area>
     </room>
     <room id="street_corner_sixth_archer">
-        <name proper="false" type="on">intersection</name>
+        <name proper="false" type="in">intersection</name>
         <area id="street_corner_sixth_archer_1">
             <link type="basic" dist="CLOSE" dir="W" area="street_archer_fifth_sixth_2"/>
             <link type="basic" dist="CLOSE" dir="N" area="street_sixth_sinclair_archer_2"/>
