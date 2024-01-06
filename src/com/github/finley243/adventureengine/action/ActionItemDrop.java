@@ -24,7 +24,7 @@ public class ActionItemDrop extends Action {
 		subject.getInventory().removeItem(item);
 		subject.getArea().getInventory().addItem(item);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
-		subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, this, null, subject, null));
+		subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null, subject, null));
 		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
 

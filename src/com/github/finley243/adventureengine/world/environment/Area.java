@@ -373,6 +373,9 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	@Override
 	public Pronoun getPronoun() {
+		if (nameIsPlural) {
+			return Pronoun.THEY;
+		}
 		return Pronoun.IT;
 	}
 	

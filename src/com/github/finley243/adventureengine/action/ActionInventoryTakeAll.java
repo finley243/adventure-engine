@@ -38,7 +38,7 @@ public class ActionInventoryTakeAll extends Action {
         inventory.removeItems(item.getTemplateID(), count);
         subject.getInventory().addItems(item.getTemplateID(), count);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
-        subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, this, null, subject, null));
+        subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null, subject, null));
         subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 

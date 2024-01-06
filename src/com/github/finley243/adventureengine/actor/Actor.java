@@ -380,9 +380,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, null, null, this, null));
+				game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, true, null, null, this, null));
 			}
-			game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
+			game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor $is $condition", textContext, true, null, null, this, null));
 		}
 	}
 
@@ -408,16 +408,16 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, null, null, this, null));
+				game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, true, null, null, this, null));
 			}
-			game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor $is $condition", textContext, null, null, this, null));
+			game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor $is $condition", textContext, true, null, null, this, null));
 		}
 	}
 	
 	public void kill() {
 		triggerScript("on_death", new Context(game(), this, this));
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
-		game().eventQueue().addToEnd(new SensoryEvent(getArea(), Phrases.get("die"), context, null, null, this, null));
+		game().eventQueue().addToEnd(new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null, this, null));
 		// TODO - Enable held item dropping on death for new equipment system
 		isDead = true;
 		HP = 0;

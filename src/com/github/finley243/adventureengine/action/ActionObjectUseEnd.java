@@ -38,7 +38,7 @@ public class ActionObjectUseEnd extends Action {
 		component.removeUser(slotID);
 		subject.setUsingObject(null);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
-		subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, this, null, subject, null));
+		subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, true, this, null, subject, null));
 		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
 

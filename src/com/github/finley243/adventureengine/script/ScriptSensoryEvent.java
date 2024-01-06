@@ -18,12 +18,14 @@ public class ScriptSensoryEvent extends Script {
     private final Expression phrase;
     private final Expression phraseAudible;
     private final Expression area;
+    private final boolean isDetectedBySelf;
 
-    public ScriptSensoryEvent(Condition condition, Expression phrase, Expression phraseAudible, Expression area) {
+    public ScriptSensoryEvent(Condition condition, Expression phrase, Expression phraseAudible, Expression area, boolean isDetectedBySelf) {
         super(condition);
         this.phrase = phrase;
         this.phraseAudible = phraseAudible;
         this.area = area;
+        this.isDetectedBySelf = isDetectedBySelf;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class ScriptSensoryEvent extends Script {
         String phraseString = (phrase == null ? null : phrase.getValueString(context));
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString(context));
         context.game().eventQueue().addToFront(new ScriptResumeEvent(runtimeStack, new ScriptReturn(null, false, false, null)));
-        context.game().eventQueue().addToFront(new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, false, context.getParentAction(), null, context.getSubject(), context.getTarget()));
+        context.game().eventQueue().addToFront(new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, isDetectedBySelf, false, context.getParentAction(), null, context.getSubject(), context.getTarget()));
         context.game().eventQueue().startExecution();
     }
 

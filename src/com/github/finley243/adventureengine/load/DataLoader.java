@@ -650,7 +650,8 @@ public class DataLoader {
                 Expression phrase = loadExpression(LoadUtils.singleChildWithName(scriptElement, "phrase"), "string");
                 Expression phraseAudible = loadExpression(LoadUtils.singleChildWithName(scriptElement, "phraseAudible"), "string");
                 Expression area = loadExpression(LoadUtils.singleChildWithName(scriptElement, "area"), "string");
-                return new ScriptSensoryEvent(condition, phrase, phraseAudible, area);
+                boolean isDetectedBySelf = LoadUtils.attributeBool(scriptElement, "detectSelf", true);
+                return new ScriptSensoryEvent(condition, phrase, phraseAudible, area, isDetectedBySelf);
             }
             case "skillMenu" -> {
                 StatHolderReference actorReference = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));

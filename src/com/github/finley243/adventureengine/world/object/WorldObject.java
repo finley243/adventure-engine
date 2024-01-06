@@ -241,6 +241,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			case "guarded" -> new ExpressionConstantBoolean(isGuarded());
 			case "broken" -> new ExpressionConstantBoolean(isBroken());
 			case "id" -> new ExpressionConstantString(getID());
+			case "name" -> new ExpressionConstantString(getName());
 			case "template_id" -> new ExpressionConstantString(templateID);
 			case "area" -> new ExpressionConstantString(getArea().getID());
 			case "room" -> new ExpressionConstantString(getArea().getRoom().getID());

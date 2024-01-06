@@ -1,6 +1,6 @@
 <data>
     <action id="move_basic">
-        <prompt>Move</prompt>
+        <prompt>$areaName ($dir)</prompt>
         <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
         <script>
             <script type="setVariable" name="origin_id">
@@ -24,7 +24,7 @@
         </script>
     </action>
     <action id="move_corner">
-        <prompt>Move</prompt>
+        <prompt>$areaName (Around corner, $dir)</prompt>
         <script>
             <script type="setVariable" name="origin_id">
                 <value type="stat" dataType="string" stat="id" holder="area">
@@ -47,7 +47,8 @@
         </script>
     </action>
     <action id="move_door">
-        <prompt>Enter</prompt>
+        <prompt>$areaName (Through $doorName, $dir)</prompt>
+        <parameter name="doorName" dataType="string" type="stat" holder="parentObject" stat="name"/>
         <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
         <condition invert="true" type="stat" dataType="boolean" stat="locked" holder="parentObject">
             <blockMessage>Locked</blockMessage>
@@ -94,14 +95,14 @@
             <script type="setVariable" name="door">
                 <value dataType="noun" type="stat" holder="parentObject"/>
             </script>
-            <script type="setState" stat="area" holder="subject">
-                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
-            </script>
             <script type="sensoryEvent">
                 <phrase>moveThrough</phrase>
                 <area type="parameter" dataType="string" name="origin_id"/>
             </script>
-            <script type="sensoryEvent">
+            <script type="setState" stat="area" holder="subject">
+                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
+            </script>
+            <script type="sensoryEvent" detectSelf="false">
                 <phrase>moveThroughReverse</phrase>
                 <area type="stat" dataType="string" holder="parentArea" stat="id"/>
             </script>

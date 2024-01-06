@@ -28,21 +28,22 @@ public class SensoryEvent implements QueuedEvent {
 	private final Bark bark;
 	private final Actor subject;
 	private final Actor target;
+	private final boolean isDetectedBySelf;
 	private final boolean isLoud;
 
-	public SensoryEvent(Area origin, String lineVisible, TextContext context, Action action, Bark bark, Actor subject, Actor target) {
-		this(new Area[]{origin}, lineVisible, null, context, false, action, bark, subject, target);
+	public SensoryEvent(Area origin, String lineVisible, TextContext context, boolean isDetectedBySelf, Action action, Bark bark, Actor subject, Actor target) {
+		this(new Area[]{origin}, lineVisible, null, context, isDetectedBySelf, false, action, bark, subject, target);
 	}
 
-	public SensoryEvent(Area[] origins, String lineVisible, TextContext context, Action action, Bark bark, Actor subject, Actor target) {
-		this(origins, lineVisible, null, context, false, action, bark, subject, target);
+	public SensoryEvent(Area[] origins, String lineVisible, TextContext context, boolean isDetectedBySelf, Action action, Bark bark, Actor subject, Actor target) {
+		this(origins, lineVisible, null, context, isDetectedBySelf, false, action, bark, subject, target);
 	}
 
-	public SensoryEvent(Area origin, String lineVisible, String lineAudible, TextContext context, boolean isLoud, Action action, Bark bark, Actor subject, Actor target) {
-		this(new Area[]{origin}, lineVisible, lineAudible, context, isLoud, action, bark, subject, target);
+	public SensoryEvent(Area origin, String lineVisible, String lineAudible, TextContext context, boolean isDetectedBySelf, boolean isLoud, Action action, Bark bark, Actor subject, Actor target) {
+		this(new Area[]{origin}, lineVisible, lineAudible, context, isDetectedBySelf, isLoud, action, bark, subject, target);
 	}
 
-	public SensoryEvent(Area[] origins, String lineVisible, String lineAudible, TextContext context, boolean isLoud, Action action, Bark bark, Actor subject, Actor target) {
+	public SensoryEvent(Area[] origins, String lineVisible, String lineAudible, TextContext context, boolean isDetectedBySelf, boolean isLoud, Action action, Bark bark, Actor subject, Actor target) {
 		this.origins = origins;
 		this.lineVisible = lineVisible;
 		this.lineAudible = lineAudible;
@@ -51,6 +52,7 @@ public class SensoryEvent implements QueuedEvent {
 		this.bark = bark;
 		this.subject = subject;
 		this.target = target;
+		this.isDetectedBySelf = isDetectedBySelf;
 		this.isLoud = isLoud;
 	}
 	
@@ -92,6 +94,10 @@ public class SensoryEvent implements QueuedEvent {
 		return target;
 	}
 
+	public boolean isDetectedBySelf() {
+		return isDetectedBySelf;
+	}
+
 	public boolean isLoud() {
 		return isLoud;
 	}
@@ -108,6 +114,9 @@ public class SensoryEvent implements QueuedEvent {
 			Set<Actor> originActors = new HashSet<>();
 			for (Area area : areas) {
 				originActors.addAll(area.getActors());
+			}
+			if (!isDetectedBySelf && subject != null) {
+				originActors.remove(subject);
 			}
 			lineOfSightActors.put(origin, originActors);
 		}

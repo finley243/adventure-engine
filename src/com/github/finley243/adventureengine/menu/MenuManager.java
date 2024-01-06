@@ -55,12 +55,12 @@ public class MenuManager {
 			switch (action.getMenuData(actor)) {
 				case MenuDataSelf data -> parentCategory = null;
 				case MenuDataMove data -> {
-					String areaName = LangUtils.titleCase(/*data.destination.getRelativeName() + " " +*/ data.destination.getName());
+					//String areaName = LangUtils.titleCase(/*data.destination.getRelativeName() + " " +*/ data.destination.getName());
 					if (!categoryMap.containsKey("move")) {
 						categoryMap.put("move", new MenuCategory(MenuCategory.CategoryType.AREA, "move", null, false, false, "Move", null));
 					}
 					parentCategory = "move";
-					promptOverride = action.getPrompt(actor) + " (" + areaName + (data.direction != null ? ", " + data.direction : "") + ")";
+					//promptOverride = action.getPrompt(actor) + " (" + areaName + (data.direction != null ? ", " + data.direction : "") + ")";
 				}
 				case MenuDataArea data -> {
 					String areaName = LangUtils.titleCase(data.area.getRelativeName() + " " + data.area.getName());
