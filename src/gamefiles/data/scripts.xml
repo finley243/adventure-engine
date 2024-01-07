@@ -1,9 +1,11 @@
 <data>
     <script id="drop_equipped">
-        <script type="setVariable" name="equippedSlot" value="hand_main"/>
-        <script external="drop_equipped_specified_slot"/>
-        <script type="setVariable" name="equippedSlot" value="hand_off"/>
-        <script external="drop_equipped_specified_slot"/>
+        <script external="drop_equipped_specified_slot">
+            <parameter name="equippedSlot" value="hand_main"/>
+        </script>
+        <script external="drop_equipped_specified_slot">
+            <parameter name="equippedSlot" value="hand_off"/>
+        </script>
     </script>
     <script id="drop_equipped_specified_slot">
         <condition type="stat" holder="subject">
@@ -53,10 +55,12 @@
         </script>
     </script>
     <script id="drop_equipped_force">
-        <script type="setVariable" name="equippedSlot" value="hand_main"/>
-        <script external="drop_equipped_force_specified_slot"/>
-        <script type="setVariable" name="equippedSlot" value="hand_off"/>
-        <script external="drop_equipped_force_specified_slot"/>
+        <script external="drop_equipped_force_specified_slot">
+            <parameter name="equippedSlot" value="hand_main"/>
+        </script>
+        <script external="drop_equipped_force_specified_slot">
+            <parameter name="equippedSlot" value="hand_off"/>
+        </script>
     </script>
     <script id="drop_equipped_force_specified_slot">
         <condition type="stat" holder="subject">

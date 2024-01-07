@@ -26,7 +26,7 @@
             </actor>
         </area>
         <area id="wilsons_corner_store_shelves">
-            <name type="in" plural="true">shelves</name>
+            <name type="near" plural="true">shelves</name>
             <description>
                 <line>The coolers cast a cool white glow across the linoleum floor. The air is colder here than at the front of the store, and a low hum echoes off the walls.</line>
             </description>

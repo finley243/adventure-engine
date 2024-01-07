@@ -2,20 +2,27 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.expression.Expression;
+
+import java.util.List;
 
 public class ScriptExternal extends Script implements ScriptReturnTarget {
 
     private final String scriptID;
+    private final List<ParameterContainer> parameters;
 
-    public ScriptExternal(Condition condition, String scriptID) {
+    public ScriptExternal(Condition condition, String scriptID, List<ParameterContainer> parameters) {
         super(condition);
         this.scriptID = scriptID;
+        this.parameters = parameters;
     }
 
     @Override
     protected void executeSuccess(RuntimeStack runtimeStack) {
-        Context innerContext = new Context(runtimeStack.getContext());
-        innerContext.clearLocalVariables();
+        Context innerContext = new Context(runtimeStack.getContext(), false);
+        for (ParameterContainer parameter : parameters) {
+            innerContext.setLocalVariable(parameter.name(), Expression.convertToConstant(parameter.value(), runtimeStack.getContext()));
+        }
         runtimeStack.addContext(innerContext, this);
         Script externalScript = runtimeStack.getContext().game().data().getScript(scriptID);
         externalScript.execute(runtimeStack);
@@ -35,5 +42,7 @@ public class ScriptExternal extends Script implements ScriptReturnTarget {
             sendReturn(runtimeStack, new ScriptReturn(null, false, false, "Function has no return statement"));
         }
     }
+
+    public record ParameterContainer(String name, Expression value) {}
 
 }

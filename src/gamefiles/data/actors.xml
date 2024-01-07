@@ -53,17 +53,11 @@
         <skill key="throwing" value="5"/>
         <skill key="intimidation" value="6"/>
         <inventory>
-            <item>wilsons_corner_store_key</item>
-            <item count="2">pistol_heavy</item>
+            <item>pistol_heavy</item>
             <item>katana</item>
-            <item count="3">grenade_frag</item>
-            <!--<item>tactical_vest</item>-->
-            <!--<item>tactical_helmet</item>-->
+            <item count="2">grenade_frag</item>
             <item>nitron_cola</item>
             <item count="20">ammo_pistol</item>
-            <item>rifle_auto</item>
-            <item count="50">ammo_rifle</item>
-            <item>mag_extended_pistol</item>
         </inventory>
     </actor>
     <actor id="stratis_receptionist" parent="default" hp="40" faction="stratis_hotel_staff" dialogueStart="stratis_receptionist_start">

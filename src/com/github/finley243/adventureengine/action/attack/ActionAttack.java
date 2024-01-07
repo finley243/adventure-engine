@@ -116,6 +116,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     public abstract void consumeAmmo(Actor subject);
 
+    public String getAttackTypeID() {
+        return attackType.getID();
+    }
+
     @Override
     public String getPrompt(Actor subject) {
         return prompt;

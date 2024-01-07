@@ -615,12 +615,24 @@ public class DataLoader {
         Condition condition = loadCondition(LoadUtils.singleChildWithName(scriptElement, "condition"));
         if (scriptElement.hasAttribute("external")) {
             String externalID = LoadUtils.attribute(scriptElement, "external", null);
-            return new ScriptExternal(condition, externalID);
+            List<ScriptExternal.ParameterContainer> parameters = new ArrayList<>();
+            for (Element parameterElement : LoadUtils.directChildrenWithName(scriptElement, "parameter")) {
+                String parameterName = LoadUtils.attribute(parameterElement, "name", null);
+                Expression parameterValue = loadExpressionOrAttribute(parameterElement, "value", null);
+                parameters.add(new ScriptExternal.ParameterContainer(parameterName, parameterValue));
+            }
+            return new ScriptExternal(condition, externalID, parameters);
         }
         switch (type) {
             case "external" -> {
                 String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
-                return new ScriptExternal(condition, scriptID);
+                List<ScriptExternal.ParameterContainer> parameters = new ArrayList<>();
+                for (Element parameterElement : LoadUtils.directChildrenWithName(scriptElement, "parameter")) {
+                    String parameterName = LoadUtils.attribute(parameterElement, "name", null);
+                    Expression parameterValue = loadExpressionOrAttribute(parameterElement, "value", null);
+                    parameters.add(new ScriptExternal.ParameterContainer(parameterName, parameterValue));
+                }
+                return new ScriptExternal(condition, scriptID, parameters);
             }
             case "transferItem" -> {
                 Expression transferItemInvOrigin = loadExpression(LoadUtils.singleChildWithName(scriptElement, "fromInv"), "inventory");

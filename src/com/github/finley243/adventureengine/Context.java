@@ -103,7 +103,7 @@ public class Context {
         }
     }
 
-    public Context(Context context) {
+    public Context(Context context, boolean keepLocalVariables) {
         this.game = context.game;
         this.subject = context.subject;
         this.target = context.target;
@@ -111,7 +111,11 @@ public class Context {
         this.parentItem = context.parentItem;
         this.parentArea = context.parentArea;
         this.parentAction = context.parentAction;
-        this.localVariables = new HashMap<>(context.localVariables);
+        if (keepLocalVariables) {
+            this.localVariables = new HashMap<>(context.localVariables);
+        } else {
+            this.localVariables = new HashMap<>();
+        }
     }
 
     public Context(Context context, Map<String, Expression> addedParameters, Item parentItem) {
@@ -171,10 +175,6 @@ public class Context {
         } else {
             localVariables.put(name, new Variable(value));
         }
-    }
-
-    public void clearLocalVariables() {
-        localVariables.clear();
     }
 
     public Map<String, Noun> getContextNounMap() {

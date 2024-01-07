@@ -16,7 +16,7 @@ public class ScriptCompound extends Script implements ScriptReturnTarget {
 
     @Override
     public void executeSuccess(RuntimeStack runtimeStack) {
-        Context innerContext = new Context(runtimeStack.getContext());
+        Context innerContext = new Context(runtimeStack.getContext(), true);
         runtimeStack.addContext(innerContext, this);
         executeNextScript(runtimeStack);
     }

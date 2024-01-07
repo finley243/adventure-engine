@@ -366,7 +366,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	@Override
 	public int pluralCount() {
 		if (nameIsPlural) {
-			return 2;
+			return 3;
 		}
 		return 1;
 	}
