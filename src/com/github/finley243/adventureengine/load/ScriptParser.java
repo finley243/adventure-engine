@@ -5,10 +5,7 @@ import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptCompound;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -375,6 +372,44 @@ public class ScriptParser {
             }
         }
         return priorityOperator;
+    }
+
+    private static int findFirstTokenIndex(List<ScriptToken> tokens, ScriptTokenType type) {
+        Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
+        for (int i = 0; i < tokens.size(); i++) {
+            ScriptToken token = tokens.get(i);
+            if (bracketStack.isEmpty() && token.type == type) {
+                return i;
+            } else if (token.type == ScriptTokenType.BRACKET_OPEN) {
+                bracketStack.push(ScriptTokenType.BRACKET_OPEN);
+            } else if (token.type == ScriptTokenType.BRACKET_CLOSE && bracketStack.peek() == ScriptTokenType.BRACKET_OPEN) {
+                bracketStack.pop();
+            } else if (token.type == ScriptTokenType.PARENTHESIS_OPEN) {
+                bracketStack.push(ScriptTokenType.PARENTHESIS_OPEN);
+            } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE && bracketStack.peek() == ScriptTokenType.PARENTHESIS_OPEN) {
+                bracketStack.pop();
+            }
+        }
+        return -1;
+    }
+
+    private static int findLastTokenIndex(List<ScriptToken> tokens, ScriptTokenType type) {
+        Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
+        for (int i = tokens.size() - 1; i >= 0; i--) {
+            ScriptToken token = tokens.get(i);
+            if (bracketStack.isEmpty() && token.type == type) {
+                return i;
+            } else if (token.type == ScriptTokenType.BRACKET_CLOSE) {
+                bracketStack.push(ScriptTokenType.BRACKET_CLOSE);
+            } else if (token.type == ScriptTokenType.BRACKET_OPEN && bracketStack.peek() == ScriptTokenType.BRACKET_CLOSE) {
+                bracketStack.pop();
+            } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE) {
+                bracketStack.push(ScriptTokenType.PARENTHESIS_CLOSE);
+            } else if (token.type == ScriptTokenType.PARENTHESIS_OPEN && bracketStack.peek() == ScriptTokenType.PARENTHESIS_CLOSE) {
+                bracketStack.pop();
+            }
+        }
+        return -1;
     }
 
     private static int getOperationPriority(ScriptTokenType tokenType) {
