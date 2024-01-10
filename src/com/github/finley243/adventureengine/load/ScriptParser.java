@@ -90,10 +90,13 @@ public class ScriptParser {
         int index = 0;
         while (index < tokens.size()) {
             int parameterStartIndex = findFirstTokenIndex(tokens, ScriptTokenType.PARENTHESIS_OPEN, index);
+            if (parameterStartIndex == -1) throw new IllegalArgumentException("Function is missing parameter block");
             int parameterEndIndex = findPairedClosingBracket(tokens, parameterStartIndex);
+            if (parameterEndIndex == -1) throw new IllegalArgumentException("Function parameter block is not properly closed");
             int bodyStartIndex = parameterEndIndex + 1;
-            if (tokens.get(bodyStartIndex).type != ScriptTokenType.BRACKET_OPEN) throw new IllegalArgumentException("Script has invalid header");
+            if (tokens.get(bodyStartIndex).type != ScriptTokenType.BRACKET_OPEN) throw new IllegalArgumentException("Function is missing body");
             int bodyEndIndex = findPairedClosingBracket(tokens, bodyStartIndex);
+            if (bodyEndIndex == -1) throw new IllegalArgumentException("Function body is not properly closed");
             List<ScriptToken> header = tokens.subList(index, parameterStartIndex);
             List<ScriptToken> parameters = tokens.subList(parameterStartIndex, parameterEndIndex + 1);
             List<ScriptToken> body = tokens.subList(bodyStartIndex, bodyEndIndex + 1);
@@ -124,14 +127,17 @@ public class ScriptParser {
     }
 
     private static Set<ScriptParameter> parseFunctionParameters(List<ScriptToken> parameterTokens) {
+        if (parameterTokens.getFirst().type != ScriptTokenType.PARENTHESIS_OPEN || parameterTokens.getLast().type != ScriptTokenType.PARENTHESIS_CLOSE) {
+            throw new IllegalArgumentException("Function has invalid parameter block");
+        }
         Set<ScriptParameter> functionParameters = new HashSet<>();
         List<List<ScriptToken>> parameterGroups = new ArrayList<>();
-        int index = 0;
+        int index = 1;
         while (index < parameterTokens.size()) {
             int nextCommaIndex = findFirstTokenIndex(parameterTokens, ScriptTokenType.COMMA, index);
             List<ScriptToken> currentGroup;
             if (nextCommaIndex == -1) {
-                currentGroup = parameterTokens.subList(index, parameterTokens.size());
+                currentGroup = parameterTokens.subList(index, parameterTokens.size() - 1);
             } else {
                 currentGroup = parameterTokens.subList(index, nextCommaIndex);
             }
