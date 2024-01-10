@@ -432,6 +432,31 @@ public class ScriptParser {
         return -1;
     }
 
+    private static int findPairedClosingBracket(List<ScriptToken> tokens, int openBracketIndex) {
+        ScriptTokenType targetBracketType;
+        switch (tokens.get(openBracketIndex).type) {
+            case PARENTHESIS_OPEN -> targetBracketType = ScriptTokenType.PARENTHESIS_CLOSE;
+            case BRACKET_OPEN -> targetBracketType = ScriptTokenType.BRACKET_CLOSE;
+            default -> throw new IllegalArgumentException("Specified token is not a valid type of open bracket");
+        }
+        Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
+        for (int i = openBracketIndex + 1; i < tokens.size(); i++) {
+            ScriptToken token = tokens.get(i);
+            if (bracketStack.isEmpty() && token.type == targetBracketType) {
+                return i;
+            } else if (token.type == ScriptTokenType.BRACKET_OPEN) {
+                bracketStack.push(ScriptTokenType.BRACKET_OPEN);
+            } else if (token.type == ScriptTokenType.BRACKET_CLOSE && bracketStack.peek() == ScriptTokenType.BRACKET_OPEN) {
+                bracketStack.pop();
+            } else if (token.type == ScriptTokenType.PARENTHESIS_OPEN) {
+                bracketStack.push(ScriptTokenType.PARENTHESIS_OPEN);
+            } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE && bracketStack.peek() == ScriptTokenType.PARENTHESIS_OPEN) {
+                bracketStack.pop();
+            }
+        }
+        return -1;
+    }
+
     private static int getOperationPriority(ScriptTokenType tokenType) {
         if (tokenType == ScriptTokenType.MULTIPLY) {
             return 0;
