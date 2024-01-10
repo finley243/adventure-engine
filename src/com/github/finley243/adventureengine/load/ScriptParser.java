@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptCompound;
+import com.github.finley243.adventureengine.script.ScriptSetVariable;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 import java.util.*;
@@ -294,21 +295,40 @@ public class ScriptParser {
 
         } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(0).value.equals("var")) {
             // Local variable definition
-
+            if (tokens.get(1).type != ScriptTokenType.NAME) {
+                throw new IllegalArgumentException("Variable declaration has no specified name");
+            }
+            if (tokens.get(tokens.size() - 1).type != ScriptTokenType.END_LINE) {
+                throw new IllegalArgumentException("Variable declaration has invalid line end");
+            }
+            String variableName = tokens.get(1).value;
+            Expression variableValue = null;
+            if (tokens.size() > 2 && tokens.get(2).type == ScriptTokenType.EQUALS) {
+                variableValue = generateExpression(tokens.subList(3, tokens.size() - 1));
+            }
+            return new ScriptSetVariable(null, Expression.constant(variableName), variableValue);
         } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(0).value.equals("stat")) {
             // Stat reference
 
         } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.get(tokens.size() - 2).type == ScriptTokenType.PARENTHESIS_CLOSE) {
             // Named function call
 
-        } else if (tokens.get(0).type == ScriptTokenType.NAME) {
+        } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.EQUALS) {
             // Local variable reference
-
+            if (tokens.get(tokens.size() - 1).type != ScriptTokenType.END_LINE) {
+                throw new IllegalArgumentException("Variable assignment has invalid line end");
+            }
+            if (tokens.size() <= 3) {
+                throw new IllegalArgumentException("Variable assignment has no specified value");
+            }
+            String variableName = tokens.get(0).value;
+            Expression variableValue = generateExpression(tokens.subList(2, tokens.size() - 1));
+            return new ScriptSetVariable(null, Expression.constant(variableName), variableValue);
         }
         return null;
     }
 
-    private static Expression generateExpression(List<ScriptToken> tokens, String dataType) {
+    private static Expression generateExpression(List<ScriptToken> tokens) {
         if (tokens.isEmpty()) return null;
         if (tokens.size() == 1) {
             ScriptToken token = tokens.get(0);
@@ -328,12 +348,12 @@ public class ScriptParser {
                 return new ExpressionParameter(token.value);
             }
         } else if (tokens.get(0).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.get(tokens.size() - 1).type == ScriptTokenType.PARENTHESIS_CLOSE) {
-            return generateExpression(tokens.subList(1, tokens.size() - 1), dataType);
+            return generateExpression(tokens.subList(1, tokens.size() - 1));
         } else {
             int priorityOperator = getPriorityOperator(tokens);
             if (priorityOperator != -1) {
-                Expression preOperator = generateExpression(tokens.subList(0, priorityOperator), dataType);
-                Expression postOperator = generateExpression(tokens.subList(priorityOperator + 1, tokens.size()), dataType);
+                Expression preOperator = generateExpression(tokens.subList(0, priorityOperator));
+                Expression postOperator = generateExpression(tokens.subList(priorityOperator + 1, tokens.size()));
                 return switch (tokens.get(priorityOperator).type) {
                     case MULTIPLY -> new ExpressionMultiply(List.of(preOperator, postOperator));
                     case DIVIDE -> new ExpressionDivide(preOperator, postOperator);
