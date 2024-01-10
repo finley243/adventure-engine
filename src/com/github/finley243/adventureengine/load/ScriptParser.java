@@ -23,109 +23,8 @@ public class ScriptParser {
         List<ScriptToken> tokens = parseToTokens(scriptText);
         List<ScriptTokenFunction> functions = groupTokensToFunctions(tokens);
         for (ScriptTokenFunction function : functions) {
-            String functionName;
-            Expression.DataType functionDataType = null;
-            Set<String> parameterNames = new HashSet<>();
-            Set<ScriptParameter> functionParameters = new HashSet<>();
-            if (function.header().size() == 2) {
-                if (function.header().get(0).type != ScriptTokenType.NAME || !"func".equals(function.header().get(0).value)) throw new IllegalArgumentException("Function is missing function identifier");
-                if (function.header().get(1).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function has invalid name");
-                functionName = function.header().get(1).value;
-            } else if (function.header().size() == 3) {
-                if (function.header().get(0).type != ScriptTokenType.NAME || !"func".equals(function.header().get(0).value)) throw new IllegalArgumentException("Function is missing function identifier");
-                if (function.header().get(1).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function has invalid data type");
-                functionDataType = stringToDataType(function.header().get(1).value);
-                if (functionDataType == null && !function.header().get(1).value.equals("void")) {
-                    throw new IllegalArgumentException("Function has invalid data type");
-                }
-                if (function.header().get(2).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function has invalid name");
-                functionName = function.header().get(2).value;
-            } else {
-                throw new IllegalArgumentException("Function has malformed header");
-            }
-            String parameterName = null;
-            boolean parameterHasDefault = false;
-            Expression parameterDefaultValue = null;
-            for (int i = 0; i < function.parameterBlock().size(); i++) {
-                ScriptToken currentToken = function.parameterBlock().get(i);
-                if (currentToken.type == ScriptTokenType.NAME) {
-                    if (parameterName == null) {
-                        parameterName = currentToken.value;
-                    } else if (parameterHasDefault) {
-                        throw new IllegalArgumentException("Function parameter default value cannot be a variable");
-                    } else {
-                        throw new IllegalArgumentException("Function has malformed parameter");
-                    }
-                } else if (currentToken.type == ScriptTokenType.COMMA) {
-                    if (i == function.parameterBlock().size() - 1) {
-                        throw new IllegalArgumentException("Function parameters contain trailing comma");
-                    }
-                    if (parameterName != null) {
-                        if (!parameterHasDefault || parameterDefaultValue != null) {
-                            parameterNames.add(parameterName);
-                            functionParameters.add(new ScriptParameter(parameterName, parameterDefaultValue));
-                            parameterName = null;
-                            parameterHasDefault = false;
-                            parameterDefaultValue = null;
-                        } else {
-                            throw new IllegalArgumentException("Function has malformed parameter");
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Function has malformed parameter");
-                    }
-                } else if (currentToken.type == ScriptTokenType.EQUALS) {
-                    if (parameterName != null && !parameterHasDefault) {
-                        parameterHasDefault = true;
-                    } else {
-                        throw new IllegalArgumentException("Function has malformed parameter");
-                    }
-                } else if (currentToken.type == ScriptTokenType.STRING) {
-                    if (parameterName != null && parameterHasDefault) {
-                        parameterDefaultValue = Expression.constant(currentToken.value);
-                    } else {
-                        throw new IllegalArgumentException("Function has malformed parameter");
-                    }
-                } else if (currentToken.type == ScriptTokenType.INTEGER) {
-                    if (parameterName != null && parameterHasDefault) {
-                        int value = Integer.parseInt(currentToken.value);
-                        parameterDefaultValue = Expression.constant(value);
-                    } else {
-                        throw new IllegalArgumentException("Function has malformed parameter");
-                    }
-                } else if (currentToken.type == ScriptTokenType.FLOAT) {
-                    if (parameterName != null && parameterHasDefault) {
-                        float value = Float.parseFloat(currentToken.value);
-                        parameterDefaultValue = Expression.constant(value);
-                    } else {
-                        throw new IllegalArgumentException("Function has malformed parameter");
-                    }
-                } else if (currentToken.type == ScriptTokenType.BOOLEAN_TRUE) {
-                    if (parameterName != null && parameterHasDefault) {
-                        parameterDefaultValue = Expression.constant(true);
-                    } else {
-                        throw new IllegalArgumentException("Function has malformed parameter");
-                    }
-                } else if (currentToken.type == ScriptTokenType.BOOLEAN_FALSE) {
-                    if (parameterName != null && parameterHasDefault) {
-                        parameterDefaultValue = Expression.constant(false);
-                    } else {
-                        throw new IllegalArgumentException("Function has malformed parameter");
-                    }
-                } else {
-                    throw new IllegalArgumentException("Function has illegal token in parameter block");
-                }
-            }
-            if (parameterName != null) {
-                if (!parameterHasDefault || parameterDefaultValue != null) {
-                    parameterNames.add(parameterName);
-                    functionParameters.add(new ScriptParameter(parameterName, parameterDefaultValue));
-                } else {
-                    throw new IllegalArgumentException("Function has malformed parameter");
-                }
-            }
-            Script functionScript = generateScript(function.body());
-            // GENERATE SCRIPT OBJECTS
-            scripts.add(new ScriptData(functionName, functionDataType, functionParameters, functionScript));
+            ScriptData script = parseFunction(function);
+            scripts.add(script);
         }
         return scripts;
     }
@@ -188,57 +87,73 @@ public class ScriptParser {
 
     private static List<ScriptTokenFunction> groupTokensToFunctions(List<ScriptToken> tokens) {
         List<ScriptTokenFunction> tokenFunctions = new ArrayList<>();
-        int currentSection = 3; // 0=header, 1=parameterBlock, 2=body, 3=terminated
-        List<ScriptToken> header = new ArrayList<>();
-        List<ScriptToken> parameterBlock = new ArrayList<>();
-        List<ScriptToken> body = new ArrayList<>();
         int index = 0;
-        int bracketDepth = 0;
         while (index < tokens.size()) {
-            ScriptToken current = tokens.get(index);
-            if (currentSection == 3) {
-                currentSection = 0;
-            }
-            if (currentSection == 0) {
-                if (current.type == ScriptTokenType.PARENTHESIS_OPEN) {
-                    currentSection = 1;
-                } else {
-                    header.add(current);
-                }
-            } else if (currentSection == 1) {
-                if (current.type == ScriptTokenType.PARENTHESIS_CLOSE) {
-                    currentSection = 2;
-                } else {
-                    parameterBlock.add(current);
-                }
-            } else { // currentSection == 2
-                if (current.type == ScriptTokenType.BRACKET_OPEN) {
-                    body.add(current);
-                    bracketDepth += 1;
-                } else if (current.type == ScriptTokenType.BRACKET_CLOSE) {
-                    bracketDepth -= 1;
-                    body.add(current);
-                    if (bracketDepth == 0) {
-                        currentSection = 3;
-                        tokenFunctions.add(new ScriptTokenFunction(header, parameterBlock, body));
-                        header = new ArrayList<>();
-                        parameterBlock = new ArrayList<>();
-                        body = new ArrayList<>();
-                    }
-                } else {
-                    body.add(current);
-                }
-            }
-            index++;
+            int parameterStartIndex = findFirstTokenIndex(tokens, ScriptTokenType.PARENTHESIS_OPEN, index);
+            int parameterEndIndex = findPairedClosingBracket(tokens, parameterStartIndex);
+            int bodyStartIndex = parameterEndIndex + 1;
+            if (tokens.get(bodyStartIndex).type != ScriptTokenType.BRACKET_OPEN) throw new IllegalArgumentException("Script has invalid header");
+            int bodyEndIndex = findPairedClosingBracket(tokens, bodyStartIndex);
+            List<ScriptToken> header = tokens.subList(index, parameterStartIndex);
+            List<ScriptToken> parameters = tokens.subList(parameterStartIndex, parameterEndIndex + 1);
+            List<ScriptToken> body = tokens.subList(bodyStartIndex, bodyEndIndex + 1);
+            tokenFunctions.add(new ScriptTokenFunction(header, parameters, body));
+            index = bodyEndIndex + 1;
         }
-        if (currentSection != 3) throw new IllegalArgumentException("Script is incomplete");
-        if (bracketDepth != 0) throw new IllegalArgumentException("Script contains unpaired brackets");
         return tokenFunctions;
+    }
+
+    private static ScriptData parseFunction(ScriptTokenFunction functionTokens) {
+        if (functionTokens.header().getFirst().type != ScriptTokenType.NAME || !functionTokens.header().getFirst().value.equals("func")) {
+            throw new IllegalArgumentException("Function header is missing func keyword");
+        }
+        if (functionTokens.header().getLast().type != ScriptTokenType.NAME) {
+            throw new IllegalArgumentException("Function header is missing valid name");
+        }
+        String functionName = functionTokens.header().getLast().value;
+        Expression.DataType functionReturnType = null;
+        if (functionTokens.header().size() == 3) {
+            if (functionTokens.header().get(1).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function header has invalid return type");
+            functionReturnType = stringToDataType(functionTokens.header().get(1).value);
+        } else if (functionTokens.header().size() != 2) {
+            throw new IllegalArgumentException("Function header contains unexpected tokens");
+        }
+        Set<ScriptParameter> functionParameters = parseFunctionParameters(functionTokens.parameters());
+        Script functionScript = generateScript(functionTokens.body());
+        return new ScriptData(functionName, functionReturnType, functionParameters, functionScript);
+    }
+
+    private static Set<ScriptParameter> parseFunctionParameters(List<ScriptToken> parameterTokens) {
+        Set<ScriptParameter> functionParameters = new HashSet<>();
+        List<List<ScriptToken>> parameterGroups = new ArrayList<>();
+        int index = 0;
+        while (index < parameterTokens.size()) {
+            int nextCommaIndex = findFirstTokenIndex(parameterTokens, ScriptTokenType.COMMA, index);
+            List<ScriptToken> currentGroup;
+            if (nextCommaIndex == -1) {
+                currentGroup = parameterTokens.subList(index, parameterTokens.size());
+            } else {
+                currentGroup = parameterTokens.subList(index, nextCommaIndex);
+            }
+            if (currentGroup.isEmpty() || currentGroup.size() == 2) throw new IllegalArgumentException("Function contains invalid parameter definition");
+            if (currentGroup.getFirst().type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function contains invalid parameter definition");
+            if (currentGroup.size() >= 3 && currentGroup.get(1).type != ScriptTokenType.EQUALS) throw new IllegalArgumentException("Function contains invalid parameter definition");
+            parameterGroups.add(currentGroup);
+        }
+        for (List<ScriptToken> parameterGroup : parameterGroups) {
+            String parameterName = parameterGroup.getFirst().value;
+            Expression parameterDefaultValue = null;
+            if (parameterGroup.size() >= 3) {
+                parameterDefaultValue = parseLiteral(parameterGroup.subList(2, parameterGroup.size()));
+            }
+            functionParameters.add(new ScriptParameter(parameterName, parameterDefaultValue));
+        }
+        return functionParameters;
     }
 
     private static Script generateScript(List<ScriptToken> tokens) {
         if (tokens.isEmpty()) return null;
-        if (tokens.get(0).type == ScriptTokenType.BRACKET_OPEN && tokens.get(tokens.size() - 1).type == ScriptTokenType.BRACKET_CLOSE) {
+        if (tokens.get(0).type == ScriptTokenType.BRACKET_OPEN && tokens.getLast().type == ScriptTokenType.BRACKET_CLOSE) {
             // Script block
             List<Script> scripts = new ArrayList<>();
             List<ScriptToken> currentScriptTokens = new ArrayList<>();
@@ -265,7 +180,7 @@ public class ScriptParser {
                 throw new IllegalArgumentException("Script is improperly terminated");
             }
             return new ScriptCompound(null, scripts, false);
-        } else if (tokens.get(0).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.get(tokens.size() - 1).type == ScriptTokenType.PARENTHESIS_CLOSE) {
+        } else if (tokens.get(0).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             // Expression block
 
         } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(0).value.equals("if")) {
@@ -298,7 +213,7 @@ public class ScriptParser {
             if (tokens.get(1).type != ScriptTokenType.NAME) {
                 throw new IllegalArgumentException("Variable declaration has no specified name");
             }
-            if (tokens.get(tokens.size() - 1).type != ScriptTokenType.END_LINE) {
+            if (tokens.getLast().type != ScriptTokenType.END_LINE) {
                 throw new IllegalArgumentException("Variable declaration has invalid line end");
             }
             String variableName = tokens.get(1).value;
@@ -315,13 +230,13 @@ public class ScriptParser {
 
         } else if (tokens.get(0).type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.EQUALS) {
             // Local variable reference
-            if (tokens.get(tokens.size() - 1).type != ScriptTokenType.END_LINE) {
+            if (tokens.getLast().type != ScriptTokenType.END_LINE) {
                 throw new IllegalArgumentException("Variable assignment has invalid line end");
             }
             if (tokens.size() <= 3) {
                 throw new IllegalArgumentException("Variable assignment has no specified value");
             }
-            String variableName = tokens.get(0).value;
+            String variableName = tokens.getFirst().value;
             Expression variableValue = generateExpression(tokens.subList(2, tokens.size() - 1));
             return new ScriptSetVariable(null, Expression.constant(variableName), variableValue);
         }
@@ -331,7 +246,7 @@ public class ScriptParser {
     private static Expression generateExpression(List<ScriptToken> tokens) {
         if (tokens.isEmpty()) return null;
         if (tokens.size() == 1) {
-            ScriptToken token = tokens.get(0);
+            ScriptToken token = tokens.getFirst();
             if (token.type == ScriptTokenType.STRING) {
                 return Expression.constant(token.value);
             } else if (token.type == ScriptTokenType.INTEGER) {
@@ -347,7 +262,7 @@ public class ScriptParser {
             } else if (token.type == ScriptTokenType.NAME) {
                 return new ExpressionParameter(token.value);
             }
-        } else if (tokens.get(0).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.get(tokens.size() - 1).type == ScriptTokenType.PARENTHESIS_CLOSE) {
+        } else if (tokens.get(0).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             return generateExpression(tokens.subList(1, tokens.size() - 1));
         } else {
             int priorityOperator = getPriorityOperator(tokens);
@@ -377,6 +292,26 @@ public class ScriptParser {
         return null;
     }
 
+    private static Expression parseLiteral(List<ScriptToken> tokens) {
+        if (tokens.size() != 1) throw new IllegalArgumentException("Expression is not a valid literal");
+        ScriptToken token = tokens.getFirst();
+        if (token.type == ScriptTokenType.STRING) {
+            return Expression.constant(token.value);
+        } else if (token.type == ScriptTokenType.INTEGER) {
+            int value = Integer.parseInt(token.value);
+            return Expression.constant(value);
+        } else if (token.type == ScriptTokenType.FLOAT) {
+            float value = Float.parseFloat(token.value);
+            return Expression.constant(value);
+        } else if (token.type == ScriptTokenType.BOOLEAN_TRUE) {
+            return Expression.constant(true);
+        } else if (token.type == ScriptTokenType.BOOLEAN_FALSE) {
+            return Expression.constant(false);
+        } else {
+            throw new IllegalArgumentException("Expression is not a valid literal");
+        }
+    }
+
     private static int getPriorityOperator(List<ScriptToken> tokens) {
         int bracketDepth = 0;
         int priorityOperator = -1;
@@ -394,9 +329,9 @@ public class ScriptParser {
         return priorityOperator;
     }
 
-    private static int findFirstTokenIndex(List<ScriptToken> tokens, ScriptTokenType type) {
+    private static int findFirstTokenIndex(List<ScriptToken> tokens, ScriptTokenType type, int startIndex) {
         Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
-        for (int i = 0; i < tokens.size(); i++) {
+        for (int i = startIndex; i < tokens.size(); i++) {
             ScriptToken token = tokens.get(i);
             if (bracketStack.isEmpty() && token.type == type) {
                 return i;
@@ -413,9 +348,9 @@ public class ScriptParser {
         return -1;
     }
 
-    private static int findLastTokenIndex(List<ScriptToken> tokens, ScriptTokenType type) {
+    private static int findLastTokenIndex(List<ScriptToken> tokens, ScriptTokenType type, int startIndex) {
         Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
-        for (int i = tokens.size() - 1; i >= 0; i--) {
+        for (int i = startIndex; i >= 0; i--) {
             ScriptToken token = tokens.get(i);
             if (bracketStack.isEmpty() && token.type == type) {
                 return i;
@@ -481,7 +416,8 @@ public class ScriptParser {
             case "stringSet" -> Expression.DataType.STRING_SET;
             case "inventory" -> Expression.DataType.INVENTORY;
             case "noun" -> Expression.DataType.NOUN;
-            default -> null;
+            case "void" -> null;
+            default -> throw new IllegalArgumentException("Invalid data type name: " + name);
         };
     }
 
@@ -509,6 +445,6 @@ public class ScriptParser {
 
     private record ScriptParameter(String name, Expression defaultValue) {}
 
-    private record ScriptTokenFunction(List<ScriptToken> header, List<ScriptToken> parameterBlock, List<ScriptToken> body) {}
+    private record ScriptTokenFunction(List<ScriptToken> header, List<ScriptToken> parameters, List<ScriptToken> body) {}
 
 }
