@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.ScriptResumeEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -20,8 +19,7 @@ public class ScriptSensoryEvent extends Script {
     private final Expression area;
     private final boolean isDetectedBySelf;
 
-    public ScriptSensoryEvent(Condition condition, Expression phrase, Expression phraseAudible, Expression area, boolean isDetectedBySelf) {
-        super(condition);
+    public ScriptSensoryEvent(Expression phrase, Expression phraseAudible, Expression area, boolean isDetectedBySelf) {
         this.phrase = phrase;
         this.phraseAudible = phraseAudible;
         this.area = area;
@@ -29,7 +27,7 @@ public class ScriptSensoryEvent extends Script {
     }
 
     @Override
-    protected void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         Context context = runtimeStack.getContext();
         Area[] originAreas = getOriginAreas(context);
         Map<String, String> contextVars = context.getTextVarMap();
@@ -37,7 +35,7 @@ public class ScriptSensoryEvent extends Script {
         TextContext textContext = new TextContext(contextVars, contextNouns);
         String phraseString = (phrase == null ? null : phrase.getValueString(context));
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString(context));
-        context.game().eventQueue().addToFront(new ScriptResumeEvent(runtimeStack, new ScriptReturn(null, false, false, null)));
+        context.game().eventQueue().addToFront(new ScriptResumeEvent(runtimeStack, new ScriptReturnData(null, false, false, null)));
         context.game().eventQueue().addToFront(new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, isDetectedBySelf, false, context.getParentAction(), null, context.getSubject(), context.getTarget()));
         context.game().eventQueue().startExecution();
     }

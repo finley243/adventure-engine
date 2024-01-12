@@ -11,13 +11,12 @@ public class ScriptConditional extends Script implements ScriptReturnTarget {
     private final Script scriptElse;
 
     public ScriptConditional(List<ConditionalScriptPair> conditionalScriptPairs, Script scriptElse) {
-        super(null);
         this.conditionalScriptPairs = conditionalScriptPairs;
         this.scriptElse = scriptElse;
     }
 
     @Override
-    protected void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         runtimeStack.addContext(runtimeStack.getContext(), null);
         executeNextIteration(runtimeStack);
     }
@@ -25,7 +24,7 @@ public class ScriptConditional extends Script implements ScriptReturnTarget {
     private void executeNextIteration(RuntimeStack runtimeStack) {
         if (runtimeStack.getIndex() >= conditionalScriptPairs.size() + (scriptElse == null ? 0 : 1)) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
         } else if (runtimeStack.getIndex() == conditionalScriptPairs.size() && scriptElse != null) {
             runtimeStack.incrementIndex();
             Context innerContext = new Context(runtimeStack.getContext(), true);
@@ -45,20 +44,20 @@ public class ScriptConditional extends Script implements ScriptReturnTarget {
     }
 
     @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturn scriptReturn) {
+    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
         runtimeStack.closeContext();
-        if (scriptReturn.error() != null) {
+        if (scriptReturnData.error() != null) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturn);
-        } else if (scriptReturn.isReturn()) {
+            sendReturn(runtimeStack, scriptReturnData);
+        } else if (scriptReturnData.isReturn()) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturn);
+            sendReturn(runtimeStack, scriptReturnData);
         } else if (runtimeStack.expressionQueueIsEmpty()) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
         } else if (runtimeStack.getIndex() >= conditionalScriptPairs.size() + (scriptElse == null ? 0 : 1)) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
         } else {
             executeNextIteration(runtimeStack);
         }

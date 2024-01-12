@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptModifyGlobal extends Script {
@@ -9,15 +8,14 @@ public class ScriptModifyGlobal extends Script {
     private final Expression globalID;
     private final Expression expression;
 
-    public ScriptModifyGlobal(Condition condition, Expression globalID, Expression expression) {
-        super(condition);
+    public ScriptModifyGlobal(Expression globalID, Expression expression) {
         if (globalID == null) throw new IllegalArgumentException("ScriptModifyGlobal globalID is null");
         this.globalID = globalID;
         this.expression = expression;
     }
 
     @Override
-    protected void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         Context context = runtimeStack.getContext();
         if (globalID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyGlobal globalID is not a string");
         String globalIDValue = globalID.getValueString(context);
@@ -34,7 +32,7 @@ public class ScriptModifyGlobal extends Script {
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType(context));
         }
-        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
     }
 
 }

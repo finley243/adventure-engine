@@ -4,10 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.Map;
+import java.util.*;
 
 public class RuntimeStack {
 
@@ -30,6 +27,26 @@ public class RuntimeStack {
     public int getIndex() {
         if (stack.peek() == null) throw new UnsupportedOperationException("Runtime stack is empty");
         return stack.peek().index;
+    }
+
+    public void addTempExpressionToList(Expression expression) {
+        if (stack.peek() == null) throw new UnsupportedOperationException("Runtime stack is empty");
+        stack.peek().tempExpressionList.add(expression);
+    }
+
+    public void addTempExpressionToMap(String name, Expression expression) {
+        if (stack.peek() == null) throw new UnsupportedOperationException("Runtime stack is empty");
+        stack.peek().tempExpressionMap.put(name, expression);
+    }
+
+    public List<Expression> getTempExpressionList() {
+        if (stack.peek() == null) throw new UnsupportedOperationException("Runtime stack is empty");
+        return stack.peek().tempExpressionList;
+    }
+
+    public Expression getTempExpressionFromMap(String name) {
+        if (stack.peek() == null) throw new UnsupportedOperationException("Runtime stack is empty");
+        return stack.peek().tempExpressionMap.get(name);
     }
 
     public Expression removeQueuedExpression() {
@@ -84,6 +101,8 @@ public class RuntimeStack {
         public int index;
         public final Deque<Expression> expressionQueue;
         public final Deque<Map.Entry<Item, Integer>> itemQueue;
+        public final List<Expression> tempExpressionList;
+        public final Map<String, Expression> tempExpressionMap;
 
         public StackData(Context context, ScriptReturnTarget returnTarget, Deque<Expression> expressionQueue, Deque<Map.Entry<Item, Integer>> itemQueue) {
             this.context = context;
@@ -91,6 +110,8 @@ public class RuntimeStack {
             this.index = 0;
             this.expressionQueue = expressionQueue;
             this.itemQueue = itemQueue;
+            this.tempExpressionList = new ArrayList<>();
+            this.tempExpressionMap = new HashMap<>();
         }
     }
 

@@ -1,21 +1,19 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.condition.Condition;
 
-import java.util.*;
+import java.util.List;
 
 public class ScriptCompound extends Script implements ScriptReturnTarget {
 
     private final List<Script> subScripts;
 
-    public ScriptCompound(Condition condition, List<Script> subScripts, boolean select) {
-        super(condition);
+    public ScriptCompound(List<Script> subScripts, boolean select) {
         this.subScripts = subScripts;
     }
 
     @Override
-    public void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         Context innerContext = new Context(runtimeStack.getContext(), true);
         runtimeStack.addContext(innerContext, this);
         executeNextScript(runtimeStack);
@@ -28,16 +26,16 @@ public class ScriptCompound extends Script implements ScriptReturnTarget {
     }
 
     @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturn scriptReturn) {
-        if (scriptReturn.error() != null) {
+    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
+        if (scriptReturnData.error() != null) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturn);
-        } else if (scriptReturn.isReturn()) {
+            sendReturn(runtimeStack, scriptReturnData);
+        } else if (scriptReturnData.isReturn()) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturn);
+            sendReturn(runtimeStack, scriptReturnData);
         } else if (runtimeStack.getIndex() >= subScripts.size()) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
         } else {
             executeNextScript(runtimeStack);
         }

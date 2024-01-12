@@ -24,7 +24,7 @@ public class ScriptEvent implements QueuedEvent, ScriptReturnTarget {
     }
 
     @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, Script.ScriptReturn scriptReturn) {
+    public void onScriptReturn(RuntimeStack runtimeStack, Script.ScriptReturnData scriptReturnData) {
         context.game().eventQueue().startExecution();
     }
 

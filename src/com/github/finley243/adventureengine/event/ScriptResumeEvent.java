@@ -3,21 +3,20 @@ package com.github.finley243.adventureengine.event;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.script.RuntimeStack;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.script.ScriptReturnTarget;
 
 public class ScriptResumeEvent implements QueuedEvent {
 
     private final RuntimeStack runtimeStack;
-    private final Script.ScriptReturn scriptReturn;
+    private final Script.ScriptReturnData scriptReturnData;
 
-    public ScriptResumeEvent(RuntimeStack runtimeStack, Script.ScriptReturn scriptReturn) {
+    public ScriptResumeEvent(RuntimeStack runtimeStack, Script.ScriptReturnData scriptReturnData) {
         this.runtimeStack = runtimeStack;
-        this.scriptReturn = scriptReturn;
+        this.scriptReturnData = scriptReturnData;
     }
 
     @Override
     public void execute(Game game) {
-        runtimeStack.getReturnTarget().onScriptReturn(runtimeStack, scriptReturn);
+        runtimeStack.getReturnTarget().onScriptReturn(runtimeStack, scriptReturnData);
     }
 
     @Override

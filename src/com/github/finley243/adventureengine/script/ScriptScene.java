@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.event.ScriptResumeEvent;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -18,21 +17,20 @@ public class ScriptScene extends Script {
     private final StatHolderReference actor;
     private final Expression scenes;
 
-    public ScriptScene(Condition condition, StatHolderReference actor, Expression scenes) {
-        super(condition);
+    public ScriptScene(StatHolderReference actor, Expression scenes) {
         if (scenes == null) throw new IllegalArgumentException("ScriptScene scenes is null");
         this.actor = actor;
         this.scenes = scenes;
     }
 
     @Override
-    public void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         Context context = runtimeStack.getContext();
         if (scenes.getDataType(context) != Expression.DataType.STRING && scenes.getDataType(context) != Expression.DataType.STRING_SET) throw new IllegalArgumentException("ScriptScene scenes is not a string or string set");
         if (!(actor.getHolder(context) instanceof Actor actorCast)) {
             return;
         }
-        context.game().eventQueue().addToFront(new ScriptResumeEvent(runtimeStack, new ScriptReturn(null, false, false, null)));
+        context.game().eventQueue().addToFront(new ScriptResumeEvent(runtimeStack, new ScriptReturnData(null, false, false, null)));
         if (scenes.getDataType(context) == Expression.DataType.STRING) {
             context.game().eventQueue().addToFront(new SceneEvent(context.game().data().getScene(scenes.getValueString(context)), null, new Context(context, actorCast, actorCast)));
         } else {

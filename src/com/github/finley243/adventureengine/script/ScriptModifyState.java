@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 
@@ -11,8 +10,7 @@ public class ScriptModifyState extends Script {
     private final Expression state;
     private final Expression expression;
 
-    public ScriptModifyState(Condition condition, StatHolderReference holder, Expression state, Expression expression) {
-        super(condition);
+    public ScriptModifyState(StatHolderReference holder, Expression state, Expression expression) {
         if (holder == null) throw new IllegalArgumentException("ScriptModifyState stat holder is null");
         if (state == null) throw new IllegalArgumentException("ScriptModifyState state name is null");
         this.holder = holder;
@@ -21,7 +19,7 @@ public class ScriptModifyState extends Script {
     }
 
     @Override
-    protected void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         Context context = runtimeStack.getContext();
         if (state.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyState state name is not a string");
         String stateValue = state.getValueString(context);
@@ -45,7 +43,7 @@ public class ScriptModifyState extends Script {
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType(context));
         }
-        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
     }
 
 }

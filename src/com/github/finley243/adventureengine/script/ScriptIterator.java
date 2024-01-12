@@ -2,10 +2,11 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class ScriptIterator extends Script implements ScriptReturnTarget {
 
@@ -13,15 +14,14 @@ public class ScriptIterator extends Script implements ScriptReturnTarget {
     private final String iteratorParameterName;
     private final Script iteratedScript;
 
-    public ScriptIterator(Condition condition, Expression setExpression, String iteratorParameterName, Script iteratedScript) {
-        super(condition);
+    public ScriptIterator(Expression setExpression, String iteratorParameterName, Script iteratedScript) {
         this.setExpression = setExpression;
         this.iteratorParameterName = iteratorParameterName;
         this.iteratedScript = iteratedScript;
     }
 
     @Override
-    protected void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         Set<String> stringSet = setExpression.getValueStringSet(runtimeStack.getContext());
         List<Expression> expressions = new ArrayList<>(stringSet.size());
         for (String setValue : stringSet) {
@@ -39,17 +39,17 @@ public class ScriptIterator extends Script implements ScriptReturnTarget {
     }
 
     @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturn scriptReturn) {
+    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
         runtimeStack.closeContext();
-        if (scriptReturn.error() != null) {
+        if (scriptReturnData.error() != null) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturn);
-        } else if (scriptReturn.isReturn()) {
+            sendReturn(runtimeStack, scriptReturnData);
+        } else if (scriptReturnData.isReturn()) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturn);
+            sendReturn(runtimeStack, scriptReturnData);
         } else if (runtimeStack.expressionQueueIsEmpty()) {
             runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
         } else {
             executeNextIteration(runtimeStack);
         }

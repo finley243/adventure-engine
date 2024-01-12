@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 
@@ -23,8 +22,7 @@ public class ScriptTransferItem extends Script {
     private final TransferItemsType transferType;
     private final Expression count;
 
-    public ScriptTransferItem(Condition condition, Expression inventoryOrigin, Expression inventoryTarget, Expression itemID, TransferItemsType transferType, Expression count) {
-        super(condition);
+    public ScriptTransferItem(Expression inventoryOrigin, Expression inventoryTarget, Expression itemID, TransferItemsType transferType, Expression count) {
         switch (transferType) {
             case INSTANCE, TYPE, ALL -> {
                 if (inventoryOrigin == null) throw new IllegalArgumentException("ScriptTransferItem of type " + transferType + " must specify an origin inventory");
@@ -41,7 +39,7 @@ public class ScriptTransferItem extends Script {
     }
 
     @Override
-    protected void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         Context context = runtimeStack.getContext();
         if (inventoryOrigin != null && inventoryOrigin.getDataType(context) != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryOrigin is not an inventory");
         if (inventoryTarget != null && inventoryTarget.getDataType(context) != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryTarget is not an inventory");
@@ -84,7 +82,7 @@ public class ScriptTransferItem extends Script {
                 }
             }
         }
-        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
     }
 
 }

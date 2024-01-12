@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.ArrayList;
@@ -13,14 +12,13 @@ public class ScriptNearestActorWithScript extends Script {
 
     private final Expression trigger;
 
-    public ScriptNearestActorWithScript(Condition condition, Expression trigger) {
-        super(condition);
+    public ScriptNearestActorWithScript(Expression trigger) {
         if (trigger == null) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is null");
         this.trigger = trigger;
     }
 
     @Override
-    protected void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         Context context = runtimeStack.getContext();
         if (trigger.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is not a string");
         // TODO - Improve efficiency of nearest actor check
@@ -45,7 +43,7 @@ public class ScriptNearestActorWithScript extends Script {
             boolean executed = nearActor.triggerScript(triggerValue, context);
             if (executed) break;
         }
-        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
     }
 
 }

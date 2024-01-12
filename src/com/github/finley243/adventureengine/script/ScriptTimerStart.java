@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Timer;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptTimerStart extends Script {
@@ -12,8 +11,7 @@ public class ScriptTimerStart extends Script {
     private final Script timerScriptExpire;
     private final Script timerScriptUpdate;
 
-    public ScriptTimerStart(Condition condition, Expression timerID, Expression timerDuration, Script timerScriptExpire, Script timerScriptUpdate) {
-        super(condition);
+    public ScriptTimerStart(Expression timerID, Expression timerDuration, Script timerScriptExpire, Script timerScriptUpdate) {
         if (timerID == null) throw new IllegalArgumentException("ScriptTimerStart timerID is null");
         if (timerDuration == null) throw new IllegalArgumentException("ScriptTimerStart timerDuration is null");
         this.timerID = timerID;
@@ -23,13 +21,13 @@ public class ScriptTimerStart extends Script {
     }
 
     @Override
-    protected void executeSuccess(RuntimeStack runtimeStack) {
+    public void execute(RuntimeStack runtimeStack) {
         Context context = runtimeStack.getContext();
         if (timerID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTimerStart timerID is not a string");
         if (timerDuration.getDataType(context) != Expression.DataType.INTEGER) throw new IllegalArgumentException("ScriptTimerStart timerDuration is not an integer");
         Timer timer = new Timer(context.game(), timerID.getValueString(context), timerDuration.getValueInteger(context), timerScriptExpire, timerScriptUpdate, context);
         context.game().data().addTimer(timer.getID(), timer);
-        sendReturn(runtimeStack, new ScriptReturn(null, false, false, null));
+        sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
     }
 
 }
