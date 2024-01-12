@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -105,11 +104,6 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	@Override
 	public boolean setStatValue(String name, Expression value, Context context) {
 		return false;
-	}
-
-	@Override
-	public Inventory getInventory() {
-		return null;
 	}
 
 	@Override

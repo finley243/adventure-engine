@@ -210,7 +210,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return targets;
 	}
 
-	@Override
 	public Inventory getInventory() {
 		return itemInventory;
 	}

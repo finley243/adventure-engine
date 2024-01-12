@@ -4,9 +4,11 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.ScriptEvent;
-import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
+import com.github.finley243.adventureengine.expression.ExpressionConstantNoun;
+import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -184,11 +186,6 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public Inventory getInventory() {
-		return null;
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionModRemove;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;

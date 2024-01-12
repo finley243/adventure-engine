@@ -7,7 +7,6 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.*;
@@ -273,15 +272,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				return true;
 			}
 		}
-	}
-
-	@Override
-	public Inventory getInventory() {
-		ObjectComponentInventory inventoryComponent = getComponentOfType(ObjectComponentInventory.class);
-		if (inventoryComponent != null) {
-			return inventoryComponent.getInventory();
-		}
-		return null;
 	}
 
 	@Override

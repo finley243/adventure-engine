@@ -3,15 +3,15 @@ package com.github.finley243.adventureengine.scene;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
+import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.stat.*;
+import com.github.finley243.adventureengine.stat.StatHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Scene extends GameInstanced implements StatHolder {
 
@@ -83,11 +83,6 @@ public class Scene extends GameInstanced implements StatHolder {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public Inventory getInventory() {
-		return null;
 	}
 
 	@Override

@@ -18,7 +18,6 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentInventory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +125,6 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 		this.currentInventory = inventory;
 	}
 
-	@Override
 	public Inventory getInventory() {
 		return currentInventory;
 	}

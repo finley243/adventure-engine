@@ -303,7 +303,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return getTemplate().getLimbs();
 	}
 
-	@Override
 	public Inventory getInventory() {
 		return inventory;
 	}

@@ -3,18 +3,13 @@ package com.github.finley243.adventureengine.world.object.component;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
-import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateInventory;
 
 import java.util.List;
-import java.util.Set;
 
 public abstract class ObjectComponent implements StatHolder {
 
@@ -73,11 +68,6 @@ public abstract class ObjectComponent implements StatHolder {
             setEnabled(value.getValueBoolean(context));
         }
         return false;
-    }
-
-    @Override
-    public Inventory getInventory() {
-        return null;
     }
 
     @Override

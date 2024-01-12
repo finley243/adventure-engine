@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolder;
 
@@ -15,11 +14,6 @@ public class WeaponData implements StatHolder {
     @Override
     public boolean setStatValue(String name, Expression value, Context context) {
         return false;
-    }
-
-    @Override
-    public Inventory getInventory() {
-        return null;
     }
 
     @Override

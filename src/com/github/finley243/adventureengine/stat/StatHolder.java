@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public interface StatHolder {
@@ -16,8 +15,6 @@ public interface StatHolder {
      * @return true if the stat is set successfully, false otherwise
      */
     boolean setStatValue(String name, Expression value, Context context);
-
-    Inventory getInventory();
 
     StatHolder getSubHolder(String name, String ID);
 
