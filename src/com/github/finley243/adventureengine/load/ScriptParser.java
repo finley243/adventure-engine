@@ -276,7 +276,9 @@ public class ScriptParser {
             // Stat assignment
             int assignmentOperatorIndex = findFirstTokenIndex(tokens, ScriptTokenType.ASSIGNMENT, 0);
             if (assignmentOperatorIndex == -1) throw new IllegalArgumentException("Stat assignment is missing assignment operator");
-
+            ScriptStatReference statReference = parseStatReference(tokens.subList(0, assignmentOperatorIndex));
+            Expression statValue = parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
+            return new ScriptSetState(null, statReference.statHolder(), statReference.name(), statValue);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME) {
             // Variable assignment
             if (tokens.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Variable assignment is missing assignment operator");
@@ -286,7 +288,6 @@ public class ScriptParser {
         } else {
             throw new IllegalArgumentException("Script contains invalid instruction");
         }
-        return null;
     }
 
     private static List<ScriptExternal.ParameterContainer> parseFunctionCallParameters(List<ScriptToken> tokens) {
