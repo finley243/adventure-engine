@@ -70,6 +70,7 @@ public abstract class Expression {
     }
 
     public static Expression convertToConstant(Expression expression, Context context) {
+        if (expression == null) return null;
         return switch (expression.getDataType(context)) {
             case BOOLEAN -> new ExpressionConstantBoolean(expression.getValueBoolean(context));
             case INTEGER -> new ExpressionConstantInteger(expression.getValueInteger(context));
@@ -99,6 +100,14 @@ public abstract class Expression {
 
     public static Expression constant(Set<String> value) {
         return new ExpressionConstantStringSet(value);
+    }
+
+    public static Expression constant(Inventory value) {
+        return new ExpressionConstantInventory(value);
+    }
+
+    public static Expression constant(Noun value) {
+        return new ExpressionConstantNoun(value);
     }
 
 }

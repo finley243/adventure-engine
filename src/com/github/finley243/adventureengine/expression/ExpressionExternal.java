@@ -8,17 +8,15 @@ import java.util.Set;
 
 public class ExpressionExternal extends Expression {
 
-    private final DataType dataType;
     private final String externalID;
 
-    public ExpressionExternal(String dataType, String externalID) {
-        this.dataType = dataTypeFromString(dataType);
+    public ExpressionExternal(String externalID) {
         this.externalID = externalID;
     }
 
     @Override
     public DataType getDataType(Context context) {
-        return dataType;
+        return context.game().data().getExpression(externalID).getDataType(context);
     }
 
     @Override

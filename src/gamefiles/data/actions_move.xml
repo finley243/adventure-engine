@@ -9,7 +9,7 @@
                 </value>
             </script>
             <script type="setVariable" name="area">
-                <value dataType="noun" type="stat" holder="parentArea"/>
+                <value stat="noun" type="stat" holder="parentArea"/>
             </script>
             <script type="sensoryEvent">
                 <phrase type="stat" dataType="string" holder="parentArea" stat="move_phrase"/>
@@ -32,7 +32,7 @@
                 </value>
             </script>
             <script type="setVariable" name="area">
-                <value dataType="noun" type="stat" holder="parentArea"/>
+                <value stat="noun" type="stat" holder="parentArea"/>
             </script>
             <script type="sensoryEvent">
                 <phrase>moveCorner</phrase>
@@ -61,7 +61,7 @@
                 </value>
             </script>
             <script type="setVariable" name="area">
-                <value dataType="noun" type="stat" holder="parentArea"/>
+                <value stat="noun" type="stat" holder="parentArea"/>
             </script>
             <script type="setVariable" name="room_origin">
                 <value dataType="string" type="stat" stat="id" holder="room">
@@ -82,19 +82,19 @@
                             <value1 type="parameter" dataType="string" name="room_origin"/>
                             <value2 type="parameter" dataType="string" name="room_target"/>
                         </condition>
-                        <value type="stat" dataType="noun" holder="room">
+                        <value type="stat" stat="noun" holder="room">
                             <parentHolder holder="area">
                                 <parentHolder holder="subject"/>
                             </parentHolder>
                         </value>
                     </if>
-                    <else type="stat" dataType="noun" holder="area">
+                    <else type="stat" stat="noun" holder="area">
                         <parentHolder holder="subject"/>
                     </else>
                 </value>
             </script>
             <script type="setVariable" name="door">
-                <value dataType="noun" type="stat" holder="parentObject"/>
+                <value stat="noun" type="stat" holder="parentObject"/>
             </script>
             <script type="sensoryEvent">
                 <phrase>moveThrough</phrase>

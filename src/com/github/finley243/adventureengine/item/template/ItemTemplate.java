@@ -5,10 +5,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantInteger;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
-import com.github.finley243.adventureengine.expression.ExpressionConstantStringSet;
+import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -96,6 +93,7 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
+			case "noun" -> new ExpressionConstantNoun(this);
 			case "price" -> new ExpressionConstantInteger(price);
 			case "id" -> new ExpressionConstantString(getID());
 			case "name" -> new ExpressionConstantString(getName());

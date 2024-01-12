@@ -79,8 +79,8 @@ public class Game {
 		ScriptParser.parseScripts("func drop_equipped_force_specified_slot(equippedSlot) {\n" +
 				"\t//condition stat.subject.(\"has_equipped_\" + equippedSlot);\n" +
 				"\tif (stat.subject.(\"has_equipped_\" + equippedSlot)) {\n" +
-				"\t\tvar string dropAreaID = randomStringFromSet(stat.subject.area.movable_areas);\n" +
-				"\t\tvar string equippedItemID = stat.subject.equipped_item(equippedSlot).id;\n" +
+				"\t\tvar dropAreaID = randomStringFromSet(stat.subject.area.movable_areas);\n" +
+				"\t\tvar equippedItemID = stat.subject.equipped_item(equippedSlot).id;\n" +
 				"\t\ttransferItem(type=instance, from=stat.subject.inv, to=stat.area(dropAreaID).inv, item=equippedItemID);\n" +
 				"\t\tsensoryEvent(phrase=\"forceDrop\", area=stat.subject.area.id);\n" +
 				"\t}\n" +

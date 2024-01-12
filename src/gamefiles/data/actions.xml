@@ -26,7 +26,7 @@
         </condition>
         <condition type="inventoryContains" requireAll="false">
             <blockMessage>No valid key in inventory</blockMessage>
-            <inv type="stat" dataType="inventory" holder="subject"/>
+            <inv type="stat" stat="inventory" holder="subject"/>
             <item type="stat" dataType="stringSet" stat="lock_keys" holder="parentObject"/>
         </condition>
         <script>
@@ -63,7 +63,7 @@
         </condition>
         <script>
             <script type="transferItem">
-                <toInv holder="subject"/>
+                <toInv holder="subject" stat="inventory"/>
                 <item type="parameter" dataType="string" name="itemID"/>
             </script>
             <script type="modifyState" dataType="int" stat="money" holder="subject">
@@ -80,7 +80,7 @@
                 </value>
             </script>
             <script type="setVariable" name="item">
-                <value dataType="noun" type="stat" holder="itemTemplate">
+                <value stat="noun" type="stat" holder="itemTemplate">
                     <holderID type="parameter" name="itemID"/>
                 </value>
             </script>

@@ -331,13 +331,13 @@ public class DataLoader {
         String dataType = LoadUtils.attribute(expressionElement, "dataType", dataTypeDefault);
         if (expressionElement.hasAttribute("external")) {
             String externalID = LoadUtils.attribute(expressionElement, "external", null);
-            return new ExpressionExternal(dataType, externalID);
+            return new ExpressionExternal(externalID);
         }
         switch (type) {
             case "stat" -> {
                 StatHolderReference statHolderReference = loadStatHolderReference(expressionElement);
                 Expression statName = loadExpressionOrAttribute(expressionElement, "stat", "string");
-                return new ExpressionStat(statHolderReference, dataType, statName);
+                return new ExpressionStat(statHolderReference, statName);
             }
             case "statHolderType" -> {
                 StatHolderReference statHolderReference = loadStatHolderReference(expressionElement);
@@ -345,11 +345,11 @@ public class DataLoader {
             }
             case "global" -> {
                 Expression globalExpressionID = loadExpressionOrAttribute(expressionElement, "globalID", "string");
-                return new ExpressionGlobal(dataType, globalExpressionID);
+                return new ExpressionGlobal(globalExpressionID);
             }
             case "external" -> {
                 String externalID = LoadUtils.attribute(expressionElement, "id", null);
-                return new ExpressionExternal(dataType, externalID);
+                return new ExpressionExternal(externalID);
             }
             case "parameter" -> {
                 String parameterName = LoadUtils.attribute(expressionElement, "name", null);

@@ -11,25 +11,25 @@ import java.util.Set;
 public class ExpressionStat extends Expression {
 
     private final StatHolderReference holder;
-    private final DataType dataType;
     private final Expression stat;
 
-    public ExpressionStat(StatHolderReference holder, String dataType, Expression stat) {
+    public ExpressionStat(StatHolderReference holder, Expression stat) {
+        if (holder == null) throw new IllegalArgumentException("ExpressionStat holder parameter is null");
+        if (stat == null) throw new IllegalArgumentException("ExpressionStat stat parameter is null");
         this.holder = holder;
-        this.dataType = dataTypeFromString(dataType);
         this.stat = stat;
     }
 
     @Override
     public DataType getDataType(Context context) {
-        return dataType;
+        if (stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
+        return holder.getHolder(context).getStatValue(stat.getValueString(context), context).getDataType(context);
     }
 
     @Override
     public boolean getValueBoolean(Context context) {
         if (getDataType(context) != DataType.BOOLEAN) throw new UnsupportedOperationException();
-        if (stat != null && stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
-        if (stat == null) return false;
+        if (stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
@@ -46,8 +46,7 @@ public class ExpressionStat extends Expression {
     @Override
     public int getValueInteger(Context context) {
         if (getDataType(context) != DataType.INTEGER) throw new UnsupportedOperationException();
-        if (stat != null && stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
-        if (stat == null) return 0;
+        if (stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
@@ -64,8 +63,7 @@ public class ExpressionStat extends Expression {
     @Override
     public float getValueFloat(Context context) {
         if (getDataType(context) != DataType.FLOAT) throw new UnsupportedOperationException();
-        if (stat != null && stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
-        if (stat == null) return 0.0f;
+        if (stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
@@ -82,8 +80,7 @@ public class ExpressionStat extends Expression {
     @Override
     public String getValueString(Context context) {
         if (getDataType(context) != DataType.STRING) throw new UnsupportedOperationException();
-        if (stat != null && stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
-        if (stat == null) return null;
+        if (stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
@@ -100,8 +97,7 @@ public class ExpressionStat extends Expression {
     @Override
     public Set<String> getValueStringSet(Context context) {
         if (getDataType(context) != DataType.STRING_SET) throw new UnsupportedOperationException();
-        if (stat != null && stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
-        if (stat == null) return null;
+        if (stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
         String statName = stat.getValueString(context);
         Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
         if (valueExpression == null) {
@@ -118,20 +114,35 @@ public class ExpressionStat extends Expression {
     @Override
     public Inventory getValueInventory(Context context) {
         if (getDataType(context) != DataType.INVENTORY) throw new UnsupportedOperationException();
-        if (stat != null && stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
-        return holder.getHolder(context).getInventory();
+        if (stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
+        String statName = stat.getValueString(context);
+        Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
+        if (valueExpression == null) {
+            context.game().log().print("ExpressionStat - stat " + statName + " does not exist on holder " + holder.getHolder(context));
+            return null;
+        }
+        if (valueExpression.getDataType(context) != getDataType(context)) {
+            context.game().log().print("ExpressionStat " + statName + " has mismatched data type (stat type: " + valueExpression.getDataType(context) + ", expression type: " + getDataType(context) + ")");
+            return null;
+        }
+        return valueExpression.getValueInventory(context);
     }
 
     @Override
     public Noun getValueNoun(Context context) {
         if (getDataType(context) != DataType.NOUN) throw new UnsupportedOperationException();
-        if (stat != null && stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
-        StatHolder statHolderObject = holder.getHolder(context);
-        if (statHolderObject instanceof Noun) {
-            return (Noun) statHolderObject;
-        } else {
-            throw new IllegalArgumentException("Specified StatHolder is not a Noun");
+        if (stat.getDataType(context) != DataType.STRING) throw new IllegalArgumentException("ExpressionStat stat parameter is not a string");
+        String statName = stat.getValueString(context);
+        Expression valueExpression = holder.getHolder(context).getStatValue(statName, context);
+        if (valueExpression == null) {
+            context.game().log().print("ExpressionStat - stat " + statName + " does not exist on holder " + holder.getHolder(context));
+            return null;
         }
+        if (valueExpression.getDataType(context) != getDataType(context)) {
+            context.game().log().print("ExpressionStat " + statName + " has mismatched data type (stat type: " + valueExpression.getDataType(context) + ", expression type: " + getDataType(context) + ")");
+            return null;
+        }
+        return valueExpression.getValueNoun(context);
     }
 
 }

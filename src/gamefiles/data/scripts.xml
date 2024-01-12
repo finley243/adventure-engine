@@ -26,19 +26,19 @@
             </value>
         </script>
         <script type="transferItem" transferType="instance">
-            <fromInv holder="subject"/>
-            <toInv holder="area">
+            <fromInv type="stat" holder="subject" stat="inventory"/>
+            <toInv type="stat" holder="area" stat="inventory">
                 <holderID type="parameter" name="dropAreaID"/>
             </toInv>
             <item type="parameter" name="equippedItemID"/>
         </script>
         <script type="setVariable" name="item">
-            <value type="stat" dataType="noun" holder="item">
+            <value type="stat" stat="noun" holder="item">
                 <holderID type="parameter" name="equippedItemID"/>
             </value>
         </script>
         <script type="setVariable" name="area">
-            <value type="stat" dataType="noun" holder="area">
+            <value type="stat" stat="noun" holder="area">
                 <holderID type="parameter" name="dropAreaID"/>
             </value>
         </script>
@@ -83,19 +83,19 @@
             </value>
         </script>
         <script type="transferItem" transferType="instance">
-            <fromInv holder="subject"/>
-            <toInv holder="area">
+            <fromInv type="stat" holder="subject" stat="inventory"/>
+            <toInv type="stat" holder="area" stat="inventory">
                 <holderID type="parameter" name="dropAreaID"/>
             </toInv>
             <item type="parameter" name="equippedItemID"/>
         </script>
         <script type="setVariable" name="item">
-            <value type="stat" dataType="noun" holder="item">
+            <value type="stat" stat="noun" holder="item">
                 <holderID type="parameter" name="equippedItemID"/>
             </value>
         </script>
         <script type="setVariable" name="area">
-            <value type="stat" dataType="noun" holder="area">
+            <value type="stat" stat="noun" holder="area">
                 <holderID type="parameter" name="dropAreaID"/>
             </value>
         </script>

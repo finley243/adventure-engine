@@ -62,11 +62,7 @@ public class Data {
 	private final Map<String, Skill> skills = new HashMap<>();
 	private final Map<String, SenseType> senseTypes = new HashMap<>();
 
-	private final Map<String, Boolean> globalBooleans = new HashMap<>();
-	private final Map<String, Integer> globalIntegers = new HashMap<>();
-	private final Map<String, Float> globalFloats = new HashMap<>();
-	private final Map<String, String> globalStrings = new HashMap<>();
-	private final Map<String, Set<String>> globalStringSets = new HashMap<>();
+	private final Map<String, Expression> globalExpressions = new HashMap<>();
 
 	public Data(Game game) {
 		this.game = game;
@@ -115,11 +111,7 @@ public class Data {
 		attributes.clear();
 		skills.clear();
 		senseTypes.clear();
-		globalIntegers.clear();
-		globalFloats.clear();
-		globalBooleans.clear();
-		globalStrings.clear();
-		globalStringSets.clear();
+		globalExpressions.clear();
 		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
 		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getConfig("playerStats"));
 		addActor(player.getID(), player);
@@ -145,11 +137,11 @@ public class Data {
 		for(Scene topic : scenes.values()) {
 			state.addAll(topic.saveState());
 		}
-		for(String variable : globalIntegers.keySet()) {
+		/*for(String variable : globalIntegers.keySet()) {
 			if(globalIntegers.get(variable) != 0) {
 				state.add(new SaveData(SaveData.DataType.VARIABLE, variable, null, globalIntegers.get(variable)));
 			}
-		}
+		}*/
 		state.addAll(dateTime().saveState());
 		return state;
 	}
@@ -467,54 +459,15 @@ public class Data {
 		return senseTypes.keySet();
 	}
 
-	public void setGlobalBoolean(String id, boolean value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
-		globalBooleans.put(id, value);
+	public void setGlobalExpression(String id, Expression value) {
+		if (id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
+		// TODO - Enforce only storing constant values
+		globalExpressions.put(id, value);
 	}
 
-	public boolean getGlobalBoolean(String id) {
-		if(!globalBooleans.containsKey(id)) return false;
-		return globalBooleans.get(id);
-	}
-
-	public void setGlobalInteger(String id, int value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
-		globalIntegers.put(id, value);
-	}
-
-	public int getGlobalInteger(String id) {
-		if(!globalIntegers.containsKey(id)) return 0;
-		return globalIntegers.get(id);
-	}
-
-	public void setGlobalFloat(String id, float value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
-		globalFloats.put(id, value);
-	}
-
-	public float getGlobalFloat(String id) {
-		if(!globalFloats.containsKey(id)) return 0.0f;
-		return globalFloats.get(id);
-	}
-
-	public void setGlobalString(String id, String value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
-		globalStrings.put(id, value);
-	}
-
-	public String getGlobalString(String id) {
-		if(!globalStrings.containsKey(id)) return null;
-		return globalStrings.get(id);
-	}
-
-	public void setGlobalStringSet(String id, Set<String> value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
-		globalStringSets.put(id, value);
-	}
-
-	public Set<String> getGlobalStringSet(String id) {
-		if(!globalStringSets.containsKey(id)) return null;
-		return globalStringSets.get(id);
+	public Expression getGlobalExpression(String id) {
+		if (!globalExpressions.containsKey(id)) return null;
+		return globalExpressions.get(id);
 	}
 	
 }

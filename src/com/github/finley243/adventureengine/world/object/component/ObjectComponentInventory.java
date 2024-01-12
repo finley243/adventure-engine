@@ -1,9 +1,13 @@
 package com.github.finley243.adventureengine.world.object.component;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.expression.ExpressionConstantInventory;
+import com.github.finley243.adventureengine.expression.ExpressionConstantNoun;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -49,6 +53,14 @@ public class ObjectComponentInventory extends ObjectComponent {
     @Override
     protected String getStatName() {
         return "inventory";
+    }
+
+    @Override
+    public Expression getStatValue(String name, Context context) {
+        return switch (name) {
+            case "inventory" -> (inventory == null ? null : new ExpressionConstantInventory(inventory));
+            default -> super.getStatValue(name, context);
+        };
     }
 
     @Override

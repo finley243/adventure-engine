@@ -10,9 +10,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.event.ScriptEvent;
-import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
+import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
@@ -236,6 +234,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
+			case "inventory" -> (getComponentOfType(ObjectComponentInventory.class) == null ? null : new ExpressionConstantInventory(getComponentOfType(ObjectComponentInventory.class).getInventory()));
+			case "noun" -> new ExpressionConstantNoun(this);
 			case "enabled" -> new ExpressionConstantBoolean(isEnabled);
 			case "hidden" -> new ExpressionConstantBoolean(isHidden);
 			case "guarded" -> new ExpressionConstantBoolean(isGuarded());

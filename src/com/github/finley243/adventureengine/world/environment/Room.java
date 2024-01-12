@@ -6,9 +6,7 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.ScriptEvent;
-import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
+import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -169,6 +167,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
+			case "noun" -> new ExpressionConstantNoun(this);
 			case "visited" -> new ExpressionConstantBoolean(hasVisited());
 			case "id" -> new ExpressionConstantString(getID());
 			case "owner_faction" -> new ExpressionConstantString(ownerFaction);

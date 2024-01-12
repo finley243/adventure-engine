@@ -27,7 +27,7 @@
             <line>He hands you a white keycard with the Stratis Hotel logo.</line>
             <scriptPost type="all">
                 <script type="transferItem" item="stratis_room_key">
-                    <toInv holder="player"/>
+                    <toInv holder="player" stat="inventory"/>
                 </script>
                 <script type="modifyState" stat="money" holder="player" value="-300"/>
                 <script type="setGlobal" globalID="purchased_stratis_room" value="true"/>

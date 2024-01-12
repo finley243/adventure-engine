@@ -8,9 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.ScriptEvent;
-import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
-import com.github.finley243.adventureengine.expression.ExpressionConstantStringSet;
+import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -392,6 +390,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
+			case "inventory" -> (itemInventory == null ? null : new ExpressionConstantInventory(itemInventory));
+			case "noun" -> new ExpressionConstantNoun(this);
 			case "id" -> new ExpressionConstantString(getID());
 			case "name" -> new ExpressionConstantString(getName());
 			case "relative_name" -> new ExpressionConstantString(getRelativeName());

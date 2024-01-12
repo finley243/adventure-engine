@@ -4,10 +4,10 @@
         <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
         <script>
             <script type="setVariable" name="area">
-                <value dataType="noun" type="stat" holder="parentArea"/>
+                <value stat="noun" type="stat" holder="parentArea"/>
             </script>
             <script type="setVariable" name="vehicle">
-                <value dataType="noun" type="stat" holder="parentObject"/>
+                <value stat="noun" type="stat" holder="parentObject"/>
             </script>
             <script type="sensoryEvent">
                 <phrase>driveTo</phrase>
@@ -27,10 +27,10 @@
         <prompt>Drive</prompt>
         <script>
             <script type="setVariable" name="area">
-                <value dataType="noun" type="stat" holder="parentArea"/>
+                <value stat="noun" type="stat" holder="parentArea"/>
             </script>
             <script type="setVariable" name="vehicle">
-                <value dataType="noun" type="stat" holder="parentObject"/>
+                <value stat="noun" type="stat" holder="parentObject"/>
             </script>
             <script type="sensoryEvent">
                 <phrase>driveCorner</phrase>
