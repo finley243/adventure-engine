@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.Script;
 
 import java.util.*;
 
@@ -78,10 +79,6 @@ public class StatStringSet extends Stat {
         return mods;
     }
 
-    public record StatStringSetMod(Condition condition, Set<String> addition, Set<String> cancellation) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
-        }
-    }
+    public record StatStringSetMod(Script condition, Set<String> addition, Set<String> cancellation) {}
 
 }

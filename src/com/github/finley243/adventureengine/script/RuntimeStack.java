@@ -36,7 +36,10 @@ public class RuntimeStack {
 
     public void addTempExpressionToMap(String name, Expression expression) {
         if (stack.peek() == null) throw new UnsupportedOperationException("Runtime stack is empty");
-        stack.peek().tempExpressionMap.put(name, expression);
+        if (!stack.peek().tempExpressionMap.containsKey(name)) {
+            stack.peek().tempExpressionMap.put(name, new ArrayList<>());
+        }
+        stack.peek().tempExpressionMap.get(name).add(expression);
     }
 
     public List<Expression> getTempExpressionList() {
@@ -44,7 +47,7 @@ public class RuntimeStack {
         return stack.peek().tempExpressionList;
     }
 
-    public Expression getTempExpressionFromMap(String name) {
+    public List<Expression> getTempExpressionsFromMap(String name) {
         if (stack.peek() == null) throw new UnsupportedOperationException("Runtime stack is empty");
         return stack.peek().tempExpressionMap.get(name);
     }
@@ -102,7 +105,7 @@ public class RuntimeStack {
         public final Deque<Expression> expressionQueue;
         public final Deque<Map.Entry<Item, Integer>> itemQueue;
         public final List<Expression> tempExpressionList;
-        public final Map<String, Expression> tempExpressionMap;
+        public final Map<String, List<Expression>> tempExpressionMap;
 
         public StackData(Context context, ScriptReturnTarget returnTarget, Deque<Expression> expressionQueue, Deque<Map.Entry<Item, Integer>> itemQueue) {
             this.context = context;
