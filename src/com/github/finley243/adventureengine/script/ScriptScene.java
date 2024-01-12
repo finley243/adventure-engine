@@ -26,41 +26,15 @@ public class ScriptScene extends Script {
     @Override
     public void execute(RuntimeStack runtimeStack) {
         Context context = runtimeStack.getContext();
-        if (scenes.getDataType(context) != Expression.DataType.STRING && scenes.getDataType(context) != Expression.DataType.STRING_SET) throw new IllegalArgumentException("ScriptScene scenes is not a string or string set");
+        if (scenes.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptScene scenes is not a string");
         if (!(actor.getHolder(context) instanceof Actor actorCast)) {
             return;
         }
         context.game().eventQueue().addToFront(new ScriptResumeEvent(runtimeStack, new ScriptReturnData(null, false, false, null)));
         if (scenes.getDataType(context) == Expression.DataType.STRING) {
             context.game().eventQueue().addToFront(new SceneEvent(context.game().data().getScene(scenes.getValueString(context)), null, new Context(context, actorCast, actorCast)));
-        } else {
-            Set<Scene> sceneValues = new HashSet<>();
-            for (String sceneID : scenes.getValueStringSet(context)) {
-                sceneValues.add(context.game().data().getScene(sceneID));
-            }
-            Scene selectedScene = selectScene(context, sceneValues);
-            context.game().eventQueue().addToFront(new SceneEvent(selectedScene, null, new Context(context, actorCast, actorCast)));
         }
         context.game().eventQueue().startExecution();
-    }
-
-    private static Scene selectScene(Context context, Set<Scene> scenes) {
-        Set<Scene> validScenes = new HashSet<>();
-        int maxPriority = 0;
-        for (Scene scene : scenes) {
-            if (scene.canChoose(context)) {
-                if (scene.getPriority() > maxPriority) {
-                    validScenes.clear();
-                    validScenes.add(scene);
-                } else if (scene.getPriority() == maxPriority) {
-                    validScenes.add(scene);
-                }
-            }
-        }
-        if (validScenes.isEmpty()) {
-            return null;
-        }
-        return MathUtils.selectRandomFromSet(validScenes);
     }
 
 }

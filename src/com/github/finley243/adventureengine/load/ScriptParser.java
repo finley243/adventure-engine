@@ -417,15 +417,15 @@ public class ScriptParser {
         if (tokens.getFirst().type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             return parseExpression(tokens.subList(1, tokens.size() - 1));
         } else if (tokens.size() == 1 && tokens.getFirst().type == ScriptTokenType.NAME) {
-            return new ExpressionParameter(tokens.getFirst().value);
+            return new ScriptExpression(new ExpressionParameter(tokens.getFirst().value));
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("stat")) {
             ScriptStatReference statReference = parseStatReference(tokens);
             return new ExpressionStat(statReference.statHolder(), statReference.name());
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("global")) {
             ScriptGlobalReference globalReference = parseGlobalReference(tokens);
-            return new ExpressionGlobal(globalReference.name());
+            return new ScriptExpression(new ExpressionGlobal(Expression.constant(globalReference.name())));
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("game")) {
-            return parseGameValue(tokens);
+            return new ScriptExpression(parseGameValue(tokens));
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             String functionName = tokens.getFirst().value;
             List<ScriptExternal.ParameterContainer> parameters = parseFunctionCallParameters(tokens.subList(2, tokens.size() - 1));
@@ -433,7 +433,7 @@ public class ScriptParser {
         } else {
             Expression literalExpression = parseLiteral(tokens);
             if (literalExpression == null) throw new IllegalArgumentException("Expression contains an invalid value");
-            return literalExpression;
+            return new ScriptExpression(literalExpression);
         }
     }
 
