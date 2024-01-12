@@ -46,6 +46,10 @@ public class StatString extends Stat {
         getTarget().onStatChange(getName());
     }
 
+    public List<StatStringMod> getMods() {
+        return mods;
+    }
+
     public record StatStringMod(Condition condition, String value) {
         public boolean shouldApply(Context context) {
             return condition == null || condition.isMet(context);

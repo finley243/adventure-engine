@@ -28,7 +28,7 @@ public class ObjectComponentLink extends ObjectComponent {
 
     public WorldObject getLinkedObject(String linkID) {
         Context context = new Context(getObject().game(), getObject());
-        Expression linkedObjectExpression = getObject().getStatValue(linkID + "_object", context);
+        Expression linkedObjectExpression = getObject().getLocalVariable(linkID + "_object");
         if (linkedObjectExpression == null) {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - linked object local variable is missing");
             return null;
@@ -43,7 +43,7 @@ public class ObjectComponentLink extends ObjectComponent {
 
     public AreaLink.CompassDirection getDirection(String linkID) {
         Context context = new Context(getObject().game(), getObject());
-        Expression directionExpression = getObject().getStatValue(linkID + "_dir", context);
+        Expression directionExpression = getObject().getLocalVariable(linkID + "_dir");
         if (directionExpression == null) {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - direction local variable is missing");
             return null;

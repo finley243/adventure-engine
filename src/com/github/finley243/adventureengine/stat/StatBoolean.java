@@ -49,6 +49,10 @@ public class StatBoolean extends Stat {
         getTarget().onStatChange(getName());
     }
 
+    public List<StatBooleanMod> getMods() {
+        return mods;
+    }
+
     public record StatBooleanMod(Condition condition, boolean value) {
         public boolean shouldApply(Context context) {
             return condition == null || condition.isMet(context);

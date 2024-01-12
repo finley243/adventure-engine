@@ -38,6 +38,10 @@ public class StatFloat extends Stat {
         getTarget().onStatChange(getName());
     }
 
+    public List<StatFloatMod> getMods() {
+        return mods;
+    }
+
     public record StatFloatMod(Condition condition, float add, float mult) {
         public boolean shouldApply(Context context) {
             return condition == null || condition.isMet(context);

@@ -14,6 +14,7 @@ public abstract class Expression {
 
     public abstract DataType getDataType(Context context);
 
+    // TODO - Remove context from expression function parameters (if a context is needed, it should probably be a script, not an expression)
     public boolean getValueBoolean(Context context) {
         throw new UnsupportedOperationException("Invalid data type function: boolean");
     }

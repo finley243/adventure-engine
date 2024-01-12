@@ -2,10 +2,11 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.script.Script;
 
 public interface StatHolder {
 
-    Expression getStatValue(String name, Context context);
+    Script getStatValue(String name, Context context);
 
     /**
      * Sets a static stat with the given name to the given value

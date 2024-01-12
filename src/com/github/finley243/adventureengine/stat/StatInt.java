@@ -39,6 +39,10 @@ public class StatInt extends Stat {
         getTarget().onStatChange(getName());
     }
 
+    public List<StatIntMod> getMods() {
+        return mods;
+    }
+
     public record StatIntMod(Condition condition, int add, float mult) {
         public boolean shouldApply(Context context) {
             return condition == null || condition.isMet(context);

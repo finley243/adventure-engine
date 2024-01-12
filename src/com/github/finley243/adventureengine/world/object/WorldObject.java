@@ -244,8 +244,12 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			case "template_id" -> new ExpressionConstantString(templateID);
 			case "area" -> new ExpressionConstantString(getArea().getID());
 			case "room" -> new ExpressionConstantString(getArea().getRoom().getID());
-			default -> localVars.getOrDefault(name, getTemplate().getLocalVarsDefault().get(name));
+			default -> getLocalVariable(name);
 		};
+	}
+
+	public Expression getLocalVariable(String name) {
+		return localVars.getOrDefault(name, getTemplate().getLocalVarsDefault().get(name));
 	}
 
 	@Override

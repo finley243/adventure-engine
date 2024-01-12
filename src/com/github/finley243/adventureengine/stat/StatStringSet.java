@@ -74,6 +74,10 @@ public class StatStringSet extends Stat {
         }
     }
 
+    public List<StatStringSetMod> getMods() {
+        return mods;
+    }
+
     public record StatStringSetMod(Condition condition, Set<String> addition, Set<String> cancellation) {
         public boolean shouldApply(Context context) {
             return condition == null || condition.isMet(context);
