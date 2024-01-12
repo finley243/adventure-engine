@@ -1103,8 +1103,7 @@ public class DataLoader {
                 return new ObjectComponentTemplateInventory(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
-                Expression networkID = loadExpressionOrAttribute(componentElement, "networkID", "string");
-                return new ObjectComponentTemplateNetwork(startEnabled, actionsRestricted, networkID);
+                return new ObjectComponentTemplateNetwork(startEnabled, actionsRestricted);
             }
             case "link" -> {
                 Map<String, ObjectComponentTemplateLink.ObjectLinkData> linkData = new HashMap<>();
