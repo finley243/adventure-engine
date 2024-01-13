@@ -124,8 +124,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public void onNewGameInit() {
 		if (!startDead) {
-			//HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
-			HP = getTemplate().getMaxHP();
+			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
 		}
 		for (String damageType : game().data().getDamageTypeIDs()) {
 			this.damageResistance.put(damageType, new StatInt("damage_resist_" + damageType, this));
@@ -235,9 +234,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 	
-	/*public int getAttribute(String attribute, Context context) {
+	public int getAttribute(String attribute, Context context) {
 		return attributes.get(attribute).value(attributesBase.get(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context);
-	}*/
+	}
 
 	public int getAttributeBase(String attribute) {
 		return attributesBase.get(attribute);
@@ -251,9 +250,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 
-	/*public int getSkill(String skill, Context context) {
+	public int getSkill(String skill, Context context) {
 		return skills.get(skill).value(skillsBase.get(skill), SKILL_MIN, SKILL_MAX, context);
-	}*/
+	}
 
 	public int getSkillBase(String skill) {
 		return skillsBase.get(skill);
@@ -275,12 +274,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return game().data().getFaction(getTemplate().getFaction());
 	}
 	
-	/*public boolean canMove(Context context) {
+	public boolean canMove(Context context) {
 		if (isUsingObject()) {
 			return false;
 		}
 		return canMove.value(true, context);
-	}*/
+	}
 
 	public boolean canPerformLocalActions() {
 		if (isUsingObject()) {
@@ -289,9 +288,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return true;
 	}
 
-	/*public boolean canDodge(Context context) {
+	public boolean canDodge(Context context) {
 		return canDodge.value(true, context);
-	}*/
+	}
 
 	public boolean isInCover() {
 		if (isUsingObject()) {
@@ -328,25 +327,25 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return getTemplate().getEquipSlots();
 	}
 
-	/*public int getMaxHP() {
+	public int getMaxHP() {
 		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
-	}*/
+	}
 
-	/*public int getDamageResistance(String damageType, Context context) {
+	public int getDamageResistance(String damageType, Context context) {
 		return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, context);
-	}*/
+	}
 
-	/*public float getDamageMult(String damageType, Context context) {
+	public float getDamageMult(String damageType, Context context) {
 		return damageMult.get(damageType).value(getTemplate().getDamageMult(damageType), 0.0f, MAX_DAMAGE_MULT, context);
-	}*/
+	}
 
-	/*public int getActionPoints() {
+	public int getActionPoints() {
 		return actionPoints.value(getTemplate().getActionPoints(), 0, MAX_ACTION_POINTS, new Context(game(), this, this));
-	}*/
+	}
 
-	/*public int getMovePoints() {
+	public int getMovePoints() {
 		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, new Context(game(), this, this));
-	}*/
+	}
 
 	@Override
 	public boolean canBeAttacked() {
@@ -809,39 +808,39 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public Script getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context) {
 		if (name.startsWith("damage_resist_")) {
 			for (String damageType : game().data().getDamageTypeIDs()) {
 				if (name.equals("damage_resist_" + damageType)) {
-					return new ScriptDynamicStatInteger(damageResistance.get(damageType), getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST);
+					return Expression.constant(getDamageResistance(damageType, context));
 				}
 			}
 			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
-			return Script.constant(0);
+			return Expression.constant(0);
 		} else if (name.startsWith("attribute_")) {
 			for (String attribute : game().data().getAttributeIDs()) {
 				if (name.equals("attribute_" + attribute)) {
-					return new ScriptDynamicStatInteger(attributes.get(attribute), attributesBase.get(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX);
+					return Expression.constant(getAttribute(attribute, context));
 				}
 			}
 			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid attribute");
-			return Script.constant(0);
+			return Expression.constant(0);
 		} else if (name.startsWith("skill_")) {
 			for (String skill : game().data().getSkillIDs()) {
 				if (name.equals("skill_" + skill)) {
-					return new ScriptDynamicStatInteger(skills.get(skill), skillsBase.get(skill), SKILL_MIN, SKILL_MAX);
+					return Expression.constant(getSkill(skill, context));
 				}
 			}
 			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid skill");
-			return Script.constant(0);
+			return Expression.constant(0);
 		} else if (name.startsWith("damage_mult_")) {
 			for (String damageType : game().data().getDamageTypeIDs()) {
 				if (name.equals("damage_mult_" + damageType)) {
-					return new ScriptDynamicStatFloat(damageMult.get(damageType), getTemplate().getDamageMult(damageType), 0, MAX_DAMAGE_MULT);
+					return Expression.constant(getDamageMult(damageType, context));
 				}
 			}
 			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
-			return Script.constant(0.0f);
+			return Expression.constant(0.0f);
 		} else if (name.startsWith("has_equipped_")) {
 			for (String slot : getTemplate().getEquipSlots().keySet()) {
 				if (name.equals("has_equipped_" + slot)) {
@@ -849,32 +848,32 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				}
 			}
 			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid equip slot");
-			return Script.constant(false);
+			return Expression.constant(false);
 		}
 		return switch (name) {
-			case "inventory" -> (getInventory() == null ? null : Script.constant(getInventory()));
-			case "noun" -> Script.constant(this);
-			case "max_hp" -> new ScriptDynamicStatInteger(maxHP, getTemplate().getMaxHP(), 0, MAX_HP);
-			case "hp" -> Script.constant(HP);
-			case "action_points" -> new ScriptDynamicStatInteger(actionPoints, getTemplate().getActionPoints(), 0, MAX_ACTION_POINTS);
-			case "move_points" -> new ScriptDynamicStatInteger(movePoints, getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS);
-			case "money" -> Script.constant(money);
-			case "enabled" -> Script.constant(isEnabled);
-			case "sleeping" -> Script.constant(isSleeping);
-			case "in_combat" -> Script.constant(isInCombat());
-			case "using_object" -> Script.constant(isUsingObject());
-			case "in_cover" -> Script.constant(isInCover());
-			case "dead" -> Script.constant(isDead);
-			case "active" -> Script.constant(isActive());
-			case "can_move" -> isUsingObject() ? Script.constant(false) : new ScriptDynamicStatBoolean(canMove, true);
-			case "can_dodge" -> new ScriptDynamicStatBoolean(canDodge, true);
-			case "id" -> Script.constant(getID());
-			case "template_id" -> Script.constant(templateID);
-			case "area" -> Script.constant(getArea().getID());
-			case "room" -> Script.constant(getArea().getRoom().getID());
-			case "equipment_effects" -> new ScriptDynamicStatStringSet(equipmentEffects, new HashSet<>());
-			case "sense_types" -> new ScriptDynamicStatStringSet(senseTypes, getTemplate().getSenseTypes());
-			case "tags" -> new ScriptDynamicStatStringSet(tags, getTemplate().getTags());
+			case "inventory" -> (getInventory() == null ? null : Expression.constant(getInventory()));
+			case "noun" -> Expression.constant(this);
+			case "max_hp" -> Expression.constant(getMaxHP());
+			case "hp" -> Expression.constant(HP);
+			case "action_points" -> Expression.constant(getActionPoints());
+			case "move_points" -> Expression.constant(getMovePoints());
+			case "money" -> Expression.constant(money);
+			case "enabled" -> Expression.constant(isEnabled);
+			case "sleeping" -> Expression.constant(isSleeping);
+			case "in_combat" -> Expression.constant(isInCombat());
+			case "using_object" -> Expression.constant(isUsingObject());
+			case "in_cover" -> Expression.constant(isInCover());
+			case "dead" -> Expression.constant(isDead);
+			case "active" -> Expression.constant(isActive());
+			case "can_move" -> Expression.constant(canMove(context));
+			case "can_dodge" -> Expression.constant(canDodge(context));
+			case "id" -> Expression.constant(getID());
+			case "template_id" -> Expression.constant(templateID);
+			case "area" -> Expression.constant(getArea().getID());
+			case "room" -> Expression.constant(getArea().getRoom().getID());
+			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), context));
+			case "sense_types" -> Expression.constant(senseTypes.value(getTemplate().getSenseTypes(), context));
+			case "tags" -> Expression.constant(tags.value(getTemplate().getTags(), context));
 			default -> null;
 		};
 	}

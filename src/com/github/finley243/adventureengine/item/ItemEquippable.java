@@ -7,9 +7,9 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionItemEquip;
 import com.github.finley243.adventureengine.action.ActionItemUnequip;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.template.EquippableTemplate;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.StatHolder;
 
 import java.util.ArrayList;
@@ -88,9 +88,9 @@ public class ItemEquippable extends Item {
 	}
 
 	@Override
-	public Script getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context) {
 		if ("has_equipped_actor".equals(name)) {
-			return Script.constant(equippedActor != null);
+			return Expression.constant(equippedActor != null);
 		}
 		return super.getStatValue(name, context);
 	}

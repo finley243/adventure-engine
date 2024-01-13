@@ -8,51 +8,45 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ScriptIterator extends Script implements ScriptReturnTarget {
+public class ScriptIterator extends Script {
 
-    private final Expression setExpression;
+    private final Script setExpression;
     private final String iteratorParameterName;
     private final Script iteratedScript;
 
-    public ScriptIterator(Expression setExpression, String iteratorParameterName, Script iteratedScript) {
+    public ScriptIterator(Script setExpression, String iteratorParameterName, Script iteratedScript) {
         this.setExpression = setExpression;
         this.iteratorParameterName = iteratorParameterName;
         this.iteratedScript = iteratedScript;
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        Set<String> stringSet = setExpression.getValueStringSet(runtimeStack.getContext());
+    public ScriptReturnData execute(Context context) {
+        ScriptReturnData setResult = setExpression.execute(context);
+        if (setResult.error() != null) {
+            return setResult;
+        } else if (setResult.isReturn()) {
+            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (setResult.value() == null) {
+            return new ScriptReturnData(null, false, false, "Expression did not receive a value");
+        } else if (setResult.value().getDataType(context) != Expression.DataType.STRING_SET) {
+            return new ScriptReturnData(null, false, false, "Expression expected a set");
+        }
+        Set<String> stringSet = setResult.value().getValueStringSet(context);
         List<Expression> expressions = new ArrayList<>(stringSet.size());
         for (String setValue : stringSet) {
             expressions.add(Expression.constant(setValue));
         }
-        runtimeStack.addContextExpressionIterator(runtimeStack.getContext(), null, expressions);
-        executeNextIteration(runtimeStack);
-    }
-
-    private void executeNextIteration(RuntimeStack runtimeStack) {
-        Expression currentExpression = runtimeStack.removeQueuedExpression();
-        Context innerContext = new Context(runtimeStack.getContext(), new MapBuilder<String, Expression>().put(iteratorParameterName, currentExpression).build());
-        runtimeStack.addContext(innerContext, this);
-        iteratedScript.execute(runtimeStack);
-    }
-
-    @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
-        runtimeStack.closeContext();
-        if (scriptReturnData.error() != null) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturnData);
-        } else if (scriptReturnData.isReturn()) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturnData);
-        } else if (runtimeStack.expressionQueueIsEmpty()) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
-        } else {
-            executeNextIteration(runtimeStack);
+        for (Expression currentExpression : expressions) {
+            Context innerContext = new Context(context, new MapBuilder<String, Expression>().put(iteratorParameterName, currentExpression).build());
+            ScriptReturnData scriptResult = iteratedScript.execute(innerContext);
+            if (scriptResult.error() != null) {
+                return scriptResult;
+            } else if (scriptResult.isReturn()) {
+                return scriptResult;
+            }
         }
+        return new ScriptReturnData(null, false, false, null);
     }
 
 }

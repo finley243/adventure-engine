@@ -6,7 +6,7 @@ import com.github.finley243.adventureengine.script.Script;
 
 public interface StatHolder {
 
-    Script getStatValue(String name, Context context);
+    Expression getStatValue(String name, Context context);
 
     /**
      * Sets a static stat with the given name to the given value

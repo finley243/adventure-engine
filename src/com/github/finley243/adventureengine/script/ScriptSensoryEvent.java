@@ -27,17 +27,16 @@ public class ScriptSensoryEvent extends Script {
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        Context context = runtimeStack.getContext();
+    public ScriptReturnData execute(Context context) {
         Area[] originAreas = getOriginAreas(context);
         Map<String, String> contextVars = context.getTextVarMap();
         Map<String, Noun> contextNouns = context.getContextNounMap();
         TextContext textContext = new TextContext(contextVars, contextNouns);
         String phraseString = (phrase == null ? null : phrase.getValueString(context));
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString(context));
-        context.game().eventQueue().addToFront(new ScriptResumeEvent(runtimeStack, new ScriptReturnData(null, false, false, null)));
-        context.game().eventQueue().addToFront(new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, isDetectedBySelf, false, context.getParentAction(), null, context.getSubject(), context.getTarget()));
-        context.game().eventQueue().startExecution();
+        SensoryEvent sensoryEvent = new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, isDetectedBySelf, false, context.getParentAction(), null, context.getSubject(), context.getTarget());
+        sensoryEvent.execute(context.game());
+        return new ScriptReturnData(null, false, false, null);
     }
 
     private Area[] getOriginAreas(Context context) {

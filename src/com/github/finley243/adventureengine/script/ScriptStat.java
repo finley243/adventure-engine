@@ -1,37 +1,34 @@
 package com.github.finley243.adventureengine.script;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 
-public class ScriptStat extends Script implements ScriptReturnTarget {
+public class ScriptStat extends Script {
 
     private final StatHolderReference statHolder;
-    private final Expression statName;
+    private final Script statName;
 
-    public ScriptStat(StatHolderReference statHolder, Expression statName) {
+    public ScriptStat(StatHolderReference statHolder, Script statName) {
         this.statHolder = statHolder;
         this.statName = statName;
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        if (statName.getDataType(runtimeStack.getContext()) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptDynamicStat statName is not a string");
-        String statNameValue = statName.getValueString(runtimeStack.getContext());
-        Script statScript = statHolder.getHolder(runtimeStack.getContext()).getStatValue(statNameValue, runtimeStack.getContext());
-        runtimeStack.addContext(runtimeStack.getContext(), this);
-        statScript.execute(runtimeStack);
-    }
-
-    @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
-        runtimeStack.closeContext();
-        if (scriptReturnData.error() != null) {
-            sendReturn(runtimeStack, scriptReturnData);
-        } else if (scriptReturnData.isReturn()) {
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, "Expression cannot contain a return statement"));
-        } else {
-            sendReturn(runtimeStack, scriptReturnData);
+    public ScriptReturnData execute(Context context) {
+        ScriptReturnData nameResult = statName.execute(context);
+        if (nameResult.error() != null) {
+            return nameResult;
+        } else if (nameResult.isReturn()) {
+            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (nameResult.value() == null) {
+            return new ScriptReturnData(null, false, false, "Expression did not receive a value");
+        } else if (nameResult.value().getDataType(context) != Expression.DataType.STRING) {
+            return new ScriptReturnData(null, false, false, "Expression expected a string value");
         }
+        String statNameValue = nameResult.value().getValueString(context);
+        Expression statValue = statHolder.getHolder(context).getStatValue(statNameValue, context);
+        return new ScriptReturnData(statValue, false, false, null);
     }
 
 }

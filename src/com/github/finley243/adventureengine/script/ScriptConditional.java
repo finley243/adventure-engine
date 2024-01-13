@@ -2,10 +2,11 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.List;
 
-public class ScriptConditional extends Script implements ScriptReturnTarget {
+public class ScriptConditional extends Script {
 
     private final List<ConditionalScriptPair> conditionalScriptPairs;
     private final Script scriptElse;
@@ -16,58 +17,33 @@ public class ScriptConditional extends Script implements ScriptReturnTarget {
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        runtimeStack.addContext(runtimeStack.getContext(), null);
-        executeNextIteration(runtimeStack);
-    }
-
-    private void executeNextIteration(RuntimeStack runtimeStack) {
-        if (runtimeStack.getIndex() >= conditionalScriptPairs.size() + (scriptElse == null ? 0 : 1)) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
-        } else if (runtimeStack.getIndex() == conditionalScriptPairs.size() && scriptElse != null) {
-            runtimeStack.incrementIndex();
-            Context innerContext = new Context(runtimeStack.getContext(), true);
-            runtimeStack.addContext(innerContext, this);
-            scriptElse.execute(runtimeStack);
-        } else {
-            ConditionalScriptPair currentBranch = conditionalScriptPairs.get(runtimeStack.getIndex());
-            runtimeStack.incrementIndex();
-            if (currentBranch.condition.isMet(runtimeStack.getContext())) {
-                Context innerContext = new Context(runtimeStack.getContext(), true);
-                runtimeStack.addContext(innerContext, this);
-                currentBranch.script.execute(runtimeStack);
-            } else {
-                executeNextIteration(runtimeStack);
+    public ScriptReturnData execute(Context context) {
+        for (ConditionalScriptPair scriptPair : conditionalScriptPairs) {
+            ScriptReturnData conditionResult = scriptPair.condition.execute(context);
+            if (conditionResult.error() != null) {
+                return conditionResult;
+            } else if (conditionResult.isReturn()) {
+                return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+            } else if (conditionResult.value() == null) {
+                return new ScriptReturnData(null, false, false, "Expression did not return a value");
+            } else if (conditionResult.value().getDataType(context) != Expression.DataType.BOOLEAN) {
+                return new ScriptReturnData(null, false, false, "Expression did not return a boolean value");
+            }
+            if (conditionResult.value().getValueBoolean(context)) {
+                return scriptPair.script.execute(context);
             }
         }
-    }
-
-    @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
-        runtimeStack.closeContext();
-        if (scriptReturnData.error() != null) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturnData);
-        } else if (scriptReturnData.isReturn()) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturnData);
-        } else if (runtimeStack.expressionQueueIsEmpty()) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
-        } else if (runtimeStack.getIndex() >= conditionalScriptPairs.size() + (scriptElse == null ? 0 : 1)) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
-        } else {
-            executeNextIteration(runtimeStack);
+        if (scriptElse != null) {
+            return scriptElse.execute(context);
         }
+        return new ScriptReturnData(null, false, false, null);
     }
 
     public static class ConditionalScriptPair {
-        private final Condition condition;
+        private final Script condition;
         private final Script script;
 
-        public ConditionalScriptPair(Condition condition, Script script) {
+        public ConditionalScriptPair(Script condition, Script script) {
             this.condition = condition;
             this.script = script;
         }

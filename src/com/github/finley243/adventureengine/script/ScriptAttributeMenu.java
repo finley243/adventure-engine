@@ -19,14 +19,13 @@ public class ScriptAttributeMenu extends Script {
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        Context context = runtimeStack.getContext();
+    public ScriptReturnData execute(Context context) {
         if (points.getDataType(context) != Expression.DataType.INTEGER) throw new IllegalArgumentException("Points expression is not an integer");
         if (!(actorReference.getHolder(context) instanceof Actor actor)) throw new IllegalArgumentException("Actor reference is not a valid actor");
         int pointsValue = points.getValueInteger(context);
-        context.game().eventQueue().addToFront(new ScriptResumeEvent(runtimeStack, new ScriptReturnData(null, false, false, null)));
-        context.game().eventQueue().addToFront(new AttributeMenuEvent(actor, pointsValue));
-        context.game().eventQueue().startExecution();
+        AttributeMenuEvent menuEvent = new AttributeMenuEvent(actor, pointsValue);
+        context.game().menuManager().attributeMenu(menuEvent, context.game(), actor, pointsValue);
+        return new ScriptReturnData(null, false, false, null);
     }
 
 }

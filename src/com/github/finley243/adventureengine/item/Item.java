@@ -12,7 +12,6 @@ import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
@@ -105,11 +104,11 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Script getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
-			case "inventory" -> (currentInventory == null ? null : Script.constant(currentInventory));
-			case "noun" -> Script.constant(this);
-			case "id" -> Script.constant(getID());
+			case "inventory" -> (currentInventory == null ? null : Expression.constant(currentInventory));
+			case "noun" -> Expression.constant(this);
+			case "id" -> Expression.constant(getID());
 			default -> null;
 		};
 	}

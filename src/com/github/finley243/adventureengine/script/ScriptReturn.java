@@ -1,18 +1,24 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.Context;
 
 public class ScriptReturn extends Script {
 
-    private final Expression expressionReturn;
+    private final Script scriptReturn;
 
-    public ScriptReturn(Expression expressionReturn) {
-        this.expressionReturn = expressionReturn;
+    public ScriptReturn(Script scriptReturn) {
+        this.scriptReturn = scriptReturn;
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        sendReturn(runtimeStack, new ScriptReturnData(expressionReturn, true, false, null));
+    public ScriptReturnData execute(Context context) {
+        ScriptReturnData scriptResult = scriptReturn.execute(context);
+        if (scriptResult.error() != null) {
+            return scriptResult;
+        } else if (scriptResult.isReturn()) {
+            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        }
+        return new ScriptReturnData(scriptResult.value(), true, false, null);
     }
 
 }

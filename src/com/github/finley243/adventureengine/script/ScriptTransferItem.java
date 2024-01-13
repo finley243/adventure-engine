@@ -39,8 +39,7 @@ public class ScriptTransferItem extends Script {
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        Context context = runtimeStack.getContext();
+    public ScriptReturnData execute(Context context) {
         if (inventoryOrigin != null && inventoryOrigin.getDataType(context) != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryOrigin is not an inventory");
         if (inventoryTarget != null && inventoryTarget.getDataType(context) != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptTransferItem inventoryTarget is not an inventory");
         if (itemID != null && itemID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTransferItem itemID is not a string");
@@ -82,7 +81,7 @@ public class ScriptTransferItem extends Script {
                 }
             }
         }
-        sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
+        return new ScriptReturnData(null, false, false, null);
     }
 
 }

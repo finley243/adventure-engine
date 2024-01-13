@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionCompare;
 
-public class ScriptComparator extends Script implements ScriptReturnTarget {
+public class ScriptComparator extends Script {
 
     private final Script firstScript;
     private final Script secondScript;
@@ -17,38 +17,31 @@ public class ScriptComparator extends Script implements ScriptReturnTarget {
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        runtimeStack.addContext(runtimeStack.getContext(), this);
-        firstScript.execute(runtimeStack);
-    }
-
-    @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
-        if (scriptReturnData.error() != null) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturnData);
-        } else if (scriptReturnData.isReturn()) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, "Expression cannot contain a return statement"));
-        } else if (scriptReturnData.value() == null) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, "Expression did not receive a value"));
-        } else if (runtimeStack.getTempExpressionList().size() == 1) {
-            Expression firstScriptValue = runtimeStack.getTempExpressionList().getFirst();
-            Expression secondScriptValue = scriptReturnData.value();
-            if (!firstScriptValue.canCompareTo(secondScriptValue, runtimeStack.getContext())) {
-                runtimeStack.closeContext();
-                sendReturn(runtimeStack, new ScriptReturnData(null, false, false, "Expression received values that could not be compared"));
-            } else {
-                boolean comparatorResult = compareExpressions(firstScriptValue, secondScriptValue, runtimeStack.getContext());
-                runtimeStack.closeContext();
-                sendReturn(runtimeStack, new ScriptReturnData(Expression.constant(comparatorResult), false, false, null));
-            }
-        } else {
-            Expression firstScriptValue = scriptReturnData.value();
-            runtimeStack.addTempExpressionToList(firstScriptValue);
-            secondScript.execute(runtimeStack);
+    public ScriptReturnData execute(Context context) {
+        ScriptReturnData firstReturn = firstScript.execute(context);
+        if (firstReturn.error() != null) {
+            return firstReturn;
+        } else if (firstReturn.isReturn()) {
+            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
         }
+        ScriptReturnData secondReturn = secondScript.execute(context);
+        if (secondReturn.error() != null) {
+            return secondReturn;
+        } else if (secondReturn.isReturn()) {
+            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        }
+        if (firstReturn.value() == null || secondReturn.value() == null) {
+            if (comparator != ExpressionCompare.Comparator.EQUAL && comparator != ExpressionCompare.Comparator.NOT_EQUAL) {
+                return new ScriptReturnData(null, false, false, "Expression has invalid comparator for null value");
+            }
+            Expression compareNullResult = Expression.constant(compareExpressionsNull(firstReturn.value(), secondReturn.value()));
+            return new ScriptReturnData(compareNullResult, false, false, null);
+        }
+        if (!firstReturn.value().canCompareTo(secondReturn.value(), context)) {
+            return new ScriptReturnData(null, false, false, "Expression received values that could not be compared");
+        }
+        Expression compareResult = Expression.constant(compareExpressions(firstReturn.value(), secondReturn.value(), context));
+        return new ScriptReturnData(compareResult, false, false, null);
     }
 
     private boolean compareExpressions(Expression expression1, Expression expression2, Context context) {
@@ -84,6 +77,14 @@ public class ScriptComparator extends Script implements ScriptReturnTarget {
             return expression1.getValueStringSet(context).equals(expression2.getValueStringSet(context));
         }
         return false;
+    }
+
+    private boolean compareExpressionsNull(Expression expression1, Expression expression2) {
+        if (comparator == ExpressionCompare.Comparator.EQUAL) {
+            return expression1 == null && expression2 == null;
+        } else {
+            return expression1 != null || expression2 != null;
+        }
     }
 
     private boolean comparatorCheckFloat(float value1, float value2, ExpressionCompare.Comparator comparator) {

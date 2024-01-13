@@ -18,8 +18,7 @@ public class ScriptNearestActorWithScript extends Script {
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        Context context = runtimeStack.getContext();
+    public ScriptReturnData execute(Context context) {
         if (trigger.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptNearestActorWithScript trigger is not a string");
         // TODO - Improve efficiency of nearest actor check
         List<Actor> nearestActor = new ArrayList<>();
@@ -43,7 +42,7 @@ public class ScriptNearestActorWithScript extends Script {
             boolean executed = nearActor.triggerScript(triggerValue, context);
             if (executed) break;
         }
-        sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
+        return new ScriptReturnData(null, false, false, null);
     }
 
 }

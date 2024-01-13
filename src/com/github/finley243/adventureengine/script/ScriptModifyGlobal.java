@@ -15,8 +15,7 @@ public class ScriptModifyGlobal extends Script {
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        Context context = runtimeStack.getContext();
+    public ScriptReturnData execute(Context context) {
         if (globalID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyGlobal globalID is not a string");
         String globalIDValue = globalID.getValueString(context);
         if (context.game().data().getGlobalExpression(globalIDValue).getDataType(context) != expression.getDataType(context)) throw new IllegalArgumentException("ScriptModifyGlobal expression data type does not match global");
@@ -32,7 +31,7 @@ public class ScriptModifyGlobal extends Script {
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType(context));
         }
-        sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
+        return new ScriptReturnData(null, false, false, null);
     }
 
 }

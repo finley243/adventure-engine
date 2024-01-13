@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.menu.MenuManager;
+import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.*;
@@ -34,6 +35,7 @@ public class Game {
 	private final EventQueue eventQueue;
 	private final MenuManager menuManager;
 	private final DebugLogger debugLogger;
+	private final ThreadControl threadControl;
 
 	private final Data data;
 
@@ -46,6 +48,7 @@ public class Game {
 		eventBus = new EventBus();
 		eventQueue = new EventQueue(this);
 		menuManager = new MenuManager();
+		threadControl = new ThreadControl(this);
 		eventBus().register(menuManager);
 		data = new Data(this);
 
@@ -101,6 +104,10 @@ public class Game {
 
 	public MenuManager menuManager() {
 		return menuManager;
+	}
+
+	public ThreadControl threadControl() {
+		return threadControl;
 	}
 
 	public DebugLogger log() {

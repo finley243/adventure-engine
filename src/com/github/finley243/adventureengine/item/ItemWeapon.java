@@ -8,9 +8,9 @@ import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.EffectComponent;
 import com.github.finley243.adventureengine.combat.WeaponClass;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.template.WeaponTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
-import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -76,13 +76,13 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return getWeaponClass().isRanged();
 	}
 	
-	/*public int getDamage(Context context) {
+	public int getDamage(Context context) {
 		return damage.value(getWeaponTemplate().getDamage(), 1, 1000, context);
 	}
 	
 	public int getRate(Context context) {
 		return rate.value(getWeaponTemplate().getRate(), 1, 50, context);
-	}*/
+	}
 
 	public float getBaseHitChanceMin() {
 		return isRanged() ? HIT_CHANCE_BASE_RANGED_MIN : HIT_CHANCE_BASE_MELEE_MIN;
@@ -92,7 +92,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 		return isRanged() ? HIT_CHANCE_BASE_RANGED_MAX : HIT_CHANCE_BASE_MELEE_MAX;
 	}
 	
-	/*public int getCritDamage(Context context) {
+	public int getCritDamage(Context context) {
 		return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000, context);
 	}
 
@@ -122,7 +122,7 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 
 	public String getDamageType(Context context) {
 		return damageType.value(getWeaponTemplate().getDamageType(), context);
-	}*/
+	}
 
 	public int getAmmoRemaining() {
 		return ammoCount;
@@ -312,20 +312,20 @@ public class ItemWeapon extends ItemEquippable implements MutableStatHolder {
 	}
 
 	@Override
-	public Script getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
-			case "damage" -> new ScriptDynamicStatInteger(damage, getWeaponTemplate().getDamage(), 1, 1000);
-			case "rate" -> new ScriptDynamicStatInteger(rate, getWeaponTemplate().getRate(), 1, 50);
-			case "crit_damage" -> new ScriptDynamicStatInteger(critDamage, getWeaponTemplate().getCritDamage(), 0, 1000);
-			case "clip_size" -> new ScriptDynamicStatInteger(clipSize, getWeaponTemplate().getClipSize(), 1, 100);
-			case "reload_action_points" -> new ScriptDynamicStatInteger(reloadActionPoints, getWeaponTemplate().getReloadActionPoints(), 0, 1000);
-			case "ammo_count" -> Script.constant(ammoCount);
-			case "armor_mult" -> new ScriptDynamicStatFloat(armorMult, getWeaponTemplate().getArmorMult(), 0.0f, 2.0f);
-			case "is_silenced" -> new ScriptDynamicStatBoolean(isSilenced, getWeaponTemplate().isSilenced());
-			case "damage_type" -> new ScriptDynamicStatString(damageType, getWeaponTemplate().getDamageType());
-			case "attack_types" -> new ScriptDynamicStatStringSet(attackTypes, getWeaponClass().getAttackTypes());
-			case "ranges" -> new ScriptDynamicStatStringSet(ranges, getWeaponClass().getPrimaryRangesAsStrings());
-			case "target_effects" -> new ScriptDynamicStatStringSet(targetEffects, getWeaponTemplate().getTargetEffects());
+			case "damage" -> Expression.constant(getDamage(context));
+			case "rate" -> Expression.constant(getRate(context));
+			case "crit_damage" -> Expression.constant(getCritDamage(context));
+			case "clip_size" -> Expression.constant(getClipSize());
+			case "reload_action_points" -> Expression.constant(getReloadActionPoints(context));
+			case "ammo_count" -> Expression.constant(ammoCount);
+			case "armor_mult" -> Expression.constant(getArmorMult(context));
+			case "is_silenced" -> Expression.constant(isSilenced(context));
+			case "damage_type" -> Expression.constant(getDamageType(context));
+			case "attack_types" -> Expression.constant(getAttackTypes());
+			case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().getPrimaryRanges(), context));
+			case "target_effects" -> Expression.constant(getTargetEffects(context));
 			default -> super.getStatValue(name, context);
 		};
 	}

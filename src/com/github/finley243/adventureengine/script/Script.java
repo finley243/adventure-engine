@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -14,13 +15,13 @@ public abstract class Script {
 	/**
 	 * Begin execution of the script
 	 *
-	 * @param runtimeStack
+	 * @param context
 	 */
-	public abstract void execute(RuntimeStack runtimeStack);
+	public abstract ScriptReturnData execute(Context context);
 
-	protected void sendReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
+	/*protected void sendReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
 		runtimeStack.getReturnTarget().onScriptReturn(runtimeStack, scriptReturnData);
-	}
+	}*/
 
 	public record ScriptReturnData(Expression value, boolean isReturn, boolean isBreak, String error) {}
 

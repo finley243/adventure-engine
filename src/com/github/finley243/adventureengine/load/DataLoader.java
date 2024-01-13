@@ -97,16 +97,16 @@ public class DataLoader {
                                     Room room = loadRoom(game, currentElement);
                                     game.data().addRoom(room.getID(), room);
                                 }
-                                case "script" -> {
+                                /*case "script" -> {
                                     String scriptID = LoadUtils.attribute(currentElement, "id", null);
                                     Script script = loadScript(currentElement);
                                     game.data().addScript(scriptID, script);
-                                }
-                                case "expression" -> {
+                                }*/
+                                /*case "expression" -> {
                                     String expressionID = LoadUtils.attribute(currentElement, "id", null);
                                     Expression expression = loadExpression(currentElement, null);
                                     game.data().addExpression(expressionID, expression);
-                                }
+                                }*/
                                 case "effect" -> {
                                     Effect effect = loadEffect(game, currentElement);
                                     game.data().addEffect(effect.getID(), effect);

@@ -2,28 +2,33 @@ package com.github.finley243.adventureengine.condition;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptConditional;
 
 /**
  * A pre-condition that can be checked
  */
 public class Condition {
 
-	private final boolean invert;
-	private final Expression expression;
+	private final Script expression;
 
-	public Condition(boolean invert, Expression expression) {
+	public Condition(Script expression) {
 		if (expression == null) throw new IllegalArgumentException("Condition expression is null");
-		this.invert = invert;
 		this.expression = expression;
 	}
 	
 	public boolean isMet(Context context) {
-		return isMetInternal(context) != invert;
-	}
-
-	private boolean isMetInternal(Context context) {
-		if (expression.getDataType(context) != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("Condition expression is not a boolean");
-		return expression.getValueBoolean(context);
+		Script.ScriptReturnData result = expression.execute(context);
+		if (result.error() != null) {
+			throw new IllegalArgumentException("Condition expression encountered an error during execution");
+		} else if (result.isReturn()) {
+			throw new IllegalArgumentException("Condition expression contains an unexpected return statement");
+		} else if (result.value() == null) {
+			throw new IllegalArgumentException("Condition expression did not return a value");
+		} else if (result.value().getDataType(context) != Expression.DataType.BOOLEAN) {
+			throw new IllegalArgumentException("Condition expression did not return a boolean value");
+		}
+		return result.value().getValueBoolean(context);
 	}
 
 }

@@ -8,47 +8,39 @@ import com.github.finley243.adventureengine.item.Item;
 
 import java.util.Map;
 
-public class ScriptInventoryIterator extends Script implements ScriptReturnTarget {
+public class ScriptInventoryIterator extends Script {
 
-    private final Expression inventoryExpression;
+    private final Script inventoryExpression;
     private final Script iteratedScript;
 
-    public ScriptInventoryIterator(Expression inventoryExpression, Script iteratedScript) {
+    public ScriptInventoryIterator(Script inventoryExpression, Script iteratedScript) {
         this.inventoryExpression = inventoryExpression;
         this.iteratedScript = iteratedScript;
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        if (inventoryExpression.getDataType(runtimeStack.getContext()) != Expression.DataType.INVENTORY) throw new IllegalArgumentException("ScriptInventoryIterator inventory expression is not an inventory");
-        Inventory inventory = inventoryExpression.getValueInventory(runtimeStack.getContext());
-        Map<Item, Integer> itemMap = inventory.getItemMap();
-        runtimeStack.addContextItemIterator(runtimeStack.getContext(), null, itemMap.entrySet());
-        executeNextIteration(runtimeStack);
-    }
-
-    private void executeNextIteration(RuntimeStack runtimeStack) {
-        Map.Entry<Item, Integer> currentItem = runtimeStack.removeQueuedItem();
-        Context innerContext = new Context(runtimeStack.getContext(), new MapBuilder<String, Expression>().put("count", Expression.constant(currentItem.getValue())).build(), currentItem.getKey());
-        runtimeStack.addContext(innerContext, this);
-        iteratedScript.execute(runtimeStack);
-    }
-
-    @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
-        runtimeStack.closeContext();
-        if (scriptReturnData.error() != null) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturnData);
-        } else if (scriptReturnData.isReturn()) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturnData);
-        } else if (runtimeStack.itemQueueIsEmpty()) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
-        } else {
-            executeNextIteration(runtimeStack);
+    public ScriptReturnData execute(Context context) {
+        ScriptReturnData setResult = inventoryExpression.execute(context);
+        if (setResult.error() != null) {
+            return setResult;
+        } else if (setResult.isReturn()) {
+            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (setResult.value() == null) {
+            return new ScriptReturnData(null, false, false, "Expression did not receive a value");
+        } else if (setResult.value().getDataType(context) != Expression.DataType.INVENTORY) {
+            return new ScriptReturnData(null, false, false, "Expression expected an inventory");
         }
+        Inventory inventory = setResult.value().getValueInventory(context);
+        for (Map.Entry<Item, Integer> currentItem : inventory.getItemMap().entrySet()) {
+            Context innerContext = new Context(context, new MapBuilder<String, Expression>().put("count", Expression.constant(currentItem.getValue())).build(), currentItem.getKey());
+            ScriptReturnData scriptResult = iteratedScript.execute(innerContext);
+            if (scriptResult.error() != null) {
+                return scriptResult;
+            } else if (scriptResult.isReturn()) {
+                return scriptResult;
+            }
+        }
+        return new ScriptReturnData(null, false, false, null);
     }
 
 }

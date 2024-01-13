@@ -3,7 +3,7 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
-public class ScriptSubtract extends Script implements ScriptReturnTarget {
+public class ScriptSubtract extends Script {
 
     private final Script firstScript;
     private final Script secondScript;
@@ -14,38 +14,28 @@ public class ScriptSubtract extends Script implements ScriptReturnTarget {
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        runtimeStack.addContext(runtimeStack.getContext(), this);
-        firstScript.execute(runtimeStack);
-    }
-
-    @Override
-    public void onScriptReturn(RuntimeStack runtimeStack, ScriptReturnData scriptReturnData) {
-        if (scriptReturnData.error() != null) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, scriptReturnData);
-        } else if (scriptReturnData.isReturn()) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, "Expression cannot contain a return statement"));
-        } else if (scriptReturnData.value() == null) {
-            runtimeStack.closeContext();
-            sendReturn(runtimeStack, new ScriptReturnData(null, false, false, "Expression did not receive a value"));
-        } else if (runtimeStack.getTempExpressionList().size() == 1) {
-            Expression firstScriptValue = runtimeStack.getTempExpressionList().getFirst();
-            Expression secondScriptValue = scriptReturnData.value();
-            if (canSubtractExpressions(firstScriptValue, secondScriptValue, runtimeStack.getContext())) {
-                Expression subtractResult = subtractExpressions(firstScriptValue, secondScriptValue, runtimeStack.getContext());
-                runtimeStack.closeContext();
-                sendReturn(runtimeStack, new ScriptReturnData(subtractResult, false, false, null));
-            } else {
-                runtimeStack.closeContext();
-                sendReturn(runtimeStack, new ScriptReturnData(null, false, false, "Expression received values that could not be subtracted"));
-            }
-        } else {
-            Expression firstScriptValue = scriptReturnData.value();
-            runtimeStack.addTempExpressionToList(firstScriptValue);
-            secondScript.execute(runtimeStack);
+    public ScriptReturnData execute(Context context) {
+        ScriptReturnData firstReturn = firstScript.execute(context);
+        if (firstReturn.error() != null) {
+            return firstReturn;
+        } else if (firstReturn.isReturn()) {
+            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (firstReturn.value() == null) {
+            return new ScriptReturnData(null, false, false, "Expression did not receive a value");
         }
+        ScriptReturnData secondReturn = secondScript.execute(context);
+        if (secondReturn.error() != null) {
+            return secondReturn;
+        } else if (secondReturn.isReturn()) {
+            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (secondReturn.value() == null) {
+            return new ScriptReturnData(null, false, false, "Expression did not receive a value");
+        }
+        if (!canSubtractExpressions(firstReturn.value(), secondReturn.value(), context)) {
+            return new ScriptReturnData(null, false, false, "Expression received values that could not be subtracted");
+        }
+        Expression subtractResult = subtractExpressions(firstReturn.value(), secondReturn.value(), context);
+        return new ScriptReturnData(subtractResult, false, false, null);
     }
 
     private boolean canSubtractExpressions(Expression firstExpression, Expression secondExpression, Context context) {

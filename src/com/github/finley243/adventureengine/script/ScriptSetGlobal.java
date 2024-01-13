@@ -15,13 +15,12 @@ public class ScriptSetGlobal extends Script {
     }
 
     @Override
-    public void execute(RuntimeStack runtimeStack) {
-        Context context = runtimeStack.getContext();
+    public ScriptReturnData execute(Context context) {
         if (globalID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptSetGlobal globalID is not a string");
         String globalIDValue = globalID.getValueString(context);
         Expression expressionConstant = Expression.convertToConstant(expression, context);
         context.game().data().setGlobalExpression(globalIDValue, expressionConstant);
-        sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
+        return new ScriptReturnData(null, false, false, null);
     }
 
 }

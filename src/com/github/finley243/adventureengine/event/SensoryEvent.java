@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class SensoryEvent implements QueuedEvent {
+public class SensoryEvent {
 
 	private final Area[] origins;
 	private final String lineVisible;
@@ -102,7 +102,6 @@ public class SensoryEvent implements QueuedEvent {
 		return isLoud;
 	}
 
-	@Override
 	public void execute(Game game) {
 		Map<Area, Set<Area>> lineOfSightAreas = new HashMap<>(); // Key = origin, Value = line of sight areas
 		for (Area origin : getOrigins()) {

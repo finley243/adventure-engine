@@ -16,10 +16,9 @@ public class ScriptFactionRelation extends Script {
 	}
 
 	@Override
-	public void execute(RuntimeStack runtimeStack) {
-		Context context = runtimeStack.getContext();
+	public ScriptReturnData execute(Context context) {
 		context.game().data().getFaction(targetFaction).setRelation(relationFaction, relation);
-		sendReturn(runtimeStack, new ScriptReturnData(null, false, false, null));
+		return new ScriptReturnData(null, false, false, null);
 	}
 
 }
