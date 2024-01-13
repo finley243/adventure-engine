@@ -635,7 +635,7 @@ public class ScriptParser {
         }
     }
 
-    private record ScriptParameter(String name, Expression defaultValue) {}
+    public record ScriptParameter(String name, Expression defaultValue) {}
 
     private record ScriptTokenFunction(List<ScriptToken> header, List<ScriptToken> parameters, List<ScriptToken> body) {}
 

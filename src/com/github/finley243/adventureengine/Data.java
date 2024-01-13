@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.DataLoader;
 import com.github.finley243.adventureengine.load.SaveData;
+import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.network.Network;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -48,8 +49,7 @@ public class Data {
 	private final Map<String, WeaponClass> weaponClasses = new HashMap<>();
 	private final Map<String, WeaponAttackType> attackTypes = new HashMap<>();
 	private final Map<String, Scene> scenes = new HashMap<>();
-	private final Map<String, Script> scripts = new HashMap<>();
-	private final Map<String, Expression> expressions = new HashMap<>();
+	private final Map<String, ScriptParser.ScriptData> scripts = new HashMap<>();
 	private final Map<String, Faction> factions = new HashMap<>();
 	private final Map<String, Network> networks = new HashMap<>();
 	private final Map<String, Timer> timers = new HashMap<>();
@@ -312,24 +312,14 @@ public class Data {
 		return scenes.get(id);
 	}
 
-	public void addScript(String id, Script value) {
+	public void addScript(String id, ScriptParser.ScriptData value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add script with blank ID");
 		if(scripts.containsKey(id)) throw new IllegalArgumentException("Cannot add script with existing ID: " + id);
 		scripts.put(id, value);
 	}
 
-	public Script getScript(String id) {
+	public ScriptParser.ScriptData getScript(String id) {
 		return scripts.get(id);
-	}
-
-	public void addExpression(String id, Expression value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add expression with blank ID");
-		if(expressions.containsKey(id)) throw new IllegalArgumentException("Cannot add expression with existing ID: " + id);
-		expressions.put(id, value);
-	}
-
-	public Expression getExpression(String id) {
-		return expressions.get(id);
 	}
 	
 	public void addFaction(String id, Faction value) {
@@ -461,7 +451,6 @@ public class Data {
 
 	public void setGlobalExpression(String id, Expression value) {
 		if (id.trim().isEmpty()) throw new IllegalArgumentException("Cannot set global variable with blank ID");
-		// TODO - Enforce only storing constant values
 		globalExpressions.put(id, value);
 	}
 
