@@ -60,8 +60,8 @@ public class ScriptDynamicStatInteger extends Script implements ScriptReturnTarg
                 for (Expression addExpression : runtimeStack.getTempExpressionsFromMap("add")) {
                     addSum += addExpression.getValueInteger(runtimeStack.getContext());
                 }
-                for (Expression addExpression : runtimeStack.getTempExpressionsFromMap("mult")) {
-                    multSum += addExpression.getValueFloat(runtimeStack.getContext());
+                for (Expression multExpression : runtimeStack.getTempExpressionsFromMap("mult")) {
+                    multSum += multExpression.getValueFloat(runtimeStack.getContext());
                 }
                 int moddedValue = MathUtils.bound(Math.round(base * (multSum + 1.0f)) + addSum, min, max);
                 runtimeStack.closeContext();

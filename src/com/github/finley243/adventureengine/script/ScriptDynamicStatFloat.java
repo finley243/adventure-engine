@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatFloat;
-import com.github.finley243.adventureengine.stat.StatInt;
 
 public class ScriptDynamicStatFloat extends Script implements ScriptReturnTarget {
 
@@ -61,8 +60,8 @@ public class ScriptDynamicStatFloat extends Script implements ScriptReturnTarget
                 for (Expression addExpression : runtimeStack.getTempExpressionsFromMap("add")) {
                     addSum += addExpression.getValueFloat(runtimeStack.getContext());
                 }
-                for (Expression addExpression : runtimeStack.getTempExpressionsFromMap("mult")) {
-                    multSum += addExpression.getValueFloat(runtimeStack.getContext());
+                for (Expression multExpression : runtimeStack.getTempExpressionsFromMap("mult")) {
+                    multSum += multExpression.getValueFloat(runtimeStack.getContext());
                 }
                 float moddedValue = MathUtils.bound((base * (multSum + 1.0f)) + addSum, min, max);
                 runtimeStack.closeContext();

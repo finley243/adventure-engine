@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class WeaponClass {
@@ -54,6 +55,14 @@ public class WeaponClass {
 
     public Set<AreaLink.DistanceCategory> getPrimaryRanges() {
         return primaryRanges;
+    }
+
+    public Set<String> getPrimaryRangesAsStrings() {
+        Set<String> ranges = new HashSet<>();
+        for (AreaLink.DistanceCategory distanceCategory : primaryRanges) {
+            ranges.add(distanceCategory.toString());
+        }
+        return ranges;
     }
 
     public boolean usesAmmo() {

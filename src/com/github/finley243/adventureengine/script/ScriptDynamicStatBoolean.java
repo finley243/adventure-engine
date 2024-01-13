@@ -1,9 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
-import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatBoolean;
-import com.github.finley243.adventureengine.stat.StatFloat;
 
 public class ScriptDynamicStatBoolean extends Script implements ScriptReturnTarget {
 

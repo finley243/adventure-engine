@@ -8,13 +8,11 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantInventory;
-import com.github.finley243.adventureengine.expression.ExpressionConstantNoun;
-import com.github.finley243.adventureengine.expression.ExpressionConstantString;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
@@ -107,11 +105,11 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Script getStatValue(String name, Context context) {
 		return switch (name) {
-			case "inventory" -> (currentInventory == null ? null : new ExpressionConstantInventory(currentInventory));
-			case "noun" -> new ExpressionConstantNoun(this);
-			case "id" -> new ExpressionConstantString(getID());
+			case "inventory" -> (currentInventory == null ? null : Script.constant(currentInventory));
+			case "noun" -> Script.constant(this);
+			case "id" -> Script.constant(getID());
 			default -> null;
 		};
 	}
