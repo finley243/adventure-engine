@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -39,7 +38,8 @@ public abstract class Behavior {
 
     public void triggerRoundScript(Actor subject) {
         if (eachRoundScript != null) {
-            subject.game().eventQueue().addToEnd(new ScriptEvent(eachRoundScript, new Context(subject.game(), subject, subject)));
+            Context context = new Context(subject.game(), subject, subject);
+            eachRoundScript.execute(context);
         }
     }
 

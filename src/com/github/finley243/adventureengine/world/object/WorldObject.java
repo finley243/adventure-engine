@@ -8,7 +8,6 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.Damage;
-import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
@@ -222,7 +221,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 
 	public void triggerScript(String entryPoint, Context context) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
-			game().eventQueue().addToEnd(new ScriptEvent(getTemplate().getScripts().get(entryPoint), context));
+			getTemplate().getScripts().get(entryPoint).execute(context);
 		}
 	}
 

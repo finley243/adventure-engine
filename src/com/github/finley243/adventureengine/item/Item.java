@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
@@ -68,7 +67,8 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if(getTemplate().getScripts().containsKey(entryPoint)) {
-			game().eventQueue().addToEnd(new ScriptEvent(getTemplate().getScripts().get(entryPoint), new Context(game(), subject, target, this)));
+			Context context = new Context(game(), subject, target, this);
+			getTemplate().getScripts().get(entryPoint).execute(context);
 		}
 	}
 

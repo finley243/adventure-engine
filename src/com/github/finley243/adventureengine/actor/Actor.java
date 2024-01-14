@@ -354,7 +354,34 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public void damage(Damage damage, Context context) {
-		game().eventQueue().addToFront(new DamageActorEvent(this, damage, context));
+		for (String effectID : damage.getTargetEffects()) {
+			getEffectComponent().addEffect(effectID);
+		}
+		int amount = damage.getAmount();
+		int equipmentResistance;
+		float equipmentMult;
+		if (damage.getLimb() != null) {
+			equipmentResistance = getEquipmentComponent().getDamageResistanceLimb(damage.getLimb().getID(), damage.getType());
+			equipmentMult = getEquipmentComponent().getDamageMultLimb(damage.getLimb().getID(), damage.getType());
+		} else {
+			equipmentResistance = getEquipmentComponent().getDamageResistanceMain(damage.getType());
+			equipmentMult = getEquipmentComponent().getDamageMultMain(damage.getType());
+		}
+		int actorResistance = getDamageResistance(damage.getType(), context);
+		float actorMult = getDamageMult(damage.getType(), context);
+		// TODO - Add additional armor mult for damage mults (part of the Damage object, affected by weapons/attacks/etc.)
+		amount -= Math.round(equipmentResistance * damage.getArmorMult());
+		amount -= Math.round(amount * equipmentMult);
+		amount -= Math.round(actorResistance * damage.getArmorMult());
+		amount -= Math.round(amount * actorMult);
+		if (damage.getLimb() != null) {
+			amount = Math.round(amount * damage.getLimb().getDamageMult());
+		}
+		if (amount < 0) amount = 0;
+		if (damage.getLimb() != null && amount > 0) {
+			damage.getLimb().applyEffects(this);
+		}
+		modifyHP(-amount, context);
 	}
 
 	public void modifyHP(int amount, Context context) {
@@ -362,20 +389,20 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (HP <= 0) {
 			HP = 0;
 			kill();
-		} else {
+		} else if (amount < 0) {
 			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, true, null, null, this, null));
+				(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, true, null, null, this, null)).execute(game());
 			}
-			game().eventQueue().addToEnd(new SensoryEvent(getArea(), "$actor $is $condition", textContext, true, null, null, this, null));
+			(new SensoryEvent(getArea(), "$actor $is $condition", textContext, true, null, null, this, null)).execute(game());
 		}
 	}
 	
 	public void kill() {
 		triggerScript("on_death", new Context(game(), this, this));
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
-		game().eventQueue().addToEnd(new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null, this, null));
+		(new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null, this, null)).execute(game());
 		// TODO - Enable held item dropping on death for new equipment system
 		isDead = true;
 		HP = 0;
@@ -943,7 +970,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public boolean triggerScript(String trigger, Context context) {
 		Script script = getTemplate().getScript(trigger);
 		if (script != null) {
-			game().eventQueue().addToEnd(new ScriptEvent(script, context));
+			script.execute(context);
 			return true;
 		} else {
 			return false;

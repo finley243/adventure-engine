@@ -231,16 +231,16 @@ public class ScriptParser {
                 index = endIndex + 1;
             }
         }
-        return new ScriptCompound(scripts, false);
+        return new ScriptCompound(scripts);
     }
 
     private static Script parseIf(List<ScriptIfTokens> branches, List<ScriptToken> bodyElse) {
         List<ScriptConditional.ConditionalScriptPair> conditionalScriptPairs = new ArrayList<>();
         for (ScriptIfTokens branch : branches) {
             Script conditionExpression = parseExpression(branch.condition());
-            Condition condition = new Condition(false, conditionExpression);
+            //Condition condition = new Condition(conditionExpression);
             Script scriptBranch = parseScript(branch.body());
-            conditionalScriptPairs.add(new ScriptConditional.ConditionalScriptPair(condition, scriptBranch));
+            conditionalScriptPairs.add(new ScriptConditional.ConditionalScriptPair(conditionExpression, scriptBranch));
         }
         Script scriptElse = parseScript(bodyElse);
         return new ScriptConditional(conditionalScriptPairs, scriptElse);
@@ -262,11 +262,11 @@ public class ScriptParser {
             String variableName = tokens.get(1).value;
             // TODO - Check for invalid names
             if (tokens.size() == 2) {
-                return new ScriptSetVariable(Expression.constant(variableName), null);
+                return new ScriptSetVariable(variableName, null);
             }
             if (tokens.get(2).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Variable definition is missing assignment operator");
             Script variableValue = parseExpression(tokens.subList(3, tokens.size()));
-            return new ScriptSetVariable(Expression.constant(variableName), variableValue);
+            return new ScriptSetVariable(variableName, variableValue);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             // Function call
             String functionName = tokens.getFirst().value;
@@ -284,7 +284,7 @@ public class ScriptParser {
             if (tokens.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Variable assignment is missing assignment operator");
             String variableName = tokens.getFirst().value;
             Script variableValue = parseExpression(tokens.subList(2, tokens.size()));
-            return new ScriptSetVariable(Expression.constant(variableName), variableValue);
+            return new ScriptSetVariable(variableName, variableValue);
         } else {
             throw new IllegalArgumentException("Script contains invalid instruction");
         }
@@ -464,7 +464,7 @@ public class ScriptParser {
         Script statName;
         if (lastDotIndex + 2 == tokens.size()) {
             if (tokens.getLast().type != ScriptTokenType.NAME) throw new IllegalArgumentException("Stat reference has invalid name");
-            statName = Expression.constant(tokens.getLast().value);
+            statName = Script.constant(tokens.getLast().value);
         } else if (tokens.get(lastDotIndex + 1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             statName = parseExpression(tokens.subList(lastDotIndex + 2, tokens.size() - 1));
         } else {

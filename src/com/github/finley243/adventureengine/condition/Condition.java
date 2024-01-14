@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.condition;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.Script;
-import com.github.finley243.adventureengine.script.ScriptConditional;
 
 /**
  * A pre-condition that can be checked

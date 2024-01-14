@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.AttributeMenuEvent;
-import com.github.finley243.adventureengine.event.ScriptResumeEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 

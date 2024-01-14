@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine;
 
-import com.github.finley243.adventureengine.event.ScriptEvent;
 import com.github.finley243.adventureengine.script.Script;
 
 public class Timer extends GameInstanced {
@@ -23,11 +22,11 @@ public class Timer extends GameInstanced {
         if (roundsRemaining > 0) {
             roundsRemaining -= 1;
             if (scriptUpdate != null && roundsRemaining > 0) {
-                game().eventQueue().addToEnd(new ScriptEvent(scriptUpdate, context));
+                scriptUpdate.execute(context);
             }
         }
         if (roundsRemaining <= 0 && scriptExpire != null) {
-            game().eventQueue().addToEnd(new ScriptEvent(scriptExpire, context));
+            scriptExpire.execute(context);
         }
     }
 

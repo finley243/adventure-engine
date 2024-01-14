@@ -2,10 +2,11 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.script.Script;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class StatStringSet extends Stat {
 
@@ -80,12 +81,9 @@ public class StatStringSet extends Stat {
         return mods;
     }
 
-    public record StatStringSetMod(Script condition, Set<String> addition, Set<String> cancellation) {
+    public record StatStringSetMod(Condition condition, Set<String> addition, Set<String> cancellation) {
         public boolean shouldApply(Context context) {
-            if (condition == null) return true;
-            Expression conditionResult = condition.execute().value();
-            if (conditionResult.getDataType(context) != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("Condition provided non-boolean value");
-            return conditionResult.getValueBoolean(context);
+            return condition == null || condition.isMet(context);
         }
     }
 

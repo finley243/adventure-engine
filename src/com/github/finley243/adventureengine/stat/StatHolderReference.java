@@ -2,20 +2,22 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.script.Script;
 
 public class StatHolderReference {
 
     private final String holderType;
-    private final Expression holderID;
+    private final Script holderIDScript;
     private final StatHolderReference parentReference;
 
-    public StatHolderReference(String holderType, Expression holderID, StatHolderReference parentReference) {
+    public StatHolderReference(String holderType, Script holderIDScript, StatHolderReference parentReference) {
         this.holderType = holderType;
-        this.holderID = holderID;
+        this.holderIDScript = holderIDScript;
         this.parentReference = parentReference;
     }
 
     public StatHolder getHolder(Context context) {
+        Expression holderID = computeHolderID(context);
         if (holderID != null && holderID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID must be a string");
         if (parentReference != null) {
             String holderIDValue = holderID != null ? holderID.getValueString(context) : null;
@@ -26,6 +28,7 @@ public class StatHolderReference {
     }
 
     private StatHolder getTopLevelHolder(Context context) {
+        Expression holderID = computeHolderID(context);
         String holderIDValue = holderID != null ? holderID.getValueString(context) : null;
         return switch (holderType) {
             case "object" -> context.game().data().getObject(holderIDValue);
@@ -42,6 +45,20 @@ public class StatHolderReference {
             case "target" -> context.getTarget();
             default -> context.getSubject(); // "subject"
         };
+    }
+
+    private Expression computeHolderID(Context context) {
+        Expression holderID = null;
+        if (holderIDScript != null) {
+            Script.ScriptReturnData holderIDResult = holderIDScript.execute(context);
+            if (holderIDResult.error() != null) {
+                throw new IllegalArgumentException("StatHolderReference holderID expression threw an error");
+            } else if (holderIDResult.isReturn()) {
+                throw new IllegalArgumentException("StatHolderReference holderID contains an unexpected return statement");
+            }
+            holderID = holderIDResult.value();
+        }
+        return holderID;
     }
 
 }

@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.actor.component;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.UpdateEquipmentEffectsEvent;
 import com.github.finley243.adventureengine.item.ItemArmor;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.item.ItemWeapon;
@@ -68,7 +68,14 @@ public class EquipmentComponent {
             equipped.put(slot, item);
         }
         item.onEquip(actor, slots);
-        actor.game().eventQueue().addToFront(new UpdateEquipmentEffectsEvent(true, actor, item));
+        // TODO - Expand to all equippable items (not just weapons)
+        if (item instanceof ItemWeapon weapon) {
+            Context context = new Context(actor.game(), actor, actor, item);
+            Set<String> equipmentEffects = actor.getStatValue("equipment_effects", context).getValueStringSet(context);
+            for (String equipmentEffect : equipmentEffects) {
+                weapon.getEffectComponent().addEffect(equipmentEffect);
+            }
+        }
     }
 
     public void unequip(ItemEquippable item) {
@@ -77,7 +84,13 @@ public class EquipmentComponent {
                 equipped.remove(slot);
             }
             item.onUnequip(actor);
-            actor.game().eventQueue().addToFront(new UpdateEquipmentEffectsEvent(false, actor, item));
+            if (item instanceof ItemWeapon weapon) {
+                Context context = new Context(actor.game(), actor, actor, item);
+                Set<String> equipmentEffects = actor.getStatValue("equipment_effects", context).getValueStringSet(context);
+                for (String equipmentEffect : equipmentEffects) {
+                    weapon.getEffectComponent().removeEffect(equipmentEffect);
+                }
+            }
         }
     }
 

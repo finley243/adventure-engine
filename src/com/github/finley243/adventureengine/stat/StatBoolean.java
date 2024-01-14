@@ -2,8 +2,6 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
-import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.script.Script;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,12 +57,9 @@ public class StatBoolean extends Stat {
         return mods;
     }
 
-    public record StatBooleanMod(Script condition, boolean value) {
+    public record StatBooleanMod(Condition condition, boolean value) {
         public boolean shouldApply(Context context) {
-            if (condition == null) return true;
-            Expression conditionResult = condition.execute().value();
-            if (conditionResult.getDataType(context) != Expression.DataType.BOOLEAN) throw new IllegalArgumentException("Condition provided non-boolean value");
-            return conditionResult.getValueBoolean(context);
+            return condition == null || condition.isMet(context);
         }
     }
 

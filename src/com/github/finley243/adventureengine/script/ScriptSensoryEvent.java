@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.event.ScriptResumeEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.textgen.Noun;

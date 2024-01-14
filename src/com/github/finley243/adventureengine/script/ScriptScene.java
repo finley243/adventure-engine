@@ -1,16 +1,10 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SceneEvent;
-import com.github.finley243.adventureengine.event.ScriptResumeEvent;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class ScriptScene extends Script {
 
