@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
-
 public class ExpressionConstantInteger extends Expression {
 
     private final int value;
@@ -11,12 +9,12 @@ public class ExpressionConstantInteger extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.INTEGER;
     }
 
     @Override
-    public int getValueInteger(Context context) {
+    public int getValueInteger() {
         return value;
     }
 

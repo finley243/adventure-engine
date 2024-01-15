@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
-
 public class ExpressionConstantString extends Expression {
 
     private final String value;
@@ -11,12 +9,12 @@ public class ExpressionConstantString extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.STRING;
     }
 
     @Override
-    public String getValueString(Context context) {
+    public String getValueString() {
         return value;
     }
 

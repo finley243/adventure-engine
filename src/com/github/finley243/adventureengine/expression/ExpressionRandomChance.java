@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 
 public class ExpressionRandomChance extends Expression {
@@ -13,14 +12,14 @@ public class ExpressionRandomChance extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.BOOLEAN;
     }
 
     @Override
-    public boolean getValueBoolean(Context context) {
-        if (chance.getDataType(context) != Expression.DataType.FLOAT) throw new IllegalArgumentException("ConditionRandom chance expression is not a float");
-        return MathUtils.randomCheck(chance.getValueFloat(context));
+    public boolean getValueBoolean() {
+        if (chance.getDataType() != Expression.DataType.FLOAT) throw new IllegalArgumentException("ConditionRandom chance expression is not a float");
+        return MathUtils.randomCheck(chance.getValueFloat());
     }
 
 }

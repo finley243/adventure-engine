@@ -23,14 +23,14 @@ public class ExpressionFilterSet extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.STRING_SET;
     }
 
     @Override
-    public Set<String> getValueStringSet(Context context) {
-        if (setExpression.getDataType(context) != DataType.STRING_SET) throw new IllegalArgumentException("ExpressionFilterSet setExpression is not a set");
-        Set<String> originalValues = setExpression.getValueStringSet(context);
+    public Set<String> getValueStringSet() {
+        if (setExpression.getDataType() != DataType.STRING_SET) throw new IllegalArgumentException("ExpressionFilterSet setExpression is not a set");
+        Set<String> originalValues = setExpression.getValueStringSet();
         Set<String> filteredValues = new HashSet<>();
         for (String currentValue : originalValues) {
             Expression parameter = new ExpressionConstantString(currentValue);

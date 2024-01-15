@@ -259,19 +259,19 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		}
 		switch (name) {
 			case "enabled" -> {
-				setEnabled(value.getValueBoolean(context));
+				setEnabled(value.getValueBoolean());
 				return true;
 			}
 			case "hidden" -> {
-				this.isHidden = value.getValueBoolean(context);
+				this.isHidden = value.getValueBoolean();
 				return true;
 			}
 			case "area" -> {
-				setArea(game().data().getArea(value.getValueString(context)));
+				setArea(game().data().getArea(value.getValueString()));
 				return true;
 			}
 			default -> {
-				localVars.put(name, Expression.convertToConstant(value, context));
+				localVars.put(name, Expression.convertToConstant(value));
 				return true;
 			}
 		}

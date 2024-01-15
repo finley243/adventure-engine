@@ -65,7 +65,7 @@ public abstract class ObjectComponent implements StatHolder {
     @Override
     public boolean setStatValue(String name, Expression value, Context context) {
         if ((getStatName() + "_enabled").equals(name)) {
-            setEnabled(value.getValueBoolean(context));
+            setEnabled(value.getValueBoolean());
         }
         return false;
     }

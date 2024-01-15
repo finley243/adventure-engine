@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
-
 public class ExpressionTimerActive extends Expression {
 
     private final Expression timerID;
@@ -12,14 +10,14 @@ public class ExpressionTimerActive extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.BOOLEAN;
     }
 
     @Override
-    public boolean getValueBoolean(Context context) {
-        if (timerID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ExpressionTimerActive timerID is not a string");
-        return context.game().data().isTimerActive(timerID.getValueString(context));
+    public boolean getValueBoolean() {
+        if (timerID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ExpressionTimerActive timerID is not a string");
+        return context.game().data().isTimerActive(timerID.getValueString());
     }
 
 }

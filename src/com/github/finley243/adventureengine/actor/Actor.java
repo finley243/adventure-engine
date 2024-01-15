@@ -917,7 +917,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (name.startsWith("equip_slot_block_")) {
 			for (String slot : getEquipSlots().keySet()) {
 				if (name.equals("equip_slot_block_" + slot)) {
-					getEquipmentComponent().setSlotBlocked(slot, value.getValueBoolean(context));
+					getEquipmentComponent().setSlotBlocked(slot, value.getValueBoolean());
 					return true;
 				}
 			}
@@ -926,31 +926,31 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		switch (name) {
 			case "known" -> {
-				isKnown = value.getValueBoolean(context);
+				isKnown = value.getValueBoolean();
 				return true;
 			}
 			case "enabled" -> {
-				setEnabled(value.getValueBoolean(context));
+				setEnabled(value.getValueBoolean());
 				return true;
 			}
 			case "player_controlled" -> {
-				playerControlled = value.getValueBoolean(context);
+				playerControlled = value.getValueBoolean();
 				return true;
 			}
 			case "hp" -> {
-				HP = MathUtils.bound(value.getValueInteger(context), 0, getMaxHP());
+				HP = MathUtils.bound(value.getValueInteger(), 0, getMaxHP());
 				return true;
 			}
 			case "money" -> {
-				money = value.getValueInteger(context);
+				money = value.getValueInteger();
 				return true;
 			}
 			case "area" -> {
-				setArea(game().data().getArea(value.getValueString(context)));
+				setArea(game().data().getArea(value.getValueString()));
 				return true;
 			}
 			case "alert_state" -> {
-				targetingComponent.setAlertState(LoadUtils.stringToEnum(value.getValueString(context), TargetingComponent.AlertState.class));
+				targetingComponent.setAlertState(LoadUtils.stringToEnum(value.getValueString(), TargetingComponent.AlertState.class));
 				return true;
 			}
 		}

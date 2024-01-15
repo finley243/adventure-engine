@@ -12,7 +12,7 @@ import java.util.Map;
 public class ActionTemplate extends GameInstanced {
 
     private final String prompt;
-    private final Map<String, Expression> parameters;
+    private final Map<String, Script> parameters;
     private final int actionPoints;
     // The conditions under which the action can be selected
     private final List<ConditionWithMessage> selectConditions;
@@ -20,7 +20,7 @@ public class ActionTemplate extends GameInstanced {
     private final Condition showCondition;
     private final Script script;
 
-    public ActionTemplate(Game game, String ID, String prompt, Map<String, Expression> parameters, int actionPoints, List<ConditionWithMessage> selectConditions, Condition showCondition, Script script) {
+    public ActionTemplate(Game game, String ID, String prompt, Map<String, Script> parameters, int actionPoints, List<ConditionWithMessage> selectConditions, Condition showCondition, Script script) {
         super(game, ID);
         this.prompt = prompt;
         this.parameters = parameters;
@@ -34,7 +34,7 @@ public class ActionTemplate extends GameInstanced {
         return prompt;
     }
 
-    public Map<String, Expression> getParameters() {
+    public Map<String, Script> getParameters() {
         return parameters;
     }
 

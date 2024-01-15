@@ -79,7 +79,7 @@ public class Game {
 		System.out.println("Loaded Game");*/
 
 		//System.out.println(Pathfinder.getLineOfSightAreas(data().getArea("apartment_0_3")));
-		ScriptParser.parseScripts("func drop_equipped_force_specified_slot(equippedSlot) {\n" +
+		ScriptParser.parseFunctions("func drop_equipped_force_specified_slot(equippedSlot) {\n" +
 				"\t//condition stat.subject.(\"has_equipped_\" + equippedSlot);\n" +
 				"\tif (stat.subject.(\"has_equipped_\" + equippedSlot)) {\n" +
 				"\t\tvar dropAreaID = randomStringFromSet(stat.subject.area.movable_areas);\n" +

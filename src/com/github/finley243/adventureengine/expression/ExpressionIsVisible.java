@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
 
@@ -15,12 +14,12 @@ public class ExpressionIsVisible extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.BOOLEAN;
     }
 
     @Override
-    public boolean getValueBoolean(Context context) {
+    public boolean getValueBoolean() {
         if (!(actor.getHolder(context) instanceof Actor actorCast)) {
             context.game().log().print("ExpressionIsVisible StatHolderReference actor is not an Actor");
             return false;

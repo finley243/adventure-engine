@@ -35,7 +35,7 @@ public class ActionInventoryStore extends Action {
         subject.getInventory().removeItem(item);
         inventory.addItem(item);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("inventory", owner).build());
-        subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null, subject, null));
+        (new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null, subject, null)).execute(subject.game());
         subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 

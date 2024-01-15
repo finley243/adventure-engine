@@ -39,27 +39,27 @@ public class ScriptAdd extends Script {
     }
 
     private boolean canAddExpressions(Expression firstExpression, Expression secondExpression, Context context) {
-        if (firstExpression.getDataType(context) == Expression.DataType.INTEGER || firstExpression.getDataType(context) == Expression.DataType.FLOAT) {
-            return secondExpression.getDataType(context) == Expression.DataType.INTEGER || secondExpression.getDataType(context) == Expression.DataType.FLOAT;
-        } else if (firstExpression.getDataType(context) == Expression.DataType.STRING) {
-            return secondExpression.getDataType(context) == Expression.DataType.STRING;
+        if (firstExpression.getDataType() == Expression.DataType.INTEGER || firstExpression.getDataType() == Expression.DataType.FLOAT) {
+            return secondExpression.getDataType() == Expression.DataType.INTEGER || secondExpression.getDataType() == Expression.DataType.FLOAT;
+        } else if (firstExpression.getDataType() == Expression.DataType.STRING) {
+            return secondExpression.getDataType() == Expression.DataType.STRING;
         }
         return false;
     }
 
     private Expression addExpressions(Expression firstExpression, Expression secondExpression, Context context) {
-        if (firstExpression.getDataType(context) == Expression.DataType.INTEGER && secondExpression.getDataType(context) == Expression.DataType.INTEGER) {
-            int value1 = firstExpression.getValueInteger(context);
-            int value2 = secondExpression.getValueInteger(context);
+        if (firstExpression.getDataType() == Expression.DataType.INTEGER && secondExpression.getDataType() == Expression.DataType.INTEGER) {
+            int value1 = firstExpression.getValueInteger();
+            int value2 = secondExpression.getValueInteger();
             return Expression.constant(value1 + value2);
-        } else if ((firstExpression.getDataType(context) == Expression.DataType.INTEGER || firstExpression.getDataType(context) == Expression.DataType.FLOAT)
-                && (secondExpression.getDataType(context) == Expression.DataType.INTEGER || secondExpression.getDataType(context) == Expression.DataType.FLOAT)) {
-            float value1 = firstExpression.getDataType(context) == Expression.DataType.INTEGER ? firstExpression.getValueInteger(context) : firstExpression.getValueFloat(context);
-            float value2 = secondExpression.getDataType(context) == Expression.DataType.INTEGER ? secondExpression.getValueInteger(context) : secondExpression.getValueFloat(context);
+        } else if ((firstExpression.getDataType() == Expression.DataType.INTEGER || firstExpression.getDataType() == Expression.DataType.FLOAT)
+                && (secondExpression.getDataType() == Expression.DataType.INTEGER || secondExpression.getDataType() == Expression.DataType.FLOAT)) {
+            float value1 = firstExpression.getDataType() == Expression.DataType.INTEGER ? firstExpression.getValueInteger() : firstExpression.getValueFloat();
+            float value2 = secondExpression.getDataType() == Expression.DataType.INTEGER ? secondExpression.getValueInteger() : secondExpression.getValueFloat();
             return Expression.constant(value1 + value2);
-        } else if (firstExpression.getDataType(context) == Expression.DataType.STRING && secondExpression.getDataType(context) == Expression.DataType.STRING) {
-            String value1 = firstExpression.getValueString(context);
-            String value2 = secondExpression.getValueString(context);
+        } else if (firstExpression.getDataType() == Expression.DataType.STRING && secondExpression.getDataType() == Expression.DataType.STRING) {
+            String value1 = firstExpression.getValueString();
+            String value2 = secondExpression.getValueString();
             return Expression.constant(value1 + value2);
         }
         return null;

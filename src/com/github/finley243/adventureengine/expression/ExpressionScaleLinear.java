@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 
 public class ExpressionScaleLinear extends Expression {
@@ -25,46 +24,46 @@ public class ExpressionScaleLinear extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.FLOAT;
     }
 
     @Override
-    public float getValueFloat(Context context) {
-        if (input.getDataType(context) != DataType.INTEGER && input.getDataType(context) != DataType.FLOAT) throw new IllegalArgumentException("Input expression is not an int or float");
-        if (inputMin.getDataType(context) != DataType.INTEGER && inputMin.getDataType(context) != DataType.FLOAT) throw new IllegalArgumentException("InputMin expression is not an int or float");
-        if (inputMax.getDataType(context) != DataType.INTEGER && inputMax.getDataType(context) != DataType.FLOAT) throw new IllegalArgumentException("InputMax expression is not an int or float");
-        if (outputMin.getDataType(context) != DataType.INTEGER && outputMin.getDataType(context) != DataType.FLOAT) throw new IllegalArgumentException("OutputMin expression is not an int or float");
-        if (outputMax.getDataType(context) != DataType.INTEGER && outputMax.getDataType(context) != DataType.FLOAT) throw new IllegalArgumentException("OutputMax expression is not an int or float");
+    public float getValueFloat() {
+        if (input.getDataType() != DataType.INTEGER && input.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("Input expression is not an int or float");
+        if (inputMin.getDataType() != DataType.INTEGER && inputMin.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("InputMin expression is not an int or float");
+        if (inputMax.getDataType() != DataType.INTEGER && inputMax.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("InputMax expression is not an int or float");
+        if (outputMin.getDataType() != DataType.INTEGER && outputMin.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("OutputMin expression is not an int or float");
+        if (outputMax.getDataType() != DataType.INTEGER && outputMax.getDataType() != DataType.FLOAT) throw new IllegalArgumentException("OutputMax expression is not an int or float");
         float inputValue;
         float inputMinValue;
         float inputMaxValue;
         float outputMinValue;
         float outputMaxValue;
-        if (input.getDataType(context) == DataType.INTEGER) {
-            inputValue = input.getValueInteger(context);
+        if (input.getDataType() == DataType.INTEGER) {
+            inputValue = input.getValueInteger();
         } else {
-            inputValue = input.getValueFloat(context);
+            inputValue = input.getValueFloat();
         }
-        if (inputMin.getDataType(context) == DataType.INTEGER) {
-            inputMinValue = inputMin.getValueInteger(context);
+        if (inputMin.getDataType() == DataType.INTEGER) {
+            inputMinValue = inputMin.getValueInteger();
         } else {
-            inputMinValue = inputMin.getValueFloat(context);
+            inputMinValue = inputMin.getValueFloat();
         }
-        if (inputMax.getDataType(context) == DataType.INTEGER) {
-            inputMaxValue = inputMax.getValueInteger(context);
+        if (inputMax.getDataType() == DataType.INTEGER) {
+            inputMaxValue = inputMax.getValueInteger();
         } else {
-            inputMaxValue = inputMax.getValueFloat(context);
+            inputMaxValue = inputMax.getValueFloat();
         }
-        if (outputMin.getDataType(context) == DataType.INTEGER) {
-            outputMinValue = outputMin.getValueInteger(context);
+        if (outputMin.getDataType() == DataType.INTEGER) {
+            outputMinValue = outputMin.getValueInteger();
         } else {
-            outputMinValue = outputMin.getValueFloat(context);
+            outputMinValue = outputMin.getValueFloat();
         }
-        if (outputMax.getDataType(context) == DataType.INTEGER) {
-            outputMaxValue = outputMax.getValueInteger(context);
+        if (outputMax.getDataType() == DataType.INTEGER) {
+            outputMaxValue = outputMax.getValueInteger();
         } else {
-            outputMaxValue = outputMax.getValueFloat(context);
+            outputMaxValue = outputMax.getValueFloat();
         }
         inputValue = MathUtils.bound(inputValue, inputMinValue, inputMaxValue);
         return ((inputValue - inputMinValue) / (inputMaxValue - inputMinValue)) * (outputMaxValue - outputMinValue) + outputMinValue;

@@ -78,7 +78,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	public boolean setStatValue(String name, Expression value, Context context) {
 		switch (name) {
 			case "triggered" -> {
-				this.hasTriggered = value.getValueBoolean(context);
+				this.hasTriggered = value.getValueBoolean();
 				return true;
 			}
 		}

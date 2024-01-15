@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.expression;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.Set;
@@ -9,52 +11,57 @@ import java.util.Set;
 public abstract class Expression {
 
     public enum DataType {
-        BOOLEAN, INTEGER, FLOAT, STRING, STRING_SET, INVENTORY, NOUN
+        BOOLEAN, INTEGER, FLOAT, STRING, STRING_SET, INVENTORY, NOUN, STAT_HOLDER
     }
 
-    public abstract DataType getDataType(Context context);
+    public abstract DataType getDataType();
 
-    // TODO - Remove context from expression function parameters (if a context is needed, it should probably be a script, not an expression)
-    public boolean getValueBoolean(Context context) {
+    public boolean getValueBoolean() {
         throw new UnsupportedOperationException("Invalid data type function: boolean");
     }
 
-    public int getValueInteger(Context context) {
+    public int getValueInteger() {
         throw new UnsupportedOperationException("Invalid data type function: integer");
     }
 
-    public float getValueFloat(Context context) {
+    public float getValueFloat() {
         throw new UnsupportedOperationException("Invalid data type function: float");
     }
 
-    public String getValueString(Context context) {
+    public String getValueString() {
         throw new UnsupportedOperationException("Invalid data type function: string");
     }
 
-    public Set<String> getValueStringSet(Context context) {
-        throw new UnsupportedOperationException("Invalid data type function: string set");
+    public Set<String> getValueStringSet() {
+        throw new UnsupportedOperationException("Invalid data type function: stringSet");
     }
 
-    public Inventory getValueInventory(Context context) {
+    public Inventory getValueInventory() {
         throw new UnsupportedOperationException("Invalid data type function: inventory");
     }
 
-    public Noun getValueNoun(Context context) {
+    public Noun getValueNoun() {
         throw new UnsupportedOperationException("Invalid data type function: noun");
     }
 
-    public boolean canCompareTo(Expression other, Context context) {
-        if (this.getDataType(context) == DataType.STRING_SET || other.getDataType(context) == DataType.STRING_SET) {
+    public StatHolder getValueStatHolder() {
+        throw new UnsupportedOperationException("Invalid data type function: statHolder");
+    }
+
+    public boolean canCompareTo(Expression other) {
+        if (this.getDataType() == DataType.STRING_SET || other.getDataType() == DataType.STRING_SET) {
             return false;
-        } else if (this.getDataType(context) == DataType.INVENTORY || other.getDataType(context) == DataType.INVENTORY) {
+        } else if (this.getDataType() == DataType.INVENTORY || other.getDataType() == DataType.INVENTORY) {
             return false;
-        } else if (this.getDataType(context) == DataType.NOUN || other.getDataType(context) == DataType.NOUN) {
+        } else if (this.getDataType() == DataType.NOUN || other.getDataType() == DataType.NOUN) {
+            return false;
+        } else if (this.getDataType() == DataType.STAT_HOLDER || other.getDataType() == DataType.STAT_HOLDER) {
             return false;
         }
-        if (this.getDataType(context) == DataType.INTEGER || this.getDataType(context) == DataType.FLOAT) {
-            return other.getDataType(context) == DataType.INTEGER || other.getDataType(context) == DataType.FLOAT;
+        if (this.getDataType() == DataType.INTEGER || this.getDataType() == DataType.FLOAT) {
+            return other.getDataType() == DataType.INTEGER || other.getDataType() == DataType.FLOAT;
         }
-        return this.getDataType(context) == other.getDataType(context);
+        return this.getDataType() == other.getDataType();
     }
 
     public static DataType dataTypeFromString(String name) {
@@ -66,20 +73,22 @@ public abstract class Expression {
             case "stringSet" -> DataType.STRING_SET;
             case "inventory" -> DataType.INVENTORY;
             case "noun" -> DataType.NOUN;
+            case "statHolder" -> DataType.STAT_HOLDER;
             default -> null;
         };
     }
 
-    public static Expression convertToConstant(Expression expression, Context context) {
+    public static Expression convertToConstant(Expression expression) {
         if (expression == null) return null;
-        return switch (expression.getDataType(context)) {
-            case BOOLEAN -> new ExpressionConstantBoolean(expression.getValueBoolean(context));
-            case INTEGER -> new ExpressionConstantInteger(expression.getValueInteger(context));
-            case FLOAT -> new ExpressionConstantFloat(expression.getValueFloat(context));
-            case STRING -> new ExpressionConstantString(expression.getValueString(context));
-            case STRING_SET -> new ExpressionConstantStringSet(expression.getValueStringSet(context));
-            case INVENTORY -> new ExpressionConstantInventory(expression.getValueInventory(context));
-            case NOUN -> new ExpressionConstantNoun(expression.getValueNoun(context));
+        return switch (expression.getDataType()) {
+            case BOOLEAN -> new ExpressionConstantBoolean(expression.getValueBoolean());
+            case INTEGER -> new ExpressionConstantInteger(expression.getValueInteger());
+            case FLOAT -> new ExpressionConstantFloat(expression.getValueFloat());
+            case STRING -> new ExpressionConstantString(expression.getValueString());
+            case STRING_SET -> new ExpressionConstantStringSet(expression.getValueStringSet());
+            case INVENTORY -> new ExpressionConstantInventory(expression.getValueInventory());
+            case NOUN -> new ExpressionConstantNoun(expression.getValueNoun());
+            case STAT_HOLDER -> new ExpressionConstantStatHolder(expression.getValueStatHolder());
         };
     }
 
@@ -109,6 +118,22 @@ public abstract class Expression {
 
     public static Expression constant(Noun value) {
         return new ExpressionConstantNoun(value);
+    }
+
+    public static Expression constant(StatHolder value) {
+        return new ExpressionConstantStatHolder(value);
+    }
+
+    public static Expression fromScript(Script script, Context context) {
+        if (script == null) return null;
+        Script.ScriptReturnData returnData = script.execute(context);
+        if (returnData.error() != null) {
+            throw new IllegalArgumentException("Expression script threw an error: " + returnData.error());
+        } else if (returnData.isReturn()) {
+            throw new IllegalArgumentException("Expression script contains an unexpected return statement");
+        } else {
+            return returnData.value();
+        }
     }
 
 }

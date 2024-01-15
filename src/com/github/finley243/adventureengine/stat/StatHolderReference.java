@@ -18,9 +18,9 @@ public class StatHolderReference {
 
     public StatHolder getHolder(Context context) {
         Expression holderID = computeHolderID(context);
-        if (holderID != null && holderID.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID must be a string");
+        if (holderID != null && holderID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID must be a string");
         if (parentReference != null) {
-            String holderIDValue = holderID != null ? holderID.getValueString(context) : null;
+            String holderIDValue = holderID != null ? holderID.getValueString() : null;
             return parentReference.getHolder(context).getSubHolder(holderType, holderIDValue);
         } else {
             return getTopLevelHolder(context);
@@ -29,7 +29,7 @@ public class StatHolderReference {
 
     private StatHolder getTopLevelHolder(Context context) {
         Expression holderID = computeHolderID(context);
-        String holderIDValue = holderID != null ? holderID.getValueString(context) : null;
+        String holderIDValue = holderID != null ? holderID.getValueString() : null;
         return switch (holderType) {
             case "object" -> context.game().data().getObject(holderIDValue);
             case "parentObject" -> context.getParentObject();

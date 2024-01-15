@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
-
 public class ExpressionTimeRange extends Expression {
 
     private final int hours1;
@@ -17,12 +15,12 @@ public class ExpressionTimeRange extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.BOOLEAN;
     }
 
     @Override
-    public boolean getValueBoolean(Context context) {
+    public boolean getValueBoolean() {
         return context.game().data().dateTime().isInRange(hours1, minutes1, hours2, minutes2);
     }
 

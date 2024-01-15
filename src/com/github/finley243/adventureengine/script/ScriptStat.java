@@ -23,10 +23,10 @@ public class ScriptStat extends Script {
             return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
         } else if (nameResult.value() == null) {
             return new ScriptReturnData(null, false, false, "Expression did not receive a value");
-        } else if (nameResult.value().getDataType(context) != Expression.DataType.STRING) {
+        } else if (nameResult.value().getDataType() != Expression.DataType.STRING) {
             return new ScriptReturnData(null, false, false, "Expression expected a string value");
         }
-        String statNameValue = nameResult.value().getValueString(context);
+        String statNameValue = nameResult.value().getValueString();
         Expression statValue = statHolder.getHolder(context).getStatValue(statNameValue, context);
         return new ScriptReturnData(statValue, false, false, null);
     }

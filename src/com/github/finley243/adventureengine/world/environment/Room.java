@@ -180,7 +180,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	public boolean setStatValue(String name, Expression value, Context context) {
 		switch (name) {
 			case "visited" -> {
-				this.hasVisited = value.getValueBoolean(context);
+				this.hasVisited = value.getValueBoolean();
 				return true;
 			}
 		}

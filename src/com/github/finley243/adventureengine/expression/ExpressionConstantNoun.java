@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.textgen.Noun;
 
 public class ExpressionConstantNoun extends Expression {
@@ -12,12 +11,12 @@ public class ExpressionConstantNoun extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.NOUN;
     }
 
     @Override
-    public Noun getValueNoun(Context context) {
+    public Noun getValueNoun() {
         return value;
     }
 

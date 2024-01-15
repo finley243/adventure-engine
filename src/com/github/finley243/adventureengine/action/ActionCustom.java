@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -24,11 +25,11 @@ public class ActionCustom extends Action {
     private final Item item;
     private final Area area;
     private final String template;
-    private final Map<String, Expression> parameters;
+    private final Map<String, Script> parameters;
     private final MenuData menuData;
     private final boolean isMove;
 
-    public ActionCustom(Game game, Actor actor, WorldObject object, Item item, Area area, String template, Map<String, Expression> parameters, MenuData menuData, boolean isMove) {
+    public ActionCustom(Game game, Actor actor, WorldObject object, Item item, Area area, String template, Map<String, Script> parameters, MenuData menuData, boolean isMove) {
         this.game = game;
         this.actor = actor;
         this.object = object;
@@ -55,27 +56,22 @@ public class ActionCustom extends Action {
 
     @Override
     public String getPrompt(Actor subject) {
-        Map<String, String> contextVars = new HashMap<>();
-        for (Map.Entry<String, Expression> entry : getTemplate().getParameters().entrySet()) {
-            if (entry.getValue().getDataType(new Context(subject.game(), subject, actor, object, item, area, this, parameters)) == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, this, parameters)));
-            }
-        }
-        for (Map.Entry<String, Expression> entry : parameters.entrySet()) {
-            if (entry.getValue().getDataType(new Context(subject.game(), subject, actor, object, item, area, this, parameters)) == Expression.DataType.STRING) {
-                contextVars.put(entry.getKey(), entry.getValue().getValueString(new Context(subject.game(), subject, actor, object, item, area, this, parameters)));
-            }
-        }
+        Map<String, String> contextVars = getParameterStrings(subject);
         return LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
     }
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         if (getTemplate().getScript() != null) {
-            Map<String, Expression> combinedParameters = new HashMap<>();
-            combinedParameters.putAll(getTemplate().getParameters());
-            combinedParameters.putAll(parameters);
-            Context context = new Context(subject.game(), subject, actor, object, item, area, this, combinedParameters);
+            Context context = new Context(subject.game(), subject, actor, object, item, area, this, new HashMap<>());
+            for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
+                Expression parameterValue = Expression.fromScript(templateParameter.getValue(), context);
+                context.setLocalVariable(templateParameter.getKey(), parameterValue);
+            }
+            for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
+                Expression parameterValue = Expression.fromScript(instanceParameter.getValue(), context);
+                context.setLocalVariable(instanceParameter.getKey(), parameterValue);
+            }
             getTemplate().getScript().execute(context);
         }
         subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
@@ -87,9 +83,8 @@ public class ActionCustom extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        Context conditionContext = new Context(subject.game(), subject, actor, object, item, area, this, parameters);
         for (ActionTemplate.ConditionWithMessage customCondition : getTemplate().getSelectConditions()) {
-            if (!customCondition.condition().isMet(conditionContext)) {
+            if (!customCondition.condition().isMet(getContextWithParameters(subject))) {
                 return new CanChooseResult(false, customCondition.message());
             }
         }
@@ -135,9 +130,40 @@ public class ActionCustom extends Action {
 
     @Override
     public boolean canShow(Actor subject) {
-        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(new Context(subject.game(), subject, actor, object, item, area, this, parameters));
+        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(getContextWithParameters(subject));
     }
 
-    public record CustomActionHolder(String action, Map<String, Expression> parameters) {}
+    private Context getContextWithParameters(Actor subject) {
+        Context context = new Context(subject.game(), subject, actor, object, item, area, this, new HashMap<>());
+        for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
+            Expression parameterValue = Expression.fromScript(templateParameter.getValue(), context);
+            context.setLocalVariable(templateParameter.getKey(), parameterValue);
+        }
+        for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
+            Expression parameterValue = Expression.fromScript(instanceParameter.getValue(), context);
+            context.setLocalVariable(instanceParameter.getKey(), parameterValue);
+        }
+        return context;
+    }
+
+    private Map<String, String> getParameterStrings(Actor subject) {
+        Map<String, String> stringMap = new HashMap<>();
+        Context context = new Context(subject.game(), subject, subject);
+        for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
+            Expression parameterValue = Expression.fromScript(templateParameter.getValue(), context);
+            if (parameterValue.getDataType() == Expression.DataType.STRING) {
+                stringMap.put(templateParameter.getKey(), parameterValue.getValueString());
+            }
+        }
+        for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
+            Expression parameterValue = Expression.fromScript(instanceParameter.getValue(), context);
+            if (parameterValue.getDataType() == Expression.DataType.STRING) {
+                stringMap.put(instanceParameter.getKey(), parameterValue.getValueString());
+            }
+        }
+        return stringMap;
+    }
+
+    public record CustomActionHolder(String action, Map<String, Script> parameters) {}
 
 }

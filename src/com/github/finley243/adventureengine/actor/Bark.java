@@ -4,8 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.MapBuilder;
-import com.github.finley243.adventureengine.textgen.Noun;
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class Bark {
         String visiblePhrase = MathUtils.selectRandomFromList(visiblePhrases);
         String nonVisiblePhrase = MathUtils.selectRandomFromList(nonVisiblePhrases);
         TextContext textContext = new TextContext(context.getTextVarMap(), context.getContextNounMap());
-        context.game().eventQueue().addToEnd(new SensoryEvent(context.getSubject().getArea(), visiblePhrase, nonVisiblePhrase, textContext, true, false, null, this, context.getSubject(), context.getTarget()));
+        (new SensoryEvent(context.getSubject().getArea(), visiblePhrase, nonVisiblePhrase, textContext, true, false, null, this, context.getSubject(), context.getTarget())).execute(context.game());
     }
 
     public BarkResponseType responseType() {

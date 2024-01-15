@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 
 public class ExpressionInventoryContains extends Expression {
@@ -16,19 +15,19 @@ public class ExpressionInventoryContains extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.BOOLEAN;
     }
 
     @Override
-    public boolean getValueBoolean(Context context) {
-        if (inventory.getDataType(context) != Expression.DataType.INVENTORY)
+    public boolean getValueBoolean() {
+        if (inventory.getDataType() != Expression.DataType.INVENTORY)
             throw new IllegalArgumentException("Expression inventory is not an inventory");
-        if (itemID.getDataType(context) != Expression.DataType.STRING && itemID.getDataType(context) != Expression.DataType.STRING_SET)
+        if (itemID.getDataType() != Expression.DataType.STRING && itemID.getDataType() != Expression.DataType.STRING_SET)
             throw new IllegalArgumentException("Expression itemID is not a string or string set");
-        if (itemID.getDataType(context) == Expression.DataType.STRING_SET) {
-            Inventory inventoryValue = inventory.getValueInventory(context);
-            for (String item : itemID.getValueStringSet(context)) {
+        if (itemID.getDataType() == Expression.DataType.STRING_SET) {
+            Inventory inventoryValue = inventory.getValueInventory();
+            for (String item : itemID.getValueStringSet()) {
                 boolean hasItem = inventoryValue.hasItem(item);
                 if (hasItem != requireAll) {
                     return hasItem;
@@ -36,7 +35,7 @@ public class ExpressionInventoryContains extends Expression {
             }
             return requireAll;
         } else {
-            return inventory.getValueInventory(context).hasItem(itemID.getValueString(context));
+            return inventory.getValueInventory().hasItem(itemID.getValueString());
         }
     }
 

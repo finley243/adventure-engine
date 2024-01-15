@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
-
 public class ExpressionConstantBoolean extends Expression {
 
     private final boolean value;
@@ -11,12 +9,12 @@ public class ExpressionConstantBoolean extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.BOOLEAN;
     }
 
     @Override
-    public boolean getValueBoolean(Context context) {
+    public boolean getValueBoolean() {
         return value;
     }
 

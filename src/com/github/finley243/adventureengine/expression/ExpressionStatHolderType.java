@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -20,12 +19,12 @@ public class ExpressionStatHolderType extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.STRING;
     }
 
     @Override
-    public String getValueString(Context context) {
+    public String getValueString() {
         StatHolder statHolder = statHolderReference.getHolder(context);
         return switch (statHolder) {
             case Actor ignored -> "actor";

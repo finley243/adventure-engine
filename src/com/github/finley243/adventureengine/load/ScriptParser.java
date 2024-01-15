@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
@@ -17,7 +16,7 @@ public class ScriptParser {
 
     private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*\n|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|==|!=|<=|>=|<|>|;|=|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}";
 
-    public static List<ScriptData> parseScripts(String scriptText) {
+    public static List<ScriptData> parseFunctions(String scriptText) {
         List<ScriptData> scripts = new ArrayList<>();
         List<ScriptToken> tokens = parseToTokens(scriptText);
         List<ScriptTokenFunction> functions = groupTokensToFunctions(tokens);
@@ -26,6 +25,16 @@ public class ScriptParser {
             scripts.add(script);
         }
         return scripts;
+    }
+
+    public static Script parseExpression(String scriptText) {
+        List<ScriptToken> tokens = parseToTokens(scriptText);
+        return parseExpression(tokens);
+    }
+
+    public static Script parseScript(String scriptText) {
+        List<ScriptToken> tokens = parseToTokens(scriptText);
+        return parseScript(tokens);
     }
 
     private static List<ScriptToken> parseToTokens(String scriptText) {
@@ -238,7 +247,6 @@ public class ScriptParser {
         List<ScriptConditional.ConditionalScriptPair> conditionalScriptPairs = new ArrayList<>();
         for (ScriptIfTokens branch : branches) {
             Script conditionExpression = parseExpression(branch.condition());
-            //Condition condition = new Condition(conditionExpression);
             Script scriptBranch = parseScript(branch.body());
             conditionalScriptPairs.add(new ScriptConditional.ConditionalScriptPair(conditionExpression, scriptBranch));
         }
@@ -269,16 +277,14 @@ public class ScriptParser {
             return new ScriptSetVariable(variableName, variableValue);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             // Function call
-            String functionName = tokens.getFirst().value;
-            List<ScriptExternal.ParameterContainer> parameters = parseFunctionCallParameters(tokens.subList(2, tokens.size() - 1));
-            return new ScriptExternal(functionName, parameters);
+            return parseFunctionCall(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("stat")) {
             // Stat assignment
             int assignmentOperatorIndex = findFirstTokenIndex(tokens, ScriptTokenType.ASSIGNMENT, 0);
             if (assignmentOperatorIndex == -1) throw new IllegalArgumentException("Stat assignment is missing assignment operator");
             ScriptStatReference statReference = parseStatReference(tokens.subList(0, assignmentOperatorIndex));
             Script statValue = parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
-            return new ScriptSetState(statReference.statHolder(), statReference.name(), statValue);
+            return new ScriptSetStat(statReference.statHolder(), statReference.name(), statValue);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME) {
             // Variable assignment
             if (tokens.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Variable assignment is missing assignment operator");
@@ -288,6 +294,12 @@ public class ScriptParser {
         } else {
             throw new IllegalArgumentException("Script contains invalid instruction");
         }
+    }
+
+    private static Script parseFunctionCall(List<ScriptToken> tokens) {
+        String functionName = tokens.getFirst().value;
+        List<ScriptExternal.ParameterContainer> parameters = parseFunctionCallParameters(tokens.subList(2, tokens.size() - 1));
+        return new ScriptExternal(functionName, parameters);
     }
 
     private static List<ScriptExternal.ParameterContainer> parseFunctionCallParameters(List<ScriptToken> tokens) {
@@ -344,13 +356,13 @@ public class ScriptParser {
     private static Script parseComparator(List<ScriptToken> tokens) {
         int firstComparatorOperator = findFirstTokenIndexFromSet(tokens, Set.of(ScriptTokenType.EQUAL, ScriptTokenType.NOT_EQUAL, ScriptTokenType.GREATER, ScriptTokenType.LESS, ScriptTokenType.GREATER_EQUAL, ScriptTokenType.LESS_EQUAL));
         if (firstComparatorOperator != -1) {
-            ExpressionCompare.Comparator comparator = switch (tokens.get(firstComparatorOperator).type) {
-                case EQUAL -> ExpressionCompare.Comparator.EQUAL;
-                case NOT_EQUAL -> ExpressionCompare.Comparator.NOT_EQUAL;
-                case GREATER -> ExpressionCompare.Comparator.GREATER;
-                case LESS -> ExpressionCompare.Comparator.LESS;
-                case GREATER_EQUAL -> ExpressionCompare.Comparator.GREATER_EQUAL;
-                case LESS_EQUAL -> ExpressionCompare.Comparator.LESS_EQUAL;
+            ScriptComparator.Comparator comparator = switch (tokens.get(firstComparatorOperator).type) {
+                case EQUAL -> ScriptComparator.Comparator.EQUAL;
+                case NOT_EQUAL -> ScriptComparator.Comparator.NOT_EQUAL;
+                case GREATER -> ScriptComparator.Comparator.GREATER;
+                case LESS -> ScriptComparator.Comparator.LESS;
+                case GREATER_EQUAL -> ScriptComparator.Comparator.GREATER_EQUAL;
+                case LESS_EQUAL -> ScriptComparator.Comparator.LESS_EQUAL;
                 default -> throw new IllegalArgumentException("Expression contains an invalid comparator statement");
             };
             Script firstExpression = parseSum(tokens.subList(0, firstComparatorOperator));
@@ -380,14 +392,19 @@ public class ScriptParser {
     private static Script parseProduct(List<ScriptToken> tokens) {
         int lastMultiplyOperator = findLastTokenIndex(tokens, ScriptTokenType.MULTIPLY, tokens.size() - 1);
         int lastDivideOperator = findLastTokenIndex(tokens, ScriptTokenType.DIVIDE, tokens.size() - 1);
-        if (lastMultiplyOperator > lastDivideOperator) {
+        int lastModuloOperator = findLastTokenIndex(tokens, ScriptTokenType.MODULO, tokens.size() - 1);
+        if (lastMultiplyOperator > lastDivideOperator && lastMultiplyOperator > lastModuloOperator) {
             Script firstExpression = parseProduct(tokens.subList(0, lastMultiplyOperator));
             Script secondExpression = parsePower(tokens.subList(lastMultiplyOperator + 1, tokens.size()));
             return new ScriptMultiply(firstExpression, secondExpression);
-        } else if (lastMultiplyOperator < lastDivideOperator) {
+        } else if (lastDivideOperator > lastMultiplyOperator && lastDivideOperator > lastModuloOperator) {
             Script firstExpression = parseProduct(tokens.subList(0, lastDivideOperator));
             Script secondExpression = parsePower(tokens.subList(lastDivideOperator + 1, tokens.size()));
             return new ScriptDivide(firstExpression, secondExpression);
+        } else if (lastModuloOperator > lastMultiplyOperator && lastModuloOperator > lastDivideOperator) {
+            Script firstExpression = parseProduct(tokens.subList(0, lastModuloOperator));
+            Script secondExpression = parsePower(tokens.subList(lastModuloOperator + 1, tokens.size()));
+            return new ScriptModulo(firstExpression, secondExpression);
         } else {
             return parsePower(tokens);
         }
@@ -417,28 +434,26 @@ public class ScriptParser {
         if (tokens.getFirst().type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             return parseExpression(tokens.subList(1, tokens.size() - 1));
         } else if (tokens.size() == 1 && tokens.getFirst().type == ScriptTokenType.NAME) {
-            return new ScriptExpression(new ExpressionParameter(tokens.getFirst().value));
+            return new ScriptGetVariable(tokens.getFirst().value);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("stat")) {
             ScriptStatReference statReference = parseStatReference(tokens);
-            return new ExpressionStat(statReference.statHolder(), statReference.name());
+            return new ScriptGetStat(statReference.statHolder(), statReference.name());
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("global")) {
             ScriptGlobalReference globalReference = parseGlobalReference(tokens);
-            return new ScriptExpression(new ExpressionGlobal(Expression.constant(globalReference.name())));
+            return new ScriptGetGlobal(globalReference.name());
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("game")) {
-            return new ScriptExpression(parseGameValue(tokens));
+            return parseGameValue(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
-            String functionName = tokens.getFirst().value;
-            List<ScriptExternal.ParameterContainer> parameters = parseFunctionCallParameters(tokens.subList(2, tokens.size() - 1));
-            return new ScriptExternal(functionName, parameters);
+            return parseFunctionCall(tokens);
         } else {
             Expression literalExpression = parseLiteral(tokens);
-            if (literalExpression == null) throw new IllegalArgumentException("Expression contains an invalid value");
             return new ScriptExpression(literalExpression);
         }
     }
 
     private static Expression parseLiteral(List<ScriptToken> tokens) {
-        if (tokens.size() != 1) return null;
+        System.out.println("Literal tokens: " + tokens);
+        if (tokens.size() != 1) throw new IllegalArgumentException("Invalid literal expression");
         ScriptToken token = tokens.getFirst();
         if (token.type == ScriptTokenType.STRING) {
             return Expression.constant(token.value);
@@ -452,9 +467,10 @@ public class ScriptParser {
             return Expression.constant(true);
         } else if (token.type == ScriptTokenType.BOOLEAN_FALSE) {
             return Expression.constant(false);
-        } else {
+        } else if (token.type == ScriptTokenType.NAME && token.value.equals("null")) {
             return null;
         }
+        throw new IllegalArgumentException("Invalid literal expression");
     }
 
     private static ScriptStatReference parseStatReference(List<ScriptToken> tokens) {
@@ -502,19 +518,13 @@ public class ScriptParser {
         return new ScriptGlobalReference(globalName);
     }
 
-    private static Expression parseGameValue(List<ScriptToken> tokens) {
+    private static Script parseGameValue(List<ScriptToken> tokens) {
         if (tokens.size() != 3) throw new IllegalArgumentException();
         if (tokens.getFirst().type != ScriptTokenType.NAME || !tokens.getFirst().value.equals("game")) throw new IllegalArgumentException("Game value reference is missing game keyword");
         if (tokens.get(1).type != ScriptTokenType.DOT) throw new IllegalArgumentException("Game value reference is missing period after game keyword");
         if (tokens.get(2).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Game value reference has invalid name");
         String gameValueName = tokens.get(2).value;
-        switch (gameValueName) {
-            case "day" -> { return new ExpressionDay(); }
-            case "month" -> { return new ExpressionMonth(); }
-            case "year" -> { return new ExpressionYear(); }
-            case "weekday" -> { return new ExpressionWeekday(); }
-        }
-        throw new IllegalArgumentException("Game value reference specifies a non-existent game value");
+        return new ScriptGetGameValue(gameValueName);
     }
 
     private static int findFirstTokenIndex(List<ScriptToken> tokens, ScriptTokenType type, int startIndex) {

@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -33,11 +34,11 @@ public class ObjectComponentLink extends ObjectComponent {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - linked object local variable is missing");
             return null;
         }
-        if (linkedObjectExpression.getDataType(context) != Expression.DataType.STRING) {
+        if (linkedObjectExpression.getDataType() != Expression.DataType.STRING) {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - linked object local variable is not a string");
             return null;
         }
-        String linkedObjectID = linkedObjectExpression.getValueString(context);
+        String linkedObjectID = linkedObjectExpression.getValueString();
         return getObject().game().data().getObject(linkedObjectID);
     }
 
@@ -48,11 +49,11 @@ public class ObjectComponentLink extends ObjectComponent {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - direction local variable is missing");
             return null;
         }
-        if (directionExpression.getDataType(context) != Expression.DataType.STRING) {
+        if (directionExpression.getDataType() != Expression.DataType.STRING) {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - direction local variable is not a string");
             return null;
         }
-        String directionString = directionExpression.getValueString(context);
+        String directionString = directionExpression.getValueString();
         return LoadUtils.stringToEnum(directionString, AreaLink.CompassDirection.class);
     }
 
@@ -120,7 +121,7 @@ public class ObjectComponentLink extends ObjectComponent {
         for (String linkID : getTemplateLink().getLinkData().keySet()) {
             ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
             if (linkData.moveAction() != null) {
-                actions.add(new ActionCustom(subject.game(), null, getObject(), null, getLinkedObject(linkID).getArea(), linkData.moveAction(), new MapBuilder<String, Expression>().put("dir", Expression.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(linkID).getArea(), getDirection(linkID)), true));
+                actions.add(new ActionCustom(subject.game(), null, getObject(), null, getLinkedObject(linkID).getArea(), linkData.moveAction(), new MapBuilder<String, Script>().put("dir", Script.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(linkID).getArea(), getDirection(linkID)), true));
             }
         }
         return actions;

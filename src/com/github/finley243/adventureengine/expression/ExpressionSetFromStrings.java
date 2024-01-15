@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,15 +13,15 @@ public class ExpressionSetFromStrings extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.STRING_SET;
     }
 
     @Override
-    public Set<String> getValueStringSet(Context context) {
+    public Set<String> getValueStringSet() {
         Set<String> stringSet = new HashSet<>();
         for (Expression stringVar : stringVars) {
-            stringSet.add(stringVar.getValueString(context));
+            stringSet.add(stringVar.getValueString());
         }
         return stringSet;
     }

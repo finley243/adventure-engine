@@ -25,11 +25,11 @@ public class ObjectComponentVehicle extends ObjectComponent {
         Context context = new Context(getObject().game(), getObject());
         Expression objectOverrideExpression = getObject().getLocalVariable("vehicle_object_override");
         if (objectOverrideExpression == null) return null;
-        if (objectOverrideExpression.getDataType(context) != Expression.DataType.STRING) {
+        if (objectOverrideExpression.getDataType() != Expression.DataType.STRING) {
             getObject().game().log().print("ObjectComponentVehicle " + getObject() + " - object override local variable is not a string");
             return null;
         }
-        String objectOverrideID = objectOverrideExpression.getValueString(context);
+        String objectOverrideID = objectOverrideExpression.getValueString();
         return getObject().game().data().getObject(objectOverrideID);
     }
 

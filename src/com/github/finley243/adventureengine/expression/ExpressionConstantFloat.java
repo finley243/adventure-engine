@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
-
 public class ExpressionConstantFloat extends Expression {
 
     private final float value;
@@ -11,12 +9,12 @@ public class ExpressionConstantFloat extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.FLOAT;
     }
 
     @Override
-    public float getValueFloat(Context context) {
+    public float getValueFloat() {
         return value;
     }
 

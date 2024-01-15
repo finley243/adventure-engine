@@ -8,25 +8,24 @@ import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 public class ScriptScene extends Script {
 
-    private final StatHolderReference actor;
+    /*private final StatHolderReference actor;
     private final Expression scenes;
 
     public ScriptScene(StatHolderReference actor, Expression scenes) {
         if (scenes == null) throw new IllegalArgumentException("ScriptScene scenes is null");
         this.actor = actor;
         this.scenes = scenes;
-    }
+    }*/
 
     @Override
     public ScriptReturnData execute(Context context) {
-        if (scenes.getDataType(context) != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptScene scenes is not a string");
-        if (!(actor.getHolder(context) instanceof Actor actorCast)) {
-            return new ScriptReturnData(null, false, false, "StatHolder is not an actor");
-        }
+        Expression scene = context.getLocalVariables().get("scene").getExpression();
+        Expression actorExpression = context.getLocalVariables().get("actor").getExpression();
+        if (scene.getDataType() != Expression.DataType.STRING) new ScriptReturnData(null, false, false, "Scene parameter is not a string");
+        if (actorExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, false, false, "Actor parameter is not a stat holder");
+        if (!(actorExpression.getValueStatHolder() instanceof Actor actor)) return new ScriptReturnData(null, false, false, "Actor parameter is not an actor");
         // TODO - Update to non-event scene system
-        if (scenes.getDataType(context) == Expression.DataType.STRING) {
-            context.game().eventQueue().addToFront(new SceneEvent(context.game().data().getScene(scenes.getValueString(context)), null, new Context(context, actorCast, actorCast)));
-        }
+        context.game().eventQueue().addToFront(new SceneEvent(context.game().data().getScene(scene.getValueString()), null, new Context(context, actor, actor)));
         return new ScriptReturnData(null, false, false, null);
     }
 

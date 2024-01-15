@@ -29,7 +29,7 @@ public class ActionItemTake extends Action {
 		area.getInventory().removeItem(item);
 		subject.getInventory().addItem(item);
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
-		subject.game().eventQueue().addToEnd(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null, subject, null));
+		(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null, subject, null)).execute(subject.game());
 		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
 

@@ -27,10 +27,10 @@ public class ScriptInventoryIterator extends Script {
             return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
         } else if (setResult.value() == null) {
             return new ScriptReturnData(null, false, false, "Expression did not receive a value");
-        } else if (setResult.value().getDataType(context) != Expression.DataType.INVENTORY) {
+        } else if (setResult.value().getDataType() != Expression.DataType.INVENTORY) {
             return new ScriptReturnData(null, false, false, "Expression expected an inventory");
         }
-        Inventory inventory = setResult.value().getValueInventory(context);
+        Inventory inventory = setResult.value().getValueInventory();
         for (Map.Entry<Item, Integer> currentItem : inventory.getItemMap().entrySet()) {
             Context innerContext = new Context(context, new MapBuilder<String, Expression>().put("count", Expression.constant(currentItem.getValue())).build(), currentItem.getKey());
             ScriptReturnData scriptResult = iteratedScript.execute(innerContext);

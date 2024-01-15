@@ -8,20 +8,23 @@ import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 public class ScriptSkillMenu extends Script {
 
-    private final StatHolderReference actorReference;
+    /*private final StatHolderReference actorReference;
     private final Expression points;
 
     public ScriptSkillMenu(StatHolderReference actorReference, Expression points) {
         if (points == null) throw new IllegalArgumentException("Points expression is null");
         this.actorReference = actorReference;
         this.points = points;
-    }
+    }*/
 
     @Override
     public ScriptReturnData execute(Context context) {
-        if (points.getDataType(context) != Expression.DataType.INTEGER) throw new IllegalArgumentException("Points expression is not an integer");
-        if (!(actorReference.getHolder(context) instanceof Actor actor)) throw new IllegalArgumentException("Actor reference is not a valid actor");
-        int pointsValue = points.getValueInteger(context);
+        Expression actorExpression = context.getLocalVariables().get("actor").getExpression();
+        Expression points = context.getLocalVariables().get("points").getExpression();
+        if (points.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, false, false, "Points parameter is not an integer");
+        if (actorExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, false, false, "Actor parameter is not a stat holder");
+        if (!(actorExpression.getValueStatHolder() instanceof Actor actor)) return new ScriptReturnData(null, false, false, "Actor parameter is not an actor");
+        int pointsValue = points.getValueInteger();
         SkillMenuEvent menuEvent = new SkillMenuEvent(actor, pointsValue);
         context.game().menuManager().skillMenu(menuEvent, context.game(), actor, pointsValue);
         return new ScriptReturnData(null, false, false, null);

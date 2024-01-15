@@ -29,10 +29,10 @@ public class ScriptIterator extends Script {
             return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
         } else if (setResult.value() == null) {
             return new ScriptReturnData(null, false, false, "Expression did not receive a value");
-        } else if (setResult.value().getDataType(context) != Expression.DataType.STRING_SET) {
+        } else if (setResult.value().getDataType() != Expression.DataType.STRING_SET) {
             return new ScriptReturnData(null, false, false, "Expression expected a set");
         }
-        Set<String> stringSet = setResult.value().getValueStringSet(context);
+        Set<String> stringSet = setResult.value().getValueStringSet();
         List<Expression> expressions = new ArrayList<>(stringSet.size());
         for (String setValue : stringSet) {
             expressions.add(Expression.constant(setValue));

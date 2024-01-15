@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
-
 public class ExpressionToString extends Expression {
 
     private final Expression expression;
@@ -11,20 +9,20 @@ public class ExpressionToString extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.STRING;
     }
 
     @Override
-    public String getValueString(Context context) {
-        return switch (expression.getDataType(context)) {
-            case BOOLEAN -> Boolean.toString(expression.getValueBoolean(context));
-            case INTEGER -> Integer.toString(expression.getValueInteger(context));
-            case FLOAT -> Float.toString(expression.getValueFloat(context));
-            case STRING -> expression.getValueString(context);
-            case STRING_SET -> expression.getValueStringSet(context).toString();
+    public String getValueString() {
+        return switch (expression.getDataType()) {
+            case BOOLEAN -> Boolean.toString(expression.getValueBoolean());
+            case INTEGER -> Integer.toString(expression.getValueInteger());
+            case FLOAT -> Float.toString(expression.getValueFloat());
+            case STRING -> expression.getValueString();
+            case STRING_SET -> expression.getValueStringSet().toString();
             case INVENTORY -> throw new UnsupportedOperationException("Cannot convert inventory to string");
-            case NOUN -> expression.getValueNoun(context).getName();
+            case NOUN -> expression.getValueNoun().getName();
         };
     }
 

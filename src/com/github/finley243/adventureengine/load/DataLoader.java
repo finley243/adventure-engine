@@ -23,8 +23,7 @@ import com.github.finley243.adventureengine.network.*;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
-import com.github.finley243.adventureengine.script.*;
-import com.github.finley243.adventureengine.stat.StatHolderReference;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -97,16 +96,6 @@ public class DataLoader {
                                     Room room = loadRoom(game, currentElement);
                                     game.data().addRoom(room.getID(), room);
                                 }
-                                /*case "script" -> {
-                                    String scriptID = LoadUtils.attribute(currentElement, "id", null);
-                                    Script script = loadScript(currentElement);
-                                    game.data().addScript(scriptID, script);
-                                }*/
-                                /*case "expression" -> {
-                                    String expressionID = LoadUtils.attribute(currentElement, "id", null);
-                                    Expression expression = loadExpression(currentElement, null);
-                                    game.data().addExpression(expressionID, expression);
-                                }*/
                                 case "effect" -> {
                                     Effect effect = loadEffect(game, currentElement);
                                     game.data().addEffect(effect.getID(), effect);
@@ -319,20 +308,18 @@ public class DataLoader {
 
     private static Condition loadCondition(Element conditionElement) {
         if (conditionElement == null) return null;
-        boolean invert = LoadUtils.attributeBool(conditionElement, "invert", false);
-        Expression booleanExpression = loadExpression(conditionElement, "boolean");
-        return new Condition(invert, booleanExpression);
+        Element scriptElement = LoadUtils.singleChildWithName(conditionElement, "script");
+        if (scriptElement == null) return null;
+        String scriptText = scriptElement.getTextContent().trim();
+        Script conditionScript = ScriptParser.parseExpression(scriptText);
+        return new Condition(conditionScript);
     }
 
-    private static Expression loadExpression(Element expressionElement, String dataTypeDefault) {
+    /*private static Expression loadExpression(Element expressionElement, String dataTypeDefault) {
         if (expressionElement == null) return null;
         String defaultType = ("inventory".equals(dataTypeDefault) || "noun".equals(dataTypeDefault)) ? "stat" : null;
         String type = LoadUtils.attribute(expressionElement, "type", defaultType);
         String dataType = LoadUtils.attribute(expressionElement, "dataType", dataTypeDefault);
-        if (expressionElement.hasAttribute("external")) {
-            String externalID = LoadUtils.attribute(expressionElement, "external", null);
-            return new ExpressionExternal(externalID);
-        }
         switch (type) {
             case "stat" -> {
                 StatHolderReference statHolderReference = loadStatHolderReference(expressionElement);
@@ -346,10 +333,6 @@ public class DataLoader {
             case "global" -> {
                 Expression globalExpressionID = loadExpressionOrAttribute(expressionElement, "globalID", "string");
                 return new ExpressionGlobal(globalExpressionID);
-            }
-            case "external" -> {
-                String externalID = LoadUtils.attribute(expressionElement, "id", null);
-                return new ExpressionExternal(externalID);
             }
             case "parameter" -> {
                 String parameterName = LoadUtils.attribute(expressionElement, "name", null);
@@ -549,11 +532,11 @@ public class DataLoader {
             }
         }
         return null;
-    }
+    }*/
 
     private static Expression loadExpressionOrAttribute(Element parentElement, String name, String dataTypeDefault) {
-        Expression expressionFromTag = loadExpression(LoadUtils.singleChildWithName(parentElement, name), dataTypeDefault);
-        if (expressionFromTag != null) return expressionFromTag;
+        //Expression expressionFromTag = loadExpression(LoadUtils.singleChildWithName(parentElement, name), dataTypeDefault);
+        //if (expressionFromTag != null) return expressionFromTag;
         String attributeValue = LoadUtils.attribute(parentElement, name, null);
         if (attributeValue == null) {
             return null;
@@ -578,7 +561,7 @@ public class DataLoader {
         }
     }
 
-    private static StatHolderReference loadStatHolderReference(Element statHolderElement) {
+    /*private static StatHolderReference loadStatHolderReference(Element statHolderElement) {
         String holderType = LoadUtils.attribute(statHolderElement, "holder", "subject");
         Expression holderID = loadExpressionOrAttribute(statHolderElement, "holderID", "string");
         StatHolderReference parentReference = null;
@@ -587,9 +570,9 @@ public class DataLoader {
             parentReference = loadStatHolderReference(parentReferenceElement);
         }
         return new StatHolderReference(holderType, holderID, parentReference);
-    }
+    }*/
 
-    private static List<Script> loadSubScripts(Element parentElement) {
+    /*private static List<Script> loadSubScripts(Element parentElement) {
         List<Element> scriptElements = LoadUtils.directChildrenWithName(parentElement, "script");
         List<Script> scripts = new ArrayList<>();
         for (Element scriptElement : scriptElements) {
@@ -597,19 +580,26 @@ public class DataLoader {
             scripts.add(script);
         }
         return scripts;
-    }
+    }*/
 
     private static Map<String, Script> loadScriptsWithTriggers(Element parentElement) {
         Map<String, Script> scripts = new HashMap<>();
         for (Element scriptElement : LoadUtils.directChildrenWithName(parentElement, "script")) {
             String trigger = scriptElement.getAttribute("trigger");
-            Script script = loadScript(scriptElement);
+            String scriptText = scriptElement.getTextContent().trim();
+            Script script = ScriptParser.parseScript(scriptText);
             scripts.put(trigger, script);
         }
         return scripts;
     }
 
     private static Script loadScript(Element scriptElement) {
+        if (scriptElement == null) return null;
+        String scriptText = scriptElement.getTextContent().trim();
+        return ScriptParser.parseScript(scriptText);
+    }
+
+    /*private static Script loadScript(Element scriptElement) {
         if (scriptElement == null) return null;
         String type = scriptElement.getAttribute("type");
         if (scriptElement.hasAttribute("external")) {
@@ -737,7 +727,7 @@ public class DataLoader {
                 return new ScriptCompound(subScriptsSequence, false);
             }
         }
-    }
+    }*/
 
     private static Faction loadFaction(Game game, Element factionElement) {
         if (factionElement == null) return null;
@@ -1064,7 +1054,7 @@ public class DataLoader {
         Map<String, Expression> localVarsDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
-            Expression varExpression = loadExpression(varDefaultElement, null);
+            Expression varExpression = loadExpressionOrAttribute(varDefaultElement, "value", null);
             localVarsDefault.put(varName, varExpression);
         }
         return new ObjectTemplate(game, ID, name, isProperName, description, maxHP, damageResistances, damageMults, scripts, customActions, networkActions, components, localVarsDefault);
@@ -1079,7 +1069,7 @@ public class DataLoader {
         Map<String, Expression> localVarsDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
-            Expression varExpression = loadExpression(varDefaultElement, null);
+            Expression varExpression = loadExpressionOrAttribute(varDefaultElement, "value", null);
             localVarsDefault.put(varName, varExpression);
         }
         return new WorldObject(game, id, template, area, startDisabled, startHidden, localVarsDefault);
@@ -1145,10 +1135,10 @@ public class DataLoader {
     private static ActionTemplate loadActionTemplate(Game game, Element actionElement) {
         String ID = LoadUtils.attribute(actionElement, "id", null);
         String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
-        Map<String, Expression> parameters = new HashMap<>();
+        Map<String, Script> parameters = new HashMap<>();
         for (Element parameterElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
             String parameterName = LoadUtils.attribute(parameterElement, "name", null);
-            Expression parameterValue = loadExpression(parameterElement, null);
+            Script parameterValue = loadScript(parameterElement);
             parameters.put(parameterName, parameterValue);
         }
         int actionPoints = LoadUtils.attributeInt(actionElement, "actionPoints", 0);
@@ -1168,11 +1158,11 @@ public class DataLoader {
         if (parentElement != null) {
             for (Element actionElement : LoadUtils.directChildrenWithName(parentElement, name)) {
                 String action = LoadUtils.attribute(actionElement, "template", null);
-                Map<String, Expression> parameters = new HashMap<>();
+                Map<String, Script> parameters = new HashMap<>();
                 for (Element variableElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
                     String parameterName = LoadUtils.attribute(variableElement, "name", null);
-                    Expression parameterExpression = loadExpression(variableElement, null);
-                    parameters.put(parameterName, parameterExpression);
+                    Script parameterValue = loadScript(variableElement);
+                    parameters.put(parameterName, parameterValue);
                 }
                 customActions.add(new ActionCustom.CustomActionHolder(action, parameters));
             }

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ScriptParser;
 
 import java.util.HashSet;
@@ -48,11 +47,11 @@ public class ScriptExternal extends Script {
         ScriptReturnData scriptResult = script.script().execute(context);
         if (!scriptResult.isReturn() && script.returnType() != null) {
             return new ScriptReturnData(null, false, false, "Function has non-void return type but is missing return statement");
-        } else if (scriptResult.value() == null /*&& script.returnType() == null*/) {
+        } else if (scriptResult.value() == null) {
             return new ScriptReturnData(null, false, false, null);
-        } else if (/*scriptResult.value() != null &&*/ script.returnType() == null) {
+        } else if (script.returnType() == null) {
             return new ScriptReturnData(null, false, false, "Function is void but is returning an unexpected value");
-        } else if (/*scriptResult.value() != null &&*/ scriptResult.value().getDataType(context) == script.returnType()) {
+        } else if (scriptResult.value().getDataType() == script.returnType()) {
             return new ScriptReturnData(scriptResult.value(), false, false, null);
         } else {
             return new ScriptReturnData(null, false, false, "Function return value does not match return type in function definition");

@@ -23,9 +23,9 @@ public class ScriptOr extends Script {
                 return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
             } else if (result.value() == null) {
                 return new ScriptReturnData(null, false, false, "Expression received a null value");
-            } else if (result.value().getDataType(context) != Expression.DataType.BOOLEAN) {
+            } else if (result.value().getDataType() != Expression.DataType.BOOLEAN) {
                 return new ScriptReturnData(null, false, false, "Expression expected a boolean value");
-            } else if (result.value().getValueBoolean(context)) {
+            } else if (result.value().getValueBoolean()) {
                 return new ScriptReturnData(Expression.constant(true), false, false, null);
             }
         }

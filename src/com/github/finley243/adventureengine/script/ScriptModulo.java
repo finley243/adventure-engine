@@ -3,12 +3,12 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
-public class ScriptMultiply extends Script {
+public class ScriptModulo extends Script {
 
     private final Script firstScript;
     private final Script secondScript;
 
-    public ScriptMultiply(Script firstScript, Script secondScript) {
+    public ScriptModulo(Script firstScript, Script secondScript) {
         this.firstScript = firstScript;
         this.secondScript = secondScript;
     }
@@ -31,30 +31,30 @@ public class ScriptMultiply extends Script {
         } else if (secondReturn.value() == null) {
             return new ScriptReturnData(null, false, false, "Expression did not receive a value");
         }
-        if (!canMultiplyExpressions(firstReturn.value(), secondReturn.value(), context)) {
-            return new ScriptReturnData(null, false, false, "Expression received values that could not be multiplied");
+        if (!canModuloExpressions(firstReturn.value(), secondReturn.value(), context)) {
+            return new ScriptReturnData(null, false, false, "Expression received values that could not form a modulo");
         }
-        Expression multiplyResult = multiplyExpressions(firstReturn.value(), secondReturn.value(), context);
-        return new ScriptReturnData(multiplyResult, false, false, null);
+        Expression moduloResult = moduloExpressions(firstReturn.value(), secondReturn.value(), context);
+        return new ScriptReturnData(moduloResult, false, false, null);
     }
 
-    private boolean canMultiplyExpressions(Expression firstExpression, Expression secondExpression, Context context) {
+    private boolean canModuloExpressions(Expression firstExpression, Expression secondExpression, Context context) {
         if (firstExpression.getDataType() == Expression.DataType.INTEGER || firstExpression.getDataType() == Expression.DataType.FLOAT) {
             return secondExpression.getDataType() == Expression.DataType.INTEGER || secondExpression.getDataType() == Expression.DataType.FLOAT;
         }
         return false;
     }
 
-    private Expression multiplyExpressions(Expression firstExpression, Expression secondExpression, Context context) {
+    private Expression moduloExpressions(Expression firstExpression, Expression secondExpression, Context context) {
         if (firstExpression.getDataType() == Expression.DataType.INTEGER && secondExpression.getDataType() == Expression.DataType.INTEGER) {
             int value1 = firstExpression.getValueInteger();
             int value2 = secondExpression.getValueInteger();
-            return Expression.constant(value1 * value2);
+            return Expression.constant(value1 % value2);
         } else if ((firstExpression.getDataType() == Expression.DataType.INTEGER || firstExpression.getDataType() == Expression.DataType.FLOAT)
                 && (secondExpression.getDataType() == Expression.DataType.INTEGER || secondExpression.getDataType() == Expression.DataType.FLOAT)) {
             float value1 = firstExpression.getDataType() == Expression.DataType.INTEGER ? firstExpression.getValueInteger() : firstExpression.getValueFloat();
             float value2 = secondExpression.getDataType() == Expression.DataType.INTEGER ? secondExpression.getValueInteger() : secondExpression.getValueFloat();
-            return Expression.constant(value1 * value2);
+            return Expression.constant(value1 % value2);
         }
         return null;
     }

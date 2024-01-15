@@ -1,34 +1,31 @@
 <data>
     <action id="lock_pick">
         <prompt>Pick lock</prompt>
-        <condition type="stat" dataType="boolean" stat="locked" holder="parentObject">
+        <condition>
             <blockMessage>Unlocked</blockMessage>
+            <script>stat.parentObject.locked</script>
         </condition>
-        <condition type="compare" comparator="GREATER_EQUAL">
+        <condition>
             <blockMessage>Higher lockpick skill required</blockMessage>
-            <value1 type="stat" dataType="int" stat="skill_lockpick" holder="subject"/>
-            <value2 type="stat" dataType="int" stat="lock_pick_difficulty" holder="parentObject"/>
+            <script>stat.subject.skill_lockpick &gt;= stat.parentObject.lock_pick_difficulty</script>
         </condition>
         <script>
-            <script type="setState" stat="locked" holder="parentObject" value="false"/>
-            <script type="sensoryEvent">
-                <phrase>pickLock</phrase>
-                <area type="stat" dataType="string" stat="id" holder="area">
-                    <parentHolder holder="subject"/>
-                </area>
-            </script>
+            stat.parentObject.locked = false;
+            sendSensoryEvent(phrase="pickLock", area=stat.subject.area.id);
         </script>
     </action>
     <action id="lock_key">
         <prompt>Unlock</prompt>
-        <condition type="stat" dataType="boolean" stat="locked" holder="parentObject">
+        <condition>
             <blockMessage>Unlocked</blockMessage>
+            <script>stat.parentObject.locked</script>
         </condition>
-        <condition type="inventoryContains" requireAll="false">
+        <!--<condition type="inventoryContains" requireAll="false">
             <blockMessage>No valid key in inventory</blockMessage>
             <inv type="stat" stat="inventory" holder="subject"/>
             <item type="stat" dataType="stringSet" stat="lock_keys" holder="parentObject"/>
-        </condition>
+            <script></script>
+        </condition>-->
         <script>
             <script type="setState" stat="locked" holder="parentObject" value="false"/>
             <script type="sensoryEvent">

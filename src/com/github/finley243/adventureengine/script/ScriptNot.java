@@ -20,10 +20,10 @@ public class ScriptNot extends Script {
             return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
         } else if (scriptResult.value() == null) {
             return new ScriptReturnData(null, false, false, "Expression did not receive a value");
-        } else if (scriptResult.value().getDataType(context) != Expression.DataType.BOOLEAN) {
+        } else if (scriptResult.value().getDataType() != Expression.DataType.BOOLEAN) {
             return new ScriptReturnData(null, false, false, "Expression expected a boolean value");
         }
-        return new ScriptReturnData(Expression.constant(!scriptResult.value().getValueBoolean(context)), false, false, null);
+        return new ScriptReturnData(Expression.constant(!scriptResult.value().getValueBoolean()), false, false, null);
     }
 
 }

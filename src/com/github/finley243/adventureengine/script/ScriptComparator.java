@@ -2,15 +2,18 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionCompare;
 
 public class ScriptComparator extends Script {
 
+    public enum Comparator {
+        LESS, GREATER, LESS_EQUAL, GREATER_EQUAL, EQUAL, NOT_EQUAL
+    }
+
     private final Script firstScript;
     private final Script secondScript;
-    private final ExpressionCompare.Comparator comparator;
+    private final Comparator comparator;
 
-    public ScriptComparator(Script firstScript, Script secondScript, ExpressionCompare.Comparator comparator) {
+    public ScriptComparator(Script firstScript, Script secondScript, Comparator comparator) {
         this.firstScript = firstScript;
         this.secondScript = secondScript;
         this.comparator = comparator;
@@ -31,13 +34,13 @@ public class ScriptComparator extends Script {
             return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
         }
         if (firstReturn.value() == null || secondReturn.value() == null) {
-            if (comparator != ExpressionCompare.Comparator.EQUAL && comparator != ExpressionCompare.Comparator.NOT_EQUAL) {
+            if (comparator != Comparator.EQUAL && comparator != Comparator.NOT_EQUAL) {
                 return new ScriptReturnData(null, false, false, "Expression has invalid comparator for null value");
             }
             Expression compareNullResult = Expression.constant(compareExpressionsNull(firstReturn.value(), secondReturn.value()));
             return new ScriptReturnData(compareNullResult, false, false, null);
         }
-        if (!firstReturn.value().canCompareTo(secondReturn.value(), context)) {
+        if (!firstReturn.value().canCompareTo(secondReturn.value())) {
             return new ScriptReturnData(null, false, false, "Expression received values that could not be compared");
         }
         Expression compareResult = Expression.constant(compareExpressions(firstReturn.value(), secondReturn.value(), context));
@@ -45,49 +48,49 @@ public class ScriptComparator extends Script {
     }
 
     private boolean compareExpressions(Expression expression1, Expression expression2, Context context) {
-        if ((expression1.getDataType(context) == Expression.DataType.INTEGER || expression1.getDataType(context) == Expression.DataType.FLOAT) &&
-                (expression2.getDataType(context) == Expression.DataType.INTEGER || expression2.getDataType(context) == Expression.DataType.FLOAT)) {
+        if ((expression1.getDataType() == Expression.DataType.INTEGER || expression1.getDataType() == Expression.DataType.FLOAT) &&
+                (expression2.getDataType() == Expression.DataType.INTEGER || expression2.getDataType() == Expression.DataType.FLOAT)) {
             float value1;
             float value2;
-            if (expression1.getDataType(context) == Expression.DataType.INTEGER) {
-                value1 = expression1.getValueInteger(context);
+            if (expression1.getDataType() == Expression.DataType.INTEGER) {
+                value1 = expression1.getValueInteger();
             } else {
-                value1 = expression1.getValueFloat(context);
+                value1 = expression1.getValueFloat();
             }
-            if (expression2.getDataType(context) == Expression.DataType.INTEGER) {
-                value2 = expression2.getValueInteger(context);
+            if (expression2.getDataType() == Expression.DataType.INTEGER) {
+                value2 = expression2.getValueInteger();
             } else {
-                value2 = expression2.getValueFloat(context);
+                value2 = expression2.getValueFloat();
             }
             return comparatorCheckFloat(value1, value2, comparator);
-        } else if (expression1.getDataType(context) == Expression.DataType.BOOLEAN) {
-            if (comparator == ExpressionCompare.Comparator.NOT_EQUAL) {
-                return expression1.getValueBoolean(context) != expression2.getValueBoolean(context);
+        } else if (expression1.getDataType() == Expression.DataType.BOOLEAN) {
+            if (comparator == Comparator.NOT_EQUAL) {
+                return expression1.getValueBoolean() != expression2.getValueBoolean();
             }
-            return expression1.getValueBoolean(context) == expression2.getValueBoolean(context);
-        } else if (expression1.getDataType(context) == Expression.DataType.STRING) {
-            if (comparator == ExpressionCompare.Comparator.NOT_EQUAL) {
-                return !expression1.getValueString(context).equals(expression2.getValueString(context));
+            return expression1.getValueBoolean() == expression2.getValueBoolean();
+        } else if (expression1.getDataType() == Expression.DataType.STRING) {
+            if (comparator == Comparator.NOT_EQUAL) {
+                return !expression1.getValueString().equals(expression2.getValueString());
             }
-            return expression1.getValueString(context).equals(expression2.getValueString(context));
-        } else if (expression1.getDataType(context) == Expression.DataType.STRING_SET) {
-            if (comparator == ExpressionCompare.Comparator.NOT_EQUAL) {
-                return !expression1.getValueStringSet(context).equals(expression2.getValueStringSet(context));
+            return expression1.getValueString().equals(expression2.getValueString());
+        } else if (expression1.getDataType() == Expression.DataType.STRING_SET) {
+            if (comparator == Comparator.NOT_EQUAL) {
+                return !expression1.getValueStringSet().equals(expression2.getValueStringSet());
             }
-            return expression1.getValueStringSet(context).equals(expression2.getValueStringSet(context));
+            return expression1.getValueStringSet().equals(expression2.getValueStringSet());
         }
         return false;
     }
 
     private boolean compareExpressionsNull(Expression expression1, Expression expression2) {
-        if (comparator == ExpressionCompare.Comparator.EQUAL) {
+        if (comparator == Comparator.EQUAL) {
             return expression1 == null && expression2 == null;
         } else {
             return expression1 != null || expression2 != null;
         }
     }
 
-    private boolean comparatorCheckFloat(float value1, float value2, ExpressionCompare.Comparator comparator) {
+    private boolean comparatorCheckFloat(float value1, float value2, Comparator comparator) {
         return switch (comparator) {
             case LESS -> (value1 < value2);
             case GREATER -> (value1 > value2);

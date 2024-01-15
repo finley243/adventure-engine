@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
 
 public class ExpressionConstantInventory extends Expression {
@@ -12,12 +11,12 @@ public class ExpressionConstantInventory extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.INVENTORY;
     }
 
     @Override
-    public Inventory getValueInventory(Context context) {
+    public Inventory getValueInventory() {
         return value;
     }
 

@@ -71,7 +71,7 @@ public class EquipmentComponent {
         // TODO - Expand to all equippable items (not just weapons)
         if (item instanceof ItemWeapon weapon) {
             Context context = new Context(actor.game(), actor, actor, item);
-            Set<String> equipmentEffects = actor.getStatValue("equipment_effects", context).getValueStringSet(context);
+            Set<String> equipmentEffects = actor.getStatValue("equipment_effects", context).getValueStringSet();
             for (String equipmentEffect : equipmentEffects) {
                 weapon.getEffectComponent().addEffect(equipmentEffect);
             }
@@ -86,7 +86,7 @@ public class EquipmentComponent {
             item.onUnequip(actor);
             if (item instanceof ItemWeapon weapon) {
                 Context context = new Context(actor.game(), actor, actor, item);
-                Set<String> equipmentEffects = actor.getStatValue("equipment_effects", context).getValueStringSet(context);
+                Set<String> equipmentEffects = actor.getStatValue("equipment_effects", context).getValueStringSet();
                 for (String equipmentEffect : equipmentEffects) {
                     weapon.getEffectComponent().removeEffect(equipmentEffect);
                 }

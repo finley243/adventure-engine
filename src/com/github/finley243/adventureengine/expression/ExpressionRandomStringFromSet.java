@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 
 import java.util.Set;
@@ -14,12 +13,12 @@ public class ExpressionRandomStringFromSet extends Expression {
     }
 
     @Override
-    public DataType getDataType(Context context) {
+    public DataType getDataType() {
         return DataType.STRING;
     }
 
-    public String getValueString(Context context) {
-        Set<String> set = stringSetVar.getValueStringSet(context);
+    public String getValueString() {
+        Set<String> set = stringSetVar.getValueStringSet();
         if (set.isEmpty()) throw new UnsupportedOperationException("Provided string set is empty");
         return MathUtils.selectRandomFromSet(set);
     }

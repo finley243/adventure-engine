@@ -24,7 +24,7 @@ public class ObjectComponentNetwork extends ObjectComponent {
     @Override
     public List<Action> getActions(Actor subject) {
         Context context = new Context(subject.game(), subject, subject, getObject());
-        Network network = subject.game().data().getNetwork(getObject().getLocalVariable("networkID").getValueString(context));
+        Network network = subject.game().data().getNetwork(getObject().getLocalVariable("networkID").getValueString());
         return new ArrayList<>(network.networkActions(subject, getObject()));
     }
 

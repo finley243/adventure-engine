@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class ScriptSensoryEvent extends Script {
 
-    private final Expression phrase;
+    /*private final Expression phrase;
     private final Expression phraseAudible;
     private final Expression area;
     private final boolean isDetectedBySelf;
@@ -23,29 +23,38 @@ public class ScriptSensoryEvent extends Script {
         this.phraseAudible = phraseAudible;
         this.area = area;
         this.isDetectedBySelf = isDetectedBySelf;
-    }
+    }*/
 
     @Override
     public ScriptReturnData execute(Context context) {
-        Area[] originAreas = getOriginAreas(context);
+        Expression phrase = context.getLocalVariables().get("phrase").getExpression();
+        Expression phraseAudible = context.getLocalVariables().get("phraseAudible").getExpression();
+        Expression area = context.getLocalVariables().get("area").getExpression();
+        Expression isDetectedBySelfExpression = context.getLocalVariables().get("detectSelf").getExpression();
+        if (phrase.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "Phrase parameter is not a string");
+        if (phraseAudible.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "PhraseAudible parameter is not a string");
+        if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.STRING_SET) return new ScriptReturnData(null, false, false, "Phrase parameter is not a string or set");
+        if (isDetectedBySelfExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, false, false, "DetectSelf parameter is not a boolean");
+        boolean isDetectedBySelf = isDetectedBySelfExpression.getValueBoolean();
+        Area[] originAreas = getOriginAreas(context, area);
         Map<String, String> contextVars = context.getTextVarMap();
         Map<String, Noun> contextNouns = context.getContextNounMap();
         TextContext textContext = new TextContext(contextVars, contextNouns);
-        String phraseString = (phrase == null ? null : phrase.getValueString(context));
-        String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString(context));
+        String phraseString = (phrase == null ? null : phrase.getValueString());
+        String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString());
         SensoryEvent sensoryEvent = new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, isDetectedBySelf, false, context.getParentAction(), null, context.getSubject(), context.getTarget());
         sensoryEvent.execute(context.game());
         return new ScriptReturnData(null, false, false, null);
     }
 
-    private Area[] getOriginAreas(Context context) {
-        if (area.getDataType(context) == Expression.DataType.STRING) {
-            String areaID = area.getValueString(context);
+    private Area[] getOriginAreas(Context context, Expression area) {
+        if (area.getDataType() == Expression.DataType.STRING) {
+            String areaID = area.getValueString();
             Area[] areaArray = new Area[1];
             areaArray[0] = context.game().data().getArea(areaID);
             return areaArray;
-        } else if (area.getDataType(context) == Expression.DataType.STRING_SET) {
-            Set<String> areaIDSet = area.getValueStringSet(context);
+        } else if (area.getDataType() == Expression.DataType.STRING_SET) {
+            Set<String> areaIDSet = area.getValueStringSet();
             Area[] areaArray = new Area[areaIDSet.size()];
             int index = 0;
             for (String areaID : areaIDSet) {

@@ -24,10 +24,10 @@ public class Condition {
 			throw new IllegalArgumentException("Condition expression contains an unexpected return statement");
 		} else if (result.value() == null) {
 			throw new IllegalArgumentException("Condition expression did not return a value");
-		} else if (result.value().getDataType(context) != Expression.DataType.BOOLEAN) {
+		} else if (result.value().getDataType() != Expression.DataType.BOOLEAN) {
 			throw new IllegalArgumentException("Condition expression did not return a boolean value");
 		}
-		return result.value().getValueBoolean(context);
+		return result.value().getValueBoolean();
 	}
 
 }

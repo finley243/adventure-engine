@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.List;
@@ -26,10 +25,10 @@ public class ScriptConditional extends Script {
                 return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
             } else if (conditionResult.value() == null) {
                 return new ScriptReturnData(null, false, false, "Expression did not return a value");
-            } else if (conditionResult.value().getDataType(context) != Expression.DataType.BOOLEAN) {
+            } else if (conditionResult.value().getDataType() != Expression.DataType.BOOLEAN) {
                 return new ScriptReturnData(null, false, false, "Expression did not return a boolean value");
             }
-            if (conditionResult.value().getValueBoolean(context)) {
+            if (conditionResult.value().getValueBoolean()) {
                 return scriptPair.script.execute(context);
             }
         }
