@@ -19,7 +19,8 @@ public class Condition {
 	public boolean isMet(Context context) {
 		Script.ScriptReturnData result = expression.execute(context);
 		if (result.error() != null) {
-			throw new IllegalArgumentException("Condition expression encountered an error during execution");
+			System.out.println(expression);
+			throw new IllegalArgumentException("Condition expression encountered an error during execution: " + result.error());
 		} else if (result.isReturn()) {
 			throw new IllegalArgumentException("Condition expression contains an unexpected return statement");
 		} else if (result.value() == null) {

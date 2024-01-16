@@ -61,4 +61,14 @@ public class StatHolderReference {
         return holderID;
     }
 
+    @Override
+    public String toString() {
+        String localString = holderType + (holderIDScript == null ? "" : "(with ID)");
+        if (parentReference == null) {
+            return localString;
+        } else {
+            return parentReference.toString() + "." + localString;
+        }
+    }
+
 }

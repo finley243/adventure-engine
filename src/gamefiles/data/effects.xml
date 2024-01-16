@@ -1,9 +1,9 @@
 <data>
     <effect id="hit_limb_weapon">
-        <scriptAdd external="drop_equipped_force"/>
+        <scriptAdd>drop_equipped_force();</scriptAdd>
     </effect>
     <effect id="food_basic">
-        <scriptAdd type="modifyState" stat="hp" value="10"/>
+        <scriptAdd>stat.subject.hp = stat.subject.hp + 10;</scriptAdd>
     </effect>
     <effect id="mag_extended_pistol_effect" type="add" stat="clip_size" amount="6" permanent="true"/>
 </data>

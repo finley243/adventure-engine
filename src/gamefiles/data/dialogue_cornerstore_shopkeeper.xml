@@ -14,7 +14,7 @@
         <line end="true">"'Till next time."</line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_questions_repeat">
-        <condition type="stat" dataType="boolean" holder="scene" holderID="cornerstore_shopkeeper_andre_questions" stat="triggered"/>
+        <condition>stat.scene("cornerstore_shopkeeper_andre_questions").triggered</condition>
         <line redirect="cornerstore_shopkeeper_andre_questions">"Go ahead."</line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre">
@@ -31,9 +31,7 @@
     </scene>
     <scene id="cornerstore_shopkeeper_andre_intimidate" type="select">
         <line redirect="cornerstore_shopkeeper_andre_questions">
-            <condition type="compare" value2="6">
-                <value1 type="stat" dataType="int" stat="skill_intimidation" holder="player"/>
-            </condition>
+            <condition>stat.player.skill_intimidation &gt;= 6</condition>
             <line>The shopkeeper puts up his hands.</line>
             <line>"Okay, okay. Fine. Ask your damn questions."</line>
         </line>
@@ -43,11 +41,9 @@
         </line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_bribe">
-        <condition type="compare" value2="200">
-            <value1 type="stat" dataType="int" stat="money" holder="player"/>
-        </condition>
+        <condition>stat.player.money &gt;= 200</condition>
         <line redirect="cornerstore_shopkeeper_andre_questions">
-            <scriptPre type="modifyState" stat="money" holder="player" value="-200"/>
+            <scriptPre>stat.player.money = stat.player.money - 200;</scriptPre>
             <line>A smirk comes across the shopkeepers face. He straightens his glasses.</line>
             <line>"See, I like people who know how to conduct business. You've got questions, ask away."</line>
         </line>

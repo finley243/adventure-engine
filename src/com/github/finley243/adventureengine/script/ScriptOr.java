@@ -18,6 +18,7 @@ public class ScriptOr extends Script {
         for (Script subScript : subScripts) {
             ScriptReturnData result = subScript.execute(context);
             if (result.error() != null) {
+                System.out.println(subScript);
                 return result;
             } else if (result.isReturn()) {
                 return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");

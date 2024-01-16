@@ -11,8 +11,8 @@
             <name type="near">entrance</name>
             <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_shelves"/>
             <object id="wilsons_corner_store_door_exit" template="door_basic">
-                <localVar name="door_link_object" value="wilsons_corner_store_exterior_door"/>
-                <localVar name="door_link_dir" value="W"/>
+                <localVar name="door_link_object">"wilsons_corner_store_exterior_door"</localVar>
+                <localVar name="door_link_dir">"W"</localVar>
             </object>
             <object id="wilsons_corner_store_counter" template="counter"/>
             <actor id="frank_wilson" template="frank_wilson">
@@ -34,11 +34,11 @@
             <object id="wilsons_corner_store_shelf" template="store_shelf_snacks"/>
             <object id="wilsons_corner_store_cooler" template="store_cooler_soft_drinks"/>
             <object id="wilsons_corner_store_network_port" template="network_port">
-                <localVar name="networkID" value="wilsons_corner_store"/>
+                <localVar name="networkID">"wilsons_corner_store"</localVar>
             </object>
             <object id="wilsons_corner_store_backroom_door" template="door_basic">
-                <localVar name="door_link_object" value="wilsons_corner_store_backroom_door_interior"/>
-                <localVar name="door_link_dir" value="E"/>
+                <localVar name="door_link_object">"wilsons_corner_store_backroom_door_interior"</localVar>
+                <localVar name="door_link_dir">"E"</localVar>
             </object>
         </area>
     </room>
@@ -46,12 +46,12 @@
         <name>backroom</name>
         <area id="wilsons_corner_store_backroom_area">
             <object id="wilsons_corner_store_backroom_door_interior" template="door_basic">
-                <localVar name="door_link_object" value="wilsons_corner_store_backroom_door"/>
-                <localVar name="door_link_dir" value="W"/>
+                <localVar name="door_link_object">"wilsons_corner_store_backroom_door"</localVar>
+                <localVar name="door_link_dir">"W"</localVar>
             </object>
             <object id="wilsons_corner_store_backroom_exit" template="door_basic">
-                <localVar name="door_link_object" value="wilsons_corner_store_exterior_backroom_door"/>
-                <localVar name="door_link_dir" value="E"/>
+                <localVar name="door_link_object">"wilsons_corner_store_exterior_backroom_door"</localVar>
+                <localVar name="door_link_dir">"E"</localVar>
             </object>
         </area>
     </room>

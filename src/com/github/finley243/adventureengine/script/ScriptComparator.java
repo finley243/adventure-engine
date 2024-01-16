@@ -23,12 +23,14 @@ public class ScriptComparator extends Script {
     public ScriptReturnData execute(Context context) {
         ScriptReturnData firstReturn = firstScript.execute(context);
         if (firstReturn.error() != null) {
+            System.out.println("Comp1: " + firstScript);
             return firstReturn;
         } else if (firstReturn.isReturn()) {
             return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
         }
         ScriptReturnData secondReturn = secondScript.execute(context);
         if (secondReturn.error() != null) {
+            System.out.println("Comp2: " + secondScript);
             return secondReturn;
         } else if (secondReturn.isReturn()) {
             return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");

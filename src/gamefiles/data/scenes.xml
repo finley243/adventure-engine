@@ -1,20 +1,10 @@
 <data>
     <scene id="stratis_lobby_intro">
-        <condition type="and">
-            <value type="stat" dataType="boolean" stat="active" holder="actor" holderID="stratis_receptionist"/>
-            <value type="not">
-                <value type="stat" dataType="boolean" stat="inCombat" holder="actor" holderID="stratis_receptionist"/>
-            </value>
-            <value type="stat" dataType="boolean" stat="active" holder="actor" holderID="stratis_guard_lobby"/>
-            <value type="not">
-                <value type="stat" dataType="boolean" stat="inCombat" holder="actor" holderID="stratis_guard_lobby"/>
-            </value>
-            <value type="compare" value2="stratis_hotel_lobby_desk">
-                <value1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_receptionist"/>
-            </value>
-            <value type="compare" value2="stratis_hotel_lobby_seating">
-                <value1 type="stat" dataType="string" stat="area" holder="actor" holderID="stratis_guard_lobby"/>
-            </value>
+        <condition>
+            stat.actor("stratis_receptionist").active &amp;&amp; !stat.actor("stratis_receptionist").inCombat &amp;&amp;
+            stat.actor("stratis_guard_lobby").active &amp;&amp; !stat.actor("stratis_guard_lobby").inCombat &amp;&amp;
+            stat.actor("stratis_receptionist").area == "stratis_hotel_lobby_desk" &amp;&amp;
+            stat.actor("stratis_guard_lobby").area == "stratis_hotel_lobby_seating"
         </condition>
         <line>The receptionist leans on the desk and sighs. He looks up from the computer, towards the security guard standing near the seating area.</line>
         <line>"Man, could this day be any longer?"</line>

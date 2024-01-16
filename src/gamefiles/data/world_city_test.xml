@@ -60,8 +60,8 @@
             <link type="basic" dist="CLOSE" dir="N" area="street_fifth_sinclair_archer_1"/>
             <link type="basic" dist="CLOSE" dir="S" area="street_corner_fifth_archer_1"/>
             <object id="wilsons_corner_store_exterior_door" template="door_basic">
-                <localVar name="door_link_object" dataType="string" value="wilsons_corner_store_door_exit"/>
-                <localVar name="door_link_dir" dataType="string" value="E"/>
+                <localVar name="door_link_object">"wilsons_corner_store_door_exit"</localVar>
+                <localVar name="door_link_dir">"E"</localVar>
             </object>
             <object id="test_motorcycle" template="motorcycle"/>
         </area>
@@ -76,8 +76,8 @@
             <link type="basic" dist="CLOSE" dir="N" area="street_sixth_sinclair_archer_1"/>
             <link type="basic" dist="CLOSE" dir="S" area="street_corner_sixth_archer_1"/>
             <object id="wilsons_corner_store_exterior_backroom_door" template="door_basic">
-                <localVar name="door_link_object" value="wilsons_corner_store_backroom_exit"/>
-                <localVar name="door_link_dir" value="W"/>
+                <localVar name="door_link_object">"wilsons_corner_store_backroom_exit"</localVar>
+                <localVar name="door_link_dir">"W"</localVar>
             </object>
         </area>
     </room>

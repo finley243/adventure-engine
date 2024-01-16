@@ -12,12 +12,12 @@
         <name>door</name>
         <component type="link">
             <link id="door_link" moveAction="move_door" visible="false">
-                <conditionMovable invert="true" type="stat" dataType="boolean" stat="locked" holder="parentObject"/>
+                <conditionMovable>!stat.parentObject.locked</conditionMovable>
             </link>
         </component>
-        <localVar name="locked" dataType="boolean" value="true"/>
-        <localVar name="lock_keys" dataType="stringSet"/>
-        <localVar name="lock_pick_difficulty" dataType="int" value="1"/>
+        <localVar name="locked">true</localVar>
+        <localVar name="lock_keys">null</localVar>
+        <localVar name="lock_pick_difficulty">1</localVar>
         <action template="lock_key"/>
         <action template="lock_pick"/>
     </object>
@@ -37,9 +37,9 @@
     </object>
     <object id="gumball_machine">
         <name>gumball machine</name>
-        <localVar name="price_hacked" value="false"/>
+        <localVar name="price_hacked">false</localVar>
         <action template="vending_machine">
-            <parameter name="itemID" dataType="string" value="gumball"/>
+            <parameter name="itemID">"gumball"</parameter>
         </action>
         <networkAction template="vending_machine_hack_price"/>
     </object>
@@ -129,12 +129,12 @@
     </object>
     <object id="vending_machine_nitron">
         <name>Nitron Cola vending machine</name>
-        <localVar name="price_hacked" value="false"/>
+        <localVar name="price_hacked">false</localVar>
         <action template="vending_machine">
-            <parameter name="itemID" value="nitron_cola"/>
+            <parameter name="itemID">"nitron_cola"</parameter>
         </action>
         <action template="vending_machine">
-            <parameter name="itemID" value="nitron_diet"/>
+            <parameter name="itemID">"nitron_diet"</parameter>
         </action>
         <networkAction template="vending_machine_hack_price"/>
     </object>

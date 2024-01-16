@@ -19,7 +19,7 @@ public class ScriptNot extends Script {
         } else if (scriptResult.isReturn()) {
             return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
         } else if (scriptResult.value() == null) {
-            return new ScriptReturnData(null, false, false, "Expression did not receive a value");
+            return new ScriptReturnData(null, false, false, "Expression received a null value");
         } else if (scriptResult.value().getDataType() != Expression.DataType.BOOLEAN) {
             return new ScriptReturnData(null, false, false, "Expression expected a boolean value");
         }

@@ -1,49 +1,21 @@
 <data>
     <action id="drive">
         <prompt>Drive</prompt>
-        <parameter name="areaName" dataType="string" type="stat" holder="parentArea" stat="name"/>
+        <parameter name="areaName">stat.parentArea.name</parameter>
         <script>
-            <script type="setVariable" name="area">
-                <value stat="noun" type="stat" holder="parentArea"/>
-            </script>
-            <script type="setVariable" name="vehicle">
-                <value stat="noun" type="stat" holder="parentObject"/>
-            </script>
-            <script type="sensoryEvent">
-                <phrase>driveTo</phrase>
-                <area type="buildStringSet">
-                    <value type="stat" dataType="string" stat="id" holder="area">
-                        <parentHolder holder="subject"/>
-                    </value>
-                    <value type="stat" dataType="string" holder="parentArea" stat="id"/>
-                </area>
-            </script>
-            <script type="setState" stat="area" holder="parentObject">
-                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
-            </script>
+            var area = stat.parentArea.noun;
+            var vehicle = stat.parentObject.noun;
+            sendSensoryEvent(phrase="driveTo", area=set(stat.subject.area.id, stat.parentArea.id));
+            stat.parentObject.area = stat.parentArea.id;
         </script>
     </action>
     <action id="drive_corner">
         <prompt>Drive</prompt>
         <script>
-            <script type="setVariable" name="area">
-                <value stat="noun" type="stat" holder="parentArea"/>
-            </script>
-            <script type="setVariable" name="vehicle">
-                <value stat="noun" type="stat" holder="parentObject"/>
-            </script>
-            <script type="sensoryEvent">
-                <phrase>driveCorner</phrase>
-                <area type="buildStringSet">
-                    <value type="stat" dataType="string" stat="id" holder="area">
-                        <parentHolder holder="subject"/>
-                    </value>
-                    <value type="stat" dataType="string" holder="parentArea" stat="id"/>
-                </area>
-            </script>
-            <script type="setState" stat="area" holder="parentObject">
-                <value type="stat" dataType="string" holder="parentArea" stat="id"/>
-            </script>
+            var area = stat.parentArea.noun;
+            var vehicle = stat.parentObject.noun;
+            sendSensoryEvent(phrase="driveCorner", area=set(stat.subject.area.id, stat.parentArea.id));
+            stat.parentObject.area = stat.parentArea.id;
         </script>
     </action>
 </data>

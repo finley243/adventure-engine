@@ -148,7 +148,7 @@ public class ActionCustom extends Action {
 
     private Map<String, String> getParameterStrings(Actor subject) {
         Map<String, String> stringMap = new HashMap<>();
-        Context context = new Context(subject.game(), subject, subject);
+        Context context = new Context(subject.game(), subject, actor, object, item, area, this, new HashMap<>());
         for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
             Expression parameterValue = Expression.fromScript(templateParameter.getValue(), context);
             if (parameterValue.getDataType() == Expression.DataType.STRING) {

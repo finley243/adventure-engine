@@ -20,73 +20,30 @@
             <blockMessage>Unlocked</blockMessage>
             <script>stat.parentObject.locked</script>
         </condition>
-        <!--<condition type="inventoryContains" requireAll="false">
+        <condition>
             <blockMessage>No valid key in inventory</blockMessage>
-            <inv type="stat" stat="inventory" holder="subject"/>
-            <item type="stat" dataType="stringSet" stat="lock_keys" holder="parentObject"/>
-            <script></script>
-        </condition>-->
+            <script>stat.parentObject.lock_keys != null &amp;&amp; inventoryContains(inventory=stat.subject.inventory, item=stat.parentObject.lock_keys)</script>
+        </condition>
         <script>
-            <script type="setState" stat="locked" holder="parentObject" value="false"/>
-            <script type="sensoryEvent">
-                <phrase>unlock</phrase>
-                <area type="stat" dataType="string" stat="id" holder="area">
-                    <parentHolder holder="subject"/>
-                </area>
-            </script>
+            stat.parentObject.locked = false;
+            sendSensoryEvent(phrase="unlock", area=stat.subject.area.id);
         </script>
     </action>
     <action id="vending_machine">
         <prompt>Buy $itemName ($price)</prompt>
-        <parameter name="itemName" dataType="string" type="stat" holder="itemTemplate" stat="name">
-            <holderID type="parameter" name="itemID"/>
-        </parameter>
-        <parameter name="price" dataType="string" type="toString">
-            <value type="conditional" dataType="int">
-                <if value="0">
-                    <condition type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
-                </if>
-                <else type="stat" dataType="int" holder="itemTemplate" stat="price">
-                    <holderID type="parameter" name="itemID"/>
-                </else>
-            </value>
-        </parameter>
-        <condition type="compare" comparator="GREATER_EQUAL">
+        <parameter name="itemName">stat.itemTemplate(itemID).name</parameter>
+        <parameter name="price">stat.parentObject.price_hacked ? 0 : stat.itemTemplate(itemID).price</parameter>
+        <condition>
             <blockMessage>Not enough credits</blockMessage>
-            <value1 type="stat" dataType="int" stat="money" holder="subject"/>
-            <value2 type="stat" dataType="int" holder="itemTemplate" stat="price">
-                <holderID type="parameter" name="itemID"/>
-            </value2>
+            <script>stat.subject.money &gt;= stat.itemTemplate(itemID).price</script>
         </condition>
         <script>
-            <script type="transferItem">
-                <toInv holder="subject" stat="inventory"/>
-                <item type="parameter" dataType="string" name="itemID"/>
-            </script>
-            <script type="modifyState" dataType="int" stat="money" holder="subject">
-                <value type="conditional" dataType="int">
-                    <if value="0">
-                        <condition type="stat" dataType="boolean" holder="parentObject" stat="price_hacked"/>
-                    </if>
-                    <else type="multiply" dataType="int">
-                        <value type="stat" dataType="int" holder="itemTemplate" stat="price">
-                            <holderID type="parameter" name="itemID"/>
-                        </value>
-                        <value value="-1"/>
-                    </else>
-                </value>
-            </script>
-            <script type="setVariable" name="item">
-                <value stat="noun" type="stat" holder="itemTemplate">
-                    <holderID type="parameter" name="itemID"/>
-                </value>
-            </script>
-            <script type="sensoryEvent">
-                <phrase>vendingMachineBuy</phrase>
-                <area type="stat" dataType="string" stat="id" holder="area">
-                    <parentHolder holder="subject"/>
-                </area>
-            </script>
+            transferItem(to=stat.subject.inventory, item=itemID);
+            if (!stat.parentObject.price_hacked) {
+                stat.subject.money = stat.subject.money - stat.itemTemplate(itemID).price;
+            }
+            var item = stat.itemTemplate(itemID).noun;
+            sendSensoryEvent(phrase="vendingMachineBuy", area=stat.subject.area.id);
         </script>
     </action>
 </data>
