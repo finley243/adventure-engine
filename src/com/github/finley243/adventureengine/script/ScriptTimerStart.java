@@ -24,8 +24,8 @@ public class ScriptTimerStart extends Script {
     public ScriptReturnData execute(Context context) {
         Expression timerID = context.getLocalVariables().get("timer").getExpression();
         Expression timerDuration = context.getLocalVariables().get("duration").getExpression();
-        if (timerID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptTimerStart timerID is not a string");
-        if (timerDuration.getDataType() != Expression.DataType.INTEGER) throw new IllegalArgumentException("ScriptTimerStart timerDuration is not an integer");
+        if (timerID.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "ScriptTimerStart timerID is not a string");
+        if (timerDuration.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, false, false, "ScriptTimerStart timerDuration is not an integer");
         // TODO - Design a way to define delayed scripts through timers in new script parser system
         Timer timer = new Timer(context.game(), timerID.getValueString(), timerDuration.getValueInteger(), null, null, context);
         context.game().data().addTimer(timer.getID(), timer);

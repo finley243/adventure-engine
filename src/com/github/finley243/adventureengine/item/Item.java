@@ -107,7 +107,7 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "inventory" -> (currentInventory == null ? null : Expression.constant(currentInventory));
-			case "noun" -> Expression.constant(this);
+			case "noun" -> Expression.constant((Noun) this);
 			case "id" -> Expression.constant(getID());
 			default -> null;
 		};

@@ -310,10 +310,13 @@ public class ScriptParser {
             int nextCommaIndex = findFirstTokenIndex(tokens, ScriptTokenType.COMMA, index);
             List<ScriptToken> currentGroup;
             if (nextCommaIndex == -1) {
-                currentGroup = tokens.subList(index, tokens.size() - 1);
+                currentGroup = tokens.subList(index, tokens.size());
+                index = tokens.size() + 1;
             } else {
                 currentGroup = tokens.subList(index, nextCommaIndex);
+                index = nextCommaIndex + 1;
             }
+
             if (currentGroup.size() < 3) throw new IllegalArgumentException("Function call contains invalid parameter");
             if (currentGroup.getFirst().type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function call contains invalid parameter");
             if (currentGroup.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Function call contains invalid parameter");
@@ -443,6 +446,8 @@ public class ScriptParser {
             return new ScriptGetGlobal(globalReference.name());
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("game")) {
             return parseGameValue(tokens);
+        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("set")) {
+            return parseSet(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             return parseFunctionCall(tokens);
         } else {
@@ -451,8 +456,30 @@ public class ScriptParser {
         }
     }
 
+    private static Script parseSet(List<ScriptToken> tokens) {
+        if (tokens.getFirst().type != ScriptTokenType.NAME || !tokens.getFirst().value.equals("set")) throw new IllegalArgumentException("Set constructor is missing set keyword");
+        if (tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) throw new IllegalArgumentException("Set constructor is missing value block");
+        if (tokens.getLast().type != ScriptTokenType.PARENTHESIS_CLOSE) throw new IllegalArgumentException("Set constructor value block is not closed");
+        if (tokens.size() == 3) return new ScriptBuildSet(new ArrayList<>());
+        List<Script> setValues = new ArrayList<>();
+        int index = 2;
+        while (index < tokens.size()) {
+            int nextCommaIndex = findFirstTokenIndex(tokens, ScriptTokenType.COMMA, index);
+            List<ScriptToken> currentGroup;
+            if (nextCommaIndex == -1) {
+                currentGroup = tokens.subList(index, tokens.size() - 1);
+                index = tokens.size();
+            } else {
+                currentGroup = tokens.subList(index, nextCommaIndex);
+                index = nextCommaIndex + 1;
+            }
+            Script currentValueScript = parseExpression(currentGroup);
+            setValues.add(currentValueScript);
+        }
+        return new ScriptBuildSet(setValues);
+    }
+
     private static Expression parseLiteral(List<ScriptToken> tokens) {
-        System.out.println("Literal tokens: " + tokens);
         if (tokens.size() != 1) throw new IllegalArgumentException("Invalid literal expression");
         ScriptToken token = tokens.getFirst();
         if (token.type == ScriptTokenType.STRING) {
@@ -477,11 +504,12 @@ public class ScriptParser {
         if (tokens.getFirst().type != ScriptTokenType.NAME || !tokens.getFirst().value.equals("stat")) throw new IllegalArgumentException("Stat reference is missing stat keyword");
         if (tokens.get(1).type != ScriptTokenType.DOT) throw new IllegalArgumentException("Stat reference is missing period after stat keyword");
         int lastDotIndex = findLastTokenIndex(tokens, ScriptTokenType.DOT, tokens.size() - 1);
+        if (lastDotIndex == -1) throw new IllegalArgumentException("Stat reference has invalid name");
         Script statName;
         if (lastDotIndex + 2 == tokens.size()) {
             if (tokens.getLast().type != ScriptTokenType.NAME) throw new IllegalArgumentException("Stat reference has invalid name");
             statName = Script.constant(tokens.getLast().value);
-        } else if (tokens.get(lastDotIndex + 1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
+        } else if (tokens.size() > lastDotIndex + 1 && tokens.get(lastDotIndex + 1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             statName = parseExpression(tokens.subList(lastDotIndex + 2, tokens.size() - 1));
         } else {
             throw new IllegalArgumentException("Stat reference has invalid name");
