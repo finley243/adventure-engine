@@ -201,14 +201,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
 			if (isNewRoom && getArea().getRoom().getDescription() != null) {
-				game().eventQueue().addToEnd(new SceneEvent(getArea().getRoom().getDescription(), null, new Context(game(), this, this)));
+				game().menuManager().sceneMenu(game(), getArea().getRoom().getDescription(), null, new Context(game(), this, this));
 				getArea().getRoom().setKnown();
 				for (Area areaInRoom : getArea().getRoom().getAreas()) {
 					areaInRoom.setKnown();
 				}
 			}
 			if (isNewArea && getArea().getDescription() != null) {
-				game().eventQueue().addToEnd(new SceneEvent(getArea().getDescription(), null, new Context(game(), this, this)));
+				game().menuManager().sceneMenu(game(), getArea().getDescription(), null, new Context(game(), this, this));
 				getArea().setKnown();
 			}
 			if (isNewRoom) {
@@ -393,16 +393,16 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				(new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, true, null, null, this, null)).execute(game());
+				SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, true, null, null, this, null));
 			}
-			(new SensoryEvent(getArea(), "$actor $is $condition", textContext, true, null, null, this, null)).execute(game());
+			SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor $is $condition", textContext, true, null, null, this, null));
 		}
 	}
 	
 	public void kill() {
 		triggerScript("on_death", new Context(game(), this, this));
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
-		(new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null, this, null)).execute(game());
+		SensoryEvent.execute(game(), new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null, this, null));
 		// TODO - Enable held item dropping on death for new equipment system
 		isDead = true;
 		HP = 0;
@@ -611,12 +611,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	
 	public void takeTurn() {
 		if (!isEnabled() || isDead()) {
-			game().eventQueue().addToEnd(new EndTurnEvent(this));
+			game().onEndTurn(this);
 			return;
 		}
 		if (isSleeping()) {
 			updateSleep();
-			game().eventQueue().addToEnd(new EndTurnEvent(this));
+			game().onEndTurn(this);
 			return;
 		}
 		getEffectComponent().onStartRound();
@@ -640,8 +640,18 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			getTargetingComponent().update();
 			getBehaviorComponent().update();
 		}
-		game().eventQueue().addToEnd(new ActionChoiceMenuEvent(this, lastAction, repeatActionCount));
-	}
+		List<Action> actionChoices = availableActions();
+		if (actionChoices.isEmpty()) {
+			endTurn();
+		}
+        Action selectedAction;
+        if (isPlayerControlled()) {
+            selectedAction = game().menuManager().actionChoiceMenu(game(), this, actionChoices);
+        } else {
+            selectedAction = chooseAIAction(actionChoices);
+        }
+        onSelectAction(selectedAction, lastAction, repeatActionCount);
+    }
 
 	public boolean isRepeatAction(Action action) {
 		for (Action repeatAction : repeatActions.keySet()) {
@@ -674,11 +684,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			repeatActionCount = 0;
 		}
 		action.choose(this, repeatActionCount);
-	}
-
-	public void onCompleteAction(Action action, int repeatActionCount) {
 		if (endTurn) {
-			game().eventQueue().addToEnd(new EndTurnEvent(this));
+			game().onEndTurn(this);
 		} else {
 			nextAction(action, repeatActionCount);
 		}
@@ -978,7 +985,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public void triggerBark(String trigger, Context context) {
-		game().eventQueue().addToEnd(new BarkEvent(this, trigger, context));
+		if (isActive()) {
+			Bark bark = getBark(trigger);
+			if (bark != null) {
+				bark.trigger(context);
+			}
+		}
 	}
 
 	public Bark getBark(String trigger) {

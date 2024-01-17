@@ -2,8 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.CompleteActionEvent;
-import com.github.finley243.adventureengine.event.SceneEvent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
 
@@ -17,8 +15,7 @@ public class ActionTalk extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.game().eventQueue().addToEnd(new SceneEvent(target.getDialogueStart(), null, new Context(target.game(), target, target)));
-		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
+		subject.game().menuManager().sceneMenu(subject.game(), target.getDialogueStart(), null, new Context(target.game(), target, target));
 	}
 
 	@Override

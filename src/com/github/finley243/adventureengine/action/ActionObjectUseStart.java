@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
@@ -42,8 +41,7 @@ public class ActionObjectUseStart extends Action {
 		component.setUser(slotID, subject);
 		subject.setUsingObject(new ObjectComponentUsable.ObjectUserData(component.getObject(), slotID));
 		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
-		(new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null, subject, null)).execute(subject.game());
-		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null, subject, null));
 	}
 
 	@Override

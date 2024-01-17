@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
-import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.item.ItemWeapon;
@@ -33,8 +32,7 @@ public class ActionItemEquip extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.getEquipmentComponent().equip(item, slots);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
-        (new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null, subject, null)).execute(subject.game());
-        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
+        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null, subject, null));
     }
 
     @Override

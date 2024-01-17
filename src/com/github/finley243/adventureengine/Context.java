@@ -219,7 +219,6 @@ public class Context {
         private Expression expression;
 
         public Variable(Expression expression) {
-            if (expression == null) throw new IllegalArgumentException("Expression cannot be initialized to null");
             this.expression = expression;
         }
 
@@ -228,7 +227,6 @@ public class Context {
         }
 
         public void setExpression(Expression expression) {
-            if (expression == null) throw new IllegalArgumentException("Expression cannot be set to null");
             this.expression = expression;
         }
     }

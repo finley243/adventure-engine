@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.ui.component;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
 
 import javax.swing.*;

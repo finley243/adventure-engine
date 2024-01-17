@@ -15,7 +15,7 @@ public class ThreadControl {
         this.pauseThread = true;
         while (pauseThread) {
             try {
-                game.wait();
+                this.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -24,7 +24,7 @@ public class ThreadControl {
 
     public synchronized void unpause() {
         this.pauseThread = false;
-        game.notify();
+        this.notify();
     }
 
 }

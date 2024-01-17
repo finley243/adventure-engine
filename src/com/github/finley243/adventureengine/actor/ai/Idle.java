@@ -25,7 +25,7 @@ public class Idle {
 
     public void trigger(Actor subject) {
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).build());
-        (new SensoryEvent(subject.getArea(), phrase, context, true, null, null, subject, null)).execute(subject.game());
+        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), phrase, context, true, null, null, subject, null));
     }
 
 }

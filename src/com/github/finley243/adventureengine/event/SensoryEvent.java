@@ -102,20 +102,20 @@ public class SensoryEvent {
 		return isLoud;
 	}
 
-	public void execute(Game game) {
+	public static void execute(Game game, SensoryEvent event) {
 		Map<Area, Set<Area>> lineOfSightAreas = new HashMap<>(); // Key = origin, Value = line of sight areas
-		for (Area origin : getOrigins()) {
+		for (Area origin : event.getOrigins()) {
 			lineOfSightAreas.put(origin, Pathfinder.getLineOfSightAreas(origin).keySet());
 		}
 		Map<Area, Set<Actor>> lineOfSightActors = new HashMap<>();
-		for (Area origin : getOrigins()) {
+		for (Area origin : event.getOrigins()) {
 			Set<Area> areas = lineOfSightAreas.get(origin);
 			Set<Actor> originActors = new HashSet<>();
 			for (Area area : areas) {
 				originActors.addAll(area.getActors());
 			}
-			if (!isDetectedBySelf && subject != null) {
-				originActors.remove(subject);
+			if (!event.isDetectedBySelf && event.subject != null) {
+				originActors.remove(event.subject);
 			}
 			lineOfSightActors.put(origin, originActors);
 		}
@@ -131,8 +131,8 @@ public class SensoryEvent {
 		// TODO - Add system for audible events (simple path length check?)
 		for (Actor actor : reverseActorMap.keySet()) {
 			boolean actorCanSeeEvent = true;
-			if (getSubject() != null) {
-				actorCanSeeEvent = getSubject().isVisible(actor);
+			if (event.getSubject() != null) {
+				actorCanSeeEvent = event.getSubject().isVisible(actor);
 			}
 			if (actorCanSeeEvent) {
 				boolean hasVisibleOrigin = false;
@@ -144,12 +144,8 @@ public class SensoryEvent {
 				}
 				actorCanSeeEvent = hasVisibleOrigin;
 			}
-			actor.onSensoryEvent(this, actorCanSeeEvent);
+			actor.onSensoryEvent(event, actorCanSeeEvent);
 		}
-	}
-
-	public boolean continueAfterExecution() {
-		return true;
 	}
 
 	private static class ActorSenseData {

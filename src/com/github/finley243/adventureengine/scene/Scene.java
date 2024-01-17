@@ -103,5 +103,7 @@ public class Scene extends GameInstanced implements StatHolder {
 		}
 		return state;
 	}
+
+	public record SceneLineResult(boolean exit, String redirect) {}
 	
 }

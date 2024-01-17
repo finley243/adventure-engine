@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
 
@@ -12,7 +11,6 @@ public class ActionEnd extends Action {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.endTurn();
-		subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public class Bark {
         String visiblePhrase = MathUtils.selectRandomFromList(visiblePhrases);
         String nonVisiblePhrase = MathUtils.selectRandomFromList(nonVisiblePhrases);
         TextContext textContext = new TextContext(context.getTextVarMap(), context.getContextNounMap());
-        (new SensoryEvent(context.getSubject().getArea(), visiblePhrase, nonVisiblePhrase, textContext, true, false, null, this, context.getSubject(), context.getTarget())).execute(context.game());
+        SensoryEvent.execute(context.game(), new SensoryEvent(context.getSubject().getArea(), visiblePhrase, nonVisiblePhrase, textContext, true, false, null, this, context.getSubject(), context.getTarget()));
     }
 
     public BarkResponseType responseType() {

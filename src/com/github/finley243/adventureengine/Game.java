@@ -32,7 +32,6 @@ public class Game {
 	public static final String CONFIG_FILE = "/config.xml";
 
 	private final EventBus eventBus;
-	private final EventQueue eventQueue;
 	private final MenuManager menuManager;
 	private final DebugLogger debugLogger;
 	private final ThreadControl threadControl;
@@ -46,8 +45,7 @@ public class Game {
 	/** Main game constructor, loads data and starts game loop */
 	public Game() throws ParserConfigurationException, SAXException, IOException, GameDataException {
 		eventBus = new EventBus();
-		eventQueue = new EventQueue(this);
-		menuManager = new MenuManager();
+		menuManager = new MenuManager(this);
 		threadControl = new ThreadControl(this);
 		eventBus().register(menuManager);
 		data = new Data(this);
@@ -96,10 +94,6 @@ public class Game {
 
 	public EventBus eventBus() {
 		return eventBus;
-	}
-
-	public EventQueue eventQueue() {
-		return eventQueue;
 	}
 
 	public MenuManager menuManager() {
@@ -157,7 +151,6 @@ public class Game {
 		this.turnOrder = computeTurnOrder();
 		this.currentTurnIndex = 0;
 		nextTurn();
-		eventQueue.startExecution();
 	}
 
 	private void nextTurn() {

@@ -31,9 +31,9 @@ public class ScriptSensoryEvent extends Script {
         Expression phraseAudible = context.getLocalVariables().get("phraseAudible").getExpression();
         Expression area = context.getLocalVariables().get("area").getExpression();
         Expression isDetectedBySelfExpression = context.getLocalVariables().get("detectSelf").getExpression();
-        if (phrase.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "Phrase parameter is not a string");
-        if (phraseAudible.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "PhraseAudible parameter is not a string");
-        if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.STRING_SET) return new ScriptReturnData(null, false, false, "Phrase parameter is not a string or set");
+        if (phrase != null && phrase.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "Phrase parameter is not a string");
+        if (phraseAudible != null && phraseAudible.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "PhraseAudible parameter is not a string");
+        if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.STRING_SET) return new ScriptReturnData(null, false, false, "Area parameter is not a string or set");
         if (isDetectedBySelfExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, false, false, "DetectSelf parameter is not a boolean");
         boolean isDetectedBySelf = isDetectedBySelfExpression.getValueBoolean();
         Area[] originAreas = getOriginAreas(context, area);
@@ -43,7 +43,7 @@ public class ScriptSensoryEvent extends Script {
         String phraseString = (phrase == null ? null : phrase.getValueString());
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString());
         SensoryEvent sensoryEvent = new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, isDetectedBySelf, false, context.getParentAction(), null, context.getSubject(), context.getTarget());
-        sensoryEvent.execute(context.game());
+        SensoryEvent.execute(context.game(), sensoryEvent);
         return new ScriptReturnData(null, false, false, null);
     }
 

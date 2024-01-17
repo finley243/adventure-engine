@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.CompleteActionEvent;
 
 import java.util.Collection;
 
@@ -33,7 +32,6 @@ public abstract class ActionRandomEach<T> extends Action {
             }
         }
         onEnd(subject, repeatActionCount);
-        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     public String getChanceTag(Actor subject) {

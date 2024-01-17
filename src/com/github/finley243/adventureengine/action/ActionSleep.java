@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.CompleteActionEvent;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
@@ -19,10 +18,9 @@ public class ActionSleep extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).build());
-        (new SensoryEvent(subject.getArea(), Phrases.get("sleep"), context, true, this, null, subject, null)).execute(subject.game());
+        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("sleep"), context, true, this, null, subject, null));
         subject.startSleep(SLEEP_DURATION);
         subject.endTurn();
-        subject.game().eventQueue().addToEnd(new CompleteActionEvent(subject, this, repeatActionCount));
     }
 
     @Override

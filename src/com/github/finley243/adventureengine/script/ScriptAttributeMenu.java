@@ -2,9 +2,7 @@ package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.event.AttributeMenuEvent;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.stat.StatHolderReference;
 
 public class ScriptAttributeMenu extends Script {
 
@@ -25,8 +23,7 @@ public class ScriptAttributeMenu extends Script {
         if (actorExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, false, false, "Actor parameter is not a stat holder");
         if (!(actorExpression.getValueStatHolder() instanceof Actor actor)) return new ScriptReturnData(null, false, false, "Actor parameter is not an actor");
         int pointsValue = points.getValueInteger();
-        AttributeMenuEvent menuEvent = new AttributeMenuEvent(actor, pointsValue);
-        context.game().menuManager().attributeMenu(menuEvent, context.game(), actor, pointsValue);
+        context.game().menuManager().attributeMenu(context.game(), actor, pointsValue);
         return new ScriptReturnData(null, false, false, null);
     }
 
