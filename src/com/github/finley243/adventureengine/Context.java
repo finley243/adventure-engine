@@ -192,7 +192,7 @@ public class Context {
             nounMap.put("item", this.getParentItem());
         }
         for (Map.Entry<String, Context.Variable> entry : this.getLocalVariables().entrySet()) {
-            if (entry.getValue().getExpression().getDataType() == Expression.DataType.NOUN) {
+            if (entry.getValue().getExpression() != null && entry.getValue().getExpression().getDataType() == Expression.DataType.NOUN) {
                 nounMap.put(entry.getKey(), entry.getValue().getExpression().getValueNoun());
             }
         }
@@ -202,7 +202,7 @@ public class Context {
     public Map<String, String> getTextVarMap() {
         Map<String, String> textVarValues = new HashMap<>();
         for (Map.Entry<String, Context.Variable> entry : this.getLocalVariables().entrySet()) {
-            if (entry.getValue().getExpression().getDataType() == Expression.DataType.STRING) {
+            if (entry.getValue().getExpression() != null && entry.getValue().getExpression().getDataType() == Expression.DataType.STRING) {
                 textVarValues.put(entry.getKey(), entry.getValue().getExpression().getValueString());
             }
         }

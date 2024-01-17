@@ -44,7 +44,7 @@ public class ScriptExternal extends Script {
                 innerContext.setLocalVariable(definitionParameter.name(), definitionParameter.defaultValue());
             }
         }
-        ScriptReturnData scriptResult = script.script().execute(context);
+        ScriptReturnData scriptResult = script.script().execute(innerContext);
         if (!scriptResult.isReturn() && script.returnType() != null) {
             return new ScriptReturnData(null, false, false, "Function has non-void return type but is missing return statement");
         } else if (scriptResult.value() == null) {
