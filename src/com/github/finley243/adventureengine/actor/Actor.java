@@ -289,6 +289,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public boolean canDodge(Context context) {
+		if (isInCover()) {
+			return false;
+		}
 		return canDodge.value(true, context);
 	}
 

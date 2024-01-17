@@ -41,6 +41,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 public class DataLoader {
@@ -131,6 +132,12 @@ public class DataLoader {
                             }
                         }
                         currentChild = currentChild.getNextSibling();
+                    }
+                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase("asf")) {
+                    String fileContents = Files.readString(file.toPath());
+                    List<ScriptParser.ScriptData> functions = ScriptParser.parseFunctions(fileContents);
+                    for (ScriptParser.ScriptData function : functions) {
+                        game.data().addScript(function.name(), function);
                     }
                 }
             }

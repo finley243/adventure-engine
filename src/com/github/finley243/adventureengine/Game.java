@@ -77,7 +77,7 @@ public class Game {
 		System.out.println("Loaded Game");*/
 
 		//System.out.println(Pathfinder.getLineOfSightAreas(data().getArea("apartment_0_3")));
-		ScriptParser.parseFunctions("func drop_equipped_force_specified_slot(equippedSlot) {\n" +
+		/*ScriptParser.parseFunctions("func drop_equipped_force_specified_slot(equippedSlot) {\n" +
 				"\t//condition stat.subject.(\"has_equipped_\" + equippedSlot);\n" +
 				"\tif (stat.subject.(\"has_equipped_\" + equippedSlot)) {\n" +
 				"\t\tvar dropAreaID = randomFromSet(set=stat.subject.area.movable_areas);\n" +
@@ -85,7 +85,7 @@ public class Game {
 				"\t\ttransferItem(transferType=\"instance\", from=stat.subject.inventory, to=stat.area(dropAreaID).inventory, item=equippedItemID);\n" +
 				"\t\tsensoryEvent(phrase=\"forceDrop\", area=stat.subject.area.id);\n" +
 				"\t}\n" +
-				"}");
+				"}");*/
 		//ScriptParser.parseScripts("\"test\" \"'single quotes'\" \"\\\"escaped quotes\\\"\"");
 
 		continueGame = true;

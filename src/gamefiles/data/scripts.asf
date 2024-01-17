@@ -1,0 +1,29 @@
+func drop_equipped() {
+    drop_equipped_specified_slot(equippedSlot = "hand_main");
+    drop_equipped_specified_slot(equippedSlot = "hand_off");
+}
+
+func drop_equipped_specified_slot(equippedSlot) {
+    // Test comment
+	if (stat.subject.("has_equipped_" + equippedSlot)) {
+		var dropAreaID = stat.subject.area.id;
+		var equippedItemID = stat.subject.equipped_item(equippedSlot).id;
+		transferItem(transferType = "instance", from = stat.subject.inventory, to = stat.area(dropAreaID).inventory, item = equippedItemID);
+		sensoryEvent(phrase = "forceDrop", area = stat.subject.area.id);
+	}
+}
+
+func drop_equipped_force() {
+    drop_equipped_force_specified_slot(equippedSlot = "hand_main");
+    drop_equipped_force_specified_slot(equippedSlot = "hand_off");
+}
+
+func drop_equipped_force_specified_slot(equippedSlot) {
+    // Test comment
+	if (stat.subject.("has_equipped_" + equippedSlot)) {
+		var dropAreaID = randomFromSet(set = stat.subject.area.movable_areas);
+		var equippedItemID = stat.subject.equipped_item(equippedSlot).id;
+		transferItem(transferType = "instance", from = stat.subject.inventory, to = stat.area(dropAreaID).inventory, item = equippedItemID);
+		sensoryEvent(phrase = "forceDrop", area = stat.subject.area.id);
+	}
+}

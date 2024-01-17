@@ -21,6 +21,7 @@ public class ScriptExternal extends Script {
     public ScriptReturnData execute(Context context) {
         Context innerContext = new Context(context, false);
         ScriptParser.ScriptData script = context.game().data().getScript(scriptID);
+        if (script == null) return new ScriptReturnData(null, null, "Function does not exist");
         Set<String> validParameterNames = new HashSet<>();
         for (ScriptParser.ScriptParameter definitionParameter : script.parameters()) {
             validParameterNames.add(definitionParameter.name());

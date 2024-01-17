@@ -16,7 +16,7 @@ public class ScriptParser {
     }
 
     private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set");
-    private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*\n|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|==|!=|<=|>=|<|>|;|=|\\?|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}";
+    private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*[\n\r]|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|==|!=|<=|>=|<|>|;|=|\\?|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}";
 
     public static List<ScriptData> parseFunctions(String scriptText) {
         List<ScriptData> scripts = new ArrayList<>();
