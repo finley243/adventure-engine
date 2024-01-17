@@ -19,11 +19,11 @@ public class ScriptCompound extends Script {
             ScriptReturnData result = subScript.execute(innerContext);
             if (result.error() != null) {
                 return result;
-            } else if (result.isReturn()) {
+            } else if (result.flowStatement() != null) {
                 return result;
             }
         }
-        return new ScriptReturnData(null, false, false, null);
+        return new ScriptReturnData(null, null, null);
     }
 
 }

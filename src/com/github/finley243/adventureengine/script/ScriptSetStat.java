@@ -20,16 +20,28 @@ public class ScriptSetStat extends Script {
 
     @Override
     public ScriptReturnData execute(Context context) {
-        Expression statNameExpression = Expression.fromScript(statName, context);
-        if (statNameExpression == null) return new ScriptReturnData(null, false, false, "Specified stat name is null");
-        if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "Specified stat name is not a string");
+        ScriptReturnData statNameResult = statName.execute(context);
+        if (statNameResult.error() != null) {
+            return statNameResult;
+        } else if (statNameResult.flowStatement() != null) {
+            return new ScriptReturnData(null, null, "Expression cannot contain flow statement");
+        }
+        Expression statNameExpression = statNameResult.value();
+        if (statNameExpression == null) return new ScriptReturnData(null, null, "Specified stat name is null");
+        if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Specified stat name is not a string");
         String statNameString = statNameExpression.getValueString();
-        Expression statValueExpression = Expression.fromScript(statValue, context);
+        ScriptReturnData statValueResult = statValue.execute(context);
+        if (statValueResult.error() != null) {
+            return statValueResult;
+        } else if (statValueResult.flowStatement() != null) {
+            return new ScriptReturnData(null, null, "Expression cannot contain flow statement");
+        }
+        Expression statValueExpression = statValueResult.value();
         boolean success = holder.getHolder(context).setStatValue(statNameString, statValueExpression, context);
         if (!success) {
-            return new ScriptReturnData(null, false, false, "Stat value could not be set");
+            return new ScriptReturnData(null, null, "Stat value could not be set");
         }
-        return new ScriptReturnData(null, false, false, null);
+        return new ScriptReturnData(null, null, null);
     }
 
 }

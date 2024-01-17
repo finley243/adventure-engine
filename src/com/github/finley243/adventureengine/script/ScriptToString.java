@@ -17,8 +17,8 @@ public class ScriptToString extends Script {
             case NOUN -> valueExpression.getValueNoun().getName();
             case INVENTORY, STAT_HOLDER -> null;
         };
-        if (stringValue == null) return new ScriptReturnData(null, false, false, "Value parameter cannot be converted to string");
-        return new ScriptReturnData(Expression.constant(stringValue), false, false, null);
+        if (stringValue == null) return new ScriptReturnData(null, null, "Value parameter cannot be converted to string");
+        return new ScriptReturnData(Expression.constant(stringValue), null, null);
     }
 
 }

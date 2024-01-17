@@ -42,7 +42,7 @@ public class ScriptModifyState extends Script {
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType());
         }
-        return new ScriptReturnData(null, false, false, null);
+        return new ScriptReturnData(null, null, null);
     }
 
 }

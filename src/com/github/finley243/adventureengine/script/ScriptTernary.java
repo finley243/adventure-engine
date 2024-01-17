@@ -20,12 +20,12 @@ public class ScriptTernary extends Script {
         ScriptReturnData conditionResult = scriptCondition.execute(context);
         if (conditionResult.error() != null) {
             return conditionResult;
-        } else if (conditionResult.isReturn()) {
-            return new ScriptReturnData(null, false, false, "Ternary condition contains an unexpected return statement");
+        } else if (conditionResult.flowStatement() != null) {
+            return new ScriptReturnData(null, null, "Ternary condition contains an unexpected flow statement");
         } else if (conditionResult.value() == null) {
-            return new ScriptReturnData(null, false, false, "Ternary condition provided a null value");
+            return new ScriptReturnData(null, null, "Ternary condition provided a null value");
         } else if (conditionResult.value().getDataType() != Expression.DataType.BOOLEAN) {
-            return new ScriptReturnData(null, false, false, "Ternary condition provided a non-boolean value");
+            return new ScriptReturnData(null, null, "Ternary condition provided a non-boolean value");
         }
         boolean conditionSuccess = conditionResult.value().getValueBoolean();
         if (conditionSuccess) {

@@ -17,6 +17,10 @@ import java.util.Set;
  */
 public abstract class Script {
 
+	public enum FlowStatementType {
+		RETURN, BREAK, CONTINUE
+	}
+
 	/**
 	 * Begin execution of the script
 	 *
@@ -85,6 +89,6 @@ public abstract class Script {
 		return new ScriptExpression(Expression.constant(value));
 	}
 
-	public record ScriptReturnData(Expression value, boolean isReturn, boolean isBreak, String error) {}
+	public record ScriptReturnData(Expression value, FlowStatementType flowStatement, String error) {}
 
 }

@@ -1,8 +1,6 @@
 package com.github.finley243.adventureengine.expression;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Inventory;
-import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 
@@ -64,20 +62,6 @@ public abstract class Expression {
         return this.getDataType() == other.getDataType();
     }
 
-    public static DataType dataTypeFromString(String name) {
-        return switch (name) {
-            case "boolean" -> DataType.BOOLEAN;
-            case "int" -> DataType.INTEGER;
-            case "float" -> DataType.FLOAT;
-            case "string" -> DataType.STRING;
-            case "stringSet" -> DataType.STRING_SET;
-            case "inventory" -> DataType.INVENTORY;
-            case "noun" -> DataType.NOUN;
-            case "statHolder" -> DataType.STAT_HOLDER;
-            default -> null;
-        };
-    }
-
     public static Expression convertToConstant(Expression expression) {
         if (expression == null) return null;
         return switch (expression.getDataType()) {
@@ -122,18 +106,6 @@ public abstract class Expression {
 
     public static Expression constant(StatHolder value) {
         return new ExpressionConstantStatHolder(value);
-    }
-
-    public static Expression fromScript(Script script, Context context) {
-        if (script == null) return null;
-        Script.ScriptReturnData returnData = script.execute(context);
-        if (returnData.error() != null) {
-            throw new IllegalArgumentException("Expression script threw an error: " + returnData.error());
-        } else if (returnData.isReturn()) {
-            throw new IllegalArgumentException("Expression script contains an unexpected return statement");
-        } else {
-            return returnData.value();
-        }
     }
 
 }

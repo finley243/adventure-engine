@@ -21,12 +21,12 @@ public class ScriptConditional extends Script {
             ScriptReturnData conditionResult = scriptPair.condition.execute(context);
             if (conditionResult.error() != null) {
                 return conditionResult;
-            } else if (conditionResult.isReturn()) {
-                return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+            } else if (conditionResult.flowStatement() != null) {
+                return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
             } else if (conditionResult.value() == null) {
-                return new ScriptReturnData(null, false, false, "Expression did not return a value");
+                return new ScriptReturnData(null, null, "Expression did not return a value");
             } else if (conditionResult.value().getDataType() != Expression.DataType.BOOLEAN) {
-                return new ScriptReturnData(null, false, false, "Expression did not return a boolean value");
+                return new ScriptReturnData(null, null, "Expression did not return a boolean value");
             }
             if (conditionResult.value().getValueBoolean()) {
                 return scriptPair.script.execute(context);
@@ -35,7 +35,7 @@ public class ScriptConditional extends Script {
         if (scriptElse != null) {
             return scriptElse.execute(context);
         }
-        return new ScriptReturnData(null, false, false, null);
+        return new ScriptReturnData(null, null, null);
     }
 
     public static class ConditionalScriptPair {

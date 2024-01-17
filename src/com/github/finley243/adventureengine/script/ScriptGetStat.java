@@ -18,13 +18,19 @@ public class ScriptGetStat extends Script {
 
     @Override
     public ScriptReturnData execute(Context context) {
-        Expression statNameExpression = Expression.fromScript(statName, context);
-        if (statNameExpression == null) return new ScriptReturnData(null, false, false, "Specified stat name is null");
-        if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "Specified stat name is not a string");
+        ScriptReturnData statNameResult = statName.execute(context);
+        if (statNameResult.error() != null) {
+            return statNameResult;
+        } else if (statNameResult.flowStatement() != null) {
+            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+        }
+        Expression statNameExpression = statNameResult.value();
+        if (statNameExpression == null) return new ScriptReturnData(null, null, "Specified stat name is null");
+        if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Specified stat name is not a string");
         String statNameString = statNameExpression.getValueString();
         StatHolder statHolderValue = statHolder.getHolder(context);
         Expression statValue = statHolderValue.getStatValue(statNameString, context);
-        return new ScriptReturnData(statValue, false, false, null);
+        return new ScriptReturnData(statValue, null, null);
     }
 
 }

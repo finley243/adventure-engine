@@ -53,8 +53,8 @@ public class StatHolderReference {
             Script.ScriptReturnData holderIDResult = holderIDScript.execute(context);
             if (holderIDResult.error() != null) {
                 throw new IllegalArgumentException("StatHolderReference holderID expression threw an error");
-            } else if (holderIDResult.isReturn()) {
-                throw new IllegalArgumentException("StatHolderReference holderID contains an unexpected return statement");
+            } else if (holderIDResult.flowStatement() != null) {
+                throw new IllegalArgumentException("StatHolderReference holderID contains an unexpected flow statement");
             }
             holderID = holderIDResult.value();
         }

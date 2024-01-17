@@ -19,17 +19,17 @@ public class ScriptAnd extends Script {
             ScriptReturnData result = subScript.execute(context);
             if (result.error() != null) {
                 return result;
-            } else if (result.isReturn()) {
-                return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+            } else if (result.flowStatement() != null) {
+                return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
             } else if (result.value() == null) {
-                return new ScriptReturnData(null, false, false, "Expression received a null value");
+                return new ScriptReturnData(null, null, "Expression received a null value");
             } else if (result.value().getDataType() != Expression.DataType.BOOLEAN) {
-                return new ScriptReturnData(null, false, false, "Expression expected a boolean value");
+                return new ScriptReturnData(null, null, "Expression expected a boolean value");
             } else if (!result.value().getValueBoolean()) {
-                return new ScriptReturnData(Expression.constant(false), false, false, null);
+                return new ScriptReturnData(Expression.constant(false), null, null);
             }
         }
-        return new ScriptReturnData(Expression.constant(true), false, false, null);
+        return new ScriptReturnData(Expression.constant(true), null, null);
     }
 
 }

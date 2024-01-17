@@ -14,11 +14,11 @@ public class ScriptGetGameValue extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         return switch (valueName) {
-            case "day" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getDay()), false, false, null);
-            case "month" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getMonth()), false, false, null);
-            case "year" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getYear()), false, false, null);
-            case "weekday" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getWeekday()), false, false, null);
-            default -> new ScriptReturnData(null, false, false, "Specified game value does not exist");
+            case "day" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getDay()), null, null);
+            case "month" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getMonth()), null, null);
+            case "year" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getYear()), null, null);
+            case "weekday" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getWeekday()), null, null);
+            default -> new ScriptReturnData(null, null, "Specified game value does not exist");
         };
     }
 

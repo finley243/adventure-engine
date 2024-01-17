@@ -6,35 +6,25 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptFactionRelation extends Script {
 
-	/*private final String targetFaction;
-	private final String relationFaction;
-	private final FactionRelation relation;
-	
-	public ScriptFactionRelation(String targetFaction, String relationFaction, FactionRelation relation) {
-		this.targetFaction = targetFaction;
-		this.relationFaction = relationFaction;
-		this.relation = relation;
-	}*/
-
 	@Override
 	public ScriptReturnData execute(Context context) {
 		Expression factionExpression = context.getLocalVariables().get("faction").getExpression();
 		Expression relatedFactionExpression = context.getLocalVariables().get("relatedFaction").getExpression();
 		Expression relationExpression = context.getLocalVariables().get("relation").getExpression();
-		if (factionExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "Faction parameter is not a string");
-		if (relatedFactionExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "RelatedFaction parameter is not a string");
-		if (relationExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, false, false, "Relation parameter is not a string");
+		if (factionExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Faction parameter is not a string");
+		if (relatedFactionExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "RelatedFaction parameter is not a string");
+		if (relationExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Relation parameter is not a string");
 		FactionRelation relation;
 		switch (relationExpression.getValueString()) {
 			case "ally" -> relation = FactionRelation.ALLY;
 			case "neutral" -> relation = FactionRelation.NEUTRAL;
 			case "hostile" -> relation = FactionRelation.HOSTILE;
 			default -> {
-				return new ScriptReturnData(null, false, false, "Relation parameter is not a valid faction relation");
+				return new ScriptReturnData(null, null, "Relation parameter is not a valid faction relation");
 			}
 		}
 		context.game().data().getFaction(factionExpression.getValueString()).setRelation(relatedFactionExpression.getValueString(), relation);
-		return new ScriptReturnData(null, false, false, null);
+		return new ScriptReturnData(null, null, null);
 	}
 
 }

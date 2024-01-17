@@ -23,33 +23,31 @@ public class ScriptComparator extends Script {
     public ScriptReturnData execute(Context context) {
         ScriptReturnData firstReturn = firstScript.execute(context);
         if (firstReturn.error() != null) {
-            System.out.println("Comp1: " + firstScript);
             return firstReturn;
-        } else if (firstReturn.isReturn()) {
-            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (firstReturn.flowStatement() != null) {
+            return new ScriptReturnData(null, null, "Expression cannot contain a return statement");
         }
         ScriptReturnData secondReturn = secondScript.execute(context);
         if (secondReturn.error() != null) {
-            System.out.println("Comp2: " + secondScript);
             return secondReturn;
-        } else if (secondReturn.isReturn()) {
-            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (secondReturn.flowStatement() != null) {
+            return new ScriptReturnData(null, null, "Expression cannot contain a return statement");
         }
         if (firstReturn.value() == null || secondReturn.value() == null) {
             if (comparator != Comparator.EQUAL && comparator != Comparator.NOT_EQUAL) {
-                return new ScriptReturnData(null, false, false, "Expression has invalid comparator for null value");
+                return new ScriptReturnData(null, null, "Expression has invalid comparator for null value");
             }
             Expression compareNullResult = Expression.constant(compareExpressionsNull(firstReturn.value(), secondReturn.value()));
-            return new ScriptReturnData(compareNullResult, false, false, null);
+            return new ScriptReturnData(compareNullResult, null, null);
         }
         if (!firstReturn.value().canCompareTo(secondReturn.value())) {
-            return new ScriptReturnData(null, false, false, "Expression received values that could not be compared");
+            return new ScriptReturnData(null, null, "Expression received values that could not be compared");
         }
-        Expression compareResult = Expression.constant(compareExpressions(firstReturn.value(), secondReturn.value(), context));
-        return new ScriptReturnData(compareResult, false, false, null);
+        Expression compareResult = Expression.constant(compareExpressions(firstReturn.value(), secondReturn.value()));
+        return new ScriptReturnData(compareResult, null, null);
     }
 
-    private boolean compareExpressions(Expression expression1, Expression expression2, Context context) {
+    private boolean compareExpressions(Expression expression1, Expression expression2) {
         if ((expression1.getDataType() == Expression.DataType.INTEGER || expression1.getDataType() == Expression.DataType.FLOAT) &&
                 (expression2.getDataType() == Expression.DataType.INTEGER || expression2.getDataType() == Expression.DataType.FLOAT)) {
             float value1;

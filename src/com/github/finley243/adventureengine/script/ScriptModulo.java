@@ -18,34 +18,34 @@ public class ScriptModulo extends Script {
         ScriptReturnData firstReturn = firstScript.execute(context);
         if (firstReturn.error() != null) {
             return firstReturn;
-        } else if (firstReturn.isReturn()) {
-            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (firstReturn.flowStatement() != null) {
+            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
         } else if (firstReturn.value() == null) {
-            return new ScriptReturnData(null, false, false, "Expression did not receive a value");
+            return new ScriptReturnData(null, null, "Expression did not receive a value");
         }
         ScriptReturnData secondReturn = secondScript.execute(context);
         if (secondReturn.error() != null) {
             return secondReturn;
-        } else if (secondReturn.isReturn()) {
-            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (secondReturn.flowStatement() != null) {
+            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
         } else if (secondReturn.value() == null) {
-            return new ScriptReturnData(null, false, false, "Expression did not receive a value");
+            return new ScriptReturnData(null, null, "Expression did not receive a value");
         }
-        if (!canModuloExpressions(firstReturn.value(), secondReturn.value(), context)) {
-            return new ScriptReturnData(null, false, false, "Expression received values that could not form a modulo");
+        if (!canModuloExpressions(firstReturn.value(), secondReturn.value())) {
+            return new ScriptReturnData(null, null, "Expression received values that could not form a modulo");
         }
-        Expression moduloResult = moduloExpressions(firstReturn.value(), secondReturn.value(), context);
-        return new ScriptReturnData(moduloResult, false, false, null);
+        Expression moduloResult = moduloExpressions(firstReturn.value(), secondReturn.value());
+        return new ScriptReturnData(moduloResult, null, null);
     }
 
-    private boolean canModuloExpressions(Expression firstExpression, Expression secondExpression, Context context) {
+    private boolean canModuloExpressions(Expression firstExpression, Expression secondExpression) {
         if (firstExpression.getDataType() == Expression.DataType.INTEGER || firstExpression.getDataType() == Expression.DataType.FLOAT) {
             return secondExpression.getDataType() == Expression.DataType.INTEGER || secondExpression.getDataType() == Expression.DataType.FLOAT;
         }
         return false;
     }
 
-    private Expression moduloExpressions(Expression firstExpression, Expression secondExpression, Context context) {
+    private Expression moduloExpressions(Expression firstExpression, Expression secondExpression) {
         if (firstExpression.getDataType() == Expression.DataType.INTEGER && secondExpression.getDataType() == Expression.DataType.INTEGER) {
             int value1 = firstExpression.getValueInteger();
             int value2 = secondExpression.getValueInteger();

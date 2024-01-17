@@ -21,8 +21,8 @@ public class Condition {
 		if (result.error() != null) {
 			System.out.println(expression);
 			throw new IllegalArgumentException("Condition expression encountered an error during execution: " + result.error());
-		} else if (result.isReturn()) {
-			throw new IllegalArgumentException("Condition expression contains an unexpected return statement");
+		} else if (result.flowStatement() != null) {
+			throw new IllegalArgumentException("Condition expression contains an unexpected flow statement");
 		} else if (result.value() == null) {
 			throw new IllegalArgumentException("Condition expression did not return a value");
 		} else if (result.value().getDataType() != Expression.DataType.BOOLEAN) {

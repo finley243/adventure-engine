@@ -25,12 +25,12 @@ public class ScriptIterator extends Script {
         ScriptReturnData setResult = setExpression.execute(context);
         if (setResult.error() != null) {
             return setResult;
-        } else if (setResult.isReturn()) {
-            return new ScriptReturnData(null, false, false, "Expression cannot contain a return statement");
+        } else if (setResult.flowStatement() != null) {
+            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
         } else if (setResult.value() == null) {
-            return new ScriptReturnData(null, false, false, "Expression did not receive a value");
+            return new ScriptReturnData(null, null, "Expression did not receive a value");
         } else if (setResult.value().getDataType() != Expression.DataType.STRING_SET) {
-            return new ScriptReturnData(null, false, false, "Expression expected a set");
+            return new ScriptReturnData(null, null, "Expression expected a set");
         }
         Set<String> stringSet = setResult.value().getValueStringSet();
         List<Expression> expressions = new ArrayList<>(stringSet.size());
@@ -42,11 +42,14 @@ public class ScriptIterator extends Script {
             ScriptReturnData scriptResult = iteratedScript.execute(innerContext);
             if (scriptResult.error() != null) {
                 return scriptResult;
-            } else if (scriptResult.isReturn()) {
+            } else if (scriptResult.flowStatement() == FlowStatementType.RETURN) {
                 return scriptResult;
+            } else if (scriptResult.flowStatement() == FlowStatementType.BREAK) {
+                return new ScriptReturnData(null, null, null);
             }
+            // Continue statement is handled implicitly
         }
-        return new ScriptReturnData(null, false, false, null);
+        return new ScriptReturnData(null, null, null);
     }
 
 }

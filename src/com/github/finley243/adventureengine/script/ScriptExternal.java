@@ -28,14 +28,14 @@ public class ScriptExternal extends Script {
         Set<String> providedParameterNames = new HashSet<>();
         for (ParameterContainer providedParameter : parameters) {
             if (!validParameterNames.contains(providedParameter.name())) {
-                return new ScriptReturnData(null, false, false, "Function call has parameter that does not exist in function definition");
+                return new ScriptReturnData(null, null, "Function call has parameter that does not exist in function definition");
             }
             providedParameterNames.add(providedParameter.name());
             ScriptReturnData parameterValueResult = providedParameter.value().execute(context);
             if (parameterValueResult.error() != null) {
                 return parameterValueResult;
-            } else if (parameterValueResult.isReturn()) {
-                return new ScriptReturnData(null, false, false, "Function parameter contains unexpected return statement");
+            } else if (parameterValueResult.flowStatement() != null) {
+                return new ScriptReturnData(null, null, "Function parameter contains unexpected flow statement");
             }
             innerContext.setLocalVariable(providedParameter.name(), parameterValueResult.value());
         }
@@ -45,16 +45,18 @@ public class ScriptExternal extends Script {
             }
         }
         ScriptReturnData scriptResult = script.script().execute(innerContext);
-        if (!scriptResult.isReturn() && script.returnType() != null) {
-            return new ScriptReturnData(null, false, false, "Function has non-void return type but is missing return statement");
+        if (scriptResult.flowStatement() != null && scriptResult.flowStatement() != FlowStatementType.RETURN) {
+            return new ScriptReturnData(null, null, "Function contains unhandled flow statement");
+        } else if (scriptResult.flowStatement() != FlowStatementType.RETURN && script.returnType() != null) {
+            return new ScriptReturnData(null, null, "Function has non-void return type but is missing return statement");
         } else if (scriptResult.value() == null) {
-            return new ScriptReturnData(null, false, false, null);
+            return new ScriptReturnData(null, null, null);
         } else if (script.returnType() == null) {
-            return new ScriptReturnData(null, false, false, "Function is void but is returning an unexpected value");
+            return new ScriptReturnData(null, null, "Function is void but is returning an unexpected value");
         } else if (scriptResult.value().getDataType() == script.returnType()) {
-            return new ScriptReturnData(scriptResult.value(), false, false, null);
+            return new ScriptReturnData(scriptResult.value(), null, null);
         } else {
-            return new ScriptReturnData(null, false, false, "Function return value does not match return type in function definition");
+            return new ScriptReturnData(null, null, "Function return value does not match return type in function definition");
         }
     }
 

@@ -22,17 +22,17 @@ public class ScriptBuildSet extends Script {
             ScriptReturnData scriptResult = valueScript.execute(context);
             if (scriptResult.error() != null) {
                 return scriptResult;
-            } else if (scriptResult.isReturn()) {
-                return new ScriptReturnData(null, false, false, "Set expression contains unexpected return statement");
+            } else if (scriptResult.flowStatement() != null) {
+                return new ScriptReturnData(null, null, "Set expression contains unexpected flow statement");
             } else if (scriptResult.value() == null) {
-                return new ScriptReturnData(null, false, false, "Set expression is null");
+                return new ScriptReturnData(null, null, "Set expression is null");
             } else if (scriptResult.value().getDataType() != Expression.DataType.STRING) {
-                return new ScriptReturnData(null, false, false, "Set expression is not a string");
+                return new ScriptReturnData(null, null, "Set expression is not a string");
             } else {
                 computedValues.add(scriptResult.value().getValueString());
             }
         }
-        return new ScriptReturnData(Expression.constant(computedValues), false, false, null);
+        return new ScriptReturnData(Expression.constant(computedValues), null, null);
     }
 
 }

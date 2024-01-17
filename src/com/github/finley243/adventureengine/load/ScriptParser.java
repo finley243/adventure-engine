@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class ScriptParser {
 
     private enum ScriptTokenType {
-        END_LINE, STRING, FLOAT, INTEGER, NAME, ASSIGNMENT, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, POWER, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE, NULL, COLON, NOT, AND, OR, EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, TERNARY_IF
+        END_LINE, STRING, FLOAT, INTEGER, NAME, ASSIGNMENT, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, POWER, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE, NULL, COLON, NOT, AND, OR, EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, TERNARY_IF, RETURN, BREAK, CONTINUE
     }
 
     private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set");
@@ -119,6 +119,12 @@ public class ScriptParser {
                 tokens.add(new ScriptToken(ScriptTokenType.BOOLEAN_FALSE));
             } else if (currentToken.equals("null")) {
                 tokens.add(new ScriptToken(ScriptTokenType.NULL));
+            } else if (currentToken.equals("return")) {
+                tokens.add(new ScriptToken(ScriptTokenType.RETURN));
+            } else if (currentToken.equals("break")) {
+                tokens.add(new ScriptToken(ScriptTokenType.BREAK));
+            } else if (currentToken.equals("continue")) {
+                tokens.add(new ScriptToken(ScriptTokenType.CONTINUE));
             } else if (currentToken.matches("_?[a-zA-Z][a-zA-Z0-9_]*")) {
                 tokens.add(new ScriptToken(ScriptTokenType.NAME, currentToken));
             }
@@ -314,10 +320,23 @@ public class ScriptParser {
             return new ScriptSetGlobal(globalID, globalValue);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME) {
             // Variable assignment
-            if (tokens.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Variable assignment is missing assignment operator");
+            if (tokens.get(1).type != ScriptTokenType.ASSIGNMENT)
+                throw new IllegalArgumentException("Variable assignment is missing assignment operator");
             String variableName = tokens.getFirst().value;
             Script variableValue = parseExpression(tokens.subList(2, tokens.size()));
             return new ScriptSetVariable(variableName, variableValue, false);
+        } else if (tokens.getFirst().type == ScriptTokenType.RETURN) {
+            if (tokens.size() == 1) {
+                return new ScriptReturn(null);
+            }
+            Script returnValue = parseExpression(tokens.subList(1, tokens.size()));
+            return new ScriptReturn(returnValue);
+        } else if (tokens.getFirst().type == ScriptTokenType.BREAK) {
+            if (tokens.size() != 1) throw new IllegalArgumentException("Break statement must be called on its own");
+            return new ScriptFlowStatement(Script.FlowStatementType.BREAK);
+        } else if (tokens.getFirst().type == ScriptTokenType.CONTINUE) {
+            if (tokens.size() != 1) throw new IllegalArgumentException("Continue statement must be called on its own");
+            return new ScriptFlowStatement(Script.FlowStatementType.CONTINUE);
         } else {
             throw new IllegalArgumentException("Script contains invalid instruction");
         }
