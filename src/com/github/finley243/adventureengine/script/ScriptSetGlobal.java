@@ -4,12 +4,12 @@ import com.github.finley243.adventureengine.Context;
 
 public class ScriptSetGlobal extends Script {
 
-    private final String globalID;
+    private final String globalName;
     private final Script globalValue;
 
-    public ScriptSetGlobal(String globalID, Script globalValue) {
-        if (globalID == null) throw new IllegalArgumentException("ScriptSetGlobal globalID is null");
-        this.globalID = globalID;
+    public ScriptSetGlobal(String globalName, Script globalValue) {
+        if (globalName == null) throw new IllegalArgumentException("ScriptSetGlobal globalID is null");
+        this.globalName = globalName;
         this.globalValue = globalValue;
     }
 
@@ -21,7 +21,7 @@ public class ScriptSetGlobal extends Script {
         } else if (globalValueResult.flowStatement() != null) {
             return new ScriptReturnData(null, null, "Script expression contains unexpected flow statement");
         }
-        context.game().data().setGlobalExpression(globalID, globalValueResult.value());
+        context.game().data().setGlobalExpression(globalName, globalValueResult.value());
         return new ScriptReturnData(null, null, null);
     }
 
