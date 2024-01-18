@@ -3,20 +3,20 @@
         <prompt>$areaName ($dir)</prompt>
         <parameter name="areaName">stat.parentArea.name</parameter>
         <script>
-            var origin_id = stat.subject.area.id;
-            var area = stat.parentArea.noun;
-            sendSensoryEvent(phrase=stat.parentArea.move_phrase, area=set(origin_id, stat.parentArea.id));
+            var originAreaID = stat.subject.area.id;
+            var targetArea = stat.parentArea.noun;
+            sendSensoryEvent(phrase=stat.parentArea.move_phrase, area=set(originAreaID, stat.parentArea.id), targetArea=targetArea);
             stat.subject.area = stat.parentArea.id;
         </script>
     </action>
     <action id="move_corner">
         <prompt>$areaName (Around corner, $dir)</prompt>
         <script>
-            var origin_id = stat.subject.area.id;
-            var area = stat.parentArea.noun;
-            sendSensoryEvent(phrase="moveCorner", area=origin_id);
+            var originAreaID = stat.subject.area.id;
+            var targetArea = stat.parentArea.noun;
+            sendSensoryEvent(phrase="moveCorner", area=originAreaID, targetArea=targetArea);
             stat.subject.area = stat.parentArea.id;
-            sendSensoryEvent(phrase="moveCorner", area=stat.parentArea.id, detectSelf=false);
+            sendSensoryEvent(phrase="moveCorner", area=stat.parentArea.id, detectSelf=false, targetArea=targetArea);
         </script>
     </action>
     <action id="move_door">
@@ -28,15 +28,15 @@
             <script>stat.parentObject.locked == null || !stat.parentObject.locked</script>
         </condition>
         <script>
-            var origin_id = stat.subject.area.id;
-            var area = stat.parentArea.noun;
-            var room_origin = stat.subject.area.room.id;
-            var room_target = stat.parentArea.room.id;
-            var area_origin = room_origin != room_target ? stat.subject.area.room.noun : stat.subject.area.noun;
+            var originAreaID = stat.subject.area.id;
+            var targetArea = stat.parentArea.noun;
+            var originRoomID = stat.subject.area.room.id;
+            var targetRoomID = stat.parentArea.room.id;
+            var originArea = originRoomID != targetRoomID ? stat.subject.area.room.noun : stat.subject.area.noun;
             var door = stat.parentObject.noun;
-            sendSensoryEvent(phrase="moveThrough", area=origin_id);
+            sendSensoryEvent(phrase="moveThrough", area=originAreaID, targetArea=targetArea, originArea=originArea, door=door);
             stat.subject.area = stat.parentArea.id;
-            sendSensoryEvent(phrase="moveThroughReverse", area=stat.parentArea.id);
+            sendSensoryEvent(phrase="moveThroughReverse", area=stat.parentArea.id, detectSelf=false, targetArea=targetArea, originArea=originArea, door=door);
         </script>
     </action>
 </data>

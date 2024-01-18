@@ -28,7 +28,7 @@ public class ScriptExternal extends Script {
         }
         Set<String> providedParameterNames = new HashSet<>();
         for (ParameterContainer providedParameter : parameters) {
-            if (!validParameterNames.contains(providedParameter.name())) {
+            if (!script.allowExtraParameters() && !validParameterNames.contains(providedParameter.name())) {
                 return new ScriptReturnData(null, null, "Function call has parameter that does not exist in function definition");
             }
             providedParameterNames.add(providedParameter.name());

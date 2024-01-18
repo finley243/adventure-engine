@@ -3,18 +3,18 @@
         <prompt>Drive</prompt>
         <parameter name="areaName">stat.parentArea.name</parameter>
         <script>
-            var area = stat.parentArea.noun;
+            var targetArea = stat.parentArea.noun;
             var vehicle = stat.parentObject.noun;
-            sendSensoryEvent(phrase="driveTo", area=set(stat.subject.area.id, stat.parentArea.id));
+            sendSensoryEvent(phrase="driveTo", area=set(stat.subject.area.id, stat.parentArea.id), targetArea=targetArea, vehicle=vehicle);
             stat.parentObject.area = stat.parentArea.id;
         </script>
     </action>
     <action id="drive_corner">
         <prompt>Drive</prompt>
         <script>
-            var area = stat.parentArea.noun;
+            var targetArea = stat.parentArea.noun;
             var vehicle = stat.parentObject.noun;
-            sendSensoryEvent(phrase="driveCorner", area=set(stat.subject.area.id, stat.parentArea.id));
+            sendSensoryEvent(phrase="driveCorner", area=set(stat.subject.area.id, stat.parentArea.id), targetArea=targetArea, vehicle=vehicle);
             stat.parentObject.area = stat.parentArea.id;
         </script>
     </action>

@@ -43,7 +43,7 @@
                 stat.subject.money = stat.subject.money - stat.itemTemplate(itemID).price;
             }
             var item = stat.itemTemplate(itemID).noun;
-            sendSensoryEvent(phrase="vendingMachineBuy", area=stat.subject.area.id);
+            sendSensoryEvent(phrase="vendingMachineBuy", area=stat.subject.area.id, item=item);
         </script>
     </action>
 </data>

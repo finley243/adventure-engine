@@ -175,7 +175,7 @@ public class ScriptParser {
         Expression.DataType functionReturnType = parseFunctionReturnType(functionTokens.header());
         Set<ScriptParameter> functionParameters = parseFunctionParameters(functionTokens.parameters());
         Script functionScript = parseScript(functionTokens.body());
-        return new ScriptData(functionName, functionReturnType, functionParameters, functionScript);
+        return new ScriptData(functionName, functionReturnType, functionParameters, false, functionScript);
     }
 
     private static Expression.DataType parseFunctionReturnType(List<ScriptToken> headerTokens) {
@@ -786,7 +786,7 @@ public class ScriptParser {
         };
     }
 
-    public record ScriptData(String name, Expression.DataType returnType, Set<ScriptParameter> parameters, Script script) {}
+    public record ScriptData(String name, Expression.DataType returnType, Set<ScriptParameter> parameters, boolean allowExtraParameters, Script script) {}
 
     private static class ScriptToken {
         public final ScriptTokenType type;

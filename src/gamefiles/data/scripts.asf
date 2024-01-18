@@ -19,7 +19,6 @@ func drop_equipped_force() {
 }
 
 func drop_equipped_force_specified_slot(equippedSlot) {
-    // Test comment
 	if (stat.subject.("has_equipped_" + equippedSlot)) {
 		var dropAreaID = randomFromSet(set = stat.subject.area.movable_areas);
 		var equippedItemID = stat.subject.equipped_item(equippedSlot).id;
