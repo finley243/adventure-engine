@@ -177,7 +177,7 @@ public class ScriptParser {
         String functionName = functionTokens.header().getLast().value;
         if (RESERVED_KEYWORDS.contains(functionName)) throw new IllegalArgumentException("Function name is reserved");
         Expression.DataType functionReturnType = parseFunctionReturnType(functionTokens.header());
-        Set<ScriptParameter> functionParameters = parseFunctionParameters(functionTokens.parameters());
+        List<ScriptParameter> functionParameters = parseFunctionParameters(functionTokens.parameters());
         Script functionScript = parseScript(functionTokens.body());
         return new ScriptData(functionName, functionReturnType, functionParameters, false, functionScript);
     }
@@ -193,8 +193,8 @@ public class ScriptParser {
         return functionReturnType;
     }
 
-    private static Set<ScriptParameter> parseFunctionParameters(List<ScriptToken> parameterTokens) {
-        Set<ScriptParameter> functionParameters = new HashSet<>();
+    private static List<ScriptParameter> parseFunctionParameters(List<ScriptToken> parameterTokens) {
+        List<ScriptParameter> functionParameters = new ArrayList<>();
         List<List<ScriptToken>> parameterGroups = new ArrayList<>();
         int index = 0;
         while (index < parameterTokens.size()) {
@@ -372,7 +372,7 @@ public class ScriptParser {
     }
 
     private static Script parseStatAssignment(List<ScriptToken> tokens) {
-        int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, Set.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO));
+        int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, Set.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO), 0);
         if (assignmentOperatorIndex == -1) throw new IllegalArgumentException("Stat assignment is missing assignment operator");
         ScriptStatReference statReference = parseStatReference(tokens.subList(0, assignmentOperatorIndex));
         Script statValue;
@@ -511,7 +511,7 @@ public class ScriptParser {
     }
 
     private static Script parseComparator(List<ScriptToken> tokens) {
-        int firstComparatorOperator = findFirstTokenIndexFromSet(tokens, Set.of(ScriptTokenType.EQUAL, ScriptTokenType.NOT_EQUAL, ScriptTokenType.GREATER, ScriptTokenType.LESS, ScriptTokenType.GREATER_EQUAL, ScriptTokenType.LESS_EQUAL));
+        int firstComparatorOperator = findFirstTokenIndexFromSet(tokens, Set.of(ScriptTokenType.EQUAL, ScriptTokenType.NOT_EQUAL, ScriptTokenType.GREATER, ScriptTokenType.LESS, ScriptTokenType.GREATER_EQUAL, ScriptTokenType.LESS_EQUAL), 0);
         if (firstComparatorOperator != -1) {
             ScriptComparator.Comparator comparator = switch (tokens.get(firstComparatorOperator).type) {
                 case EQUAL -> ScriptComparator.Comparator.EQUAL;
@@ -531,39 +531,32 @@ public class ScriptParser {
     }
 
     private static Script parseSum(List<ScriptToken> tokens) {
-        int lastPlusOperator = findLastTokenIndex(tokens, ScriptTokenType.PLUS, tokens.size() - 1);
-        int lastMinusOperator = findLastTokenIndex(tokens, ScriptTokenType.MINUS, tokens.size() - 1);
-        if (lastPlusOperator > lastMinusOperator) {
-            Script firstExpression = parseSum(tokens.subList(0, lastPlusOperator));
-            Script secondExpression = parseProduct(tokens.subList(lastPlusOperator + 1, tokens.size()));
-            return new ScriptAdd(firstExpression, secondExpression);
-        } else if (lastPlusOperator < lastMinusOperator) {
-            Script firstExpression = parseSum(tokens.subList(0, lastMinusOperator));
-            Script secondExpression = parseProduct(tokens.subList(lastMinusOperator + 1, tokens.size()));
-            return new ScriptSubtract(firstExpression, secondExpression);
-        } else {
+        int lastSumOperator = findLastTokenIndexFromSet(tokens, Set.of(ScriptTokenType.PLUS, ScriptTokenType.MINUS), tokens.size() - 1);
+        if (lastSumOperator == -1) {
             return parseProduct(tokens);
+        }
+        Script firstExpression = parseSum(tokens.subList(0, lastSumOperator));
+        Script secondExpression = parseProduct(tokens.subList(lastSumOperator + 1, tokens.size()));
+        if (tokens.get(lastSumOperator).type == ScriptTokenType.PLUS) {
+            return new ScriptAdd(firstExpression, secondExpression);
+        } else {
+            return new ScriptSubtract(firstExpression, secondExpression);
         }
     }
 
     private static Script parseProduct(List<ScriptToken> tokens) {
-        int lastMultiplyOperator = findLastTokenIndex(tokens, ScriptTokenType.MULTIPLY, tokens.size() - 1);
-        int lastDivideOperator = findLastTokenIndex(tokens, ScriptTokenType.DIVIDE, tokens.size() - 1);
-        int lastModuloOperator = findLastTokenIndex(tokens, ScriptTokenType.MODULO, tokens.size() - 1);
-        if (lastMultiplyOperator > lastDivideOperator && lastMultiplyOperator > lastModuloOperator) {
-            Script firstExpression = parseProduct(tokens.subList(0, lastMultiplyOperator));
-            Script secondExpression = parsePower(tokens.subList(lastMultiplyOperator + 1, tokens.size()));
-            return new ScriptMultiply(firstExpression, secondExpression);
-        } else if (lastDivideOperator > lastMultiplyOperator && lastDivideOperator > lastModuloOperator) {
-            Script firstExpression = parseProduct(tokens.subList(0, lastDivideOperator));
-            Script secondExpression = parsePower(tokens.subList(lastDivideOperator + 1, tokens.size()));
-            return new ScriptDivide(firstExpression, secondExpression);
-        } else if (lastModuloOperator > lastMultiplyOperator && lastModuloOperator > lastDivideOperator) {
-            Script firstExpression = parseProduct(tokens.subList(0, lastModuloOperator));
-            Script secondExpression = parsePower(tokens.subList(lastModuloOperator + 1, tokens.size()));
-            return new ScriptModulo(firstExpression, secondExpression);
-        } else {
+        int lastProductOperator = findLastTokenIndexFromSet(tokens, Set.of(ScriptTokenType.MULTIPLY, ScriptTokenType.DIVIDE, ScriptTokenType.MODULO), tokens.size() - 1);
+        if (lastProductOperator == -1) {
             return parsePower(tokens);
+        }
+        Script firstExpression = parseProduct(tokens.subList(0, lastProductOperator));
+        Script secondExpression = parsePower(tokens.subList(lastProductOperator + 1, tokens.size()));
+        if (tokens.get(lastProductOperator).type == ScriptTokenType.MULTIPLY) {
+            return new ScriptMultiply(firstExpression, secondExpression);
+        } else if (tokens.get(lastProductOperator).type == ScriptTokenType.DIVIDE) {
+            return new ScriptDivide(firstExpression, secondExpression);
+        } else {
+            return new ScriptModulo(firstExpression, secondExpression);
         }
     }
 
@@ -719,6 +712,7 @@ public class ScriptParser {
     }
 
     private static int findFirstTokenIndex(List<ScriptToken> tokens, ScriptTokenType type, int startIndex) {
+        if (startIndex < 0 || startIndex >= tokens.size()) throw new IllegalArgumentException("Start index is outside the valid range");
         Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
         for (int i = startIndex; i < tokens.size(); i++) {
             ScriptToken token = tokens.get(i);
@@ -738,6 +732,7 @@ public class ScriptParser {
     }
 
     private static int findLastTokenIndex(List<ScriptToken> tokens, ScriptTokenType type, int startIndex) {
+        if (startIndex < 0 || startIndex >= tokens.size()) throw new IllegalArgumentException("Start index is outside the valid range");
         Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
         for (int i = startIndex; i >= 0; i--) {
             ScriptToken token = tokens.get(i);
@@ -756,9 +751,30 @@ public class ScriptParser {
         return -1;
     }
 
-    private static int findFirstTokenIndexFromSet(List<ScriptToken> tokens, Set<ScriptTokenType> types) {
+    private static int findFirstTokenIndexFromSet(List<ScriptToken> tokens, Set<ScriptTokenType> types, int startIndex) {
+        if (startIndex < 0 || startIndex >= tokens.size()) throw new IllegalArgumentException("Start index is outside the valid range");
         Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
-        for (int i = 0; i < tokens.size(); i++) {
+        for (int i = startIndex; i < tokens.size(); i++) {
+            ScriptToken token = tokens.get(i);
+            if (bracketStack.isEmpty() && types.contains(token.type)) {
+                return i;
+            } else if (token.type == ScriptTokenType.BRACKET_OPEN) {
+                bracketStack.push(ScriptTokenType.BRACKET_OPEN);
+            } else if (token.type == ScriptTokenType.BRACKET_CLOSE && bracketStack.peek() == ScriptTokenType.BRACKET_OPEN) {
+                bracketStack.pop();
+            } else if (token.type == ScriptTokenType.PARENTHESIS_OPEN) {
+                bracketStack.push(ScriptTokenType.PARENTHESIS_OPEN);
+            } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE && bracketStack.peek() == ScriptTokenType.PARENTHESIS_OPEN) {
+                bracketStack.pop();
+            }
+        }
+        return -1;
+    }
+
+    private static int findLastTokenIndexFromSet(List<ScriptToken> tokens, Set<ScriptTokenType> types, int startIndex) {
+        if (startIndex < 0 || startIndex >= tokens.size()) throw new IllegalArgumentException("Start index is outside the valid range");
+        Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
+        for (int i = startIndex; i >= 0; i--) {
             ScriptToken token = tokens.get(i);
             if (bracketStack.isEmpty() && types.contains(token.type)) {
                 return i;
@@ -814,7 +830,7 @@ public class ScriptParser {
         };
     }
 
-    public record ScriptData(String name, Expression.DataType returnType, Set<ScriptParameter> parameters, boolean allowExtraParameters, Script script) {}
+    public record ScriptData(String name, Expression.DataType returnType, List<ScriptParameter> parameters, boolean allowExtraParameters, Script script) {}
 
     private static class ScriptToken {
         public final ScriptTokenType type;
