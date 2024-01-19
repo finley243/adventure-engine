@@ -28,7 +28,7 @@ public abstract class Script {
 	 */
 	public abstract ScriptReturnData execute(Context context);
 
-	public static void loadBuiltInFunctions(Game game) {
+	public static void loadNativeFunctions(Game game) {
 		List<ScriptParser.ScriptData> functions = new ArrayList<>();
 		functions.add(new ScriptParser.ScriptData("attributeMenu", null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("points", true, null)), false, new ScriptAttributeMenu()));
 		functions.add(new ScriptParser.ScriptData("skillMenu", null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("points", true, null)), false, new ScriptSkillMenu()));
@@ -52,6 +52,7 @@ public abstract class Script {
 		functions.add(new ScriptParser.ScriptData("statHolderType", null, List.of(new ScriptParser.ScriptParameter("holder", true, null)), false, new ScriptStatHolderType()));
 		functions.add(new ScriptParser.ScriptData("isTimerActive", null, List.of(new ScriptParser.ScriptParameter("timer", true, null)), false, new ScriptTimerActive()));
 		functions.add(new ScriptParser.ScriptData("toString", null, List.of(new ScriptParser.ScriptParameter("value", true, null)), false, new ScriptToString()));
+		functions.add(new ScriptParser.ScriptData("dataType", null, List.of(new ScriptParser.ScriptParameter("value", true, null)), false, new ScriptDataType()));
 		for (ScriptParser.ScriptData scriptData : functions) {
 			game.data().addScript(scriptData.name(), scriptData);
 		}
