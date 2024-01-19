@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 public class ScriptParser {
 
     private enum ScriptTokenType {
-        END_LINE, STRING, FLOAT, INTEGER, NAME, ASSIGNMENT, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, POWER, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE, NULL, COLON, NOT, AND, OR, EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, TERNARY_IF, RETURN, BREAK, CONTINUE, MODIFIER_PLUS, MODIFIER_MINUS, MODIFIER_MULTIPLY, MODIFIER_DIVIDE, MODIFIER_MODULO
+        END_LINE, STRING, FLOAT, INTEGER, NAME, ASSIGNMENT, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, POWER, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE, NULL, COLON, NOT, AND, OR, EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, TERNARY_IF, RETURN, BREAK, CONTINUE, MODIFIER_PLUS, MODIFIER_MINUS, MODIFIER_MULTIPLY, MODIFIER_DIVIDE, MODIFIER_MODULO, ERROR, LOG
     }
 
-    private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set");
+    private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set", "error", "log");
     private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*[\n\r]|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|<|>|;|=|\\?|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}";
 
     public static List<ScriptData> parseFunctions(String scriptText) {
@@ -135,6 +135,10 @@ public class ScriptParser {
                 tokens.add(new ScriptToken(ScriptTokenType.BREAK));
             } else if (currentToken.equals("continue")) {
                 tokens.add(new ScriptToken(ScriptTokenType.CONTINUE));
+            } else if (currentToken.equals("error")) {
+                tokens.add(new ScriptToken(ScriptTokenType.ERROR));
+            } else if (currentToken.equals("log")) {
+                tokens.add(new ScriptToken(ScriptTokenType.LOG));
             } else if (currentToken.matches("_?[a-zA-Z][a-zA-Z0-9_]*")) {
                 tokens.add(new ScriptToken(ScriptTokenType.NAME, currentToken));
             }
@@ -320,6 +324,30 @@ public class ScriptParser {
             }
             Script returnValue = parseExpression(tokens.subList(1, tokens.size()));
             return new ScriptReturn(returnValue);
+        } else if (tokens.getFirst().type == ScriptTokenType.ERROR) {
+            if (tokens.size() < 2 || tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) {
+                throw new IllegalArgumentException("Error statement is missing opening parenthesis");
+            }
+            int closingParenthesisIndex = findPairedClosingBracket(tokens, 1);
+            if (closingParenthesisIndex == -1) {
+                throw new IllegalArgumentException("Error statement is missing closing parenthesis");
+            } else if (closingParenthesisIndex != tokens.size() - 1) {
+                throw new IllegalArgumentException("Error statement is improperly terminated");
+            }
+            Script errorMessage = parseExpression(tokens.subList(2, tokens.size() - 1));
+            return new ScriptError(errorMessage);
+        } else if (tokens.getFirst().type == ScriptTokenType.LOG) {
+            if (tokens.size() < 2 || tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) {
+                throw new IllegalArgumentException("Log statement is missing opening parenthesis");
+            }
+            int closingParenthesisIndex = findPairedClosingBracket(tokens, 1);
+            if (closingParenthesisIndex == -1) {
+                throw new IllegalArgumentException("Log statement is missing closing parenthesis");
+            } else if (closingParenthesisIndex != tokens.size() - 1) {
+                throw new IllegalArgumentException("Log statement is improperly terminated");
+            }
+            Script logMessage = parseExpression(tokens.subList(2, tokens.size() - 1));
+            return new ScriptPrintLog(logMessage);
         } else if (tokens.getFirst().type == ScriptTokenType.BREAK) {
             if (tokens.size() != 1) throw new IllegalArgumentException("Break statement must be called on its own");
             return new ScriptFlowStatement(Script.FlowStatementType.BREAK);
