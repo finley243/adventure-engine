@@ -9,17 +9,23 @@ public class StatHolderReference {
     private final String holderType;
     private final Script holderIDScript;
     private final StatHolderReference parentReference;
+    private final Script holderExpression;
 
-    public StatHolderReference(String holderType, Script holderIDScript, StatHolderReference parentReference) {
+    public StatHolderReference(String holderType, Script holderIDScript, StatHolderReference parentReference, Script holderExpression) {
         this.holderType = holderType;
         this.holderIDScript = holderIDScript;
         this.parentReference = parentReference;
+        this.holderExpression = holderExpression;
     }
 
     public StatHolder getHolder(Context context) {
-        Expression holderID = computeHolderID(context);
-        if (holderID != null && holderID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID must be a string");
-        if (parentReference != null) {
+        if (holderExpression != null) {
+            Expression expressionResult = computeHolderExpression(context);
+            if (expressionResult.getDataType() != Expression.DataType.STAT_HOLDER) throw new IllegalArgumentException("StatHolderReference expression is not a stat holder");
+            return expressionResult.getValueStatHolder();
+        } else if (parentReference != null) {
+            Expression holderID = computeHolderID(context);
+            if (holderID != null && holderID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID is not a string");
             String holderIDValue = holderID != null ? holderID.getValueString() : null;
             return parentReference.getHolder(context).getSubHolder(holderType, holderIDValue);
         } else {
@@ -59,6 +65,20 @@ public class StatHolderReference {
             holderID = holderIDResult.value();
         }
         return holderID;
+    }
+
+    private Expression computeHolderExpression(Context context) {
+        Expression expression = null;
+        if (holderExpression != null) {
+            Script.ScriptReturnData expressionResult = holderExpression.execute(context);
+            if (expressionResult.error() != null) {
+                throw new IllegalArgumentException("StatHolderReference expression threw an error");
+            } else if (expressionResult.flowStatement() != null) {
+                throw new IllegalArgumentException("StatHolderReference expression contains an unexpected flow statement");
+            }
+            expression = expressionResult.value();
+        }
+        return expression;
     }
 
     @Override

@@ -682,15 +682,20 @@ public class ScriptParser {
             lastHolderStartIndex = lastDotIndex + 1;
             parentReference = parseStatHolder(tokens.subList(0, lastDotIndex));
         }
-        if (tokens.get(lastHolderStartIndex).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Stat holder reference contains invalid stat holder type");
-        String holderType = tokens.get(lastHolderStartIndex).value;
+        String holderType = null;
         Script holderID = null;
-        if (tokens.size() > lastHolderStartIndex + 1 && tokens.get(lastHolderStartIndex + 1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
-            holderID = parseExpression(tokens.subList(lastHolderStartIndex + 2, tokens.size() - 1));
-        } else if (tokens.size() - lastHolderStartIndex != 1) {
+        Script holderExpression = null;
+        if (lastDotIndex == -1 && tokens.get(lastHolderStartIndex).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
+            holderExpression = parseExpression(tokens.subList(lastHolderStartIndex + 1, tokens.size() - 1));
+        } else if (tokens.get(lastHolderStartIndex).type == ScriptTokenType.NAME) {
+            holderType = tokens.get(lastHolderStartIndex).value;
+        } else {
             throw new IllegalArgumentException("Stat holder reference contains invalid stat holder type");
         }
-        return new StatHolderReference(holderType, holderID, parentReference);
+        if (holderExpression == null && tokens.size() > lastHolderStartIndex + 1 && tokens.get(lastHolderStartIndex + 1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
+            holderID = parseExpression(tokens.subList(lastHolderStartIndex + 2, tokens.size() - 1));
+        }
+        return new StatHolderReference(holderType, holderID, parentReference, holderExpression);
     }
 
     private static ScriptGlobalReference parseGlobalReference(List<ScriptToken> tokens) {
@@ -778,13 +783,13 @@ public class ScriptParser {
             ScriptToken token = tokens.get(i);
             if (bracketStack.isEmpty() && types.contains(token.type)) {
                 return i;
-            } else if (token.type == ScriptTokenType.BRACKET_OPEN) {
-                bracketStack.push(ScriptTokenType.BRACKET_OPEN);
-            } else if (token.type == ScriptTokenType.BRACKET_CLOSE && bracketStack.peek() == ScriptTokenType.BRACKET_OPEN) {
+            } else if (token.type == ScriptTokenType.BRACKET_CLOSE) {
+                bracketStack.push(ScriptTokenType.BRACKET_CLOSE);
+            } else if (token.type == ScriptTokenType.BRACKET_OPEN && bracketStack.peek() == ScriptTokenType.BRACKET_CLOSE) {
                 bracketStack.pop();
-            } else if (token.type == ScriptTokenType.PARENTHESIS_OPEN) {
-                bracketStack.push(ScriptTokenType.PARENTHESIS_OPEN);
-            } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE && bracketStack.peek() == ScriptTokenType.PARENTHESIS_OPEN) {
+            } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE) {
+                bracketStack.push(ScriptTokenType.PARENTHESIS_CLOSE);
+            } else if (token.type == ScriptTokenType.PARENTHESIS_OPEN && bracketStack.peek() == ScriptTokenType.PARENTHESIS_CLOSE) {
                 bracketStack.pop();
             }
         }
