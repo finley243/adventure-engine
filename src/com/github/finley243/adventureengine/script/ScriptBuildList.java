@@ -3,29 +3,28 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-public class ScriptBuildSet extends Script {
+public class ScriptBuildList extends Script {
 
     private final List<Script> valueScripts;
 
-    public ScriptBuildSet(List<Script> valueScripts) {
+    public ScriptBuildList(List<Script> valueScripts) {
         this.valueScripts = valueScripts;
     }
 
     @Override
     public ScriptReturnData execute(Context context) {
-        Set<Expression> computedValues = new HashSet<>();
+        List<Expression> computedValues = new ArrayList<>();
         for (Script valueScript : valueScripts) {
             ScriptReturnData scriptResult = valueScript.execute(context);
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() != null) {
-                return new ScriptReturnData(null, null, "Set expression contains unexpected flow statement");
+                return new ScriptReturnData(null, null, "List expression contains unexpected flow statement");
             } else if (scriptResult.value() == null) {
-                return new ScriptReturnData(null, null, "Set expression is null");
+                return new ScriptReturnData(null, null, "List expression is null");
             } else {
                 computedValues.add(scriptResult.value());
             }

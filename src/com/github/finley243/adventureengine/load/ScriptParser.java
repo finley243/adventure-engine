@@ -15,7 +15,7 @@ public class ScriptParser {
         END_LINE, STRING, FLOAT, INTEGER, NAME, ASSIGNMENT, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, POWER, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE, NULL, COLON, NOT, AND, OR, EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, TERNARY_IF, RETURN, BREAK, CONTINUE, MODIFIER_PLUS, MODIFIER_MINUS, MODIFIER_MULTIPLY, MODIFIER_DIVIDE, MODIFIER_MODULO, ERROR, LOG
     }
 
-    private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set", "error", "log");
+    private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set", "list", "error", "log");
     private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*[\n\r]|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|<|>|;|=|\\?|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}";
 
     public static List<ScriptData> parseFunctions(String scriptText) {
@@ -596,8 +596,8 @@ public class ScriptParser {
             return new ScriptGetGlobal(globalReference.name());
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("game")) {
             return parseGameValue(tokens);
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("set")) {
-            return parseSet(tokens);
+        } else if (tokens.getFirst().type == ScriptTokenType.NAME && (tokens.getFirst().value.equals("set") || tokens.getFirst().value.equals("list"))) {
+            return parseCollection(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             return parseFunctionCall(tokens);
         } else {
@@ -606,12 +606,12 @@ public class ScriptParser {
         }
     }
 
-    private static Script parseSet(List<ScriptToken> tokens) {
-        if (tokens.getFirst().type != ScriptTokenType.NAME || !tokens.getFirst().value.equals("set")) throw new IllegalArgumentException("Set constructor is missing set keyword");
-        if (tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) throw new IllegalArgumentException("Set constructor is missing value block");
-        if (tokens.getLast().type != ScriptTokenType.PARENTHESIS_CLOSE) throw new IllegalArgumentException("Set constructor value block is not closed");
+    private static Script parseCollection(List<ScriptToken> tokens) {
+        if (tokens.getFirst().type != ScriptTokenType.NAME || (!tokens.getFirst().value.equals("set") && !tokens.getFirst().value.equals("list"))) throw new IllegalArgumentException("Collection constructor is missing set or list keyword");
+        if (tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) throw new IllegalArgumentException("Collection constructor is missing value block");
+        if (tokens.getLast().type != ScriptTokenType.PARENTHESIS_CLOSE) throw new IllegalArgumentException("Collection constructor value block is not closed");
         if (tokens.size() == 3) return new ScriptBuildSet(new ArrayList<>());
-        List<Script> setValues = new ArrayList<>();
+        List<Script> collectionValues = new ArrayList<>();
         int index = 2;
         while (index < tokens.size()) {
             int nextCommaIndex = findFirstTokenIndex(tokens, ScriptTokenType.COMMA, index);
@@ -624,9 +624,13 @@ public class ScriptParser {
                 index = nextCommaIndex + 1;
             }
             Script currentValueScript = parseExpression(currentGroup);
-            setValues.add(currentValueScript);
+            collectionValues.add(currentValueScript);
         }
-        return new ScriptBuildSet(setValues);
+        if (tokens.getFirst().value.equals("set")) {
+            return new ScriptBuildSet(collectionValues);
+        } else {
+            return new ScriptBuildList(collectionValues);
+        }
     }
 
     private static Expression parseLiteral(List<ScriptToken> tokens) {
