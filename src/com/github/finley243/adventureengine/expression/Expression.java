@@ -73,6 +73,7 @@ public abstract class Expression {
 
     public static Expression constant(Object valueObject) {
         if (valueObject == null) return null;
+        if (valueObject instanceof Expression expression) return expression;
         if (valueObject instanceof Set<?> set) {
             Set<Expression> expressionSet = new HashSet<>();
             for (Object elementObject : set) {
