@@ -11,10 +11,10 @@ public class ScriptRandomValueFromSet extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         Expression setExpression = context.getLocalVariables().get("set").getExpression();
-        if (setExpression.getDataType() != Expression.DataType.STRING_SET) return new ScriptReturnData(null, null, "Set parameter is not a set");
-        Set<String> set = setExpression.getValueStringSet();
-        String selectedValue = MathUtils.selectRandomFromSet(set);
-        return new ScriptReturnData(Expression.constant(selectedValue), null, null);
+        if (setExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Set parameter is not a set");
+        Set<Expression> set = setExpression.getValueSet();
+        Expression selectedValue = MathUtils.selectRandomFromSet(set);
+        return new ScriptReturnData(selectedValue, null, null);
     }
 
 }

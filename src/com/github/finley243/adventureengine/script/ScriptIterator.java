@@ -29,13 +29,14 @@ public class ScriptIterator extends Script {
             return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
         } else if (setResult.value() == null) {
             return new ScriptReturnData(null, null, "Expression did not receive a value");
-        } else if (setResult.value().getDataType() != Expression.DataType.STRING_SET) {
-            return new ScriptReturnData(null, null, "Expression expected a set");
+        } else if (setResult.value().getDataType() != Expression.DataType.SET && setResult.value().getDataType() != Expression.DataType.LIST) {
+            return new ScriptReturnData(null, null, "Expression expected a set or list");
         }
-        Set<String> stringSet = setResult.value().getValueStringSet();
-        List<Expression> expressions = new ArrayList<>(stringSet.size());
-        for (String setValue : stringSet) {
-            expressions.add(Expression.constant(setValue));
+        List<Expression> expressions;
+        if (setResult.value().getDataType() == Expression.DataType.SET) {
+            expressions = new ArrayList<>(setResult.value().getValueSet());
+        } else {
+            expressions = setResult.value().getValueList();
         }
         for (Expression currentExpression : expressions) {
             Context innerContext = new Context(context, new MapBuilder<String, Expression>().put(iteratorParameterName, currentExpression).build());

@@ -73,11 +73,11 @@ public class ScriptComparator extends Script {
                 return !expression1.getValueString().equals(expression2.getValueString());
             }
             return expression1.getValueString().equals(expression2.getValueString());
-        } else if (expression1.getDataType() == Expression.DataType.STRING_SET) {
+        } else if (expression1.getDataType() == Expression.DataType.SET) {
             if (comparator == Comparator.NOT_EQUAL) {
-                return !expression1.getValueStringSet().equals(expression2.getValueStringSet());
+                return !expression1.getValueSet().equals(expression2.getValueSet());
             }
-            return expression1.getValueStringSet().equals(expression2.getValueStringSet());
+            return expression1.getValueSet().equals(expression2.getValueSet());
         }
         return false;
     }

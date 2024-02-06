@@ -271,7 +271,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				return true;
 			}
 			default -> {
-				localVars.put(name, Expression.convertToConstant(value));
+				localVars.put(name, value);
 				return true;
 			}
 		}

@@ -388,15 +388,15 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
-			case "inventory" -> (itemInventory == null ? null : new ExpressionConstantInventory(itemInventory));
-			case "noun" -> new ExpressionConstantNoun(this);
-			case "id" -> new ExpressionConstantString(getID());
-			case "name" -> new ExpressionConstantString(getName());
-			case "relative_name" -> new ExpressionConstantString(getRelativeName());
-			case "move_phrase" -> new ExpressionConstantString(getMovePhrase(context.getSubject()));
-			case "room" -> new ExpressionConstantString(roomID);
+			case "inventory" -> (itemInventory == null ? null : Expression.constant(itemInventory));
+			case "noun" -> Expression.constant((Noun) this);
+			case "id" -> Expression.constant(getID());
+			case "name" -> Expression.constant(getName());
+			case "relative_name" -> Expression.constant(getRelativeName());
+			case "move_phrase" -> Expression.constant(getMovePhrase(context.getSubject()));
+			case "room" -> Expression.constant(roomID);
 			//case "visible_areas" -> new ExpressionConstantStringSet(getLineOfSightAreaIDs());
-			case "movable_areas" -> new ExpressionConstantStringSet(getMovableAreaIDs(null));
+			case "movable_areas" -> Expression.constant(getMovableAreaIDs(null));
 			default -> null;
 		};
 	}

@@ -18,4 +18,9 @@ public class ExpressionConstantFloat extends Expression {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return Float.toString(value);
+    }
+
 }

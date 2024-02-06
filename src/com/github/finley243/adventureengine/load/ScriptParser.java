@@ -827,7 +827,7 @@ public class ScriptParser {
             case "int" -> Expression.DataType.INTEGER;
             case "float" -> Expression.DataType.FLOAT;
             case "string" -> Expression.DataType.STRING;
-            case "stringSet" -> Expression.DataType.STRING_SET;
+            case "stringSet" -> Expression.DataType.SET;
             case "inventory" -> Expression.DataType.INVENTORY;
             case "noun" -> Expression.DataType.NOUN;
             case "void" -> null;

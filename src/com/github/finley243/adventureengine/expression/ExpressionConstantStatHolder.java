@@ -20,4 +20,9 @@ public class ExpressionConstantStatHolder extends Expression {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return null;
+    }
+
 }

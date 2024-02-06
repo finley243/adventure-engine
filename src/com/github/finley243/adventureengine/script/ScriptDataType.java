@@ -16,7 +16,8 @@ public class ScriptDataType extends Script {
             case INTEGER -> "integer";
             case FLOAT -> "float";
             case STRING -> "string";
-            case STRING_SET -> "set";
+            case SET -> "set";
+            case LIST -> "list";
             case NOUN -> "noun";
             case INVENTORY -> "inventory";
             case STAT_HOLDER -> "statHolder";

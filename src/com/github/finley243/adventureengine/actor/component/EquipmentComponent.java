@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.actor.component;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.ItemArmor;
@@ -70,9 +69,7 @@ public class EquipmentComponent {
         item.onEquip(actor, slots);
         // TODO - Expand to all equippable items (not just weapons)
         if (item instanceof ItemWeapon weapon) {
-            Context context = new Context(actor.game(), actor, actor, item);
-            Set<String> equipmentEffects = actor.getStatValue("equipment_effects", context).getValueStringSet();
-            for (String equipmentEffect : equipmentEffects) {
+            for (String equipmentEffect : actor.getEquipmentEffects(item)) {
                 weapon.getEffectComponent().addEffect(equipmentEffect);
             }
         }
@@ -85,9 +82,7 @@ public class EquipmentComponent {
             }
             item.onUnequip(actor);
             if (item instanceof ItemWeapon weapon) {
-                Context context = new Context(actor.game(), actor, actor, item);
-                Set<String> equipmentEffects = actor.getStatValue("equipment_effects", context).getValueStringSet();
-                for (String equipmentEffect : equipmentEffects) {
+                for (String equipmentEffect : actor.getEquipmentEffects(item)) {
                     weapon.getEffectComponent().removeEffect(equipmentEffect);
                 }
             }

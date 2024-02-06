@@ -20,4 +20,9 @@ public class ExpressionConstantInventory extends Expression {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return null;
+    }
+
 }

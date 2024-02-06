@@ -350,6 +350,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, new Context(game(), this, this));
 	}
 
+	public Set<String> getEquipmentEffects(ItemEquippable item) {
+		return equipmentEffects.value(new HashSet<>(), new Context(game(), this, this, item));
+	}
+
 	@Override
 	public boolean canBeAttacked() {
 		return !isDead();

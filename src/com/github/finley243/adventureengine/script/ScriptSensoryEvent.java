@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.environment.Area;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class ScriptSensoryEvent extends Script {
         Expression isDetectedBySelfExpression = context.getLocalVariables().get("detectSelf").getExpression();
         if (phrase != null && phrase.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Phrase parameter is not a string");
         if (phraseAudible != null && phraseAudible.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "PhraseAudible parameter is not a string");
-        if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.STRING_SET) return new ScriptReturnData(null, null, "Area parameter is not a string or set");
+        if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Area parameter is not a string or set");
         if (isDetectedBySelfExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, null, "DetectSelf parameter is not a boolean");
         boolean isDetectedBySelf = isDetectedBySelfExpression.getValueBoolean();
         Area[] originAreas = getOriginAreas(context, area);
@@ -41,8 +42,12 @@ public class ScriptSensoryEvent extends Script {
             Area[] areaArray = new Area[1];
             areaArray[0] = context.game().data().getArea(areaID);
             return areaArray;
-        } else if (area.getDataType() == Expression.DataType.STRING_SET) {
-            Set<String> areaIDSet = area.getValueStringSet();
+        } else if (area.getDataType() == Expression.DataType.SET) {
+            Set<String> areaIDSet = new HashSet<>();
+            for (Expression areaIDExpression : area.getValueSet()) {
+                // TODO - Add type checking for set expressions
+                areaIDSet.add(areaIDExpression.getValueString());
+            }
             Area[] areaArray = new Area[areaIDSet.size()];
             int index = 0;
             for (String areaID : areaIDSet) {

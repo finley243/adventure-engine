@@ -20,4 +20,9 @@ public class ExpressionConstantNoun extends Expression {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return value.getName();
+    }
+
 }
