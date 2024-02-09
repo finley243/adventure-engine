@@ -23,4 +23,18 @@ public class ExpressionConstantInteger extends Expression {
         return Integer.toString(value);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ExpressionConstantInteger expression)) {
+            return false;
+        } else {
+            return expression.value == this.value;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(value);
+    }
+
 }

@@ -25,4 +25,18 @@ public class ExpressionConstantStatHolder extends Expression {
         return null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ExpressionConstantStatHolder expression)) {
+            return false;
+        } else {
+            return expression.value == this.value;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
 }

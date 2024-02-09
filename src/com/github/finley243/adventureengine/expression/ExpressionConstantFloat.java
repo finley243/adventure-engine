@@ -23,4 +23,18 @@ public class ExpressionConstantFloat extends Expression {
         return Float.toString(value);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ExpressionConstantFloat expression)) {
+            return false;
+        } else {
+            return expression.value == this.value;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return Float.hashCode(value);
+    }
+
 }

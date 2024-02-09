@@ -25,4 +25,18 @@ public class ExpressionConstantNoun extends Expression {
         return value.getName();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ExpressionConstantNoun expression)) {
+            return false;
+        } else {
+            return expression.value == this.value;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
 }
