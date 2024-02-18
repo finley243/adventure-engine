@@ -105,11 +105,11 @@ public abstract class Expression {
             case Inventory value -> {
                 return new ExpressionConstantInventory(value);
             }
-            case Noun value -> {
-                return new ExpressionConstantNoun(value);
-            }
             case StatHolder value -> {
                 return new ExpressionConstantStatHolder(value);
+            }
+            case Noun value -> {
+                return new ExpressionConstantNoun(value);
             }
             default -> throw new IllegalArgumentException("Expression is not a valid type");
         }
