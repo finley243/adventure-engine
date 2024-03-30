@@ -115,36 +115,4 @@ public abstract class Expression {
         }
     }
 
-    /*public static Expression constant(boolean value) {
-        return new ExpressionConstantBoolean(value);
-    }
-
-    public static Expression constant(int value) {
-        return new ExpressionConstantInteger(value);
-    }
-
-    public static Expression constant(float value) {
-        return new ExpressionConstantFloat(value);
-    }
-
-    public static Expression constant(String value) {
-        return new ExpressionConstantString(value);
-    }
-
-    public static Expression constant(Set<String> value) {
-        return new ExpressionConstantStringSet(value);
-    }
-
-    public static Expression constant(Inventory value) {
-        return new ExpressionConstantInventory(value);
-    }
-
-    public static Expression constant(Noun value) {
-        return new ExpressionConstantNoun(value);
-    }
-
-    public static Expression constant(StatHolder value) {
-        return new ExpressionConstantStatHolder(value);
-    }*/
-
 }
