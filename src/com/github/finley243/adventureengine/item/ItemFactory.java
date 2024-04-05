@@ -31,6 +31,7 @@ public class ItemFactory {
 		};
 		if (item != null) {
 			game.data().addItemInstance(ID, item);
+			item.onInit();
 		}
 		return item;
 	}

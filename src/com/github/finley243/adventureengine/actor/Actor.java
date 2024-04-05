@@ -122,7 +122,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		setEnabled(!startDisabled);
 	}
 
-	public void onNewGameInit() {
+	public void onInit() {
 		if (!startDead) {
 			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
 		}

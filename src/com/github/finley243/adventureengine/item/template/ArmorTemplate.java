@@ -20,8 +20,8 @@ public class ArmorTemplate extends EquippableTemplate {
     // Whether damage resistances/mults will be applied to non-targeted damage
     private final boolean coversMainBody;
 
-    public ArmorTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, Set<Set<String>> slots, List<String> equippedEffects, List<ActionCustom.CustomActionHolder> equippedActions, Map<String, Integer> damageResistance, Map<String, Float> damageMult, Set<String> coveredLimbs, boolean coversMainBody) {
-        super(game, ID, name, description, scripts, customActions, price, slots, equippedEffects, equippedActions);
+    public ArmorTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price, Set<Set<String>> slots, List<String> equippedEffects, List<ActionCustom.CustomActionHolder> equippedActions, Map<String, Integer> damageResistance, Map<String, Float> damageMult, Set<String> coveredLimbs, boolean coversMainBody) {
+        super(game, ID, name, description, scripts, components, customActions, price, slots, equippedEffects, equippedActions);
         this.damageResistance = damageResistance;
         this.damageMult = damageMult;
         this.coveredLimbs = coveredLimbs;

@@ -15,8 +15,8 @@ public class ModTemplate extends ItemTemplate {
     private final String modSlot;
     private final List<String> effects;
 
-    public ModTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, String modSlot, List<String> effects) {
-        super(game, ID, name, description, scripts, customActions, price);
+    public ModTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price, String modSlot, List<String> effects) {
+        super(game, ID, name, description, scripts, components, customActions, price);
         this.modSlot = modSlot;
         this.effects = effects;
     }

@@ -44,7 +44,7 @@ public abstract class ObjectComponent implements StatHolder {
         return isEnabled;
     }
 
-    public void onNewGameInit() {
+    public void onInit() {
         this.isEnabled = getTemplate().startEnabled();
     }
 

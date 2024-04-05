@@ -7,7 +7,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantInventory;
-import com.github.finley243.adventureengine.expression.ExpressionConstantNoun;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -43,8 +42,8 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
-    public void onNewGameInit() {
-        super.onNewGameInit();
+    public void onInit() {
+        super.onInit();
         if (getTemplateInventory().getLootTable() != null) {
             getTemplateInventory().getLootTable().generateItems(getObject().game(), inventory);
         }

@@ -12,8 +12,8 @@ import java.util.Set;
 
 public class MiscTemplate extends ItemTemplate {
 
-    public MiscTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price) {
-        super(game, ID, name, description, scripts, customActions, price);
+    public MiscTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price) {
+        super(game, ID, name, description, scripts, components, customActions, price);
     }
 
     @Override

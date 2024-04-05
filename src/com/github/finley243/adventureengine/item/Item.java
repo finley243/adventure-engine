@@ -7,6 +7,9 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.item.component.ItemComponent;
+import com.github.finley243.adventureengine.item.component.ItemComponentFactory;
+import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
@@ -14,21 +17,24 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
+import com.github.finley243.adventureengine.world.object.component.ObjectComponentFactory;
+import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	private Inventory currentInventory;
 	private boolean isKnown;
 	private final String templateID;
+	private final Map<Class<? extends ItemComponent>, ItemComponent> components;
 
 	public Item(Game game, String ID, String templateID) {
 		super(game, ID);
 		this.templateID = templateID;
 		this.currentInventory = null;
+		this.components = new HashMap<>();
 	}
 
 	@Override
@@ -63,6 +69,23 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	public Scene getDescription() {
 		return getTemplate().getDescription();
+	}
+
+	public void onInit() {
+		for (ItemComponentTemplate componentTemplate : getTemplate().getComponents()) {
+			ItemComponent component = ItemComponentFactory.create(componentTemplate, this);
+			if (component == null) throw new UnsupportedOperationException("Cannot add null component to item " + this);
+			if (components.containsKey(component.getClass())) {
+				throw new UnsupportedOperationException("Item " + this + " already contains a component of type " + component.getClass());
+			}
+			components.put(component.getClass(), component);
+			component.onInit();
+		}
+	}
+
+	public <T extends ItemComponent> T getComponentOfType(Class<T> componentClass) {
+		ItemComponent uncastComponent = components.get(componentClass);
+		return componentClass.cast(uncastComponent);
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {

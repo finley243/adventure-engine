@@ -791,7 +791,7 @@ public class DataLoader {
                 }
                 Set<String> coveredLimbs = LoadUtils.setOfTags(itemElement, "coveredLimb");
                 boolean coversMainBody = LoadUtils.attributeBool(itemElement, "coversMainBody", false);
-                return new ArmorTemplate(game, id, name, description, scripts, customActions, price, apparelSlots, apparelEffects, equippedActions, damageResistances, damageMults, coveredLimbs, coversMainBody);
+                return new ArmorTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, apparelSlots, apparelEffects, equippedActions, damageResistances, damageMults, coveredLimbs, coversMainBody);
             }
             case "equippable" -> {
                 Set<Set<String>> equipSlots = new HashSet<>();
@@ -801,13 +801,13 @@ public class DataLoader {
                 }
                 List<String> equippedEffects = LoadUtils.listOfTags(itemElement, "effect");
                 List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");
-                return new EquippableTemplate(game, id, name, description, scripts, customActions, price, equipSlots, equippedEffects, equippedActions);
+                return new EquippableTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, equipSlots, equippedEffects, equippedActions);
             }
             case "consumable" -> {
                 String consumePrompt = LoadUtils.singleTag(itemElement, "consumePrompt", null);
                 String consumePhrase = LoadUtils.singleTag(itemElement, "consumePhrase", null);
                 List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ConsumableTemplate(game, id, name, description, scripts, customActions, price, consumePrompt, consumePhrase, consumableEffects);
+                return new ConsumableTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, consumePrompt, consumePhrase, consumableEffects);
             }
             case "weapon" -> {
                 List<String> equippedEffects = LoadUtils.listOfTags(itemElement, "equippedEffect");
@@ -830,20 +830,20 @@ public class DataLoader {
                     int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
                     modSlots.put(slotName, slotCount);
                 }
-                return new WeaponTemplate(game, id, name, description, scripts, customActions, price, equippedEffects, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
+                return new WeaponTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, equippedEffects, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(itemElement, "modSlot", null);
                 List<String> effects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ModTemplate(game, id, name, description, scripts, customActions, price, modSlot, effects);
+                return new ModTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, modSlot, effects);
             }
             case "ammo" -> {
                 List<String> ammoWeaponEffects = LoadUtils.listOfTags(itemElement, "weaponEffect");
                 boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
-                return new AmmoTemplate(game, id, name, description, scripts, customActions, price, ammoWeaponEffects, ammoIsReusable);
+                return new AmmoTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, ammoWeaponEffects, ammoIsReusable);
             }
             default -> {
-                return new MiscTemplate(game, id, name, description, scripts, customActions, price);
+                return new MiscTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price);
             }
         }
     }

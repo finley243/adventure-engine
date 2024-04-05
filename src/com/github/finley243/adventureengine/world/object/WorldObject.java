@@ -154,14 +154,15 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return isHidden;
 	}
 
-	public void onNewGameInit() {
+	public void onInit() {
 		for (ObjectComponentTemplate componentTemplate : getTemplate().getComponents()) {
 			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, this);
+			if (component == null) throw new UnsupportedOperationException("Cannot add null component to object " + this);
 			if (components.containsKey(component.getClass())) {
 				throw new UnsupportedOperationException("Object " + this + " already contains a component of type " + component.getClass());
 			}
 			components.put(component.getClass(), component);
-            component.onNewGameInit();
+            component.onInit();
         }
 		this.HP = getTemplate().getMaxHP();
 	}
@@ -215,8 +216,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
     }
 
 	public <T extends ObjectComponent> T getComponentOfType(Class<T> componentClass) {
-		ObjectComponent uncastComponents = components.get(componentClass);
-		return componentClass.cast(uncastComponents);
+		ObjectComponent uncastComponent = components.get(componentClass);
+		return componentClass.cast(uncastComponent);
 	}
 
 	public void triggerScript(String entryPoint, Context context) {

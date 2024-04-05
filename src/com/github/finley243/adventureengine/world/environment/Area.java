@@ -165,7 +165,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		};
 	}
 
-	public void onNewGameInit() {}
+	public void onInit() {}
 	
 	public Set<WorldObject> getObjects(){
 		return objects;

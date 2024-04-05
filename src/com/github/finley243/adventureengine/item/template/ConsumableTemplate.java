@@ -16,8 +16,8 @@ public class ConsumableTemplate extends ItemTemplate {
 	private final String consumePhrase;
 	private final List<String> effects;
 	
-	public ConsumableTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, int price, String consumePrompt, String consumePhrase, List<String> effects) {
-		super(game, ID, name, description, scripts, customActions, price);
+	public ConsumableTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price, String consumePrompt, String consumePhrase, List<String> effects) {
+		super(game, ID, name, description, scripts, components, customActions, price);
 		this.consumePrompt = consumePrompt;
 		this.consumePhrase = consumePhrase;
 		this.effects = effects;
