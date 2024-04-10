@@ -116,6 +116,9 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 		if (this.getDescription() != null) {
 			actions.add(new ActionInspectItem(this));
 		}
+		for (ItemComponent component : components.values()) {
+			actions.addAll(component.inventoryActions(subject));
+		}
 		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 			actions.add(new ActionCustom(game(), null, null, this, null, customAction.action(), customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
 		}
