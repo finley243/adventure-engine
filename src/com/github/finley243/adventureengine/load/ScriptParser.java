@@ -17,6 +17,48 @@ public class ScriptParser {
 
     private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set", "list", "error", "log");
     private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*[\n\r]|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|<|>|;|=|\\?|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}";
+    private static final Map<String, ScriptTokenType> SIMPLE_TOKENS_MAP = new HashMap<>() {
+        {
+            put(";", ScriptTokenType.END_LINE);
+            put("=", ScriptTokenType.ASSIGNMENT);
+            put("+=", ScriptTokenType.MODIFIER_PLUS);
+            put("-=", ScriptTokenType.MODIFIER_MINUS);
+            put("*=", ScriptTokenType.MODIFIER_MULTIPLY);
+            put("/=", ScriptTokenType.MODIFIER_DIVIDE);
+            put("%=", ScriptTokenType.MODIFIER_MODULO);
+            put(",", ScriptTokenType.COMMA);
+            put(".", ScriptTokenType.DOT);
+            put("+", ScriptTokenType.PLUS);
+            put("-", ScriptTokenType.MINUS);
+            put("/", ScriptTokenType.DIVIDE);
+            put("*", ScriptTokenType.MULTIPLY);
+            put("%", ScriptTokenType.MODULO);
+            put("^", ScriptTokenType.POWER);
+            put(":", ScriptTokenType.COLON);
+            put("?", ScriptTokenType.TERNARY_IF);
+            put("!", ScriptTokenType.NOT);
+            put("&&", ScriptTokenType.AND);
+            put("||", ScriptTokenType.OR);
+            put("==", ScriptTokenType.EQUAL);
+            put("!=", ScriptTokenType.NOT_EQUAL);
+            put("<=", ScriptTokenType.LESS_EQUAL);
+            put(">=", ScriptTokenType.GREATER_EQUAL);
+            put("<", ScriptTokenType.LESS);
+            put(">", ScriptTokenType.GREATER);
+            put("(", ScriptTokenType.PARENTHESIS_OPEN);
+            put(")", ScriptTokenType.PARENTHESIS_CLOSE);
+            put("{", ScriptTokenType.BRACKET_OPEN);
+            put("}", ScriptTokenType.BRACKET_CLOSE);
+            put("true", ScriptTokenType.BOOLEAN_TRUE);
+            put("false", ScriptTokenType.BOOLEAN_FALSE);
+            put("null", ScriptTokenType.NULL);
+            put("return", ScriptTokenType.RETURN);
+            put("break", ScriptTokenType.BREAK);
+            put("continue", ScriptTokenType.CONTINUE);
+            put("error", ScriptTokenType.ERROR);
+            put("log", ScriptTokenType.LOG);
+        }
+    };
 
     public static List<ScriptData> parseFunctions(String scriptText) {
         List<ScriptData> scripts = new ArrayList<>();
@@ -46,104 +88,31 @@ public class ScriptParser {
 
     private static List<ScriptToken> parseToTokens(String scriptText) {
         List<ScriptToken> tokens = new ArrayList<>();
-        Pattern pattern = Pattern.compile(REGEX_PATTERN);
-        Matcher matcher = pattern.matcher(scriptText);
+        Matcher matcher = Pattern.compile(REGEX_PATTERN).matcher(scriptText);
         while (matcher.find()) {
             String currentToken = matcher.group();
-            if (currentToken.startsWith("\"") && currentToken.endsWith("\"") && currentToken.length() > 1) {
-                String value = currentToken.substring(1, currentToken.length() - 1);
-                value = value.replaceAll("\\\\\"", "\"");
+            if (currentToken.startsWith("\"") && currentToken.endsWith("\"")) {
+                String value = stringLiteralToValue(currentToken);
                 tokens.add(new ScriptToken(ScriptTokenType.STRING, value));
-            } else if (currentToken.startsWith("'") && currentToken.endsWith("'") && currentToken.length() > 1) {
-                String value = currentToken.substring(1, currentToken.length() - 1);
-                value = value.replaceAll("\\\\'", "'");
+            } else if (currentToken.startsWith("'") && currentToken.endsWith("'")) {
+                String value = stringLiteralToValue(currentToken);
                 tokens.add(new ScriptToken(ScriptTokenType.STRING, value));
             } else if (currentToken.matches("([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f")) {
                 String value = currentToken.substring(0, currentToken.length() - 1);
                 tokens.add(new ScriptToken(ScriptTokenType.FLOAT, value));
             } else if (currentToken.matches("[0-9]+")) {
                 tokens.add(new ScriptToken(ScriptTokenType.INTEGER, currentToken));
-            } else if (currentToken.equals(";")) {
-                tokens.add(new ScriptToken(ScriptTokenType.END_LINE));
-            } else if (currentToken.equals("=")) {
-                tokens.add(new ScriptToken(ScriptTokenType.ASSIGNMENT));
-            } else if (currentToken.equals("+=")) {
-                tokens.add(new ScriptToken(ScriptTokenType.MODIFIER_PLUS));
-            } else if (currentToken.equals("-=")) {
-                tokens.add(new ScriptToken(ScriptTokenType.MODIFIER_MINUS));
-            } else if (currentToken.equals("*=")) {
-                tokens.add(new ScriptToken(ScriptTokenType.MODIFIER_MULTIPLY));
-            } else if (currentToken.equals("/=")) {
-                tokens.add(new ScriptToken(ScriptTokenType.MODIFIER_DIVIDE));
-            } else if (currentToken.equals("%=")) {
-                tokens.add(new ScriptToken(ScriptTokenType.MODIFIER_MODULO));
-            } else if (currentToken.equals(",")) {
-                tokens.add(new ScriptToken(ScriptTokenType.COMMA));
-            } else if (currentToken.equals(".")) {
-                tokens.add(new ScriptToken(ScriptTokenType.DOT));
-            } else if (currentToken.equals("+")) {
-                tokens.add(new ScriptToken(ScriptTokenType.PLUS));
-            } else if (currentToken.equals("-")) {
-                tokens.add(new ScriptToken(ScriptTokenType.MINUS));
-            } else if (currentToken.equals("/")) {
-                tokens.add(new ScriptToken(ScriptTokenType.DIVIDE));
-            } else if (currentToken.equals("*")) {
-                tokens.add(new ScriptToken(ScriptTokenType.MULTIPLY));
-            } else if (currentToken.equals("%")) {
-                tokens.add(new ScriptToken(ScriptTokenType.MODULO));
-            } else if (currentToken.equals("^")) {
-                tokens.add(new ScriptToken(ScriptTokenType.POWER));
-            } else if (currentToken.equals(":")) {
-                tokens.add(new ScriptToken(ScriptTokenType.COLON));
-            } else if (currentToken.equals("?")) {
-                tokens.add(new ScriptToken(ScriptTokenType.TERNARY_IF));
-            } else if (currentToken.equals("!")) {
-                tokens.add(new ScriptToken(ScriptTokenType.NOT));
-            } else if (currentToken.equals("&&")) {
-                tokens.add(new ScriptToken(ScriptTokenType.AND));
-            } else if (currentToken.equals("||")) {
-                tokens.add(new ScriptToken(ScriptTokenType.OR));
-            } else if (currentToken.equals("==")) {
-                tokens.add(new ScriptToken(ScriptTokenType.EQUAL));
-            } else if (currentToken.equals("!=")) {
-                tokens.add(new ScriptToken(ScriptTokenType.NOT_EQUAL));
-            } else if (currentToken.equals("<=")) {
-                tokens.add(new ScriptToken(ScriptTokenType.LESS_EQUAL));
-            } else if (currentToken.equals(">=")) {
-                tokens.add(new ScriptToken(ScriptTokenType.GREATER_EQUAL));
-            } else if (currentToken.equals("<")) {
-                tokens.add(new ScriptToken(ScriptTokenType.LESS));
-            } else if (currentToken.equals(">")) {
-                tokens.add(new ScriptToken(ScriptTokenType.GREATER));
-            } else if (currentToken.equals("(")) {
-                tokens.add(new ScriptToken(ScriptTokenType.PARENTHESIS_OPEN));
-            } else if (currentToken.equals(")")) {
-                tokens.add(new ScriptToken(ScriptTokenType.PARENTHESIS_CLOSE));
-            } else if (currentToken.equals("{")) {
-                tokens.add(new ScriptToken(ScriptTokenType.BRACKET_OPEN));
-            } else if (currentToken.equals("}")) {
-                tokens.add(new ScriptToken(ScriptTokenType.BRACKET_CLOSE));
-            } else if (currentToken.equals("true")) {
-                tokens.add(new ScriptToken(ScriptTokenType.BOOLEAN_TRUE));
-            } else if (currentToken.equals("false")) {
-                tokens.add(new ScriptToken(ScriptTokenType.BOOLEAN_FALSE));
-            } else if (currentToken.equals("null")) {
-                tokens.add(new ScriptToken(ScriptTokenType.NULL));
-            } else if (currentToken.equals("return")) {
-                tokens.add(new ScriptToken(ScriptTokenType.RETURN));
-            } else if (currentToken.equals("break")) {
-                tokens.add(new ScriptToken(ScriptTokenType.BREAK));
-            } else if (currentToken.equals("continue")) {
-                tokens.add(new ScriptToken(ScriptTokenType.CONTINUE));
-            } else if (currentToken.equals("error")) {
-                tokens.add(new ScriptToken(ScriptTokenType.ERROR));
-            } else if (currentToken.equals("log")) {
-                tokens.add(new ScriptToken(ScriptTokenType.LOG));
+            } else if (SIMPLE_TOKENS_MAP.containsKey(currentToken)) {
+                tokens.add(new ScriptToken(SIMPLE_TOKENS_MAP.get(currentToken)));
             } else if (currentToken.matches("_?[a-zA-Z][a-zA-Z0-9_]*")) {
                 tokens.add(new ScriptToken(ScriptTokenType.NAME, currentToken));
             }
         }
         return tokens;
+    }
+
+    private static String stringLiteralToValue(String token) {
+        return token.substring(1, token.length() - 1).replaceAll("\\\\(.)", "$1");
     }
 
     private static List<ScriptTokenFunction> groupTokensToFunctions(List<ScriptToken> tokens) {
@@ -195,31 +164,17 @@ public class ScriptParser {
 
     private static List<ScriptParameter> parseFunctionParameters(List<ScriptToken> parameterTokens) {
         List<ScriptParameter> functionParameters = new ArrayList<>();
-        List<List<ScriptToken>> parameterGroups = new ArrayList<>();
         int index = 0;
         while (index < parameterTokens.size()) {
             int nextCommaIndex = findFirstTokenIndex(parameterTokens, ScriptTokenType.COMMA, index);
-            List<ScriptToken> currentGroup;
-            if (nextCommaIndex == -1) {
-                currentGroup = parameterTokens.subList(index, parameterTokens.size());
-                index = parameterTokens.size();
-            } else {
-                currentGroup = parameterTokens.subList(index, nextCommaIndex);
-                index = nextCommaIndex;
-            }
+            List<ScriptToken> currentGroup = parameterTokens.subList(index, nextCommaIndex == -1 ? parameterTokens.size() : nextCommaIndex);
+            index = nextCommaIndex == -1 ? parameterTokens.size() : nextCommaIndex;
             if (currentGroup.isEmpty() || currentGroup.size() == 2) throw new IllegalArgumentException("Function contains invalid parameter definition (1)");
             if (currentGroup.getFirst().type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function contains invalid parameter definition (2)");
             if (currentGroup.size() >= 3 && currentGroup.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Function contains invalid parameter definition (3)");
-            parameterGroups.add(currentGroup);
-        }
-        for (List<ScriptToken> parameterGroup : parameterGroups) {
-            String parameterName = parameterGroup.getFirst().value;
-            boolean parameterIsRequired = true;
-            Expression parameterDefaultValue = null;
-            if (parameterGroup.size() >= 3) {
-                parameterIsRequired = false;
-                parameterDefaultValue = parseLiteral(parameterGroup.subList(2, parameterGroup.size()));
-            }
+            String parameterName = currentGroup.getFirst().value;
+            boolean parameterIsRequired = currentGroup.size() < 3;
+            Expression parameterDefaultValue = parameterIsRequired ? null : parseLiteral(currentGroup.subList(2, currentGroup.size()));
             functionParameters.add(new ScriptParameter(parameterName, parameterIsRequired, parameterDefaultValue));
         }
         return functionParameters;
