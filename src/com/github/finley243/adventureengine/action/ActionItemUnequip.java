@@ -3,8 +3,8 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.item.ItemEquippable;
-import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -13,9 +13,9 @@ import com.github.finley243.adventureengine.textgen.TextContext;
 
 public class ActionItemUnequip extends Action {
 
-    private final ItemEquippable item;
+    private final Item item;
 
-    public ActionItemUnequip(ItemEquippable item) {
+    public ActionItemUnequip(Item item) {
         this.item = item;
     }
 
@@ -38,7 +38,7 @@ public class ActionItemUnequip extends Action {
 
     @Override
     public float utility(Actor subject) {
-        if (item instanceof ItemWeapon && !subject.isInCombat()) {
+        if (item.hasComponentOfType(ItemComponentWeapon.class) && !subject.isInCombat()) {
             return 0.4f;
         }
         return 0.0f;

@@ -1,5 +1,5 @@
 <data>
-    <item type="misc" id="coin" price="1">
+    <item id="coin" price="1">
         <name>coin</name>
     </item>
 </data>

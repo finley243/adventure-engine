@@ -216,8 +216,12 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
     }
 
 	public <T extends ObjectComponent> T getComponentOfType(Class<T> componentClass) {
-		ObjectComponent uncastComponent = components.get(componentClass);
-		return componentClass.cast(uncastComponent);
+		ObjectComponent component = components.get(componentClass);
+		return componentClass.cast(component);
+	}
+
+	public <T extends ObjectComponent> boolean hasComponentOfType(Class<T> componentClass) {
+		return components.containsKey(componentClass);
 	}
 
 	public void triggerScript(String entryPoint, Context context) {
@@ -233,7 +237,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
-			case "inventory" -> (getComponentOfType(ObjectComponentInventory.class) == null ? null : new ExpressionConstantInventory(getComponentOfType(ObjectComponentInventory.class).getInventory()));
+			case "inventory" -> (hasComponentOfType(ObjectComponentInventory.class) ? new ExpressionConstantInventory(getComponentOfType(ObjectComponentInventory.class).getInventory()) : null);
 			case "noun" -> new ExpressionConstantNoun(this);
 			case "enabled" -> new ExpressionConstantBoolean(isEnabled);
 			case "hidden" -> new ExpressionConstantBoolean(isHidden);

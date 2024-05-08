@@ -1,26 +1,26 @@
 <data>
-    <item type="misc" id="can_soda" price="1">
+    <item id="can_soda" price="1">
         <name>empty soda can</name>
     </item>
-    <item type="misc" id="can_aluminum" price="1">
+    <item id="can_aluminum" price="1">
         <name>rusted aluminum can</name>
     </item>
-    <item type="misc" id="scrap_wires" price="1">
+    <item id="scrap_wires" price="1">
         <name>scrap wires</name>
     </item>
-    <item type="misc" id="bag_plastic" price="1">
+    <item id="bag_plastic" price="1">
         <name>dirty plastic bag</name>
     </item>
-    <item type="misc" id="ecig_cartridge" price="1">
+    <item id="ecig_cartridge" price="1">
         <name>empty e-cig cartridge</name>
     </item>
-    <item type="misc" id="bottle_pill" price="1">
+    <item id="bottle_pill" price="1">
         <name>empty pill bottle</name>
     </item>
-    <item type="misc" id="cup_paper" price="1">
+    <item id="cup_paper" price="1">
         <name>dirty paper cup</name>
     </item>
-    <item type="misc" id="can_spray_paint" price="1">
+    <item id="can_spray_paint" price="1">
         <name>empty spray-paint can</name>
     </item>
 </data>

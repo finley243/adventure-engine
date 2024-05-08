@@ -3,8 +3,9 @@ package com.github.finley243.adventureengine.item;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.item.component.ItemComponentMod;
+import com.github.finley243.adventureengine.item.component.ItemComponentModdable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -41,18 +42,17 @@ public class LootTableEntry {
 			} else {
 				for (int i = 0; i < count; i++) {
 					Item itemInstance = ItemFactory.create(game, referenceID);
-					// TODO - Expand to other types of items besides weapons
-					if (modReference != null && itemInstance instanceof ItemWeapon weapon && MathUtils.randomCheck(modChance)) {
+					if (modReference != null && itemInstance.hasComponentOfType(ItemComponentModdable.class) && MathUtils.randomCheck(modChance)) {
 						if (modIsTable) {
 							Inventory modInventory = new Inventory(game, null);
 							game.data().getLootTable(modReference).generateItems(game, inventory);
 							for (Map.Entry<Item, Integer> entry : modInventory.getItemMap().entrySet()) {
 								Item modItem = entry.getKey();
 								int modCount = entry.getValue();
-								if (modItem instanceof ItemMod mod) {
+								if (modItem.hasComponentOfType(ItemComponentMod.class)) {
 									for (int j = 0; j < modCount; j++) {
-										if (weapon.canInstallMod(mod)) {
-											weapon.installMod(mod);
+										if (itemInstance.getComponentOfType(ItemComponentModdable.class).canInstallMod(modItem)) {
+											itemInstance.getComponentOfType(ItemComponentModdable.class).installMod(modItem);
 										}
 									}
 								}
@@ -60,8 +60,8 @@ public class LootTableEntry {
 							modInventory.clear();
 						} else {
 							Item modItem = ItemFactory.create(game, modReference);
-							if (modItem instanceof ItemMod mod) {
-								weapon.installMod(mod);
+							if (modItem.hasComponentOfType(ItemComponentMod.class)) {
+								itemInstance.getComponentOfType(ItemComponentModdable.class).installMod(modItem);
 							}
 						}
 					}

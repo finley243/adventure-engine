@@ -1,46 +1,104 @@
 <data>
-    <item type="weapon" id="baseball_bat" price="15" class="club">
+    <item id="baseball_bat" price="15">
         <name>baseball bat</name>
-        <damage base="10" crit="5"/>
-        <rate>2</rate>
+        <component type="weapon" class="club">
+            <damage base="10" crit="5"/>
+            <rate>2</rate>
+        </component>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+                <slot>hand_off</slot>
+            </slotGroup>
+        </component>
     </item>
-    <item type="weapon" id="katana" price="60" class="sword">
+    <item id="katana" price="60">
         <name>katana</name>
         <description>
             <line>A razor-sharp sword of fine craftsmanship.</line>
         </description>
-        <damage base="20" crit="10"/>
-        <rate>2</rate>
+        <component type="weapon" class="sword">
+            <damage base="20" crit="10"/>
+            <rate>2</rate>
+        </component>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+                <slot>hand_off</slot>
+            </slotGroup>
+        </component>
     </item>
-    <item type="weapon" id="pistol_light" price="30" class="pistol">
+    <item id="pistol_light" price="30">
         <name>light pistol</name>
-        <damage base="10" crit="5"/>
-        <rate>2</rate>
-        <clipSize>12</clipSize>
-        <reloadActionPoints>1</reloadActionPoints>
-        <modSlot name="pistol_mag"/>
+        <component type="weapon" class="pistol">
+            <damage base="10" crit="5"/>
+            <rate>2</rate>
+            <clipSize>12</clipSize>
+            <reloadActionPoints>1</reloadActionPoints>
+        </component>
+        <component type="moddable">
+            <modSlot name="pistol_mag"/>
+        </component>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+            </slotGroup>
+            <slotGroup>
+                <slot>hand_off</slot>
+            </slotGroup>
+        </component>
     </item>
-    <item type="weapon" id="pistol_heavy" price="50" class="pistol">
+    <item id="pistol_heavy" price="50">
         <name>heavy pistol</name>
-        <damage base="14" crit="6"/>
-        <rate>2</rate>
-        <clipSize>6</clipSize>
-        <reloadActionPoints>1</reloadActionPoints>
-        <modSlot name="pistol_mag"/>
+        <component type="weapon" class="pistol">
+            <damage base="14" crit="6"/>
+            <rate>2</rate>
+            <clipSize>6</clipSize>
+            <reloadActionPoints>1</reloadActionPoints>
+        </component>
+        <component type="moddable">
+            <modSlot name="pistol_mag"/>
+        </component>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+            </slotGroup>
+            <slotGroup>
+                <slot>hand_off</slot>
+            </slotGroup>
+        </component>
     </item>
-    <item type="weapon" id="rifle_auto" price="90" class="assault_rifle">
+    <item id="rifle_auto" price="90">
         <name>auto rifle</name>
         <description>
             <line>A full-auto assault rifle.</line>
         </description>
-        <damage base="15" crit="4"/>
-        <rate>2</rate>
-        <clipSize>16</clipSize>
-        <reloadActionPoints>1</reloadActionPoints>
+        <component type="weapon" class="assault_rifle">
+            <damage base="15" crit="4"/>
+            <rate>2</rate>
+            <clipSize>16</clipSize>
+            <reloadActionPoints>1</reloadActionPoints>
+        </component>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+                <slot>hand_off</slot>
+            </slotGroup>
+        </component>
     </item>
-    <item type="weapon" id="grenade_frag" price="10" class="grenade">
+    <item id="grenade_frag" price="10">
         <name>frag grenade</name>
-        <damage base="20" crit="5"/>
-        <rate>1</rate>
+        <component type="weapon" class="grenade">
+            <damage base="20" crit="5"/>
+            <rate>1</rate>
+        </component>
+        <component type="equippable">
+            <slotGroup>
+                <slot>hand_main</slot>
+            </slotGroup>
+            <slotGroup>
+                <slot>hand_off</slot>
+            </slotGroup>
+        </component>
     </item>
 </data>

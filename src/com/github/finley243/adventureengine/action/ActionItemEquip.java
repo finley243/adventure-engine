@@ -4,8 +4,9 @@ import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.item.ItemEquippable;
-import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
+import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -20,10 +21,10 @@ public class ActionItemEquip extends Action {
     public static final float SUBOPTIMAL_WEAPON_UTILITY = 0.4f;
     public static final float OPTIMAL_WEAPON_UTILITY = 0.7f;
 
-    private final ItemEquippable item;
+    private final Item item;
     private final Set<String> slots;
 
-    public ActionItemEquip(ItemEquippable item, Set<String> slots) {
+    public ActionItemEquip(Item item, Set<String> slots) {
         this.item = item;
         this.slots = slots;
     }
@@ -41,7 +42,7 @@ public class ActionItemEquip extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        if (item.getEquippedActor() != null) {
+        if (item.getComponentOfType(ItemComponentEquippable.class).getEquippedActor() != null) {
             return new CanChooseResult(false, "Already equipped");
         }
         if (subject.getEquipmentComponent().isSlotBlocked(slots)) {
@@ -75,9 +76,9 @@ public class ActionItemEquip extends Action {
 
     @Override
     public float utility(Actor subject) {
-        if (item instanceof ItemWeapon weapon) {
+        if (item.hasComponentOfType(ItemComponentWeapon.class)) {
             if (!subject.isInCombat()) return 0;
-            if (weapon.isRanged()) {
+            if (item.getComponentOfType(ItemComponentWeapon.class).isRanged()) {
                 if (UtilityUtils.actorHasMeleeTargets(subject)) {
                     return SUBOPTIMAL_WEAPON_UTILITY;
                 } else {

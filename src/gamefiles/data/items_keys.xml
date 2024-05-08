@@ -1,17 +1,17 @@
 <data>
-    <item type="misc" id="stratis_room_key">
+    <item id="stratis_room_key">
         <name>Stratis room 508 keycard</name>
     </item>
-    <item type="misc" id="stratis_master_key">
+    <item id="stratis_master_key">
         <name>Stratis master keycard</name>
     </item>
-    <item type="misc" id="nexus_bouncer_key">
+    <item id="nexus_bouncer_key">
         <name>Nexus bouncer key</name>
     </item>
-    <item type="misc" id="stratis_security_key">
+    <item id="stratis_security_key">
         <name>Stratis security key</name>
     </item>
-    <item type="misc" id="wilsons_corner_store_key">
+    <item id="wilsons_corner_store_key">
         <name>Wilson's corner store key</name>
     </item>
 </data>

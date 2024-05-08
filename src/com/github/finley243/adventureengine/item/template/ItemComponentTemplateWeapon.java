@@ -16,7 +16,8 @@ public class ItemComponentTemplateWeapon extends ItemComponentTemplate {
     private final String damageType;
     private final Set<String> targetEffects;
 
-    public ItemComponentTemplateWeapon(String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, int reloadActionPoints, float armorMult, boolean silenced, String damageType, Set<String> targetEffects) {
+    public ItemComponentTemplateWeapon(boolean actionsRestricted, String weaponClass, int damage, int rate, int critDamage, float critChance, int clipSize, int reloadActionPoints, float armorMult, boolean silenced, String damageType, Set<String> targetEffects) {
+        super(actionsRestricted);
         if (weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null");
         this.weaponClass = weaponClass;
         this.damage = damage;

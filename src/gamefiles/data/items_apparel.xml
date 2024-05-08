@@ -1,17 +1,25 @@
 <data>
-    <item type="apparel" id="tactical_vest" price="40" coversMainBody="true">
+    <item id="tactical_vest" price="40">
         <name>tactical vest</name>
-        <slotGroup>
-            <slot>torso</slot>
-        </slotGroup>
-        <damage type="physical" resistance="5"/>
+        <component type="equippable">
+            <slotGroup>
+                <slot>torso</slot>
+            </slotGroup>
+        </component>
+        <component type="armor" coversMainBody="true">
+            <damage type="physical" resistance="5"/>
+        </component>
     </item>
-    <item type="apparel" id="tactical_helmet" price="30">
+    <item id="tactical_helmet" price="30">
         <name>tactical helmet</name>
-        <slotGroup>
-            <slot>head</slot>
-        </slotGroup>
-        <coveredLimb>head</coveredLimb>
-        <damage type="physical" resistance="3"/>
+        <component type="equippable">
+            <slotGroup>
+                <slot>head</slot>
+            </slotGroup>
+        </component>
+        <component type="armor">
+            <coveredLimb>head</coveredLimb>
+            <damage type="physical" resistance="3"/>
+        </component>
     </item>
 </data>

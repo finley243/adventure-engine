@@ -1,25 +1,25 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.item.ItemMod;
-import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.component.ItemComponentModdable;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
 
 public class ActionModInstall extends Action {
 
-    private final ItemWeapon weapon;
-    private final ItemMod mod;
+    private final Item target;
+    private final Item mod;
 
-    public ActionModInstall(ItemWeapon weapon, ItemMod mod) {
-        this.weapon = weapon;
+    public ActionModInstall(Item target, Item mod) {
+        this.target = target;
         this.mod = mod;
     }
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.getInventory().removeItem(mod);
-        weapon.installMod(mod);
+        target.getComponentOfType(ItemComponentModdable.class).installMod(mod);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ActionModInstall extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        if (!weapon.canInstallMod(mod)) {
+        if (!target.getComponentOfType(ItemComponentModdable.class).canInstallMod(mod)) {
             return new CanChooseResult(false, "Cannot be installed on this item");
         }
         return new CanChooseResult(true, null);
@@ -36,12 +36,12 @@ public class ActionModInstall extends Action {
 
     @Override
     public boolean canShow(Actor subject) {
-        return super.canShow(subject) && weapon.hasModSlots();
+        return super.canShow(subject) && target.hasComponentOfType(ItemComponentModdable.class);
     }
 
     @Override
     public MenuData getMenuData(Actor subject) {
-        return new MenuDataInventoryCombine(weapon, subject.getInventory(), mod, subject.getInventory());
+        return new MenuDataInventoryCombine(target, subject.getInventory(), mod, subject.getInventory());
     }
 
     @Override

@@ -1,8 +1,10 @@
 <data>
-    <item type="ammo" id="ammo_pistol">
+    <item id="ammo_pistol">
         <name>pistol round</name>
+        <component type="ammo"/>
     </item>
-    <item type="ammo" id="ammo_rifle">
+    <item id="ammo_rifle">
         <name>rifle round</name>
+        <component type="ammo"/>
     </item>
 </data>

@@ -10,7 +10,8 @@ import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantInteger;
-import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -330,13 +331,13 @@ public class TargetingComponent {
 
     private Set<AreaLink.DistanceCategory> idealDistances() {
         // TODO - Generalize function (not specific to weapon)
-        Set<ItemWeapon> equippedWeapons = actor.getEquipmentComponent().getEquippedWeapons();
+        Set<Item> equippedWeapons = actor.getEquipmentComponent().getEquippedWeapons();
         if (equippedWeapons.isEmpty()) {
             return Set.of(AreaLink.DistanceCategory.NEAR);
         }
         Set<AreaLink.DistanceCategory> combinedRanges = new HashSet<>();
-        for (ItemWeapon weapon : equippedWeapons) {
-            combinedRanges.addAll(weapon.getRanges(new Context(actor.game(), actor, actor, weapon)));
+        for (Item weapon : equippedWeapons) {
+            combinedRanges.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(new Context(actor.game(), actor, actor, weapon)));
         }
         return combinedRanges;
     }

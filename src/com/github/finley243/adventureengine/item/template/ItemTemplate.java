@@ -12,12 +12,9 @@ import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-public abstract class ItemTemplate extends GameInstanced implements Noun, StatHolder {
+public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 
 	private int generatedCount;
 
@@ -81,7 +78,10 @@ public abstract class ItemTemplate extends GameInstanced implements Noun, StatHo
 		return price;
 	}
 
-	public abstract Set<String> getTags();
+	public Set<String> getTags() {
+		// TODO - Add tags for components
+		return new HashSet<>();
+	}
 
 	public List<ItemComponentTemplate> getComponents() {
 		return components;

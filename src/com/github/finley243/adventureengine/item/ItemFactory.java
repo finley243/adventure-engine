@@ -19,7 +19,9 @@ public class ItemFactory {
 	}
 
 	private static Item create(Game game, ItemTemplate stats, String ID) {
-		Item item = switch (stats) {
+		if (stats == null) return null;
+		Item item = new Item(game, ID, stats.getID());
+		/*Item item = switch (stats) {
 			case ConsumableTemplate ignored -> new ItemConsumable(game, ID, stats.getID());
 			case WeaponTemplate ignored -> new ItemWeapon(game, ID, stats.getID());
 			case ArmorTemplate ignored -> new ItemArmor(game, ID, stats.getID());
@@ -27,12 +29,10 @@ public class ItemFactory {
 			case ModTemplate ignored -> new ItemMod(game, ID, stats.getID());
 			case AmmoTemplate ignored -> new ItemAmmo(game, ID, stats.getID());
 			case MiscTemplate ignored -> new ItemMisc(game, ID, stats.getID());
-			default -> null;
-		};
-		if (item != null) {
-			game.data().addItemInstance(ID, item);
-			item.onInit();
-		}
+			default -> new Item(game, ID, stats.getID());
+		};*/
+		game.data().addItemInstance(ID, item);
+		item.onInit();
 		return item;
 	}
 	

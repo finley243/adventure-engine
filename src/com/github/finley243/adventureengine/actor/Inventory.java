@@ -3,8 +3,8 @@ package com.github.finley243.adventureengine.actor;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.item.ItemFactory;
+import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -126,8 +126,8 @@ public class Inventory {
 					item.setInventory(null);
 				}
 				if (wasRemoved && actor != null) {
-					if (item instanceof ItemEquippable) {
-						actor.getEquipmentComponent().unequip((ItemEquippable) item);
+					if (item.hasComponentOfType(ItemComponentEquippable.class)) {
+						actor.getEquipmentComponent().unequip(item);
 					}
 				}
 			}
@@ -139,8 +139,8 @@ public class Inventory {
 					itemsStateless.get(item.getTemplateID()).instance.setInventory(null);
 					itemsStateless.remove(item.getTemplateID());
 					if (actor != null) {
-						if (item instanceof ItemEquippable) {
-							actor.getEquipmentComponent().unequip((ItemEquippable) item);
+						if (item.hasComponentOfType(ItemComponentEquippable.class)) {
+							actor.getEquipmentComponent().unequip(item);
 						}
 					}
 				} else {

@@ -315,276 +315,15 @@ public class DataLoader {
 
     private static Condition loadCondition(Element conditionElement) {
         if (conditionElement == null) return null;
-        //Script conditionScript = loadExpressionScript(LoadUtils.singleChildWithName(conditionElement, "script"));
         Script conditionScript = loadExpressionScript(conditionElement);
         return new Condition(conditionScript);
     }
 
-    /*private static Expression loadExpression(Element expressionElement, String dataTypeDefault) {
-        if (expressionElement == null) return null;
-        String defaultType = ("inventory".equals(dataTypeDefault) || "noun".equals(dataTypeDefault)) ? "stat" : null;
-        String type = LoadUtils.attribute(expressionElement, "type", defaultType);
-        String dataType = LoadUtils.attribute(expressionElement, "dataType", dataTypeDefault);
-        switch (type) {
-            case "stat" -> {
-                StatHolderReference statHolderReference = loadStatHolderReference(expressionElement);
-                Expression statName = loadExpressionOrAttribute(expressionElement, "stat", "string");
-                return new ExpressionStat(statHolderReference, statName);
-            }
-            case "statHolderType" -> {
-                StatHolderReference statHolderReference = loadStatHolderReference(expressionElement);
-                return new ExpressionStatHolderType(statHolderReference);
-            }
-            case "global" -> {
-                Expression globalExpressionID = loadExpressionOrAttribute(expressionElement, "globalID", "string");
-                return new ExpressionGlobal(globalExpressionID);
-            }
-            case "parameter" -> {
-                String parameterName = LoadUtils.attribute(expressionElement, "name", null);
-                return new ExpressionParameter(parameterName);
-            }
-            case "timerActive" -> {
-                Expression timerID = loadExpressionOrAttribute(expressionElement, "timerID", "string");
-                return new ExpressionTimerActive(timerID);
-            }
-            case "timeRange" -> {
-                Element timeStartElement = LoadUtils.singleChildWithName(expressionElement, "start");
-                Element timeEndElement = LoadUtils.singleChildWithName(expressionElement, "end");
-                int hours1 = LoadUtils.attributeInt(timeStartElement, "hours", 0);
-                int minutes1 = LoadUtils.attributeInt(timeStartElement, "minutes", 0);
-                int hours2 = LoadUtils.attributeInt(timeEndElement, "hours", 0);
-                int minutes2 = LoadUtils.attributeInt(timeEndElement, "minutes", 0);
-                return new ExpressionTimeRange(hours1, minutes1, hours2, minutes2);
-            }
-            case "year" -> {
-                return new ExpressionYear();
-            }
-            case "month" -> {
-                return new ExpressionMonth();
-            }
-            case "day" -> {
-                return new ExpressionDay();
-            }
-            case "weekday" -> {
-                return new ExpressionWeekday();
-            }
-            case "isCombatant" -> {
-                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "actor"));
-                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "target"));
-                return new ExpressionIsCombatant(actorRef, targetRef);
-            }
-            case "isVisible" -> {
-                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "actor"));
-                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(expressionElement, "target"));
-                return new ExpressionIsVisible(actorRef, targetRef);
-            }
-            case "and" -> {
-                List<Expression> expressions = new ArrayList<>();
-                for (Element productVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
-                    expressions.add(loadExpression(productVariableElement, null));
-                }
-                return new ExpressionLogicCompound(expressions, true);
-            }
-            case "or" -> {
-                List<Expression> expressions = new ArrayList<>();
-                for (Element productVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
-                    expressions.add(loadExpression(productVariableElement, null));
-                }
-                return new ExpressionLogicCompound(expressions, false);
-            }
-            case "not" -> {
-                Expression notExpression = loadExpressionOrAttribute(expressionElement, "value", "boolean");
-                return new ExpressionNot(notExpression);
-            }
-            case "compare" -> {
-                Expression compareExpression1 = loadExpressionOrAttribute(expressionElement, "value1", null);
-                Expression compareExpression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
-                ExpressionCompare.Comparator comparator = LoadUtils.attributeEnum(expressionElement, "equality", ExpressionCompare.Comparator.class, ExpressionCompare.Comparator.GREATER_EQUAL);
-                return new ExpressionCompare(compareExpression1, compareExpression2, comparator);
-            }
-            case "add" -> {
-                List<Expression> sumExpressions = new ArrayList<>();
-                for (Element sumVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
-                    sumExpressions.add(loadExpression(sumVariableElement, null));
-                }
-                return new ExpressionAdd(sumExpressions);
-            }
-            case "multiply" -> {
-                List<Expression> productExpressions = new ArrayList<>();
-                for (Element productVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
-                    productExpressions.add(loadExpression(productVariableElement, null));
-                }
-                return new ExpressionMultiply(productExpressions);
-            }
-            case "subtract" -> {
-                Expression expression1 = loadExpressionOrAttribute(expressionElement, "value1", null);
-                Expression expression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
-                return new ExpressionSubtract(expression1, expression2);
-            }
-            case "divide" -> {
-                Expression expression1 = loadExpressionOrAttribute(expressionElement, "value1", null);
-                Expression expression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
-                return new ExpressionDivide(expression1, expression2);
-            }
-            case "modulo" -> {
-                Expression expression1 = loadExpressionOrAttribute(expressionElement, "value1", null);
-                Expression expression2 = loadExpressionOrAttribute(expressionElement, "value2", null);
-                return new ExpressionModulo(expression1, expression2);
-            }
-            case "power" -> {
-                Expression expressionBase = loadExpressionOrAttribute(expressionElement, "base", null);
-                Expression expressionExponent = loadExpressionOrAttribute(expressionElement, "exponent", null);
-                return new ExpressionPower(expressionBase, expressionExponent);
-            }
-            case "randomChance" -> {
-                Expression chance = loadExpressionOrAttribute(expressionElement, "chance", "float");
-                return new ExpressionRandomChance(chance);
-            }
-            case "scaleLinear" -> {
-                Expression input = loadExpressionOrAttribute(expressionElement, "input", "int");
-                Expression inputMin = loadExpressionOrAttribute(expressionElement, "inputMin", "int");
-                Expression inputMax = loadExpressionOrAttribute(expressionElement, "inputMax", "int");
-                Expression outputMin = loadExpressionOrAttribute(expressionElement, "outputMin", "float");
-                Expression outputMax = loadExpressionOrAttribute(expressionElement, "outputMax", "float");
-                return new ExpressionScaleLinear(input, inputMin, inputMax, outputMin, outputMax);
-            }
-            case "scaleLog" -> {
-                Expression input = loadExpressionOrAttribute(expressionElement, "input", "int");
-                Expression inputMin = loadExpressionOrAttribute(expressionElement, "inputMin", "int");
-                Expression inputMax = loadExpressionOrAttribute(expressionElement, "inputMax", "int");
-                Expression outputMin = loadExpressionOrAttribute(expressionElement, "outputMin", "float");
-                Expression outputMax = loadExpressionOrAttribute(expressionElement, "outputMax", "float");
-                return new ExpressionScaleLog(input, inputMin, inputMax, outputMin, outputMax);
-            }
-            case "hasVariable" -> {
-                String variableName = LoadUtils.attribute(expressionElement, "name", null);
-                return new ExpressionHasVariable(variableName);
-            }
-            case "concat" -> {
-                List<Expression> stringExpressions = new ArrayList<>();
-                for (Element concatVariableElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
-                    stringExpressions.add(loadExpression(concatVariableElement, "string"));
-                }
-                return new ExpressionConcatStrings(stringExpressions);
-            }
-            case "toString" -> {
-                Expression toStringExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "value"), null);
-                return new ExpressionToString(toStringExpression);
-            }
-            case "randomStringFromSet" -> {
-                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
-                return new ExpressionRandomStringFromSet(setExpression);
-            }
-            case "filterSet" -> {
-                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
-                String parameterName = LoadUtils.attribute(expressionElement, "itrName", null);
-                Condition filterCondition = loadCondition(LoadUtils.singleChildWithName(expressionElement, "condition"));
-                return new ExpressionFilterSet(setExpression, parameterName, filterCondition);
-            }
-            case "setContains" -> {
-                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
-                Expression stringExpression = loadExpressionOrAttribute(expressionElement, "value", "string");
-                return new ExpressionSetContains(setExpression, stringExpression);
-            }
-            case "inventoryContains" -> {
-                Expression inventory = loadExpression(LoadUtils.singleChildWithName(expressionElement, "inv"), "inventory");
-                Expression itemID = loadExpressionOrAttribute(expressionElement, "item", "string");
-                boolean requireAll = LoadUtils.attributeBool(expressionElement, "requireAll", false);
-                return new ExpressionInventoryContains(inventory, itemID, requireAll);
-            }
-            case "size" -> {
-                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "set"), "stringSet");
-                return new ExpressionSetSize(setExpression);
-            }
-            case "buildStringSet" -> {
-                List<Expression> stringVars = new ArrayList<>();
-                for (Element stringVarElement : LoadUtils.directChildrenWithName(expressionElement, "value")) {
-                    stringVars.add(loadExpression(stringVarElement, "string"));
-                }
-                return new ExpressionSetFromStrings(stringVars);
-            }
-            case "round" -> {
-                Expression roundExpression = loadExpression(LoadUtils.singleChildWithName(expressionElement, "value"), "float");
-                return new ExpressionRound(roundExpression);
-            }
-            case "conditional" -> {
-                List<ExpressionConditional.ConditionVariablePair> conditionVariablePairs = new ArrayList<>();
-                for (Element pairElement : LoadUtils.directChildrenWithName(expressionElement, "if")) {
-                    Condition condition = loadCondition(LoadUtils.singleChildWithName(pairElement, "condition"));
-                    Expression expression = loadExpressionOrAttribute(pairElement, "value", dataType);
-                    conditionVariablePairs.add(new ExpressionConditional.ConditionVariablePair(condition, expression));
-                }
-                Expression expressionElse = loadExpression(LoadUtils.singleChildWithName(expressionElement, "else"), dataType);
-                return new ExpressionConditional(dataType, conditionVariablePairs, expressionElse);
-            }
-            case null, default -> {
-                String valueString = LoadUtils.attribute(expressionElement, "value", null);
-                if (LoadUtils.isValidFloat(valueString)) {
-                    return new ExpressionConstantFloat(Float.parseFloat(valueString));
-                } else if (LoadUtils.isValidInteger(valueString)) {
-                    return new ExpressionConstantInteger(Integer.parseInt(valueString));
-                } else if (LoadUtils.isValidBoolean(valueString)) {
-                    boolean valueBoolean = valueString.equalsIgnoreCase("t") || valueString.equalsIgnoreCase("true");
-                    return new ExpressionConstantBoolean(valueBoolean);
-                } else if (valueString != null) {
-                    return new ExpressionConstantString(valueString);
-                } else if (LoadUtils.hasChildWithName(expressionElement, "value")) {
-                    Set<String> stringSet = LoadUtils.setOfTags(expressionElement, "value");
-                    return new ExpressionConstantStringSet(stringSet);
-                } else if (!expressionElement.getTextContent().isEmpty()) {
-                    return new ExpressionConstantString(expressionElement.getTextContent());
-                }
-            }
-        }
-        return null;
-    }*/
-
     private static Expression loadExpressionOrAttribute(Element parentElement) {
-        //Expression expressionFromTag = loadExpression(LoadUtils.singleChildWithName(parentElement, name), dataTypeDefault);
-        //if (expressionFromTag != null) return expressionFromTag;
-        /*String attributeValue = LoadUtils.attribute(parentElement, name, null);
-        if (attributeValue == null) {
-            return null;
-        } else if (LoadUtils.isValidFloat(attributeValue)) {
-            return new ExpressionConstantFloat(Float.parseFloat(attributeValue));
-        } else if (LoadUtils.isValidInteger(attributeValue)) {
-            return new ExpressionConstantInteger(Integer.parseInt(attributeValue));
-        } else if (LoadUtils.isValidBoolean(attributeValue)) {
-            boolean valueBoolean = attributeValue.equalsIgnoreCase("t") || attributeValue.equalsIgnoreCase("true");
-            return new ExpressionConstantBoolean(valueBoolean);
-        } else {
-            return new ExpressionConstantString(attributeValue);
-        }*/
         if (parentElement == null) return null;
         String expressionText = parentElement.getTextContent().trim();
         return ScriptParser.parseLiteral(expressionText);
     }
-
-    private static Expression loadExpressionOrAttribute(Element parentElement, Expression defaultExpression) {
-        if (parentElement == null) return defaultExpression;
-        return loadExpressionOrAttribute(parentElement);
-    }
-
-    /*private static StatHolderReference loadStatHolderReference(Element statHolderElement) {
-        String holderType = LoadUtils.attribute(statHolderElement, "holder", "subject");
-        Expression holderID = loadExpressionOrAttribute(statHolderElement, "holderID", "string");
-        StatHolderReference parentReference = null;
-        Element parentReferenceElement = LoadUtils.singleChildWithName(statHolderElement, "parentHolder");
-        if (parentReferenceElement != null) {
-            parentReference = loadStatHolderReference(parentReferenceElement);
-        }
-        return new StatHolderReference(holderType, holderID, parentReference);
-    }*/
-
-    /*private static List<Script> loadSubScripts(Element parentElement) {
-        List<Element> scriptElements = LoadUtils.directChildrenWithName(parentElement, "script");
-        List<Script> scripts = new ArrayList<>();
-        for (Element scriptElement : scriptElements) {
-            Script script = loadScript(scriptElement);
-            scripts.add(script);
-        }
-        return scripts;
-    }*/
 
     private static Map<String, Script> loadScriptsWithTriggers(Element parentElement) {
         Map<String, Script> scripts = new HashMap<>();
@@ -608,136 +347,6 @@ public class DataLoader {
         return ScriptParser.parseExpression(scriptText);
     }
 
-    /*private static Script loadScript(Element scriptElement) {
-        if (scriptElement == null) return null;
-        String type = scriptElement.getAttribute("type");
-        if (scriptElement.hasAttribute("external")) {
-            String externalID = LoadUtils.attribute(scriptElement, "external", null);
-            List<ScriptExternal.ParameterContainer> parameters = new ArrayList<>();
-            for (Element parameterElement : LoadUtils.directChildrenWithName(scriptElement, "parameter")) {
-                String parameterName = LoadUtils.attribute(parameterElement, "name", null);
-                Expression parameterValue = loadExpressionOrAttribute(parameterElement, "value", null);
-                parameters.add(new ScriptExternal.ParameterContainer(parameterName, parameterValue));
-            }
-            return new ScriptExternal(externalID, parameters);
-        }
-        switch (type) {
-            case "external" -> {
-                String scriptID = LoadUtils.attribute(scriptElement, "scriptID", null);
-                List<ScriptExternal.ParameterContainer> parameters = new ArrayList<>();
-                for (Element parameterElement : LoadUtils.directChildrenWithName(scriptElement, "parameter")) {
-                    String parameterName = LoadUtils.attribute(parameterElement, "name", null);
-                    Expression parameterValue = loadExpressionOrAttribute(parameterElement, "value", null);
-                    parameters.add(new ScriptExternal.ParameterContainer(parameterName, parameterValue));
-                }
-                return new ScriptExternal(scriptID, parameters);
-            }
-            case "transferItem" -> {
-                Expression transferItemInvOrigin = loadExpression(LoadUtils.singleChildWithName(scriptElement, "fromInv"), "inventory");
-                Expression transferItemInvTarget = loadExpression(LoadUtils.singleChildWithName(scriptElement, "toInv"), "inventory");
-                Expression transferItemID = loadExpressionOrAttribute(scriptElement, "item", "string");
-                ScriptTransferItem.TransferItemsType transferType = LoadUtils.attributeEnum(scriptElement, "transferType", ScriptTransferItem.TransferItemsType.class, ScriptTransferItem.TransferItemsType.COUNT);
-                Expression transferItemCount = loadExpressionOrAttribute(scriptElement, "count", "int", new ExpressionConstantInteger(1));
-                return new ScriptTransferItem(transferItemInvOrigin, transferItemInvTarget, transferItemID, transferType, transferItemCount);
-            }
-            case "scene" -> {
-                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
-                Expression scenes = loadExpressionOrAttribute(scriptElement, "scene", "string");
-                return new ScriptScene(actorRef, scenes);
-            }
-            case "combat" -> {
-                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
-                StatHolderReference targetRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "target"));
-                return new ScriptCombat(actorRef, targetRef);
-            }
-            case "factionRelation" -> {
-                String targetFaction = LoadUtils.attribute(scriptElement, "targetFaction", null);
-                String relationFaction = LoadUtils.attribute(scriptElement, "relationFaction", null);
-                Faction.FactionRelation relation = LoadUtils.attributeEnum(scriptElement, "relation", Faction.FactionRelation.class, Faction.FactionRelation.NEUTRAL);
-                return new ScriptFactionRelation(targetFaction, relationFaction, relation);
-            }
-            case "sensoryEvent" -> {
-                Expression phrase = loadExpression(LoadUtils.singleChildWithName(scriptElement, "phrase"), "string");
-                Expression phraseAudible = loadExpression(LoadUtils.singleChildWithName(scriptElement, "phraseAudible"), "string");
-                Expression area = loadExpression(LoadUtils.singleChildWithName(scriptElement, "area"), "string");
-                boolean isDetectedBySelf = LoadUtils.attributeBool(scriptElement, "detectSelf", true);
-                return new ScriptSensoryEvent(phrase, phraseAudible, area, isDetectedBySelf);
-            }
-            case "skillMenu" -> {
-                StatHolderReference actorReference = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
-                Expression points = loadExpressionOrAttribute(scriptElement, "points", "int");
-                return new ScriptSkillMenu(actorReference, points);
-            }
-            case "attributeMenu" -> {
-                StatHolderReference actorReference = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
-                Expression points = loadExpressionOrAttribute(scriptElement, "points", "int");
-                return new ScriptAttributeMenu(actorReference, points);
-            }
-            case "bark" -> {
-                StatHolderReference actorRef = loadStatHolderReference(LoadUtils.singleChildWithName(scriptElement, "actor"));
-                String barkTrigger = LoadUtils.attribute(scriptElement, "trigger", null);
-                return new ScriptBark(actorRef, barkTrigger);
-            }
-            case "nearestActorScript" -> {
-                Expression nearestTrigger = loadExpressionOrAttribute(scriptElement, "trigger", "string");
-                return new ScriptNearestActorWithScript(nearestTrigger);
-            }
-            case "timerStart" -> {
-                Expression timerID = loadExpressionOrAttribute(scriptElement, "timerID", "string");
-                Expression timerDuration = loadExpressionOrAttribute(scriptElement, "duration", "int");
-                Script timerScriptExpire = loadScript(LoadUtils.singleChildWithName(scriptElement, "scriptExpire"));
-                Script timerScriptUpdate = loadScript(LoadUtils.singleChildWithName(scriptElement, "scriptUpdate"));
-                return new ScriptTimerStart(timerID, timerDuration, timerScriptExpire, timerScriptUpdate);
-            }
-            case "setState" -> {
-                StatHolderReference setStateHolder = loadStatHolderReference(scriptElement);
-                Expression setStateName = loadExpressionOrAttribute(scriptElement, "stat", "string");
-                Expression setStateExpression = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptSetState(setStateHolder, setStateName, setStateExpression);
-            }
-            case "modifyState" -> {
-                StatHolderReference modifyStateHolder = loadStatHolderReference(scriptElement);
-                Expression modifyStateName = loadExpressionOrAttribute(scriptElement, "stat", "string");
-                Expression modifyStateExpression = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptModifyState(modifyStateHolder, modifyStateName, modifyStateExpression);
-            }
-            case "setGlobal" -> {
-                Expression setGlobalID = loadExpressionOrAttribute(scriptElement, "globalID", "string");
-                Expression setGlobalExpression = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptSetGlobal(setGlobalID, setGlobalExpression);
-            }
-            case "modifyGlobal" -> {
-                Expression modifyGlobalID = loadExpressionOrAttribute(scriptElement, "globalID", "string");
-                Expression modifyGlobalExpression = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptModifyGlobal(modifyGlobalID, modifyGlobalExpression);
-            }
-            case "setVariable" -> {
-                Expression setVariableName = loadExpressionOrAttribute(scriptElement, "name", "string");
-                Expression setVariableValue = loadExpressionOrAttribute(scriptElement, "value", null);
-                return new ScriptSetVariable(setVariableName, setVariableValue);
-            }
-            case "iterator" -> {
-                Expression setExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "set"), "stringSet");
-                String iteratorParameterName = LoadUtils.attribute(scriptElement, "itrName", null);
-                Script iteratedScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "script"));
-                return new ScriptIterator(setExpression, iteratorParameterName, iteratedScript);
-            }
-            case "inventoryIterator" -> {
-                Expression inventoryExpression = loadExpression(LoadUtils.singleChildWithName(scriptElement, "inv"), "inventory");
-                Script iteratedScript = loadScript(LoadUtils.singleChildWithName(scriptElement, "script"));
-                return new ScriptInventoryIterator(inventoryExpression, iteratedScript);
-            }
-            case "select" -> {
-                List<Script> subScriptsSelect = loadSubScripts(scriptElement);
-                return new ScriptCompound(subScriptsSelect, true);
-            }
-            default -> { // "all"
-                List<Script> subScriptsSequence = loadSubScripts(scriptElement);
-                return new ScriptCompound(subScriptsSequence, false);
-            }
-        }
-    }*/
-
     private static Faction loadFaction(Game game, Element factionElement) {
         if (factionElement == null) return null;
         String id = factionElement.getAttribute("id");
@@ -760,25 +369,34 @@ public class DataLoader {
 
     private static ItemTemplate loadItemTemplate(Game game, Element itemElement) {
         if (itemElement == null) return null;
-        String type = itemElement.getAttribute("type");
         String id = itemElement.getAttribute("id");
         String name = LoadUtils.singleTag(itemElement, "name", null);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(itemElement, "description"));
         Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(itemElement, "action");
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
+        List<ItemComponentTemplate> components = new ArrayList<>();
+        for (Element componentElement : LoadUtils.directChildrenWithName(itemElement, "component")) {
+            ItemComponentTemplate componentTemplate = loadItemComponentTemplate(game, componentElement);
+            components.add(componentTemplate);
+        }
+        return new ItemTemplate(game, id, name, description, scripts, components, customActions, price);
+    }
+
+    private static ItemComponentTemplate loadItemComponentTemplate(Game game, Element componentElement) {
+        if (componentElement == null) return null;
+        String type = componentElement.getAttribute("type");
+        boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "restricted", false);
         switch (type) {
-            case "apparel" -> {
-                Set<Set<String>> apparelSlots = new HashSet<>();
-                for (Element slotGroupElement : LoadUtils.directChildrenWithName(itemElement, "slotGroup")) {
-                    Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
-                    apparelSlots.add(slotGroup);
-                }
-                List<String> apparelEffects = LoadUtils.listOfTags(itemElement, "effect");
-                List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");
+            case "ammo" -> {
+                List<String> ammoWeaponEffects = LoadUtils.listOfTags(componentElement, "weaponEffect");
+                boolean ammoIsReusable = LoadUtils.attributeBool(componentElement, "isReusable", false);
+                return new ItemComponentTemplateAmmo(actionsRestricted, ammoWeaponEffects, ammoIsReusable);
+            }
+            case "armor" -> {
                 Map<String, Integer> damageResistances = new HashMap<>();
                 Map<String, Float> damageMults = new HashMap<>();
-                for (Element damageElement : LoadUtils.directChildrenWithName(itemElement, "damage")) {
+                for (Element damageElement : LoadUtils.directChildrenWithName(componentElement, "damage")) {
                     String damageType = LoadUtils.attribute(damageElement, "type", null);
                     Integer resistance = LoadUtils.attributeInt(damageElement, "resistance", null);
                     Float mult = LoadUtils.attributeFloat(damageElement, "mult", null);
@@ -789,61 +407,60 @@ public class DataLoader {
                         damageMults.put(damageType, mult);
                     }
                 }
-                Set<String> coveredLimbs = LoadUtils.setOfTags(itemElement, "coveredLimb");
-                boolean coversMainBody = LoadUtils.attributeBool(itemElement, "coversMainBody", false);
-                return new ArmorTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, apparelSlots, apparelEffects, equippedActions, damageResistances, damageMults, coveredLimbs, coversMainBody);
+                Set<String> coveredLimbs = LoadUtils.setOfTags(componentElement, "coveredLimb");
+                boolean coversMainBody = LoadUtils.attributeBool(componentElement, "coversMainBody", false);
+                return new ItemComponentTemplateArmor(actionsRestricted, damageResistances, damageMults, coveredLimbs, coversMainBody);
+            }
+            case "consumable" -> {
+                String consumePrompt = LoadUtils.singleTag(componentElement, "consumePrompt", null);
+                String consumePhrase = LoadUtils.singleTag(componentElement, "consumePhrase", null);
+                List<String> consumableEffects = LoadUtils.listOfTags(componentElement, "effect");
+                return new ItemComponentTemplateConsumable(actionsRestricted, consumePrompt, consumePhrase, consumableEffects);
+            }
+            case "effectable" -> {
+                return new ItemComponentTemplateEffectable(actionsRestricted);
             }
             case "equippable" -> {
                 Set<Set<String>> equipSlots = new HashSet<>();
-                for (Element slotGroupElement : LoadUtils.directChildrenWithName(itemElement, "slotGroup")) {
+                for (Element slotGroupElement : LoadUtils.directChildrenWithName(componentElement, "slotGroup")) {
                     Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
                     equipSlots.add(slotGroup);
                 }
-                List<String> equippedEffects = LoadUtils.listOfTags(itemElement, "effect");
-                List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");
-                return new EquippableTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, equipSlots, equippedEffects, equippedActions);
+                List<String> equippedEffects = LoadUtils.listOfTags(componentElement, "effect");
+                List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(componentElement, "equippedAction");
+                return new ItemComponentTemplateEquippable(actionsRestricted, equipSlots, equippedEffects, equippedActions);
             }
-            case "consumable" -> {
-                String consumePrompt = LoadUtils.singleTag(itemElement, "consumePrompt", null);
-                String consumePhrase = LoadUtils.singleTag(itemElement, "consumePhrase", null);
-                List<String> consumableEffects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ConsumableTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, consumePrompt, consumePhrase, consumableEffects);
+            case "mod" -> {
+                String modSlot = LoadUtils.attribute(componentElement, "modSlot", null);
+                List<String> effects = LoadUtils.listOfTags(componentElement, "effect");
+                return new ItemComponentTemplateMod(actionsRestricted, modSlot, effects);
             }
-            case "weapon" -> {
-                List<String> equippedEffects = LoadUtils.listOfTags(itemElement, "equippedEffect");
-                List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(itemElement, "equippedAction");
-                String weaponClass = LoadUtils.attribute(itemElement, "class", null);
-                int weaponRate = LoadUtils.singleTagInt(itemElement, "rate", 1);
-                Element damageElement = LoadUtils.singleChildWithName(itemElement, "damage");
-                int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
-                int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
-                float critChance = LoadUtils.attributeFloat(itemElement, "critChance", 0.0f);
-                String weaponDamageType = LoadUtils.attribute(damageElement, "type", game.data().getConfig("defaultDamageType"));
-                float weaponArmorMult = LoadUtils.singleTagFloat(itemElement, "armorMult", 1.0f);
-                boolean weaponSilenced = LoadUtils.singleTagBoolean(itemElement, "silenced", false);
-                int weaponClipSize = LoadUtils.singleTagInt(itemElement, "clipSize", 1);
-                int weaponReloadActionPoints = LoadUtils.singleTagInt(itemElement, "reloadActionPoints", 1);
-                Set<String> weaponTargetEffects = LoadUtils.setOfTags(itemElement, "targetEffect");
+            case "moddable" -> {
                 Map<String, Integer> modSlots = new HashMap<>();
-                for (Element modSlotElement : LoadUtils.directChildrenWithName(itemElement, "modSlot")) {
+                for (Element modSlotElement : LoadUtils.directChildrenWithName(componentElement, "modSlot")) {
                     String slotName = LoadUtils.attribute(modSlotElement, "name", null);
                     int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
                     modSlots.put(slotName, slotCount);
                 }
-                return new WeaponTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, equippedEffects, equippedActions, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects, modSlots);
+                return new ItemComponentTemplateModdable(actionsRestricted, modSlots);
             }
-            case "mod" -> {
-                String modSlot = LoadUtils.attribute(itemElement, "modSlot", null);
-                List<String> effects = LoadUtils.listOfTags(itemElement, "effect");
-                return new ModTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, modSlot, effects);
-            }
-            case "ammo" -> {
-                List<String> ammoWeaponEffects = LoadUtils.listOfTags(itemElement, "weaponEffect");
-                boolean ammoIsReusable = LoadUtils.attributeBool(itemElement, "isReusable", false);
-                return new AmmoTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price, ammoWeaponEffects, ammoIsReusable);
+            case "weapon" -> {
+                String weaponClass = LoadUtils.attribute(componentElement, "class", null);
+                int weaponRate = LoadUtils.singleTagInt(componentElement, "rate", 1);
+                Element damageElement = LoadUtils.singleChildWithName(componentElement, "damage");
+                int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
+                int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
+                float critChance = LoadUtils.attributeFloat(componentElement, "critChance", 0.0f);
+                String weaponDamageType = LoadUtils.attribute(damageElement, "type", game.data().getConfig("defaultDamageType"));
+                float weaponArmorMult = LoadUtils.singleTagFloat(componentElement, "armorMult", 1.0f);
+                boolean weaponSilenced = LoadUtils.singleTagBoolean(componentElement, "silenced", false);
+                int weaponClipSize = LoadUtils.singleTagInt(componentElement, "clipSize", 1);
+                int weaponReloadActionPoints = LoadUtils.singleTagInt(componentElement, "reloadActionPoints", 1);
+                Set<String> weaponTargetEffects = LoadUtils.setOfTags(componentElement, "targetEffect");
+                return new ItemComponentTemplateWeapon(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
             }
             default -> {
-                return new MiscTemplate(game, id, name, description, scripts, new ArrayList<>(), customActions, price);
+                return null;
             }
         }
     }
@@ -1268,17 +885,12 @@ public class DataLoader {
         String ID = LoadUtils.attribute(weaponClassElement, "id", null);
         String name = LoadUtils.singleTag(weaponClassElement, "name", null);
         boolean isRanged = LoadUtils.attributeBool(weaponClassElement, "isRanged", false);
-        Set<Set<String>> slots = new HashSet<>();
-        for (Element slotGroupElement : LoadUtils.directChildrenWithName(weaponClassElement, "slotGroup")) {
-            Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
-            slots.add(slotGroup);
-        }
         boolean isLoud = LoadUtils.attributeBool(weaponClassElement, "isLoud", false);
         String skill = LoadUtils.attribute(weaponClassElement, "skill", null);
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(weaponClassElement, "range", AreaLink.DistanceCategory.class);
         Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
         Set<String> attackTypes = LoadUtils.setOfTags(weaponClassElement, "attackType");
-        return new WeaponClass(ID, name, isRanged, slots, isLoud, skill, primaryRanges, ammoTypes, attackTypes);
+        return new WeaponClass(ID, name, isRanged, isLoud, skill, primaryRanges, ammoTypes, attackTypes);
     }
 
     private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) {

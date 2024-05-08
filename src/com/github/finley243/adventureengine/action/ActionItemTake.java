@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
 import com.github.finley243.adventureengine.textgen.Noun;
@@ -33,7 +33,7 @@ public class ActionItemTake extends Action {
 
 	@Override
 	public float utility(Actor subject) {
-		if (item instanceof ItemWeapon && subject.isInCombat() && !UtilityUtils.actorHasWeapon(subject)) {
+		if (item.hasComponentOfType(ItemComponentWeapon.class) && subject.isInCombat() && !UtilityUtils.actorHasWeapon(subject)) {
 			return 0.7f;
 		} else {
 			return 0.0f;

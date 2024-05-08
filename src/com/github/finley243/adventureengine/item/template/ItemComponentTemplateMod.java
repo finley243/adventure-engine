@@ -7,7 +7,8 @@ public class ItemComponentTemplateMod extends ItemComponentTemplate {
     private final String modSlot;
     private final List<String> effects;
 
-    public ItemComponentTemplateMod(String modSlot, List<String> effects) {
+    public ItemComponentTemplateMod(boolean actionsRestricted, String modSlot, List<String> effects) {
+        super(actionsRestricted);
         this.modSlot = modSlot;
         this.effects = effects;
     }

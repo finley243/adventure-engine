@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.ArrayList;
@@ -78,9 +78,9 @@ public class UtilityUtils {
 							bestActions.get(i).add(currentAction);
 							break;
 						} else if (currentWeight > maxWeights.get(i)) {
-							maxWeights.remove(maxWeights.size() - 1);
+							maxWeights.removeLast();
 							maxWeights.add(i, currentWeight);
-							bestActions.remove(bestActions.size() - 1);
+							bestActions.removeLast();
 							bestActions.add(i, new ArrayList<>());
 							bestActions.get(i).add(currentAction);
 							break;
@@ -107,7 +107,7 @@ public class UtilityUtils {
 
 	public static boolean actorHasWeapon(Actor actor) {
 		for (Item item : actor.getInventory().getItems()) {
-			if (item instanceof ItemWeapon) {
+			if (item.hasComponentOfType(ItemComponentWeapon.class)) {
 				return true;
 			}
 		}

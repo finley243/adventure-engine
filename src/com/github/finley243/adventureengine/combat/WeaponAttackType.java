@@ -8,7 +8,8 @@ import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -113,22 +114,22 @@ public class WeaponAttackType {
         return ID;
     }
 
-    public List<Action> generateActions(Actor subject, ItemWeapon weapon) {
+    public List<Action> generateActions(Actor subject, Item weapon) {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = new Context(subject.game(), subject, subject, weapon);
         List<Action> actions = new ArrayList<>();
-        String skill = skillOverride != null ? skillOverride : weapon.getSkill();
-        float hitChanceMin = baseHitChanceMinOverride != null ? baseHitChanceMinOverride : weapon.getBaseHitChanceMin();
-        float hitChanceMax = baseHitChanceMaxOverride != null ? baseHitChanceMaxOverride : weapon.getBaseHitChanceMax();
-        Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getRanges(context))) : weapon.getRanges(context));
-        int rate = rateOverride != null ? rateOverride : weapon.getRate(context);
-        int damage = damageOverride != null ? damageOverride : (int) (weapon.getDamage(context) * (damageMult + 1.0f));
-        String damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getDamageType(context);
-        float armorMult = armorMultOverride != null ? armorMultOverride : weapon.getArmorMult(context);
-        boolean isLoud = isLoudOverride != null ? isLoudOverride : weapon.isLoud(context);
+        String skill = skillOverride != null ? skillOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getSkill();
+        float hitChanceMin = baseHitChanceMinOverride != null ? baseHitChanceMinOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getBaseHitChanceMin();
+        float hitChanceMax = baseHitChanceMaxOverride != null ? baseHitChanceMaxOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getBaseHitChanceMax();
+        Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context))) : weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context));
+        int rate = rateOverride != null ? rateOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getRate(context);
+        int damage = damageOverride != null ? damageOverride : (int) (weapon.getComponentOfType(ItemComponentWeapon.class).getDamage(context) * (damageMult + 1.0f));
+        String damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getDamageType(context);
+        float armorMult = armorMultOverride != null ? armorMultOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getArmorMult(context);
+        boolean isLoud = isLoudOverride != null ? isLoudOverride : weapon.getComponentOfType(ItemComponentWeapon.class).isLoud(context);
         List<String> targetEffectsCombined = new ArrayList<>(targetEffects);
         if (!overrideTargetEffects) {
-            targetEffectsCombined.addAll(weapon.getTargetEffects(context));
+            targetEffectsCombined.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getTargetEffects(context));
         }
         switch (category) {
             case SINGLE -> {

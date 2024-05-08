@@ -10,18 +10,16 @@ public class WeaponClass {
     private final String ID;
     private final String name;
     private final boolean isRanged;
-    private final Set<Set<String>> slots;
     private final boolean isLoud;
     private final String skill;
     private final Set<AreaLink.DistanceCategory> primaryRanges;
     private final Set<String> ammoTypes;
     private final Set<String> attackTypes;
 
-    public WeaponClass(String ID, String name, boolean isRanged, Set<Set<String>> slots, boolean isLoud, String skill, Set<AreaLink.DistanceCategory> primaryRanges, Set<String> ammoTypes, Set<String> attackTypes) {
+    public WeaponClass(String ID, String name, boolean isRanged, boolean isLoud, String skill, Set<AreaLink.DistanceCategory> primaryRanges, Set<String> ammoTypes, Set<String> attackTypes) {
         this.ID = ID;
         this.name = name;
         this.isRanged = isRanged;
-        this.slots = slots;
         this.isLoud = isLoud;
         this.skill = skill;
         this.primaryRanges = primaryRanges;
@@ -39,10 +37,6 @@ public class WeaponClass {
 
     public boolean isRanged() {
         return isRanged;
-    }
-
-    public Set<Set<String>> getSlots() {
-        return slots;
     }
 
     public boolean isLoud() {

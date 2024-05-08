@@ -17,7 +17,6 @@ import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemEquippable;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
@@ -350,7 +349,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, new Context(game(), this, this));
 	}
 
-	public Set<String> getEquipmentEffects(ItemEquippable item) {
+	public Set<String> getEquipmentEffects(Item item) {
 		return equipmentEffects.value(new HashSet<>(), new Context(game(), this, this, item));
 	}
 
@@ -1049,7 +1048,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		/*if (equipmentComponent.hasEquippedItem()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equipped_item", equipmentComponent.getEquippedItem().getID()));
 		}*/
-		for (ItemEquippable item : equipmentComponent.getEquippedItems()) {
+		for (Item item : equipmentComponent.getEquippedItems()) {
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equipped_apparel", item.getID()));
 		}
 		if (usingObject != null) {

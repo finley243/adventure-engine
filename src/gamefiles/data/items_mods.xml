@@ -1,6 +1,8 @@
 <data>
-    <item type="mod" id="mag_extended_pistol" modSlot="pistol_mag">
+    <item id="mag_extended_pistol">
         <name>extended pistol magazine</name>
-        <effect>mag_extended_pistol_effect</effect>
+        <component type="mod" modSlot="pistol_mag">
+            <effect>mag_extended_pistol_effect</effect>
+        </component>
     </item>
 </data>

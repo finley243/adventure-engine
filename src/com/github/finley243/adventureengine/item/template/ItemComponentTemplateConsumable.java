@@ -8,7 +8,8 @@ public class ItemComponentTemplateConsumable extends ItemComponentTemplate {
     private final String consumePhrase;
     private final List<String> effects;
 
-    public ItemComponentTemplateConsumable(String consumePrompt, String consumePhrase, List<String> effects) {
+    public ItemComponentTemplateConsumable(boolean actionsRestricted, String consumePrompt, String consumePhrase, List<String> effects) {
+        super(actionsRestricted);
         this.consumePrompt = consumePrompt;
         this.consumePhrase = consumePhrase;
         this.effects = effects;

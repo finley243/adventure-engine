@@ -14,16 +14,13 @@ import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.scene.Scene;
-import com.github.finley243.adventureengine.stat.StatHolder;
+import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentFactory;
-import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 
 import java.util.*;
 
-public abstract class Item extends GameInstanced implements Noun, StatHolder {
+public class Item extends GameInstanced implements Noun, MutableStatHolder {
 
 	private Inventory currentInventory;
 	private boolean isKnown;
@@ -84,12 +81,16 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 	}
 
 	public <T extends ItemComponent> T getComponentOfType(Class<T> componentClass) {
-		ItemComponent uncastComponent = components.get(componentClass);
-		return componentClass.cast(uncastComponent);
+		ItemComponent component = components.get(componentClass);
+		return componentClass.cast(component);
+	}
+
+	public <T extends ItemComponent> boolean hasComponentOfType(Class<T> componentClass) {
+		return components.containsKey(componentClass);
 	}
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
-		if(getTemplate().getScripts().containsKey(entryPoint)) {
+		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			Context context = new Context(game(), subject, target, this);
 			getTemplate().getScripts().get(entryPoint).execute(context);
 		}
@@ -117,7 +118,9 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 			actions.add(new ActionInspectItem(this));
 		}
 		for (ItemComponent component : components.values()) {
-			actions.addAll(component.inventoryActions(subject));
+			if (!component.actionsRestricted()) {
+				actions.addAll(component.inventoryActions(subject));
+			}
 		}
 		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 			actions.add(new ActionCustom(game(), null, null, this, null, customAction.action(), customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
@@ -131,6 +134,10 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public Expression getStatValue(String name, Context context) {
+		for (ItemComponent component : components.values()) {
+			Expression componentValue = component.getStatValue(name, context);
+			if (componentValue != null) return componentValue;
+		}
 		return switch (name) {
 			case "inventory" -> (currentInventory == null ? null : Expression.constant(currentInventory));
 			case "noun" -> Expression.constant((Noun) this);
@@ -141,6 +148,10 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 
 	@Override
 	public boolean setStatValue(String name, Expression value, Context context) {
+		for (ItemComponent component : components.values()) {
+			boolean success = component.setStatValue(name, value, context);
+			if (success) return true;
+		}
 		return false;
 	}
 
@@ -158,6 +169,36 @@ public abstract class Item extends GameInstanced implements Noun, StatHolder {
 			return getTemplate();
 		}
 		return null;
+	}
+
+	@Override
+	public StatInt getStatInt(String name) {
+		return null;
+	}
+
+	@Override
+	public StatFloat getStatFloat(String name) {
+		return null;
+	}
+
+	@Override
+	public StatBoolean getStatBoolean(String name) {
+		return null;
+	}
+
+	@Override
+	public StatString getStatString(String name) {
+		return null;
+	}
+
+	@Override
+	public StatStringSet getStatStringSet(String name) {
+		return null;
+	}
+
+	@Override
+	public void onStatChange(String name) {
+
 	}
 
 	public void loadState(SaveData saveData) {}

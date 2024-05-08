@@ -3,7 +3,9 @@ package com.github.finley243.adventureengine.action.attack;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
-import com.github.finley243.adventureengine.item.ItemWeapon;
+import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.component.ItemComponentAmmo;
+import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataAttackTargeted;
 import com.github.finley243.adventureengine.world.AttackTarget;
@@ -15,9 +17,9 @@ import java.util.Set;
 public class ActionAttackLimb extends ActionAttack {
 
 	private final AttackTarget target;
-	private final ItemWeapon weapon;
+	private final Item weapon;
 
-	public ActionAttackLimb(WeaponAttackType attackType, ItemWeapon weapon, AttackTarget target, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, String skill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
+	public ActionAttackLimb(WeaponAttackType attackType, Item weapon, AttackTarget target, Limb limb, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, String skill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
 		super(attackType, weapon, Set.of(target), limb, null, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, baseHitChanceMin, baseHitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceMult, dodgeSkill, hitChanceType, isLoud);
 		this.target = target;
 		this.weapon = weapon;
@@ -25,11 +27,11 @@ public class ActionAttackLimb extends ActionAttack {
 
 	@Override
 	public void consumeAmmo(Actor subject) {
-		if (weapon.usesAmmo() && weapon.getLoadedAmmoType() != null) {
-			if (weapon.getLoadedAmmoType().isReusable()) {
-				target.getArea().getInventory().addItems(weapon.getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
+		if (weapon.getComponentOfType(ItemComponentWeapon.class).usesAmmo() && weapon.getComponentOfType(ItemComponentWeapon.class).getLoadedAmmoType() != null) {
+			if (weapon.getComponentOfType(ItemComponentWeapon.class).getLoadedAmmoType().getComponentOfType(ItemComponentAmmo.class).isReusable()) {
+				target.getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentWeapon.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
 			}
-			weapon.consumeAmmo(getAmmoConsumed());
+			weapon.getComponentOfType(ItemComponentWeapon.class).consumeAmmo(getAmmoConsumed());
 		}
 		switch (getWeaponConsumeType()) {
 			case PLACE -> {
@@ -46,7 +48,7 @@ public class ActionAttackLimb extends ActionAttack {
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
-		if (weapon.usesAmmo() && weapon.getAmmoRemaining() < getAmmoConsumed()) {
+		if (weapon.getComponentOfType(ItemComponentWeapon.class).usesAmmo() && weapon.getComponentOfType(ItemComponentWeapon.class).getAmmoRemaining() < getAmmoConsumed()) {
 			return new CanChooseResult(false, "Not enough ammo");
 		}
 		if (!getRanges().contains(subject.getArea().getLinearDistanceTo(target.getArea()))) {

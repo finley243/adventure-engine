@@ -1,44 +1,58 @@
 <data>
-    <item type="consumable" id="burger" price="10">
+    <item id="burger" price="10">
         <name>hamburger</name>
-        <consumePrompt>Eat</consumePrompt>
-        <consumePhrase>eat</consumePhrase>
-        <effect>food_basic</effect>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
     </item>
-    <item type="consumable" id="burger_cheese" price="10">
+    <item id="burger_cheese" price="10">
         <name>cheeseburger</name>
-        <consumePrompt>Eat</consumePrompt>
-        <consumePhrase>eat</consumePhrase>
-        <effect>food_basic</effect>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
     </item>
-    <item type="consumable" id="burger_deluxe" price="10">
+    <item id="burger_deluxe" price="10">
         <name>deluxe hamburger</name>
-        <consumePrompt>Eat</consumePrompt>
-        <consumePhrase>eat</consumePhrase>
-        <effect>food_basic</effect>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
     </item>
-    <item type="consumable" id="french_fries" price="10">
+    <item id="french_fries" price="10">
         <name>french fries</name>
-        <consumePrompt>Eat</consumePrompt>
-        <consumePhrase>eat</consumePhrase>
-        <effect>food_basic</effect>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
     </item>
-    <item type="consumable" id="nutri_chips_bacon" price="5">
+    <item id="nutri_chips_bacon" price="5">
         <name>Smoky Bacon Nutri-Chips</name>
-        <consumePrompt>Eat</consumePrompt>
-        <consumePhrase>eat</consumePhrase>
-        <effect>food_basic</effect>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
     </item>
-    <item type="consumable" id="nutri_chips_wasabi" price="5">
+    <item id="nutri_chips_wasabi" price="5">
         <name>Wasabi Ginger Nutri-Chips</name>
-        <consumePrompt>Eat</consumePrompt>
-        <consumePhrase>eat</consumePhrase>
-        <effect>food_basic</effect>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
     </item>
-    <item type="consumable" id="gumball" price="1">
+    <item id="gumball" price="1">
         <name>gumball</name>
-        <consumePrompt>Eat</consumePrompt>
-        <consumePhrase>eat</consumePhrase>
-        <effect>food_basic</effect>
+        <component type="consumable">
+            <consumePrompt>Eat</consumePrompt>
+            <consumePhrase>eat</consumePhrase>
+            <effect>food_basic</effect>
+        </component>
     </item>
 </data>
