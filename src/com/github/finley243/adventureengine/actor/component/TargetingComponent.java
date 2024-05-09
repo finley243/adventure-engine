@@ -122,7 +122,7 @@ public class TargetingComponent {
                 targetData.areaTarget = null;
             }
         } else if (targetData.areaTarget == null) {
-            targetData.areaTarget = new AreaTarget(idealAreas(targetData.lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, entry.getKey()), true);
+            targetData.areaTarget = new AreaTarget(idealAreas(targetData.lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, target), true);
             actor.addPursueTarget(targetData.areaTarget);
         } else {
             targetData.areaTarget.setTargetAreas(idealAreas(targetData.lastKnownArea));
