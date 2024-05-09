@@ -68,8 +68,7 @@ public class TargetingComponent {
 
     public void updateTurn() {
         Set<Actor> lineOfSightActors = actor.getLineOfSightActors();
-        Set<Actor> actorsToRemove = new HashSet<>();
-        for (Map.Entry<Actor, DetectedActor> entry : detectedActors.entrySet()) {
+        detectedActors.entrySet().removeIf(entry -> {
             if (lineOfSightActors.contains(entry.getKey()) && entry.getKey().isVisible(actor)) {
                 entry.getValue().lostVisualCounter = 0;
                 entry.getValue().lastKnownArea = entry.getKey().getArea();
@@ -80,17 +79,15 @@ public class TargetingComponent {
                 if (entry.getValue().state.turnsUntilRemove != -1) {
                     entry.getValue().lostVisualCounter += 1;
                     if (entry.getValue().lostVisualCounter >= entry.getValue().state.turnsUntilRemove) {
-                        actorsToRemove.add(entry.getKey());
+                        if (entry.getValue().areaTarget != null) {
+                            entry.getValue().areaTarget.markForRemoval();
+                        }
+                        return true;
                     }
                 }
             }
-        }
-        for (Actor actorToRemove : actorsToRemove) {
-            if (detectedActors.get(actorToRemove).areaTarget != null) {
-                detectedActors.get(actorToRemove).areaTarget.markForRemoval();
-            }
-            detectedActors.remove(actorToRemove);
-        }
+            return false;
+        });
     }
 
     public void update() {
@@ -107,25 +104,29 @@ public class TargetingComponent {
                 if (lineOfSightActors.contains(entry.getKey()) && entry.getKey().isVisible(actor)) {
                     entry.getValue().lastKnownArea = entry.getKey().getArea();
                 }
-                if (entry.getKey().isDead()) {
-                    entry.getValue().state = DetectionState.DEAD;
-                    entry.getValue().stateCounter = 0;
-                    if (entry.getValue().areaTarget != null) {
-                        entry.getValue().areaTarget.markForRemoval();
-                        entry.getValue().areaTarget = null;
-                    }
-                } else if (entry.getValue().areaTarget == null) {
-                    entry.getValue().areaTarget = new AreaTarget(idealAreas(entry.getValue().lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, entry.getKey()), true);
-                    actor.addPursueTarget(entry.getValue().areaTarget);
-                } else {
-                    entry.getValue().areaTarget.setTargetAreas(idealAreas(entry.getValue().lastKnownArea));
-                    entry.getValue().areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, entry.getKey()));
-                }
+                updateTargetHostile(entry.getKey(), entry.getValue());
             }
         }
         if (startedInCombat && !hasTargetsOfType(DetectionState.HOSTILE)) {
             actor.triggerScript("on_combat_end", new Context(actor.game(), actor, actor));
             actor.triggerBark("on_combat_end", new Context(actor.game(), actor, actor));
+        }
+    }
+
+    private void updateTargetHostile(Actor target, DetectedActor targetData) {
+        if (target.isDead()) {
+            targetData.state = DetectionState.DEAD;
+            targetData.stateCounter = 0;
+            if (targetData.areaTarget != null) {
+                targetData.areaTarget.markForRemoval();
+                targetData.areaTarget = null;
+            }
+        } else if (targetData.areaTarget == null) {
+            targetData.areaTarget = new AreaTarget(idealAreas(targetData.lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, entry.getKey()), true);
+            actor.addPursueTarget(targetData.areaTarget);
+        } else {
+            targetData.areaTarget.setTargetAreas(idealAreas(targetData.lastKnownArea));
+            targetData.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, target));
         }
     }
 
