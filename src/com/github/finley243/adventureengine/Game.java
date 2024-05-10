@@ -1,11 +1,9 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
-import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -75,18 +73,6 @@ public class Game {
 			e.printStackTrace();
 		}
 		System.out.println("Loaded Game");*/
-
-		//System.out.println(Pathfinder.getLineOfSightAreas(data().getArea("apartment_0_3")));
-		/*ScriptParser.parseFunctions("func drop_equipped_force_specified_slot(equippedSlot) {\n" +
-				"\t//condition stat.subject.(\"has_equipped_\" + equippedSlot);\n" +
-				"\tif (stat.subject.(\"has_equipped_\" + equippedSlot)) {\n" +
-				"\t\tvar dropAreaID = randomFromSet(set=stat.subject.area.movable_areas);\n" +
-				"\t\tvar equippedItemID = stat.subject.equipped_item(equippedSlot).id;\n" +
-				"\t\ttransferItem(transferType=\"instance\", from=stat.subject.inventory, to=stat.area(dropAreaID).inventory, item=equippedItemID);\n" +
-				"\t\tsensoryEvent(phrase=\"forceDrop\", area=stat.subject.area.id);\n" +
-				"\t}\n" +
-				"}");*/
-		//ScriptParser.parseScripts("\"test\" \"'single quotes'\" \"\\\"escaped quotes\\\"\"");
 
 		continueGame = true;
 		startRound();

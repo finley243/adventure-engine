@@ -268,19 +268,29 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return null;
 	}
 
-	public Set<Area> getDirectVisibleLinkedAreas() {
-		Set<Area> visibleAreas = new HashSet<>();
-		visibleAreas.add(this);
+	public Set<AreaLink> getDirectVisibleLinkedAreas() {
+		Set<AreaLink> visibleAreas = new HashSet<>();
 		for (AreaLink link : linkedAreas.values()) {
+			// TODO - Evaluate whether this check is necessary (does not allow non-visible paths to be calculated for reachability)
 			if (game().data().getLinkType(link.getType()).isVisible()) {
-				Area area = game().data().getArea(link.getAreaID());
-				visibleAreas.add(area);
+				//Area area = game().data().getArea(link.getAreaID());
+				visibleAreas.add(link);
 			}
 		}
-		for (WorldObject object : getObjects()) {
+		/*for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
 			visibleAreas.addAll(linkComponent.getLinkedLineOfSightAreas());
+		}*/
+		return visibleAreas;
+	}
+
+	public Map<WorldObject, Set<Area>> getObjectVisibleLinkedAreas() {
+		Map<WorldObject, Set<Area>> visibleAreas = new HashMap<>();
+		for (WorldObject object : getObjects()) {
+			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
+			if (linkComponent == null) continue;
+			visibleAreas.put(object, linkComponent.getLinkedLineOfSightAreas());
 		}
 		return visibleAreas;
 	}

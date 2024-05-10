@@ -6,6 +6,9 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
+import com.github.finley243.adventureengine.world.path.PathData;
+import com.github.finley243.adventureengine.world.path.PathDataArea;
+import com.github.finley243.adventureengine.world.path.PathDataAreaLink;
 
 import java.util.*;
 
@@ -77,11 +80,15 @@ public class Pathfinder {
 
 	public static Map<Area, VisibleAreaData> getLineOfSightAreas(Area origin) {
 		Map<Area, VisibleAreaData> visibleAreas = new HashMap<>();
-		List<Area> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
+		//List<Area> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
+		Map<String, AreaQueueData> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
 		Map<Area, AreaPathData> visibleMap = new HashMap<>();
-		for (Area currentArea : possiblyVisibleAreas) {
+		for (Map.Entry<String, AreaQueueData> currentAreaEntry : possiblyVisibleAreas.entrySet()) {
+			Area currentArea = currentAreaEntry.getValue().area();
 			if (currentArea.equals(origin)) {
-				visibleAreas.put(currentArea, new VisibleAreaData(null, Area.pathLengthToDistance(0)));
+				List<PathData> pathData = new ArrayList<>();
+				pathData.add(new PathDataArea(origin));
+				visibleAreas.put(currentArea, new VisibleAreaData(null, Area.pathLengthToDistance(0), pathData));
 				visibleMap.put(currentArea, new AreaPathData(null, true, 0));
 			} else {
 				for (Area visibleArea : new HashSet<>(visibleMap.keySet())) {
@@ -105,7 +112,7 @@ public class Pathfinder {
 				}
 				if (visibleMap.containsKey(currentArea)) {
 					if (visibleMap.get(currentArea).visibleLinkCount >= 2 || visibleMap.get(currentArea).hasLinearPath) {
-						visibleAreas.put(currentArea, new VisibleAreaData(visibleMap.get(currentArea).direction, Area.pathLengthToDistance(visibleMap.get(currentArea).minPathLength)));
+						visibleAreas.put(currentArea, new VisibleAreaData(visibleMap.get(currentArea).direction, Area.pathLengthToDistance(visibleMap.get(currentArea).minPathLength), currentAreaEntry.getValue().pathData()));
 					} else {
 						visibleMap.remove(currentArea);
 					}
@@ -115,22 +122,30 @@ public class Pathfinder {
 		return visibleAreas;
 	}
 
-	private static List<Area> getPossiblyVisibleAreas(Area origin, int range) {
-		List<Area> possiblyVisibleAreas = new ArrayList<>();
-		Set<Area> possiblyVisibleAreaSet = new HashSet<>();
+	private static Map<String, AreaQueueData> getPossiblyVisibleAreas(Area origin, int range) {
+		Map<String, AreaQueueData> possiblyVisibleAreas = new LinkedHashMap<>();
+		//Set<String> possiblyVisibleAreaSet = new HashSet<>();
 		Queue<AreaQueueData> areaQueue = new LinkedList<>();
-		areaQueue.add(new AreaQueueData(origin, 0));
-		possiblyVisibleAreaSet.add(origin);
+		List<PathData> originPathData = new ArrayList<>();
+		originPathData.add(new PathDataArea(origin));
+		areaQueue.add(new AreaQueueData(origin, 0, originPathData));
+		//possiblyVisibleAreaSet.add(origin.getID());
 		while (!areaQueue.isEmpty()) {
 			AreaQueueData currentAreaData = areaQueue.remove();
 			Area currentArea = currentAreaData.area();
 			int currentDistance = currentAreaData.distance();
-			possiblyVisibleAreas.add(currentArea);
+			List<PathData> currentPathData = currentAreaData.pathData;
+			possiblyVisibleAreas.put(currentArea.getID(), new AreaQueueData(currentArea, currentDistance, currentPathData));
 			if (currentDistance < range) {
-				for (Area linkedArea : currentArea.getDirectVisibleLinkedAreas()) {
-					if (!possiblyVisibleAreaSet.contains(linkedArea)) {
-						areaQueue.add(new AreaQueueData(linkedArea, currentDistance + 1));
-						possiblyVisibleAreaSet.add(linkedArea);
+				for (AreaLink areaLink : currentArea.getDirectVisibleLinkedAreas()) {
+					if (!possiblyVisibleAreas.containsKey(areaLink.getAreaID())) {
+						Area linkedArea = origin.game().data().getArea(areaLink.getAreaID());
+						List<PathData> extendedPathData = new ArrayList<>(currentPathData);
+						extendedPathData.add(new PathDataAreaLink(areaLink));
+						extendedPathData.add(new PathDataArea(linkedArea));
+						AreaQueueData linkedAreaData = new AreaQueueData(linkedArea, currentDistance + 1, extendedPathData);
+						areaQueue.add(linkedAreaData);
+						//possiblyVisibleAreaSet.add(areaLink.getAreaID());
 					}
 				}
 			}
@@ -281,7 +296,7 @@ public class Pathfinder {
 		return null;
 	}
 
-	private record AreaQueueData(Area area, int distance) {}
+	private record AreaQueueData(Area area, int distance, List<PathData> pathData) {}
 
 	private static class AreaPathData {
 
@@ -299,6 +314,6 @@ public class Pathfinder {
 
 	}
 
-	public record VisibleAreaData(AreaLink.CompassDirection direction, AreaLink.DistanceCategory distance) {}
+	public record VisibleAreaData(AreaLink.CompassDirection direction, AreaLink.DistanceCategory distance, List<PathData> pathData) {}
 
 }
