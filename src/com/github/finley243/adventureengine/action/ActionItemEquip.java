@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
+import com.github.finley243.adventureengine.item.template.ItemComponentTemplateEquippable;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.textgen.LangUtils;
@@ -14,24 +15,22 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextContext;
 
-import java.util.Set;
-
 public class ActionItemEquip extends Action {
 
     public static final float SUBOPTIMAL_WEAPON_UTILITY = 0.4f;
     public static final float OPTIMAL_WEAPON_UTILITY = 0.7f;
 
     private final Item item;
-    private final Set<String> slots;
+    private final ItemComponentTemplateEquippable.EquippableSlotsData slotsData;
 
-    public ActionItemEquip(Item item, Set<String> slots) {
+    public ActionItemEquip(Item item, ItemComponentTemplateEquippable.EquippableSlotsData slotsData) {
         this.item = item;
-        this.slots = slots;
+        this.slotsData = slotsData;
     }
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        subject.getEquipmentComponent().equip(item, slots);
+        subject.getEquipmentComponent().equip(item, slotsData);
         TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null, subject, null));
     }
@@ -45,10 +44,10 @@ public class ActionItemEquip extends Action {
         if (item.getComponentOfType(ItemComponentEquippable.class).getEquippedActor() != null) {
             return new CanChooseResult(false, "Already equipped");
         }
-        if (subject.getEquipmentComponent().isSlotBlocked(slots)) {
+        if (subject.getEquipmentComponent().isSlotBlocked(slotsData.slots())) {
             return new CanChooseResult(false, "Equipping this item is blocked");
         }
-        if (!subject.getEquipmentComponent().isSlotEmpty(slots)) {
+        if (!subject.getEquipmentComponent().isSlotEmpty(slotsData.slots())) {
             return new CanChooseResult(false, "Another item is already equipped");
         }
         return new CanChooseResult(true, null);
@@ -63,7 +62,7 @@ public class ActionItemEquip extends Action {
     public String getPrompt(Actor subject) {
         StringBuilder slotLabel = new StringBuilder();
         boolean first = true;
-        for (String slot : slots) {
+        for (String slot : slotsData.slots()) {
             if (first) {
                 first = false;
             } else {

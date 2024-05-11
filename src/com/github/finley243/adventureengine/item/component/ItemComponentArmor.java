@@ -12,6 +12,11 @@ public class ItemComponentArmor extends ItemComponent {
         super(item, template);
     }
 
+    @Override
+    public boolean hasState() {
+        return false;
+    }
+
     private ItemComponentTemplateArmor getArmorTemplate() {
         return (ItemComponentTemplateArmor) getTemplate();
     }

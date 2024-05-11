@@ -21,6 +21,8 @@ public abstract class ItemComponent implements MutableStatHolder {
         this.template = template;
     }
 
+    public abstract boolean hasState();
+
     public Item getItem() {
         return item;
     }

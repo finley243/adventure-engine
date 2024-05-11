@@ -14,6 +14,11 @@ public class ItemComponentMod extends ItemComponent {
         super(item, template);
     }
 
+    @Override
+    public boolean hasState() {
+        return false;
+    }
+
     private ItemComponentTemplateMod getModTemplate() {
         return (ItemComponentTemplateMod) getTemplate();
     }

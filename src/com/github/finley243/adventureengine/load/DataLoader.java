@@ -417,18 +417,19 @@ public class DataLoader {
                 List<String> consumableEffects = LoadUtils.listOfTags(componentElement, "effect");
                 return new ItemComponentTemplateConsumable(actionsRestricted, consumePrompt, consumePhrase, consumableEffects);
             }
-            case "effectable" -> {
-                return new ItemComponentTemplateEffectable(actionsRestricted);
+            case "effectible" -> {
+                return new ItemComponentTemplateEffectible(actionsRestricted);
             }
             case "equippable" -> {
-                Set<Set<String>> equipSlots = new HashSet<>();
+                Set<ItemComponentTemplateEquippable.EquippableSlotsData> equipSlots = new HashSet<>();
                 for (Element slotGroupElement : LoadUtils.directChildrenWithName(componentElement, "slotGroup")) {
                     Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
-                    equipSlots.add(slotGroup);
+                    Set<String> exposedComponents = LoadUtils.setOfTags(slotGroupElement, "exposedComponent");
+                    List<String> equippedEffects = LoadUtils.listOfTags(componentElement, "effect");
+                    List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(componentElement, "equippedAction");
+                    equipSlots.add(new ItemComponentTemplateEquippable.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
                 }
-                List<String> equippedEffects = LoadUtils.listOfTags(componentElement, "effect");
-                List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(componentElement, "equippedAction");
-                return new ItemComponentTemplateEquippable(actionsRestricted, equipSlots, equippedEffects, equippedActions);
+                return new ItemComponentTemplateEquippable(actionsRestricted, equipSlots);
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(componentElement, "modSlot", null);

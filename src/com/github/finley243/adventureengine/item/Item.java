@@ -105,8 +105,13 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	public boolean hasState() {
+        for (ItemComponent component : components.values()) {
+			if (component.hasState()) {
+				return true;
+			}
+		}
 		return false;
-	}
+    }
 	
 	public List<Action> inventoryActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();

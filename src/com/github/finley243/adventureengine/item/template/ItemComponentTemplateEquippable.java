@@ -7,29 +7,17 @@ import java.util.Set;
 
 public class ItemComponentTemplateEquippable extends ItemComponentTemplate {
 
-    private final Set<Set<String>> slots;
-    private final List<String> equippedEffects;
-    private final List<ActionCustom.CustomActionHolder> equippedActions;
+    private final Set<EquippableSlotsData> slots;
 
-    public ItemComponentTemplateEquippable(boolean actionsRestricted, Set<Set<String>> slots, List<String> equippedEffects, List<ActionCustom.CustomActionHolder> equippedActions) {
+    public ItemComponentTemplateEquippable(boolean actionsRestricted, Set<EquippableSlotsData> slots) {
         super(actionsRestricted);
         this.slots = slots;
-        this.equippedEffects = equippedEffects;
-        this.equippedActions = equippedActions;
     }
 
-    public Set<Set<String>> getSlots() {
+    public Set<EquippableSlotsData> getSlots() {
         return slots;
     }
 
-    public List<String> getEquippedEffects() {
-        return equippedEffects;
-    }
-
-    public List<ActionCustom.CustomActionHolder> getEquippedActions() {
-        return equippedActions;
-    }
-
-    public record EquippableSlotsData(Set<String> slots, Set<String> componentsExposed) {}
+    public record EquippableSlotsData(Set<String> slots, Set<String> componentsExposed, List<String> equippedEffects, List<ActionCustom.CustomActionHolder> equippedActions) {}
 
 }

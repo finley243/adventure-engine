@@ -5,14 +5,19 @@ import com.github.finley243.adventureengine.actor.component.EffectComponent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 
-public class ItemComponentEffectable extends ItemComponent {
+public class ItemComponentEffectible extends ItemComponent {
 
     // TODO - EffectComponent round updates (handled by current inventory owner, either actor or area)
     private final EffectComponent effectComponent;
 
-    public ItemComponentEffectable(Item item, ItemComponentTemplate template) {
+    public ItemComponentEffectible(Item item, ItemComponentTemplate template) {
         super(item, template);
         this.effectComponent = new EffectComponent(item.game(), item, new Context(item.game(), item.game().data().getPlayer(), item.game().data().getPlayer(), item));
+    }
+
+    @Override
+    public boolean hasState() {
+        return effectComponent.hasAnyEffect();
     }
 
     public void addEffect(String effectID) {

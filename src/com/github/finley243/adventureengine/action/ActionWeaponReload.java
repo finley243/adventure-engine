@@ -39,6 +39,9 @@ public class ActionWeaponReload extends Action {
 			}
 			int ammoInInventory = subject.getInventory().itemCount(ammoType);
 			int reloadAmount = Math.min(weapon.getComponentOfType(ItemComponentWeapon.class).reloadCapacity(), ammoInInventory);
+			System.out.println("Reload capacity: " + weapon.getComponentOfType(ItemComponentWeapon.class).reloadCapacity());
+			System.out.println("Ammo in inventory: " + ammoInInventory);
+			System.out.println("Reload amount: " + reloadAmount);
 			weapon.getComponentOfType(ItemComponentWeapon.class).loadAmmo(reloadAmount);
 			weapon.getComponentOfType(ItemComponentWeapon.class).setLoadedAmmoType(ammoType);
 			ammoType.getComponentOfType(ItemComponentAmmo.class).onLoad(weapon);

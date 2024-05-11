@@ -21,6 +21,10 @@ public class EffectComponent {
         this.effects = new HashMap<>();
     }
 
+    public boolean hasAnyEffect() {
+        return !effects.isEmpty();
+    }
+
     public void addEffect(String effectID) {
         Effect effect = game.data().getEffect(effectID);
         if (effect.getConditionAdd() == null || effect.getConditionAdd().isMet(scriptContext)) {

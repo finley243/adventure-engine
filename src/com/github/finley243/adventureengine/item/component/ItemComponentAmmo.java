@@ -10,6 +10,11 @@ public class ItemComponentAmmo extends ItemComponent {
         super(item, template);
     }
 
+    @Override
+    public boolean hasState() {
+        return false;
+    }
+
     private ItemComponentTemplateAmmo getAmmoTemplate() {
         return (ItemComponentTemplateAmmo) getTemplate();
     }
@@ -20,13 +25,13 @@ public class ItemComponentAmmo extends ItemComponent {
 
     public void onLoad(Item weapon) {
         for (String effectID : getAmmoTemplate().getWeaponEffects()) {
-            weapon.getComponentOfType(ItemComponentEffectable.class).addEffect(effectID);
+            weapon.getComponentOfType(ItemComponentEffectible.class).addEffect(effectID);
         }
     }
 
     public void onUnload(Item weapon) {
         for (String effectID : getAmmoTemplate().getWeaponEffects()) {
-            weapon.getComponentOfType(ItemComponentEffectable.class).removeEffect(effectID);
+            weapon.getComponentOfType(ItemComponentEffectible.class).removeEffect(effectID);
         }
     }
 

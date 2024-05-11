@@ -1,14 +1,16 @@
 <data>
     <item id="baseball_bat" price="15">
         <name>baseball bat</name>
-        <component type="weapon" class="club">
+        <component type="weapon" class="club" restricted="true">
             <damage base="10" crit="5"/>
             <rate>2</rate>
         </component>
+        <component type="effectible"/>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>
                 <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
             </slotGroup>
         </component>
     </item>
@@ -17,54 +19,62 @@
         <description>
             <line>A razor-sharp sword of fine craftsmanship.</line>
         </description>
-        <component type="weapon" class="sword">
+        <component type="weapon" class="sword" restricted="true">
             <damage base="20" crit="10"/>
             <rate>2</rate>
         </component>
+        <component type="effectible"/>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>
                 <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
             </slotGroup>
         </component>
     </item>
     <item id="pistol_light" price="30">
         <name>light pistol</name>
-        <component type="weapon" class="pistol">
+        <component type="weapon" class="pistol" restricted="true">
             <damage base="10" crit="5"/>
             <rate>2</rate>
             <clipSize>12</clipSize>
             <reloadActionPoints>1</reloadActionPoints>
         </component>
+        <component type="effectible"/>
         <component type="moddable">
             <modSlot name="pistol_mag"/>
         </component>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>
+                <exposedComponent>weapon</exposedComponent>
             </slotGroup>
             <slotGroup>
                 <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
             </slotGroup>
         </component>
     </item>
     <item id="pistol_heavy" price="50">
         <name>heavy pistol</name>
-        <component type="weapon" class="pistol">
+        <component type="weapon" class="pistol" restricted="true">
             <damage base="14" crit="6"/>
             <rate>2</rate>
             <clipSize>6</clipSize>
             <reloadActionPoints>1</reloadActionPoints>
         </component>
+        <component type="effectible"/>
         <component type="moddable">
             <modSlot name="pistol_mag"/>
         </component>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>
+                <exposedComponent>weapon</exposedComponent>
             </slotGroup>
             <slotGroup>
                 <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
             </slotGroup>
         </component>
     </item>
@@ -73,31 +83,36 @@
         <description>
             <line>A full-auto assault rifle.</line>
         </description>
-        <component type="weapon" class="assault_rifle">
+        <component type="weapon" class="assault_rifle" restricted="true">
             <damage base="15" crit="4"/>
             <rate>2</rate>
             <clipSize>16</clipSize>
             <reloadActionPoints>1</reloadActionPoints>
         </component>
+        <component type="effectible"/>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>
                 <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
             </slotGroup>
         </component>
     </item>
     <item id="grenade_frag" price="10">
         <name>frag grenade</name>
-        <component type="weapon" class="grenade">
+        <component type="weapon" class="grenade" restricted="true">
             <damage base="20" crit="5"/>
             <rate>1</rate>
         </component>
+        <component type="effectible"/>
         <component type="equippable">
             <slotGroup>
                 <slot>hand_main</slot>
+                <exposedComponent>weapon</exposedComponent>
             </slotGroup>
             <slotGroup>
                 <slot>hand_off</slot>
+                <exposedComponent>weapon</exposedComponent>
             </slotGroup>
         </component>
     </item>

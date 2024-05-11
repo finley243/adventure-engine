@@ -21,6 +21,11 @@ public class ItemComponentModdable extends ItemComponent {
         this.mods = new HashMap<>();
     }
 
+    @Override
+    public boolean hasState() {
+        return true;
+    }
+
     private ItemComponentTemplateModdable getModdableTemplate() {
         return (ItemComponentTemplateModdable) getTemplate();
     }
@@ -43,7 +48,7 @@ public class ItemComponentModdable extends ItemComponent {
 
     public void installMod(Item mod) {
         for (String effectID : mod.getComponentOfType(ItemComponentMod.class).getEffects()) {
-            getItem().getComponentOfType(ItemComponentEffectable.class).addEffect(effectID);
+            getItem().getComponentOfType(ItemComponentEffectible.class).addEffect(effectID);
         }
         String modSlot = mod.getComponentOfType(ItemComponentMod.class).getModSlot();
         if (!mods.containsKey(modSlot)) {
@@ -54,7 +59,7 @@ public class ItemComponentModdable extends ItemComponent {
 
     public void removeMod(Item mod) {
         for (String effectID : mod.getComponentOfType(ItemComponentMod.class).getEffects()) {
-            getItem().getComponentOfType(ItemComponentEffectable.class).removeEffect(effectID);
+            getItem().getComponentOfType(ItemComponentEffectible.class).removeEffect(effectID);
         }
         String modSlot = mod.getComponentOfType(ItemComponentMod.class).getModSlot();
         mods.get(modSlot).remove(mod);

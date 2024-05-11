@@ -54,6 +54,7 @@
         <skill key="intimidation" value="6"/>
         <inventory>
             <item>pistol_heavy</item>
+            <item>mag_extended_pistol</item>
             <item>katana</item>
             <item count="2">grenade_frag</item>
             <item>nitron_cola</item>

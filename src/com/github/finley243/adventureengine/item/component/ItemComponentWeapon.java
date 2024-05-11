@@ -58,6 +58,11 @@ public class ItemComponentWeapon extends ItemComponent {
         this.ammoCount = 0;
     }
 
+    @Override
+    public boolean hasState() {
+        return usesAmmo();
+    }
+
     private ItemComponentTemplateWeapon getWeaponTemplate() {
         return (ItemComponentTemplateWeapon) getTemplate();
     }

@@ -14,6 +14,11 @@ public class ItemComponentConsumable extends ItemComponent {
         super(item, template);
     }
 
+    @Override
+    public boolean hasState() {
+        return false;
+    }
+
     private ItemComponentTemplateConsumable getConsumableTemplate() {
         return (ItemComponentTemplateConsumable) getTemplate();
     }
