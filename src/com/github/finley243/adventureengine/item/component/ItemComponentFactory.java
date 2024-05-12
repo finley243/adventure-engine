@@ -12,6 +12,7 @@ public class ItemComponentFactory {
             case ItemComponentTemplateConsumable typeTemplate -> new ItemComponentConsumable(item, typeTemplate);
             case ItemComponentTemplateEffectible typeTemplate -> new ItemComponentEffectible(item, typeTemplate);
             case ItemComponentTemplateEquippable typeTemplate -> new ItemComponentEquippable(item, typeTemplate);
+            case ItemComponentTemplateMagazine typeTemplate -> new ItemComponentMagazine(item, typeTemplate);
             case ItemComponentTemplateMod typeTemplate -> new ItemComponentMod(item, typeTemplate);
             case ItemComponentTemplateModdable typeTemplate -> new ItemComponentModdable(item, typeTemplate);
             case ItemComponentTemplateWeapon typeTemplate -> new ItemComponentWeapon(item, typeTemplate);
@@ -26,6 +27,7 @@ public class ItemComponentFactory {
             case "consumable" -> ItemComponentConsumable.class;
             case "effectible" -> ItemComponentEffectible.class;
             case "equippable" -> ItemComponentEquippable.class;
+            case "magazine" -> ItemComponentMagazine.class;
             case "mod" -> ItemComponentMod.class;
             case "moddable" -> ItemComponentModdable.class;
             case "weapon" -> ItemComponentWeapon.class;

@@ -2,12 +2,10 @@ package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplateWeapon;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -28,16 +26,11 @@ public class ItemComponentWeapon extends ItemComponent {
     private final StatInt critDamage;
     private final StatFloat critChance;
     private final StatStringSet ranges;
-    private final StatInt clipSize;
-    private final StatInt reloadActionPoints;
     private final StatFloat hitChanceModifier;
     private final StatFloat armorMult;
     private final StatString damageType;
     private final StatBoolean isSilenced;
     private final StatStringSet targetEffects;
-
-    private Item ammoType;
-    private int ammoCount;
 
     public ItemComponentWeapon(Item item, ItemComponentTemplateWeapon template) {
         super(item, template);
@@ -47,20 +40,16 @@ public class ItemComponentWeapon extends ItemComponent {
         this.critDamage = new StatInt("crit_damage", item);
         this.critChance = new StatFloat("crit_chance", item);
         this.ranges = new StatStringSet("ranges", item);
-        this.clipSize = new StatInt("clip_size", item);
-        this.reloadActionPoints = new StatInt("reload_action_points", item);
         this.hitChanceModifier = new StatFloat("hit_chance_bonus", item);
         this.armorMult = new StatFloat("armor_mult", item);
         this.damageType = new StatString("damage_type", item);
         this.isSilenced = new StatBoolean("is_silenced", item, false);
         this.targetEffects = new StatStringSet("target_effects", item);
-        this.ammoType = null;
-        this.ammoCount = 0;
     }
 
     @Override
     public boolean hasState() {
-        return usesAmmo();
+        return false;
     }
 
     private ItemComponentTemplateWeapon getWeaponTemplate() {
@@ -72,11 +61,6 @@ public class ItemComponentWeapon extends ItemComponent {
         List<Action> actions = super.inventoryActions(subject);
         for (String attackType : getAttackTypes()) {
             actions.addAll(getItem().game().data().getAttackType(attackType).generateActions(subject, getItem()));
-        }
-        if (usesAmmo()) {
-            for (String current : getAmmoTypes()) {
-                actions.add(new ActionWeaponReload(getItem(), ItemFactory.create(getItem().game(), current)));
-            }
         }
         return actions;
     }
@@ -129,15 +113,15 @@ public class ItemComponentWeapon extends ItemComponent {
         return targetEffects.value(getWeaponTemplate().getTargetEffects(), context);
     }
 
-    public int getClipSize() {
+    /*public int getClipSize() {
         return clipSize.value(getWeaponTemplate().getClipSize(), 1, 100, new Context(getItem().game(), getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor(), getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor(), getItem()));
-    }
+    }*/
 
     public String getDamageType(Context context) {
         return damageType.value(getWeaponTemplate().getDamageType(), context);
     }
 
-    public int getAmmoRemaining() {
+    /*public int getAmmoRemaining() {
         return ammoCount;
     }
 
@@ -179,11 +163,11 @@ public class ItemComponentWeapon extends ItemComponent {
     public void emptyAmmo() {
         ammoCount = 0;
         setLoadedAmmoType(null);
-    }
+    }*/
 
-    public int getReloadActionPoints(Context context) {
+    /*public int getReloadActionPoints(Context context) {
         return reloadActionPoints.value(getWeaponTemplate().getReloadActionPoints(), 0, 1000, context);
-    }
+    }*/
 
     public boolean isSilenced(Context context) {
         return isSilenced.value(getWeaponTemplate().isSilenced(), context);
@@ -193,13 +177,13 @@ public class ItemComponentWeapon extends ItemComponent {
         return getWeaponClass().isLoud() && !isSilenced(context);
     }
 
-    public boolean usesAmmo() {
+    /*public boolean usesAmmo() {
         return getWeaponClass().usesAmmo();
-    }
+    }*/
 
-    public Set<String> getAmmoTypes() {
+    /*public Set<String> getAmmoTypes() {
         return getWeaponClass().getAmmoTypes();
-    }
+    }*/
 
     public String getSkill() {
         return getWeaponClass().getSkill();
@@ -215,8 +199,6 @@ public class ItemComponentWeapon extends ItemComponent {
             case "damage" -> damage;
             case "rate" -> rate;
             case "crit_damage" -> critDamage;
-            case "clip_size" -> clipSize;
-            case "reload_action_points" -> reloadActionPoints;
             default -> super.getStatInt(name);
         };
     }
@@ -265,9 +247,6 @@ public class ItemComponentWeapon extends ItemComponent {
             case "damage" -> Expression.constant(getDamage(context));
             case "rate" -> Expression.constant(getRate(context));
             case "crit_damage" -> Expression.constant(getCritDamage(context));
-            case "clip_size" -> Expression.constant(getClipSize());
-            case "reload_action_points" -> Expression.constant(getReloadActionPoints(context));
-            case "ammo_count" -> Expression.constant(ammoCount);
             case "armor_mult" -> Expression.constant(getArmorMult(context));
             case "is_silenced" -> Expression.constant(isSilenced(context));
             case "damage_type" -> Expression.constant(getDamageType(context));
@@ -276,27 +255,6 @@ public class ItemComponentWeapon extends ItemComponent {
             case "target_effects" -> Expression.constant(getTargetEffects(context));
             default -> super.getStatValue(name, context);
         };
-    }
-
-    @Override
-    public void onStatChange(String name) {
-        if ("clip_size".equals(name) && ammoCount > getClipSize()) {
-            int difference = ammoCount - getClipSize();
-            ammoCount = getClipSize();
-            if (getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor() != null) {
-                getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor().getInventory().addItems(ammoType.getTemplateID(), difference);
-            }
-        } else {
-            super.onStatChange(name);
-        }
-    }
-
-    @Override
-    public StatHolder getSubHolder(String name, String ID) {
-        if ("ammo_type".equals(name)) {
-            return ammoType;
-        }
-        return super.getSubHolder(name, ID);
     }
 
 }

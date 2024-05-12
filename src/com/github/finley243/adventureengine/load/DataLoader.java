@@ -431,6 +431,12 @@ public class DataLoader {
                 }
                 return new ItemComponentTemplateEquippable(actionsRestricted, equipSlots);
             }
+            case "magazine" -> {
+                Set<String> ammoTypes = LoadUtils.setOfTags(componentElement, "ammoType");
+                int magazineSize = LoadUtils.singleTagInt(componentElement, "size", 1);
+                int reloadActionPoints = LoadUtils.singleTagInt(componentElement, "reloadActionPoints", 1);
+                return new ItemComponentTemplateMagazine(actionsRestricted, ammoTypes, magazineSize, reloadActionPoints);
+            }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(componentElement, "modSlot", null);
                 List<String> effects = LoadUtils.listOfTags(componentElement, "effect");
@@ -455,10 +461,8 @@ public class DataLoader {
                 String weaponDamageType = LoadUtils.attribute(damageElement, "type", game.data().getConfig("defaultDamageType"));
                 float weaponArmorMult = LoadUtils.singleTagFloat(componentElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(componentElement, "silenced", false);
-                int weaponClipSize = LoadUtils.singleTagInt(componentElement, "clipSize", 1);
-                int weaponReloadActionPoints = LoadUtils.singleTagInt(componentElement, "reloadActionPoints", 1);
                 Set<String> weaponTargetEffects = LoadUtils.setOfTags(componentElement, "targetEffect");
-                return new ItemComponentTemplateWeapon(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponClipSize, weaponReloadActionPoints, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
+                return new ItemComponentTemplateWeapon(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
             }
             default -> {
                 return null;

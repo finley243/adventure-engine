@@ -37,7 +37,10 @@
         <component type="weapon" class="pistol" restricted="true">
             <damage base="10" crit="5"/>
             <rate>2</rate>
-            <clipSize>12</clipSize>
+        </component>
+        <component type="magazine" restricted="true">
+            <ammoType>ammo_pistol</ammoType>
+            <size>12</size>
             <reloadActionPoints>1</reloadActionPoints>
         </component>
         <component type="effectible"/>
@@ -48,10 +51,12 @@
             <slotGroup>
                 <slot>hand_main</slot>
                 <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
             </slotGroup>
             <slotGroup>
                 <slot>hand_off</slot>
                 <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
             </slotGroup>
         </component>
     </item>
@@ -60,7 +65,10 @@
         <component type="weapon" class="pistol" restricted="true">
             <damage base="14" crit="6"/>
             <rate>2</rate>
-            <clipSize>6</clipSize>
+        </component>
+        <component type="magazine" restricted="true">
+            <ammoType>ammo_pistol</ammoType>
+            <size>6</size>
             <reloadActionPoints>1</reloadActionPoints>
         </component>
         <component type="effectible"/>
@@ -71,10 +79,12 @@
             <slotGroup>
                 <slot>hand_main</slot>
                 <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
             </slotGroup>
             <slotGroup>
                 <slot>hand_off</slot>
                 <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
             </slotGroup>
         </component>
     </item>
@@ -86,7 +96,10 @@
         <component type="weapon" class="assault_rifle" restricted="true">
             <damage base="15" crit="4"/>
             <rate>2</rate>
-            <clipSize>16</clipSize>
+        </component>
+        <component type="magazine" restricted="true">
+            <ammoType>ammo_rifle</ammoType>
+            <size>16</size>
             <reloadActionPoints>1</reloadActionPoints>
         </component>
         <component type="effectible"/>
@@ -95,6 +108,7 @@
                 <slot>hand_main</slot>
                 <slot>hand_off</slot>
                 <exposedComponent>weapon</exposedComponent>
+                <exposedComponent>magazine</exposedComponent>
             </slotGroup>
         </component>
     </item>
