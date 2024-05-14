@@ -1,9 +1,12 @@
 package com.github.finley243.adventureengine.textgen;
 
+import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.MathUtils;
+import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,6 +15,11 @@ public class TextGen {
 	private static final char RANDOM_OPEN = '{';
 	private static final char RANDOM_CLOSE = '}';
 	private static final char RANDOM_SEPARATOR = '|';
+	private static final char CONDITIONAL_OPEN = '(';
+	private static final char CONDITIONAL_CLOSE = ')';
+	private static final char CONDITIONAL_SEPARATOR = '|';
+	private static final char CONDITIONAL_CONDITION_OPEN = '[';
+	private static final char CONDITIONAL_CONDITION_CLOSE = ']';
 
 	// e.g. jumps
 	private static final String VERB_S = "$s";
@@ -28,19 +36,20 @@ public class TextGen {
 	private static TextContext lastContext;
 
 	/*
-	 * Format for tags: $_subject hit$s_subject $object1 with $object2
+	 * Format for tags: $subject hit$s $object1 with $object2
 	 * Format for OR expressions: {this thing|other thing} or {$tag thing|other thing}
+	 * Format for conditionals: ([condition]phrase|[other condition]other phrase|default phrase)
 	 */
 
-	public static String generate(String line, TextContext context) {
+	public static String generate(String line, Context context, TextContext textContext) {
 		if (line == null) return null;
 		String sentence = "";
-		line = chooseRandoms(line);
-		line = determineContext(line, context);
+		line = processBlockStatements(line, context);
+		line = determineContext(line, textContext);
 		sentence += LangUtils.capitalize(line);
 		sentence += ".";
-		lastContext = context;
-		for (Noun object : context.getObjects().values()) {
+		lastContext = textContext;
+		for (Noun object : textContext.getObjects().values()) {
 			object.setKnown();
 		}
 		return sentence;
@@ -68,7 +77,7 @@ public class TextGen {
 			for (int i = 0; i < objectList.size(); i++) {
 				Noun object = objectList.get(i);
 				if (!lastObjectList.isEmpty()) {
-					if (lastObjectList.size() <= i && object == lastObjectList.get(lastObjectList.size() - 1)
+					if (lastObjectList.size() <= i && object == lastObjectList.getLast()
 							|| lastObjectList.size() > i && object == lastObjectList.get(i)) {
 						if (!matchesAnyPronounsUpToObjectIndex(lastContext, object.getPronoun(), i, usePronouns)) {
 							usePronouns[i] = true;
@@ -87,59 +96,55 @@ public class TextGen {
 				usePronounsMap.put(objectTag, true);
 			}
 		}
-		return populateFromContext(line, context, usePronounsMap);
+		return replaceTagsFromContext(line, context, usePronounsMap);
+	}
+
+	private static String processBlockStatements(String line, Context context) {
+		for (int i = 0; i < line.length(); i++) {
+			if (line.charAt(i) == RANDOM_OPEN) {
+				return processBlockStatements(chooseRandoms(line), context);
+			} else if (line.charAt(i) == CONDITIONAL_OPEN) {
+				return processBlockStatements(evaluateConditionals(line, context), context);
+			}
+		}
+		return line;
 	}
 
 	private static String chooseRandoms(String line) {
-		List<String> parts = new ArrayList<>();
-		int openIndex = -1;
-		int closeIndex = -1;
-		int depth = 0;
-		for (int i = 0; i < line.length(); i++) {
-			if (line.charAt(i) == RANDOM_OPEN) {
-				if (depth == 0) {
-					openIndex = i;
-				}
-				depth++;
-			} else if (line.charAt(i) == RANDOM_CLOSE) {
-				depth--;
-				if (depth == 0) {
-					String lineInBrackets = line.substring(openIndex + 1, i);
-					List<String> randomChoices = separateRandomChoices(lineInBrackets);
-					String randomChoice = randomChoices.get(ThreadLocalRandom.current().nextInt(randomChoices.size()));
-					parts.add(line.substring(closeIndex + 1, openIndex));
-					parts.add(chooseRandoms(randomChoice));
-					closeIndex = i;
-				}
-			}
-		}
-		parts.add(line.substring(closeIndex + 1));
-		StringBuilder newLine = new StringBuilder();
-		for (String current : parts) {
-			newLine.append(current);
-		}
-		return newLine.toString();
+		return replaceInsideBracketsWithResult(line, RANDOM_OPEN, null, (s, _) -> {
+			List<String> randomChoices = getSeparatedStrings(s, RANDOM_SEPARATOR);
+			return MathUtils.selectRandomFromList(randomChoices);
+		});
 	}
 
-	private static List<String> separateRandomChoices(String line) {
-		List<String> parts = new ArrayList<>();
-		int indexOfLastSplit = -1;
-		int depth = 0;
-		for (int i = 0; i < line.length(); i++) {
-			if (line.charAt(i) == RANDOM_OPEN) {
-				depth++;
-			} else if (line.charAt(i) == RANDOM_CLOSE) {
-				depth--;
-			} else if (depth == 0 && line.charAt(i) == RANDOM_SEPARATOR) {
-				parts.add(line.substring(indexOfLastSplit + 1, i).trim());
-				indexOfLastSplit = i;
-			}
-		}
-		parts.add(line.substring(indexOfLastSplit + 1).trim());
-		return parts;
+	private static String evaluateConditionals(String line, Context context) {
+		return replaceInsideBracketsWithResult(line, CONDITIONAL_OPEN, context, TextGen::evaluateConditionalStatement);
 	}
 
-	private static String populateFromContext(String line, TextContext context, Map<String, Boolean> usePronouns) {
+	private static String evaluateConditionalStatement(String line, Context context) {
+		List<String> conditionalBranches = getSeparatedStrings(line, CONDITIONAL_SEPARATOR);
+		for (int i = 0; i < conditionalBranches.size(); i++) {
+			String currentBranch = conditionalBranches.get(i);
+			if (i < conditionalBranches.size() - 1 && currentBranch.charAt(0) != CONDITIONAL_CONDITION_OPEN) {
+				throw new IllegalArgumentException("Conditional branch is missing condition");
+			}
+			if (i == conditionalBranches.size() - 1 && currentBranch.charAt(0) != CONDITIONAL_CONDITION_OPEN) {
+				return currentBranch;
+			}
+			int conditionCloseIndex = currentBranch.indexOf(CONDITIONAL_CONDITION_CLOSE);
+			if (conditionCloseIndex == -1) {
+				throw new IllegalArgumentException("Condition is missing closing bracket");
+			}
+			String conditionString = currentBranch.substring(1, conditionCloseIndex);
+			Condition condition = new Condition(ScriptParser.parseExpression(conditionString));
+			if (condition.isMet(context)) {
+				return currentBranch.substring(conditionCloseIndex + 1);
+			}
+		}
+		return "";
+	}
+
+	private static String replaceTagsFromContext(String line, TextContext context, Map<String, Boolean> usePronouns) {
 		Pattern tokenPattern = Pattern.compile("\\$[a-zA-Z0-9_']+");
 		Matcher tokenMatcher = tokenPattern.matcher(line);
 		List<TextToken> tokens = new ArrayList<>();
@@ -250,6 +255,60 @@ public class TextGen {
 		return builder.toString();
 	}
 
+	private static String replaceInsideBracketsWithResult(String line, char openBracketType, Context context, TextProcessor processor) {
+		List<String> parts = new ArrayList<>();
+		int openIndex = -1;
+		int closeIndex = -1;
+		Deque<Character> openBracketStack = new ArrayDeque<>();
+		for (int i = 0; i < line.length(); i++) {
+			if (line.charAt(i) == '(' || line.charAt(i) == '{' || line.charAt(i) == '[') {
+				if (openBracketStack.isEmpty() && line.charAt(i) == openBracketType) {
+					openIndex = i;
+				}
+				openBracketStack.push(line.charAt(i));
+			} else if (line.charAt(i) == ')' || line.charAt(i) == '}' || line.charAt(i) == ']') {
+				if (openBracketStack.isEmpty()) throw new IllegalArgumentException("Unmatched close bracket");
+				if (line.charAt(i) == getCorrespondingCloseBracket(openBracketStack.peek())) {
+					char lastOpenBracket = openBracketStack.pop();
+					if (lastOpenBracket == openBracketType && openBracketStack.isEmpty()) {
+						String bracketContents = line.substring(openIndex + 1, i);
+						parts.add(line.substring(closeIndex + 1, openIndex));
+						parts.add(processor.process(bracketContents, context));
+						closeIndex = i;
+					}
+				}
+			}
+		}
+		if (!openBracketStack.isEmpty()) throw new IllegalArgumentException("Unmatched open bracket");
+		parts.add(line.substring(closeIndex + 1));
+		StringBuilder newLine = new StringBuilder();
+		for (String current : parts) {
+			newLine.append(current);
+		}
+		return newLine.toString();
+	}
+
+	private static List<String> getSeparatedStrings(String line, char separator) {
+		if (separator == '(' || separator == ')' || separator == '{' || separator == '}' || separator == '[' || separator == ']') throw new IllegalArgumentException("Separator cannot be a bracket");
+		List<String> parts = new ArrayList<>();
+		int lastSeparatorIndex = -1;
+		Deque<Character> openBracketStack = new ArrayDeque<>();
+		for (int i = 0; i < line.length(); i++) {
+			if (line.charAt(i) == '(' || line.charAt(i) == '{' || line.charAt(i) == '[') {
+				openBracketStack.push(line.charAt(i));
+			} else if (line.charAt(i) == ')' || line.charAt(i) == '}' || line.charAt(i) == ']') {
+				if (openBracketStack.isEmpty()) throw new IllegalArgumentException("Unmatched close bracket");
+				openBracketStack.pop();
+			} else if (line.charAt(i) == separator && openBracketStack.isEmpty()) {
+				parts.add(line.substring(lastSeparatorIndex + 1, i));
+				lastSeparatorIndex = i;
+			}
+		}
+		if (!openBracketStack.isEmpty()) throw new IllegalArgumentException("Unmatched open bracket");
+		parts.add(line.substring(lastSeparatorIndex + 1));
+		return parts;
+	}
+
 	private static String getSubjectKeyFromToken(TextToken token) {
 		if (token.value.endsWith("_name")) {
 			return token.value.substring(0, token.value.length() - 5);
@@ -294,6 +353,15 @@ public class TextGen {
 			if(usePronouns[i] && objectPronoun == pronoun) return true;
 		}
 		return false;
+	}
+
+	private static char getCorrespondingCloseBracket(char openBracket) {
+		return switch (openBracket) {
+			case '(' -> ')';
+			case '{' -> '}';
+			case '[' -> ']';
+			default -> throw new IllegalArgumentException("Invalid open bracket: " + openBracket);
+		};
 	}
 
 	private static class TextToken {

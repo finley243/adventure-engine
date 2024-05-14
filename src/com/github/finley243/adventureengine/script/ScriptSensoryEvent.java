@@ -31,7 +31,7 @@ public class ScriptSensoryEvent extends Script {
         TextContext textContext = new TextContext(contextVars, contextNouns);
         String phraseString = (phrase == null ? null : phrase.getValueString());
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString());
-        SensoryEvent sensoryEvent = new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), textContext, isDetectedBySelf, false, context.getParentAction(), null, context.getSubject(), context.getTarget());
+        SensoryEvent sensoryEvent = new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), context, textContext, isDetectedBySelf, false, context.getParentAction(), null);
         SensoryEvent.execute(context.game(), sensoryEvent);
         return new ScriptReturnData(null, null, null);
     }

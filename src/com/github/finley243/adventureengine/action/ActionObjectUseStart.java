@@ -40,8 +40,9 @@ public class ActionObjectUseStart extends Action {
 		}
 		component.setUser(slotID, subject);
 		subject.setUsingObject(new ObjectComponentUsable.ObjectUserData(component.getObject(), slotID));
-		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null, subject, null));
+		Context context = new Context(subject.game(), subject, null, component.getObject());
+		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, textContext, true, this, null));
 	}
 
 	@Override

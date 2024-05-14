@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -33,8 +34,9 @@ public class ActionInventoryStore extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.getInventory().removeItem(item);
         inventory.addItem(item);
-        TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("inventory", owner).build());
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null, subject, null));
+        Context context = new Context(subject.game(), subject, null, item);
+        TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).put("inventory", owner).build());
+        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, textContext, true, this, null));
     }
 
     @Override

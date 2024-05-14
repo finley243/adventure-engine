@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -22,8 +23,9 @@ public class ActionItemDrop extends Action {
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.getInventory().removeItem(item);
 		subject.getArea().getInventory().addItem(item);
-		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null, subject, null));
+		Context context = new Context(subject.game(), subject, null, item);
+		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, textContext, true, this, null));
 	}
 
 	@Override

@@ -36,8 +36,9 @@ public class ActionObjectUseEnd extends Action {
 		}
 		component.removeUser(slotID);
 		subject.setUsingObject(null);
-		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, true, this, null, subject, null));
+		Context context = new Context(subject.game(), subject, null, component.getObject());
+		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, textContext, true, this, null));
 	}
 
 	@Override

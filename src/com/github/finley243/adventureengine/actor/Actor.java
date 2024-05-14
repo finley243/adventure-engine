@@ -397,19 +397,21 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			HP = 0;
 			kill();
 		} else if (amount < 0) {
-			triggerScript("on_damaged", new Context(game(), this, context.getSubject()));
+			Context modifierContext = new Context(game(), this, context.getSubject());
+			triggerScript("on_damaged", modifierContext);
 			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor lose$s $amount HP", textContext, true, null, null, this, null));
+				SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor lose$s $amount HP", modifierContext, textContext, true, null, null));
 			}
-			SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor $is $condition", textContext, true, null, null, this, null));
+			SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor $is $condition", modifierContext, textContext, true, null, null));
 		}
 	}
 	
 	public void kill() {
-		triggerScript("on_death", new Context(game(), this, this));
-		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
-		SensoryEvent.execute(game(), new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null, this, null));
+		Context context = new Context(game(), this, null);
+		triggerScript("on_death", context);
+		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
+		SensoryEvent.execute(game(), new SensoryEvent(getArea(), Phrases.get("die"), context, textContext, true, null, null));
 		// TODO - Enable held item dropping on death for new equipment system
 		isDead = true;
 		HP = 0;
@@ -478,19 +480,19 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
                     game().eventBus().post(new RenderTextEvent(text));
                 }
             } else {
-				if (event.getSubject().equals(this)) return;
+				if (event.getContext().getSubject().equals(this)) return;
 				if (visible) { // Visible
 					if (event.isAction()) {
-						targetingComponent.onVisibleAction(event.getAction(), event.getSubject());
+						targetingComponent.onVisibleAction(event.getAction(), event.getContext().getSubject());
 					} else if (event.isBark()) {
 						if (event.getBark().responseType() == Bark.BarkResponseType.HOSTILE) {
-							targetingComponent.addCombatant(event.getTarget());
+							targetingComponent.addCombatant(event.getContext().getTarget());
 						}
 					}
 				} else { // Audible
 					if (event.isBark()) {
 						if (event.getBark().responseType() == Bark.BarkResponseType.HOSTILE) {
-							targetingComponent.addCombatant(event.getTarget());
+							targetingComponent.addCombatant(event.getContext().getTarget());
 						}
 					}
 				}

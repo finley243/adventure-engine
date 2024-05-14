@@ -47,8 +47,9 @@ public class ActionWeaponReload extends Action {
 			weapon.getComponentOfType(ItemComponentMagazine.class).loadAmmo(weapon.getComponentOfType(ItemComponentMagazine.class).reloadCapacity());
 			weapon.getComponentOfType(ItemComponentMagazine.class).setLoadedAmmoType(ammoType);
 		}
-		TextContext context = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("weapon", weapon).build());
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, true, this, null, subject, null));
+		Context context = new Context(subject.game(), subject, null, weapon);
+		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("weapon", weapon).build());
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, textContext, true, this, null));
 	}
 
 	@Override
