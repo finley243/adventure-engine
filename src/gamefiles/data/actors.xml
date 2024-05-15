@@ -81,9 +81,9 @@
             <table>weapon_ranged</table>
         </inventory>
         <bark trigger="on_combat_start">
-            <visible>"Finally, some action!" $actor yell$s</visible>
-            <visible>"Can't wait to take you down!" $actor yell$s</visible>
-            <visible>"Get 'em!" $actor yell$s</visible>
+            <visible>"Finally, some action!" $actor yell$s.</visible>
+            <visible>"Can't wait to take you down!" $actor yell$s.</visible>
+            <visible>"Get 'em!" $actor yell$s.</visible>
         </bark>
     </actor>
     <actor id="enemy_melee" parent="default" hp="40" faction="enemy">
@@ -92,9 +92,9 @@
             <table>weapon_melee</table>
         </inventory>
         <bark trigger="on_combat_start">
-            <visible>"Finally, some action!" $actor yell$s</visible>
-            <visible>"Can't wait to take you down!" $actor yell$s</visible>
-            <visible>"Get 'em!" $actor yell$s</visible>
+            <visible>"Finally, some action!" $actor yell$s.</visible>
+            <visible>"Can't wait to take you down!" $actor yell$s.</visible>
+            <visible>"Get 'em!" $actor yell$s.</visible>
         </bark>
     </actor>
     <actor id="nexus_bouncer" parent="default" hp="70" faction="nexus_staff" dialogueStart="nexus_bouncer_start">

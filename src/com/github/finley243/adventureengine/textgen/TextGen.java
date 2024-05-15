@@ -43,16 +43,17 @@ public class TextGen {
 
 	public static String generate(String line, Context context, TextContext textContext) {
 		if (line == null) return null;
-		String sentence = "";
+		//String sentence = "";
 		line = processBlockStatements(line, context);
 		line = determineContext(line, textContext);
-		sentence += LangUtils.capitalize(line);
-		sentence += ".";
+		line = capitalizeSentences(line);
+		//sentence += LangUtils.capitalize(line);
+		//sentence += ".";
 		lastContext = textContext;
 		for (Noun object : textContext.getObjects().values()) {
 			object.setKnown();
 		}
-		return sentence;
+		return line;
 	}
 
 	public static String generateVarsOnly(String line, Map<String, String> vars) {
@@ -67,6 +68,26 @@ public class TextGen {
 	
 	public static void clearContext() {
 		lastContext = null;
+	}
+
+	private static String capitalizeSentences(String line) {
+		if (line == null || line.isEmpty()) {
+			return line;
+		}
+		StringBuilder result = new StringBuilder(line.length());
+		boolean capitalizeNext = true;
+		for (char currentChar : line.toCharArray()) {
+			if (capitalizeNext && Character.isLetter(currentChar)) {
+				result.append(Character.toUpperCase(currentChar));
+				capitalizeNext = false;
+			} else {
+				result.append(currentChar);
+			}
+			if (currentChar == '.') {
+				capitalizeNext = true;
+			}
+		}
+		return result.toString();
 	}
 
 	private static String determineContext(String line, TextContext context) {

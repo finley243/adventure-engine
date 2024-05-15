@@ -19,7 +19,7 @@
                 <behaviors>
                     <behavior type="move" area="wilsons_corner_store_entrance">
                         <idle>
-                            <phrase>$actor {yawn$s|stretch$es|tap$s $actor's fingers rhythmically on the counter|look$s across the store|check$s something under the counter, then straighten$s back up|glance$s out the window}</phrase>
+                            <phrase>$actor {yawn$s|stretch$es|tap$s $actor's fingers rhythmically on the counter|look$s across the store|check$s something under the counter, then straighten$s back up|glance$s out the window}.</phrase>
                         </idle>
                     </behavior>
                 </behaviors>
@@ -63,61 +63,5 @@
     </room>
     <room id="archer_apartments_23">
         <name proper="true">apartment 23</name>
-        <area id="apartment_0_0">
-            <link type="basic" dist="CLOSE" dir="N" area="apartment_0_1"/>
-            <link type="basic" dist="CLOSE" dir="E" area="apartment_1_0"/>
-        </area>
-        <area id="apartment_0_1">
-            <link type="basic" dist="CLOSE" dir="S" area="apartment_0_0"/>
-            <link type="basic" dist="CLOSE" dir="E" area="apartment_1_1"/>
-            <link type="basic" dist="CLOSE" dir="N" area="apartment_0_2"/>
-        </area>
-        <area id="apartment_0_2">
-            <link type="basic" dist="CLOSE" dir="S" area="apartment_0_1"/>
-            <link type="basic" dist="CLOSE" dir="E" area="apartment_1_2"/>
-            <link type="basic" dist="CLOSE" dir="N" area="apartment_0_3"/>
-        </area>
-        <area id="apartment_0_3">
-            <link type="basic" dist="CLOSE" dir="S" area="apartment_0_2"/>
-            <link type="basic" dist="CLOSE" dir="E" area="apartment_1_3"/>
-        </area>
-        <area id="apartment_1_0">
-            <link type="basic" dist="CLOSE" dir="N" area="apartment_1_1"/>
-            <link type="basic" dist="CLOSE" dir="W" area="apartment_0_0"/>
-            <link type="basic" dist="CLOSE" dir="E" area="apartment_2_0"/>
-        </area>
-        <area id="apartment_1_1">
-            <link type="basic" dist="CLOSE" dir="S" area="apartment_1_0"/>
-            <link type="basic" dist="CLOSE" dir="W" area="apartment_0_1"/>
-            <link type="basic" dist="CLOSE" dir="N" area="apartment_1_2"/>
-            <link type="basic" dist="CLOSE" dir="E" area="apartment_2_1"/>
-        </area>
-        <area id="apartment_1_2">
-            <link type="basic" dist="CLOSE" dir="S" area="apartment_1_1"/>
-            <link type="basic" dist="CLOSE" dir="W" area="apartment_0_2"/>
-            <link type="basic" dist="CLOSE" dir="N" area="apartment_1_3"/>
-        </area>
-        <area id="apartment_1_3">
-            <link type="basic" dist="CLOSE" dir="S" area="apartment_1_2"/>
-            <link type="basic" dist="CLOSE" dir="W" area="apartment_0_3"/>
-        </area>
-        <area id="apartment_2_0">
-            <link type="basic" dist="CLOSE" dir="N" area="apartment_2_1"/>
-            <link type="basic" dist="CLOSE" dir="W" area="apartment_1_0"/>
-            <link type="basic" dist="CLOSE" dir="E" area="apartment_3_0"/>
-        </area>
-        <area id="apartment_2_1">
-            <link type="basic" dist="CLOSE" dir="S" area="apartment_2_0"/>
-            <link type="basic" dist="CLOSE" dir="W" area="apartment_1_1"/>
-            <link type="basic" dist="CLOSE" dir="E" area="apartment_3_1"/>
-        </area>
-        <area id="apartment_3_0">
-            <link type="basic" dist="CLOSE" dir="N" area="apartment_3_1"/>
-            <link type="basic" dist="CLOSE" dir="W" area="apartment_2_0"/>
-        </area>
-        <area id="apartment_3_1">
-            <link type="basic" dist="CLOSE" dir="S" area="apartment_3_0"/>
-            <link type="basic" dist="CLOSE" dir="W" area="apartment_2_1"/>
-        </area>
     </room>
 </data>
