@@ -213,7 +213,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
         int damage = damage();
-        Context context = new Context(subject.game(), subject, target, getWeapon());
+        Context context = new Context(subject.game(), subject, target, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         //TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
@@ -225,7 +225,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
-        Context context = new Context(subject.game(), subject, target, getWeapon());
+        Context context = new Context(subject.game(), subject, target, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         //TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
@@ -235,7 +235,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onSuccessOverall(Actor subject, int repeatActionCount) {
-        Context context = new Context(subject.game(), subject, null, getWeapon());
+        Context context = new Context(subject.game(), subject, null, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         //TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
@@ -244,7 +244,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onFailOverall(Actor subject, int repeatActionCount) {
-        Context context = new Context(subject.game(), subject, null, getWeapon());
+        Context context = new Context(subject.game(), subject, null, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         //TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
