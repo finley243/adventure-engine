@@ -1,14 +1,11 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
-import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
 
 public class ActionObjectUseEnd extends Action {
@@ -37,8 +34,7 @@ public class ActionObjectUseEnd extends Action {
 		component.removeUser(slotID);
 		subject.setUsingObject(null);
 		Context context = new Context(subject.game(), subject, null, component.getObject());
-		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("object", component.getObject()).build());
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, textContext, true, this, null));
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, true, this, null));
 	}
 
 	@Override

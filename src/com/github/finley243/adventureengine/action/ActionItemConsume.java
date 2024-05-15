@@ -1,15 +1,12 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
-import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.TextContext;
 
 import java.util.List;
 
@@ -31,8 +28,7 @@ public class ActionItemConsume extends Action {
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.getInventory().removeItem(item);
 		Context context = new Context(subject.game(), subject, null, item);
-		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(consumePhrase), context, textContext, true, this, null));
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(consumePhrase), context, true, this, null));
 		for (String effect : effects) {
 			subject.getEffectComponent().addEffect(effect);
 		}

@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -43,6 +44,10 @@ public class Context {
         this(game, subject, target, null, parentItem, null, null, new HashMap<>());
     }
 
+    public Context(Game game, Actor subject, Actor target, Item parentItem, Area parentArea) {
+        this(game, subject, target, null, parentItem, parentArea, null, new HashMap<>());
+    }
+
     public Context(Game game, Actor subject, Actor target, Item parentItem, Map<String, Expression> localVariables) {
         this(game, subject, target, null, parentItem, null, null, localVariables);
     }
@@ -57,6 +62,10 @@ public class Context {
 
     public Context(Game game, Actor subject, AttackTarget attackTarget, Item parentItem) {
         this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, null, null, new HashMap<>());
+    }
+
+    public Context(Game game, Actor subject, AttackTarget attackTarget, Item parentItem, Area parentArea) {
+        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, parentArea, null, new HashMap<>());
     }
 
     public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Action parentAction, Map<String, Expression> localVariables) {
@@ -177,7 +186,11 @@ public class Context {
         }
     }
 
-    public Map<String, Noun> getContextNounMap() {
+    public TextContext generateTextContext() {
+        return new TextContext(this.getTextVarMap(), this.getContextNounMap());
+    }
+
+    private Map<String, Noun> getContextNounMap() {
         Map<String, Noun> nounMap = new HashMap<>();
         if (this.getSubject() != null) {
             nounMap.put("actor", this.getSubject());
@@ -191,6 +204,9 @@ public class Context {
         if (this.getParentItem() != null) {
             nounMap.put("item", this.getParentItem());
         }
+        if (this.getParentArea() != null) {
+            nounMap.put("area", this.getParentArea());
+        }
         for (Map.Entry<String, Context.Variable> entry : this.getLocalVariables().entrySet()) {
             if (entry.getValue().getExpression() != null && entry.getValue().getExpression().getDataType() == Expression.DataType.NOUN) {
                 nounMap.put(entry.getKey(), entry.getValue().getExpression().getValueNoun());
@@ -199,7 +215,7 @@ public class Context {
         return nounMap;
     }
 
-    public Map<String, String> getTextVarMap() {
+    private Map<String, String> getTextVarMap() {
         Map<String, String> textVarValues = new HashMap<>();
         for (Map.Entry<String, Context.Variable> entry : this.getLocalVariables().entrySet()) {
             if (entry.getValue().getExpression() != null && entry.getValue().getExpression().getDataType() == Expression.DataType.STRING) {

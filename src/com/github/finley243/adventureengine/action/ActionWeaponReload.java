@@ -11,9 +11,7 @@ import com.github.finley243.adventureengine.item.component.ItemComponentAmmo;
 import com.github.finley243.adventureengine.item.component.ItemComponentMagazine;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
-import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.TextContext;
 
 public class ActionWeaponReload extends Action {
 
@@ -48,8 +46,7 @@ public class ActionWeaponReload extends Action {
 			weapon.getComponentOfType(ItemComponentMagazine.class).setLoadedAmmoType(ammoType);
 		}
 		Context context = new Context(subject.game(), subject, null, weapon);
-		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("weapon", weapon).build());
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, textContext, true, this, null));
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, true, this, null));
 	}
 
 	@Override

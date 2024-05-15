@@ -1,16 +1,12 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
-import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.PluralNoun;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionItemTakeAll extends Action {
@@ -30,8 +26,8 @@ public class ActionItemTakeAll extends Action {
 		area.getInventory().removeItems(item.getTemplateID(), count);
 		subject.getInventory().addItems(item.getTemplateID(), count);
 		Context context = new Context(subject.game(), subject, null, item);
-		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, textContext, true, this, null));
+		//TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null));
 	}
 
 	@Override

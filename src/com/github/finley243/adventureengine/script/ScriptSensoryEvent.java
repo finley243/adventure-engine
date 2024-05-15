@@ -3,13 +3,10 @@ package com.github.finley243.adventureengine.script;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class ScriptSensoryEvent extends Script {
@@ -26,12 +23,9 @@ public class ScriptSensoryEvent extends Script {
         if (isDetectedBySelfExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, null, "DetectSelf parameter is not a boolean");
         boolean isDetectedBySelf = isDetectedBySelfExpression.getValueBoolean();
         Area[] originAreas = getOriginAreas(context, area);
-        Map<String, String> contextVars = context.getTextVarMap();
-        Map<String, Noun> contextNouns = context.getContextNounMap();
-        TextContext textContext = new TextContext(contextVars, contextNouns);
         String phraseString = (phrase == null ? null : phrase.getValueString());
         String phraseAudibleString = (phraseAudible == null ? null : phraseAudible.getValueString());
-        SensoryEvent sensoryEvent = new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), context, textContext, isDetectedBySelf, false, context.getParentAction(), null);
+        SensoryEvent sensoryEvent = new SensoryEvent(originAreas, Phrases.get(phraseString), Phrases.get(phraseAudibleString), context, isDetectedBySelf, false, context.getParentAction(), null);
         SensoryEvent.execute(context.game(), sensoryEvent);
         return new ScriptReturnData(null, null, null);
     }

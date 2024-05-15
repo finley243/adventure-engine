@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -9,9 +8,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
-import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class ActionItemTake extends Action {
@@ -29,8 +26,7 @@ public class ActionItemTake extends Action {
 		area.getInventory().removeItem(item);
 		subject.getInventory().addItem(item);
 		Context context = new Context(subject.game(), subject, null, item);
-		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", item).build());
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, textContext, true, this, null));
+		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null));
 	}
 
 	@Override

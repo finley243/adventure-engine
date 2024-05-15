@@ -27,7 +27,6 @@ import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
@@ -398,20 +397,20 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			kill();
 		} else if (amount < 0) {
 			Context modifierContext = new Context(game(), this, context.getSubject());
+			modifierContext.setLocalVariable("amount", Expression.constant(String.valueOf(amount)));
+			modifierContext.setLocalVariable("condition", Expression.constant(getConditionDescription()));
 			triggerScript("on_damaged", modifierContext);
-			TextContext textContext = new TextContext(Map.of("amount", String.valueOf(amount), "condition", this.getConditionDescription()), new MapBuilder<String, Noun>().put("actor", this).build());
 			if (SHOW_HP_CHANGES) {
-				SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor lose$s $amount HP", modifierContext, textContext, true, null, null));
+				SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor lose$s $amount HP", modifierContext, true, null, null));
 			}
-			SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor $is $condition", modifierContext, textContext, true, null, null));
+			SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor $is $condition", modifierContext, true, null, null));
 		}
 	}
 	
 	public void kill() {
 		Context context = new Context(game(), this, null);
 		triggerScript("on_death", context);
-		TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", this).build());
-		SensoryEvent.execute(game(), new SensoryEvent(getArea(), Phrases.get("die"), context, textContext, true, null, null));
+		SensoryEvent.execute(game(), new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null));
 		// TODO - Enable held item dropping on death for new equipment system
 		isDead = true;
 		HP = 0;

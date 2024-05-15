@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.textgen;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class TextContext {
@@ -8,7 +7,6 @@ public class TextContext {
 	public enum Pronoun{
 		HE("he", "him", "his", "himself", true, false),
 		SHE("she", "her", "her", "herself", true, false),
-		// TODO - Add two variants of THEY pronoun for singular and plural referents (singular uses third person verb when using the name but not the pronoun)
 		THEY("they", "them", "their", "themselves", false, false),
 		IT("it", "it", "its", "itself", true, false),
 		I("I", "me", "my", "myself", false, true),
@@ -31,10 +29,6 @@ public class TextContext {
 
 	private final Map<String, Noun> objects;
 	private final Map<String, String> vars;
-
-	public TextContext(Map<String, Noun> objects) {
-		this(new HashMap<>(), objects);
-	}
 
 	public TextContext(Map<String, String> vars, Map<String, Noun> objects) {
 		if (objects == null) throw new IllegalArgumentException("Context objects cannot be null");

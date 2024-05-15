@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Bark;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -21,30 +20,28 @@ public class SensoryEvent {
 	private final String lineVisible;
 	private final String lineAudible;
 	private final Context context;
-	private final TextContext textContext;
 	private final Action action;
 	private final Bark bark;
 	private final boolean isDetectedBySelf;
 	private final boolean isLoud;
 
-	public SensoryEvent(Area origin, String lineVisible, Context context, TextContext textContext, boolean isDetectedBySelf, Action action, Bark bark) {
-		this(new Area[]{origin}, lineVisible, null, context, textContext, isDetectedBySelf, false, action, bark);
+	public SensoryEvent(Area origin, String lineVisible, Context context, boolean isDetectedBySelf, Action action, Bark bark) {
+		this(new Area[]{origin}, lineVisible, null, context, isDetectedBySelf, false, action, bark);
 	}
 
-	public SensoryEvent(Area[] origins, String lineVisible, Context context, TextContext textContext, boolean isDetectedBySelf, Action action, Bark bark) {
-		this(origins, lineVisible, null, context, textContext, isDetectedBySelf, false, action, bark);
+	public SensoryEvent(Area[] origins, String lineVisible, Context context, boolean isDetectedBySelf, Action action, Bark bark) {
+		this(origins, lineVisible, null, context, isDetectedBySelf, false, action, bark);
 	}
 
-	public SensoryEvent(Area origin, String lineVisible, String lineAudible, Context context, TextContext textContext, boolean isDetectedBySelf, boolean isLoud, Action action, Bark bark) {
-		this(new Area[]{origin}, lineVisible, lineAudible, context, textContext, isDetectedBySelf, isLoud, action, bark);
+	public SensoryEvent(Area origin, String lineVisible, String lineAudible, Context context, boolean isDetectedBySelf, boolean isLoud, Action action, Bark bark) {
+		this(new Area[]{origin}, lineVisible, lineAudible, context, isDetectedBySelf, isLoud, action, bark);
 	}
 
-	public SensoryEvent(Area[] origins, String lineVisible, String lineAudible, Context context, TextContext textContext, boolean isDetectedBySelf, boolean isLoud, Action action, Bark bark) {
+	public SensoryEvent(Area[] origins, String lineVisible, String lineAudible, Context context, boolean isDetectedBySelf, boolean isLoud, Action action, Bark bark) {
 		this.origins = origins;
 		this.lineVisible = lineVisible;
 		this.lineAudible = lineAudible;
 		this.context = context;
-		this.textContext = textContext;
 		this.action = action;
 		this.bark = bark;
 		this.isDetectedBySelf = isDetectedBySelf;
@@ -57,12 +54,12 @@ public class SensoryEvent {
 	
 	public String getTextVisible() {
 		if (lineVisible == null) return null;
-		return TextGen.generate(lineVisible, context, textContext);
+		return TextGen.generate(lineVisible, context, context.generateTextContext());
 	}
 
 	public String getTextAudible() {
 		if (lineAudible == null) return null;
-		return TextGen.generate(lineAudible, context, textContext);
+		return TextGen.generate(lineAudible, context, context.generateTextContext());
 	}
 
 	public Action getAction() {

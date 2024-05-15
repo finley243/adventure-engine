@@ -4,9 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.SensoryEvent;
-import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.MapBuilder;
-import com.github.finley243.adventureengine.textgen.Noun;
 
 public class Idle {
 
@@ -25,8 +22,7 @@ public class Idle {
 
     public void trigger(Actor subject) {
         Context context = new Context(subject.game(), subject, null);
-        TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).build());
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), phrase, context, textContext, true, null, null));
+        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), phrase, context, true, null, null));
     }
 
 }
