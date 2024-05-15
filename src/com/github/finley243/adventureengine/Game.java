@@ -6,7 +6,6 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.ThreadControl;
-import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.*;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -26,7 +25,6 @@ public class Game {
 	public static final String GAMEFILES = "src/gamefiles";
 	public static final String DATA_DIRECTORY = "/data";
 	public static final String LOG_DIRECTORY = "/logs";
-	public static final String PHRASE_FILE = "/phrases.txt";
 	public static final String CONFIG_FILE = "/config.xml";
 
 	private final EventBus eventBus;
@@ -48,7 +46,6 @@ public class Game {
 		eventBus().register(menuManager);
 		data = new Data(this);
 
-		Phrases.load(new File(GAMEFILES + PHRASE_FILE));
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
 
 		debugLogger = new DebugLogger(GAMEFILES + LOG_DIRECTORY, data.getConfig("enableDebugLog").equalsIgnoreCase("true"));
@@ -64,7 +61,7 @@ public class Game {
 
 		data().getPlayer().setStatValue("money", Expression.constant(50), new Context(this, data().getPlayer(), data().getPlayer()));
 
-		/*File saveFile = new File(GAMEFILES + "/save.aes");
+		/*File saveFile = new File(GAMEFILES + "/save.asav");
 		SaveLoader.saveGame(saveFile, data());
 		System.out.println("Saved Game");
 		try {

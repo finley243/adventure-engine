@@ -24,6 +24,7 @@ import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -133,12 +134,14 @@ public class DataLoader {
                         }
                         currentChild = currentChild.getNextSibling();
                     }
-                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase("asf")) {
+                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase("ascr")) {
                     String fileContents = Files.readString(file.toPath());
                     List<ScriptParser.ScriptData> functions = ScriptParser.parseFunctions(fileContents);
                     for (ScriptParser.ScriptData function : functions) {
                         game.data().addScript(function.name(), function);
                     }
+                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase("aphr")) {
+                    Phrases.load(file);
                 }
             }
         }
