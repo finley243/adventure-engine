@@ -21,17 +21,18 @@ public class TextGen {
 	private static final char CONDITIONAL_CONDITION_OPEN = '[';
 	private static final char CONDITIONAL_CONDITION_CLOSE = ']';
 
-	// e.g. jumps
-	private static final String VERB_S = "$s";
-	// e.g. goes/does
-	private static final String VERB_ES = "$es";
-	// e.g. flies
-	private static final String VERB_IES = "$ies";
-
-	private static final String VERB_DO_NOT = "$doesn't";
-	private static final String VERB_BE = "$is";
-	private static final String VERB_BE_NOT = "$isn't";
-	private static final String VERB_HAVE = "$has";
+	private static final Map<String, String> VERB_MAP = new HashMap<>() {{
+		// e.g. jumps
+        put("s", "");
+		// e.g. goes/does
+        put("es", "");
+		// e.g. flies
+        put("ies", "y");
+		put("doesn't", "don't");
+		put("is", "are");
+		put("isn't", "aren't");
+		put("has", "have");
+    }};
 	
 	private static TextContext lastContext;
 
@@ -166,14 +167,14 @@ public class TextGen {
 	}
 
 	private static String replaceTagsFromContext(String line, TextContext context, Map<String, Boolean> usePronouns) {
-		Pattern tokenPattern = Pattern.compile("\\$[a-zA-Z0-9_']+");
+		Pattern tokenPattern = Pattern.compile("\\$([a-zA-Z0-9_']+)");
 		Matcher tokenMatcher = tokenPattern.matcher(line);
 		List<TextToken> tokens = new ArrayList<>();
 		while (tokenMatcher.find()) {
 			int start = tokenMatcher.start();
 			int end = tokenMatcher.end();
-			String value = tokenMatcher.group().substring(1);
-			boolean isVerb = value.equals("s") || value.equals("es") || value.equals("ies") || value.equals("doesn't") || value.equals("is") || value.equals("isn't") || value.equals("has");
+			String value = tokenMatcher.group(1);
+			boolean isVerb = VERB_MAP.containsKey(value);
 			tokens.add(new TextToken(start, end, value, isVerb));
 		}
 		for (int i = 0; i < tokens.size(); i++) {
@@ -204,69 +205,23 @@ public class TextGen {
 				builder.append(usePronouns.get(tokenName) ? (token.isSubject ? object.getPronoun().subject : object.getPronoun().object) : formatNoun(object.getName(), object.isProperName(), object.isKnown(), object.pluralCount()));
 				token.usedPronoun = usePronouns.get(tokenName);
 				usePronouns.put(tokenName, true);
-			} else if (tokenName.endsWith("'s") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 2))) {
-				String objectKey = tokenName.substring(0, tokenName.length() - 2);
+			} else if (tokenMatchesSuffixPattern(tokenName, "'s", context)) {
+				String objectKey = getObjectKeyFromSuffixedToken(tokenName, "'s");
 				Noun object = context.getObjects().get(objectKey);
 				builder.append(usePronouns.get(objectKey) ? object.getPronoun().possessive : LangUtils.possessive(formatNoun(object.getName(), object.isProperName(), object.isKnown(), object.pluralCount()), object.pluralCount() > 1));
 				token.usedPronoun = usePronouns.get(objectKey);
 				usePronouns.put(objectKey, true);
-			} else if (tokenName.endsWith("_self") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 5))) {
-				String objectKey = tokenName.substring(0, tokenName.length() - 5);
+			} else if (tokenMatchesSuffixPattern(tokenName, "_self", context)) {
+				String objectKey = getObjectKeyFromSuffixedToken(tokenName, "_self");
 				builder.append(context.getObjects().get(objectKey).getPronoun().reflexive);
-			} else if (tokenName.endsWith("_name") && context.getObjects().containsKey(tokenName.substring(0, tokenName.length() - 5))) {
-				String objectKey = tokenName.substring(0, tokenName.length() - 5);
+			} else if (tokenMatchesSuffixPattern(tokenName, "_name", context)) {
+				String objectKey = getObjectKeyFromSuffixedToken(tokenName, "_name");
 				builder.append(context.getObjects().get(objectKey).getName());
-			} else if (tokenName.equals("s")) {
+			} else if (VERB_MAP.containsKey(tokenName)) {
 				Noun subject = context.getObjects().get(getSubjectKeyFromToken(token.subjectToken));
-				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.pluralCount() > 1 ? "" : "s");
-				} else {
-					builder.append(subject.getPronoun().thirdPersonVerb ? "s" : "");
-				}
-			} else if (tokenName.equals("es")) {
-				Noun subject = context.getObjects().get(getSubjectKeyFromToken(token.subjectToken));
-				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.pluralCount() > 1 ? "" : "es");
-				} else {
-					builder.append(subject.getPronoun().thirdPersonVerb ? "es" : "");
-				}
-			} else if (tokenName.equals("ies")) {
-				Noun subject = context.getObjects().get(getSubjectKeyFromToken(token.subjectToken));
-				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.pluralCount() > 1 ? "y" : "ies");
-				} else {
-					builder.append(subject.getPronoun().thirdPersonVerb ? "ies" : "y");
-				}
-			} else if (tokenName.equals("doesn't")) {
-				Noun subject = context.getObjects().get(getSubjectKeyFromToken(token.subjectToken));
-				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.pluralCount() > 1 ? "don't" : "doesn't");
-				} else {
-					builder.append(subject.getPronoun().thirdPersonVerb ? "doesn't" : "don't");
-				}
-			} else if (tokenName.equals("is")) {
-				Noun subject = context.getObjects().get(getSubjectKeyFromToken(token.subjectToken));
-				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.pluralCount() > 1 ? "are" : "is");
-				} else {
-					builder.append(subject.getPronoun().thirdPersonVerb ? "is"
-							: (subject.getPronoun() == Pronoun.I ? "am" : "are"));
-				}
-			} else if (tokenName.equals("isn't")) {
-				Noun subject = context.getObjects().get(getSubjectKeyFromToken(token.subjectToken));
-				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.pluralCount() > 1 ? "aren't" : "isn't");
-				} else {
-					builder.append(subject.getPronoun().thirdPersonVerb ? "isn't"
-							: (subject.getPronoun() == Pronoun.I ? "am not" : "aren't"));
-				}
-			} else if (tokenName.equals("has")) {
-				Noun subject = context.getObjects().get(getSubjectKeyFromToken(token.subjectToken));
-				if (!token.subjectToken.usedPronoun) {
-					builder.append(subject.pluralCount() > 1 ? "have" : "has");
-				} else {
-					builder.append(subject.getPronoun().thirdPersonVerb ? "has" : "have");
-				}
+				boolean useThirdPerson = subject.pluralCount() <= 1 && subject.getPronoun().thirdPersonVerb;
+				String conjugatedVerb = useThirdPerson ? tokenName : VERB_MAP.get(tokenName);
+				builder.append(conjugatedVerb);
 			} else {
 				builder.append("$").append(tokenName);
 			}
@@ -274,6 +229,14 @@ public class TextGen {
 		}
 		builder.append(line.substring(lastEnd));
 		return builder.toString();
+	}
+
+	private static boolean tokenMatchesSuffixPattern(String tokenName, String suffix, TextContext textContext) {
+		return tokenName.endsWith(suffix) && textContext.getObjects().containsKey(getObjectKeyFromSuffixedToken(tokenName, suffix));
+	}
+
+	private static String getObjectKeyFromSuffixedToken(String tokenName, String suffix) {
+		return tokenName.substring(0, tokenName.length() - suffix.length());
 	}
 
 	private static String replaceInsideBracketsWithResult(String line, char openBracketType, Context context, TextProcessor processor) {

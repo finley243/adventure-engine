@@ -118,7 +118,7 @@
             <item>katana</item>
         </inventory>
         <bark trigger="on_detect_target_passive">
-            <visible>$actor turn$s to look at $target</visible>
+            <visible>$actor turn$s to look at $target.</visible>
         </bark>
     </actor>
 </data>
