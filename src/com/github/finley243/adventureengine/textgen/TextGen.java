@@ -44,12 +44,9 @@ public class TextGen {
 
 	public static String generate(String line, Context context, TextContext textContext) {
 		if (line == null) return null;
-		//String sentence = "";
-		line = processBlockStatements(line, context);
+		line = processBlockStatements(line, 0, context);
 		line = determineContext(line, textContext);
 		line = capitalizeSentences(line);
-		//sentence += LangUtils.capitalize(line);
-		//sentence += ".";
 		lastContext = textContext;
 		for (Noun object : textContext.getObjects().values()) {
 			object.setKnown();
@@ -121,12 +118,14 @@ public class TextGen {
 		return replaceTagsFromContext(line, context, usePronounsMap);
 	}
 
-	private static String processBlockStatements(String line, Context context) {
-		for (int i = 0; i < line.length(); i++) {
+	private static String processBlockStatements(String line, int startIndex, Context context) {
+		for (int i = startIndex; i < line.length(); i++) {
 			if (line.charAt(i) == RANDOM_OPEN) {
-				return processBlockStatements(chooseRandoms(line), context);
+				return processBlockStatements(chooseRandoms(line), i, context);
 			} else if (line.charAt(i) == CONDITIONAL_OPEN) {
-				return processBlockStatements(evaluateConditionals(line, context), context);
+				return processBlockStatements(evaluateConditionals(line, context), i, context);
+			} else if (line.charAt(i) == '@') {
+				return processBlockStatements(populatePhraseReferences(line, context), i, context);
 			}
 		}
 		return line;
@@ -164,6 +163,30 @@ public class TextGen {
 			}
 		}
 		return "";
+	}
+
+	private static String populatePhraseReferences(String line, Context context) {
+		Pattern tokenPattern = Pattern.compile("@([a-zA-Z0-9_]+)");
+		Matcher tokenMatcher = tokenPattern.matcher(line);
+		StringBuilder builder = new StringBuilder();
+		int lastEnd = 0;
+		while (tokenMatcher.find()) {
+			int start = tokenMatcher.start();
+			int end = tokenMatcher.end();
+			String name = tokenMatcher.group(1);
+			// TODO - Prevent infinite recursion
+			builder.append(line, lastEnd, start);
+			String phraseToInsert = Phrases.get(name);
+			if (phraseToInsert != null) {
+				builder.append(phraseToInsert);
+			} else {
+				// Appending the original @ symbol causes an infinite recursion
+				builder.append("MISSING_PHRASE_").append(name);
+			}
+			lastEnd = end;
+		}
+		builder.append(line.substring(lastEnd));
+		return builder.toString();
 	}
 
 	private static String replaceTagsFromContext(String line, TextContext context, Map<String, Boolean> usePronouns) {
