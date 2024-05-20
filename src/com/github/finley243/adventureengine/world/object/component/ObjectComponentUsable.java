@@ -7,10 +7,8 @@ import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
 import com.github.finley243.adventureengine.action.ActionObjectUseStart;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.stat.StatHolder;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
@@ -100,7 +98,7 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     @Override
-    public List<Action> getActions(Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
             if (!users.containsKey(slotID) && (!subject.isUsingObject() || !subject.getUsingObject().equals(this))) {
@@ -116,7 +114,7 @@ public class ObjectComponentUsable extends ObjectComponent {
         for (String exposedComponentName : getTemplateUsable().getUsableSlotData().get(slotID).componentsExposed()) {
             ObjectComponent component = getObject().getComponentOfType(ObjectComponentFactory.getClassFromName(exposedComponentName));
             if (component.isEnabled()) {
-                actions.addAll(component.getActions(subject));
+                actions.addAll(component.getPossibleActions(subject));
             }
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsableSlotData().get(slotID).usingActions()) {

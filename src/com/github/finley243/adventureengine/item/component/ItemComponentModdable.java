@@ -31,8 +31,8 @@ public class ItemComponentModdable extends ItemComponent {
     }
 
     @Override
-    public List<Action> inventoryActions(Actor subject) {
-        List<Action> actions = super.inventoryActions(subject);
+    protected List<Action> getPossibleInventoryActions(Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(subject);
         for (List<Item> modList : mods.values()) {
             for (Item mod : modList) {
                 actions.add(new ActionModRemove(getItem(), mod));

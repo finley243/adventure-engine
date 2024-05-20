@@ -116,7 +116,7 @@ public class ObjectComponentLink extends ObjectComponent {
     }*/
 
     @Override
-    public List<Action> getActions(Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         for (String linkID : getTemplateLink().getLinkData().keySet()) {
             ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);

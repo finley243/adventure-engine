@@ -41,7 +41,7 @@ public class ItemComponentMagazine extends ItemComponent {
     }
 
     @Override
-    public List<Action> inventoryActions(Actor subject) {
+    protected List<Action> getPossibleInventoryActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         for (String current : getMagazineTemplate().getAmmoTypes()) {
             actions.add(new ActionWeaponReload(getItem(), ItemFactory.create(getItem().game(), current)));

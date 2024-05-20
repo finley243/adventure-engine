@@ -32,8 +32,8 @@ public class ItemComponentMod extends ItemComponent {
     }
 
     @Override
-    public List<Action> inventoryActions(Actor subject) {
-        List<Action> actions = super.inventoryActions(subject);
+    protected List<Action> getPossibleInventoryActions(Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(subject);
         for (Item item : subject.getInventory().getItems()) {
             if (item.hasComponentOfType(ItemComponentModdable.class)) {
                 actions.add(new ActionModInstall(item, getItem()));

@@ -32,8 +32,8 @@ public class ItemComponentEquippable extends ItemComponent {
     }
 
     @Override
-    public List<Action> inventoryActions(Actor subject) {
-        List<Action> actions = super.inventoryActions(subject);
+    protected List<Action> getPossibleInventoryActions(Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(subject);
         for (ItemComponentTemplateEquippable.EquippableSlotsData slots : getEquippableTemplate().getSlots()) {
             actions.add(new ActionItemEquip(getItem(), slots));
         }
@@ -84,7 +84,7 @@ public class ItemComponentEquippable extends ItemComponent {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionItemUnequip(getItem()));
         for (String exposedComponent : equippedSlotsData.componentsExposed()) {
-            actions.addAll(getItem().getComponentOfType(ItemComponentFactory.getClassFromName(exposedComponent)).inventoryActions(subject));
+            actions.addAll(getItem().getComponentOfType(ItemComponentFactory.getClassFromName(exposedComponent)).getPossibleInventoryActions(subject));
         }
         for (ActionCustom.CustomActionHolder equippedAction : equippedSlotsData.equippedActions()) {
             actions.add(new ActionCustom(getItem().game(), null, null, getItem(), null, equippedAction.action(), equippedAction.parameters(), new MenuDataInventory(getItem(), subject.getInventory()), false));

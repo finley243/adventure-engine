@@ -123,9 +123,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder {
 			actions.add(new ActionInspectItem(this));
 		}
 		for (ItemComponent component : components.values()) {
-			if (!component.actionsRestricted()) {
-				actions.addAll(component.inventoryActions(subject));
-			}
+			actions.addAll(component.getInventoryActions(subject));
 		}
 		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 			actions.add(new ActionCustom(game(), null, null, this, null, customAction.action(), customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));

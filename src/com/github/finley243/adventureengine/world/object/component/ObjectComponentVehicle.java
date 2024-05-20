@@ -34,7 +34,7 @@ public class ObjectComponentVehicle extends ObjectComponent {
     }
 
     @Override
-    public List<Action> getActions(Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         WorldObject objectOverride = getObjectOverride();
         if (objectOverride != null) {

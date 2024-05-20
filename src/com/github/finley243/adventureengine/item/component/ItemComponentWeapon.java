@@ -57,8 +57,8 @@ public class ItemComponentWeapon extends ItemComponent {
     }
 
     @Override
-    public List<Action> inventoryActions(Actor subject) {
-        List<Action> actions = super.inventoryActions(subject);
+    protected List<Action> getPossibleInventoryActions(Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(subject);
         for (String attackType : getAttackTypes()) {
             actions.addAll(getItem().game().data().getAttackType(attackType).generateActions(subject, getItem()));
         }

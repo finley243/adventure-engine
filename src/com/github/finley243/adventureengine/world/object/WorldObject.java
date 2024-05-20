@@ -174,9 +174,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		List<Action> actions = new ArrayList<>();
 		if (!isGuarded()) {
 			for (ObjectComponent component : components.values()) {
-				if (component.isEnabled() && !component.actionsRestricted()) {
-					actions.addAll(component.getActions(subject));
-				}
+				actions.addAll(component.getActions(subject));
 			}
 			for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 				actions.add(new ActionCustom(game(), null, this, null, null, customAction.action(), customAction.parameters(), new MenuDataObject(this), false));

@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ObjectComponent implements StatHolder {
@@ -26,9 +27,16 @@ public abstract class ObjectComponent implements StatHolder {
         return template;
     }
 
-    public abstract List<Action> getActions(Actor subject);
+    public List<Action> getActions(Actor subject) {
+        if (isEnabled && !actionsRestricted()) {
+            return getPossibleActions(subject);
+        }
+        return new ArrayList<>();
+    }
 
-    public boolean actionsRestricted() {
+    protected abstract List<Action> getPossibleActions(Actor subject);
+
+    private boolean actionsRestricted() {
         return getTemplate().actionsRestricted();
     }
 

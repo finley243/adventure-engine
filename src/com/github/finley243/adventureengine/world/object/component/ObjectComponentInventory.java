@@ -30,7 +30,7 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
-    public List<Action> getActions(Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         actions.addAll(inventory.getExternalActions(getObject(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
         for (ActionCustom.CustomActionHolder customAction : getTemplateInventory().getPerItemActions()) {

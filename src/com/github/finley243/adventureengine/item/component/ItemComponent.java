@@ -31,7 +31,7 @@ public abstract class ItemComponent implements MutableStatHolder {
         return template;
     }
 
-    public boolean actionsRestricted() {
+    private boolean actionsRestricted() {
         return getTemplate().actionsRestricted();
     }
 
@@ -39,7 +39,14 @@ public abstract class ItemComponent implements MutableStatHolder {
 
     }
 
-    public List<Action> inventoryActions(Actor subject) {
+    public List<Action> getInventoryActions(Actor subject) {
+        if (!actionsRestricted()) {
+            return getPossibleInventoryActions(subject);
+        }
+        return new ArrayList<>();
+    }
+
+    protected List<Action> getPossibleInventoryActions(Actor subject) {
         return new ArrayList<>();
     }
 
