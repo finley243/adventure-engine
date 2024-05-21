@@ -12,8 +12,8 @@ public class NetworkNodeControl extends NetworkNode {
 
     private final String objectID;
 
-    public NetworkNodeControl(String ID, String name, int securityLevel, String objectID) {
-        super(ID, name, securityLevel);
+    public NetworkNodeControl(Game game, String ID, String templateID, String name, String objectID) {
+        super(game, ID, templateID, name);
         this.objectID = objectID;
     }
 

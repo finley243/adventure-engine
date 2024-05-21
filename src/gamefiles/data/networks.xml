@@ -1,19 +1,16 @@
 <data>
-    <network id="wilsons_corner_store">
-        <name>wilsons_network</name>
-        <node id="wilsons_corner_store_main">
-            <name>node_main</name>
-            <node id="wilsons_corner_store_devices">
-                <name>device_system</name>
-                <node id="wilsons_corner_store_purchase_logs" type="data" scene="wilsons_corner_store_purchase_logs">
-                    <name>purchase_logs</name>
-                </node>
-                <node id="wilsons_corner_store_gumball_machine" type="control" object="wilsons_corner_store_gumball_machine">
-                    <name>gumball_machine_01</name>
-                </node>
+    <node id="wilsons_corner_store_main">
+        <name>node_main</name>
+        <node id="wilsons_corner_store_devices">
+            <name>device_system</name>
+            <node id="wilsons_corner_store_purchase_logs" type="data" scene="wilsons_corner_store_purchase_logs">
+                <name>purchase_logs</name>
+            </node>
+            <node id="wilsons_corner_store_gumball_machine" type="control" object="wilsons_corner_store_gumball_machine">
+                <name>gumball_machine_01</name>
             </node>
         </node>
-    </network>
+    </node>
     <scene id="wilsons_corner_store_purchase_logs">
         <line>Purchase history corrupted.</line>
         <line>Please load backup file to continue.</line>

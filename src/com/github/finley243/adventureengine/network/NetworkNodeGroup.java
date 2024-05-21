@@ -16,8 +16,8 @@ public class NetworkNodeGroup extends NetworkNode {
 
     private final Set<NetworkNode> childNodes;
 
-    public NetworkNodeGroup(String ID, String name, int securityLevel, Set<NetworkNode> childNodes) {
-        super(ID, name, securityLevel);
+    public NetworkNodeGroup(Game game, String ID, String templateID, String name, Set<NetworkNode> childNodes) {
+        super(game, ID, templateID, name);
         this.childNodes = childNodes;
     }
 

@@ -110,9 +110,13 @@ public class DataLoader {
                                     LinkType linkType = loadLinkType(game, currentElement);
                                     game.data().addLinkType(linkType.getID(), linkType);
                                 }
-                                case "network" -> {
-                                    Network network = loadNetwork(currentElement);
-                                    game.data().addNetwork(network.getID(), network);
+                                case "networkNode" -> {
+                                    NetworkNode networkNode = loadNetworkNode(game, currentElement);
+                                    game.data().addNetworkNode(networkNode.getID(), networkNode);
+                                }
+                                case "networkNodeTemplate" -> {
+                                    NetworkNodeTemplate networkNodeTemplate = loadNetworkNodeTemplate(currentElement);
+                                    game.data().addNetworkNodeTemplate(networkNodeTemplate.getID(), networkNodeTemplate);
                                 }
                                 case "damageType" -> {
                                     DamageType damageType = loadDamageType(currentElement);
@@ -943,36 +947,34 @@ public class DataLoader {
         return new WeaponAttackType(ID, category, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, ammoConsumed, actionPoints, weaponConsumeType, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChanceMult, dodgeSkill, hitChanceType, isLoudOverride);
     }
 
-    private static Network loadNetwork(Element networkElement) {
-        String ID = LoadUtils.attribute(networkElement, "id", null);
-        String name = LoadUtils.singleTag(networkElement, "name", null);
-        NetworkNode topNode = loadNetworkNode(LoadUtils.singleChildWithName(networkElement, "node"));
-        return new Network(ID, name, topNode);
-    }
-
-    private static NetworkNode loadNetworkNode(Element nodeElement) {
+    private static NetworkNode loadNetworkNode(Game game, Element nodeElement) {
         String type = LoadUtils.attribute(nodeElement, "type", null);
         String ID = LoadUtils.attribute(nodeElement, "id", null);
+        String templateID = LoadUtils.attribute(nodeElement, "template", null);
         String name = LoadUtils.singleTag(nodeElement, "name", null);
-        int securityLevel = LoadUtils.attributeInt(nodeElement, "securityLevel", 0);
         switch (type) {
             case "data" -> {
                 String dataSceneID = LoadUtils.attribute(nodeElement, "scene", null);
-                return new NetworkNodeData(ID, name, securityLevel, dataSceneID);
+                return new NetworkNodeData(game, ID, templateID, name, dataSceneID);
             }
             case "control" -> {
                 String controlObjectID = LoadUtils.attribute(nodeElement, "object", null);
-                return new NetworkNodeControl(ID, name, securityLevel, controlObjectID);
+                return new NetworkNodeControl(game, ID, templateID, name, controlObjectID);
             }
             case null, default -> {
                 Set<NetworkNode> groupNodes = new HashSet<>();
                 for (Element childNodeElement : LoadUtils.directChildrenWithName(nodeElement, "node")) {
-                    NetworkNode childNode = loadNetworkNode(childNodeElement);
+                    NetworkNode childNode = loadNetworkNode(game, childNodeElement);
                     groupNodes.add(childNode);
                 }
-                return new NetworkNodeGroup(ID, name, securityLevel, groupNodes);
+                return new NetworkNodeGroup(game, ID, templateID, name, groupNodes);
             }
         }
+    }
+
+    private static NetworkNodeTemplate loadNetworkNodeTemplate(Element templateElement) {
+        String ID = LoadUtils.attribute(templateElement, "id", null);
+        return new NetworkNodeTemplate(ID);
     }
 
 }

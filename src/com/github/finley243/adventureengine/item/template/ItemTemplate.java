@@ -98,7 +98,7 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
-			case "noun" -> Expression.constant((Noun) this);
+			case "noun" -> Expression.constantNoun(this);
 			case "price" -> Expression.constant(price);
 			case "id" -> Expression.constant(getID());
 			case "name" -> Expression.constant(getName());

@@ -399,7 +399,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "inventory" -> (itemInventory == null ? null : Expression.constant(itemInventory));
-			case "noun" -> Expression.constant((Noun) this);
+			case "noun" -> Expression.constantNoun(this);
 			case "id" -> Expression.constant(getID());
 			case "name" -> Expression.constant(getName());
 			case "relative_name" -> Expression.constant(getRelativeName());

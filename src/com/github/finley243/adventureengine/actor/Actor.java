@@ -894,7 +894,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		return switch (name) {
 			case "inventory" -> (getInventory() == null ? null : Expression.constant(getInventory()));
-			case "noun" -> Expression.constant((Noun) this);
+			case "noun" -> Expression.constantNoun(this);
 			case "max_hp" -> Expression.constant(getMaxHP());
 			case "hp" -> Expression.constant(HP);
 			case "action_points" -> Expression.constant(getActionPoints());

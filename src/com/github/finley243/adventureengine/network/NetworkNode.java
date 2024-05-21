@@ -1,42 +1,37 @@
 package com.github.finley243.adventureengine.network;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.network.ActionNetworkBreach;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolder;
-import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public abstract class NetworkNode implements StatHolder {
+public abstract class NetworkNode extends GameInstanced implements StatHolder {
 
-    private final String ID;
+    private final String templateID;
     private final String name;
-    private final int securityLevel;
 
     private boolean isBreached;
 
-    public NetworkNode(String ID, String name, int securityLevel) {
-        this.ID = ID;
+    public NetworkNode(Game game, String ID, String templateID, String name) {
+        super(game, ID);
+        this.templateID = templateID;
         this.name = name;
-        this.securityLevel = securityLevel;
     }
 
-    public String getID() {
-        return ID;
+    private NetworkNodeTemplate getTemplate() {
+        return game().data().getNetworkNodeTemplate(templateID);
     }
 
     public String getName() {
         return name;
-    }
-
-    public int getSecurityLevel() {
-        return securityLevel;
     }
 
     public boolean isBreached() {
@@ -49,8 +44,6 @@ public abstract class NetworkNode implements StatHolder {
 
     public List<Action> actions(Actor subject, WorldObject object) {
         List<Action> actions = new ArrayList<>();
-        /*String[] currentNodePath = Arrays.copyOf(menuPath, menuPath.length + 1);
-        currentNodePath[currentNodePath.length - 1] = getName();*/
         if (isBreached()) {
             actions.addAll(breachedActions(subject, object));
         } else {
@@ -64,9 +57,8 @@ public abstract class NetworkNode implements StatHolder {
     @Override
     public Expression getStatValue(String name, Context context) {
         return switch (name) {
-            case "id" -> Expression.constant(ID);
+            case "id" -> Expression.constant(getID());
             case "name" -> Expression.constant(name);
-            case "securityLevel" -> Expression.constant(securityLevel);
             case "isBreached" -> Expression.constant(isBreached);
             default -> null;
         };

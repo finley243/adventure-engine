@@ -71,6 +71,14 @@ public abstract class Expression {
         return this.getDataType() == other.getDataType();
     }
 
+    public static Expression constantNoun(Noun noun) {
+        if (noun == null) return null;
+        return new ExpressionConstantNoun(noun);
+    }
+
+    /*
+     * DO NOT USE WITH FOR GENERATING NOUN CONSTANTS! Use Expression.constantNoun() instead.
+     */
     public static Expression constant(Object valueObject) {
         if (valueObject == null) return null;
         if (valueObject instanceof Expression expression) return expression;
@@ -107,9 +115,6 @@ public abstract class Expression {
             }
             case StatHolder value -> {
                 return new ExpressionConstantStatHolder(value);
-            }
-            case Noun value -> {
-                return new ExpressionConstantNoun(value);
             }
             default -> throw new IllegalArgumentException("Expression is not a valid type");
         }

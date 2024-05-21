@@ -1,9 +1,8 @@
 package com.github.finley243.adventureengine.world.object.component;
 
-import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.network.Network;
+import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateNetwork;
@@ -23,9 +22,8 @@ public class ObjectComponentNetwork extends ObjectComponent {
 
     @Override
     protected List<Action> getPossibleActions(Actor subject) {
-        Context context = new Context(subject.game(), subject, subject, getObject());
-        Network network = subject.game().data().getNetwork(getObject().getLocalVariable("networkID").getValueString());
-        return new ArrayList<>(network.networkActions(subject, getObject()));
+        NetworkNode networkNode = subject.game().data().getNetworkNode(getObject().getLocalVariable("networkID").getValueString());
+        return new ArrayList<>(networkNode.actions(subject, getObject()));
     }
 
     @Override

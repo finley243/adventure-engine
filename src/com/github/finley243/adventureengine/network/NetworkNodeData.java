@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.network;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.network.ActionNetworkReadData;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -12,8 +13,8 @@ public class NetworkNodeData extends NetworkNode {
 
     private final String sceneID;
 
-    public NetworkNodeData(String ID, String name, int securityLevel, String sceneID) {
-        super(ID, name, securityLevel);
+    public NetworkNodeData(Game game, String ID, String templateID, String name, String sceneID) {
+        super(game, ID, templateID, name);
         this.sceneID = sceneID;
     }
 
