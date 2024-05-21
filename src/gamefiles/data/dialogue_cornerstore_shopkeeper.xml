@@ -18,6 +18,7 @@
         <line redirect="cornerstore_shopkeeper_andre_questions">"Go ahead."</line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre">
+        <condition>!stat.scene("cornerstore_shopkeeper_andre_questions").triggered</condition>
         <line>The shopkeeper looks down his glasses at you.</line>
         <line>"I see a lot of people. What makes you think I know anything about this 'Andre'?"</line>
         <choice link="cornerstore_shopkeeper_andre_truth">He lives in this building. Figured he might have dropped by once or twice.</choice>
@@ -53,9 +54,21 @@
         <line>"Right, back to business then?"</line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_questions">
-        <choice link="cornerstore_shopkeeper_andre_questions">When did you last see Andre?</choice>
-        <choice link="cornerstore_shopkeeper_andre_questions">Is Andre a regular here?</choice>
-        <choice link="cornerstore_shopkeeper_andre_questions">Was Andre acting strange when you last saw him?</choice>
+        <choice link="cornerstore_shopkeeper_andre_lastseen">When did you last see Andre?</choice>
+        <choice link="cornerstore_shopkeeper_andre_regular">Was Andre a regular here?</choice>
+        <choice link="cornerstore_shopkeeper_andre_strange">Was Andre acting strange when you last saw him?</choice>
         <choice link="cornerstore_shopkeeper_andre_dismiss">That's all.</choice>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_lastseen">
+        <line redirect="cornerstore_shopkeeper_andre_questions">"A few weeks ago, at least. Very odd for him, but I just figured he got a new job or something."</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_regular">
+        <line>The shopkeeper smirks.</line>
+        <line redirect="cornerstore_shopkeeper_andre_questions">"He was here every morning, almost without fail. I think he must live in this building."</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_strange">
+        <line>"Not that I could tell. If I recall, he bought a couple bags of NutriChips. Oh, and a whole case of Nitron Energy."</line>
+        <line>He shakes his head.</line>
+        <line redirect="cornerstore_shopkeeper_andre_questions">"I guess if you're going to disappear, you've gotta stock up first. Although, come to think of it, I don't think I'd ever seen him buy Nitron Energy before. He was always a Diet guy."</line>
     </scene>
 </data>
