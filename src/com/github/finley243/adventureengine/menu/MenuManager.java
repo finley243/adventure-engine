@@ -339,11 +339,6 @@ public class MenuManager {
 	private Scene.SceneLineResult sceneLine(Game game, SceneLine line, String lastSceneID, Context context, boolean ignoreCondition) {
 		if (ignoreCondition || line.shouldShow(context, lastSceneID)) {
 			line.setTriggered();
-			if (line.shouldExit()) {
-				return new Scene.SceneLineResult(true, null);
-			} else if (line.hasRedirect()) {
-				return new Scene.SceneLineResult(false, line.getRedirectID());
-			}
 			if (line.getText() != null) {
 				game.eventBus().post(new RenderTextEvent(line.getText()));
 			}
@@ -382,6 +377,11 @@ public class MenuManager {
 			}
 			if (line.getScriptPost() != null) {
 				line.getScriptPost().execute(context);
+			}
+			if (line.shouldExit()) {
+				return new Scene.SceneLineResult(true, null);
+			} else if (line.hasRedirect()) {
+				return new Scene.SceneLineResult(false, line.getRedirectID());
 			}
 		}
 		return new Scene.SceneLineResult(false, null);
