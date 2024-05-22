@@ -19,12 +19,12 @@ moveOnto:$actor move$s onto $targetArea.
 moveFront:$actor move$s in front of $targetArea.
 moveBehind:$actor move$s behind $targetArea.
 moveBeside:$actor move$s beside $targetArea.
-moveInWithin:$actor move$s $dir_name.
-moveOnWithin:$actor move$s $dir_name on $targetArea.
-moveFrontWithin:$actor move$s $dir_name in front of $targetArea.
-moveBehindWithin:$actor move$s $dir_name behind $targetArea.
-moveBesideWithin:$actor move$s $dir_name beside $targetArea.
-moveNearWithin:$actor move$s $dir_name near $targetArea.
+moveInWithin:$actor move$s $dirName.
+moveOnWithin:$actor move$s $dirName on $targetArea.
+moveFrontWithin:$actor move$s $dirName in front of $targetArea.
+moveBehindWithin:$actor move$s $dirName behind $targetArea.
+moveBesideWithin:$actor move$s $dirName beside $targetArea.
+moveNearWithin:$actor move$s $dirName near $targetArea.
 moveCorner:$actor turn$s around the corner to $targetArea.
 driveTo:$actor drive$s $vehicle to $targetArea.
 driveCorner:$actor drive$s $vehicle around the corner to $targetArea.

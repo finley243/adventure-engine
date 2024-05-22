@@ -12,7 +12,7 @@
             <link type="basic" dist="CLOSE" dir="N" area="wilsons_corner_store_shelves"/>
             <object id="wilsons_corner_store_door_exit" template="door_basic">
                 <localVar name="door_link_object">"wilsons_corner_store_exterior_door"</localVar>
-                <localVar name="door_link_dir">"W"</localVar>
+                <localVar name="door_link_dir">"SW"</localVar>
             </object>
             <object id="wilsons_corner_store_counter" template="counter"/>
             <actor id="frank_wilson" template="frank_wilson">

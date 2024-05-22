@@ -57,10 +57,11 @@
         <choice link="cornerstore_shopkeeper_andre_lastseen">When did you last see Andre?</choice>
         <choice link="cornerstore_shopkeeper_andre_regular">Was Andre a regular here?</choice>
         <choice link="cornerstore_shopkeeper_andre_strange">Was Andre acting strange when you last saw him?</choice>
+        <choice link="cornerstore_shopkeeper_andre_work">Did Andre ever mention where he worked?</choice>
         <choice link="cornerstore_shopkeeper_andre_dismiss">That's all.</choice>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_lastseen">
-        <line redirect="cornerstore_shopkeeper_andre_questions">"A few weeks ago, at least. Very odd for him, but I just figured he got a new job or something."</line>
+        <line redirect="cornerstore_shopkeeper_andre_questions">"A few weeks ago, at least. Very odd for him to just vanish like that. I figured he got a new job or something."</line>
     </scene>
     <scene id="cornerstore_shopkeeper_andre_regular">
         <line>The shopkeeper smirks.</line>
@@ -70,5 +71,8 @@
         <line>"Not that I could tell. If I recall, he bought a couple bags of NutriChips. Oh, and a whole case of Nitron Energy."</line>
         <line>He shakes his head.</line>
         <line redirect="cornerstore_shopkeeper_andre_questions">"I guess if you're going to disappear, you've gotta stock up first. Although, come to think of it, I don't think I'd ever seen him buy Nitron Energy before. He was always a Diet guy."</line>
+    </scene>
+    <scene id="cornerstore_shopkeeper_andre_work">
+        <line redirect="cornerstore_shopkeeper_andre_questions">"No, but I know a corporate man when I see one. Every move calculated, not one second wasted. Don't know if he's still working for one of them, but it's in his blood now. Seems like Andre handled it better than most though. Never lost his humanity."</line>
     </scene>
 </data>
