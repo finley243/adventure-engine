@@ -32,7 +32,7 @@
     <action id="vending_machine">
         <prompt>Buy $itemName ($price)</prompt>
         <parameter name="itemName">stat.itemTemplate(itemID).name</parameter>
-        <parameter name="price">stat.parentObject.price_hacked ? 0 : stat.itemTemplate(itemID).price</parameter>
+        <parameter name="price">stat.parentObject.price_hacked ? "0" : toString(value=stat.itemTemplate(itemID).price)</parameter>
         <condition>
             <blockMessage>Not enough credits</blockMessage>
             <script>stat.subject.money &gt;= stat.itemTemplate(itemID).price</script>

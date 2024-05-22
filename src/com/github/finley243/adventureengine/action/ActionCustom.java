@@ -62,7 +62,7 @@ public class ActionCustom extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         if (getTemplate().getScript() != null) {
-            Context context = new Context(subject.game(), subject, actor, object, item, area, this, new HashMap<>());
+            Context context = getContextWithParameters(subject);
             for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
                 Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
                 if (parameterResult.error() != null) {
@@ -141,14 +141,6 @@ public class ActionCustom extends Action {
 
     private Context getContextWithParameters(Actor subject) {
         Context context = new Context(subject.game(), subject, actor, object, item, area, this, new HashMap<>());
-        for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
-            Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
-            if (parameterResult.error() != null) {
-                game.log().print("Action parameter error: " + parameterResult.error());
-            } else {
-                context.setLocalVariable(templateParameter.getKey(), parameterResult.value());
-            }
-        }
         for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
             Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
             if (parameterResult.error() != null) {
@@ -157,34 +149,47 @@ public class ActionCustom extends Action {
                 context.setLocalVariable(instanceParameter.getKey(), parameterResult.value());
             }
         }
+        for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
+            Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
+            if (parameterResult.error() != null) {
+                game.log().print("Action parameter error: " + parameterResult.error());
+            } else {
+                context.setLocalVariable(templateParameter.getKey(), parameterResult.value());
+            }
+        }
         return context;
     }
 
     private Map<String, String> getParameterStrings(Actor subject) {
         Map<String, String> stringMap = new HashMap<>();
-        Context context = new Context(subject.game(), subject, actor, object, item, area, this, new HashMap<>());
-        for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
-            Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
-            if (parameterResult.error() != null) {
-                game.log().print("Action parameter error: " + parameterResult.error());
-                break;
-            }
-            Expression parameterValue = parameterResult.value();
-            if (parameterValue != null && parameterValue.getDataType() == Expression.DataType.STRING) {
-                stringMap.put(templateParameter.getKey(), parameterValue.getValueString());
+        Context context = getContextWithParameters(subject);
+        for (Map.Entry<String, Context.Variable> variable : context.getLocalVariables().entrySet()) {
+            if (variable.getValue().getExpression() != null && variable.getValue().getExpression().getDataType() == Expression.DataType.STRING) {
+                stringMap.put(variable.getKey(), variable.getValue().getExpression().getValueString());
             }
         }
-        for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
+        /*for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
             Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
             if (parameterResult.error() != null) {
                 game.log().print("Action parameter error: " + parameterResult.error());
-                break;
+                continue;
             }
             Expression parameterValue = parameterResult.value();
             if (parameterValue != null && parameterValue.getDataType() == Expression.DataType.STRING) {
                 stringMap.put(instanceParameter.getKey(), parameterValue.getValueString());
             }
         }
+        for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
+            Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
+            if (parameterResult.error() != null) {
+                game.log().print("Action parameter error: " + parameterResult.error());
+                continue;
+            }
+            Expression parameterValue = parameterResult.value();
+            if (parameterValue != null && parameterValue.getDataType() == Expression.DataType.STRING) {
+                stringMap.put(templateParameter.getKey(), parameterValue.getValueString());
+            }
+        }*/
         return stringMap;
     }
 

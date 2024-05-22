@@ -20,37 +20,47 @@
     <room id="street_corner_sixth_sinclair">
         <name proper="false" type="in">intersection</name>
         <area id="street_corner_sixth_sinclair_1">
-            <link type="basic" dist="CLOSE" dir="W" area="street_sinclair_fifth_sixth_2"/>
+            <link type="basic" dist="CLOSE" dir="W" area="street_sinclair_fifth_sixth_3"/>
             <link type="basic" dist="CLOSE" dir="S" area="street_sixth_sinclair_archer_1"/>
         </area>
     </room>
     <room id="street_corner_sixth_archer">
         <name proper="false" type="in">intersection</name>
         <area id="street_corner_sixth_archer_1">
-            <link type="basic" dist="CLOSE" dir="W" area="street_archer_fifth_sixth_2"/>
+            <link type="basic" dist="CLOSE" dir="W" area="street_archer_fifth_sixth_3"/>
             <link type="basic" dist="CLOSE" dir="N" area="street_sixth_sinclair_archer_2"/>
         </area>
     </room>
     <room id="street_sinclair_fifth_sixth">
         <name proper="true" type="on">Sinclair Street</name>
         <area id="street_sinclair_fifth_sixth_1">
-            <link type="basic" dist="close" dir="E" area="street_sinclair_fifth_sixth_2"/>
             <link type="basic" dist="CLOSE" dir="W" area="street_corner_fifth_sinclair_1"/>
+            <link type="basic" dist="CLOSE" dir="E" area="street_sinclair_fifth_sixth_2"/>
         </area>
         <area id="street_sinclair_fifth_sixth_2">
-            <link type="basic" dist="close" dir="W" area="street_sinclair_fifth_sixth_1"/>
+            <link type="basic" dist="CLOSE" dir="W" area="street_sinclair_fifth_sixth_1"/>
+            <link type="basic" dist="CLOSE" dir="E" area="street_sinclair_fifth_sixth_3"/>
+            <link type="basic" dist="CLOSE" dir="S" area="alley_archer_fifth_sixth_1"/>
+        </area>
+        <area id="street_sinclair_fifth_sixth_3">
+            <link type="basic" dist="CLOSE" dir="W" area="street_sinclair_fifth_sixth_2"/>
             <link type="basic" dist="CLOSE" dir="E" area="street_corner_sixth_sinclair_1"/>
         </area>
     </room>
     <room id="street_archer_fifth_sixth">
         <name proper="true" type="on">Archer Street</name>
         <area id="street_archer_fifth_sixth_1">
-            <link type="basic" dist="close" dir="E" area="street_archer_fifth_sixth_2"/>
             <link type="basic" dist="CLOSE" dir="W" area="street_corner_fifth_archer_1"/>
+            <link type="basic" dist="CLOSE" dir="E" area="street_archer_fifth_sixth_2"/>
             <object id="wilsons_corner_store_exterior_vending_machine" template="vending_machine_nitron"/>
         </area>
         <area id="street_archer_fifth_sixth_2">
-            <link type="basic" dist="close" dir="W" area="street_archer_fifth_sixth_1"/>
+            <link type="basic" dist="CLOSE" dir="W" area="street_archer_fifth_sixth_1"/>
+            <link type="basic" dist="CLOSE" dir="E" area="street_archer_fifth_sixth_3"/>
+            <link type="basic" dist="CLOSE" dir="N" area="alley_archer_fifth_sixth_3"/>
+        </area>
+        <area id="street_archer_fifth_sixth_3">
+            <link type="basic" dist="CLOSE" dir="W" area="street_archer_fifth_sixth_2"/>
             <link type="basic" dist="CLOSE" dir="E" area="street_corner_sixth_archer_1"/>
         </area>
     </room>
@@ -75,10 +85,25 @@
         <area id="street_sixth_sinclair_archer_2">
             <link type="basic" dist="CLOSE" dir="N" area="street_sixth_sinclair_archer_1"/>
             <link type="basic" dist="CLOSE" dir="S" area="street_corner_sixth_archer_1"/>
+        </area>
+    </room>
+    <room id="alley_archer_fifth_sixth">
+        <name proper="false" type="in">alley</name>
+        <area id="alley_archer_fifth_sixth_1">
+            <link type="basic" dist="CLOSE" dir="N" area="street_sinclair_fifth_sixth_2"/>
+            <link type="basic" dist="CLOSE" dir="S" area="alley_archer_fifth_sixth_2"/>
+        </area>
+        <area id="alley_archer_fifth_sixth_2">
+            <link type="basic" dist="CLOSE" dir="N" area="alley_archer_fifth_sixth_1"/>
+            <link type="basic" dist="CLOSE" dir="S" area="alley_archer_fifth_sixth_3"/>
             <object id="wilsons_corner_store_exterior_backroom_door" template="door_basic">
                 <localVar name="door_link_object">"wilsons_corner_store_backroom_exit"</localVar>
                 <localVar name="door_link_dir">"W"</localVar>
             </object>
+        </area>
+        <area id="alley_archer_fifth_sixth_3">
+            <link type="basic" dist="CLOSE" dir="N" area="alley_archer_fifth_sixth_2"/>
+            <link type="basic" dist="CLOSE" dir="S" area="street_archer_fifth_sixth_2"/>
         </area>
     </room>
 </data>
