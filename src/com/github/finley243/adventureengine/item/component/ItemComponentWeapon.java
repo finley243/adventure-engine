@@ -113,61 +113,9 @@ public class ItemComponentWeapon extends ItemComponent {
         return targetEffects.value(getWeaponTemplate().getTargetEffects(), context);
     }
 
-    /*public int getClipSize() {
-        return clipSize.value(getWeaponTemplate().getClipSize(), 1, 100, new Context(getItem().game(), getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor(), getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor(), getItem()));
-    }*/
-
     public String getDamageType(Context context) {
         return damageType.value(getWeaponTemplate().getDamageType(), context);
     }
-
-    /*public int getAmmoRemaining() {
-        return ammoCount;
-    }
-
-    public float getAmmoFraction() {
-        if (getWeaponTemplate().getClipSize() == 0) return 1.0f;
-        return ((float) ammoCount) / ((float) getWeaponTemplate().getClipSize());
-    }
-
-    public int reloadCapacity() {
-        return getClipSize() - getAmmoRemaining();
-    }
-
-    public void setLoadedAmmoType(Item type) {
-        if (ammoType != null) {
-            ammoType.getComponentOfType(ItemComponentAmmo.class).onUnload(getItem());
-        }
-        this.ammoType = type;
-        if (type != null) {
-            type.getComponentOfType(ItemComponentAmmo.class).onLoad(getItem());
-        }
-    }
-
-    public Item getLoadedAmmoType() {
-        return ammoType;
-    }
-
-    public void loadAmmo(int amount) {
-        ammoCount += amount;
-    }
-
-    public void consumeAmmo(int amount) {
-        ammoCount -= amount;
-        if (ammoCount <= 0) {
-            ammoCount = 0;
-            setLoadedAmmoType(null);
-        }
-    }
-
-    public void emptyAmmo() {
-        ammoCount = 0;
-        setLoadedAmmoType(null);
-    }*/
-
-    /*public int getReloadActionPoints(Context context) {
-        return reloadActionPoints.value(getWeaponTemplate().getReloadActionPoints(), 0, 1000, context);
-    }*/
 
     public boolean isSilenced(Context context) {
         return isSilenced.value(getWeaponTemplate().isSilenced(), context);
@@ -176,14 +124,6 @@ public class ItemComponentWeapon extends ItemComponent {
     public boolean isLoud(Context context) {
         return getWeaponClass().isLoud() && !isSilenced(context);
     }
-
-    /*public boolean usesAmmo() {
-        return getWeaponClass().usesAmmo();
-    }*/
-
-    /*public Set<String> getAmmoTypes() {
-        return getWeaponClass().getAmmoTypes();
-    }*/
 
     public String getSkill() {
         return getWeaponClass().getSkill();

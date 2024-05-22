@@ -168,6 +168,10 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder {
 
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
+		for (ItemComponent component : components.values()) {
+			StatHolder componentValue = component.getSubHolder(name, ID);
+			if (componentValue != null) return componentValue;
+		}
 		if ("template".equals(name)) {
 			return getTemplate();
 		}
@@ -176,32 +180,54 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder {
 
 	@Override
 	public StatInt getStatInt(String name) {
+		for (ItemComponent component : components.values()) {
+			StatInt componentValue = component.getStatInt(name);
+			if (componentValue != null) return componentValue;
+		}
 		return null;
 	}
 
 	@Override
 	public StatFloat getStatFloat(String name) {
+		for (ItemComponent component : components.values()) {
+			StatFloat componentValue = component.getStatFloat(name);
+			if (componentValue != null) return componentValue;
+		}
 		return null;
 	}
 
 	@Override
 	public StatBoolean getStatBoolean(String name) {
+		for (ItemComponent component : components.values()) {
+			StatBoolean componentValue = component.getStatBoolean(name);
+			if (componentValue != null) return componentValue;
+		}
 		return null;
 	}
 
 	@Override
 	public StatString getStatString(String name) {
+		for (ItemComponent component : components.values()) {
+			StatString componentValue = component.getStatString(name);
+			if (componentValue != null) return componentValue;
+		}
 		return null;
 	}
 
 	@Override
 	public StatStringSet getStatStringSet(String name) {
+		for (ItemComponent component : components.values()) {
+			StatStringSet componentValue = component.getStatStringSet(name);
+			if (componentValue != null) return componentValue;
+		}
 		return null;
 	}
 
 	@Override
 	public void onStatChange(String name) {
-
+		for (ItemComponent component : components.values()) {
+			component.onStatChange(name);
+		}
 	}
 
 	public void loadState(SaveData saveData) {}
