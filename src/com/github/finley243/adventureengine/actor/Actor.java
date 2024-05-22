@@ -1,10 +1,7 @@
 package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.*;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.action.ActionEnd;
-import com.github.finley243.adventureengine.action.ActionTalk;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
@@ -80,6 +77,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final StatStringSet equipmentEffects;
 	private final TargetingComponent targetingComponent;
 	private final BehaviorComponent behaviorComponent;
+	private Actor carriedActor;
 	private int money;
 	private ObjectComponentUsable.ObjectUserData usingObject;
 	private final StatStringSet senseTypes;
@@ -197,6 +195,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		this.area = area;
 		area.addActor(this);
+		if (isCarryingActor()) {
+			getCarriedActor().setArea(area);
+		}
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
 			if (isNewRoom && getArea().getRoom().getDescription() != null) {
@@ -301,6 +302,22 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return false;
 	}
 
+	public boolean canBeCarried() {
+		return isDead();
+	}
+
+	public void setCarriedActor(Actor carriedActor) {
+		this.carriedActor = carriedActor;
+	}
+
+	public Actor getCarriedActor() {
+		return carriedActor;
+	}
+
+	public boolean isCarryingActor() {
+		return carriedActor != null;
+	}
+
 	public List<Limb> getLimbs() {
 		return getTemplate().getLimbs();
 	}
@@ -391,19 +408,19 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public void modifyHP(int amount, Context context) {
-		HP -= amount;
+		HP += amount;
 		if (HP <= 0) {
 			HP = 0;
 			kill();
 		} else if (amount < 0) {
 			Context modifierContext = new Context(game(), this, context.getSubject());
-			modifierContext.setLocalVariable("amount", Expression.constant(String.valueOf(amount)));
+			modifierContext.setLocalVariable("amount", Expression.constant(String.valueOf(-amount)));
 			modifierContext.setLocalVariable("condition", Expression.constant(getConditionDescription()));
 			triggerScript("on_damaged", modifierContext);
 			if (SHOW_HP_CHANGES) {
-				SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor lose$s $amount HP", modifierContext, true, null, null));
+				SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor lose$s $amount HP.", modifierContext, true, null, null));
 			}
-			SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor $is $condition", modifierContext, true, null, null));
+			SensoryEvent.execute(game(), new SensoryEvent(getArea(), "$actor $is $condition.", modifierContext, true, null, null));
 		}
 	}
 	
@@ -412,6 +429,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		triggerScript("on_death", context);
 		SensoryEvent.execute(game(), new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null));
 		// TODO - Enable held item dropping on death for new equipment system
+		// TODO - Remove from usable object, if applicable (for certain types of usable objects)
 		isDead = true;
 		HP = 0;
 		if (isPlayer()) {
@@ -532,6 +550,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 		} else if (isDead()) {
 			actions.addAll(inventory.getExternalActions(this, subject, "Take", "takeFrom", null, null, true, false));
+			actions.add(new ActionCarryActorStart(this));
 		}
 		for (ActionCustom.CustomActionHolder actionHolder : getTemplate().getCustomActions()) {
 			actions.add(new ActionCustom(game(), this, null, null, null, actionHolder.action(), actionHolder.parameters(), new MenuDataActor(this), false));
@@ -541,6 +560,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				actions.add(new ActionCustom(game(), this, null, item, null, inventoryActionHolder.action(), inventoryActionHolder.parameters(), new MenuDataActorInventory(this, item, false, false), false));
 			}
 		}
+		return actions;
+	}
+
+	public List<Action> carriedActions(Actor subject) {
+		List<Action> actions = new ArrayList<>();
+		actions.add(new ActionCarryActorEnd(this));
 		return actions;
 	}
 
@@ -567,6 +592,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			if (getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanPerformParentActions(getUsingObject().slot())) {
 				actions.addAll(getUsingObject().object().localActions(this));
 			}
+		}
+		if (isCarryingActor()) {
+			actions.addAll(getCarriedActor().carriedActions(this));
 		}
 		for (Actor visibleActor : getLineOfSightActors()) {
 			if (visibleActor.isVisible(this)) {

@@ -201,12 +201,13 @@ public class MenuManager {
 					} else {
 						throw new UnsupportedOperationException("No menu handling implemented for attack target type");
 					}
-					if (!categoryMap.containsKey("attack")) {
-						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", targetCategory, false, false, "Attack", null));
+					String attackCategory = targetCategory + "_attack";
+					if (!categoryMap.containsKey(attackCategory)) {
+						categoryMap.put(attackCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, attackCategory, targetCategory, false, false, "Attack", null));
 					}
-					String weaponCategory = "attack_weapon_" + data.weapon.getID();
+					String weaponCategory = attackCategory + "_weapon_" + data.weapon.getID();
 					if (!categoryMap.containsKey(weaponCategory)) {
-						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", false, false, weaponName, null));
+						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, attackCategory, false, false, weaponName, null));
 					}
 					parentCategory = weaponCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
@@ -229,14 +230,15 @@ public class MenuManager {
 					} else {
 						throw new UnsupportedOperationException("No menu handling implemented for attack target type");
 					}
-					if (!categoryMap.containsKey("attack")) {
-						categoryMap.put("attack", new MenuCategory(MenuCategory.CategoryType.GENERIC, "attack", targetCategory, false, false, "Attack", null));
+					String attackCategory = targetCategory + "_attack";
+					if (!categoryMap.containsKey(attackCategory)) {
+						categoryMap.put(attackCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, attackCategory, targetCategory, false, false, "Attack", null));
 					}
-					String weaponCategory = "attack_weapon_" + data.weapon.getID();
+					String weaponCategory = attackCategory + "_weapon_" + data.weapon.getID();
 					if (!categoryMap.containsKey(weaponCategory)) {
-						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, "attack", false, false, weaponName, null));
+						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, attackCategory, false, false, weaponName, null));
 					}
-					String attackTypeCategory = "attack_weapon_" + data.weapon.getID() + "_target_" + ((GameInstanced) data.target).getID() + "_targeted_" + ((ActionAttack) action).getAttackTypeID();
+					String attackTypeCategory = weaponCategory + "_target_" + ((GameInstanced) data.target).getID() + "_targeted_" + ((ActionAttack) action).getAttackTypeID();
 					String attackTypeName = action.getPrompt(actor);
 					if (!categoryMap.containsKey(attackTypeCategory)) {
 						categoryMap.put(attackTypeCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, attackTypeCategory, weaponCategory, false, false, attackTypeName, null));
@@ -254,15 +256,15 @@ public class MenuManager {
 					if (!categoryMap.containsKey(areaCategory)) {
 						categoryMap.put(areaCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, areaCategory, "areas", false, false, targetName, null));
 					}
-					String weaponCategory = "attack_weapon_" + data.weapon.getID();
+					String weaponCategory = areaCategory + "_attack_weapon_" + data.weapon.getID();
 					if (!categoryMap.containsKey(weaponCategory)) {
 						categoryMap.put(weaponCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, weaponCategory, areaCategory, false, false, weaponName, null));
 					}
-					String targetCategory = "attack_weapon" + data.weapon.getID() + "_target_area_" + data.target.getID();
+					/*String targetCategory = "attack_weapon" + data.weapon.getID() + "_target_area_" + data.target.getID();
 					if (!categoryMap.containsKey(targetCategory)) {
 						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, false, false, targetName, null));
-					}
-					parentCategory = targetCategory;
+					}*/
+					parentCategory = weaponCategory;
 					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
 				}
 				default -> throw new IllegalStateException("Unexpected menu data: " + action.getMenuData(actor));
