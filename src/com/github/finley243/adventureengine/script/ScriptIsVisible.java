@@ -15,7 +15,7 @@ public class ScriptIsVisible extends Script {
         if (targetExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new Script.ScriptReturnData(null, null, "Target parameter is not a stat holder");
         if (!(targetExpression.getValueStatHolder() instanceof Actor target)) return new Script.ScriptReturnData(null, null, "Target parameter is not an actor");
         boolean isVisible = target.isVisible(actor) && actor.getLineOfSightActors().contains(target);
-        return new Script.ScriptReturnData(Expression.constant(isVisible), null, null);
+        return new Script.ScriptReturnData(Expression.constant(isVisible), FlowStatementType.RETURN, null);
     }
 
 }

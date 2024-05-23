@@ -9,7 +9,7 @@ public class ScriptToString extends Script {
     public ScriptReturnData execute(Context context) {
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         String stringValue = valueExpression.toString();
-        return new ScriptReturnData(Expression.constant(stringValue), null, null);
+        return new ScriptReturnData(Expression.constant(stringValue), FlowStatementType.RETURN, null);
     }
 
 }

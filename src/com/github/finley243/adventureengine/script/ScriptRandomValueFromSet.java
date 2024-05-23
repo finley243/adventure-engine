@@ -14,7 +14,7 @@ public class ScriptRandomValueFromSet extends Script {
         if (setExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Set parameter is not a set");
         Set<Expression> set = setExpression.getValueSet();
         Expression selectedValue = MathUtils.selectRandomFromSet(set);
-        return new ScriptReturnData(selectedValue, null, null);
+        return new ScriptReturnData(selectedValue, FlowStatementType.RETURN, null);
     }
 
 }

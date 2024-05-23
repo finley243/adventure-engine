@@ -28,13 +28,13 @@ public class ScriptInventoryContains extends Script {
             for (String itemID : itemIDSet) {
                 boolean hasItem = inventory.hasItem(itemID);
                 if (hasItem != requireAll) {
-                    return new ScriptReturnData(Expression.constant(hasItem), null, null);
+                    return new ScriptReturnData(Expression.constant(hasItem), FlowStatementType.RETURN, null);
                 }
             }
-            return new ScriptReturnData(Expression.constant(requireAll), null, null);
+            return new ScriptReturnData(Expression.constant(requireAll), FlowStatementType.RETURN, null);
         } else {
             String itemID = itemExpression.getValueString();
-            return new ScriptReturnData(Expression.constant(inventory.hasItem(itemID)), null, null);
+            return new ScriptReturnData(Expression.constant(inventory.hasItem(itemID)), FlowStatementType.RETURN, null);
         }
     }
 

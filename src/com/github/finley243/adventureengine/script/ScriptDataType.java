@@ -22,7 +22,7 @@ public class ScriptDataType extends Script {
             case INVENTORY -> "inventory";
             case STAT_HOLDER -> "statHolder";
         };
-        return new ScriptReturnData(Expression.constant(dataTypeName), null, null);
+        return new ScriptReturnData(Expression.constant(dataTypeName), FlowStatementType.RETURN, null);
     }
 
 }

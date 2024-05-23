@@ -14,7 +14,7 @@ public class ScriptSetContains extends Script {
         if (setExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Set parameter is not a set");
         Set<Expression> set = setExpression.getValueSet();
         boolean setContainsValue = set.contains(valueExpression);
-        return new ScriptReturnData(Expression.constant(setContainsValue), null, null);
+        return new ScriptReturnData(Expression.constant(setContainsValue), FlowStatementType.RETURN, null);
     }
 
 }

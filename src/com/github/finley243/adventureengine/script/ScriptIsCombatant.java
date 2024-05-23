@@ -16,7 +16,7 @@ public class ScriptIsCombatant extends Script {
         if (targetExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, "Target parameter is not a stat holder");
         if (!(targetExpression.getValueStatHolder() instanceof Actor target)) return new ScriptReturnData(null, null, "Target parameter is not an actor");
         boolean isCombatant = actor.getTargetingComponent().isTargetOfType(target, TargetingComponent.DetectionState.HOSTILE);
-        return new ScriptReturnData(Expression.constant(isCombatant), null, null);
+        return new ScriptReturnData(Expression.constant(isCombatant), FlowStatementType.RETURN, null);
     }
 
 }

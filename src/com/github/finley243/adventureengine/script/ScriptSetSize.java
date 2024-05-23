@@ -13,7 +13,7 @@ public class ScriptSetSize extends Script {
         if (setExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Set parameter is not a set");
         Set<Expression> set = setExpression.getValueSet();
         int setSize = set.size();
-        return new ScriptReturnData(Expression.constant(setSize), null, null);
+        return new ScriptReturnData(Expression.constant(setSize), FlowStatementType.RETURN, null);
     }
 
 }

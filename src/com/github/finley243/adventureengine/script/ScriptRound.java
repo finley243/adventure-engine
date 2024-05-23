@@ -11,7 +11,7 @@ public class ScriptRound extends Script {
         if (valueExpression.getDataType() != Expression.DataType.FLOAT) return new Script.ScriptReturnData(null, null, "Value parameter is not a float");
         float value = valueExpression.getValueFloat();
         int roundedValue = Math.round(value);
-        return new Script.ScriptReturnData(Expression.constant(roundedValue), null, null);
+        return new Script.ScriptReturnData(Expression.constant(roundedValue), FlowStatementType.RETURN, null);
     }
 
 }

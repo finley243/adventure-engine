@@ -50,7 +50,7 @@ public class ScriptScaleLog extends Script {
         }
         inputValue = MathUtils.bound(inputValue, inputMinValue, inputMaxValue);
         float scaledValue = (float) (((Math.log(inputValue) - Math.log(inputMinValue))/(Math.log(inputMaxValue) - Math.log(inputMinValue))) * (outputMaxValue - outputMinValue) + outputMinValue);
-        return new ScriptReturnData(Expression.constant(scaledValue), null, null);
+        return new ScriptReturnData(Expression.constant(scaledValue), FlowStatementType.RETURN, null);
     }
 
 }

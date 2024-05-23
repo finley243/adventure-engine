@@ -168,28 +168,6 @@ public class ActionCustom extends Action {
                 stringMap.put(variable.getKey(), variable.getValue().getExpression().getValueString());
             }
         }
-        /*for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
-            Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
-            if (parameterResult.error() != null) {
-                game.log().print("Action parameter error: " + parameterResult.error());
-                continue;
-            }
-            Expression parameterValue = parameterResult.value();
-            if (parameterValue != null && parameterValue.getDataType() == Expression.DataType.STRING) {
-                stringMap.put(instanceParameter.getKey(), parameterValue.getValueString());
-            }
-        }
-        for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
-            Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
-            if (parameterResult.error() != null) {
-                game.log().print("Action parameter error: " + parameterResult.error());
-                continue;
-            }
-            Expression parameterValue = parameterResult.value();
-            if (parameterValue != null && parameterValue.getDataType() == Expression.DataType.STRING) {
-                stringMap.put(templateParameter.getKey(), parameterValue.getValueString());
-            }
-        }*/
         return stringMap;
     }
 
