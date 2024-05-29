@@ -58,8 +58,20 @@
     <room id="archer_burger_restaurant">
         <name>BigBurger</name>
     </room>
-    <room id="archer_apartments">
+    <room id="archer_apartments_entrance">
         <name>apartments</name>
+        <area id="archer_apartments_entrance_front">
+            <name type="near">entrance</name>
+            <link type="basic" dist="CLOSE" dir="N" area="archer_apartments_entrance_stairs"/>
+            <object id="archer_apartments_entrance_door" template="door_basic">
+                <localVar name="door_link_object">"archer_apartments_exterior_door"</localVar>
+                <localVar name="door_link_dir">"S"</localVar>
+            </object>
+        </area>
+        <area id="archer_apartments_entrance_stairs">
+            <name type="near">stairs</name>
+            <link type="basic" dist="CLOSE" dir="S" area="archer_apartments_entrance_front"/>
+        </area>
     </room>
     <room id="archer_apartments_23">
         <name proper="true">apartment 23</name>

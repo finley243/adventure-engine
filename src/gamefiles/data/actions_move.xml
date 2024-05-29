@@ -1,7 +1,7 @@
 <data>
     <action id="move_basic">
         <prompt>$areaName ($dir)</prompt>
-        <parameter name="areaName">stat.parentArea.name</parameter>
+        <parameter name="areaName">stat.subject.area.room.id != stat.parentArea.room.id ? stat.parentArea.room.name : stat.parentArea.name</parameter>
         <script>
             var originAreaID = stat.subject.area.id;
             var targetArea = stat.parentArea.noun;
@@ -22,7 +22,7 @@
     <action id="move_door">
         <prompt>$areaName (Through $doorName, $dir)</prompt>
         <parameter name="doorName">stat.parentObject.name</parameter>
-        <parameter name="areaName">stat.parentArea.name</parameter>
+        <parameter name="areaName">stat.subject.area.room.id != stat.parentArea.room.id ? stat.parentArea.room.name : stat.parentArea.name</parameter>
         <condition>
             <blockMessage>Locked</blockMessage>
             <script>stat.parentObject.locked == null || !stat.parentObject.locked</script>

@@ -53,6 +53,10 @@
             <link type="basic" dist="CLOSE" dir="W" area="street_corner_fifth_archer_1"/>
             <link type="basic" dist="CLOSE" dir="E" area="street_archer_fifth_sixth_2"/>
             <object id="wilsons_corner_store_exterior_vending_machine" template="vending_machine_nitron"/>
+            <object id="archer_apartments_exterior_door" template="door_basic">
+                <localVar name="door_link_object">"archer_apartments_entrance_door"</localVar>
+                <localVar name="door_link_dir">"N"</localVar>
+            </object>
         </area>
         <area id="street_archer_fifth_sixth_2">
             <link type="basic" dist="CLOSE" dir="W" area="street_archer_fifth_sixth_1"/>

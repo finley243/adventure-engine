@@ -169,6 +169,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "noun" -> Expression.constantNoun(this);
+			case "name" -> Expression.constant(getName());
 			case "visited" -> Expression.constant(hasVisited());
 			case "id" -> Expression.constant(getID());
 			case "owner_faction" -> Expression.constant(ownerFaction);
