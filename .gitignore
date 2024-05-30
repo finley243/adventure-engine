@@ -4,6 +4,9 @@ target/
 # IntelliJ directory
 .idea/
 
+# VSCode directory
+.vscode/
+
 # Gamedata log directory
 src/gamefiles/logs/
 
