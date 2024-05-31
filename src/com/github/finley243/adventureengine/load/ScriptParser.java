@@ -152,28 +152,34 @@ public class ScriptParser {
     }
 
     private static Expression.DataType parseFunctionReturnType(List<ScriptToken> headerTokens) {
-        Expression.DataType functionReturnType = null;
         if (headerTokens.size() == 3) {
             if (headerTokens.get(1).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function header has invalid return type");
-            functionReturnType = stringToDataType(headerTokens.get(1).value);
-        } else if (headerTokens.size() != 2) {
-            throw new IllegalArgumentException("Function header contains unexpected tokens");
+            return stringToDataType(headerTokens.get(1).value);
         }
-        return functionReturnType;
+        if (headerTokens.size() == 2) {
+            return null;
+        }
+        throw new IllegalArgumentException("Function header contains unexpected tokens");
     }
 
     private static List<ScriptParameter> parseFunctionParameters(List<ScriptToken> parameterTokens) {
         List<ScriptParameter> functionParameters = new ArrayList<>();
+        boolean hasParsedNamedParameter = false;
         int index = 0;
         while (index < parameterTokens.size()) {
             int nextCommaIndex = findFirstTokenIndex(parameterTokens, ScriptTokenType.COMMA, index);
             List<ScriptToken> currentGroup = parameterTokens.subList(index, nextCommaIndex == -1 ? parameterTokens.size() : nextCommaIndex);
             index = nextCommaIndex == -1 ? parameterTokens.size() : nextCommaIndex;
-            if (currentGroup.isEmpty() || currentGroup.size() == 2) throw new IllegalArgumentException("Function contains invalid parameter definition (1)");
-            if (currentGroup.getFirst().type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function contains invalid parameter definition (2)");
-            if (currentGroup.size() >= 3 && currentGroup.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Function contains invalid parameter definition (3)");
+            if (currentGroup.isEmpty() || currentGroup.size() == 2) throw new IllegalArgumentException("Function contains invalid parameter definition");
+            if (currentGroup.getFirst().type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function contains invalid parameter name");
+            if (currentGroup.size() >= 3 && currentGroup.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Function contains invalid parameter definition");
             String parameterName = currentGroup.getFirst().value;
             boolean parameterIsRequired = currentGroup.size() < 3;
+            if (parameterIsRequired) {
+                hasParsedNamedParameter = true;
+            } else if (hasParsedNamedParameter) {
+                throw new IllegalArgumentException("Function contains unnamed parameter after named parameter");
+            }
             Expression parameterDefaultValue = parameterIsRequired ? null : parseLiteral(currentGroup.subList(2, currentGroup.size()));
             functionParameters.add(new ScriptParameter(parameterName, parameterIsRequired, parameterDefaultValue));
         }
@@ -399,7 +405,7 @@ public class ScriptParser {
 
     private static List<ScriptExternal.ParameterContainer> parseFunctionCallParameters(List<ScriptToken> tokens) {
         List<ScriptExternal.ParameterContainer> parameters = new ArrayList<>();
-        List<List<ScriptToken>> parameterGroups = new ArrayList<>();
+        boolean hasParsedNamedParameter = false;
         int index = 0;
         while (index < tokens.size()) {
             int nextCommaIndex = findFirstTokenIndex(tokens, ScriptTokenType.COMMA, index);
@@ -411,16 +417,19 @@ public class ScriptParser {
                 currentGroup = tokens.subList(index, nextCommaIndex);
                 index = nextCommaIndex + 1;
             }
-
-            if (currentGroup.size() < 3) throw new IllegalArgumentException("Function call contains invalid parameter");
-            if (currentGroup.getFirst().type != ScriptTokenType.NAME) throw new IllegalArgumentException("Function call contains invalid parameter");
-            if (currentGroup.get(1).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Function call contains invalid parameter");
-            parameterGroups.add(currentGroup);
-        }
-        for (List<ScriptToken> parameterGroup : parameterGroups) {
-            String parameterName = parameterGroup.getFirst().value;
-            Script parameterValue = parseExpression(parameterGroup.subList(2, parameterGroup.size()));
-            parameters.add(new ScriptExternal.ParameterContainer(parameterName, parameterValue));
+            if (currentGroup.getFirst().type == ScriptTokenType.NAME && currentGroup.size() >= 2 && currentGroup.get(1).type == ScriptTokenType.ASSIGNMENT) {
+                // Named parameter
+                if (currentGroup.size() < 3) throw new IllegalArgumentException("Function call contains invalid parameter");
+                String parameterName = currentGroup.getFirst().value;
+                Script parameterValue = parseExpression(currentGroup.subList(2, currentGroup.size()));
+                parameters.add(new ScriptExternal.ParameterContainer(parameterName, parameterValue));
+                hasParsedNamedParameter = true;
+            } else {
+                // Unnamed parameter
+                if (hasParsedNamedParameter) throw new IllegalArgumentException("Function call contains unnamed parameter after named parameter");
+                Script parameterValue = parseExpression(currentGroup);
+                parameters.add(new ScriptExternal.ParameterContainer(null, parameterValue));
+            }
         }
         return parameters;
     }

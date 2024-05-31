@@ -1,6 +1,6 @@
 func drop_equipped() {
-    drop_equipped_specified_slot(equippedSlot = "hand_main");
-    drop_equipped_specified_slot(equippedSlot = "hand_off");
+    drop_equipped_specified_slot("hand_main");
+    drop_equipped_specified_slot("hand_off");
 }
 
 func drop_equipped_specified_slot(equippedSlot) {
@@ -14,8 +14,8 @@ func drop_equipped_specified_slot(equippedSlot) {
 }
 
 func drop_equipped_force() {
-    drop_equipped_force_specified_slot(equippedSlot = "hand_main");
-    drop_equipped_force_specified_slot(equippedSlot = "hand_off");
+    drop_equipped_force_specified_slot("hand_main");
+    drop_equipped_force_specified_slot("hand_off");
 }
 
 func drop_equipped_force_specified_slot(equippedSlot) {

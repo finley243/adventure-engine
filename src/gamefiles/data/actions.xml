@@ -11,7 +11,7 @@
         </condition>
         <script>
             stat.parentObject.locked = false;
-            sendSensoryEvent(phrase="pickLock", area=stat.subject.area.id);
+            sendSensoryEvent(area=stat.subject.area.id, phrase="pickLock");
         </script>
     </action>
     <action id="lock_key">
@@ -26,7 +26,7 @@
         </condition>
         <script>
             stat.parentObject.locked = false;
-            sendSensoryEvent(phrase="unlock", area=stat.subject.area.id);
+            sendSensoryEvent(area=stat.subject.area.id, phrase="unlock");
         </script>
     </action>
     <action id="vending_machine">
@@ -43,7 +43,7 @@
                 stat.subject.money = stat.subject.money - stat.itemTemplate(itemID).price;
             }
             var item = stat.itemTemplate(itemID).noun;
-            sendSensoryEvent(phrase="vendingMachineBuy", area=stat.subject.area.id, item=item);
+            sendSensoryEvent(area=stat.subject.area.id, phrase="vendingMachineBuy", item=item);
         </script>
     </action>
 </data>

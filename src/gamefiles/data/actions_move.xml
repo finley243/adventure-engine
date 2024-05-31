@@ -5,7 +5,7 @@
         <script>
             var originAreaID = stat.subject.area.id;
             var targetArea = stat.parentArea.noun;
-            sendSensoryEvent(phrase=stat.parentArea.move_phrase, area=set(originAreaID, stat.parentArea.id), targetArea=targetArea, dirName=dirName);
+            sendSensoryEvent(area=set(originAreaID, stat.parentArea.id), phrase=stat.parentArea.move_phrase, targetArea=targetArea, dirName=dirName);
             stat.subject.area = stat.parentArea.id;
         </script>
     </action>
@@ -14,9 +14,9 @@
         <script>
             var originAreaID = stat.subject.area.id;
             var targetArea = stat.parentArea.noun;
-            sendSensoryEvent(phrase="moveCorner", area=originAreaID, targetArea=targetArea);
+            sendSensoryEvent(area=originAreaID, phrase="moveCorner", targetArea=targetArea);
             stat.subject.area = stat.parentArea.id;
-            sendSensoryEvent(phrase="moveCorner", area=stat.parentArea.id, detectSelf=false, targetArea=targetArea);
+            sendSensoryEvent(area=stat.parentArea.id, phrase="moveCorner", detectSelf=false, targetArea=targetArea);
         </script>
     </action>
     <action id="move_door">
@@ -34,9 +34,9 @@
             var targetRoomID = stat.parentArea.room.id;
             var originArea = originRoomID != targetRoomID ? stat.subject.area.room.noun : stat.subject.area.noun;
             var door = stat.parentObject.noun;
-            sendSensoryEvent(phrase="moveThrough", area=originAreaID, targetArea=targetArea, originArea=originArea, door=door);
+            sendSensoryEvent(area=originAreaID, phrase="moveThrough", targetArea=targetArea, originArea=originArea, door=door);
             stat.subject.area = stat.parentArea.id;
-            sendSensoryEvent(phrase="moveThroughReverse", area=stat.parentArea.id, detectSelf=false, targetArea=targetArea, originArea=originArea, door=door);
+            sendSensoryEvent(area=stat.parentArea.id, phrase="moveThroughReverse", detectSelf=false, targetArea=targetArea, originArea=originArea, door=door);
         </script>
     </action>
 </data>

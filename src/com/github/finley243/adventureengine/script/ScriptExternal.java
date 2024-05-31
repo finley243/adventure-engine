@@ -22,26 +22,53 @@ public class ScriptExternal extends Script {
         Context innerContext = new Context(context, false);
         ScriptParser.ScriptData script = context.game().data().getScript(scriptID);
         if (script == null) return new ScriptReturnData(null, null, "Function does not exist");
-        Set<String> validParameterNames = new HashSet<>();
+        Set<String> definitionParameterNames = new HashSet<>();
         for (ScriptParser.ScriptParameter definitionParameter : script.parameters()) {
-            validParameterNames.add(definitionParameter.name());
+            definitionParameterNames.add(definitionParameter.name());
         }
         Set<String> providedParameterNames = new HashSet<>();
-        for (ParameterContainer providedParameter : parameters) {
-            if (!script.allowExtraParameters() && !validParameterNames.contains(providedParameter.name())) {
+        boolean hasUsedNamedParameter = false;
+        for (int i = 0; i < parameters.size(); i++) {
+            ParameterContainer providedParameter = parameters.get(i);
+            if (!script.allowExtraParameters() && !definitionParameterNames.contains(providedParameter.name())) {
                 return new ScriptReturnData(null, null, "Function call has parameter that does not exist in function definition");
             }
-            providedParameterNames.add(providedParameter.name());
-            ScriptReturnData parameterValueResult = providedParameter.value().execute(context);
-            if (parameterValueResult.error() != null) {
-                return parameterValueResult;
-            } else if (parameterValueResult.flowStatement() != null) {
-                return new ScriptReturnData(null, null, "Function parameter contains unexpected flow statement");
+            if (providedParameter.name() == null) {
+                if (i < script.parameters().size() && !script.parameters().get(i).isRequired()) {
+                    return new ScriptReturnData(null, null, "Function call has positional parameter after named parameter");
+                }
+                if (hasUsedNamedParameter) {
+                    return new ScriptReturnData(null, null, "Function call has positional parameter after named parameter");
+                }
+                ScriptReturnData parameterValueResult = providedParameter.value().execute(context);
+                if (parameterValueResult.error() != null) {
+                    return parameterValueResult;
+                } else if (parameterValueResult.flowStatement() != null) {
+                    return new ScriptReturnData(null, null, "Function parameter contains unexpected flow statement");
+                }
+                innerContext.setLocalVariable(script.parameters().get(i).name(), parameterValueResult.value());
+                providedParameterNames.add(script.parameters().get(i).name());
+            } else {
+                if (!script.allowExtraParameters() && !definitionParameterNames.contains(providedParameter.name())) {
+                    return new ScriptReturnData(null, null, "Function call has named parameter that does not exist in function definition");
+                }
+                ScriptReturnData parameterValueResult = providedParameter.value().execute(context);
+                if (parameterValueResult.error() != null) {
+                    return parameterValueResult;
+                } else if (parameterValueResult.flowStatement() != null) {
+                    return new ScriptReturnData(null, null, "Function parameter contains unexpected flow statement");
+                }
+                innerContext.setLocalVariable(providedParameter.name(), parameterValueResult.value());
+                hasUsedNamedParameter = true;
+                providedParameterNames.add(providedParameter.name());
             }
-            innerContext.setLocalVariable(providedParameter.name(), parameterValueResult.value());
         }
+        // Set default values for parameters that are not provided, and throw error if required parameter is not provided
         for (ScriptParser.ScriptParameter definitionParameter : script.parameters()) {
             if (!providedParameterNames.contains(definitionParameter.name())) {
+                if (definitionParameter.isRequired()) {
+                    return new ScriptReturnData(null, null, "Function call is missing required parameter: " + definitionParameter.name());
+                }
                 innerContext.setLocalVariable(definitionParameter.name(), definitionParameter.defaultValue());
             }
         }
