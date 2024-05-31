@@ -16,7 +16,7 @@ public class ScriptListIndexSet extends Script {
         if (indexExpression.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, "Index parameter is not an integer");
         List<Expression> list = listExpression.getValueList();
         int index = indexExpression.getValueInteger();
-        if (index < 0 || index > list.size()) return new ScriptReturnData(null, null, "Index is out of bounds");
+        if (index < 0 || index >= list.size()) return new ScriptReturnData(null, null, "Index is out of bounds");
         list.set(index, valueExpression);
         return new ScriptReturnData(null, null, null);
     }

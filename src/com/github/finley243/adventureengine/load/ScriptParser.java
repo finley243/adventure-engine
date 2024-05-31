@@ -12,11 +12,11 @@ import java.util.regex.Pattern;
 public class ScriptParser {
 
     private enum ScriptTokenType {
-        END_LINE, STRING, FLOAT, INTEGER, NAME, ASSIGNMENT, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, POWER, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE, NULL, COLON, NOT, AND, OR, EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, TERNARY_IF, RETURN, BREAK, CONTINUE, MODIFIER_PLUS, MODIFIER_MINUS, MODIFIER_MULTIPLY, MODIFIER_DIVIDE, MODIFIER_MODULO, ERROR, LOG
+        END_LINE, STRING, FLOAT, INTEGER, NAME, ASSIGNMENT, COMMA, DOT, PLUS, MINUS, DIVIDE, MULTIPLY, MODULO, POWER, PARENTHESIS_OPEN, PARENTHESIS_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, BRACKET_SQUARE_OPEN, BRACKET_SQUARE_CLOSE, BOOLEAN_TRUE, BOOLEAN_FALSE, NULL, COLON, NOT, AND, OR, EQUAL, NOT_EQUAL, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, TERNARY_IF, RETURN, BREAK, CONTINUE, MODIFIER_PLUS, MODIFIER_MINUS, MODIFIER_MULTIPLY, MODIFIER_DIVIDE, MODIFIER_MODULO, ERROR, LOG
     }
 
     private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set", "list", "error", "log");
-    private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*[\n\r]|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|<|>|;|=|\\?|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}";
+    private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*[\n\r]|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|<|>|;|=|\\?|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}|\\[|\\]";
     private static final Map<String, ScriptTokenType> SIMPLE_TOKENS_MAP = new HashMap<>() {
         {
             put(";", ScriptTokenType.END_LINE);
@@ -49,6 +49,8 @@ public class ScriptParser {
             put(")", ScriptTokenType.PARENTHESIS_CLOSE);
             put("{", ScriptTokenType.BRACKET_OPEN);
             put("}", ScriptTokenType.BRACKET_CLOSE);
+            put("[", ScriptTokenType.BRACKET_SQUARE_OPEN);
+            put("]", ScriptTokenType.BRACKET_SQUARE_CLOSE);
             put("true", ScriptTokenType.BOOLEAN_TRUE);
             put("false", ScriptTokenType.BOOLEAN_FALSE);
             put("null", ScriptTokenType.NULL);
@@ -281,9 +283,6 @@ public class ScriptParser {
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("global")) {
             // Global assignment
             return parseGlobalAssignment(tokens);
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME) {
-            // Variable assignment
-            return parseVariableAssignment(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.RETURN) {
             if (tokens.size() == 1) {
                 return new ScriptReturn(null);
@@ -320,9 +319,42 @@ public class ScriptParser {
         } else if (tokens.getFirst().type == ScriptTokenType.CONTINUE) {
             if (tokens.size() != 1) throw new IllegalArgumentException("Continue statement must be called on its own");
             return new ScriptFlowStatement(Script.FlowStatementType.CONTINUE);
+        } else if (tokens.getFirst().type == ScriptTokenType.NAME && (tokens.get(1).type == ScriptTokenType.ASSIGNMENT || tokens.get(1).type == ScriptTokenType.MODIFIER_PLUS || tokens.get(1).type == ScriptTokenType.MODIFIER_MINUS || tokens.get(1).type == ScriptTokenType.MODIFIER_MULTIPLY || tokens.get(1).type == ScriptTokenType.MODIFIER_DIVIDE || tokens.get(1).type == ScriptTokenType.MODIFIER_MODULO)) {
+            // Variable assignment
+            return parseVariableAssignment(tokens);
+        } else if (findFirstTokenIndex(tokens, ScriptTokenType.BRACKET_SQUARE_OPEN, 0) != -1) {
+            // List element assignment
+            return parseListElementAssignment(tokens);
         } else {
             throw new IllegalArgumentException("Script contains invalid instruction");
         }
+    }
+
+    private static Script parseListElementAssignment(List<ScriptToken> tokens) {
+        int listIndexOpen = findFirstTokenIndex(tokens, ScriptTokenType.BRACKET_SQUARE_OPEN, 0);
+        int listIndexClose = findPairedClosingBracket(tokens, listIndexOpen);
+        if (listIndexClose == -1) {
+            throw new IllegalArgumentException("List element assignment is missing closing bracket on index block");
+        }
+        int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, Set.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO), listIndexClose);
+        if (assignmentOperatorIndex == -1) {
+            throw new IllegalArgumentException("List element assignment has no assignment operator");
+        } else if (assignmentOperatorIndex != listIndexClose + 1) {
+            throw new IllegalArgumentException("List element assignment has unexpected tokens before assignment operator");
+        }
+        Script listScript = parseValue(tokens.subList(0, listIndexOpen));
+        Script indexScript = parseExpression(tokens.subList(listIndexOpen + 1, listIndexClose));
+        Script valueScript = parseValue(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
+        Script valueScriptWithOperators = switch (tokens.get(assignmentOperatorIndex).type) {
+            case ASSIGNMENT -> valueScript;
+            case MODIFIER_PLUS -> new ScriptAdd(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
+            case MODIFIER_MINUS -> new ScriptSubtract(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
+            case MODIFIER_MULTIPLY -> new ScriptMultiply(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
+            case MODIFIER_DIVIDE -> new ScriptDivide(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
+            case MODIFIER_MODULO -> new ScriptModulo(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
+            default -> throw new IllegalArgumentException("Not a valid assignment operator");
+        };
+        return new ScriptListIndexSetInternal(listScript, indexScript, valueScriptWithOperators);
     }
 
     private static Script parseVariableDeclaration(List<ScriptToken> tokens) {
@@ -552,6 +584,8 @@ public class ScriptParser {
     private static Script parseValue(List<ScriptToken> tokens) {
         if (tokens.getFirst().type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             return parseExpression(tokens.subList(1, tokens.size() - 1));
+        } else if (tokens.getLast().type == ScriptTokenType.BRACKET_SQUARE_CLOSE) {
+            return parseListElementReference(tokens);
         } else if (tokens.size() == 1 && tokens.getFirst().type == ScriptTokenType.NAME) {
             return new ScriptGetVariable(tokens.getFirst().value);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("stat")) {
@@ -573,6 +607,14 @@ public class ScriptParser {
             Expression literalExpression = parseLiteral(tokens);
             return new ScriptExpression(literalExpression);
         }
+    }
+
+    private static Script parseListElementReference(List<ScriptToken> tokens) {
+        int indexBracketOpen = findFirstTokenIndex(tokens, ScriptTokenType.BRACKET_SQUARE_OPEN, 0);
+        int indexBracketClose = findPairedClosingBracket(tokens, indexBracketOpen);
+        Script listExpression = parseExpression(tokens.subList(0, indexBracketOpen));
+        Script indexExpression = parseExpression(tokens.subList(indexBracketOpen + 1, indexBracketClose));
+        return new ScriptListIndexGetInternal(listExpression, indexExpression);
     }
 
     private static Script parseCollection(List<ScriptToken> tokens) {
@@ -704,6 +746,10 @@ public class ScriptParser {
                 bracketStack.push(ScriptTokenType.PARENTHESIS_OPEN);
             } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE && bracketStack.peek() == ScriptTokenType.PARENTHESIS_OPEN) {
                 bracketStack.pop();
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_OPEN) {
+                bracketStack.push(ScriptTokenType.BRACKET_SQUARE_OPEN);
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_CLOSE && bracketStack.peek() == ScriptTokenType.BRACKET_SQUARE_OPEN) {
+                bracketStack.pop();
             }
         }
         return -1;
@@ -723,6 +769,10 @@ public class ScriptParser {
             } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE) {
                 bracketStack.push(ScriptTokenType.PARENTHESIS_CLOSE);
             } else if (token.type == ScriptTokenType.PARENTHESIS_OPEN && bracketStack.peek() == ScriptTokenType.PARENTHESIS_CLOSE) {
+                bracketStack.pop();
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_CLOSE) {
+                bracketStack.push(ScriptTokenType.BRACKET_SQUARE_CLOSE);
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_OPEN && bracketStack.peek() == ScriptTokenType.BRACKET_SQUARE_CLOSE) {
                 bracketStack.pop();
             }
         }
@@ -744,6 +794,10 @@ public class ScriptParser {
                 bracketStack.push(ScriptTokenType.PARENTHESIS_OPEN);
             } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE && bracketStack.peek() == ScriptTokenType.PARENTHESIS_OPEN) {
                 bracketStack.pop();
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_OPEN) {
+                bracketStack.push(ScriptTokenType.BRACKET_SQUARE_OPEN);
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_CLOSE && bracketStack.peek() == ScriptTokenType.BRACKET_SQUARE_OPEN) {
+                bracketStack.pop();
             }
         }
         return -1;
@@ -764,6 +818,10 @@ public class ScriptParser {
                 bracketStack.push(ScriptTokenType.PARENTHESIS_CLOSE);
             } else if (token.type == ScriptTokenType.PARENTHESIS_OPEN && bracketStack.peek() == ScriptTokenType.PARENTHESIS_CLOSE) {
                 bracketStack.pop();
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_CLOSE) {
+                bracketStack.push(ScriptTokenType.BRACKET_SQUARE_CLOSE);
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_OPEN && bracketStack.peek() == ScriptTokenType.BRACKET_SQUARE_CLOSE) {
+                bracketStack.pop();
             }
         }
         return -1;
@@ -774,6 +832,7 @@ public class ScriptParser {
         switch (tokens.get(openBracketIndex).type) {
             case PARENTHESIS_OPEN -> targetBracketType = ScriptTokenType.PARENTHESIS_CLOSE;
             case BRACKET_OPEN -> targetBracketType = ScriptTokenType.BRACKET_CLOSE;
+            case BRACKET_SQUARE_OPEN -> targetBracketType = ScriptTokenType.BRACKET_SQUARE_CLOSE;
             default -> throw new IllegalArgumentException("Specified token is not a valid type of open bracket");
         }
         Deque<ScriptTokenType> bracketStack = new ArrayDeque<>();
@@ -788,6 +847,10 @@ public class ScriptParser {
             } else if (token.type == ScriptTokenType.PARENTHESIS_OPEN) {
                 bracketStack.push(ScriptTokenType.PARENTHESIS_OPEN);
             } else if (token.type == ScriptTokenType.PARENTHESIS_CLOSE && bracketStack.peek() == ScriptTokenType.PARENTHESIS_OPEN) {
+                bracketStack.pop();
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_OPEN) {
+                bracketStack.push(ScriptTokenType.BRACKET_SQUARE_OPEN);
+            } else if (token.type == ScriptTokenType.BRACKET_SQUARE_CLOSE && bracketStack.peek() == ScriptTokenType.BRACKET_SQUARE_OPEN) {
                 bracketStack.pop();
             }
         }
