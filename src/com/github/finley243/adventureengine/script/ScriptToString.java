@@ -8,6 +8,9 @@ public class ScriptToString extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
+        if (valueExpression == null) {
+            return new ScriptReturnData(Expression.constant("null"), FlowStatementType.RETURN, null);
+        }
         String stringValue = valueExpression.toString();
         return new ScriptReturnData(Expression.constant(stringValue), FlowStatementType.RETURN, null);
     }

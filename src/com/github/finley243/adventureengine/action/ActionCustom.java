@@ -79,7 +79,10 @@ public class ActionCustom extends Action {
                     context.setLocalVariable(instanceParameter.getKey(), parameterResult.value());
                 }
             }
-            getTemplate().getScript().execute(context);
+            Script.ScriptReturnData actionScriptResult = getTemplate().getScript().execute(context);
+            if (actionScriptResult.error() != null) {
+                game.log().print("Action script error: " + actionScriptResult.error());
+            }
         }
     }
 

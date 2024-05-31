@@ -36,6 +36,7 @@ public class DebugLogger {
     }
 
     public void print(String text) {
+        System.out.println(text);
         if (enabled) {
             String timestamp = LocalDateTime.now().format(timestampFormatter);
             try {
