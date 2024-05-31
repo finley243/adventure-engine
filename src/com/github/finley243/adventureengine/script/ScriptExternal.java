@@ -75,13 +75,13 @@ public class ScriptExternal extends Script {
         ScriptReturnData scriptResult = script.script().execute(innerContext);
         if (scriptResult.flowStatement() != null && scriptResult.flowStatement() != FlowStatementType.RETURN) {
             return new ScriptReturnData(null, null, "Function contains unhandled flow statement");
-        } else if (scriptResult.flowStatement() != FlowStatementType.RETURN && script.returnType() != null) {
-            return new ScriptReturnData(null, null, "Function has non-void return type but is missing return statement");
+        } else if (scriptResult.flowStatement() != FlowStatementType.RETURN && script.hasReturn()) {
+            return new ScriptReturnData(null, null, "Function has return type but is missing return statement");
         } else if (scriptResult.value() == null) {
             return new ScriptReturnData(null, null, null);
-        } else if (script.returnType() == null) {
-            return new ScriptReturnData(null, null, "Function is void but is returning an unexpected value");
-        } else if (scriptResult.value().getDataType() == script.returnType()) {
+        } else if (!script.hasReturn()) {
+            return new ScriptReturnData(null, null, "Function has no return but is returning an unexpected value");
+        } else if (script.returnType() == null || scriptResult.value().getDataType() == script.returnType()) {
             return new ScriptReturnData(scriptResult.value(), null, null);
         } else {
             return new ScriptReturnData(null, null, "Function return value does not match return type in function definition");

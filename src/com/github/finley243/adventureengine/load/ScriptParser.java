@@ -145,10 +145,15 @@ public class ScriptParser {
         }
         String functionName = functionTokens.header().getLast().value;
         if (RESERVED_KEYWORDS.contains(functionName)) throw new IllegalArgumentException("Function name is reserved");
+        boolean functionHasReturn = functionHasReturn(functionTokens.header());
         Expression.DataType functionReturnType = parseFunctionReturnType(functionTokens.header());
         List<ScriptParameter> functionParameters = parseFunctionParameters(functionTokens.parameters());
         Script functionScript = parseScript(functionTokens.body());
-        return new ScriptData(functionName, functionReturnType, functionParameters, false, functionScript);
+        return new ScriptData(functionName, functionHasReturn, functionReturnType, functionParameters, false, functionScript);
+    }
+
+    private static boolean functionHasReturn(List<ScriptToken> headerTokens) {
+        return headerTokens.size() == 3;
     }
 
     private static Expression.DataType parseFunctionReturnType(List<ScriptToken> headerTokens) {
@@ -795,15 +800,17 @@ public class ScriptParser {
             case "int" -> Expression.DataType.INTEGER;
             case "float" -> Expression.DataType.FLOAT;
             case "string" -> Expression.DataType.STRING;
-            case "stringSet" -> Expression.DataType.SET;
+            case "set" -> Expression.DataType.SET;
+            case "list" -> Expression.DataType.LIST;
+            case "statHolder" -> Expression.DataType.STAT_HOLDER;
             case "inventory" -> Expression.DataType.INVENTORY;
             case "noun" -> Expression.DataType.NOUN;
-            case "void" -> null;
+            case "any" -> null;
             default -> throw new IllegalArgumentException("Invalid data type name: " + name);
         };
     }
 
-    public record ScriptData(String name, Expression.DataType returnType, List<ScriptParameter> parameters, boolean allowExtraParameters, Script script) {}
+    public record ScriptData(String name, boolean hasReturn, Expression.DataType returnType, List<ScriptParameter> parameters, boolean allowExtraParameters, Script script) {}
 
     private static class ScriptToken {
         public final ScriptTokenType type;
