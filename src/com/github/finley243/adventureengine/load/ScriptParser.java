@@ -17,6 +17,7 @@ public class ScriptParser {
 
     private static final Set<String> RESERVED_KEYWORDS = Sets.newHashSet("var", "func", "true", "false", "for", "if", "else", "stat", "statHolder", "return", "break", "continue", "game", "global", "null", "set", "list", "error", "log");
     private static final String REGEX_PATTERN = "/\\*[.*]+\\*/|//.*[\n\r]|\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'|_?[a-zA-Z][a-zA-Z0-9_]*|([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f|[0-9]+|\\+=|-=|\\*=|/=|%=|==|!=|<=|>=|<|>|;|=|\\?|,|\\.|\\+|-|/|\\*|%|\\^|:|!|&&|\\|\\||\\(|\\)|\\{|\\}|\\[|\\]";
+    private static final Set<ScriptTokenType> ASSIGNMENT_OPERATORS = Set.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO);
     private static final Map<String, ScriptTokenType> SIMPLE_TOKENS_MAP = new HashMap<>() {
         {
             put(";", ScriptTokenType.END_LINE);
@@ -277,12 +278,9 @@ public class ScriptParser {
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.get(1).type == ScriptTokenType.PARENTHESIS_OPEN && tokens.getLast().type == ScriptTokenType.PARENTHESIS_CLOSE) {
             // Function call
             return parseFunctionCall(tokens);
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("stat")) {
-            // Stat assignment
-            return parseStatAssignment(tokens);
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("global")) {
-            // Global assignment
-            return parseGlobalAssignment(tokens);
+        } else if (findFirstTokenIndexFromSet(tokens, ASSIGNMENT_OPERATORS, 0) != -1) {
+            // Assignment
+            return parseAssignment(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.RETURN) {
             if (tokens.size() == 1) {
                 return new ScriptReturn(null);
@@ -319,14 +317,28 @@ public class ScriptParser {
         } else if (tokens.getFirst().type == ScriptTokenType.CONTINUE) {
             if (tokens.size() != 1) throw new IllegalArgumentException("Continue statement must be called on its own");
             return new ScriptFlowStatement(Script.FlowStatementType.CONTINUE);
-        } else if (tokens.getFirst().type == ScriptTokenType.NAME && (tokens.get(1).type == ScriptTokenType.ASSIGNMENT || tokens.get(1).type == ScriptTokenType.MODIFIER_PLUS || tokens.get(1).type == ScriptTokenType.MODIFIER_MINUS || tokens.get(1).type == ScriptTokenType.MODIFIER_MULTIPLY || tokens.get(1).type == ScriptTokenType.MODIFIER_DIVIDE || tokens.get(1).type == ScriptTokenType.MODIFIER_MODULO)) {
+        } else {
+            throw new IllegalArgumentException("Script contains invalid instruction");
+        }
+    }
+
+    private static Script parseAssignment(List<ScriptToken> tokens) {
+        int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, ASSIGNMENT_OPERATORS, 0);
+        int firstSquareBracketIndex = findFirstTokenIndex(tokens, ScriptTokenType.BRACKET_SQUARE_OPEN, 0);
+        if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("stat")) {
+            // Stat assignment
+            return parseStatAssignment(tokens);
+        } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("global")) {
+            // Global assignment
+            return parseGlobalAssignment(tokens);
+        } else if (tokens.getFirst().type == ScriptTokenType.NAME && assignmentOperatorIndex == 1) {
             // Variable assignment
             return parseVariableAssignment(tokens);
-        } else if (findFirstTokenIndex(tokens, ScriptTokenType.BRACKET_SQUARE_OPEN, 0) != -1) {
+        } else if (firstSquareBracketIndex != -1 && firstSquareBracketIndex < assignmentOperatorIndex) {
             // List element assignment
             return parseListElementAssignment(tokens);
         } else {
-            throw new IllegalArgumentException("Script contains invalid instruction");
+            throw new IllegalArgumentException("Assignment statement is invalid");
         }
     }
 
@@ -336,7 +348,7 @@ public class ScriptParser {
         if (listIndexClose == -1) {
             throw new IllegalArgumentException("List element assignment is missing closing bracket on index block");
         }
-        int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, Set.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO), listIndexClose);
+        int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, ASSIGNMENT_OPERATORS, listIndexClose);
         if (assignmentOperatorIndex == -1) {
             throw new IllegalArgumentException("List element assignment has no assignment operator");
         } else if (assignmentOperatorIndex != listIndexClose + 1) {
@@ -370,7 +382,7 @@ public class ScriptParser {
     }
 
     private static Script parseStatAssignment(List<ScriptToken> tokens) {
-        int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, Set.of(ScriptTokenType.ASSIGNMENT, ScriptTokenType.MODIFIER_PLUS, ScriptTokenType.MODIFIER_MINUS, ScriptTokenType.MODIFIER_MULTIPLY, ScriptTokenType.MODIFIER_DIVIDE, ScriptTokenType.MODIFIER_MODULO), 0);
+        int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, ASSIGNMENT_OPERATORS, 0);
         if (assignmentOperatorIndex == -1) throw new IllegalArgumentException("Stat assignment is missing assignment operator");
         ScriptStatReference statReference = parseStatReference(tokens.subList(0, assignmentOperatorIndex));
         Script statValue;
