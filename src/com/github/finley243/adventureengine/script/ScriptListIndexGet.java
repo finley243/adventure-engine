@@ -17,7 +17,7 @@ public class ScriptListIndexGet extends Script {
         int index = indexExpression.getValueInteger();
         if (index < 0 || index >= list.size()) return new ScriptReturnData(null, null, "Index is out of bounds");
         Expression valueAtIndex = list.get(index);
-        return new ScriptReturnData(valueAtIndex, null, null);
+        return new ScriptReturnData(valueAtIndex, FlowStatementType.RETURN, null);
     }
 
 }
