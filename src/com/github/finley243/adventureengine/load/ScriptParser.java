@@ -344,7 +344,7 @@ public class ScriptParser {
         }
         Script listScript = parseValue(tokens.subList(0, listIndexOpen));
         Script indexScript = parseExpression(tokens.subList(listIndexOpen + 1, listIndexClose));
-        Script valueScript = parseValue(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
+        Script valueScript = parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
         Script valueScriptWithOperators = switch (tokens.get(assignmentOperatorIndex).type) {
             case ASSIGNMENT -> valueScript;
             case MODIFIER_PLUS -> new ScriptAdd(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
