@@ -17,10 +17,10 @@ public class ScriptSensoryEvent extends Script {
         Expression phraseAudible = context.getLocalVariables().get("phraseAudible").getExpression();
         Expression area = context.getLocalVariables().get("area").getExpression();
         Expression isDetectedBySelfExpression = context.getLocalVariables().get("detectSelf").getExpression();
-        if (phrase != null && phrase.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Phrase parameter is not a string");
-        if (phraseAudible != null && phraseAudible.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "PhraseAudible parameter is not a string");
-        if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Area parameter is not a string or set");
-        if (isDetectedBySelfExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, null, "DetectSelf parameter is not a boolean");
+        if (phrase != null && phrase.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Phrase parameter is not a string", -1));
+        if (phraseAudible != null && phraseAudible.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("PhraseAudible parameter is not a string", -1));
+        if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Area parameter is not a string or set", -1));
+        if (isDetectedBySelfExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, null, new ScriptErrorData("DetectSelf parameter is not a boolean", -1));
         boolean isDetectedBySelf = isDetectedBySelfExpression.getValueBoolean();
         Area[] originAreas = getOriginAreas(context, area);
         String phraseString = (phrase == null ? null : phrase.getValueString());

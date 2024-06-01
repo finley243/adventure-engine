@@ -11,7 +11,7 @@ public class ScriptListCopy extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         Expression listExpression = context.getLocalVariables().get("list").getExpression();
-        if (listExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, "List parameter is not a list");
+        if (listExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List parameter is not a list", -1));
         List<Expression> list = listExpression.getValueList();
         List<Expression> listCopy = new ArrayList<>(list);
         return new ScriptReturnData(Expression.constant(listCopy), FlowStatementType.RETURN, null);

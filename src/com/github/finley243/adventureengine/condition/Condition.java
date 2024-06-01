@@ -20,7 +20,7 @@ public class Condition {
 		Script.ScriptReturnData result = expression.execute(context);
 		if (result.error() != null) {
 			System.out.println(expression);
-			throw new IllegalArgumentException("Condition expression encountered an error during execution: " + result.error());
+			throw new IllegalArgumentException("Condition expression encountered an error during execution: " + result.error().message());
 		} else if (result.flowStatement() != null) {
 			throw new IllegalArgumentException("Condition expression contains an unexpected flow statement");
 		} else if (result.value() == null) {

@@ -15,10 +15,11 @@ public class ScriptCompound extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         Context innerContext = new Context(context, true);
-        for (Script subScript : subScripts) {
+        for (int i = 0; i < subScripts.size(); i++) {
+            Script subScript = subScripts.get(i);
             ScriptReturnData result = subScript.execute(innerContext);
             if (result.error() != null) {
-                return result;
+                return new ScriptReturnData(null, null, new ScriptErrorData(result.error().message(), i + 1));
             } else if (result.flowStatement() != null) {
                 return result;
             }

@@ -14,15 +14,15 @@ public class ScriptInventoryContains extends Script {
         Expression inventoryExpression = context.getLocalVariables().get("inventory").getExpression();
         Expression itemExpression = context.getLocalVariables().get("item").getExpression();
         Expression requireAllExpression = context.getLocalVariables().get("requireAll").getExpression();
-        if (inventoryExpression.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, "Inventory parameter is not an inventory");
-        if (itemExpression.getDataType() != Expression.DataType.STRING && itemExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Item parameter is not a string or set");
-        if (requireAllExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, null, "RequireAll parameter is not a boolean");
+        if (inventoryExpression.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, new ScriptErrorData("Inventory parameter is not an inventory", -1));
+        if (itemExpression.getDataType() != Expression.DataType.STRING && itemExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Item parameter is not a string or set", -1));
+        if (requireAllExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, null, new ScriptErrorData("RequireAll parameter is not a boolean", -1));
         Inventory inventory = inventoryExpression.getValueInventory();
         boolean requireAll = requireAllExpression.getValueBoolean();
         if (itemExpression.getDataType() == Expression.DataType.SET) {
             Set<String> itemIDSet = new HashSet<>();
             for (Expression itemExpressionFromSet : itemExpression.getValueSet()) {
-                if (itemExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Item set contains a value that is not a string");
+                if (itemExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Item set contains a value that is not a string", -1));
                 itemIDSet.add(itemExpressionFromSet.getValueString());
             }
             for (String itemID : itemIDSet) {

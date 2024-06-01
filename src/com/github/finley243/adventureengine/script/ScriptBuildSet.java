@@ -23,9 +23,9 @@ public class ScriptBuildSet extends Script {
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() != null) {
-                return new ScriptReturnData(null, null, "Set expression contains unexpected flow statement");
+                return new ScriptReturnData(null, null, new ScriptErrorData("Set expression contains unexpected flow statement", -1));
             } else if (scriptResult.value() == null) {
-                return new ScriptReturnData(null, null, "Set expression is null");
+                return new ScriptReturnData(null, null, new ScriptErrorData("Set expression is null", -1));
             } else {
                 computedValues.add(scriptResult.value());
             }

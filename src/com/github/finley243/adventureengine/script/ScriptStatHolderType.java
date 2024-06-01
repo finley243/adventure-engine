@@ -16,7 +16,7 @@ public class ScriptStatHolderType extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         Expression statHolderExpression = context.getLocalVariables().get("holder").getExpression();
-        if (statHolderExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, "Holder parameter is not a stat holder");
+        if (statHolderExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a stat holder", -1));
         StatHolder statHolder = statHolderExpression.getValueStatHolder();
         String typeString = switch (statHolder) {
             case Actor ignored -> "actor";
@@ -28,7 +28,7 @@ public class ScriptStatHolderType extends Script {
             case Scene ignored -> "scene";
             case null, default -> null;
         };
-        if (typeString == null) return new ScriptReturnData(null, null, "Holder parameter is not a recognized type of StatHolder");
+        if (typeString == null) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a recognized type of StatHolder", -1));
         return new ScriptReturnData(Expression.constant(typeString), FlowStatementType.RETURN, null);
     }
 

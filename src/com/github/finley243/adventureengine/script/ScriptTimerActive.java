@@ -8,7 +8,7 @@ public class ScriptTimerActive extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         Expression timerID = context.getLocalVariables().get("timer").getExpression();
-        if (timerID.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Timer parameter is not a string");
+        if (timerID.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Timer parameter is not a string", -1));
         boolean timerIsActive = context.game().data().isTimerActive(timerID.getValueString());
         return new ScriptReturnData(Expression.constant(timerIsActive), FlowStatementType.RETURN, null);
     }

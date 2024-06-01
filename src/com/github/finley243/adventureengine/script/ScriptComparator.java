@@ -25,23 +25,23 @@ public class ScriptComparator extends Script {
         if (firstReturn.error() != null) {
             return firstReturn;
         } else if (firstReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a return statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a return statement", -1));
         }
         ScriptReturnData secondReturn = secondScript.execute(context);
         if (secondReturn.error() != null) {
             return secondReturn;
         } else if (secondReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a return statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a return statement", -1));
         }
         if (firstReturn.value() == null || secondReturn.value() == null) {
             if (comparator != Comparator.EQUAL && comparator != Comparator.NOT_EQUAL) {
-                return new ScriptReturnData(null, null, "Expression has invalid comparator for null value");
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression has invalid comparator for null value", -1));
             }
             Expression compareNullResult = Expression.constant(compareExpressionsNull(firstReturn.value(), secondReturn.value()));
             return new ScriptReturnData(compareNullResult, null, null);
         }
         if (!firstReturn.value().canCompareTo(secondReturn.value())) {
-            return new ScriptReturnData(null, null, "Expression received values that could not be compared");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not be compared", -1));
         }
         Expression compareResult = Expression.constant(compareExpressions(firstReturn.value(), secondReturn.value()));
         return new ScriptReturnData(compareResult, null, null);

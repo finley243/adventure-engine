@@ -18,7 +18,7 @@ public class ScriptGetGameValue extends Script {
             case "month" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getMonth()), null, null);
             case "year" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getYear()), null, null);
             case "weekday" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getWeekday()), null, null);
-            default -> new ScriptReturnData(null, null, "Specified game value does not exist");
+            default -> new ScriptReturnData(null, null, new ScriptErrorData("Specified game value does not exist", -1));
         };
     }
 

@@ -17,11 +17,11 @@ public class ScriptPrintLog extends Script {
         if (messageResult.error() != null) {
             return messageResult;
         } else if (messageResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
         } else if (messageResult.value() == null) {
-            return new ScriptReturnData(null, null, "Expression provided a null value");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a null value", -1));
         } else if (messageResult.value().getDataType() != Expression.DataType.STRING) {
-            return new ScriptReturnData(null, null, "Expression provided a non-string value");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a non-string value", -1));
         }
         String messageValue = messageResult.value().getValueString();
         context.game().log().print(messageValue);

@@ -18,15 +18,15 @@ public class ScriptSetVariable extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         if (isDefinition && context.getLocalVariables().containsKey(variableName)) {
-            return new ScriptReturnData(null, null, "Variable with name is already defined");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Variable with name is already defined", -1));
         } else if (!isDefinition && !context.getLocalVariables().containsKey(variableName)) {
-            return new ScriptReturnData(null, null, "Variable with name has not been defined");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Variable with name has not been defined", -1));
         }
         ScriptReturnData valueResult = variableValue.execute(context);
         if (valueResult.error() != null) {
             return valueResult;
         } else if (valueResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
         }
         context.setLocalVariable(variableName, valueResult.value());
         return new ScriptReturnData(null, null, null);

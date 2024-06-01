@@ -19,7 +19,7 @@ public class ScriptSetGlobal extends Script {
         if (globalValueResult.error() != null) {
             return globalValueResult;
         } else if (globalValueResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Script expression contains unexpected flow statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Script expression contains unexpected flow statement", -1));
         }
         context.game().data().setGlobalExpression(globalName, globalValueResult.value());
         return new ScriptReturnData(null, null, null);

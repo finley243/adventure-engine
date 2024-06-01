@@ -58,7 +58,7 @@ public class StatHolderReference {
         if (holderIDScript != null) {
             Script.ScriptReturnData holderIDResult = holderIDScript.execute(context);
             if (holderIDResult.error() != null) {
-                throw new IllegalArgumentException("StatHolderReference holderID expression threw an error: " + holderIDResult.error());
+                throw new IllegalArgumentException("StatHolderReference holderID expression threw an error: " + holderIDResult.error().message());
             } else if (holderIDResult.flowStatement() != null) {
                 throw new IllegalArgumentException("StatHolderReference holderID contains an unexpected flow statement");
             }
@@ -72,7 +72,7 @@ public class StatHolderReference {
         if (holderExpression != null) {
             Script.ScriptReturnData expressionResult = holderExpression.execute(context);
             if (expressionResult.error() != null) {
-                throw new IllegalArgumentException("StatHolderReference expression threw an error: " + expressionResult.error());
+                throw new IllegalArgumentException("StatHolderReference expression threw an error: " + expressionResult.error().message());
             } else if (expressionResult.flowStatement() != null) {
                 throw new IllegalArgumentException("StatHolderReference expression contains an unexpected flow statement");
             }

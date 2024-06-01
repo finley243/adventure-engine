@@ -22,11 +22,11 @@ public class ScriptGetStat extends Script {
         if (statNameResult.error() != null) {
             return statNameResult;
         } else if (statNameResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
         }
         Expression statNameExpression = statNameResult.value();
-        if (statNameExpression == null) return new ScriptReturnData(null, null, "Specified stat name is null");
-        if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Specified stat name is not a string");
+        if (statNameExpression == null) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat name is null", -1));
+        if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat name is not a string", -1));
         String statNameString = statNameExpression.getValueString();
         StatHolder statHolderValue = statHolder.getHolder(context);
         Expression statValue = statHolderValue.getStatValue(statNameString, context);

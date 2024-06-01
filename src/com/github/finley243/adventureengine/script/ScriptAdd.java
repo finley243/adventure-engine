@@ -19,20 +19,20 @@ public class ScriptAdd extends Script {
         if (firstReturn.error() != null) {
             return firstReturn;
         } else if (firstReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
         } else if (firstReturn.value() == null) {
-            return new ScriptReturnData(null, null, "Expression did not receive a value");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", -1));
         }
         ScriptReturnData secondReturn = secondScript.execute(context);
         if (secondReturn.error() != null) {
             return secondReturn;
         } else if (secondReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
         } else if (secondReturn.value() == null) {
-            return new ScriptReturnData(null, null, "Expression did not receive a value");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", -1));
         }
         if (!canAddExpressions(firstReturn.value(), secondReturn.value())) {
-            return new ScriptReturnData(null, null, "Expression received values that could not be added");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not be added", -1));
         }
         Expression addResult = addExpressions(firstReturn.value(), secondReturn.value());
         return new ScriptReturnData(addResult, null, null);

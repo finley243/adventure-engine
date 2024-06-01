@@ -19,7 +19,7 @@ public class ScriptReturn extends Script {
         if (scriptResult.error() != null) {
             return scriptResult;
         } else if (scriptResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
         }
         return new ScriptReturnData(scriptResult.value(), FlowStatementType.RETURN, null);
     }

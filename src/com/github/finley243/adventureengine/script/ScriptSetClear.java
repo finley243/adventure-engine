@@ -10,7 +10,7 @@ public class ScriptSetClear extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         Expression setExpression = context.getLocalVariables().get("set").getExpression();
-        if (setExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Set parameter is not a set");
+        if (setExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set parameter is not a set", -1));
         Set<Expression> set = setExpression.getValueSet();
         set.clear();
         return new ScriptReturnData(null, null, null);

@@ -9,9 +9,9 @@ public class ScriptRandomBoolean extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         Expression chanceExpression = context.getLocalVariables().get("chance").getExpression();
-        if (chanceExpression.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, "Chance parameter is not a float");
+        if (chanceExpression.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("Chance parameter is not a float", -1));
         float chance = chanceExpression.getValueFloat();
-        if (chance < 0.0f || chance > 1.0f) return new ScriptReturnData(null, null, "Chance parameter is outside the valid range");
+        if (chance < 0.0f || chance > 1.0f) return new ScriptReturnData(null, null, new ScriptErrorData("Chance parameter is outside the valid range", -1));
         boolean result = MathUtils.randomCheck(chance);
         return new ScriptReturnData(Expression.constant(result), FlowStatementType.RETURN, null);
     }

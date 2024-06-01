@@ -22,11 +22,11 @@ public class ScriptConditional extends Script {
             if (conditionResult.error() != null) {
                 return conditionResult;
             } else if (conditionResult.flowStatement() != null) {
-                return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
             } else if (conditionResult.value() == null) {
-                return new ScriptReturnData(null, null, "Expression did not return a value");
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not return a value", -1));
             } else if (conditionResult.value().getDataType() != Expression.DataType.BOOLEAN) {
-                return new ScriptReturnData(null, null, "Expression did not return a boolean value");
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not return a boolean value", -1));
             }
             if (conditionResult.value().getValueBoolean()) {
                 return scriptPair.script.execute(context);

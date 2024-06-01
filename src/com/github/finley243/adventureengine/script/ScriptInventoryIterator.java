@@ -24,11 +24,11 @@ public class ScriptInventoryIterator extends Script {
         if (setResult.error() != null) {
             return setResult;
         } else if (setResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
         } else if (setResult.value() == null) {
-            return new ScriptReturnData(null, null, "Expression did not receive a value");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", -1));
         } else if (setResult.value().getDataType() != Expression.DataType.INVENTORY) {
-            return new ScriptReturnData(null, null, "Expression expected an inventory");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected an inventory", -1));
         }
         Inventory inventory = setResult.value().getValueInventory();
         for (Map.Entry<Item, Integer> currentItem : inventory.getItemMap().entrySet()) {

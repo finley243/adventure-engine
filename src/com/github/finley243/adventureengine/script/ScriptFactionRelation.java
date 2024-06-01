@@ -11,16 +11,16 @@ public class ScriptFactionRelation extends Script {
 		Expression factionExpression = context.getLocalVariables().get("faction").getExpression();
 		Expression relatedFactionExpression = context.getLocalVariables().get("relatedFaction").getExpression();
 		Expression relationExpression = context.getLocalVariables().get("relation").getExpression();
-		if (factionExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Faction parameter is not a string");
-		if (relatedFactionExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "RelatedFaction parameter is not a string");
-		if (relationExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, "Relation parameter is not a string");
+		if (factionExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Faction parameter is not a string", -1));
+		if (relatedFactionExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("RelatedFaction parameter is not a string", -1));
+		if (relationExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Relation parameter is not a string", -1));
 		FactionRelation relation;
 		switch (relationExpression.getValueString()) {
 			case "ally" -> relation = FactionRelation.ALLY;
 			case "neutral" -> relation = FactionRelation.NEUTRAL;
 			case "hostile" -> relation = FactionRelation.HOSTILE;
 			default -> {
-				return new ScriptReturnData(null, null, "Relation parameter is not a valid faction relation");
+				return new ScriptReturnData(null, null, new ScriptErrorData("Relation parameter is not a valid faction relation", -1));
 			}
 		}
 		context.game().data().getFaction(factionExpression.getValueString()).setRelation(relatedFactionExpression.getValueString(), relation);

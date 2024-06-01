@@ -11,11 +11,11 @@ public class ScriptListIndexGet extends Script {
     public ScriptReturnData execute(Context context) {
         Expression listExpression = context.getLocalVariables().get("list").getExpression();
         Expression indexExpression = context.getLocalVariables().get("index").getExpression();
-        if (listExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, "List parameter is not a list");
-        if (indexExpression.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, "Index parameter is not an integer");
+        if (listExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List parameter is not a list", -1));
+        if (indexExpression.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Index parameter is not an integer", -1));
         List<Expression> list = listExpression.getValueList();
         int index = indexExpression.getValueInteger();
-        if (index < 0 || index >= list.size()) return new ScriptReturnData(null, null, "Index is out of bounds");
+        if (index < 0 || index >= list.size()) return new ScriptReturnData(null, null, new ScriptErrorData("Index is out of bounds", -1));
         Expression valueAtIndex = list.get(index);
         return new ScriptReturnData(valueAtIndex, FlowStatementType.RETURN, null);
     }

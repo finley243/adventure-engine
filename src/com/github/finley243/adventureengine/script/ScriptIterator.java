@@ -26,11 +26,11 @@ public class ScriptIterator extends Script {
         if (setResult.error() != null) {
             return setResult;
         } else if (setResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
         } else if (setResult.value() == null) {
-            return new ScriptReturnData(null, null, "Expression did not receive a value");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", -1));
         } else if (setResult.value().getDataType() != Expression.DataType.SET && setResult.value().getDataType() != Expression.DataType.LIST) {
-            return new ScriptReturnData(null, null, "Expression expected a set or list");
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected a set or list", -1));
         }
         List<Expression> expressions;
         if (setResult.value().getDataType() == Expression.DataType.SET) {

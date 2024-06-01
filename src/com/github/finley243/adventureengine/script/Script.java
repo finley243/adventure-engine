@@ -112,6 +112,8 @@ public abstract class Script {
 		return new ScriptExpression(Expression.constant(value));
 	}
 
-	public record ScriptReturnData(Expression value, FlowStatementType flowStatement, String error) {}
+	public record ScriptReturnData(Expression value, FlowStatementType flowStatement, ScriptErrorData error) {}
+
+	public record ScriptErrorData(String message, int line) {}
 
 }

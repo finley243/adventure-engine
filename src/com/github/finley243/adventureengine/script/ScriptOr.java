@@ -21,11 +21,11 @@ public class ScriptOr extends Script {
                 System.out.println(subScript);
                 return result;
             } else if (result.flowStatement() != null) {
-                return new ScriptReturnData(null, null, "Expression cannot contain a flow statement");
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
             } else if (result.value() == null) {
-                return new ScriptReturnData(null, null, "Expression received a null value");
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression received a null value", -1));
             } else if (result.value().getDataType() != Expression.DataType.BOOLEAN) {
-                return new ScriptReturnData(null, null, "Expression expected a boolean value");
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected a boolean value", -1));
             } else if (result.value().getValueBoolean()) {
                 return new ScriptReturnData(Expression.constant(true), null, null);
             }

@@ -12,8 +12,8 @@ public class ScriptSetIntersect extends Script {
     public ScriptReturnData execute(Context context) {
         Expression setOneExpression = context.getLocalVariables().get("setOne").getExpression();
         Expression setTwoExpression = context.getLocalVariables().get("setTwo").getExpression();
-        if (setOneExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Set one parameter is not a set");
-        if (setTwoExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, "Set two parameter is not a set");
+        if (setOneExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set one parameter is not a set", -1));
+        if (setTwoExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set two parameter is not a set", -1));
         Set<Expression> setOne = setOneExpression.getValueSet();
         Set<Expression> setTwo = setTwoExpression.getValueSet();
         Set<Expression> setIntersect = new HashSet<>();

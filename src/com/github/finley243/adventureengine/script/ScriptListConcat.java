@@ -12,8 +12,8 @@ public class ScriptListConcat extends Script {
     public ScriptReturnData execute(Context context) {
         Expression listOneExpression = context.getLocalVariables().get("listOne").getExpression();
         Expression listTwoExpression = context.getLocalVariables().get("listTwo").getExpression();
-        if (listOneExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, "List one parameter is not a list");
-        if (listTwoExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, "List two parameter is not a list");
+        if (listOneExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List one parameter is not a list", -1));
+        if (listTwoExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List two parameter is not a list", -1));
         List<Expression> listOne = listOneExpression.getValueList();
         List<Expression> listTwo = listTwoExpression.getValueList();
         List<Expression> listCombined = new ArrayList<>(listOne);
