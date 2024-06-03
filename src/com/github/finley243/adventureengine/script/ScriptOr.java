@@ -9,7 +9,8 @@ public class ScriptOr extends Script {
 
     private final List<Script> subScripts;
 
-    public ScriptOr(List<Script> subScripts) {
+    public ScriptOr(int line, List<Script> subScripts) {
+        super(line);
         this.subScripts = subScripts;
     }
 
@@ -21,11 +22,11 @@ public class ScriptOr extends Script {
                 System.out.println(subScript);
                 return result;
             } else if (result.flowStatement() != null) {
-                return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
             } else if (result.value() == null) {
-                return new ScriptReturnData(null, null, new ScriptErrorData("Expression received a null value", -1));
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression received a null value", getLine()));
             } else if (result.value().getDataType() != Expression.DataType.BOOLEAN) {
-                return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected a boolean value", -1));
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected a boolean value", getLine()));
             } else if (result.value().getValueBoolean()) {
                 return new ScriptReturnData(Expression.constant(true), null, null);
             }

@@ -6,12 +6,16 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptRandomBoolean extends Script {
 
+    public ScriptRandomBoolean(int line) {
+        super(line);
+    }
+
     @Override
     public ScriptReturnData execute(Context context) {
         Expression chanceExpression = context.getLocalVariables().get("chance").getExpression();
-        if (chanceExpression.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("Chance parameter is not a float", -1));
+        if (chanceExpression.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("Chance parameter is not a float", getLine()));
         float chance = chanceExpression.getValueFloat();
-        if (chance < 0.0f || chance > 1.0f) return new ScriptReturnData(null, null, new ScriptErrorData("Chance parameter is outside the valid range", -1));
+        if (chance < 0.0f || chance > 1.0f) return new ScriptReturnData(null, null, new ScriptErrorData("Chance parameter is outside the valid range", getLine()));
         boolean result = MathUtils.randomCheck(chance);
         return new ScriptReturnData(Expression.constant(result), FlowStatementType.RETURN, null);
     }

@@ -914,7 +914,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		} else if (name.startsWith("has_equipped_")) {
 			for (String slot : getTemplate().getEquipSlots().keySet()) {
 				if (name.equals("has_equipped_" + slot)) {
-					Script.constant(equipmentComponent.getEquippedItemInSlot(slot) != null);
+					return Expression.constant(equipmentComponent.getEquippedItemInSlot(slot) != null);
 				}
 			}
 			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid equip slot");

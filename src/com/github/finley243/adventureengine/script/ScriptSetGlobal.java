@@ -7,7 +7,8 @@ public class ScriptSetGlobal extends Script {
     private final String globalName;
     private final Script globalValue;
 
-    public ScriptSetGlobal(String globalName, Script globalValue) {
+    public ScriptSetGlobal(int line, String globalName, Script globalValue) {
+        super(line);
         if (globalName == null) throw new IllegalArgumentException("ScriptSetGlobal globalID is null");
         this.globalName = globalName;
         this.globalValue = globalValue;
@@ -19,7 +20,7 @@ public class ScriptSetGlobal extends Script {
         if (globalValueResult.error() != null) {
             return globalValueResult;
         } else if (globalValueResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Script expression contains unexpected flow statement", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Script expression contains unexpected flow statement", getLine()));
         }
         context.game().data().setGlobalExpression(globalName, globalValueResult.value());
         return new ScriptReturnData(null, null, null);

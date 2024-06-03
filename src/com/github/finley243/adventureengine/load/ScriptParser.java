@@ -92,23 +92,26 @@ public class ScriptParser {
     private static List<ScriptToken> parseToTokens(String scriptText) {
         List<ScriptToken> tokens = new ArrayList<>();
         Matcher matcher = Pattern.compile(REGEX_PATTERN).matcher(scriptText);
+        int lastEnd = 0;
+        int lastLine = 0;
         while (matcher.find()) {
             String currentToken = matcher.group();
+            int tokenLine = lastLine + scriptText.substring(lastEnd, matcher.start()).split("\n", -1).length;
             if (currentToken.startsWith("\"") && currentToken.endsWith("\"")) {
                 String value = stringLiteralToValue(currentToken);
-                tokens.add(new ScriptToken(ScriptTokenType.STRING, value));
+                tokens.add(new ScriptToken(ScriptTokenType.STRING, value, tokenLine));
             } else if (currentToken.startsWith("'") && currentToken.endsWith("'")) {
                 String value = stringLiteralToValue(currentToken);
-                tokens.add(new ScriptToken(ScriptTokenType.STRING, value));
+                tokens.add(new ScriptToken(ScriptTokenType.STRING, value, tokenLine));
             } else if (currentToken.matches("([0-9]*\\.[0-9]+|[0-9]+\\.?[0-9]*)f")) {
                 String value = currentToken.substring(0, currentToken.length() - 1);
-                tokens.add(new ScriptToken(ScriptTokenType.FLOAT, value));
+                tokens.add(new ScriptToken(ScriptTokenType.FLOAT, value, tokenLine));
             } else if (currentToken.matches("[0-9]+")) {
-                tokens.add(new ScriptToken(ScriptTokenType.INTEGER, currentToken));
+                tokens.add(new ScriptToken(ScriptTokenType.INTEGER, currentToken, tokenLine));
             } else if (SIMPLE_TOKENS_MAP.containsKey(currentToken)) {
-                tokens.add(new ScriptToken(SIMPLE_TOKENS_MAP.get(currentToken)));
+                tokens.add(new ScriptToken(SIMPLE_TOKENS_MAP.get(currentToken), tokenLine));
             } else if (currentToken.matches("_?[a-zA-Z][a-zA-Z0-9_]*")) {
-                tokens.add(new ScriptToken(ScriptTokenType.NAME, currentToken));
+                tokens.add(new ScriptToken(ScriptTokenType.NAME, currentToken, tokenLine));
             }
         }
         return tokens;
@@ -200,6 +203,7 @@ public class ScriptParser {
         int index = 0;
         while (index < tokens.size()) {
             if (tokens.get(index).type == ScriptTokenType.NAME && tokens.get(index).value.equals("if")) {
+                int lineStart = tokens.get(index).line;
                 List<ScriptIfTokens> branches = new ArrayList<>();
                 List<ScriptToken> bodyElse = null;
                 if (tokens.get(index + 1).type != ScriptTokenType.PARENTHESIS_OPEN) throw new IllegalArgumentException("If statement is missing condition");
@@ -228,16 +232,17 @@ public class ScriptParser {
                         index = branchBodyEndIndex + 1;
                     }
                 }
-                Script script = parseIf(branches, bodyElse);
+                Script script = parseIf(branches, bodyElse, lineStart);
                 scripts.add(script);
             } else if (tokens.get(index).type == ScriptTokenType.NAME && tokens.get(index).value.equals("for")) {
+                int lineStart = tokens.get(index).line;
                 if (tokens.get(index + 1).type != ScriptTokenType.PARENTHESIS_OPEN) throw new IllegalArgumentException("For loop is missing iterator");
                 int iteratorEndIndex = findPairedClosingBracket(tokens, index + 1);
                 if (iteratorEndIndex == -1) throw new IllegalArgumentException("For loop iterator is not closed");
                 if (tokens.get(iteratorEndIndex + 1).type != ScriptTokenType.BRACKET_OPEN) throw new IllegalArgumentException("For loop is missing body");
                 int bodyEndIndex = findPairedClosingBracket(tokens, iteratorEndIndex + 1);
                 if (bodyEndIndex == -1) throw new IllegalArgumentException("For loop body is not closed");
-                Script script = parseFor(tokens.subList(index + 1, iteratorEndIndex), tokens.subList(iteratorEndIndex + 2, bodyEndIndex));
+                Script script = parseFor(tokens.subList(index + 1, iteratorEndIndex), tokens.subList(iteratorEndIndex + 2, bodyEndIndex), lineStart);
                 scripts.add(script);
                 index = bodyEndIndex + 1;
             } else {
@@ -248,10 +253,10 @@ public class ScriptParser {
                 index = endIndex + 1;
             }
         }
-        return new ScriptCompound(scripts);
+        return new ScriptCompound(tokens.isEmpty() ? 0 : tokens.getFirst().line, scripts);
     }
 
-    private static Script parseIf(List<ScriptIfTokens> branches, List<ScriptToken> bodyElse) {
+    private static Script parseIf(List<ScriptIfTokens> branches, List<ScriptToken> bodyElse, int lineStart) {
         List<ScriptConditional.ConditionalScriptPair> conditionalScriptPairs = new ArrayList<>();
         for (ScriptIfTokens branch : branches) {
             Script conditionExpression = parseExpression(branch.condition());
@@ -259,16 +264,16 @@ public class ScriptParser {
             conditionalScriptPairs.add(new ScriptConditional.ConditionalScriptPair(conditionExpression, scriptBranch));
         }
         Script scriptElse = bodyElse == null ? null : parseScript(bodyElse);
-        return new ScriptConditional(conditionalScriptPairs, scriptElse);
+        return new ScriptConditional(lineStart, conditionalScriptPairs, scriptElse);
     }
 
-    private static Script parseFor(List<ScriptToken> iterator, List<ScriptToken> body) {
+    private static Script parseFor(List<ScriptToken> iterator, List<ScriptToken> body, int lineStart) {
         if (iterator.getFirst().type != ScriptTokenType.NAME || iterator.get(1).type != ScriptTokenType.COLON) throw new IllegalArgumentException("For loop has invalid iterator format");
         String iteratorVariableName = iterator.getFirst().value;
         // TODO - Check for invalid variable name
         Script iteratedValuesExpression = parseExpression(iterator.subList(2, iterator.size()));
         Script iteratedScript = parseScript(body);
-        return new ScriptIterator(iteratedValuesExpression, iteratorVariableName, iteratedScript);
+        return new ScriptIterator(lineStart, iteratedValuesExpression, iteratorVariableName, iteratedScript);
     }
 
     private static Script parseSingleInstruction(List<ScriptToken> tokens) {
@@ -283,10 +288,10 @@ public class ScriptParser {
             return parseAssignment(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.RETURN) {
             if (tokens.size() == 1) {
-                return new ScriptReturn(null);
+                return new ScriptReturn(tokens.getFirst().line, null);
             }
             Script returnValue = parseExpression(tokens.subList(1, tokens.size()));
-            return new ScriptReturn(returnValue);
+            return new ScriptReturn(tokens.getFirst().line, returnValue);
         } else if (tokens.getFirst().type == ScriptTokenType.ERROR) {
             if (tokens.size() < 2 || tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) {
                 throw new IllegalArgumentException("Error statement is missing opening parenthesis");
@@ -298,7 +303,7 @@ public class ScriptParser {
                 throw new IllegalArgumentException("Error statement is improperly terminated");
             }
             Script errorMessage = parseExpression(tokens.subList(2, tokens.size() - 1));
-            return new ScriptError(errorMessage);
+            return new ScriptError(tokens.getFirst().line, errorMessage);
         } else if (tokens.getFirst().type == ScriptTokenType.LOG) {
             if (tokens.size() < 2 || tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) {
                 throw new IllegalArgumentException("Log statement is missing opening parenthesis");
@@ -310,13 +315,13 @@ public class ScriptParser {
                 throw new IllegalArgumentException("Log statement is improperly terminated");
             }
             Script logMessage = parseExpression(tokens.subList(2, tokens.size() - 1));
-            return new ScriptPrintLog(logMessage);
+            return new ScriptPrintLog(tokens.getFirst().line, logMessage);
         } else if (tokens.getFirst().type == ScriptTokenType.BREAK) {
             if (tokens.size() != 1) throw new IllegalArgumentException("Break statement must be called on its own");
-            return new ScriptFlowStatement(Script.FlowStatementType.BREAK);
+            return new ScriptFlowStatement(tokens.getFirst().line, Script.FlowStatementType.BREAK);
         } else if (tokens.getFirst().type == ScriptTokenType.CONTINUE) {
             if (tokens.size() != 1) throw new IllegalArgumentException("Continue statement must be called on its own");
-            return new ScriptFlowStatement(Script.FlowStatementType.CONTINUE);
+            return new ScriptFlowStatement(tokens.getFirst().line, Script.FlowStatementType.CONTINUE);
         } else {
             throw new IllegalArgumentException("Script contains invalid instruction");
         }
@@ -357,16 +362,17 @@ public class ScriptParser {
         Script listScript = parseValue(tokens.subList(0, listIndexOpen));
         Script indexScript = parseExpression(tokens.subList(listIndexOpen + 1, listIndexClose));
         Script valueScript = parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
+        int lineStart = tokens.getFirst().line;
         Script valueScriptWithOperators = switch (tokens.get(assignmentOperatorIndex).type) {
             case ASSIGNMENT -> valueScript;
-            case MODIFIER_PLUS -> new ScriptAdd(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
-            case MODIFIER_MINUS -> new ScriptSubtract(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
-            case MODIFIER_MULTIPLY -> new ScriptMultiply(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
-            case MODIFIER_DIVIDE -> new ScriptDivide(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
-            case MODIFIER_MODULO -> new ScriptModulo(new ScriptListIndexGetInternal(listScript, indexScript), valueScript);
+            case MODIFIER_PLUS -> new ScriptAdd(lineStart, new ScriptListIndexGetInternal(lineStart, listScript, indexScript), valueScript);
+            case MODIFIER_MINUS -> new ScriptSubtract(lineStart, new ScriptListIndexGetInternal(lineStart, listScript, indexScript), valueScript);
+            case MODIFIER_MULTIPLY -> new ScriptMultiply(lineStart, new ScriptListIndexGetInternal(lineStart, listScript, indexScript), valueScript);
+            case MODIFIER_DIVIDE -> new ScriptDivide(lineStart, new ScriptListIndexGetInternal(lineStart, listScript, indexScript), valueScript);
+            case MODIFIER_MODULO -> new ScriptModulo(lineStart, new ScriptListIndexGetInternal(lineStart, listScript, indexScript), valueScript);
             default -> throw new IllegalArgumentException("Not a valid assignment operator");
         };
-        return new ScriptListIndexSetInternal(listScript, indexScript, valueScriptWithOperators);
+        return new ScriptListIndexSetInternal(lineStart, listScript, indexScript, valueScriptWithOperators);
     }
 
     private static Script parseVariableDeclaration(List<ScriptToken> tokens) {
@@ -374,82 +380,69 @@ public class ScriptParser {
         String variableName = tokens.get(1).value;
         if (RESERVED_KEYWORDS.contains(variableName)) throw new IllegalArgumentException("Variable name is reserved");
         if (tokens.size() == 2) {
-            return new ScriptSetVariable(variableName, null, true);
+            return new ScriptSetVariable(tokens.getFirst().line, variableName, null, true);
         }
         if (tokens.get(2).type != ScriptTokenType.ASSIGNMENT) throw new IllegalArgumentException("Variable definition is missing assignment operator");
         Script variableValue = parseExpression(tokens.subList(3, tokens.size()));
-        return new ScriptSetVariable(variableName, variableValue, true);
+        return new ScriptSetVariable(tokens.getFirst().line, variableName, variableValue, true);
     }
 
     private static Script parseStatAssignment(List<ScriptToken> tokens) {
         int assignmentOperatorIndex = findFirstTokenIndexFromSet(tokens, ASSIGNMENT_OPERATORS, 0);
         if (assignmentOperatorIndex == -1) throw new IllegalArgumentException("Stat assignment is missing assignment operator");
         ScriptStatReference statReference = parseStatReference(tokens.subList(0, assignmentOperatorIndex));
-        Script statValue;
-        if (tokens.get(assignmentOperatorIndex).type == ScriptTokenType.ASSIGNMENT) {
-            statValue = parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
-        } else if (tokens.get(assignmentOperatorIndex).type == ScriptTokenType.MODIFIER_PLUS) {
-            statValue = new ScriptAdd(new ScriptGetStat(statReference.statHolder(), statReference.name()), parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size())));
-        } else if (tokens.get(assignmentOperatorIndex).type == ScriptTokenType.MODIFIER_MINUS) {
-            statValue = new ScriptSubtract(new ScriptGetStat(statReference.statHolder(), statReference.name()), parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size())));
-        } else if (tokens.get(assignmentOperatorIndex).type == ScriptTokenType.MODIFIER_MULTIPLY) {
-            statValue = new ScriptMultiply(new ScriptGetStat(statReference.statHolder(), statReference.name()), parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size())));
-        } else if (tokens.get(assignmentOperatorIndex).type == ScriptTokenType.MODIFIER_DIVIDE) {
-            statValue = new ScriptDivide(new ScriptGetStat(statReference.statHolder(), statReference.name()), parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size())));
-        } else { // Modulo modifier
-            statValue = new ScriptDivide(new ScriptGetStat(statReference.statHolder(), statReference.name()), parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size())));
-        }
-        return new ScriptSetStat(statReference.statHolder(), statReference.name(), statValue);
+        Script valueScript = parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
+        int lineStart = tokens.getFirst().line;
+        Script valueScriptWithOperators = switch (tokens.get(assignmentOperatorIndex).type) {
+            case ASSIGNMENT -> valueScript;
+            case MODIFIER_PLUS -> new ScriptAdd(lineStart, new ScriptGetStat(lineStart, statReference.statHolder(), statReference.name()), valueScript);
+            case MODIFIER_MINUS -> new ScriptSubtract(lineStart, new ScriptGetStat(lineStart, statReference.statHolder(), statReference.name()), valueScript);
+            case MODIFIER_MULTIPLY -> new ScriptMultiply(lineStart, new ScriptGetStat(lineStart, statReference.statHolder(), statReference.name()), valueScript);
+            case MODIFIER_DIVIDE -> new ScriptDivide(lineStart, new ScriptGetStat(lineStart, statReference.statHolder(), statReference.name()), valueScript);
+            case MODIFIER_MODULO -> new ScriptModulo(lineStart, new ScriptGetStat(lineStart, statReference.statHolder(), statReference.name()), valueScript);
+            default -> throw new IllegalArgumentException("Not a valid assignment operator");
+        };
+        return new ScriptSetStat(lineStart, statReference.statHolder(), statReference.name(), valueScriptWithOperators);
     }
 
     private static Script parseGlobalAssignment(List<ScriptToken> tokens) {
         if (tokens.get(1).type != ScriptTokenType.DOT) throw new IllegalArgumentException("Global assignment is missing dot after global keyword");
         if (tokens.get(2).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Global assignment is missing global name");
         String globalName = tokens.get(2).value;
-        Script globalValue;
-        if (tokens.get(3).type == ScriptTokenType.ASSIGNMENT) {
-            globalValue = parseExpression(tokens.subList(4, tokens.size()));
-        } else if (tokens.get(3).type == ScriptTokenType.MODIFIER_PLUS) {
-            globalValue = new ScriptAdd(new ScriptGetGlobal(globalName), parseExpression(tokens.subList(4, tokens.size())));
-        } else if (tokens.get(3).type == ScriptTokenType.MODIFIER_MINUS) {
-            globalValue = new ScriptSubtract(new ScriptGetGlobal(globalName), parseExpression(tokens.subList(4, tokens.size())));
-        } else if (tokens.get(3).type == ScriptTokenType.MODIFIER_MULTIPLY) {
-            globalValue = new ScriptMultiply(new ScriptGetGlobal(globalName), parseExpression(tokens.subList(4, tokens.size())));
-        } else if (tokens.get(3).type == ScriptTokenType.MODIFIER_DIVIDE) {
-            globalValue = new ScriptDivide(new ScriptGetGlobal(globalName), parseExpression(tokens.subList(4, tokens.size())));
-        } else if (tokens.get(3).type == ScriptTokenType.MODIFIER_MODULO) {
-            globalValue = new ScriptModulo(new ScriptGetGlobal(globalName), parseExpression(tokens.subList(4, tokens.size())));
-        } else {
-            throw new IllegalArgumentException("Global assignment is missing assignment operator");
-        }
-        return new ScriptSetGlobal(globalName, globalValue);
+        Script valueScript = parseExpression(tokens.subList(4, tokens.size()));
+        int lineStart = tokens.getFirst().line;
+        Script valueScriptWithOperators = switch (tokens.get(3).type) {
+            case ASSIGNMENT -> valueScript;
+            case MODIFIER_PLUS -> new ScriptAdd(lineStart, new ScriptGetGlobal(lineStart, globalName), valueScript);
+            case MODIFIER_MINUS -> new ScriptSubtract(lineStart, new ScriptGetGlobal(lineStart, globalName), valueScript);
+            case MODIFIER_MULTIPLY -> new ScriptMultiply(lineStart, new ScriptGetGlobal(lineStart, globalName), valueScript);
+            case MODIFIER_DIVIDE -> new ScriptDivide(lineStart, new ScriptGetGlobal(lineStart, globalName), valueScript);
+            case MODIFIER_MODULO -> new ScriptModulo(lineStart, new ScriptGetGlobal(lineStart, globalName), valueScript);
+            default -> throw new IllegalArgumentException("Not a valid assignment operator");
+        };
+        return new ScriptSetGlobal(lineStart, globalName, valueScriptWithOperators);
     }
 
     private static Script parseVariableAssignment(List<ScriptToken> tokens) {
         String variableName = tokens.getFirst().value;
-        Script variableValue;
-        if (tokens.get(1).type == ScriptTokenType.ASSIGNMENT) {
-            variableValue = parseExpression(tokens.subList(2, tokens.size()));
-        } else if (tokens.get(1).type == ScriptTokenType.MODIFIER_PLUS) {
-            variableValue = new ScriptAdd(new ScriptGetVariable(variableName), parseExpression(tokens.subList(2, tokens.size())));
-        } else if (tokens.get(1).type == ScriptTokenType.MODIFIER_MINUS) {
-            variableValue = new ScriptSubtract(new ScriptGetVariable(variableName), parseExpression(tokens.subList(2, tokens.size())));
-        } else if (tokens.get(1).type == ScriptTokenType.MODIFIER_MULTIPLY) {
-            variableValue = new ScriptMultiply(new ScriptGetVariable(variableName), parseExpression(tokens.subList(2, tokens.size())));
-        } else if (tokens.get(1).type == ScriptTokenType.MODIFIER_DIVIDE) {
-            variableValue = new ScriptDivide(new ScriptGetVariable(variableName), parseExpression(tokens.subList(2, tokens.size())));
-        } else if (tokens.get(1).type == ScriptTokenType.MODIFIER_MODULO) {
-            variableValue = new ScriptModulo(new ScriptGetVariable(variableName), parseExpression(tokens.subList(2, tokens.size())));
-        } else {
-            throw new IllegalArgumentException("Variable assignment is missing assignment operator");
-        }
-        return new ScriptSetVariable(variableName, variableValue, false);
+        Script valueScript = parseExpression(tokens.subList(2, tokens.size()));
+        int lineStart = tokens.getFirst().line;
+        Script valueScriptWithOperators = switch (tokens.get(1).type) {
+            case ASSIGNMENT -> valueScript;
+            case MODIFIER_PLUS -> new ScriptAdd(lineStart, new ScriptGetVariable(lineStart, variableName), valueScript);
+            case MODIFIER_MINUS -> new ScriptSubtract(lineStart, new ScriptGetVariable(lineStart, variableName), valueScript);
+            case MODIFIER_MULTIPLY -> new ScriptMultiply(lineStart, new ScriptGetVariable(lineStart, variableName), valueScript);
+            case MODIFIER_DIVIDE -> new ScriptDivide(lineStart, new ScriptGetVariable(lineStart, variableName), valueScript);
+            case MODIFIER_MODULO -> new ScriptModulo(lineStart, new ScriptGetVariable(lineStart, variableName), valueScript);
+            default -> throw new IllegalArgumentException("Not a valid assignment operator");
+        };
+        return new ScriptSetVariable(lineStart, variableName, valueScriptWithOperators, false);
     }
 
     private static Script parseFunctionCall(List<ScriptToken> tokens) {
         String functionName = tokens.getFirst().value;
         List<ScriptExternal.ParameterContainer> parameters = parseFunctionCallParameters(tokens.subList(2, tokens.size() - 1));
-        return new ScriptExternal(functionName, parameters);
+        return new ScriptExternal(tokens.getFirst().line, functionName, parameters);
     }
 
     private static List<ScriptExternal.ParameterContainer> parseFunctionCallParameters(List<ScriptToken> tokens) {
@@ -495,7 +488,7 @@ public class ScriptParser {
             Script scriptCondition = parseOr(tokens.subList(0, firstTernaryOperator));
             Script scriptTrue = parseOr(tokens.subList(firstTernaryOperator + 1, firstTernaryElse));
             Script scriptFalse = parseTernary(tokens.subList(firstTernaryElse + 1, tokens.size()));
-            return new ScriptTernary(scriptCondition, scriptTrue, scriptFalse);
+            return new ScriptTernary(tokens.get(firstTernaryOperator).line, scriptCondition, scriptTrue, scriptFalse);
         } else {
             return parseOr(tokens);
         }
@@ -506,7 +499,7 @@ public class ScriptParser {
         if (lastOrOperator != -1) {
             Script firstExpression = parseOr(tokens.subList(0, lastOrOperator));
             Script secondExpression = parseAnd(tokens.subList(lastOrOperator + 1, tokens.size()));
-            return new ScriptOr(List.of(firstExpression, secondExpression));
+            return new ScriptOr(tokens.get(lastOrOperator).line, List.of(firstExpression, secondExpression));
         } else {
             return parseAnd(tokens);
         }
@@ -517,7 +510,7 @@ public class ScriptParser {
         if (lastAndOperator != -1) {
             Script firstExpression = parseAnd(tokens.subList(0, lastAndOperator));
             Script secondExpression = parseComparator(tokens.subList(lastAndOperator + 1, tokens.size()));
-            return new ScriptAnd(List.of(firstExpression, secondExpression));
+            return new ScriptAnd(tokens.get(lastAndOperator).line, List.of(firstExpression, secondExpression));
         } else {
             return parseComparator(tokens);
         }
@@ -537,7 +530,7 @@ public class ScriptParser {
             };
             Script firstExpression = parseSum(tokens.subList(0, firstComparatorOperator));
             Script secondExpression = parseSum(tokens.subList(firstComparatorOperator + 1, tokens.size()));
-            return new ScriptComparator(firstExpression, secondExpression, comparator);
+            return new ScriptComparator(tokens.get(firstComparatorOperator).line, firstExpression, secondExpression, comparator);
         } else {
             return parseSum(tokens);
         }
@@ -551,9 +544,9 @@ public class ScriptParser {
         Script firstExpression = parseSum(tokens.subList(0, lastSumOperator));
         Script secondExpression = parseProduct(tokens.subList(lastSumOperator + 1, tokens.size()));
         if (tokens.get(lastSumOperator).type == ScriptTokenType.PLUS) {
-            return new ScriptAdd(firstExpression, secondExpression);
+            return new ScriptAdd(tokens.get(lastSumOperator).line, firstExpression, secondExpression);
         } else {
-            return new ScriptSubtract(firstExpression, secondExpression);
+            return new ScriptSubtract(tokens.get(lastSumOperator).line, firstExpression, secondExpression);
         }
     }
 
@@ -565,11 +558,11 @@ public class ScriptParser {
         Script firstExpression = parseProduct(tokens.subList(0, lastProductOperator));
         Script secondExpression = parsePower(tokens.subList(lastProductOperator + 1, tokens.size()));
         if (tokens.get(lastProductOperator).type == ScriptTokenType.MULTIPLY) {
-            return new ScriptMultiply(firstExpression, secondExpression);
+            return new ScriptMultiply(tokens.get(lastProductOperator).line, firstExpression, secondExpression);
         } else if (tokens.get(lastProductOperator).type == ScriptTokenType.DIVIDE) {
-            return new ScriptDivide(firstExpression, secondExpression);
+            return new ScriptDivide(tokens.get(lastProductOperator).line, firstExpression, secondExpression);
         } else {
-            return new ScriptModulo(firstExpression, secondExpression);
+            return new ScriptModulo(tokens.get(lastProductOperator).line, firstExpression, secondExpression);
         }
     }
 
@@ -578,7 +571,7 @@ public class ScriptParser {
         if (firstPowerSymbol != -1) {
             Script powerBase = parseNot(tokens.subList(0, firstPowerSymbol));
             Script powerExponent = parsePower(tokens.subList(firstPowerSymbol + 1, tokens.size()));
-            return new ScriptPower(powerBase, powerExponent);
+            return new ScriptPower(tokens.get(firstPowerSymbol).line, powerBase, powerExponent);
         } else {
             return parseNot(tokens);
         }
@@ -587,7 +580,7 @@ public class ScriptParser {
     private static Script parseNot(List<ScriptToken> tokens) {
         if (tokens.getFirst().type == ScriptTokenType.NOT) {
             Script innerValue = parseValue(tokens.subList(1, tokens.size()));
-            return new ScriptNot(innerValue);
+            return new ScriptNot(tokens.getFirst().line, innerValue);
         } else {
             return parseValue(tokens);
         }
@@ -599,16 +592,16 @@ public class ScriptParser {
         } else if (tokens.getLast().type == ScriptTokenType.BRACKET_SQUARE_CLOSE) {
             return parseListElementReference(tokens);
         } else if (tokens.size() == 1 && tokens.getFirst().type == ScriptTokenType.NAME) {
-            return new ScriptGetVariable(tokens.getFirst().value);
+            return new ScriptGetVariable(tokens.getFirst().line, tokens.getFirst().value);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("stat")) {
             ScriptStatReference statReference = parseStatReference(tokens);
-            return new ScriptGetStat(statReference.statHolder(), statReference.name());
+            return new ScriptGetStat(tokens.getFirst().line, statReference.statHolder(), statReference.name());
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("statHolder")) {
             StatHolderReference statHolderReference = parseStatHolderReference(tokens);
-            return new ScriptStatHolder(statHolderReference);
+            return new ScriptStatHolder(tokens.getFirst().line, statHolderReference);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("global")) {
             ScriptGlobalReference globalReference = parseGlobalReference(tokens);
-            return new ScriptGetGlobal(globalReference.name());
+            return new ScriptGetGlobal(tokens.getFirst().line, globalReference.name());
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && tokens.getFirst().value.equals("game")) {
             return parseGameValue(tokens);
         } else if (tokens.getFirst().type == ScriptTokenType.NAME && (tokens.getFirst().value.equals("set") || tokens.getFirst().value.equals("list"))) {
@@ -617,7 +610,7 @@ public class ScriptParser {
             return parseFunctionCall(tokens);
         } else {
             Expression literalExpression = parseLiteral(tokens);
-            return new ScriptExpression(literalExpression);
+            return new ScriptExpression(tokens.getFirst().line, literalExpression);
         }
     }
 
@@ -626,14 +619,20 @@ public class ScriptParser {
         int indexBracketClose = findPairedClosingBracket(tokens, indexBracketOpen);
         Script listExpression = parseExpression(tokens.subList(0, indexBracketOpen));
         Script indexExpression = parseExpression(tokens.subList(indexBracketOpen + 1, indexBracketClose));
-        return new ScriptListIndexGetInternal(listExpression, indexExpression);
+        return new ScriptListIndexGetInternal(tokens.getFirst().line, listExpression, indexExpression);
     }
 
     private static Script parseCollection(List<ScriptToken> tokens) {
         if (tokens.getFirst().type != ScriptTokenType.NAME || (!tokens.getFirst().value.equals("set") && !tokens.getFirst().value.equals("list"))) throw new IllegalArgumentException("Collection constructor is missing set or list keyword");
         if (tokens.get(1).type != ScriptTokenType.PARENTHESIS_OPEN) throw new IllegalArgumentException("Collection constructor is missing value block");
         if (tokens.getLast().type != ScriptTokenType.PARENTHESIS_CLOSE) throw new IllegalArgumentException("Collection constructor value block is not closed");
-        if (tokens.size() == 3) return new ScriptBuildSet(new ArrayList<>());
+        if (tokens.size() == 3) {
+            if (tokens.getFirst().value.equals("set")) {
+                return new ScriptBuildSet(tokens.getFirst().line, new ArrayList<>());
+            } else {
+                return new ScriptBuildList(tokens.getFirst().line, new ArrayList<>());
+            }
+        }
         List<Script> collectionValues = new ArrayList<>();
         int index = 2;
         while (index < tokens.size()) {
@@ -650,9 +649,9 @@ public class ScriptParser {
             collectionValues.add(currentValueScript);
         }
         if (tokens.getFirst().value.equals("set")) {
-            return new ScriptBuildSet(collectionValues);
+            return new ScriptBuildSet(tokens.getFirst().line, collectionValues);
         } else {
-            return new ScriptBuildList(collectionValues);
+            return new ScriptBuildList(tokens.getFirst().line, collectionValues);
         }
     }
 
@@ -740,7 +739,7 @@ public class ScriptParser {
         if (tokens.get(1).type != ScriptTokenType.DOT) throw new IllegalArgumentException("Game value reference is missing period after game keyword");
         if (tokens.get(2).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Game value reference has invalid name");
         String gameValueName = tokens.get(2).value;
-        return new ScriptGetGameValue(gameValueName);
+        return new ScriptGetGameValue(tokens.getFirst().line, gameValueName);
     }
 
     private static int findFirstTokenIndex(List<ScriptToken> tokens, ScriptTokenType type, int startIndex) {
@@ -890,15 +889,18 @@ public class ScriptParser {
     private static class ScriptToken {
         public final ScriptTokenType type;
         public final String value;
+        public final int line;
 
-        public ScriptToken(ScriptTokenType type) {
+        public ScriptToken(ScriptTokenType type, int line) {
             this.type = type;
             this.value = null;
+            this.line = line;
         }
 
-        public ScriptToken(ScriptTokenType type, String value) {
+        public ScriptToken(ScriptTokenType type, String value, int line) {
             this.type = type;
             this.value = value;
+            this.line = line;
         }
 
         @Override

@@ -6,7 +6,8 @@ public class ScriptReturn extends Script {
 
     private final Script scriptReturn;
 
-    public ScriptReturn(Script scriptReturn) {
+    public ScriptReturn(int line, Script scriptReturn) {
+        super(line);
         this.scriptReturn = scriptReturn;
     }
 
@@ -19,7 +20,7 @@ public class ScriptReturn extends Script {
         if (scriptResult.error() != null) {
             return scriptResult;
         } else if (scriptResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
         }
         return new ScriptReturnData(scriptResult.value(), FlowStatementType.RETURN, null);
     }

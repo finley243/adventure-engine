@@ -5,6 +5,10 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptDataType extends Script {
 
+    public ScriptDataType(int line) {
+        super(line);
+    }
+
     @Override
     public ScriptReturnData execute(Context context) {
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();

@@ -7,10 +7,14 @@ import java.util.Set;
 
 public class ScriptSetSize extends Script {
 
+    public ScriptSetSize(int line) {
+        super(line);
+    }
+
     @Override
     public Script.ScriptReturnData execute(Context context) {
         Expression setExpression = context.getLocalVariables().get("set").getExpression();
-        if (setExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set parameter is not a set", -1));
+        if (setExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set parameter is not a set", getLine()));
         Set<Expression> set = setExpression.getValueSet();
         int setSize = set.size();
         return new ScriptReturnData(Expression.constant(setSize), FlowStatementType.RETURN, null);

@@ -7,7 +7,8 @@ public class ScriptExpression extends Script {
 
     private final Expression expression;
 
-    public ScriptExpression(Expression expression) {
+    public ScriptExpression(int line, Expression expression) {
+        super(line);
         this.expression = expression;
     }
 

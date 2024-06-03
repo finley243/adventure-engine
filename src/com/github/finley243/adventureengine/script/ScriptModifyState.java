@@ -10,7 +10,8 @@ public class ScriptModifyState extends Script {
     private final Expression state;
     private final Expression expression;
 
-    public ScriptModifyState(StatHolderReference holder, Expression state, Expression expression) {
+    public ScriptModifyState(int line, StatHolderReference holder, Expression state, Expression expression) {
+        super(line);
         if (holder == null) throw new IllegalArgumentException("ScriptModifyState stat holder is null");
         if (state == null) throw new IllegalArgumentException("ScriptModifyState state name is null");
         this.holder = holder;

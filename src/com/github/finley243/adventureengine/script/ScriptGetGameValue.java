@@ -7,7 +7,8 @@ public class ScriptGetGameValue extends Script {
 
     private final String valueName;
 
-    public ScriptGetGameValue(String valueName) {
+    public ScriptGetGameValue(int line, String valueName) {
+        super(line);
         this.valueName = valueName;
     }
 

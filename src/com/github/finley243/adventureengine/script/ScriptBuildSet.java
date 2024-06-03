@@ -11,7 +11,8 @@ public class ScriptBuildSet extends Script {
 
     private final List<Script> valueScripts;
 
-    public ScriptBuildSet(List<Script> valueScripts) {
+    public ScriptBuildSet(int line, List<Script> valueScripts) {
+        super(line);
         this.valueScripts = valueScripts;
     }
 
@@ -23,9 +24,9 @@ public class ScriptBuildSet extends Script {
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() != null) {
-                return new ScriptReturnData(null, null, new ScriptErrorData("Set expression contains unexpected flow statement", -1));
+                return new ScriptReturnData(null, null, new ScriptErrorData("Set expression contains unexpected flow statement", getLine()));
             } else if (scriptResult.value() == null) {
-                return new ScriptReturnData(null, null, new ScriptErrorData("Set expression is null", -1));
+                return new ScriptReturnData(null, null, new ScriptErrorData("Set expression is null", getLine()));
             } else {
                 computedValues.add(scriptResult.value());
             }

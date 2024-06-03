@@ -6,7 +6,8 @@ public class ScriptFlowStatement extends Script {
 
     private final FlowStatementType statementType;
 
-    public ScriptFlowStatement(FlowStatementType statementType) {
+    public ScriptFlowStatement(int line, FlowStatementType statementType) {
+        super(line);
         if (statementType == FlowStatementType.RETURN) throw new IllegalArgumentException("ScriptFlowStatement should not be used for return statements, use ScriptReturn instead");
         this.statementType = statementType;
     }

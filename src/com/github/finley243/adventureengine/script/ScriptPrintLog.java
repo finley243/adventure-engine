@@ -7,7 +7,8 @@ public class ScriptPrintLog extends Script {
 
     private final Script scriptMessage;
 
-    public ScriptPrintLog(Script scriptMessage) {
+    public ScriptPrintLog(int line, Script scriptMessage) {
+        super(line);
         this.scriptMessage = scriptMessage;
     }
 
@@ -17,11 +18,11 @@ public class ScriptPrintLog extends Script {
         if (messageResult.error() != null) {
             return messageResult;
         } else if (messageResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
         } else if (messageResult.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a null value", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a null value", getLine()));
         } else if (messageResult.value().getDataType() != Expression.DataType.STRING) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a non-string value", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a non-string value", getLine()));
         }
         String messageValue = messageResult.value().getValueString();
         context.game().log().print(messageValue);

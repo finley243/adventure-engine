@@ -13,7 +13,8 @@ public class ScriptInventoryIterator extends Script {
     private final Script inventoryExpression;
     private final Script iteratedScript;
 
-    public ScriptInventoryIterator(Script inventoryExpression, Script iteratedScript) {
+    public ScriptInventoryIterator(int line, Script inventoryExpression, Script iteratedScript) {
+        super(line);
         this.inventoryExpression = inventoryExpression;
         this.iteratedScript = iteratedScript;
     }
@@ -24,11 +25,11 @@ public class ScriptInventoryIterator extends Script {
         if (setResult.error() != null) {
             return setResult;
         } else if (setResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
         } else if (setResult.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getLine()));
         } else if (setResult.value().getDataType() != Expression.DataType.INVENTORY) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected an inventory", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected an inventory", getLine()));
         }
         Inventory inventory = setResult.value().getValueInventory();
         for (Map.Entry<Item, Integer> currentItem : inventory.getItemMap().entrySet()) {

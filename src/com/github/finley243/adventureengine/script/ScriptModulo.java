@@ -8,7 +8,8 @@ public class ScriptModulo extends Script {
     private final Script firstScript;
     private final Script secondScript;
 
-    public ScriptModulo(Script firstScript, Script secondScript) {
+    public ScriptModulo(int line, Script firstScript, Script secondScript) {
+        super(line);
         this.firstScript = firstScript;
         this.secondScript = secondScript;
     }
@@ -19,20 +20,20 @@ public class ScriptModulo extends Script {
         if (firstReturn.error() != null) {
             return firstReturn;
         } else if (firstReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
         } else if (firstReturn.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getLine()));
         }
         ScriptReturnData secondReturn = secondScript.execute(context);
         if (secondReturn.error() != null) {
             return secondReturn;
         } else if (secondReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
         } else if (secondReturn.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getLine()));
         }
         if (!canModuloExpressions(firstReturn.value(), secondReturn.value())) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not form a modulo", -1));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not form a modulo", getLine()));
         }
         Expression moduloResult = moduloExpressions(firstReturn.value(), secondReturn.value());
         return new ScriptReturnData(moduloResult, null, null);
