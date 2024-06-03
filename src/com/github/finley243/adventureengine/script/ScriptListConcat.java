@@ -8,16 +8,16 @@ import java.util.List;
 
 public class ScriptListConcat extends Script {
 
-    public ScriptListConcat(int line) {
-        super(line);
+    public ScriptListConcat(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     @Override
     public ScriptReturnData execute(Context context) {
         Expression listOneExpression = context.getLocalVariables().get("listOne").getExpression();
         Expression listTwoExpression = context.getLocalVariables().get("listTwo").getExpression();
-        if (listOneExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List one parameter is not a list", getLine()));
-        if (listTwoExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List two parameter is not a list", getLine()));
+        if (listOneExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List one parameter is not a list", getTraceData()));
+        if (listTwoExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List two parameter is not a list", getTraceData()));
         List<Expression> listOne = listOneExpression.getValueList();
         List<Expression> listTwo = listTwoExpression.getValueList();
         List<Expression> listCombined = new ArrayList<>(listOne);

@@ -11,8 +11,8 @@ import java.util.Set;
 
 public class ScriptSensoryEvent extends Script {
 
-    public ScriptSensoryEvent(int line) {
-        super(line);
+    public ScriptSensoryEvent(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     @Override
@@ -21,10 +21,10 @@ public class ScriptSensoryEvent extends Script {
         Expression phraseAudible = context.getLocalVariables().get("phraseAudible").getExpression();
         Expression area = context.getLocalVariables().get("area").getExpression();
         Expression isDetectedBySelfExpression = context.getLocalVariables().get("detectSelf").getExpression();
-        if (phrase != null && phrase.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Phrase parameter is not a string", getLine()));
-        if (phraseAudible != null && phraseAudible.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("PhraseAudible parameter is not a string", getLine()));
-        if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Area parameter is not a string or set", getLine()));
-        if (isDetectedBySelfExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, null, new ScriptErrorData("DetectSelf parameter is not a boolean", getLine()));
+        if (phrase != null && phrase.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Phrase parameter is not a string", getTraceData()));
+        if (phraseAudible != null && phraseAudible.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("PhraseAudible parameter is not a string", getTraceData()));
+        if (area.getDataType() != Expression.DataType.STRING && area.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Area parameter is not a string or set", getTraceData()));
+        if (isDetectedBySelfExpression.getDataType() != Expression.DataType.BOOLEAN) return new ScriptReturnData(null, null, new ScriptErrorData("DetectSelf parameter is not a boolean", getTraceData()));
         boolean isDetectedBySelf = isDetectedBySelfExpression.getValueBoolean();
         Area[] originAreas = getOriginAreas(context, area);
         String phraseString = (phrase == null ? null : phrase.getValueString());

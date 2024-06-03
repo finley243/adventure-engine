@@ -7,8 +7,8 @@ public class ScriptGetGameValue extends Script {
 
     private final String valueName;
 
-    public ScriptGetGameValue(int line, String valueName) {
-        super(line);
+    public ScriptGetGameValue(ScriptTraceData traceData, String valueName) {
+        super(traceData);
         this.valueName = valueName;
     }
 
@@ -19,7 +19,7 @@ public class ScriptGetGameValue extends Script {
             case "month" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getMonth()), null, null);
             case "year" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getYear()), null, null);
             case "weekday" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getWeekday()), null, null);
-            default -> new ScriptReturnData(null, null, new ScriptErrorData("Specified game value does not exist", -1));
+            default -> new ScriptReturnData(null, null, new ScriptErrorData("Specified game value does not exist", getTraceData()));
         };
     }
 

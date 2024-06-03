@@ -8,16 +8,16 @@ import java.util.Set;
 
 public class ScriptSetUnion extends Script {
 
-    public ScriptSetUnion(int line) {
-        super(line);
+    public ScriptSetUnion(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     @Override
     public ScriptReturnData execute(Context context) {
         Expression setOneExpression = context.getLocalVariables().get("setOne").getExpression();
         Expression setTwoExpression = context.getLocalVariables().get("setTwo").getExpression();
-        if (setOneExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set one parameter is not a set", getLine()));
-        if (setTwoExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set two parameter is not a set", getLine()));
+        if (setOneExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set one parameter is not a set", getTraceData()));
+        if (setTwoExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set two parameter is not a set", getTraceData()));
         Set<Expression> setOne = setOneExpression.getValueSet();
         Set<Expression> setTwo = setTwoExpression.getValueSet();
         Set<Expression> setUnion = new HashSet<>();

@@ -7,8 +7,8 @@ public class ScriptGetGlobal extends Script {
 
     private final String globalName;
 
-    public ScriptGetGlobal(int line, String globalName) {
-        super(line);
+    public ScriptGetGlobal(ScriptTraceData traceData, String globalName) {
+        super(traceData);
         this.globalName = globalName;
     }
 

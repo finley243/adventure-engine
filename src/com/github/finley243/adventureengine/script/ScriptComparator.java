@@ -13,8 +13,8 @@ public class ScriptComparator extends Script {
     private final Script secondScript;
     private final Comparator comparator;
 
-    public ScriptComparator(int line, Script firstScript, Script secondScript, Comparator comparator) {
-        super(line);
+    public ScriptComparator(ScriptTraceData traceData, Script firstScript, Script secondScript, Comparator comparator) {
+        super(traceData);
         this.firstScript = firstScript;
         this.secondScript = secondScript;
         this.comparator = comparator;
@@ -26,23 +26,23 @@ public class ScriptComparator extends Script {
         if (firstReturn.error() != null) {
             return firstReturn;
         } else if (firstReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a return statement", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a return statement", getTraceData()));
         }
         ScriptReturnData secondReturn = secondScript.execute(context);
         if (secondReturn.error() != null) {
             return secondReturn;
         } else if (secondReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a return statement", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a return statement", getTraceData()));
         }
         if (firstReturn.value() == null || secondReturn.value() == null) {
             if (comparator != Comparator.EQUAL && comparator != Comparator.NOT_EQUAL) {
-                return new ScriptReturnData(null, null, new ScriptErrorData("Expression has invalid comparator for null value", getLine()));
+                return new ScriptReturnData(null, null, new ScriptErrorData("Expression has invalid comparator for null value", getTraceData()));
             }
             Expression compareNullResult = Expression.constant(compareExpressionsNull(firstReturn.value(), secondReturn.value()));
             return new ScriptReturnData(compareNullResult, null, null);
         }
         if (!firstReturn.value().canCompareTo(secondReturn.value())) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not be compared", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not be compared", getTraceData()));
         }
         Expression compareResult = Expression.constant(compareExpressions(firstReturn.value(), secondReturn.value()));
         return new ScriptReturnData(compareResult, null, null);

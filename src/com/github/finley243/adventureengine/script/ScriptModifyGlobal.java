@@ -8,8 +8,8 @@ public class ScriptModifyGlobal extends Script {
     private final Expression globalID;
     private final Expression expression;
 
-    public ScriptModifyGlobal(int line, Expression globalID, Expression expression) {
-        super(line);
+    public ScriptModifyGlobal(ScriptTraceData traceData, Expression globalID, Expression expression) {
+        super(traceData);
         if (globalID == null) throw new IllegalArgumentException("ScriptModifyGlobal globalID is null");
         this.globalID = globalID;
         this.expression = expression;

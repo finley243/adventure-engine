@@ -7,14 +7,14 @@ import java.util.List;
 
 public class ScriptListClear extends Script {
 
-    public ScriptListClear(int line) {
-        super(line);
+    public ScriptListClear(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     @Override
     public ScriptReturnData execute(Context context) {
         Expression listExpression = context.getLocalVariables().get("list").getExpression();
-        if (listExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List parameter is not a list", getLine()));
+        if (listExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List parameter is not a list", getTraceData()));
         List<Expression> list = listExpression.getValueList();
         list.clear();
         return new ScriptReturnData(null, null, null);

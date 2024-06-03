@@ -7,14 +7,14 @@ public class ScriptGetVariable extends Script {
 
     private final String variableName;
 
-    public ScriptGetVariable(int line, String variableName) {
-        super(line);
+    public ScriptGetVariable(ScriptTraceData traceData, String variableName) {
+        super(traceData);
         this.variableName = variableName;
     }
 
     @Override
     public ScriptReturnData execute(Context context) {
-        if (!context.getLocalVariables().containsKey(variableName)) return new ScriptReturnData(null, null, new ScriptErrorData("Specified variable has not been defined: " + variableName, getLine()));
+        if (!context.getLocalVariables().containsKey(variableName)) return new ScriptReturnData(null, null, new ScriptErrorData("Specified variable has not been defined: " + variableName, getTraceData()));
         Expression variableValue = context.getLocalVariables().get(variableName).getExpression();
         return new ScriptReturnData(variableValue, null, null);
     }

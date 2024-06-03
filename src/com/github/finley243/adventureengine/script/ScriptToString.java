@@ -5,8 +5,8 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptToString extends Script {
 
-    public ScriptToString(int line) {
-        super(line);
+    public ScriptToString(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     @Override

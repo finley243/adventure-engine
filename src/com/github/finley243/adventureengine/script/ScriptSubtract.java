@@ -8,8 +8,8 @@ public class ScriptSubtract extends Script {
     private final Script firstScript;
     private final Script secondScript;
 
-    public ScriptSubtract(int line, Script firstScript, Script secondScript) {
-        super(line);
+    public ScriptSubtract(ScriptTraceData traceData, Script firstScript, Script secondScript) {
+        super(traceData);
         this.firstScript = firstScript;
         this.secondScript = secondScript;
     }
@@ -20,20 +20,20 @@ public class ScriptSubtract extends Script {
         if (firstReturn.error() != null) {
             return firstReturn;
         } else if (firstReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getTraceData()));
         } else if (firstReturn.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getTraceData()));
         }
         ScriptReturnData secondReturn = secondScript.execute(context);
         if (secondReturn.error() != null) {
             return secondReturn;
         } else if (secondReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getTraceData()));
         } else if (secondReturn.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getTraceData()));
         }
         if (!canSubtractExpressions(firstReturn.value(), secondReturn.value())) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not be subtracted", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not be subtracted", getTraceData()));
         }
         Expression subtractResult = subtractExpressions(firstReturn.value(), secondReturn.value());
         return new ScriptReturnData(subtractResult, null, null);

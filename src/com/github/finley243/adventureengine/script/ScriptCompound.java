@@ -8,8 +8,8 @@ public class ScriptCompound extends Script {
 
     private final List<Script> subScripts;
 
-    public ScriptCompound(int line, List<Script> subScripts) {
-        super(line);
+    public ScriptCompound(ScriptTraceData traceData, List<Script> subScripts) {
+        super(traceData);
         this.subScripts = subScripts;
     }
 

@@ -9,8 +9,8 @@ public class ScriptStatHolder extends Script {
 
     private final StatHolderReference statHolderReference;
 
-    public ScriptStatHolder(int line, StatHolderReference statHolderReference) {
-        super(line);
+    public ScriptStatHolder(ScriptTraceData traceData, StatHolderReference statHolderReference) {
+        super(traceData);
         this.statHolderReference = statHolderReference;
     }
 

@@ -5,8 +5,8 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptDataType extends Script {
 
-    public ScriptDataType(int line) {
-        super(line);
+    public ScriptDataType(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     @Override

@@ -44,7 +44,8 @@ public class TextGen {
 
 	public static String generate(String line, Context context, TextContext textContext) {
 		if (line == null) return null;
-		line = processBlockStatements(line, 0, context);
+		String originalLine = line;
+		line = processBlockStatements(line, 0, context, originalLine);
 		line = determineContext(line, textContext);
 		line = capitalizeSentences(line);
 		lastContext = textContext;
@@ -118,31 +119,31 @@ public class TextGen {
 		return replaceTagsFromContext(line, context, usePronounsMap);
 	}
 
-	private static String processBlockStatements(String line, int startIndex, Context context) {
+	private static String processBlockStatements(String line, int startIndex, Context context, String originalLine) {
 		for (int i = startIndex; i < line.length(); i++) {
 			if (line.charAt(i) == RANDOM_OPEN) {
-				return processBlockStatements(chooseRandoms(line), i, context);
+				return processBlockStatements(chooseRandoms(line, originalLine), i, context, originalLine);
 			} else if (line.charAt(i) == CONDITIONAL_OPEN) {
-				return processBlockStatements(evaluateConditionals(line, context), i, context);
+				return processBlockStatements(evaluateConditionals(line, context, originalLine), i, context, originalLine);
 			} else if (line.charAt(i) == '@') {
-				return processBlockStatements(populatePhraseReferences(line, context), i, context);
+				return processBlockStatements(populatePhraseReferences(line, context, originalLine), i, context, originalLine);
 			}
 		}
 		return line;
 	}
 
-	private static String chooseRandoms(String line) {
-		return replaceInsideBracketsWithResult(line, RANDOM_OPEN, null, (s, _) -> {
+	private static String chooseRandoms(String line, String originalLine) {
+		return replaceInsideBracketsWithResult(line, RANDOM_OPEN, null, originalLine, (s, _, _) -> {
 			List<String> randomChoices = getSeparatedStrings(s, RANDOM_SEPARATOR);
 			return MathUtils.selectRandomFromList(randomChoices);
 		});
 	}
 
-	private static String evaluateConditionals(String line, Context context) {
-		return replaceInsideBracketsWithResult(line, CONDITIONAL_OPEN, context, TextGen::evaluateConditionalStatement);
+	private static String evaluateConditionals(String line, Context context, String originalLine) {
+		return replaceInsideBracketsWithResult(line, CONDITIONAL_OPEN, context, originalLine, TextGen::evaluateConditionalStatement);
 	}
 
-	private static String evaluateConditionalStatement(String line, Context context) {
+	private static String evaluateConditionalStatement(String line, Context context, String originalLine) {
 		List<String> conditionalBranches = getSeparatedStrings(line, CONDITIONAL_SEPARATOR);
 		for (int i = 0; i < conditionalBranches.size(); i++) {
 			String currentBranch = conditionalBranches.get(i);
@@ -157,7 +158,7 @@ public class TextGen {
 				throw new IllegalArgumentException("Condition is missing closing bracket");
 			}
 			String conditionString = currentBranch.substring(1, conditionCloseIndex);
-			Condition condition = new Condition(ScriptParser.parseExpression(conditionString));
+			Condition condition = new Condition(ScriptParser.parseExpression(conditionString, "Phrase: " + originalLine));
 			if (condition.isMet(context)) {
 				return currentBranch.substring(conditionCloseIndex + 1);
 			}
@@ -165,7 +166,7 @@ public class TextGen {
 		return "";
 	}
 
-	private static String populatePhraseReferences(String line, Context context) {
+	private static String populatePhraseReferences(String line, Context context, String originalLine) {
 		Pattern tokenPattern = Pattern.compile("@([a-zA-Z0-9_]+)");
 		Matcher tokenMatcher = tokenPattern.matcher(line);
 		StringBuilder builder = new StringBuilder();
@@ -262,7 +263,7 @@ public class TextGen {
 		return tokenName.substring(0, tokenName.length() - suffix.length());
 	}
 
-	private static String replaceInsideBracketsWithResult(String line, char openBracketType, Context context, TextProcessor processor) {
+	private static String replaceInsideBracketsWithResult(String line, char openBracketType, Context context, String originalLine, TextProcessor processor) {
 		List<String> parts = new ArrayList<>();
 		int openIndex = -1;
 		int closeIndex = -1;
@@ -280,7 +281,7 @@ public class TextGen {
 					if (lastOpenBracket == openBracketType && openBracketStack.isEmpty()) {
 						String bracketContents = line.substring(openIndex + 1, i);
 						parts.add(line.substring(closeIndex + 1, openIndex));
-						parts.add(processor.process(bracketContents, context));
+						parts.add(processor.process(bracketContents, context, originalLine));
 						closeIndex = i;
 					}
 				}

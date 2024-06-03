@@ -9,8 +9,8 @@ public class ScriptTernary extends Script {
     private final Script scriptTrue;
     private final Script scriptFalse;
 
-    public ScriptTernary(int line, Script scriptCondition, Script scriptTrue, Script scriptFalse) {
-        super(line);
+    public ScriptTernary(ScriptTraceData traceData, Script scriptCondition, Script scriptTrue, Script scriptFalse) {
+        super(traceData);
         this.scriptCondition = scriptCondition;
         this.scriptTrue = scriptTrue;
         this.scriptFalse = scriptFalse;
@@ -22,11 +22,11 @@ public class ScriptTernary extends Script {
         if (conditionResult.error() != null) {
             return conditionResult;
         } else if (conditionResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Ternary condition contains an unexpected flow statement", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Ternary condition contains an unexpected flow statement", getTraceData()));
         } else if (conditionResult.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Ternary condition provided a null value", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Ternary condition provided a null value", getTraceData()));
         } else if (conditionResult.value().getDataType() != Expression.DataType.BOOLEAN) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Ternary condition provided a non-boolean value", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Ternary condition provided a non-boolean value", getTraceData()));
         }
         boolean conditionSuccess = conditionResult.value().getValueBoolean();
         if (conditionSuccess) {

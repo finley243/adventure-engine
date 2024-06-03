@@ -47,6 +47,9 @@ import java.util.*;
 
 public class DataLoader {
 
+    private static final String SCRIPT_FILE_EXTENSION = "ascr";
+    private static final String PHRASE_FILE_EXTENSION = "aphr";
+
     public static void loadFromDir(Game game, File dir) throws ParserConfigurationException, IOException, SAXException, GameDataException {
         if (dir.isDirectory()) {
             File[] files = dir.listFiles();
@@ -138,13 +141,13 @@ public class DataLoader {
                         }
                         currentChild = currentChild.getNextSibling();
                     }
-                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase("ascr")) {
+                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase(SCRIPT_FILE_EXTENSION)) {
                     String fileContents = Files.readString(file.toPath());
-                    List<ScriptParser.ScriptData> functions = ScriptParser.parseFunctions(fileContents);
+                    List<ScriptParser.ScriptData> functions = ScriptParser.parseFunctions(fileContents, file.getName());
                     for (ScriptParser.ScriptData function : functions) {
                         game.data().addScript(function.name(), function);
                     }
-                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase("aphr")) {
+                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase(PHRASE_FILE_EXTENSION)) {
                     Phrases.load(file);
                 }
             }
@@ -224,7 +227,7 @@ public class DataLoader {
         }
         Set<String> senseTypes = LoadUtils.setOfTags(actorElement, "senseType");
         Set<String> tags = LoadUtils.setOfTags(actorElement, "tag");
-        Map<String, Script> scripts = loadScriptsWithTriggers(actorElement);
+        Map<String, Script> scripts = loadScriptsWithTriggers(actorElement, "Actor(" + id + ")");
         List<String> startingEffects = LoadUtils.listOfTags(actorElement, "startEffect");
 
         Map<String, Bark> barks = new HashMap<>();
@@ -236,8 +239,8 @@ public class DataLoader {
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
         }
 
-        List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(actorElement, "action");
-        List<ActionCustom.CustomActionHolder> customInventoryActions = loadCustomActions(actorElement, "itemAction");
+        List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(actorElement, "action", "ActorTemplate(" + id + ")");
+        List<ActionCustom.CustomActionHolder> customInventoryActions = loadCustomActions(actorElement, "itemAction", "ActorTemplate(" + id + ")");
 
         return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, tags, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }
@@ -269,13 +272,13 @@ public class DataLoader {
             case "select" -> Scene.SceneType.SELECTOR;
             default -> Scene.SceneType.SEQUENTIAL; // "all"
         };
-        Condition condition = loadCondition(LoadUtils.singleChildWithName(sceneElement, "condition"));
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(sceneElement, "condition"), "Scene(" + sceneID + ") - condition");
         boolean once = LoadUtils.attributeBool(sceneElement, "once", false);
         int priority = LoadUtils.attributeInt(sceneElement, "priority", 1);
         List<Element> lineElements = LoadUtils.directChildrenWithName(sceneElement, "line");
         List<SceneLine> lines = new ArrayList<>();
         for (Element lineElement : lineElements) {
-            SceneLine line = loadSceneLine(lineElement);
+            SceneLine line = loadSceneLine(lineElement, sceneID);
             lines.add(line);
         }
         List<Element> choiceElements = LoadUtils.directChildrenWithName(sceneElement, "choice");
@@ -287,7 +290,7 @@ public class DataLoader {
         return new Scene(game, sceneID, condition, once, priority, lines, choices, type);
     }
 
-    private static SceneLine loadSceneLine(Element lineElement) {
+    private static SceneLine loadSceneLine(Element lineElement, String sceneID) {
         boolean once = LoadUtils.attributeBool(lineElement, "once", false);
         boolean exit = LoadUtils.attributeBool(lineElement, "exit", false);
         String redirect = LoadUtils.attribute(lineElement, "redirect", null);
@@ -302,12 +305,12 @@ public class DataLoader {
                 case "select" -> Scene.SceneType.SELECTOR;
                 default -> Scene.SceneType.SEQUENTIAL; // "all"
             };
-            Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"));
-            Script scriptPre = loadScript(LoadUtils.singleChildWithName(lineElement, "scriptPre"));
-            Script scriptPost = loadScript(LoadUtils.singleChildWithName(lineElement, "scriptPost"));
+            Condition condition = loadCondition(LoadUtils.singleChildWithName(lineElement, "condition"), "Scene(" + sceneID + ") - line condition");
+            Script scriptPre = loadScript(LoadUtils.singleChildWithName(lineElement, "scriptPre"), "Scene(" + sceneID + ") - line pre-script");
+            Script scriptPost = loadScript(LoadUtils.singleChildWithName(lineElement, "scriptPost"), "Scene(" + sceneID + ") - line post-script");
             List<SceneLine> subLines = new ArrayList<>();
             for (Element subLineElement : LoadUtils.directChildrenWithName(lineElement, "line")) {
-                SceneLine subLine = loadSceneLine(subLineElement);
+                SceneLine subLine = loadSceneLine(subLineElement, sceneID);
                 subLines.add(subLine);
             }
             return new SceneLine(type, subLines, condition, scriptPre, scriptPost, once, exit, redirect, from);
@@ -320,38 +323,38 @@ public class DataLoader {
         return new SceneChoice(link, prompt);
     }
 
-    private static Condition loadCondition(Element conditionElement) {
+    private static Condition loadCondition(Element conditionElement, String traceString) {
         if (conditionElement == null) return null;
-        Script conditionScript = loadExpressionScript(conditionElement);
+        Script conditionScript = loadExpressionScript(conditionElement, traceString);
         return new Condition(conditionScript);
     }
 
-    private static Expression loadExpressionOrAttribute(Element parentElement) {
+    private static Expression loadExpressionOrAttribute(Element parentElement, String traceString) {
         if (parentElement == null) return null;
         String expressionText = parentElement.getTextContent().trim();
-        return ScriptParser.parseLiteral(expressionText);
+        return ScriptParser.parseLiteral(expressionText, traceString);
     }
 
-    private static Map<String, Script> loadScriptsWithTriggers(Element parentElement) {
+    private static Map<String, Script> loadScriptsWithTriggers(Element parentElement, String traceString) {
         Map<String, Script> scripts = new HashMap<>();
         for (Element scriptElement : LoadUtils.directChildrenWithName(parentElement, "script")) {
             String trigger = scriptElement.getAttribute("trigger");
-            Script script = loadScript(scriptElement);
+            Script script = loadScript(scriptElement, traceString + " - script trigger: " + trigger);
             scripts.put(trigger, script);
         }
         return scripts;
     }
 
-    private static Script loadScript(Element scriptElement) {
+    private static Script loadScript(Element scriptElement, String traceString) {
         if (scriptElement == null) return null;
         String scriptText = scriptElement.getTextContent().trim();
-        return ScriptParser.parseScript(scriptText);
+        return ScriptParser.parseScript(scriptText, traceString);
     }
 
-    private static Script loadExpressionScript(Element scriptElement) {
+    private static Script loadExpressionScript(Element scriptElement, String traceString) {
         if (scriptElement == null) return null;
         String scriptText = scriptElement.getTextContent().trim();
-        return ScriptParser.parseExpression(scriptText);
+        return ScriptParser.parseExpression(scriptText, traceString);
     }
 
     private static Faction loadFaction(Game game, Element factionElement) {
@@ -379,18 +382,18 @@ public class DataLoader {
         String id = itemElement.getAttribute("id");
         String name = LoadUtils.singleTag(itemElement, "name", null);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(itemElement, "description"));
-        Map<String, Script> scripts = loadScriptsWithTriggers(itemElement);
-        List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(itemElement, "action");
+        Map<String, Script> scripts = loadScriptsWithTriggers(itemElement, "ItemTemplate(" + id + ")");
+        List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(itemElement, "action", "ItemTemplate(" + id + ")");
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
         List<ItemComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(itemElement, "component")) {
-            ItemComponentTemplate componentTemplate = loadItemComponentTemplate(game, componentElement);
+            ItemComponentTemplate componentTemplate = loadItemComponentTemplate(game, componentElement, id);
             components.add(componentTemplate);
         }
         return new ItemTemplate(game, id, name, description, scripts, components, customActions, price);
     }
 
-    private static ItemComponentTemplate loadItemComponentTemplate(Game game, Element componentElement) {
+    private static ItemComponentTemplate loadItemComponentTemplate(Game game, Element componentElement, String itemID) {
         if (componentElement == null) return null;
         String type = componentElement.getAttribute("type");
         boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "restricted", false);
@@ -433,7 +436,7 @@ public class DataLoader {
                     Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
                     Set<String> exposedComponents = LoadUtils.setOfTags(slotGroupElement, "exposedComponent");
                     List<String> equippedEffects = LoadUtils.listOfTags(componentElement, "effect");
-                    List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(componentElement, "equippedAction");
+                    List<ActionCustom.CustomActionHolder> equippedActions = loadCustomActions(componentElement, "equippedAction", "ItemComponent(" + itemID + ")");
                     equipSlots.add(new ItemComponentTemplateEquippable.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
                 }
                 return new ItemComponentTemplateEquippable(actionsRestricted, equipSlots);
@@ -494,17 +497,17 @@ public class DataLoader {
         String effectType = LoadUtils.attribute(effectElement, "type", null);
         int duration = LoadUtils.attributeInt(effectElement, "duration", 0);
         boolean stackable = LoadUtils.attributeBool(effectElement, "stack", true);
-        Condition conditionAdd = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionAdd"));
-        Condition conditionRemove = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionRemove"));
-        Condition conditionActive = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionActive"));
-        Script scriptAdd = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptAdd"));
-        Script scriptRemove = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRemove"));
-        Script scriptRound = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRound"));
+        Condition conditionAdd = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionAdd"), "Effect(" + ID + ") - add condition");
+        Condition conditionRemove = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionRemove"), "Effect(" + ID + ") - remove condition");
+        Condition conditionActive = loadCondition(LoadUtils.singleChildWithName(effectElement, "conditionActive"), "Effect(" + ID + ") - active condition");
+        Script scriptAdd = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptAdd"), "Effect(" + ID + ") - add script");
+        Script scriptRemove = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRemove"), "Effect(" + ID + ") - remove script");
+        Script scriptRound = loadScript(LoadUtils.singleChildWithName(effectElement, "scriptRound"), "Effect(" + ID + ") - round script");
         switch (effectType) {
             case "add" -> {
                 String statMod = LoadUtils.attribute(effectElement, "stat", null);
                 String statModValue = LoadUtils.attribute(effectElement, "amount", "0");
-                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"), "Effect(" + ID + ") - stat condition");
                 boolean statModIsFloat = statModValue.contains(".");
                 if (statModIsFloat) {
                     float statModValueFloat = Float.parseFloat(statModValue);
@@ -517,26 +520,26 @@ public class DataLoader {
             case "mult" -> {
                 String statMult = LoadUtils.attribute(effectElement, "stat", null);
                 float statMultAmount = LoadUtils.attributeFloat(effectElement, "amount", 0.0f);
-                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"), "Effect(" + ID + ") - stat condition");
                 return new EffectStatMult(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statMult, statMultAmount, statCondition);
             }
             case "boolean" -> {
                 String statBoolean = LoadUtils.attribute(effectElement, "stat", null);
                 boolean statBooleanValue = LoadUtils.attributeBool(effectElement, "value", true);
-                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"), "Effect(" + ID + ") - stat condition");
                 return new EffectStatBoolean(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statBoolean, statBooleanValue, statCondition);
             }
             case "string" -> {
                 String statString = LoadUtils.attribute(effectElement, "stat", null);
                 String statStringValue = LoadUtils.attribute(effectElement, "value", null);
-                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"), "Effect(" + ID + ") - stat condition");
                 return new EffectStatString(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statString, statStringValue, statCondition);
             }
             case "stringSet" -> {
                 String statStringSet = LoadUtils.attribute(effectElement, "stat", null);
                 Set<String> stringSetValuesAdd = LoadUtils.setOfTags(effectElement, "add");
                 Set<String> stringSetValuesRemove = LoadUtils.setOfTags(effectElement, "remove");
-                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"));
+                Condition statCondition = loadCondition(LoadUtils.singleChildWithName(effectElement, "statCondition"), "Effect(" + ID + ") - stat condition");
                 return new EffectStatStringSet(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, statStringSet, stringSetValuesAdd, stringSetValuesRemove, statCondition);
             }
             case "compound" -> {
@@ -593,7 +596,7 @@ public class DataLoader {
         String roomOwnerFaction = LoadUtils.attribute(roomElement, "faction", null);
         Area.RestrictionType restrictionType = LoadUtils.attributeEnum(roomElement, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
         boolean allowAllies = LoadUtils.attributeBool(roomElement, "allowAllies", false);
-        Map<String, Script> roomScripts = loadScriptsWithTriggers(roomElement);
+        Map<String, Script> roomScripts = loadScriptsWithTriggers(roomElement, "Room(" + roomID + ")");
 
         List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
         Set<Area> areas = new HashSet<>();
@@ -631,7 +634,7 @@ public class DataLoader {
             linkSet.put(linkAreaID, link);
         }
 
-        Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement);
+        Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement, "Area(" + areaID + ")");
 
         Area area = new Area(game, areaID, landmarkID, name, nameType, nameIsPlural, description, roomID, areaOwnerFaction, restrictionType, allowAllies, linkSet, areaScripts);
 
@@ -681,18 +684,18 @@ public class DataLoader {
                 damageMults.put(damageType, damageMult);
             }
         }
-        Map<String, Script> scripts = loadScriptsWithTriggers(objectElement);
-        List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(objectElement, "action");
-        List<ActionCustom.CustomActionHolder> networkActions = loadCustomActions(objectElement, "networkAction");
+        Map<String, Script> scripts = loadScriptsWithTriggers(objectElement, "ObjectTemplate(" + ID + ")");
+        List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(objectElement, "action", "ObjectTemplate(" + ID + ")");
+        List<ActionCustom.CustomActionHolder> networkActions = loadCustomActions(objectElement, "networkAction", "ObjectTemplate(" + ID + ")");
         List<ObjectComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(objectElement, "component")) {
-            ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(componentElement);
+            ObjectComponentTemplate componentTemplate = loadObjectComponentTemplate(componentElement, ID);
             components.add(componentTemplate);
         }
         Map<String, Expression> localVarsDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
-            Expression varExpression = loadExpressionOrAttribute(varDefaultElement);
+            Expression varExpression = loadExpressionOrAttribute(varDefaultElement, "ObjectTemplate(" + ID + ") - local var: " + varName);
             localVarsDefault.put(varName, varExpression);
         }
         return new ObjectTemplate(game, ID, name, isProperName, description, maxHP, damageResistances, damageMults, scripts, customActions, networkActions, components, localVarsDefault);
@@ -707,13 +710,13 @@ public class DataLoader {
         Map<String, Expression> localVarsDefault = new HashMap<>();
         for (Element varDefaultElement : LoadUtils.directChildrenWithName(objectElement, "localVar")) {
             String varName = LoadUtils.attribute(varDefaultElement, "name", null);
-            Expression varExpression = loadExpressionOrAttribute(varDefaultElement);
+            Expression varExpression = loadExpressionOrAttribute(varDefaultElement, "Object(" + id + ") - local var: " + varName);
             localVarsDefault.put(varName, varExpression);
         }
         return new WorldObject(game, id, template, area, startDisabled, startHidden, localVarsDefault);
     }
 
-    private static ObjectComponentTemplate loadObjectComponentTemplate(Element componentElement) throws GameDataException {
+    private static ObjectComponentTemplate loadObjectComponentTemplate(Element componentElement, String objectID) throws GameDataException {
         String type = LoadUtils.attribute(componentElement, "type", null);
         boolean startEnabled = LoadUtils.attributeBool(componentElement, "startEnabled", true);
         boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "restricted", false);
@@ -726,7 +729,7 @@ public class DataLoader {
                 String storePhrase = LoadUtils.singleTag(componentElement, "storePhrase", null);
                 boolean enableTake = LoadUtils.attributeBool(componentElement, "enableTake", true);
                 boolean enableStore = LoadUtils.attributeBool(componentElement, "enableStore", true);
-                List<ActionCustom.CustomActionHolder> perItemActions = loadCustomActions(componentElement, "itemAction");
+                List<ActionCustom.CustomActionHolder> perItemActions = loadCustomActions(componentElement, "itemAction", "ObjectComponentInventory(" + objectID + ")");
                 return new ObjectComponentTemplateInventory(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
@@ -737,7 +740,7 @@ public class DataLoader {
                 for (Element linkDataElement : LoadUtils.directChildrenWithName(componentElement, "link")) {
                     String linkID = LoadUtils.attribute(linkDataElement, "id", null);
                     String moveAction = LoadUtils.attribute(linkDataElement, "moveAction", null);
-                    Condition conditionVisible = loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"));
+                    Condition conditionVisible = loadCondition(LoadUtils.singleChildWithName(linkDataElement, "conditionVisible"), "ObjectComponentLink(" + objectID + ") - link visible condition");
                     boolean isVisible = LoadUtils.attributeBool(linkDataElement, "visible", false);
                     linkData.put(linkID, new ObjectComponentTemplateLink.ObjectLinkData(moveAction, conditionVisible, isVisible));
                 }
@@ -757,7 +760,7 @@ public class DataLoader {
                     boolean userCanPerformLocalActions = LoadUtils.attributeBool(slotElement, "localActions", true);
                     boolean userCanPerformParentActions = LoadUtils.attributeBool(slotElement, "parentActions", true);
                     Set<String> componentsExposed = LoadUtils.setOfTags(slotElement, "exposedComponent");
-                    List<ActionCustom.CustomActionHolder> usingActions = loadCustomActions(slotElement, "usingAction");
+                    List<ActionCustom.CustomActionHolder> usingActions = loadCustomActions(slotElement, "usingAction", "ObjectComponentUsable(" + objectID + ")");
                     usableSlotData.put(slotID, new ObjectComponentTemplateUsable.UsableSlotData(startPhrase, endPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, componentsExposed, usingActions));
                 }
                 return new ObjectComponentTemplateUsable(startEnabled, actionsRestricted, usableSlotData);
@@ -776,22 +779,24 @@ public class DataLoader {
         Map<String, Script> parameters = new HashMap<>();
         for (Element parameterElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
             String parameterName = LoadUtils.attribute(parameterElement, "name", null);
-            Script parameterValue = loadExpressionScript(parameterElement);
+            Script parameterValue = loadExpressionScript(parameterElement, "ActionTemplate(" + ID + ") - parameter: " + parameterName);
             parameters.put(parameterName, parameterValue);
         }
         int actionPoints = LoadUtils.attributeInt(actionElement, "actionPoints", 0);
         List<ActionTemplate.ConditionWithMessage> selectConditions = new ArrayList<>();
+        int conditionNum = 1;
         for (Element conditionElement : LoadUtils.directChildrenWithName(actionElement, "condition")) {
-            Condition condition = loadCondition(LoadUtils.singleChildWithName(conditionElement, "script"));
+            Condition condition = loadCondition(LoadUtils.singleChildWithName(conditionElement, "script"), "ActionTemplate(" + ID + ") - condition " + conditionNum);
             String blockMessage = LoadUtils.singleTag(conditionElement, "blockMessage", null);
             selectConditions.add(new ActionTemplate.ConditionWithMessage(condition, blockMessage));
+            conditionNum += 1;
         }
-        Condition showCondition = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"));
-        Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"));
+        Condition showCondition = loadCondition(LoadUtils.singleChildWithName(actionElement, "conditionShow"), "ActionTemplate(" + ID + ") - show condition");
+        Script script = loadScript(LoadUtils.singleChildWithName(actionElement, "script"), "ActionTemplate(" + ID + ") - script");
         return new ActionTemplate(game, ID, prompt, parameters, actionPoints, selectConditions, showCondition, script);
     }
 
-    private static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name) {
+    private static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name, String traceString) {
         List<ActionCustom.CustomActionHolder> customActions = new ArrayList<>();
         if (parentElement != null) {
             for (Element actionElement : LoadUtils.directChildrenWithName(parentElement, name)) {
@@ -799,7 +804,7 @@ public class DataLoader {
                 Map<String, Script> parameters = new HashMap<>();
                 for (Element variableElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
                     String parameterName = LoadUtils.attribute(variableElement, "name", null);
-                    Script parameterValue = loadExpressionScript(variableElement);
+                    Script parameterValue = loadExpressionScript(variableElement, traceString + " - custom action parameter: " + parameterName);
                     parameters.put(parameterName, parameterValue);
                 }
                 customActions.add(new ActionCustom.CustomActionHolder(action, parameters));
@@ -829,31 +834,31 @@ public class DataLoader {
         if (actorElement == null) return null;
         String ID = actorElement.getAttribute("id");
         String template = LoadUtils.attribute(actorElement, "template", null);
-        List<Behavior> behaviors = loadBehaviors(LoadUtils.singleChildWithName(actorElement, "behaviors"));
+        List<Behavior> behaviors = loadBehaviors(LoadUtils.singleChildWithName(actorElement, "behaviors"), ID);
         boolean startDead = LoadUtils.attributeBool(actorElement, "startDead", false);
         boolean startDisabled = LoadUtils.attributeBool(actorElement, "startDisabled", false);
         return ActorFactory.create(game, ID, area, template, behaviors, startDead, startDisabled);
     }
 
-    private static List<Behavior> loadBehaviors(Element behaviorsElement) {
+    private static List<Behavior> loadBehaviors(Element behaviorsElement, String actorID) {
         if (behaviorsElement == null) return new ArrayList<>();
         List<Behavior> behaviors = new ArrayList<>();
         for (Element behaviorElement : LoadUtils.directChildrenWithName(behaviorsElement, "behavior")) {
-            Behavior behavior = loadBehavior(behaviorElement);
+            Behavior behavior = loadBehavior(behaviorElement, actorID);
             behaviors.add(behavior);
         }
         return behaviors;
     }
 
-    private static Behavior loadBehavior(Element behaviorElement) {
+    private static Behavior loadBehavior(Element behaviorElement, String actorID) {
         String type = LoadUtils.attribute(behaviorElement, "type", null);
-        Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"));
-        Script eachRoundScript = loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptEachRound"));
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"), "Behavior(" + actorID + ") - condition");
+        Script eachRoundScript = loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptEachRound"), "Behavior(" + actorID + ") - round script");
         int duration = LoadUtils.attributeInt(behaviorElement, "duration", 0);
         List<Idle> idles = new ArrayList<>();
         List<Element> idleElements = LoadUtils.directChildrenWithName(behaviorElement, "idle");
         for (Element idleElement : idleElements) {
-            Idle idle = loadIdle(idleElement);
+            Idle idle = loadIdle(idleElement, actorID);
             idles.add(idle);
         }
         switch (type) {
@@ -879,16 +884,16 @@ public class DataLoader {
                 return new BehaviorFollow(condition, eachRoundScript, duration, idles, actorTarget);
             }
             case "procedure" -> {
-                List<Behavior> procedureBehaviors = loadBehaviors(behaviorElement);
+                List<Behavior> procedureBehaviors = loadBehaviors(behaviorElement, actorID);
                 boolean isCycle = LoadUtils.attributeBool(behaviorElement, "isCycle", false);
                 return new BehaviorProcedure(condition, eachRoundScript, isCycle, procedureBehaviors);
             }
+            default -> throw new IllegalArgumentException("Behavior type is not valid: " + type);
         }
-        return null;
     }
 
-    private static Idle loadIdle(Element idleElement) {
-        Condition condition = loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"));
+    private static Idle loadIdle(Element idleElement, String actorID) {
+        Condition condition = loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"), "Idle(" + actorID + ") - condition");
         String phrase = LoadUtils.singleTag(idleElement, "phrase", null);
         return new Idle(condition, phrase);
     }

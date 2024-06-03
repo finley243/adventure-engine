@@ -6,8 +6,8 @@ import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptScaleLog extends Script {
 
-    public ScriptScaleLog(int line) {
-        super(line);
+    public ScriptScaleLog(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     @Override
@@ -17,11 +17,11 @@ public class ScriptScaleLog extends Script {
         Expression inputMax = context.getLocalVariables().get("inputMax").getExpression();
         Expression outputMin = context.getLocalVariables().get("outputMin").getExpression();
         Expression outputMax = context.getLocalVariables().get("outputMax").getExpression();
-        if (input.getDataType() != Expression.DataType.INTEGER && input.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("Input parameter is not an integer or float", getLine()));
-        if (inputMin.getDataType() != Expression.DataType.INTEGER && inputMin.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("InputMin parameter is not an integer or float", getLine()));
-        if (inputMax.getDataType() != Expression.DataType.INTEGER && inputMax.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("InputMax parameter is not an integer or float", getLine()));
-        if (outputMin.getDataType() != Expression.DataType.INTEGER && outputMin.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("OutputMin parameter is not an integer or float", getLine()));
-        if (outputMax.getDataType() != Expression.DataType.INTEGER && outputMax.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("OutputMax parameter is not an integer or float", getLine()));
+        if (input.getDataType() != Expression.DataType.INTEGER && input.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("Input parameter is not an integer or float", getTraceData()));
+        if (inputMin.getDataType() != Expression.DataType.INTEGER && inputMin.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("InputMin parameter is not an integer or float", getTraceData()));
+        if (inputMax.getDataType() != Expression.DataType.INTEGER && inputMax.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("InputMax parameter is not an integer or float", getTraceData()));
+        if (outputMin.getDataType() != Expression.DataType.INTEGER && outputMin.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("OutputMin parameter is not an integer or float", getTraceData()));
+        if (outputMax.getDataType() != Expression.DataType.INTEGER && outputMax.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("OutputMax parameter is not an integer or float", getTraceData()));
         float inputValue;
         float inputMinValue;
         float inputMaxValue;

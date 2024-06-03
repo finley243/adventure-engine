@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class ScriptTransferItem extends Script {
 
-    public ScriptTransferItem(int line) {
-        super(line);
+    public ScriptTransferItem(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     public enum TransferItemsType {
@@ -23,7 +23,7 @@ public class ScriptTransferItem extends Script {
     @Override
     public ScriptReturnData execute(Context context) {
         Expression typeExpression = context.getLocalVariables().get("transferType").getExpression();
-        if (typeExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Type parameter is not a string", getLine()));
+        if (typeExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Type parameter is not a string", getTraceData()));
         TransferItemsType transferType;
         switch (typeExpression.getValueString()) {
             case "instance" -> transferType = TransferItemsType.INSTANCE;
@@ -31,17 +31,17 @@ public class ScriptTransferItem extends Script {
             case "type" -> transferType = TransferItemsType.TYPE;
             case "all" -> transferType = TransferItemsType.ALL;
             default -> {
-                return new ScriptReturnData(null, null, new ScriptErrorData("Type parameter is not a valid transfer type", getLine()));
+                return new ScriptReturnData(null, null, new ScriptErrorData("Type parameter is not a valid transfer type", getTraceData()));
             }
         }
         Expression itemID = context.getLocalVariables().get("item").getExpression();
         Expression inventoryOrigin = context.getLocalVariables().get("from").getExpression();
         Expression inventoryTarget = context.getLocalVariables().get("to").getExpression();
         Expression count = context.getLocalVariables().get("count").getExpression();
-        if (inventoryOrigin != null && inventoryOrigin.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, new ScriptErrorData("From parameter is not an inventory", getLine()));
-        if (inventoryTarget != null && inventoryTarget.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, new ScriptErrorData("To parameter is not an inventory", getLine()));
-        if (itemID != null && itemID.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Item parameter is not a string", getLine()));
-        if (count != null && count.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Count parameter is not an integer", getLine()));
+        if (inventoryOrigin != null && inventoryOrigin.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, new ScriptErrorData("From parameter is not an inventory", getTraceData()));
+        if (inventoryTarget != null && inventoryTarget.getDataType() != Expression.DataType.INVENTORY) return new ScriptReturnData(null, null, new ScriptErrorData("To parameter is not an inventory", getTraceData()));
+        if (itemID != null && itemID.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Item parameter is not a string", getTraceData()));
+        if (count != null && count.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Count parameter is not an integer", getTraceData()));
         switch (transferType) {
             case INSTANCE -> {
                 String itemIDValue = itemID.getValueString();

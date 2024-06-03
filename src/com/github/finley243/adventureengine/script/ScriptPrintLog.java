@@ -7,8 +7,8 @@ public class ScriptPrintLog extends Script {
 
     private final Script scriptMessage;
 
-    public ScriptPrintLog(int line, Script scriptMessage) {
-        super(line);
+    public ScriptPrintLog(ScriptTraceData traceData, Script scriptMessage) {
+        super(traceData);
         this.scriptMessage = scriptMessage;
     }
 
@@ -18,11 +18,11 @@ public class ScriptPrintLog extends Script {
         if (messageResult.error() != null) {
             return messageResult;
         } else if (messageResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getTraceData()));
         } else if (messageResult.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a null value", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a null value", getTraceData()));
         } else if (messageResult.value().getDataType() != Expression.DataType.STRING) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a non-string value", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a non-string value", getTraceData()));
         }
         String messageValue = messageResult.value().getValueString();
         context.game().log().print(messageValue);

@@ -7,19 +7,19 @@ import java.util.List;
 
 public class ScriptListIndexGet extends Script {
 
-    public ScriptListIndexGet(int line) {
-        super(line);
+    public ScriptListIndexGet(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     @Override
     public ScriptReturnData execute(Context context) {
         Expression listExpression = context.getLocalVariables().get("list").getExpression();
         Expression indexExpression = context.getLocalVariables().get("index").getExpression();
-        if (listExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List parameter is not a list", getLine()));
-        if (indexExpression.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Index parameter is not an integer", getLine()));
+        if (listExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List parameter is not a list", getTraceData()));
+        if (indexExpression.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Index parameter is not an integer", getTraceData()));
         List<Expression> list = listExpression.getValueList();
         int index = indexExpression.getValueInteger();
-        if (index < 0 || index >= list.size()) return new ScriptReturnData(null, null, new ScriptErrorData("Index is out of bounds", getLine()));
+        if (index < 0 || index >= list.size()) return new ScriptReturnData(null, null, new ScriptErrorData("Index is out of bounds", getTraceData()));
         Expression valueAtIndex = list.get(index);
         return new ScriptReturnData(valueAtIndex, FlowStatementType.RETURN, null);
     }

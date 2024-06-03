@@ -5,6 +5,6 @@ import com.github.finley243.adventureengine.Context;
 @FunctionalInterface
 public interface TextProcessor {
 
-    String process(String line, Context context);
+    String process(String line, Context context, String originalLine);
 
 }

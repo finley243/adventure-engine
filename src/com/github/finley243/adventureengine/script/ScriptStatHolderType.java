@@ -13,14 +13,14 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ScriptStatHolderType extends Script {
 
-    public ScriptStatHolderType(int line) {
-        super(line);
+    public ScriptStatHolderType(ScriptTraceData traceData) {
+        super(traceData);
     }
 
     @Override
     public ScriptReturnData execute(Context context) {
         Expression statHolderExpression = context.getLocalVariables().get("holder").getExpression();
-        if (statHolderExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a stat holder", getLine()));
+        if (statHolderExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a stat holder", getTraceData()));
         StatHolder statHolder = statHolderExpression.getValueStatHolder();
         String typeString = switch (statHolder) {
             case Actor ignored -> "actor";
@@ -32,7 +32,7 @@ public class ScriptStatHolderType extends Script {
             case Scene ignored -> "scene";
             case null, default -> null;
         };
-        if (typeString == null) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a recognized type of StatHolder", getLine()));
+        if (typeString == null) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a recognized type of StatHolder", getTraceData()));
         return new ScriptReturnData(Expression.constant(typeString), FlowStatementType.RETURN, null);
     }
 

@@ -8,8 +8,8 @@ public class ScriptDivide extends Script {
     private final Script firstScript;
     private final Script secondScript;
 
-    public ScriptDivide(int line, Script firstScript, Script secondScript) {
-        super(line);
+    public ScriptDivide(ScriptTraceData traceData, Script firstScript, Script secondScript) {
+        super(traceData);
         this.firstScript = firstScript;
         this.secondScript = secondScript;
     }
@@ -20,20 +20,20 @@ public class ScriptDivide extends Script {
         if (firstReturn.error() != null) {
             return firstReturn;
         } else if (firstReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getTraceData()));
         } else if (firstReturn.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getTraceData()));
         }
         ScriptReturnData secondReturn = secondScript.execute(context);
         if (secondReturn.error() != null) {
             return secondReturn;
         } else if (secondReturn.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getTraceData()));
         } else if (secondReturn.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getTraceData()));
         }
         if (!canDivideExpressions(firstReturn.value(), secondReturn.value())) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not be divided", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression received values that could not be divided", getTraceData()));
         }
         Expression divideResult = divideExpressions(firstReturn.value(), secondReturn.value());
         return new ScriptReturnData(divideResult, null, null);

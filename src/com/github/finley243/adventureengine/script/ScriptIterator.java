@@ -13,8 +13,8 @@ public class ScriptIterator extends Script {
     private final String iteratorParameterName;
     private final Script iteratedScript;
 
-    public ScriptIterator(int line, Script setExpression, String iteratorParameterName, Script iteratedScript) {
-        super(line);
+    public ScriptIterator(ScriptTraceData traceData, Script setExpression, String iteratorParameterName, Script iteratedScript) {
+        super(traceData);
         this.setExpression = setExpression;
         this.iteratorParameterName = iteratorParameterName;
         this.iteratedScript = iteratedScript;
@@ -26,11 +26,11 @@ public class ScriptIterator extends Script {
         if (setResult.error() != null) {
             return setResult;
         } else if (setResult.flowStatement() != null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain a flow statement", getTraceData()));
         } else if (setResult.value() == null) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getTraceData()));
         } else if (setResult.value().getDataType() != Expression.DataType.SET && setResult.value().getDataType() != Expression.DataType.LIST) {
-            return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected a set or list", getLine()));
+            return new ScriptReturnData(null, null, new ScriptErrorData("Expression expected a set or list", getTraceData()));
         }
         List<Expression> expressions;
         if (setResult.value().getDataType() == Expression.DataType.SET) {
