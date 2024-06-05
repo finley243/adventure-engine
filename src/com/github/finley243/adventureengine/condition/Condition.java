@@ -18,9 +18,9 @@ public class Condition {
 	
 	public boolean isMet(Context context) {
 		Script.ScriptReturnData result = expression.execute(context);
+		// TODO - Replace exceptions with error log and default to false
 		if (result.error() != null) {
-			System.out.println(expression);
-			throw new IllegalArgumentException("Condition expression encountered an error during execution: " + result.error().message());
+			throw new IllegalArgumentException("Condition expression encountered an error during execution: " + result.stackTrace());
 		} else if (result.flowStatement() != null) {
 			throw new IllegalArgumentException("Condition expression contains an unexpected flow statement");
 		} else if (result.value() == null) {

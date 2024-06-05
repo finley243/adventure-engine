@@ -125,7 +125,14 @@ public abstract class Script {
 		return new ScriptExpression(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), Expression.constant(value));
 	}
 
-	public record ScriptReturnData(Expression value, FlowStatementType flowStatement, ScriptErrorData error) {}
+	public record ScriptReturnData(Expression value, FlowStatementType flowStatement, ScriptErrorData error) {
+		public String stackTrace() {
+			if (error == null) {
+				return null;
+			}
+			return error.message() + "\n - (" + error.traceData().line() + ") " + error.traceData().fileName();
+		}
+	}
 
 	public record ScriptErrorData(String message, ScriptTraceData traceData) {}
 
