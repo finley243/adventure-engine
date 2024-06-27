@@ -15,6 +15,11 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
+    public String getID() {
+        return "inspect_area";
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         if (area.getRoom().getDescription() != null) {
             subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), null, new Context(subject.game(), subject, subject));

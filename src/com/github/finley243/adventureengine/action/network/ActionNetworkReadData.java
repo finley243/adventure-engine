@@ -18,6 +18,11 @@ public class ActionNetworkReadData extends NetworkAction {
     }
 
     @Override
+    public String getID() {
+        return "network_read";
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.game().menuManager().sceneMenu(subject.game(), subject.game().data().getScene(node.getSceneID()), null, new Context(subject.game(), subject, subject, object));
     }

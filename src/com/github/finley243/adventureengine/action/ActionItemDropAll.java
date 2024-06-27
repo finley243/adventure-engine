@@ -16,6 +16,11 @@ public class ActionItemDropAll extends Action {
 		if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionItemDropAll on item with state");
 		this.item = item;
 	}
+
+	@Override
+	public String getID() {
+		return "item_drop_all";
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

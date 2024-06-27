@@ -12,6 +12,11 @@ public class ActionTalk extends Action {
 	public ActionTalk(Actor target) {
 		this.target = target;
 	}
+
+	@Override
+	public String getID() {
+		return "actor_talk";
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

@@ -79,8 +79,8 @@ public abstract class Behavior {
         }
     }
 
-    public float actionUtilityOverride(Actor subject, Action action) {
-        return -1.0f;
+    public Float actionUtilityOverride(Actor subject, Action action) {
+        return null;
     }
 
     public boolean isGuarding(Actor subject, WorldObject object) {

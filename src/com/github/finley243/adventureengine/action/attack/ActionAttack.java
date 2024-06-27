@@ -110,6 +110,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.isLoud = isLoud;
     }
 
+    @Override
+    public String getID() {
+        return "attack_" + attackType.getID();
+    }
+
     public abstract void consumeAmmo(Actor subject);
 
     public String getAttackTypeID() {

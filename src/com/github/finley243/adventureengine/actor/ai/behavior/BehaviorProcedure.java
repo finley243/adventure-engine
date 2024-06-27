@@ -70,7 +70,7 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public float actionUtilityOverride(Actor subject, Action action) {
+    public Float actionUtilityOverride(Actor subject, Action action) {
         return stages.get(currentStage).actionUtilityOverride(subject, action);
     }
 

@@ -17,6 +17,11 @@ public class ActionNetworkBreach extends NetworkAction {
     }
 
     @Override
+    public String getID() {
+        return "network_breach";
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         node.setBreached(true);
     }

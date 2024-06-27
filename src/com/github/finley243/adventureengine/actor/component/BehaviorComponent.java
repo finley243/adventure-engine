@@ -39,10 +39,10 @@ public class BehaviorComponent {
     }
 
     // A return value of -1.0f indicates no override for given action
-    public float actionUtilityOverride(Action action) {
+    public Float actionUtilityOverride(Action action) {
         Behavior current = currentBehavior();
         if (current == null) {
-            return -1.0f;
+            return null;
         } else {
             return current.actionUtilityOverride(actor, action);
         }

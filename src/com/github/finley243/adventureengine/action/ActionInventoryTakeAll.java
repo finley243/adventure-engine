@@ -31,6 +31,11 @@ public class ActionInventoryTakeAll extends Action {
     }
 
     @Override
+    public String getID() {
+        return "inventory_take_all";
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         int count = inventory.itemCount(item);
         inventory.removeItems(item.getTemplateID(), count);

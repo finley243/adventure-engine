@@ -15,6 +15,11 @@ public class ActionItemDrop extends Action {
 	public ActionItemDrop(Item item) {
 		this.item = item;
 	}
+
+	@Override
+	public String getID() {
+		return "item_drop";
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

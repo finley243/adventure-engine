@@ -23,6 +23,11 @@ public class ActionItemConsume extends Action {
 		this.consumePhrase = consumePhrase;
 		this.effects = effects;
 	}
+
+	@Override
+	public String getID() {
+		return "item_consume";
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

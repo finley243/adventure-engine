@@ -26,6 +26,11 @@ public class ActionObjectUseStart extends Action {
 	public String getSlotID() {
 		return slotID;
 	}
+
+	@Override
+	public String getID() {
+		return "object_use_start";
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

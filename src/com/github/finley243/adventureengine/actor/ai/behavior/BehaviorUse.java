@@ -33,13 +33,13 @@ public class BehaviorUse extends Behavior {
     }
 
     @Override
-    public float actionUtilityOverride(Actor subject, Action action) {
+    public Float actionUtilityOverride(Actor subject, Action action) {
         if (action instanceof ActionObjectUseStart actionUseStart && actionUseStart.getComponent().getObject().getID().equals(object) && actionUseStart.getSlotID().equals(slot)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
-        } else if(action instanceof ActionObjectUseEnd actionUseEnd && actionUseEnd.getComponent().getObject().getID().equals(object) && actionUseEnd.getSlotID().equals(slot)) {
+        } else if (action instanceof ActionObjectUseEnd actionUseEnd && actionUseEnd.getComponent().getObject().getID().equals(object) && actionUseEnd.getSlotID().equals(slot)) {
             return 0.0f;
         }
-        return -1.0f;
+        return super.actionUtilityOverride(subject, action);
     }
 
 }

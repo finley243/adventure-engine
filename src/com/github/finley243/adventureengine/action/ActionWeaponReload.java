@@ -26,6 +26,11 @@ public class ActionWeaponReload extends Action {
 		this.weapon = weapon;
 		this.ammoType = ammoType;
 	}
+
+	@Override
+	public String getID() {
+		return "item_reload";
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

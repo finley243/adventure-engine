@@ -18,6 +18,11 @@ public class ActionItemUnequip extends Action {
     }
 
     @Override
+    public String getID() {
+        return "item_unequip";
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.getEquipmentComponent().unequip(item);
         Context context = new Context(subject.game(), subject, null, item);

@@ -13,6 +13,11 @@ public class ActionInspectObject extends Action {
 	public ActionInspectObject(WorldObject object) {
 		this.object = object;
 	}
+
+	@Override
+	public String getID() {
+		return "inspect_object";
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

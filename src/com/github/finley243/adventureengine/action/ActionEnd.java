@@ -9,6 +9,11 @@ public class ActionEnd extends Action {
 	public ActionEnd() {}
 
 	@Override
+	public String getID() {
+		return "end_turn";
+	}
+
+	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.endTurn();
 	}

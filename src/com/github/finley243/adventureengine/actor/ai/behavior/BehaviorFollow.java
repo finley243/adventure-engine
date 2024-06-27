@@ -26,4 +26,5 @@ public class BehaviorFollow extends Behavior {
     public Area getTargetArea(Actor subject) {
         return subject.game().data().getActor(actor).getArea();
     }
+
 }

@@ -40,6 +40,11 @@ public class ActionCustom extends Action {
         this.isMove = isMove;
     }
 
+    @Override
+    public String getID() {
+        return getTemplate().getID();
+    }
+
     public Game game() {
         return game;
     }

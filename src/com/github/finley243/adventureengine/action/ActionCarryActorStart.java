@@ -16,6 +16,11 @@ public class ActionCarryActorStart extends Action {
     }
 
     @Override
+    public String getID() {
+        return "carry_actor_start";
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.setCarriedActor(carriedActor);
         Context context = new Context(subject.game(), subject, carriedActor);

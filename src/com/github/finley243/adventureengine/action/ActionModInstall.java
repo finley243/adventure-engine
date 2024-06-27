@@ -17,6 +17,11 @@ public class ActionModInstall extends Action {
     }
 
     @Override
+    public String getID() {
+        return "item_mod_install";
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.getInventory().removeItem(mod);
         target.getComponentOfType(ItemComponentModdable.class).installMod(mod);

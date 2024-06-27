@@ -17,6 +17,8 @@ public abstract class Action {
 
 	public Action() {}
 
+	public abstract String getID();
+
 	public abstract void choose(Actor subject, int repeatActionCount);
 
 	public abstract MenuData getMenuData(Actor subject);

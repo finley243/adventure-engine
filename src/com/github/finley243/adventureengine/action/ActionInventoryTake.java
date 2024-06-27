@@ -30,6 +30,11 @@ public class ActionInventoryTake extends Action {
     }
 
     @Override
+    public String getID() {
+        return "inventory_take";
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         inventory.removeItem(item);
         subject.getInventory().addItem(item);

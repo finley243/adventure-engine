@@ -20,6 +20,11 @@ public class ActionItemTake extends Action {
 		this.area = area;
 		this.item = item;
 	}
+
+	@Override
+	public String getID() {
+		return "item_take";
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
