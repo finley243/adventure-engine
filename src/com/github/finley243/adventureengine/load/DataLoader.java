@@ -875,10 +875,6 @@ public class DataLoader {
                 String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
                 return new BehaviorGuard(condition, eachRoundScript, duration, idles, guardTarget);
             }
-            case "sleep" -> {
-                String bedTarget = LoadUtils.attribute(behaviorElement, "bed", null);
-                return new BehaviorSleep(condition, eachRoundScript, idles, bedTarget);
-            }
             case "follow" -> {
                 String actorTarget = LoadUtils.attribute(behaviorElement, "actor", null);
                 return new BehaviorFollow(condition, eachRoundScript, duration, idles, actorTarget);
