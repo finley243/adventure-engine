@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -29,6 +30,11 @@ public class BehaviorProcedure extends Behavior {
     @Override
     public boolean isInTargetState(Actor subject) {
         return stages.get(currentStage).isInTargetState(subject);
+    }
+
+    @Override
+    public void onPerformAction(Action action) {
+        stages.get(currentStage).onPerformAction(action);
     }
 
     @Override
@@ -77,6 +83,11 @@ public class BehaviorProcedure extends Behavior {
     @Override
     public boolean isGuarding(Actor subject, WorldObject object) {
         return stages.get(currentStage).isGuarding(subject, object);
+    }
+
+    @Override
+    public Idle getIdle(Actor subject) {
+        return stages.get(currentStage).getIdle(subject);
     }
 
 }

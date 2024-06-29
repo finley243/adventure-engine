@@ -37,7 +37,6 @@
             sendSensoryEvent(area=originAreaID, phrase="moveThrough", targetArea=targetArea, originArea=originArea, door=door);
             stat.subject.area = stat.parentArea.id;
             sendSensoryEvent(area=stat.parentArea.id, phrase="moveThroughReverse", detectSelf=false, targetArea=targetArea, originArea=originArea, door=door);
-            example_function();
         </script>
     </action>
 </data>

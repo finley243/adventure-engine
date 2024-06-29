@@ -879,6 +879,10 @@ public class DataLoader {
                 String actorTarget = LoadUtils.attribute(behaviorElement, "actor", null);
                 return new BehaviorFollow(condition, eachRoundScript, duration, idles, actorTarget);
             }
+            case "action" -> {
+                String actionID = LoadUtils.attribute(behaviorElement, "action", null);
+                return new BehaviorAction(condition, eachRoundScript, duration, idles, actionID);
+            }
             case "procedure" -> {
                 List<Behavior> procedureBehaviors = loadBehaviors(behaviorElement, actorID);
                 boolean isCycle = LoadUtils.attributeBool(behaviorElement, "isCycle", false);

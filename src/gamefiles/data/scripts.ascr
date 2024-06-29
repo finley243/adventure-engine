@@ -26,14 +26,3 @@ func drop_equipped_force_specified_slot(equippedSlot) {
 		sensoryEvent(phrase = "forceDrop", area = stat.subject.area.id);
 	}
 }
-
-func example_function() {
-    var x = 1;
-    var y = 2;
-    var z = x + y;
-    test_error_system("Example function error");
-}
-
-func test_error_system(message) {
-    error(message);
-}

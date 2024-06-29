@@ -17,10 +17,13 @@
             <object id="wilsons_corner_store_counter" template="counter"/>
             <actor id="frank_wilson" template="frank_wilson">
                 <behaviors>
-                    <behavior type="move" area="wilsons_corner_store_entrance">
-                        <idle>
-                            <phrase>$actor {yawn$s|stretch$es|tap$s $actor's fingers rhythmically on the counter|look$s across the store|check$s something under the counter, then straighten$s back up|glance$s out the window}.</phrase>
-                        </idle>
+                    <behavior type="procedure" isCycle="true">
+                        <behavior type="move" area="wilsons_corner_store_entrance" duration="6">
+                            <idle>
+                                <phrase>$actor {yawn$s|stretch$es|tap$s $actor's fingers rhythmically on the counter|look$s across the store|check$s something under the counter, then straighten$s back up|glance$s out the window}.</phrase>
+                            </idle>
+                        </behavior>
+                        <behavior type="move" area="wilsons_corner_store_backroom_area" duration="1"/>
                     </behavior>
                 </behaviors>
             </actor>

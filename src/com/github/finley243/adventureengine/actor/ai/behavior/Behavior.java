@@ -15,9 +15,9 @@ import java.util.List;
 
 public abstract class Behavior {
 
-    public static final float BEHAVIOR_ACTION_UTILITY = 0.7f;
+    public static final Float BEHAVIOR_ACTION_UTILITY = 0.7f;
     // To avoid conflicts, behaviors are ignored (-1.0f prevents overriding) during combat
-    public static final float BEHAVIOR_ACTION_UTILITY_COMBAT = -1.0f;
+    public static final Float BEHAVIOR_ACTION_UTILITY_COMBAT = null;
     public static final float BEHAVIOR_MOVEMENT_UTILITY = 0.7f;
     public static final float BEHAVIOR_MOVEMENT_UTILITY_COMBAT = 0.0f;
 
@@ -78,6 +78,8 @@ public abstract class Behavior {
             return isInTargetState(subject);
         }
     }
+
+    public void onPerformAction(Action action) {}
 
     public Float actionUtilityOverride(Actor subject, Action action) {
         return null;
