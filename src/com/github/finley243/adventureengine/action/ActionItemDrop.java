@@ -20,6 +20,11 @@ public class ActionItemDrop extends Action {
 	public String getID() {
 		return "item_drop";
 	}
+
+	@Override
+	public Context getContext(Actor subject) {
+		return new Context(subject.game(), subject, null, item);
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

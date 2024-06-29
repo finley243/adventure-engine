@@ -45,6 +45,11 @@ public class ActionCustom extends Action {
         return getTemplate().getID();
     }
 
+    @Override
+    public Context getContext(Actor subject) {
+        return getContextWithParameters(subject);
+    }
+
     public Game game() {
         return game;
     }

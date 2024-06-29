@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 
@@ -18,6 +19,8 @@ public abstract class Action {
 	public Action() {}
 
 	public abstract String getID();
+
+	public abstract Context getContext(Actor subject);
 
 	public abstract void choose(Actor subject, int repeatActionCount);
 

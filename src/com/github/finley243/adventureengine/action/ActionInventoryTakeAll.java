@@ -36,12 +36,19 @@ public class ActionInventoryTakeAll extends Action {
     }
 
     @Override
+    public Context getContext(Actor subject) {
+        Context context = new Context(subject.game(), subject, null, item);
+        context.setLocalVariable("inventory", Expression.constantNoun(owner));
+        context.setLocalVariable("count", Expression.constant(inventory.itemCount(item)));
+        return context;
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         int count = inventory.itemCount(item);
         inventory.removeItems(item.getTemplateID(), count);
         subject.getInventory().addItems(item.getTemplateID(), count);
-        Context context = new Context(subject.game(), subject, null, item);
-        context.setLocalVariable("inventory", Expression.constant(owner));
+        Context context = getContext(subject);
         //TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
     }

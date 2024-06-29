@@ -1,6 +1,8 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentModdable;
 import com.github.finley243.adventureengine.menu.action.MenuData;
@@ -19,6 +21,13 @@ public class ActionModInstall extends Action {
     @Override
     public String getID() {
         return "item_mod_install";
+    }
+
+    @Override
+    public Context getContext(Actor subject) {
+        Context context = new Context(subject.game(), subject, null, target);
+        context.setLocalVariable("mod", Expression.constant(mod));
+        return context;
     }
 
     @Override

@@ -31,6 +31,13 @@ public class ActionWeaponReload extends Action {
 	public String getID() {
 		return "item_reload";
 	}
+
+	@Override
+	public Context getContext(Actor subject) {
+		Context context = new Context(subject.game(), subject, null, weapon);
+		context.setLocalVariable("ammo", Expression.constant(ammoType));
+		return context;
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

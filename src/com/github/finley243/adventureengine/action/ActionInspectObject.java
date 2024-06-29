@@ -18,6 +18,11 @@ public class ActionInspectObject extends Action {
 	public String getID() {
 		return "inspect_object";
 	}
+
+	@Override
+	public Context getContext(Actor subject) {
+		return new Context(subject.game(), subject, null, object);
+	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {

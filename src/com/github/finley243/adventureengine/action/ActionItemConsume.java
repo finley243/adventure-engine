@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
@@ -27,6 +28,11 @@ public class ActionItemConsume extends Action {
 	@Override
 	public String getID() {
 		return "item_consume";
+	}
+
+	@Override
+	public Context getContext(Actor subject) {
+        return new Context(subject.game(), subject, null, item);
 	}
 	
 	@Override

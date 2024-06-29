@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -30,6 +31,13 @@ public class ActionObjectUseStart extends Action {
 	@Override
 	public String getID() {
 		return "object_use_start";
+	}
+
+	@Override
+	public Context getContext(Actor subject) {
+		Context context = new Context(subject.game(), subject, null, component.getObject());
+		context.setLocalVariable("slot", Expression.constant(slotID));
+		return context;
 	}
 	
 	@Override

@@ -20,6 +20,11 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
+    public Context getContext(Actor subject) {
+        return new Context(subject.game(), subject, null, area);
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         if (area.getRoom().getDescription() != null) {
             subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), null, new Context(subject.game(), subject, subject));

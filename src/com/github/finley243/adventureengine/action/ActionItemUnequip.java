@@ -23,6 +23,11 @@ public class ActionItemUnequip extends Action {
     }
 
     @Override
+    public Context getContext(Actor subject) {
+        return new Context(subject.game(), subject, null, item);
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.getEquipmentComponent().unequip(item);
         Context context = new Context(subject.game(), subject, null, item);

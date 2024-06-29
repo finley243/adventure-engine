@@ -36,6 +36,10 @@ public class Context {
         this(game, subject, target, parentObject, null, null, null, new HashMap<>());
     }
 
+    public Context(Game game, Actor subject, Actor target, Area parentArea) {
+        this(game, subject, target, null, null, parentArea, null, new HashMap<>());
+    }
+
     public Context(Game game, WorldObject parentObject) {
         this(game, null, null, parentObject, null, null, null, new HashMap<>());
     }

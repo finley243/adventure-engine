@@ -1,6 +1,8 @@
 package com.github.finley243.adventureengine.action.network;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.network.NetworkNode;
@@ -19,6 +21,13 @@ public class ActionNetworkBreach extends NetworkAction {
     @Override
     public String getID() {
         return "network_breach";
+    }
+
+    @Override
+    public Context getContext(Actor subject) {
+        Context context = new Context(subject.game(), subject, null, object);
+        context.setLocalVariable("node", Expression.constant(node));
+        return context;
     }
 
     @Override

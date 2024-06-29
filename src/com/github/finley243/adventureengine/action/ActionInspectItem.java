@@ -20,6 +20,11 @@ public class ActionInspectItem extends Action {
     }
 
     @Override
+    public Context getContext(Actor subject) {
+        return new Context(subject.game(), subject, null, item);
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.game().menuManager().sceneMenu(subject.game(), item.getDescription(), null, new Context(subject.game(), subject, subject, item));
         item.triggerScript("on_inspect", subject, subject);

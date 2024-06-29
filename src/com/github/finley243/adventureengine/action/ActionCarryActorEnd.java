@@ -21,6 +21,11 @@ public class ActionCarryActorEnd extends Action {
     }
 
     @Override
+    public Context getContext(Actor subject) {
+        return new Context(subject.game(), subject, carriedActor);
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.setCarriedActor(null);
         Context context = new Context(subject.game(), subject, carriedActor);

@@ -115,6 +115,13 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return "attack_" + attackType.getID();
     }
 
+    @Override
+    public Context getContext(Actor subject) {
+        Context context = new Context(subject.game(), subject, targets.size() == 1 ? targets.iterator().next() : null, getWeapon(), getArea());
+        context.setLocalVariable("targets", Expression.constant(targets));
+        return context;
+    }
+
     public abstract void consumeAmmo(Actor subject);
 
     public String getAttackTypeID() {

@@ -1,7 +1,9 @@
 package com.github.finley243.adventureengine.action.attack;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentAmmo;
 import com.github.finley243.adventureengine.item.component.ItemComponentMagazine;

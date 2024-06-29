@@ -35,11 +35,17 @@ public class ActionInventoryTake extends Action {
     }
 
     @Override
+    public Context getContext(Actor subject) {
+        Context context = new Context(subject.game(), subject, null, item);
+        context.setLocalVariable("inventory", Expression.constantNoun(owner));
+        return context;
+    }
+
+    @Override
     public void choose(Actor subject, int repeatActionCount) {
         inventory.removeItem(item);
         subject.getInventory().addItem(item);
-        Context context = new Context(subject.game(), subject, null, item);
-        context.setLocalVariable("inventory", Expression.constant(owner));
+        Context context = getContext(subject);
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
     }
 

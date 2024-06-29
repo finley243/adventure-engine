@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
 
@@ -16,6 +17,11 @@ public class ActionTalk extends Action {
 	@Override
 	public String getID() {
 		return "actor_talk";
+	}
+
+	@Override
+	public Context getContext(Actor subject) {
+        return new Context(subject.game(), subject, target);
 	}
 	
 	@Override

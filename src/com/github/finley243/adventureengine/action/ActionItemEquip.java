@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
@@ -29,6 +30,13 @@ public class ActionItemEquip extends Action {
     @Override
     public String getID() {
         return "item_equip";
+    }
+
+    @Override
+    public Context getContext(Actor subject) {
+        Context context = new Context(subject.game(), subject, null, item);
+        context.setLocalVariable("equipSlots", Expression.constant(slotsData.slots()));
+        return context;
     }
 
     @Override

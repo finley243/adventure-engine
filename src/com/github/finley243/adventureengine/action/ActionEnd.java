@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
@@ -11,6 +12,11 @@ public class ActionEnd extends Action {
 	@Override
 	public String getID() {
 		return "end_turn";
+	}
+
+	@Override
+	public Context getContext(Actor subject) {
+		return new Context(subject.game(), subject, null);
 	}
 
 	@Override
