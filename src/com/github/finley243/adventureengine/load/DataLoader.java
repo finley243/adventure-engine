@@ -881,7 +881,8 @@ public class DataLoader {
             }
             case "action" -> {
                 String actionID = LoadUtils.attribute(behaviorElement, "action", null);
-                return new BehaviorAction(condition, eachRoundScript, duration, idles, actionID);
+                Condition actionCondition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "actionCondition"), "Behavior(" + actorID + ") - action condition");
+                return new BehaviorAction(condition, eachRoundScript, duration, idles, actionID, actionCondition);
             }
             case "procedure" -> {
                 List<Behavior> procedureBehaviors = loadBehaviors(behaviorElement, actorID);

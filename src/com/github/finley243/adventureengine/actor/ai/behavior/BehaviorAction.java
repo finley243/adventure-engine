@@ -12,12 +12,14 @@ import java.util.List;
 public class BehaviorAction extends Behavior {
 
     private final String actionID;
+    private final Condition actionCondition;
 
     private boolean hasPerformedAction;
 
-    public BehaviorAction(Condition condition, Script eachRoundScript, int duration, List<Idle> idles, String actionID) {
+    public BehaviorAction(Condition condition, Script eachRoundScript, int duration, List<Idle> idles, String actionID, Condition actionCondition) {
         super(condition, eachRoundScript, duration, idles);
         this.actionID = actionID;
+        this.actionCondition = actionCondition;
         this.hasPerformedAction = false;
     }
 
@@ -38,23 +40,26 @@ public class BehaviorAction extends Behavior {
     }
 
     @Override
-    public void onPerformAction(Action action) {
-        if (actionIsMatch(action)) {
+    public void onPerformAction(Actor subject, Action action) {
+        if (actionIsMatch(subject, action)) {
             hasPerformedAction = true;
         }
-        super.onPerformAction(action);
+        super.onPerformAction(subject, action);
     }
 
     @Override
     public Float actionUtilityOverride(Actor subject, Action action) {
-        if (actionIsMatch(action)) {
+        if (actionIsMatch(subject, action)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         }
         return super.actionUtilityOverride(subject, action);
     }
 
-    private boolean actionIsMatch(Action action) {
-        return action.getID().equals(actionID);
+    private boolean actionIsMatch(Actor subject, Action action) {
+        if (!action.getID().equals(actionID)) {
+            return false;
+        }
+        return actionCondition == null || actionCondition.isMet(action.getContext(subject));
     }
 
 }

@@ -33,8 +33,8 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public void onPerformAction(Action action) {
-        stages.get(currentStage).onPerformAction(action);
+    public void onPerformAction(Actor subject, Action action) {
+        stages.get(currentStage).onPerformAction(subject, action);
     }
 
     @Override

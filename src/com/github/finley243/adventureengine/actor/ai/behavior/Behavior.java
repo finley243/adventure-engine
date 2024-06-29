@@ -79,7 +79,7 @@ public abstract class Behavior {
         }
     }
 
-    public void onPerformAction(Action action) {}
+    public void onPerformAction(Actor subject, Action action) {}
 
     public Float actionUtilityOverride(Actor subject, Action action) {
         return null;

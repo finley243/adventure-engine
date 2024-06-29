@@ -57,7 +57,7 @@ public class BehaviorComponent {
     public void onPerformAction(Action action) {
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
-            currentBehavior.onPerformAction(action);
+            currentBehavior.onPerformAction(actor, action);
         }
     }
 
