@@ -853,6 +853,7 @@ public class DataLoader {
     private static Behavior loadBehavior(Element behaviorElement, String actorID) {
         String type = LoadUtils.attribute(behaviorElement, "type", null);
         Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"), "Behavior(" + actorID + ") - condition");
+        Script startScript = loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptStart"), "Behavior(" + actorID + ") - start script");
         Script eachRoundScript = loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptEachRound"), "Behavior(" + actorID + ") - round script");
         int duration = LoadUtils.attributeInt(behaviorElement, "duration", 0);
         List<Idle> idles = new ArrayList<>();
@@ -864,30 +865,30 @@ public class DataLoader {
         switch (type) {
             case "move" -> {
                 String areaTarget = LoadUtils.attribute(behaviorElement, "area", null);
-                return new BehaviorMove(condition, eachRoundScript, duration, idles, areaTarget);
+                return new BehaviorMove(condition, startScript, eachRoundScript, duration, idles, areaTarget);
             }
             case "use" -> {
                 String objectTarget = LoadUtils.attribute(behaviorElement, "object", null);
                 String slotTarget = LoadUtils.attribute(behaviorElement, "slot", null);
-                return new BehaviorUse(condition, eachRoundScript, duration, idles, objectTarget, slotTarget);
+                return new BehaviorUse(condition, startScript, eachRoundScript, duration, idles, objectTarget, slotTarget);
             }
             case "guard" -> {
                 String guardTarget = LoadUtils.attribute(behaviorElement, "object", null);
-                return new BehaviorGuard(condition, eachRoundScript, duration, idles, guardTarget);
+                return new BehaviorGuard(condition, startScript, eachRoundScript, duration, idles, guardTarget);
             }
             case "follow" -> {
                 String actorTarget = LoadUtils.attribute(behaviorElement, "actor", null);
-                return new BehaviorFollow(condition, eachRoundScript, duration, idles, actorTarget);
+                return new BehaviorFollow(condition, startScript, eachRoundScript, duration, idles, actorTarget);
             }
             case "action" -> {
                 String actionID = LoadUtils.attribute(behaviorElement, "action", null);
                 Condition actionCondition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "actionCondition"), "Behavior(" + actorID + ") - action condition");
-                return new BehaviorAction(condition, eachRoundScript, duration, idles, actionID, actionCondition);
+                return new BehaviorAction(condition, startScript, eachRoundScript, duration, idles, actionID, actionCondition);
             }
             case "procedure" -> {
                 List<Behavior> procedureBehaviors = loadBehaviors(behaviorElement, actorID);
                 boolean isCycle = LoadUtils.attributeBool(behaviorElement, "isCycle", false);
-                return new BehaviorProcedure(condition, eachRoundScript, isCycle, procedureBehaviors);
+                return new BehaviorProcedure(condition, startScript, eachRoundScript, isCycle, procedureBehaviors);
             }
             default -> throw new IllegalArgumentException("Behavior type is not valid: " + type);
         }

@@ -16,9 +16,10 @@ public class BehaviorProcedure extends Behavior {
     private final boolean isCycle;
     private final List<Behavior> stages;
     private int currentStage;
+    private Context currentStageContext;
 
-    public BehaviorProcedure(Condition condition, Script eachRoundScript, boolean isCycle, List<Behavior> stages) {
-        super(condition, eachRoundScript, 0, null);
+    public BehaviorProcedure(Condition condition, Script startScript, Script eachRoundScript, boolean isCycle, List<Behavior> stages) {
+        super(condition, eachRoundScript, startScript, 0, null);
         if (stages.isEmpty()) throw new IllegalArgumentException("BehaviorCycle stages cannot be empty");
         if (stages.size() == 1) throw new IllegalArgumentException("BehaviorCycle cannot have 1 stage");
         for (Behavior behavior : stages) {
@@ -49,26 +50,27 @@ public class BehaviorProcedure extends Behavior {
 
     @Override
     public void updateTurn(Actor subject, Context scriptContext) {
-        triggerRoundScript(subject, scriptContext);
-        stages.get(currentStage).updateTurn(subject, new Context(scriptContext, scriptContext.getSubject(), scriptContext.getTarget()));
+        triggerRoundScript(scriptContext);
+        stages.get(currentStage).updateTurn(subject, currentStageContext);
     }
 
     @Override
-    public void update(Actor subject) {
-        stages.get(currentStage).update(subject);
+    public void update(Actor subject, Context scriptContext) {
+        stages.get(currentStage).update(subject, currentStageContext);
         if (stages.get(currentStage).hasCompleted(subject)) {
             currentStage += 1;
             if (currentStage >= stages.size()) {
                 currentStage = 0;
             }
-            stages.get(currentStage).onStart();
+            currentStageContext = new Context(scriptContext, scriptContext.getSubject(), scriptContext.getTarget());
+            stages.get(currentStage).onStart(currentStageContext);
         }
     }
 
     @Override
-    public void onStart() {
+    public void onStart(Context scriptContext) {
         currentStage = 0;
-        stages.get(currentStage).onStart();
+        stages.get(currentStage).onStart(currentStageContext);
     }
 
     @Override

@@ -12,8 +12,8 @@ public class BehaviorFollow extends Behavior {
 
     private final String actor;
 
-    public BehaviorFollow(Condition condition, Script eachRoundScript, int duration, List<Idle> idles, String actor) {
-        super(condition, eachRoundScript, duration, idles);
+    public BehaviorFollow(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String actor) {
+        super(condition, startScript, eachRoundScript, duration, idles);
         this.actor = actor;
     }
 

@@ -16,8 +16,8 @@ public class BehaviorUse extends Behavior {
     private final String object;
     private final String slot;
 
-    public BehaviorUse(Condition condition, Script eachRoundScript, int duration, List<Idle> idles, String object, String slot) {
-        super(condition, eachRoundScript, duration, idles);
+    public BehaviorUse(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String object, String slot) {
+        super(condition, startScript, eachRoundScript, duration, idles);
         this.object = object;
         this.slot = slot;
     }

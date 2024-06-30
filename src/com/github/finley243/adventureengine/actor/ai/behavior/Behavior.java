@@ -22,23 +22,30 @@ public abstract class Behavior {
     public static final float BEHAVIOR_MOVEMENT_UTILITY_COMBAT = 0.0f;
 
     private final Condition condition;
+    private final Script startScript;
     private final Script eachRoundScript;
     // If duration = 0, behavior will continue indefinitely until endCondition is met or until superseded by another behavior
     private final int duration;
     private final List<Idle> idles;
     private int turnsRemaining;
 
-    public Behavior(Condition condition, Script eachRoundScript, int duration, List<Idle> idles) {
+    public Behavior(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles) {
         this.condition = condition;
+        this.startScript = startScript;
         this.eachRoundScript = eachRoundScript;
         this.duration = duration;
         this.idles = idles;
         this.turnsRemaining = 0;
     }
 
-    public void triggerRoundScript(Actor subject, Context context) {
+    public void triggerStartScript(Context context) {
+        if (startScript != null) {
+            startScript.execute(context);
+        }
+    }
+
+    public void triggerRoundScript(Context context) {
         if (eachRoundScript != null) {
-            //Context context = new Context(subject.game(), subject, subject);
             eachRoundScript.execute(context);
         }
     }
@@ -47,7 +54,7 @@ public abstract class Behavior {
     public abstract boolean isInTargetState(Actor subject);
 
     public void updateTurn(Actor subject, Context scriptContext) {
-        triggerRoundScript(subject, scriptContext);
+        triggerRoundScript(scriptContext);
         if (duration > 0 && turnsRemaining > 0) {
             if (isInTargetState(subject)) {
                 turnsRemaining -= 1;
@@ -58,15 +65,16 @@ public abstract class Behavior {
         }
     }
 
-    public void update(Actor subject) {
+    public void update(Actor subject, Context scriptContext) {
         if (duration > 0 && turnsRemaining > 0 && !isInTargetState(subject)) {
             // Reset counter if countdown condition is interrupted
             turnsRemaining = duration;
         }
     }
 
-    public void onStart() {
+    public void onStart(Context scriptContext) {
         turnsRemaining = duration;
+        triggerStartScript(scriptContext);
     }
 
     public abstract Area getTargetArea(Actor subject);

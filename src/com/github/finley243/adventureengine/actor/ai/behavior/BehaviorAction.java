@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
@@ -16,17 +17,17 @@ public class BehaviorAction extends Behavior {
 
     private boolean hasPerformedAction;
 
-    public BehaviorAction(Condition condition, Script eachRoundScript, int duration, List<Idle> idles, String actionID, Condition actionCondition) {
-        super(condition, eachRoundScript, duration, idles);
+    public BehaviorAction(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String actionID, Condition actionCondition) {
+        super(condition, startScript, eachRoundScript, duration, idles);
         this.actionID = actionID;
         this.actionCondition = actionCondition;
         this.hasPerformedAction = false;
     }
 
     @Override
-    public void onStart() {
+    public void onStart(Context scriptContext) {
         hasPerformedAction = false;
-        super.onStart();
+        super.onStart(scriptContext);
     }
 
     @Override

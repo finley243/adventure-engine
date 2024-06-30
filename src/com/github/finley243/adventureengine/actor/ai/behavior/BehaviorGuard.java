@@ -13,8 +13,8 @@ public class BehaviorGuard extends Behavior {
 
     private final String guardTarget;
 
-    public BehaviorGuard(Condition condition, Script eachRoundScript, int duration, List<Idle> idles, String guardTarget) {
-        super(condition, eachRoundScript, duration, idles);
+    public BehaviorGuard(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String guardTarget) {
+        super(condition, startScript, eachRoundScript, duration, idles);
         this.guardTarget = guardTarget;
     }
 
