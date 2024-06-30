@@ -62,7 +62,7 @@ public class BehaviorProcedure extends Behavior {
             if (currentStage >= stages.size()) {
                 currentStage = 0;
             }
-            currentStageContext = new Context(scriptContext, scriptContext.getSubject(), scriptContext.getTarget());
+            resetStageContext(scriptContext);
             stages.get(currentStage).onStart(currentStageContext);
         }
     }
@@ -70,6 +70,7 @@ public class BehaviorProcedure extends Behavior {
     @Override
     public void onStart(Context scriptContext) {
         currentStage = 0;
+        resetStageContext(scriptContext);
         stages.get(currentStage).onStart(currentStageContext);
     }
 
@@ -91,6 +92,10 @@ public class BehaviorProcedure extends Behavior {
     @Override
     public Idle getIdle(Actor subject) {
         return stages.get(currentStage).getIdle(subject);
+    }
+
+    private void resetStageContext(Context parentContext) {
+        currentStageContext = new Context(parentContext, parentContext.getSubject(), parentContext.getTarget());
     }
 
 }
