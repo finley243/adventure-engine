@@ -36,9 +36,9 @@ public abstract class Behavior {
         this.turnsRemaining = 0;
     }
 
-    public void triggerRoundScript(Actor subject) {
+    public void triggerRoundScript(Actor subject, Context context) {
         if (eachRoundScript != null) {
-            Context context = new Context(subject.game(), subject, subject);
+            //Context context = new Context(subject.game(), subject, subject);
             eachRoundScript.execute(context);
         }
     }
@@ -46,8 +46,8 @@ public abstract class Behavior {
     // Whether the turnsRemaining counter should be counted down
     public abstract boolean isInTargetState(Actor subject);
 
-    public void updateTurn(Actor subject) {
-        triggerRoundScript(subject);
+    public void updateTurn(Actor subject, Context scriptContext) {
+        triggerRoundScript(subject, scriptContext);
         if (duration > 0 && turnsRemaining > 0) {
             if (isInTargetState(subject)) {
                 turnsRemaining -= 1;

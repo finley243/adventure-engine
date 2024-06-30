@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.component;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
@@ -18,11 +19,13 @@ public class BehaviorComponent {
     private final List<Behavior> behaviors;
     private int currentIndex;
     private AreaTarget areaTarget;
+    private Context scriptContext;
 
     public BehaviorComponent(Actor actor, List<Behavior> behaviors) {
         this.actor = actor;
         this.behaviors = Objects.requireNonNullElseGet(behaviors, ArrayList::new);
         this.currentIndex = -1;
+        resetContext();
     }
 
     private Behavior currentBehavior() {
@@ -65,7 +68,7 @@ public class BehaviorComponent {
         if (behaviors.isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
-            currentBehavior.updateTurn(actor);
+            currentBehavior.updateTurn(actor, scriptContext);
         }
     }
 
@@ -119,6 +122,7 @@ public class BehaviorComponent {
         for (int i = 0; i < (onlyHigherPriorities ? currentIndex : behaviors.size()); i++) {
             if (behaviors.get(i).isValid(actor)) {
                 currentIndex = i;
+                resetContext();
                 behaviors.get(i).onStart();
                 if (areaTarget != null) {
                     if (behaviors.get(i).getTargetArea(actor) != null) {
@@ -131,6 +135,10 @@ public class BehaviorComponent {
                 return;
             }
         }
+    }
+
+    private void resetContext() {
+        scriptContext = new Context(actor.game(), actor, actor);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
@@ -47,9 +48,9 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public void updateTurn(Actor subject) {
-        triggerRoundScript(subject);
-        stages.get(currentStage).updateTurn(subject);
+    public void updateTurn(Actor subject, Context scriptContext) {
+        triggerRoundScript(subject, scriptContext);
+        stages.get(currentStage).updateTurn(subject, new Context(scriptContext, scriptContext.getSubject(), scriptContext.getTarget()));
     }
 
     @Override
