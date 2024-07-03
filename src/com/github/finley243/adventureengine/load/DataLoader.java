@@ -661,7 +661,12 @@ public class DataLoader {
 
     private static Item loadItem(Game game, Element itemElement) {
         String itemTemplate = LoadUtils.attribute(itemElement, "template", null);
-        return ItemFactory.create(game, itemTemplate);
+        String instanceID = LoadUtils.attribute(itemElement, "id", null);
+        if (instanceID == null) {
+            return ItemFactory.create(game, itemTemplate);
+        } else {
+            return ItemFactory.create(game, itemTemplate, instanceID);
+        }
     }
 
     private static ObjectTemplate loadObjectTemplate(Game game, Element objectElement) throws GameDataException {

@@ -14,8 +14,8 @@ public class ItemFactory {
 		return create(game, stats, ID);
 	}
 
-	public static void load(Game game, String statsID, String ID) {
-		create(game, game.data().getItemTemplate(statsID), ID);
+	public static Item create(Game game, String statsID, String ID) {
+		return create(game, game.data().getItemTemplate(statsID), ID);
 	}
 
 	private static Item create(Game game, ItemTemplate stats, String ID) {
