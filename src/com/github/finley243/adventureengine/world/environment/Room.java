@@ -37,7 +37,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 
 	private boolean hasVisited;
 
-	public Room(Game game, String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, String ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Set<Area> areas, Map<String, Script> scripts) {
+	public Room(Game game, String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, String ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Map<String, Script> scripts) {
 		super(game, ID);
 		this.name = name;
 		this.nameType = nameType;
@@ -46,9 +46,13 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 		this.ownerFaction = ownerFaction;
 		this.restrictionType = restrictionType;
 		this.allowAllies = allowAllies;
-		this.areas = areas;
+		this.areas = new HashSet<>();
 		this.hasVisited = false;
 		this.scripts = scripts;
+	}
+
+	public void addArea(Area area) {
+		areas.add(area);
 	}
 	
 	public Set<Area> getAreas(){

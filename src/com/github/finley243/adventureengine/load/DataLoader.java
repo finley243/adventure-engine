@@ -101,6 +101,10 @@ public class DataLoader {
                                     Room room = loadRoom(game, currentElement);
                                     game.data().addRoom(room.getID(), room);
                                 }
+                                case "area" -> {
+                                    Area area = loadArea(game, currentElement);
+                                    game.data().addArea(area.getID(), area);
+                                }
                                 case "effect" -> {
                                     Effect effect = loadEffect(game, currentElement);
                                     game.data().addEffect(effect.getID(), effect);
@@ -598,20 +602,21 @@ public class DataLoader {
         boolean allowAllies = LoadUtils.attributeBool(roomElement, "allowAllies", false);
         Map<String, Script> roomScripts = loadScriptsWithTriggers(roomElement, "Room(" + roomID + ")");
 
-        List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
+        /*List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
         Set<Area> areas = new HashSet<>();
         for (Element areaElement : areaElements) {
             Area area = loadArea(game, areaElement, roomID);
             areas.add(area);
             game.data().addArea(area.getID(), area);
-        }
+        }*/
 
-        return new Room(game, roomID, roomName, roomNameType, roomNameIsProper, roomDescription, roomOwnerFaction, restrictionType, allowAllies, areas, roomScripts);
+        return new Room(game, roomID, roomName, roomNameType, roomNameIsProper, roomDescription, roomOwnerFaction, restrictionType, allowAllies, roomScripts);
     }
 
-    private static Area loadArea(Game game, Element areaElement, String roomID) {
+    private static Area loadArea(Game game, Element areaElement) {
         if (areaElement == null) return null;
-        String areaID = areaElement.getAttribute("id");
+        String areaID = LoadUtils.attribute(areaElement, "id", null);
+        String roomID = LoadUtils.attribute(areaElement, "room", null);
         String landmarkID = LoadUtils.attribute(areaElement, "landmark", null);
         Element nameElement = LoadUtils.singleChildWithName(areaElement, "name");
         String name = (nameElement == null ? null : nameElement.getTextContent());
