@@ -90,10 +90,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public String getName() {
 		if (landmarkID != null) {
 			return getLandmark().getName();
-		} else if (name != null) {
-			return name;
-		} else {
+		} else if (roomID != null && name == null) {
 			return getRoom().getName();
+		} else {
+			return name;
 		}
 	}
 	
@@ -120,7 +120,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public void setKnown() {
 		if (landmarkID != null) {
 			getLandmark().setKnown();
-		} else if (name == null) {
+		} else if (roomID != null && name == null) {
 			getRoom().setKnown();
 		}
 		isKnown = true;
@@ -130,7 +130,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public boolean isKnown() {
 		if (landmarkID != null) {
 			return getLandmark().isKnown();
-		} else if (name == null) {
+		} else if (roomID != null && name == null) {
 			return getRoom().isKnown();
 		} else {
 			return isKnown;
@@ -138,7 +138,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	public String getRelativeName() {
-		if (name == null && landmarkID == null) {
+		if (landmarkID == null && name == null && roomID != null) {
 			return getRoom().getRelativeName();
 		}
 		return switch (nameType) {
@@ -152,7 +152,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	public String getMovePhrase(Actor subject) {
-		if (name == null && landmarkID == null) {
+		if (landmarkID == null && name == null && roomID != null) {
 			return getRoom().getMovePhrase(subject);
 		}
 		return switch (nameType) {
@@ -390,6 +390,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 	
 	public Room getRoom() {
+		if (roomID == null) return null;
 		return game().data().getRoom(roomID);
 	}
 

@@ -45,10 +45,11 @@
             <localVar name="door_link_dir">"E"</localVar>
         </object>
     </area>
-    <room id="wilsons_corner_store_backroom">
+    <!--<room id="wilsons_corner_store_backroom">
         <name>backroom</name>
-    </room>
-    <area id="wilsons_corner_store_backroom_area" room="wilsons_corner_store_backroom">
+    </room>-->
+    <area id="wilsons_corner_store_backroom_area">
+        <name type="in">backroom</name>
         <object id="wilsons_corner_store_backroom_door_interior" template="door_basic">
             <localVar name="door_link_object">"wilsons_corner_store_backroom_door"</localVar>
             <localVar name="door_link_dir">"W"</localVar>

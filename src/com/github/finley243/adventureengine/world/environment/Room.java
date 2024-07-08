@@ -79,7 +79,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	public String getMovePhrase(Actor subject) {
-		if (subject.getArea().getRoom().equals(this)) {
+		if (Objects.equals(subject.getArea().getRoom(), this)) {
 			return switch (nameType) {
 				case IN -> "moveInWithin";
 				case ON -> "moveOnWithin";

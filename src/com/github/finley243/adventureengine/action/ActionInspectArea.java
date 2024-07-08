@@ -26,7 +26,7 @@ public class ActionInspectArea extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        if (area.getRoom().getDescription() != null) {
+        if (area.getRoom() != null && area.getRoom().getDescription() != null) {
             subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), null, new Context(subject.game(), subject, subject));
             area.getRoom().setKnown();
             for (Area area : area.getRoom().getAreas()) {
@@ -37,7 +37,9 @@ public class ActionInspectArea extends Action {
             subject.game().menuManager().sceneMenu(subject.game(), area.getDescription(), null, new Context(subject.game(), subject, subject));
             area.setKnown();
         }
-        area.getRoom().triggerScript("on_inspect", subject, subject);
+        if (area.getRoom() != null) {
+            area.getRoom().triggerScript("on_inspect", subject, subject);
+        }
         area.triggerScript("on_inspect", subject, subject);
     }
 
@@ -47,7 +49,7 @@ public class ActionInspectArea extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        if (area.getDescription() == null && area.getRoom().getDescription() == null) {
+        if (area.getDescription() == null && (area.getRoom() == null || area.getRoom().getDescription() == null)) {
             return new CanChooseResult(false, "Nothing to see");
         }
         return new CanChooseResult(true, null);

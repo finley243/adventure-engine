@@ -30,6 +30,7 @@ public class ScriptGetStat extends Script {
         if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat name is not a string", getTraceData()));
         String statNameString = statNameExpression.getValueString();
         StatHolder statHolderValue = statHolder.getHolder(context);
+        if (statHolderValue == null) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat holder is null", getTraceData()));
         Expression statValue = statHolderValue.getStatValue(statNameString, context);
         return new ScriptReturnData(statValue, null, null);
     }

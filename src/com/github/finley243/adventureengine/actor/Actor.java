@@ -188,7 +188,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	
 	@Override
 	public void setArea(Area area) {
-		boolean isNewRoom = getArea() == null || !getArea().getRoom().equals(area.getRoom());
+		boolean isNewRoom = getArea() == null || !Objects.equals(getArea().getRoom(), area.getRoom());
 		boolean isNewArea = getArea() == null || !getArea().equals(area);
 		if (this.area != null) {
 			this.area.removeActor(this);
@@ -199,8 +199,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			getCarriedActor().setArea(area);
 		}
 		if (isPlayer()) {
-			game().eventBus().post(new RenderAreaEvent(LangUtils.titleCase(getArea().getRoom().getName()), LangUtils.titleCase(getArea().getName())));
-			if (isNewRoom && getArea().getRoom().getDescription() != null) {
+			game().eventBus().post(new RenderAreaEvent(getArea().getRoom() != null ? LangUtils.titleCase(getArea().getRoom().getName()) : null, LangUtils.titleCase(getArea().getName())));
+			if (isNewRoom && getArea().getRoom() != null && getArea().getRoom().getDescription() != null) {
 				game().menuManager().sceneMenu(game(), getArea().getRoom().getDescription(), null, new Context(game(), this, this));
 				getArea().getRoom().setKnown();
 				for (Area areaInRoom : getArea().getRoom().getAreas()) {
@@ -211,7 +211,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				game().menuManager().sceneMenu(game(), getArea().getDescription(), null, new Context(game(), this, this));
 				getArea().setKnown();
 			}
-			if (isNewRoom) {
+			if (isNewRoom && getArea().getRoom() != null) {
 				getArea().getRoom().triggerScript("on_player_enter", this, this);
 			}
 			getArea().triggerScript("on_player_enter", this, this);
@@ -941,7 +941,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "id" -> Expression.constant(getID());
 			case "template_id" -> Expression.constant(templateID);
 			case "area" -> Expression.constant(getArea().getID());
-			case "room" -> Expression.constant(getArea().getRoom().getID());
+			case "room" -> Expression.constant(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
 			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), context));
 			case "sense_types" -> Expression.constant(senseTypes.value(getTemplate().getSenseTypes(), context));
 			case "tags" -> Expression.constant(tags.value(getTemplate().getTags(), context));

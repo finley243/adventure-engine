@@ -22,7 +22,7 @@
     <action id="move_door">
         <prompt>$areaName (Through $doorName, $dir)</prompt>
         <parameter name="doorName">stat.parentObject.name</parameter>
-        <parameter name="areaName">stat.subject.area.room.id != stat.parentArea.room.id ? stat.parentArea.room.name : stat.parentArea.name</parameter>
+        <parameter name="areaName">statHolder.parentArea.room != null &amp;&amp; (statHolder.subject.area.room == null || stat.subject.area.room.id != stat.parentArea.room.id) ? stat.parentArea.room.name : stat.parentArea.name</parameter>
         <condition>
             <blockMessage>Locked</blockMessage>
             <script>stat.parentObject.locked == null || !stat.parentObject.locked</script>
@@ -30,9 +30,9 @@
         <script>
             var originAreaID = stat.subject.area.id;
             var targetArea = stat.parentArea.noun;
-            var originRoomID = stat.subject.area.room.id;
-            var targetRoomID = stat.parentArea.room.id;
-            var originArea = originRoomID != targetRoomID ? stat.subject.area.room.noun : stat.subject.area.noun;
+            var originRoomID = statHolder.subject.area.room != null ? stat.subject.area.room.id : null;
+            var targetRoomID = statHolder.parentArea.room != null ? stat.parentArea.room.id : null;
+            var originArea = originRoomID != null &amp;&amp; originRoomID != targetRoomID ? stat.subject.area.room.noun : stat.subject.area.noun;
             var door = stat.parentObject.noun;
             sendSensoryEvent(area=originAreaID, phrase="moveThrough", targetArea=targetArea, originArea=originArea, door=door);
             stat.subject.area = stat.parentArea.id;

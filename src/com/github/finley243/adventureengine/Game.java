@@ -122,7 +122,9 @@ public class Game {
 		for (WorldObject object : data().getObjects()) {
 			object.onStartRound();
 		}
-		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
+		if (data.getPlayer().getArea().getRoom() != null) {
+			data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
+		}
 		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
 		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
 		for (Actor visibleActor : data().getPlayer().getLineOfSightActors()) {
