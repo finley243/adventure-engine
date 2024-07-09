@@ -115,6 +115,14 @@ public class WeaponAttackType {
     }
 
     public List<Action> generateActions(Actor subject, Item weapon) {
+        if (weapon != null) {
+            return generateActionsWeapon(subject, weapon);
+        } else {
+            return generateActionsUnarmed(subject);
+        }
+    }
+
+    private List<Action> generateActionsWeapon(Actor subject, Item weapon) {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = new Context(subject.game(), subject, subject, weapon);
         List<Action> actions = new ArrayList<>();
@@ -151,6 +159,44 @@ public class WeaponAttackType {
             case SPREAD -> {
                 for (Area target : subject.getVisibleAreas().keySet()) {
                     actions.add(new ActionAttackArea(this, weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                }
+            }
+        }
+        return actions;
+    }
+
+    private List<Action> generateActionsUnarmed(Actor subject) {
+        String skill = skillOverride;
+        float hitChanceMin = baseHitChanceMinOverride;
+        float hitChanceMax = baseHitChanceMaxOverride;
+        Set<AreaLink.DistanceCategory> ranges = rangeOverride;
+        int rate = rateOverride;
+        int damage = damageOverride;
+        String damageType = damageTypeOverride;
+        float armorMult = armorMultOverride;
+        boolean isLoud = isLoudOverride;
+        List<String> targetEffectsCombined = new ArrayList<>(targetEffects);
+        List<Action> actions = new ArrayList<>();
+        switch (category) {
+            case SINGLE -> {
+                for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
+                    if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
+                        actions.add(new ActionAttackBasic(this, null, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                    }
+                }
+            }
+            case TARGETED -> {
+                for (Actor target : subject.getLineOfSightActors()) {
+                    if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
+                        for (Limb limb : target.getLimbs()) {
+                            actions.add(new ActionAttackLimb(this, null, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                        }
+                    }
+                }
+            }
+            case SPREAD -> {
+                for (Area target : subject.getVisibleAreas().keySet()) {
+                    actions.add(new ActionAttackArea(this, null, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                 }
             }
         }

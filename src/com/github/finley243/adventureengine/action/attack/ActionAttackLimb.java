@@ -27,6 +27,9 @@ public class ActionAttackLimb extends ActionAttack {
 
 	@Override
 	public void consumeAmmo(Actor subject) {
+		if (weapon == null) {
+			return;
+		}
 		if (weapon.hasComponentOfType(ItemComponentMagazine.class)) {
 			if (weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType() != null && weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getComponentOfType(ItemComponentAmmo.class).isReusable()) {
 				target.getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
@@ -48,7 +51,7 @@ public class ActionAttackLimb extends ActionAttack {
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
-		if (weapon.hasComponentOfType(ItemComponentMagazine.class) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() < getAmmoConsumed()) {
+		if (weapon != null && weapon.hasComponentOfType(ItemComponentMagazine.class) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() < getAmmoConsumed()) {
 			return new CanChooseResult(false, "Not enough ammo");
 		}
 		if (!getRanges().contains(subject.getArea().getLinearDistanceTo(target.getArea()))) {

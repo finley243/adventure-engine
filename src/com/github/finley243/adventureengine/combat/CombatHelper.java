@@ -17,15 +17,18 @@ public class CombatHelper {
 	public static float calculateHitChance(Actor attacker, Item weapon, AttackTarget target, Limb limb, String attackSkill, String dodgeSkill, float hitChanceBaseMin, float hitChanceBaseMax, float hitChanceMult) {
 		Context context = new Context(attacker.game(), attacker, target, weapon);
 		float chance = MathUtils.chanceLogSkill(attacker, attackSkill, hitChanceBaseMin, hitChanceBaseMax, context);
-		if (dodgeSkill != null && target instanceof Actor actor && actor.canDodge(context)) {
+		if (dodgeSkill != null && target instanceof Actor targetActor && targetActor.canDodge(context)) {
 			int attackerSkill = attacker.getSkill(attackSkill, context);
-			int targetSkill = ((Actor) target).getSkill(dodgeSkill, context);
+			int targetSkill = targetActor.getSkill(dodgeSkill, context);
 			if (targetSkill >= attackerSkill) {
 				int penaltyMult = targetSkill - attackerSkill + 1;
 				chance -= penaltyMult * 0.05f;
 			}
 		}
-		chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(context, chance);
+		if (weapon != null) {
+			// TODO - Find a way to allow hit chance effects on unarmed attacks (no weapon)
+			chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(context, chance);
+		}
 		if (limb != null) {
 			chance *= limb.getHitChance();
 		}
@@ -36,7 +39,10 @@ public class CombatHelper {
 	public static float calculateHitChanceNoTarget(Actor attacker, Item weapon, Limb limb, String attackSkill, float hitChanceBaseMin, float hitChanceBaseMax, float hitChanceMult) {
 		Context context = new Context(attacker.game(), attacker, attacker, weapon);
 		float chance = MathUtils.chanceLogSkill(attacker, attackSkill, hitChanceBaseMin, hitChanceBaseMax, context);
-		chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(context, chance);
+		if (weapon != null) {
+			// TODO - Find a way to allow hit chance effects on unarmed attacks (no weapon)
+			chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(context, chance);
+		}
 		if (limb != null) {
 			chance *= limb.getHitChance();
 		}
@@ -45,10 +51,10 @@ public class CombatHelper {
 	}
 
 	public static float calculateHitChanceDodgeOnly(Actor attacker, AttackTarget target, String attackSkill, String dodgeSkill) {
-		if (target instanceof Actor) {
+		if (target instanceof Actor targetActor) {
 			Context context = new Context(attacker.game(), attacker, target);
 			int attackerSkill = attacker.getSkill(attackSkill, context);
-			int targetSkill = ((Actor) target).getSkill(dodgeSkill, context);
+			int targetSkill = targetActor.getSkill(dodgeSkill, context);
 			if (targetSkill >= attackerSkill) {
 				int penaltyMult = targetSkill - attackerSkill + 1;
 				return 1.0f - (penaltyMult * 0.05f);
