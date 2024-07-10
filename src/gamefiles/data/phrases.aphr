@@ -79,3 +79,7 @@ jackIn:$actor jack$s into $object.
 jackOut:$actor jack$s out of $object.
 pickUpActor:$actor pick$s up $target and sling$s $target over $actor's shoulder.
 putDownActor:$actor {set$s|put$s} $target {down|on the ground}.
+punchHit:$actor punch$es $target.
+punchHitRepeat:$actor punch$es $target again.
+punchMiss:$actor tr$ies to punch $target, but $actor miss$es.
+punchMissRepeat:$actor tr$ies to punch $target again, but $actor miss$es.

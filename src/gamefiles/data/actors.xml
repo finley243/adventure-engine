@@ -45,6 +45,7 @@
         <damageResistance type="explosive" value="0"/>
         <damageResistance type="electrical" value="0"/>
         <inventory/>
+        <attackType>punch</attackType>
     </actor>
     <actor id="player" parent="default" hp="70" faction="player">
         <name proper="true" pronoun="YOU">PLAYER</name>

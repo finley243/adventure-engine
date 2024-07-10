@@ -231,6 +231,7 @@ public class DataLoader {
         }
         Set<String> senseTypes = LoadUtils.setOfTags(actorElement, "senseType");
         Set<String> tags = LoadUtils.setOfTags(actorElement, "tag");
+        List<String> unarmedAttackTypes = LoadUtils.listOfTags(actorElement, "attackType");
         Map<String, Script> scripts = loadScriptsWithTriggers(actorElement, "Actor(" + id + ")");
         List<String> startingEffects = LoadUtils.listOfTags(actorElement, "startEffect");
 
@@ -246,7 +247,7 @@ public class DataLoader {
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(actorElement, "action", "ActorTemplate(" + id + ")");
         List<ActionCustom.CustomActionHolder> customInventoryActions = loadCustomActions(actorElement, "itemAction", "ActorTemplate(" + id + ")");
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, tags, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, tags, unarmedAttackTypes, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }
 
     private static List<Limb> loadLimbs(Element element) {

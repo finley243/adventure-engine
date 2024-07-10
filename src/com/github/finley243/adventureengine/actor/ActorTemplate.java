@@ -32,6 +32,7 @@ public class ActorTemplate extends GameInstanced {
 	private final Map<String, Integer> skills;
 	private final Set<String> senseTypes;
 	private final Set<String> tags;
+	private final List<String> unarmedAttackTypes;
 
 	private final List<String> startingEffects;
 	
@@ -44,7 +45,7 @@ public class ActorTemplate extends GameInstanced {
 	private final List<ActionCustom.CustomActionHolder> customActions;
 	private final List<ActionCustom.CustomActionHolder> customInventoryActions;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer actionPoints, Integer movePoints, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<String> senseTypes, Set<String> tags, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer actionPoints, Integer movePoints, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<String> senseTypes, Set<String> tags, List<String> unarmedAttackTypes, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -75,6 +76,7 @@ public class ActorTemplate extends GameInstanced {
 		this.skills = skills;
 		this.senseTypes = senseTypes;
 		this.tags = tags;
+		this.unarmedAttackTypes = unarmedAttackTypes;
 		this.startingEffects = startingEffects;
 		this.lootTable = lootTable;
 		this.dialogueStart = dialogueStart;
@@ -187,6 +189,16 @@ public class ActorTemplate extends GameInstanced {
 			return game().data().getActorTemplate(parentID).getTags();
 		} else {
 			return new HashSet<>();
+		}
+	}
+
+	public List<String> getUnarmedAttackTypes() {
+		if (!unarmedAttackTypes.isEmpty()) {
+			return unarmedAttackTypes;
+		} else if (parentID != null) {
+			return game().data().getActorTemplate(parentID).getUnarmedAttackTypes();
+		} else {
+			return new ArrayList<>();
 		}
 	}
 

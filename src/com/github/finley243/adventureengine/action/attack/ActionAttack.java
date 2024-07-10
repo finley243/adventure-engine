@@ -18,6 +18,7 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
@@ -228,7 +229,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         Context context = new Context(subject.game(), subject, target, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
-        //TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(getHitPhrase(repeatActionCount)), Phrases.get(getHitPhraseAudible(repeatActionCount)), context, true, isLoud, null, null));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
         target.damage(damageData, context);
@@ -240,7 +240,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         Context context = new Context(subject.game(), subject, target, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
-        //TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("target", (Noun) target).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(getMissPhrase(repeatActionCount)), Phrases.get(getMissPhraseAudible(repeatActionCount)), context, true, isLoud, null, null));
         subject.triggerScript("on_attack_failure", context);
     }
@@ -250,7 +249,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         Context context = new Context(subject.game(), subject, null, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
-        //TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(getHitOverallPhrase(repeatActionCount)), Phrases.get(getHitOverallPhraseAudible(repeatActionCount)), context, true, isLoud, this, null));
     }
 
@@ -259,7 +257,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         Context context = new Context(subject.game(), subject, null, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
-        //TextContext attackContext = new TextContext(Map.of("limb", (getLimb() == null ? "null" : getLimb().getName()), "relativeTo", (getArea() == null ? "null" : getArea().getRelativeName())), new MapBuilder<String, Noun>().put("actor", subject).put("weapon", getWeapon()).putIf(getArea() != null, "area", getArea()).build());
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(getMissOverallPhrase(repeatActionCount)), Phrases.get(getMissOverallPhraseAudible(repeatActionCount)), context, true, isLoud, this, null));
     }
 
@@ -270,7 +267,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public boolean isRepeatMatch(Action action) {
-        return action instanceof ActionAttack actionAttack && actionAttack.getWeapon().equals(this.getWeapon()) && actionAttack.attackType.equals(this.attackType);
+        return action instanceof ActionAttack actionAttack && Objects.equals(actionAttack.getWeapon(), this.getWeapon()) && actionAttack.attackType.equals(this.attackType);
     }
 
     @Override
@@ -299,7 +296,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         if (BLOCK_ALL_ATTACKS_BEYOND_RATE_LIMIT) {
             return action instanceof ActionAttack;
         }
-        return action instanceof ActionAttack actionAttack && actionAttack.getWeapon().equals(this.getWeapon()) && actionAttack.attackType.equals(this.attackType);
+        return action instanceof ActionAttack actionAttack && Objects.equals(actionAttack.getWeapon(), this.getWeapon()) && actionAttack.attackType.equals(this.attackType);
     }
 
     @Override

@@ -55,4 +55,12 @@
         <missOverallPhrase>grenadeMiss</missOverallPhrase>
         <missOverallPhraseRepeat>grenadeMissRepeat</missOverallPhraseRepeat>
     </attackType>
+    <attackType id="punch" category="single" ammoConsumed="0" skill="melee" dodgeSkill="dodge" hitChanceMin="0.1" hitChanceMax="0.9" rate="2" damage="5" damageType="physical" armorMult="1.0" isLoudOverride="false">
+        <prompt>Punch</prompt>
+        <hitPhrase>punchHit</hitPhrase>
+        <hitPhraseRepeat>punchHitRepeat</hitPhraseRepeat>
+        <missPhrase>punchMiss</missPhrase>
+        <missPhraseRepeat>punchMissRepeat</missPhraseRepeat>
+        <range>NEAR</range>
+    </attackType>
 </data>

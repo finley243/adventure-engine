@@ -12,20 +12,16 @@ public class WeaponDataTemplate implements StatHolder {
     private final int rate;
     private final int critDamage;
     private final float critChance;
-    private final int clipSize;
-    private final int reloadActionPoints;
     private final float armorMult;
     private final boolean silenced;
     private final String damageType;
     private final Set<String> targetEffects;
 
-    public WeaponDataTemplate(int damage, int rate, int critDamage, float critChance, int clipSize, int reloadActionPoints, float armorMult, boolean silenced, String damageType, Set<String> targetEffects) {
+    public WeaponDataTemplate(int damage, int rate, int critDamage, float critChance, float armorMult, boolean silenced, String damageType, Set<String> targetEffects) {
         this.damage = damage;
         this.rate = rate;
         this.critDamage = critDamage;
         this.critChance = critChance;
-        this.clipSize = clipSize;
-        this.reloadActionPoints = reloadActionPoints;
         this.armorMult = armorMult;
         this.silenced = silenced;
         this.damageType = damageType;
@@ -39,8 +35,6 @@ public class WeaponDataTemplate implements StatHolder {
             case "rate" -> Expression.constant(rate);
             case "crit_damage" -> Expression.constant(critDamage);
             case "crit_chance" -> Expression.constant(critChance);
-            case "clip_size" -> Expression.constant(clipSize);
-            case "reload_action_points" -> Expression.constant(reloadActionPoints);
             case "armor_mult" -> Expression.constant(armorMult);
             case "silenced" -> Expression.constant(silenced);
             case "damage_type" -> Expression.constant(damageType);
