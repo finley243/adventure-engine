@@ -141,7 +141,8 @@ public class TargetingComponent {
     }
 
     public void onVisibleAction(Action action, Actor target) {
-        processDetectionEvent(target, getActionDetectionChance(action, target));
+        float actionDetectionChance = getActionDetectionChance(action, target);
+        processDetectionEvent(target, actionDetectionChance);
         updateTargetArea(target, target.getArea());
         // TODO - Handle criminal action detection
     }
@@ -287,6 +288,9 @@ public class TargetingComponent {
     }
 
     public float getActionDetectionChance(Action action, Actor subject) {
+        if (!subject.isSneaking()) {
+            return 1.0f;
+        }
         Context context = new Context(actor.game(), actor, subject);
         // TODO - Allow specifying detection skill
         return switch (action.detectionChance()) {
@@ -297,6 +301,9 @@ public class TargetingComponent {
     }
 
     public float getPassiveDetectionChance(Actor subject) {
+        if (!subject.isSneaking()) {
+            return 1.0f;
+        }
         AreaLink.DistanceCategory distance = actor.getArea().getLinearDistanceTo(subject.getArea());
         if (subject.isDead()) {
             return switch (distance) {

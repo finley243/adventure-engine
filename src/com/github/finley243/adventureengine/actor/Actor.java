@@ -9,7 +9,6 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.combat.Damage;
-import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.event.*;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
@@ -482,6 +481,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				sleepCounter = 0;
 			}
 		}
+	}
+
+	public boolean isSneaking() {
+		return false;
 	}
 	
 	public void onSensoryEvent(SensoryEvent event, boolean visible) {
