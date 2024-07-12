@@ -32,7 +32,7 @@ public class ActionNetworkReadData extends NetworkAction {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        subject.game().menuManager().sceneMenu(subject.game(), subject.game().data().getScene(node.getSceneID()), null, new Context(subject.game(), subject, subject, object));
+        subject.game().menuManager().sceneMenu(subject.game(), subject.game().data().getScene(node.getSceneID()), new Context(subject.game(), subject, subject, object));
     }
 
     @Override

@@ -291,8 +291,15 @@ public class MenuManager {
 		return actions.get(input.getIndex());
 	}
 
-	public void sceneMenu(Game game, Scene scene, String lastSceneID, Context context) {
+	public void sceneMenu(Game game, Scene scene, Context context) {
+		sceneMenu(game, scene, context, null, false);
+	}
+
+	public void sceneMenu(Game game, Scene scene, Context context, String lastSceneID, boolean isFromRedirect) {
 		scene.setTriggered();
+		if (!isFromRedirect) {
+			game.eventBus().post(new TextClearEvent());
+		}
 		switch (scene.getType()) {
 			case SEQUENTIAL -> {
 				for (SceneLine line : scene.getLines()) {
@@ -300,7 +307,7 @@ public class MenuManager {
 					if (result.exit()) {
 						return;
 					} else if (result.redirect() != null) {
-						sceneMenu(game, game.data().getScene(result.redirect()), scene.getID(), context);
+						sceneMenu(game, game.data().getScene(result.redirect()), context, scene.getID(), true);
 						return;
 					}
 				}
@@ -312,7 +319,7 @@ public class MenuManager {
 						if (result.exit()) {
 							return;
 						} else if (result.redirect() != null) {
-							sceneMenu(game, game.data().getScene(result.redirect()), scene.getID(), context);
+							sceneMenu(game, game.data().getScene(result.redirect()), context, scene.getID(), true);
 							return;
 						}
 						break;
@@ -331,7 +338,7 @@ public class MenuManager {
 				if (result.exit()) {
 					return;
 				} else if (result.redirect() != null) {
-					sceneMenu(game, game.data().getScene(result.redirect()), scene.getID(), context);
+					sceneMenu(game, game.data().getScene(result.redirect()), context, scene.getID(), true);
 					return;
 				}
 			}
@@ -347,7 +354,7 @@ public class MenuManager {
 				return;
 			}
 			String chosenSceneID = sceneChoiceMenu(game, validChoices);
-			sceneMenu(game, game.data().getScene(chosenSceneID), scene.getID(), context);
+			sceneMenu(game, game.data().getScene(chosenSceneID), context, scene.getID(), false);
 		}
 	}
 
@@ -433,6 +440,10 @@ public class MenuManager {
 		for (Map.Entry<String, Integer> entry : input.getValues().entrySet()) {
 			actor.setSkillBase(entry.getKey(), entry.getValue());
 		}
+	}
+
+	private void continueMenu() {
+		startChoiceMenu(game, List.of(new MenuChoice("Continue", new Action.CanChooseResult(true, null), -1, false, "continue")), new ArrayList<>(), -1, true);
 	}
 
 	private ChoiceMenuInputEvent startChoiceMenu(Game game, List<MenuChoice> menuChoices, List<MenuCategory> menuCategories, int endTurnIndex, boolean forcePrompts) {

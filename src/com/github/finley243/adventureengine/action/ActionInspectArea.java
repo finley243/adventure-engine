@@ -27,14 +27,14 @@ public class ActionInspectArea extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         if (area.getRoom() != null && area.getRoom().getDescription() != null) {
-            subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), null, new Context(subject.game(), subject, subject));
+            subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), new Context(subject.game(), subject, subject));
             area.getRoom().setKnown();
             for (Area area : area.getRoom().getAreas()) {
                 area.setKnown();
             }
         }
         if (area.getDescription() != null) {
-            subject.game().menuManager().sceneMenu(subject.game(), area.getDescription(), null, new Context(subject.game(), subject, subject));
+            subject.game().menuManager().sceneMenu(subject.game(), area.getDescription(), new Context(subject.game(), subject, subject));
             area.setKnown();
         }
         if (area.getRoom() != null) {
