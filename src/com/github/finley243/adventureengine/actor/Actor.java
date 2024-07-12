@@ -61,6 +61,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private boolean isDead;
 	private boolean isSleeping;
 	private boolean endTurn;
+	private boolean isSneaking;
 	private final StatInt actionPoints;
 	private final StatInt movePoints;
 	private int actionPointsUsed;
@@ -484,7 +485,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public boolean isSneaking() {
-		return false;
+		return isSneaking;
+	}
+
+	public void setSneaking(boolean sneaking) {
+		this.isSneaking = sneaking;
 	}
 	
 	public void onSensoryEvent(SensoryEvent event, boolean visible) {
@@ -620,6 +625,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		actions.addAll(equipmentComponent.getEquippedActions());
 		for (String unarmedAttackType : getTemplate().getUnarmedAttackTypes()) {
 			actions.addAll(game().data().getAttackType(unarmedAttackType).generateActions(this, null));
+		}
+		if (isSneaking()) {
+			actions.add(new ActionSneakEnd());
+		} else {
+			actions.add(new ActionSneakStart());
 		}
 		actions.add(new ActionEnd());
 		actions.removeIf(action -> !action.canShow(this));
