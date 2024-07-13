@@ -26,3 +26,8 @@ func drop_equipped_force_specified_slot(equippedSlot) {
 		sensoryEvent(phrase = "forceDrop", area = stat.subject.area.id);
 	}
 }
+
+func on_player_level_up() {
+    var skillPoints = 2;
+    skillMenu(statHolder.subject, skillPoints);
+}

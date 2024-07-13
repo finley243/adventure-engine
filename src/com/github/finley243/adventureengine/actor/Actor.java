@@ -51,6 +51,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private boolean isKnown;
 	private final Area defaultArea;
 	private Area area;
+	private int level;
+	private int XP;
 	private final StatInt maxHP;
 	private int HP;
 	private final Map<String, StatInt> damageResistance;
@@ -124,6 +126,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (!startDead) {
 			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
 		}
+		level = getTemplate().getStartingLevel();
 		for (String damageType : game().data().getDamageTypeIDs()) {
 			this.damageResistance.put(damageType, new StatInt("damage_resist_" + damageType, this));
 			this.damageMult.put(damageType, new StatFloat("damage_mult_" + damageType, this));
@@ -715,7 +718,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return false;
 	}
 
-	public void onSelectAction(Action action, Action lastAction, int repeatActionCount) {
+	private void onSelectAction(Action action, Action lastAction, int repeatActionCount) {
 		boolean isRepeatMatch = false;
 		for (Action repeatAction : repeatActions.keySet()) {
 			if (repeatAction.isRepeatMatch(action)) {
@@ -941,6 +944,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return switch (name) {
 			case "inventory" -> (getInventory() == null ? null : Expression.constant(getInventory()));
 			case "noun" -> Expression.constantNoun(this);
+			case "level" -> Expression.constant(level);
+			case "xp" -> Expression.constant(XP);
 			case "max_hp" -> Expression.constant(getMaxHP());
 			case "hp" -> Expression.constant(HP);
 			case "action_points" -> Expression.constant(getActionPoints());
@@ -996,6 +1001,20 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 			case "player_controlled" -> {
 				playerControlled = value.getValueBoolean();
+				return true;
+			}
+			case "level" -> {
+				level = value.getValueInteger();
+				return true;
+			}
+			case "xp" -> {
+				XP = value.getValueInteger();
+				int levelUpXP = 10; // TODO - Replace with expression loaded in actor template/game config/etc.
+				if (XP >= levelUpXP) {
+					XP -= levelUpXP;
+					level += 1;
+					onLevelUp();
+				}
 				return true;
 			}
 			case "hp" -> {
@@ -1106,6 +1125,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "action_points_used", actionPointsUsed));
 		}
 		return state;
+	}
+
+	private void onLevelUp() {
+		triggerScript("on_level_up", new Context(game(), this, this));
 	}
 	
 }
