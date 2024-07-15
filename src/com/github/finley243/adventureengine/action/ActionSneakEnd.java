@@ -23,6 +23,18 @@ public class ActionSneakEnd extends Action {
     }
 
     @Override
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        if (subject.isUsingObject()) {
+            return new CanChooseResult(false, "Sneaking unavailable");
+        }
+        return new CanChooseResult(true, null);
+    }
+
+    @Override
     public MenuData getMenuData(Actor subject) {
         return new MenuDataSelf();
     }

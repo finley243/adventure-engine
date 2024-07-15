@@ -195,6 +195,7 @@ public class DataLoader {
         Integer actionPoints = LoadUtils.attributeInt(actorElement, "actionPoints", null);
         Integer movePoints = LoadUtils.attributeInt(actorElement, "movePoints", null);
         Integer startingLevel = LoadUtils.attributeInt(actorElement, "startLevel", null);
+        Script levelUpThresholdExpression = loadExpressionScript(LoadUtils.singleChildWithName(actorElement, "levelUpThreshold"), "Actor(" + id + ") - level up threshold");
         Integer hp = LoadUtils.attributeInt(actorElement, "hp", null);
         Map<String, Integer> damageResistances = new HashMap<>();
         Map<String, Float> damageMults = new HashMap<>();
@@ -248,7 +249,7 @@ public class DataLoader {
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(actorElement, "action", "ActorTemplate(" + id + ")");
         List<ActionCustom.CustomActionHolder> customInventoryActions = loadCustomActions(actorElement, "itemAction", "ActorTemplate(" + id + ")");
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, startingLevel, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, tags, unarmedAttackTypes, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
+        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, startingLevel, levelUpThresholdExpression, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, tags, unarmedAttackTypes, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }
 
     private static List<Limb> loadLimbs(Element element) {

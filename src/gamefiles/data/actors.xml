@@ -1,6 +1,7 @@
 <data>
     <actor id="default" faction="default" isEnforcer="false" actionPoints="3" movePoints="2" hp="30" startLevel="1">
         <name proper="false" pronoun="THEY">DEFAULT</name>
+        <levelUpThreshold>20</levelUpThreshold>
         <attribute key="body" value="4"/>
         <attribute key="intelligence" value="4"/>
         <attribute key="charisma" value="4"/>

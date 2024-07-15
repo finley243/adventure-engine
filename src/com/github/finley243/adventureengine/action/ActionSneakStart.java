@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
 
@@ -20,6 +21,18 @@ public class ActionSneakStart extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.setSneaking(true);
+    }
+
+    @Override
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
+        if (!resultSuper.canChoose()) {
+            return resultSuper;
+        }
+        if (subject.isUsingObject()) {
+            return new CanChooseResult(false, "Sneaking unavailable");
+        }
+        return new CanChooseResult(true, null);
     }
 
     @Override

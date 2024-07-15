@@ -491,6 +491,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public boolean isSneaking() {
+		if (isUsingObject()) {
+			return false;
+		}
 		return isSneaking;
 	}
 
@@ -1012,12 +1015,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 			case "xp" -> {
 				XP = value.getValueInteger();
-				int levelUpXP = 10; // TODO - Replace with expression loaded in actor template/game config/etc.
-				if (XP >= levelUpXP) {
-					XP -= levelUpXP;
-					level += 1;
-					onLevelUp();
-				}
+				evaluateXPChange();
 				return true;
 			}
 			case "hp" -> {
@@ -1128,6 +1126,31 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "action_points_used", actionPointsUsed));
 		}
 		return state;
+	}
+
+	private void evaluateXPChange() {
+		Context levelUpThresholdContext = new Context(game(), this, this);
+		levelUpThresholdContext.setLocalVariable("level", Expression.constant(level));
+		Script.ScriptReturnData thresholdReturn = getTemplate().getLevelUpThresholdExpression().execute(levelUpThresholdContext);
+		if (thresholdReturn.error() != null) {
+			game().log().print("Actor " + this + " level up threshold expression error: " + thresholdReturn.stackTrace());
+			return;
+		} else if (thresholdReturn.flowStatement() != null) {
+			game().log().print("Actor " + this + " level up threshold expression contains unexpected flow statement");
+			return;
+		} else if (thresholdReturn.value() == null) {
+			game().log().print("Actor " + this + " level up threshold expression gave a null value");
+			return;
+		} else if (thresholdReturn.value().getDataType() != Expression.DataType.INTEGER) {
+			game().log().print("Actor " + this + " level up threshold expression gave a non-integer value");
+			return;
+		}
+		int levelUpXP = thresholdReturn.value().getValueInteger();
+		if (XP >= levelUpXP) {
+			XP -= levelUpXP;
+			level += 1;
+			onLevelUp();
+		}
 	}
 
 	private void onLevelUp() {
