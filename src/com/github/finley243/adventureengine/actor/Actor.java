@@ -414,8 +414,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void modifyHP(int amount, Context context) {
 		HP += amount;
 		if (HP <= 0) {
+			Context killContext = new Context(game(), this, context.getSubject());
 			HP = 0;
-			kill();
+			kill(killContext);
 		} else if (amount < 0) {
 			Context modifierContext = new Context(game(), this, context.getSubject());
 			modifierContext.setLocalVariable("amount", Expression.constant(String.valueOf(-amount)));
@@ -428,9 +429,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 	
-	public void kill() {
-		Context context = new Context(game(), this, null);
+	public void kill(Context context) {
 		triggerScript("on_death", context);
+		if (context.getTarget() != null && context.getTarget() != this) {
+			context.getTarget().triggerScript("on_kill", new Context(context.game(), context.getTarget(), context.getSubject()));
+		}
 		SensoryEvent.execute(game(), new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null));
 		// TODO - Enable held item dropping on death for new equipment system
 		// TODO - Remove from usable object, if applicable (for certain types of usable objects)
