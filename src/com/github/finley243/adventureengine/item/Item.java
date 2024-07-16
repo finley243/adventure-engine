@@ -6,8 +6,10 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.effect.Effectible;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.component.ItemComponent;
+import com.github.finley243.adventureengine.item.component.ItemComponentEffectible;
 import com.github.finley243.adventureengine.item.component.ItemComponentFactory;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
@@ -20,7 +22,7 @@ import com.github.finley243.adventureengine.textgen.TextContext;
 
 import java.util.*;
 
-public class Item extends GameInstanced implements Noun, MutableStatHolder {
+public class Item extends GameInstanced implements Noun, MutableStatHolder, Effectible {
 
 	private Inventory currentInventory;
 	private boolean isKnown;
@@ -133,6 +135,20 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder {
 
 	public Set<String> getTags() {
 		return getTemplate().getTags();
+	}
+
+	@Override
+	public void addEffect(String effectID) {
+		if (hasComponentOfType(ItemComponentEffectible.class)) {
+			getComponentOfType(ItemComponentEffectible.class).addEffect(effectID);
+		}
+	}
+
+	@Override
+	public void removeEffect(String effectID) {
+		if (hasComponentOfType(ItemComponentEffectible.class)) {
+			getComponentOfType(ItemComponentEffectible.class).removeEffect(effectID);
+		}
 	}
 
 	@Override

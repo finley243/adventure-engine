@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.combat.Damage;
+import com.github.finley243.adventureengine.effect.Effectible;
 import com.github.finley243.adventureengine.event.*;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
@@ -34,7 +35,7 @@ import com.github.finley243.adventureengine.world.path.PathDataArea;
 
 import java.util.*;
 
-public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget {
+public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget, Effectible {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ATTRIBUTE_MIN = 1;
@@ -336,6 +337,16 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public EffectComponent getEffectComponent() {
 		return effectComponent;
+	}
+
+	@Override
+	public void addEffect(String effectID) {
+		effectComponent.addEffect(effectID);
+	}
+
+	@Override
+	public void removeEffect(String effectID) {
+		effectComponent.removeEffect(effectID);
 	}
 
 	public BehaviorComponent getBehaviorComponent() {
