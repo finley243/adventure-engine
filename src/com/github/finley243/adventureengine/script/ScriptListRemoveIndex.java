@@ -20,8 +20,8 @@ public class ScriptListRemoveIndex extends Script {
         List<Expression> list = listExpression.getValueList();
         int index = indexExpression.getValueInteger();
         if (index < 0 || index >= list.size()) return new ScriptReturnData(null, null, new ScriptErrorData("Index is out of bounds", getTraceData()));
-        list.remove(index);
-        return new ScriptReturnData(null, null, null);
+        Expression removedValue = list.remove(index);
+        return new ScriptReturnData(removedValue, null, null);
     }
 
 }

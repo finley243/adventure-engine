@@ -252,6 +252,13 @@ public class TargetingComponent {
         return detectedActors.containsKey(target) && detectedActors.get(target).state == type;
     }
 
+    public DetectionState getTargetType(Actor target) {
+        if (!detectedActors.containsKey(target)) {
+            return null;
+        }
+        return detectedActors.get(target).state;
+    }
+
     public boolean hasTargetsOfType(DetectionState type) {
         for (DetectedActor actor : detectedActors.values()) {
             if (actor.state == type) {
