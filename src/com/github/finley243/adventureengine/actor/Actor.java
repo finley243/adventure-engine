@@ -68,6 +68,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final StatInt actionPoints;
 	private final StatInt movePoints;
 	private int actionPointsUsed;
+	private final StatBoolean canPerformActions;
 	private final StatBoolean canMove;
 	private final StatBoolean canDodge;
 	private final Map<Action, Integer> repeatActions;
@@ -105,6 +106,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.damageMult = new HashMap<>();
 		this.actionPoints = new StatInt("action_points", this);
 		this.movePoints = new StatInt("move_points", this);
+		this.canPerformActions = new StatBoolean("can_perform_actions", this, false);
 		this.canMove = new StatBoolean("can_move", this, false);
 		this.canDodge = new StatBoolean("can_dodge", this, false);
 		this.inventory = new Inventory(game, this);
@@ -277,6 +279,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	
 	public Faction getFaction() {
 		return game().data().getFaction(getTemplate().getFaction());
+	}
+
+	public boolean canPerformActions(Context context) {
+		return canPerformActions.value(true, context);
 	}
 	
 	public boolean canMove(Context context) {
@@ -604,6 +610,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public List<Action> availableActions() {
+		if (!canPerformActions(new Context(game(), this, this))) {
+			return new ArrayList<>();
+		}
 		List<Action> actions = new ArrayList<>();
 		if (canPerformLocalActions()) {
 			for (Actor actor : getArea().getActors()) {
@@ -708,7 +717,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	private void nextAction(Action lastAction, int repeatActionCount) {
-		if (!playerControlled) {
+		if (!isPlayerControlled()) {
 			updatePursueTargets();
 			getTargetingComponent().update();
 			getBehaviorComponent().update();
@@ -768,7 +777,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void endTurn() {
 		actionPointsUsed = 0;
 		endTurn = true;
-		if (!playerControlled && shouldIdle()) {
+		if (!isPlayerControlled() && shouldIdle()) {
 			playIdle();
 		}
 	}
@@ -890,7 +899,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	@Override
 	public StatBoolean getStatBoolean(String name) {
-		if ("can_move".equals(name)) {
+		if ("can_perform_actions".equals(name)) {
+			return canPerformActions;
+		} else if ("can_move".equals(name)) {
 			return canMove;
 		} else if ("can_dodge".equals(name)) {
 			return canDodge;
@@ -975,6 +986,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "in_cover" -> Expression.constant(isInCover());
 			case "dead" -> Expression.constant(isDead);
 			case "active" -> Expression.constant(isActive());
+			case "can_perform_actions" -> Expression.constant(canPerformActions(context));
 			case "can_move" -> Expression.constant(canMove(context));
 			case "can_dodge" -> Expression.constant(canDodge(context));
 			case "id" -> Expression.constant(getID());
