@@ -847,10 +847,11 @@ public class DataLoader {
         if (actorElement == null) return null;
         String ID = actorElement.getAttribute("id");
         String template = LoadUtils.attribute(actorElement, "template", null);
+        String nameDescriptor = LoadUtils.singleTag(actorElement, "descriptor", null);
         List<Behavior> behaviors = loadBehaviors(LoadUtils.singleChildWithName(actorElement, "behaviors"), ID);
         boolean startDead = LoadUtils.attributeBool(actorElement, "startDead", false);
         boolean startDisabled = LoadUtils.attributeBool(actorElement, "startDisabled", false);
-        return ActorFactory.create(game, ID, area, template, behaviors, startDead, startDisabled);
+        return ActorFactory.create(game, ID, nameDescriptor, area, template, behaviors, startDead, startDisabled);
     }
 
     private static List<Behavior> loadBehaviors(Element behaviorsElement, String actorID) {

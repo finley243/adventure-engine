@@ -1,7 +1,7 @@
 <data>
     <action id="move_basic">
         <prompt>$areaName ($dir)</prompt>
-        <parameter name="areaName">stat.subject.area.room.id != stat.parentArea.room.id ? stat.parentArea.room.name : stat.parentArea.name</parameter>
+        <parameter name="areaName">statHolder.parentArea.room != null &amp;&amp; (statHolder.subject.area.room == null || stat.subject.area.room.id != stat.parentArea.room.id) ? stat.parentArea.room.name : stat.parentArea.name</parameter>
         <script>
             var originAreaID = stat.subject.area.id;
             var targetArea = stat.parentArea.noun;

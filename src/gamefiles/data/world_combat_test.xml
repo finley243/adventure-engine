@@ -1,0 +1,27 @@
+<data>
+    <room id="warehouse">
+        <name>warehouse</name>
+    </room>
+    <area id="warehouse_aisle_back">
+        <name type="in">back aisle</name>
+        <link type="basic" dist="CLOSE" dir="S" area="warehouse_aisle_front"/>
+        <actor id="warehouse_enemy_1" template="enemy">
+            <descriptor>greasy-haired</descriptor>
+        </actor>
+        <actor id="warehouse_enemy_2" template="enemy_melee">
+            <descriptor>burly</descriptor>
+        </actor>
+    </area>
+    <area id="warehouse_aisle_front">
+        <name type="in">front aisle</name>
+        <link type="basic" dist="CLOSE" dir="N" area="warehouse_aisle_back"/>
+        <link type="basic" dist="CLOSE" dir="S" area="warehouse_bay_doors"/>
+        <actor id="warehouse_enemy_3" template="enemy">
+            <descriptor>tattooed</descriptor>
+        </actor>
+    </area>
+    <area id="warehouse_bay_doors">
+        <name type="near" plural="true">loading dock doors</name>
+        <link type="basic" dist="CLOSE" dir="N" area="warehouse_aisle_front"/>
+    </area>
+</data>

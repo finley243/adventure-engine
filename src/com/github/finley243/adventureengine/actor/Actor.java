@@ -50,6 +50,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	private final String templateID;
 	private boolean isKnown;
+	private final String nameDescriptor;
 	private final Area defaultArea;
 	private Area area;
 	private int level;
@@ -91,8 +92,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private boolean playerControlled;
 	private final StatStringSet tags;
 
-	public Actor(Game game, String ID, Area area, String templateID, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControlled) {
+	public Actor(Game game, String ID, String nameDescriptor, Area area, String templateID, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControlled) {
 		super(game, ID);
+		this.nameDescriptor = nameDescriptor;
 		this.defaultArea = area;
 		this.area = area;
 		this.templateID = templateID;
@@ -160,6 +162,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	
 	@Override
 	public String getName() {
+		if (nameDescriptor != null) {
+			return nameDescriptor + " " + getTemplate().getName();
+		}
 		return getTemplate().getName();
 	}
 

@@ -8,12 +8,12 @@ import java.util.List;
 
 public class ActorFactory {
 	
-	public static Actor create(Game gameInstance, String ID, Area area, String template, List<Behavior> behaviors, boolean startDead, boolean startDisabled) {
-		return new Actor(gameInstance, ID, area, template, behaviors, startDead, startDisabled, false);
+	public static Actor create(Game gameInstance, String ID, String nameDescriptor, Area area, String template, List<Behavior> behaviors, boolean startDead, boolean startDisabled) {
+		return new Actor(gameInstance, ID, nameDescriptor, area, template, behaviors, startDead, startDisabled, false);
 	}
 	
 	public static Actor createPlayer(Game gameInstance, String ID, Area area, String template) {
-		return new Actor(gameInstance, ID, area, template, null, false, false, true);
+		return new Actor(gameInstance, ID, null, area, template, null, false, false, true);
 	}
 	
 }
