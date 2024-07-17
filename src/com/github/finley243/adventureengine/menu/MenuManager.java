@@ -291,8 +291,8 @@ public class MenuManager {
 		return actions.get(input.getIndex());
 	}
 
-	public void sceneMenu(Game game, Scene scene, Context context) {
-		sceneMenu(game, scene, context, null, false);
+	public void sceneMenu(Game game, Scene scene, Context context, boolean clearText) {
+		sceneMenu(game, scene, context, null, !clearText);
 	}
 
 	public void sceneMenu(Game game, Scene scene, Context context, String lastSceneID, boolean isFromRedirect) {

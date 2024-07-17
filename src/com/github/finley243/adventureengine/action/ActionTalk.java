@@ -25,7 +25,7 @@ public class ActionTalk extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.game().menuManager().sceneMenu(subject.game(), target.getDialogueStart(), new Context(target.game(), target, target));
+		subject.game().menuManager().sceneMenu(subject.game(), target.getDialogueStart(), new Context(target.game(), target, target), true);
 	}
 
 	@Override

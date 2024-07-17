@@ -18,7 +18,7 @@ public class ScriptScene extends Script {
         if (actorExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Actor parameter is not a stat holder", getTraceData()));
         if (!(actorExpression.getValueStatHolder() instanceof Actor actor)) return new ScriptReturnData(null, null, new ScriptErrorData("Actor parameter is not an actor", getTraceData()));
         // TODO - Update to non-event scene system
-        context.game().menuManager().sceneMenu(context.game(), context.game().data().getScene(scene.getValueString()), new Context(context, actor, actor));
+        context.game().menuManager().sceneMenu(context.game(), context.game().data().getScene(scene.getValueString()), new Context(context, actor, actor), false);
         return new ScriptReturnData(null, null, null);
     }
 
