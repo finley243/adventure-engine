@@ -16,4 +16,8 @@ public class PathDataArea extends PathData {
         return null;
     }
 
+    public Area getArea() {
+        return area;
+    }
+
 }

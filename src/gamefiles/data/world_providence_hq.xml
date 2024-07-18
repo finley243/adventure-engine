@@ -2,11 +2,33 @@
     <room id="providence_lobby">
         <name>lobby</name>
     </room>
-    <area id="providence_lobby_entrance" room="providence_lobby"></area>
-    <area id="providence_lobby_reception" room="providence_lobby"></area>
-    <area id="providence_lobby_elevators" room="providence_lobby"></area>
-    <area id="providence_lobby_showroom" room="providence_lobby"></area>
+    <area id="providence_lobby_entrance" room="providence_lobby">
+        <name type="near">entrance</name>
+        <link type="basic" dist="CLOSE" dir="N" area="providence_lobby_reception"/>
+    </area>
+    <area id="providence_lobby_reception" room="providence_lobby">
+        <name type="near">reception desk</name>
+        <link type="basic" dist="CLOSE" dir="S" area="providence_lobby_entrance"/>
+        <link type="basic" dist="CLOSE" dir="N" area="providence_lobby_elevators"/>
+        <link type="basic" dist="CLOSE" dir="E" area="providence_lobby_showroom"/>
+        <object id="providence_lobby_reception_restroom_door" template="door_basic">
+            <localVar name="door_link_object">"providence_lobby_restroom_door"</localVar>
+            <localVar name="door_link_dir">"W"</localVar>
+        </object>
+    </area>
+    <area id="providence_lobby_elevators" room="providence_lobby">
+        <name type="near" plural="true">elevators</name>
+        <link type="basic" dist="CLOSE" dir="S" area="providence_lobby_reception"/>
+    </area>
+    <area id="providence_lobby_showroom">
+        <name type="in">showroom</name>
+        <link type="basic" dist="CLOSE" dir="W" area="providence_lobby_reception"/>
+    </area>
     <area id="providence_lobby_restroom">
         <name type="in">restroom</name>
+        <object id="providence_lobby_restroom_door" template="door_basic">
+            <localVar name="door_link_object">"providence_lobby_reception_restroom_door"</localVar>
+            <localVar name="door_link_dir">"E"</localVar>
+        </object>
     </area>
 </data>
