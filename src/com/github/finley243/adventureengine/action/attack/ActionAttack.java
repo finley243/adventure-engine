@@ -12,6 +12,8 @@ import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.textgen.MultiNoun;
+import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -225,12 +227,16 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public void onSuccessOverall(Actor subject, int repeatActionCount) {
+    public void onSuccessOverall(Actor subject, int repeatActionCount, List<AttackTarget> targetsSuccess, List<AttackTarget> targetsFail) {
         Context context = new Context(subject.game(), subject, null, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
         context.setLocalVariable("success", Expression.constant(true));
+        List<Noun> targetsSuccessNouns = targetsSuccess.stream().map(target -> (Noun) target).toList();
+        List<Noun> targetsFailNouns = targetsFail.stream().map(target -> (Noun) target).toList();
+        context.setLocalVariable("targetsSuccess", Expression.constantNoun(new MultiNoun(targetsSuccessNouns)));
+        context.setLocalVariable("targetsFail", Expression.constantNoun(new MultiNoun(targetsFailNouns)));
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
     }
 

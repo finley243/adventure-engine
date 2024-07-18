@@ -3,7 +3,9 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class ActionRandomEach<T> extends Action {
 
@@ -19,12 +21,24 @@ public abstract class ActionRandomEach<T> extends Action {
         boolean continueAfterStart = onStart(subject, repeatActionCount);
         if (continueAfterStart) {
             if (MathUtils.randomCheck(chanceOverall(subject))) {
-                onSuccessOverall(subject, repeatActionCount);
+                List<ComputedTarget<T>> computedTargets = new ArrayList<>();
+                List<T> succeededTargets = new ArrayList<>();
+                List<T> failedTargets = new ArrayList<>();
                 for (T target : collection) {
                     if (MathUtils.randomCheck(chance(subject, target))) {
-                        onSuccess(subject, target, repeatActionCount);
+                        computedTargets.add(new ComputedTarget<>(target, true));
+                        succeededTargets.add(target);
                     } else {
-                        onFail(subject, target, repeatActionCount);
+                        computedTargets.add(new ComputedTarget<>(target, false));
+                        failedTargets.add(target);
+                    }
+                }
+                onSuccessOverall(subject, repeatActionCount, succeededTargets, failedTargets);
+                for (ComputedTarget<T> computedTarget : computedTargets) {
+                    if (computedTarget.success()) {
+                        onSuccess(subject, computedTarget.target(), repeatActionCount);
+                    } else {
+                        onFail(subject, computedTarget.target(), repeatActionCount);
                     }
                 }
             } else {
@@ -64,12 +78,14 @@ public abstract class ActionRandomEach<T> extends Action {
 
     public abstract void onFail(Actor subject, T target, int repeatActionCount);
 
-    public abstract void onSuccessOverall(Actor subject, int repeatActionCount);
+    public abstract void onSuccessOverall(Actor subject, int repeatActionCount, List<T> targetsSuccess, List<T> targetsFail);
 
     public abstract void onFailOverall(Actor subject, int repeatActionCount);
 
     public abstract float chance(Actor subject, T target);
 
     public abstract float chanceOverall(Actor subject);
+
+    private record ComputedTarget<T>(T target, boolean success) {}
 
 }
