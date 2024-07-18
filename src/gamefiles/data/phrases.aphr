@@ -7,10 +7,7 @@ forceDrop:$actor drop$s $item and $item lands $relativeTo $area.
 eat:$actor eat$s $item.
 equip:$actor equip$s $item.
 exitElevator:$actor exit$s $elevator.
-meleeHit:$actor swing$s $actor's $item_name at $target and $item hit$s $target.
-meleeHitRepeat:$actor take$s another swing at $target and $item hit$s $target.
-meleeMiss:$actor tr$ies to hit $target with $actor's $item_name, but $actor miss$es.
-meleeMissRepeat:$actor tr$ies to hit $target again, but $actor miss$es.
+meleeAttack:$actor swing$s $actor's $item_name at $target ([success]and $item hit$s $target|but $actor miss$es).
 moveThrough:$actor go$es through $door to $targetArea.
 moveThroughReverse:$actor come$s through $door from $originArea.
 moveToward:$actor move$s toward $targetArea.
@@ -29,10 +26,7 @@ moveCorner:$actor turn$s around the corner to $targetArea.
 driveTo:$actor drive$s $vehicle to $targetArea.
 driveCorner:$actor drive$s $vehicle around the corner to $targetArea.
 pickUp:$actor grab$s $item.
-rangedHit:$actor fire$s a shot with $actor's $item_name and it hits $target.
-rangedHitRepeat:$actor fire$s another shot and it hits $target.
-rangedMiss:$actor fire$s a shot with $actor's $item_name at $target, but it misses.
-rangedMissRepeat:$actor fire$s another shot at $target, but it misses.
+rangedAttack:$actor fire$s $actor's $item_name at $target ([success]and it hits $target|but it misses $target).
 reload:$actor reload$s $actor's $item_name.
 sell:$actor sell$s $item.
 sit:$actor sit$s in $object.
@@ -54,22 +48,10 @@ dodgeSuccess:$actor {dodge$s|move$s} {out of the way of|away from} $item.
 dodgeFail:$actor tr$ies to dodge $item, but $actor lose$s $actor's balance.
 counterSuccess:$actor slip$s {under|past} $item and hit$s $attacker.
 counterFail:$actor {tr$ies|attempt$s} to hit $attacker, but $actor {$doesn't make it past|$isn't fast enough to avoid} $item.
-meleeHitLimb:$actor swing$s $actor's $item_name at $target's $limb and $item hit$s.
-meleeHitLimbRepeat:$actor take$s another swing at $target's $limb and $actor's $item_name hit$s $target.
-rangedHitLimb:$actor fire$s $actor's $item_name at $target's $limb and the bullet hits $target.
-rangedHitLimbRepeat:$actor fire$s another shot at $target's $limb and the bullet hits $target.
-meleeMissLimb:$actor swing$s $actor's $item_name at $target's $limb, but it {{just|barely} misses|{swings|swipes} past} $target.
-meleeMissLimbRepeat:$actor take$s another swing at $target's $limb, but it {{just|barely} misses|{swings|swipes} past} $target.
-rangedMissLimb:$actor fire$s $actor's $item_name at $target's $limb, but $actor miss$es.
-rangedMissLimbRepeat:$actor fire$s another shot at $target's $limb, but $actor miss$es.
-rangedAutoHit:$actor fire$s a spray of bullets from $actor's $item_name at $target, and they hit $target.
-rangedAutoHitRepeat:$actor fire$s another spray at $target, and they hit $target.
-rangedAutoMiss:$actor fire$s a spray of bullets from $actor's $item_name at $target, but $actor miss$es.
-rangedAutoMissRepeat:$actor fire$s another spray at $target, but $actor miss$es.
-grenadeHit:$actor throw$s $item $relativeTo $area and $item explode$s.
-grenadeHitRepeat:$actor throw$s $item $relativeTo $area and $item explode$s.
-grenadeMiss:$actor {tr$ies to throw|throw$s} $item $relativeTo $area but $actor miss$es.
-grenadeMissRepeat:$actor {tr$ies to throw|throw$s} $item $relativeTo $area but $actor miss$es.
+meleeAttackLimb:$actor swing$s $actor's $item_name at $target, ([success]hitting $target's $limb|but $item {{just|barely} misses|{swings|swipes} past} $target).
+rangedAttackLimb:$actor fire$s $actor's $item_name at $target ([success]and a bullet hits $target's $limb|but $actor miss$es).
+rangedAutoAttack:$actor fire$s a spray of bullets from $actor's $item_name at $target ([success]and they hit $target|but $actor miss$es).
+grenadeAttack:$actor throw$s $item $relativeTo $area ([success]and $item explode$s|but $item {go$es too far|fl$ies too far|fall$s short}, exploding harmlessly).
 getUp:$actor get$s up from $object.
 lieDown:$actor lie$s down in $object.
 sleep:after a brief moment, $actor fall$s asleep.
@@ -79,7 +61,4 @@ jackIn:$actor jack$s into $object.
 jackOut:$actor jack$s out of $object.
 pickUpActor:$actor pick$s up $target and sling$s $target over $actor's shoulder.
 putDownActor:$actor {set$s|put$s} $target {down|on the ground}.
-punchHit:$actor punch$es $target.
-punchHitRepeat:$actor punch$es $target again.
-punchMiss:$actor tr$ies to punch $target, but $actor miss$es.
-punchMissRepeat:$actor tr$ies to punch $target again, but $actor miss$es.
+punchAttack:$actor ([success]punch$es $target|tr$ies to punch $target, but $actor miss$es).

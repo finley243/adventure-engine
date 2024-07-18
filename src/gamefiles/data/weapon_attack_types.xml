@@ -1,66 +1,39 @@
 <data>
     <attackType id="basic_ranged" category="single" ammoConsumed="1">
         <prompt>Attack</prompt>
-        <hitPhrase>rangedHit</hitPhrase>
-        <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
-        <missPhrase>rangedMiss</missPhrase>
-        <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
+        <attackPhrase>rangedAttack</attackPhrase>
     </attackType>
     <attackType id="basic_melee" category="single" ammoConsumed="1" dodgeSkill="dodge">
         <prompt>Attack</prompt>
-        <hitPhrase>meleeHit</hitPhrase>
-        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
-        <missPhrase>meleeMiss</missPhrase>
-        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
+        <attackPhrase>meleeAttack</attackPhrase>
     </attackType>
     <attackType id="targeted_ranged" category="targeted" ammoConsumed="1">
         <prompt>Targeted Attack</prompt>
-        <hitPhrase>rangedHitLimb</hitPhrase>
-        <hitPhraseRepeat>rangedHitLimbRepeat</hitPhraseRepeat>
-        <missPhrase>rangedMissLimb</missPhrase>
-        <missPhraseRepeat>rangedMissLimbRepeat</missPhraseRepeat>
+        <attackPhrase>rangedAttackLimb</attackPhrase>
     </attackType>
     <attackType id="targeted_melee" category="targeted" ammoConsumed="1" dodgeSkill="dodge">
         <prompt>Targeted Attack</prompt>
-        <hitPhrase>meleeHitLimb</hitPhrase>
-        <hitPhraseRepeat>meleeHitLimbRepeat</hitPhraseRepeat>
-        <missPhrase>meleeMissLimb</missPhrase>
-        <missPhraseRepeat>meleeMissLimbRepeat</missPhraseRepeat>
+        <attackPhrase>meleeAttackLimb</attackPhrase>
     </attackType>
     <attackType id="spread_ranged" category="spread" ammoConsumed="1">
         <prompt>Spread Attack</prompt>
-        <hitPhrase>rangedHit</hitPhrase>
-        <hitPhraseRepeat>rangedHitRepeat</hitPhraseRepeat>
-        <missPhrase>rangedMiss</missPhrase>
-        <missPhraseRepeat>rangedMissRepeat</missPhraseRepeat>
+        <attackPhrase>rangedAttack</attackPhrase>
     </attackType>
     <attackType id="spread_melee" category="spread" ammoConsumed="1" dodgeSkill="dodge">
         <prompt>Spread Attack</prompt>
-        <hitPhrase>meleeHit</hitPhrase>
-        <hitPhraseRepeat>meleeHitRepeat</hitPhraseRepeat>
-        <missPhrase>meleeMiss</missPhrase>
-        <missPhraseRepeat>meleeMissRepeat</missPhraseRepeat>
+        <attackPhrase>meleeAttack</attackPhrase>
     </attackType>
     <attackType id="autofire" category="single" ammoConsumed="3" rate="1" damageMult="2.0" hitChanceMult="-0.4">
         <prompt>Autofire</prompt>
-        <hitPhrase>rangedAutoHit</hitPhrase>
-        <hitPhraseRepeat>rangedAutoHitRepeat</hitPhraseRepeat>
-        <missPhrase>rangedAutoMiss</missPhrase>
-        <missPhraseRepeat>rangedAutoMissRepeat</missPhraseRepeat>
+        <attackPhrase>rangedAutoAttack</attackPhrase>
     </attackType>
     <attackType id="grenade" category="spread" ammoConsumed="0" weaponConsumeType="destroy" dodgeSkill="dodge">
         <prompt>Throw</prompt>
-        <hitOverallPhrase>grenadeHit</hitOverallPhrase>
-        <hitOverallPhraseRepeat>grenadeHitRepeat</hitOverallPhraseRepeat>
-        <missOverallPhrase>grenadeMiss</missOverallPhrase>
-        <missOverallPhraseRepeat>grenadeMissRepeat</missOverallPhraseRepeat>
+        <attackPhrase>grenadeAttack</attackPhrase>
     </attackType>
     <attackType id="punch" category="single" ammoConsumed="0" skill="melee" dodgeSkill="dodge" hitChanceMin="0.1" hitChanceMax="0.9" rate="2" damage="5" damageType="physical" armorMult="1.0" isLoudOverride="false">
         <prompt>Punch</prompt>
-        <hitPhrase>punchHit</hitPhrase>
-        <hitPhraseRepeat>punchHitRepeat</hitPhraseRepeat>
-        <missPhrase>punchMiss</missPhrase>
-        <missPhraseRepeat>punchMissRepeat</missPhraseRepeat>
+        <attackPhrase>punchAttack</attackPhrase>
         <range>NEAR</range>
     </attackType>
 </data>

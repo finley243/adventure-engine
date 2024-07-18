@@ -32,22 +32,10 @@ public class WeaponAttackType {
     private final String ID;
     private final AttackCategory category;
     private final String prompt;
-    private final String hitPhrase;
-    private final String hitPhraseRepeat;
-    private final String hitOverallPhrase;
-    private final String hitOverallPhraseRepeat;
-    private final String hitPhraseAudible;
-    private final String hitPhraseRepeatAudible;
-    private final String hitOverallPhraseAudible;
-    private final String hitOverallPhraseRepeatAudible;
-    private final String missPhrase;
-    private final String missPhraseRepeat;
-    private final String missOverallPhrase;
-    private final String missOverallPhraseRepeat;
-    private final String missPhraseAudible;
-    private final String missPhraseRepeatAudible;
-    private final String missOverallPhraseAudible;
-    private final String missOverallPhraseRepeatAudible;
+    private final String attackPhrase;
+    private final String attackOverallPhrase;
+    private final String attackPhraseAudible;
+    private final String attackOverallPhraseAudible;
     private final int ammoConsumed;
     private final int actionPoints;
     private final WeaponConsumeType weaponConsumeType;
@@ -69,26 +57,14 @@ public class WeaponAttackType {
     private final ActionAttack.AttackHitChanceType hitChanceType;
     private final Boolean isLoudOverride;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String hitPhrase, String hitPhraseRepeat, String hitOverallPhrase, String hitOverallPhraseRepeat, String hitPhraseAudible, String hitPhraseRepeatAudible, String hitOverallPhraseAudible, String hitOverallPhraseRepeatAudible, String missPhrase, String missPhraseRepeat, String missOverallPhrase, String missOverallPhraseRepeat, String missPhraseAudible, String missPhraseRepeatAudible, String missOverallPhraseAudible, String missOverallPhraseRepeatAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, String skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, float hitChanceMult, String dodgeSkill, ActionAttack.AttackHitChanceType hitChanceType, Boolean isLoudOverride) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, String skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Integer damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, float hitChanceMult, String dodgeSkill, ActionAttack.AttackHitChanceType hitChanceType, Boolean isLoudOverride) {
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
-        this.hitPhrase = hitPhrase;
-        this.hitPhraseRepeat = hitPhraseRepeat;
-        this.hitOverallPhrase = hitOverallPhrase;
-        this.hitOverallPhraseRepeat = hitOverallPhraseRepeat;
-        this.hitPhraseAudible = hitPhraseAudible;
-        this.hitPhraseRepeatAudible = hitPhraseRepeatAudible;
-        this.hitOverallPhraseAudible = hitOverallPhraseAudible;
-        this.hitOverallPhraseRepeatAudible = hitOverallPhraseRepeatAudible;
-        this.missPhrase = missPhrase;
-        this.missPhraseRepeat = missPhraseRepeat;
-        this.missOverallPhrase = missOverallPhrase;
-        this.missOverallPhraseRepeat = missOverallPhraseRepeat;
-        this.missPhraseAudible = missPhraseAudible;
-        this.missPhraseRepeatAudible = missPhraseRepeatAudible;
-        this.missOverallPhraseAudible = missOverallPhraseAudible;
-        this.missOverallPhraseRepeatAudible = missOverallPhraseRepeatAudible;
+        this.attackPhrase = attackPhrase;
+        this.attackOverallPhrase = attackOverallPhrase;
+        this.attackPhraseAudible = attackPhraseAudible;
+        this.attackOverallPhraseAudible = attackOverallPhraseAudible;
         this.ammoConsumed = ammoConsumed;
         this.actionPoints = actionPoints;
         this.weaponConsumeType = weaponConsumeType;
@@ -143,7 +119,7 @@ public class WeaponAttackType {
             case SINGLE -> {
                 for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                        actions.add(new ActionAttackBasic(this, weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                        actions.add(new ActionAttackBasic(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                     }
                 }
             }
@@ -151,14 +127,14 @@ public class WeaponAttackType {
                 for (Actor target : subject.getLineOfSightActors()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
-                            actions.add(new ActionAttackLimb(this, weapon, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                            actions.add(new ActionAttackLimb(this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                         }
                     }
                 }
             }
             case SPREAD -> {
                 for (Area target : subject.getVisibleAreas().keySet()) {
-                    actions.add(new ActionAttackArea(this, weapon, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                    actions.add(new ActionAttackArea(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                 }
             }
         }
@@ -181,7 +157,7 @@ public class WeaponAttackType {
             case SINGLE -> {
                 for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                        actions.add(new ActionAttackBasic(this, null, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                        actions.add(new ActionAttackBasic(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                     }
                 }
             }
@@ -189,14 +165,14 @@ public class WeaponAttackType {
                 for (Actor target : subject.getLineOfSightActors()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
-                            actions.add(new ActionAttackLimb(this, null, target, limb, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                            actions.add(new ActionAttackLimb(this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                         }
                     }
                 }
             }
             case SPREAD -> {
                 for (Area target : subject.getVisibleAreas().keySet()) {
-                    actions.add(new ActionAttackArea(this, null, target, prompt, hitPhrase, hitPhraseRepeat, hitOverallPhrase, hitOverallPhraseRepeat, hitPhraseAudible, hitPhraseRepeatAudible, hitOverallPhraseAudible, hitOverallPhraseRepeatAudible, missPhrase, missPhraseRepeat, missOverallPhrase, missOverallPhraseRepeat, missPhraseAudible, missPhraseRepeatAudible, missOverallPhraseAudible, missOverallPhraseRepeatAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                    actions.add(new ActionAttackArea(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
                 }
             }
         }
