@@ -33,11 +33,11 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	private final boolean allowAllies;
 	private final Set<Area> areas;
 
-	private final Map<String, Script> scripts;
+	private final Map<String, List<Script>> scripts;
 
 	private boolean hasVisited;
 
-	public Room(Game game, String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, String ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Map<String, Script> scripts) {
+	public Room(Game game, String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, String ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Map<String, List<Script>> scripts) {
 		super(game, ID);
 		this.name = name;
 		this.nameType = nameType;
@@ -199,8 +199,10 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
-			Context context = new Context(game(), subject, target);
-			scripts.get(entryPoint).execute(context);
+			for (Script currentScript : scripts.get(entryPoint)) {
+				Context context = new Context(game(), subject, target);
+				currentScript.execute(context);
+			}
 		}
 	}
 

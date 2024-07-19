@@ -18,13 +18,13 @@ public class ObjectTemplate extends GameInstanced {
     private final int maxHP;
     private final Map<String, Integer> damageResistances;
     private final Map<String, Float> damageMults;
-    private final Map<String, Script> scripts;
+    private final Map<String, List<Script>> scripts;
     private final List<ActionCustom.CustomActionHolder> customActions;
     private final List<ActionCustom.CustomActionHolder> networkActions;
     private final List<ObjectComponentTemplate> components;
     private final Map<String, Expression> localVarsDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Float> damageMults, Map<String, Script> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, List<ObjectComponentTemplate> components, Map<String, Expression> localVarsDefault) {
+    public ObjectTemplate(Game game, String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Float> damageMults, Map<String, List<Script>> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, List<ObjectComponentTemplate> components, Map<String, Expression> localVarsDefault) {
         super(game, ID);
         this.name = name;
         this.isProperName = isProperName;
@@ -63,7 +63,7 @@ public class ObjectTemplate extends GameInstanced {
         return damageMults.getOrDefault(damageType, 0.0f);
     }
 
-    public Map<String, Script> getScripts() {
+    public Map<String, List<Script>> getScripts() {
         return scripts;
     }
 

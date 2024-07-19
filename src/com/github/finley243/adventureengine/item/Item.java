@@ -16,6 +16,7 @@ import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
@@ -93,8 +94,10 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
-			Context context = new Context(game(), subject, target, this);
-			getTemplate().getScripts().get(entryPoint).execute(context);
+			for (Script currentScript : getTemplate().getScripts().get(entryPoint)) {
+				Context context = new Context(game(), subject, target, this);
+				currentScript.execute(context);
+			}
 		}
 	}
 

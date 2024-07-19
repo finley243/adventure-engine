@@ -234,7 +234,7 @@ public class DataLoader {
         Set<String> senseTypes = LoadUtils.setOfTags(actorElement, "senseType");
         Set<String> tags = LoadUtils.setOfTags(actorElement, "tag");
         List<String> unarmedAttackTypes = LoadUtils.listOfTags(actorElement, "attackType");
-        Map<String, Script> scripts = loadScriptsWithTriggers(actorElement, "Actor(" + id + ")");
+        Map<String, List<Script>> scripts = loadScriptsWithTriggers(actorElement, "Actor(" + id + ")");
         List<String> startingEffects = LoadUtils.listOfTags(actorElement, "startEffect");
 
         Map<String, Bark> barks = new HashMap<>();
@@ -342,12 +342,15 @@ public class DataLoader {
         return ScriptParser.parseLiteral(expressionText, traceString);
     }
 
-    private static Map<String, Script> loadScriptsWithTriggers(Element parentElement, String traceString) {
-        Map<String, Script> scripts = new HashMap<>();
+    private static Map<String, List<Script>> loadScriptsWithTriggers(Element parentElement, String traceString) {
+        Map<String, List<Script>> scripts = new HashMap<>();
         for (Element scriptElement : LoadUtils.directChildrenWithName(parentElement, "script")) {
             String trigger = scriptElement.getAttribute("trigger");
             Script script = loadScript(scriptElement, traceString + " - script trigger: " + trigger);
-            scripts.put(trigger, script);
+            if (!scripts.containsKey(trigger)) {
+                scripts.put(trigger, new ArrayList<>());
+            }
+            scripts.get(trigger).add(script);
         }
         return scripts;
     }
@@ -389,7 +392,7 @@ public class DataLoader {
         String id = itemElement.getAttribute("id");
         String name = LoadUtils.singleTag(itemElement, "name", null);
         Scene description = loadScene(game, LoadUtils.singleChildWithName(itemElement, "description"));
-        Map<String, Script> scripts = loadScriptsWithTriggers(itemElement, "ItemTemplate(" + id + ")");
+        Map<String, List<Script>> scripts = loadScriptsWithTriggers(itemElement, "ItemTemplate(" + id + ")");
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(itemElement, "action", "ItemTemplate(" + id + ")");
         int price = LoadUtils.attributeInt(itemElement, "price", 0);
         List<ItemComponentTemplate> components = new ArrayList<>();
@@ -603,7 +606,7 @@ public class DataLoader {
         String roomOwnerFaction = LoadUtils.attribute(roomElement, "faction", null);
         Area.RestrictionType restrictionType = LoadUtils.attributeEnum(roomElement, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
         boolean allowAllies = LoadUtils.attributeBool(roomElement, "allowAllies", false);
-        Map<String, Script> roomScripts = loadScriptsWithTriggers(roomElement, "Room(" + roomID + ")");
+        Map<String, List<Script>> roomScripts = loadScriptsWithTriggers(roomElement, "Room(" + roomID + ")");
 
         /*List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
         Set<Area> areas = new HashSet<>();
@@ -642,7 +645,7 @@ public class DataLoader {
             linkSet.put(linkAreaID, link);
         }
 
-        Map<String, Script> areaScripts = loadScriptsWithTriggers(areaElement, "Area(" + areaID + ")");
+        Map<String, List<Script>> areaScripts = loadScriptsWithTriggers(areaElement, "Area(" + areaID + ")");
 
         Area area = new Area(game, areaID, landmarkID, name, nameType, nameIsPlural, description, roomID, areaOwnerFaction, restrictionType, allowAllies, linkSet, areaScripts);
 
@@ -697,7 +700,7 @@ public class DataLoader {
                 damageMults.put(damageType, damageMult);
             }
         }
-        Map<String, Script> scripts = loadScriptsWithTriggers(objectElement, "ObjectTemplate(" + ID + ")");
+        Map<String, List<Script>> scripts = loadScriptsWithTriggers(objectElement, "ObjectTemplate(" + ID + ")");
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(objectElement, "action", "ObjectTemplate(" + ID + ")");
         List<ActionCustom.CustomActionHolder> networkActions = loadCustomActions(objectElement, "networkAction", "ObjectTemplate(" + ID + ")");
         List<ObjectComponentTemplate> components = new ArrayList<>();

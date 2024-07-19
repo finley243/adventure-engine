@@ -41,13 +41,13 @@ public class ActorTemplate extends GameInstanced {
 	private final LootTable lootTable;
 	private final String dialogueStart;
 
-	private final Map<String, Script> scripts;
+	private final Map<String, List<Script>> scripts;
 	private final Map<String, Bark> barks;
 
 	private final List<ActionCustom.CustomActionHolder> customActions;
 	private final List<ActionCustom.CustomActionHolder> customInventoryActions;
 	
-	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer actionPoints, Integer movePoints, Integer startingLevel, Script levelUpThresholdExpression, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<String> senseTypes, Set<String> tags, List<String> unarmedAttackTypes, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, Script> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
+	public ActorTemplate(Game game, String ID, String parentID, String name, Boolean isProperName, Pronoun pronoun, String faction, Boolean isEnforcer, Integer actionPoints, Integer movePoints, Integer startingLevel, Script levelUpThresholdExpression, Integer maxHP, Map<String, Integer> damageResistance, Map<String, Float> damageMult, List<Limb> limbs, Map<String, EquipSlot> equipSlots, Map<String, Integer> attributes, Map<String, Integer> skills, Set<String> senseTypes, Set<String> tags, List<String> unarmedAttackTypes, List<String> startingEffects, LootTable lootTable, String dialogueStart, Map<String, List<Script>> scripts, Map<String, Bark> barks, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> customInventoryActions) {
 		super(game, ID);
 		if (parentID == null) {
 			if (name == null) throw new IllegalArgumentException("(Actor: " + ID + ") Must specify parameters for non-parented template: name");
@@ -230,14 +230,15 @@ public class ActorTemplate extends GameInstanced {
 		return dialogueStart != null ? dialogueStart : game().data().getActorTemplate(parentID).getDialogueStart();
 	}
 
-	public Script getScript(String trigger) {
+	public List<Script> getScripts(String trigger) {
+		List<Script> combinedScripts = new ArrayList<>();
 		if (scripts.containsKey(trigger)) {
-			return scripts.get(trigger);
-		} else if (parentID != null) {
-			return game().data().getActorTemplate(parentID).getScript(trigger);
-		} else {
-			return null;
+			combinedScripts.addAll(scripts.get(trigger));
 		}
+		if (parentID != null) {
+			combinedScripts.addAll(game().data().getActorTemplate(parentID).getScripts(trigger));
+		}
+		return combinedScripts;
 	}
 
 	public Bark getBark(String trigger) {

@@ -52,7 +52,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	// All areas that can be accessed when in this area (key is areaID)
 	private final Map<String, AreaLink> linkedAreas;
 
-	private final Map<String, Script> scripts;
+	private final Map<String, List<Script>> scripts;
 	
 	// All objects in this area
 	private final Set<WorldObject> objects;
@@ -63,7 +63,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	private final StatStringSet effects;
 	
-	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, String roomID, String ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Map<String, Script> scripts) {
+	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, String roomID, String ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Map<String, List<Script>> scripts) {
 		super(game, ID);
 		this.landmarkID = landmarkID;
 		this.name = name;
@@ -458,8 +458,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
-			Context context = new Context(game(), subject, target);
-			scripts.get(entryPoint).execute(context);
+			for (Script currentScript : scripts.get(entryPoint)) {
+				Context context = new Context(game(), subject, target);
+				currentScript.execute(context);
+			}
 		}
 	}
 

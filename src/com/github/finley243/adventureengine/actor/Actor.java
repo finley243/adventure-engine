@@ -1076,13 +1076,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		};
 	}
 
-	public boolean triggerScript(String trigger, Context context) {
-		Script script = getTemplate().getScript(trigger);
-		if (script != null) {
-			script.execute(context);
-			return true;
-		} else {
-			return false;
+	public void triggerScript(String trigger, Context context) {
+		for (Script currentScript : getTemplate().getScripts(trigger)) {
+			currentScript.execute(context);
 		}
 	}
 

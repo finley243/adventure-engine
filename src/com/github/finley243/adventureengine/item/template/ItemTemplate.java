@@ -21,11 +21,11 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 	private final String name;
 	private final Scene description;
 	private final int price;
-	private final Map<String, Script> scripts;
+	private final Map<String, List<Script>> scripts;
 	private final List<ItemComponentTemplate> components;
 	private final List<ActionCustom.CustomActionHolder> customActions;
 
-	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, Script> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price) {
+	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, List<Script>> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price) {
 		super(game, ID);
 		this.name = name;
 		this.description = description;
@@ -87,7 +87,7 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 		return components;
 	}
 
-	public Map<String, Script> getScripts() {
+	public Map<String, List<Script>> getScripts() {
 		return scripts;
 	}
 
