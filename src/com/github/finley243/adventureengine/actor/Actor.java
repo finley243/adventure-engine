@@ -542,15 +542,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 					if (event.isAction()) {
 						targetingComponent.onVisibleAction(event.getAction(), event.getContext().getSubject());
 					} else if (event.isBark()) {
-						if (event.getBark().responseType() == Bark.BarkResponseType.HOSTILE) {
-							targetingComponent.addCombatant(event.getContext().getTarget());
-						}
+						targetingComponent.onAudibleBark(event.getBark(), event.getContext().getSubject(), event.getContext().getTarget(), true);
 					}
 				} else { // Audible
 					if (event.isBark()) {
-						if (event.getBark().responseType() == Bark.BarkResponseType.HOSTILE) {
-							targetingComponent.addCombatant(event.getContext().getTarget());
-						}
+						targetingComponent.onAudibleBark(event.getBark(), event.getContext().getSubject(), event.getContext().getTarget(), false);
 					}
 				}
 			}

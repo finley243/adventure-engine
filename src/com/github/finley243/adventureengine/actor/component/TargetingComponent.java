@@ -4,7 +4,9 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Bark;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
@@ -12,6 +14,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantInteger;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
+import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -107,9 +110,10 @@ public class TargetingComponent {
                 updateTargetHostile(entry.getKey(), entry.getValue());
             }
         }
+        Context context = new Context(actor.game(), actor, actor);
         if (startedInCombat && !hasTargetsOfType(DetectionState.HOSTILE)) {
-            actor.triggerScript("on_combat_end", new Context(actor.game(), actor, actor));
-            actor.triggerBark("on_combat_end", new Context(actor.game(), actor, actor));
+            actor.triggerScript("on_combat_end", context);
+            actor.triggerBark("on_combat_end", context);
         }
     }
 
@@ -140,14 +144,41 @@ public class TargetingComponent {
         }
     }
 
-    public void onVisibleAction(Action action, Actor target) {
-        float actionDetectionChance = getActionDetectionChance(action, target);
-        processDetectionEvent(target, actionDetectionChance);
-        updateTargetArea(target, target.getArea());
+    public void onVisibleAction(Action action, Actor subject) {
+        float actionDetectionChance = getActionDetectionChance(action, subject);
+        processDetectionEvent(subject, actionDetectionChance);
+        updateTargetArea(subject, subject.getArea());
+        if (isTargetDetected(subject)) {
+            if (action instanceof ActionAttack attackAction) {
+                if (subject.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.ALLY) {
+                    // If attacker is an ally, add their attack targets as combatants (as long as they're not allies)
+                    for (AttackTarget attackTarget : attackAction.getTargets()) {
+                        if (attackTarget instanceof Actor targetActor && targetActor.getFaction().getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ALLY) {
+                            addCombatant(targetActor);
+                        }
+                    }
+                } else {
+                    // If any attack target is an ally, add the attacker as a combatant (as long as they're not an ally)
+                    for (AttackTarget attackTarget : attackAction.getTargets()) {
+                        if (attackTarget instanceof Actor targetActor && targetActor.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.ALLY) {
+                            addCombatant(subject);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         // TODO - Handle criminal action detection
     }
 
+    public void onAudibleBark(Bark bark, Actor subject, Actor target, boolean visible) {
+        if (bark.responseType() == Bark.BarkResponseType.HOSTILE && subject.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.ALLY) {
+            addCombatant(target);
+        }
+    }
+
     private void processDetectionEvent(Actor target, float detectionChance) {
+        Context context = new Context(actor.game(), actor, target);
         if (!detectedActors.containsKey(target) || detectedActors.get(target).state == DetectionState.DETECTING) {
             boolean detected = MathUtils.randomCheck(detectionChance);
             if (detected) {
@@ -155,12 +186,13 @@ public class TargetingComponent {
                     detectedActors.put(target, new DetectedActor(DetectionState.DETECTING, target.getArea()));
                 }
                 int eventsUntilDetected = getStateTriggerValue(DetectionState.DETECTING) - detectedActors.get(target).stateCounter;
+                context.setLocalVariable("detectionRemaining", Expression.constant(eventsUntilDetected));
                 if (eventsUntilDetected <= DEDICATED_DETECTION_BARKS) {
                     for (int i = 1; i <= DEDICATED_DETECTION_BARKS; i++) {
-                        actor.triggerBark("on_update_detection_" + i, new Context(actor.game(), actor, target, new MapBuilder<String, Expression>().put("detectionRemaining", new ExpressionConstantInteger(eventsUntilDetected)).build()));
+                        actor.triggerBark("on_update_detection_" + i, context);
                     }
                 } else {
-                    actor.triggerBark("on_update_detection", new Context(actor.game(), actor, target, new MapBuilder<String, Expression>().put("detectionRemaining", new ExpressionConstantInteger(eventsUntilDetected)).build()));
+                    actor.triggerBark("on_update_detection", context);
                 }
                 updateState(target);
             }
@@ -171,17 +203,18 @@ public class TargetingComponent {
                 detectedActors.get(target).state = DetectionState.TRESPASSING;
             }
             detectedActors.get(target).stateCounter = 0;
-            actor.triggerScript("on_target_trespassing_start", new Context(actor.game(), actor, target));
-            actor.triggerBark("on_target_trespassing_start", new Context(actor.game(), actor, target));
+            actor.triggerScript("on_target_trespassing_start", context);
+            actor.triggerBark("on_target_trespassing_start", context);
         } else if (detectedActors.get(target).state == DetectionState.TRESPASSING && !actorIsTrespassing(target)) {
             detectedActors.get(target).state = DetectionState.PASSIVE;
             detectedActors.get(target).stateCounter = 0;
-            actor.triggerScript("on_target_trespassing_end", new Context(actor.game(), actor, target));
-            actor.triggerBark("on_target_trespassing_end", new Context(actor.game(), actor, target));
+            actor.triggerScript("on_target_trespassing_end", context);
+            actor.triggerBark("on_target_trespassing_end", context);
         }
     }
 
     private void updateState(Actor target) {
+        Context context = new Context(actor.game(), actor, target);
         detectedActors.get(target).stateCounter += 1;
         if (detectedActors.get(target).stateCounter >= getStateTriggerValue(detectedActors.get(target).state)) {
             detectedActors.get(target).stateCounter = 0;
@@ -190,32 +223,32 @@ public class TargetingComponent {
                     boolean isTrespassing = actorIsTrespassing(target);
                     if (actor.isDead()) {
                         // TODO - Limit response to actors in allied faction?
-                        actor.triggerScript("on_detect_dead", new Context(actor.game(), actor, target));
-                        actor.triggerBark("on_detect_dead", new Context(actor.game(), actor, target));
+                        actor.triggerScript("on_detect_dead", context);
+                        actor.triggerBark("on_detect_dead", context);
                         detectedActors.get(target).state = DetectionState.DEAD;
                     } else if (isTrespassing && target.getArea().getRestrictionType() == Area.RestrictionType.PRIVATE) {
                         // TODO - Limit trespassing response to allies of owner faction (and possibly just enforcers)
-                        actor.triggerScript("on_detect_target_trespassing", new Context(actor.game(), actor, target));
-                        actor.triggerBark("on_detect_target_trespassing", new Context(actor.game(), actor, target));
+                        actor.triggerScript("on_detect_target_trespassing", context);
+                        actor.triggerBark("on_detect_target_trespassing", context);
                         // TODO - Make actor follow trespasser until they leave the area?
                         detectedActors.get(target).state = DetectionState.TRESPASSING;
                     } else if (isTrespassing && target.getArea().getRestrictionType() == Area.RestrictionType.HOSTILE) {
-                        actor.triggerScript("on_detect_target_hostile_area", new Context(actor.game(), actor, target));
-                        actor.triggerBark("on_detect_target_hostile_area", new Context(actor.game(), actor, target));
+                        actor.triggerScript("on_detect_target_hostile_area", context);
+                        actor.triggerBark("on_detect_target_hostile_area", context);
                         detectedActors.get(target).state = DetectionState.HOSTILE;
                     } else if (actor.getFaction().getRelationTo(target.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
-                        actor.triggerScript("on_detect_target_hostile_faction", new Context(actor.game(), actor, target));
-                        actor.triggerBark("on_detect_target_hostile_faction", new Context(actor.game(), actor, target));
+                        actor.triggerScript("on_detect_target_hostile_faction", context);
+                        actor.triggerBark("on_detect_target_hostile_faction", context);
                         detectedActors.get(target).state = DetectionState.HOSTILE;
                     } else {
-                        actor.triggerScript("on_detect_target_passive", new Context(actor.game(), actor, target));
-                        actor.triggerBark("on_detect_target_passive", new Context(actor.game(), actor, target));
+                        actor.triggerScript("on_detect_target_passive", context);
+                        actor.triggerBark("on_detect_target_passive", context);
                         detectedActors.get(target).state = DetectionState.PASSIVE;
                     }
                 }
                 case TRESPASSING -> {
-                    actor.triggerScript("on_trespassing_become_hostile", new Context(actor.game(), actor, target));
-                    actor.triggerBark("on_trespassing_become_hostile", new Context(actor.game(), actor, target));
+                    actor.triggerScript("on_trespassing_become_hostile", context);
+                    actor.triggerBark("on_trespassing_become_hostile", context);
                     detectedActors.get(target).state = DetectionState.HOSTILE;
                 }
             }
@@ -229,15 +262,16 @@ public class TargetingComponent {
         }
         Faction areaFaction = actor.game().data().getFaction(area.getOwnerFaction());
         if (target.getFaction().equals(areaFaction)) {
-            return true;
+            return false;
         }
-        return area.allowAllies() && areaFaction.getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ALLY;
+        return !area.allowAllies() || areaFaction.getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ALLY;
     }
 
     public void addCombatant(Actor target) {
+        Context context = new Context(actor.game(), actor, target);
         if (!hasTargetsOfType(DetectionState.HOSTILE)) {
-            actor.triggerScript("on_combat_start", new Context(actor.game(), actor, target));
-            actor.triggerBark("on_combat_start", new Context(actor.game(), actor, target));
+            actor.triggerScript("on_combat_start", context);
+            actor.triggerBark("on_combat_start", context);
         }
         if (detectedActors.containsKey(target)) {
             detectedActors.get(target).state = DetectionState.HOSTILE;
@@ -250,6 +284,10 @@ public class TargetingComponent {
 
     public boolean isTargetOfType(Actor target, DetectionState type) {
         return detectedActors.containsKey(target) && detectedActors.get(target).state == type;
+    }
+
+    public boolean isTargetDetected(Actor target) {
+        return detectedActors.containsKey(target) && detectedActors.get(target).state != DetectionState.DETECTING;
     }
 
     public DetectionState getTargetType(Actor target) {
