@@ -31,9 +31,10 @@
         <prompt>Throw</prompt>
         <attackPhrase>grenadeAttack</attackPhrase>
     </attackType>
-    <attackType id="punch" category="single" ammoConsumed="0" skill="melee" dodgeSkill="dodge" hitChanceMin="0.1" hitChanceMax="0.9" rate="2" damage="5" damageType="physical" armorMult="1.0" isLoudOverride="false">
+    <attackType id="punch" category="single" ammoConsumed="0" skill="melee" dodgeSkill="dodge" hitChanceMin="0.1" hitChanceMax="0.9" rate="2" damageType="physical" armorMult="1.0" isLoudOverride="false">
         <prompt>Punch</prompt>
         <attackPhrase>punchAttack</attackPhrase>
         <range>NEAR</range>
+        <damage>5</damage>
     </attackType>
 </data>

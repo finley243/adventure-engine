@@ -946,7 +946,7 @@ public class DataLoader {
         boolean useNonIdealRange = LoadUtils.attributeBool(attackTypeElement, "nonIdealRange", false);
         Set<AreaLink.DistanceCategory> rangeOverride = LoadUtils.setOfEnumTags(attackTypeElement, "range", AreaLink.DistanceCategory.class);
         Integer rateOverride = LoadUtils.attributeInt(attackTypeElement, "rate", null);
-        Integer damageOverride = LoadUtils.attributeInt(attackTypeElement, "damage", null);
+        Script damageOverride = loadExpressionScript(LoadUtils.singleChildWithName(attackTypeElement, "damage"), "WeaponAttackType(" + ID + ") - damage");
         float damageMult = LoadUtils.attributeFloat(attackTypeElement, "damageMult", 0.0f);
         String damageTypeOverride = LoadUtils.attribute(attackTypeElement, "damageType", null);
         Float armorMultOverride = LoadUtils.attributeFloat(attackTypeElement, "armorMult", null);

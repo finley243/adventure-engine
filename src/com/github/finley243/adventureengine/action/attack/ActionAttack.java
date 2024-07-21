@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.MultiNoun;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -50,7 +51,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final WeaponAttackType.WeaponConsumeType weaponConsumeType;
     private final Set<AreaLink.DistanceCategory> ranges;
     private final int rate;
-    private final int damage;
+    private final Script damage;
     private final String damageType;
     private final float armorMult;
     private final List<String> targetEffects;
@@ -59,7 +60,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final AttackHitChanceType hitChanceType;
     private final boolean isLoud;
 
-    public ActionAttack(WeaponAttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, String attackSkill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, int damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
+    public ActionAttack(WeaponAttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, String attackSkill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
         super(targets);
         this.attackType = attackType;
         this.weapon = weapon;
@@ -128,8 +129,19 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return area;
     }
 
-    public int damage() {
-        return damage;
+    protected int computeDamage(Context context) {
+        Script.ScriptReturnData damageReturn = damage.execute(context);
+        if (damageReturn.error() != null) {
+            throw new RuntimeException("Error while computing attack damage: " + damageReturn.stackTrace());
+        } else if (damageReturn.flowStatement() != null) {
+            throw new RuntimeException("Unexpected flow statement in attack damage expression");
+        } else if (damageReturn.value() == null) {
+            throw new RuntimeException("Attack damage expression returned null");
+        } else if (damageReturn.value().getDataType() != Expression.DataType.INTEGER) {
+            throw new RuntimeException("Attack damage expression returned non-integer value");
+        } else {
+            return damageReturn.value().getValueInteger();
+        }
     }
 
     public float hitChanceMult() {
@@ -203,12 +215,13 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
-        int damage = damage();
         Context context = new Context(subject.game(), subject, target, getWeapon(), getArea());
+        int damage = computeDamage(context);
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
         context.setLocalVariable("success", Expression.constant(true));
+        context.setLocalVariable("damage", Expression.constant(damage));
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
         target.damage(damageData, context);
