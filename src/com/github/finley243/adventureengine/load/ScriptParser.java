@@ -191,8 +191,9 @@ public class ScriptParser {
             } else if (hasParsedNamedParameter) {
                 throw new IllegalArgumentException("Function contains unnamed parameter after named parameter");
             }
-            Expression parameterDefaultValue = parameterIsRequired ? null : parseLiteral(currentGroup.subList(2, currentGroup.size()));
+            Expression parameterDefaultValue = parameterIsRequired ? null : parseLiteral(currentGroup.subList(2, index));
             functionParameters.add(new ScriptParameter(parameterName, parameterIsRequired, parameterDefaultValue));
+            index += 1;
         }
         return functionParameters;
     }

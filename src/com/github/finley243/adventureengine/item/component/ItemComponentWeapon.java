@@ -193,6 +193,7 @@ public class ItemComponentWeapon extends ItemComponent {
             case "attack_types" -> Expression.constant(getAttackTypes());
             case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().getPrimaryRanges(), context));
             case "target_effects" -> Expression.constant(getTargetEffects(context));
+            case "skill" -> Expression.constant(getSkill());
             default -> super.getStatValue(name, context);
         };
     }

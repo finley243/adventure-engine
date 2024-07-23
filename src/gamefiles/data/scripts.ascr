@@ -31,3 +31,14 @@ func on_player_level_up() {
     var skillPoints = 2;
     skillMenu(statHolder.subject, skillPoints);
 }
+
+func float hit_chance_skill(attackSkill, dodgeSkill) {
+    var attackerSkillLevel = stat.subject.("skill_" + attackSkill);
+    var targetSkillLevel = dodgeSkill == null || statHolderType(statHolder.target) != "actor" ? 0 : stat.target.("skill_" + dodgeSkill);
+    var hitChance = scaleLog(attackerSkillLevel, 1, 10, 0.1f, 0.9f);
+    if (targetSkillLevel >= attackerSkillLevel) {
+        var penaltyMult = targetSkillLevel - attackerSkillLevel + 1;
+        hitChance -= penaltyMult * 0.05f;
+    }
+    return hitChance;
+}

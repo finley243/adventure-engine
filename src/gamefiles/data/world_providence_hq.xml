@@ -15,6 +15,7 @@
             <localVar name="door_link_object">"providence_lobby_restroom_door"</localVar>
             <localVar name="door_link_dir">"W"</localVar>
         </object>
+        <actor id="providence_receptionist" template="enemy_melee"/>
     </area>
     <area id="providence_lobby_elevators" room="providence_lobby">
         <name type="near" plural="true">elevators</name>

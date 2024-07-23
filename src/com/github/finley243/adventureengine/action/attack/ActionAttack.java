@@ -43,9 +43,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final String attackOverallPhrase;
     private final String attackPhraseAudible;
     private final String attackOverallPhraseAudible;
-    private final String attackSkill;
-    private final float baseHitChanceMin;
-    private final float baseHitChanceMax;
     private final int ammoConsumed;
     private final int actionPoints;
     private final WeaponAttackType.WeaponConsumeType weaponConsumeType;
@@ -55,12 +52,13 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final String damageType;
     private final float armorMult;
     private final List<String> targetEffects;
+    private final Script hitChanceExpression;
+    private final Script hitChanceOverallExpression;
     private final float hitChanceMult;
-    private final String dodgeSkill;
     private final AttackHitChanceType hitChanceType;
     private final boolean isLoud;
 
-    public ActionAttack(WeaponAttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, String attackSkill, float baseHitChanceMin, float baseHitChanceMax, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, String damageType, float armorMult, List<String> targetEffects, float hitChanceMult, String dodgeSkill, AttackHitChanceType hitChanceType, boolean isLoud) {
+    public ActionAttack(WeaponAttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, String damageType, float armorMult, List<String> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, AttackHitChanceType hitChanceType, boolean isLoud) {
         super(targets);
         this.attackType = attackType;
         this.weapon = weapon;
@@ -72,9 +70,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.attackOverallPhrase = attackOverallPhrase;
         this.attackPhraseAudible = attackPhraseAudible;
         this.attackOverallPhraseAudible = attackOverallPhraseAudible;
-        this.attackSkill = attackSkill;
-        this.baseHitChanceMin = baseHitChanceMin;
-        this.baseHitChanceMax = baseHitChanceMax;
         this.ammoConsumed = ammoConsumed;
         this.actionPoints = actionPoints;
         this.weaponConsumeType = weaponConsumeType;
@@ -84,8 +79,9 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.damageType = damageType;
         this.armorMult = armorMult;
         this.targetEffects = targetEffects;
+        this.hitChanceExpression = hitChanceExpression;
+        this.hitChanceOverallExpression = hitChanceOverallExpression;
         this.hitChanceMult = hitChanceMult;
-        this.dodgeSkill = dodgeSkill;
         this.hitChanceType = hitChanceType;
         this.isLoud = isLoud;
     }
@@ -148,16 +144,8 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return hitChanceMult;
     }
 
-    public String getDodgeSkill() {
-        return dodgeSkill;
-    }
-
     public int getAmmoConsumed() {
         return ammoConsumed;
-    }
-
-    public String getAttackSkill() {
-        return attackSkill;
     }
 
     public Set<AreaLink.DistanceCategory> getRanges() {
@@ -171,10 +159,10 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public float chance(Actor subject, AttackTarget target) {
         if (hitChanceType == AttackHitChanceType.INDEPENDENT) {
-            return CombatHelper.calculateHitChance(subject, weapon, target, getLimb(), getAttackSkill(), getDodgeSkill(), baseHitChanceMin, baseHitChanceMax, hitChanceMult());
+            return CombatHelper.calculateHitChance(subject, weapon, target, getLimb(), hitChanceExpression, hitChanceMult());
         } else {
-            if (getDodgeSkill() != null) {
-                return CombatHelper.calculateHitChanceDodgeOnly(subject, target, getAttackSkill(), getDodgeSkill());
+            if (hitChanceExpression != null) {
+                return CombatHelper.calculateHitChanceDodgeOnly(subject, target, weapon, hitChanceExpression);
             } else {
                 return 1.0f;
             }
@@ -186,18 +174,14 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         if (hitChanceType == AttackHitChanceType.INDEPENDENT) {
             return 1.0f;
         } else {
-            return CombatHelper.calculateHitChanceNoTarget(subject, weapon, getLimb(), getAttackSkill(), baseHitChanceMin, baseHitChanceMax, hitChanceMult());
+            return CombatHelper.calculateHitChanceNoTarget(subject, weapon, getLimb(), hitChanceOverallExpression, hitChanceMult());
         }
     }
 
     @Override
     public boolean onStart(Actor subject, int repeatActionCount) {
         for (AttackTarget target : targets) {
-            if (target instanceof Actor) {
-                subject.triggerScript("on_attack", new Context(subject.game(), subject, target));
-            } else {
-                subject.triggerScript("on_attack", new Context(subject.game(), subject, target));
-            }
+            subject.triggerScript("on_attack", new Context(subject.game(), subject, target));
         }
         consumeAmmo(subject);
         return true;
@@ -248,8 +232,8 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         context.setLocalVariable("success", Expression.constant(true));
         List<Noun> targetsSuccessNouns = targetsSuccess.stream().map(target -> (Noun) target).toList();
         List<Noun> targetsFailNouns = targetsFail.stream().map(target -> (Noun) target).toList();
-        context.setLocalVariable("targetsSuccess", Expression.constantNoun(new MultiNoun(targetsSuccessNouns)));
-        context.setLocalVariable("targetsFail", Expression.constantNoun(new MultiNoun(targetsFailNouns)));
+        context.setLocalVariable("targetsSuccess", targetsSuccessNouns.isEmpty() ? null : Expression.constantNoun(new MultiNoun(targetsSuccessNouns)));
+        context.setLocalVariable("targetsFail", targetsFailNouns.isEmpty() ? null : Expression.constantNoun(new MultiNoun(targetsFailNouns)));
         SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
     }
 

@@ -607,15 +607,6 @@ public class DataLoader {
         Area.RestrictionType restrictionType = LoadUtils.attributeEnum(roomElement, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
         boolean allowAllies = LoadUtils.attributeBool(roomElement, "allowAllies", false);
         Map<String, List<Script>> roomScripts = loadScriptsWithTriggers(roomElement, "Room(" + roomID + ")");
-
-        /*List<Element> areaElements = LoadUtils.directChildrenWithName(roomElement, "area");
-        Set<Area> areas = new HashSet<>();
-        for (Element areaElement : areaElements) {
-            Area area = loadArea(game, areaElement, roomID);
-            areas.add(area);
-            game.data().addArea(area.getID(), area);
-        }*/
-
         return new Room(game, roomID, roomName, roomNameType, roomNameIsProper, roomDescription, roomOwnerFaction, restrictionType, allowAllies, roomScripts);
     }
 
@@ -940,9 +931,6 @@ public class DataLoader {
         int ammoConsumed = LoadUtils.attributeInt(attackTypeElement, "ammoConsumed", 1);
         int actionPoints = LoadUtils.attributeInt(attackTypeElement, "actionPoints", 1);
         WeaponAttackType.WeaponConsumeType weaponConsumeType = LoadUtils.attributeEnum(attackTypeElement, "weaponConsumeType", WeaponAttackType.WeaponConsumeType.class, WeaponAttackType.WeaponConsumeType.NONE);
-        String skillOverride = LoadUtils.attribute(attackTypeElement, "skill", null);
-        Float baseHitChanceMin = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMin", null);
-        Float baseHitChanceMax = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMax", null);
         boolean useNonIdealRange = LoadUtils.attributeBool(attackTypeElement, "nonIdealRange", false);
         Set<AreaLink.DistanceCategory> rangeOverride = LoadUtils.setOfEnumTags(attackTypeElement, "range", AreaLink.DistanceCategory.class);
         Integer rateOverride = LoadUtils.attributeInt(attackTypeElement, "rate", null);
@@ -952,11 +940,12 @@ public class DataLoader {
         Float armorMultOverride = LoadUtils.attributeFloat(attackTypeElement, "armorMult", null);
         List<String> targetEffects = LoadUtils.listOfTags(attackTypeElement, "targetEffect");
         boolean overrideTargetEffects = LoadUtils.attributeBool(attackTypeElement, "overrideEffects", false);
+        Script hitChance = loadExpressionScript(LoadUtils.singleChildWithName(attackTypeElement, "hitChance"), "WeaponAttackType(" + ID + ") - hit chance");
+        Script hitChanceOverall = loadExpressionScript(LoadUtils.singleChildWithName(attackTypeElement, "hitChanceOverall"), "WeaponAttackType(" + ID + ") - overall hit chance");
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
-        String dodgeSkill = LoadUtils.attribute(attackTypeElement, "dodgeSkill", null);
         ActionAttack.AttackHitChanceType hitChanceType = LoadUtils.attributeEnum(attackTypeElement, "hitChanceType", ActionAttack.AttackHitChanceType.class, ActionAttack.AttackHitChanceType.INDEPENDENT);
         Boolean isLoudOverride = LoadUtils.attributeBool(attackTypeElement, "isLoudOverride", null);
-        return new WeaponAttackType(ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, skillOverride, baseHitChanceMin, baseHitChanceMax, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChanceMult, dodgeSkill, hitChanceType, isLoudOverride);
+        return new WeaponAttackType(ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoudOverride);
     }
 
     private static NetworkNode loadNetworkNode(Game game, Element nodeElement) {

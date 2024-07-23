@@ -38,9 +38,6 @@ public class WeaponAttackType {
     private final int actionPoints;
     private final WeaponConsumeType weaponConsumeType;
 
-    private final String skillOverride;
-    private final Float baseHitChanceMinOverride;
-    private final Float baseHitChanceMaxOverride;
     private final boolean useNonIdealRange;
     private final Set<AreaLink.DistanceCategory> rangeOverride;
     private final Integer rateOverride;
@@ -50,12 +47,13 @@ public class WeaponAttackType {
     private final Float armorMultOverride;
     private final List<String> targetEffects;
     private final boolean overrideTargetEffects;
+    private final Script hitChance;
+    private final Script hitChanceOverall;
     private final float hitChanceMult;
-    private final String dodgeSkill;
     private final ActionAttack.AttackHitChanceType hitChanceType;
     private final Boolean isLoudOverride;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, String skillOverride, Float baseHitChanceMinOverride, Float baseHitChanceMaxOverride, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Script damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, float hitChanceMult, String dodgeSkill, ActionAttack.AttackHitChanceType hitChanceType, Boolean isLoudOverride) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Script damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, Script hitChance, Script hitChanceOverall, float hitChanceMult, ActionAttack.AttackHitChanceType hitChanceType, Boolean isLoudOverride) {
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
@@ -66,9 +64,6 @@ public class WeaponAttackType {
         this.ammoConsumed = ammoConsumed;
         this.actionPoints = actionPoints;
         this.weaponConsumeType = weaponConsumeType;
-        this.skillOverride = skillOverride;
-        this.baseHitChanceMinOverride = baseHitChanceMinOverride;
-        this.baseHitChanceMaxOverride = baseHitChanceMaxOverride;
         this.useNonIdealRange = useNonIdealRange;
         this.rangeOverride = rangeOverride;
         this.rateOverride = rateOverride;
@@ -78,8 +73,9 @@ public class WeaponAttackType {
         this.armorMultOverride = armorMultOverride;
         this.targetEffects = targetEffects;
         this.overrideTargetEffects = overrideTargetEffects;
+        this.hitChance = hitChance;
+        this.hitChanceOverall = hitChanceOverall;
         this.hitChanceMult = hitChanceMult;
-        this.dodgeSkill = dodgeSkill;
         this.hitChanceType = hitChanceType;
         this.isLoudOverride = isLoudOverride;
     }
@@ -100,9 +96,6 @@ public class WeaponAttackType {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = new Context(subject.game(), subject, subject, weapon);
         List<Action> actions = new ArrayList<>();
-        String skill = skillOverride != null ? skillOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getSkill();
-        float hitChanceMin = baseHitChanceMinOverride != null ? baseHitChanceMinOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getBaseHitChanceMin();
-        float hitChanceMax = baseHitChanceMaxOverride != null ? baseHitChanceMaxOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getBaseHitChanceMax();
         Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context))) : weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context));
         int rate = rateOverride != null ? rateOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getRate(context);
         Script damage = Objects.requireNonNullElseGet(damageOverride, () -> Script.constant((int) (weapon.getComponentOfType(ItemComponentWeapon.class).getDamage(context) * (damageMult + 1.0f))));
@@ -117,7 +110,7 @@ public class WeaponAttackType {
             case SINGLE -> {
                 for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                        actions.add(new ActionAttackBasic(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                        actions.add(new ActionAttackBasic(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
                     }
                 }
             }
@@ -125,14 +118,14 @@ public class WeaponAttackType {
                 for (Actor target : subject.getLineOfSightActors()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
-                            actions.add(new ActionAttackLimb(this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                            actions.add(new ActionAttackLimb(this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
                         }
                     }
                 }
             }
             case SPREAD -> {
                 for (Area target : subject.getVisibleAreas().keySet()) {
-                    actions.add(new ActionAttackArea(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                    actions.add(new ActionAttackArea(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
                 }
             }
         }
@@ -140,9 +133,6 @@ public class WeaponAttackType {
     }
 
     private List<Action> generateActionsUnarmed(Actor subject) {
-        String skill = skillOverride;
-        float hitChanceMin = baseHitChanceMinOverride;
-        float hitChanceMax = baseHitChanceMaxOverride;
         Set<AreaLink.DistanceCategory> ranges = rangeOverride;
         int rate = rateOverride;
         Script damage = damageOverride;
@@ -155,7 +145,7 @@ public class WeaponAttackType {
             case SINGLE -> {
                 for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                        actions.add(new ActionAttackBasic(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                        actions.add(new ActionAttackBasic(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
                     }
                 }
             }
@@ -163,14 +153,14 @@ public class WeaponAttackType {
                 for (Actor target : subject.getLineOfSightActors()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
-                            actions.add(new ActionAttackLimb(this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                            actions.add(new ActionAttackLimb(this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
                         }
                     }
                 }
             }
             case SPREAD -> {
                 for (Area target : subject.getVisibleAreas().keySet()) {
-                    actions.add(new ActionAttackArea(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, skill, hitChanceMin, hitChanceMax, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChanceMult, dodgeSkill, hitChanceType, isLoud));
+                    actions.add(new ActionAttackArea(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
                 }
             }
         }

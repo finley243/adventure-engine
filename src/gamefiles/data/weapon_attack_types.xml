@@ -2,39 +2,48 @@
     <attackType id="basic_ranged" category="single" ammoConsumed="1">
         <prompt>Attack</prompt>
         <attackPhrase>rangedAttack</attackPhrase>
+        <hitChance>hit_chance_skill(stat.parentItem.skill, null)</hitChance>
     </attackType>
-    <attackType id="basic_melee" category="single" ammoConsumed="1" dodgeSkill="dodge">
+    <attackType id="basic_melee" category="single" ammoConsumed="1">
         <prompt>Attack</prompt>
         <attackPhrase>meleeAttack</attackPhrase>
+        <hitChance>hit_chance_skill(stat.parentItem.skill, "dodge")</hitChance>
     </attackType>
     <attackType id="targeted_ranged" category="targeted" ammoConsumed="1">
         <prompt>Targeted Attack</prompt>
         <attackPhrase>rangedAttackLimb</attackPhrase>
+        <hitChance>hit_chance_skill(stat.parentItem.skill, null)</hitChance>
     </attackType>
-    <attackType id="targeted_melee" category="targeted" ammoConsumed="1" dodgeSkill="dodge">
+    <attackType id="targeted_melee" category="targeted" ammoConsumed="1">
         <prompt>Targeted Attack</prompt>
         <attackPhrase>meleeAttackLimb</attackPhrase>
+        <hitChance>hit_chance_skill(stat.parentItem.skill, "dodge")</hitChance>
     </attackType>
     <attackType id="spread_ranged" category="spread" ammoConsumed="1">
         <prompt>Spread Attack</prompt>
         <attackPhrase>rangedAttack</attackPhrase>
+        <hitChance>hit_chance_skill(stat.parentItem.skill, null)</hitChance>
     </attackType>
-    <attackType id="spread_melee" category="spread" ammoConsumed="1" dodgeSkill="dodge">
+    <attackType id="spread_melee" category="spread" ammoConsumed="1">
         <prompt>Spread Attack</prompt>
         <attackPhrase>meleeAttack</attackPhrase>
+        <hitChance>hit_chance_skill(stat.parentItem.skill, "dodge")</hitChance>
     </attackType>
     <attackType id="autofire" category="single" ammoConsumed="3" rate="1" damageMult="2.0" hitChanceMult="-0.4">
         <prompt>Autofire</prompt>
         <attackPhrase>rangedAutoAttack</attackPhrase>
+        <hitChance>hit_chance_skill(stat.parentItem.skill, null)</hitChance>
     </attackType>
-    <attackType id="grenade" category="spread" ammoConsumed="0" weaponConsumeType="destroy" dodgeSkill="dodge">
+    <attackType id="grenade" category="spread" ammoConsumed="0" weaponConsumeType="destroy" hitChanceType="joint">
         <prompt>Throw</prompt>
         <attackPhrase>grenadeAttack</attackPhrase>
+        <hitChanceOverall>hit_chance_skill(stat.parentItem.skill, null)</hitChanceOverall>
     </attackType>
-    <attackType id="punch" category="single" ammoConsumed="0" skill="melee" dodgeSkill="dodge" hitChanceMin="0.1" hitChanceMax="0.9" rate="2" damageType="physical" armorMult="1.0" isLoudOverride="false">
+    <attackType id="punch" category="single" ammoConsumed="0" rate="2" damageType="physical" armorMult="1.0" isLoudOverride="false">
         <prompt>Punch</prompt>
         <attackPhrase>punchAttack</attackPhrase>
         <range>NEAR</range>
         <damage>5</damage>
+        <hitChance>hit_chance_skill("melee", "dodge")</hitChance>
     </attackType>
 </data>
