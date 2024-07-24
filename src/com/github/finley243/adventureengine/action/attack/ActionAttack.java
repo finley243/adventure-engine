@@ -29,10 +29,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     public static final boolean BLOCK_ALL_ATTACKS_BEYOND_RATE_LIMIT = true;
     public static final boolean REPEATS_USE_NO_ACTION_POINTS = true;
 
-    public enum AttackHitChanceType {
-        INDEPENDENT, JOINT
-    }
-
     private final WeaponAttackType attackType;
     private final Set<AttackTarget> targets;
     private final Item weapon;
@@ -55,10 +51,9 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final Script hitChanceExpression;
     private final Script hitChanceOverallExpression;
     private final float hitChanceMult;
-    private final AttackHitChanceType hitChanceType;
     private final boolean isLoud;
 
-    public ActionAttack(WeaponAttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, String damageType, float armorMult, List<String> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, AttackHitChanceType hitChanceType, boolean isLoud) {
+    public ActionAttack(WeaponAttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, String damageType, float armorMult, List<String> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud) {
         super(targets);
         this.attackType = attackType;
         this.weapon = weapon;
@@ -82,7 +77,6 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         this.hitChanceExpression = hitChanceExpression;
         this.hitChanceOverallExpression = hitChanceOverallExpression;
         this.hitChanceMult = hitChanceMult;
-        this.hitChanceType = hitChanceType;
         this.isLoud = isLoud;
     }
 
@@ -158,24 +152,18 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public float chance(Actor subject, AttackTarget target) {
-        if (hitChanceType == AttackHitChanceType.INDEPENDENT) {
-            return CombatHelper.calculateHitChance(subject, weapon, target, getLimb(), hitChanceExpression, hitChanceMult());
-        } else {
-            if (hitChanceExpression != null) {
-                return CombatHelper.calculateHitChanceDodgeOnly(subject, target, weapon, hitChanceExpression);
-            } else {
-                return 1.0f;
-            }
+        if (hitChanceExpression == null) {
+            return 1.0f;
         }
+        return CombatHelper.calculateHitChance(subject, weapon, target, getLimb(), hitChanceExpression, hitChanceMult());
     }
 
     @Override
     public float chanceOverall(Actor subject) {
-        if (hitChanceType == AttackHitChanceType.INDEPENDENT) {
+        if (hitChanceOverallExpression == null) {
             return 1.0f;
-        } else {
-            return CombatHelper.calculateHitChanceNoTarget(subject, weapon, getLimb(), hitChanceOverallExpression, hitChanceMult());
         }
+        return CombatHelper.calculateHitChanceNoTarget(subject, weapon, getLimb(), hitChanceOverallExpression, hitChanceMult());
     }
 
     @Override

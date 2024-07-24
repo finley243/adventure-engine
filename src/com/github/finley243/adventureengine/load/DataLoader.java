@@ -943,9 +943,8 @@ public class DataLoader {
         Script hitChance = loadExpressionScript(LoadUtils.singleChildWithName(attackTypeElement, "hitChance"), "WeaponAttackType(" + ID + ") - hit chance");
         Script hitChanceOverall = loadExpressionScript(LoadUtils.singleChildWithName(attackTypeElement, "hitChanceOverall"), "WeaponAttackType(" + ID + ") - overall hit chance");
         float hitChanceMult = LoadUtils.attributeFloat(attackTypeElement, "hitChanceMult", 0.0f);
-        ActionAttack.AttackHitChanceType hitChanceType = LoadUtils.attributeEnum(attackTypeElement, "hitChanceType", ActionAttack.AttackHitChanceType.class, ActionAttack.AttackHitChanceType.INDEPENDENT);
         Boolean isLoudOverride = LoadUtils.attributeBool(attackTypeElement, "isLoudOverride", null);
-        return new WeaponAttackType(ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoudOverride);
+        return new WeaponAttackType(ID, category, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, useNonIdealRange, rangeOverride, rateOverride, damageOverride, damageMult, damageTypeOverride, armorMultOverride, targetEffects, overrideTargetEffects, hitChance, hitChanceOverall, hitChanceMult, isLoudOverride);
     }
 
     private static NetworkNode loadNetworkNode(Game game, Element nodeElement) {

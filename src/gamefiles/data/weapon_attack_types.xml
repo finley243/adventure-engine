@@ -34,7 +34,7 @@
         <attackPhrase>rangedAutoAttack</attackPhrase>
         <hitChance>hit_chance_skill(stat.parentItem.skill, null)</hitChance>
     </attackType>
-    <attackType id="grenade" category="spread" ammoConsumed="0" weaponConsumeType="destroy" hitChanceType="joint">
+    <attackType id="grenade" category="spread" ammoConsumed="0" weaponConsumeType="destroy">
         <prompt>Throw</prompt>
         <attackPhrase>grenadeAttack</attackPhrase>
         <hitChanceOverall>hit_chance_skill(stat.parentItem.skill, null)</hitChanceOverall>

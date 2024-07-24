@@ -50,10 +50,9 @@ public class WeaponAttackType {
     private final Script hitChance;
     private final Script hitChanceOverall;
     private final float hitChanceMult;
-    private final ActionAttack.AttackHitChanceType hitChanceType;
     private final Boolean isLoudOverride;
 
-    public WeaponAttackType(String ID, AttackCategory category, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Script damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, Script hitChance, Script hitChanceOverall, float hitChanceMult, ActionAttack.AttackHitChanceType hitChanceType, Boolean isLoudOverride) {
+    public WeaponAttackType(String ID, AttackCategory category, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponConsumeType weaponConsumeType, boolean useNonIdealRange, Set<AreaLink.DistanceCategory> rangeOverride, Integer rateOverride, Script damageOverride, float damageMult, String damageTypeOverride, Float armorMultOverride, List<String> targetEffects, boolean overrideTargetEffects, Script hitChance, Script hitChanceOverall, float hitChanceMult, Boolean isLoudOverride) {
         this.ID = ID;
         this.category = category;
         this.prompt = prompt;
@@ -76,7 +75,6 @@ public class WeaponAttackType {
         this.hitChance = hitChance;
         this.hitChanceOverall = hitChanceOverall;
         this.hitChanceMult = hitChanceMult;
-        this.hitChanceType = hitChanceType;
         this.isLoudOverride = isLoudOverride;
     }
 
@@ -110,7 +108,7 @@ public class WeaponAttackType {
             case SINGLE -> {
                 for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                        actions.add(new ActionAttackBasic(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
+                        actions.add(new ActionAttackBasic(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                     }
                 }
             }
@@ -118,14 +116,14 @@ public class WeaponAttackType {
                 for (Actor target : subject.getLineOfSightActors()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
-                            actions.add(new ActionAttackLimb(this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
+                            actions.add(new ActionAttackLimb(this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                         }
                     }
                 }
             }
             case SPREAD -> {
                 for (Area target : subject.getVisibleAreas().keySet()) {
-                    actions.add(new ActionAttackArea(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
+                    actions.add(new ActionAttackArea(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                 }
             }
         }
@@ -145,7 +143,7 @@ public class WeaponAttackType {
             case SINGLE -> {
                 for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                        actions.add(new ActionAttackBasic(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
+                        actions.add(new ActionAttackBasic(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                     }
                 }
             }
@@ -153,14 +151,14 @@ public class WeaponAttackType {
                 for (Actor target : subject.getLineOfSightActors()) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
-                            actions.add(new ActionAttackLimb(this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
+                            actions.add(new ActionAttackLimb(this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                         }
                     }
                 }
             }
             case SPREAD -> {
                 for (Area target : subject.getVisibleAreas().keySet()) {
-                    actions.add(new ActionAttackArea(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, hitChanceType, isLoud));
+                    actions.add(new ActionAttackArea(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                 }
             }
         }
