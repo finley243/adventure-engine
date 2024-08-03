@@ -65,7 +65,7 @@ public class JSwitchPanel extends JPanel {
             }
             categoryByID.put(category.getCategoryID(), category);
         }
-        JPanel topLevelPanel = new JChoiceMenuPanel(game, this, null, topLevelCategories, topLevelActions, endTurnIndex);
+        JPanel topLevelPanel = new JChoiceMenuPanel(game, this, null, null, topLevelCategories, topLevelActions, endTurnIndex);
         addChoicePanel(topLevelPanel, TOP_LEVEL_MENU);
         Set<String> combinedCategories = new HashSet<>();
         combinedCategories.addAll(actions.keySet());
@@ -74,13 +74,24 @@ public class JSwitchPanel extends JPanel {
             String parentCategory = parentCategories.getOrDefault(categoryID, TOP_LEVEL_MENU);
             List<MenuChoice> actionData = actions.getOrDefault(categoryID, new ArrayList<>());
             List<MenuCategory> categoryData = categories.getOrDefault(categoryID, new ArrayList<>());
+            String categoryTitle = categoryByID.get(categoryID).getName();
+            String lastCategoryID = parentCategory;
+            while (lastCategoryID != null && !lastCategoryID.equals(TOP_LEVEL_MENU)) {
+                String parentName = categoryByID.get(lastCategoryID).getName();
+                if (categoryTitle == null) {
+                    categoryTitle = parentName;
+                } else {
+                    categoryTitle = parentName + " / " + categoryTitle;
+                }
+                lastCategoryID = parentCategories.get(lastCategoryID);
+            }
             JPanel categoryPanel;
             if (categoryByID.get(categoryID).getType() == MenuCategory.CategoryType.INVENTORY_TRANSFER) {
-                categoryPanel = new JChoiceMenuDetailsDoublePanel(game, this, parentCategory, categoryData, actionData, endTurnIndex);
+                categoryPanel = new JChoiceMenuDetailsDoublePanel(game, this, parentCategory, categoryTitle, categoryData, actionData, endTurnIndex);
             } else if (categoryByID.get(categoryID).showDetails()) {
-                categoryPanel = new JChoiceMenuDetailsPanel(game, this, parentCategory, categoryData, actionData, endTurnIndex);
+                categoryPanel = new JChoiceMenuDetailsPanel(game, this, parentCategory, categoryTitle, categoryData, actionData, endTurnIndex);
             } else {
-                categoryPanel = new JChoiceMenuPanel(game, this, parentCategory, categoryData, actionData, endTurnIndex);
+                categoryPanel = new JChoiceMenuPanel(game, this, parentCategory, categoryTitle, categoryData, actionData, endTurnIndex);
             }
             addChoicePanel(categoryPanel, categoryID);
         }

@@ -34,7 +34,7 @@ public class JChoiceMenuDetailsDoublePanel extends JPanel {
     private final Game game;
     private final JSwitchPanel switchPanel;
 
-    public JChoiceMenuDetailsDoublePanel(Game game, JSwitchPanel switchPanel, String parentCategory, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
+    public JChoiceMenuDetailsDoublePanel(Game game, JSwitchPanel switchPanel, String parentCategory, String categoryTitle, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
         this.game = game;
         this.switchPanel = switchPanel;
         setLayout(new GridBagLayout());
@@ -79,7 +79,7 @@ public class JChoiceMenuDetailsDoublePanel extends JPanel {
         int layoutIndexLeft = 0;
         int layoutIndexRight = 0;
         if (parentCategory != null) {
-            JComponent backButton = getBackButton();
+            JComponent backButton = getBackButton(categoryTitle);
             listPanelLeft.add(backButton, generateConstraintsButtons(0, layoutIndexLeft, 1, 1, 1, 0));
             layoutIndexLeft++;
         }
@@ -148,8 +148,8 @@ public class JChoiceMenuDetailsDoublePanel extends JPanel {
         return actionButton;
     }
 
-    private JComponent getBackButton() {
-        return new JBackButton(switchPanel);
+    private JComponent getBackButton(String categoryTitle) {
+        return new JBackButton(switchPanel, categoryTitle);
     }
 
     private JComponent getCategoryButton(MenuCategory category) {
