@@ -59,6 +59,6 @@ searchContainer:$actor search$es through $container.
 vendingMachineBuy:$actor press$es the order button and $item drops into the tray.
 jackIn:$actor jack$s into $object.
 jackOut:$actor jack$s out of $object.
-pickUpActor:$actor pick$s up $target and sling$s $target over $actor's shoulder.
+pickUpActor:$actor pick$s up $target, slinging $target over $actor's shoulder.
 putDownActor:$actor {set$s|put$s} $target {down|on the ground}.
 punchAttack:$actor ([success]punch$es $target|tr$ies to punch $target, but $actor miss$es).
