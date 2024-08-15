@@ -588,11 +588,8 @@ public class DataLoader {
         int countMin = LoadUtils.attributeInt(entryElement, "countMin", count);
         int countMax = LoadUtils.attributeInt(entryElement, "countMax", count);
         String modTable = LoadUtils.attribute(entryElement, "modTable", null);
-        String modItem = LoadUtils.attribute(entryElement, "modItem", null);
         float modChance = LoadUtils.attributeFloat(entryElement, "modChance", 1.0f);
-        boolean modIsTable = modTable != null;
-        String modReference = modIsTable ? modTable : modItem;
-        return new LootTableEntry(referenceID, isTable, chance, countMin, countMax, modReference, modIsTable, modChance);
+        return new LootTableEntry(referenceID, isTable, chance, countMin, countMax, modTable, modChance);
     }
 
     private static Room loadRoom(Game game, Element roomElement) {

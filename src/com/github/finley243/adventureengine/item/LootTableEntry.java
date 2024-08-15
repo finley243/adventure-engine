@@ -16,18 +16,16 @@ public class LootTableEntry {
 	private final float chance;
 	private final int countMin;
 	private final int countMax;
-	private final String modReference;
-	private final boolean modIsTable;
+	private final String modTable;
 	private final float modChance;
 	
-	public LootTableEntry(String referenceID, boolean isLootTable, float chance, int countMin, int countMax, String modReference, boolean modIsTable, float modChance) {
+	public LootTableEntry(String referenceID, boolean isLootTable, float chance, int countMin, int countMax, String modTable, float modChance) {
 		this.referenceID = referenceID;
 		this.isLootTable = isLootTable;
 		this.chance = chance;
 		this.countMin = countMin;
 		this.countMax = countMax;
-		this.modReference = modReference;
-		this.modIsTable = modIsTable;
+		this.modTable = modTable;
 		this.modChance = modChance;
 	}
 
@@ -42,28 +40,21 @@ public class LootTableEntry {
 			} else {
 				for (int i = 0; i < count; i++) {
 					Item itemInstance = ItemFactory.create(game, referenceID);
-					if (modReference != null && itemInstance.hasComponentOfType(ItemComponentModdable.class) && MathUtils.randomCheck(modChance)) {
-						if (modIsTable) {
-							Inventory modInventory = new Inventory(game, null);
-							game.data().getLootTable(modReference).generateItems(game, inventory);
-							for (Map.Entry<Item, Integer> entry : modInventory.getItemMap().entrySet()) {
-								Item modItem = entry.getKey();
-								int modCount = entry.getValue();
-								if (modItem.hasComponentOfType(ItemComponentMod.class)) {
-									for (int j = 0; j < modCount; j++) {
-										if (itemInstance.getComponentOfType(ItemComponentModdable.class).canInstallMod(modItem)) {
-											itemInstance.getComponentOfType(ItemComponentModdable.class).installMod(modItem);
-										}
+					if (modTable != null && itemInstance.hasComponentOfType(ItemComponentModdable.class) && MathUtils.randomCheck(modChance)) {
+						Inventory modInventory = new Inventory(game, null);
+						game.data().getLootTable(modTable).generateItems(game, inventory);
+						for (Map.Entry<Item, Integer> entry : modInventory.getItemMap().entrySet()) {
+							Item modItem = entry.getKey();
+							int modCount = entry.getValue();
+							if (modItem.hasComponentOfType(ItemComponentMod.class)) {
+								for (int j = 0; j < modCount; j++) {
+									if (itemInstance.getComponentOfType(ItemComponentModdable.class).canInstallMod(modItem)) {
+										itemInstance.getComponentOfType(ItemComponentModdable.class).installMod(modItem);
 									}
 								}
 							}
-							modInventory.clear();
-						} else {
-							Item modItem = ItemFactory.create(game, modReference);
-							if (modItem.hasComponentOfType(ItemComponentMod.class)) {
-								itemInstance.getComponentOfType(ItemComponentModdable.class).installMod(modItem);
-							}
 						}
+						modInventory.clear();
 					}
 					inventory.addItem(itemInstance);
 				}
