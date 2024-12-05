@@ -91,6 +91,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private int sleepCounter;
 	private boolean playerControlled;
 	private final StatStringSet tags;
+	private final Map<String, List<Script>> scripts;
 
 	public Actor(Game game, String ID, String nameDescriptor, Area area, String templateID, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControlled) {
 		super(game, ID);
@@ -124,6 +125,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.startDisabled = startDisabled;
 		this.playerControlled = playerControlled;
 		this.tags = new StatStringSet("tags", this);
+		this.scripts = new HashMap<>();
 		setEnabled(!startDisabled);
 	}
 
@@ -1072,9 +1074,30 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		};
 	}
 
+	public void addScript(String trigger, Script script) {
+		if (!scripts.containsKey(trigger)) {
+			scripts.put(trigger, new ArrayList<>());
+		}
+		scripts.get(trigger).add(script);
+	}
+
+	public void removeScript(String trigger, Script script) {
+		if (scripts.containsKey(trigger)) {
+			scripts.get(trigger).remove(script);
+		}
+		if (scripts.get(trigger).isEmpty()) {
+			scripts.remove(trigger);
+		}
+	}
+
 	public void triggerScript(String trigger, Context context) {
 		for (Script currentScript : getTemplate().getScripts(trigger)) {
 			currentScript.execute(context);
+		}
+		if (scripts.containsKey(trigger)) {
+			for (Script currentScript : scripts.get(trigger)) {
+				currentScript.execute(context);
+			}
 		}
 	}
 
