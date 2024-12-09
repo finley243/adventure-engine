@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.ThreadControl;
+import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.*;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -33,6 +34,7 @@ public class Game {
 	private final ThreadControl threadControl;
 
 	private final Data data;
+	private final QuestManager questManager;
 
 	private boolean continueGame;
 	private List<Actor> turnOrder;
@@ -45,6 +47,7 @@ public class Game {
 		threadControl = new ThreadControl(this);
 		eventBus().register(menuManager);
 		data = new Data(this);
+		questManager = new QuestManager();
 
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
 
@@ -93,6 +96,10 @@ public class Game {
 
 	public Data data() {
 		return data;
+	}
+
+	public QuestManager questManager() {
+		return questManager;
 	}
 	
 	/** Simple game loop that runs nextRound until continueGameLoop is false */

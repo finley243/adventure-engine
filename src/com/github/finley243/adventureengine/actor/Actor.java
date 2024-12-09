@@ -720,6 +720,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	private void nextAction(Action lastAction, int repeatActionCount) {
+		game().questManager().update();
 		if (!isPlayerControlled()) {
 			updatePursueTargets();
 			getTargetingComponent().update();
