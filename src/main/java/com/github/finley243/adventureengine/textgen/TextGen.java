@@ -12,14 +12,22 @@ import java.util.regex.Pattern;
 
 public class TextGen {
 
+	private static final Set<Character> VALID_OPEN_BRACKETS = Set.of('(', '{', '[');
+	private static final Set<Character> VALID_CLOSE_BRACKETS = Set.of(')', '}', ']');
 	private static final char RANDOM_OPEN = '{';
-	private static final char RANDOM_CLOSE = '}';
 	private static final char RANDOM_SEPARATOR = '|';
 	private static final char CONDITIONAL_OPEN = '(';
-	private static final char CONDITIONAL_CLOSE = ')';
 	private static final char CONDITIONAL_SEPARATOR = '|';
 	private static final char CONDITIONAL_CONDITION_OPEN = '[';
 	private static final char CONDITIONAL_CONDITION_CLOSE = ']';
+
+	private static final Map<Integer, String> PLURAL_DESCRIPTORS = new TreeMap<>() {{
+		// Integer value represents a maximum count for the descriptor.
+		// Descriptors must be arranged in ascending order.
+		put(2, "a couple of ");
+		put(5, "several ");
+	}};
+	private static final String DEFAULT_PLURAL_DESCRIPTOR = "some ";
 
 	private static final Map<String, String> VERB_MAP = new HashMap<>() {{
 		// e.g. jumps
@@ -126,7 +134,7 @@ public class TextGen {
 			} else if (line.charAt(i) == CONDITIONAL_OPEN) {
 				return processBlockStatements(evaluateConditionals(line, context, originalLine), i, context, originalLine);
 			} else if (line.charAt(i) == '@') {
-				return processBlockStatements(populatePhraseReferences(line, context, originalLine), i, context, originalLine);
+				return processBlockStatements(populatePhraseReferences(line, context), i, context, originalLine);
 			}
 		}
 		return line;
@@ -148,7 +156,7 @@ public class TextGen {
 		for (int i = 0; i < conditionalBranches.size(); i++) {
 			String currentBranch = conditionalBranches.get(i);
 			if (i < conditionalBranches.size() - 1 && currentBranch.charAt(0) != CONDITIONAL_CONDITION_OPEN) {
-				throw new IllegalArgumentException("Conditional branch is missing condition");
+				throw new IllegalArgumentException("Non-default conditional branch is missing condition");
 			}
 			if (i == conditionalBranches.size() - 1 && currentBranch.charAt(0) != CONDITIONAL_CONDITION_OPEN) {
 				return currentBranch;
@@ -166,7 +174,7 @@ public class TextGen {
 		return "";
 	}
 
-	private static String populatePhraseReferences(String line, Context context, String originalLine) {
+	private static String populatePhraseReferences(String line, Context context) {
 		Pattern tokenPattern = Pattern.compile("@([a-zA-Z0-9_]+)");
 		Matcher tokenMatcher = tokenPattern.matcher(line);
 		StringBuilder builder = new StringBuilder();
@@ -195,11 +203,9 @@ public class TextGen {
 		Matcher tokenMatcher = tokenPattern.matcher(line);
 		List<TextToken> tokens = new ArrayList<>();
 		while (tokenMatcher.find()) {
-			int start = tokenMatcher.start();
-			int end = tokenMatcher.end();
 			String value = tokenMatcher.group(1);
 			boolean isVerb = VERB_MAP.containsKey(value);
-			tokens.add(new TextToken(start, end, value, isVerb));
+			tokens.add(new TextToken(tokenMatcher.start(), tokenMatcher.end(), value, isVerb));
 		}
 		for (int i = 0; i < tokens.size(); i++) {
 			TextToken currentToken = tokens.get(i);
@@ -264,50 +270,48 @@ public class TextGen {
 	}
 
 	private static String replaceInsideBracketsWithResult(String line, char openBracketType, Context context, String originalLine, TextProcessor processor) {
-		List<String> parts = new ArrayList<>();
+		StringBuilder newLine = new StringBuilder();
 		int openIndex = -1;
 		int closeIndex = -1;
 		Deque<Character> openBracketStack = new ArrayDeque<>();
 		for (int i = 0; i < line.length(); i++) {
-			if (line.charAt(i) == '(' || line.charAt(i) == '{' || line.charAt(i) == '[') {
-				if (openBracketStack.isEmpty() && line.charAt(i) == openBracketType) {
+			char currentChar = line.charAt(i);
+			if (VALID_OPEN_BRACKETS.contains(currentChar)) {
+				if (openBracketStack.isEmpty() && currentChar == openBracketType) {
 					openIndex = i;
 				}
-				openBracketStack.push(line.charAt(i));
-			} else if (line.charAt(i) == ')' || line.charAt(i) == '}' || line.charAt(i) == ']') {
+				openBracketStack.push(currentChar);
+			} else if (VALID_CLOSE_BRACKETS.contains(currentChar)) {
 				if (openBracketStack.isEmpty()) throw new IllegalArgumentException("Unmatched close bracket");
-				if (line.charAt(i) == getCorrespondingCloseBracket(openBracketStack.peek())) {
-					char lastOpenBracket = openBracketStack.pop();
-					if (lastOpenBracket == openBracketType && openBracketStack.isEmpty()) {
-						String bracketContents = line.substring(openIndex + 1, i);
-						parts.add(line.substring(closeIndex + 1, openIndex));
-						parts.add(processor.process(bracketContents, context, originalLine));
-						closeIndex = i;
-					}
+				if (currentChar != getCorrespondingCloseBracket(openBracketStack.peek())) throw new IllegalArgumentException("Mismatched brackets");
+				char lastOpenBracket = openBracketStack.pop();
+				if (lastOpenBracket == openBracketType && openBracketStack.isEmpty()) {
+					String bracketContents = line.substring(openIndex + 1, i);
+					newLine.append(line, closeIndex + 1, openIndex);
+					newLine.append(processor.process(bracketContents, context, originalLine));
+					closeIndex = i;
 				}
 			}
 		}
 		if (!openBracketStack.isEmpty()) throw new IllegalArgumentException("Unmatched open bracket");
-		parts.add(line.substring(closeIndex + 1));
-		StringBuilder newLine = new StringBuilder();
-		for (String current : parts) {
-			newLine.append(current);
-		}
+		newLine.append(line.substring(closeIndex + 1));
 		return newLine.toString();
 	}
 
 	private static List<String> getSeparatedStrings(String line, char separator) {
-		if (separator == '(' || separator == ')' || separator == '{' || separator == '}' || separator == '[' || separator == ']') throw new IllegalArgumentException("Separator cannot be a bracket");
+		if (VALID_OPEN_BRACKETS.contains(separator) || VALID_CLOSE_BRACKETS.contains(separator)) throw new IllegalArgumentException("Separator cannot be a bracket");
 		List<String> parts = new ArrayList<>();
 		int lastSeparatorIndex = -1;
 		Deque<Character> openBracketStack = new ArrayDeque<>();
 		for (int i = 0; i < line.length(); i++) {
-			if (line.charAt(i) == '(' || line.charAt(i) == '{' || line.charAt(i) == '[') {
-				openBracketStack.push(line.charAt(i));
-			} else if (line.charAt(i) == ')' || line.charAt(i) == '}' || line.charAt(i) == ']') {
+			char currentChar = line.charAt(i);
+			if (VALID_OPEN_BRACKETS.contains(currentChar)) {
+				openBracketStack.push(currentChar);
+			} else if (VALID_CLOSE_BRACKETS.contains(currentChar)) {
 				if (openBracketStack.isEmpty()) throw new IllegalArgumentException("Unmatched close bracket");
+				if (currentChar != getCorrespondingCloseBracket(openBracketStack.peek())) throw new IllegalArgumentException("Mismatched brackets");
 				openBracketStack.pop();
-			} else if (line.charAt(i) == separator && openBracketStack.isEmpty()) {
+			} else if (currentChar == separator && openBracketStack.isEmpty()) {
 				parts.add(line.substring(lastSeparatorIndex + 1, i));
 				lastSeparatorIndex = i;
 			}
@@ -325,32 +329,25 @@ public class TextGen {
 	}
 
 	private static String formatNoun(String name, boolean isProper, boolean isDefinite, int pluralCount) {
+		if (pluralCount < 1) throw new IllegalArgumentException("Plural count is less than 1");
 		if (isProper) {
 			return name;
-		} else if (pluralCount == 1) {
-			if (!isDefinite) {
-				boolean startsWithVowel = "aeiou".indexOf(name.charAt(0)) >= 0;
-				if (startsWithVowel) {
-					return "an " + name;
-				} else {
-					return "a " + name;
-				}
-			} else {
+		}
+		if (pluralCount == 1) {
+			if (isDefinite) {
 				return "the " + name;
 			}
-		} else {
-			if (!isDefinite) {
-				if (pluralCount == 2) {
-					return "a couple of " + name;
-				} else if (pluralCount <= 5) {
-					return "several " + name;
-				} else {
-					return "some " + name;
-				}
-			} else {
-				return "the " + name;
+			return LangUtils.isVowel(name.charAt(0)) ? "an " + name : "a " + name;
+        }
+		if (isDefinite) {
+			return "the " + name;
+		}
+		for (Map.Entry<Integer, String> entry : PLURAL_DESCRIPTORS.entrySet()) {
+			if (pluralCount <= entry.getKey()) {
+				return entry.getValue() + name;
 			}
 		}
+		return DEFAULT_PLURAL_DESCRIPTOR + name;
 	}
 
 	// Returns whether there is a matching (and used) pronoun in context that is below the given index
@@ -377,18 +374,15 @@ public class TextGen {
 		public final int end;
 		public final String value;
 		public final boolean isVerb;
-		public boolean isSubject;
-		public boolean usedPronoun;
-		public TextToken subjectToken;
+		public boolean isSubject = false;
+		public boolean usedPronoun = false;
+		public TextToken subjectToken = null;
 
 		TextToken(int start, int end, String value, boolean isVerb) {
 			this.start = start;
 			this.end = end;
 			this.value = value;
 			this.isVerb = isVerb;
-			this.isSubject = false;
-			this.usedPronoun = false;
-			this.subjectToken = null;
 		}
 	}
 

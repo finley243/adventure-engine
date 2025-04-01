@@ -7,7 +7,7 @@ public class LangUtils {
 		String lastTwoLetters = noun.substring(noun.length() - 2);
 		if (lastLetter.equals("s") || lastLetter.equals("x") || lastLetter.equals("z") || lastTwoLetters.equals("ch") || lastTwoLetters.equals("sh")) {
 			return noun + "es";
-		} else if (lastLetter.equals("y") && "aeiou".indexOf(noun.charAt(noun.length() - 2)) < 0) { // Second to last character is not a vowel
+		} else if (lastLetter.equals("y") && !isVowel(noun.charAt(noun.length() - 2))) { // Second to last character is not a vowel
 			return noun.substring(0, noun.length() - 1) + "ies";
 		} else {
 			return noun + "s";
@@ -58,7 +58,7 @@ public class LangUtils {
 	
 	public static String addArticle(String word, boolean indefinite) {
 		if (indefinite) {
-			boolean startsWithVowel = "aeiou".indexOf(word.charAt(0)) >= 0;
+			boolean startsWithVowel = isVowel(word.charAt(0));
 			if (startsWithVowel) {
 				return "an " + word;
 			} else {
@@ -67,6 +67,10 @@ public class LangUtils {
 		} else {
 			return "the " + word;
 		}
+	}
+
+	public static boolean isVowel(char c) {
+		return "aeiou".indexOf(c) >= 0;
 	}
 	
 }
