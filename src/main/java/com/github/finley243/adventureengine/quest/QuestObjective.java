@@ -14,6 +14,7 @@ public class QuestObjective extends GameInstanced implements StatHolder {
         OPEN, COMPLETED, FAILED
     }
 
+    private final Quest parentQuest;
     private final String name;
     private final String description;
 
@@ -29,8 +30,9 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     private boolean isActive;
     private State state;
 
-    public QuestObjective(Game game, String ID, String name, String description, Condition completionCondition, Condition failureCondition, Script activateScript, Script deactivateScript, Script completionScript, Script failureScript) {
+    public QuestObjective(Game game, String ID, Quest parentQuest, String name, String description, Condition completionCondition, Condition failureCondition, Script activateScript, Script deactivateScript, Script completionScript, Script failureScript) {
         super(game, ID);
+        this.parentQuest = parentQuest;
         this.name = name;
         this.description = description;
         this.completionCondition = completionCondition;
@@ -41,6 +43,10 @@ public class QuestObjective extends GameInstanced implements StatHolder {
         this.failureScript = failureScript;
         this.isActive = false;
         this.state = State.OPEN;
+    }
+
+    public Quest getParentQuest() {
+        return parentQuest;
     }
 
     public String getName() {
@@ -68,10 +74,12 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     public void setActive(boolean active) {
         if (isActive != active) {
             if (active) {
+                game().questManager().addActiveObjective(this);
                 if (activateScript != null) {
                     activateScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
                 }
             } else {
+                game().questManager().removeActiveObjective(this);
                 if (deactivateScript != null) {
                     deactivateScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
                 }
