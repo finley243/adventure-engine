@@ -7,6 +7,9 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataArea;
+import com.github.finley243.adventureengine.textgen.MultiNoun;
+import com.github.finley243.adventureengine.textgen.Noun;
+import com.github.finley243.adventureengine.textgen.PluralNoun;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.path.PathDataArea;
@@ -77,6 +80,28 @@ public class ActionInspectArea extends Action {
                 phrase = "There $is $area.";
             }
             subject.game().eventBus().post(new RenderTextEvent(TextGen.generate(phrase, context, context.generateTextContext())));
+
+            List<Noun> visibleObjects = currentArea.getObjects().stream()
+                    .map(object -> (Noun) object)
+                    .toList();
+            List<Noun> visibleActors = currentArea.getActors().stream()
+                    .filter(actor -> !actor.equals(subject)) // Exclude the subject actor
+                    .map(actor -> (Noun) actor)
+                    .toList();
+            List<Noun> visibleItems = currentArea.getInventory().getItemMap().entrySet().stream()
+                    .map(entry -> entry.getValue() == 1
+                            ? (Noun) entry.getKey()
+                            : new PluralNoun((Noun) entry.getKey(), entry.getValue()))
+                    .toList();
+            List<Noun> areaContents = new ArrayList<>();
+            areaContents.addAll(visibleObjects);
+            areaContents.addAll(visibleActors);
+            areaContents.addAll(visibleItems);
+            if (!areaContents.isEmpty()) {
+                context.setLocalVariable("areaContents", Expression.constantNoun(new MultiNoun(areaContents)));
+                String areaContentsPhrase = "$relativeName $area, there $is $areaContents.";
+                subject.game().eventBus().post(new RenderTextEvent(TextGen.generate(areaContentsPhrase, context, context.generateTextContext())));
+            }
         }
         TextGen.clearContext();
         area.triggerScript("on_inspect", subject, subject);
