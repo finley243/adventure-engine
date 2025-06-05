@@ -95,4 +95,8 @@ public class MultiNoun implements Noun {
         return TextContext.Pronoun.THEY;
     }
 
+    public Noun getFirstNoun() {
+        return nouns.getFirst();
+    }
+
 }

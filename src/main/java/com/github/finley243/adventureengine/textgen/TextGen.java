@@ -249,7 +249,14 @@ public class TextGen {
 				builder.append(context.getObjects().get(objectKey).getName());
 			} else if (VERB_MAP.containsKey(tokenName)) {
 				Noun subject = context.getObjects().get(getSubjectKeyFromToken(token.subjectToken));
-				boolean useThirdPerson = subject.pluralCount() <= 1 && subject.getPronoun().thirdPersonVerb;
+				boolean isThereConstruction = token.value.equals("is") && token.start - 6 >= 0 && line.startsWith("there ", token.start - 6);
+                boolean useThirdPerson;
+                if (isThereConstruction && token.subjectToken != null && subject instanceof MultiNoun multiNoun) {
+                    Noun firstNoun = multiNoun.getFirstNoun();
+                    useThirdPerson = firstNoun.pluralCount() <= 1 && firstNoun.getPronoun().thirdPersonVerb;
+                } else {
+                    useThirdPerson = subject.pluralCount() <= 1 && subject.getPronoun().thirdPersonVerb;
+                }
 				String conjugatedVerb = useThirdPerson ? tokenName : VERB_MAP.get(tokenName);
 				builder.append(conjugatedVerb);
 			} else {
