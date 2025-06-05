@@ -367,15 +367,7 @@ public class ScriptParser {
         Script valueScript = parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
         int lineStart = tokens.getFirst().line;
         String fileName = tokens.getFirst().fileName;
-        Script valueScriptWithOperators = switch (tokens.get(assignmentOperatorIndex).type) {
-            case ASSIGNMENT -> valueScript;
-            case MODIFIER_PLUS -> new ScriptAdd(new Script.ScriptTraceData(lineStart, fileName), new ScriptListIndexGetInternal(new Script.ScriptTraceData(lineStart, fileName), listScript, indexScript), valueScript);
-            case MODIFIER_MINUS -> new ScriptSubtract(new Script.ScriptTraceData(lineStart, fileName), new ScriptListIndexGetInternal(new Script.ScriptTraceData(lineStart, fileName), listScript, indexScript), valueScript);
-            case MODIFIER_MULTIPLY -> new ScriptMultiply(new Script.ScriptTraceData(lineStart, fileName), new ScriptListIndexGetInternal(new Script.ScriptTraceData(lineStart, fileName), listScript, indexScript), valueScript);
-            case MODIFIER_DIVIDE -> new ScriptDivide(new Script.ScriptTraceData(lineStart, fileName), new ScriptListIndexGetInternal(new Script.ScriptTraceData(lineStart, fileName), listScript, indexScript), valueScript);
-            case MODIFIER_MODULO -> new ScriptModulo(new Script.ScriptTraceData(lineStart, fileName), new ScriptListIndexGetInternal(new Script.ScriptTraceData(lineStart, fileName), listScript, indexScript), valueScript);
-            default -> throw new IllegalArgumentException("Not a valid assignment operator");
-        };
+        Script valueScriptWithOperators = applyAssignmentOperator(tokens.get(assignmentOperatorIndex).type, new ScriptListIndexGetInternal(new Script.ScriptTraceData(lineStart, fileName), listScript, indexScript), valueScript, new Script.ScriptTraceData(lineStart, fileName));
         return new ScriptListIndexSetInternal(new Script.ScriptTraceData(lineStart, fileName), listScript, indexScript, valueScriptWithOperators);
     }
 
@@ -398,15 +390,7 @@ public class ScriptParser {
         Script valueScript = parseExpression(tokens.subList(assignmentOperatorIndex + 1, tokens.size()));
         int lineStart = tokens.getFirst().line;
         String fileName = tokens.getFirst().fileName;
-        Script valueScriptWithOperators = switch (tokens.get(assignmentOperatorIndex).type) {
-            case ASSIGNMENT -> valueScript;
-            case MODIFIER_PLUS -> new ScriptAdd(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetStat(new Script.ScriptTraceData(lineStart, fileName), statReference.statHolder(), statReference.name()), valueScript);
-            case MODIFIER_MINUS -> new ScriptSubtract(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetStat(new Script.ScriptTraceData(lineStart, fileName), statReference.statHolder(), statReference.name()), valueScript);
-            case MODIFIER_MULTIPLY -> new ScriptMultiply(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetStat(new Script.ScriptTraceData(lineStart, fileName), statReference.statHolder(), statReference.name()), valueScript);
-            case MODIFIER_DIVIDE -> new ScriptDivide(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetStat(new Script.ScriptTraceData(lineStart, fileName), statReference.statHolder(), statReference.name()), valueScript);
-            case MODIFIER_MODULO -> new ScriptModulo(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetStat(new Script.ScriptTraceData(lineStart, fileName), statReference.statHolder(), statReference.name()), valueScript);
-            default -> throw new IllegalArgumentException("Not a valid assignment operator");
-        };
+        Script valueScriptWithOperators = applyAssignmentOperator(tokens.get(assignmentOperatorIndex).type, new ScriptGetStat(new Script.ScriptTraceData(lineStart, fileName), statReference.statHolder(), statReference.name()), valueScript, new Script.ScriptTraceData(lineStart, fileName));
         return new ScriptSetStat(new Script.ScriptTraceData(lineStart, fileName), statReference.statHolder(), statReference.name(), valueScriptWithOperators);
     }
 
@@ -417,15 +401,7 @@ public class ScriptParser {
         Script valueScript = parseExpression(tokens.subList(4, tokens.size()));
         int lineStart = tokens.getFirst().line;
         String fileName = tokens.getFirst().fileName;
-        Script valueScriptWithOperators = switch (tokens.get(3).type) {
-            case ASSIGNMENT -> valueScript;
-            case MODIFIER_PLUS -> new ScriptAdd(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetGlobal(new Script.ScriptTraceData(lineStart, fileName), globalName), valueScript);
-            case MODIFIER_MINUS -> new ScriptSubtract(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetGlobal(new Script.ScriptTraceData(lineStart, fileName), globalName), valueScript);
-            case MODIFIER_MULTIPLY -> new ScriptMultiply(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetGlobal(new Script.ScriptTraceData(lineStart, fileName), globalName), valueScript);
-            case MODIFIER_DIVIDE -> new ScriptDivide(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetGlobal(new Script.ScriptTraceData(lineStart, fileName), globalName), valueScript);
-            case MODIFIER_MODULO -> new ScriptModulo(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetGlobal(new Script.ScriptTraceData(lineStart, fileName), globalName), valueScript);
-            default -> throw new IllegalArgumentException("Not a valid assignment operator");
-        };
+        Script valueScriptWithOperators = applyAssignmentOperator(tokens.get(3).type, new ScriptGetGlobal(new Script.ScriptTraceData(lineStart, fileName), globalName), valueScript, new Script.ScriptTraceData(lineStart, fileName));
         return new ScriptSetGlobal(new Script.ScriptTraceData(lineStart, fileName), globalName, valueScriptWithOperators);
     }
 
@@ -434,15 +410,7 @@ public class ScriptParser {
         Script valueScript = parseExpression(tokens.subList(2, tokens.size()));
         int lineStart = tokens.getFirst().line;
         String fileName = tokens.getFirst().fileName;
-        Script valueScriptWithOperators = switch (tokens.get(1).type) {
-            case ASSIGNMENT -> valueScript;
-            case MODIFIER_PLUS -> new ScriptAdd(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetVariable(new Script.ScriptTraceData(lineStart, fileName), variableName), valueScript);
-            case MODIFIER_MINUS -> new ScriptSubtract(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetVariable(new Script.ScriptTraceData(lineStart, fileName), variableName), valueScript);
-            case MODIFIER_MULTIPLY -> new ScriptMultiply(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetVariable(new Script.ScriptTraceData(lineStart, fileName), variableName), valueScript);
-            case MODIFIER_DIVIDE -> new ScriptDivide(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetVariable(new Script.ScriptTraceData(lineStart, fileName), variableName), valueScript);
-            case MODIFIER_MODULO -> new ScriptModulo(new Script.ScriptTraceData(lineStart, fileName), new ScriptGetVariable(new Script.ScriptTraceData(lineStart, fileName), variableName), valueScript);
-            default -> throw new IllegalArgumentException("Not a valid assignment operator");
-        };
+        Script valueScriptWithOperators = applyAssignmentOperator(tokens.get(1).type, new ScriptGetVariable(new Script.ScriptTraceData(lineStart, fileName), variableName), valueScript, new Script.ScriptTraceData(lineStart, fileName));
         return new ScriptSetVariable(new Script.ScriptTraceData(lineStart, fileName), variableName, valueScriptWithOperators, false);
     }
 
@@ -747,6 +715,18 @@ public class ScriptParser {
         if (tokens.get(2).type != ScriptTokenType.NAME) throw new IllegalArgumentException("Game value reference has invalid name");
         String gameValueName = tokens.get(2).value;
         return new ScriptGetGameValue(new Script.ScriptTraceData(tokens.getFirst().line, tokens.getFirst().fileName), gameValueName);
+    }
+
+    private static Script applyAssignmentOperator(ScriptTokenType operator, Script leftValue, Script rightValue, Script.ScriptTraceData trace) {
+        return switch(operator) {
+            case ASSIGNMENT -> rightValue;
+            case MODIFIER_PLUS -> new ScriptAdd(trace, leftValue, rightValue);
+            case MODIFIER_MINUS -> new ScriptSubtract(trace, leftValue, rightValue);
+            case MODIFIER_MULTIPLY -> new ScriptMultiply(trace, leftValue, rightValue);
+            case MODIFIER_DIVIDE -> new ScriptDivide(trace, leftValue, rightValue);
+            case MODIFIER_MODULO -> new ScriptModulo(trace, leftValue, rightValue);
+            default -> throw new IllegalArgumentException("Not a valid assignment operator");
+        };
     }
 
     private static int findFirstTokenIndex(List<ScriptToken> tokens, ScriptTokenType type, int startIndex) {
