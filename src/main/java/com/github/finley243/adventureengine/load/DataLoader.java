@@ -54,7 +54,8 @@ public class DataLoader {
             File[] files = dir.listFiles();
             assert files != null;
             for (File file : files) {
-                if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase("xml")) {
+                String fileExtension = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+                if (fileExtension.equalsIgnoreCase("xml")) {
                     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                     DocumentBuilder builder = factory.newDocumentBuilder();
                     Document document = builder.parse(file);
@@ -144,13 +145,19 @@ public class DataLoader {
                         }
                         currentChild = currentChild.getNextSibling();
                     }
-                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase(SCRIPT_FILE_EXTENSION)) {
+                } else if (fileExtension.equalsIgnoreCase(SCRIPT_FILE_EXTENSION)) {
                     String fileContents = Files.readString(file.toPath());
-                    List<ScriptParser.ScriptData> functions = ScriptParser.parseFunctions(fileContents, file.getName());
+                    List<ScriptParser.ScriptData> functions;// = ScriptParser.parseFunctions(fileContents, file.getName());
+                    try {
+                        functions = ScriptParser.parseFunctions(fileContents, file.getName());
+                    } catch (ScriptCompileException e) {
+                        System.err.println(e.getFileName() + ":" + e.getLineNumber() + " - " + e.getMessage());
+                        continue; // Skip this file if there are compilation errors
+                    }
                     for (ScriptParser.ScriptData function : functions) {
                         game.data().addScript(function.name(), function);
                     }
-                } else if (file.getName().substring(file.getName().lastIndexOf(".") + 1).equalsIgnoreCase(PHRASE_FILE_EXTENSION)) {
+                } else if (fileExtension.equalsIgnoreCase(PHRASE_FILE_EXTENSION)) {
                     Phrases.load(file);
                 }
             }
@@ -181,7 +188,7 @@ public class DataLoader {
         return new SenseType(ID, name);
     }
 
-    private static ActorTemplate loadActor(Game game, Element actorElement) {
+    private static ActorTemplate loadActor(Game game, Element actorElement) throws GameDataException {
         String id = LoadUtils.attribute(actorElement, "id", null);
         String parentID = LoadUtils.attribute(actorElement, "parent", null);
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
@@ -270,7 +277,7 @@ public class DataLoader {
         return new Limb(ID, name, hitChance, damageMult, apparelSlot, hitEffects);
     }
 
-    private static Scene loadScene(Game game, Element sceneElement) {
+    private static Scene loadScene(Game game, Element sceneElement) throws GameDataException {
         if (sceneElement == null) return null;
         String sceneID = LoadUtils.attribute(sceneElement, "id", null);
         Scene.SceneType type = switch (LoadUtils.attribute(sceneElement, "type", "all")) {
@@ -296,7 +303,7 @@ public class DataLoader {
         return new Scene(game, sceneID, condition, once, priority, lines, choices, type);
     }
 
-    private static SceneLine loadSceneLine(Element lineElement, String sceneID) {
+    private static SceneLine loadSceneLine(Element lineElement, String sceneID) throws GameDataException {
         boolean once = LoadUtils.attributeBool(lineElement, "once", false);
         boolean exit = LoadUtils.attributeBool(lineElement, "exit", false);
         String redirect = LoadUtils.attribute(lineElement, "redirect", null);
@@ -329,19 +336,23 @@ public class DataLoader {
         return new SceneChoice(link, prompt);
     }
 
-    private static Condition loadCondition(Element conditionElement, String traceString) {
+    private static Condition loadCondition(Element conditionElement, String traceString) throws GameDataException {
         if (conditionElement == null) return null;
         Script conditionScript = loadExpressionScript(conditionElement, traceString);
         return new Condition(conditionScript);
     }
 
-    private static Expression loadExpressionOrAttribute(Element parentElement, String traceString) {
+    private static Expression loadExpressionOrAttribute(Element parentElement, String traceString) throws GameDataException {
         if (parentElement == null) return null;
         String expressionText = parentElement.getTextContent().trim();
-        return ScriptParser.parseLiteral(expressionText, traceString);
+        try {
+            return ScriptParser.parseLiteral(expressionText, traceString);
+        } catch (ScriptCompileException e) {
+            throw new GameDataException(e.getFileName() + ":" + e.getLineNumber() + " - " + e.getMessage());
+        }
     }
 
-    private static Map<String, List<Script>> loadScriptsWithTriggers(Element parentElement, String traceString) {
+    private static Map<String, List<Script>> loadScriptsWithTriggers(Element parentElement, String traceString) throws GameDataException {
         Map<String, List<Script>> scripts = new HashMap<>();
         for (Element scriptElement : LoadUtils.directChildrenWithName(parentElement, "script")) {
             String trigger = scriptElement.getAttribute("trigger");
@@ -354,16 +365,24 @@ public class DataLoader {
         return scripts;
     }
 
-    private static Script loadScript(Element scriptElement, String traceString) {
+    private static Script loadScript(Element scriptElement, String traceString) throws GameDataException {
         if (scriptElement == null) return null;
         String scriptText = scriptElement.getTextContent().trim();
-        return ScriptParser.parseScript(scriptText, traceString);
+        try {
+            return ScriptParser.parseScript(scriptText, traceString);
+        } catch (ScriptCompileException e) {
+            throw new GameDataException(e.getFileName() + ":" + e.getLineNumber() + " - " + e.getMessage());
+        }
     }
 
-    private static Script loadExpressionScript(Element scriptElement, String traceString) {
+    private static Script loadExpressionScript(Element scriptElement, String traceString) throws GameDataException {
         if (scriptElement == null) return null;
         String scriptText = scriptElement.getTextContent().trim();
-        return ScriptParser.parseExpression(scriptText, traceString);
+        try {
+            return ScriptParser.parseExpression(scriptText, traceString);
+        } catch (ScriptCompileException e) {
+            throw new GameDataException(e.getFileName() + ":" + e.getLineNumber() + " - " + e.getMessage());
+        }
     }
 
     private static Faction loadFaction(Game game, Element factionElement) {
@@ -386,7 +405,7 @@ public class DataLoader {
         return relations;
     }
 
-    private static ItemTemplate loadItemTemplate(Game game, Element itemElement) {
+    private static ItemTemplate loadItemTemplate(Game game, Element itemElement) throws GameDataException {
         if (itemElement == null) return null;
         String id = itemElement.getAttribute("id");
         String name = LoadUtils.singleTag(itemElement, "name", null);
@@ -402,7 +421,7 @@ public class DataLoader {
         return new ItemTemplate(game, id, name, description, scripts, components, customActions, price);
     }
 
-    private static ItemComponentTemplate loadItemComponentTemplate(Game game, Element componentElement, String itemID) {
+    private static ItemComponentTemplate loadItemComponentTemplate(Game game, Element componentElement, String itemID) throws GameDataException {
         if (componentElement == null) return null;
         String type = componentElement.getAttribute("type");
         boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "restricted", false);
@@ -489,7 +508,7 @@ public class DataLoader {
         }
     }
 
-    private static List<Effect> loadEffects(Game game, Element effectsElement) {
+    private static List<Effect> loadEffects(Game game, Element effectsElement) throws GameDataException {
         if (effectsElement == null) return new ArrayList<>();
         List<Element> effectElements = LoadUtils.directChildrenWithName(effectsElement, "effect");
         List<Effect> effects = new ArrayList<>();
@@ -499,7 +518,7 @@ public class DataLoader {
         return effects;
     }
 
-    private static Effect loadEffect(Game game, Element effectElement) {
+    private static Effect loadEffect(Game game, Element effectElement) throws GameDataException {
         if (effectElement == null) return null;
         String ID = LoadUtils.attribute(effectElement, "id", null);
         boolean manualRemoval = LoadUtils.attributeBool(effectElement, "permanent", false);
@@ -591,7 +610,7 @@ public class DataLoader {
         return new LootTableEntry(referenceID, isTable, chance, countMin, countMax, modTable, modChance);
     }
 
-    private static Room loadRoom(Game game, Element roomElement) {
+    private static Room loadRoom(Game game, Element roomElement) throws GameDataException {
         if (roomElement == null) return null;
         String roomID = roomElement.getAttribute("id");
         Element roomNameElement = LoadUtils.singleChildWithName(roomElement, "name");
@@ -606,7 +625,7 @@ public class DataLoader {
         return new Room(game, roomID, roomName, roomNameType, roomNameIsProper, roomDescription, roomOwnerFaction, restrictionType, allowAllies, roomScripts);
     }
 
-    private static Area loadArea(Game game, Element areaElement) {
+    private static Area loadArea(Game game, Element areaElement) throws GameDataException {
         if (areaElement == null) return null;
         String areaID = LoadUtils.attribute(areaElement, "id", null);
         String roomID = LoadUtils.attribute(areaElement, "room", null);
@@ -704,7 +723,7 @@ public class DataLoader {
         return new ObjectTemplate(game, ID, name, isProperName, description, maxHP, damageResistances, damageMults, scripts, customActions, networkActions, components, localVarsDefault);
     }
 
-    private static WorldObject loadObject(Game game, Element objectElement, Area area) {
+    private static WorldObject loadObject(Game game, Element objectElement, Area area) throws GameDataException {
         if (objectElement == null) return null;
         String template = LoadUtils.attribute(objectElement, "template", null);
         String id = LoadUtils.attribute(objectElement, "id", null);
@@ -776,7 +795,7 @@ public class DataLoader {
         }
     }
 
-    private static ActionTemplate loadActionTemplate(Game game, Element actionElement) {
+    private static ActionTemplate loadActionTemplate(Game game, Element actionElement) throws GameDataException {
         String ID = LoadUtils.attribute(actionElement, "id", null);
         String prompt = LoadUtils.singleTag(actionElement, "prompt", null);
         Map<String, Script> parameters = new HashMap<>();
@@ -799,7 +818,7 @@ public class DataLoader {
         return new ActionTemplate(game, ID, prompt, parameters, actionPoints, selectConditions, showCondition, script);
     }
 
-    private static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name, String traceString) {
+    private static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name, String traceString) throws GameDataException {
         List<ActionCustom.CustomActionHolder> customActions = new ArrayList<>();
         if (parentElement != null) {
             for (Element actionElement : LoadUtils.directChildrenWithName(parentElement, name)) {
@@ -833,7 +852,7 @@ public class DataLoader {
         return new LinkType(game, ID, isVisible, actorMoveAction, actorMoveDistances, vehicleMoveActions, vehicleMoveDistances);
     }
 
-    private static Actor loadActorInstance(Game game, Element actorElement, Area area) {
+    private static Actor loadActorInstance(Game game, Element actorElement, Area area) throws GameDataException {
         if (actorElement == null) return null;
         String ID = actorElement.getAttribute("id");
         String template = LoadUtils.attribute(actorElement, "template", null);
@@ -844,7 +863,7 @@ public class DataLoader {
         return ActorFactory.create(game, ID, nameDescriptor, area, template, behaviors, startDead, startDisabled);
     }
 
-    private static List<Behavior> loadBehaviors(Element behaviorsElement, String actorID) {
+    private static List<Behavior> loadBehaviors(Element behaviorsElement, String actorID) throws GameDataException {
         if (behaviorsElement == null) return new ArrayList<>();
         List<Behavior> behaviors = new ArrayList<>();
         for (Element behaviorElement : LoadUtils.directChildrenWithName(behaviorsElement, "behavior")) {
@@ -854,7 +873,7 @@ public class DataLoader {
         return behaviors;
     }
 
-    private static Behavior loadBehavior(Element behaviorElement, String actorID) {
+    private static Behavior loadBehavior(Element behaviorElement, String actorID) throws GameDataException {
         String type = LoadUtils.attribute(behaviorElement, "type", null);
         Condition condition = loadCondition(LoadUtils.singleChildWithName(behaviorElement, "condition"), "Behavior(" + actorID + ") - condition");
         Script startScript = loadScript(LoadUtils.singleChildWithName(behaviorElement, "scriptStart"), "Behavior(" + actorID + ") - start script");
@@ -898,7 +917,7 @@ public class DataLoader {
         }
     }
 
-    private static Idle loadIdle(Element idleElement, String actorID) {
+    private static Idle loadIdle(Element idleElement, String actorID) throws GameDataException {
         Condition condition = loadCondition(LoadUtils.singleChildWithName(idleElement, "condition"), "Idle(" + actorID + ") - condition");
         String phrase = LoadUtils.singleTag(idleElement, "phrase", null);
         return new Idle(condition, phrase);
@@ -916,7 +935,7 @@ public class DataLoader {
         return new WeaponClass(ID, name, isRanged, isLoud, skill, primaryRanges, ammoTypes, attackTypes);
     }
 
-    private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) {
+    private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) throws GameDataException {
         String ID = LoadUtils.attribute(attackTypeElement, "id", null);
         WeaponAttackType.AttackCategory category = LoadUtils.attributeEnum(attackTypeElement, "category", WeaponAttackType.AttackCategory.class, WeaponAttackType.AttackCategory.SINGLE);
         String prompt = LoadUtils.singleTag(attackTypeElement, "prompt", null);
