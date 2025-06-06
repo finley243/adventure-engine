@@ -21,12 +21,12 @@ public class ActionInspectObject extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		return new Context(subject.game(), subject, null, object);
+		return new Context(subject.game(), subject, null, object, null, null, this);
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		Context context = new Context(subject.game(), subject, subject, object);
+		Context context = getContext(subject);
 		subject.game().menuManager().sceneMenu(subject.game(), object.getDescription(), context, false);
 		object.triggerScript("on_inspect", context);
 	}

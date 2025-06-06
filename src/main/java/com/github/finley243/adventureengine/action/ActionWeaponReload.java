@@ -78,7 +78,8 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public int actionPoints(Actor subject) {
-		return weapon.getComponentOfType(ItemComponentMagazine.class).getReloadActionPoints(new Context(subject.game(), subject, subject, weapon, new MapBuilder<String, Expression>().put("ammo_type", new ExpressionConstantString(ammoType.getTemplateID())).build()));
+		Context context = new Context(subject.game(), subject, subject, null, weapon, null, this, new MapBuilder<String, Expression>().put("ammo_type", new ExpressionConstantString(ammoType.getTemplateID())).build());
+		return weapon.getComponentOfType(ItemComponentMagazine.class).getReloadActionPoints(context);
 	}
 
 	@Override

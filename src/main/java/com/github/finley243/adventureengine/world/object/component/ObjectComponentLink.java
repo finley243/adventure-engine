@@ -28,7 +28,6 @@ public class ObjectComponentLink extends ObjectComponent {
     }
 
     public WorldObject getLinkedObject(String linkID) {
-        Context context = new Context(getObject().game(), getObject());
         Expression linkedObjectExpression = getObject().getLocalVariable(linkID + "_object");
         if (linkedObjectExpression == null) {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - linked object local variable is missing");
@@ -43,7 +42,6 @@ public class ObjectComponentLink extends ObjectComponent {
     }
 
     public AreaLink.CompassDirection getDirection(String linkID) {
-        Context context = new Context(getObject().game(), getObject());
         Expression directionExpression = getObject().getLocalVariable(linkID + "_dir");
         if (directionExpression == null) {
             getObject().game().log().print("ObjectComponentLink " + getObject() + " - direction local variable is missing");
@@ -59,7 +57,8 @@ public class ObjectComponentLink extends ObjectComponent {
 
     public boolean isLinkedAreaVisible(String linkID, Actor actor) {
         ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
-        return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(new Context(getObject().game(), actor, actor, getObject())));
+        Context context = new Context(getObject().game(), actor, actor, getObject(), null, null, null);
+        return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(context));
     }
 
     public Set<Area> getLinkedLineOfSightAreas() {
@@ -74,8 +73,9 @@ public class ObjectComponentLink extends ObjectComponent {
 
     public Map<Area, AreaLink.CompassDirection> getLinkedLineOfSightAreasWithDirections() {
         Map<Area, AreaLink.CompassDirection> linkedAreas = new HashMap<>();
+        Context context = new Context(getObject().game(), getObject().game().data().getPlayer(), getObject().game().data().getPlayer(), getObject(), null, null, null);
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
-            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(new Context(getObject().game(), getObject().game().data().getPlayer(), getObject().game().data().getPlayer(), getObject())))) {
+            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(context))) {
                 linkedAreas.put(getLinkedObject(linkEntry.getKey()).getArea(), getDirection(linkEntry.getKey()));
             }
         }

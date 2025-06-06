@@ -17,7 +17,7 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_MIN = 0.01f;
 	
 	public static float calculateHitChance(Actor attacker, Item weapon, AttackTarget target, Limb limb, Script hitChanceFunction, float hitChanceMult) {
-		Context context = new Context(attacker.game(), attacker, target, weapon);
+		Context context = new Context(attacker.game(), attacker, target, weapon, null);
 		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(context);
 		if (hitChanceResult.error() != null) {
 			throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());

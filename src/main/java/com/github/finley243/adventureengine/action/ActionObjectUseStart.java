@@ -35,22 +35,22 @@ public class ActionObjectUseStart extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		Context context = new Context(subject.game(), subject, null, component.getObject());
+		Context context = new Context(subject.game(), subject, null, component.getObject(), null, null, this);
 		context.setLocalVariable("slot", Expression.constant(slotID));
 		return context;
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
+		Context context = getContext(subject);
 		if (subject.isUsingObject()) {
 			subject.getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).removeUser(subject.getUsingObject().slot());
 		}
 		if (component.userIsInCover(slotID)) {
-			subject.triggerScript("on_take_cover", new Context(subject.game(), subject, subject, getComponent().getObject()));
+			subject.triggerScript("on_take_cover", context);
 		}
 		component.setUser(slotID, subject);
 		subject.setUsingObject(new ObjectComponentUsable.ObjectUserData(component.getObject(), slotID));
-		Context context = new Context(subject.game(), subject, null, component.getObject());
 		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null));
 	}
 

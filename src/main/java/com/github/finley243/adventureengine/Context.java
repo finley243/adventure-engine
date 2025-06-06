@@ -25,51 +25,19 @@ public class Context {
     private final Map<String, Variable> localVariables;
 
     public Context(Game game, Actor subject, Actor target) {
-        this(game, subject, target, null, null, null, null, new HashMap<>());
-    }
-
-    public Context(Game game, Actor subject, Actor target, Map<String, Expression> localVariables) {
-        this(game, subject, target, null, null, null, null, localVariables);
-    }
-
-    public Context(Game game, Actor subject, Actor target, WorldObject parentObject) {
-        this(game, subject, target, parentObject, null, null, null, new HashMap<>());
-    }
-
-    public Context(Game game, Actor subject, Actor target, Area parentArea) {
-        this(game, subject, target, null, null, parentArea, null, new HashMap<>());
-    }
-
-    public Context(Game game, WorldObject parentObject) {
-        this(game, null, null, parentObject, null, null, null, new HashMap<>());
+        this(game, subject, target, null, null, null, null, null);
     }
 
     public Context(Game game, Actor subject, Actor target, Item parentItem) {
-        this(game, subject, target, null, parentItem, null, null, new HashMap<>());
-    }
-
-    public Context(Game game, Actor subject, Actor target, Item parentItem, Area parentArea) {
-        this(game, subject, target, null, parentItem, parentArea, null, new HashMap<>());
-    }
-
-    public Context(Game game, Actor subject, Actor target, Item parentItem, Map<String, Expression> localVariables) {
-        this(game, subject, target, null, parentItem, null, null, localVariables);
-    }
-
-    public Context(Game game, Item parentItem) {
-        this(game, null, null, null, parentItem, null, null, new HashMap<>());
-    }
-
-    public Context(Game game, Actor subject, AttackTarget attackTarget) {
-        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null);
-    }
-
-    public Context(Game game, Actor subject, AttackTarget attackTarget, Item parentItem) {
-        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, null, null, new HashMap<>());
+        this(game, subject, target, null, parentItem, null, null, null);
     }
 
     public Context(Game game, Actor subject, AttackTarget attackTarget, Item parentItem, Area parentArea) {
-        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, parentArea, null, new HashMap<>());
+        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, parentArea, null, null);
+    }
+
+    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Action parentAction) {
+        this(game, subject, target, parentObject, parentItem, parentArea, parentAction, null);
     }
 
     public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Action parentAction, Map<String, Expression> localVariables) {
@@ -81,8 +49,10 @@ public class Context {
         this.parentArea = parentArea;
         this.parentAction = parentAction;
         this.localVariables = new HashMap<>();
-        for (Map.Entry<String, Expression> parameter : localVariables.entrySet()) {
-            this.localVariables.put(parameter.getKey(), new Variable(parameter.getValue()));
+        if (localVariables != null) {
+            for (Map.Entry<String, Expression> parameter : localVariables.entrySet()) {
+                this.localVariables.put(parameter.getKey(), new Variable(parameter.getValue()));
+            }
         }
     }
 
@@ -252,3 +222,4 @@ public class Context {
     }
 
 }
+

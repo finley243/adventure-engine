@@ -25,7 +25,7 @@ public class ActionNetworkBreach extends NetworkAction {
 
     @Override
     public Context getContext(Actor subject) {
-        Context context = new Context(subject.game(), subject, null, object);
+        Context context = new Context(subject.game(), subject, null, object, null, null, this);
         context.setLocalVariable("node", Expression.constant(node));
         return context;
     }

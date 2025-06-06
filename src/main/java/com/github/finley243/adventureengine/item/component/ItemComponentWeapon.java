@@ -130,7 +130,7 @@ public class ItemComponentWeapon extends ItemComponent {
     }
 
     public Set<String> getAttackTypes() {
-        return attackTypes.value(getWeaponClass().getAttackTypes(), new Context(getItem().game(), getItem()));
+        return attackTypes.value(getWeaponClass().getAttackTypes(), new Context(getItem().game(), null, null, getItem()));
     }
 
     @Override

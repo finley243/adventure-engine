@@ -34,7 +34,7 @@ public class ActionInspectArea extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        return new Context(subject.game(), subject, null, area);
+        return new Context(subject.game(), subject, null, null, null, area, this);
     }
 
     @Override

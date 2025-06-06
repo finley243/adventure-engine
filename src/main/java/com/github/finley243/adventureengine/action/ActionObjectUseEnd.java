@@ -34,19 +34,19 @@ public class ActionObjectUseEnd extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		Context context = new Context(subject.game(), subject, null, component.getObject());
+		Context context = new Context(subject.game(), subject, null, component.getObject(), null, null, this);
 		context.setLocalVariable("slot", Expression.constant(slotID));
 		return context;
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
+		Context context = getContext(subject);
 		if (component.userIsInCover(slotID)) {
-			subject.triggerScript("on_leave_cover", new Context(subject.game(), subject, subject, getComponent().getObject()));
+			subject.triggerScript("on_leave_cover", context);
 		}
 		component.removeUser(slotID);
 		subject.setUsingObject(null);
-		Context context = new Context(subject.game(), subject, null, component.getObject());
 		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, true, this, null));
 	}
 
