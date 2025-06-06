@@ -18,7 +18,7 @@ public class ScriptSkillMenu extends Script {
         if (actorExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Actor parameter is not a stat holder", getTraceData()));
         if (!(actorExpression.getValueStatHolder() instanceof Actor actor)) return new ScriptReturnData(null, null, new ScriptErrorData("Actor parameter is not an actor", getTraceData()));
         int pointsValue = points.getValueInteger();
-        context.game().menuManager().skillMenu(context.game(), actor, pointsValue);
+        context.game().menuManager().skillMenu(context.game(), actor, pointsValue, context.game().data().getSkillIDs());
         return new ScriptReturnData(null, null, null);
     }
 

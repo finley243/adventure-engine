@@ -7,10 +7,12 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class NetworkNodeControl extends NetworkNode {
 
     private final String objectID;
+    private WorldObject object;
 
     public NetworkNodeControl(Game game, String ID, String templateID, String name, String objectID) {
         super(game, ID, templateID, name);
@@ -18,12 +20,17 @@ public class NetworkNodeControl extends NetworkNode {
     }
 
     @Override
+    public void init(Map<String, WorldObject> objects) {
+        this.object = objects.get(objectID);
+    }
+
+    @Override
     protected List<Action> breachedActions(Actor subject, WorldObject object) {
         return new ArrayList<>(subject.game().data().getObject(objectID).networkActions(subject, this));
     }
 
-    public WorldObject getObject(Game game) {
-        return game.data().getObject(objectID);
+    public WorldObject getObject() {
+        return object;
     }
 
 }

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.event;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Bark;
@@ -90,7 +89,7 @@ public class SensoryEvent {
 		return isLoud;
 	}
 
-	public static void execute(Game game, SensoryEvent event) {
+	public static void execute(SensoryEvent event) {
 		Map<Area, Set<Area>> lineOfSightAreas = new HashMap<>(); // Key = origin, Value = line of sight areas
 		for (Area origin : event.getOrigins()) {
 			lineOfSightAreas.put(origin, Pathfinder.getLineOfSightAreas(origin).keySet());

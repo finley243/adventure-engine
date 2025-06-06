@@ -29,7 +29,7 @@ public class ActionCarryActorEnd extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.setCarriedActor(null);
         Context context = new Context(subject.game(), subject, carriedActor);
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("putDownActor"), context, true, this, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("putDownActor"), context, true, this, null));
     }
 
     @Override

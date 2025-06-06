@@ -78,10 +78,10 @@ public class Data {
 	public void newGame() throws ParserConfigurationException, IOException, SAXException, GameDataException {
 		reset();
 		for (Area area : areas.values()) {
-			area.onInit();
+			area.onInit(areas);
 		}
 		for (Actor actor : actors.values()) {
-			actor.onInit();
+			actor.onInit(getDamageTypeIDs(), getAttributeIDs(), getSkillIDs());
 		}
 		for (WorldObject object : new ArrayList<>(objects.values())) {
 			object.onInit();

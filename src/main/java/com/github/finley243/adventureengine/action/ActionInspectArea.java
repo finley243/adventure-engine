@@ -39,20 +39,6 @@ public class ActionInspectArea extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
-        if (area.getRoom() != null && area.getRoom().getDescription() != null) {
-            subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), new Context(subject.game(), subject, subject), false);
-            area.getRoom().setKnown();
-            for (Area area : area.getRoom().getAreas()) {
-                area.setKnown();
-            }
-        }
-        if (area.getDescription() != null) {
-            subject.game().menuManager().sceneMenu(subject.game(), area.getDescription(), new Context(subject.game(), subject, subject), false);
-            area.setKnown();
-        }
-        if (area.getRoom() != null) {
-            area.getRoom().triggerScript("on_inspect", subject, subject);
-        }
         Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(area, subject);
         List<Area> orderedAreaList = new ArrayList<>(visibleAreas.keySet());
         orderedAreaList.sort(Comparator.comparingInt(a -> visibleAreas.get(a).pathData().size()));
@@ -103,7 +89,21 @@ public class ActionInspectArea extends Action {
                 subject.game().eventBus().post(new RenderTextEvent(TextGen.generate(areaContentsPhrase, context, context.generateTextContext())));
             }
         }
-        TextGen.clearContext();
+        if (area.getRoom() != null && area.getRoom().getDescription() != null) {
+            subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), new Context(subject.game(), subject, subject), false);
+            area.getRoom().setKnown();
+            for (Area area : area.getRoom().getAreas()) {
+                area.setKnown();
+            }
+        }
+        if (area.getDescription() != null) {
+            subject.game().menuManager().sceneMenu(subject.game(), area.getDescription(), new Context(subject.game(), subject, subject), false);
+            area.setKnown();
+        }
+        if (area.getRoom() != null) {
+            area.getRoom().triggerScript("on_inspect", subject, subject);
+        }
+        //TextGen.clearContext();
         area.triggerScript("on_inspect", subject, subject);
     }
 

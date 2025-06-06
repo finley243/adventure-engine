@@ -35,8 +35,8 @@ public class NetworkNodeGroup extends NetworkNode {
         return switch (name) {
             case "childNodes" -> Expression.constant(getAllChildNodes());
             case "directChildNodes" -> Expression.constant(childNodes);
-            case "childObjects" -> Expression.constant(getAllChildObjects(context.game()));
-            case "directChildObjects" -> Expression.constant(getDirectChildObjects(context.game()));
+            case "childObjects" -> Expression.constant(getAllChildObjects());
+            case "directChildObjects" -> Expression.constant(getDirectChildObjects());
             default -> super.getStatValue(name, context);
         };
     }
@@ -51,23 +51,23 @@ public class NetworkNodeGroup extends NetworkNode {
         return children;
     }
 
-    private Set<WorldObject> getDirectChildObjects(Game game) {
+    private Set<WorldObject> getDirectChildObjects() {
         Set<WorldObject> childObjects = new HashSet<>();
         for (NetworkNode node : childNodes) {
             if (node instanceof NetworkNodeControl controlNode) {
-                childObjects.add(controlNode.getObject(game));
+                childObjects.add(controlNode.getObject());
             }
         }
         return childObjects;
     }
 
-    private Set<WorldObject> getAllChildObjects(Game game) {
+    private Set<WorldObject> getAllChildObjects() {
         Set<WorldObject> childObjects = new HashSet<>();
         for (NetworkNode node : childNodes) {
             if (node instanceof NetworkNodeControl controlNode) {
-                childObjects.add(controlNode.getObject(game));
+                childObjects.add(controlNode.getObject());
             } else if (node instanceof NetworkNodeGroup groupNode) {
-                childObjects.addAll(groupNode.getAllChildObjects(game));
+                childObjects.addAll(groupNode.getAllChildObjects());
             }
         }
         return childObjects;

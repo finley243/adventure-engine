@@ -31,7 +31,7 @@ public class ActionItemDrop extends Action {
 		subject.getInventory().removeItem(item);
 		subject.getArea().getInventory().addItem(item);
 		Context context = new Context(subject.game(), subject, null, item);
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
+		SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
 	}
 
 	@Override

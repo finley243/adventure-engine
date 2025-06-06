@@ -31,7 +31,7 @@ public class ActionItemUnequip extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.getEquipmentComponent().unequip(item);
         Context context = new Context(subject.game(), subject, null, item);
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("unequip"), context, true, this, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("unequip"), context, true, this, null));
     }
 
     @Override

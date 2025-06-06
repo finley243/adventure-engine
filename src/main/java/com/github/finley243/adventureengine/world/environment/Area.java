@@ -165,9 +165,12 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		};
 	}
 
-	public void onInit() {
+	public void onInit(Map<String, Area> allAreas) {
 		if (roomID != null) {
 			game().data().getRoom(roomID).addArea(this);
+		}
+		for (AreaLink link : linkedAreas.values()) {
+			link.init(allAreas);
 		}
 	}
 	
@@ -234,7 +237,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
 				String actionTemplate = vehicleType == null ? game().data().getLinkType(link.getType()).getActorMoveAction() : game().data().getLinkType(link.getType()).getVehicleMoveAction(vehicleType);
-				moveActions.add(new ActionCustom(game(), null, vehicleObject, null, game().data().getArea(link.getAreaID()), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(game().data().getArea(link.getAreaID()), link.getDirection()), true));
+				moveActions.add(new ActionCustom(game(), null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
 			}
 		}
 		return moveActions;
@@ -244,7 +247,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		Set<Area> movableAreas = new HashSet<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
-				movableAreas.add(game().data().getArea(link.getAreaID()));
+				movableAreas.add(link.getArea());
 			}
 		}
 		return movableAreas;
@@ -254,7 +257,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		Set<String> movableAreas = new HashSet<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
-				movableAreas.add(link.getAreaID());
+				movableAreas.add(link.getArea().getID());
 			}
 		}
 		return movableAreas;

@@ -138,8 +138,8 @@ public class Pathfinder {
 			possiblyVisibleAreas.put(currentArea.getID(), new AreaQueueData(currentArea, currentDistance, currentPathData));
 			if (currentDistance < range) {
 				for (AreaLink areaLink : currentArea.getDirectVisibleLinkedAreas()) {
-					if (!possiblyVisibleAreas.containsKey(areaLink.getAreaID())) {
-						Area linkedArea = origin.game().data().getArea(areaLink.getAreaID());
+					if (!possiblyVisibleAreas.containsKey(areaLink.getArea().getID())) {
+						Area linkedArea = areaLink.getArea();
 						List<PathData> extendedPathData = new ArrayList<>(currentPathData);
 						extendedPathData.add(new PathDataAreaLink(areaLink));
 						extendedPathData.add(new PathDataArea(linkedArea));

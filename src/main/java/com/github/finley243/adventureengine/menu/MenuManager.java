@@ -18,10 +18,7 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.google.common.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MenuManager {
 
@@ -418,9 +415,9 @@ public class MenuManager {
 		return validChoices.get(input.getIndex()).getLinkedID();
 	}
 
-	public void attributeMenu(Game game, Actor actor, int points) {
+	public void attributeMenu(Game game, Actor actor, int points, Set<String> attributeIDs) {
 		List<NumericMenuField> menuFields = new ArrayList<>();
-		for (String attribute : game.data().getAttributeIDs()) {
+		for (String attribute : attributeIDs) {
 			int actorBase = actor.getAttributeBase(attribute);
 			menuFields.add(new NumericMenuField(attribute, game.data().getAttribute(attribute).name(), actorBase, Actor.ATTRIBUTE_MAX, actorBase));
 		}
@@ -430,9 +427,9 @@ public class MenuManager {
 		}
 	}
 
-	public void skillMenu(Game game, Actor actor, int points) {
+	public void skillMenu(Game game, Actor actor, int points, Set<String> skillIDs) {
 		List<NumericMenuField> menuFields = new ArrayList<>();
-		for (String skill : game.data().getSkillIDs()) {
+		for (String skill : skillIDs) {
 			int actorBase = actor.getSkillBase(skill);
 			menuFields.add(new NumericMenuField(skill, game.data().getSkill(skill).name(), actorBase, Actor.SKILL_MAX, actorBase));
 		}

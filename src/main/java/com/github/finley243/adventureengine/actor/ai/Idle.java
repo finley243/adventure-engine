@@ -22,7 +22,7 @@ public class Idle {
 
     public void trigger(Actor subject) {
         Context context = new Context(subject.game(), subject, null);
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), phrase, context, true, null, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), phrase, context, true, null, null));
     }
 
 }

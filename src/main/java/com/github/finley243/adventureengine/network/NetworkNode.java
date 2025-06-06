@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public abstract class NetworkNode extends GameInstanced implements StatHolder {
 
@@ -24,6 +25,10 @@ public abstract class NetworkNode extends GameInstanced implements StatHolder {
         super(game, ID);
         this.templateID = templateID;
         this.name = name;
+    }
+
+    public void init(Map<String, WorldObject> objects) {
+
     }
 
     private NetworkNodeTemplate getTemplate() {

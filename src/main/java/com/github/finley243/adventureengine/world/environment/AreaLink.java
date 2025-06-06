@@ -2,6 +2,8 @@ package com.github.finley243.adventureengine.world.environment;
 
 import com.github.finley243.adventureengine.Game;
 
+import java.util.Map;
+
 public class AreaLink {
 
     public enum DistanceCategory {
@@ -30,6 +32,7 @@ public class AreaLink {
     }
 
     private final String areaID;
+    private Area area;
     private final String type;
     private final CompassDirection direction;
     private final DistanceCategory distance;
@@ -41,8 +44,16 @@ public class AreaLink {
         this.distance = distance;
     }
 
-    public String getAreaID() {
+    public void init(Map<String, Area> allAreas) {
+        this.area = allAreas.get(areaID);
+    }
+
+    private String getAreaID() {
         return areaID;
+    }
+
+    public Area getArea() {
+        return area;
     }
 
     public String getType() {

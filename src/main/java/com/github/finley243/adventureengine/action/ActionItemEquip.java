@@ -43,7 +43,7 @@ public class ActionItemEquip extends Action {
     public void choose(Actor subject, int repeatActionCount) {
         subject.getEquipmentComponent().equip(item, slotsData);
         Context context = new Context(subject.game(), subject, null, item);
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null));
     }
 
     @Override

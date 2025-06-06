@@ -50,7 +50,7 @@ public class ActionInventoryTakeAll extends Action {
         subject.getInventory().addItems(item.getTemplateID(), count);
         Context context = getContext(subject);
         //TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
     }
 
     @Override

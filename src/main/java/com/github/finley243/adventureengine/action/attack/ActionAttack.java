@@ -194,7 +194,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
         context.setLocalVariable("success", Expression.constant(true));
         context.setLocalVariable("damage", Expression.constant(damage));
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
         target.damage(damageData, context);
         subject.triggerScript("on_attack_success", context);
@@ -207,7 +207,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
         context.setLocalVariable("success", Expression.constant(false));
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
         subject.triggerScript("on_attack_failure", context);
     }
 
@@ -222,7 +222,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         List<Noun> targetsFailNouns = targetsFail.stream().map(target -> (Noun) target).toList();
         context.setLocalVariable("targetsSuccess", targetsSuccessNouns.isEmpty() ? null : Expression.constantNoun(new MultiNoun(targetsSuccessNouns)));
         context.setLocalVariable("targetsFail", targetsFailNouns.isEmpty() ? null : Expression.constantNoun(new MultiNoun(targetsFailNouns)));
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
     }
 
     @Override
@@ -232,7 +232,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
         context.setLocalVariable("success", Expression.constant(false));
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
     }
 
     @Override

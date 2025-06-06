@@ -42,7 +42,7 @@ public class ActionWeaponReload extends Action {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.triggerScript("on_reload", new Context(subject.game(), subject, subject, weapon));
-		if (subject == subject.game().data().getPlayer()) {
+		if (subject.isPlayer()) {
 			if (!ammoType.equals(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType()) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() > 0) {
 				subject.getInventory().addItems(ammoType.getTemplateID(), weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining());
 				weapon.getComponentOfType(ItemComponentMagazine.class).emptyAmmo();
@@ -58,7 +58,7 @@ public class ActionWeaponReload extends Action {
 			weapon.getComponentOfType(ItemComponentMagazine.class).setLoadedAmmoType(ammoType);
 		}
 		Context context = new Context(subject.game(), subject, null, weapon);
-		SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, true, this, null));
+		SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, true, this, null));
 	}
 
 	@Override

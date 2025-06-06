@@ -46,7 +46,7 @@ public class ActionInventoryTake extends Action {
         inventory.removeItem(item);
         subject.getInventory().addItem(item);
         Context context = getContext(subject);
-        SensoryEvent.execute(subject.game(), new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
+        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
     }
 
     @Override
