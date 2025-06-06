@@ -241,6 +241,21 @@ public class TextGen {
 				builder.append(usePronouns.get(objectKey) ? object.getPronoun().possessive : LangUtils.possessive(formatNoun(object.getName(), object.isProperName(), object.isKnown(), object.pluralCount()), object.pluralCount() > 1));
 				token.usedPronoun = usePronouns.get(objectKey);
 				usePronouns.put(objectKey, true);
+			} else if (tokenMatchesPossessiveObjectPattern(tokenName, context)) {
+				String[] objectKeys = getObjectKeysFromPossessiveObjectToken(tokenName);
+				Noun possessor = context.getObjects().get(objectKeys[0]);
+				Noun object = context.getObjects().get(objectKeys[1]);
+				if (object.isProperName()) {
+					builder.append(object.getName());
+				} else if (usePronouns.get(objectKeys[1])) {
+					builder.append(token.isSubject ? object.getPronoun().subject : object.getPronoun().object);
+				} else {
+					builder.append(usePronouns.get(objectKeys[0]) ? possessor.getPronoun().possessive : LangUtils.possessive(formatNoun(possessor.getName(), possessor.isProperName(), possessor.isKnown(), possessor.pluralCount()), possessor.pluralCount() > 1));
+					builder.append(" ");
+					builder.append(object.getName());
+				}
+				token.usedPronoun = usePronouns.get(objectKeys[1]);
+				usePronouns.put(objectKeys[1], true);
 			} else if (tokenMatchesSuffixPattern(tokenName, "_self", context)) {
 				String objectKey = getObjectKeyFromSuffixedToken(tokenName, "_self");
 				builder.append(context.getObjects().get(objectKey).getPronoun().reflexive);
@@ -274,6 +289,18 @@ public class TextGen {
 
 	private static String getObjectKeyFromSuffixedToken(String tokenName, String suffix) {
 		return tokenName.substring(0, tokenName.length() - suffix.length());
+	}
+
+	private static boolean tokenMatchesPossessiveObjectPattern(String tokenName, TextContext textContext) {
+		if (tokenName == null || !tokenName.contains("'s_")) return false;
+		String[] objectKeys = getObjectKeysFromPossessiveObjectToken(tokenName);
+		return textContext.getObjects().containsKey(objectKeys[0]) && textContext.getObjects().containsKey(objectKeys[1]);
+	}
+
+	private static String[] getObjectKeysFromPossessiveObjectToken(String tokenName) {
+		String[] parts = tokenName.split("'s_");
+		if (parts.length != 2) throw new IllegalArgumentException("Invalid possessive object token: " + tokenName);
+		return parts;
 	}
 
 	private static String replaceInsideBracketsWithResult(String line, char openBracketType, Context context, String originalLine, TextProcessor processor) {

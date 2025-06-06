@@ -7,7 +7,7 @@ forceDrop:$actor drop$s $item and $item lands $relativeTo $area.
 eat:$actor eat$s $item.
 equip:$actor equip$s $item.
 exitElevator:$actor exit$s $elevator.
-meleeAttack:$actor swing$s $actor's $item_name at $target ([success]and $item hit$s $target|but $actor miss$es).
+meleeAttack:$actor swing$s $actor's_item at $target ([success]and $item hit$s $target|but $actor miss$es).
 moveThrough:$actor go$es through $door to $targetArea.
 moveThroughReverse:$actor come$s through $door from $originArea.
 moveToward:$actor move$s toward $targetArea.
@@ -26,8 +26,8 @@ moveCorner:$actor turn$s around the corner to $targetArea.
 driveTo:$actor drive$s $vehicle to $targetArea.
 driveCorner:$actor drive$s $vehicle around the corner to $targetArea.
 pickUp:$actor grab$s $item.
-rangedAttack:$actor fire$s $actor's $item_name at $target ([success]and it hits $target|but it misses $target).
-reload:$actor reload$s $actor's $item_name.
+rangedAttack:$actor fire$s $actor's_item at $target ([success]and it hits $target|but it misses $target).
+reload:$actor reload$s $actor's_item.
 sell:$actor sell$s $item.
 sit:$actor sit$s in $object.
 stand:$actor stand$s up.
@@ -48,9 +48,9 @@ dodgeSuccess:$actor {dodge$s|move$s} {out of the way of|away from} $item.
 dodgeFail:$actor tr$ies to dodge $item, but $actor lose$s $actor's balance.
 counterSuccess:$actor slip$s {under|past} $item and hit$s $attacker.
 counterFail:$actor {tr$ies|attempt$s} to hit $attacker, but $actor {$doesn't make it past|$isn't fast enough to avoid} $item.
-meleeAttackLimb:$actor swing$s $actor's $item_name at $target, ([success]hitting $target's $limb|but $item {{just|barely} misses|{swings|swipes} past} $target).
-rangedAttackLimb:$actor fire$s $actor's $item_name at $target ([success]and a bullet hits $target's $limb|but $actor miss$es).
-rangedAutoAttack:$actor fire$s a spray of bullets from $actor's $item_name at $target ([success]and they hit $target|but $actor miss$es).
+meleeAttackLimb:$actor swing$s $actor's_item at $target, ([success]hitting $target's $limb|but $item {{just|barely} misses|{swings|swipes} past} $target).
+rangedAttackLimb:$actor fire$s $actor's_item at $target ([success]and a bullet hits $target's $limb|but $actor miss$es).
+rangedAutoAttack:$actor fire$s a spray of bullets from $actor's_item at $target ([success]and they hit $target|but $actor miss$es).
 grenadeAttack:$actor throw$s $item $relativeTo $area ([success]and $item explode$s|but $item {go$es too far|fl$ies too far|fall$s short}, exploding harmlessly).
 getUp:$actor get$s up from $object.
 lieDown:$actor lie$s down in $object.
