@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.object.component;
 
+import com.github.finley243.adventureengine.DebugLogger;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -24,7 +25,7 @@ public class ObjectComponentVehicle extends ObjectComponent {
         Expression objectOverrideExpression = getObject().getLocalVariable("vehicle_object_override");
         if (objectOverrideExpression == null) return null;
         if (objectOverrideExpression.getDataType() != Expression.DataType.STRING) {
-            getObject().game().log().print("ObjectComponentVehicle " + getObject() + " - object override local variable is not a string");
+            DebugLogger.print("ObjectComponentVehicle " + getObject() + " - object override local variable is not a string");
             return null;
         }
         String objectOverrideID = objectOverrideExpression.getValueString();

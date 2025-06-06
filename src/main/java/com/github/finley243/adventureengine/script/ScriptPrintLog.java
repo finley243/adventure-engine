@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.DebugLogger;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptPrintLog extends Script {
@@ -25,7 +26,7 @@ public class ScriptPrintLog extends Script {
             return new ScriptReturnData(null, null, new ScriptErrorData("Expression provided a non-string value", getTraceData()));
         }
         String messageValue = messageResult.value().getValueString();
-        context.game().log().print(messageValue);
+        DebugLogger.print(messageValue);
         return new ScriptReturnData(null, null, null);
     }
 

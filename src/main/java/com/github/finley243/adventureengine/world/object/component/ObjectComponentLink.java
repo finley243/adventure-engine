@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.DebugLogger;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
@@ -30,11 +31,11 @@ public class ObjectComponentLink extends ObjectComponent {
     public WorldObject getLinkedObject(String linkID) {
         Expression linkedObjectExpression = getObject().getLocalVariable(linkID + "_object");
         if (linkedObjectExpression == null) {
-            getObject().game().log().print("ObjectComponentLink " + getObject() + " - linked object local variable is missing");
+            DebugLogger.print("ObjectComponentLink " + getObject() + " - linked object local variable is missing");
             return null;
         }
         if (linkedObjectExpression.getDataType() != Expression.DataType.STRING) {
-            getObject().game().log().print("ObjectComponentLink " + getObject() + " - linked object local variable is not a string");
+            DebugLogger.print("ObjectComponentLink " + getObject() + " - linked object local variable is not a string");
             return null;
         }
         String linkedObjectID = linkedObjectExpression.getValueString();
@@ -44,11 +45,11 @@ public class ObjectComponentLink extends ObjectComponent {
     public AreaLink.CompassDirection getDirection(String linkID) {
         Expression directionExpression = getObject().getLocalVariable(linkID + "_dir");
         if (directionExpression == null) {
-            getObject().game().log().print("ObjectComponentLink " + getObject() + " - direction local variable is missing");
+            DebugLogger.print("ObjectComponentLink " + getObject() + " - direction local variable is missing");
             return null;
         }
         if (directionExpression.getDataType() != Expression.DataType.STRING) {
-            getObject().game().log().print("ObjectComponentLink " + getObject() + " - direction local variable is not a string");
+            DebugLogger.print("ObjectComponentLink " + getObject() + " - direction local variable is not a string");
             return null;
         }
         String directionString = directionExpression.getValueString();

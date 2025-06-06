@@ -258,7 +258,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public void setAttributeBase(String attribute, int value) {
 		if (!attributesBase.containsKey(attribute)) {
-			game().log().print("Actor " + this + " - attempted to set base attribute that does not exist: " + attribute);
+			DebugLogger.print("Actor " + this + " - attempted to set base attribute that does not exist: " + attribute);
 		} else {
 			attributesBase.put(attribute, value);
 		}
@@ -274,7 +274,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public void setSkillBase(String skill, int value) {
 		if (!skills.containsKey(skill)) {
-			game().log().print("Actor " + this + " - attempted to set base skill that does not exist: " + skill);
+			DebugLogger.print("Actor " + this + " - attempted to set base skill that does not exist: " + skill);
 		} else {
 			skillsBase.put(skill, value);
 		}
@@ -919,28 +919,28 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (name.startsWith("damage_resist_")) {
 			String damageType = name.substring("damage_resist_".length());
 			if (!damageResistance.containsKey(damageType)) {
-				game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
+				DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
 				return Expression.constant(0);
 			}
 			return Expression.constant(getDamageResistance(damageType, context));
 		} else if (name.startsWith("attribute_")) {
 			String attribute = name.substring("attribute_".length());
 			if (!attributes.containsKey(attribute)) {
-				game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid attribute");
+				DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid attribute");
 				return Expression.constant(0);
 			}
 			return Expression.constant(getAttribute(attribute, context));
 		} else if (name.startsWith("skill_")) {
 			String skill = name.substring("skill_".length());
 			if (!skills.containsKey(skill)) {
-				game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid skill");
+				DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid skill");
 				return Expression.constant(0);
 			}
 			return Expression.constant(getSkill(skill, context));
 		} else if (name.startsWith("damage_mult_")) {
 			String damageType = name.substring("damage_mult_".length());
 			if (!damageMult.containsKey(damageType)) {
-				game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
+				DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
 				return Expression.constant(0.0f);
 			}
 			return Expression.constant(getDamageMult(damageType, context));
@@ -950,7 +950,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 					return Expression.constant(equipmentComponent.getEquippedItemInSlot(slot) != null);
 				}
 			}
-			game().log().print("Actor " + this + " - getStatValue " + name + " references an invalid equip slot");
+			DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid equip slot");
 			return Expression.constant(false);
 		}
 		return switch (name) {
@@ -1000,7 +1000,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 					return true;
 				}
 			}
-			game().log().print("Actor " + this + " - setStatValue " + name + " references an invalid equip slot");
+			DebugLogger.print("Actor " + this + " - setStatValue " + name + " references an invalid equip slot");
 			return false;
 		}
 		switch (name) {
@@ -1157,16 +1157,16 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		levelUpThresholdContext.setLocalVariable("level", Expression.constant(level));
 		Script.ScriptReturnData thresholdReturn = getTemplate().getLevelUpThresholdExpression().execute(levelUpThresholdContext);
 		if (thresholdReturn.error() != null) {
-			game().log().print("Actor " + this + " level up threshold expression error: " + thresholdReturn.stackTrace());
+			DebugLogger.print("Actor " + this + " level up threshold expression error: " + thresholdReturn.stackTrace());
 			return;
 		} else if (thresholdReturn.flowStatement() != null) {
-			game().log().print("Actor " + this + " level up threshold expression contains unexpected flow statement");
+			DebugLogger.print("Actor " + this + " level up threshold expression contains unexpected flow statement");
 			return;
 		} else if (thresholdReturn.value() == null) {
-			game().log().print("Actor " + this + " level up threshold expression gave a null value");
+			DebugLogger.print("Actor " + this + " level up threshold expression gave a null value");
 			return;
 		} else if (thresholdReturn.value().getDataType() != Expression.DataType.INTEGER) {
-			game().log().print("Actor " + this + " level up threshold expression gave a non-integer value");
+			DebugLogger.print("Actor " + this + " level up threshold expression gave a non-integer value");
 			return;
 		}
 		int levelUpXP = thresholdReturn.value().getValueInteger();

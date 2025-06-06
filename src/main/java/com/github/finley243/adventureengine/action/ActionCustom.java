@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.DebugLogger;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
@@ -76,7 +77,7 @@ public class ActionCustom extends Action {
             for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
                 Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
                 if (parameterResult.error() != null) {
-                    game.log().print("Action parameter error: " + parameterResult.stackTrace());
+                    DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
                 } else {
                     context.setLocalVariable(templateParameter.getKey(), parameterResult.value());
                 }
@@ -84,14 +85,14 @@ public class ActionCustom extends Action {
             for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
                 Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
                 if (parameterResult.error() != null) {
-                    game.log().print("Action parameter error: " + parameterResult.stackTrace());
+                    DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
                 } else {
                     context.setLocalVariable(instanceParameter.getKey(), parameterResult.value());
                 }
             }
             Script.ScriptReturnData actionScriptResult = getTemplate().getScript().execute(context);
             if (actionScriptResult.error() != null) {
-                game.log().print("Action script error: " + actionScriptResult.stackTrace());
+                DebugLogger.print("Action script error: " + actionScriptResult.stackTrace());
             }
         }
     }
@@ -157,7 +158,7 @@ public class ActionCustom extends Action {
         for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
             Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
             if (parameterResult.error() != null) {
-                game.log().print("Action parameter error: " + parameterResult.stackTrace());
+                DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
             } else {
                 context.setLocalVariable(instanceParameter.getKey(), parameterResult.value());
             }
@@ -165,7 +166,7 @@ public class ActionCustom extends Action {
         for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
             Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
             if (parameterResult.error() != null) {
-                game.log().print("Action parameter error: " + parameterResult.stackTrace());
+                DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
             } else {
                 context.setLocalVariable(templateParameter.getKey(), parameterResult.value());
             }

@@ -30,7 +30,6 @@ public class Game {
 
 	private final EventBus eventBus;
 	private final MenuManager menuManager;
-	private final DebugLogger debugLogger;
 	private final ThreadControl threadControl;
 
 	private final Data data;
@@ -51,7 +50,9 @@ public class Game {
 
 		ConfigLoader.loadConfig(this, new File(GAMEFILES + CONFIG_FILE));
 
-		debugLogger = new DebugLogger(GAMEFILES + LOG_DIRECTORY, data.getConfig("enableDebugLog").equalsIgnoreCase("true"));
+		if (data.getConfig("enableDebugLog").equalsIgnoreCase("true")) {
+			DebugLogger.init(GAMEFILES + LOG_DIRECTORY);
+		}
 
 		UserInterface userInterface = switch (data.getConfig("interfaceType")) {
 			case "graphicalChoice" -> new GraphicalInterfaceComplex(this);
@@ -88,10 +89,6 @@ public class Game {
 
 	public ThreadControl threadControl() {
 		return threadControl;
-	}
-
-	public DebugLogger log() {
-		return debugLogger;
 	}
 
 	public Data data() {
