@@ -23,12 +23,14 @@ import java.util.*;
 public class MenuManager {
 
 	private final Game game;
+	private final ThreadControl threadControl;
 
 	private ChoiceMenuInputEvent choiceInput;
 	private NumericMenuInputEvent numericInput;
 	
 	public MenuManager(Game game) {
 		this.game = game;
+		this.threadControl = new ThreadControl();
 		this.choiceInput = null;
 		this.numericInput = null;
 	}
@@ -445,9 +447,9 @@ public class MenuManager {
 
 	private ChoiceMenuInputEvent startChoiceMenu(Game game, List<MenuChoice> menuChoices, List<MenuCategory> menuCategories, int endTurnIndex, boolean forcePrompts) {
 		game.eventBus().post(new RenderChoiceMenuEvent(menuChoices, menuCategories, endTurnIndex, forcePrompts));
-		synchronized (game.threadControl()) {
+		synchronized (threadControl) {
 			while (this.choiceInput == null) {
-				game.threadControl().pause();
+				threadControl.pause();
 			}
 		}
 		ChoiceMenuInputEvent input = this.choiceInput;
@@ -457,9 +459,9 @@ public class MenuManager {
 
 	private NumericMenuInputEvent startNumericMenu(Game game, List<NumericMenuField> menuFields, int points) {
 		game.eventBus().post(new RenderNumericMenuEvent(menuFields, points));
-		synchronized (game.threadControl()) {
+		synchronized (threadControl) {
 			while (this.numericInput == null) {
-				game.threadControl().pause();
+				threadControl.pause();
 			}
 		}
 		NumericMenuInputEvent input = this.numericInput;
@@ -469,17 +471,17 @@ public class MenuManager {
 	
 	@Subscribe
 	public void onMenuSelectEvent(ChoiceMenuInputEvent e) {
-		synchronized (game.threadControl()) {
+		synchronized (threadControl) {
 			this.choiceInput = e;
-			game.threadControl().unpause();
+			threadControl.unpause();
 		}
 	}
 
 	@Subscribe
 	public void onNumericMenuConfirmEvent(NumericMenuInputEvent e) {
-		synchronized (game.threadControl()) {
+		synchronized (threadControl) {
 			this.numericInput = e;
-			game.threadControl().unpause();
+			threadControl.unpause();
 		}
 	}
 	

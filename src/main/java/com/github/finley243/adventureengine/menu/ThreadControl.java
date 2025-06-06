@@ -1,15 +1,10 @@
 package com.github.finley243.adventureengine.menu;
 
-import com.github.finley243.adventureengine.Game;
-
 public class ThreadControl {
 
-    private final Game game;
     private boolean pauseThread;
 
-    public ThreadControl(Game game) {
-        this.game = game;
-    }
+    public ThreadControl() {}
 
     public synchronized void pause() {
         this.pauseThread = true;

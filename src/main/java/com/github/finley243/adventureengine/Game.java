@@ -30,7 +30,6 @@ public class Game {
 
 	private final EventBus eventBus;
 	private final MenuManager menuManager;
-	private final ThreadControl threadControl;
 
 	private final Data data;
 	private final QuestManager questManager;
@@ -43,7 +42,6 @@ public class Game {
 	public Game() throws ParserConfigurationException, SAXException, IOException, GameDataException {
 		eventBus = new EventBus();
 		menuManager = new MenuManager(this);
-		threadControl = new ThreadControl(this);
 		eventBus().register(menuManager);
 		data = new Data(this);
 		questManager = new QuestManager();
@@ -85,10 +83,6 @@ public class Game {
 
 	public MenuManager menuManager() {
 		return menuManager;
-	}
-
-	public ThreadControl threadControl() {
-		return threadControl;
 	}
 
 	public Data data() {
