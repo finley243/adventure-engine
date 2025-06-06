@@ -341,7 +341,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	public Set<Area> visibleAreasInRange(Actor subject, Set<AreaLink.DistanceCategory> ranges) {
 		Set<Area> areas = new HashSet<>();
-		Map<Area, Pathfinder.VisibleAreaData> visibleAreas = subject.getVisibleAreas();
+		Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(this, subject);
 		for (Map.Entry<Area, Pathfinder.VisibleAreaData> entry : visibleAreas.entrySet()) {
 			if (ranges.contains(entry.getValue().distance())) {
 				areas.add(entry.getKey());
