@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.ui.component;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
+import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,27 +11,23 @@ import java.awt.event.MouseEvent;
 
 public class JChoiceButton extends JPanel {
 
-    private final JLabel labelMain;
-    private final JLabel labelActionPoints;
-    private final JLabel labelDetails;
-
-    private final Game game;
+    private final EventBus eventBus;
     private final int choiceIndex;
     private final JSwitchPanel switchPanel;
 
     private boolean mouseHovering;
 
-    public JChoiceButton(String label, int actionPoints, String details, Game game, int choiceIndex, JSwitchPanel switchPanel) {
-        this.game = game;
+    public JChoiceButton(String label, int actionPoints, String details, EventBus eventBus, int choiceIndex, JSwitchPanel switchPanel) {
+        this.eventBus = eventBus;
         this.choiceIndex = choiceIndex;
         this.switchPanel = switchPanel;
         setLayout(new BorderLayout());
-        this.labelMain = new JLabel(label);
+        JLabel labelMain = new JLabel(label);
         add(labelMain, BorderLayout.LINE_START);
         String actionPointText = actionPoints == -1 || actionPoints == 0 ? null : actionPoints + GraphicalInterfaceComplex.LABEL_ACTION_POINTS;
-        this.labelActionPoints = new JLabel(actionPointText);
+        JLabel labelActionPoints = new JLabel(actionPointText);
         add(labelActionPoints, BorderLayout.LINE_END);
-        this.labelDetails = new JLabel(details);
+        JLabel labelDetails = new JLabel(details);
         add(labelDetails, BorderLayout.PAGE_END);
 
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(GraphicalInterfaceComplex.COLOR_BUTTON_BORDER, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
@@ -86,7 +82,7 @@ public class JChoiceButton extends JPanel {
 
     private void onPressed() {
         switchPanel.clear();
-        game.eventBus().post(new ChoiceMenuInputEvent(choiceIndex));
+        eventBus.post(new ChoiceMenuInputEvent(choiceIndex));
     }
 
     @Override

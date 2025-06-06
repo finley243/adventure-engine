@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.ui.component;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.menu.NumericMenuField;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
+import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,26 +16,12 @@ public class JNumericMenuPanel extends JPanel {
     private static final int SCROLL_BAR_WIDTH_REMOVED = 8;
     private static final int SCROLL_INCREMENT = 5;
 
-    // spinnerPanel contains spinnerScrollPane (which contains spinnerInnerPanel, which itself contains listPanel) and confirmButton
-    private final JPanel spinnerPanel;
-    private final JScrollPane spinnerScrollPane;
-    private final JPanel spinnerInnerPanel;
-    private final JPanel listPanel;
     private final JConfirmNumericButton confirmButton;
 
     private final Map<String, JNumericSpinner> spinners;
-    private final List<NumericMenuField> numericFields;
-    private final int points;
     private final int maxTotal;
 
-    private final Game game;
-    private final JSwitchPanel switchPanel;
-
-    public JNumericMenuPanel(Game game, JSwitchPanel switchPanel, List<NumericMenuField> numericFields, int points) {
-        this.game = game;
-        this.switchPanel = switchPanel;
-        this.numericFields = numericFields;
-        this.points = points;
+    public JNumericMenuPanel(EventBus eventBus, JSwitchPanel switchPanel, List<NumericMenuField> numericFields, int points) {
 
         int initialSum = 0;
         for (NumericMenuField numericField : numericFields) {
@@ -45,16 +31,16 @@ public class JNumericMenuPanel extends JPanel {
 
         setLayout(new GridBagLayout());
         setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.spinnerPanel = new JPanel();
+        JPanel spinnerPanel = new JPanel();
         spinnerPanel.setLayout(new BorderLayout());
         spinnerPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.spinnerInnerPanel = new JPanel();
+        JPanel spinnerInnerPanel = new JPanel();
         spinnerInnerPanel.setLayout(new BorderLayout());
         spinnerInnerPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.spinnerScrollPane = getScrollPane(spinnerInnerPanel);
+        JScrollPane spinnerScrollPane = getScrollPane(spinnerInnerPanel);
         spinnerScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         spinnerScrollPane.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.listPanel = new JPanel();
+        JPanel listPanel = new JPanel();
         listPanel.setLayout(new GridBagLayout());
         listPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
         this.spinners = new HashMap<>();
@@ -68,7 +54,7 @@ public class JNumericMenuPanel extends JPanel {
             listPanel.add(spinner, generateConstraintsButtons(1, layoutIndex, 1, 1, 1, 0));
             layoutIndex++;
         }
-        this.confirmButton = new JConfirmNumericButton(null, game, spinners, switchPanel);
+        this.confirmButton = new JConfirmNumericButton(null, eventBus, spinners, switchPanel);
         spinnerInnerPanel.add(listPanel, BorderLayout.PAGE_START);
         spinnerPanel.add(spinnerScrollPane, BorderLayout.CENTER);
         spinnerPanel.add(confirmButton, BorderLayout.PAGE_END);

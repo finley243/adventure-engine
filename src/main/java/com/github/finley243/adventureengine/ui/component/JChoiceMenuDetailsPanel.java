@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine.ui.component;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
+import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,37 +17,30 @@ public class JChoiceMenuDetailsPanel extends JPanel {
     private static final int SCROLL_BAR_WIDTH_REMOVED = 8;
     private static final int SCROLL_INCREMENT = 5;
 
-    // buttonPanel contains buttonScrollPane (which contains buttonInnerPanel, which itself contains listPanel) and endTurnButton
-    private final JPanel buttonPanel;
-    private final JScrollPane buttonScrollPane;
-    private final JPanel buttonInnerPanel;
-    private final JPanel listPanel;
-    private final JChoiceButton endTurnButton;
-
     private final JDetailsPanel detailsPanel;
 
-    private final Game game;
+    private final EventBus eventBus;
     private final JSwitchPanel switchPanel;
 
-    public JChoiceMenuDetailsPanel(Game game, JSwitchPanel switchPanel, String parentCategory, String categoryTitle, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
-        this.game = game;
+    public JChoiceMenuDetailsPanel(EventBus eventBus, JSwitchPanel switchPanel, String parentCategory, String categoryTitle, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
+        this.eventBus = eventBus;
         this.switchPanel = switchPanel;
         setLayout(new GridBagLayout());
         setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BorderLayout());
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         buttonPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.buttonInnerPanel = new JPanel();
+        JPanel buttonInnerPanel = new JPanel();
         buttonInnerPanel.setLayout(new BorderLayout());
         buttonInnerPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.buttonScrollPane = getScrollPane(buttonInnerPanel);
+        JScrollPane buttonScrollPane = getScrollPane(buttonInnerPanel);
         buttonScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
         buttonScrollPane.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.listPanel = new JPanel();
+        JPanel listPanel = new JPanel();
         listPanel.setLayout(new GridBagLayout());
         listPanel.setBackground(GraphicalInterfaceComplex.COLOR_BACKGROUND);
-        this.endTurnButton = getEndTurnButton(endTurnIndex);
+        JChoiceButton endTurnButton = getEndTurnButton(endTurnIndex);
         this.detailsPanel = new JDetailsPanel();
         int layoutIndex = 0;
         if (parentCategory != null) {
@@ -99,14 +92,14 @@ public class JChoiceMenuDetailsPanel extends JPanel {
     }
 
     private JChoiceButton getEndTurnButton(int index) {
-        JChoiceButton endTurnButton = new JChoiceButton(GraphicalInterfaceComplex.LABEL_END_TURN, -1, null, game, index, switchPanel);
+        JChoiceButton endTurnButton = new JChoiceButton(GraphicalInterfaceComplex.LABEL_END_TURN, -1, null, eventBus, index, switchPanel);
         endTurnButton.setEnabled(index > -1);
         endTurnButton.setVisible(true);
         return endTurnButton;
     }
 
     private JComponent getActionButton(MenuChoice action) {
-        JChoiceButton actionButton = new JChoiceButton(action.getPrompt(), action.getActionPoints(), action.getDisabledReason(), game, action.getIndex(), switchPanel);
+        JChoiceButton actionButton = new JChoiceButton(action.getPrompt(), action.getActionPoints(), action.getDisabledReason(), eventBus, action.getIndex(), switchPanel);
         actionButton.setEnabled(action.isEnabled());
         return actionButton;
     }

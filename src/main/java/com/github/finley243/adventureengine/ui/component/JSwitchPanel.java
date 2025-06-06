@@ -1,10 +1,10 @@
 package com.github.finley243.adventureengine.ui.component;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.NumericMenuField;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
+import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,12 +17,12 @@ public class JSwitchPanel extends JPanel {
 
     private final CardLayout cardLayout;
 
-    private final Game game;
+    private final EventBus eventBus;
     private final Set<String> validPanels;
     private final Deque<String> panelStack;
 
-    public JSwitchPanel(Game game) {
-        this.game = game;
+    public JSwitchPanel(EventBus eventBus) {
+        this.eventBus = eventBus;
         this.validPanels = new HashSet<>();
         this.panelStack = new ArrayDeque<>();
         this.cardLayout = new CardLayout();
@@ -65,7 +65,7 @@ public class JSwitchPanel extends JPanel {
             }
             categoryByID.put(category.getCategoryID(), category);
         }
-        JPanel topLevelPanel = new JChoiceMenuPanel(game, this, null, null, topLevelCategories, topLevelActions, endTurnIndex);
+        JPanel topLevelPanel = new JChoiceMenuPanel(eventBus, this, null, null, topLevelCategories, topLevelActions, endTurnIndex);
         addChoicePanel(topLevelPanel, TOP_LEVEL_MENU);
         Set<String> combinedCategories = new HashSet<>();
         combinedCategories.addAll(actions.keySet());
@@ -87,11 +87,11 @@ public class JSwitchPanel extends JPanel {
             }
             JPanel categoryPanel;
             if (categoryByID.get(categoryID).getType() == MenuCategory.CategoryType.INVENTORY_TRANSFER) {
-                categoryPanel = new JChoiceMenuDetailsDoublePanel(game, this, parentCategory, categoryTitle, categoryData, actionData, endTurnIndex);
+                categoryPanel = new JChoiceMenuDetailsDoublePanel(eventBus, this, parentCategory, categoryTitle, categoryData, actionData, endTurnIndex);
             } else if (categoryByID.get(categoryID).showDetails()) {
-                categoryPanel = new JChoiceMenuDetailsPanel(game, this, parentCategory, categoryTitle, categoryData, actionData, endTurnIndex);
+                categoryPanel = new JChoiceMenuDetailsPanel(eventBus, this, parentCategory, categoryTitle, categoryData, actionData, endTurnIndex);
             } else {
-                categoryPanel = new JChoiceMenuPanel(game, this, parentCategory, categoryTitle, categoryData, actionData, endTurnIndex);
+                categoryPanel = new JChoiceMenuPanel(eventBus, this, parentCategory, categoryTitle, categoryData, actionData, endTurnIndex);
             }
             addChoicePanel(categoryPanel, categoryID);
         }
@@ -100,7 +100,7 @@ public class JSwitchPanel extends JPanel {
     }
 
     public void loadNumericMenu(List<NumericMenuField> numericFields, int points) {
-        JNumericMenuPanel numericPanel = new JNumericMenuPanel(game, this, numericFields, points);
+        JNumericMenuPanel numericPanel = new JNumericMenuPanel(eventBus, this, numericFields, points);
         addChoicePanel(numericPanel, TOP_LEVEL_MENU);
         switchToPanel(TOP_LEVEL_MENU);
         validate();

@@ -14,7 +14,6 @@ public class JNumericSpinner extends JPanel {
     private final JNumericButtonDecrease buttonDecrease;
 
     private final JNumericMenuPanel numericMenuPanel;
-    private final int initial;
     private final int min;
     private final int max;
     private final int maxTotal;
@@ -22,7 +21,6 @@ public class JNumericSpinner extends JPanel {
     private int value;
 
     public JNumericSpinner(int initial, int min, int max, int maxTotal, JNumericMenuPanel numericMenuPanel) {
-        this.initial = initial;
         this.min = min;
         this.max = max;
         this.maxTotal = maxTotal;

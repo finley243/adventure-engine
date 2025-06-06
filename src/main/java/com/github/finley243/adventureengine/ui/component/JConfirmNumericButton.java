@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.ui.component;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.event.ui.NumericMenuInputEvent;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
+import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,23 +15,20 @@ public class JConfirmNumericButton extends JPanel {
 
     private static final String CONFIRM_LABEL = "Confirm";
 
-    private final JLabel labelMain;
-    private final JLabel labelDetails;
-
-    private final Game game;
+    private final EventBus eventBus;
     private final Map<String, JNumericSpinner> spinners;
     private final JSwitchPanel switchPanel;
 
     private boolean mouseHovering;
 
-    public JConfirmNumericButton(String details, Game game, Map<String, JNumericSpinner> spinners, JSwitchPanel switchPanel) {
-        this.game = game;
+    public JConfirmNumericButton(String details, EventBus eventBus, Map<String, JNumericSpinner> spinners, JSwitchPanel switchPanel) {
+        this.eventBus = eventBus;
         this.spinners = spinners;
         this.switchPanel = switchPanel;
         setLayout(new BorderLayout());
-        this.labelMain = new JLabel(CONFIRM_LABEL);
+        JLabel labelMain = new JLabel(CONFIRM_LABEL);
         add(labelMain, BorderLayout.LINE_START);
-        this.labelDetails = new JLabel(details);
+        JLabel labelDetails = new JLabel(details);
         add(labelDetails, BorderLayout.PAGE_END);
 
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(GraphicalInterfaceComplex.COLOR_BUTTON_BORDER, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));
@@ -88,7 +85,7 @@ public class JConfirmNumericButton extends JPanel {
         for (Map.Entry<String, JNumericSpinner> entry : spinners.entrySet()) {
             changedValues.put(entry.getKey(), entry.getValue().getValue());
         }
-        game.eventBus().post(new NumericMenuInputEvent(changedValues));
+        eventBus.post(new NumericMenuInputEvent(changedValues));
     }
 
     @Override

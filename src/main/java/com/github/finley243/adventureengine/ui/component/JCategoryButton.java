@@ -9,10 +9,6 @@ import java.awt.event.MouseEvent;
 
 public class JCategoryButton extends JPanel {
 
-    private final JLabel labelMain;
-    private final JLabel labelArrow;
-    private final JLabel labelDetails;
-
     private final JSwitchPanel switchPanel;
     private final String category;
 
@@ -22,11 +18,11 @@ public class JCategoryButton extends JPanel {
         this.switchPanel = switchPanel;
         this.category = category;
         setLayout(new BorderLayout());
-        this.labelMain = new JLabel(label);
+        JLabel labelMain = new JLabel(label);
         add(labelMain, BorderLayout.LINE_START);
-        this.labelArrow = new JLabel(">");
+        JLabel labelArrow = new JLabel(">");
         add(labelArrow, BorderLayout.LINE_END);
-        this.labelDetails = new JLabel(details);
+        JLabel labelDetails = new JLabel(details);
         add(labelDetails, BorderLayout.PAGE_END);
 
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(GraphicalInterfaceComplex.COLOR_BUTTON_BORDER, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));

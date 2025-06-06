@@ -9,9 +9,6 @@ import java.awt.event.MouseEvent;
 
 public class JBackButton extends JPanel {
 
-    private final JLabel labelMain;
-    private final JLabel labelArrow;
-
     private final JSwitchPanel switchPanel;
 
     private boolean mouseHovering;
@@ -19,9 +16,9 @@ public class JBackButton extends JPanel {
     public JBackButton(JSwitchPanel switchPanel, String categoryTitle) {
         this.switchPanel = switchPanel;
         setLayout(new BorderLayout());
-        this.labelMain = new JLabel(GraphicalInterfaceComplex.LABEL_BACK);
+        JLabel labelMain = new JLabel(GraphicalInterfaceComplex.LABEL_BACK);
         add(labelMain, BorderLayout.LINE_END);
-        this.labelArrow = new JLabel("< " + categoryTitle);
+        JLabel labelArrow = new JLabel("< " + categoryTitle);
         add(labelArrow, BorderLayout.LINE_START);
 
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(GraphicalInterfaceComplex.COLOR_BUTTON_BORDER, 1), BorderFactory.createEmptyBorder(5, 5, 5, 5)));

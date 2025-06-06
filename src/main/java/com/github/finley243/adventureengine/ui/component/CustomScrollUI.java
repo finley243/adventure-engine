@@ -38,13 +38,13 @@ public class CustomScrollUI extends BasicScrollBarUI {
         graphics2D.clearRect(0, 0, c.getWidth(), c.getHeight());
         graphics2D.setColor(isThumbRollover() ? GraphicalInterfaceComplex.COLOR_SCROLL_BAR_HOVER : GraphicalInterfaceComplex.COLOR_SCROLL_BAR);
         int height = Math.max(thumbBounds.height, thumbWidth);
+        int x;
         if (centered) { // Centered scroll bar
-        int x = Math.round(((float) (thumbBounds.width - thumbWidth)) / 2) + thumbBounds.x;
-        graphics2D.fillRect(x, thumbBounds.y + verticalPadding, thumbWidth, height - (2 * verticalPadding));
+            x = Math.round(((float) (thumbBounds.width - thumbWidth)) / 2) + thumbBounds.x;
         } else { // Right aligned scroll bar
-            int x = thumbBounds.width - thumbWidth + thumbBounds.x;
-            graphics2D.fillRect(x, thumbBounds.y + verticalPadding, thumbWidth, height - (2 * verticalPadding));
+            x = thumbBounds.width - thumbWidth + thumbBounds.x;
         }
+        graphics2D.fillRect(x, thumbBounds.y + verticalPadding, thumbWidth, height - (2 * verticalPadding));
         graphics2D.dispose();
     }
 

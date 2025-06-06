@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.ui.component.JGameTextPanel;
 import com.github.finley243.adventureengine.ui.component.JSwitchPanel;
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import javax.swing.*;
@@ -39,16 +40,12 @@ public class GraphicalInterfaceComplex implements UserInterface {
 	public static final String LABEL_BACK = "BACK";
 	public static final String LABEL_ACTION_POINTS = " AP";
 
-	private final Game game;
-
 	private final JFrame window;
 	private final JGameTextPanel textPanel;
 	private final JSwitchPanel switchPanel;
 
-	public GraphicalInterfaceComplex(Game game) {
-		this.game = game;
-
-		this.window = new JFrame(game.data().getConfig("gameName"));
+	public GraphicalInterfaceComplex(EventBus eventBus, String gameName) {
+		this.window = new JFrame(gameName);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setMinimumSize(new Dimension(500, 600));
 		window.setPreferredSize(new Dimension(500, 600));
@@ -58,7 +55,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 		this.textPanel = new JGameTextPanel();
 		window.add(textPanel);
 
-		this.switchPanel = new JSwitchPanel(game);
+		this.switchPanel = new JSwitchPanel(eventBus);
 		window.add(switchPanel);
 
 		window.pack();
