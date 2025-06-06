@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
-import com.github.finley243.adventureengine.menu.ThreadControl;
 import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.*;

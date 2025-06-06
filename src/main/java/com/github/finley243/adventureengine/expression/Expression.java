@@ -80,24 +80,29 @@ public abstract class Expression {
      * DO NOT USE WITH FOR GENERATING NOUN CONSTANTS! Use Expression.constantNoun() instead.
      */
     public static Expression constant(Object valueObject) {
-        if (valueObject == null) return null;
-        if (valueObject instanceof Expression expression) return expression;
-        if (valueObject instanceof Set<?> set) {
-            Set<Expression> expressionSet = new HashSet<>();
-            for (Object elementObject : set) {
-                Expression elementExpression = Expression.constant(elementObject);
-                expressionSet.add(elementExpression);
-            }
-            return new ExpressionConstantSet(expressionSet);
-        } else if (valueObject instanceof List<?> set) {
-            List<Expression> expressionList = new ArrayList<>();
-            for (Object elementObject : set) {
-                Expression elementExpression = Expression.constant(elementObject);
-                expressionList.add(elementExpression);
-            }
-            return new ExpressionConstantList(expressionList);
-        }
         switch (valueObject) {
+            case null -> {
+                return null;
+            }
+            case Expression expression -> {
+                return expression;
+            }
+            case Set<?> set -> {
+                Set<Expression> expressionSet = new HashSet<>();
+                for (Object elementObject : set) {
+                    Expression elementExpression = Expression.constant(elementObject);
+                    expressionSet.add(elementExpression);
+                }
+                return new ExpressionConstantSet(expressionSet);
+            }
+            case List<?> set -> {
+                List<Expression> expressionList = new ArrayList<>();
+                for (Object elementObject : set) {
+                    Expression elementExpression = Expression.constant(elementObject);
+                    expressionList.add(elementExpression);
+                }
+                return new ExpressionConstantList(expressionList);
+            }
             case Boolean value -> {
                 return new ExpressionConstantBoolean(value);
             }
