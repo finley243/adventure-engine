@@ -60,6 +60,8 @@ public abstract class ObjectComponent implements StatHolder {
 
     public void onSetObjectArea(Area area) {}
 
+    public void onStartRound() {}
+
     protected abstract String getStatName();
 
     @Override

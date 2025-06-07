@@ -7,7 +7,6 @@ import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 
 public class ItemComponentEffectible extends ItemComponent {
 
-    // TODO - EffectComponent round updates (handled by current inventory owner, either actor or area)
     private final EffectComponent effectComponent;
 
     public ItemComponentEffectible(Item item, ItemComponentTemplate template) {
@@ -26,6 +25,11 @@ public class ItemComponentEffectible extends ItemComponent {
 
     public void removeEffect(String effectID) {
         effectComponent.removeEffect(effectID);
+    }
+
+    @Override
+    public void onStartRound() {
+        effectComponent.onStartRound();
     }
 
 }

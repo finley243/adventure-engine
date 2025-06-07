@@ -173,6 +173,11 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			link.init(allAreas);
 		}
 	}
+
+	public void onStartRound() {
+		applyEffects();
+		getInventory().onStartRound();
+	}
 	
 	public Set<WorldObject> getObjects(){
 		return objects;
@@ -351,10 +356,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			}
 		}
 		return areas;
-	}
-
-	public void onStartRound() {
-		applyEffects();
 	}
 
 	public void applyEffects() {

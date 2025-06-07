@@ -30,6 +30,14 @@ public class Inventory {
 		this.itemsStateless = new HashMap<>();
 	}
 
+	public void onStartRound() {
+		for (List<Item> itemList : items.values()) {
+			for (Item item : itemList) {
+				item.onStartRound();
+			}
+		}
+	}
+
 	public void addItem(Item item) {
 		if (item.hasState()) {
 			if (item.getInventory() != null) throw new UnsupportedOperationException("Cannot add item " + item + " to inventory because it is still located in another inventory");
@@ -83,15 +91,6 @@ public class Inventory {
 			totalCount += items.get(itemID).size();
 		}
 		return totalCount >= count;
-	}
-
-	public boolean hasItemWithTag(String tag) {
-		for (Item item : getItems()) {
-			if (item.getTags().contains(tag)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	// TODO - Possibly change behavior to return count of stated items with the same template, rather than count of instance

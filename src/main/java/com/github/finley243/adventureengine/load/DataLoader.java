@@ -308,7 +308,6 @@ public class DataLoader {
         boolean exit = LoadUtils.attributeBool(lineElement, "exit", false);
         String redirect = LoadUtils.attribute(lineElement, "redirect", null);
         String from = LoadUtils.attribute(lineElement, "from", null);
-        // TODO - Check this condition's functionality more thoroughly (may have unexpected results in rare situations)
         if (lineElement.getChildNodes().getLength() == 1) {
             String text = lineElement.getTextContent().trim();
             return new SceneLine(text, once, exit, redirect, from);

@@ -35,9 +35,9 @@ public abstract class ItemComponent implements MutableStatHolder {
         return getTemplate().actionsRestricted();
     }
 
-    public void onInit() {
+    public void onInit() {}
 
-    }
+    public void onStartRound() {}
 
     public List<Action> getInventoryActions(Actor subject) {
         if (!actionsRestricted()) {

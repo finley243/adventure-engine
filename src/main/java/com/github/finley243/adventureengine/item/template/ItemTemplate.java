@@ -78,11 +78,6 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 		return price;
 	}
 
-	public Set<String> getTags() {
-		// TODO - Add tags for components
-		return new HashSet<>();
-	}
-
 	public List<ItemComponentTemplate> getComponents() {
 		return components;
 	}
@@ -102,7 +97,6 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 			case "price" -> Expression.constant(price);
 			case "id" -> Expression.constant(getID());
 			case "name" -> Expression.constant(getName());
-			case "tags" -> Expression.constant(getTags());
 			default -> null;
 		};
 	}

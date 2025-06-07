@@ -169,7 +169,11 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.HP = getTemplate().getMaxHP();
 	}
 
-	public void onStartRound() {}
+	public void onStartRound() {
+		for (ObjectComponent component : components.values()) {
+			component.onStartRound();
+		}
+	}
 
 	@Override
 	public List<Action> localActions(Actor subject) {

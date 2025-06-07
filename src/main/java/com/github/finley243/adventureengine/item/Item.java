@@ -83,6 +83,12 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		}
 	}
 
+	public void onStartRound() {
+		for (ItemComponent component : components.values()) {
+			component.onStartRound();
+		}
+	}
+
 	public <T extends ItemComponent> T getComponentOfType(Class<T> componentClass) {
 		ItemComponent component = components.get(componentClass);
 		return componentClass.cast(component);
@@ -134,10 +140,6 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 			actions.add(new ActionCustom(game(), null, null, this, null, customAction.action(), customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
 		}
 		return actions;
-	}
-
-	public Set<String> getTags() {
-		return getTemplate().getTags();
 	}
 
 	@Override

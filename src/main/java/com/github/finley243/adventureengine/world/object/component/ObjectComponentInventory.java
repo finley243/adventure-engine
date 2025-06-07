@@ -50,6 +50,11 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
+    public void onStartRound() {
+        inventory.onStartRound();
+    }
+
+    @Override
     protected String getStatName() {
         return "inventory";
     }

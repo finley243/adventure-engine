@@ -705,6 +705,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			return;
 		}
 		getEffectComponent().onStartRound();
+		getInventory().onStartRound();
 		if (!playerControlled) {
 			getTargetingComponent().updateTurn();
 			getBehaviorComponent().updateTurn();
