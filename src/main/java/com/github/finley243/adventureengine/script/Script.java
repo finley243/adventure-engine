@@ -41,7 +41,7 @@ public abstract class Script {
 		return traceData;
 	}
 
-	public static void loadNativeFunctions(Game game) {
+	public static List<ScriptParser.ScriptData> getNativeFunctions() {
 		List<ScriptParser.ScriptData> functions = new ArrayList<>();
 		functions.add(new ScriptParser.ScriptData("attributeMenu", false, null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("points", true, null)), false, new ScriptAttributeMenu(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("skillMenu", false, null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("points", true, null)), false, new ScriptSkillMenu(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
@@ -90,9 +90,7 @@ public abstract class Script {
 		functions.add(new ScriptParser.ScriptData("toTitleCase", true, Expression.DataType.STRING, List.of(new ScriptParser.ScriptParameter("string", true, null)), false, new ScriptStringCase(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME), ScriptStringCase.CaseType.TITLE)));
 		functions.add(new ScriptParser.ScriptData("dataType", true, Expression.DataType.STRING, List.of(new ScriptParser.ScriptParameter("value", true, null)), false, new ScriptDataType(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("sleep", false, null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("duration", true, null)), false, new ScriptSleep(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
-		for (ScriptParser.ScriptData scriptData : functions) {
-			game.data().addScript(scriptData.name(), scriptData);
-		}
+		return functions;
 	}
 
 	public static Script constant(boolean value) {

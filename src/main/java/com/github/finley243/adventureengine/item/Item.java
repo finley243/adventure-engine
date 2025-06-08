@@ -27,12 +27,12 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	private Inventory currentInventory;
 	private boolean isKnown;
-	private final String templateID;
+	private final ItemTemplate template;
 	private final Map<Class<? extends ItemComponent>, ItemComponent> components;
 
-	public Item(Game game, String ID, String templateID) {
+	public Item(Game game, String ID, ItemTemplate template) {
 		super(game, ID);
-		this.templateID = templateID;
+		this.template = template;
 		this.currentInventory = null;
 		this.components = new HashMap<>();
 	}
@@ -108,7 +108,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	protected ItemTemplate getTemplate() {
-		return game().data().getItemTemplate(templateID);
+		return template;
 	}
 
 	public String getTemplateID() {

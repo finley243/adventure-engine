@@ -115,7 +115,9 @@ public class Data {
 		skills.clear();
 		senseTypes.clear();
 		globalExpressions.clear();
-		Script.loadNativeFunctions(game);
+		for (ScriptParser.ScriptData nativeFunction : Script.getNativeFunctions()) {
+			addScript(nativeFunction.name(), nativeFunction);
+		}
 		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
 		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getConfig("playerStats"));
 		addActor(player.getID(), player);

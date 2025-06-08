@@ -20,7 +20,7 @@ public class ItemFactory {
 
 	private static Item create(Game game, ItemTemplate stats, String ID) {
 		if (stats == null) return null;
-		Item item = new Item(game, ID, stats.getID());
+		Item item = new Item(game, ID, stats);
 		game.data().addItemInstance(ID, item);
 		item.onInit();
 		return item;

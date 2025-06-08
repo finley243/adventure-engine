@@ -51,10 +51,6 @@ public class ActionCustom extends Action {
         return getContextWithParameters(subject);
     }
 
-    public Game game() {
-        return game;
-    }
-
     public ActionTemplate getTemplate() {
         return game.data().getActionTemplate(template);
     }
