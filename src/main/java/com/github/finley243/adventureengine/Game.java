@@ -91,17 +91,6 @@ public class Game {
 	public QuestManager questManager() {
 		return questManager;
 	}
-	
-	/** Simple game loop that runs nextRound until continueGameLoop is false */
-	/*private void startGameLoop() {
-		continueGame = true;
-		while (continueGame) {
-			nextRound();
-			if (data().getPlayer().isActive()) {
-				sleep(800);
-			}
-		}
-	}*/
 
 	private void startRound() {
 		if (!continueGame) return;
@@ -154,45 +143,6 @@ public class Game {
 		List<Actor> actors = new ArrayList<>(data().getActors());
 		actors.sort((a1, a2) -> a2.getAttribute("agility", new Context(this, a2, a2)) - a1.getAttribute("agility", new Context(this, a1, a1)));
 		return actors;
-	}
-	
-	/** Executes a single round of the game (every actor takes a turn) */
-	/*private void nextRound() {
-		eventBus.post(new TextClearEvent());
-		TextGen.clearContext();
-		for (Timer timer : data().getTimers()) {
-			timer.update();
-			if (timer.shouldRemove()) {
-				data().removeTimer(timer.getID());
-			}
-		}
-		for (Area area : data().getAreas()) {
-			area.onStartRound();
-		}
-		for (WorldObject object : data().getObjects()) {
-			object.onStartRound();
-		}
-		data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
-		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
-		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
-		for (Actor visibleActor : data().getPlayer().getVisibleActors()) {
-			visibleActor.triggerScript("on_player_visible_round", new Context(this, visibleActor, data().getPlayer()));
-		}
-		for (Actor actor : data().getActors()) {
-			if (!actor.isPlayer()) {
-				actor.takeTurn();
-			}
-		}
-		data().getPlayer().takeTurn();
-		data().dateTime().onNextRound();
-	}*/
-	
-	private void sleep(int millis) {
-		try {
-			Thread.sleep(millis);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/** Ends the game loop, triggered when the player dies */
