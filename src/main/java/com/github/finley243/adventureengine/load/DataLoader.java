@@ -91,7 +91,7 @@ public class DataLoader {
                                 }
                                 case "weaponClass" -> {
                                     WeaponClass weaponClass = loadWeaponClass(currentElement);
-                                    game.data().addWeaponClass(weaponClass.getID(), weaponClass);
+                                    game.data().addWeaponClass(weaponClass.ID(), weaponClass);
                                 }
                                 case "attackType" -> {
                                     WeaponAttackType attackType = loadWeaponAttackType(currentElement);
@@ -929,9 +929,8 @@ public class DataLoader {
         boolean isLoud = LoadUtils.attributeBool(weaponClassElement, "isLoud", false);
         String skill = LoadUtils.attribute(weaponClassElement, "skill", null);
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(weaponClassElement, "range", AreaLink.DistanceCategory.class);
-        Set<String> ammoTypes = LoadUtils.setOfTags(weaponClassElement, "ammo");
         Set<String> attackTypes = LoadUtils.setOfTags(weaponClassElement, "attackType");
-        return new WeaponClass(ID, name, isRanged, isLoud, skill, primaryRanges, ammoTypes, attackTypes);
+        return new WeaponClass(ID, name, isRanged, isLoud, skill, primaryRanges, attackTypes);
     }
 
     private static WeaponAttackType loadWeaponAttackType(Element attackTypeElement) throws GameDataException {

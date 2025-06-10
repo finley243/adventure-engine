@@ -8,7 +8,6 @@
             <slot>hand_off</slot>
         </slotGroup>
         <range>CLOSE</range>
-        <ammo>ammo_pistol</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
     </weaponClass>
@@ -21,7 +20,6 @@
             <slot>hand_off</slot>
         </slotGroup>
         <range>CLOSE</range>
-        <ammo>ammo_pistol</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
         <attackType>autofire</attackType>
@@ -33,7 +31,6 @@
             <slot>hand_off</slot>
         </slotGroup>
         <range>FAR</range>
-        <ammo>ammo_rifle</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
     </weaponClass>
@@ -44,7 +41,6 @@
             <slot>hand_off</slot>
         </slotGroup>
         <range>FAR</range>
-        <ammo>ammo_rifle</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
         <attackType>autofire</attackType>
@@ -56,7 +52,6 @@
             <slot>hand_off</slot>
         </slotGroup>
         <range>DISTANT</range>
-        <ammo>ammo_rifle</ammo>
         <attackType>basic_ranged</attackType>
         <attackType>targeted_ranged</attackType>
     </weaponClass>

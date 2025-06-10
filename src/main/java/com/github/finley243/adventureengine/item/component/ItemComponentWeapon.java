@@ -98,7 +98,7 @@ public class ItemComponentWeapon extends ItemComponent {
     }
 
     public Set<AreaLink.DistanceCategory> getRanges(Context context) {
-        return ranges.valueEnum(getWeaponClass().getPrimaryRanges(), AreaLink.DistanceCategory.class, context);
+        return ranges.valueEnum(getWeaponClass().primaryRanges(), AreaLink.DistanceCategory.class, context);
     }
 
     public float getModifiedHitChance(Context context, float baseChance) {
@@ -126,11 +126,11 @@ public class ItemComponentWeapon extends ItemComponent {
     }
 
     public String getSkill() {
-        return getWeaponClass().getSkill();
+        return getWeaponClass().skill();
     }
 
     public Set<String> getAttackTypes() {
-        return attackTypes.value(getWeaponClass().getAttackTypes(), new Context(getItem().game(), null, null, getItem()));
+        return attackTypes.value(getWeaponClass().attackTypes(), new Context(getItem().game(), null, null, getItem()));
     }
 
     @Override
@@ -191,7 +191,7 @@ public class ItemComponentWeapon extends ItemComponent {
             case "is_silenced" -> Expression.constant(isSilenced(context));
             case "damage_type" -> Expression.constant(getDamageType(context));
             case "attack_types" -> Expression.constant(getAttackTypes());
-            case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().getPrimaryRanges(), context));
+            case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges(), context));
             case "target_effects" -> Expression.constant(getTargetEffects(context));
             case "skill" -> Expression.constant(getSkill());
             default -> super.getStatValue(name, context);
