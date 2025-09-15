@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.ArrayList;
@@ -15,11 +16,11 @@ public class StatFloat extends Stat {
         this.mods = new ArrayList<>();
     }
 
-    public float value(float base, float min, float max, Context context) {
+    public float value(float base, float min, float max, Game game, Context context) {
         float add = 0.0f;
         float mult = 0.0f;
         for (StatFloatMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (mod.shouldApply(game, context)) {
                 add += mod.add;
                 mult += mod.mult;
             }
@@ -28,14 +29,14 @@ public class StatFloat extends Stat {
         return Math.min(Math.max(computedValue, min), max);
     }
 
-    public void addMod(StatFloatMod mod) {
+    public void addMod(StatFloatMod mod, Game game) {
         mods.add(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(getName(), game);
     }
 
-    public void removeMod(StatFloatMod mod) {
+    public void removeMod(StatFloatMod mod, Game game) {
         mods.remove(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(getName(), game);
     }
 
     public List<StatFloatMod> getMods() {
@@ -43,8 +44,8 @@ public class StatFloat extends Stat {
     }
 
     public record StatFloatMod(Condition condition, float add, float mult) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
+        public boolean shouldApply(Game game, Context context) {
+            return condition == null || condition.isMet(game, context);
         }
     }
 

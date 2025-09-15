@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
 import com.github.finley243.adventureengine.action.ActionObjectUseStart;
@@ -33,13 +34,13 @@ public class BehaviorUse extends Behavior {
     }
 
     @Override
-    public Float actionUtilityOverride(Actor subject, Action action) {
+    public Float actionUtilityOverride(Game game, Actor subject, Action action) {
         if (action instanceof ActionObjectUseStart actionUseStart && actionUseStart.getComponent().getObject().getID().equals(object) && actionUseStart.getSlotID().equals(slot)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         } else if (action instanceof ActionObjectUseEnd actionUseEnd && actionUseEnd.getComponent().getObject().getID().equals(object) && actionUseEnd.getSlotID().equals(slot)) {
             return 0.0f;
         }
-        return super.actionUtilityOverride(subject, action);
+        return super.actionUtilityOverride(game, subject, action);
     }
 
 }

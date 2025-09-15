@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.List;
@@ -15,9 +16,9 @@ public class ScriptAnd extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         for (Script subScript : subScripts) {
-            ScriptReturnData result = subScript.execute(context);
+            ScriptReturnData result = subScript.execute(game, context);
             if (result.error() != null) {
                 return result;
             } else if (result.flowStatement() != null) {

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.expression.Expression;
 
@@ -11,7 +12,7 @@ public class ScriptScaleLog extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression input = context.getLocalVariables().get("input").getExpression();
         Expression inputMin = context.getLocalVariables().get("inputMin").getExpression();
         Expression inputMax = context.getLocalVariables().get("inputMax").getExpression();

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class ScriptListConcat extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression listOneExpression = context.getLocalVariables().get("listOne").getExpression();
         Expression listTwoExpression = context.getLocalVariables().get("listTwo").getExpression();
         if (listOneExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List one parameter is not a list", getTraceData()));

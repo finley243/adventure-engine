@@ -25,14 +25,14 @@ public class EffectStatStringSet extends Effect {
 
     @Override
     public void start(MutableStatHolder target) {
-        StatStringSet moddableSet = target.getStatStringSet(stat);
-        moddableSet.addMod(new StatStringSet.StatStringSetMod(statCondition, valuesAdd, valuesRemove));
+        StatStringSet moddableSet = target.getStatStringSet(stat, game());
+        moddableSet.addMod(new StatStringSet.StatStringSetMod(statCondition, valuesAdd, valuesRemove), game());
     }
 
     @Override
     public void end(MutableStatHolder target) {
-        StatStringSet moddableSet = target.getStatStringSet(stat);
-        moddableSet.removeMod(new StatStringSet.StatStringSetMod(statCondition, valuesAdd, valuesRemove));
+        StatStringSet moddableSet = target.getStatStringSet(stat, game());
+        moddableSet.removeMod(new StatStringSet.StatStringSetMod(statCondition, valuesAdd, valuesRemove), game());
     }
 
 }

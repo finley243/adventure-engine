@@ -42,7 +42,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	public boolean canChoose(Context context) {
-		return (condition == null || condition.isMet(context)) && !(once && hasTriggered);
+		return (condition == null || condition.isMet(game(), context)) && !(once && hasTriggered);
 	}
 	
 	public List<SceneLine> getLines() {
@@ -66,7 +66,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Game game, Context context) {
 		return switch (name) {
 			case "triggered" -> new ExpressionConstantBoolean(hasTriggered);
 			case "id" -> new ExpressionConstantString(getID());
@@ -75,7 +75,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Game game, Context context) {
 		switch (name) {
 			case "triggered" -> {
 				this.hasTriggered = value.getValueBoolean();

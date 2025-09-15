@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -20,8 +21,8 @@ public class ScriptInventoryIterator extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData setResult = inventoryExpression.execute(context);
+    public ScriptReturnData execute(Game game, Context context) {
+        ScriptReturnData setResult = inventoryExpression.execute(game, context);
         if (setResult.error() != null) {
             return setResult;
         } else if (setResult.flowStatement() != null) {
@@ -34,7 +35,7 @@ public class ScriptInventoryIterator extends Script {
         Inventory inventory = setResult.value().getValueInventory();
         for (Map.Entry<Item, Integer> currentItem : inventory.getItemMap().entrySet()) {
             Context innerContext = new Context(context, new MapBuilder<String, Expression>().put("count", Expression.constant(currentItem.getValue())).build(), currentItem.getKey());
-            ScriptReturnData scriptResult = iteratedScript.execute(innerContext);
+            ScriptReturnData scriptResult = iteratedScript.execute(game, innerContext);
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() == FlowStatementType.RETURN) {

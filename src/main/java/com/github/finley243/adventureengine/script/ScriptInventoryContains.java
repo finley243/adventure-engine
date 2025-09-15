@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 
@@ -14,7 +15,7 @@ public class ScriptInventoryContains extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression inventoryExpression = context.getLocalVariables().get("inventory").getExpression();
         Expression itemExpression = context.getLocalVariables().get("item").getExpression();
         Expression requireAllExpression = context.getLocalVariables().get("requireAll").getExpression();

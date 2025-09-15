@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.LoadUtils;
 
@@ -16,34 +17,34 @@ public class StatString extends Stat {
         this.mods = new ArrayList<>();
     }
 
-    public String value(String base, Context context) {
+    public String value(String base, Game game, Context context) {
         String topValue = null;
         for (StatStringMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (mod.shouldApply(game, context)) {
                 topValue = mod.value;
             }
         }
         return topValue == null ? base : topValue;
     }
 
-    public <E extends Enum<E>> E valueEnum(E base, Class<E> enumType, Context context) {
+    public <E extends Enum<E>> E valueEnum(E base, Class<E> enumType, Game game, Context context) {
         String topValue = null;
         for (StatStringMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (mod.shouldApply(game, context)) {
                 topValue = mod.value;
             }
         }
         return topValue == null ? base : LoadUtils.stringToEnum(topValue, enumType);
     }
 
-    public void addMod(StatStringMod mod) {
+    public void addMod(StatStringMod mod, Game game) {
         mods.add(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(getName(), game);
     }
 
-    public void removeMod(StatStringMod mod) {
+    public void removeMod(StatStringMod mod, Game game) {
         mods.remove(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(getName(), game);
     }
 
     public List<StatStringMod> getMods() {
@@ -51,8 +52,8 @@ public class StatString extends Stat {
     }
 
     public record StatStringMod(Condition condition, String value) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
+        public boolean shouldApply(Game game, Context context) {
+            return condition == null || condition.isMet(game, context);
         }
     }
 

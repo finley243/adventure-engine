@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolder;
 
@@ -29,7 +30,7 @@ public class WeaponDataTemplate implements StatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Game game, Context context) {
         return switch (name) {
             case "damage" -> Expression.constant(damage);
             case "rate" -> Expression.constant(rate);
@@ -44,7 +45,7 @@ public class WeaponDataTemplate implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setStatValue(String name, Expression value, Game game, Context context) {
         return false;
     }
 

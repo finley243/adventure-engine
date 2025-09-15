@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.HashSet;
@@ -17,10 +18,10 @@ public class ScriptBuildSet extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Set<Expression> computedValues = new HashSet<>();
         for (Script valueScript : valueScripts) {
-            ScriptReturnData scriptResult = valueScript.execute(context);
+            ScriptReturnData scriptResult = valueScript.execute(game, context);
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() != null) {

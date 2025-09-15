@@ -119,7 +119,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.skillsBase = new HashMap<>();
 		this.attributes = new HashMap<>();
 		this.skills = new HashMap<>();
-		this.effectComponent = new EffectComponent(game, this, new Context(game, this, this));
+		this.effectComponent = new EffectComponent(game, this, new Context(this, this));
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
 		this.repeatActions = new HashMap<>();
 		this.startDisabled = startDisabled;
@@ -131,7 +131,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public void onInit(Set<String> damageTypeIDs, Set<String> attributeIDs, Set<String> skillIDs) {
 		if (!startDead) {
-			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
+			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, game(), new Context(this, this));
 		}
 		level = getTemplate().getStartingLevel();
 		for (String damageType : damageTypeIDs) {
@@ -215,14 +215,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(getArea().getRoom() != null ? LangUtils.titleCase(getArea().getRoom().getName()) : null, LangUtils.titleCase(getArea().getName())));
 			if (isNewRoom && getArea().getRoom() != null && getArea().getRoom().getDescription() != null) {
-				game().menuManager().sceneMenu(game(), getArea().getRoom().getDescription(), new Context(game(), this, this), false);
+				game().menuManager().sceneMenu(game(), getArea().getRoom().getDescription(), new Context(this, this), false);
 				getArea().getRoom().setKnown();
 				for (Area areaInRoom : getArea().getRoom().getAreas()) {
 					areaInRoom.setKnown();
 				}
 			}
 			if (isNewArea && getArea().getDescription() != null) {
-				game().menuManager().sceneMenu(game(), getArea().getDescription(), new Context(game(), this, this), false);
+				game().menuManager().sceneMenu(game(), getArea().getDescription(), new Context(this, this), false);
 				getArea().setKnown();
 			}
 			if (isNewRoom && getArea().getRoom() != null) {
@@ -249,7 +249,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 	
 	public int getAttribute(String attribute, Context context) {
-		return attributes.get(attribute).value(attributesBase.get(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, context);
+		return attributes.get(attribute).value(attributesBase.get(attribute), ATTRIBUTE_MIN, ATTRIBUTE_MAX, game(), context);
 	}
 
 	public int getAttributeBase(String attribute) {
@@ -265,7 +265,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public int getSkill(String skill, Context context) {
-		return skills.get(skill).value(skillsBase.get(skill), SKILL_MIN, SKILL_MAX, context);
+		return skills.get(skill).value(skillsBase.get(skill), SKILL_MIN, SKILL_MAX, game(), context);
 	}
 
 	public int getSkillBase(String skill) {
@@ -289,14 +289,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public boolean canPerformActions(Context context) {
-		return canPerformActions.value(true, context);
+		return canPerformActions.value(true, game(), context);
 	}
 	
 	public boolean canMove(Context context) {
 		if (isUsingObject()) {
 			return false;
 		}
-		return canMove.value(true, context);
+		return canMove.value(true, game(), context);
 	}
 
 	public boolean canPerformLocalActions() {
@@ -310,7 +310,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (isInCover()) {
 			return false;
 		}
-		return canDodge.value(true, context);
+		return canDodge.value(true, game(), context);
 	}
 
 	public boolean isInCover() {
@@ -375,27 +375,27 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public int getMaxHP() {
-		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
+		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, game(), new Context(this, this));
 	}
 
 	public int getDamageResistance(String damageType, Context context) {
-		return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, context);
+		return damageResistance.get(damageType).value(getTemplate().getDamageResistance(damageType), 0, MAX_DAMAGE_RESIST, game(), context);
 	}
 
 	public float getDamageMult(String damageType, Context context) {
-		return damageMult.get(damageType).value(getTemplate().getDamageMult(damageType), 0.0f, MAX_DAMAGE_MULT, context);
+		return damageMult.get(damageType).value(getTemplate().getDamageMult(damageType), 0.0f, MAX_DAMAGE_MULT, game(), context);
 	}
 
 	public int getActionPoints() {
-		return actionPoints.value(getTemplate().getActionPoints(), 0, MAX_ACTION_POINTS, new Context(game(), this, this));
+		return actionPoints.value(getTemplate().getActionPoints(), 0, MAX_ACTION_POINTS, game(), new Context(this, this));
 	}
 
 	public int getMovePoints() {
-		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, new Context(game(), this, this));
+		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, game(), new Context(this, this));
 	}
 
 	public Set<String> getEquipmentEffects(Item item) {
-		return equipmentEffects.value(new HashSet<>(), new Context(game(), this, this, item));
+		return equipmentEffects.value(new HashSet<>(), game(), new Context(this, this, item));
 	}
 
 	@Override
@@ -438,11 +438,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void modifyHP(int amount, Context context) {
 		HP += amount;
 		if (HP <= 0) {
-			Context killContext = new Context(game(), this, context.getSubject());
+			Context killContext = new Context(this, context.getSubject());
 			HP = 0;
 			kill(killContext);
 		} else if (amount < 0) {
-			Context modifierContext = new Context(game(), this, context.getSubject());
+			Context modifierContext = new Context(this, context.getSubject());
 			modifierContext.setLocalVariable("amount", Expression.constant(String.valueOf(-amount)));
 			modifierContext.setLocalVariable("condition", Expression.constant(getConditionDescription()));
 			triggerScript("on_damaged", modifierContext);
@@ -456,7 +456,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void kill(Context context) {
 		triggerScript("on_death", context);
 		if (context.getTarget() != null && context.getTarget() != this) {
-			context.getTarget().triggerScript("on_kill", new Context(context.game(), context.getTarget(), context.getSubject()));
+			context.getTarget().triggerScript("on_kill", new Context(context.getTarget(), context.getSubject()));
 		}
 		SensoryEvent.execute(new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null));
 		// TODO - Enable held item dropping on death for new equipment system
@@ -530,10 +530,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			if (isPlayer()) {
                 String text = null;
                 if (visible) {
-                    text = event.getTextVisible();
+                    text = event.getTextVisible(game());
                 }
 				if (text == null) {
-                    text = event.getTextAudible();
+                    text = event.getTextAudible(game());
                 }
                 if (text != null) {
                     game().eventBus().post(new RenderTextEvent(text));
@@ -613,7 +613,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public List<Action> availableActions() {
-		if (!canPerformActions(new Context(game(), this, this))) {
+		if (!canPerformActions(new Context(this, this))) {
 			return new ArrayList<>();
 		}
 		List<Action> actions = new ArrayList<>();
@@ -647,7 +647,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				actions.addAll(visibleObject.visibleActions(this));
 			}
 		}
-		if (canMove(new Context(game(), this, this))) {
+		if (canMove(new Context(this, this))) {
 			actions.addAll(getArea().getMoveActions(this, null, null));
 		}
 		actions.addAll(getArea().getAreaActions(this));
@@ -656,7 +656,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		actions.addAll(equipmentComponent.getEquippedActions());
 		for (String unarmedAttackType : getTemplate().getUnarmedAttackTypes()) {
-			actions.addAll(game().data().getAttackType(unarmedAttackType).generateActions(this, null));
+			actions.addAll(game().data().getAttackType(unarmedAttackType).generateActions(game(), this, null));
 		}
 		if (isSneaking()) {
 			actions.add(new ActionSneakEnd());
@@ -858,7 +858,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
+	public StatInt getStatInt(String name, Game game) {
 		if (name.startsWith("damage_resist_")) {
 			String damageType = name.substring("damage_resist_".length());
 			return damageResistance.get(damageType);
@@ -878,7 +878,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public StatFloat getStatFloat(String name) {
+	public StatFloat getStatFloat(String name, Game game) {
 		if (name.startsWith("damage_mult_")) {
 			String damageType = name.substring("damage_mult_".length());
 			return damageMult.get(damageType);
@@ -887,7 +887,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(String name) {
+	public StatBoolean getStatBoolean(String name, Game game) {
 		if ("can_perform_actions".equals(name)) {
 			return canPerformActions;
 		} else if ("can_move".equals(name)) {
@@ -899,12 +899,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public StatString getStatString(String name) {
+	public StatString getStatString(String name, Game game) {
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(String name) {
+	public StatStringSet getStatStringSet(String name, Game game) {
 		if ("equipment_effects".equals(name)) {
 			return equipmentEffects;
 		} else if ("sense_types".equals(name)) {
@@ -916,7 +916,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Game game, Context context) {
 		if (name.startsWith("damage_resist_")) {
 			String damageType = name.substring("damage_resist_".length());
 			if (!damageResistance.containsKey(damageType)) {
@@ -978,22 +978,22 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "template_id" -> Expression.constant(templateID);
 			case "area" -> Expression.constant(getArea().getID());
 			case "room" -> Expression.constant(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
-			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), context));
-			case "sense_types" -> Expression.constant(senseTypes.value(getTemplate().getSenseTypes(), context));
-			case "tags" -> Expression.constant(tags.value(getTemplate().getTags(), context));
+			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), game(), context));
+			case "sense_types" -> Expression.constant(senseTypes.value(getTemplate().getSenseTypes(), game(), context));
+			case "tags" -> Expression.constant(tags.value(getTemplate().getTags(), game(), context));
 			default -> null;
 		};
 	}
 
 	@Override
-	public void onStatChange(String name) {
+	public void onStatChange(String name, Game game) {
 		if ("max_hp".equals(name) && HP > getMaxHP()) {
 			HP = getMaxHP();
 		}
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Game game, Context context) {
 		if (name.startsWith("equip_slot_block_")) {
 			for (String slot : getEquipSlots().keySet()) {
 				if (name.equals("equip_slot_block_" + slot)) {
@@ -1074,11 +1074,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public void triggerScript(String trigger, Context context) {
 		for (Script currentScript : getTemplate().getScripts(trigger)) {
-			currentScript.execute(context);
+			currentScript.execute(game(), context);
 		}
 		if (scripts.containsKey(trigger)) {
 			for (Script currentScript : scripts.get(trigger)) {
-				currentScript.execute(context);
+				currentScript.execute(game(), context);
 			}
 		}
 	}
@@ -1154,9 +1154,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	private void evaluateXPChange() {
-		Context levelUpThresholdContext = new Context(game(), this, this);
+		Context levelUpThresholdContext = new Context(this, this);
 		levelUpThresholdContext.setLocalVariable("level", Expression.constant(level));
-		Script.ScriptReturnData thresholdReturn = getTemplate().getLevelUpThresholdExpression().execute(levelUpThresholdContext);
+		Script.ScriptReturnData thresholdReturn = getTemplate().getLevelUpThresholdExpression().execute(game(), levelUpThresholdContext);
 		if (thresholdReturn.error() != null) {
 			DebugLogger.print("Actor " + this + " level up threshold expression error: " + thresholdReturn.stackTrace());
 			return;
@@ -1179,7 +1179,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	private void onLevelUp() {
-		triggerScript("on_level_up", new Context(game(), this, this));
+		triggerScript("on_level_up", new Context(this, this));
 	}
 	
 }

@@ -58,8 +58,8 @@ public class ObjectComponentLink extends ObjectComponent {
 
     public boolean isLinkedAreaVisible(String linkID, Actor actor) {
         ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
-        Context context = new Context(getObject().game(), actor, actor, getObject(), null, null, null);
-        return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(context));
+        Context context = new Context(actor, actor, getObject(), null, null, null);
+        return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(getObject().game(), context));
     }
 
     public Set<Area> getLinkedLineOfSightAreas() {
@@ -74,9 +74,9 @@ public class ObjectComponentLink extends ObjectComponent {
 
     public Map<Area, AreaLink.CompassDirection> getLinkedLineOfSightAreasWithDirections() {
         Map<Area, AreaLink.CompassDirection> linkedAreas = new HashMap<>();
-        Context context = new Context(getObject().game(), getObject().game().data().getPlayer(), getObject().game().data().getPlayer(), getObject(), null, null, null);
+        Context context = new Context(getObject().game().data().getPlayer(), getObject().game().data().getPlayer(), getObject(), null, null, null);
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
-            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(context))) {
+            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(getObject().game(), context))) {
                 linkedAreas.put(getLinkedObject(linkEntry.getKey()).getArea(), getDirection(linkEntry.getKey()));
             }
         }

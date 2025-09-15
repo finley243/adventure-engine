@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptTernary extends Script {
@@ -17,8 +18,8 @@ public class ScriptTernary extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData conditionResult = scriptCondition.execute(context);
+    public ScriptReturnData execute(Game game, Context context) {
+        ScriptReturnData conditionResult = scriptCondition.execute(game, context);
         if (conditionResult.error() != null) {
             return conditionResult;
         } else if (conditionResult.flowStatement() != null) {
@@ -30,9 +31,9 @@ public class ScriptTernary extends Script {
         }
         boolean conditionSuccess = conditionResult.value().getValueBoolean();
         if (conditionSuccess) {
-            return scriptTrue.execute(context);
+            return scriptTrue.execute(game, context);
         } else {
-            return scriptFalse.execute(context);
+            return scriptFalse.execute(game, context);
         }
     }
 

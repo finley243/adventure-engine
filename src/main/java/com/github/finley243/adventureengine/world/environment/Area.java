@@ -360,7 +360,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	public void applyEffects() {
 		for (Actor actor : getActors()) {
-			for (String effectID : effects.value(new HashSet<>(), new Context(game(), actor, actor))) {
+			for (String effectID : effects.value(new HashSet<>(), game(), new Context(actor, actor))) {
 				actor.getEffectComponent().addEffect(effectID);
 			}
 		}
@@ -405,7 +405,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Game game, Context context) {
 		return switch (name) {
 			case "inventory" -> (itemInventory == null ? null : Expression.constant(itemInventory));
 			case "noun" -> Expression.constantNoun(this);
@@ -421,32 +421,32 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Game game, Context context) {
 		return false;
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
+	public StatInt getStatInt(String name, Game game) {
 		return null;
 	}
 
 	@Override
-	public StatFloat getStatFloat(String name) {
+	public StatFloat getStatFloat(String name, Game game) {
 		return null;
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(String name) {
+	public StatBoolean getStatBoolean(String name, Game game) {
 		return null;
 	}
 
 	@Override
-	public StatString getStatString(String name) {
+	public StatString getStatString(String name, Game game) {
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(String name) {
+	public StatStringSet getStatStringSet(String name, Game game) {
 		if ("effects".equals(name)) {
 			return effects;
 		}
@@ -454,7 +454,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public void onStatChange(String name) {
+	public void onStatChange(String name, Game game) {
 		if ("effects".equals(name)) {
 			applyEffects();
 		}
@@ -463,8 +463,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				Context context = new Context(game(), subject, target);
-				currentScript.execute(context);
+				Context context = new Context(subject, target);
+				currentScript.execute(game(), context);
 			}
 		}
 	}

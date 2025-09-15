@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class ScriptCopy extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         Expression copyExpression = switch (valueExpression.getDataType()) {
             case LIST -> Expression.constant(new ArrayList<>(valueExpression.getValueList()));

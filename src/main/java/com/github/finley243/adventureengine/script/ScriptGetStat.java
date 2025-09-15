@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
@@ -18,8 +19,8 @@ public class ScriptGetStat extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData statNameResult = statName.execute(context);
+    public ScriptReturnData execute(Game game, Context context) {
+        ScriptReturnData statNameResult = statName.execute(game, context);
         if (statNameResult.error() != null) {
             return statNameResult;
         } else if (statNameResult.flowStatement() != null) {
@@ -29,9 +30,9 @@ public class ScriptGetStat extends Script {
         if (statNameExpression == null) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat name is null", getTraceData()));
         if (statNameExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat name is not a string", getTraceData()));
         String statNameString = statNameExpression.getValueString();
-        StatHolder statHolderValue = statHolder.getHolder(context);
+        StatHolder statHolderValue = statHolder.getHolder(game, context);
         if (statHolderValue == null) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat holder is null", getTraceData()));
-        Expression statValue = statHolderValue.getStatValue(statNameString, context);
+        Expression statValue = statHolderValue.getStatValue(statNameString, game, context);
         return new ScriptReturnData(statValue, null, null);
     }
 

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.expression.Expression;
 
@@ -11,7 +12,7 @@ public class ScriptRandomBoolean extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression chanceExpression = context.getLocalVariables().get("chance").getExpression();
         if (chanceExpression.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("Chance parameter is not a float", getTraceData()));
         float chance = chanceExpression.getValueFloat();

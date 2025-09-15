@@ -34,7 +34,7 @@ public class ActionObjectUseEnd extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		Context context = new Context(subject.game(), subject, null, component.getObject(), null, null, this);
+		Context context = new Context(subject, null, component.getObject(), null, null, this);
 		context.setLocalVariable("slot", Expression.constant(slotID));
 		return context;
 	}

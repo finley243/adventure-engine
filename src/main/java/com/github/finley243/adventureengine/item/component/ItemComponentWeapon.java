@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.WeaponClass;
@@ -59,8 +60,8 @@ public class ItemComponentWeapon extends ItemComponent {
     @Override
     protected List<Action> getPossibleInventoryActions(Actor subject) {
         List<Action> actions = super.getPossibleInventoryActions(subject);
-        for (String attackType : getAttackTypes()) {
-            actions.addAll(getItem().game().data().getAttackType(attackType).generateActions(subject, getItem()));
+        for (String attackType : getAttackTypes(subject.game())) {
+            actions.addAll(getItem().game().data().getAttackType(attackType).generateActions(subject.game(), subject, getItem()));
         }
         return actions;
     }
@@ -73,12 +74,12 @@ public class ItemComponentWeapon extends ItemComponent {
         return getWeaponClass().isRanged();
     }
 
-    public int getDamage(Context context) {
-        return damage.value(getWeaponTemplate().getDamage(), 1, 1000, context);
+    public int getDamage(Game game, Context context) {
+        return damage.value(getWeaponTemplate().getDamage(), 1, 1000, game, context);
     }
 
-    public int getRate(Context context) {
-        return rate.value(getWeaponTemplate().getRate(), 1, 50, context);
+    public int getRate(Game game, Context context) {
+        return rate.value(getWeaponTemplate().getRate(), 1, 50, game, context);
     }
 
     public float getBaseHitChanceMin() {
@@ -89,88 +90,88 @@ public class ItemComponentWeapon extends ItemComponent {
         return isRanged() ? HIT_CHANCE_BASE_RANGED_MAX : HIT_CHANCE_BASE_MELEE_MAX;
     }
 
-    public int getCritDamage(Context context) {
-        return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000, context);
+    public int getCritDamage(Game game, Context context) {
+        return critDamage.value(getWeaponTemplate().getCritDamage(), 0, 1000, game, context);
     }
 
-    public float getCritChance(Context context) {
-        return critChance.value(getWeaponTemplate().getCritChance(), 0.0f, 1.0f, context);
+    public float getCritChance(Game game, Context context) {
+        return critChance.value(getWeaponTemplate().getCritChance(), 0.0f, 1.0f, game, context);
     }
 
-    public Set<AreaLink.DistanceCategory> getRanges(Context context) {
-        return ranges.valueEnum(getWeaponClass().primaryRanges(), AreaLink.DistanceCategory.class, context);
+    public Set<AreaLink.DistanceCategory> getRanges(Game game, Context context) {
+        return ranges.valueEnum(getWeaponClass().primaryRanges(), AreaLink.DistanceCategory.class, game, context);
     }
 
-    public float getModifiedHitChance(Context context, float baseChance) {
-        return hitChanceModifier.value(baseChance, 0.0f, 1.0f, context);
+    public float getModifiedHitChance(Game game, Context context, float baseChance) {
+        return hitChanceModifier.value(baseChance, 0.0f, 1.0f, game, context);
     }
 
-    public float getArmorMult(Context context) {
-        return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, context);
+    public float getArmorMult(Game game, Context context) {
+        return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, game, context);
     }
 
-    public Set<String> getTargetEffects(Context context) {
-        return targetEffects.value(getWeaponTemplate().getTargetEffects(), context);
+    public Set<String> getTargetEffects(Game game, Context context) {
+        return targetEffects.value(getWeaponTemplate().getTargetEffects(), game, context);
     }
 
-    public String getDamageType(Context context) {
-        return damageType.value(getWeaponTemplate().getDamageType(), context);
+    public String getDamageType(Game game, Context context) {
+        return damageType.value(getWeaponTemplate().getDamageType(), game, context);
     }
 
-    public boolean isSilenced(Context context) {
-        return isSilenced.value(getWeaponTemplate().isSilenced(), context);
+    public boolean isSilenced(Game game, Context context) {
+        return isSilenced.value(getWeaponTemplate().isSilenced(), game, context);
     }
 
-    public boolean isLoud(Context context) {
-        return getWeaponClass().isLoud() && !isSilenced(context);
+    public boolean isLoud(Game game, Context context) {
+        return getWeaponClass().isLoud() && !isSilenced(game, context);
     }
 
     public String getSkill() {
         return getWeaponClass().skill();
     }
 
-    public Set<String> getAttackTypes() {
-        return attackTypes.value(getWeaponClass().attackTypes(), new Context(getItem().game(), null, null, getItem()));
+    public Set<String> getAttackTypes(Game game) {
+        return attackTypes.value(getWeaponClass().attackTypes(), game, new Context((Actor) null, null, getItem()));
     }
 
     @Override
-    public StatInt getStatInt(String name) {
+    public StatInt getStatInt(String name, Game game) {
         return switch (name) {
             case "damage" -> damage;
             case "rate" -> rate;
             case "crit_damage" -> critDamage;
-            default -> super.getStatInt(name);
+            default -> super.getStatInt(name, game);
         };
     }
 
     @Override
-    public StatFloat getStatFloat(String name) {
+    public StatFloat getStatFloat(String name, Game game) {
         if ("hit_chance_modifier".equals(name)) {
             return hitChanceModifier;
         } else if ("armor_mult".equals(name)) {
             return armorMult;
         }
-        return super.getStatFloat(name);
+        return super.getStatFloat(name, game);
     }
 
     @Override
-    public StatBoolean getStatBoolean(String name) {
+    public StatBoolean getStatBoolean(String name, Game game) {
         if ("is_silenced".equals(name)) {
             return isSilenced;
         }
-        return super.getStatBoolean(name);
+        return super.getStatBoolean(name, game);
     }
 
     @Override
-    public StatString getStatString(String name) {
+    public StatString getStatString(String name, Game game) {
         if ("damage_type".equals(name)) {
             return damageType;
         }
-        return super.getStatString(name);
+        return super.getStatString(name, game);
     }
 
     @Override
-    public StatStringSet getStatStringSet(String name) {
+    public StatStringSet getStatStringSet(String name, Game game) {
         if ("ranges".equals(name)) {
             return ranges;
         } else if ("attack_types".equals(name)) {
@@ -178,23 +179,23 @@ public class ItemComponentWeapon extends ItemComponent {
         } else if ("target_effects".equals(name)) {
             return targetEffects;
         }
-        return super.getStatStringSet(name);
+        return super.getStatStringSet(name, game);
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Game game, Context context) {
         return switch (name) {
-            case "damage" -> Expression.constant(getDamage(context));
-            case "rate" -> Expression.constant(getRate(context));
-            case "crit_damage" -> Expression.constant(getCritDamage(context));
-            case "armor_mult" -> Expression.constant(getArmorMult(context));
-            case "is_silenced" -> Expression.constant(isSilenced(context));
-            case "damage_type" -> Expression.constant(getDamageType(context));
-            case "attack_types" -> Expression.constant(getAttackTypes());
-            case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges(), context));
-            case "target_effects" -> Expression.constant(getTargetEffects(context));
+            case "damage" -> Expression.constant(getDamage(game, context));
+            case "rate" -> Expression.constant(getRate(game, context));
+            case "crit_damage" -> Expression.constant(getCritDamage(game, context));
+            case "armor_mult" -> Expression.constant(getArmorMult(game, context));
+            case "is_silenced" -> Expression.constant(isSilenced(game, context));
+            case "damage_type" -> Expression.constant(getDamageType(game, context));
+            case "attack_types" -> Expression.constant(getAttackTypes(game));
+            case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges(), game, context));
+            case "target_effects" -> Expression.constant(getTargetEffects(game, context));
             case "skill" -> Expression.constant(getSkill());
-            default -> super.getStatValue(name, context);
+            default -> super.getStatValue(name, game, context);
         };
     }
 

@@ -25,7 +25,7 @@ public class ActionModRemove extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        Context context = new Context(subject.game(), subject, null, target);
+        Context context = new Context(subject, null, target);
         context.setLocalVariable("mod", Expression.constant(mod));
         return context;
     }

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.List;
@@ -17,9 +18,9 @@ public class ScriptConditional extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         for (ConditionalScriptPair scriptPair : conditionalScriptPairs) {
-            ScriptReturnData conditionResult = scriptPair.condition.execute(context);
+            ScriptReturnData conditionResult = scriptPair.condition.execute(game, context);
             if (conditionResult.error() != null) {
                 return conditionResult;
             } else if (conditionResult.flowStatement() != null) {
@@ -30,11 +31,11 @@ public class ScriptConditional extends Script {
                 return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not return a boolean value", getTraceData()));
             }
             if (conditionResult.value().getValueBoolean()) {
-                return scriptPair.script.execute(context);
+                return scriptPair.script.execute(game, context);
             }
         }
         if (scriptElse != null) {
-            return scriptElse.execute(context);
+            return scriptElse.execute(game, context);
         }
         return new ScriptReturnData(null, null, null);
     }

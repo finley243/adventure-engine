@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
@@ -21,7 +22,7 @@ public class ScriptTransferItem extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression typeExpression = context.getLocalVariables().get("transferType").getExpression();
         if (typeExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Type parameter is not a string", getTraceData()));
         TransferItemsType transferType;
@@ -45,7 +46,7 @@ public class ScriptTransferItem extends Script {
         switch (transferType) {
             case INSTANCE -> {
                 String itemIDValue = itemID.getValueString();
-                Item itemState = context.game().data().getItemInstance(itemIDValue);
+                Item itemState = game.data().getItemInstance(itemIDValue);
                 inventoryOrigin.getValueInventory().removeItem(itemState);
                 if (inventoryTarget != null) {
                     inventoryTarget.getValueInventory().addItem(itemState);

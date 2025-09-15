@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandomEach;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -87,7 +88,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public Context getContext(Actor subject) {
-        Context context = new Context(subject.game(), subject, targets.size() == 1 ? targets.iterator().next() : null, getWeapon(), getArea());
+        Context context = new Context(subject, targets.size() == 1 ? targets.iterator().next() : null, getWeapon(), getArea());
         context.setLocalVariable("targets", Expression.constant(targets));
         return context;
     }
@@ -119,8 +120,8 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         return area;
     }
 
-    protected int computeDamage(Context context) {
-        Script.ScriptReturnData damageReturn = damage.execute(context);
+    protected int computeDamage(Game game, Context context) {
+        Script.ScriptReturnData damageReturn = damage.execute(game, context);
         if (damageReturn.error() != null) {
             throw new RuntimeException("Error while computing attack damage: " + damageReturn.stackTrace());
         } else if (damageReturn.flowStatement() != null) {
@@ -155,7 +156,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         if (hitChanceExpression == null) {
             return 1.0f;
         }
-        return CombatHelper.calculateHitChance(subject, weapon, target, getLimb(), hitChanceExpression, hitChanceMult());
+        return CombatHelper.calculateHitChance(subject.game(), subject, weapon, target, getLimb(), hitChanceExpression, hitChanceMult());
     }
 
     @Override
@@ -163,13 +164,13 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         if (hitChanceOverallExpression == null) {
             return 1.0f;
         }
-        return CombatHelper.calculateHitChanceNoTarget(subject, weapon, getLimb(), hitChanceOverallExpression, hitChanceMult());
+        return CombatHelper.calculateHitChanceNoTarget(subject.game(), subject, weapon, getLimb(), hitChanceOverallExpression, hitChanceMult());
     }
 
     @Override
     public boolean onStart(Actor subject, int repeatActionCount) {
         for (AttackTarget target : targets) {
-            subject.triggerScript("on_attack", new Context(subject.game(), subject, target, getWeapon(), getArea()));
+            subject.triggerScript("on_attack", new Context(subject, target, getWeapon(), getArea()));
         }
         consumeAmmo(subject);
         return true;
@@ -187,8 +188,8 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
-        Context context = new Context(subject.game(), subject, target, getWeapon(), getArea());
-        int damage = computeDamage(context);
+        Context context = new Context(subject, target, getWeapon(), getArea());
+        int damage = computeDamage(subject.game(), context);
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
@@ -202,7 +203,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
-        Context context = new Context(subject.game(), subject, target, getWeapon(), getArea());
+        Context context = new Context(subject, target, getWeapon(), getArea());
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
@@ -213,7 +214,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onSuccessOverall(Actor subject, int repeatActionCount, List<AttackTarget> targetsSuccess, List<AttackTarget> targetsFail) {
-        Context context = new Context(subject.game(), subject, null, null, getWeapon(), getArea(), this);
+        Context context = new Context(subject, null, null, getWeapon(), getArea(), this);
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
@@ -227,7 +228,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onFailOverall(Actor subject, int repeatActionCount) {
-        Context context = new Context(subject.game(), subject, null, null, getWeapon(), getArea(), this);
+        Context context = new Context(subject, null, null, getWeapon(), getArea(), this);
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));

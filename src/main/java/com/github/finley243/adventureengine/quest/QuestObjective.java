@@ -59,9 +59,9 @@ public class QuestObjective extends GameInstanced implements StatHolder {
 
     public void update() {
         if (isActive && state == State.OPEN) {
-            if (completionCondition != null && completionCondition.isMet(new Context(game(), game().data().getPlayer(), game().data().getPlayer()))) {
+            if (completionCondition != null && completionCondition.isMet(game(), new Context(game().data().getPlayer(), game().data().getPlayer()))) {
                 setCompleted(true);
-            } else if (failureCondition != null && failureCondition.isMet(new Context(game(), game().data().getPlayer(), game().data().getPlayer()))) {
+            } else if (failureCondition != null && failureCondition.isMet(game(), new Context(game().data().getPlayer(), game().data().getPlayer()))) {
                 setFailed(true);
             }
         }
@@ -76,12 +76,12 @@ public class QuestObjective extends GameInstanced implements StatHolder {
             if (active) {
                 game().questManager().addActiveObjective(this);
                 if (activateScript != null) {
-                    activateScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
+                    activateScript.execute(game(), new Context(game().data().getPlayer(), game().data().getPlayer()));
                 }
             } else {
                 game().questManager().removeActiveObjective(this);
                 if (deactivateScript != null) {
-                    deactivateScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
+                    deactivateScript.execute(game(), new Context(game().data().getPlayer(), game().data().getPlayer()));
                 }
             }
         }
@@ -95,9 +95,9 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     public void setState(State state) {
         if (this.state != state) {
             if (state == State.COMPLETED && completionScript != null) {
-                completionScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
+                completionScript.execute(game(), new Context(game().data().getPlayer(), game().data().getPlayer()));
             } else if (state == State.FAILED && failureScript != null) {
-                failureScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
+                failureScript.execute(game(), new Context(game().data().getPlayer(), game().data().getPlayer()));
             }
         }
         this.state = state;
@@ -128,7 +128,7 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Game game, Context context) {
         return switch (name) {
             case "id" -> Expression.constant(getID());
             case "name" -> Expression.constant(name);
@@ -142,7 +142,7 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setStatValue(String name, Expression value, Game game, Context context) {
         switch (name) {
             case "isActive" -> setActive(value.getValueBoolean());
             case "state" -> state = State.valueOf(value.getValueString());

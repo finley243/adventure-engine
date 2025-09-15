@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
@@ -35,8 +36,8 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public void onPerformAction(Actor subject, Action action) {
-        stages.get(currentStage).onPerformAction(subject, action);
+    public void onPerformAction(Game game, Actor subject, Action action) {
+        stages.get(currentStage).onPerformAction(game, subject, action);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class BehaviorProcedure extends Behavior {
 
     @Override
     public void updateTurn(Actor subject, Context scriptContext) {
-        triggerRoundScript(scriptContext);
+        triggerRoundScript(subject.game(), scriptContext);
         stages.get(currentStage).updateTurn(subject, currentStageContext);
     }
 
@@ -63,15 +64,15 @@ public class BehaviorProcedure extends Behavior {
                 currentStage = 0;
             }
             resetStageContext(scriptContext);
-            stages.get(currentStage).onStart(currentStageContext);
+            stages.get(currentStage).onStart(subject.game(), currentStageContext);
         }
     }
 
     @Override
-    public void onStart(Context scriptContext) {
+    public void onStart(Game game, Context scriptContext) {
         currentStage = 0;
         resetStageContext(scriptContext);
-        stages.get(currentStage).onStart(currentStageContext);
+        stages.get(currentStage).onStart(game, currentStageContext);
     }
 
     @Override
@@ -80,8 +81,8 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public Float actionUtilityOverride(Actor subject, Action action) {
-        return stages.get(currentStage).actionUtilityOverride(subject, action);
+    public Float actionUtilityOverride(Game game, Actor subject, Action action) {
+        return stages.get(currentStage).actionUtilityOverride(game, subject, action);
     }
 
     @Override
@@ -90,8 +91,8 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public Idle getIdle(Actor subject) {
-        return stages.get(currentStage).getIdle(subject);
+    public Idle getIdle(Game game, Actor subject) {
+        return stages.get(currentStage).getIdle(game, subject);
     }
 
     private void resetStageContext(Context parentContext) {

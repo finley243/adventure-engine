@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
@@ -18,7 +19,7 @@ public class ScriptStatHolderType extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression statHolderExpression = context.getLocalVariables().get("holder").getExpression();
         if (statHolderExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a stat holder", getTraceData()));
         StatHolder statHolder = statHolderExpression.getValueStatHolder();

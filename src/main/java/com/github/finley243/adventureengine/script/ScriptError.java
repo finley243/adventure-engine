@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptError extends Script {
@@ -13,8 +14,8 @@ public class ScriptError extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData messageResult = scriptMessage.execute(context);
+    public ScriptReturnData execute(Game game, Context context) {
+        ScriptReturnData messageResult = scriptMessage.execute(game, context);
         if (messageResult.error() != null) {
             return messageResult;
         } else if (messageResult.flowStatement() != null) {

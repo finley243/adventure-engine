@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptPower extends Script {
@@ -15,8 +16,8 @@ public class ScriptPower extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData firstReturn = firstScript.execute(context);
+    public ScriptReturnData execute(Game game, Context context) {
+        ScriptReturnData firstReturn = firstScript.execute(game, context);
         if (firstReturn.error() != null) {
             return firstReturn;
         } else if (firstReturn.flowStatement() != null) {
@@ -24,7 +25,7 @@ public class ScriptPower extends Script {
         } else if (firstReturn.value() == null) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Expression did not receive a value", getTraceData()));
         }
-        ScriptReturnData secondReturn = secondScript.execute(context);
+        ScriptReturnData secondReturn = secondScript.execute(game, context);
         if (secondReturn.error() != null) {
             return secondReturn;
         } else if (secondReturn.flowStatement() != null) {

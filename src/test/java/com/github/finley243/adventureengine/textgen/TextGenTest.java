@@ -16,9 +16,9 @@ public class TextGenTest {
         String phraseTemplate = "$nounCat $is in $nounBag.";
         Context context = null;
         TextContext textContext = new TextContext(Map.of(), Map.of("nounCat", nounCat, "nounBag", nounBag));
-        String generatedResult = TextGen.generate(phraseTemplate, context, textContext);
+        String generatedResult = TextGen.generate(phraseTemplate, null, context, textContext);
         assertEquals("The cat is in a bag.", generatedResult, "Generated text does not match expected result: " + generatedResult + " (expected: The cat is in a bag.)");
-        String generatedResultRepeat = TextGen.generate(phraseTemplate, context, textContext);
+        String generatedResultRepeat = TextGen.generate(phraseTemplate, null, context, textContext);
         assertEquals("It is in it.", generatedResultRepeat, "Repeated generated text does not match expected result: " + generatedResultRepeat + " (expected: It is in it.)");
     }
 

@@ -34,30 +34,30 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		Context context = new Context(subject.game(), subject, null, weapon);
+		Context context = new Context(subject, null, weapon);
 		context.setLocalVariable("ammo", Expression.constant(ammoType));
 		return context;
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.triggerScript("on_reload", new Context(subject.game(), subject, subject, weapon));
+		subject.triggerScript("on_reload", new Context(subject, subject, weapon));
 		if (subject.isPlayer()) {
 			if (!ammoType.equals(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType()) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() > 0) {
 				subject.getInventory().addItems(ammoType.getTemplateID(), weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining());
 				weapon.getComponentOfType(ItemComponentMagazine.class).emptyAmmo();
 			}
 			int ammoInInventory = subject.getInventory().itemCount(ammoType);
-			int reloadAmount = Math.min(weapon.getComponentOfType(ItemComponentMagazine.class).reloadCapacity(), ammoInInventory);
+			int reloadAmount = Math.min(weapon.getComponentOfType(ItemComponentMagazine.class).reloadCapacity(subject.game()), ammoInInventory);
 			weapon.getComponentOfType(ItemComponentMagazine.class).loadAmmo(reloadAmount);
 			weapon.getComponentOfType(ItemComponentMagazine.class).setLoadedAmmoType(ammoType);
 			ammoType.getComponentOfType(ItemComponentAmmo.class).onLoad(weapon);
 			subject.getInventory().removeItems(ammoType.getTemplateID(), reloadAmount);
 		} else {
-			weapon.getComponentOfType(ItemComponentMagazine.class).loadAmmo(weapon.getComponentOfType(ItemComponentMagazine.class).reloadCapacity());
+			weapon.getComponentOfType(ItemComponentMagazine.class).loadAmmo(weapon.getComponentOfType(ItemComponentMagazine.class).reloadCapacity(subject.game()));
 			weapon.getComponentOfType(ItemComponentMagazine.class).setLoadedAmmoType(ammoType);
 		}
-		Context context = new Context(subject.game(), subject, null, weapon);
+		Context context = new Context(subject, null, weapon);
 		SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, true, this, null));
 	}
 
@@ -78,8 +78,8 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public int actionPoints(Actor subject) {
-		Context context = new Context(subject.game(), subject, subject, null, weapon, null, this, new MapBuilder<String, Expression>().put("ammo_type", new ExpressionConstantString(ammoType.getTemplateID())).build());
-		return weapon.getComponentOfType(ItemComponentMagazine.class).getReloadActionPoints(context);
+		Context context = new Context(subject, subject, null, weapon, null, this, new MapBuilder<String, Expression>().put("ammo_type", new ExpressionConstantString(ammoType.getTemplateID())).build());
+		return weapon.getComponentOfType(ItemComponentMagazine.class).getReloadActionPoints(subject.game(), context);
 	}
 
 	@Override

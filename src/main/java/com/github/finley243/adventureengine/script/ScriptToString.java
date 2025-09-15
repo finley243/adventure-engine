@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptToString extends Script {
@@ -10,7 +11,7 @@ public class ScriptToString extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         if (valueExpression == null) {
             return new ScriptReturnData(Expression.constant("null"), FlowStatementType.RETURN, null);

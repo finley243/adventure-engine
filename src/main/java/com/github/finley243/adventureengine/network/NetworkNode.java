@@ -60,7 +60,7 @@ public abstract class NetworkNode extends GameInstanced implements StatHolder {
     protected abstract List<Action> breachedActions(Actor subject, WorldObject object);
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Game game, Context context) {
         return switch (name) {
             case "id" -> Expression.constant(getID());
             case "name" -> Expression.constant(name);
@@ -70,7 +70,7 @@ public abstract class NetworkNode extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setStatValue(String name, Expression value, Game game, Context context) {
         return false;
     }
 

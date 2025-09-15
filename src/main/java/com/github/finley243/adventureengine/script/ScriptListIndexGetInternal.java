@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.List;
@@ -17,8 +18,8 @@ public class ScriptListIndexGetInternal extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData listResult = listScript.execute(context);
+    public ScriptReturnData execute(Game game, Context context) {
+        ScriptReturnData listResult = listScript.execute(game, context);
         if (listResult.error() != null) {
             return listResult;
         } else if (listResult.flowStatement() != null) {
@@ -27,7 +28,7 @@ public class ScriptListIndexGetInternal extends Script {
             return new ScriptReturnData(null, null, new ScriptErrorData("List expression is null", getTraceData()));
         }
         Expression listExpression = listResult.value();
-        ScriptReturnData indexResult = indexScript.execute(context);
+        ScriptReturnData indexResult = indexScript.execute(game, context);
         if (indexResult.error() != null) {
             return indexResult;
         } else if (indexResult.flowStatement() != null) {

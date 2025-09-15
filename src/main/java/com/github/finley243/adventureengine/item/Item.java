@@ -101,8 +101,8 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			for (Script currentScript : getTemplate().getScripts().get(entryPoint)) {
-				Context context = new Context(game(), subject, target, this);
-				currentScript.execute(context);
+				Context context = new Context(subject, target, this);
+				currentScript.execute(game(), context);
 			}
 		}
 	}
@@ -157,9 +157,9 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Game game, Context context) {
 		for (ItemComponent component : components.values()) {
-			Expression componentValue = component.getStatValue(name, context);
+			Expression componentValue = component.getStatValue(name, game, context);
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
@@ -171,9 +171,9 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Game game, Context context) {
 		for (ItemComponent component : components.values()) {
-			boolean success = component.setStatValue(name, value, context);
+			boolean success = component.setStatValue(name, value, game, context);
 			if (success) return true;
 		}
 		return false;
@@ -200,54 +200,54 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
+	public StatInt getStatInt(String name, Game game) {
 		for (ItemComponent component : components.values()) {
-			StatInt componentValue = component.getStatInt(name);
+			StatInt componentValue = component.getStatInt(name, game);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatFloat getStatFloat(String name) {
+	public StatFloat getStatFloat(String name, Game game) {
 		for (ItemComponent component : components.values()) {
-			StatFloat componentValue = component.getStatFloat(name);
+			StatFloat componentValue = component.getStatFloat(name, game);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(String name) {
+	public StatBoolean getStatBoolean(String name, Game game) {
 		for (ItemComponent component : components.values()) {
-			StatBoolean componentValue = component.getStatBoolean(name);
+			StatBoolean componentValue = component.getStatBoolean(name, game);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatString getStatString(String name) {
+	public StatString getStatString(String name, Game game) {
 		for (ItemComponent component : components.values()) {
-			StatString componentValue = component.getStatString(name);
+			StatString componentValue = component.getStatString(name, game);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(String name) {
+	public StatStringSet getStatStringSet(String name, Game game) {
 		for (ItemComponent component : components.values()) {
-			StatStringSet componentValue = component.getStatStringSet(name);
+			StatStringSet componentValue = component.getStatStringSet(name, game);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public void onStatChange(String name) {
+	public void onStatChange(String name, Game game) {
 		for (ItemComponent component : components.values()) {
-			component.onStatChange(name);
+			component.onStatChange(name, game);
 		}
 	}
 

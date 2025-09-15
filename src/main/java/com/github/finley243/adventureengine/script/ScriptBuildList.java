@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.ArrayList;
@@ -16,10 +17,10 @@ public class ScriptBuildList extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         List<Expression> computedValues = new ArrayList<>();
         for (Script valueScript : valueScripts) {
-            ScriptReturnData scriptResult = valueScript.execute(context);
+            ScriptReturnData scriptResult = valueScript.execute(game, context);
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() != null) {

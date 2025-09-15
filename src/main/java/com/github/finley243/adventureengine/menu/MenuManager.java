@@ -313,7 +313,7 @@ public class MenuManager {
 			}
 			case SELECTOR -> {
 				for (SceneLine line : scene.getLines()) {
-					if (line.shouldShow(context, lastSceneID)) {
+					if (line.shouldShow(game, context, lastSceneID)) {
 						Scene.SceneLineResult result = sceneLine(game, line, lastSceneID, context, true);
 						if (result.exit()) {
 							return;
@@ -328,7 +328,7 @@ public class MenuManager {
 			case RANDOM -> {
 				List<SceneLine> validLines = new ArrayList<>();
 				for (SceneLine line : scene.getLines()) {
-					if (line.shouldShow(context, lastSceneID)) {
+					if (line.shouldShow(game, context, lastSceneID)) {
 						validLines.add(line);
 					}
 				}
@@ -358,13 +358,13 @@ public class MenuManager {
 	}
 
 	private Scene.SceneLineResult sceneLine(Game game, SceneLine line, String lastSceneID, Context context, boolean ignoreCondition) {
-		if (ignoreCondition || line.shouldShow(context, lastSceneID)) {
+		if (ignoreCondition || line.shouldShow(game, context, lastSceneID)) {
 			line.setTriggered();
 			if (line.getText() != null) {
 				game.eventBus().post(new RenderTextEvent(line.getText()));
 			}
 			if (line.getScriptPre() != null) {
-				line.getScriptPre().execute(context);
+				line.getScriptPre().execute(game, context);
 			}
 			if (line.getSubLines() != null) {
 				switch (line.getType()) {
@@ -376,7 +376,7 @@ public class MenuManager {
 					}
 					case SELECTOR -> {
 						for (SceneLine subLine : line.getSubLines()) {
-							if (subLine.shouldShow(context, lastSceneID)) {
+							if (subLine.shouldShow(game, context, lastSceneID)) {
 								Scene.SceneLineResult result = sceneLine(game, subLine, lastSceneID, context, true);
 								if (result.exit() || result.redirect() != null) return result;
 								break;
@@ -386,7 +386,7 @@ public class MenuManager {
 					case RANDOM -> {
 						List<SceneLine> validLines = new ArrayList<>(line.getSubLines().size());
 						for (SceneLine subLine : line.getSubLines()) {
-							if (subLine.shouldShow(context, lastSceneID)) {
+							if (subLine.shouldShow(game, context, lastSceneID)) {
 								validLines.add(subLine);
 							}
 						}
@@ -397,7 +397,7 @@ public class MenuManager {
 				}
 			}
 			if (line.getScriptPost() != null) {
-				line.getScriptPost().execute(context);
+				line.getScriptPost().execute(game, context);
 			}
 			if (line.shouldExit()) {
 				return new Scene.SceneLineResult(true, null);

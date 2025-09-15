@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 
@@ -18,7 +19,7 @@ public class ScriptStringCase extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression stringExpression = context.getLocalVariables().get("string").getExpression();
         if (stringExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("String parameter is not a string", getTraceData()));
         String stringValue = stringExpression.getValueString();

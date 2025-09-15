@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 
 public class ScriptSetVariable extends Script {
 
@@ -17,13 +18,13 @@ public class ScriptSetVariable extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         if (isDefinition && context.getLocalVariables().containsKey(variableName)) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Variable with name is already defined", getTraceData()));
         } else if (!isDefinition && !context.getLocalVariables().containsKey(variableName)) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Variable with name has not been defined", getTraceData()));
         }
-        ScriptReturnData valueResult = variableValue.execute(context);
+        ScriptReturnData valueResult = variableValue.execute(game, context);
         if (valueResult.error() != null) {
             return valueResult;
         } else if (valueResult.flowStatement() != null) {

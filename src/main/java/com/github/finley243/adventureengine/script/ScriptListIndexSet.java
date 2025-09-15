@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class ScriptListIndexSet extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression listExpression = context.getLocalVariables().get("list").getExpression();
         Expression indexExpression = context.getLocalVariables().get("index").getExpression();
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();

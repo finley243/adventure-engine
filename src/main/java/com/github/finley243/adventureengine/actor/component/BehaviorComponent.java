@@ -38,7 +38,7 @@ public class BehaviorComponent {
         if (current == null) {
             return null;
         } else {
-            return current.getIdle(actor);
+            return current.getIdle(actor.game(), actor);
         }
     }
 
@@ -48,7 +48,7 @@ public class BehaviorComponent {
         if (current == null) {
             return null;
         } else {
-            return current.actionUtilityOverride(actor, action);
+            return current.actionUtilityOverride(actor.game(), actor, action);
         }
     }
 
@@ -60,7 +60,7 @@ public class BehaviorComponent {
     public void onPerformAction(Action action) {
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
-            currentBehavior.onPerformAction(actor, action);
+            currentBehavior.onPerformAction(actor.game(), actor, action);
         }
     }
 
@@ -86,7 +86,7 @@ public class BehaviorComponent {
 
     private void endCurrentBehaviorIfInvalid() {
         Behavior currentBehavior = currentBehavior();
-        if (currentBehavior != null && !currentBehavior.isValid(actor)) {
+        if (currentBehavior != null && !currentBehavior.isValid(actor.game(), actor)) {
             currentIndex = -1;
             areaTarget.markForRemoval();
             areaTarget = null;
@@ -120,10 +120,10 @@ public class BehaviorComponent {
         Behavior currentBehavior = currentBehavior();
         boolean onlyHigherPriorities = currentBehavior != null && !currentBehavior.hasCompleted(actor);
         for (int i = 0; i < (onlyHigherPriorities ? currentIndex : behaviors.size()); i++) {
-            if (behaviors.get(i).isValid(actor)) {
+            if (behaviors.get(i).isValid(actor.game(), actor)) {
                 currentIndex = i;
                 resetContext();
-                behaviors.get(i).onStart(scriptContext);
+                behaviors.get(i).onStart(actor.game(), scriptContext);
                 if (areaTarget != null) {
                     if (behaviors.get(i).getTargetArea(actor) != null) {
                         areaTarget.setTargetArea(behaviors.get(i).getTargetArea(actor));
@@ -138,7 +138,7 @@ public class BehaviorComponent {
     }
 
     private void resetContext() {
-        scriptContext = new Context(actor.game(), actor, actor);
+        scriptContext = new Context(actor, actor);
     }
 
 }

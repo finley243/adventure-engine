@@ -231,15 +231,15 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	public void triggerScript(String entryPoint, Context context) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			for (Script currentScript : getTemplate().getScripts().get(entryPoint)) {
-				currentScript.execute(context);
+				currentScript.execute(game(), context);
 			}
 		}
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Game game, Context context) {
 		for (ObjectComponent component : components.values()) {
-			Expression componentValue = component.getStatValue(name, context);
+			Expression componentValue = component.getStatValue(name, game, context);
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
@@ -263,9 +263,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Game game, Context context) {
 		for (ObjectComponent component : components.values()) {
-			boolean success = component.setStatValue(name, value, context);
+			boolean success = component.setStatValue(name, value, game, context);
 			if (success) return true;
 		}
 		switch (name) {

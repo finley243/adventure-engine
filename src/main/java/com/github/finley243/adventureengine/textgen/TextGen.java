@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.textgen;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.ScriptParser;
@@ -50,10 +51,10 @@ public class TextGen {
 	 * Format for conditionals: ([condition]phrase|[other condition]other phrase|default phrase)
 	 */
 
-	public static String generate(String line, Context context, TextContext textContext) {
+	public static String generate(String line, Game game, Context context, TextContext textContext) {
 		if (line == null) return null;
 		String originalLine = line;
-		line = processBlockStatements(line, 0, context, originalLine);
+		line = processBlockStatements(line, 0, game, context, originalLine);
 		line = determineContext(line, textContext);
 		line = capitalizeSentences(line);
 		lastContext = textContext;
@@ -127,31 +128,31 @@ public class TextGen {
 		return replaceTagsFromContext(line, context, usePronounsMap);
 	}
 
-	private static String processBlockStatements(String line, int startIndex, Context context, String originalLine) {
+	private static String processBlockStatements(String line, int startIndex, Game game, Context context, String originalLine) {
 		for (int i = startIndex; i < line.length(); i++) {
 			if (line.charAt(i) == RANDOM_OPEN) {
-				return processBlockStatements(chooseRandoms(line, originalLine), i, context, originalLine);
+				return processBlockStatements(chooseRandoms(line, originalLine), i, game, context, originalLine);
 			} else if (line.charAt(i) == CONDITIONAL_OPEN) {
-				return processBlockStatements(evaluateConditionals(line, context, originalLine), i, context, originalLine);
+				return processBlockStatements(evaluateConditionals(line, game, context, originalLine), i, game, context, originalLine);
 			} else if (line.charAt(i) == '@') {
-				return processBlockStatements(populatePhraseReferences(line, context), i, context, originalLine);
+				return processBlockStatements(populatePhraseReferences(line, context), i, game, context, originalLine);
 			}
 		}
 		return line;
 	}
 
 	private static String chooseRandoms(String line, String originalLine) {
-		return replaceInsideBracketsWithResult(line, RANDOM_OPEN, null, originalLine, (s, _, _) -> {
+		return replaceInsideBracketsWithResult(line, RANDOM_OPEN, null, null, originalLine, (s, _, _, _) -> {
 			List<String> randomChoices = getSeparatedStrings(s, RANDOM_SEPARATOR);
 			return MathUtils.selectRandomFromList(randomChoices);
 		});
 	}
 
-	private static String evaluateConditionals(String line, Context context, String originalLine) {
-		return replaceInsideBracketsWithResult(line, CONDITIONAL_OPEN, context, originalLine, TextGen::evaluateConditionalStatement);
+	private static String evaluateConditionals(String line, Game game, Context context, String originalLine) {
+		return replaceInsideBracketsWithResult(line, CONDITIONAL_OPEN, game, context, originalLine, TextGen::evaluateConditionalStatement);
 	}
 
-	private static String evaluateConditionalStatement(String line, Context context, String originalLine) {
+	private static String evaluateConditionalStatement(String line, Game game, Context context, String originalLine) {
 		List<String> conditionalBranches = getSeparatedStrings(line, CONDITIONAL_SEPARATOR);
 		for (int i = 0; i < conditionalBranches.size(); i++) {
 			String currentBranch = conditionalBranches.get(i);
@@ -167,7 +168,7 @@ public class TextGen {
 			}
 			String conditionString = currentBranch.substring(1, conditionCloseIndex);
 			Condition condition = new Condition(ScriptParser.parseExpression(conditionString, "Phrase: " + originalLine));
-			if (condition.isMet(context)) {
+			if (condition.isMet(game, context)) {
 				return currentBranch.substring(conditionCloseIndex + 1);
 			}
 		}
@@ -303,7 +304,7 @@ public class TextGen {
 		return parts;
 	}
 
-	private static String replaceInsideBracketsWithResult(String line, char openBracketType, Context context, String originalLine, TextProcessor processor) {
+	private static String replaceInsideBracketsWithResult(String line, char openBracketType, Game game, Context context, String originalLine, TextProcessor processor) {
 		StringBuilder newLine = new StringBuilder();
 		int openIndex = -1;
 		int closeIndex = -1;
@@ -322,7 +323,7 @@ public class TextGen {
 				if (lastOpenBracket == openBracketType && openBracketStack.isEmpty()) {
 					String bracketContents = line.substring(openIndex + 1, i);
 					newLine.append(line, closeIndex + 1, openIndex);
-					newLine.append(processor.process(bracketContents, context, originalLine));
+					newLine.append(processor.process(bracketContents, game, context, originalLine));
 					closeIndex = i;
 				}
 			}

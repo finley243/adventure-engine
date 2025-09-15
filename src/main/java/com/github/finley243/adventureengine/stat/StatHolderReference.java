@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.Script;
 
@@ -18,45 +19,45 @@ public class StatHolderReference {
         this.holderExpression = holderExpression;
     }
 
-    public StatHolder getHolder(Context context) {
+    public StatHolder getHolder(Game game, Context context) {
         if (holderExpression != null) {
-            Expression expressionResult = computeHolderExpression(context);
+            Expression expressionResult = computeHolderExpression(game, context);
             if (expressionResult.getDataType() != Expression.DataType.STAT_HOLDER) throw new IllegalArgumentException("StatHolderReference expression is not a stat holder");
             return expressionResult.getValueStatHolder();
         } else if (parentReference != null) {
-            Expression holderID = computeHolderID(context);
+            Expression holderID = computeHolderID(game, context);
             if (holderID != null && holderID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("StatHolderReference holderID is not a string");
             String holderIDValue = holderID != null ? holderID.getValueString() : null;
-            return parentReference.getHolder(context).getSubHolder(holderType, holderIDValue);
+            return parentReference.getHolder(game, context).getSubHolder(holderType, holderIDValue);
         } else {
-            return getTopLevelHolder(context);
+            return getTopLevelHolder(game, context);
         }
     }
 
-    private StatHolder getTopLevelHolder(Context context) {
-        Expression holderID = computeHolderID(context);
+    private StatHolder getTopLevelHolder(Game game, Context context) {
+        Expression holderID = computeHolderID(game, context);
         String holderIDValue = holderID != null ? holderID.getValueString() : null;
         return switch (holderType) {
-            case "object" -> context.game().data().getObject(holderIDValue);
+            case "object" -> game.data().getObject(holderIDValue);
             case "parentObject" -> context.getParentObject();
-            case "item" -> context.game().data().getItemInstance(holderIDValue);
-            case "itemTemplate" -> context.game().data().getItemTemplate(holderIDValue);
+            case "item" -> game.data().getItemInstance(holderIDValue);
+            case "itemTemplate" -> game.data().getItemTemplate(holderIDValue);
             case "parentItem" -> context.getParentItem();
-            case "area" -> context.game().data().getArea(holderIDValue);
+            case "area" -> game.data().getArea(holderIDValue);
             case "parentArea" -> context.getParentArea();
-            case "room" -> context.game().data().getRoom(holderIDValue);
-            case "scene" -> context.game().data().getScene(holderIDValue);
-            case "actor" -> context.game().data().getActor(holderIDValue);
-            case "player" -> context.game().data().getPlayer();
+            case "room" -> game.data().getRoom(holderIDValue);
+            case "scene" -> game.data().getScene(holderIDValue);
+            case "actor" -> game.data().getActor(holderIDValue);
+            case "player" -> game.data().getPlayer();
             case "target" -> context.getTarget();
             default -> context.getSubject(); // "subject"
         };
     }
 
-    private Expression computeHolderID(Context context) {
+    private Expression computeHolderID(Game game, Context context) {
         Expression holderID = null;
         if (holderIDScript != null) {
-            Script.ScriptReturnData holderIDResult = holderIDScript.execute(context);
+            Script.ScriptReturnData holderIDResult = holderIDScript.execute(game, context);
             // TODO - Possibly replace exceptions with error log and default to null
             if (holderIDResult.error() != null) {
                 throw new IllegalArgumentException("StatHolderReference holderID expression threw an error: " + holderIDResult.stackTrace());
@@ -68,10 +69,10 @@ public class StatHolderReference {
         return holderID;
     }
 
-    private Expression computeHolderExpression(Context context) {
+    private Expression computeHolderExpression(Game game, Context context) {
         Expression expression = null;
         if (holderExpression != null) {
-            Script.ScriptReturnData expressionResult = holderExpression.execute(context);
+            Script.ScriptReturnData expressionResult = holderExpression.execute(game, context);
             // TODO - Possibly replace exceptions with error log and default to null
             if (expressionResult.error() != null) {
                 throw new IllegalArgumentException("StatHolderReference expression threw an error: " + expressionResult.stackTrace());

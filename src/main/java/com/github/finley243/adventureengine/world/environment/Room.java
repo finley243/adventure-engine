@@ -167,7 +167,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Game game, Context context) {
 		return switch (name) {
 			case "noun" -> Expression.constantNoun(this);
 			case "name" -> Expression.constant(getName());
@@ -179,7 +179,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Game game, Context context) {
 		switch (name) {
 			case "visited" -> {
 				this.hasVisited = value.getValueBoolean();
@@ -197,8 +197,8 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				Context context = new Context(game(), subject, target);
-				currentScript.execute(context);
+				Context context = new Context(subject, target);
+				currentScript.execute(game(), context);
 			}
 		}
 	}

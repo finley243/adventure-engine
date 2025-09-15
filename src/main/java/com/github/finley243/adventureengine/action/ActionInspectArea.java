@@ -34,7 +34,7 @@ public class ActionInspectArea extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        return new Context(subject.game(), subject, null, null, null, area, this);
+        return new Context(subject, null, null, null, area, this);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ActionInspectArea extends Action {
         for (Area currentArea : orderedAreaList) {
             Pathfinder.VisibleAreaData areaData = visibleAreas.get(currentArea);
             String directionName = areaData.direction() != null ? areaData.direction().name : null;
-            Context context = new Context(subject.game(), subject, subject);
+            Context context = new Context(subject, subject);
             Area leadingArea = null;
             if (areaData.pathData().size() > 3) {
                 leadingArea = ((PathDataArea) areaData.pathData().get(areaData.pathData().size() - 3)).getArea();
@@ -65,7 +65,7 @@ public class ActionInspectArea extends Action {
             } else {
                 phrase = "There $is $area.";
             }
-            subject.game().eventBus().post(new RenderTextEvent(TextGen.generate(phrase, context, context.generateTextContext())));
+            subject.game().eventBus().post(new RenderTextEvent(TextGen.generate(phrase, subject.game(), context, context.generateTextContext())));
 
             List<Noun> visibleObjects = currentArea.getObjects().stream()
                     .map(object -> (Noun) object)
@@ -86,18 +86,18 @@ public class ActionInspectArea extends Action {
             if (!areaContents.isEmpty()) {
                 context.setLocalVariable("areaContents", Expression.constantNoun(new MultiNoun(areaContents)));
                 String areaContentsPhrase = "$relativeName $area, there $is $areaContents.";
-                subject.game().eventBus().post(new RenderTextEvent(TextGen.generate(areaContentsPhrase, context, context.generateTextContext())));
+                subject.game().eventBus().post(new RenderTextEvent(TextGen.generate(areaContentsPhrase, subject.game(), context, context.generateTextContext())));
             }
         }
         if (area.getRoom() != null && area.getRoom().getDescription() != null) {
-            subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), new Context(subject.game(), subject, subject), false);
+            subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), new Context(subject, subject), false);
             area.getRoom().setKnown();
             for (Area area : area.getRoom().getAreas()) {
                 area.setKnown();
             }
         }
         if (area.getDescription() != null) {
-            subject.game().menuManager().sceneMenu(subject.game(), area.getDescription(), new Context(subject.game(), subject, subject), false);
+            subject.game().menuManager().sceneMenu(subject.game(), area.getDescription(), new Context(subject, subject), false);
             area.setKnown();
         }
         if (area.getRoom() != null) {

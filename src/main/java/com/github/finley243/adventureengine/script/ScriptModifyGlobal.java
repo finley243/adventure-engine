@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptModifyGlobal extends Script {
@@ -16,18 +17,18 @@ public class ScriptModifyGlobal extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         if (globalID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyGlobal globalID is not a string");
         String globalIDValue = globalID.getValueString();
-        if (context.game().data().getGlobalExpression(globalIDValue).getDataType() != expression.getDataType()) throw new IllegalArgumentException("ScriptModifyGlobal expression data type does not match global");
+        if (game.data().getGlobalExpression(globalIDValue).getDataType() != expression.getDataType()) throw new IllegalArgumentException("ScriptModifyGlobal expression data type does not match global");
         switch (expression.getDataType()) {
             case INTEGER -> {
-                int oldValueInt = context.game().data().getGlobalExpression(globalIDValue).getValueInteger();
-                context.game().data().setGlobalExpression(globalIDValue, Expression.constant(oldValueInt + expression.getValueInteger()));
+                int oldValueInt = game.data().getGlobalExpression(globalIDValue).getValueInteger();
+                game.data().setGlobalExpression(globalIDValue, Expression.constant(oldValueInt + expression.getValueInteger()));
             }
             case FLOAT -> {
-                float oldValueFloat = context.game().data().getGlobalExpression(globalIDValue).getValueFloat();
-                context.game().data().setGlobalExpression(globalIDValue, Expression.constant(oldValueFloat + expression.getValueFloat()));
+                float oldValueFloat = game.data().getGlobalExpression(globalIDValue).getValueFloat();
+                game.data().setGlobalExpression(globalIDValue, Expression.constant(oldValueFloat + expression.getValueFloat()));
             }
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType());

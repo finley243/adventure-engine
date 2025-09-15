@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.ArrayList;
@@ -17,10 +18,10 @@ public class StatStringSet extends Stat {
         this.mods = new ArrayList<>();
     }
 
-    public Set<String> value(Set<String> base, Context context) {
+    public Set<String> value(Set<String> base, Game game, Context context) {
         Set<String> outputSet = new HashSet<>(base);
         for (StatStringSetMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (mod.shouldApply(game, context)) {
                 outputSet.addAll(mod.addition);
                 outputSet.removeAll(mod.cancellation);
             }
@@ -28,22 +29,22 @@ public class StatStringSet extends Stat {
         return outputSet;
     }
 
-    public <T extends Enum<T>> Set<String> valueFromEnum(Set<T> base, Context context) {
+    public <T extends Enum<T>> Set<String> valueFromEnum(Set<T> base, Game game, Context context) {
         Set<String> enumStrings = new HashSet<>();
         for (T enumValue : base) {
             enumStrings.add(enumValue.toString().toLowerCase());
         }
-        return value(enumStrings, context);
+        return value(enumStrings, game, context);
     }
 
-    public <T extends Enum<T>> Set<T> valueEnum(Set<T> base, Class<T> enumClass, Context context) {
+    public <T extends Enum<T>> Set<T> valueEnum(Set<T> base, Class<T> enumClass, Game game, Context context) {
         Set<T> outputSet = new HashSet<>(base);
         Set<T> additionalEnum = new HashSet<>();
         Set<T> cancellationEnum = new HashSet<>();
         Set<String> additional = new HashSet<>();
         Set<String> cancellation = new HashSet<>();
         for (StatStringSetMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (mod.shouldApply(game, context)) {
                 additional.addAll(mod.addition);
                 cancellation.addAll(mod.cancellation);
             }
@@ -59,14 +60,14 @@ public class StatStringSet extends Stat {
         return outputSet;
     }
 
-    public void addMod(StatStringSetMod mod) {
+    public void addMod(StatStringSetMod mod, Game game) {
         mods.add(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(getName(), game);
     }
 
-    public void removeMod(StatStringSetMod mod) {
+    public void removeMod(StatStringSetMod mod, Game game) {
         mods.remove(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(getName(), game);
     }
 
     private <T extends Enum<T>> T enumValue(String string, Class<T> enumClass) {
@@ -82,8 +83,8 @@ public class StatStringSet extends Stat {
     }
 
     public record StatStringSetMod(Condition condition, Set<String> addition, Set<String> cancellation) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
+        public boolean shouldApply(Game game, Context context) {
+            return condition == null || condition.isMet(game, context);
         }
     }
 

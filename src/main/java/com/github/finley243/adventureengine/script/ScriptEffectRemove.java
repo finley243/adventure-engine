@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.effect.Effectible;
 import com.github.finley243.adventureengine.expression.Expression;
 
@@ -11,7 +12,7 @@ public class ScriptEffectRemove extends Script{
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression targetExpression = context.getLocalVariables().get("target").getExpression();
         Expression effectExpression = context.getLocalVariables().get("effect").getExpression();
         if (targetExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Target parameter is not a stat holder", getTraceData()));

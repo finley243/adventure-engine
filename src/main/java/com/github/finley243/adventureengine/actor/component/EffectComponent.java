@@ -27,9 +27,9 @@ public class EffectComponent {
 
     public void addEffect(String effectID) {
         Effect effect = game.data().getEffect(effectID);
-        if (effect.getConditionAdd() == null || effect.getConditionAdd().isMet(scriptContext)) {
+        if (effect.getConditionAdd() == null || effect.getConditionAdd().isMet(game, scriptContext)) {
             if (effect.getScriptAdd() != null) {
-                effect.getScriptAdd().execute(scriptContext);
+                effect.getScriptAdd().execute(game, scriptContext);
             }
             if (effect.isInstant()) {
                 effect.start(statHolder);
@@ -55,7 +55,7 @@ public class EffectComponent {
                 effect.end(statHolder);
             }
             if (effect.getScriptRemove() != null) {
-                effect.getScriptRemove().execute(scriptContext);
+                effect.getScriptRemove().execute(game, scriptContext);
             }
             effects.get(effectID).remove(0);
             if (effects.get(effectID).isEmpty()) {
@@ -70,15 +70,15 @@ public class EffectComponent {
             String effectID = itr.next();
             Effect effect = game.data().getEffect(effectID);
             for (EffectData instance : effects.get(effectID)) {
-                if (instance.isActive && effect.getConditionActive() != null && !effect.getConditionActive().isMet(scriptContext)) {
+                if (instance.isActive && effect.getConditionActive() != null && !effect.getConditionActive().isMet(game, scriptContext)) {
                     instance.isActive = false;
                     effect.end(statHolder);
-                } else if (!instance.isActive && effect.getConditionActive() != null && effect.getConditionActive().isMet(scriptContext)) {
+                } else if (!instance.isActive && effect.getConditionActive() != null && effect.getConditionActive().isMet(game, scriptContext)) {
                     instance.isActive = true;
                     effect.start(statHolder);
                 }
                 if (effect.getScriptRound() != null) {
-                    effect.getScriptRound().execute(scriptContext);
+                    effect.getScriptRound().execute(game, scriptContext);
                 }
                 if (instance.isActive) {
                     effect.eachRound(statHolder);
@@ -92,10 +92,10 @@ public class EffectComponent {
                     if (effect.getDuration() != -1) {
                         currentInstance.turnsRemaining -= 1;
                     }
-                    if (currentInstance.turnsRemaining == 0 || (effect.getConditionRemove() != null && effect.getConditionRemove().isMet(scriptContext))) {
+                    if (currentInstance.turnsRemaining == 0 || (effect.getConditionRemove() != null && effect.getConditionRemove().isMet(game, scriptContext))) {
                         effect.end(statHolder);
                         if (effect.getScriptRemove() != null) {
-                            effect.getScriptRemove().execute(scriptContext);
+                            effect.getScriptRemove().execute(game, scriptContext);
                         }
                         instanceItr.remove();
                         if (effectInstances.isEmpty()) {

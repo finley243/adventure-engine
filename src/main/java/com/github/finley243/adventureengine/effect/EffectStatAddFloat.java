@@ -21,17 +21,17 @@ public class EffectStatAddFloat extends Effect {
 
     @Override
     public void start(MutableStatHolder target) {
-        StatFloat statFloat = target.getStatFloat(stat);
+        StatFloat statFloat = target.getStatFloat(stat, game());
         if(statFloat != null) {
-            statFloat.addMod(new StatFloat.StatFloatMod(statCondition, amount, 0.0f));
+            statFloat.addMod(new StatFloat.StatFloatMod(statCondition, amount, 0.0f), game());
         }
     }
 
     @Override
     public void end(MutableStatHolder target) {
-        StatFloat statFloat = target.getStatFloat(stat);
+        StatFloat statFloat = target.getStatFloat(stat, game());
         if(statFloat != null) {
-            statFloat.removeMod(new StatFloat.StatFloatMod(statCondition, amount, 0.0f));
+            statFloat.removeMod(new StatFloat.StatFloatMod(statCondition, amount, 0.0f), game());
         }
     }
 

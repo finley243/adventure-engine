@@ -21,12 +21,12 @@ public class EffectStatBoolean extends Effect {
 
     @Override
     public void start(MutableStatHolder target) {
-        target.getStatBoolean(stat).addMod(new StatBoolean.StatBooleanMod(statCondition, value));
+        target.getStatBoolean(stat, game()).addMod(new StatBoolean.StatBooleanMod(statCondition, value), game());
     }
 
     @Override
     public void end(MutableStatHolder target) {
-        target.getStatBoolean(stat).removeMod(new StatBoolean.StatBooleanMod(statCondition, value));
+        target.getStatBoolean(stat, game()).removeMod(new StatBoolean.StatBooleanMod(statCondition, value), game());
     }
 
 }

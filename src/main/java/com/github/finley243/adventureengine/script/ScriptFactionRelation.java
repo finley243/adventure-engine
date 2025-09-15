@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Faction.FactionRelation;
 import com.github.finley243.adventureengine.expression.Expression;
 
@@ -11,7 +12,7 @@ public class ScriptFactionRelation extends Script {
     }
 
     @Override
-	public ScriptReturnData execute(Context context) {
+	public ScriptReturnData execute(Game game, Context context) {
 		Expression factionExpression = context.getLocalVariables().get("faction").getExpression();
 		Expression relatedFactionExpression = context.getLocalVariables().get("relatedFaction").getExpression();
 		Expression relationExpression = context.getLocalVariables().get("relation").getExpression();
@@ -27,7 +28,7 @@ public class ScriptFactionRelation extends Script {
 				return new ScriptReturnData(null, null, new ScriptErrorData("Relation parameter is not a valid faction relation", getTraceData()));
 			}
 		}
-		context.game().data().getFaction(factionExpression.getValueString()).setRelation(relatedFactionExpression.getValueString(), relation);
+		game.data().getFaction(factionExpression.getValueString()).setRelation(relatedFactionExpression.getValueString(), relation);
 		return new ScriptReturnData(null, null, null);
 	}
 

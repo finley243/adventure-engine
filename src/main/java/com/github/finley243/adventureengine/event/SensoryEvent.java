@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.event;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Bark;
@@ -51,14 +52,14 @@ public class SensoryEvent {
 		return origins;
 	}
 	
-	public String getTextVisible() {
+	public String getTextVisible(Game game) {
 		if (lineVisible == null) return null;
-		return TextGen.generate(lineVisible, context, context.generateTextContext());
+		return TextGen.generate(lineVisible, game, context, context.generateTextContext());
 	}
 
-	public String getTextAudible() {
+	public String getTextAudible(Game game) {
 		if (lineAudible == null) return null;
-		return TextGen.generate(lineAudible, context, context.generateTextContext());
+		return TextGen.generate(lineAudible, game, context, context.generateTextContext());
 	}
 
 	public Action getAction() {

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 public class ScriptGetVariable extends Script {
@@ -13,7 +14,7 @@ public class ScriptGetVariable extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         if (!context.getLocalVariables().containsKey(variableName)) return new ScriptReturnData(null, null, new ScriptErrorData("Specified variable has not been defined: " + variableName, getTraceData()));
         Expression variableValue = context.getLocalVariables().get(variableName).getExpression();
         return new ScriptReturnData(variableValue, null, null);

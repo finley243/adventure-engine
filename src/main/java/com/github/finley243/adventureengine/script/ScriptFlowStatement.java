@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 
 public class ScriptFlowStatement extends Script {
 
@@ -13,7 +14,7 @@ public class ScriptFlowStatement extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         return new ScriptReturnData(null, statementType, null);
     }
 

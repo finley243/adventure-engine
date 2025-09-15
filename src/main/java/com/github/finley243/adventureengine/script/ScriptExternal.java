@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.load.ScriptParser;
 
 import java.util.HashSet;
@@ -19,9 +20,9 @@ public class ScriptExternal extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Context innerContext = new Context(context, false);
-        ScriptParser.ScriptData script = context.game().data().getScript(scriptID);
+        ScriptParser.ScriptData script = game.data().getScript(scriptID);
         if (script == null) return new ScriptReturnData(null, null, new ScriptErrorData("Function does not exist", getTraceData()));
         Set<String> definitionParameterNames = new HashSet<>();
         for (ScriptParser.ScriptParameter definitionParameter : script.parameters()) {
@@ -38,7 +39,7 @@ public class ScriptExternal extends Script {
                 if (hasUsedNamedParameter) {
                     return new ScriptReturnData(null, null, new ScriptErrorData("Function call " + scriptID + " has positional parameter after named parameter", getTraceData()));
                 }
-                ScriptReturnData parameterValueResult = providedParameter.value().execute(context);
+                ScriptReturnData parameterValueResult = providedParameter.value().execute(game, context);
                 if (parameterValueResult.error() != null) {
                     return parameterValueResult;
                 } else if (parameterValueResult.flowStatement() != null) {
@@ -50,7 +51,7 @@ public class ScriptExternal extends Script {
                 if (!script.allowExtraParameters() && !definitionParameterNames.contains(providedParameter.name())) {
                     return new ScriptReturnData(null, null, new ScriptErrorData("Function call " + scriptID + " has named parameter that does not exist in function definition", getTraceData()));
                 }
-                ScriptReturnData parameterValueResult = providedParameter.value().execute(context);
+                ScriptReturnData parameterValueResult = providedParameter.value().execute(game, context);
                 if (parameterValueResult.error() != null) {
                     return parameterValueResult;
                 } else if (parameterValueResult.flowStatement() != null) {
@@ -70,7 +71,7 @@ public class ScriptExternal extends Script {
                 innerContext.setLocalVariable(definitionParameter.name(), definitionParameter.defaultValue());
             }
         }
-        ScriptReturnData scriptResult = script.script().execute(innerContext);
+        ScriptReturnData scriptResult = script.script().execute(game, innerContext);
         if (scriptResult.error() != null) {
             return new ScriptReturnData(null, null, new ScriptErrorData(scriptResult.error().message() + "\n - (" + scriptResult.error().traceData().fileName() + ":" + scriptResult.error().traceData().line() + ") " + scriptID + "()", getTraceData()));
         } else if (scriptResult.flowStatement() != null && scriptResult.flowStatement() != FlowStatementType.RETURN) {

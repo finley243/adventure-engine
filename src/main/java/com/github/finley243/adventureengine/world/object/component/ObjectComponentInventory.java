@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -60,10 +61,10 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Game game, Context context) {
         return switch (name) {
             case "inventory" -> (inventory == null ? null : new ExpressionConstantInventory(inventory));
-            default -> super.getStatValue(name, context);
+            default -> super.getStatValue(name, game, context);
         };
     }
 

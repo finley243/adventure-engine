@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class Context {
 
-    private final Game game;
+    //private final Game game;
     private final Actor subject;
     private final Actor target;
     private final WorldObject parentObject;
@@ -24,24 +24,23 @@ public class Context {
     private final Action parentAction;
     private final Map<String, Variable> localVariables;
 
-    public Context(Game game, Actor subject, Actor target) {
-        this(game, subject, target, null, null, null, null, null);
+    public Context(Actor subject, Actor target) {
+        this(subject, target, null, null, null, null, null);
     }
 
-    public Context(Game game, Actor subject, Actor target, Item parentItem) {
-        this(game, subject, target, null, parentItem, null, null, null);
+    public Context(Actor subject, Actor target, Item parentItem) {
+        this(subject, target, null, parentItem, null, null, null);
     }
 
-    public Context(Game game, Actor subject, AttackTarget attackTarget, Item parentItem, Area parentArea) {
-        this(game, subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, parentArea, null, null);
+    public Context(Actor subject, AttackTarget attackTarget, Item parentItem, Area parentArea) {
+        this(subject, (attackTarget instanceof Actor) ? (Actor) attackTarget : null, (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null, parentItem, parentArea, null, null);
     }
 
-    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Action parentAction) {
-        this(game, subject, target, parentObject, parentItem, parentArea, parentAction, null);
+    public Context(Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Action parentAction) {
+        this(subject, target, parentObject, parentItem, parentArea, parentAction, null);
     }
 
-    public Context(Game game, Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Action parentAction, Map<String, Expression> localVariables) {
-        this.game = game;
+    public Context(Actor subject, Actor target, WorldObject parentObject, Item parentItem, Area parentArea, Action parentAction, Map<String, Expression> localVariables) {
         this.subject = subject;
         this.target = target;
         this.parentObject = parentObject;
@@ -57,7 +56,6 @@ public class Context {
     }
 
     public Context(Context context, Actor subject, Actor target) {
-        this.game = context.game;
         this.subject = subject;
         this.target = target;
         this.parentObject = context.parentObject;
@@ -68,7 +66,6 @@ public class Context {
     }
 
     public Context(Context context, Map<String, Expression> addedParameters) {
-        this.game = context.game;
         this.subject = context.subject;
         this.target = context.target;
         this.parentObject = context.parentObject;
@@ -87,7 +84,6 @@ public class Context {
     }
 
     public Context(Context context, boolean keepLocalVariables) {
-        this.game = context.game;
         this.subject = context.subject;
         this.target = context.target;
         this.parentObject = context.parentObject;
@@ -102,7 +98,6 @@ public class Context {
     }
 
     public Context(Context context, Map<String, Expression> addedParameters, Item parentItem) {
-        this.game = context.game;
         this.subject = context.subject;
         this.target = context.target;
         this.parentObject = context.parentObject;
@@ -118,10 +113,6 @@ public class Context {
                 this.localVariables.put(parameter.getKey(), new Variable(parameter.getValue()));
             }
         }
-    }
-
-    public Game game() {
-        return game;
     }
 
     public Actor getSubject() {

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.ArrayList;
@@ -18,11 +19,11 @@ public class StatBoolean extends Stat {
         this.mods = new ArrayList<>();
     }
 
-    public boolean value(boolean base, Context context) {
+    public boolean value(boolean base, Game game, Context context) {
         int countTrue = 0;
         int countFalse = 0;
         for (StatBooleanMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (mod.shouldApply(game, context)) {
                 if (mod.value) {
                     countTrue += 1;
                 } else {
@@ -39,14 +40,14 @@ public class StatBoolean extends Stat {
         }
     }
 
-    public void addMod(StatBooleanMod mod) {
+    public void addMod(StatBooleanMod mod, Game game) {
         mods.add(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(getName(), game);
     }
 
-    public void removeMod(StatBooleanMod mod) {
+    public void removeMod(StatBooleanMod mod, Game game) {
         mods.remove(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(getName(), game);
     }
 
     public boolean getPriorityValue() {
@@ -58,8 +59,8 @@ public class StatBoolean extends Stat {
     }
 
     public record StatBooleanMod(Condition condition, boolean value) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
+        public boolean shouldApply(Game game, Context context) {
+            return condition == null || condition.isMet(game, context);
         }
     }
 

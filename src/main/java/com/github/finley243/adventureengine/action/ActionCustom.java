@@ -71,7 +71,7 @@ public class ActionCustom extends Action {
         if (getTemplate().getScript() != null) {
             Context context = getContextWithParameters(subject);
             for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
-                Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
+                Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(game, context);
                 if (parameterResult.error() != null) {
                     DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
                 } else {
@@ -79,14 +79,14 @@ public class ActionCustom extends Action {
                 }
             }
             for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
-                Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
+                Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(game, context);
                 if (parameterResult.error() != null) {
                     DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
                 } else {
                     context.setLocalVariable(instanceParameter.getKey(), parameterResult.value());
                 }
             }
-            Script.ScriptReturnData actionScriptResult = getTemplate().getScript().execute(context);
+            Script.ScriptReturnData actionScriptResult = getTemplate().getScript().execute(game, context);
             if (actionScriptResult.error() != null) {
                 DebugLogger.print("Action script error: " + actionScriptResult.stackTrace());
             }
@@ -100,7 +100,7 @@ public class ActionCustom extends Action {
             return resultSuper;
         }
         for (ActionTemplate.ConditionWithMessage customCondition : getTemplate().getSelectConditions()) {
-            if (!customCondition.condition().isMet(getContextWithParameters(subject))) {
+            if (!customCondition.condition().isMet(game, getContextWithParameters(subject))) {
                 return new CanChooseResult(false, customCondition.message());
             }
         }
@@ -146,13 +146,13 @@ public class ActionCustom extends Action {
 
     @Override
     public boolean canShow(Actor subject) {
-        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(getContextWithParameters(subject));
+        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(game, getContextWithParameters(subject));
     }
 
     private Context getContextWithParameters(Actor subject) {
-        Context context = new Context(subject.game(), subject, actor, object, item, area, this, new HashMap<>());
+        Context context = new Context(subject, actor, object, item, area, this, new HashMap<>());
         for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
-            Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
+            Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(game, context);
             if (parameterResult.error() != null) {
                 DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
             } else {
@@ -160,7 +160,7 @@ public class ActionCustom extends Action {
             }
         }
         for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
-            Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
+            Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(game, context);
             if (parameterResult.error() != null) {
                 DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
             } else {

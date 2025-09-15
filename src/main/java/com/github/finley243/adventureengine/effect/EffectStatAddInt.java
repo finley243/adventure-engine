@@ -21,17 +21,17 @@ public class EffectStatAddInt extends Effect {
 
     @Override
     public void start(MutableStatHolder target) {
-        StatInt statInt = target.getStatInt(stat);
+        StatInt statInt = target.getStatInt(stat, game());
         if(statInt != null) {
-            statInt.addMod(new StatInt.StatIntMod(statCondition, amount, 0.0f));
+            statInt.addMod(new StatInt.StatIntMod(statCondition, amount, 0.0f), game());
         }
     }
 
     @Override
     public void end(MutableStatHolder target) {
-        StatInt statInt = target.getStatInt(stat);
+        StatInt statInt = target.getStatInt(stat, game());
         if(statInt != null) {
-            statInt.removeMod(new StatInt.StatIntMod(statCondition, amount, 0.0f));
+            statInt.removeMod(new StatInt.StatIntMod(statCondition, amount, 0.0f), game());
         }
     }
 

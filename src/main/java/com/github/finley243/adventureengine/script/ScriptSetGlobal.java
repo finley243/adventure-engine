@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 
 public class ScriptSetGlobal extends Script {
 
@@ -15,14 +16,14 @@ public class ScriptSetGlobal extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData globalValueResult = globalValue.execute(context);
+    public ScriptReturnData execute(Game game, Context context) {
+        ScriptReturnData globalValueResult = globalValue.execute(game, context);
         if (globalValueResult.error() != null) {
             return globalValueResult;
         } else if (globalValueResult.flowStatement() != null) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Script expression contains unexpected flow statement", getTraceData()));
         }
-        context.game().data().setGlobalExpression(globalName, globalValueResult.value());
+        game.data().setGlobalExpression(globalName, globalValueResult.value());
         return new ScriptReturnData(null, null, null);
     }
 

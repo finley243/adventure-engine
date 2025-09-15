@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.Collection;
@@ -12,7 +13,7 @@ public class ScriptCollectionContains extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression collectionExpression = context.getLocalVariables().get("collection").getExpression();
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         Collection<Expression> collection = switch (collectionExpression.getDataType()) {

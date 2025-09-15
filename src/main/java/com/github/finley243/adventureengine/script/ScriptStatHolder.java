@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.stat.StatHolderReference;
@@ -15,8 +16,8 @@ public class ScriptStatHolder extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        StatHolder statHolder = statHolderReference.getHolder(context);
+    public ScriptReturnData execute(Game game, Context context) {
+        StatHolder statHolder = statHolderReference.getHolder(game, context);
         return new ScriptReturnData(Expression.constant(statHolder), null, null);
     }
 

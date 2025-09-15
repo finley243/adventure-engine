@@ -31,11 +31,12 @@ public abstract class Script {
 	}
 
 	/**
-	 * Begin execution of the script
-	 *
-	 * @param context The context with which this script will be executed
-	 */
-	public abstract ScriptReturnData execute(Context context);
+     * Begin execution of the script
+     *
+     * @param game
+     * @param context The context with which this script will be executed
+     */
+	public abstract ScriptReturnData execute(Game game, Context context);
 
 	protected ScriptTraceData getTraceData() {
 		return traceData;

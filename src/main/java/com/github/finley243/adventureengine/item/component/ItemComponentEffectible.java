@@ -11,7 +11,7 @@ public class ItemComponentEffectible extends ItemComponent {
 
     public ItemComponentEffectible(Item item, ItemComponentTemplate template) {
         super(item, template);
-        this.effectComponent = new EffectComponent(item.game(), item, new Context(item.game(), item.game().data().getPlayer(), item.game().data().getPlayer(), item));
+        this.effectComponent = new EffectComponent(item.game(), item, new Context(item.game().data().getPlayer(), item.game().data().getPlayer(), item));
     }
 
     @Override

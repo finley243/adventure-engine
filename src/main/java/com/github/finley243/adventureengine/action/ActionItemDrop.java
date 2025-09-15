@@ -23,14 +23,14 @@ public class ActionItemDrop extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		return new Context(subject.game(), subject, null, item);
+		return new Context(subject, null, item);
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.getInventory().removeItem(item);
 		subject.getArea().getInventory().addItem(item);
-		Context context = new Context(subject.game(), subject, null, item);
+		Context context = new Context(subject, null, item);
 		SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
 	}
 

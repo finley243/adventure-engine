@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -38,15 +39,15 @@ public abstract class Behavior {
         this.turnsRemaining = 0;
     }
 
-    public void triggerStartScript(Context context) {
+    public void triggerStartScript(Game game, Context context) {
         if (startScript != null) {
-            startScript.execute(context);
+            startScript.execute(game, context);
         }
     }
 
-    public void triggerRoundScript(Context context) {
+    public void triggerRoundScript(Game game, Context context) {
         if (eachRoundScript != null) {
-            eachRoundScript.execute(context);
+            eachRoundScript.execute(game, context);
         }
     }
 
@@ -54,7 +55,7 @@ public abstract class Behavior {
     public abstract boolean isInTargetState(Actor subject);
 
     public void updateTurn(Actor subject, Context scriptContext) {
-        triggerRoundScript(scriptContext);
+        triggerRoundScript(subject.game(), scriptContext);
         if (duration > 0 && turnsRemaining > 0) {
             if (isInTargetState(subject)) {
                 turnsRemaining -= 1;
@@ -72,9 +73,9 @@ public abstract class Behavior {
         }
     }
 
-    public void onStart(Context scriptContext) {
+    public void onStart(Game game, Context scriptContext) {
         turnsRemaining = duration;
-        triggerStartScript(scriptContext);
+        triggerStartScript(game, scriptContext);
     }
 
     public abstract Area getTargetArea(Actor subject);
@@ -87,9 +88,9 @@ public abstract class Behavior {
         }
     }
 
-    public void onPerformAction(Actor subject, Action action) {}
+    public void onPerformAction(Game game, Actor subject, Action action) {}
 
-    public Float actionUtilityOverride(Actor subject, Action action) {
+    public Float actionUtilityOverride(Game game, Actor subject, Action action) {
         return null;
     }
 
@@ -97,15 +98,15 @@ public abstract class Behavior {
         return false;
     }
 
-    public boolean isValid(Actor subject) {
-        return condition == null || condition.isMet(new Context(subject.game(), subject, subject));
+    public boolean isValid(Game game, Actor subject) {
+        return condition == null || condition.isMet(game, new Context(subject, subject));
     }
 
-    public Idle getIdle(Actor subject) {
+    public Idle getIdle(Game game, Actor subject) {
         if (idles == null) return null;
         List<Idle> validIdles = new ArrayList<>();
         for (Idle idle : idles) {
-            if (idle.canPlay(subject)) {
+            if (idle.canPlay(game, subject)) {
                 validIdles.add(idle);
             }
         }

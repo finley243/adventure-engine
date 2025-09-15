@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -12,7 +13,7 @@ public class ScriptRandomInteger extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    public ScriptReturnData execute(Game game, Context context) {
         Expression minExpression = context.getLocalVariables().get("min").getExpression();
         Expression maxExpression = context.getLocalVariables().get("max").getExpression();
         if (minExpression.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Min parameter is not an integer", getTraceData()));

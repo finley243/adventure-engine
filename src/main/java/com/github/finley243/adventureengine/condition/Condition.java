@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.condition;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.Script;
 
@@ -16,8 +17,8 @@ public class Condition {
 		this.expression = expression;
 	}
 	
-	public boolean isMet(Context context) {
-		Script.ScriptReturnData result = expression.execute(context);
+	public boolean isMet(Game game, Context context) {
+		Script.ScriptReturnData result = expression.execute(game, context);
 		// TODO - Replace exceptions with error log and default to false
 		if (result.error() != null) {
 			throw new IllegalArgumentException("Condition expression encountered an error during execution: " + result.stackTrace());

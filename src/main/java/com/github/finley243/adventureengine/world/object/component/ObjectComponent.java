@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -65,7 +66,7 @@ public abstract class ObjectComponent implements StatHolder {
     protected abstract String getStatName();
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Game game, Context context) {
         if ((getStatName() + "_enabled").equals(name)) {
             return Expression.constant(isEnabled());
         }
@@ -73,7 +74,7 @@ public abstract class ObjectComponent implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setStatValue(String name, Expression value, Game game, Context context) {
         if ((getStatName() + "_enabled").equals(name)) {
             setEnabled(value.getValueBoolean());
         }

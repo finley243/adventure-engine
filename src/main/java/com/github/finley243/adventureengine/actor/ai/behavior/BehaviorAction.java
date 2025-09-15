@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
@@ -25,9 +26,9 @@ public class BehaviorAction extends Behavior {
     }
 
     @Override
-    public void onStart(Context scriptContext) {
+    public void onStart(Game game, Context scriptContext) {
         hasPerformedAction = false;
-        super.onStart(scriptContext);
+        super.onStart(game, scriptContext);
     }
 
     @Override
@@ -41,26 +42,26 @@ public class BehaviorAction extends Behavior {
     }
 
     @Override
-    public void onPerformAction(Actor subject, Action action) {
-        if (actionIsMatch(subject, action)) {
+    public void onPerformAction(Game game, Actor subject, Action action) {
+        if (actionIsMatch(game, subject, action)) {
             hasPerformedAction = true;
         }
-        super.onPerformAction(subject, action);
+        super.onPerformAction(game, subject, action);
     }
 
     @Override
-    public Float actionUtilityOverride(Actor subject, Action action) {
-        if (actionIsMatch(subject, action)) {
+    public Float actionUtilityOverride(Game game, Actor subject, Action action) {
+        if (actionIsMatch(game, subject, action)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         }
-        return super.actionUtilityOverride(subject, action);
+        return super.actionUtilityOverride(game, subject, action);
     }
 
-    private boolean actionIsMatch(Actor subject, Action action) {
+    private boolean actionIsMatch(Game game, Actor subject, Action action) {
         if (!action.getID().equals(actionID)) {
             return false;
         }
-        return actionCondition == null || actionCondition.isMet(action.getContext(subject));
+        return actionCondition == null || actionCondition.isMet(game, action.getContext(subject));
     }
 
 }

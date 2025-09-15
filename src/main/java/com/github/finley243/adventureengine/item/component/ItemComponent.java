@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -51,12 +52,12 @@ public abstract class ItemComponent implements MutableStatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Game game, Context context) {
         return null;
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setStatValue(String name, Expression value, Game game, Context context) {
         return false;
     }
 
@@ -66,32 +67,32 @@ public abstract class ItemComponent implements MutableStatHolder {
     }
 
     @Override
-    public StatInt getStatInt(String name) {
+    public StatInt getStatInt(String name, Game game) {
         return null;
     }
 
     @Override
-    public StatFloat getStatFloat(String name) {
+    public StatFloat getStatFloat(String name, Game game) {
         return null;
     }
 
     @Override
-    public StatBoolean getStatBoolean(String name) {
+    public StatBoolean getStatBoolean(String name, Game game) {
         return null;
     }
 
     @Override
-    public StatString getStatString(String name) {
+    public StatString getStatString(String name, Game game) {
         return null;
     }
 
     @Override
-    public StatStringSet getStatStringSet(String name) {
+    public StatStringSet getStatStringSet(String name, Game game) {
         return null;
     }
 
     @Override
-    public void onStatChange(String name) {
+    public void onStatChange(String name, Game game) {
 
     }
 

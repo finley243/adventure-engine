@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.scene;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
 
@@ -59,8 +60,8 @@ public class SceneLine {
     	return text;
     }
     
-    public boolean shouldShow(Context context, String lastTopicID) {
-    	return (condition == null || condition.isMet(context))
+    public boolean shouldShow(Game game, Context context, String lastTopicID) {
+    	return (condition == null || condition.isMet(game, context))
                 && !(once && hasTriggered)
                 && !(fromSceneID != null && !fromSceneID.equals(lastTopicID));
     }

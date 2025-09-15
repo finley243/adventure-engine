@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
@@ -129,7 +130,7 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Game game, Context context) {
         if (name.startsWith("has_user_")) {
             for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
                 if (name.equals("has_user_" + slotID)) {
@@ -138,7 +139,7 @@ public class ObjectComponentUsable extends ObjectComponent {
             }
             return null;
         }
-        return super.getStatValue(name, context);
+        return super.getStatValue(name, game, context);
     }
 
     @Override
