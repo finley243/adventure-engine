@@ -300,7 +300,7 @@ public class Data {
 
 	public void addAttackType(String id, WeaponAttackType attackType) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add attack type with blank ID");
-		if(weaponClasses.containsKey(id)) throw new IllegalArgumentException("Cannot add attack type with existing ID: " + id);
+		if(attackTypes.containsKey(id)) throw new IllegalArgumentException("Cannot add attack type with existing ID: " + id);
 		attackTypes.put(id, attackType);
 	}
 
