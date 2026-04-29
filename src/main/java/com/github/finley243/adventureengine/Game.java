@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.ai.PathfindingService;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
@@ -108,6 +109,7 @@ public class Game {
 		for (WorldObject object : data().getObjects()) {
 			object.onStartRound();
 		}
+		PathfindingService.precomputeVisibleAreas(data().getActors());
 		if (data.getPlayer().getArea().getRoom() != null) {
 			data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
 		}

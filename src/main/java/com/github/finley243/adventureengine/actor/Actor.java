@@ -88,6 +88,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private ObjectComponentUsable.ObjectUserData usingObject;
 	private final StatStringSet senseTypes;
 	private final Set<AreaTarget> areaTargets;
+	private volatile Map<Area, Pathfinder.VisibleAreaData> cachedVisibleAreas;
 	private int sleepCounter;
 	private boolean playerControlled;
 	private final StatStringSet tags;
@@ -202,6 +203,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	
 	@Override
 	public void setArea(Area area) {
+		cachedVisibleAreas = null;
 		boolean isNewRoom = getArea() == null || !Objects.equals(getArea().getRoom(), area.getRoom());
 		boolean isNewArea = getArea() == null || !getArea().equals(area);
 		if (this.area != null) {
@@ -815,12 +817,19 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 
-	public Map<Area, Pathfinder.VisibleAreaData> getVisibleAreas() {
+	public void refreshVisibleAreas() {
 		if (isUsingObject() && !getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanSeeOtherAreas(getUsingObject().slot())) {
-			return Map.of(getArea(), new Pathfinder.VisibleAreaData(null, Area.pathLengthToDistance(0), List.of(new PathDataArea(getArea()))));
+			cachedVisibleAreas = Map.of(getArea(), new Pathfinder.VisibleAreaData(null, Area.pathLengthToDistance(0), List.of(new PathDataArea(getArea()))));
 		} else {
-			return Pathfinder.getVisibleAreas(getArea(), this);
+			cachedVisibleAreas = Pathfinder.getVisibleAreas(getArea(), this);
 		}
+	}
+
+	public Map<Area, Pathfinder.VisibleAreaData> getVisibleAreas() {
+		if (cachedVisibleAreas == null) {
+			refreshVisibleAreas();
+		}
+		return cachedVisibleAreas;
 	}
 
 	public boolean isVisible(Actor subject) {
