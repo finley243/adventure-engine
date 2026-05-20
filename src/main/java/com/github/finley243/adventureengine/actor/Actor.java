@@ -33,6 +33,7 @@ import com.github.finley243.adventureengine.world.object.component.ObjectCompone
 import com.github.finley243.adventureengine.world.path.PathDataArea;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget, Effectible {
 
@@ -906,41 +907,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	@Override
 	public Expression getStatValue(String name, Context context) {
 		if (name.startsWith("damage_resist_")) {
-			String damageType = name.substring("damage_resist_".length());
-			if (!damageResistance.containsKey(damageType)) {
-				DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
-				return Expression.constant(0);
-			}
-			return Expression.constant(getDamageResistance(damageType, context));
+			return resolveExpressionPrefix(name, "damage_resist_", damageResistance, "damage type", Expression.constant(0), key -> Expression.constant(getDamageResistance(key, context)));
 		} else if (name.startsWith("attribute_")) {
-			String attribute = name.substring("attribute_".length());
-			if (!attributes.containsKey(attribute)) {
-				DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid attribute");
-				return Expression.constant(0);
-			}
-			return Expression.constant(getAttribute(attribute, context));
+			return resolveExpressionPrefix(name, "attribute_", attributes, "attribute", Expression.constant(0), key -> Expression.constant(getAttribute(key, context)));
 		} else if (name.startsWith("skill_")) {
-			String skill = name.substring("skill_".length());
-			if (!skills.containsKey(skill)) {
-				DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid skill");
-				return Expression.constant(0);
-			}
-			return Expression.constant(getSkill(skill, context));
+			return resolveExpressionPrefix(name, "skill_", skills, "skill", Expression.constant(0), key -> Expression.constant(getSkill(key, context)));
 		} else if (name.startsWith("damage_mult_")) {
-			String damageType = name.substring("damage_mult_".length());
-			if (!damageMult.containsKey(damageType)) {
-				DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid damage type");
-				return Expression.constant(0.0f);
-			}
-			return Expression.constant(getDamageMult(damageType, context));
+			return resolveExpressionPrefix(name, "damage_mult_", damageMult, "damage type", Expression.constant(0.0f), key -> Expression.constant(getDamageMult(key, context)));
 		} else if (name.startsWith("has_equipped_")) {
-			for (String slot : getTemplate().getEquipSlots().keySet()) {
-				if (name.equals("has_equipped_" + slot)) {
-					return Expression.constant(equipmentComponent.getEquippedItemInSlot(slot) != null);
-				}
-			}
-			DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid equip slot");
-			return Expression.constant(false);
+			return resolveExpressionPrefix(name, "has_equipped_", getTemplate().getEquipSlots(), "equip slot", Expression.constant(false), key -> Expression.constant(getEquipmentComponent().getEquippedItemInSlot(key) != null));
 		}
 		return switch (name) {
 			case "inventory" -> (getInventory() == null ? null : Expression.constant(getInventory()));
@@ -1076,6 +1051,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public Bark getBark(String trigger) {
 		return getTemplate().getBark(trigger);
+	}
+
+	private Expression resolveExpressionPrefix(String name, String prefix, Map<String, ?> map, String keyType, Expression fallback, Function<String, Expression> resolver) {
+		String key = name.substring(prefix.length());
+		if (!map.containsKey(key)) {
+			DebugLogger.print("Actor " + this + " - getStatValue " + name + " references an invalid " + keyType);
+			return fallback;
+		}
+		return resolver.apply(key);
 	}
 
 	private void evaluateXPChange() {
