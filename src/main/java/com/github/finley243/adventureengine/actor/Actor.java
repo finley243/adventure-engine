@@ -713,32 +713,55 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.actionPointsUsed = 0;
 		this.repeatActions.clear();
 		this.endTurn = false;
-		nextAction(null, 0);
+		Action lastAction = null;
+		int repeatActionCount = 0;
+		while (!endTurn) {
+			game().questManager().update();
+			if (!isPlayerControlled()) {
+				updatePursueTargets();
+				getTargetingComponent().update();
+				getBehaviorComponent().update();
+			}
+			List<Action> actionChoices = availableActions();
+			if (actionChoices.isEmpty()) {
+				endTurn();
+				break;
+			}
+			Action selectedAction;
+			if (isPlayerControlled()) {
+				selectedAction = game().menuManager().actionChoiceMenu(game(), this, actionChoices);
+			} else {
+				selectedAction = chooseAIAction(actionChoices);
+			}
+			boolean isRepeatMatch = false;
+			for (Action repeatAction : repeatActions.keySet()) {
+				if (repeatAction.isRepeatMatch(selectedAction)) {
+					isRepeatMatch = true;
+					repeatActions.put(repeatAction, repeatActions.get(repeatAction) - 1);
+					break;
+				}
+			}
+			if (!(isRepeatMatch && selectedAction.repeatsUseNoActionPoints())) {
+				actionPointsUsed += selectedAction.actionPoints(this);
+			}
+			if (!isRepeatMatch && selectedAction.repeatCount(this) > 0) {
+				repeatActions.put(selectedAction, selectedAction.repeatCount(this) - 1);
+			}
+			if (lastAction != null && selectedAction.isRepeatMatch(lastAction)) {
+				repeatActionCount += 1;
+			} else {
+				repeatActionCount = 0;
+			}
+			selectedAction.choose(this, repeatActionCount);
+			getBehaviorComponent().onPerformAction(selectedAction);
+			lastAction = selectedAction;
+		}
+		game().onEndTurn(this);
 	}
 
 	public boolean isPlayerControlled() {
 		return playerControlled;
 	}
-
-	private void nextAction(Action lastAction, int repeatActionCount) {
-		game().questManager().update();
-		if (!isPlayerControlled()) {
-			updatePursueTargets();
-			getTargetingComponent().update();
-			getBehaviorComponent().update();
-		}
-		List<Action> actionChoices = availableActions();
-		if (actionChoices.isEmpty()) {
-			endTurn();
-		}
-        Action selectedAction;
-        if (isPlayerControlled()) {
-            selectedAction = game().menuManager().actionChoiceMenu(game(), this, actionChoices);
-        } else {
-            selectedAction = chooseAIAction(actionChoices);
-        }
-        onSelectAction(selectedAction, lastAction, repeatActionCount);
-    }
 
 	public boolean isRepeatAction(Action action) {
 		for (Action repeatAction : repeatActions.keySet()) {
@@ -747,36 +770,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 		}
 		return false;
-	}
-
-	private void onSelectAction(Action action, Action lastAction, int repeatActionCount) {
-		boolean isRepeatMatch = false;
-		for (Action repeatAction : repeatActions.keySet()) {
-			if (repeatAction.isRepeatMatch(action)) {
-				isRepeatMatch = true;
-				int countRemaining = repeatActions.get(repeatAction) - 1;
-				repeatActions.put(repeatAction, countRemaining);
-				break;
-			}
-		}
-		if (!(isRepeatMatch && action.repeatsUseNoActionPoints())) {
-			actionPointsUsed += action.actionPoints(this);
-		}
-		if (!isRepeatMatch && action.repeatCount(this) > 0) {
-			repeatActions.put(action, action.repeatCount(this) - 1);
-		}
-		if (lastAction != null && action.isRepeatMatch(lastAction)) {
-			repeatActionCount += 1;
-		} else {
-			repeatActionCount = 0;
-		}
-		action.choose(this, repeatActionCount);
-		getBehaviorComponent().onPerformAction(action);
-		if (endTurn) {
-			game().onEndTurn(this);
-		} else {
-			nextAction(action, repeatActionCount);
-		}
 	}
 	
 	public void endTurn() {
