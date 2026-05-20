@@ -108,7 +108,7 @@ public class TargetingComponent {
                 updateTargetHostile(entry.getKey(), entry.getValue());
             }
         }
-        Context context = new Context(actor.game(), actor, actor);
+        Context context = Context.builder(actor.game()).subject(actor).target(actor).build();
         if (startedInCombat && !hasTargetsOfType(DetectionState.HOSTILE)) {
             actor.triggerScript("on_combat_end", context);
             actor.triggerBark("on_combat_end", context);
@@ -176,7 +176,7 @@ public class TargetingComponent {
     }
 
     private void processDetectionEvent(Actor target, float detectionChance) {
-        Context context = new Context(actor.game(), actor, target);
+        Context context = Context.builder(actor.game()).subject(actor).target(target).build();
         if (!detectedActors.containsKey(target) || detectedActors.get(target).state == DetectionState.DETECTING) {
             boolean detected = MathUtils.randomCheck(detectionChance);
             if (detected) {
@@ -212,7 +212,7 @@ public class TargetingComponent {
     }
 
     private void updateState(Actor target) {
-        Context context = new Context(actor.game(), actor, target);
+        Context context = Context.builder(actor.game()).subject(actor).target(target).build();
         detectedActors.get(target).stateCounter += 1;
         if (detectedActors.get(target).stateCounter >= getStateTriggerValue(detectedActors.get(target).state)) {
             detectedActors.get(target).stateCounter = 0;
@@ -266,7 +266,7 @@ public class TargetingComponent {
     }
 
     public void addCombatant(Actor target) {
-        Context context = new Context(actor.game(), actor, target);
+        Context context = Context.builder(actor.game()).subject(actor).target(target).build();
         if (!hasTargetsOfType(DetectionState.HOSTILE)) {
             actor.triggerScript("on_combat_start", context);
             actor.triggerBark("on_combat_start", context);
@@ -334,7 +334,7 @@ public class TargetingComponent {
         if (!subject.isSneaking()) {
             return 1.0f;
         }
-        Context context = new Context(actor.game(), actor, subject);
+        Context context = Context.builder(actor.game()).subject(actor).target(subject).build();
         // TODO - Allow specifying detection skill
         return switch (action.detectionChance()) {
             case LOW -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.01f, 0.50f, context);
@@ -356,7 +356,7 @@ public class TargetingComponent {
                 case DISTANT ->  0.25f;
             };
         } else {
-            Context context = new Context(actor.game(), actor, subject);
+            Context context = Context.builder(actor.game()).subject(actor).target(subject).build();
             return switch (distance) {
                 case NEAR -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.50f, 0.95f, context);
                 case CLOSE -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.20f, 0.80f, context);
@@ -388,7 +388,7 @@ public class TargetingComponent {
         }
         Set<AreaLink.DistanceCategory> combinedRanges = new HashSet<>();
         for (Item weapon : equippedWeapons) {
-            combinedRanges.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(new Context(actor.game(), actor, actor, weapon)));
+            combinedRanges.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(Context.builder(actor.game()).subject(actor).target(actor).parentItem(weapon).build()));
         }
         return combinedRanges;
     }

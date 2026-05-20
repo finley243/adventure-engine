@@ -20,7 +20,7 @@ public class ScriptExternal extends Script {
 
     @Override
     public ScriptReturnData execute(Context context) {
-        Context innerContext = new Context(context, false);
+        Context innerContext = Context.from(context).clearVariables().build();
         ScriptParser.ScriptData script = context.game().data().getScript(scriptID);
         if (script == null) return new ScriptReturnData(null, null, new ScriptErrorData("Function does not exist", getTraceData()));
         Set<String> definitionParameterNames = new HashSet<>();

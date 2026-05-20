@@ -59,9 +59,9 @@ public class QuestObjective extends GameInstanced implements StatHolder {
 
     public void update() {
         if (isActive && state == State.OPEN) {
-            if (completionCondition != null && completionCondition.isMet(new Context(game(), game().data().getPlayer(), game().data().getPlayer()))) {
+            if (completionCondition != null && completionCondition.isMet(Context.builder(game()).subject(game().data().getPlayer()).target(game().data().getPlayer()).build())) {
                 setCompleted(true);
-            } else if (failureCondition != null && failureCondition.isMet(new Context(game(), game().data().getPlayer(), game().data().getPlayer()))) {
+            } else if (failureCondition != null && failureCondition.isMet(Context.builder(game()).subject(game().data().getPlayer()).target(game().data().getPlayer()).build())) {
                 setFailed(true);
             }
         }
@@ -76,12 +76,12 @@ public class QuestObjective extends GameInstanced implements StatHolder {
             if (active) {
                 game().questManager().addActiveObjective(this);
                 if (activateScript != null) {
-                    activateScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
+                    activateScript.execute(Context.builder(game()).subject(game().data().getPlayer()).target(game().data().getPlayer()).build());
                 }
             } else {
                 game().questManager().removeActiveObjective(this);
                 if (deactivateScript != null) {
-                    deactivateScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
+                    deactivateScript.execute(Context.builder(game()).subject(game().data().getPlayer()).target(game().data().getPlayer()).build());
                 }
             }
         }
@@ -95,9 +95,9 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     public void setState(State state) {
         if (this.state != state) {
             if (state == State.COMPLETED && completionScript != null) {
-                completionScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
+                completionScript.execute(Context.builder(game()).subject(game().data().getPlayer()).target(game().data().getPlayer()).build());
             } else if (state == State.FAILED && failureScript != null) {
-                failureScript.execute(new Context(game(), game().data().getPlayer(), game().data().getPlayer()));
+                failureScript.execute(Context.builder(game()).subject(game().data().getPlayer()).target(game().data().getPlayer()).build());
             }
         }
         this.state = state;

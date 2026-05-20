@@ -54,7 +54,8 @@ public class ItemComponentMagazine extends ItemComponent {
     }
 
     public int getMagazineSize() {
-        return clipSize.value(getMagazineTemplate().getMagazineSize(), 1, 100, new Context(getItem().game(), getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor(), getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor(), getItem()));
+        Actor equippedActor = getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor();
+        return clipSize.value(getMagazineTemplate().getMagazineSize(), 1, 100, Context.builder(getItem().game()).subject(equippedActor).target(equippedActor).parentItem(getItem()).build());
     }
 
     public int getAmmoRemaining() {

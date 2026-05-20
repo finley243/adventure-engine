@@ -91,7 +91,7 @@ public class WeaponAttackType {
 
     private List<Action> generateActionsWeapon(Actor subject, Item weapon) {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
-        Context context = new Context(subject.game(), subject, subject, weapon);
+        Context context = Context.builder(subject.game()).subject(subject).target(subject).parentItem(weapon).build();
         List<Action> actions = new ArrayList<>();
         Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context))) : weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context));
         int rate = rateOverride != null ? rateOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getRate(context);

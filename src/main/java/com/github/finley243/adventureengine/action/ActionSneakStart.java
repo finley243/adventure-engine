@@ -14,7 +14,7 @@ public class ActionSneakStart extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        return new Context(subject.game(), subject, subject);
+        return Context.builder(subject.game()).subject(subject).target(subject).build();
     }
 
     @Override

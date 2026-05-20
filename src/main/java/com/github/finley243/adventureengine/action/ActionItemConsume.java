@@ -31,13 +31,13 @@ public class ActionItemConsume extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-        return new Context(subject.game(), subject, null, item);
+        return Context.builder(subject.game()).subject(subject).parentItem(item).build();
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.getInventory().removeItem(item);
-		Context context = new Context(subject.game(), subject, null, item);
+		Context context = getContext(subject);
 		SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(consumePhrase), context, true, this, null));
 		for (String effect : effects) {
 			subject.getEffectComponent().addEffect(effect);

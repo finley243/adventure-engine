@@ -25,7 +25,7 @@ public class ActionNetworkReadData extends NetworkAction {
 
     @Override
     public Context getContext(Actor subject) {
-        Context context = new Context(subject.game(), subject, null, object, null, null, this);
+        Context context = Context.builder(subject.game()).subject(subject).parentObject(object).parentAction(this).build();
         context.setLocalVariable("node", Expression.constant(node));
         return context;
     }

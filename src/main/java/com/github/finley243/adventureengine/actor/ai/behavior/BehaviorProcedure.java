@@ -95,7 +95,7 @@ public class BehaviorProcedure extends Behavior {
     }
 
     private void resetStageContext(Context parentContext) {
-        currentStageContext = new Context(parentContext, parentContext.getSubject(), parentContext.getTarget());
+        currentStageContext = Context.from(parentContext).build();
     }
 
 }

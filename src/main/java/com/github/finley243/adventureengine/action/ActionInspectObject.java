@@ -21,7 +21,7 @@ public class ActionInspectObject extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		return new Context(subject.game(), subject, null, object, null, null, this);
+		return Context.builder(subject.game()).subject(subject).parentObject(object).parentAction(this).build();
 	}
 	
 	@Override

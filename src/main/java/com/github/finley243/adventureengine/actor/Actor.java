@@ -119,7 +119,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.skillsBase = new HashMap<>();
 		this.attributes = new HashMap<>();
 		this.skills = new HashMap<>();
-		this.effectComponent = new EffectComponent(game, this, new Context(game, this, this));
+		this.effectComponent = new EffectComponent(game, this, Context.builder(game).subject(this).target(this).build());
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
 		this.repeatActions = new HashMap<>();
 		this.startDisabled = startDisabled;
@@ -131,7 +131,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public void onInit(Set<String> damageTypeIDs, Set<String> attributeIDs, Set<String> skillIDs) {
 		if (!startDead) {
-			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
+			HP = maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, Context.builder(game()).subject(this).target(this).build());
 		}
 		level = getTemplate().getStartingLevel();
 		for (String damageType : damageTypeIDs) {
@@ -215,14 +215,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (isPlayer()) {
 			game().eventBus().post(new RenderAreaEvent(getArea().getRoom() != null ? LangUtils.titleCase(getArea().getRoom().getName()) : null, LangUtils.titleCase(getArea().getName())));
 			if (isNewRoom && getArea().getRoom() != null && getArea().getRoom().getDescription() != null) {
-				game().menuManager().sceneMenu(game(), getArea().getRoom().getDescription(), new Context(game(), this, this), false);
+				game().menuManager().sceneMenu(game(), getArea().getRoom().getDescription(), Context.builder(game()).subject(this).target(this).build(), false);
 				getArea().getRoom().setKnown();
 				for (Area areaInRoom : getArea().getRoom().getAreas()) {
 					areaInRoom.setKnown();
 				}
 			}
 			if (isNewArea && getArea().getDescription() != null) {
-				game().menuManager().sceneMenu(game(), getArea().getDescription(), new Context(game(), this, this), false);
+				game().menuManager().sceneMenu(game(), getArea().getDescription(), Context.builder(game()).subject(this).target(this).build(), false);
 				getArea().setKnown();
 			}
 			if (isNewRoom && getArea().getRoom() != null) {
@@ -375,7 +375,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public int getMaxHP() {
-		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, new Context(game(), this, this));
+		return maxHP.value(getTemplate().getMaxHP(), 0, MAX_HP, Context.builder(game()).subject(this).target(this).build());
 	}
 
 	public int getDamageResistance(String damageType, Context context) {
@@ -387,15 +387,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public int getActionPoints() {
-		return actionPoints.value(getTemplate().getActionPoints(), 0, MAX_ACTION_POINTS, new Context(game(), this, this));
+		return actionPoints.value(getTemplate().getActionPoints(), 0, MAX_ACTION_POINTS, Context.builder(game()).subject(this).target(this).build());
 	}
 
 	public int getMovePoints() {
-		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, new Context(game(), this, this));
+		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, Context.builder(game()).subject(this).target(this).build());
 	}
 
 	public Set<String> getEquipmentEffects(Item item) {
-		return equipmentEffects.value(new HashSet<>(), new Context(game(), this, this, item));
+		return equipmentEffects.value(new HashSet<>(), Context.builder(game()).subject(this).target(this).parentItem(item).build());
 	}
 
 	@Override
@@ -438,11 +438,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void modifyHP(int amount, Context context) {
 		HP += amount;
 		if (HP <= 0) {
-			Context killContext = new Context(game(), this, context.getSubject());
+			Context killContext = Context.builder(game()).subject(this).target(context.getSubject()).build();
 			HP = 0;
 			kill(killContext);
 		} else if (amount < 0) {
-			Context modifierContext = new Context(game(), this, context.getSubject());
+			Context modifierContext = Context.builder(game()).subject(this).target(context.getSubject()).build();
 			modifierContext.setLocalVariable("amount", Expression.constant(String.valueOf(-amount)));
 			modifierContext.setLocalVariable("condition", Expression.constant(getConditionDescription()));
 			triggerScript("on_damaged", modifierContext);
@@ -456,7 +456,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public void kill(Context context) {
 		triggerScript("on_death", context);
 		if (context.getTarget() != null && context.getTarget() != this) {
-			context.getTarget().triggerScript("on_kill", new Context(context.game(), context.getTarget(), context.getSubject()));
+			context.getTarget().triggerScript("on_kill", Context.builder(game()).subject(context.getTarget()).target(context.getSubject()).build());
 		}
 		SensoryEvent.execute(new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null));
 		// TODO - Enable held item dropping on death for new equipment system
@@ -613,7 +613,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public List<Action> availableActions() {
-		if (!canPerformActions(new Context(game(), this, this))) {
+		if (!canPerformActions(Context.builder(game()).subject(this).target(this).build())) {
 			return new ArrayList<>();
 		}
 		List<Action> actions = new ArrayList<>();
@@ -647,7 +647,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				actions.addAll(visibleObject.visibleActions(this));
 			}
 		}
-		if (canMove(new Context(game(), this, this))) {
+		if (canMove(Context.builder(game()).subject(this).target(this).build())) {
 			actions.addAll(getArea().getMoveActions(this, null, null));
 		}
 		actions.addAll(getArea().getAreaActions(this));
@@ -1154,7 +1154,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	private void evaluateXPChange() {
-		Context levelUpThresholdContext = new Context(game(), this, this);
+		Context levelUpThresholdContext = Context.builder(game()).subject(this).target(this).build();
 		levelUpThresholdContext.setLocalVariable("level", Expression.constant(level));
 		Script.ScriptReturnData thresholdReturn = getTemplate().getLevelUpThresholdExpression().execute(levelUpThresholdContext);
 		if (thresholdReturn.error() != null) {
@@ -1179,7 +1179,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	private void onLevelUp() {
-		triggerScript("on_level_up", new Context(game(), this, this));
+		triggerScript("on_level_up", Context.builder(game()).subject(this).target(this).build());
 	}
 	
 }

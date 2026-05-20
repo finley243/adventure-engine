@@ -101,7 +101,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			for (Script currentScript : getTemplate().getScripts().get(entryPoint)) {
-				Context context = new Context(game(), subject, target, this);
+				Context context = Context.builder(game()).subject(subject).target(target).parentItem(this).build();
 				currentScript.execute(context);
 			}
 		}

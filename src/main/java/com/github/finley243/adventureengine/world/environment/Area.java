@@ -360,7 +360,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	public void applyEffects() {
 		for (Actor actor : getActors()) {
-			for (String effectID : effects.value(new HashSet<>(), new Context(game(), actor, actor))) {
+			for (String effectID : effects.value(new HashSet<>(), Context.builder(game()).subject(actor).target(actor).build())) {
 				actor.getEffectComponent().addEffect(effectID);
 			}
 		}
@@ -463,7 +463,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				Context context = new Context(game(), subject, target);
+				Context context = Context.builder(game()).subject(subject).target(target).build();
 				currentScript.execute(context);
 			}
 		}

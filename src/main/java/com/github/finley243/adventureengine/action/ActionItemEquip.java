@@ -34,7 +34,7 @@ public class ActionItemEquip extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        Context context = new Context(subject.game(), subject, null, item);
+        Context context = Context.builder(subject.game()).subject(subject).parentItem(item).build();
         context.setLocalVariable("equipSlots", Expression.constant(slotsData.slots()));
         return context;
     }
@@ -42,7 +42,7 @@ public class ActionItemEquip extends Action {
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.getEquipmentComponent().equip(item, slotsData);
-        Context context = new Context(subject.game(), subject, null, item);
+        Context context = getContext(subject);
         SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null));
     }
 

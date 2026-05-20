@@ -197,7 +197,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	public void triggerScript(String entryPoint, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				Context context = new Context(game(), subject, target);
+				Context context = Context.builder(game()).subject(subject).target(target).build();
 				currentScript.execute(context);
 			}
 		}

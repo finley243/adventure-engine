@@ -150,7 +150,7 @@ public class ActionCustom extends Action {
     }
 
     private Context getContextWithParameters(Actor subject) {
-        Context context = new Context(subject.game(), subject, actor, object, item, area, this, new HashMap<>());
+        Context context = Context.builder(subject.game()).subject(subject).target(actor).parentObject(object).parentItem(item).parentArea(area).parentAction(this).build();
         for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
             Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
             if (parameterResult.error() != null) {

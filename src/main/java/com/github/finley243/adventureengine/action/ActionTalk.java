@@ -20,12 +20,12 @@ public class ActionTalk extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-        return new Context(subject.game(), subject, target);
+        return Context.builder(subject.game()).subject(subject).target(target).build();
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.game().menuManager().sceneMenu(subject.game(), target.getDialogueStart(), new Context(target.game(), target, target), true);
+		subject.game().menuManager().sceneMenu(subject.game(), target.getDialogueStart(), Context.builder(target.game()).subject(target).target(target).build(), true);
 	}
 
 	@Override

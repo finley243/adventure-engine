@@ -25,7 +25,7 @@ public class ActionItemDropAll extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		Context context = new Context(subject.game(), subject, null, item);
+		Context context = Context.builder(subject.game()).subject(subject).parentItem(item).build();
 		context.setLocalVariable("count", Expression.constant(subject.getInventory().itemCount(item)));
 		return context;
 	}
@@ -35,7 +35,7 @@ public class ActionItemDropAll extends Action {
 		int count = subject.getInventory().itemCount(item);
 		subject.getInventory().removeItems(item.getTemplateID(), count);
 		subject.getArea().getInventory().addItems(item.getTemplateID(), count);
-		Context context = new Context(subject.game(), subject, null, item);
+		Context context = getContext(subject);
 		//TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
 		SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
 	}

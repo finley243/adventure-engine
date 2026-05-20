@@ -17,7 +17,7 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_MIN = 0.01f;
 	
 	public static float calculateHitChance(Actor attacker, Item weapon, AttackTarget target, Limb limb, Script hitChanceFunction, float hitChanceMult) {
-		Context context = new Context(attacker.game(), attacker, target, weapon, null);
+		Context context = Context.builder(attacker.game()).subject(attacker).attackTarget(target).parentItem(weapon).build();
 		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(context);
 		if (hitChanceResult.error() != null) {
 			throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());
@@ -41,7 +41,7 @@ public class CombatHelper {
 	}
 
 	public static float calculateHitChanceNoTarget(Actor attacker, Item weapon, Limb limb, Script hitChanceFunction, float hitChanceMult) {
-		Context context = new Context(attacker.game(), attacker, attacker, weapon);
+		Context context = Context.builder(attacker.game()).subject(attacker).target(attacker).parentItem(weapon).build();
 		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(context);
 		if (hitChanceResult.error() != null) {
 			throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());
@@ -66,7 +66,7 @@ public class CombatHelper {
 
 	public static float calculateHitChanceDodgeOnly(Actor attacker, AttackTarget target, Item weapon, Script hitChanceFunction) {
 		if (target instanceof Actor targetActor) {
-			Context context = new Context(attacker.game(), attacker, targetActor, weapon);
+			Context context = Context.builder(attacker.game()).subject(attacker).target(targetActor).parentItem(weapon).build();
 			Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(context);
 			if (hitChanceResult.error() != null) {
 				throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());

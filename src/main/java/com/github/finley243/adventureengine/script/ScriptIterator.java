@@ -39,7 +39,7 @@ public class ScriptIterator extends Script {
             expressions = setResult.value().getValueList();
         }
         for (Expression currentExpression : expressions) {
-            Context innerContext = new Context(context, new MapBuilder<String, Expression>().put(iteratorParameterName, currentExpression).build());
+            Context innerContext = Context.from(context).addVariable(iteratorParameterName, currentExpression).build();
             ScriptReturnData scriptResult = iteratedScript.execute(innerContext);
             if (scriptResult.error() != null) {
                 return scriptResult;

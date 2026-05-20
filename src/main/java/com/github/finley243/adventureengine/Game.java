@@ -60,7 +60,7 @@ public class Game {
 
 		data().newGame();
 
-		data().getPlayer().setStatValue("money", Expression.constant(50), new Context(this, data().getPlayer(), data().getPlayer()));
+		data().getPlayer().setStatValue("money", Expression.constant(50), Context.builder(this).subject(data().getPlayer()).target(data().getPlayer()).build());
 
 		/*File saveFile = new File(GAMEFILES + "/save.asav");
 		SaveLoader.saveGame(saveFile, data());
@@ -115,7 +115,7 @@ public class Game {
 		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
 		for (Actor visibleActor : data().getPlayer().getLineOfSightActors()) {
 			if (visibleActor.isVisible(data().getPlayer())) {
-				visibleActor.triggerScript("on_player_visible_round", new Context(this, visibleActor, data().getPlayer()));
+				visibleActor.triggerScript("on_player_visible_round", Context.builder(this).subject(visibleActor).target(data().getPlayer()).build());
 			}
 		}
 		data().dateTime().onNextRound();
@@ -141,7 +141,7 @@ public class Game {
 
 	private List<Actor> computeTurnOrder() {
 		List<Actor> actors = new ArrayList<>(data().getActors());
-		actors.sort((a1, a2) -> a2.getAttribute("agility", new Context(this, a2, a2)) - a1.getAttribute("agility", new Context(this, a1, a1)));
+		actors.sort((a1, a2) -> a2.getAttribute("agility", Context.builder(this).subject(a2).target(a2).build()) - a1.getAttribute("agility", Context.builder(this).subject(a1).target(a1).build()));
 		return actors;
 	}
 	

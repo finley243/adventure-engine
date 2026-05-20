@@ -34,14 +34,14 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		Context context = new Context(subject.game(), subject, null, weapon);
+		Context context = Context.builder(subject.game()).subject(subject).parentItem(weapon).build();
 		context.setLocalVariable("ammo", Expression.constant(ammoType));
 		return context;
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
-		subject.triggerScript("on_reload", new Context(subject.game(), subject, subject, weapon));
+		subject.triggerScript("on_reload", Context.builder(subject.game()).subject(subject).target(subject).parentItem(weapon).build());
 		if (subject.isPlayer()) {
 			if (!ammoType.equals(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType()) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() > 0) {
 				subject.getInventory().addItems(ammoType.getTemplateID(), weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining());
@@ -57,7 +57,7 @@ public class ActionWeaponReload extends Action {
 			weapon.getComponentOfType(ItemComponentMagazine.class).loadAmmo(weapon.getComponentOfType(ItemComponentMagazine.class).reloadCapacity());
 			weapon.getComponentOfType(ItemComponentMagazine.class).setLoadedAmmoType(ammoType);
 		}
-		Context context = new Context(subject.game(), subject, null, weapon);
+		Context context = Context.builder(subject.game()).subject(subject).parentItem(weapon).build();
 		SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("reload"), context, true, this, null));
 	}
 
@@ -78,7 +78,7 @@ public class ActionWeaponReload extends Action {
 
 	@Override
 	public int actionPoints(Actor subject) {
-		Context context = new Context(subject.game(), subject, subject, null, weapon, null, this, new MapBuilder<String, Expression>().put("ammo_type", new ExpressionConstantString(ammoType.getTemplateID())).build());
+		Context context = Context.builder(subject.game()).subject(subject).target(subject).parentItem(weapon).parentAction(this).addVariable("ammo_type", new ExpressionConstantString(ammoType.getTemplateID())).build();
 		return weapon.getComponentOfType(ItemComponentMagazine.class).getReloadActionPoints(context);
 	}
 

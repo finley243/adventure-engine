@@ -34,7 +34,7 @@ public class ActionInspectArea extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        return new Context(subject.game(), subject, null, null, null, area, this);
+        return Context.builder(subject.game()).subject(subject).parentArea(area).parentAction(this).build();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ActionInspectArea extends Action {
         for (Area currentArea : orderedAreaList) {
             Pathfinder.VisibleAreaData areaData = visibleAreas.get(currentArea);
             String directionName = areaData.direction() != null ? areaData.direction().name : null;
-            Context context = new Context(subject.game(), subject, subject);
+            Context context = Context.builder(subject.game()).subject(subject).target(subject).build();
             Area leadingArea = null;
             if (areaData.pathData().size() > 3) {
                 leadingArea = ((PathDataArea) areaData.pathData().get(areaData.pathData().size() - 3)).getArea();
@@ -90,14 +90,14 @@ public class ActionInspectArea extends Action {
             }
         }
         if (area.getRoom() != null && area.getRoom().getDescription() != null) {
-            subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), new Context(subject.game(), subject, subject), false);
+            subject.game().menuManager().sceneMenu(subject.game(), area.getRoom().getDescription(), Context.builder(subject.game()).subject(subject).target(subject).build(), false);
             area.getRoom().setKnown();
             for (Area area : area.getRoom().getAreas()) {
                 area.setKnown();
             }
         }
         if (area.getDescription() != null) {
-            subject.game().menuManager().sceneMenu(subject.game(), area.getDescription(), new Context(subject.game(), subject, subject), false);
+            subject.game().menuManager().sceneMenu(subject.game(), area.getDescription(), Context.builder(subject.game()).subject(subject).target(subject).build(), false);
             area.setKnown();
         }
         if (area.getRoom() != null) {

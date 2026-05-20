@@ -98,7 +98,7 @@ public abstract class Behavior {
     }
 
     public boolean isValid(Actor subject) {
-        return condition == null || condition.isMet(new Context(subject.game(), subject, subject));
+        return condition == null || condition.isMet(Context.builder(subject.game()).subject(subject).target(subject).build());
     }
 
     public Idle getIdle(Actor subject) {

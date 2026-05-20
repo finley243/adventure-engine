@@ -17,11 +17,11 @@ public class Idle {
     }
 
     public boolean canPlay(Actor subject) {
-        return condition == null || condition.isMet(new Context(subject.game(), subject, subject));
+        return condition == null || condition.isMet(Context.builder(subject.game()).subject(subject).target(subject).build());
     }
 
     public void trigger(Actor subject) {
-        Context context = new Context(subject.game(), subject, null);
+        Context context = Context.builder(subject.game()).subject(subject).build();
         SensoryEvent.execute(new SensoryEvent(subject.getArea(), phrase, context, true, null, null));
     }
 

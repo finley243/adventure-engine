@@ -138,7 +138,7 @@ public class BehaviorComponent {
     }
 
     private void resetContext() {
-        scriptContext = new Context(actor.game(), actor, actor);
+        scriptContext = Context.builder(actor.game()).subject(actor).target(actor).build();
     }
 
 }

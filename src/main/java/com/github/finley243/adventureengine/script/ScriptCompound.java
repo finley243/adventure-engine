@@ -15,7 +15,7 @@ public class ScriptCompound extends Script {
 
     @Override
     public ScriptReturnData execute(Context context) {
-        Context innerContext = new Context(context, true);
+        Context innerContext = Context.from(context).build();
         for (Script subScript : subScripts) {
             ScriptReturnData result = subScript.execute(innerContext);
             if (result.error() != null) {

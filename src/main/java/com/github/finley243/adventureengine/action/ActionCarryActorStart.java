@@ -22,13 +22,13 @@ public class ActionCarryActorStart extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        return new Context(subject.game(), subject, carriedActor);
+        return Context.builder(subject.game()).subject(subject).target(carriedActor).build();
     }
 
     @Override
     public void choose(Actor subject, int repeatActionCount) {
         subject.setCarriedActor(carriedActor);
-        Context context = new Context(subject.game(), subject, carriedActor);
+        Context context = Context.builder(subject.game()).subject(subject).target(carriedActor).build();
         SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("pickUpActor"), context, true, this, null));
     }
 

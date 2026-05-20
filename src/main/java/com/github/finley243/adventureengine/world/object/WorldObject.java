@@ -108,7 +108,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		amount -= Math.round(getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult());
 		amount -= Math.round(amount * getTemplate().getDamageMult(damage.getType()));
 		HP -= amount;
-		Context objectContext = new Context(context, false);
+		Context objectContext = Context.from(context).clearVariables().build();
 		if (HP <= 0) {
 			HP = 0;
 			triggerScript("on_broken", objectContext);
