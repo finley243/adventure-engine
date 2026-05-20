@@ -8,7 +8,6 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.expression.*;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -467,22 +466,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 				currentScript.execute(context);
 			}
 		}
-	}
-
-	public void loadState(SaveData saveData) {
-		if (saveData.getParameter().equals("is_known")) {
-			if (saveData.getValueBoolean()) {
-				setKnown();
-			}
-		}
-	}
-
-	public List<SaveData> saveState() {
-		List<SaveData> state = new ArrayList<>();
-		if (isKnown()) {
-			state.add(new SaveData(SaveData.DataType.AREA, this.getID(), "is_known", isKnown()));
-		}
-		return state;
 	}
 
 	public static AreaLink.DistanceCategory pathLengthToDistance(int pathLength) {

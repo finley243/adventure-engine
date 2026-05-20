@@ -1,10 +1,5 @@
 package com.github.finley243.adventureengine;
 
-import com.github.finley243.adventureengine.load.SaveData;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class DateTimeController {
 
     public static final int MINUTES_PER_ROUND = 2;
@@ -162,26 +157,6 @@ public class DateTimeController {
 
     public static int roundsToMinutes(int rounds) {
         return rounds * MINUTES_PER_ROUND;
-    }
-
-    public List<SaveData> saveState() {
-        List<SaveData> state = new ArrayList<>();
-        state.add(new SaveData(SaveData.DataType.TIME, null, "minutes", minutes));
-        state.add(new SaveData(SaveData.DataType.TIME, null, "year", year));
-        state.add(new SaveData(SaveData.DataType.TIME, null, "month", month));
-        state.add(new SaveData(SaveData.DataType.TIME, null, "day", day));
-        state.add(new SaveData(SaveData.DataType.TIME, null, "weekday", weekday));
-        return state;
-    }
-
-    public void loadState(SaveData state) {
-        switch (state.getParameter()) {
-            case "minutes" -> this.minutes = state.getValueInt();
-            case "year" -> this.year = state.getValueInt();
-            case "month" -> this.month = state.getValueInt();
-            case "day" -> this.day = state.getValueInt();
-            case "weekday" -> this.weekday = state.getValueInt();
-        }
     }
 
 }

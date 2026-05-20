@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.expression.*;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.StatHolder;
@@ -109,20 +108,6 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
 		return null;
-	}
-
-	public void loadState(SaveData saveData) {
-		if (saveData.getParameter().equals("generated_count")) {
-			this.generatedCount = saveData.getValueInt();
-		}
-	}
-
-	public List<SaveData> saveState() {
-		List<SaveData> state = new ArrayList<>();
-		if (generatedCount > 0) {
-			state.add(new SaveData(SaveData.DataType.ITEM_TEMPLATE, this.getID(), "generated_count", generatedCount));
-		}
-		return state;
 	}
 	
 }

@@ -7,10 +7,8 @@ import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.stat.StatHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Scene extends GameInstanced implements StatHolder {
@@ -88,20 +86,6 @@ public class Scene extends GameInstanced implements StatHolder {
 	@Override
 	public StatHolder getSubHolder(String name, String ID) {
 		return null;
-	}
-
-	public void loadState(SaveData saveData) {
-		if ("has_triggered".equals(saveData.getParameter())) {
-			this.hasTriggered = saveData.getValueBoolean();
-		}
-	}
-
-	public List<SaveData> saveState() {
-		List<SaveData> state = new ArrayList<>();
-		if (hasTriggered) {
-			state.add(new SaveData(SaveData.DataType.SCENE, this.getID(), "has_triggered", hasTriggered));
-		}
-		return state;
 	}
 
 	public record SceneLineResult(boolean exit, String redirect) {}

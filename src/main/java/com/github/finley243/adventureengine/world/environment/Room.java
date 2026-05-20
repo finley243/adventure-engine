@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.StatHolder;
@@ -201,24 +200,6 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 				currentScript.execute(context);
 			}
 		}
-	}
-
-	public void loadState(SaveData saveData) {
-		switch (saveData.getParameter()) {
-			case "is_known" -> this.isKnown = saveData.getValueBoolean();
-			case "has_visited" -> this.hasVisited = saveData.getValueBoolean();
-		}
-	}
-
-	public List<SaveData> saveState() {
-		List<SaveData> state = new ArrayList<>();
-		if (isKnown) {
-			state.add(new SaveData(SaveData.DataType.ROOM, this.getID(), "is_known", isKnown));
-		}
-		if (hasVisited) {
-			state.add(new SaveData(SaveData.DataType.ROOM, this.getID(), "has_visited", hasVisited));
-		}
-		return state;
 	}
 
 	@Override

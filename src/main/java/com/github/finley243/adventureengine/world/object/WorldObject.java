@@ -9,7 +9,6 @@ import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.expression.*;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.network.NetworkNode;
@@ -294,28 +293,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			case "area" -> getArea();
 			default -> null;
 		};
-	}
-
-	public void loadState(SaveData saveData) {
-		switch (saveData.getParameter()) {
-			case "is_known" -> this.isKnown = saveData.getValueBoolean();
-			case "is_enabled" -> setEnabled(saveData.getValueBoolean());
-			case "area" -> this.area = game().data().getArea(saveData.getValueString());
-		}
-	}
-
-	public List<SaveData> saveState() {
-		List<SaveData> state = new ArrayList<>();
-		if (isKnown) {
-			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "is_known", isKnown));
-		}
-		if (!isEnabled) {
-			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "is_enabled", isEnabled));
-		}
-		if (area != defaultArea) {
-			state.add(new SaveData(SaveData.DataType.OBJECT, this.getID(), "area", area.getID()));
-		}
-		return state;
 	}
 
 }

@@ -13,7 +13,6 @@ import com.github.finley243.adventureengine.item.component.ItemComponentEffectib
 import com.github.finley243.adventureengine.item.component.ItemComponentFactory;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -249,16 +248,6 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		for (ItemComponent component : components.values()) {
 			component.onStatChange(name);
 		}
-	}
-
-	public void loadState(SaveData saveData) {}
-
-	public List<SaveData> saveState() {
-		List<SaveData> state = new ArrayList<>();
-		if(hasState()) {
-			state.add(new SaveData(SaveData.DataType.ITEM_INSTANCE, this.getID(), null, this.getTemplate().getID()));
-		}
-		return state;
 	}
 
 	@Override

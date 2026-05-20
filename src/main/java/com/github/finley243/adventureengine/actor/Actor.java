@@ -16,7 +16,6 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.load.LoadUtils;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -1077,63 +1076,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public Bark getBark(String trigger) {
 		return getTemplate().getBark(trigger);
-	}
-
-	public void loadState(SaveData saveData) {
-		switch (saveData.getParameter()) {
-			case "hp" -> this.HP = saveData.getValueInt();
-			case "is_enabled" -> setEnabled(saveData.getValueBoolean());
-			case "is_dead" -> this.isDead = saveData.getValueBoolean();
-			case "is_known" -> this.isKnown = saveData.getValueBoolean();
-			case "area" -> {
-				if (saveData.getValueString() == null) {
-					this.area = null;
-				} else {
-					this.area = game().data().getArea(saveData.getValueString());
-				}
-			}
-			case "inventory" -> {
-				if (inventory != null) inventory.loadState(saveData);
-			}
-			//case "equipped_item" -> this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
-			//case "equipped_apparel" -> this.equipmentComponent.equip((ItemEquippable) game().data().getItemState(saveData.getValueString()));
-			case "action_points_used" -> this.actionPointsUsed = saveData.getValueInt();
-		}
-	}
-
-	public List<SaveData> saveState() {
-		List<SaveData> state = new ArrayList<>();
-		if (isKnown) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "is_known", isKnown));
-		}
-		if (isEnabled == startDisabled) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "is_enabled", isEnabled));
-		}
-		if (isDead != startDead) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "is_dead", isDead));
-		}
-		if (area != defaultArea) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "area", (area == null ? null : area.getID())));
-		}
-		if (inventory != null) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "inventory", inventory.saveState()));
-		}
-		if (targetingComponent != null) {
-			//state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "targeting", targetingComponent.saveState()));
-		}
-		/*if (equipmentComponent.hasEquippedItem()) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equipped_item", equipmentComponent.getEquippedItem().getID()));
-		}*/
-		for (Item item : equipmentComponent.getEquippedItems()) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "equipped_apparel", item.getID()));
-		}
-		if (usingObject != null) {
-			//state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "using_object", usingObject.getObject().getID()));
-		}
-		if (actionPointsUsed != 0) {
-			state.add(new SaveData(SaveData.DataType.ACTOR, this.getID(), "action_points_used", actionPointsUsed));
-		}
-		return state;
 	}
 
 	private void evaluateXPChange() {

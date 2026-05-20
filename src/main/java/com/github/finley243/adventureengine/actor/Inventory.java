@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -267,32 +266,6 @@ public class Inventory {
 			}
 		}
 		return actions;
-	}
-
-	public void loadState(SaveData data) {
-		if (data.getParameter().equals("inventory")) {
-			for (SaveData subData : data.getValueMulti()) {
-				switch (subData.getParameter()) {
-					case "item" -> addItem(game.data().getItemInstance(subData.getValueString()));
-					case "itemStateless" ->
-							addItems(subData.getValueString(), subData.getValueInt());
-				}
-			}
-		}
-	}
-
-	public List<SaveData> saveState() {
-		List<SaveData> state = new ArrayList<>();
-		for (String itemType : items.keySet()) {
-			for (Item item : items.get(itemType)) {
-				state.add(new SaveData(null, null, "item", item.getID()));
-			}
-		}
-		for (StatelessItemStack stack : itemsStateless.values()) {
-			//state.add(new SaveData(null, null, "itemStateless", itemType, itemsStateless.get(itemType)));
-			state.add(new SaveData(null, null, "item", stack.instance.getID(), stack.count));
-		}
-		return state;
 	}
 
 	private static class StatelessItemStack {

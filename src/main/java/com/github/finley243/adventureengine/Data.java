@@ -11,7 +11,6 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.DataLoader;
-import com.github.finley243.adventureengine.load.SaveData;
 import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.network.NetworkNodeTemplate;
@@ -121,51 +120,6 @@ public class Data {
 		DataLoader.loadFromDir(game, new File(Game.GAMEFILES + Game.DATA_DIRECTORY));
 		player = ActorFactory.createPlayer(game, getConfig("playerID"), getArea(getConfig("playerStartArea")), getConfig("playerStats"));
 		addActor(player.getID(), player);
-	}
-
-	public List<SaveData> saveState() {
-		List<SaveData> state = new ArrayList<>();
-		for(Area area : areas.values()) {
-			state.addAll(area.saveState());
-		}
-		for(Room room : rooms.values()) {
-			state.addAll(room.saveState());
-		}
-		for(Actor actor : actors.values()) {
-			state.addAll(actor.saveState());
-		}
-		for(WorldObject object : objects.values()) {
-			state.addAll(object.saveState());
-		}
-		for(ItemTemplate itemTemplate : itemTemplates.values()) {
-			state.addAll(itemTemplate.saveState());
-		}
-		for(Scene topic : scenes.values()) {
-			state.addAll(topic.saveState());
-		}
-		/*for(String variable : globalIntegers.keySet()) {
-			if(globalIntegers.get(variable) != 0) {
-				state.add(new SaveData(SaveData.DataType.VARIABLE, variable, null, globalIntegers.get(variable)));
-			}
-		}*/
-		state.addAll(dateTime().saveState());
-		return state;
-	}
-
-	public void loadState(List<SaveData> state) throws ParserConfigurationException, IOException, SAXException, GameDataException {
-		reset();
-		// TODO - Improve efficiency
-		List<SaveData> nonItemSaveData = new ArrayList<>();
-		for(SaveData saveData : state) {
-			if(saveData.isItemInstance()) {
-				saveData.apply(this);
-			} else {
-				nonItemSaveData.add(saveData);
-			}
-		}
-		for(SaveData saveData : nonItemSaveData) {
-			saveData.apply(this);
-		}
 	}
 
 	public Game game() {
