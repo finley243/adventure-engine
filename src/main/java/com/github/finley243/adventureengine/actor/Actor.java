@@ -48,49 +48,58 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	public static final int MAX_ACTION_POINTS = 10;
 	public static final int MAX_MOVE_POINTS = 10;
 
+	private final boolean startDisabled;
+	private boolean isEnabled;
+	private boolean playerControlled;
+
 	private final String templateID;
 	private boolean isKnown;
 	private final String nameDescriptor;
+
 	private final Area defaultArea;
 	private Area area;
+
+	private final StatStringSet senseTypes;
+	private final Set<AreaTarget> areaTargets;
+
 	private int level;
 	private int XP;
+
 	private final StatInt maxHP;
 	private int HP;
-	private final Map<String, StatInt> damageResistance;
-	private final Map<String, StatFloat> damageMult;
-	private final boolean startDisabled;
-	private boolean isEnabled;
 	private final boolean startDead;
 	private boolean isDead;
+	private final Map<String, StatInt> damageResistance;
+	private final Map<String, StatFloat> damageMult;
+
 	private boolean isSleeping;
-	private boolean endTurn;
+	private int sleepCounter;
 	private boolean isSneaking;
+	private Actor carriedActor;
+	private ObjectComponentUsable.ObjectUserData usingObject;
+
+	private final StatStringSet equipmentEffects;
+
+	private boolean endTurn;
 	private final StatInt actionPoints;
 	private final StatInt movePoints;
 	private int actionPointsUsed;
+	private final Map<Action, Integer> repeatActions;
 	private final StatBoolean canPerformActions;
 	private final StatBoolean canMove;
 	private final StatBoolean canDodge;
-	private final Map<Action, Integer> repeatActions;
+
 	private final Map<String, Integer> attributesBase;
 	private final Map<String, Integer> skillsBase;
 	private final Map<String, StatInt> attributes;
 	private final Map<String, StatInt> skills;
+
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final EquipmentComponent equipmentComponent;
-	private final StatStringSet equipmentEffects;
 	private final TargetingComponent targetingComponent;
 	private final BehaviorComponent behaviorComponent;
-	private Actor carriedActor;
-	private int money;
-	private ObjectComponentUsable.ObjectUserData usingObject;
-	private final StatStringSet senseTypes;
-	private final Set<AreaTarget> areaTargets;
-	private int sleepCounter;
-	private boolean playerControlled;
-	private final StatStringSet tags;
+
 	private final Map<String, List<Script>> scripts;
 
 	public Actor(Game game, String ID, String nameDescriptor, Area area, String templateID, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean playerControlled) {
@@ -124,7 +133,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.repeatActions = new HashMap<>();
 		this.startDisabled = startDisabled;
 		this.playerControlled = playerControlled;
-		this.tags = new StatStringSet("tags", this);
 		this.scripts = new HashMap<>();
 		setEnabled(!startDisabled);
 	}
@@ -612,7 +620,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return new ArrayList<>();
 	}
 
-	public List<Action> availableActions() {
+	private List<Action> availableActions() {
 		if (!canPerformActions(Context.builder(game()).subject(this).target(this).build())) {
 			return new ArrayList<>();
 		}
@@ -664,6 +672,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			actions.add(new ActionSneakStart());
 		}
 		actions.add(new ActionEnd());
+		applyActionConstraints(actions);
+		return actions;
+	}
+
+	private void applyActionConstraints(List<Action> actions) {
 		actions.removeIf(action -> !action.canShow(this));
 		for (Action currentAction : actions) {
 			boolean isRepeatMatch = false;
@@ -691,9 +704,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				currentAction.setDisabled(true, "Not enough action points");
 			}
 		}
-		return actions;
 	}
-	
+
 	public void takeTurn() {
 		if (!isEnabled() || isDead()) {
 			game().onEndTurn(this);
@@ -909,8 +921,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			return equipmentEffects;
 		} else if ("sense_types".equals(name)) {
 			return senseTypes;
-		} else if ("tags".equals(name)) {
-			return tags;
 		}
 		return null;
 	}
@@ -963,7 +973,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "hp" -> Expression.constant(HP);
 			case "action_points" -> Expression.constant(getActionPoints());
 			case "move_points" -> Expression.constant(getMovePoints());
-			case "money" -> Expression.constant(money);
 			case "enabled" -> Expression.constant(isEnabled);
 			case "sleeping" -> Expression.constant(isSleeping);
 			case "in_combat" -> Expression.constant(isInCombat());
@@ -980,7 +989,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "room" -> Expression.constant(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
 			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), context));
 			case "sense_types" -> Expression.constant(senseTypes.value(getTemplate().getSenseTypes(), context));
-			case "tags" -> Expression.constant(tags.value(getTemplate().getTags(), context));
 			default -> null;
 		};
 	}
@@ -1028,10 +1036,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 			case "hp" -> {
 				HP = MathUtils.bound(value.getValueInteger(), 0, getMaxHP());
-				return true;
-			}
-			case "money" -> {
-				money = value.getValueInteger();
 				return true;
 			}
 			case "area" -> {
