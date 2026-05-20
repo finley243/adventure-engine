@@ -24,6 +24,25 @@ public class Context {
     private final Action parentAction;
     private final Map<String, Variable> localVariables;
 
+    public static Builder builder(Game game) {
+        return new Builder(game);
+    }
+
+    public static Builder from(Context context) {
+        return new Builder(context);
+    }
+
+    private Context(Builder builder) {
+        this.game = builder.game;
+        this.subject = builder.subject;
+        this.target = builder.target;
+        this.parentObject = builder.parentObject;
+        this.parentItem = builder.parentItem;
+        this.parentArea = builder.parentArea;
+        this.parentAction = builder.parentAction;
+        this.localVariables = new HashMap<>(builder.localVariables);
+    }
+
     public Context(Game game, Actor subject, Actor target) {
         this(game, subject, target, null, null, null, null, null);
     }
@@ -197,6 +216,94 @@ public class Context {
             }
         }
         return textVarValues;
+    }
+
+    public static class Builder {
+        private final Game game;
+        private Actor subject;
+        private Actor target;
+        private WorldObject parentObject;
+        private Item parentItem;
+        private Area parentArea;
+        private Action parentAction;
+        private final Map<String, Variable> localVariables = new HashMap<>();
+
+        private Builder(Game game) {
+            this.game = game;
+        }
+
+        private Builder(Context context) {
+            this.game = context.game;
+            this.subject = context.subject;
+            this.target = context.target;
+            this.parentObject = context.parentObject;
+            this.parentItem = context.parentItem;
+            this.parentArea = context.parentArea;
+            this.parentAction = context.parentAction;
+            this.localVariables.putAll(context.localVariables);
+        }
+
+        public Builder subject(Actor subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public Builder target(Actor target) {
+            this.target = target;
+            return this;
+        }
+
+        /** Resolves an AttackTarget to either target (Actor) or parentObject (WorldObject). */
+        public Builder target(AttackTarget attackTarget) {
+            this.target = (attackTarget instanceof Actor) ? (Actor) attackTarget : null;
+            this.parentObject = (attackTarget instanceof WorldObject) ? (WorldObject) attackTarget : null;
+            return this;
+        }
+
+        public Builder parentObject(WorldObject parentObject) {
+            this.parentObject = parentObject;
+            return this;
+        }
+
+        public Builder parentItem(Item parentItem) {
+            this.parentItem = parentItem;
+            return this;
+        }
+
+        public Builder parentArea(Area parentArea) {
+            this.parentArea = parentArea;
+            return this;
+        }
+
+        public Builder parentAction(Action parentAction) {
+            this.parentAction = parentAction;
+            return this;
+        }
+
+        /** Removes all local variables inherited from the source context. */
+        public Builder clearVariables() {
+            this.localVariables.clear();
+            return this;
+        }
+
+        /**
+         * Merges variables into this context. If a variable already exists (shared with a parent
+         * scope), its expression is updated in-place so the parent scope sees the change too.
+         */
+        public Builder addVariables(Map<String, Expression> variables) {
+            for (Map.Entry<String, Expression> entry : variables.entrySet()) {
+                if (this.localVariables.containsKey(entry.getKey())) {
+                    this.localVariables.get(entry.getKey()).setExpression(entry.getValue());
+                } else {
+                    this.localVariables.put(entry.getKey(), new Variable(entry.getValue()));
+                }
+            }
+            return this;
+        }
+
+        public Context build() {
+            return new Context(this);
+        }
     }
 
     /**
