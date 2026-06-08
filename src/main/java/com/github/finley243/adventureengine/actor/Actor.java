@@ -432,7 +432,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			amount = Math.round(amount * damage.getLimb().getDamageMult());
 		}
 		if (amount < 0) amount = 0;
-		return new ComputedDamage(amount, damage.getLimb());
+		boolean isKillingBlow = HP - amount <= 0;
+		return new ComputedDamage(amount, damage.getLimb(), isKillingBlow);
 	}
 
 	@Override

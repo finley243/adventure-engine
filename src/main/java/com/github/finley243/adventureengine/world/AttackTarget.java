@@ -19,6 +19,6 @@ public interface AttackTarget {
 
     boolean isVisible(Actor subject);
 
-    public record ComputedDamage(int amount, Limb limb) {}
+    public record ComputedDamage(int amount, Limb limb, boolean isKillingBlow) {}
 
 }
