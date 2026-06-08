@@ -109,7 +109,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		int amount = damage.getAmount();
 		amount -= Math.round(getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult());
 		amount -= Math.round(amount * getTemplate().getDamageMult(damage.getType()));
-		return new ComputedDamage(amount);
+		return new ComputedDamage(amount, null);
 	}
 
 	@Override
