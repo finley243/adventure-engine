@@ -68,22 +68,6 @@ public class ActionCustom extends Action {
     public void choose(Game game, int repeatActionCount, Actor subject) {
         if (getTemplate().getScript() != null) {
             Context context = getContextWithParameters(game, subject);
-            for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
-                Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
-                if (parameterResult.error() != null) {
-                    DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
-                } else {
-                    context.setLocalVariable(templateParameter.getKey(), parameterResult.value());
-                }
-            }
-            for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
-                Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
-                if (parameterResult.error() != null) {
-                    DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
-                } else {
-                    context.setLocalVariable(instanceParameter.getKey(), parameterResult.value());
-                }
-            }
             Script.ScriptReturnData actionScriptResult = getTemplate().getScript().execute(context);
             if (actionScriptResult.error() != null) {
                 DebugLogger.print("Action script error: " + actionScriptResult.stackTrace());
@@ -149,20 +133,20 @@ public class ActionCustom extends Action {
 
     private Context getContextWithParameters(Game game, Actor subject) {
         Context context = Context.builder(game).subject(subject).target(actor).parentObject(object).parentItem(item).parentArea(area).parentAction(this).build();
-        for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
-            Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
-            if (parameterResult.error() != null) {
-                DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
-            } else {
-                context.setLocalVariable(instanceParameter.getKey(), parameterResult.value());
-            }
-        }
         for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
             Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
             if (parameterResult.error() != null) {
                 DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
             } else {
                 context.setLocalVariable(templateParameter.getKey(), parameterResult.value());
+            }
+        }
+        for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
+            Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
+            if (parameterResult.error() != null) {
+                DebugLogger.print("Action parameter error: " + parameterResult.stackTrace());
+            } else {
+                context.setLocalVariable(instanceParameter.getKey(), parameterResult.value());
             }
         }
         return context;
