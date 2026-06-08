@@ -38,6 +38,10 @@ public class ObjectComponentUsable extends ObjectComponent {
         return getTemplateUsable().getUsableSlotData().get(slotID).endPhrase();
     }
 
+    public String getEndDeathPhrase(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).endDeathPhrase();
+    }
+
     public String getStartPrompt(String slotID) {
         return getTemplateUsable().getUsableSlotData().get(slotID).startPrompt();
     }
@@ -64,6 +68,10 @@ public class ObjectComponentUsable extends ObjectComponent {
 
     public boolean userCanPerformParentActions(String slotID) {
         return getTemplateUsable().getUsableSlotData().get(slotID).userCanPerformParentActions();
+    }
+
+    public boolean shouldRemoveUserOnDeath(String slotID) {
+        return getTemplateUsable().getUsableSlotData().get(slotID).shouldRemoveUserOnDeath();
     }
 
     public Actor getUser(String slotID) {

@@ -773,6 +773,7 @@ public class DataLoader {
                     String slotID = LoadUtils.attribute(slotElement, "id", null);
                     String startPhrase = LoadUtils.singleTag(slotElement, "startPhrase", null);
                     String endPhrase = LoadUtils.singleTag(slotElement, "endPhrase", null);
+                    String endDeathPhrase = LoadUtils.singleTag(slotElement, "endDeathPhrase", null);
                     String startPrompt = LoadUtils.singleTag(slotElement, "startPrompt", null);
                     String endPrompt = LoadUtils.singleTag(slotElement, "endPrompt", null);
                     boolean userIsInCover = LoadUtils.attributeBool(slotElement, "cover", false);
@@ -780,9 +781,10 @@ public class DataLoader {
                     boolean userCanSeeOtherAreas = LoadUtils.attributeBool(slotElement, "seeOtherAreas", true);
                     boolean userCanPerformLocalActions = LoadUtils.attributeBool(slotElement, "localActions", true);
                     boolean userCanPerformParentActions = LoadUtils.attributeBool(slotElement, "parentActions", true);
+                    boolean shouldRemoveUserOnDeath = LoadUtils.attributeBool(slotElement, "removeUserOnDeath", false);
                     Set<String> componentsExposed = LoadUtils.setOfTags(slotElement, "exposedComponent");
                     List<ActionCustom.CustomActionHolder> usingActions = loadCustomActions(slotElement, "usingAction", "ObjectComponentUsable(" + objectID + ")");
-                    usableSlotData.put(slotID, new ObjectComponentTemplateUsable.UsableSlotData(startPhrase, endPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, componentsExposed, usingActions));
+                    usableSlotData.put(slotID, new ObjectComponentTemplateUsable.UsableSlotData(startPhrase, endPhrase, endDeathPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, shouldRemoveUserOnDeath, componentsExposed, usingActions));
                 }
                 return new ObjectComponentTemplateUsable(startEnabled, actionsRestricted, usableSlotData);
             }

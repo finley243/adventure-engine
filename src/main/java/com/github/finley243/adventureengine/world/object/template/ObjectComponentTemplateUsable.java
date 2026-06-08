@@ -19,6 +19,6 @@ public class ObjectComponentTemplateUsable extends ObjectComponentTemplate {
         return usableSlotData;
     }
 
-    public record UsableSlotData(String startPhrase, String endPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, boolean userCanPerformLocalActions, boolean userCanPerformParentActions, Set<String> componentsExposed, List<ActionCustom.CustomActionHolder> usingActions) {}
+    public record UsableSlotData(String startPhrase, String endPhrase, String endDeathPhrase, String startPrompt, String endPrompt, boolean userIsInCover, boolean userIsHidden, boolean userCanSeeOtherAreas, boolean userCanPerformLocalActions, boolean userCanPerformParentActions, boolean shouldRemoveUserOnDeath, Set<String> componentsExposed, List<ActionCustom.CustomActionHolder> usingActions) {}
 
 }

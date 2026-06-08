@@ -462,8 +462,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			context.getTarget().triggerScript("on_kill", Context.from(defaultContext).subject(context.getTarget()).target(context.getSubject()).build());
 		}
 		SensoryEvent.execute(game, new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null));
-		// TODO - Enable held item dropping on death for new equipment system
-		// TODO - Remove from usable object, if applicable (for certain types of usable objects)
+		stopUsingObjectOnDeathIfPresent(game);
 		isDead = true;
 		HP = 0;
 		if (isPlayer()) {
@@ -568,6 +567,19 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	
 	public boolean isUsingObject() {
 		return this.usingObject != null;
+	}
+
+	private void stopUsingObjectOnDeathIfPresent(Game game) {
+		if (!isUsingObject()) return;
+		WorldObject object = getUsingObject().object();
+		ObjectComponentUsable usableComponent = object.getComponentOfType(ObjectComponentUsable.class);
+		String usingSlot = getUsingObject().slot();
+		if (usableComponent.shouldRemoveUserOnDeath(usingSlot)) {
+			usableComponent.removeUser(usingSlot);
+			setUsingObject(null);
+			Context context = Context.builder(game).subject(this).target(this).parentObject(object).build();
+			SensoryEvent.execute(game, new SensoryEvent(getArea(), Phrases.get(usableComponent.getEndDeathPhrase(usingSlot)), context, true, null, null));
+		}
 	}
 	
 	public boolean isInCombat() {
