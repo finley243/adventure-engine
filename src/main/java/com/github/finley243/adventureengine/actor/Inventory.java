@@ -15,29 +15,27 @@ import java.util.Map;
 
 public class Inventory {
 
-	private final Game game;
 	// If inventory belongs to an object or secondary component (e.g. vendor inventory), actor will be null
 	private final Actor actor;
 	// Keys are statsIDs, values are lists of items with the corresponding statsID
 	private final Map<String, List<Item>> items;
 	private final Map<String, StatelessItemStack> itemsStateless;
 
-	public Inventory(Game game, Actor actor) {
-		this.game = game;
+	public Inventory(Actor actor) {
 		this.actor = actor;
 		this.items = new HashMap<>();
 		this.itemsStateless = new HashMap<>();
 	}
 
-	public void onStartRound() {
+	public void onStartRound(Game game) {
 		for (List<Item> itemList : items.values()) {
 			for (Item item : itemList) {
-				item.onStartRound();
+				item.onStartRound(game);
 			}
 		}
 	}
 
-	public void addItem(Item item) {
+	public void addItem(Item item, Game game) {
 		if (item.hasState()) {
 			if (item.getInventory() != null) throw new UnsupportedOperationException("Cannot add item " + item + " to inventory because it is still located in another inventory");
 			if (!items.containsKey(item.getTemplateID())) {
@@ -59,20 +57,20 @@ public class Inventory {
 		}
 	}
 
-	public void addItems(String itemID, int count) {
+	public void addItems(String itemID, int count, Game game) {
 		if (count <= 0) throw new IllegalArgumentException("Cannot add non-positive number of Items: " + itemID);
 		for (int i = 0; i < count; i++) {
 			Item instance = ItemFactory.create(game, itemID);
-			addItem(instance);
+			addItem(instance, game);
 		}
 	}
 
-	public void addItems(Map<Item, Integer> itemMap) {
+	public void addItems(Map<Item, Integer> itemMap, Game game) {
 		for (Item item : itemMap.keySet()) {
 			if (item.hasState()) {
-				addItem(item);
+				addItem(item, game);
 			} else {
-				addItems(item.getTemplateID(), itemMap.get(item));
+				addItems(item.getTemplateID(), itemMap.get(item), game);
 			}
 		}
 	}
@@ -113,7 +111,7 @@ public class Inventory {
 		return totalCount;
 	}
 
-	public void removeItem(Item item) {
+	public void removeItem(Item item, Game game) {
 		if (item.hasState()) {
 			if (items.containsKey(item.getTemplateID())) {
 				boolean wasRemoved = items.get(item.getTemplateID()).remove(item);
@@ -125,7 +123,7 @@ public class Inventory {
 				}
 				if (wasRemoved && actor != null) {
 					if (item.hasComponentOfType(ItemComponentEquippable.class)) {
-						actor.getEquipmentComponent().unequip(item);
+						actor.getEquipmentComponent().unequip(game, item);
 					}
 				}
 			}
@@ -138,7 +136,7 @@ public class Inventory {
 					itemsStateless.remove(item.getTemplateID());
 					if (actor != null) {
 						if (item.hasComponentOfType(ItemComponentEquippable.class)) {
-							actor.getEquipmentComponent().unequip(item);
+							actor.getEquipmentComponent().unequip(game, item);
 						}
 					}
 				} else {
@@ -206,7 +204,7 @@ public class Inventory {
 		return uniqueItems;
 	}
 
-	public List<Action> getAreaActions(Area area) {
+	public List<Action> getAreaActions(Game game, Area area) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
@@ -223,18 +221,18 @@ public class Inventory {
 		return actions;
 	}
 
-	public List<Action> getExternalActions(Noun owner, Actor subject, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore) {
+	public List<Action> getExternalActions(Game game, Noun owner, Actor subject, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore) {
 		List<Action> actions = new ArrayList<>();
 		if (enableTake) {
-			actions.addAll(getTakeActions(owner, takePrompt, takePhrase));
+			actions.addAll(getTakeActions(game, owner, takePrompt, takePhrase));
 		}
 		if (subject != null && enableStore) {
-			actions.addAll(subject.getInventory().getStoreActions(owner, this, storePrompt, storePhrase));
+			actions.addAll(subject.getInventory().getStoreActions(game, owner, this, storePrompt, storePhrase));
 		}
 		return actions;
 	}
 
-	private List<Action> getTakeActions(Noun owner, String prompt, String phrase) {
+	private List<Action> getTakeActions(Game game, Noun owner, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
@@ -251,7 +249,7 @@ public class Inventory {
 		return actions;
 	}
 
-	private List<Action> getStoreActions(Noun owner, Inventory other, String prompt, String phrase) {
+	private List<Action> getStoreActions(Game game, Noun owner, Inventory other, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {

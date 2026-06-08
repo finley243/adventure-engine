@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 
@@ -8,7 +9,7 @@ public abstract class ActionRandom extends Action {
     public ActionRandom() {}
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(Game game, int repeatActionCount, Actor subject) {
         boolean continueAfterStart = onStart(subject, repeatActionCount);
         if (continueAfterStart) {
             if (MathUtils.randomCheck(chance(subject))) {

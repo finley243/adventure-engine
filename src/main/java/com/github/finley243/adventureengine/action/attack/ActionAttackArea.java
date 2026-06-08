@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.action.attack;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.item.Item;
@@ -24,35 +25,35 @@ public class ActionAttackArea extends ActionAttack {
     }
 
     @Override
-    public void consumeAmmo(Actor subject) {
+    public void consumeAmmo(Game game, Actor subject) {
         if (weapon == null) {
             return;
         }
         if (weapon.hasComponentOfType(ItemComponentMagazine.class)) {
             if (weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType() != null && weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getComponentOfType(ItemComponentAmmo.class).isReusable()) {
-                getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
+                getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed(), game);
             }
-            weapon.getComponentOfType(ItemComponentMagazine.class).consumeAmmo(getAmmoConsumed());
+            weapon.getComponentOfType(ItemComponentMagazine.class).consumeAmmo(game, getAmmoConsumed());
         }
         switch (getWeaponConsumeType()) {
             case PLACE -> {
-                subject.getInventory().removeItem(weapon);
-                getArea().getInventory().addItem(weapon);
+                subject.getInventory().removeItem(weapon, game);
+                getArea().getInventory().addItem(weapon, game);
             }
-            case DESTROY -> subject.getInventory().removeItem(weapon);
+            case DESTROY -> subject.getInventory().removeItem(weapon, game);
         }
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose(Game game, Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(game, subject);
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
         if (weapon != null && weapon.hasComponentOfType(ItemComponentMagazine.class) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() < getAmmoConsumed()) {
             return new CanChooseResult(false, "Not enough ammo");
         }
-        if (!getRanges().contains(subject.getArea().getLinearDistanceTo(getArea()))) {
+        if (!getRanges().contains(subject.getArea().getLinearDistanceTo(game, getArea()))) {
             return new CanChooseResult(false, "Target area outside range");
         }
         if (!getArea().isVisible(subject)) {

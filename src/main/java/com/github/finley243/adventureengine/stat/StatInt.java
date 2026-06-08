@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.condition.Condition;
 
@@ -29,14 +30,14 @@ public class StatInt extends Stat {
         return MathUtils.bound(computedValue, min, max);
     }
 
-    public void addMod(StatIntMod mod) {
+    public void addMod(Game game, StatIntMod mod) {
         mods.add(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(game, getName());
     }
 
-    public void removeMod(StatIntMod mod) {
+    public void removeMod(Game game, StatIntMod mod) {
         mods.remove(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(game, getName());
     }
 
     public List<StatIntMod> getMods() {

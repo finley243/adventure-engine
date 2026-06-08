@@ -38,7 +38,7 @@ public class ScriptSetStat extends Script {
             return new ScriptReturnData(null, null, new ScriptErrorData("Expression cannot contain flow statement", getTraceData()));
         }
         Expression statValueExpression = statValueResult.value();
-        boolean success = holder.getHolder(context).setStatValue(statNameString, statValueExpression, context);
+        boolean success = holder.getHolder(context).setStatValue(statNameString, statValueExpression, context, context.game());
         if (!success) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Stat value could not be set", getTraceData()));
         }

@@ -31,7 +31,7 @@ public class ScriptGetStat extends Script {
         String statNameString = statNameExpression.getValueString();
         StatHolder statHolderValue = statHolder.getHolder(context);
         if (statHolderValue == null) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat holder is null", getTraceData()));
-        Expression statValue = statHolderValue.getStatValue(statNameString, context);
+        Expression statValue = statHolderValue.getStatValue(statNameString, context, context.game());
         return new ScriptReturnData(statValue, null, null);
     }
 

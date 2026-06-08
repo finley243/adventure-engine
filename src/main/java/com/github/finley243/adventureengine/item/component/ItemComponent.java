@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -35,28 +36,28 @@ public abstract class ItemComponent implements MutableStatHolder {
         return getTemplate().actionsRestricted();
     }
 
-    public void onInit() {}
+    public void onInit(Game game) {}
 
-    public void onStartRound() {}
+    public void onStartRound(Game game) {}
 
-    public List<Action> getInventoryActions(Actor subject) {
+    public List<Action> getInventoryActions(Game game, Actor subject) {
         if (!actionsRestricted()) {
-            return getPossibleInventoryActions(subject);
+            return getPossibleInventoryActions(game, subject);
         }
         return new ArrayList<>();
     }
 
-    protected List<Action> getPossibleInventoryActions(Actor subject) {
+    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
         return new ArrayList<>();
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Context context, Game game) {
         return null;
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setStatValue(String name, Expression value, Context context, Game game) {
         return false;
     }
 
@@ -66,32 +67,32 @@ public abstract class ItemComponent implements MutableStatHolder {
     }
 
     @Override
-    public StatInt getStatInt(String name) {
+    public StatInt getStatInt(Game game, String name) {
         return null;
     }
 
     @Override
-    public StatFloat getStatFloat(String name) {
+    public StatFloat getStatFloat(Game game, String name) {
         return null;
     }
 
     @Override
-    public StatBoolean getStatBoolean(String name) {
+    public StatBoolean getStatBoolean(Game game, String name) {
         return null;
     }
 
     @Override
-    public StatString getStatString(String name) {
+    public StatString getStatString(Game game, String name) {
         return null;
     }
 
     @Override
-    public StatStringSet getStatStringSet(String name) {
+    public StatStringSet getStatStringSet(Game game, String name) {
         return null;
     }
 
     @Override
-    public void onStatChange(String name) {
+    public void onStatChange(Game game, String name) {
 
     }
 

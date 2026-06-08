@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.ArrayList;
@@ -28,14 +29,14 @@ public class StatFloat extends Stat {
         return Math.min(Math.max(computedValue, min), max);
     }
 
-    public void addMod(StatFloatMod mod) {
+    public void addMod(Game game, StatFloatMod mod) {
         mods.add(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(game, getName());
     }
 
-    public void removeMod(StatFloatMod mod) {
+    public void removeMod(Game game, StatFloatMod mod) {
         mods.remove(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(game, getName());
     }
 
     public List<StatFloatMod> getMods() {

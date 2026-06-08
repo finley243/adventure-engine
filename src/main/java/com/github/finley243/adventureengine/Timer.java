@@ -10,7 +10,7 @@ public class Timer extends GameInstanced {
     private int roundsRemaining;
 
     public Timer(Game game, String ID, int rounds, Script scriptExpire, Script scriptUpdate, Context context) {
-        super(game, ID);
+        super(ID);
         if (rounds <= 0) throw new IllegalArgumentException("Timer duration must be greater than 0");
         this.roundsRemaining = rounds;
         this.scriptExpire = scriptExpire;

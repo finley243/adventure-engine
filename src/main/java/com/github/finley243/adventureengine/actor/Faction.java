@@ -15,7 +15,7 @@ public class Faction extends GameInstanced {
 	private final Map<String, FactionRelation> relations;
 	
 	public Faction(Game game, String ID, FactionRelation defaultRelation, Map<String, FactionRelation> relations) {
-		super(game, ID);
+		super(ID);
 		this.defaultRelation = defaultRelation;
 		this.relations = relations;
 	}

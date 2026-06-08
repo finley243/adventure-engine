@@ -47,8 +47,8 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
-        return getContextWithParameters(subject);
+    public Context getContext(Game game, Actor subject) {
+        return getContextWithParameters(game, subject);
     }
 
     public ActionTemplate getTemplate() {
@@ -61,15 +61,15 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public String getPrompt(Actor subject) {
-        Map<String, String> contextVars = getParameterStrings(subject);
+    public String getPrompt(Game game, Actor subject) {
+        Map<String, String> contextVars = getParameterStrings(this.game, subject);
         return LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(Game game, int repeatActionCount, Actor subject) {
         if (getTemplate().getScript() != null) {
-            Context context = getContextWithParameters(subject);
+            Context context = getContextWithParameters(game, subject);
             for (Map.Entry<String, Script> templateParameter : getTemplate().getParameters().entrySet()) {
                 Script.ScriptReturnData parameterResult = templateParameter.getValue().execute(context);
                 if (parameterResult.error() != null) {
@@ -94,13 +94,13 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose(Game game, Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(game, subject);
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
         for (ActionTemplate.ConditionWithMessage customCondition : getTemplate().getSelectConditions()) {
-            if (!customCondition.condition().isMet(getContextWithParameters(subject))) {
+            if (!customCondition.condition().isMet(getContextWithParameters(this.game, subject))) {
                 return new CanChooseResult(false, customCondition.message());
             }
         }
@@ -108,7 +108,7 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public int actionPoints(Actor subject) {
+    public int actionPoints(Game game, Actor subject) {
         return getTemplate().getActionPoints();
     }
 
@@ -145,12 +145,12 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public boolean canShow(Actor subject) {
-        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(getContextWithParameters(subject));
+    public boolean canShow(Game game, Actor subject) {
+        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(getContextWithParameters(this.game, subject));
     }
 
-    private Context getContextWithParameters(Actor subject) {
-        Context context = Context.builder(subject.game()).subject(subject).target(actor).parentObject(object).parentItem(item).parentArea(area).parentAction(this).build();
+    private Context getContextWithParameters(Game game, Actor subject) {
+        Context context = Context.builder(game).subject(subject).target(actor).parentObject(object).parentItem(item).parentArea(area).parentAction(this).build();
         for (Map.Entry<String, Script> instanceParameter : parameters.entrySet()) {
             Script.ScriptReturnData parameterResult = instanceParameter.getValue().execute(context);
             if (parameterResult.error() != null) {
@@ -170,9 +170,9 @@ public class ActionCustom extends Action {
         return context;
     }
 
-    private Map<String, String> getParameterStrings(Actor subject) {
+    private Map<String, String> getParameterStrings(Game game, Actor subject) {
         Map<String, String> stringMap = new HashMap<>();
-        Context context = getContextWithParameters(subject);
+        Context context = getContextWithParameters(game, subject);
         for (Map.Entry<String, Context.Variable> variable : context.getLocalVariables().entrySet()) {
             if (variable.getValue().getExpression() != null && variable.getValue().getExpression().getDataType() == Expression.DataType.STRING) {
                 stringMap.put(variable.getKey(), variable.getValue().getExpression().getValueString());

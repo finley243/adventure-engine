@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.item.component;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionItemConsume;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -24,8 +25,8 @@ public class ItemComponentConsumable extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(subject);
+    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(game, subject);
         actions.add(new ActionItemConsume(getItem(), getConsumableTemplate().getConsumePrompt(), getConsumableTemplate().getConsumePhrase(), getConsumableTemplate().getEffects()));
         return actions;
     }

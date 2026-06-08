@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 
@@ -22,10 +23,10 @@ public class Bark {
         this.nonVisiblePhrases = nonVisiblePhrases;
     }
 
-    public void trigger(Context context) {
+    public void trigger(Game game, Context context) {
         String visiblePhrase = MathUtils.selectRandomFromList(visiblePhrases);
         String nonVisiblePhrase = MathUtils.selectRandomFromList(nonVisiblePhrases);
-        SensoryEvent.execute(new SensoryEvent(context.getSubject().getArea(), visiblePhrase, nonVisiblePhrase, context, true, false, null, this));
+        SensoryEvent.execute(game, new SensoryEvent(context.getSubject().getArea(), visiblePhrase, nonVisiblePhrase, context, true, false, null, this));
     }
 
     public BarkResponseType responseType() {

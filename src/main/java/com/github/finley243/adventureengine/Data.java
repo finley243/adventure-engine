@@ -77,13 +77,19 @@ public class Data {
 	public void newGame() throws ParserConfigurationException, IOException, SAXException, GameDataException {
 		reset();
 		for (Area area : areas.values()) {
-			area.onInit(areas);
+			area.onInit(game);
+		}
+		for (Room room : rooms.values()) {
+			room.onInit(game);
+		}
+		for (ActorTemplate actorTemplate : actorStats.values()) {
+			actorTemplate.onInit(game);
 		}
 		for (Actor actor : actors.values()) {
-			actor.onInit(getDamageTypeIDs(), getAttributeIDs(), getSkillIDs());
+			actor.onInit(game, getDamageTypeIDs(), getAttributeIDs(), getSkillIDs());
 		}
 		for (WorldObject object : new ArrayList<>(objects.values())) {
-			object.onInit();
+			object.onInit(game);
 		}
 	}
 
@@ -428,5 +434,5 @@ public class Data {
 		if (!globalExpressions.containsKey(id)) return null;
 		return globalExpressions.get(id);
 	}
-	
+
 }

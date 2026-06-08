@@ -29,7 +29,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	
 	public Scene(Game game, String ID, Condition condition, boolean once, int priority, List<SceneLine> lines, List<SceneChoice> choices, SceneType type) {
 		// TODO - Always assigned a non-null ID (for in-line scenes, assign an "automatic" ID if none is manually specified)
-		super(game, ID);
+		super(ID);
 		this.condition = condition;
 		this.once = once;
 		this.priority = priority;
@@ -64,7 +64,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context, Game game) {
 		return switch (name) {
 			case "triggered" -> new ExpressionConstantBoolean(hasTriggered);
 			case "id" -> new ExpressionConstantString(getID());
@@ -73,7 +73,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Context context, Game game) {
 		switch (name) {
 			case "triggered" -> {
 				this.hasTriggered = value.getValueBoolean();

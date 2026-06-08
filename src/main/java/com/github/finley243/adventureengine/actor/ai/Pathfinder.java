@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -22,10 +23,10 @@ public class Pathfinder {
 	 * @param targetArea Position the path leads to
 	 * @return Shortest path from currentArea to targetArea
 	 */
-	public static List<Area> findPath(Area startArea, Area targetArea, String vehicleType) {
+	public static List<Area> findPath(Game game, Area startArea, Area targetArea, String vehicleType) {
 		Set<Area> targetSet = new HashSet<>();
 		targetSet.add(targetArea);
-		return findPath(startArea, targetSet, vehicleType);
+		return findPath(game, startArea, targetSet, vehicleType);
 	}
 
 	/**
@@ -34,7 +35,7 @@ public class Pathfinder {
 	 * @param targetAreas Positions the path could lead to
 	 * @return Shortest path from currentArea to targetArea
 	 */
-	public static List<Area> findPath(Area startArea, Set<Area> targetAreas, String vehicleType) {
+	public static List<Area> findPath(Game game, Area startArea, Set<Area> targetAreas, String vehicleType) {
 		if (targetAreas.contains(startArea)) return Collections.singletonList(startArea);
 		Set<Area> hasVisited = new HashSet<>();
 		Queue<List<Area>> paths = new LinkedList<>();
@@ -52,7 +53,7 @@ public class Pathfinder {
 			for (WorldObject object : pathEnd.getObjects()) {
 				ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 				if (linkComponent == null) continue;
-				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
+				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
 			}
 			Collections.shuffle(linkedAreasGlobal);
 			for (Area linkedArea : linkedAreasGlobal) {
@@ -67,8 +68,8 @@ public class Pathfinder {
 		return null;
 	}
 
-	public static Map<Area, VisibleAreaData> getVisibleAreas(Area origin, Actor actor) {
-		Map<Area, VisibleAreaData> visibleAreas = getLineOfSightAreas(origin);
+	public static Map<Area, VisibleAreaData> getVisibleAreas(Game game, Area origin, Actor actor) {
+		Map<Area, VisibleAreaData> visibleAreas = getLineOfSightAreas(game, origin);
 		for (Area area : new HashSet<>(visibleAreas.keySet())) {
 			if (!area.isVisible(actor)) {
 				visibleAreas.remove(area);
@@ -78,7 +79,7 @@ public class Pathfinder {
 		return visibleAreas;
 	}
 
-	public static Map<Area, VisibleAreaData> getLineOfSightAreas(Area origin) {
+	public static Map<Area, VisibleAreaData> getLineOfSightAreas(Game game, Area origin) {
 		Map<Area, VisibleAreaData> visibleAreas = new HashMap<>();
 		//List<Area> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
 		Map<String, AreaQueueData> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
@@ -92,8 +93,8 @@ public class Pathfinder {
 				visibleMap.put(currentArea, new AreaPathData(null, true, 0));
 			} else {
 				for (Area visibleArea : new HashSet<>(visibleMap.keySet())) {
-					if (!visibleArea.hasDirectVisibleLinkTo(currentArea) || visibleArea.hasLineOfSightObstruction()) continue;
-					AreaLink.CompassDirection linkDirection = visibleArea.getLinkDirectionTo(currentArea);
+					if (!visibleArea.hasDirectVisibleLinkTo(currentArea, game) || visibleArea.hasLineOfSightObstruction()) continue;
+					AreaLink.CompassDirection linkDirection = visibleArea.getLinkDirectionTo(currentArea, game);
 					AreaLink.CompassDirection currentOriginDirection = combinedDirection(visibleMap.get(visibleArea).direction, linkDirection);
 					int currentPathLength = visibleMap.get(visibleArea).minPathLength + 1;
 					if (currentOriginDirection == null) continue;
@@ -180,7 +181,7 @@ public class Pathfinder {
 	}
 
 	// TODO - Should use reachable areas, not movable areas
-	public static Set<Actor> actorsInRange(Area origin, int range, boolean useObjectLinks) {
+	public static Set<Actor> actorsInRange(Game game, Area origin, int range, boolean useObjectLinks) {
 		Set<Area> visited = new HashSet<>();
 		Queue<List<Area>> paths = new LinkedList<>();
 		List<Area> startPath = new ArrayList<>();
@@ -197,7 +198,7 @@ public class Pathfinder {
 				for (WorldObject object : pathEnd.getObjects()) {
 					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 					if (linkComponent == null) continue;
-					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
+					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
 				}
 			}
 			for (Area linkedArea : linkedAreasGlobal) {
@@ -215,7 +216,7 @@ public class Pathfinder {
 	}
 
 	// TODO - Should use reachable areas, not movable areas
-	public static Actor nearestActor(Area origin, boolean useObjectLinks) {
+	public static Actor nearestActor(Game game, Area origin, boolean useObjectLinks) {
 		Set<Area> visited = new HashSet<>();
 		Queue<Area> areaQueue = new LinkedList<>();
 		areaQueue.add(origin);
@@ -231,7 +232,7 @@ public class Pathfinder {
 				for (WorldObject object : currentArea.getObjects()) {
 					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 					if (linkComponent == null) continue;
-					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
+					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
 				}
 			}
 			Collections.shuffle(linkedAreasGlobal);

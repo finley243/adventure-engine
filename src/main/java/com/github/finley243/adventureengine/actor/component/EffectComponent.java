@@ -9,13 +9,11 @@ import java.util.*;
 
 public class EffectComponent {
 
-    private final Game game;
     private final MutableStatHolder statHolder;
     private final Context scriptContext;
-    private final Map<String, List<EffectData>> effects;
+    private final Map<Effect, List<EffectData>> effects;
 
-    public EffectComponent(Game game, MutableStatHolder statHolder, Context scriptContext) {
-        this.game = game;
+    public EffectComponent(MutableStatHolder statHolder, Context scriptContext) {
         this.statHolder = statHolder;
         this.scriptContext = scriptContext;
         this.effects = new HashMap<>();
@@ -25,75 +23,72 @@ public class EffectComponent {
         return !effects.isEmpty();
     }
 
-    public void addEffect(String effectID) {
-        Effect effect = game.data().getEffect(effectID);
+    public void addEffect(Game game, Effect effect) {
         if (effect.getConditionAdd() == null || effect.getConditionAdd().isMet(scriptContext)) {
             if (effect.getScriptAdd() != null) {
                 effect.getScriptAdd().execute(scriptContext);
             }
             if (effect.isInstant()) {
-                effect.start(statHolder);
-                effect.end(statHolder);
+                effect.start(game, statHolder);
+                effect.end(game, statHolder);
             } else {
-                if (!effects.containsKey(effectID)) {
-                    effects.put(effectID, new ArrayList<>());
+                if (!effects.containsKey(effect)) {
+                    effects.put(effect, new ArrayList<>());
                 }
-                if (effect.isStackable() || effects.get(effectID).isEmpty()) {
-                    effects.get(effectID).add(new EffectData(effect.getDuration(), true));
-                    effect.start(statHolder);
+                if (effect.isStackable() || effects.get(effect).isEmpty()) {
+                    effects.get(effect).add(new EffectData(effect.getDuration(), true));
+                    effect.start(game, statHolder);
                 } else {
-                    effects.get(effectID).get(0).turnsRemaining = effect.getDuration();
+                    effects.get(effect).getFirst().turnsRemaining = effect.getDuration();
                 }
             }
         }
     }
 
-    public void removeEffect(String effectID) {
-        if (effects.containsKey(effectID)) {
-            Effect effect = game.data().getEffect(effectID);
-            if (effects.get(effectID).get(0).isActive) {
-                effect.end(statHolder);
+    public void removeEffect(Game game, Effect effect) {
+        if (effects.containsKey(effect)) {
+            if (effects.get(effect).getFirst().isActive) {
+                effect.end(game, statHolder);
             }
             if (effect.getScriptRemove() != null) {
                 effect.getScriptRemove().execute(scriptContext);
             }
-            effects.get(effectID).remove(0);
-            if (effects.get(effectID).isEmpty()) {
-                effects.remove(effectID);
+            effects.get(effect).removeFirst();
+            if (effects.get(effect).isEmpty()) {
+                effects.remove(effect);
             }
         }
     }
 
-    public void onStartRound() {
-        Iterator<String> itr = effects.keySet().iterator();
+    public void onStartRound(Game game) {
+        Iterator<Effect> itr = effects.keySet().iterator();
         while (itr.hasNext()) {
-            String effectID = itr.next();
-            Effect effect = game.data().getEffect(effectID);
-            for (EffectData instance : effects.get(effectID)) {
+            Effect effect = itr.next();
+            for (EffectData instance : effects.get(effect)) {
                 if (instance.isActive && effect.getConditionActive() != null && !effect.getConditionActive().isMet(scriptContext)) {
                     instance.isActive = false;
-                    effect.end(statHolder);
+                    effect.end(game, statHolder);
                 } else if (!instance.isActive && effect.getConditionActive() != null && effect.getConditionActive().isMet(scriptContext)) {
                     instance.isActive = true;
-                    effect.start(statHolder);
+                    effect.start(game, statHolder);
                 }
                 if (effect.getScriptRound() != null) {
                     effect.getScriptRound().execute(scriptContext);
                 }
                 if (instance.isActive) {
-                    effect.eachRound(statHolder);
+                    effect.eachRound(game, statHolder);
                 }
             }
             if (!effect.manualRemoval()) {
-                List<EffectData> effectInstances = effects.get(effectID);
-                Iterator<EffectData> instanceItr = effects.get(effectID).iterator();
+                List<EffectData> effectInstances = effects.get(effect);
+                Iterator<EffectData> instanceItr = effects.get(effect).iterator();
                 while (instanceItr.hasNext()) {
                     EffectData currentInstance = instanceItr.next();
                     if (effect.getDuration() != -1) {
                         currentInstance.turnsRemaining -= 1;
                     }
                     if (currentInstance.turnsRemaining == 0 || (effect.getConditionRemove() != null && effect.getConditionRemove().isMet(scriptContext))) {
-                        effect.end(statHolder);
+                        effect.end(game, statHolder);
                         if (effect.getScriptRemove() != null) {
                             effect.getScriptRemove().execute(scriptContext);
                         }

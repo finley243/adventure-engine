@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -20,9 +21,9 @@ public class ObjectComponentInventory extends ObjectComponent {
 
     private final Inventory inventory;
 
-    public ObjectComponentInventory(WorldObject object, ObjectComponentTemplate template) {
-        super(object, template);
-        this.inventory = new Inventory(object.game(), null);
+    public ObjectComponentInventory(Game game, WorldObject object, ObjectComponentTemplate template) {
+        super(game, object, template);
+        this.inventory = new Inventory(null);
     }
 
     private ObjectComponentTemplateInventory getTemplateInventory() {
@@ -30,28 +31,28 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
-    protected List<Action> getPossibleActions(Actor subject) {
+    protected List<Action> getPossibleActions(Game game, Actor subject) {
         List<Action> actions = new ArrayList<>();
-        actions.addAll(inventory.getExternalActions(getObject(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
+        actions.addAll(inventory.getExternalActions(game, getObject(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
         for (ActionCustom.CustomActionHolder customAction : getTemplateInventory().getPerItemActions()) {
             for (Item item : inventory.getItems()) {
-                actions.add(new ActionCustom(getObject().game(), null, getObject(), item, null, customAction.action(), customAction.parameters(), new MenuDataObjectInventory(getObject(), item, false, false), false));
+                actions.add(new ActionCustom(game, null, getObject(), item, null, customAction.action(), customAction.parameters(), new MenuDataObjectInventory(getObject(), item, false, false), false));
             }
         }
         return actions;
     }
 
     @Override
-    public void onInit() {
-        super.onInit();
+    public void onInit(Game game) {
+        super.onInit(game);
         if (getTemplateInventory().getLootTable() != null) {
-            getTemplateInventory().getLootTable().generateItems(getObject().game(), inventory);
+            getTemplateInventory().getLootTable().generateItems(game, inventory);
         }
     }
 
     @Override
-    public void onStartRound() {
-        inventory.onStartRound();
+    public void onStartRound(Game game) {
+        inventory.onStartRound(game);
     }
 
     @Override
@@ -60,10 +61,10 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Context context, Game game) {
         return switch (name) {
             case "inventory" -> (inventory == null ? null : new ExpressionConstantInventory(inventory));
-            default -> super.getStatValue(name, context);
+            default -> super.getStatValue(name, context, game);
         };
     }
 

@@ -20,13 +20,13 @@ public class EffectStatString extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
-        target.getStatString(stat).addMod(new StatString.StatStringMod(statCondition, value));
+    public void start(Game game, MutableStatHolder target) {
+        target.getStatString(game, stat).addMod(game, new StatString.StatStringMod(statCondition, value));
     }
 
     @Override
-    public void end(MutableStatHolder target) {
-        target.getStatString(stat).removeMod(new StatString.StatStringMod(statCondition, value));
+    public void end(Game game, MutableStatHolder target) {
+        target.getStatString(game, stat).removeMod(game, new StatString.StatStringMod(statCondition, value));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
@@ -13,18 +14,18 @@ public class ActionSneakStart extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
-        return Context.builder(subject.game()).subject(subject).target(subject).build();
+    public Context getContext(Game game, Actor subject) {
+        return Context.builder(game).subject(subject).target(subject).build();
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(Game game, int repeatActionCount, Actor subject) {
         subject.setSneaking(true);
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose(Game game, Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(game, subject);
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -40,7 +41,7 @@ public class ActionSneakStart extends Action {
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt(Game game, Actor subject) {
         return "Start Sneaking";
     }
 

@@ -16,9 +16,8 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_MAX = 0.99f;
 	public static final float HIT_CHANCE_MIN = 0.01f;
 	
-	public static float calculateHitChance(Actor attacker, Item weapon, AttackTarget target, Limb limb, Script hitChanceFunction, float hitChanceMult) {
-		Context context = Context.builder(attacker.game()).subject(attacker).attackTarget(target).parentItem(weapon).build();
-		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(context);
+	public static float calculateHitChance(Context scriptContext, Item weapon, Limb limb, Script hitChanceFunction, float hitChanceMult) {
+		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(scriptContext);
 		if (hitChanceResult.error() != null) {
 			throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());
 		} else if (hitChanceResult.flowStatement() != null) {
@@ -31,7 +30,7 @@ public class CombatHelper {
 		float chance = hitChanceResult.value().getValueFloat();
 		if (weapon != null) {
 			// TODO - Find a way to allow hit chance effects on unarmed attacks (no weapon)
-			chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(context, chance);
+			chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(scriptContext, chance);
 		}
 		if (limb != null) {
 			chance *= limb.getHitChance();
@@ -40,9 +39,8 @@ public class CombatHelper {
 		return MathUtils.bound(chance, HIT_CHANCE_MIN, HIT_CHANCE_MAX);
 	}
 
-	public static float calculateHitChanceNoTarget(Actor attacker, Item weapon, Limb limb, Script hitChanceFunction, float hitChanceMult) {
-		Context context = Context.builder(attacker.game()).subject(attacker).target(attacker).parentItem(weapon).build();
-		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(context);
+	public static float calculateHitChanceNoTarget(Context scriptContext, Item weapon, Limb limb, Script hitChanceFunction, float hitChanceMult) {
+		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(scriptContext);
 		if (hitChanceResult.error() != null) {
 			throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());
 		} else if (hitChanceResult.flowStatement() != null) {
@@ -55,7 +53,7 @@ public class CombatHelper {
 		float chance = hitChanceResult.value().getValueFloat();
 		if (weapon != null) {
 			// TODO - Find a way to allow hit chance effects on unarmed attacks (no weapon)
-			chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(context, chance);
+			chance = weapon.getComponentOfType(ItemComponentWeapon.class).getModifiedHitChance(scriptContext, chance);
 		}
 		if (limb != null) {
 			chance *= limb.getHitChance();
@@ -64,10 +62,9 @@ public class CombatHelper {
 		return MathUtils.bound(chance, HIT_CHANCE_MIN, HIT_CHANCE_MAX);
 	}
 
-	public static float calculateHitChanceDodgeOnly(Actor attacker, AttackTarget target, Item weapon, Script hitChanceFunction) {
-		if (target instanceof Actor targetActor) {
-			Context context = Context.builder(attacker.game()).subject(attacker).target(targetActor).parentItem(weapon).build();
-			Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(context);
+	public static float calculateHitChanceDodgeOnly(Context scriptContext, AttackTarget target, Script hitChanceFunction) {
+		if (target instanceof Actor) {
+			Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(scriptContext);
 			if (hitChanceResult.error() != null) {
 				throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());
 			} else if (hitChanceResult.flowStatement() != null) {

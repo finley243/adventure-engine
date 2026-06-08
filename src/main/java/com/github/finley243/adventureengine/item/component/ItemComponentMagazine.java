@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -12,7 +13,6 @@ import com.github.finley243.adventureengine.item.template.ItemComponentTemplateM
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.stat.StatInt;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ItemComponentMagazine extends ItemComponent {
@@ -41,10 +41,10 @@ public class ItemComponentMagazine extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(Actor subject) {
-        List<Action> actions = new ArrayList<>();
+    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(game, subject);
         for (String current : getMagazineTemplate().getAmmoTypes()) {
-            actions.add(new ActionWeaponReload(getItem(), ItemFactory.create(getItem().game(), current)));
+            actions.add(new ActionWeaponReload(getItem(), ItemFactory.create(game, current)));
         }
         return actions;
     }
@@ -53,9 +53,9 @@ public class ItemComponentMagazine extends ItemComponent {
         return reloadActionPoints.value(getMagazineTemplate().getReloadActionPoints(), 0, 1000, context);
     }
 
-    public int getMagazineSize() {
+    public int getMagazineSize(Game game) {
         Actor equippedActor = getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor();
-        return clipSize.value(getMagazineTemplate().getMagazineSize(), 1, 100, Context.builder(getItem().game()).subject(equippedActor).target(equippedActor).parentItem(getItem()).build());
+        return clipSize.value(getMagazineTemplate().getMagazineSize(), 1, 100, Context.builder(game).subject(equippedActor).target(equippedActor).parentItem(getItem()).build());
     }
 
     public int getAmmoRemaining() {
@@ -67,17 +67,17 @@ public class ItemComponentMagazine extends ItemComponent {
         return ((float) ammoCount) / ((float) getMagazineTemplate().getMagazineSize());
     }
 
-    public int reloadCapacity() {
-        return getMagazineSize() - getAmmoRemaining();
+    public int reloadCapacity(Game game) {
+        return getMagazineSize(game) - getAmmoRemaining();
     }
 
-    public void setLoadedAmmoType(Item type) {
+    public void setLoadedAmmoType(Game game, Item type) {
         if (ammoType != null) {
-            ammoType.getComponentOfType(ItemComponentAmmo.class).onUnload(getItem());
+            ammoType.getComponentOfType(ItemComponentAmmo.class).onUnload(game, getItem());
         }
         this.ammoType = type;
         if (type != null) {
-            type.getComponentOfType(ItemComponentAmmo.class).onLoad(getItem());
+            type.getComponentOfType(ItemComponentAmmo.class).onLoad(game, getItem());
         }
     }
 
@@ -89,48 +89,48 @@ public class ItemComponentMagazine extends ItemComponent {
         ammoCount += amount;
     }
 
-    public void consumeAmmo(int amount) {
+    public void consumeAmmo(Game game, int amount) {
         ammoCount -= amount;
         if (ammoCount <= 0) {
             ammoCount = 0;
-            setLoadedAmmoType(null);
+            setLoadedAmmoType(game, null);
         }
     }
 
-    public void emptyAmmo() {
+    public void emptyAmmo(Game game) {
         ammoCount = 0;
-        setLoadedAmmoType(null);
+        setLoadedAmmoType(game, null);
     }
 
     @Override
-    public StatInt getStatInt(String name) {
+    public StatInt getStatInt(Game game, String name) {
         return switch (name) {
             case "clip_size" -> clipSize;
             case "reload_action_points" -> reloadActionPoints;
-            default -> super.getStatInt(name);
+            default -> super.getStatInt(game, name);
         };
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Context context, Game game) {
         return switch (name) {
-            case "magazine_size" -> Expression.constant(getMagazineSize());
+            case "magazine_size" -> Expression.constant(getMagazineSize(game));
             case "reload_action_points" -> Expression.constant(getReloadActionPoints(context));
             case "ammo_count" -> Expression.constant(ammoCount);
-            default -> super.getStatValue(name, context);
+            default -> super.getStatValue(name, context, game);
         };
     }
 
     @Override
-    public void onStatChange(String name) {
-        if ("magazine_size".equals(name) && ammoCount > getMagazineSize()) {
-            int difference = ammoCount - getMagazineSize();
-            ammoCount = getMagazineSize();
+    public void onStatChange(Game game, String name) {
+        if ("magazine_size".equals(name) && ammoCount > getMagazineSize(game)) {
+            int difference = ammoCount - getMagazineSize(game);
+            ammoCount = getMagazineSize(game);
             if (getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor() != null) {
-                getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor().getInventory().addItems(ammoType.getTemplateID(), difference);
+                getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor().getInventory().addItems(ammoType.getTemplateID(), difference, game);
             }
         } else {
-            super.onStatChange(name);
+            super.onStatChange(game, name);
         }
     }
 

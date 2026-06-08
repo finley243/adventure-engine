@@ -15,7 +15,7 @@ public class LinkType extends GameInstanced {
     private final Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances;
 
     public LinkType(Game game, String ID, boolean isVisible, String actorMoveAction, Set<AreaLink.DistanceCategory> actorMoveDistances, Map<String, String> vehicleMoveActions, Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances) {
-        super(game, ID);
+        super(ID);
         this.isVisible = isVisible;
         this.actorMoveAction = actorMoveAction;
         this.actorMoveDistances = actorMoveDistances;

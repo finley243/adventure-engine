@@ -46,9 +46,9 @@ public class ScriptTransferItem extends Script {
             case INSTANCE -> {
                 String itemIDValue = itemID.getValueString();
                 Item itemState = context.game().data().getItemInstance(itemIDValue);
-                inventoryOrigin.getValueInventory().removeItem(itemState);
+                inventoryOrigin.getValueInventory().removeItem(itemState, context.game());
                 if (inventoryTarget != null) {
-                    inventoryTarget.getValueInventory().addItem(itemState);
+                    inventoryTarget.getValueInventory().addItem(itemState, context.game());
                 }
             }
             case COUNT -> {
@@ -58,7 +58,7 @@ public class ScriptTransferItem extends Script {
                     inventoryOrigin.getValueInventory().removeItems(itemIDValue, countValue);
                 }
                 if (inventoryTarget != null) {
-                    inventoryTarget.getValueInventory().addItems(itemIDValue, countValue);
+                    inventoryTarget.getValueInventory().addItems(itemIDValue, countValue, context.game());
                 }
             }
             case TYPE -> {
@@ -67,7 +67,7 @@ public class ScriptTransferItem extends Script {
                 int countInInventory = invOriginValue.itemCount(itemIDValue);
                 invOriginValue.removeItems(itemIDValue, countInInventory);
                 if (inventoryTarget != null) {
-                    inventoryTarget.getValueInventory().addItems(itemIDValue, countInInventory);
+                    inventoryTarget.getValueInventory().addItems(itemIDValue, countInInventory, context.game());
                 }
             }
             case ALL -> {
@@ -75,7 +75,7 @@ public class ScriptTransferItem extends Script {
                 Map<Item, Integer> allItems = invOriginValue.getItemMap();
                 invOriginValue.clear();
                 if (inventoryTarget != null) {
-                    inventoryTarget.getValueInventory().addItems(allItems);
+                    inventoryTarget.getValueInventory().addItems(allItems, context.game());
                 }
             }
         }

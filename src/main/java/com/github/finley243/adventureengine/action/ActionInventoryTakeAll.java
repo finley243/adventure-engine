@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -36,25 +37,25 @@ public class ActionInventoryTakeAll extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
-        Context context = Context.builder(subject.game()).subject(subject).parentItem(item).build();
+    public Context getContext(Game game, Actor subject) {
+        Context context = Context.builder(game).subject(subject).parentItem(item).build();
         context.setLocalVariable("inventory", Expression.constantNoun(owner));
         context.setLocalVariable("count", Expression.constant(inventory.itemCount(item)));
         return context;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(Game game, int repeatActionCount, Actor subject) {
         int count = inventory.itemCount(item);
         inventory.removeItems(item.getTemplateID(), count);
-        subject.getInventory().addItems(item.getTemplateID(), count);
-        Context context = getContext(subject);
+        subject.getInventory().addItems(item.getTemplateID(), count, game);
+        Context context = getContext(game, subject);
         //TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
-        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
+        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
     }
 
     @Override
-    public int actionPoints(Actor subject) {
+    public int actionPoints(Game game, Actor subject) {
         return 0;
     }
 
@@ -69,7 +70,7 @@ public class ActionInventoryTakeAll extends Action {
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt(Game game, Actor subject) {
         return prompt + " All";
     }
 

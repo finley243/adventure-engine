@@ -15,7 +15,7 @@ public class Quest extends GameInstanced implements StatHolder {
     private final Map<String, QuestObjective> objectives;
 
     public Quest(Game game, String ID, String name, Map<String, QuestObjective> objectives) {
-        super(game, ID);
+        super(ID);
         this.name = name;
         this.objectives = objectives;
     }
@@ -25,7 +25,7 @@ public class Quest extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Context context, Game game) {
         return switch (name) {
             case "id" -> Expression.constant(getID());
             case "name" -> Expression.constant(name);
@@ -34,7 +34,7 @@ public class Quest extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setStatValue(String name, Expression value, Context context, Game game) {
         return false;
     }
 

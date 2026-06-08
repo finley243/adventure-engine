@@ -33,19 +33,21 @@ public class AreaLink {
 
     private final String areaID;
     private Area area;
-    private final String type;
+    private final String typeID;
+    private LinkType type;
     private final CompassDirection direction;
     private final DistanceCategory distance;
 
-    public AreaLink(String areaID, String type, CompassDirection direction, DistanceCategory distance) {
+    public AreaLink(String areaID, String typeID, CompassDirection direction, DistanceCategory distance) {
         this.areaID = areaID;
-        this.type = type;
+        this.typeID = typeID;
         this.direction = direction;
         this.distance = distance;
     }
 
-    public void init(Map<String, Area> allAreas) {
-        this.area = allAreas.get(areaID);
+    public void init(Game game) {
+        this.area = game.data().getArea(areaID);
+        this.type = game.data().getLinkType(typeID);
     }
 
     private String getAreaID() {
@@ -53,31 +55,37 @@ public class AreaLink {
     }
 
     public Area getArea() {
+        if (area == null) throw new IllegalStateException("AreaLink not initialized");
         return area;
     }
 
-    public String getType() {
+    public String getTypeID() {
+        return typeID;
+    }
+
+    public LinkType getType() {
+        if (type == null) throw new IllegalStateException("AreaLink not initialized");
         return type;
     }
 
-    public boolean isMovable(Game game) {
-        if (game.data().getLinkType(getType()).getActorMoveAction() == null) {
+    public boolean isMovable() {
+        if (getType().getActorMoveAction() == null) {
             return false;
         }
-        if (game.data().getLinkType(getType()).allowAllActorDistances()) {
+        if (getType().allowAllActorDistances()) {
             return true;
         }
-        return game.data().getLinkType(getType()).getActorMoveDistances().contains(getDistance());
+        return getType().getActorMoveDistances().contains(getDistance());
     }
 
-    public boolean isVehicleMovable(Game game, String vehicleType) {
-        if (game.data().getLinkType(getType()).getVehicleMoveAction(vehicleType) == null) {
+    public boolean isVehicleMovable(String vehicleType) {
+        if (getType().getVehicleMoveAction(vehicleType) == null) {
             return false;
         }
-        if (game.data().getLinkType(getType()).allowAllVehicleDistances(vehicleType)) {
+        if (getType().allowAllVehicleDistances(vehicleType)) {
             return true;
         }
-        return game.data().getLinkType(getType()).getVehicleMoveDistances(vehicleType).contains(getDistance());
+        return getType().getVehicleMoveDistances(vehicleType).contains(getDistance());
     }
 
     public CompassDirection getDirection() {

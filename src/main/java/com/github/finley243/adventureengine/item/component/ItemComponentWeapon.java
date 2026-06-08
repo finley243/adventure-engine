@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.WeaponClass;
@@ -32,6 +33,8 @@ public class ItemComponentWeapon extends ItemComponent {
     private final StatBoolean isSilenced;
     private final StatStringSet targetEffects;
 
+    private WeaponClass weaponClass;
+
     public ItemComponentWeapon(Item item, ItemComponentTemplateWeapon template) {
         super(item, template);
         this.attackTypes = new StatStringSet("attack_types", item);
@@ -52,21 +55,28 @@ public class ItemComponentWeapon extends ItemComponent {
         return false;
     }
 
+    @Override
+    public void onInit(Game game) {
+        super.onInit(game);
+        this.weaponClass = game.data().getWeaponClass(getWeaponTemplate().getWeaponClass());
+    }
+
     private ItemComponentTemplateWeapon getWeaponTemplate() {
         return (ItemComponentTemplateWeapon) getTemplate();
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(subject);
-        for (String attackType : getAttackTypes()) {
-            actions.addAll(getItem().game().data().getAttackType(attackType).generateActions(subject, getItem()));
+    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(game, subject);
+        for (String attackType : getAttackTypes(Context.builder(game).subject(subject).parentItem(getItem()).build())) {
+            actions.addAll(game.data().getAttackType(attackType).generateActions(game, subject, getItem()));
         }
         return actions;
     }
 
     public WeaponClass getWeaponClass() {
-        return getItem().game().data().getWeaponClass(getWeaponTemplate().getWeaponClass());
+        if (weaponClass == null) throw new IllegalStateException("ItemComponentWeapon has not been initialized");
+        return weaponClass;
     }
 
     public boolean isRanged() {
@@ -129,48 +139,48 @@ public class ItemComponentWeapon extends ItemComponent {
         return getWeaponClass().skill();
     }
 
-    public Set<String> getAttackTypes() {
-        return attackTypes.value(getWeaponClass().attackTypes(), Context.builder(getItem().game()).parentItem(getItem()).build());
+    public Set<String> getAttackTypes(Context context) {
+        return attackTypes.value(getWeaponClass().attackTypes(), context);
     }
 
     @Override
-    public StatInt getStatInt(String name) {
+    public StatInt getStatInt(Game game, String name) {
         return switch (name) {
             case "damage" -> damage;
             case "rate" -> rate;
             case "crit_damage" -> critDamage;
-            default -> super.getStatInt(name);
+            default -> super.getStatInt(game, name);
         };
     }
 
     @Override
-    public StatFloat getStatFloat(String name) {
+    public StatFloat getStatFloat(Game game, String name) {
         if ("hit_chance_modifier".equals(name)) {
             return hitChanceModifier;
         } else if ("armor_mult".equals(name)) {
             return armorMult;
         }
-        return super.getStatFloat(name);
+        return super.getStatFloat(game, name);
     }
 
     @Override
-    public StatBoolean getStatBoolean(String name) {
+    public StatBoolean getStatBoolean(Game game, String name) {
         if ("is_silenced".equals(name)) {
             return isSilenced;
         }
-        return super.getStatBoolean(name);
+        return super.getStatBoolean(game, name);
     }
 
     @Override
-    public StatString getStatString(String name) {
+    public StatString getStatString(Game game, String name) {
         if ("damage_type".equals(name)) {
             return damageType;
         }
-        return super.getStatString(name);
+        return super.getStatString(game, name);
     }
 
     @Override
-    public StatStringSet getStatStringSet(String name) {
+    public StatStringSet getStatStringSet(Game game, String name) {
         if ("ranges".equals(name)) {
             return ranges;
         } else if ("attack_types".equals(name)) {
@@ -178,11 +188,11 @@ public class ItemComponentWeapon extends ItemComponent {
         } else if ("target_effects".equals(name)) {
             return targetEffects;
         }
-        return super.getStatStringSet(name);
+        return super.getStatStringSet(game, name);
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Context context, Game game) {
         return switch (name) {
             case "damage" -> Expression.constant(getDamage(context));
             case "rate" -> Expression.constant(getRate(context));
@@ -190,11 +200,11 @@ public class ItemComponentWeapon extends ItemComponent {
             case "armor_mult" -> Expression.constant(getArmorMult(context));
             case "is_silenced" -> Expression.constant(isSilenced(context));
             case "damage_type" -> Expression.constant(getDamageType(context));
-            case "attack_types" -> Expression.constant(getAttackTypes());
+            case "attack_types" -> Expression.constant(getAttackTypes(context));
             case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges(), context));
             case "target_effects" -> Expression.constant(getTargetEffects(context));
             case "skill" -> Expression.constant(getSkill());
-            default -> super.getStatValue(name, context);
+            default -> super.getStatValue(name, context, game);
         };
     }
 

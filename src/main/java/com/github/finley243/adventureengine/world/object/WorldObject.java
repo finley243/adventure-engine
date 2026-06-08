@@ -37,6 +37,7 @@ import java.util.Map;
 public class WorldObject extends GameInstanced implements Noun, Physical, StatHolder, AttackTarget {
 
 	private final String templateID;
+	private ObjectTemplate template;
 	private boolean isKnown;
 	private boolean isEnabled;
 	private boolean isHidden;
@@ -47,7 +48,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Map<String, Expression> localVars;
 
 	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Expression> localVarsDefault) {
-		super(gameInstance, ID);
+		super(ID);
 		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
 		this.templateID = templateID;
 		this.defaultArea = area;
@@ -59,7 +60,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	private ObjectTemplate getTemplate() {
-		return game().data().getObjectTemplate(templateID);
+		if (template == null) throw new IllegalStateException("WorldObject has not been initialized");
+		return template;
 	}
 	
 	@Override
@@ -102,7 +104,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public void damage(Damage damage, Context context) {
+	public void damage(Game game, Damage damage, Context context) {
 		int amount = damage.getAmount();
 		amount -= Math.round(getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult());
 		amount -= Math.round(amount * getTemplate().getDamageMult(damage.getType()));
@@ -126,12 +128,12 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 	
 	@Override
-	public void setArea(Area area) {
+	public void setArea(Area area, Game game) {
 		if (isEnabled) {
 			this.area.removeObject(this);
 			area.addObject(this);
 			for (ObjectComponent component : components.values()) {
-				component.onSetObjectArea(area);
+				component.onSetObjectArea(area, game);
 			}
 		}
 		this.area = area;
@@ -155,34 +157,35 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return isHidden;
 	}
 
-	public void onInit() {
+	public void onInit(Game game) {
+		template = game.data().getObjectTemplate(templateID);
 		for (ObjectComponentTemplate componentTemplate : getTemplate().getComponents()) {
-			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, this);
+			ObjectComponent component = ObjectComponentFactory.create(game, componentTemplate, this);
 			if (component == null) throw new UnsupportedOperationException("Cannot add null component to object " + this);
 			if (components.containsKey(component.getClass())) {
 				throw new UnsupportedOperationException("Object " + this + " already contains a component of type " + component.getClass());
 			}
 			components.put(component.getClass(), component);
-            component.onInit();
+            component.onInit(game);
         }
 		this.HP = getTemplate().getMaxHP();
 	}
 
-	public void onStartRound() {
+	public void onStartRound(Game game) {
 		for (ObjectComponent component : components.values()) {
-			component.onStartRound();
+			component.onStartRound(game);
 		}
 	}
 
 	@Override
-	public List<Action> localActions(Actor subject) {
+	public List<Action> localActions(Game game, Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		if (!isGuarded()) {
 			for (ObjectComponent component : components.values()) {
-				actions.addAll(component.getActions(subject));
+				actions.addAll(component.getActions(game, subject));
 			}
 			for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-				actions.add(new ActionCustom(game(), null, this, null, null, customAction.action(), customAction.parameters(), new MenuDataObject(this), false));
+				actions.add(new ActionCustom(game, null, this, null, null, customAction.action(), customAction.parameters(), new MenuDataObject(this), false));
 			}
 		}
 		return actions;
@@ -197,10 +200,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return actions;
 	}
 
-	public List<Action> networkActions(Actor subject, NetworkNode node) {
+	public List<Action> networkActions(Game game, Actor subject, NetworkNode node) {
 		List<Action> actions = new ArrayList<>();
 		for (ActionCustom.CustomActionHolder networkAction : getTemplate().getNetworkActions()) {
-			actions.add(new ActionCustom(game(), null, this, null, null, networkAction.action(), networkAction.parameters(), new MenuDataNetwork(node), false));
+			actions.add(new ActionCustom(game, null, this, null, null, networkAction.action(), networkAction.parameters(), new MenuDataNetwork(node), false));
 		}
 		return actions;
 	}
@@ -236,9 +239,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context, Game game) {
 		for (ObjectComponent component : components.values()) {
-			Expression componentValue = component.getStatValue(name, context);
+			Expression componentValue = component.getStatValue(name, context, game);
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
@@ -262,9 +265,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Context context, Game game) {
 		for (ObjectComponent component : components.values()) {
-			boolean success = component.setStatValue(name, value, context);
+			boolean success = component.setStatValue(name, value, context, game);
 			if (success) return true;
 		}
 		switch (name) {
@@ -277,7 +280,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				return true;
 			}
 			case "area" -> {
-				setArea(game().data().getArea(value.getValueString()));
+				setArea(context.game().data().getArea(value.getValueString()), game);
 				return true;
 			}
 			default -> {

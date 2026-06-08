@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.attack.ActionAttackArea;
 import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
@@ -81,17 +82,17 @@ public class WeaponAttackType {
         return ID;
     }
 
-    public List<Action> generateActions(Actor subject, Item weapon) {
+    public List<Action> generateActions(Game game, Actor subject, Item weapon) {
         if (weapon != null) {
-            return generateActionsWeapon(subject, weapon);
+            return generateActionsWeapon(game, subject, weapon);
         } else {
-            return generateActionsUnarmed(subject);
+            return generateActionsUnarmed(game, subject);
         }
     }
 
-    private List<Action> generateActionsWeapon(Actor subject, Item weapon) {
+    private List<Action> generateActionsWeapon(Game game, Actor subject, Item weapon) {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
-        Context context = Context.builder(subject.game()).subject(subject).target(subject).parentItem(weapon).build();
+        Context context = Context.builder(game).subject(subject).target(subject).parentItem(weapon).build();
         List<Action> actions = new ArrayList<>();
         Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context))) : weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(context));
         int rate = rateOverride != null ? rateOverride : weapon.getComponentOfType(ItemComponentWeapon.class).getRate(context);
@@ -105,14 +106,14 @@ public class WeaponAttackType {
         }
         switch (category) {
             case SINGLE -> {
-                for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
+                for (AttackTarget target : subject.getLineOfSightAttackTargets(game)) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         actions.add(new ActionAttackBasic(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                     }
                 }
             }
             case TARGETED -> {
-                for (Actor target : subject.getLineOfSightActors()) {
+                for (Actor target : subject.getLineOfSightActors(game)) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
                             actions.add(new ActionAttackLimb(this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
@@ -121,7 +122,7 @@ public class WeaponAttackType {
                 }
             }
             case SPREAD -> {
-                for (Area target : subject.getVisibleAreas().keySet()) {
+                for (Area target : subject.getVisibleAreas(game).keySet()) {
                     actions.add(new ActionAttackArea(this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                 }
             }
@@ -129,7 +130,7 @@ public class WeaponAttackType {
         return actions;
     }
 
-    private List<Action> generateActionsUnarmed(Actor subject) {
+    private List<Action> generateActionsUnarmed(Game game, Actor subject) {
         Set<AreaLink.DistanceCategory> ranges = rangeOverride;
         int rate = rateOverride;
         Script damage = damageOverride;
@@ -140,14 +141,14 @@ public class WeaponAttackType {
         List<Action> actions = new ArrayList<>();
         switch (category) {
             case SINGLE -> {
-                for (AttackTarget target : subject.getLineOfSightAttackTargets()) {
+                for (AttackTarget target : subject.getLineOfSightAttackTargets(game)) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         actions.add(new ActionAttackBasic(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                     }
                 }
             }
             case TARGETED -> {
-                for (Actor target : subject.getLineOfSightActors()) {
+                for (Actor target : subject.getLineOfSightActors(game)) {
                     if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                         for (Limb limb : target.getLimbs()) {
                             actions.add(new ActionAttackLimb(this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
@@ -156,7 +157,7 @@ public class WeaponAttackType {
                 }
             }
             case SPREAD -> {
-                for (Area target : subject.getVisibleAreas().keySet()) {
+                for (Area target : subject.getVisibleAreas(game).keySet()) {
                     actions.add(new ActionAttackArea(this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud));
                 }
             }

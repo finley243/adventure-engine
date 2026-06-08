@@ -17,22 +17,24 @@ import java.util.Map;
 public abstract class NetworkNode extends GameInstanced implements StatHolder {
 
     private final String templateID;
+    private NetworkNodeTemplate template;
     private final String name;
 
     private boolean isBreached;
 
     public NetworkNode(Game game, String ID, String templateID, String name) {
-        super(game, ID);
+        super(ID);
         this.templateID = templateID;
         this.name = name;
     }
 
-    public void init(Map<String, WorldObject> objects) {
-
+    public void init(Game game, Map<String, WorldObject> objects) {
+        this.template = game.data().getNetworkNodeTemplate(templateID);
     }
 
     private NetworkNodeTemplate getTemplate() {
-        return game().data().getNetworkNodeTemplate(templateID);
+        if (template == null) throw new IllegalStateException("NetworkNode has not been initialized");
+        return template;
     }
 
     public String getName() {
@@ -47,20 +49,20 @@ public abstract class NetworkNode extends GameInstanced implements StatHolder {
         this.isBreached = state;
     }
 
-    public List<Action> actions(Actor subject, WorldObject object) {
+    public List<Action> actions(Game game, Actor subject, WorldObject object) {
         List<Action> actions = new ArrayList<>();
         if (isBreached()) {
-            actions.addAll(breachedActions(subject, object));
+            actions.addAll(breachedActions(game, subject, object));
         } else {
             actions.add(new ActionNetworkBreach(this, object));
         }
         return actions;
     }
 
-    protected abstract List<Action> breachedActions(Actor subject, WorldObject object);
+    protected abstract List<Action> breachedActions(Game game, Actor subject, WorldObject object);
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Context context, Game game) {
         return switch (name) {
             case "id" -> Expression.constant(getID());
             case "name" -> Expression.constant(name);
@@ -70,7 +72,7 @@ public abstract class NetworkNode extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setStatValue(String name, Expression value, Context context, Game game) {
         return false;
     }
 

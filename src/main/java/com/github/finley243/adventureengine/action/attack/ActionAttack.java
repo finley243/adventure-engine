@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action.attack;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionRandomEach;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -86,20 +87,20 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public Context getContext(Actor subject) {
-        Context context = Context.builder(subject.game()).subject(subject).attackTarget(targets.size() == 1 ? targets.iterator().next() : null).parentItem(getWeapon()).parentArea(getArea()).build();
+    public Context getContext(Game game, Actor subject) {
+        Context context = Context.builder(game).subject(subject).attackTarget(targets.size() == 1 ? targets.iterator().next() : null).parentItem(getWeapon()).parentArea(getArea()).build();
         context.setLocalVariable("targets", Expression.constant(targets));
         return context;
     }
 
-    public abstract void consumeAmmo(Actor subject);
+    public abstract void consumeAmmo(Game game, Actor subject);
 
     public String getAttackTypeID() {
         return attackType.getID();
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt(Game game, Actor subject) {
         return prompt;
     }
 
@@ -151,69 +152,71 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public float chance(Actor subject, AttackTarget target) {
+    public float chance(Game game, Actor subject, AttackTarget target) {
         if (hitChanceExpression == null) {
             return 1.0f;
         }
-        return CombatHelper.calculateHitChance(subject, weapon, target, getLimb(), hitChanceExpression, hitChanceMult());
+        Context scriptContext = Context.builder(game).subject(subject).attackTarget(target).parentItem(weapon).build();
+        return CombatHelper.calculateHitChance(scriptContext, weapon, getLimb(), hitChanceExpression, hitChanceMult());
     }
 
     @Override
-    public float chanceOverall(Actor subject) {
+    public float chanceOverall(Game game, Actor subject) {
         if (hitChanceOverallExpression == null) {
             return 1.0f;
         }
-        return CombatHelper.calculateHitChanceNoTarget(subject, weapon, getLimb(), hitChanceOverallExpression, hitChanceMult());
+        Context scriptContext = Context.builder(game).subject(subject).parentItem(weapon).build();
+        return CombatHelper.calculateHitChanceNoTarget(scriptContext, weapon, getLimb(), hitChanceOverallExpression, hitChanceMult());
     }
 
     @Override
-    public boolean onStart(Actor subject, int repeatActionCount) {
+    public boolean onStart(Game game, Actor subject, int repeatActionCount) {
         for (AttackTarget target : targets) {
-            subject.triggerScript("on_attack", Context.builder(subject.game()).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build());
+            subject.triggerScript("on_attack", Context.builder(game).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build());
         }
-        consumeAmmo(subject);
+        consumeAmmo(game, subject);
         return true;
     }
 
     @Override
-    public void onEnd(Actor subject, int repeatActionCount) {
+    public void onEnd(Game game, Actor subject, int repeatActionCount) {
         // TODO - Use illegal action system to add targets if detected
         for (AttackTarget target : targets) {
             if (target instanceof Actor && ((Actor) target).getTargetingComponent() != null) {
-                ((Actor) target).getTargetingComponent().addCombatant(subject);
+                ((Actor) target).getTargetingComponent().addCombatant(game, subject);
             }
         }
     }
 
     @Override
-    public void onSuccess(Actor subject, AttackTarget target, int repeatActionCount) {
-        Context context = Context.builder(subject.game()).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
+    public void onSuccess(Game game, Actor subject, AttackTarget target, int repeatActionCount) {
+        Context context = Context.builder(game).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
         int damage = computeDamage(context);
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
         context.setLocalVariable("success", Expression.constant(true));
         context.setLocalVariable("damage", Expression.constant(damage));
-        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
+        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
-        target.damage(damageData, context);
+        target.damage(game, damageData, context);
         subject.triggerScript("on_attack_success", context);
     }
 
     @Override
-    public void onFail(Actor subject, AttackTarget target, int repeatActionCount) {
-        Context context = Context.builder(subject.game()).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
+    public void onFail(Game game, Actor subject, AttackTarget target, int repeatActionCount) {
+        Context context = Context.builder(game).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
         context.setLocalVariable("success", Expression.constant(false));
-        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
+        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
         subject.triggerScript("on_attack_failure", context);
     }
 
     @Override
-    public void onSuccessOverall(Actor subject, int repeatActionCount, List<AttackTarget> targetsSuccess, List<AttackTarget> targetsFail) {
-        Context context = Context.builder(subject.game()).subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
+    public void onSuccessOverall(Game game, Actor subject, int repeatActionCount, List<AttackTarget> targetsSuccess, List<AttackTarget> targetsFail) {
+        Context context = Context.builder(game).subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
@@ -222,17 +225,17 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         List<Noun> targetsFailNouns = targetsFail.stream().map(target -> (Noun) target).toList();
         context.setLocalVariable("targetsSuccess", targetsSuccessNouns.isEmpty() ? null : Expression.constantNoun(new MultiNoun(targetsSuccessNouns)));
         context.setLocalVariable("targetsFail", targetsFailNouns.isEmpty() ? null : Expression.constantNoun(new MultiNoun(targetsFailNouns)));
-        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
+        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
     }
 
     @Override
-    public void onFailOverall(Actor subject, int repeatActionCount) {
-        Context context = Context.builder(subject.game()).subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
+    public void onFailOverall(Game game, Actor subject, int repeatActionCount) {
+        Context context = Context.builder(game).subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
         context.setLocalVariable("success", Expression.constant(false));
-        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
+        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(attackOverallPhrase), Phrases.get(attackOverallPhraseAudible), context, true, isLoud, this, null));
     }
 
     @Override
@@ -251,7 +254,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public int actionPoints(Actor subject) {
+    public int actionPoints(Game game, Actor subject) {
         return actionPoints;
     }
 

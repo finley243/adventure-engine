@@ -20,7 +20,7 @@ public class ActionTemplate extends GameInstanced {
     private final Script script;
 
     public ActionTemplate(Game game, String ID, String prompt, Map<String, Script> parameters, int actionPoints, List<ConditionWithMessage> selectConditions, Condition showCondition, Script script) {
-        super(game, ID);
+        super(ID);
         this.prompt = prompt;
         this.parameters = parameters;
         this.actionPoints = actionPoints;

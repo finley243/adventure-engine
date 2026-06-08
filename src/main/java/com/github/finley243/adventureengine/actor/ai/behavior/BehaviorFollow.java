@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
@@ -18,13 +19,13 @@ public class BehaviorFollow extends Behavior {
     }
 
     @Override
-    public boolean isInTargetState(Actor subject) {
-        return subject.game().data().getActor(actor).getArea().equals(subject.getArea());
+    public boolean isInTargetState(Game game, Actor subject) {
+        return game.data().getActor(actor).getArea().equals(subject.getArea());
     }
 
     @Override
-    public Area getTargetArea(Actor subject) {
-        return subject.game().data().getActor(actor).getArea();
+    public Area getTargetArea(Game game, Actor subject) {
+        return game.data().getActor(actor).getArea();
     }
 
 }

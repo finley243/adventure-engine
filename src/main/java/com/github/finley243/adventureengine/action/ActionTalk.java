@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
@@ -19,18 +20,18 @@ public class ActionTalk extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
-        return Context.builder(subject.game()).subject(subject).target(target).build();
+	public Context getContext(Game game, Actor subject) {
+        return Context.builder(game).subject(subject).target(target).build();
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
-		subject.game().menuManager().sceneMenu(subject.game(), target.getDialogueStart(), Context.builder(target.game()).subject(target).target(target).build(), true);
+	public void choose(Game game, int repeatActionCount, Actor subject) {
+		game.menuManager().sceneMenu(game, target.getDialogueStart(), Context.builder(game).subject(target).target(target).build(), true);
 	}
 
 	@Override
-	public CanChooseResult canChoose(Actor subject) {
-		CanChooseResult resultSuper = super.canChoose(subject);
+	public CanChooseResult canChoose(Game game, Actor subject) {
+		CanChooseResult resultSuper = super.canChoose(game, subject);
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
@@ -49,7 +50,7 @@ public class ActionTalk extends Action {
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt(Game game, Actor subject) {
 		return "Talk";
 	}
 

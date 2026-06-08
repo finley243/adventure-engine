@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.LoadUtils;
 
@@ -36,14 +37,14 @@ public class StatString extends Stat {
         return topValue == null ? base : LoadUtils.stringToEnum(topValue, enumType);
     }
 
-    public void addMod(StatStringMod mod) {
+    public void addMod(Game game, StatStringMod mod) {
         mods.add(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(game, getName());
     }
 
-    public void removeMod(StatStringMod mod) {
+    public void removeMod(Game game, StatStringMod mod) {
         mods.remove(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(game, getName());
     }
 
     public List<StatStringMod> getMods() {

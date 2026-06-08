@@ -23,7 +23,7 @@ public class Effect extends GameInstanced {
 	private final Script scriptRound;
 
 	public Effect(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound) {
-		super(game, ID);
+		super(ID);
 		this.manualRemoval = manualRemoval;
 		this.duration = duration;
 		this.stackable = stackable;
@@ -35,11 +35,11 @@ public class Effect extends GameInstanced {
 		this.scriptRound = scriptRound;
 	}
 	
-	public void start(MutableStatHolder target) {}
+	public void start(Game game, MutableStatHolder target) {}
 	
-	public void end(MutableStatHolder target) {}
+	public void end(Game game, MutableStatHolder target) {}
 	
-	public void eachRound(MutableStatHolder target) {}
+	public void eachRound(Game game, MutableStatHolder target) {}
 
 	public boolean manualRemoval() {
 		return manualRemoval;

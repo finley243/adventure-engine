@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.item.component;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionModInstall;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -32,8 +33,8 @@ public class ItemComponentMod extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(subject);
+    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(game, subject);
         for (Item item : subject.getInventory().getItems()) {
             if (item.hasComponentOfType(ItemComponentModdable.class)) {
                 actions.add(new ActionModInstall(item, getItem()));

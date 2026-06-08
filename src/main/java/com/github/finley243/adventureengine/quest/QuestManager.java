@@ -1,5 +1,7 @@
 package com.github.finley243.adventureengine.quest;
 
+import com.github.finley243.adventureengine.Game;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,10 +33,10 @@ public class QuestManager {
         }
     }
 
-    public void update() {
+    public void update(Game game) {
         for (Quest quest : activeObjectives.keySet()) {
             for (QuestObjective objective : activeObjectives.get(quest)) {
-                objective.update();
+                objective.update(game);
             }
         }
     }

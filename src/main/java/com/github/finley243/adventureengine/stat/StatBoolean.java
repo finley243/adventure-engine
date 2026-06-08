@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.ArrayList;
@@ -39,14 +40,14 @@ public class StatBoolean extends Stat {
         }
     }
 
-    public void addMod(StatBooleanMod mod) {
+    public void addMod(Game game, StatBooleanMod mod) {
         mods.add(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(game, getName());
     }
 
-    public void removeMod(StatBooleanMod mod) {
+    public void removeMod(Game game, StatBooleanMod mod) {
         mods.remove(mod);
-        getTarget().onStatChange(getName());
+        getTarget().onStatChange(game, getName());
     }
 
     public boolean getPriorityValue() {

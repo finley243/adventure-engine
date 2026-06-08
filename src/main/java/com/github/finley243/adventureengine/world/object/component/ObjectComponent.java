@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -17,24 +18,30 @@ public abstract class ObjectComponent implements StatHolder {
     private boolean isEnabled;
     private final WorldObject object;
     private final ObjectComponentTemplate template;
+    private final Context defaultContext;
 
-    public ObjectComponent(WorldObject object, ObjectComponentTemplate template) {
+    public ObjectComponent(Game game, WorldObject object, ObjectComponentTemplate template) {
         this.object = object;
         this.template = template;
+        this.defaultContext = Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).parentObject(object).build();
+    }
+
+    protected Context getDefaultContext() {
+        return defaultContext;
     }
 
     protected ObjectComponentTemplate getTemplate() {
         return template;
     }
 
-    public List<Action> getActions(Actor subject) {
+    public List<Action> getActions(Game game, Actor subject) {
         if (isEnabled && !actionsRestricted()) {
-            return getPossibleActions(subject);
+            return getPossibleActions(game, subject);
         }
         return new ArrayList<>();
     }
 
-    protected abstract List<Action> getPossibleActions(Actor subject);
+    protected abstract List<Action> getPossibleActions(Game game, Actor subject);
 
     private boolean actionsRestricted() {
         return getTemplate().actionsRestricted();
@@ -52,20 +59,20 @@ public abstract class ObjectComponent implements StatHolder {
         return isEnabled;
     }
 
-    public void onInit() {
+    public void onInit(Game game) {
         this.isEnabled = getTemplate().startEnabled();
     }
 
     public void onSetObjectEnabled(boolean enable) {}
 
-    public void onSetObjectArea(Area area) {}
+    public void onSetObjectArea(Area area, Game game) {}
 
-    public void onStartRound() {}
+    public void onStartRound(Game game) {}
 
     protected abstract String getStatName();
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Context context, Game game) {
         if ((getStatName() + "_enabled").equals(name)) {
             return Expression.constant(isEnabled());
         }
@@ -73,7 +80,7 @@ public abstract class ObjectComponent implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context) {
+    public boolean setStatValue(String name, Expression value, Context context, Game game) {
         if ((getStatName() + "_enabled").equals(name)) {
             setEnabled(value.getValueBoolean());
         }

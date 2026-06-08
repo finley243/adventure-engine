@@ -20,13 +20,14 @@ public class NetworkNodeControl extends NetworkNode {
     }
 
     @Override
-    public void init(Map<String, WorldObject> objects) {
+    public void init(Game game, Map<String, WorldObject> objects) {
+        super.init(game, objects);
         this.object = objects.get(objectID);
     }
 
     @Override
-    protected List<Action> breachedActions(Actor subject, WorldObject object) {
-        return new ArrayList<>(subject.game().data().getObject(objectID).networkActions(subject, this));
+    protected List<Action> breachedActions(Game game, Actor subject, WorldObject object) {
+        return new ArrayList<>(game.data().getObject(objectID).networkActions(game, subject, this));
     }
 
     public WorldObject getObject() {

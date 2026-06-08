@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.ai;
 import java.util.List;
 import java.util.Set;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -26,15 +27,15 @@ public class AreaTarget {
 		this(Set.of(targetArea), targetUtility, manualRemoval);
 	}
 	
-	public void update(Actor subject) {
+	public void update(Game game, Actor subject) {
 		if (path == null || !targetAreas.contains(path.get(path.size() - 1))) {
-			path = Pathfinder.findPath(subject.getArea(), targetAreas, null);
+			path = Pathfinder.findPath(game, subject.getArea(), targetAreas, null);
 			pathIndex = 0;
 		}
 		if (path != null && path.get(pathIndex) != subject.getArea()) {
 			int currentIndex = getCurrentIndex(subject);
 			if (currentIndex == -1) {
-				path = Pathfinder.findPath(subject.getArea(), targetAreas, null);
+				path = Pathfinder.findPath(game, subject.getArea(), targetAreas, null);
 				pathIndex = 0;
 			} else {
 				pathIndex = currentIndex;
@@ -76,9 +77,9 @@ public class AreaTarget {
 		return path.get(pathIndex + 1) == area;
 	}
 	
-	public int getDistance(Actor subject) {
+	public int getDistance(Game game, Actor subject) {
 		if (path == null) {
-			path = Pathfinder.findPath(subject.getArea(), targetAreas, null);
+			path = Pathfinder.findPath(game, subject.getArea(), targetAreas, null);
 			pathIndex = 0;
 		}
 		return (path == null ? -1 : path.size() - (pathIndex + 1));

@@ -22,22 +22,22 @@ public class NetworkNodeGroup extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Actor subject, WorldObject object) {
+    protected List<Action> breachedActions(Game game, Actor subject, WorldObject object) {
         List<Action> actions = new ArrayList<>();
         for (NetworkNode childNode : childNodes) {
-            actions.addAll(childNode.actions(subject, object));
+            actions.addAll(childNode.actions(game, subject, object));
         }
         return actions;
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Context context, Game game) {
         return switch (name) {
             case "childNodes" -> Expression.constant(getAllChildNodes());
             case "directChildNodes" -> Expression.constant(childNodes);
             case "childObjects" -> Expression.constant(getAllChildObjects());
             case "directChildObjects" -> Expression.constant(getDirectChildObjects());
-            default -> super.getStatValue(name, context);
+            default -> super.getStatValue(name, context, game);
         };
     }
 

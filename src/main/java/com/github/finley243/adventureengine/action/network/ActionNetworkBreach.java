@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action.network;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
@@ -24,20 +25,20 @@ public class ActionNetworkBreach extends NetworkAction {
     }
 
     @Override
-    public Context getContext(Actor subject) {
-        Context context = Context.builder(subject.game()).subject(subject).parentObject(object).parentAction(this).build();
+    public Context getContext(Game game, Actor subject) {
+        Context context = Context.builder(game).subject(subject).parentObject(object).parentAction(this).build();
         context.setLocalVariable("node", Expression.constant(node));
         return context;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(Game game, int repeatActionCount, Actor subject) {
         node.setBreached(true);
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose(Game game, Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(game, subject);
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -53,7 +54,7 @@ public class ActionNetworkBreach extends NetworkAction {
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt(Game game, Actor subject) {
         return "Breach Node";
     }
 

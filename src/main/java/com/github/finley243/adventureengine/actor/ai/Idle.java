@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor.ai;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -16,13 +17,13 @@ public class Idle {
         this.phrase = phrase;
     }
 
-    public boolean canPlay(Actor subject) {
-        return condition == null || condition.isMet(Context.builder(subject.game()).subject(subject).target(subject).build());
+    public boolean canPlay(Game game, Actor subject) {
+        return condition == null || condition.isMet(Context.builder(game).subject(subject).target(subject).build());
     }
 
-    public void trigger(Actor subject) {
-        Context context = Context.builder(subject.game()).subject(subject).build();
-        SensoryEvent.execute(new SensoryEvent(subject.getArea(), phrase, context, true, null, null));
+    public void trigger(Game game, Actor subject) {
+        Context context = Context.builder(game).subject(subject).build();
+        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), phrase, context, true, null, null));
     }
 
 }

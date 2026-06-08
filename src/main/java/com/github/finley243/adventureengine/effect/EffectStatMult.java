@@ -21,27 +21,27 @@ public class EffectStatMult extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
-        StatInt statInt = target.getStatInt(stat);
+    public void start(Game game, MutableStatHolder target) {
+        StatInt statInt = target.getStatInt(game, stat);
         if(statInt != null) {
-            statInt.addMod(new StatInt.StatIntMod(statCondition, 0, amount));
+            statInt.addMod(game, new StatInt.StatIntMod(statCondition, 0, amount));
         } else {
-            StatFloat statFloat = target.getStatFloat(stat);
+            StatFloat statFloat = target.getStatFloat(game, stat);
             if(statFloat != null) {
-                statFloat.addMod(new StatFloat.StatFloatMod(statCondition, 0.0f, amount));
+                statFloat.addMod(game, new StatFloat.StatFloatMod(statCondition, 0.0f, amount));
             }
         }
     }
 
     @Override
-    public void end(MutableStatHolder target) {
-        StatInt statInt = target.getStatInt(stat);
+    public void end(Game game, MutableStatHolder target) {
+        StatInt statInt = target.getStatInt(game, stat);
         if(statInt != null) {
-            statInt.removeMod(new StatInt.StatIntMod(statCondition, 0, amount));
+            statInt.removeMod(game, new StatInt.StatIntMod(statCondition, 0, amount));
         } else {
-            StatFloat statFloat = target.getStatFloat(stat);
+            StatFloat statFloat = target.getStatFloat(game, stat);
             if(statFloat != null) {
-                statFloat.removeMod(new StatFloat.StatFloatMod(statCondition, 0.0f, amount));
+                statFloat.removeMod(game, new StatFloat.StatFloatMod(statCondition, 0.0f, amount));
             }
         }
     }

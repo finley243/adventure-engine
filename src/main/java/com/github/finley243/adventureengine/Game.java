@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
-import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
@@ -60,18 +59,6 @@ public class Game {
 
 		data().newGame();
 
-		data().getPlayer().setStatValue("money", Expression.constant(50), Context.builder(this).subject(data().getPlayer()).target(data().getPlayer()).build());
-
-		/*File saveFile = new File(GAMEFILES + "/save.asav");
-		SaveLoader.saveGame(saveFile, data());
-		System.out.println("Saved Game");
-		try {
-			SaveLoader.loadGame(saveFile, data());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Loaded Game");*/
-
 		continueGame = true;
 		startRound();
 	}
@@ -103,17 +90,17 @@ public class Game {
 			}
 		}
 		for (Area area : data().getAreas()) {
-			area.onStartRound();
+			area.onStartRound(this);
 		}
 		for (WorldObject object : data().getObjects()) {
-			object.onStartRound();
+			object.onStartRound(this);
 		}
 		if (data.getPlayer().getArea().getRoom() != null) {
-			data().getPlayer().getArea().getRoom().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
+			data().getPlayer().getArea().getRoom().triggerScript("on_player_round", this, data().getPlayer(), data().getPlayer());
 		}
-		data().getPlayer().getArea().triggerScript("on_player_round", data().getPlayer(), data().getPlayer());
+		data().getPlayer().getArea().triggerScript("on_player_round", this, data().getPlayer(), data().getPlayer());
 		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
-		for (Actor visibleActor : data().getPlayer().getLineOfSightActors()) {
+		for (Actor visibleActor : data().getPlayer().getLineOfSightActors(this)) {
 			if (visibleActor.isVisible(data().getPlayer())) {
 				visibleActor.triggerScript("on_player_visible_round", Context.builder(this).subject(visibleActor).target(data().getPlayer()).build());
 			}
@@ -125,7 +112,7 @@ public class Game {
 	}
 
 	private void nextTurn() {
-		turnOrder.get(currentTurnIndex).takeTurn();
+		turnOrder.get(currentTurnIndex).takeTurn(this);
 	}
 
 	public void onEndTurn(Actor actor) {

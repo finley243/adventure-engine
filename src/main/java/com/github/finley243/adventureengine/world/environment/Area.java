@@ -5,8 +5,10 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -34,6 +36,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	private final String landmarkID;
+	private WorldObject landmark;
 	private final String name;
 	private final AreaNameType nameType;
 	private final boolean nameIsPlural;
@@ -41,10 +44,12 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	// The room containing this area
 	private final String roomID;
+	private Room room;
 	
 	private final Scene description;
 
-	private final String ownerFaction;
+	private final String ownerFactionID;
+	private Faction ownerFaction;
 	private final RestrictionType restrictionType;
 	private final Boolean allowAllies;
 	
@@ -62,27 +67,29 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 
 	private final StatStringSet effects;
 	
-	public Area(Game game, String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, String roomID, String ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Map<String, List<Script>> scripts) {
-		super(game, ID);
+	public Area(String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, String roomID, String ownerFactionID, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Map<String, List<Script>> scripts) {
+		super(ID);
 		this.landmarkID = landmarkID;
 		this.name = name;
 		this.nameType = nameType;
 		this.nameIsPlural = nameIsPlural;
 		this.description = description;
 		this.roomID = roomID;
-		this.ownerFaction = ownerFaction;
+		this.ownerFactionID = ownerFactionID;
 		this.restrictionType = restrictionType;
 		this.allowAllies = allowAllies;
 		this.linkedAreas = linkedAreas;
 		this.objects = new HashSet<>();
 		this.actors = new HashSet<>();
-		this.itemInventory = new Inventory(game, null);
+		this.itemInventory = new Inventory(null);
 		this.scripts = scripts;
 		this.effects = new StatStringSet("effects", this);
 	}
 
 	public WorldObject getLandmark() {
-		return game().data().getObject(landmarkID);
+		if (landmarkID == null) return null;
+		if (landmark == null) throw new IllegalStateException("Area has not been initialized");
+		return landmark;
 	}
 
 	@Override
@@ -100,8 +107,9 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return description;
 	}
 
-	public String getOwnerFaction() {
-		if (ownerFaction == null) return getRoom().getOwnerFaction();
+	public Faction getOwnerFaction() {
+		if (ownerFactionID == null) return getRoom().getOwnerFaction();
+		if (ownerFaction == null) throw new IllegalStateException("Area has not been initialized");
 		return ownerFaction;
 	}
 
@@ -164,18 +172,25 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		};
 	}
 
-	public void onInit(Map<String, Area> allAreas) {
+	public void onInit(Game game) {
 		if (roomID != null) {
-			game().data().getRoom(roomID).addArea(this);
+			room = game.data().getRoom(roomID);
+			room.addArea(this);
+		}
+		if (landmarkID != null) {
+			landmark = game.data().getObject(landmarkID);
+		}
+		if (ownerFactionID != null) {
+			ownerFaction = game.data().getFaction(ownerFactionID);
 		}
 		for (AreaLink link : linkedAreas.values()) {
-			link.init(allAreas);
+			link.init(game);
 		}
 	}
 
-	public void onStartRound() {
-		applyEffects();
-		getInventory().onStartRound();
+	public void onStartRound(Game game) {
+		applyEffects(game);
+		getInventory().onStartRound(game);
 	}
 	
 	public Set<WorldObject> getObjects(){
@@ -232,16 +247,16 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return null;
 	}
 
-	public List<Action> getItemActions() {
-		return itemInventory.getAreaActions(this);
+	public List<Action> getItemActions(Game game) {
+		return itemInventory.getAreaActions(game, this);
 	}
 
-	public List<Action> getMoveActions(Actor subject, String vehicleType, WorldObject vehicleObject) {
+	public List<Action> getMoveActions(Game game, Actor subject, String vehicleType, WorldObject vehicleObject) {
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
-			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
-				String actionTemplate = vehicleType == null ? game().data().getLinkType(link.getType()).getActorMoveAction() : game().data().getLinkType(link.getType()).getVehicleMoveAction(vehicleType);
-				moveActions.add(new ActionCustom(game(), null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
+			if (vehicleType != null && link.isVehicleMovable(vehicleType) || vehicleType == null && link.isMovable()) {
+				String actionTemplate = vehicleType == null ? game.data().getLinkType(link.getTypeID()).getActorMoveAction() : game.data().getLinkType(link.getTypeID()).getVehicleMoveAction(vehicleType);
+				moveActions.add(new ActionCustom(game, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
 			}
 		}
 		return moveActions;
@@ -250,7 +265,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public Set<Area> getMovableAreas(String vehicleType) {
 		Set<Area> movableAreas = new HashSet<>();
 		for (AreaLink link : linkedAreas.values()) {
-			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
+			if (vehicleType != null && link.isVehicleMovable(vehicleType) || vehicleType == null && link.isMovable()) {
 				movableAreas.add(link.getArea());
 			}
 		}
@@ -260,7 +275,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	private Set<String> getMovableAreaIDs(String vehicleType) {
 		Set<String> movableAreas = new HashSet<>();
 		for (AreaLink link : linkedAreas.values()) {
-			if (vehicleType != null && link.isVehicleMovable(game(), vehicleType) || vehicleType == null && link.isMovable(game())) {
+			if (vehicleType != null && link.isVehicleMovable(vehicleType) || vehicleType == null && link.isMovable()) {
 				movableAreas.add(link.getArea().getID());
 			}
 		}
@@ -283,7 +298,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		Set<AreaLink> visibleAreas = new HashSet<>();
 		for (AreaLink link : linkedAreas.values()) {
 			// TODO - Evaluate whether this check is necessary (does not allow non-visible paths to be calculated for reachability)
-			if (game().data().getLinkType(link.getType()).isVisible()) {
+			if (link.getType().isVisible()) {
 				//Area area = game().data().getArea(link.getAreaID());
 				visibleAreas.add(link);
 			}
@@ -296,32 +311,32 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return visibleAreas;
 	}
 
-	public Map<WorldObject, Set<Area>> getObjectVisibleLinkedAreas() {
+	public Map<WorldObject, Set<Area>> getObjectVisibleLinkedAreas(Game game) {
 		Map<WorldObject, Set<Area>> visibleAreas = new HashMap<>();
 		for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
-			visibleAreas.put(object, linkComponent.getLinkedLineOfSightAreas());
+			visibleAreas.put(object, linkComponent.getLinkedLineOfSightAreas(game));
 		}
 		return visibleAreas;
 	}
 
-	public boolean hasDirectVisibleLinkTo(Area area) {
+	public boolean hasDirectVisibleLinkTo(Area area, Game game) {
 		if (linkedAreas.containsKey(area.getID())) {
 			AreaLink link = linkedAreas.get(area.getID());
-			return game().data().getLinkType(link.getType()).isVisible();
+			return link.getType().isVisible();
 		}
 		for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
-			if (linkComponent.getLinkedLineOfSightAreas().contains(area)) {
+			if (linkComponent.getLinkedLineOfSightAreas(game).contains(area)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public AreaLink.CompassDirection getLinkDirectionTo(Area area) {
+	public AreaLink.CompassDirection getLinkDirectionTo(Area area, Game game) {
 		if (linkedAreas.containsKey(area.getID())) {
 			AreaLink link = linkedAreas.get(area.getID());
 			return link.getDirection();
@@ -329,7 +344,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
-			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedLineOfSightAreasWithDirections();
+			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedLineOfSightAreasWithDirections(game);
 			if (visibleAreasWithDirections.containsKey(area)) {
 				return visibleAreasWithDirections.get(area);
 			}
@@ -337,18 +352,18 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return null;
 	}
 
-	public AreaLink.DistanceCategory getLinearDistanceTo(Area area) {
+	public AreaLink.DistanceCategory getLinearDistanceTo(Game game, Area area) {
 		if (linkedAreas.containsKey(area.getID())) {
 			return linkedAreas.get(area.getID()).getDistance();
 		}
-		Pathfinder.VisibleAreaData areaData = Pathfinder.getLineOfSightAreas(this).get(area);
+		Pathfinder.VisibleAreaData areaData = Pathfinder.getLineOfSightAreas(game, this).get(area);
 		if (areaData == null) return null;
 		return areaData.distance();
 	}
 
-	public Set<Area> visibleAreasInRange(Actor subject, Set<AreaLink.DistanceCategory> ranges) {
+	public Set<Area> visibleAreasInRange(Game game, Actor subject, Set<AreaLink.DistanceCategory> ranges) {
 		Set<Area> areas = new HashSet<>();
-		Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(this, subject);
+		Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(game, this, subject);
 		for (Map.Entry<Area, Pathfinder.VisibleAreaData> entry : visibleAreas.entrySet()) {
 			if (ranges.contains(entry.getValue().distance())) {
 				areas.add(entry.getKey());
@@ -357,10 +372,11 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return areas;
 	}
 
-	public void applyEffects() {
+	public void applyEffects(Game game) {
 		for (Actor actor : getActors()) {
-			for (String effectID : effects.value(new HashSet<>(), Context.builder(game()).subject(actor).target(actor).build())) {
-				actor.getEffectComponent().addEffect(effectID);
+			for (String effectID : effects.value(new HashSet<>(), Context.builder(game).subject(actor).target(actor).build())) {
+				Effect effect = game.data().getEffect(effectID);
+				actor.getEffectComponent().addEffect(game, effect);
 			}
 		}
 	}
@@ -394,7 +410,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	
 	public Room getRoom() {
 		if (roomID == null) return null;
-		return game().data().getRoom(roomID);
+		if (room == null) throw new IllegalStateException("Area has not been initialized");
+		return room;
 	}
 
 	public List<Action> getAreaActions(Actor subject) {
@@ -404,7 +421,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context, Game game) {
 		return switch (name) {
 			case "inventory" -> (itemInventory == null ? null : Expression.constant(itemInventory));
 			case "noun" -> Expression.constantNoun(this);
@@ -420,32 +437,32 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Context context, Game game) {
 		return false;
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
+	public StatInt getStatInt(Game game, String name) {
 		return null;
 	}
 
 	@Override
-	public StatFloat getStatFloat(String name) {
+	public StatFloat getStatFloat(Game game, String name) {
 		return null;
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(String name) {
+	public StatBoolean getStatBoolean(Game game, String name) {
 		return null;
 	}
 
 	@Override
-	public StatString getStatString(String name) {
+	public StatString getStatString(Game game, String name) {
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(String name) {
+	public StatStringSet getStatStringSet(Game game, String name) {
 		if ("effects".equals(name)) {
 			return effects;
 		}
@@ -453,16 +470,16 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
-	public void onStatChange(String name) {
+	public void onStatChange(Game game, String name) {
 		if ("effects".equals(name)) {
-			applyEffects();
+			applyEffects(game);
 		}
 	}
 
-	public void triggerScript(String entryPoint, Actor subject, Actor target) {
+	public void triggerScript(String entryPoint, Game game, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				Context context = Context.builder(game()).subject(subject).target(target).build();
+				Context context = Context.builder(game).subject(subject).target(target).build();
 				currentScript.execute(context);
 			}
 		}

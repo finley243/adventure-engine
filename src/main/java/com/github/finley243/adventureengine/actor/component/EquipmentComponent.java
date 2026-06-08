@@ -1,7 +1,9 @@
 package com.github.finley243.adventureengine.actor.component;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentArmor;
 import com.github.finley243.adventureengine.item.component.ItemComponentEffectible;
@@ -59,33 +61,35 @@ public class EquipmentComponent {
         return true;
     }
 
-    public void equip(Item item, ItemComponentTemplateEquippable.EquippableSlotsData slotsData) {
+    public void equip(Game game, Item item, ItemComponentTemplateEquippable.EquippableSlotsData slotsData) {
         if (!actor.getEquipSlots().keySet().containsAll(slotsData.slots())) throw new UnsupportedOperationException("Specified equip slots do not exist on actor: " + actor + ", " + slotsData.slots());
         if (!item.getComponentOfType(ItemComponentEquippable.class).isValidEquipData(slotsData)) throw new UnsupportedOperationException("Invalid slots for equipping item: " + item + ", " + slotsData.slots());
         for (String slot : slotsData.slots()) {
             Item lastEquipped = equipped.get(slot);
             if (lastEquipped != null) {
-                unequip(lastEquipped);
+                unequip(game, lastEquipped);
             }
             equipped.put(slot, item);
         }
-        item.getComponentOfType(ItemComponentEquippable.class).onEquip(actor, slotsData);
+        item.getComponentOfType(ItemComponentEquippable.class).onEquip(game, actor, slotsData);
         if (item.hasComponentOfType(ItemComponentEffectible.class)) {
-            for (String equipmentEffect : actor.getEquipmentEffects(item)) {
-                item.getComponentOfType(ItemComponentEffectible.class).addEffect(equipmentEffect);
+            for (String equipmentEffectID : actor.getEquipmentEffects(item)) {
+                Effect equipmentEffect = game.data().getEffect(equipmentEffectID);
+                item.getComponentOfType(ItemComponentEffectible.class).addEffect(game, equipmentEffect);
             }
         }
     }
 
-    public void unequip(Item item) {
+    public void unequip(Game game, Item item) {
         if (getEquippedItems().contains(item)) {
             for (String slot : item.getComponentOfType(ItemComponentEquippable.class).getEquippedSlots()) {
                 equipped.remove(slot);
             }
-            item.getComponentOfType(ItemComponentEquippable.class).onUnequip(actor);
+            item.getComponentOfType(ItemComponentEquippable.class).onUnequip(game, actor);
             if (item.hasComponentOfType(ItemComponentEffectible.class)) {
-                for (String equipmentEffect : actor.getEquipmentEffects(item)) {
-                    item.getComponentOfType(ItemComponentEffectible.class).removeEffect(equipmentEffect);
+                for (String equipmentEffectID : actor.getEquipmentEffects(item)) {
+                    Effect equipmentEffect = game.data().getEffect(equipmentEffectID);
+                    item.getComponentOfType(ItemComponentEffectible.class).removeEffect(game, equipmentEffect);
                 }
             }
         }
@@ -167,11 +171,11 @@ public class EquipmentComponent {
         return damageMult;
     }
 
-    public List<Action> getEquippedActions() {
+    public List<Action> getEquippedActions(Game game) {
         List<Action> actions = new ArrayList<>();
         for (Item item : getEquippedItems()) {
             // TODO - Fix actions for multiple equipped items with the same name
-            actions.addAll(item.getComponentOfType(ItemComponentEquippable.class).equippedActions(actor));
+            actions.addAll(item.getComponentOfType(ItemComponentEquippable.class).equippedActions(game, actor));
         }
         return actions;
     }

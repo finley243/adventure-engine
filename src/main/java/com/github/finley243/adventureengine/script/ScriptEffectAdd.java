@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.Effectible;
 import com.github.finley243.adventureengine.expression.Expression;
 
@@ -18,7 +19,8 @@ public class ScriptEffectAdd extends Script{
         if (!(targetExpression.getValueStatHolder() instanceof Effectible effectibleTarget)) return new ScriptReturnData(null, null, new ScriptErrorData("Target parameter does not support effects", getTraceData()));
         if (targetExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Effect parameter is not a string", getTraceData()));
         String effectID = effectExpression.getValueString();
-        effectibleTarget.addEffect(effectID);
+        Effect effect = context.game().data().getEffect(effectID);
+        effectibleTarget.addEffect(context.game(), effect);
         return new ScriptReturnData(null, null, null);
     }
 

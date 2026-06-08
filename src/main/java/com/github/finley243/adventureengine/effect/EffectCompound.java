@@ -17,23 +17,23 @@ public class EffectCompound extends Effect {
     }
 
     @Override
-    public void start(MutableStatHolder target) {
+    public void start(Game game, MutableStatHolder target) {
         for (Effect subEffect : subEffects) {
-            subEffect.start(target);
+            subEffect.start(game, target);
         }
     }
 
     @Override
-    public void end(MutableStatHolder target) {
+    public void end(Game game, MutableStatHolder target) {
         for (Effect subEffect : subEffects) {
-            subEffect.end(target);
+            subEffect.end(game, target);
         }
     }
 
     @Override
-    public void eachRound(MutableStatHolder target) {
+    public void eachRound(Game game, MutableStatHolder target) {
         for (Effect subEffect : subEffects) {
-            subEffect.eachRound(target);
+            subEffect.eachRound(game, target);
         }
     }
 }

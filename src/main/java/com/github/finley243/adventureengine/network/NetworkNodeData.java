@@ -23,7 +23,7 @@ public class NetworkNodeData extends NetworkNode {
     }
 
     @Override
-    protected List<Action> breachedActions(Actor subject, WorldObject object) {
+    protected List<Action> breachedActions(Game game, Actor subject, WorldObject object) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionNetworkReadData(this, object));
         return actions;

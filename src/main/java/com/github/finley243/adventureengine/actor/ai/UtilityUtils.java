@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -46,8 +47,8 @@ public class UtilityUtils {
 		return 0.2f * (((float) targetsBlocked) / ((float) totalTargets));
 	}
 	
-	public static float getPursueTargetUtility(Actor subject, Actor target) {
-		if (!target.isVisible(subject) || !subject.getLineOfSightActors().contains(target)) {
+	public static float getPursueTargetUtility(Game game, Actor subject, Actor target) {
+		if (!target.isVisible(subject) || !subject.getLineOfSightActors(game).contains(target)) {
 			return PURSUE_TARGET_UTILITY_INVISIBLE;
 		} else if (subject.getEquipmentComponent().hasMeleeWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_MELEE;
@@ -58,7 +59,7 @@ public class UtilityUtils {
 		}
 	}
 
-	public static Action selectActionByUtility(Actor actor, List<Action> actions, int chaos) {
+	public static Action selectActionByUtility(Game game, Actor actor, List<Action> actions, int chaos) {
 		List<List<Action>> bestActions = new ArrayList<>(chaos + 1);
 		List<Float> maxWeights = new ArrayList<>(chaos + 1);
 		for (int i = 0; i < chaos + 1; i++) {
@@ -66,9 +67,9 @@ public class UtilityUtils {
 			maxWeights.add(0.0f);
 		}
 		for (Action currentAction : actions) {
-			if (currentAction.canChoose(actor).canChoose()) {
+			if (currentAction.canChoose(game, actor).canChoose()) {
 				float currentWeight = currentAction.utility(actor);
-				Float behaviorOverride = actor.getBehaviorComponent().actionUtilityOverride(currentAction);
+				Float behaviorOverride = actor.getBehaviorComponent().actionUtilityOverride(game, currentAction);
 				if (behaviorOverride != null) {
 					currentWeight = behaviorOverride;
 				}

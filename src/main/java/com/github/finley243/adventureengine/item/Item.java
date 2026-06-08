@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.Effectible;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.component.ItemComponent;
@@ -30,7 +31,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	private final Map<Class<? extends ItemComponent>, ItemComponent> components;
 
 	public Item(Game game, String ID, ItemTemplate template) {
-		super(game, ID);
+		super(ID);
 		this.template = template;
 		this.currentInventory = null;
 		this.components = new HashMap<>();
@@ -70,7 +71,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return getTemplate().getDescription();
 	}
 
-	public void onInit() {
+	public void onInit(Game game) {
 		for (ItemComponentTemplate componentTemplate : getTemplate().getComponents()) {
 			ItemComponent component = ItemComponentFactory.create(componentTemplate, this);
 			if (component == null) throw new UnsupportedOperationException("Cannot add null component to item " + this);
@@ -78,13 +79,13 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 				throw new UnsupportedOperationException("Item " + this + " already contains a component of type " + component.getClass());
 			}
 			components.put(component.getClass(), component);
-			component.onInit();
+			component.onInit(game);
 		}
 	}
 
-	public void onStartRound() {
+	public void onStartRound(Game game) {
 		for (ItemComponent component : components.values()) {
-			component.onStartRound();
+			component.onStartRound(game);
 		}
 	}
 
@@ -97,10 +98,10 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return components.containsKey(componentClass);
 	}
 
-	public void triggerScript(String entryPoint, Actor subject, Actor target) {
+	public void triggerScript(String entryPoint, Game game, Actor subject, Actor target) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			for (Script currentScript : getTemplate().getScripts().get(entryPoint)) {
-				Context context = Context.builder(game()).subject(subject).target(target).parentItem(this).build();
+				Context context = Context.builder(game).subject(subject).target(target).parentItem(this).build();
 				currentScript.execute(context);
 			}
 		}
@@ -123,7 +124,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return false;
     }
 	
-	public List<Action> inventoryActions(Actor subject) {
+	public List<Action> inventoryActions(Game game, Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionItemDrop(this));
 		if (subject.getInventory().itemCount(this) > 1) {
@@ -133,32 +134,32 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 			actions.add(new ActionInspectItem(this));
 		}
 		for (ItemComponent component : components.values()) {
-			actions.addAll(component.getInventoryActions(subject));
+			actions.addAll(component.getInventoryActions(game, subject));
 		}
 		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-			actions.add(new ActionCustom(game(), null, null, this, null, customAction.action(), customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
+			actions.add(new ActionCustom(game, null, null, this, null, customAction.action(), customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
 		}
 		return actions;
 	}
 
 	@Override
-	public void addEffect(String effectID) {
+	public void addEffect(Game game, Effect effect) {
 		if (hasComponentOfType(ItemComponentEffectible.class)) {
-			getComponentOfType(ItemComponentEffectible.class).addEffect(effectID);
+			getComponentOfType(ItemComponentEffectible.class).addEffect(game, effect);
 		}
 	}
 
 	@Override
-	public void removeEffect(String effectID) {
+	public void removeEffect(Game game, Effect effect) {
 		if (hasComponentOfType(ItemComponentEffectible.class)) {
-			getComponentOfType(ItemComponentEffectible.class).removeEffect(effectID);
+			getComponentOfType(ItemComponentEffectible.class).removeEffect(game, effect);
 		}
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context, Game game) {
 		for (ItemComponent component : components.values()) {
-			Expression componentValue = component.getStatValue(name, context);
+			Expression componentValue = component.getStatValue(name, context, game);
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
@@ -170,9 +171,9 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Context context, Game game) {
 		for (ItemComponent component : components.values()) {
-			boolean success = component.setStatValue(name, value, context);
+			boolean success = component.setStatValue(name, value, context, game);
 			if (success) return true;
 		}
 		return false;
@@ -199,54 +200,54 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public StatInt getStatInt(String name) {
+	public StatInt getStatInt(Game game, String name) {
 		for (ItemComponent component : components.values()) {
-			StatInt componentValue = component.getStatInt(name);
+			StatInt componentValue = component.getStatInt(game, name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatFloat getStatFloat(String name) {
+	public StatFloat getStatFloat(Game game, String name) {
 		for (ItemComponent component : components.values()) {
-			StatFloat componentValue = component.getStatFloat(name);
+			StatFloat componentValue = component.getStatFloat(game, name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(String name) {
+	public StatBoolean getStatBoolean(Game game, String name) {
 		for (ItemComponent component : components.values()) {
-			StatBoolean componentValue = component.getStatBoolean(name);
+			StatBoolean componentValue = component.getStatBoolean(game, name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatString getStatString(String name) {
+	public StatString getStatString(Game game, String name) {
 		for (ItemComponent component : components.values()) {
-			StatString componentValue = component.getStatString(name);
+			StatString componentValue = component.getStatString(game, name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(String name) {
+	public StatStringSet getStatStringSet(Game game, String name) {
 		for (ItemComponent component : components.values()) {
-			StatStringSet componentValue = component.getStatStringSet(name);
+			StatStringSet componentValue = component.getStatStringSet(game, name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public void onStatChange(String name) {
+	public void onStatChange(Game game, String name) {
 		for (ItemComponent component : components.values()) {
-			component.onStatChange(name);
+			component.onStatChange(game, name);
 		}
 	}
 

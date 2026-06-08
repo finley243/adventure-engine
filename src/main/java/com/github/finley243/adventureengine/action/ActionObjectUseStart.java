@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -34,15 +35,15 @@ public class ActionObjectUseStart extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
-		Context context = Context.builder(subject.game()).subject(subject).parentObject(component.getObject()).parentAction(this).build();
+	public Context getContext(Game game, Actor subject) {
+		Context context = Context.builder(game).subject(subject).parentObject(component.getObject()).parentAction(this).build();
 		context.setLocalVariable("slot", Expression.constant(slotID));
 		return context;
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
-		Context context = getContext(subject);
+	public void choose(Game game, int repeatActionCount, Actor subject) {
+		Context context = getContext(game, subject);
 		if (subject.isUsingObject()) {
 			subject.getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).removeUser(subject.getUsingObject().slot());
 		}
@@ -51,7 +52,7 @@ public class ActionObjectUseStart extends Action {
 		}
 		component.setUser(slotID, subject);
 		subject.setUsingObject(new ObjectComponentUsable.ObjectUserData(component.getObject(), slotID));
-		SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null));
+		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null));
 	}
 
 	@Override
@@ -68,7 +69,7 @@ public class ActionObjectUseStart extends Action {
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt(Game game, Actor subject) {
 		return component.getStartPrompt(slotID);
 	}
 

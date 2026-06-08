@@ -18,7 +18,7 @@ public class ScriptCombat extends Script{
         if (!(actorExpression.getValueStatHolder() instanceof Actor actor)) return new ScriptReturnData(null, null, new ScriptErrorData("Actor parameter is not an actor", getTraceData()));
         if (targetExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Target parameter is not a stat holder", getTraceData()));
         if (!(targetExpression.getValueStatHolder() instanceof Actor target)) return new ScriptReturnData(null, null, new ScriptErrorData("Target parameter is not an actor", getTraceData()));
-        actor.getTargetingComponent().addCombatant(target);
+        actor.getTargetingComponent().addCombatant(context.game(), target);
         return new ScriptReturnData(null, null, null);
     }
 

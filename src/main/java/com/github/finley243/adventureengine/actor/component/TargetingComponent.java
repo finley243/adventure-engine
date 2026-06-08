@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.attack.ActionAttack;
@@ -54,11 +55,13 @@ public class TargetingComponent {
     }
 
     private final Actor actor;
+    private final Context defaultContext;
     private final Map<Actor, DetectedActor> detectedActors;
     private AlertState alertState;
 
-    public TargetingComponent(Actor actor) {
+    public TargetingComponent(Game game, Actor actor) {
         this.actor = actor;
+        this.defaultContext = Context.builder(game).subject(actor).target(actor).build();
         this.detectedActors = new HashMap<>();
         this.alertState = DEFAULT_ALERT_STATE;
     }
@@ -67,14 +70,14 @@ public class TargetingComponent {
         this.alertState = state;
     }
 
-    public void updateTurn() {
-        Set<Actor> lineOfSightActors = actor.getLineOfSightActors();
+    public void updateTurn(Game game) {
+        Set<Actor> lineOfSightActors = actor.getLineOfSightActors(game);
         detectedActors.entrySet().removeIf(entry -> {
             if (lineOfSightActors.contains(entry.getKey()) && entry.getKey().isVisible(actor)) {
                 entry.getValue().lostVisualCounter = 0;
                 entry.getValue().lastKnownArea = entry.getKey().getArea();
                 if (entry.getValue().state.updateOnTurn) {
-                    updateState(entry.getKey());
+                    updateState(game, entry.getKey());
                 }
             } else {
                 if (entry.getValue().state.turnsUntilRemove != -1) {
@@ -91,11 +94,11 @@ public class TargetingComponent {
         });
     }
 
-    public void update() {
-        Set<Actor> lineOfSightActors = actor.getLineOfSightActors();
+    public void update(Game game) {
+        Set<Actor> lineOfSightActors = actor.getLineOfSightActors(game);
         for (Actor lineOfSightActor : lineOfSightActors) {
             if (lineOfSightActor.isVisible(actor)) {
-                processDetectionEvent(lineOfSightActor, getPassiveDetectionChance(lineOfSightActor));
+                processDetectionEvent(game, lineOfSightActor, getPassiveDetectionChance(game, lineOfSightActor));
             }
         }
         boolean startedInCombat = false;
@@ -105,17 +108,17 @@ public class TargetingComponent {
                 if (lineOfSightActors.contains(entry.getKey()) && entry.getKey().isVisible(actor)) {
                     entry.getValue().lastKnownArea = entry.getKey().getArea();
                 }
-                updateTargetHostile(entry.getKey(), entry.getValue());
+                updateTargetHostile(game, entry.getKey(), entry.getValue());
             }
         }
-        Context context = Context.builder(actor.game()).subject(actor).target(actor).build();
+        Context context = Context.from(defaultContext).build();
         if (startedInCombat && !hasTargetsOfType(DetectionState.HOSTILE)) {
             actor.triggerScript("on_combat_end", context);
-            actor.triggerBark("on_combat_end", context);
+            actor.triggerBark("on_combat_end", game, context);
         }
     }
 
-    private void updateTargetHostile(Actor target, DetectedActor targetData) {
+    private void updateTargetHostile(Game game, Actor target, DetectedActor targetData) {
         if (target.isDead()) {
             targetData.state = DetectionState.DEAD;
             targetData.stateCounter = 0;
@@ -124,42 +127,42 @@ public class TargetingComponent {
                 targetData.areaTarget = null;
             }
         } else if (targetData.areaTarget == null) {
-            targetData.areaTarget = new AreaTarget(idealAreas(targetData.lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, target), true);
+            targetData.areaTarget = new AreaTarget(idealAreas(game, targetData.lastKnownArea), UtilityUtils.getPursueTargetUtility(game, actor, target), true);
             actor.addPursueTarget(targetData.areaTarget);
         } else {
-            targetData.areaTarget.setTargetAreas(idealAreas(targetData.lastKnownArea));
-            targetData.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(actor, target));
+            targetData.areaTarget.setTargetAreas(idealAreas(game, targetData.lastKnownArea));
+            targetData.areaTarget.setTargetUtility(UtilityUtils.getPursueTargetUtility(game, actor, target));
         }
     }
 
-    public void updateTargetArea(Actor target, Area area) {
+    public void updateTargetArea(Game game, Actor target, Area area) {
         if (detectedActors.containsKey(target)) {
             DetectedActor combatant = detectedActors.get(target);
             combatant.lastKnownArea = area;
             if (combatant.areaTarget != null) {
-                combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
+                combatant.areaTarget.setTargetAreas(idealAreas(game, combatant.lastKnownArea));
             }
         }
     }
 
-    public void onVisibleAction(Action action, Actor subject) {
+    public void onVisibleAction(Game game, Action action, Actor subject) {
         float actionDetectionChance = getActionDetectionChance(action, subject);
-        processDetectionEvent(subject, actionDetectionChance);
-        updateTargetArea(subject, subject.getArea());
+        processDetectionEvent(game, subject, actionDetectionChance);
+        updateTargetArea(game, subject, subject.getArea());
         if (isTargetDetected(subject)) {
             if (action instanceof ActionAttack attackAction) {
                 if (subject.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.ALLY) {
                     // If attacker is an ally, add their attack targets as combatants (as long as they're not allies)
                     for (AttackTarget attackTarget : attackAction.getTargets()) {
                         if (attackTarget instanceof Actor targetActor && targetActor.getFaction().getRelationTo(actor.getFaction().getID()) != Faction.FactionRelation.ALLY) {
-                            addCombatant(targetActor);
+                            addCombatant(game, targetActor);
                         }
                     }
                 } else {
                     // If any attack target is an ally, add the attacker as a combatant (as long as they're not an ally)
                     for (AttackTarget attackTarget : attackAction.getTargets()) {
                         if (attackTarget instanceof Actor targetActor && targetActor.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.ALLY) {
-                            addCombatant(subject);
+                            addCombatant(game, subject);
                             break;
                         }
                     }
@@ -169,14 +172,14 @@ public class TargetingComponent {
         // TODO - Handle criminal action detection
     }
 
-    public void onAudibleBark(Bark bark, Actor subject, Actor target, boolean visible) {
+    public void onAudibleBark(Bark bark, Game game, Actor subject, Actor target, boolean visible) {
         if (bark.responseType() == Bark.BarkResponseType.HOSTILE && subject.getFaction().getRelationTo(actor.getFaction().getID()) == Faction.FactionRelation.ALLY) {
-            addCombatant(target);
+            addCombatant(game, target);
         }
     }
 
-    private void processDetectionEvent(Actor target, float detectionChance) {
-        Context context = Context.builder(actor.game()).subject(actor).target(target).build();
+    private void processDetectionEvent(Game game, Actor target, float detectionChance) {
+        Context context = Context.from(defaultContext).target(target).build();
         if (!detectedActors.containsKey(target) || detectedActors.get(target).state == DetectionState.DETECTING) {
             boolean detected = MathUtils.randomCheck(detectionChance);
             if (detected) {
@@ -187,12 +190,12 @@ public class TargetingComponent {
                 context.setLocalVariable("detectionRemaining", Expression.constant(eventsUntilDetected));
                 if (eventsUntilDetected <= DEDICATED_DETECTION_BARKS) {
                     for (int i = 1; i <= DEDICATED_DETECTION_BARKS; i++) {
-                        actor.triggerBark("on_update_detection_" + i, context);
+                        actor.triggerBark("on_update_detection_" + i, game, context);
                     }
                 } else {
-                    actor.triggerBark("on_update_detection", context);
+                    actor.triggerBark("on_update_detection", game, context);
                 }
-                updateState(target);
+                updateState(game, target);
             }
         } else if (detectedActors.get(target).state == DetectionState.PASSIVE && actorIsTrespassing(target)) {
             if (target.getArea().getRestrictionType() == Area.RestrictionType.HOSTILE) {
@@ -202,17 +205,17 @@ public class TargetingComponent {
             }
             detectedActors.get(target).stateCounter = 0;
             actor.triggerScript("on_target_trespassing_start", context);
-            actor.triggerBark("on_target_trespassing_start", context);
+            actor.triggerBark("on_target_trespassing_start", game, context);
         } else if (detectedActors.get(target).state == DetectionState.TRESPASSING && !actorIsTrespassing(target)) {
             detectedActors.get(target).state = DetectionState.PASSIVE;
             detectedActors.get(target).stateCounter = 0;
             actor.triggerScript("on_target_trespassing_end", context);
-            actor.triggerBark("on_target_trespassing_end", context);
+            actor.triggerBark("on_target_trespassing_end", game, context);
         }
     }
 
-    private void updateState(Actor target) {
-        Context context = Context.builder(actor.game()).subject(actor).target(target).build();
+    private void updateState(Game game, Actor target) {
+        Context context = Context.from(defaultContext).target(target).build();
         detectedActors.get(target).stateCounter += 1;
         if (detectedActors.get(target).stateCounter >= getStateTriggerValue(detectedActors.get(target).state)) {
             detectedActors.get(target).stateCounter = 0;
@@ -222,31 +225,31 @@ public class TargetingComponent {
                     if (actor.isDead()) {
                         // TODO - Limit response to actors in allied faction?
                         actor.triggerScript("on_detect_dead", context);
-                        actor.triggerBark("on_detect_dead", context);
+                        actor.triggerBark("on_detect_dead", game, context);
                         detectedActors.get(target).state = DetectionState.DEAD;
                     } else if (isTrespassing && target.getArea().getRestrictionType() == Area.RestrictionType.PRIVATE) {
                         // TODO - Limit trespassing response to allies of owner faction (and possibly just enforcers)
                         actor.triggerScript("on_detect_target_trespassing", context);
-                        actor.triggerBark("on_detect_target_trespassing", context);
+                        actor.triggerBark("on_detect_target_trespassing", game, context);
                         // TODO - Make actor follow trespasser until they leave the area?
                         detectedActors.get(target).state = DetectionState.TRESPASSING;
                     } else if (isTrespassing && target.getArea().getRestrictionType() == Area.RestrictionType.HOSTILE) {
                         actor.triggerScript("on_detect_target_hostile_area", context);
-                        actor.triggerBark("on_detect_target_hostile_area", context);
+                        actor.triggerBark("on_detect_target_hostile_area", game, context);
                         detectedActors.get(target).state = DetectionState.HOSTILE;
                     } else if (actor.getFaction().getRelationTo(target.getFaction().getID()) == Faction.FactionRelation.HOSTILE) {
                         actor.triggerScript("on_detect_target_hostile_faction", context);
-                        actor.triggerBark("on_detect_target_hostile_faction", context);
+                        actor.triggerBark("on_detect_target_hostile_faction", game, context);
                         detectedActors.get(target).state = DetectionState.HOSTILE;
                     } else {
                         actor.triggerScript("on_detect_target_passive", context);
-                        actor.triggerBark("on_detect_target_passive", context);
+                        actor.triggerBark("on_detect_target_passive", game, context);
                         detectedActors.get(target).state = DetectionState.PASSIVE;
                     }
                 }
                 case TRESPASSING -> {
                     actor.triggerScript("on_trespassing_become_hostile", context);
-                    actor.triggerBark("on_trespassing_become_hostile", context);
+                    actor.triggerBark("on_trespassing_become_hostile", game, context);
                     detectedActors.get(target).state = DetectionState.HOSTILE;
                 }
             }
@@ -258,18 +261,18 @@ public class TargetingComponent {
         if (area.getRestrictionType() == Area.RestrictionType.PUBLIC || area.getOwnerFaction() == null) {
             return false;
         }
-        Faction areaFaction = actor.game().data().getFaction(area.getOwnerFaction());
+        Faction areaFaction = area.getOwnerFaction();
         if (target.getFaction().equals(areaFaction)) {
             return false;
         }
         return !area.allowAllies() || areaFaction.getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ALLY;
     }
 
-    public void addCombatant(Actor target) {
-        Context context = Context.builder(actor.game()).subject(actor).target(target).build();
+    public void addCombatant(Game game, Actor target) {
+        Context context = Context.from(defaultContext).target(target).build();
         if (!hasTargetsOfType(DetectionState.HOSTILE)) {
             actor.triggerScript("on_combat_start", context);
-            actor.triggerBark("on_combat_start", context);
+            actor.triggerBark("on_combat_start", game, context);
         }
         if (detectedActors.containsKey(target)) {
             detectedActors.get(target).state = DetectionState.HOSTILE;
@@ -334,7 +337,7 @@ public class TargetingComponent {
         if (!subject.isSneaking()) {
             return 1.0f;
         }
-        Context context = Context.builder(actor.game()).subject(actor).target(subject).build();
+        Context context = Context.from(defaultContext).target(subject).build();
         // TODO - Allow specifying detection skill
         return switch (action.detectionChance()) {
             case LOW -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.01f, 0.50f, context);
@@ -343,11 +346,11 @@ public class TargetingComponent {
         };
     }
 
-    public float getPassiveDetectionChance(Actor subject) {
+    public float getPassiveDetectionChance(Game game, Actor subject) {
         if (!subject.isSneaking()) {
             return 1.0f;
         }
-        AreaLink.DistanceCategory distance = actor.getArea().getLinearDistanceTo(subject.getArea());
+        AreaLink.DistanceCategory distance = actor.getArea().getLinearDistanceTo(game, subject.getArea());
         if (subject.isDead()) {
             return switch (distance) {
                 case NEAR -> 0.95f;
@@ -356,7 +359,7 @@ public class TargetingComponent {
                 case DISTANT ->  0.25f;
             };
         } else {
-            Context context = Context.builder(actor.game()).subject(actor).target(subject).build();
+            Context context = Context.from(defaultContext).target(subject).build();
             return switch (distance) {
                 case NEAR -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.50f, 0.95f, context);
                 case CLOSE -> MathUtils.chanceLinearSkillInverted(subject, "stealth", 0.20f, 0.80f, context);
@@ -388,62 +391,15 @@ public class TargetingComponent {
         }
         Set<AreaLink.DistanceCategory> combinedRanges = new HashSet<>();
         for (Item weapon : equippedWeapons) {
-            combinedRanges.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(Context.builder(actor.game()).subject(actor).target(actor).parentItem(weapon).build()));
+            combinedRanges.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getRanges(Context.from(defaultContext).parentItem(weapon).build()));
         }
         return combinedRanges;
     }
 
-    private Set<Area> idealAreas(Area targetArea) {
+    private Set<Area> idealAreas(Game game, Area targetArea) {
         Set<AreaLink.DistanceCategory> idealDistances = idealDistances();
-        return targetArea.visibleAreasInRange(actor, idealDistances);
+        return targetArea.visibleAreasInRange(game, actor, idealDistances);
     }
-
-    /*public void loadState(SaveData data) {
-        if (data.getParameter().equals("targeting")) {
-            for (SaveData subData : data.getValueMulti()) {
-                switch (subData.getParameter()) {
-                    case "detected":
-                        detectionCounters.put(actor.game().data().getActor(subData.getValueString()), subData.getValueInt());
-                        break;
-                    case "combatant":
-                        Actor actor = null;
-                        Combatant combatant = new Combatant(null);
-                        for (SaveData combatantData : subData.getValueMulti()) {
-                            switch (combatantData.getParameter()) {
-                                case "actor":
-                                    actor = this.actor.game().data().getActor(combatantData.getValueString());
-                                    break;
-                                case "lastKnownArea":
-                                    combatant.lastKnownArea = this.actor.game().data().getArea(combatantData.getValueString());
-                                    break;
-                                case "turnsUntilRemove":
-                                    combatant.turnsUntilRemove = combatantData.getValueInt();
-                            }
-                        }
-                        if (actor != null) {
-                            combatants.put(actor, combatant);
-                        }
-                        break;
-                }
-            }
-        }
-    }
-
-    public List<SaveData> saveState() {
-        List<SaveData> state = new ArrayList<>();
-        for (Actor actor : detectionCounters.keySet()) {
-            state.add(new SaveData(null, null, "detected", actor.getID(), detectionCounters.get(actor)));
-        }
-        for (Actor actor : combatants.keySet()) {
-            Combatant combatant = combatants.get(actor);
-            List<SaveData> combatantData = new ArrayList<>();
-            combatantData.add(new SaveData(null, null, "actor", actor.getID()));
-            combatantData.add(new SaveData(null, null, "lastKnownArea", combatant.lastKnownArea.getID()));
-            combatantData.add(new SaveData(null, null, "turnsUntilRemove", combatant.turnsUntilRemove));
-            state.add(new SaveData(null, null, "combatant", combatantData));
-        }
-        return state;
-    }*/
 
     public static class DetectedActor {
         public DetectionState state;

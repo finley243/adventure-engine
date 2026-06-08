@@ -45,7 +45,7 @@ public class MenuManager {
 		int endTurnIndex = -1;
 		for (int i = 0; i < actions.size(); i++) {
 			Action action = actions.get(i);
-			if (!action.canShow(actor)) continue;
+			if (!action.canShow(game, actor)) continue;
 			if (action instanceof ActionEnd) {
 				endTurnIndex = i;
 				continue;
@@ -128,9 +128,9 @@ public class MenuManager {
 					if (!categoryMap.containsKey(invItemCategory)) {
 						categoryMap.put(invItemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, invItemCategory, "inventory", false, false, itemName + (itemCount > 1 ? " (" + itemCount + ")" : ""), null));
 					}
-					String combineCategory = "inv_item_" + data.item.getID() + "_combine_" + action.getPrompt(actor);
+					String combineCategory = "inv_item_" + data.item.getID() + "_combine_" + action.getPrompt(game, actor);
 					if (!categoryMap.containsKey(combineCategory)) {
-						categoryMap.put(combineCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, combineCategory, invItemCategory, false, false, action.getPrompt(actor), null));
+						categoryMap.put(combineCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, combineCategory, invItemCategory, false, false, action.getPrompt(game, actor), null));
 					}
 					parentCategory = combineCategory;
 					promptOverride = combinedItemName + (combinedItemCount > 1 ? " (" + combinedItemCount + ")" : "");
@@ -151,7 +151,7 @@ public class MenuManager {
 						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, inventoryCategory, false, !data.isStoreAction, itemName, null));
 					}
 					parentCategory = itemCategory;*/
-					promptOverride = itemName + " (" + action.getPrompt(actor) + ")";
+					promptOverride = itemName + " (" + action.getPrompt(game, actor) + ")";
 					showOnRight = !data.isStoreAction;
 					parentCategory = inventoryCategory;
 				}
@@ -171,7 +171,7 @@ public class MenuManager {
 						categoryMap.put(itemCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, itemCategory, actorCategory, false, !data.isStoreAction, itemName, null));
 					}
 					parentCategory = itemCategory;*/
-					promptOverride = itemName + " (" + action.getPrompt(actor) + ")";
+					promptOverride = itemName + " (" + action.getPrompt(game, actor) + ")";
 					showOnRight = !data.isStoreAction;
 					parentCategory = inventoryCategory;
 				}
@@ -213,7 +213,7 @@ public class MenuManager {
 					} else {
 						parentCategory = attackCategory;
 					}
-					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
+					promptOverride = action.getPrompt(game, actor) + " (" + ((ActionAttack) action).getChanceTag(game, actor) + ")";
 				}
 				case MenuDataAttackTargeted data -> {
 					String targetName = LangUtils.titleCase(((Noun) data.target).getName());
@@ -247,12 +247,12 @@ public class MenuManager {
 						weaponCategory = attackCategory;
 					}
 					String attackTypeCategory = weaponCategory + "_target_" + ((GameInstanced) data.target).getID() + "_targeted_" + ((ActionAttack) action).getAttackTypeID();
-					String attackTypeName = action.getPrompt(actor);
+					String attackTypeName = action.getPrompt(game, actor);
 					if (!categoryMap.containsKey(attackTypeCategory)) {
 						categoryMap.put(attackTypeCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, attackTypeCategory, weaponCategory, false, false, attackTypeName, null));
 					}
 					parentCategory = attackTypeCategory;
-					promptOverride = limbName + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
+					promptOverride = limbName + " (" + ((ActionAttack) action).getChanceTag(game, actor) + ")";
 				}
 				case MenuDataAttackArea data -> {
 					String targetName = LangUtils.titleCase(data.target.getName());
@@ -277,13 +277,13 @@ public class MenuManager {
 					if (!categoryMap.containsKey(targetCategory)) {
 						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, false, false, targetName, null));
 					}*/
-					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
+					promptOverride = action.getPrompt(game, actor) + " (" + ((ActionAttack) action).getChanceTag(game, actor) + ")";
 				}
 				default -> throw new IllegalStateException("Unexpected menu data: " + action.getMenuData(actor));
 			}
-			String prompt = action.getPrompt(actor);
-			int actionPoints = (actor.isRepeatAction(action) && action.repeatsUseNoActionPoints()) ? 0 : action.actionPoints(actor);
-			menuChoices.add(new MenuChoice((promptOverride != null ? promptOverride : action.getPrompt(actor)), action.canChoose(actor), actionPoints, showOnRight, parentCategory, prompt));
+			String prompt = action.getPrompt(game, actor);
+			int actionPoints = (actor.isRepeatAction(action) && action.repeatsUseNoActionPoints()) ? 0 : action.actionPoints(game, actor);
+			menuChoices.add(new MenuChoice((promptOverride != null ? promptOverride : action.getPrompt(game, actor)), action.canChoose(game, actor), actionPoints, showOnRight, parentCategory, prompt));
 		}
 		List<MenuCategory> menuCategories = new ArrayList<>(categoryMap.values());
 		ChoiceMenuInputEvent input = startChoiceMenu(game, menuChoices, menuCategories, endTurnIndex, false);

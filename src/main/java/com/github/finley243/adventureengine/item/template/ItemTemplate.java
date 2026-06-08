@@ -25,7 +25,7 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 	private final List<ActionCustom.CustomActionHolder> customActions;
 
 	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, List<Script>> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price) {
-		super(game, ID);
+		super(ID);
 		this.name = name;
 		this.description = description;
 		this.scripts = scripts;
@@ -90,7 +90,7 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context, Game game) {
 		return switch (name) {
 			case "noun" -> Expression.constantNoun(this);
 			case "price" -> Expression.constant(price);
@@ -101,7 +101,7 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Context context, Game game) {
 		return false;
 	}
 

@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.DebugLogger;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
@@ -20,15 +21,15 @@ import java.util.*;
 
 public class ObjectComponentLink extends ObjectComponent {
 
-    public ObjectComponentLink(WorldObject object, ObjectComponentTemplate template) {
-        super(object, template);
+    public ObjectComponentLink(Game game, WorldObject object, ObjectComponentTemplate template) {
+        super(game, object, template);
     }
 
     private ObjectComponentTemplateLink getTemplateLink() {
         return (ObjectComponentTemplateLink) getTemplate();
     }
 
-    public WorldObject getLinkedObject(String linkID) {
+    public WorldObject getLinkedObject(Game game, String linkID) {
         Expression linkedObjectExpression = getObject().getLocalVariable(linkID + "_object");
         if (linkedObjectExpression == null) {
             DebugLogger.print("ObjectComponentLink " + getObject() + " - linked object local variable is missing");
@@ -39,7 +40,7 @@ public class ObjectComponentLink extends ObjectComponent {
             return null;
         }
         String linkedObjectID = linkedObjectExpression.getValueString();
-        return getObject().game().data().getObject(linkedObjectID);
+        return game.data().getObject(linkedObjectID);
     }
 
     public AreaLink.CompassDirection getDirection(String linkID) {
@@ -56,48 +57,48 @@ public class ObjectComponentLink extends ObjectComponent {
         return LoadUtils.stringToEnum(directionString, AreaLink.CompassDirection.class);
     }
 
-    public boolean isLinkedAreaVisible(String linkID, Actor actor) {
+    public boolean isLinkedAreaVisible(String linkID, Game game, Actor actor) {
         ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
-        Context context = Context.builder(getObject().game()).subject(actor).target(actor).parentObject(getObject()).build();
+        Context context = Context.builder(game).subject(actor).target(actor).parentObject(getObject()).build();
         return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(context));
     }
 
-    public Set<Area> getLinkedLineOfSightAreas() {
+    public Set<Area> getLinkedLineOfSightAreas(Game game) {
         Set<Area> linkedAreas = new HashSet<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
             if (linkEntry.getValue().isVisible()) {
-                linkedAreas.add(getLinkedObject(linkEntry.getKey()).getArea());
+                linkedAreas.add(getLinkedObject(game, linkEntry.getKey()).getArea());
             }
         }
         return linkedAreas;
     }
 
-    public Map<Area, AreaLink.CompassDirection> getLinkedLineOfSightAreasWithDirections() {
+    public Map<Area, AreaLink.CompassDirection> getLinkedLineOfSightAreasWithDirections(Game game) {
         Map<Area, AreaLink.CompassDirection> linkedAreas = new HashMap<>();
-        Context context = Context.builder(getObject().game()).subject(getObject().game().data().getPlayer()).target(getObject().game().data().getPlayer()).parentObject(getObject()).build();
+        Context context = Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).parentObject(getObject()).build();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
             if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(context))) {
-                linkedAreas.put(getLinkedObject(linkEntry.getKey()).getArea(), getDirection(linkEntry.getKey()));
+                linkedAreas.put(getLinkedObject(game, linkEntry.getKey()).getArea(), getDirection(linkEntry.getKey()));
             }
         }
         return linkedAreas;
     }
 
-    public Set<Area> getLinkedAreasAudible() {
+    public Set<Area> getLinkedAreasAudible(Game game) {
         Set<Area> linkedAreas = new HashSet<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
             if (linkEntry.getValue().isVisible()) {
-                linkedAreas.add(getLinkedObject(linkEntry.getKey()).getArea());
+                linkedAreas.add(getLinkedObject(game, linkEntry.getKey()).getArea());
             }
         }
         return linkedAreas;
     }
 
-    public Set<Area> getLinkedAreasMovable() {
+    public Set<Area> getLinkedAreasMovable(Game game) {
         Set<Area> linkedAreas = new HashSet<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
             if (linkEntry.getValue().moveAction() != null) {
-                linkedAreas.add(getLinkedObject(linkEntry.getKey()).getArea());
+                linkedAreas.add(getLinkedObject(game, linkEntry.getKey()).getArea());
             }
         }
         return linkedAreas;
@@ -117,12 +118,12 @@ public class ObjectComponentLink extends ObjectComponent {
     }*/
 
     @Override
-    protected List<Action> getPossibleActions(Actor subject) {
+    protected List<Action> getPossibleActions(Game game, Actor subject) {
         List<Action> actions = new ArrayList<>();
         for (String linkID : getTemplateLink().getLinkData().keySet()) {
             ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
             if (linkData.moveAction() != null) {
-                actions.add(new ActionCustom(subject.game(), null, getObject(), null, getLinkedObject(linkID).getArea(), linkData.moveAction(), new MapBuilder<String, Script>().put("dir", Script.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(linkID).getArea(), getDirection(linkID)), true));
+                actions.add(new ActionCustom(game, null, getObject(), null, getLinkedObject(game, linkID).getArea(), linkData.moveAction(), new MapBuilder<String, Script>().put("dir", Script.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(game, linkID).getArea(), getDirection(linkID)), true));
             }
         }
         return actions;

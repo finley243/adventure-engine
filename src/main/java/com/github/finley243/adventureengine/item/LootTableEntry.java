@@ -41,7 +41,7 @@ public class LootTableEntry {
 				for (int i = 0; i < count; i++) {
 					Item itemInstance = ItemFactory.create(game, referenceID);
 					if (modTable != null && itemInstance.hasComponentOfType(ItemComponentModdable.class) && MathUtils.randomCheck(modChance)) {
-						Inventory modInventory = new Inventory(game, null);
+						Inventory modInventory = new Inventory(null);
 						game.data().getLootTable(modTable).generateItems(game, inventory);
 						for (Map.Entry<Item, Integer> entry : modInventory.getItemMap().entrySet()) {
 							Item modItem = entry.getKey();
@@ -49,14 +49,14 @@ public class LootTableEntry {
 							if (modItem.hasComponentOfType(ItemComponentMod.class)) {
 								for (int j = 0; j < modCount; j++) {
 									if (itemInstance.getComponentOfType(ItemComponentModdable.class).canInstallMod(modItem)) {
-										itemInstance.getComponentOfType(ItemComponentModdable.class).installMod(modItem);
+										itemInstance.getComponentOfType(ItemComponentModdable.class).installMod(game, modItem);
 									}
 								}
 							}
 						}
 						modInventory.clear();
 					}
-					inventory.addItem(itemInstance);
+					inventory.addItem(itemInstance, game);
 				}
 			}
 		}

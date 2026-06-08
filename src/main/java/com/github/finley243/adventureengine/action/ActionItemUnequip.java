@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
@@ -23,15 +24,15 @@ public class ActionItemUnequip extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
-        return Context.builder(subject.game()).subject(subject).parentItem(item).build();
+    public Context getContext(Game game, Actor subject) {
+        return Context.builder(game).subject(subject).parentItem(item).build();
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
-        subject.getEquipmentComponent().unequip(item);
-        Context context = getContext(subject);
-        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("unequip"), context, true, this, null));
+    public void choose(Game game, int repeatActionCount, Actor subject) {
+        subject.getEquipmentComponent().unequip(game, item);
+        Context context = getContext(game, subject);
+        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("unequip"), context, true, this, null));
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ActionItemUnequip extends Action {
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt(Game game, Actor subject) {
         return "Unequip";
     }
 

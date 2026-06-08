@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
@@ -23,8 +24,8 @@ public class ObjectComponentUsable extends ObjectComponent {
 
     private final Map<String, Actor> users;
 
-    public ObjectComponentUsable(WorldObject object, ObjectComponentTemplate template) {
-        super(object, template);
+    public ObjectComponentUsable(Game game, WorldObject object, ObjectComponentTemplate template) {
+        super(game, object, template);
         this.users = new HashMap<>();
     }
 
@@ -91,14 +92,14 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     @Override
-    public void onSetObjectArea(Area area) {
+    public void onSetObjectArea(Area area, Game game) {
         for (Actor user : users.values()) {
-            user.setArea(area);
+            user.setArea(area, game);
         }
     }
 
     @Override
-    protected List<Action> getPossibleActions(Actor subject) {
+    protected List<Action> getPossibleActions(Game game, Actor subject) {
         List<Action> actions = new ArrayList<>();
         for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
             if (!users.containsKey(slotID) && (!subject.isUsingObject() || !subject.getUsingObject().equals(this))) {
@@ -108,17 +109,17 @@ public class ObjectComponentUsable extends ObjectComponent {
         return actions;
     }
 
-    public List<Action> getUsingActions(String slotID, Actor subject) {
+    public List<Action> getUsingActions(Game game, String slotID, Actor subject) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionObjectUseEnd(this, slotID));
         for (String exposedComponentName : getTemplateUsable().getUsableSlotData().get(slotID).componentsExposed()) {
             ObjectComponent component = getObject().getComponentOfType(ObjectComponentFactory.getClassFromName(exposedComponentName));
             if (component.isEnabled()) {
-                actions.addAll(component.getPossibleActions(subject));
+                actions.addAll(component.getPossibleActions(game, subject));
             }
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsableSlotData().get(slotID).usingActions()) {
-            actions.add(new ActionCustom(getObject().game(), null, getObject(), null, null, usingAction.action(), usingAction.parameters(), new MenuDataObject(getObject()), false));
+            actions.add(new ActionCustom(game, null, getObject(), null, null, usingAction.action(), usingAction.parameters(), new MenuDataObject(getObject()), false));
         }
         return actions;
     }
@@ -129,7 +130,7 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context) {
+    public Expression getStatValue(String name, Context context, Game game) {
         if (name.startsWith("has_user_")) {
             for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
                 if (name.equals("has_user_" + slotID)) {
@@ -138,7 +139,7 @@ public class ObjectComponentUsable extends ObjectComponent {
             }
             return null;
         }
-        return super.getStatValue(name, context);
+        return super.getStatValue(name, context, game);
     }
 
     @Override

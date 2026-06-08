@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -24,7 +25,8 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	private final boolean isProperName;
 	private boolean isKnown;
 	private final Scene description;
-	private final String ownerFaction;
+	private final String ownerFactionID;
+	private Faction ownerFaction;
 	private final Area.RestrictionType restrictionType;
 	private final boolean allowAllies;
 	private final Set<Area> areas;
@@ -33,18 +35,24 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 
 	private boolean hasVisited;
 
-	public Room(Game game, String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, String ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Map<String, List<Script>> scripts) {
-		super(game, ID);
+	public Room(Game game, String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, String ownerFactionID, Area.RestrictionType restrictionType, boolean allowAllies, Map<String, List<Script>> scripts) {
+		super(ID);
 		this.name = name;
 		this.nameType = nameType;
 		this.isProperName = isProperName;
 		this.description = description;
-		this.ownerFaction = ownerFaction;
+		this.ownerFactionID = ownerFactionID;
 		this.restrictionType = restrictionType;
 		this.allowAllies = allowAllies;
 		this.areas = new HashSet<>();
 		this.hasVisited = false;
 		this.scripts = scripts;
+	}
+
+	public void onInit(Game game) {
+		if (ownerFactionID != null) {
+			this.ownerFaction = game.data().getFaction(ownerFactionID);
+		}
 	}
 
 	public void addArea(Area area) {
@@ -107,7 +115,8 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 		hasVisited = true;
 	}
 
-	public String getOwnerFaction() {
+	public Faction getOwnerFaction() {
+		if (ownerFaction == null && ownerFactionID != null) throw new IllegalStateException("Room has not been initialized");
 		return ownerFaction;
 	}
 
@@ -166,7 +175,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context) {
+	public Expression getStatValue(String name, Context context, Game game) {
 		return switch (name) {
 			case "noun" -> Expression.constantNoun(this);
 			case "name" -> Expression.constant(getName());
@@ -178,7 +187,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context) {
+	public boolean setStatValue(String name, Expression value, Context context, Game game) {
 		switch (name) {
 			case "visited" -> {
 				this.hasVisited = value.getValueBoolean();
@@ -193,10 +202,10 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 		return null;
 	}
 
-	public void triggerScript(String entryPoint, Actor subject, Actor target) {
+	public void triggerScript(String entryPoint, Game game, Actor subject, Actor target) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				Context context = Context.builder(game()).subject(subject).target(target).build();
+				Context context = Context.builder(game).subject(subject).target(target).build();
 				currentScript.execute(context);
 			}
 		}

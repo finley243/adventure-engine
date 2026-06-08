@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -33,22 +34,22 @@ public class ActionItemEquip extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
-        Context context = Context.builder(subject.game()).subject(subject).parentItem(item).build();
+    public Context getContext(Game game, Actor subject) {
+        Context context = Context.builder(game).subject(subject).parentItem(item).build();
         context.setLocalVariable("equipSlots", Expression.constant(slotsData.slots()));
         return context;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
-        subject.getEquipmentComponent().equip(item, slotsData);
-        Context context = getContext(subject);
-        SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null));
+    public void choose(Game game, int repeatActionCount, Actor subject) {
+        subject.getEquipmentComponent().equip(game, item, slotsData);
+        Context context = getContext(game, subject);
+        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null));
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose(Game game, Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(game, subject);
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -70,7 +71,7 @@ public class ActionItemEquip extends Action {
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt(Game game, Actor subject) {
         StringBuilder slotLabel = new StringBuilder();
         boolean first = true;
         for (String slot : slotsData.slots()) {

@@ -652,7 +652,7 @@ public class DataLoader {
 
         Map<String, List<Script>> areaScripts = loadScriptsWithTriggers(areaElement, "Area(" + areaID + ")");
 
-        Area area = new Area(game, areaID, landmarkID, name, nameType, nameIsPlural, description, roomID, areaOwnerFaction, restrictionType, allowAllies, linkSet, areaScripts);
+        Area area = new Area(areaID, landmarkID, name, nameType, nameIsPlural, description, roomID, areaOwnerFaction, restrictionType, allowAllies, linkSet, areaScripts);
 
         List<Element> objectElements = LoadUtils.directChildrenWithName(areaElement, "object");
         for (Element objectElement : objectElements) {
@@ -663,7 +663,7 @@ public class DataLoader {
         List<Element> itemElements = LoadUtils.directChildrenWithName(areaElement, "item");
         for (Element itemElement : itemElements) {
             Item item = loadItem(game, itemElement);
-            area.getInventory().addItem(item);
+            area.getInventory().addItem(item, game);
         }
 
         List<Element> actorElements = LoadUtils.directChildrenWithName(areaElement, "actor");

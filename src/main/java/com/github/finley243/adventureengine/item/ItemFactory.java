@@ -22,7 +22,7 @@ public class ItemFactory {
 		if (stats == null) return null;
 		Item item = new Item(game, ID, stats);
 		game.data().addItemInstance(ID, item);
-		item.onInit();
+		item.onInit(game);
 		return item;
 	}
 	

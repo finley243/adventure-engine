@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.item.Item;
@@ -22,20 +23,20 @@ public class ActionItemDrop extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
-		return Context.builder(subject.game()).subject(subject).parentItem(item).build();
+	public Context getContext(Game game, Actor subject) {
+		return Context.builder(game).subject(subject).parentItem(item).build();
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
-		subject.getInventory().removeItem(item);
-		subject.getArea().getInventory().addItem(item);
-		Context context = getContext(subject);
-		SensoryEvent.execute(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
+	public void choose(Game game, int repeatActionCount, Actor subject) {
+		subject.getInventory().removeItem(item, game);
+		subject.getArea().getInventory().addItem(item, game);
+		Context context = getContext(game, subject);
+		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
 	}
 
 	@Override
-	public int actionPoints(Actor subject) {
+	public int actionPoints(Game game, Actor subject) {
 		return 0;
 	}
 
@@ -45,7 +46,7 @@ public class ActionItemDrop extends Action {
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt(Game game, Actor subject) {
 		return "Drop";
 	}
 

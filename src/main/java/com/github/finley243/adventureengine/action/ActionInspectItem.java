@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
@@ -20,18 +21,18 @@ public class ActionInspectItem extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
-        return Context.builder(subject.game()).subject(subject).parentItem(item).build();
+    public Context getContext(Game game, Actor subject) {
+        return Context.builder(game).subject(subject).parentItem(item).build();
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
-        subject.game().menuManager().sceneMenu(subject.game(), item.getDescription(), Context.builder(subject.game()).subject(subject).target(subject).parentItem(item).build(), false);
-        item.triggerScript("on_inspect", subject, subject);
+    public void choose(Game game, int repeatActionCount, Actor subject) {
+        game.menuManager().sceneMenu(game, item.getDescription(), Context.builder(game).subject(subject).target(subject).parentItem(item).build(), false);
+        item.triggerScript("on_inspect", game, subject, subject);
     }
 
     @Override
-    public int actionPoints(Actor subject) {
+    public int actionPoints(Game game, Actor subject) {
         return 0;
     }
 
@@ -41,7 +42,7 @@ public class ActionInspectItem extends Action {
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt(Game game, Actor subject) {
         return "Inspect";
     }
 

@@ -1,8 +1,10 @@
 package com.github.finley243.adventureengine.item.component;
 
+import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionModRemove;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplateModdable;
@@ -31,8 +33,8 @@ public class ItemComponentModdable extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(subject);
+    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(game, subject);
         for (List<Item> modList : mods.values()) {
             for (Item mod : modList) {
                 actions.add(new ActionModRemove(getItem(), mod));
@@ -46,9 +48,10 @@ public class ItemComponentModdable extends ItemComponent {
         return getModdableTemplate().getModSlots().containsKey(modSlot) && (!mods.containsKey(modSlot) || mods.get(modSlot).size() < getModdableTemplate().getModSlots().get(modSlot));
     }
 
-    public void installMod(Item mod) {
+    public void installMod(Game game, Item mod) {
         for (String effectID : mod.getComponentOfType(ItemComponentMod.class).getEffects()) {
-            getItem().getComponentOfType(ItemComponentEffectible.class).addEffect(effectID);
+            Effect effect = game.data().getEffect(effectID);
+            getItem().getComponentOfType(ItemComponentEffectible.class).addEffect(game, effect);
         }
         String modSlot = mod.getComponentOfType(ItemComponentMod.class).getModSlot();
         if (!mods.containsKey(modSlot)) {
@@ -57,9 +60,10 @@ public class ItemComponentModdable extends ItemComponent {
         mods.get(modSlot).add(mod);
     }
 
-    public void removeMod(Item mod) {
+    public void removeMod(Game game, Item mod) {
         for (String effectID : mod.getComponentOfType(ItemComponentMod.class).getEffects()) {
-            getItem().getComponentOfType(ItemComponentEffectible.class).removeEffect(effectID);
+            Effect effect = game.data().getEffect(effectID);
+            getItem().getComponentOfType(ItemComponentEffectible.class).removeEffect(game, effect);
         }
         String modSlot = mod.getComponentOfType(ItemComponentMod.class).getModSlot();
         mods.get(modSlot).remove(mod);
