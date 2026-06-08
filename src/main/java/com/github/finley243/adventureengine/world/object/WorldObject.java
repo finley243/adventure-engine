@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectObject;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.Damage;
 import com.github.finley243.adventureengine.expression.*;
@@ -185,7 +186,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 				actions.addAll(component.getActions(game, subject));
 			}
 			for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-				actions.add(new ActionCustom(game, null, this, null, null, customAction.action(), customAction.parameters(), new MenuDataObject(this), false));
+				ActionTemplate customActionTemplate = game.data().getActionTemplate(customAction.action());
+				actions.add(new ActionCustom(null, this, null, null, customActionTemplate, customAction.parameters(), new MenuDataObject(this), false));
 			}
 		}
 		return actions;
@@ -203,7 +205,8 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	public List<Action> networkActions(Game game, Actor subject, NetworkNode node) {
 		List<Action> actions = new ArrayList<>();
 		for (ActionCustom.CustomActionHolder networkAction : getTemplate().getNetworkActions()) {
-			actions.add(new ActionCustom(game, null, this, null, null, networkAction.action(), networkAction.parameters(), new MenuDataNetwork(node), false));
+			ActionTemplate customNetworkActionTemplate =  game.data().getActionTemplate(networkAction.action());
+			actions.add(new ActionCustom(null, this, null, null, customNetworkActionTemplate, networkAction.parameters(), new MenuDataNetwork(node), false));
 		}
 		return actions;
 	}

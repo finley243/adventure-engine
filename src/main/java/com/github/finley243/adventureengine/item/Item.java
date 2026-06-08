@@ -137,7 +137,8 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 			actions.addAll(component.getInventoryActions(game, subject));
 		}
 		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-			actions.add(new ActionCustom(game, null, null, this, null, customAction.action(), customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
+			ActionTemplate customActionTemplate = game.data().getActionTemplate(customAction.action());
+			actions.add(new ActionCustom(null, null, this, null, customActionTemplate, customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
 		}
 		return actions;
 	}

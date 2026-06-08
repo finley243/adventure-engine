@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.LoadUtils;
@@ -123,7 +124,8 @@ public class ObjectComponentLink extends ObjectComponent {
         for (String linkID : getTemplateLink().getLinkData().keySet()) {
             ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
             if (linkData.moveAction() != null) {
-                actions.add(new ActionCustom(game, null, getObject(), null, getLinkedObject(game, linkID).getArea(), linkData.moveAction(), new MapBuilder<String, Script>().put("dir", Script.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(game, linkID).getArea(), getDirection(linkID)), true));
+                ActionTemplate linkMoveActionTemplate = game.data().getActionTemplate(linkData.moveAction());
+                actions.add(new ActionCustom(null, getObject(), null, getLinkedObject(game, linkID).getArea(), linkMoveActionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(game, linkID).getArea(), getDirection(linkID)), true));
             }
         }
         return actions;

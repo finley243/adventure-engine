@@ -19,18 +19,16 @@ import java.util.Map;
 
 public class ActionCustom extends Action {
 
-    private final Game game;
     private final Actor actor;
     private final WorldObject object;
     private final Item item;
     private final Area area;
-    private final String template;
+    private final ActionTemplate template;
     private final Map<String, Script> parameters;
     private final MenuData menuData;
     private final boolean isMove;
 
-    public ActionCustom(Game game, Actor actor, WorldObject object, Item item, Area area, String template, Map<String, Script> parameters, MenuData menuData, boolean isMove) {
-        this.game = game;
+    public ActionCustom(Actor actor, WorldObject object, Item item, Area area, ActionTemplate template, Map<String, Script> parameters, MenuData menuData, boolean isMove) {
         this.actor = actor;
         this.object = object;
         this.item = item;
@@ -52,7 +50,7 @@ public class ActionCustom extends Action {
     }
 
     public ActionTemplate getTemplate() {
-        return game.data().getActionTemplate(template);
+        return template;
     }
 
     @Override
@@ -62,7 +60,7 @@ public class ActionCustom extends Action {
 
     @Override
     public String getPrompt(Game game, Actor subject) {
-        Map<String, String> contextVars = getParameterStrings(this.game, subject);
+        Map<String, String> contextVars = getParameterStrings(game, subject);
         return LangUtils.capitalize(TextGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
     }
 
@@ -100,7 +98,7 @@ public class ActionCustom extends Action {
             return resultSuper;
         }
         for (ActionTemplate.ConditionWithMessage customCondition : getTemplate().getSelectConditions()) {
-            if (!customCondition.condition().isMet(getContextWithParameters(this.game, subject))) {
+            if (!customCondition.condition().isMet(getContextWithParameters(game, subject))) {
                 return new CanChooseResult(false, customCondition.message());
             }
         }
@@ -146,7 +144,7 @@ public class ActionCustom extends Action {
 
     @Override
     public boolean canShow(Game game, Actor subject) {
-        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(getContextWithParameters(this.game, subject));
+        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(getContextWithParameters(game, subject));
     }
 
     private Context getContextWithParameters(Game game, Actor subject) {

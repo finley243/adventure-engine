@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -36,7 +37,8 @@ public class ObjectComponentInventory extends ObjectComponent {
         actions.addAll(inventory.getExternalActions(game, getObject(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
         for (ActionCustom.CustomActionHolder customAction : getTemplateInventory().getPerItemActions()) {
             for (Item item : inventory.getItems()) {
-                actions.add(new ActionCustom(game, null, getObject(), item, null, customAction.action(), customAction.parameters(), new MenuDataObjectInventory(getObject(), item, false, false), false));
+                ActionTemplate customActionTemplate = game.data().getActionTemplate(customAction.action());
+                actions.add(new ActionCustom(null, getObject(), item, null, customActionTemplate, customAction.parameters(), new MenuDataObjectInventory(getObject(), item, false, false), false));
             }
         }
         return actions;

@@ -1,10 +1,7 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.action.ActionItemEquip;
-import com.github.finley243.adventureengine.action.ActionItemUnequip;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
@@ -91,7 +88,8 @@ public class ItemComponentEquippable extends ItemComponent {
             actions.addAll(getItem().getComponentOfType(ItemComponentFactory.getClassFromName(exposedComponent)).getPossibleInventoryActions(game, subject));
         }
         for (ActionCustom.CustomActionHolder equippedAction : equippedSlotsData.equippedActions()) {
-            actions.add(new ActionCustom(game, null, null, getItem(), null, equippedAction.action(), equippedAction.parameters(), new MenuDataInventory(getItem(), subject.getInventory()), false));
+            ActionTemplate customActionTemplate = game.data().getActionTemplate(equippedAction.action());
+            actions.add(new ActionCustom(null, null, getItem(), null, customActionTemplate, equippedAction.parameters(), new MenuDataInventory(getItem(), subject.getInventory()), false));
         }
         return actions;
     }

@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.*;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionInspectArea;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.Inventory;
@@ -255,8 +256,9 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(vehicleType) || vehicleType == null && link.isMovable()) {
-				String actionTemplate = vehicleType == null ? game.data().getLinkType(link.getTypeID()).getActorMoveAction() : game.data().getLinkType(link.getTypeID()).getVehicleMoveAction(vehicleType);
-				moveActions.add(new ActionCustom(game, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
+				String actionTemplateID = vehicleType == null ? game.data().getLinkType(link.getTypeID()).getActorMoveAction() : game.data().getLinkType(link.getTypeID()).getVehicleMoveAction(vehicleType);
+				ActionTemplate actionTemplate = game.data().getActionTemplate(actionTemplateID);
+				moveActions.add(new ActionCustom(null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
 			}
 		}
 		return moveActions;

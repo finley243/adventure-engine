@@ -2,10 +2,7 @@ package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.action.ActionObjectUseEnd;
-import com.github.finley243.adventureengine.action.ActionObjectUseStart;
+import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
@@ -119,7 +116,8 @@ public class ObjectComponentUsable extends ObjectComponent {
             }
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsableSlotData().get(slotID).usingActions()) {
-            actions.add(new ActionCustom(game, null, getObject(), null, null, usingAction.action(), usingAction.parameters(), new MenuDataObject(getObject()), false));
+            ActionTemplate usingActionTemplate = game.data().getActionTemplate(usingAction.action());
+            actions.add(new ActionCustom(null, getObject(), null, null, usingActionTemplate, usingAction.parameters(), new MenuDataObject(getObject()), false));
         }
         return actions;
     }
