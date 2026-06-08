@@ -361,7 +361,7 @@ public class Data {
 
 	public void addLinkType(String id, LinkType value) {
 		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add link type with blank ID");
-		if(actionTemplates.containsKey(id)) throw new IllegalArgumentException("Cannot add link type with existing ID: " + id);
+		if(linkTypes.containsKey(id)) throw new IllegalArgumentException("Cannot add link type with existing ID: " + id);
 		linkTypes.put(id, value);
 	}
 
