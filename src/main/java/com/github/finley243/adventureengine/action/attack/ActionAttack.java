@@ -172,6 +172,9 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     @Override
     public boolean onStart(Game game, Actor subject, int repeatActionCount) {
         for (AttackTarget target : targets) {
+            if (subject.isPlayer() && target instanceof Noun targetNoun) {
+                targetNoun.setKnown();
+            }
             subject.triggerScript("on_attack", Context.builder(game).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build());
         }
         consumeAmmo(game, subject);

@@ -43,6 +43,9 @@ public class ActionObjectUseStart extends Action {
 	
 	@Override
 	public void choose(Game game, int repeatActionCount, Actor subject) {
+		if (subject.isPlayer()) {
+			component.getObject().setKnown();
+		}
 		Context context = getContext(game, subject);
 		if (subject.isUsingObject()) {
 			subject.getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).removeUser(subject.getUsingObject().slot());

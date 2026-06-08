@@ -28,6 +28,9 @@ public class ActionCarryActorStart extends Action {
 
     @Override
     public void choose(Game game, int repeatActionCount, Actor subject) {
+        if (subject.isPlayer()) {
+            carriedActor.setKnown();
+        }
         subject.setCarriedActor(carriedActor);
         Context context = Context.builder(game).subject(subject).target(carriedActor).build();
         SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("pickUpActor"), context, true, this, null));

@@ -66,6 +66,17 @@ public class ActionCustom extends Action {
 
     @Override
     public void choose(Game game, int repeatActionCount, Actor subject) {
+        if (subject.isPlayer()) {
+            if (object != null) {
+                object.setKnown();
+            }
+            if (item != null) {
+                item.setKnown();
+            }
+            if (actor != null) {
+                actor.setKnown();
+            }
+        }
         if (getTemplate().getScript() != null) {
             Context context = getContextWithParameters(game, subject);
             Script.ScriptReturnData actionScriptResult = getTemplate().getScript().execute(context);

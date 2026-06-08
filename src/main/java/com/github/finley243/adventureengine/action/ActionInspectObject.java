@@ -27,6 +27,9 @@ public class ActionInspectObject extends Action {
 	
 	@Override
 	public void choose(Game game, int repeatActionCount, Actor subject) {
+		if (subject.isPlayer()) {
+			object.setKnown();
+		}
 		Context context = getContext(game, subject);
 		game.menuManager().sceneMenu(game, object.getDescription(), context, false);
 		object.triggerScript("on_inspect", context);
