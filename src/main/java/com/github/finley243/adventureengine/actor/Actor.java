@@ -406,7 +406,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public void damage(Game game, Damage damage, Context context) {
+	public ComputedDamage applyEffectsAndComputeDamage(Game game, Damage damage, Context context) {
 		for (String effectID : damage.getTargetEffects()) {
 			Effect effect = game.data().getEffect(effectID);
 			getEffectComponent().addEffect(game, effect);
@@ -435,7 +435,13 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (damage.getLimb() != null && amount > 0) {
 			damage.getLimb().applyEffects(game, this);
 		}
-		modifyHP(game, -amount, context);
+		//modifyHP(game, -amount, context);
+		return new ComputedDamage(amount);
+	}
+
+	@Override
+	public void applyDamage(Game game, ComputedDamage computedDamage, Context context) {
+		modifyHP(game, -computedDamage.amount(), context);
 	}
 
 	public void modifyHP(Game game, int amount, Context context) {

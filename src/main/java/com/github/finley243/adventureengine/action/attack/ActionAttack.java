@@ -197,9 +197,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
         context.setLocalVariable("success", Expression.constant(true));
         context.setLocalVariable("damage", Expression.constant(damage));
-        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
-        target.damage(game, damageData, context);
+        AttackTarget.ComputedDamage computedDamage = target.applyEffectsAndComputeDamage(game, damageData, context);
+        context.setLocalVariable("finalDamage", Expression.constant(computedDamage.amount()));
+        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
+        target.applyDamage(game, computedDamage, context);
         subject.triggerScript("on_attack_success", context);
     }
 

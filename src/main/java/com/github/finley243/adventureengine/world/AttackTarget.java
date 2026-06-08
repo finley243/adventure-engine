@@ -10,10 +10,14 @@ public interface AttackTarget {
 
     boolean canBeAttacked();
 
-    void damage(Game game, Damage damage, Context context);
+    ComputedDamage applyEffectsAndComputeDamage(Game game, Damage damage, Context context);
+
+    void applyDamage(Game game, ComputedDamage computedDamage, Context context);
 
     Area getArea();
 
     boolean isVisible(Actor subject);
+
+    public record ComputedDamage(int amount) {}
 
 }

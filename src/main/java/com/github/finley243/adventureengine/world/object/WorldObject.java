@@ -105,11 +105,16 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public void damage(Game game, Damage damage, Context context) {
+	public ComputedDamage applyEffectsAndComputeDamage(Game game, Damage damage, Context context) {
 		int amount = damage.getAmount();
 		amount -= Math.round(getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult());
 		amount -= Math.round(amount * getTemplate().getDamageMult(damage.getType()));
-		HP -= amount;
+		return new ComputedDamage(amount);
+	}
+
+	@Override
+	public void applyDamage(Game game, ComputedDamage computedDamage, Context context) {
+		HP -= computedDamage.amount();
 		Context objectContext = Context.from(context).clearVariables().build();
 		if (HP <= 0) {
 			HP = 0;
