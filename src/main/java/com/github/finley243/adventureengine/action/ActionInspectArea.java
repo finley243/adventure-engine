@@ -93,8 +93,8 @@ public class ActionInspectArea extends Action {
         if (area.getRoom() != null && area.getRoom().getDescription() != null) {
             game.menuManager().sceneMenu(game, area.getRoom().getDescription(), Context.builder(game).subject(subject).target(subject).build(), false);
             area.getRoom().setKnown();
-            for (Area area : area.getRoom().getAreas()) {
-                area.setKnown();
+            for (Area roomArea : area.getRoom().getAreas()) {
+                roomArea.setKnown();
             }
         }
         if (area.getDescription() != null) {
