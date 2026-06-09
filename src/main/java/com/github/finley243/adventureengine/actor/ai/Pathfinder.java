@@ -55,7 +55,6 @@ public class Pathfinder {
 				if (linkComponent == null) continue;
 				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
 			}
-			Collections.shuffle(linkedAreasGlobal);
 			for (Area linkedArea : linkedAreasGlobal) {
 				if (!hasVisited.contains(linkedArea)) {
 					List<Area> linkedPath = new ArrayList<>(currentPath);
@@ -81,7 +80,6 @@ public class Pathfinder {
 
 	public static Map<Area, VisibleAreaData> getLineOfSightAreas(Game game, Area origin) {
 		Map<Area, VisibleAreaData> visibleAreas = new HashMap<>();
-		//List<Area> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
 		Map<String, AreaQueueData> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
 		Map<Area, AreaPathData> visibleMap = new HashMap<>();
 		for (Map.Entry<String, AreaQueueData> currentAreaEntry : possiblyVisibleAreas.entrySet()) {
@@ -125,12 +123,10 @@ public class Pathfinder {
 
 	private static Map<String, AreaQueueData> getPossiblyVisibleAreas(Area origin, int range) {
 		Map<String, AreaQueueData> possiblyVisibleAreas = new LinkedHashMap<>();
-		//Set<String> possiblyVisibleAreaSet = new HashSet<>();
 		Queue<AreaQueueData> areaQueue = new LinkedList<>();
 		List<PathData> originPathData = new ArrayList<>();
 		originPathData.add(new PathDataArea(origin));
 		areaQueue.add(new AreaQueueData(origin, 0, originPathData));
-		//possiblyVisibleAreaSet.add(origin.getID());
 		while (!areaQueue.isEmpty()) {
 			AreaQueueData currentAreaData = areaQueue.remove();
 			Area currentArea = currentAreaData.area();
@@ -146,7 +142,6 @@ public class Pathfinder {
 						extendedPathData.add(new PathDataArea(linkedArea));
 						AreaQueueData linkedAreaData = new AreaQueueData(linkedArea, currentDistance + 1, extendedPathData);
 						areaQueue.add(linkedAreaData);
-						//possiblyVisibleAreaSet.add(areaLink.getAreaID());
 					}
 				}
 			}
@@ -235,7 +230,6 @@ public class Pathfinder {
 					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
 				}
 			}
-			Collections.shuffle(linkedAreasGlobal);
 			for (Area linkedArea : linkedAreasGlobal) {
 				if (!visited.contains(linkedArea)) {
 					areaQueue.add(linkedArea);
