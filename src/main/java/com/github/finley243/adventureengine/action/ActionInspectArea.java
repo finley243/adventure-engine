@@ -13,7 +13,6 @@ import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.PluralNoun;
 import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.path.PathDataArea;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -42,15 +41,15 @@ public class ActionInspectArea extends Action {
     public void choose(Game game, int repeatActionCount, Actor subject) {
         Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(game, area, subject);
         List<Area> orderedAreaList = new ArrayList<>(visibleAreas.keySet());
-        orderedAreaList.sort(Comparator.comparingInt(a -> visibleAreas.get(a).pathData().size()));
+        orderedAreaList.sort(Comparator.comparingInt(a -> visibleAreas.get(a).path().size()));
         TextGen.clearContext();
         for (Area currentArea : orderedAreaList) {
             Pathfinder.VisibleAreaData areaData = visibleAreas.get(currentArea);
             String directionName = areaData.direction() != null ? areaData.direction().name : null;
             Context context = Context.builder(game).subject(subject).target(subject).build();
             Area leadingArea = null;
-            if (areaData.pathData().size() > 3) {
-                leadingArea = ((PathDataArea) areaData.pathData().get(areaData.pathData().size() - 3)).getArea();
+            if (areaData.path().size() > 2) {
+                leadingArea = areaData.path().get(areaData.path().size() - 2);
             }
             context.setLocalVariable("relativeName", Expression.constant(currentArea.getRelativeName()));
             context.setLocalVariable("area", Expression.constantNoun(currentArea));

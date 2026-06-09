@@ -6,9 +6,6 @@ import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
-import com.github.finley243.adventureengine.world.path.PathData;
-import com.github.finley243.adventureengine.world.path.PathDataArea;
-import com.github.finley243.adventureengine.world.path.PathDataAreaLink;
 
 import java.util.*;
 
@@ -84,9 +81,9 @@ public class Pathfinder {
 		for (Map.Entry<String, AreaQueueData> currentAreaEntry : possiblyVisibleAreas.entrySet()) {
 			Area currentArea = currentAreaEntry.getValue().area();
 			if (currentArea.equals(origin)) {
-				List<PathData> pathData = new ArrayList<>();
-				pathData.add(new PathDataArea(origin));
-				visibleAreas.put(currentArea, new VisibleAreaData(null, Area.pathLengthToDistance(0), pathData));
+				List<Area> path = new ArrayList<>();
+				path.add(origin);
+				visibleAreas.put(currentArea, new VisibleAreaData(null, Area.pathLengthToDistance(0), path));
 				visibleMap.put(currentArea, new AreaPathData(null, true, 0));
 			} else {
 				for (Area visibleArea : new HashSet<>(visibleMap.keySet())) {
@@ -110,7 +107,7 @@ public class Pathfinder {
 				}
 				if (visibleMap.containsKey(currentArea)) {
 					if (visibleMap.get(currentArea).visibleLinkCount >= 2 || visibleMap.get(currentArea).hasLinearPath) {
-						visibleAreas.put(currentArea, new VisibleAreaData(visibleMap.get(currentArea).direction, Area.pathLengthToDistance(visibleMap.get(currentArea).minPathLength), currentAreaEntry.getValue().pathData()));
+						visibleAreas.put(currentArea, new VisibleAreaData(visibleMap.get(currentArea).direction, Area.pathLengthToDistance(visibleMap.get(currentArea).minPathLength), currentAreaEntry.getValue().path()));
 					} else {
 						visibleMap.remove(currentArea);
 					}
@@ -123,23 +120,22 @@ public class Pathfinder {
 	private static Map<String, AreaQueueData> getPossiblyVisibleAreas(Area origin, int range) {
 		Map<String, AreaQueueData> possiblyVisibleAreas = new LinkedHashMap<>();
 		Queue<AreaQueueData> areaQueue = new LinkedList<>();
-		List<PathData> originPathData = new ArrayList<>();
-		originPathData.add(new PathDataArea(origin));
-		areaQueue.add(new AreaQueueData(origin, 0, originPathData));
+		List<Area> originPath = new ArrayList<>();
+		originPath.add(origin);
+		areaQueue.add(new AreaQueueData(origin, 0, originPath));
 		while (!areaQueue.isEmpty()) {
 			AreaQueueData currentAreaData = areaQueue.remove();
 			Area currentArea = currentAreaData.area();
 			int currentDistance = currentAreaData.distance();
-			List<PathData> currentPathData = currentAreaData.pathData;
-			possiblyVisibleAreas.put(currentArea.getID(), new AreaQueueData(currentArea, currentDistance, currentPathData));
+			List<Area> currentPath = currentAreaData.path();
+			possiblyVisibleAreas.put(currentArea.getID(), new AreaQueueData(currentArea, currentDistance, currentPath));
 			if (currentDistance < range) {
 				for (AreaLink areaLink : currentArea.getDirectVisibleLinkedAreas()) {
 					if (!possiblyVisibleAreas.containsKey(areaLink.getArea().getID())) {
 						Area linkedArea = areaLink.getArea();
-						List<PathData> extendedPathData = new ArrayList<>(currentPathData);
-						extendedPathData.add(new PathDataAreaLink(areaLink));
-						extendedPathData.add(new PathDataArea(linkedArea));
-						AreaQueueData linkedAreaData = new AreaQueueData(linkedArea, currentDistance + 1, extendedPathData);
+						List<Area> extendedPath = new ArrayList<>(currentPath);
+						extendedPath.add(linkedArea);
+						AreaQueueData linkedAreaData = new AreaQueueData(linkedArea, currentDistance + 1, extendedPath);
 						areaQueue.add(linkedAreaData);
 					}
 				}
@@ -271,7 +267,7 @@ public class Pathfinder {
 		return null;
 	}
 
-	private record AreaQueueData(Area area, int distance, List<PathData> pathData) {}
+	private record AreaQueueData(Area area, int distance, List<Area> path) {}
 
 	private static class AreaPathData {
 
@@ -289,6 +285,6 @@ public class Pathfinder {
 
 	}
 
-	public record VisibleAreaData(AreaLink.CompassDirection direction, AreaLink.DistanceCategory distance, List<PathData> pathData) {}
+	public record VisibleAreaData(AreaLink.CompassDirection direction, AreaLink.DistanceCategory distance, List<Area> path) {}
 
 }

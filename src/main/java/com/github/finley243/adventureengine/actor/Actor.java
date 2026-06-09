@@ -31,7 +31,6 @@ import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
-import com.github.finley243.adventureengine.world.path.PathDataArea;
 
 import java.util.*;
 import java.util.function.Function;
@@ -838,7 +837,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public Map<Area, Pathfinder.VisibleAreaData> getVisibleAreas(Game game) {
 		if (isUsingObject() && !getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanSeeOtherAreas(getUsingObject().slot())) {
-			return Map.of(getArea(), new Pathfinder.VisibleAreaData(null, Area.pathLengthToDistance(0), List.of(new PathDataArea(getArea()))));
+			return Map.of(getArea(), new Pathfinder.VisibleAreaData(null, Area.pathLengthToDistance(0), List.of(getArea())));
 		} else {
 			return Pathfinder.getVisibleAreas(game, getArea(), this);
 		}
