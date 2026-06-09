@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai;
 
 import com.github.finley243.adventureengine.Game;
-import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -37,30 +36,30 @@ public class Pathfinder {
 	 */
 	public static List<Area> findPath(Game game, Area startArea, Set<Area> targetAreas, String vehicleType) {
 		if (targetAreas.contains(startArea)) return Collections.singletonList(startArea);
-		Set<Area> hasVisited = new HashSet<>();
-		Queue<List<Area>> paths = new LinkedList<>();
-		List<Area> startPath = new ArrayList<>();
-		startPath.add(startArea);
-		paths.add(startPath);
-		hasVisited.add(startArea);
-		while (!paths.isEmpty()) {
-			List<Area> currentPath = paths.remove();
-			Area pathEnd = currentPath.get(currentPath.size() - 1);
-			if (targetAreas.contains(pathEnd)) {
-				return currentPath;
+		Map<Area, Area> predecessors = new HashMap<>();
+		Queue<Area> queue = new LinkedList<>();
+		queue.add(startArea);
+		predecessors.put(startArea, null);
+		while (!queue.isEmpty()) {
+			Area currentArea = queue.remove();
+			if (targetAreas.contains(currentArea)) {
+				List<Area> path = new ArrayList<>();
+				for (Area pathArea = currentArea; pathArea != null; pathArea = predecessors.get(pathArea)) {
+					path.add(pathArea);
+				}
+				Collections.reverse(path);
+				return path;
 			}
-			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(vehicleType));
-			for (WorldObject object : pathEnd.getObjects()) {
+			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas(vehicleType));
+			for (WorldObject object : currentArea.getObjects()) {
 				ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 				if (linkComponent == null) continue;
 				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
 			}
 			for (Area linkedArea : linkedAreasGlobal) {
-				if (!hasVisited.contains(linkedArea)) {
-					List<Area> linkedPath = new ArrayList<>(currentPath);
-					linkedPath.add(linkedArea);
-					paths.add(linkedPath);
-					hasVisited.add(linkedArea);
+				if (!predecessors.containsKey(linkedArea)) {
+					predecessors.put(linkedArea, currentArea);
+					queue.add(linkedArea);
 				}
 			}
 		}
@@ -150,77 +149,58 @@ public class Pathfinder {
 	}
 
 	// TODO - Should use reachable areas, not movable areas
-	public static Set<Area> areasInRange(Area origin, int range) {
-		Queue<List<Area>> paths = new LinkedList<>();
-		List<Area> startPath = new ArrayList<>();
-		Set<Area> areasInRange = new HashSet<>();
-		startPath.add(origin);
-		paths.add(startPath);
-		areasInRange.add(origin);
-		while (!paths.isEmpty()) {
-			List<Area> currentPath = paths.remove();
-			Area pathEnd = currentPath.get(currentPath.size() - 1);
-			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(null));
-			for (Area linkedArea : linkedAreasGlobal) {
-				if (!areasInRange.contains(linkedArea)) {
-					if (currentPath.size() - 1 < range) {
-						List<Area> linkedPath = new ArrayList<>(currentPath);
-						linkedPath.add(linkedArea);
-						paths.add(linkedPath);
-						areasInRange.add(linkedArea);
-					}
-				}
-			}
-		}
-		return areasInRange;
-	}
-
-	// TODO - Should use reachable areas, not movable areas
-	public static Set<Actor> actorsInRange(Game game, Area origin, int range, boolean useObjectLinks) {
-		Set<Area> visited = new HashSet<>();
-		Queue<List<Area>> paths = new LinkedList<>();
-		List<Area> startPath = new ArrayList<>();
-		Set<Actor> actorsInRange = new HashSet<>();
-		startPath.add(origin);
-		paths.add(startPath);
-		visited.add(origin);
-		while (!paths.isEmpty()) {
-			List<Area> currentPath = paths.remove();
-			Area pathEnd = currentPath.get(currentPath.size() - 1);
-			actorsInRange.addAll(pathEnd.getActors());
-			List<Area> linkedAreasGlobal = new ArrayList<>(pathEnd.getMovableAreas(null));
+	public static Set<Area> areasInRange(Game game, Area origin, int range, boolean useObjectLinks) {
+		Map<Area, Integer> visited = new HashMap<>();
+		Queue<Area> queue = new LinkedList<>();
+		queue.add(origin);
+		visited.put(origin, 0);
+		while (!queue.isEmpty()) {
+			Area currentArea = queue.remove();
+			int currentDepth = visited.get(currentArea);
+			if (currentDepth >= range) continue;
+			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas(null));
 			if (useObjectLinks) {
-				for (WorldObject object : pathEnd.getObjects()) {
+				for (WorldObject object : currentArea.getObjects()) {
 					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 					if (linkComponent == null) continue;
 					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
 				}
 			}
 			for (Area linkedArea : linkedAreasGlobal) {
-				if (!visited.contains(linkedArea)) {
-					if (currentPath.size() - 1 < range) {
-						List<Area> linkedPath = new ArrayList<>(currentPath);
-						linkedPath.add(linkedArea);
-						paths.add(linkedPath);
-						visited.add(linkedArea);
-					}
+				if (!visited.containsKey(linkedArea)) {
+					queue.add(linkedArea);
+					visited.put(linkedArea, currentDepth + 1);
 				}
 			}
+		}
+		return visited.keySet();
+	}
+
+	// TODO - Should use reachable areas, not movable areas
+	public static Set<Actor> actorsInRange(Game game, Area origin, int range, boolean useObjectLinks) {
+		Set<Actor> actorsInRange = new HashSet<>();
+		for (Area area : areasInRange(game, origin, range, useObjectLinks)) {
+			actorsInRange.addAll(area.getActors());
 		}
 		return actorsInRange;
 	}
 
 	// TODO - Should use reachable areas, not movable areas
-	public static Actor nearestActor(Game game, Area origin, boolean useObjectLinks) {
-		Set<Area> visited = new HashSet<>();
-		Queue<Area> areaQueue = new LinkedList<>();
-		areaQueue.add(origin);
-		visited.add(origin);
-		while (!areaQueue.isEmpty()) {
-			Area currentArea = areaQueue.remove();
+	public static Set<Actor> nearestActors(Game game, Area origin, boolean useObjectLinks) {
+		Map<Area, Integer> visited = new HashMap<>();
+		Queue<Area> queue = new LinkedList<>();
+		queue.add(origin);
+		visited.put(origin, 0);
+		Set<Actor> nearestActors = new HashSet<>();
+		int nearestDepth = Integer.MAX_VALUE;
+		while (!queue.isEmpty()) {
+			Area currentArea = queue.remove();
+			int currentDepth = visited.get(currentArea);
+			if (currentDepth > nearestDepth) break;
 			Set<Actor> currentAreaActors = currentArea.getActors();
 			if (!currentAreaActors.isEmpty()) {
-				return MathUtils.selectRandomFromSet(currentAreaActors);
+				nearestDepth = currentDepth;
+				nearestActors.addAll(currentAreaActors);
 			}
 			List<Area> linkedAreasGlobal = new ArrayList<>(currentArea.getMovableAreas(null));
 			if (useObjectLinks) {
@@ -231,13 +211,13 @@ public class Pathfinder {
 				}
 			}
 			for (Area linkedArea : linkedAreasGlobal) {
-				if (!visited.contains(linkedArea)) {
-					areaQueue.add(linkedArea);
-					visited.add(linkedArea);
+				if (!visited.containsKey(linkedArea)) {
+					queue.add(linkedArea);
+					visited.put(linkedArea, currentDepth + 1);
 				}
 			}
 		}
-		return null;
+		return nearestActors.isEmpty() ? null : nearestActors;
 	}
 
 	private static AreaLink.CompassDirection combinedDirection(AreaLink.CompassDirection dir1, AreaLink.CompassDirection dir2) {
