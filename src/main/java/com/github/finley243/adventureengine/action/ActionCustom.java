@@ -67,6 +67,9 @@ public class ActionCustom extends Action {
     @Override
     public void choose(Game game, int repeatActionCount, Actor subject) {
         if (subject.isPlayer()) {
+            if (area != null) {
+                area.setKnown();
+            }
             if (object != null) {
                 object.setKnown();
             }
