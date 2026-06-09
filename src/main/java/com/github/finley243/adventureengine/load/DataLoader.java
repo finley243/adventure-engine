@@ -31,6 +31,7 @@ import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.*;
+import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -141,6 +142,10 @@ public class DataLoader {
                                     SenseType senseType = loadSenseType(currentElement);
                                     game.data().addSenseType(senseType.ID(), senseType);
                                 }
+                                case "obstructionType" -> {
+                                    ObstructionType obstructionType = loadObstructionType(currentElement);
+                                    game.data().addObstructionType(obstructionType.ID(), obstructionType);
+                                }
                             }
                         }
                         currentChild = currentChild.getNextSibling();
@@ -184,8 +189,15 @@ public class DataLoader {
 
     private static SenseType loadSenseType(Element element) {
         String ID = LoadUtils.attribute(element, "id", null);
+        String name = LoadUtils.singleTag(element, "name", null);
+        Set<String> bypassedObstructionTypes = LoadUtils.setOfTags(element, "bypassedObstructionType");
+        return new SenseType(ID, name, bypassedObstructionTypes);
+    }
+
+    private static ObstructionType loadObstructionType(Element element) {
+        String ID = LoadUtils.attribute(element, "id", null);
         String name = element.getTextContent();
-        return new SenseType(ID, name);
+        return new ObstructionType(ID, name);
     }
 
     private static ActorTemplate loadActor(Game game, Element actorElement) throws GameDataException {
@@ -650,9 +662,11 @@ public class DataLoader {
             linkSet.put(linkAreaID, link);
         }
 
+        Set<String> defaultObstructionTypes = LoadUtils.setOfTags(areaElement, "obstructionType");
+
         Map<String, List<Script>> areaScripts = loadScriptsWithTriggers(areaElement, "Area(" + areaID + ")");
 
-        Area area = new Area(areaID, landmarkID, name, nameType, nameIsPlural, description, roomID, areaOwnerFaction, restrictionType, allowAllies, linkSet, areaScripts);
+        Area area = new Area(areaID, landmarkID, name, nameType, nameIsPlural, description, roomID, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);
 
         List<Element> objectElements = LoadUtils.directChildrenWithName(areaElement, "object");
         for (Element objectElement : objectElements) {

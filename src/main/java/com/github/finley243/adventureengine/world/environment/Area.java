@@ -9,7 +9,9 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
+import com.github.finley243.adventureengine.actor.component.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.effect.Effectible;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -26,7 +28,7 @@ import java.util.*;
 /**
  * Represents a section of a room that can contain objects and actors
  */
-public class Area extends GameInstanced implements Noun, MutableStatHolder {
+public class Area extends GameInstanced implements Noun, MutableStatHolder, Effectible {
 
 	public enum RestrictionType {
 		PUBLIC, PRIVATE, HOSTILE
@@ -66,9 +68,14 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	// Inventory containing all items in the area (that are not in object or actor inventories)
 	private final Inventory itemInventory;
 
+	private EffectComponent effectComponent;
+
 	private final StatStringSet effects;
+
+	private final Set<String> defaultObstructions;
+	private final StatStringSet obstructions;
 	
-	public Area(String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, String roomID, String ownerFactionID, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Map<String, List<Script>> scripts) {
+	public Area(String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, String roomID, String ownerFactionID, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
 		super(ID);
 		this.landmarkID = landmarkID;
 		this.name = name;
@@ -85,6 +92,25 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		this.itemInventory = new Inventory(null);
 		this.scripts = scripts;
 		this.effects = new StatStringSet("effects", this);
+		this.defaultObstructions = defaultObstructions;
+		this.obstructions = new StatStringSet("obstructions", this);
+	}
+
+	public void onInit(Game game) {
+		if (roomID != null) {
+			room = game.data().getRoom(roomID);
+			room.addArea(this);
+		}
+		if (landmarkID != null) {
+			landmark = game.data().getObject(landmarkID);
+		}
+		if (ownerFactionID != null) {
+			ownerFaction = game.data().getFaction(ownerFactionID);
+		}
+		for (AreaLink link : linkedAreas.values()) {
+			link.init(game);
+		}
+		this.effectComponent = new EffectComponent(this, Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).parentArea(this).build());
 	}
 
 	public WorldObject getLandmark() {
@@ -173,25 +199,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		};
 	}
 
-	public void onInit(Game game) {
-		if (roomID != null) {
-			room = game.data().getRoom(roomID);
-			room.addArea(this);
-		}
-		if (landmarkID != null) {
-			landmark = game.data().getObject(landmarkID);
-		}
-		if (ownerFactionID != null) {
-			ownerFaction = game.data().getFaction(ownerFactionID);
-		}
-		for (AreaLink link : linkedAreas.values()) {
-			link.init(game);
-		}
-	}
-
 	public void onStartRound(Game game) {
 		applyEffects(game);
 		getInventory().onStartRound(game);
+		effectComponent.onStartRound(game);
 	}
 	
 	public Set<WorldObject> getObjects(){
@@ -288,14 +299,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		return true;
 	}
 
-	public boolean hasLineOfSightObstruction() {
-		return false;
-	}
-
-	public ObstructionData getLineOfSightObstruction() {
-		return null;
-	}
-
 	public Set<AreaLink> getDirectVisibleLinkedAreas() {
 		Set<AreaLink> visibleAreas = new HashSet<>();
 		for (AreaLink link : linkedAreas.values()) {
@@ -358,7 +361,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		if (linkedAreas.containsKey(area.getID())) {
 			return linkedAreas.get(area.getID()).getDistance();
 		}
-		Pathfinder.VisibleAreaData areaData = Pathfinder.getLineOfSightAreas(game, this).get(area);
+		Pathfinder.VisibleAreaData areaData = Pathfinder.getLineOfSightAreas(game, this, Set.of(), true).get(area);
 		if (areaData == null) return null;
 		return areaData.distance();
 	}
@@ -381,6 +384,15 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 				actor.getEffectComponent().addEffect(game, effect);
 			}
 		}
+	}
+
+	public Set<String> getObstructions(Game game) {
+		return obstructions.value(defaultObstructions, Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).parentArea(this).build());
+	}
+
+	public boolean hasUnbypassedObstruction(Game game, Set<String> bypassedObstructions) {
+		Set<String> activeObstructions = getObstructions(game);
+		return !bypassedObstructions.containsAll(activeObstructions);
 	}
 
 	@Override
@@ -423,6 +435,16 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	}
 
 	@Override
+	public void addEffect(Game game, Effect effect) {
+		effectComponent.addEffect(game, effect);
+	}
+
+	@Override
+	public void removeEffect(Game game, Effect effect) {
+		effectComponent.removeEffect(game, effect);
+	}
+
+	@Override
 	public Expression getStatValue(String name, Context context, Game game) {
 		return switch (name) {
 			case "inventory" -> (itemInventory == null ? null : Expression.constant(itemInventory));
@@ -434,6 +456,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 			case "room" -> Expression.constant(roomID);
 			//case "visible_areas" -> new ExpressionConstantStringSet(getLineOfSightAreaIDs());
 			case "movable_areas" -> Expression.constant(getMovableAreaIDs(null));
+			case "obstruction_types" -> Expression.constant(getObstructions(game));
 			default -> null;
 		};
 	}
@@ -467,6 +490,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 	public StatStringSet getStatStringSet(Game game, String name) {
 		if ("effects".equals(name)) {
 			return effects;
+		} else if ("obstructions".equals(name)) {
+			return obstructions;
 		}
 		return null;
 	}
@@ -495,7 +520,5 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder {
 		}
 		return null;
 	}
-
-	public record ObstructionData(float hitChanceModifier, float detectionChanceModifier, boolean isTotalObstruction) {}
 	
 }

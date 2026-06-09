@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.actor.ai;
 
+import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -64,7 +65,7 @@ public class Pathfinder {
 	}
 
 	public static Map<Area, VisibleAreaData> getVisibleAreas(Game game, Area origin, Actor actor) {
-		Map<Area, VisibleAreaData> visibleAreas = getLineOfSightAreas(game, origin);
+		Map<Area, VisibleAreaData> visibleAreas = getLineOfSightAreas(game, origin, actor.getAllBypassedObstructionTypes(game), false);
 		for (Area area : new HashSet<>(visibleAreas.keySet())) {
 			if (!area.isVisible(actor)) {
 				visibleAreas.remove(area);
@@ -74,7 +75,7 @@ public class Pathfinder {
 		return visibleAreas;
 	}
 
-	public static Map<Area, VisibleAreaData> getLineOfSightAreas(Game game, Area origin) {
+	public static Map<Area, VisibleAreaData> getLineOfSightAreas(Game game, Area origin, Set<String> bypassedObstructions, boolean ignoreAllObstructions) {
 		Map<Area, VisibleAreaData> visibleAreas = new HashMap<>();
 		Map<String, AreaQueueData> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
 		Map<Area, AreaPathData> visibleMap = new HashMap<>();
@@ -87,7 +88,7 @@ public class Pathfinder {
 				visibleMap.put(currentArea, new AreaPathData(null, true, 0));
 			} else {
 				for (Area visibleArea : new HashSet<>(visibleMap.keySet())) {
-					if (!visibleArea.hasDirectVisibleLinkTo(currentArea, game) || visibleArea.hasLineOfSightObstruction()) continue;
+					if (!visibleArea.hasDirectVisibleLinkTo(currentArea, game) || (!ignoreAllObstructions && visibleArea.hasUnbypassedObstruction(game, bypassedObstructions))) continue;
 					AreaLink.CompassDirection linkDirection = visibleArea.getLinkDirectionTo(currentArea, game);
 					AreaLink.CompassDirection currentOriginDirection = combinedDirection(visibleMap.get(visibleArea).direction, linkDirection);
 					int currentPathLength = visibleMap.get(visibleArea).minPathLength + 1;

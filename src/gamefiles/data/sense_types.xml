@@ -1,5 +1,8 @@
 <data>
-    <senseType id="vision_basic">basic vision</senseType>
-    <senseType id="vision_night">night vision</senseType>
-    <senseType id="vision_thermal">thermal vision</senseType>
+    <senseType id="vision_night">
+        <name>night vision</name>
+    </senseType>
+    <senseType id="vision_thermal">
+        <name>thermal vision</name>
+    </senseType>
 </data>

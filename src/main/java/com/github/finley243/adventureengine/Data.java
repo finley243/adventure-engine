@@ -21,6 +21,7 @@ import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
+import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -62,6 +63,7 @@ public class Data {
 	private final Map<String, Attribute> attributes = new HashMap<>();
 	private final Map<String, Skill> skills = new HashMap<>();
 	private final Map<String, SenseType> senseTypes = new HashMap<>();
+	private final Map<String, ObstructionType> obstructionTypes = new HashMap<>();
 
 	private final Map<String, Expression> globalExpressions = new HashMap<>();
 
@@ -423,6 +425,20 @@ public class Data {
 
 	public Set<String> getSenseTypeIDs() {
 		return senseTypes.keySet();
+	}
+
+	public void addObstructionType(String id, ObstructionType value) {
+		if (id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add obstruction type with blank ID");
+		if (obstructionTypes.containsKey(id)) throw new IllegalArgumentException("Cannot add obstruction type with existing ID: " + id);
+		obstructionTypes.put(id, value);
+	}
+
+	public ObstructionType getObstructionType(String id) {
+		return obstructionTypes.get(id);
+	}
+
+	public Set<String> getObstructionTypeIDs() {
+		return obstructionTypes.keySet();
 	}
 
 	public void setGlobalExpression(String id, Expression value) {

@@ -877,6 +877,20 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return attackTargets;
 	}
 
+	public Set<String> getSenseTypes() {
+		Context context = Context.from(defaultContext).build();
+		return senseTypes.value(getTemplate().getSenseTypes(), context);
+	}
+
+	public Set<String> getAllBypassedObstructionTypes(Game game) {
+		Set<String> bypassedTypes = new HashSet<>();
+		for (String senseTypeID : getSenseTypes()) {
+			SenseType senseType = game.data().getSenseType(senseTypeID);
+			bypassedTypes.addAll(senseType.bypassedObstructionTypes());
+		}
+		return bypassedTypes;
+	}
+
 	@Override
 	public StatInt getStatInt(Game game, String name) {
 		if (name.startsWith("damage_resist_")) {
@@ -933,6 +947,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return null;
 	}
 
+	// TODO - Do not pass script Context to evaluate Stat objects (use default context instead)
 	@Override
 	public Expression getStatValue(String name, Context context, Game game) {
 		if (name.startsWith("damage_resist_")) {
@@ -970,7 +985,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "area" -> Expression.constant(getArea().getID());
 			case "room" -> Expression.constant(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
 			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), context));
-			case "sense_types" -> Expression.constant(senseTypes.value(getTemplate().getSenseTypes(), context));
+			case "sense_types" -> Expression.constant(getSenseTypes());
 			default -> null;
 		};
 	}
