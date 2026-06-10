@@ -75,7 +75,7 @@ public class DataLoader {
                                     game.data().addScene(scene.getID(), scene);
                                 }
                                 case "actor" -> {
-                                    ActorTemplate actor = loadActor(game, currentElement);
+                                    ActorTemplate actor = loadActor(currentElement);
                                     game.data().addActorTemplate(actor.getID(), actor);
                                 }
                                 case "object" -> {
@@ -200,7 +200,7 @@ public class DataLoader {
         return new ObstructionType(ID, name);
     }
 
-    private static ActorTemplate loadActor(Game game, Element actorElement) throws GameDataException {
+    private static ActorTemplate loadActor(Element actorElement) throws GameDataException {
         String id = LoadUtils.attribute(actorElement, "id", null);
         String parentID = LoadUtils.attribute(actorElement, "parent", null);
         Element nameElement = LoadUtils.singleChildWithName(actorElement, "name");
@@ -250,7 +250,6 @@ public class DataLoader {
             skills.put(skill, value);
         }
         Set<String> senseTypes = LoadUtils.setOfTags(actorElement, "senseType");
-        Set<String> tags = LoadUtils.setOfTags(actorElement, "tag");
         List<String> unarmedAttackTypes = LoadUtils.listOfTags(actorElement, "attackType");
         Map<String, List<Script>> scripts = loadScriptsWithTriggers(actorElement, "Actor(" + id + ")");
         List<String> startingEffects = LoadUtils.listOfTags(actorElement, "startEffect");
@@ -267,7 +266,7 @@ public class DataLoader {
         List<ActionCustom.CustomActionHolder> customActions = loadCustomActions(actorElement, "action", "ActorTemplate(" + id + ")");
         List<ActionCustom.CustomActionHolder> customInventoryActions = loadCustomActions(actorElement, "itemAction", "ActorTemplate(" + id + ")");
 
-        return new ActorTemplate(game, id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, startingLevel, levelUpThresholdExpression, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, tags, unarmedAttackTypes, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
+        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, startingLevel, levelUpThresholdExpression, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, unarmedAttackTypes, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }
 
     private static List<Limb> loadLimbs(Element element) {
