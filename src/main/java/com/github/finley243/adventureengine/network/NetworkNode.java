@@ -16,25 +16,17 @@ import java.util.Map;
 
 public abstract class NetworkNode extends GameInstanced implements StatHolder {
 
-    private final String templateID;
-    private NetworkNodeTemplate template;
     private final String name;
 
     private boolean isBreached;
 
-    public NetworkNode(Game game, String ID, String templateID, String name) {
+    public NetworkNode(String ID, String name) {
         super(ID);
-        this.templateID = templateID;
         this.name = name;
     }
 
     public void init(Game game, Map<String, WorldObject> objects) {
-        this.template = game.data().getNetworkNodeTemplate(templateID);
-    }
 
-    private NetworkNodeTemplate getTemplate() {
-        if (template == null) throw new IllegalStateException("NetworkNode has not been initialized");
-        return template;
     }
 
     public String getName() {

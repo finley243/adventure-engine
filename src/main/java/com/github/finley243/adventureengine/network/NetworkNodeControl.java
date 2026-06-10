@@ -14,8 +14,8 @@ public class NetworkNodeControl extends NetworkNode {
     private final String objectID;
     private WorldObject object;
 
-    public NetworkNodeControl(Game game, String ID, String templateID, String name, String objectID) {
-        super(game, ID, templateID, name);
+    public NetworkNodeControl(String ID, String name, String objectID) {
+        super(ID, name);
         this.objectID = objectID;
     }
 

@@ -13,7 +13,6 @@ import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.load.DataLoader;
 import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.network.NetworkNode;
-import com.github.finley243.adventureengine.network.NetworkNodeTemplate;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -53,7 +52,6 @@ public class Data {
 	private final Map<String, ScriptParser.ScriptData> scripts = new HashMap<>();
 	private final Map<String, Faction> factions = new HashMap<>();
 	private final Map<String, NetworkNode> networkNodes = new HashMap<>();
-	private final Map<String, NetworkNodeTemplate> networkNodeTemplates = new HashMap<>();
 	private final Map<String, Timer> timers = new HashMap<>();
 	private final Map<String, Effect> effects = new HashMap<>();
 	private final Map<String, ActionTemplate> actionTemplates = new HashMap<>();
@@ -112,7 +110,6 @@ public class Data {
 		scripts.clear();
 		factions.clear();
 		networkNodes.clear();
-		networkNodeTemplates.clear();
 		timers.clear();
 		effects.clear();
 		actionTemplates.clear();
@@ -308,16 +305,6 @@ public class Data {
 
 	public NetworkNode getNetworkNode(String id) {
 		return networkNodes.get(id);
-	}
-
-	public void addNetworkNodeTemplate(String id, NetworkNodeTemplate value) {
-		if(id.trim().isEmpty()) throw new IllegalArgumentException("Cannot add network node template with blank ID");
-		if(networkNodeTemplates.containsKey(id)) throw new IllegalArgumentException("Cannot add network node template with existing ID: " + id);
-		networkNodeTemplates.put(id, value);
-	}
-
-	public NetworkNodeTemplate getNetworkNodeTemplate(String id) {
-		return networkNodeTemplates.get(id);
 	}
 
 	public void addTimer(String id, Timer value) {

@@ -13,8 +13,8 @@ public class NetworkNodeData extends NetworkNode {
 
     private final String sceneID;
 
-    public NetworkNodeData(Game game, String ID, String templateID, String name, String sceneID) {
-        super(game, ID, templateID, name);
+    public NetworkNodeData(String ID, String name, String sceneID) {
+        super(ID, name);
         this.sceneID = sceneID;
     }
 
