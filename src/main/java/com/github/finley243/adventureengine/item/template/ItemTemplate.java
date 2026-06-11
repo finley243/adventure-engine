@@ -24,7 +24,7 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 	private final List<ItemComponentTemplate> components;
 	private final List<ActionCustom.CustomActionHolder> customActions;
 
-	public ItemTemplate(Game game, String ID, String name, Scene description, Map<String, List<Script>> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price) {
+	public ItemTemplate(String ID, String name, Scene description, Map<String, List<Script>> scripts, List<ItemComponentTemplate> components, List<ActionCustom.CustomActionHolder> customActions, int price) {
 		super(ID);
 		this.name = name;
 		this.description = description;

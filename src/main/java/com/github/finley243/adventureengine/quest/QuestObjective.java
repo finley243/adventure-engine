@@ -30,7 +30,7 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     private boolean isActive;
     private State state;
 
-    public QuestObjective(Game game, String ID, Quest parentQuest, String name, String description, Condition completionCondition, Condition failureCondition, Script activateScript, Script deactivateScript, Script completionScript, Script failureScript) {
+    public QuestObjective(String ID, Quest parentQuest, String name, String description, Condition completionCondition, Condition failureCondition, Script activateScript, Script deactivateScript, Script completionScript, Script failureScript) {
         super(ID);
         this.parentQuest = parentQuest;
         this.name = name;

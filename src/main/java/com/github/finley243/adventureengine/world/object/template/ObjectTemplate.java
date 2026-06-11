@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.object.template;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -24,7 +23,7 @@ public class ObjectTemplate extends GameInstanced {
     private final List<ObjectComponentTemplate> components;
     private final Map<String, Expression> localVarsDefault;
 
-    public ObjectTemplate(Game game, String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Float> damageMults, Map<String, List<Script>> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, List<ObjectComponentTemplate> components, Map<String, Expression> localVarsDefault) {
+    public ObjectTemplate(String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Float> damageMults, Map<String, List<Script>> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, List<ObjectComponentTemplate> components, Map<String, Expression> localVarsDefault) {
         super(ID);
         this.name = name;
         this.isProperName = isProperName;

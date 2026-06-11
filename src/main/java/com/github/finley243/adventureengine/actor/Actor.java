@@ -105,7 +105,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Map<String, List<Script>> scripts;
 	private final Context defaultContext;
 
-	public Actor(Game game, String ID, String nameDescriptor, Area area, String templateID, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean isPlayerControlled) {
+	public Actor(String ID, String nameDescriptor, Area area, String templateID, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean isPlayerControlled) {
 		super(ID);
 		this.nameDescriptor = nameDescriptor;
 		this.defaultArea = area;

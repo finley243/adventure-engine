@@ -22,7 +22,7 @@ public class Effect extends GameInstanced {
 	private final Script scriptRemove;
 	private final Script scriptRound;
 
-	public Effect(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound) {
+	public Effect(String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound) {
 		super(ID);
 		this.manualRemoval = manualRemoval;
 		this.duration = duration;

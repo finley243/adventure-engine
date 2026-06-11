@@ -25,50 +25,29 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	private final boolean isProperName;
 	private boolean isKnown;
 	private final Scene description;
-	private final String ownerFactionID;
-	private Faction ownerFaction;
+	private final Faction ownerFaction;
 	private final Area.RestrictionType restrictionType;
 	private final boolean allowAllies;
-	private final Set<Area> areas;
 
 	private final Map<String, List<Script>> scripts;
 
 	private boolean hasVisited;
 
-	public Room(Game game, String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, String ownerFactionID, Area.RestrictionType restrictionType, boolean allowAllies, Map<String, List<Script>> scripts) {
+	public Room(String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, Faction ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Map<String, List<Script>> scripts) {
 		super(ID);
 		this.name = name;
 		this.nameType = nameType;
 		this.isProperName = isProperName;
 		this.description = description;
-		this.ownerFactionID = ownerFactionID;
+		this.ownerFaction = ownerFaction;
 		this.restrictionType = restrictionType;
 		this.allowAllies = allowAllies;
-		this.areas = new HashSet<>();
 		this.hasVisited = false;
 		this.scripts = scripts;
 	}
 
 	public void onInit(Game game) {
-		if (ownerFactionID != null) {
-			this.ownerFaction = game.data().getFaction(ownerFactionID);
-		}
-	}
 
-	public void addArea(Area area) {
-		areas.add(area);
-	}
-	
-	public Set<Area> getAreas(){
-		return areas;
-	}
-
-	public Set<String> getAreaIDs() {
-		Set<String> areaIDs = new HashSet<>();
-		for (Area area : areas) {
-			areaIDs.add(area.getID());
-		}
-		return areaIDs;
 	}
 
 	public String getRelativeName() {
@@ -116,7 +95,6 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	public Faction getOwnerFaction() {
-		if (ownerFaction == null && ownerFactionID != null) throw new IllegalStateException("Room has not been initialized");
 		return ownerFaction;
 	}
 

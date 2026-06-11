@@ -63,7 +63,7 @@ public class ScriptParser {
         }
     };
 
-    public static List<ScriptData> parseFunctions(String scriptText, String fileName) {
+    public List<ScriptData> parseFunctions(String scriptText, String fileName) {
         List<ScriptData> scripts = new ArrayList<>();
         List<ScriptToken> tokens = parseToTokens(scriptText, fileName);
         List<ScriptTokenFunction> functions = groupTokensToFunctions(tokens);
@@ -74,17 +74,17 @@ public class ScriptParser {
         return scripts;
     }
 
-    public static Script parseExpression(String scriptText, String fileName) {
+    public Script parseExpression(String scriptText, String fileName) {
         List<ScriptToken> tokens = parseToTokens(scriptText, fileName);
         return parseExpression(tokens);
     }
 
-    public static Script parseScript(String scriptText, String fileName) {
+    public Script parseScript(String scriptText, String fileName) {
         List<ScriptToken> tokens = parseToTokens(scriptText, fileName);
         return parseScript(tokens);
     }
 
-    public static Expression parseLiteral(String scriptText, String fileName) {
+    public Expression parseLiteral(String scriptText, String fileName) {
         List<ScriptToken> tokens = parseToTokens(scriptText, fileName);
         return parseLiteral(tokens);
     }

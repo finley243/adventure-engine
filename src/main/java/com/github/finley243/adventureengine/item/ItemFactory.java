@@ -1,28 +1,27 @@
 package com.github.finley243.adventureengine.item;
 
-import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.gamedata.MutableRegistry;
 import com.github.finley243.adventureengine.item.template.*;
 
 public class ItemFactory {
 
-	public static Item create(Game game, String statsID) {
-		return create(game, game.data().getItemTemplate(statsID));
+	private final MutableRegistry<Item> itemMutableRegistry;
+
+	public ItemFactory(MutableRegistry<Item> itemMutableRegistry) {
+		this.itemMutableRegistry = itemMutableRegistry;
 	}
 	
-	public static Item create(Game game, ItemTemplate stats) {
-		String ID = stats.generateInstanceID();
-		return create(game, stats, ID);
+	public Item createWithGenID(ItemTemplate template) {
+		String ID = template.generateInstanceID();
+		return create(template, ID);
 	}
 
-	public static Item create(Game game, String statsID, String ID) {
-		return create(game, game.data().getItemTemplate(statsID), ID);
-	}
-
-	private static Item create(Game game, ItemTemplate stats, String ID) {
-		if (stats == null) return null;
-		Item item = new Item(game, ID, stats);
-		game.data().addItemInstance(ID, item);
-		item.onInit(game);
+	public Item create(ItemTemplate template, String ID) {
+		if (ID == null) throw new IllegalArgumentException("Item ID cannot be null");
+		if (template == null) throw new IllegalArgumentException("Item template cannot be null");
+		Item item = new Item(ID, template);
+		itemMutableRegistry.add(ID, item);
+		//item.onInit(game);
 		return item;
 	}
 	

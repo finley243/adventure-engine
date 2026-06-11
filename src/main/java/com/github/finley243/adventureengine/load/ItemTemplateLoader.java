@@ -1,0 +1,134 @@
+package com.github.finley243.adventureengine.load;
+
+import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.gamedata.ConfigHandler;
+import com.github.finley243.adventureengine.gamedata.ConfigOption;
+import com.github.finley243.adventureengine.item.template.*;
+import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.script.Script;
+import org.w3c.dom.Element;
+
+import java.util.*;
+
+public class ItemTemplateLoader {
+
+    private static final String NAME_ITEM = "item";
+
+    private final ConfigHandler configHandler;
+    private final ScriptParser scriptParser;
+    private final SceneLoader sceneLoader;
+
+    public ItemTemplateLoader(ConfigHandler configHandler, ScriptParser scriptParser, SceneLoader sceneLoader) {
+        this.configHandler = configHandler;
+        this.scriptParser = scriptParser;
+        this.sceneLoader = sceneLoader;
+    }
+
+    public Map<String, ItemTemplate> load(Element element) {
+        return LoadUtils.loadAll(element, NAME_ITEM, this::parseItemTemplate, ItemTemplate::getID);
+    }
+
+    private ItemTemplate parseItemTemplate(Element element) {
+        if (element == null) return null;
+        String id = element.getAttribute("id");
+        String name = LoadUtils.singleTag(element, "name", null);
+        Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, "description"));
+        Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "ItemTemplate(" + id + ")");
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptParser, "ItemTemplate(" + id + ")");
+        int price = LoadUtils.attributeInt(element, "price", 0);
+        List<ItemComponentTemplate> components = new ArrayList<>();
+        for (Element componentElement : LoadUtils.directChildrenWithName(element, "component")) {
+            ItemComponentTemplate componentTemplate = parseItemComponentTemplate(componentElement, id);
+            components.add(componentTemplate);
+        }
+        return new ItemTemplate(id, name, description, scripts, components, customActions, price);
+    }
+
+    private ItemComponentTemplate parseItemComponentTemplate(Element componentElement, String itemID) {
+        if (componentElement == null) return null;
+        String type = componentElement.getAttribute("type");
+        boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "restricted", false);
+        switch (type) {
+            case "ammo" -> {
+                List<String> ammoWeaponEffects = LoadUtils.listOfTags(componentElement, "weaponEffect");
+                boolean ammoIsReusable = LoadUtils.attributeBool(componentElement, "isReusable", false);
+                return new ItemComponentTemplateAmmo(actionsRestricted, ammoWeaponEffects, ammoIsReusable);
+            }
+            case "armor" -> {
+                Map<String, Integer> damageResistances = new HashMap<>();
+                Map<String, Float> damageMults = new HashMap<>();
+                for (Element damageElement : LoadUtils.directChildrenWithName(componentElement, "damage")) {
+                    String damageType = LoadUtils.attribute(damageElement, "type", null);
+                    Integer resistance = LoadUtils.attributeInt(damageElement, "resistance", null);
+                    Float mult = LoadUtils.attributeFloat(damageElement, "mult", null);
+                    if (resistance != null) {
+                        damageResistances.put(damageType, resistance);
+                    }
+                    if (mult != null) {
+                        damageMults.put(damageType, mult);
+                    }
+                }
+                Set<String> coveredLimbs = LoadUtils.setOfTags(componentElement, "coveredLimb");
+                boolean coversMainBody = LoadUtils.attributeBool(componentElement, "coversMainBody", false);
+                return new ItemComponentTemplateArmor(actionsRestricted, damageResistances, damageMults, coveredLimbs, coversMainBody);
+            }
+            case "consumable" -> {
+                String consumePrompt = LoadUtils.singleTag(componentElement, "consumePrompt", null);
+                String consumePhrase = LoadUtils.singleTag(componentElement, "consumePhrase", null);
+                List<String> consumableEffects = LoadUtils.listOfTags(componentElement, "effect");
+                return new ItemComponentTemplateConsumable(actionsRestricted, consumePrompt, consumePhrase, consumableEffects);
+            }
+            case "effectible" -> {
+                return new ItemComponentTemplateEffectible(actionsRestricted);
+            }
+            case "equippable" -> {
+                Set<ItemComponentTemplateEquippable.EquippableSlotsData> equipSlots = new HashSet<>();
+                for (Element slotGroupElement : LoadUtils.directChildrenWithName(componentElement, "slotGroup")) {
+                    Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
+                    Set<String> exposedComponents = LoadUtils.setOfTags(slotGroupElement, "exposedComponent");
+                    List<String> equippedEffects = LoadUtils.listOfTags(componentElement, "effect");
+                    List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptParser, "ItemComponent(" + itemID + ")");
+                    equipSlots.add(new ItemComponentTemplateEquippable.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
+                }
+                return new ItemComponentTemplateEquippable(actionsRestricted, equipSlots);
+            }
+            case "magazine" -> {
+                Set<String> ammoTypes = LoadUtils.setOfTags(componentElement, "ammoType");
+                int magazineSize = LoadUtils.singleTagInt(componentElement, "size", 1);
+                int reloadActionPoints = LoadUtils.singleTagInt(componentElement, "reloadActionPoints", 1);
+                return new ItemComponentTemplateMagazine(actionsRestricted, ammoTypes, magazineSize, reloadActionPoints);
+            }
+            case "mod" -> {
+                String modSlot = LoadUtils.attribute(componentElement, "modSlot", null);
+                List<String> effects = LoadUtils.listOfTags(componentElement, "effect");
+                return new ItemComponentTemplateMod(actionsRestricted, modSlot, effects);
+            }
+            case "moddable" -> {
+                Map<String, Integer> modSlots = new HashMap<>();
+                for (Element modSlotElement : LoadUtils.directChildrenWithName(componentElement, "modSlot")) {
+                    String slotName = LoadUtils.attribute(modSlotElement, "name", null);
+                    int slotCount = LoadUtils.attributeInt(modSlotElement, "count", 1);
+                    modSlots.put(slotName, slotCount);
+                }
+                return new ItemComponentTemplateModdable(actionsRestricted, modSlots);
+            }
+            case "weapon" -> {
+                String weaponClass = LoadUtils.attribute(componentElement, "class", null);
+                int weaponRate = LoadUtils.singleTagInt(componentElement, "rate", 1);
+                Element damageElement = LoadUtils.singleChildWithName(componentElement, "damage");
+                int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
+                int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
+                float critChance = LoadUtils.attributeFloat(componentElement, "critChance", 0.0f);
+                String weaponDamageType = LoadUtils.attribute(damageElement, "type", configHandler.get(ConfigOption.DEFAULT_DAMAGE_TYPE));
+                float weaponArmorMult = LoadUtils.singleTagFloat(componentElement, "armorMult", 1.0f);
+                boolean weaponSilenced = LoadUtils.singleTagBoolean(componentElement, "silenced", false);
+                Set<String> weaponTargetEffects = LoadUtils.setOfTags(componentElement, "targetEffect");
+                return new ItemComponentTemplateWeapon(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
+
+}

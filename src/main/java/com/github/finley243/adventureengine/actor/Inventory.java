@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
+import com.github.finley243.adventureengine.gamedata.MutableRegistry;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
@@ -35,7 +36,7 @@ public class Inventory {
 		}
 	}
 
-	public void addItem(Item item, Game game) {
+	public void addItem(Item item, MutableRegistry<Item> itemMutableRegistry) {
 		if (item.hasState()) {
 			if (item.getInventory() != null) throw new UnsupportedOperationException("Cannot add item " + item + " to inventory because it is still located in another inventory");
 			if (!items.containsKey(item.getTemplateID())) {
@@ -47,7 +48,8 @@ public class Inventory {
 			if (!itemsStateless.containsKey(item.getTemplateID())) {
 				Item instanceToAdd = item;
 				if (item.getInventory() != null) {
-					instanceToAdd = ItemFactory.create(game, item.getTemplateID());
+					instanceToAdd = ItemFactory.createWithGenID(item.getTemplate());
+					itemMutableRegistry.add(instanceToAdd.getID(), instanceToAdd);
 				}
 				itemsStateless.put(item.getTemplateID(), new StatelessItemStack(instanceToAdd, 1));
 				instanceToAdd.setInventory(this);
@@ -60,7 +62,7 @@ public class Inventory {
 	public void addItems(String itemID, int count, Game game) {
 		if (count <= 0) throw new IllegalArgumentException("Cannot add non-positive number of Items: " + itemID);
 		for (int i = 0; i < count; i++) {
-			Item instance = ItemFactory.create(game, itemID);
+			Item instance = ItemFactory.createWithGenID(itemID);
 			addItem(instance, game);
 		}
 	}
@@ -212,7 +214,7 @@ public class Inventory {
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
-			Item item = ItemFactory.create(game, current);
+			Item item = ItemFactory.createWithGenID(current);
 			actions.add(new ActionItemTake(area, item));
 			if (itemCount(current) > 1) {
 				actions.add(new ActionItemTakeAll(area, item));
@@ -240,7 +242,7 @@ public class Inventory {
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
-			Item item = ItemFactory.create(game, current);
+			Item item = ItemFactory.createWithGenID(current);
 			actions.add(new ActionInventoryTake(owner, this, item, prompt, phrase));
 			if (itemCount(current) > 1) {
 				actions.add(new ActionInventoryTakeAll(owner, this, item, prompt, phrase));
@@ -257,7 +259,7 @@ public class Inventory {
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
-			Item item = ItemFactory.create(game, current);
+			Item item = ItemFactory.createWithGenID(current);
 			actions.add(new ActionInventoryStore(owner, other, item, prompt, phrase));
 			if (itemCount(current) > 1) {
 				actions.add(new ActionInventoryStoreAll(owner, other, item, prompt, phrase));

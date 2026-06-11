@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.action;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
@@ -19,7 +18,7 @@ public class ActionTemplate extends GameInstanced {
     private final Condition showCondition;
     private final Script script;
 
-    public ActionTemplate(Game game, String ID, String prompt, Map<String, Script> parameters, int actionPoints, List<ConditionWithMessage> selectConditions, Condition showCondition, Script script) {
+    public ActionTemplate(String ID, String prompt, Map<String, Script> parameters, int actionPoints, List<ConditionWithMessage> selectConditions, Condition showCondition, Script script) {
         super(ID);
         this.prompt = prompt;
         this.parameters = parameters;

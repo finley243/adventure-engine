@@ -44,7 +44,7 @@ public class ItemComponentMagazine extends ItemComponent {
     protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
         List<Action> actions = super.getPossibleInventoryActions(game, subject);
         for (String current : getMagazineTemplate().getAmmoTypes()) {
-            actions.add(new ActionWeaponReload(getItem(), ItemFactory.create(game, current)));
+            actions.add(new ActionWeaponReload(getItem(), ItemFactory.createWithGenID(current)));
         }
         return actions;
     }

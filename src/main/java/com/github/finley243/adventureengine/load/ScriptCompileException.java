@@ -11,12 +11,6 @@ public class ScriptCompileException extends RuntimeException {
         this.lineNumber = lineNumber;
     }
 
-    public ScriptCompileException(String message, String fileName, int lineNumber, Throwable cause) {
-        super(message, cause);
-        this.fileName = fileName;
-        this.lineNumber = lineNumber;
-    }
-
     public String getFileName() {
         return fileName;
     }

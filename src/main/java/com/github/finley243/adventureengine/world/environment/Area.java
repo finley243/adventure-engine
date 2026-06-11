@@ -46,8 +46,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	private boolean isKnown;
 
 	// The room containing this area
-	private final String roomID;
-	private Room room;
+	private final Room room;
 	
 	private final Scene description;
 
@@ -75,14 +74,14 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	private final Set<String> defaultObstructions;
 	private final StatStringSet obstructions;
 	
-	public Area(String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, String roomID, String ownerFactionID, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
+	public Area(String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, String ownerFactionID, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
 		super(ID);
 		this.landmarkID = landmarkID;
 		this.name = name;
 		this.nameType = nameType;
 		this.nameIsPlural = nameIsPlural;
 		this.description = description;
-		this.roomID = roomID;
+		this.room = room;
 		this.ownerFactionID = ownerFactionID;
 		this.restrictionType = restrictionType;
 		this.allowAllies = allowAllies;
@@ -97,10 +96,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	public void onInit(Game game) {
-		if (roomID != null) {
-			room = game.data().getRoom(roomID);
-			room.addArea(this);
-		}
 		if (landmarkID != null) {
 			landmark = game.data().getObject(landmarkID);
 		}
@@ -123,7 +118,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	public String getName() {
 		if (landmarkID != null) {
 			return getLandmark().getName();
-		} else if (roomID != null && name == null) {
+		} else if (room != null && name == null) {
 			return getRoom().getName();
 		} else {
 			return name;
@@ -154,7 +149,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	public void setKnown() {
 		if (landmarkID != null) {
 			getLandmark().setKnown();
-		} else if (roomID != null && name == null) {
+		} else if (room != null && name == null) {
 			getRoom().setKnown();
 		}
 		isKnown = true;
@@ -164,7 +159,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	public boolean isKnown() {
 		if (landmarkID != null) {
 			return getLandmark().isKnown();
-		} else if (roomID != null && name == null) {
+		} else if (room != null && name == null) {
 			return getRoom().isKnown();
 		} else {
 			return isKnown;
@@ -172,7 +167,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	public String getRelativeName() {
-		if (landmarkID == null && name == null && roomID != null) {
+		if (landmarkID == null && name == null && room != null) {
 			return getRoom().getRelativeName();
 		}
 		return switch (nameType) {
@@ -186,7 +181,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	public String getMovePhrase(Actor subject) {
-		if (landmarkID == null && name == null && roomID != null) {
+		if (landmarkID == null && name == null && room != null) {
 			return getRoom().getMovePhrase(subject);
 		}
 		return switch (nameType) {
@@ -423,9 +418,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 	
 	public Room getRoom() {
-		if (roomID == null) return null;
-		if (room == null) throw new IllegalStateException("Area has not been initialized");
-		return room;
+        return room;
 	}
 
 	public List<Action> getAreaActions(Actor subject) {
@@ -453,7 +446,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 			case "name" -> Expression.constant(getName());
 			case "relative_name" -> Expression.constant(getRelativeName());
 			case "move_phrase" -> Expression.constant(getMovePhrase(context.getSubject()));
-			case "room" -> Expression.constant(roomID);
+			case "room" -> Expression.constant((StatHolder) room);
 			//case "visible_areas" -> new ExpressionConstantStringSet(getLineOfSightAreaIDs());
 			case "movable_areas" -> Expression.constant(getMovableAreaIDs(null));
 			case "obstruction_types" -> Expression.constant(getObstructions(game));

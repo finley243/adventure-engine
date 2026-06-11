@@ -30,7 +30,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	private final ItemTemplate template;
 	private final Map<Class<? extends ItemComponent>, ItemComponent> components;
 
-	public Item(Game game, String ID, ItemTemplate template) {
+	public Item(String ID, ItemTemplate template) {
 		super(ID);
 		this.template = template;
 		this.currentInventory = null;
@@ -107,7 +107,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		}
 	}
 
-	protected ItemTemplate getTemplate() {
+	public ItemTemplate getTemplate() {
 		return template;
 	}
 

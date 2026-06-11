@@ -300,7 +300,7 @@ public class MenuManager {
 			game.eventBus().post(new TextClearEvent());
 		}
 		switch (scene.getType()) {
-			case SEQUENTIAL -> {
+			case ALL -> {
 				for (SceneLine line : scene.getLines()) {
 					Scene.SceneLineResult result = sceneLine(game, line, lastSceneID, context, false);
 					if (result.exit()) {
@@ -311,7 +311,7 @@ public class MenuManager {
 					}
 				}
 			}
-			case SELECTOR -> {
+			case SELECT -> {
 				for (SceneLine line : scene.getLines()) {
 					if (line.shouldShow(context, lastSceneID)) {
 						Scene.SceneLineResult result = sceneLine(game, line, lastSceneID, context, true);
@@ -368,13 +368,13 @@ public class MenuManager {
 			}
 			if (line.getSubLines() != null) {
 				switch (line.getType()) {
-					case SEQUENTIAL -> {
+					case ALL -> {
 						for (SceneLine subLine : line.getSubLines()) {
 							Scene.SceneLineResult result = sceneLine(game, subLine, lastSceneID, context, false);
 							if (result.exit() || result.redirect() != null) return result;
 						}
 					}
-					case SELECTOR -> {
+					case SELECT -> {
 						for (SceneLine subLine : line.getSubLines()) {
 							if (subLine.shouldShow(context, lastSceneID)) {
 								Scene.SceneLineResult result = sceneLine(game, subLine, lastSceneID, context, true);

@@ -12,8 +12,8 @@ public class EffectStatString extends Effect {
     private final String value;
     private final Condition statCondition;
 
-    public EffectStatString(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound, String stat, String value, Condition statCondition) {
-        super(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
+    public EffectStatString(String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound, String stat, String value, Condition statCondition) {
+        super(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
         this.stat = stat;
         this.value = value;
         this.statCondition = statCondition;

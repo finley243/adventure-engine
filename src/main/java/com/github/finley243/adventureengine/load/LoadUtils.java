@@ -1,9 +1,15 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
+import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.script.Script;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class LoadUtils {
@@ -162,6 +168,67 @@ public class LoadUtils {
 	public static boolean isValidBoolean(String value) {
 		if (value == null) return false;
 		return value.equalsIgnoreCase("t") || value.equalsIgnoreCase("f") || value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false");
+	}
+
+	public static Condition loadCondition(Element element, ScriptParser scriptParser, String sourceName) {
+		if (element == null) return null;
+		Script conditionScript = loadScriptExpression(element, scriptParser, sourceName);
+		return new Condition(conditionScript);
+	}
+
+	public static Script loadScript(Element element, ScriptParser scriptParser, String sourceName) {
+		if (element == null) return null;
+		String scriptText = element.getTextContent().trim();
+		return scriptParser.parseScript(scriptText, sourceName);
+	}
+
+	public static Script loadScriptExpression(Element element, ScriptParser scriptParser, String sourceName) {
+		if (element == null) return null;
+		String scriptText = element.getTextContent().trim();
+		return scriptParser.parseExpression(scriptText, sourceName);
+	}
+
+	public static Map<String, List<Script>> loadScriptsWithTriggers(Element parentElement, ScriptParser scriptParser, String sourceName) {
+		Map<String, List<Script>> scripts = new HashMap<>();
+		for (Element scriptElement : directChildrenWithName(parentElement, "script")) {
+			String trigger = scriptElement.getAttribute("trigger");
+			Script script = loadScript(scriptElement, scriptParser, sourceName + " - script trigger: " + trigger);
+			scripts.computeIfAbsent(trigger, _ -> new ArrayList<>()).add(script);
+			scripts.get(trigger).add(script);
+		}
+		return scripts;
+	}
+
+	public static Expression loadScriptLiteral(Element parentElement, ScriptParser scriptParser, String traceString) {
+		if (parentElement == null) return null;
+		String expressionText = parentElement.getTextContent().trim();
+		return scriptParser.parseLiteral(expressionText, traceString);
+	}
+
+	public static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name, ScriptParser scriptParser, String traceString) {
+		List<ActionCustom.CustomActionHolder> customActions = new ArrayList<>();
+		if (parentElement != null) {
+			for (Element actionElement : LoadUtils.directChildrenWithName(parentElement, name)) {
+				String action = LoadUtils.attribute(actionElement, "template", null);
+				Map<String, Script> parameters = new HashMap<>();
+				for (Element variableElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
+					String parameterName = LoadUtils.attribute(variableElement, "name", null);
+					Script parameterValue = loadScriptExpression(variableElement, scriptParser, traceString + " - custom action parameter: " + parameterName);
+					parameters.put(parameterName, parameterValue);
+				}
+				customActions.add(new ActionCustom.CustomActionHolder(action, parameters));
+			}
+		}
+		return customActions;
+	}
+
+	public static <T> Map<String, T> loadAll(Element parentElement, String name, Function<Element, T> parser, Function<T, String> idExtractor) {
+		Map<String, T> resultMap = new HashMap<>();
+		for (Element child : directChildrenWithName(parentElement, name)) {
+			T obj = parser.apply(child);
+			resultMap.put(idExtractor.apply(obj), obj);
+		}
+		return resultMap;
 	}
 	
 }

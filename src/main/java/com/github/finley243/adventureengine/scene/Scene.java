@@ -14,7 +14,7 @@ import java.util.List;
 public class Scene extends GameInstanced implements StatHolder {
 
 	public enum SceneType {
-		SEQUENTIAL, SELECTOR, RANDOM
+		ALL, SELECT, RANDOM
 	}
 
 	private final Condition condition;
@@ -27,7 +27,7 @@ public class Scene extends GameInstanced implements StatHolder {
 
 	private boolean hasTriggered;
 	
-	public Scene(Game game, String ID, Condition condition, boolean once, int priority, List<SceneLine> lines, List<SceneChoice> choices, SceneType type) {
+	public Scene(String ID, Condition condition, boolean once, int priority, List<SceneLine> lines, List<SceneChoice> choices, SceneType type) {
 		// TODO - Always assigned a non-null ID (for in-line scenes, assign an "automatic" ID if none is manually specified)
 		super(ID);
 		this.condition = condition;

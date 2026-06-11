@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.world.environment;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 
 import java.util.Map;
@@ -14,7 +13,7 @@ public class LinkType extends GameInstanced {
     private final Map<String, String> vehicleMoveActions;
     private final Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances;
 
-    public LinkType(Game game, String ID, boolean isVisible, String actorMoveAction, Set<AreaLink.DistanceCategory> actorMoveDistances, Map<String, String> vehicleMoveActions, Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances) {
+    public LinkType(String ID, boolean isVisible, String actorMoveAction, Set<AreaLink.DistanceCategory> actorMoveDistances, Map<String, String> vehicleMoveActions, Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances) {
         super(ID);
         this.isVisible = isVisible;
         this.actorMoveAction = actorMoveAction;

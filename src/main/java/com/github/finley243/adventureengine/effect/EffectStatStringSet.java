@@ -15,8 +15,8 @@ public class EffectStatStringSet extends Effect {
     private final Set<String> valuesRemove;
     private final Condition statCondition;
 
-    public EffectStatStringSet(Game game, String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound, String stat, Set<String> valuesAdd, Set<String> valuesRemove, Condition statCondition) {
-        super(game, ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
+    public EffectStatStringSet(String ID, int duration, boolean manualRemoval, boolean stackable, Condition conditionAdd, Condition conditionRemove, Condition conditionActive, Script scriptAdd, Script scriptRemove, Script scriptRound, String stat, Set<String> valuesAdd, Set<String> valuesRemove, Condition statCondition) {
+        super(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
         this.stat = stat;
         this.valuesAdd = valuesAdd;
         this.valuesRemove = valuesRemove;

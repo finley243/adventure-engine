@@ -48,7 +48,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private final Map<Class<? extends ObjectComponent>, ObjectComponent> components;
 	private final Map<String, Expression> localVars;
 
-	public WorldObject(Game gameInstance, String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Expression> localVarsDefault) {
+	public WorldObject(String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Expression> localVarsDefault) {
 		super(ID);
 		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
 		this.templateID = templateID;

@@ -12,11 +12,9 @@ public class AreaRegistry extends Registry<Area> {
         super(entries);
         this.areasByRoom = new HashMap<>();
         for (Area area : entries.values()) {
-            String roomID = area.getRoom().getID();
-            if (!areasByRoom.containsKey(roomID)) {
-                areasByRoom.put(roomID, new HashSet<>());
+            if (area.getRoom() != null) {
+                areasByRoom.computeIfAbsent(area.getRoom().getID(), _ -> new HashSet<>()).add(area);
             }
-            this.areasByRoom.get(area.getRoom().getID()).add(area);
         }
     }
 

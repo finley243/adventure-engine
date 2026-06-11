@@ -39,7 +39,7 @@ public class LootTableEntry {
 				}
 			} else {
 				for (int i = 0; i < count; i++) {
-					Item itemInstance = ItemFactory.create(game, referenceID);
+					Item itemInstance = ItemFactory.createWithGenID(referenceID);
 					if (modTable != null && itemInstance.hasComponentOfType(ItemComponentModdable.class) && MathUtils.randomCheck(modChance)) {
 						Inventory modInventory = new Inventory(null);
 						game.data().getLootTable(modTable).generateItems(game, inventory);

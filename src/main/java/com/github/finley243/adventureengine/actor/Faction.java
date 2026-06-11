@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 
 import java.util.Map;
@@ -14,7 +13,7 @@ public class Faction extends GameInstanced {
 	private final FactionRelation defaultRelation;
 	private final Map<String, FactionRelation> relations;
 	
-	public Faction(Game game, String ID, FactionRelation defaultRelation, Map<String, FactionRelation> relations) {
+	public Faction(String ID, FactionRelation defaultRelation, Map<String, FactionRelation> relations) {
 		super(ID);
 		this.defaultRelation = defaultRelation;
 		this.relations = relations;

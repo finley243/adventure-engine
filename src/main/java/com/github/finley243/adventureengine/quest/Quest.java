@@ -14,7 +14,7 @@ public class Quest extends GameInstanced implements StatHolder {
 
     private final Map<String, QuestObjective> objectives;
 
-    public Quest(Game game, String ID, String name, Map<String, QuestObjective> objectives) {
+    public Quest(String ID, String name, Map<String, QuestObjective> objectives) {
         super(ID);
         this.name = name;
         this.objectives = objectives;
