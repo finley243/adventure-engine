@@ -1,14 +1,12 @@
 package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.attack.ActionAttackArea;
 import com.github.finley243.adventureengine.action.attack.ActionAttackBasic;
 import com.github.finley243.adventureengine.action.attack.ActionAttackLimb;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
-import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.script.Script;
@@ -83,15 +81,15 @@ public class WeaponAttackType {
         return ID;
     }
 
-    public List<Action> generateActions(Actor subject, Item weapon, AreaRegistry areaRegistry) {
+    public List<Action> generateActions(Actor subject, Item weapon) {
         if (weapon != null) {
-            return generateActionsWeapon(subject, weapon, areaRegistry);
+            return generateActionsWeapon(subject, weapon);
         } else {
-            return generateActionsUnarmed(subject, areaRegistry);
+            return generateActionsUnarmed(subject);
         }
     }
 
-    private List<Action> generateActionsWeapon(Actor subject, Item weapon, AreaRegistry areaRegistry) {
+    private List<Action> generateActionsWeapon(Actor subject, Item weapon) {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).build();
         List<Action> actions = new ArrayList<>();
@@ -131,7 +129,7 @@ public class WeaponAttackType {
         return actions;
     }
 
-    private List<Action> generateActionsUnarmed(Actor subject, AreaRegistry areaRegistry) {
+    private List<Action> generateActionsUnarmed(Actor subject) {
         Set<AreaLink.DistanceCategory> ranges = rangeOverride;
         int rate = rateOverride;
         Script damage = damageOverride;

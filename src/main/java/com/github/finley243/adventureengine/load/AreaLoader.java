@@ -12,8 +12,10 @@ import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
+import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
+import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 import org.w3c.dom.Element;
 
 import java.util.HashMap;
@@ -34,8 +36,10 @@ public class AreaLoader {
     private final ItemLoader itemLoader;
     private final MutableRegistry<Item> itemMutableRegistry;
     private final Registry<Room> roomRegistry;
+    private final Registry<ObstructionType> obstructionTypeRegistry;
+    private final Registry<LinkType> linkTypeRegistry;
 
-    public AreaLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, ScriptParser scriptParser, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, MutableRegistry<Item> itemMutableRegistry, Registry<Room> roomRegistry) {
+    public AreaLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, ScriptParser scriptParser, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, MutableRegistry<Item> itemMutableRegistry, Registry<Room> roomRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<LinkType> linkTypeRegistry) {
         this.configHandler = configHandler;
         this.scriptRuntime = scriptRuntime;
         this.scriptParser = scriptParser;
@@ -45,6 +49,8 @@ public class AreaLoader {
         this.itemLoader = itemLoader;
         this.itemMutableRegistry = itemMutableRegistry;
         this.roomRegistry = roomRegistry;
+        this.obstructionTypeRegistry = obstructionTypeRegistry;
+        this.linkTypeRegistry = linkTypeRegistry;
     }
 
     public AreaLoaderResult load(Element element) {
@@ -110,7 +116,7 @@ public class AreaLoader {
 
         Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Area(" + areaID + ")");
 
-        Area area = new Area(scriptRuntime, areaID, landmarkID, name, nameType, nameIsPlural, description, room, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);
+        Area area = new Area(scriptRuntime, obstructionTypeRegistry, areaID, landmarkID, name, nameType, nameIsPlural, description, room, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);
 
         Map<String, WorldObject> objectMap = new HashMap<>();
         for (Element objectElement : LoadUtils.directChildrenWithName(element, "object")) {

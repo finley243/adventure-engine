@@ -13,6 +13,8 @@ import com.github.finley243.adventureengine.actor.component.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.Effectible;
 import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.gamedata.AreaRegistry;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -42,8 +44,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	private final ScriptRuntime scriptRuntime;
 
-	private final String landmarkID;
-	private WorldObject landmark;
+	private final WorldObject landmark;
 	private final String name;
 	private final AreaNameType nameType;
 	private final boolean nameIsPlural;
@@ -54,8 +55,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	
 	private final Scene description;
 
-	private final String ownerFactionID;
-	private Faction ownerFaction;
+	private final Faction ownerFaction;
 	private final RestrictionType restrictionType;
 	private final Boolean allowAllies;
 	
@@ -76,18 +76,18 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	private final StatStringSet effects;
 
 	private final Set<String> defaultObstructions;
-	private final StatStringSet obstructions;
+	private final StatStringSetRegistry<ObstructionType> obstructions;
 	
-	public Area(ScriptRuntime scriptRuntime, String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, String ownerFactionID, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
+	public Area(ScriptRuntime scriptRuntime, Registry<ObstructionType> obstructionTypeRegistry, String ID, WorldObject landmark, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, Faction ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
 		super(ID);
 		this.scriptRuntime = scriptRuntime;
-		this.landmarkID = landmarkID;
+		this.landmark = landmark;
 		this.name = name;
 		this.nameType = nameType;
 		this.nameIsPlural = nameIsPlural;
 		this.description = description;
 		this.room = room;
-		this.ownerFactionID = ownerFactionID;
+		this.ownerFaction = ownerFaction;
 		this.restrictionType = restrictionType;
 		this.allowAllies = allowAllies;
 		this.linkedAreas = linkedAreas;
@@ -97,31 +97,23 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		this.scripts = scripts;
 		this.effects = new StatStringSet("effects", this);
 		this.defaultObstructions = defaultObstructions;
-		this.obstructions = new StatStringSet("obstructions", this);
+		this.obstructions = new StatStringSetRegistry<>("obstructions", this, obstructionTypeRegistry, ObstructionType::ID);
+		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().parentArea(this).build());
 	}
 
 	public void onInit(Game game) {
-		if (landmarkID != null) {
-			landmark = game.data().getObject(landmarkID);
-		}
-		if (ownerFactionID != null) {
-			ownerFaction = game.data().getFaction(ownerFactionID);
-		}
 		for (AreaLink link : linkedAreas.values()) {
 			link.init(game);
 		}
-		this.effectComponent = new EffectComponent(this, Context.builder().subject(game.data().getPlayer()).target(game.data().getPlayer()).parentArea(this).build());
 	}
 
 	private WorldObject getLandmark() {
-		if (landmarkID == null) return null;
-		if (landmark == null) throw new IllegalStateException("Area has not been initialized");
 		return landmark;
 	}
 
 	@Override
 	public String getName() {
-		if (landmarkID != null) {
+		if (landmark != null) {
 			return getLandmark().getName();
 		} else if (room != null && name == null) {
 			return getRoom().getName();
@@ -135,8 +127,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	public Faction getOwnerFaction() {
-		if (ownerFactionID == null) return getRoom().getOwnerFaction();
-		if (ownerFaction == null) throw new IllegalStateException("Area has not been initialized");
+		if (ownerFaction == null) return getRoom().getOwnerFaction();
 		return ownerFaction;
 	}
 
@@ -152,7 +143,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	@Override
 	public void setKnown() {
-		if (landmarkID != null) {
+		if (landmark != null) {
 			getLandmark().setKnown();
 		} else if (room != null && name == null) {
 			getRoom().setKnown();
@@ -162,7 +153,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	@Override
 	public boolean isKnown() {
-		if (landmarkID != null) {
+		if (landmark != null) {
 			return getLandmark().isKnown();
 		} else if (room != null && name == null) {
 			return getRoom().isKnown();
@@ -172,7 +163,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	public String getRelativeName() {
-		if (landmarkID == null && name == null && room != null) {
+		if (landmark == null && name == null && room != null) {
 			return getRoom().getRelativeName();
 		}
 		return switch (nameType) {
@@ -186,7 +177,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	public String getMovePhrase(Actor subject) {
-		if (landmarkID == null && name == null && room != null) {
+		if (landmark == null && name == null && room != null) {
 			return getRoom().getMovePhrase(subject);
 		}
 		return switch (nameType) {
@@ -199,10 +190,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		};
 	}
 
-	public void onStartRound(Game game) {
-		applyEffects(game);
-		getInventory().onStartRound(game);
-		effectComponent.onStartRound(game);
+	public void onStartRound() {
+		applyEffects();
+		getInventory().onStartRound();
+		effectComponent.onStartRound();
 	}
 	
 	public Set<WorldObject> getObjects(){
@@ -259,17 +250,17 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return null;
 	}
 
-	public List<Action> getItemActions(Game game) {
-		return itemInventory.getAreaActions(game, this);
+	public List<Action> getItemActions() {
+		return itemInventory.getAreaActions();
 	}
 
-	public List<Action> getMoveActions(Game game, Actor subject, String vehicleType, WorldObject vehicleObject) {
+	public List<Action> getMoveActions(Actor subject, String vehicleType, WorldObject vehicleObject) {
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(vehicleType) || vehicleType == null && link.isMovable()) {
-				String actionTemplateID = vehicleType == null ? game.data().getLinkType(link.getTypeID()).getActorMoveAction() : game.data().getLinkType(link.getTypeID()).getVehicleMoveAction(vehicleType);
+				String actionTemplateID = vehicleType == null ? game.data().getLinkType(link.getType().getID()).getActorMoveAction() : game.data().getLinkType(link.getType().getID()).getVehicleMoveAction(vehicleType);
 				ActionTemplate actionTemplate = game.data().getActionTemplate(actionTemplateID);
-				moveActions.add(new ActionCustom(null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
+				moveActions.add(new ActionCustom(scriptRuntime, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
 			}
 		}
 		return moveActions;
@@ -326,7 +317,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return visibleAreas;
 	}
 
-	public boolean hasDirectVisibleLinkTo(Area area, Game game) {
+	public boolean hasDirectVisibleLinkTo(Area area, AreaRegistry areaRegistry) {
 		if (linkedAreas.containsKey(area.getID())) {
 			AreaLink link = linkedAreas.get(area.getID());
 			return link.getType().isVisible();
@@ -334,7 +325,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
-			if (linkComponent.getLinkedLineOfSightAreas(game).contains(area)) {
+			if (linkComponent.getLinkedLineOfSightAreas(areaRegistry).contains(area)) {
 				return true;
 			}
 		}
@@ -377,9 +368,9 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return areas;
 	}
 
-	public void applyEffects(Game game) {
+	public void applyEffects() {
 		for (Actor actor : getActors()) {
-			for (String effectID : effects.value(new HashSet<>(), Context.builder(game).subject(actor).target(actor).build())) {
+			for (String effectID : effects.value(new HashSet<>(), Context.builder().subject(actor).target(actor).build())) {
 				Effect effect = game.data().getEffect(effectID);
 				actor.getEffectComponent().addEffect(game, effect);
 			}
@@ -387,12 +378,16 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	public Set<ObstructionType> getObstructions() {
+		return obstructions.valueObjects();
+	}
+
+	public Set<String> getObstructionIDs() {
 		return obstructions.value(defaultObstructions, Context.builder().parentArea(this).build());
 	}
 
-	public boolean hasUnbypassedObstruction(Set<ObstructionType> bypassedObstructions) {
-		Set<ObstructionType> activeObstructions = getObstructions();
-		return !bypassedObstructions.containsAll(activeObstructions);
+	public boolean hasUnbypassedObstruction(Set<String> bypassedObstructionIDs) {
+		Set<String> activeObstructionIDs = getObstructionIDs();
+		return !bypassedObstructionIDs.containsAll(activeObstructionIDs);
 	}
 
 	@Override
@@ -434,12 +429,12 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	@Override
 	public void addEffect(Effect effect) {
-		effectComponent.addEffect(game, effect);
+		effectComponent.addEffect(effect);
 	}
 
 	@Override
 	public void removeEffect(Effect effect) {
-		effectComponent.removeEffect(game, effect);
+		effectComponent.removeEffect(effect);
 	}
 
 	@Override
@@ -454,7 +449,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 			case "room" -> Expression.constant((StatHolder) room);
 			//case "visible_areas" -> new ExpressionConstantStringSet(getLineOfSightAreaIDs());
 			case "movable_areas" -> Expression.constant(getMovableAreaIDs(null));
-			case "obstruction_types" -> Expression.constant(getObstructions(game));
+			case "obstruction_types" -> Expression.constant(getObstructionIDs());
 			default -> null;
 		};
 	}
@@ -497,14 +492,14 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	@Override
 	public void onStatChange(String name) {
 		if ("effects".equals(name)) {
-			applyEffects(game);
+			applyEffects();
 		}
 	}
 
 	public void triggerScript(String entryPoint, Context context) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				scriptRuntime.executeScript(currentScript, context);
+				currentScript.run(scriptRuntime, context);
 			}
 		}
 	}

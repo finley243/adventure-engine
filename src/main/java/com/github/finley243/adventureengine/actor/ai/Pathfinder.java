@@ -1,9 +1,8 @@
 package com.github.finley243.adventureengine.actor.ai;
 
-import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -15,16 +14,24 @@ public class Pathfinder {
 
 	public static final int MAX_VISIBLE_DISTANCE = 15;
 
+	private final AreaRegistry areaRegistry;
+	private final Registry<WorldObject> objectRegistry;
+
+	public Pathfinder(AreaRegistry areaRegistry, Registry<WorldObject> objectRegistry) {
+		this.areaRegistry = areaRegistry;
+		this.objectRegistry = objectRegistry;
+	}
+
 	/**
 	 * Returns a list of Areas that represents the shortest path between them
 	 * @param startArea Start position to path from
 	 * @param targetArea Position the path leads to
 	 * @return Shortest path from currentArea to targetArea
 	 */
-	public static List<Area> findPath(Game game, Area startArea, Area targetArea, String vehicleType) {
+	public List<Area> findPath(Area startArea, Area targetArea, String vehicleType) {
 		Set<Area> targetSet = new HashSet<>();
 		targetSet.add(targetArea);
-		return findPath(game, startArea, targetSet, vehicleType);
+		return findPath(startArea, targetSet, vehicleType);
 	}
 
 	/**
@@ -33,7 +40,7 @@ public class Pathfinder {
 	 * @param targetAreas Positions the path could lead to
 	 * @return Shortest path from currentArea to targetArea
 	 */
-	public static List<Area> findPath(Game game, Area startArea, Set<Area> targetAreas, String vehicleType) {
+	public List<Area> findPath(Area startArea, Set<Area> targetAreas, String vehicleType) {
 		if (targetAreas.contains(startArea)) return Collections.singletonList(startArea);
 		Map<Area, Area> predecessors = new HashMap<>();
 		Queue<Area> queue = new LinkedList<>();
@@ -53,7 +60,7 @@ public class Pathfinder {
 			for (WorldObject object : currentArea.getObjects()) {
 				ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 				if (linkComponent == null) continue;
-				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
+				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(objectRegistry));
 			}
 			for (Area linkedArea : linkedAreasGlobal) {
 				if (!predecessors.containsKey(linkedArea)) {
@@ -65,8 +72,8 @@ public class Pathfinder {
 		return null;
 	}
 
-	public static Map<Area, VisibleAreaData> getVisibleAreas(AreaRegistry areaRegistry, Area origin, Actor actor) {
-		Map<Area, VisibleAreaData> visibleAreas = getLineOfSightAreas(areaRegistry, origin, actor.getAllBypassedObstructionTypes(), false);
+	public Map<Area, VisibleAreaData> getVisibleAreas(Area origin, Actor actor) {
+		Map<Area, VisibleAreaData> visibleAreas = getLineOfSightAreas(origin, actor.getAllBypassedObstructionTypes(), false);
 		for (Area area : new HashSet<>(visibleAreas.keySet())) {
 			if (!area.isVisible(actor)) {
 				visibleAreas.remove(area);
@@ -76,7 +83,7 @@ public class Pathfinder {
 		return visibleAreas;
 	}
 
-	public static Map<Area, VisibleAreaData> getLineOfSightAreas(AreaRegistry areaRegistry, Area origin, Set<String> bypassedObstructions, boolean ignoreAllObstructions) {
+	public Map<Area, VisibleAreaData> getLineOfSightAreas(Area origin, Set<String> bypassedObstructions, boolean ignoreAllObstructions) {
 		Map<Area, VisibleAreaData> visibleAreas = new HashMap<>();
 		Map<String, AreaQueueData> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
 		Map<Area, AreaPathData> visibleMap = new HashMap<>();
@@ -89,7 +96,7 @@ public class Pathfinder {
 				visibleMap.put(currentArea, new AreaPathData(null, true, 0));
 			} else {
 				for (Area visibleArea : new HashSet<>(visibleMap.keySet())) {
-					if (!visibleArea.hasDirectVisibleLinkTo(currentArea, areaRegistry) || (!ignoreAllObstructions && visibleArea.hasUnbypassedObstruction(game, bypassedObstructions))) continue;
+					if (!visibleArea.hasDirectVisibleLinkTo(currentArea, areaRegistry) || (!ignoreAllObstructions && visibleArea.hasUnbypassedObstruction(bypassedObstructions))) continue;
 					AreaLink.CompassDirection linkDirection = visibleArea.getLinkDirectionTo(currentArea, game);
 					AreaLink.CompassDirection currentOriginDirection = combinedDirection(visibleMap.get(visibleArea).direction, linkDirection);
 					int currentPathLength = visibleMap.get(visibleArea).minPathLength + 1;
@@ -119,7 +126,7 @@ public class Pathfinder {
 		return visibleAreas;
 	}
 
-	private static Map<String, AreaQueueData> getPossiblyVisibleAreas(Area origin, int range) {
+	private Map<String, AreaQueueData> getPossiblyVisibleAreas(Area origin, int range) {
 		Map<String, AreaQueueData> possiblyVisibleAreas = new LinkedHashMap<>();
 		Queue<AreaQueueData> areaQueue = new LinkedList<>();
 		List<Area> originPath = new ArrayList<>();
@@ -147,7 +154,7 @@ public class Pathfinder {
 	}
 
 	// TODO - Should use reachable areas, not movable areas
-	public static Set<Area> areasInRange(Game game, Area origin, int range, boolean useObjectLinks) {
+	public Set<Area> areasInRange(Area origin, int range, boolean useObjectLinks) {
 		Map<Area, Integer> visited = new HashMap<>();
 		Queue<Area> queue = new LinkedList<>();
 		queue.add(origin);
@@ -175,16 +182,16 @@ public class Pathfinder {
 	}
 
 	// TODO - Should use reachable areas, not movable areas
-	public static Set<Actor> actorsInRange(Game game, Area origin, int range, boolean useObjectLinks) {
+	public Set<Actor> actorsInRange(Area origin, int range, boolean useObjectLinks) {
 		Set<Actor> actorsInRange = new HashSet<>();
-		for (Area area : areasInRange(game, origin, range, useObjectLinks)) {
+		for (Area area : areasInRange(origin, range, useObjectLinks)) {
 			actorsInRange.addAll(area.getActors());
 		}
 		return actorsInRange;
 	}
 
 	// TODO - Should use reachable areas, not movable areas
-	public static Set<Actor> nearestActors(Game game, Area origin, boolean useObjectLinks) {
+	public Set<Actor> nearestActors(Area origin, boolean useObjectLinks) {
 		Map<Area, Integer> visited = new HashMap<>();
 		Queue<Area> queue = new LinkedList<>();
 		queue.add(origin);
@@ -205,7 +212,7 @@ public class Pathfinder {
 				for (WorldObject object : currentArea.getObjects()) {
 					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 					if (linkComponent == null) continue;
-					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
+					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
 				}
 			}
 			for (Area linkedArea : linkedAreasGlobal) {
@@ -218,7 +225,7 @@ public class Pathfinder {
 		return nearestActors.isEmpty() ? null : nearestActors;
 	}
 
-	private static AreaLink.CompassDirection combinedDirection(AreaLink.CompassDirection dir1, AreaLink.CompassDirection dir2) {
+	private AreaLink.CompassDirection combinedDirection(AreaLink.CompassDirection dir1, AreaLink.CompassDirection dir2) {
 		if (dir1 == null && dir2 != null) {
 			return dir2;
 		}

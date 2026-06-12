@@ -1,20 +1,24 @@
 package com.github.finley243.adventureengine.item.template;
 
+import com.github.finley243.adventureengine.combat.DamageType;
+import com.github.finley243.adventureengine.combat.WeaponClass;
+import com.github.finley243.adventureengine.effect.Effect;
+
 import java.util.Set;
 
 public class ItemComponentTemplateWeapon extends ItemComponentTemplate {
 
-    private final String weaponClass;
+    private final WeaponClass weaponClass;
     private final int damage;
     private final int rate;
     private final int critDamage;
     private final float critChance;
     private final float armorMult;
     private final boolean silenced;
-    private final String damageType;
-    private final Set<String> targetEffects;
+    private final DamageType damageType;
+    private final Set<Effect> targetEffects;
 
-    public ItemComponentTemplateWeapon(boolean actionsRestricted, String weaponClass, int damage, int rate, int critDamage, float critChance, float armorMult, boolean silenced, String damageType, Set<String> targetEffects) {
+    public ItemComponentTemplateWeapon(boolean actionsRestricted, WeaponClass weaponClass, int damage, int rate, int critDamage, float critChance, float armorMult, boolean silenced, DamageType damageType, Set<Effect> targetEffects) {
         super(actionsRestricted);
         if (weaponClass == null) throw new IllegalArgumentException("Weapon class cannot be null");
         this.weaponClass = weaponClass;
@@ -28,7 +32,7 @@ public class ItemComponentTemplateWeapon extends ItemComponentTemplate {
         this.targetEffects = targetEffects;
     }
 
-    public String getWeaponClass() {
+    public WeaponClass getWeaponClass() {
         return weaponClass;
     }
 
@@ -56,11 +60,11 @@ public class ItemComponentTemplateWeapon extends ItemComponentTemplate {
         return silenced;
     }
 
-    public String getDamageType() {
+    public DamageType getDamageType() {
         return damageType;
     }
 
-    public Set<String> getTargetEffects() {
+    public Set<Effect> getTargetEffects() {
         return targetEffects;
     }
 

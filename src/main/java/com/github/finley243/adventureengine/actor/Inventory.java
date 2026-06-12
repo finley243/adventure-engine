@@ -1,11 +1,9 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
-import com.github.finley243.adventureengine.gamedata.MutableRegistry;
+import com.github.finley243.adventureengine.item.InventoryOwner;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
-import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -16,27 +14,28 @@ import java.util.Map;
 
 public class Inventory {
 
-	// If inventory belongs to an object or secondary component (e.g. vendor inventory), actor will be null
-	private final Actor actor;
+	private final ItemFactory itemFactory;
+	private final InventoryOwner inventoryOwner;
 	// Keys are statsIDs, values are lists of items with the corresponding statsID
 	private final Map<String, List<Item>> items;
 	private final Map<String, StatelessItemStack> itemsStateless;
 
-	public Inventory(Actor actor) {
-		this.actor = actor;
+	public Inventory(ItemFactory itemFactory, InventoryOwner inventoryOwner) {
+		this.itemFactory = itemFactory;
+		this.inventoryOwner = inventoryOwner;
 		this.items = new HashMap<>();
 		this.itemsStateless = new HashMap<>();
 	}
 
-	public void onStartRound(Game game) {
+	public void onStartRound() {
 		for (List<Item> itemList : items.values()) {
 			for (Item item : itemList) {
-				item.onStartRound(game);
+				item.onStartRound();
 			}
 		}
 	}
 
-	public void addItem(Item item, MutableRegistry<Item> itemMutableRegistry) {
+	public void addItem(Item item) {
 		if (item.hasState()) {
 			if (item.getInventory() != null) throw new UnsupportedOperationException("Cannot add item " + item + " to inventory because it is still located in another inventory");
 			if (!items.containsKey(item.getTemplateID())) {
@@ -48,8 +47,7 @@ public class Inventory {
 			if (!itemsStateless.containsKey(item.getTemplateID())) {
 				Item instanceToAdd = item;
 				if (item.getInventory() != null) {
-					instanceToAdd = ItemFactory.createWithGenID(item.getTemplate());
-					itemMutableRegistry.add(instanceToAdd.getID(), instanceToAdd);
+					instanceToAdd = itemFactory.createWithGenID(item.getTemplate());
 				}
 				itemsStateless.put(item.getTemplateID(), new StatelessItemStack(instanceToAdd, 1));
 				instanceToAdd.setInventory(this);
@@ -59,20 +57,20 @@ public class Inventory {
 		}
 	}
 
-	public void addItems(String itemID, int count, Game game) {
+	public void addItems(String itemID, int count) {
 		if (count <= 0) throw new IllegalArgumentException("Cannot add non-positive number of Items: " + itemID);
 		for (int i = 0; i < count; i++) {
-			Item instance = ItemFactory.createWithGenID(itemID);
-			addItem(instance, game);
+			Item instance = itemFactory.createWithGenID(itemID);
+			addItem(instance);
 		}
 	}
 
-	public void addItems(Map<Item, Integer> itemMap, Game game) {
+	public void addItems(Map<Item, Integer> itemMap) {
 		for (Item item : itemMap.keySet()) {
 			if (item.hasState()) {
-				addItem(item, game);
+				addItem(item);
 			} else {
-				addItems(item.getTemplateID(), itemMap.get(item), game);
+				addItems(item.getTemplateID(), itemMap.get(item));
 			}
 		}
 	}
@@ -113,7 +111,7 @@ public class Inventory {
 		return totalCount;
 	}
 
-	public void removeItem(Item item, Game game) {
+	public void removeItem(Item item) {
 		if (item.hasState()) {
 			if (items.containsKey(item.getTemplateID())) {
 				boolean wasRemoved = items.get(item.getTemplateID()).remove(item);
@@ -123,10 +121,8 @@ public class Inventory {
 				if (wasRemoved) {
 					item.setInventory(null);
 				}
-				if (wasRemoved && actor != null) {
-					if (item.hasComponentOfType(ItemComponentEquippable.class)) {
-						actor.getEquipmentComponent().unequip(game, item);
-					}
+				if (wasRemoved && inventoryOwner != null) {
+					inventoryOwner.onRemoveItemFromInventory(item);
 				}
 			}
 		} else {
@@ -136,10 +132,8 @@ public class Inventory {
 				if (newCount <= 0) {
 					itemsStateless.get(item.getTemplateID()).instance.setInventory(null);
 					itemsStateless.remove(item.getTemplateID());
-					if (actor != null) {
-						if (item.hasComponentOfType(ItemComponentEquippable.class)) {
-							actor.getEquipmentComponent().unequip(game, item);
-						}
+					if (inventoryOwner != null) {
+						inventoryOwner.onRemoveItemFromInventory(item);
 					}
 				} else {
 					itemsStateless.get(item.getTemplateID()).count = newCount;
@@ -206,7 +200,7 @@ public class Inventory {
 		return uniqueItems;
 	}
 
-	public List<Action> getAreaActions(Game game, Area area) {
+	public List<Action> getAreaActions(Area area) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
@@ -214,7 +208,7 @@ public class Inventory {
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
-			Item item = ItemFactory.createWithGenID(current);
+			Item item = itemFactory.createWithGenID(current);
 			actions.add(new ActionItemTake(area, item));
 			if (itemCount(current) > 1) {
 				actions.add(new ActionItemTakeAll(area, item));
@@ -223,18 +217,18 @@ public class Inventory {
 		return actions;
 	}
 
-	public List<Action> getExternalActions(Game game, Noun owner, Actor subject, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore) {
+	public List<Action> getExternalActions(Noun owner, Actor subject, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore) {
 		List<Action> actions = new ArrayList<>();
 		if (enableTake) {
-			actions.addAll(getTakeActions(game, owner, takePrompt, takePhrase));
+			actions.addAll(getTakeActions(owner, takePrompt, takePhrase));
 		}
 		if (subject != null && enableStore) {
-			actions.addAll(subject.getInventory().getStoreActions(game, owner, this, storePrompt, storePhrase));
+			actions.addAll(subject.getInventory().getStoreActions(owner, this, storePrompt, storePhrase));
 		}
 		return actions;
 	}
 
-	private List<Action> getTakeActions(Game game, Noun owner, String prompt, String phrase) {
+	private List<Action> getTakeActions(Noun owner, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
@@ -242,7 +236,7 @@ public class Inventory {
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
-			Item item = ItemFactory.createWithGenID(current);
+			Item item = itemFactory.createWithGenID(current);
 			actions.add(new ActionInventoryTake(owner, this, item, prompt, phrase));
 			if (itemCount(current) > 1) {
 				actions.add(new ActionInventoryTakeAll(owner, this, item, prompt, phrase));
@@ -251,7 +245,7 @@ public class Inventory {
 		return actions;
 	}
 
-	private List<Action> getStoreActions(Game game, Noun owner, Inventory other, String prompt, String phrase) {
+	private List<Action> getStoreActions(Noun owner, Inventory other, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
@@ -259,7 +253,7 @@ public class Inventory {
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
-			Item item = ItemFactory.createWithGenID(current);
+			Item item = itemFactory.createWithGenID(current);
 			actions.add(new ActionInventoryStore(owner, other, item, prompt, phrase));
 			if (itemCount(current) > 1) {
 				actions.add(new ActionInventoryStoreAll(owner, other, item, prompt, phrase));

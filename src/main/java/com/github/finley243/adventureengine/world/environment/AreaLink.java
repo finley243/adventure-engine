@@ -2,8 +2,6 @@ package com.github.finley243.adventureengine.world.environment;
 
 import com.github.finley243.adventureengine.Game;
 
-import java.util.Map;
-
 public class AreaLink {
 
     public enum DistanceCategory {
@@ -33,25 +31,19 @@ public class AreaLink {
 
     private final String areaID;
     private Area area;
-    private final String typeID;
-    private LinkType type;
+    private final LinkType type;
     private final CompassDirection direction;
     private final DistanceCategory distance;
 
-    public AreaLink(String areaID, String typeID, CompassDirection direction, DistanceCategory distance) {
+    public AreaLink(String areaID, LinkType type, CompassDirection direction, DistanceCategory distance) {
         this.areaID = areaID;
-        this.typeID = typeID;
+        this.type = type;
         this.direction = direction;
         this.distance = distance;
     }
 
     public void init(Game game) {
         this.area = game.data().getArea(areaID);
-        this.type = game.data().getLinkType(typeID);
-    }
-
-    private String getAreaID() {
-        return areaID;
     }
 
     public Area getArea() {
@@ -59,12 +51,7 @@ public class AreaLink {
         return area;
     }
 
-    public String getTypeID() {
-        return typeID;
-    }
-
     public LinkType getType() {
-        if (type == null) throw new IllegalStateException("AreaLink not initialized");
         return type;
     }
 

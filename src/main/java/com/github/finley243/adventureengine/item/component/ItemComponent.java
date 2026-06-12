@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.*;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public abstract class ItemComponent implements MutableStatHolder {
         return new ArrayList<>();
     }
 
-    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
+    protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
         return new ArrayList<>();
     }
 

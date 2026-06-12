@@ -71,7 +71,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return getTemplate().getDescription();
 	}
 
-	public void onInit(Game game) {
+	public void onInit() {
 		for (ItemComponentTemplate componentTemplate : getTemplate().getComponents()) {
 			ItemComponent component = ItemComponentFactory.create(componentTemplate, this);
 			if (component == null) throw new UnsupportedOperationException("Cannot add null component to item " + this);
@@ -79,11 +79,11 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 				throw new UnsupportedOperationException("Item " + this + " already contains a component of type " + component.getClass());
 			}
 			components.put(component.getClass(), component);
-			component.onInit(game);
+			component.onInit();
 		}
 	}
 
-	public void onStartRound(Game game) {
+	public void onStartRound() {
 		for (ItemComponent component : components.values()) {
 			component.onStartRound();
 		}

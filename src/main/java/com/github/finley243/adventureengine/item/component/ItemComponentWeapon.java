@@ -4,10 +4,14 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplateWeapon;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -21,7 +25,7 @@ public class ItemComponentWeapon extends ItemComponent {
     public static final float HIT_CHANCE_BASE_RANGED_MIN = 0.10f;
     public static final float HIT_CHANCE_BASE_RANGED_MAX = 0.90f;
 
-    private final StatStringSet attackTypes;
+    private final StatStringSetRegistry<WeaponAttackType> attackTypes;
     private final StatInt damage;
     private final StatInt rate;
     private final StatInt critDamage;
@@ -31,13 +35,11 @@ public class ItemComponentWeapon extends ItemComponent {
     private final StatFloat armorMult;
     private final StatString damageType;
     private final StatBoolean isSilenced;
-    private final StatStringSet targetEffects;
+    private final StatStringSetRegistry<Effect> targetEffects;
 
-    private WeaponClass weaponClass;
-
-    public ItemComponentWeapon(Item item, ItemComponentTemplateWeapon template) {
+    public ItemComponentWeapon(Item item, ItemComponentTemplateWeapon template, Registry<WeaponAttackType> attackTypeRegistry, Registry<Effect> effectRegistry) {
         super(item, template);
-        this.attackTypes = new StatStringSet("attack_types", item);
+        this.attackTypes = new StatStringSetRegistry<>("attack_types", item, attackTypeRegistry, WeaponAttackType::getID);
         this.damage = new StatInt("damage", item);
         this.rate = new StatInt("rate", item);
         this.critDamage = new StatInt("crit_damage", item);
@@ -47,7 +49,7 @@ public class ItemComponentWeapon extends ItemComponent {
         this.armorMult = new StatFloat("armor_mult", item);
         this.damageType = new StatString("damage_type", item);
         this.isSilenced = new StatBoolean("is_silenced", item, false);
-        this.targetEffects = new StatStringSet("target_effects", item);
+        this.targetEffects = new StatStringSetRegistry<>("target_effects", item, effectRegistry, Effect::getID);
     }
 
     @Override
@@ -55,28 +57,21 @@ public class ItemComponentWeapon extends ItemComponent {
         return false;
     }
 
-    @Override
-    public void onInit(Game game) {
-        super.onInit(game);
-        this.weaponClass = game.data().getWeaponClass(getWeaponTemplate().getWeaponClass());
-    }
-
     private ItemComponentTemplateWeapon getWeaponTemplate() {
         return (ItemComponentTemplateWeapon) getTemplate();
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(game, subject);
-        for (String attackType : getAttackTypes(Context.builder(game).subject(subject).parentItem(getItem()).build())) {
-            actions.addAll(game.data().getAttackType(attackType).generateActions(game, subject, getItem()));
+    protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(scriptRuntime, subject);
+        for (WeaponAttackType attackType : getAttackTypes(scriptRuntime, Context.builder().subject(subject).parentItem(getItem()).build())) {
+            actions.addAll(attackType.generateActions(subject, getItem()));
         }
         return actions;
     }
 
     public WeaponClass getWeaponClass() {
-        if (weaponClass == null) throw new IllegalStateException("ItemComponentWeapon has not been initialized");
-        return weaponClass;
+        return getWeaponTemplate().getWeaponClass();
     }
 
     public boolean isRanged() {
@@ -107,8 +102,8 @@ public class ItemComponentWeapon extends ItemComponent {
         return critChance.value(getWeaponTemplate().getCritChance(), 0.0f, 1.0f, context);
     }
 
-    public Set<AreaLink.DistanceCategory> getRanges(Context context) {
-        return ranges.valueEnum(getWeaponClass().primaryRanges(), AreaLink.DistanceCategory.class, context);
+    public Set<AreaLink.DistanceCategory> getRanges(ScriptRuntime scriptRuntime, Context context) {
+        return ranges.valueEnum(getWeaponClass().primaryRanges(), AreaLink.DistanceCategory.class, scriptRuntime, context);
     }
 
     public float getModifiedHitChance(Context context, float baseChance) {
@@ -119,8 +114,8 @@ public class ItemComponentWeapon extends ItemComponent {
         return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, context);
     }
 
-    public Set<String> getTargetEffects(Context context) {
-        return targetEffects.value(getWeaponTemplate().getTargetEffects(), context);
+    public Set<String> getTargetEffects(ScriptRuntime scriptRuntime, Context context) {
+        return targetEffects.value(getWeaponTemplate().getTargetEffects(), scriptRuntime, context);
     }
 
     public String getDamageType(Context context) {
@@ -139,8 +134,8 @@ public class ItemComponentWeapon extends ItemComponent {
         return getWeaponClass().skill();
     }
 
-    public Set<String> getAttackTypes(Context context) {
-        return attackTypes.value(getWeaponClass().attackTypes(), context);
+    public Set<WeaponAttackType> getAttackTypes(ScriptRuntime scriptRuntime, Context context) {
+        return attackTypes.valueObjects(getWeaponClass().attackTypes(), scriptRuntime, context);
     }
 
     @Override

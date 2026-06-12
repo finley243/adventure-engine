@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplateMagazine;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.stat.StatInt;
 
@@ -41,8 +42,8 @@ public class ItemComponentMagazine extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(game, subject);
+    protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(scriptRuntime, subject);
         for (String current : getMagazineTemplate().getAmmoTypes()) {
             actions.add(new ActionWeaponReload(getItem(), ItemFactory.createWithGenID(current)));
         }

@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,10 +18,10 @@ public class StatStringSet extends Stat {
         this.mods = new ArrayList<>();
     }
 
-    public Set<String> value(Set<String> base, Context context) {
+    public Set<String> value(Set<String> base, ScriptRuntime scriptRuntime, Context context) {
         Set<String> outputSet = new HashSet<>(base);
         for (StatStringSetMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (mod.shouldApply(scriptRuntime, context)) {
                 outputSet.addAll(mod.addition);
                 outputSet.removeAll(mod.cancellation);
             }
@@ -28,22 +29,22 @@ public class StatStringSet extends Stat {
         return outputSet;
     }
 
-    public <T extends Enum<T>> Set<String> valueFromEnum(Set<T> base, Context context) {
+    public <T extends Enum<T>> Set<String> valueFromEnum(Set<T> base, ScriptRuntime scriptRuntime, Context context) {
         Set<String> enumStrings = new HashSet<>();
         for (T enumValue : base) {
             enumStrings.add(enumValue.toString().toLowerCase());
         }
-        return value(enumStrings, context);
+        return value(enumStrings, scriptRuntime, context);
     }
 
-    public <T extends Enum<T>> Set<T> valueEnum(Set<T> base, Class<T> enumClass, Context context) {
+    public <T extends Enum<T>> Set<T> valueEnum(Set<T> base, Class<T> enumClass, ScriptRuntime scriptRuntime, Context context) {
         Set<T> outputSet = new HashSet<>(base);
         Set<T> additionalEnum = new HashSet<>();
         Set<T> cancellationEnum = new HashSet<>();
         Set<String> additional = new HashSet<>();
         Set<String> cancellation = new HashSet<>();
         for (StatStringSetMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (mod.shouldApply(scriptRuntime, context)) {
                 additional.addAll(mod.addition);
                 cancellation.addAll(mod.cancellation);
             }
@@ -82,8 +83,8 @@ public class StatStringSet extends Stat {
     }
 
     public record StatStringSetMod(Condition condition, Set<String> addition, Set<String> cancellation) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
+        public boolean shouldApply(ScriptRuntime scriptRuntime, Context context) {
+            return condition == null || condition.isMet(scriptRuntime, context);
         }
     }
 

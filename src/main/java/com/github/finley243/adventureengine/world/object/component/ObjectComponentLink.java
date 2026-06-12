@@ -9,9 +9,12 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.gamedata.AreaRegistry;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -30,7 +33,7 @@ public class ObjectComponentLink extends ObjectComponent {
         return (ObjectComponentTemplateLink) getTemplate();
     }
 
-    public WorldObject getLinkedObject(Game game, String linkID) {
+    public WorldObject getLinkedObject(Registry<WorldObject> objectRegistry, String linkID) {
         Expression linkedObjectExpression = getObject().getLocalVariable(linkID + "_object");
         if (linkedObjectExpression == null) {
             DebugLogger.print("ObjectComponentLink " + getObject() + " - linked object local variable is missing");
@@ -41,7 +44,7 @@ public class ObjectComponentLink extends ObjectComponent {
             return null;
         }
         String linkedObjectID = linkedObjectExpression.getValueString();
-        return game.data().getObject(linkedObjectID);
+        return objectRegistry.getFromID(linkedObjectID);
     }
 
     public AreaLink.CompassDirection getDirection(String linkID) {
@@ -58,48 +61,48 @@ public class ObjectComponentLink extends ObjectComponent {
         return LoadUtils.stringToEnum(directionString, AreaLink.CompassDirection.class);
     }
 
-    public boolean isLinkedAreaVisible(String linkID, Game game, Actor actor) {
+    public boolean isLinkedAreaVisible(ScriptRuntime scriptRuntime, String linkID, Actor actor) {
         ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
-        Context context = Context.builder(game).subject(actor).target(actor).parentObject(getObject()).build();
-        return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(context));
+        Context context = Context.builder().subject(actor).target(actor).parentObject(getObject()).build();
+        return linkData.isVisible() && (linkData.conditionVisible() == null || linkData.conditionVisible().isMet(scriptRuntime, context));
     }
 
-    public Set<Area> getLinkedLineOfSightAreas(Game game) {
+    public Set<Area> getLinkedLineOfSightAreas(Registry<WorldObject> objectRegistry) {
         Set<Area> linkedAreas = new HashSet<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
             if (linkEntry.getValue().isVisible()) {
-                linkedAreas.add(getLinkedObject(game, linkEntry.getKey()).getArea());
+                linkedAreas.add(getLinkedObject(objectRegistry, linkEntry.getKey()).getArea());
             }
         }
         return linkedAreas;
     }
 
-    public Map<Area, AreaLink.CompassDirection> getLinkedLineOfSightAreasWithDirections(Game game) {
+    public Map<Area, AreaLink.CompassDirection> getLinkedLineOfSightAreasWithDirections(ScriptRuntime scriptRuntime, Registry<WorldObject> objectRegistry) {
         Map<Area, AreaLink.CompassDirection> linkedAreas = new HashMap<>();
-        Context context = Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).parentObject(getObject()).build();
+        Context context = Context.builder().parentObject(getObject()).build();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
-            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(context))) {
-                linkedAreas.put(getLinkedObject(game, linkEntry.getKey()).getArea(), getDirection(linkEntry.getKey()));
+            if (linkEntry.getValue().isVisible() && (linkEntry.getValue().conditionVisible() == null || linkEntry.getValue().conditionVisible().isMet(scriptRuntime, context))) {
+                linkedAreas.put(getLinkedObject(objectRegistry, linkEntry.getKey()).getArea(), getDirection(linkEntry.getKey()));
             }
         }
         return linkedAreas;
     }
 
-    public Set<Area> getLinkedAreasAudible(Game game) {
+    public Set<Area> getLinkedAreasAudible(Registry<WorldObject> objectRegistry) {
         Set<Area> linkedAreas = new HashSet<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
             if (linkEntry.getValue().isVisible()) {
-                linkedAreas.add(getLinkedObject(game, linkEntry.getKey()).getArea());
+                linkedAreas.add(getLinkedObject(objectRegistry, linkEntry.getKey()).getArea());
             }
         }
         return linkedAreas;
     }
 
-    public Set<Area> getLinkedAreasMovable(Game game) {
+    public Set<Area> getLinkedAreasMovable(Registry<WorldObject> objectRegistry) {
         Set<Area> linkedAreas = new HashSet<>();
         for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> linkEntry : getTemplateLink().getLinkData().entrySet()) {
             if (linkEntry.getValue().moveAction() != null) {
-                linkedAreas.add(getLinkedObject(game, linkEntry.getKey()).getArea());
+                linkedAreas.add(getLinkedObject(objectRegistry, linkEntry.getKey()).getArea());
             }
         }
         return linkedAreas;

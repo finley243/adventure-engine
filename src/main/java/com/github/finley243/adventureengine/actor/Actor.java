@@ -19,8 +19,11 @@ import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.gamedata.MutableRegistry;
+import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.item.InventoryOwner;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
+import com.github.finley243.adventureengine.item.component.ItemComponentEquippable;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
@@ -42,7 +45,7 @@ import com.github.finley243.adventureengine.world.object.component.ObjectCompone
 import java.util.*;
 import java.util.function.Function;
 
-public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget, Effectible {
+public class Actor extends GameInstanced implements Noun, Physical, MutableStatHolder, AttackTarget, Effectible, InventoryOwner {
 
 	public static final boolean SHOW_HP_CHANGES = true;
 	public static final int ATTRIBUTE_MIN = 1;
@@ -72,7 +75,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Area defaultArea;
 	private Area area;
 
-	private final StatStringSet senseTypes;
+	private final StatStringSetRegistry<SenseType> senseTypes;
 	private final Set<AreaTarget> areaTargets;
 
 	private int level;
@@ -91,7 +94,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private Actor carriedActor;
 	private ObjectComponentUsable.ObjectUserData usingObject;
 
-	private final StatStringSet equipmentEffects;
+	private final StatStringSetRegistry<Effect> equipmentEffects;
 
 	private boolean endTurn;
 	private final StatInt actionPoints;
@@ -116,7 +119,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Map<String, List<Script>> scripts;
 	private final Context defaultContext;
 
-	public Actor(ScriptRuntime scriptRuntime, UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, Collection<DamageType> allDamageTypes, Collection<Attribute> allAttributes, Collection<Skill> allSkills, String ID, String nameDescriptor, Area area, ActorTemplate template, boolean isPlayer, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean isPlayerControlled) {
+	public Actor(ScriptRuntime scriptRuntime, UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Collection<DamageType> allDamageTypes, Collection<Attribute> allAttributes, Collection<Skill> allSkills, String ID, String nameDescriptor, Area area, ActorTemplate template, boolean isPlayer, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean isPlayerControlled) {
 		super(ID);
 		this.scriptRuntime = scriptRuntime;
 		this.eventBus = eventBus;
@@ -129,7 +132,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.isPlayer = isPlayer;
 		this.targetingComponent = new TargetingComponent(this);
 		this.areaTargets = new HashSet<>();
-		this.senseTypes = new StatStringSet("sense_types", this);
+		this.senseTypes = new StatStringSetRegistry<>("sense_types", this, senseTypeRegistry, SenseType::ID);
 		this.startDead = startDead;
 		this.isDead = startDead;
 		this.maxHP = new StatInt("max_hp", this);
@@ -140,14 +143,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.canDodge = new StatBoolean("can_dodge", this, false);
 		this.inventory = new Inventory(this);
 		this.equipmentComponent = new EquipmentComponent(this);
-		this.equipmentEffects = new StatStringSet("equipment_effects", this);
-		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().subject(this).target(this).build());
+		this.equipmentEffects = new StatStringSetRegistry<>("equipment_effects", this, effectRegistry, Effect::getID);
+		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().subject(this).build());
 		this.behaviorComponent = new BehaviorComponent(this, behaviors);
 		this.repeatActions = new HashMap<>();
 		this.startDisabled = startDisabled;
 		this.isPlayerControlled = isPlayerControlled;
 		this.scripts = new HashMap<>();
-		this.defaultContext = Context.builder().subject(this).target(this).build();
+		this.defaultContext = Context.builder().subject(this).build();
 		this.damageResistance = new HashMap<>();
 		this.damageMult = new HashMap<>();
 		for (DamageType damageType : allDamageTypes) {
@@ -413,8 +416,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return movePoints.value(getTemplate().getMovePoints(), 0, MAX_MOVE_POINTS, Context.from(defaultContext).build());
 	}
 
-	public Set<String> getEquipmentEffects(Item item) {
-		return equipmentEffects.value(new HashSet<>(), Context.from(defaultContext).parentItem(item).build());
+	public Set<Effect> getEquipmentEffects(Item item) {
+		return equipmentEffects.valueObjects(new HashSet<>(), scriptRuntime, Context.from(defaultContext).parentItem(item).build());
 	}
 
 	@Override
@@ -896,7 +899,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public Set<SenseType> getSenseTypes() {
 		Context context = Context.from(defaultContext).build();
-		return senseTypes.value(getTemplate().getSenseTypes(), context);
+		return senseTypes.valueObjects(getTemplate().getSenseTypes(), context);
 	}
 
 	public Set<String> getAllBypassedObstructionTypes() {
@@ -1113,6 +1116,13 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return getTemplate().getBark(trigger);
 	}
 
+	@Override
+	public void onRemoveItemFromInventory(Item item) {
+		if (item.hasComponentOfType(ItemComponentEquippable.class)) {
+			getEquipmentComponent().unequip(item);
+		}
+	}
+
 	private Expression resolveExpressionPrefix(String name, String prefix, Map<String, ?> map, String keyType, Expression fallback, Function<String, Expression> resolver) {
 		String key = name.substring(prefix.length());
 		if (!map.containsKey(key)) {
@@ -1155,5 +1165,5 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 		getArea().triggerScript("on_player_enter", Context.from(defaultContext).build());
 	}
-	
+
 }

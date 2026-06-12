@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.item.component;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionModRemove;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -8,6 +7,7 @@ import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplate;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplateModdable;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,8 +33,8 @@ public class ItemComponentModdable extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(game, subject);
+    protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(scriptRuntime, subject);
         for (List<Item> modList : mods.values()) {
             for (Item mod : modList) {
                 actions.add(new ActionModRemove(getItem(), mod));

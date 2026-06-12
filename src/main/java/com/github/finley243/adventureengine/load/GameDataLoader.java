@@ -63,13 +63,11 @@ public class GameDataLoader {
     private final ConfigHandler configHandler;
     private final ScriptRuntime scriptRuntime;
     private final MutableRegistry<Item> itemMutableRegistry;
-    private final ItemFactory itemFactory;
 
-    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, ItemFactory itemFactory) {
+    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry) {
         this.configHandler = configHandler;
         this.scriptRuntime = scriptRuntime;
         this.itemMutableRegistry = itemMutableRegistry;
-        this.itemFactory = itemFactory;
     }
 
     public GameData loadData(File dir) throws GameDataException {
@@ -113,10 +111,10 @@ public class GameDataLoader {
         CombatTypeLoader combatTypeLoader = new CombatTypeLoader(scriptParser);
         Map<String, DamageType> damageTypeMap = loadMapFromFileName(dir, NAME_DAMAGE_TYPE, builder, combatTypeLoader::loadDamageTypes);
         Registry<DamageType> damageTypeRegistry = new Registry<>(damageTypeMap);
-        Map<String, WeaponClass> weaponClassMap = loadMapFromFileName(dir, NAME_WEAPON_CLASS, builder, combatTypeLoader::loadWeaponClasses);
-        Registry<WeaponClass> weaponClassRegistry = new Registry<>(weaponClassMap);
         Map<String, WeaponAttackType> attackTypeMap = loadMapFromFileName(dir, NAME_ATTACK_TYPE, builder, combatTypeLoader::loadAttackTypes);
         Registry<WeaponAttackType> attackTypeRegistry = new Registry<>(attackTypeMap);
+        Map<String, WeaponClass> weaponClassMap = loadMapFromFileName(dir, NAME_WEAPON_CLASS, builder, e -> combatTypeLoader.loadWeaponClasses(e, attackTypeRegistry));
+        Registry<WeaponClass> weaponClassRegistry = new Registry<>(weaponClassMap);
 
         FactionLoader factionLoader = new FactionLoader();
         Map<String, Faction> factionMap = loadMapFromFileName(dir, NAME_FACTION, builder, factionLoader::load);
@@ -160,14 +158,16 @@ public class GameDataLoader {
         Map<String, Room> roomMap =  loadMapFromFileName(dir, NAME_ROOM, builder, roomLoader::load);
         Registry<Room> roomRegistry = new Registry<>(roomMap);
 
-        ActorTemplateLoader actorTemplateLoader = new ActorTemplateLoader(scriptParser, lootTableLoader, actionRegistry, effectRegistry, factionRegistry, attackTypeRegistry, sceneRegistry, lootTableRegistry);
+        ActorTemplateLoader actorTemplateLoader = new ActorTemplateLoader(scriptParser, lootTableLoader, senseTypeRegistry, actionRegistry, effectRegistry, factionRegistry, attackTypeRegistry, sceneRegistry, lootTableRegistry);
         Map<String, ActorTemplate> actorTemplateMap = loadMapFromFileName(dir, NAME_ACTOR_TEMPLATE, builder, actorTemplateLoader::load);
         Registry<ActorTemplate> actorTemplateRegistry = new Registry<>(actorTemplateMap);
+
+        ItemFactory itemFactory = new ItemFactory(itemTemplateRegistry, itemMutableRegistry);
 
         ActorLoader actorLoader = new ActorLoader(scriptParser);
         ObjectLoader objectLoader = new ObjectLoader(scriptParser, objectTemplateRegistry);
         ItemLoader itemLoader = new ItemLoader(itemFactory, itemTemplateRegistry);
-        AreaLoader areaLoader = new AreaLoader(configHandler, scriptRuntime, scriptParser, sceneLoader, actorLoader, objectLoader, itemLoader, itemMutableRegistry, roomRegistry);
+        AreaLoader areaLoader = new AreaLoader(configHandler, scriptRuntime, scriptParser, sceneLoader, actorLoader, objectLoader, itemLoader, itemMutableRegistry, roomRegistry, obstructionTypeRegistry, linkTypeRegistry);
         Element areasElement = getRootElementFromFileName(dir, NAME_AREA, builder);
         AreaLoader.AreaLoaderResult areaLoaderResult = areaLoader.load(areasElement);
         AreaRegistry areaRegistry = new AreaRegistry(areaLoaderResult.areas());
@@ -176,7 +176,7 @@ public class GameDataLoader {
         ActorRegistry actorRegistry = new ActorRegistry(areaLoaderResult.actors(), playerActor);
         Registry<WorldObject> objectRegistry = new Registry<>(areaLoaderResult.objects());
 
-        return new GameData(phraseManager, areaRegistry, roomRegistry, actorTemplateRegistry, actorRegistry, objectTemplateRegistry, objectRegistry, itemTemplateRegistry, itemMutableRegistry, lootTableRegistry, weaponClassRegistry, attackTypeRegistry, sceneRegistry, factionRegistry, networkRegistry, effectRegistry, actionRegistry, linkTypeRegistry, damageTypeRegistry, attributeRegistry, skillRegistry, senseTypeRegistry, obstructionTypeRegistry, scriptRegistry);
+        return new GameData(phraseManager, itemFactory, areaRegistry, roomRegistry, actorTemplateRegistry, actorRegistry, objectTemplateRegistry, objectRegistry, itemTemplateRegistry, itemMutableRegistry, lootTableRegistry, weaponClassRegistry, attackTypeRegistry, sceneRegistry, factionRegistry, networkRegistry, effectRegistry, actionRegistry, linkTypeRegistry, damageTypeRegistry, attributeRegistry, skillRegistry, senseTypeRegistry, obstructionTypeRegistry, scriptRegistry);
     }
 
     private <T> Map<String, T> loadMapFromFileName(File parentDir, String name, DocumentBuilder builder, Function<Element, Map<String, T>> loadFunction) throws GameDataException {

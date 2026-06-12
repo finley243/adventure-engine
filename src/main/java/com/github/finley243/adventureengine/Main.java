@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.event.UIEventBusImpl;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.*;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.load.GameDataLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
@@ -48,9 +47,8 @@ public class Main {
 		}
 
 		MutableRegistry<Item> itemMutableRegistry = new MutableRegistry<>(Map.of());
-		ItemFactory itemFactory = new ItemFactory(itemMutableRegistry);
 
-		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, itemFactory);
+		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry);
 		File dataDirectory = Path.of(GAMEFILES + DATA_DIRECTORY).toFile();
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);

@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplateEquippable;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,8 @@ public class ItemComponentEquippable extends ItemComponent {
     }
 
     @Override
-    protected List<Action> getPossibleInventoryActions(Game game, Actor subject) {
-        List<Action> actions = super.getPossibleInventoryActions(game, subject);
+    protected List<Action> getPossibleInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
+        List<Action> actions = super.getPossibleInventoryActions(scriptRuntime, subject);
         for (ItemComponentTemplateEquippable.EquippableSlotsData slots : getEquippableTemplate().getSlots()) {
             actions.add(new ActionItemEquip(getItem(), slots));
         }
