@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.item;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.actor.Inventory;
+import com.github.finley243.adventureengine.gamedata.MutableRegistry;
 
 import java.util.List;
 
@@ -22,15 +22,15 @@ public class LootTable {
 		return ID;
 	}
 
-	public void generateItems(Game game, Inventory inventory) {
+	public void generateItems(Inventory inventory, ItemFactory itemFactory, MutableRegistry<Item> itemMutableRegistry) {
 		if (useAll) {
 			for (LootTableEntry entry : entries) {
-				entry.generateItems(game, inventory);
+				entry.generateItems(inventory, itemFactory, itemMutableRegistry);
 			}
 		} else {
 			LootTableEntry randomEntry = MathUtils.selectRandomFromList(entries);
 			if (randomEntry != null) {
-				randomEntry.generateItems(game, inventory);
+				randomEntry.generateItems(inventory,  itemFactory, itemMutableRegistry);
 			}
 		}
 	}

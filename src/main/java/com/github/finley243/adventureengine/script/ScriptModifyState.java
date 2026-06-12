@@ -20,25 +20,25 @@ public class ScriptModifyState extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         if (state.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyState state name is not a string");
         String stateValue = state.getValueString();
         switch (expression.getDataType()) {
             case INTEGER -> {
-                Expression oldValueExpression = holder.getHolder(context).getStatValue(stateValue, context, context.game());
+                Expression oldValueExpression = holder.getHolder(context).getStatValue(stateValue, context);
                 if (oldValueExpression == null) throw new UnsupportedOperationException("Expression " + stateValue + " does not exist on holder");
                 if (oldValueExpression.getDataType() != Expression.DataType.INTEGER) throw new UnsupportedOperationException("Expression " + stateValue + " is not a float");
                 int oldValue = oldValueExpression.getValueInteger();
                 Expression newValueExpression = Expression.constant(oldValue + expression.getValueInteger());
-                holder.getHolder(context).setStatValue(stateValue, newValueExpression, context, context.game());
+                holder.getHolder(context).setStatValue(stateValue, newValueExpression, context);
             }
             case FLOAT -> {
-                Expression oldValueExpression = holder.getHolder(context).getStatValue(stateValue, context, context.game());
+                Expression oldValueExpression = holder.getHolder(context).getStatValue(stateValue, context);
                 if (oldValueExpression == null) throw new UnsupportedOperationException("Expression " + stateValue + " does not exist on holder");
                 if (oldValueExpression.getDataType() != Expression.DataType.FLOAT) throw new UnsupportedOperationException("Expression " + stateValue + " is not a float");
                 float oldValue = oldValueExpression.getValueFloat();
                 Expression newValueExpression = Expression.constant(oldValue + expression.getValueFloat());
-                holder.getHolder(context).setStatValue(stateValue, newValueExpression, context, context.game());
+                holder.getHolder(context).setStatValue(stateValue, newValueExpression, context);
             }
             default ->
                     throw new UnsupportedOperationException("No modify functions for provided data type: " + expression.getDataType());

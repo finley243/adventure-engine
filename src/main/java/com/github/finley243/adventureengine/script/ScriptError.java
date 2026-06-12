@@ -13,8 +13,8 @@ public class ScriptError extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData messageResult = scriptMessage.execute(context);
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        ScriptReturnData messageResult = scriptMessage.execute(, context);
         if (messageResult.error() != null) {
             return messageResult;
         } else if (messageResult.flowStatement() != null) {

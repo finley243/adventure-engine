@@ -18,7 +18,7 @@ public class ScriptStatHolderType extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression statHolderExpression = context.getLocalVariables().get("holder").getExpression();
         if (statHolderExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Holder parameter is not a stat holder", getTraceData()));
         StatHolder statHolder = statHolderExpression.getValueStatHolder();

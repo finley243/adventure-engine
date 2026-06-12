@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.menu.action.MenuData;
@@ -22,12 +21,12 @@ public class ActionCarryActorEnd extends Action {
     }
 
     @Override
-    public Context getContext(Game game, Actor subject) {
+    public Context getContext(Actor subject) {
         return Context.builder(game).subject(subject).target(carriedActor).build();
     }
 
     @Override
-    public void choose(Game game, int repeatActionCount, Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         subject.setCarriedActor(null);
         Context context = Context.builder(game).subject(subject).target(carriedActor).build();
         SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("putDownActor"), context, true, this, null));
@@ -39,7 +38,7 @@ public class ActionCarryActorEnd extends Action {
     }
 
     @Override
-    public String getPrompt(Game game, Actor subject) {
+    public String getPrompt(Actor subject) {
         return "Put down";
     }
 

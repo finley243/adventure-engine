@@ -17,13 +17,13 @@ public class ScriptSetVariable extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         if (isDefinition && context.getLocalVariables().containsKey(variableName)) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Variable with name is already defined", getTraceData()));
         } else if (!isDefinition && !context.getLocalVariables().containsKey(variableName)) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Variable with name has not been defined", getTraceData()));
         }
-        ScriptReturnData valueResult = variableValue.execute(context);
+        ScriptReturnData valueResult = variableValue.execute(, context);
         if (valueResult.error() != null) {
             return valueResult;
         } else if (valueResult.flowStatement() != null) {

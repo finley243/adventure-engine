@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.event.ui;
 
-public class ChoiceMenuInputEvent {
+public class ChoiceMenuInputEvent extends UIEvent {
 
 	private final int index;
 	

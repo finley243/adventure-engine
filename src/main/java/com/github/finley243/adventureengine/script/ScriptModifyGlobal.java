@@ -16,7 +16,7 @@ public class ScriptModifyGlobal extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         if (globalID.getDataType() != Expression.DataType.STRING) throw new IllegalArgumentException("ScriptModifyGlobal globalID is not a string");
         String globalIDValue = globalID.getValueString();
         if (context.game().data().getGlobalExpression(globalIDValue).getDataType() != expression.getDataType()) throw new IllegalArgumentException("ScriptModifyGlobal expression data type does not match global");

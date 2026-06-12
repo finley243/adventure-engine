@@ -12,11 +12,11 @@ public class ScriptReturn extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         if (scriptReturn == null) {
             return new ScriptReturnData(null, FlowStatementType.RETURN, null);
         }
-        ScriptReturnData scriptResult = scriptReturn.execute(context);
+        ScriptReturnData scriptResult = scriptReturn.execute(, context);
         if (scriptResult.error() != null) {
             return scriptResult;
         } else if (scriptResult.flowStatement() != null) {

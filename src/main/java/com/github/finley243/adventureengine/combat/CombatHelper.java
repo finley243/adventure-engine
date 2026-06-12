@@ -17,7 +17,7 @@ public class CombatHelper {
 	public static final float HIT_CHANCE_MIN = 0.01f;
 	
 	public static float calculateHitChance(Context scriptContext, Item weapon, Limb limb, Script hitChanceFunction, float hitChanceMult) {
-		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(scriptContext);
+		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(, scriptContext);
 		if (hitChanceResult.error() != null) {
 			throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());
 		} else if (hitChanceResult.flowStatement() != null) {
@@ -40,7 +40,7 @@ public class CombatHelper {
 	}
 
 	public static float calculateHitChanceNoTarget(Context scriptContext, Item weapon, Limb limb, Script hitChanceFunction, float hitChanceMult) {
-		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(scriptContext);
+		Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(, scriptContext);
 		if (hitChanceResult.error() != null) {
 			throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());
 		} else if (hitChanceResult.flowStatement() != null) {
@@ -64,7 +64,7 @@ public class CombatHelper {
 
 	public static float calculateHitChanceDodgeOnly(Context scriptContext, AttackTarget target, Script hitChanceFunction) {
 		if (target instanceof Actor) {
-			Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(scriptContext);
+			Script.ScriptReturnData hitChanceResult = hitChanceFunction.execute(, scriptContext);
 			if (hitChanceResult.error() != null) {
 				throw new RuntimeException("Error calculating hit chance: " + hitChanceResult.stackTrace());
 			} else if (hitChanceResult.flowStatement() != null) {

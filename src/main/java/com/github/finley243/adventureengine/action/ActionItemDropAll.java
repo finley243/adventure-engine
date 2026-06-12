@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -25,24 +24,24 @@ public class ActionItemDropAll extends Action {
 	}
 
 	@Override
-	public Context getContext(Game game, Actor subject) {
+	public Context getContext(Actor subject) {
 		Context context = Context.builder(game).subject(subject).parentItem(item).build();
 		context.setLocalVariable("count", Expression.constant(subject.getInventory().itemCount(item)));
 		return context;
 	}
 	
 	@Override
-	public void choose(Game game, int repeatActionCount, Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		int count = subject.getInventory().itemCount(item);
 		subject.getInventory().removeItems(item.getTemplateID(), count);
 		subject.getArea().getInventory().addItems(item.getTemplateID(), count, game);
-		Context context = getContext(game, subject);
+		Context context = getContext(subject);
 		//TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
 		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
 	}
 
 	@Override
-	public int actionPoints(Game game, Actor subject) {
+	public int actionPoints(Actor subject) {
 		return 0;
 	}
 
@@ -52,7 +51,7 @@ public class ActionItemDropAll extends Action {
 	}
 
 	@Override
-	public String getPrompt(Game game, Actor subject) {
+	public String getPrompt(Actor subject) {
 		return "Drop All";
 	}
 

@@ -15,9 +15,9 @@ public class ScriptAnd extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         for (Script subScript : subScripts) {
-            ScriptReturnData result = subScript.execute(context);
+            ScriptReturnData result = subScript.execute(, context);
             if (result.error() != null) {
                 return result;
             } else if (result.flowStatement() != null) {

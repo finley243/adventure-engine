@@ -1,12 +1,12 @@
 package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -23,11 +23,11 @@ public class BehaviorComponent {
     private AreaTarget areaTarget;
     private Context scriptContext;
 
-    public BehaviorComponent(Game game, Actor actor, List<Behavior> behaviors) {
+    public BehaviorComponent(Actor actor, List<Behavior> behaviors) {
         this.actor = actor;
         this.behaviors = Objects.requireNonNullElseGet(behaviors, ArrayList::new);
         this.currentIndex = -1;
-        this.defaultContext = Context.builder(game).subject(actor).target(actor).build();
+        this.defaultContext = Context.builder().subject(actor).target(actor).build();
         resetContext();
     }
 
@@ -36,22 +36,21 @@ public class BehaviorComponent {
         return behaviors.get(currentIndex);
     }
 
-    public Idle getIdle(Game game) {
+    public Idle getIdle(ScriptRuntime scriptRuntime) {
         Behavior current = currentBehavior();
         if (current == null) {
             return null;
         } else {
-            return current.getIdle(game, actor);
+            return current.getIdle(actor, scriptRuntime);
         }
     }
 
-    // A return value of -1.0f indicates no override for given action
-    public Float actionUtilityOverride(Game game, Action action) {
+    public Float actionUtilityOverride(Action action) {
         Behavior current = currentBehavior();
         if (current == null) {
             return null;
         } else {
-            return current.actionUtilityOverride(game, actor, action);
+            return current.actionUtilityOverride(actor, action);
         }
     }
 
@@ -60,47 +59,47 @@ public class BehaviorComponent {
         return currentBehavior != null && currentBehavior.isGuarding(actor, object);
     }
 
-    public void onPerformAction(Game game, Action action) {
+    public void onPerformAction(Action action) {
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
-            currentBehavior.onPerformAction(game, actor, action);
+            currentBehavior.onPerformAction(actor, action);
         }
     }
 
-    public void updateTurn(Game game) {
+    public void updateTurn(ScriptRuntime scriptRuntime) {
         if (behaviors.isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
-            currentBehavior.updateTurn(game, actor, scriptContext);
+            currentBehavior.updateTurn(actor, scriptRuntime);
         }
     }
 
-    public void update(Game game) {
+    public void update(ScriptRuntime scriptRuntime) {
         if (behaviors.isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
-            currentBehavior.update(game, actor, scriptContext);
+            currentBehavior.update(actor, scriptContext);
         }
-        endCurrentBehaviorIfInvalid(game);
-        selectNextBehavior(game);
-        updateAreaTarget(game);
+        endCurrentBehaviorIfInvalid(scriptRuntime);
+        selectNextBehavior(scriptRuntime);
+        updateAreaTarget();
     }
 
-    private void endCurrentBehaviorIfInvalid(Game game) {
+    private void endCurrentBehaviorIfInvalid(ScriptRuntime scriptRuntime) {
         Behavior currentBehavior = currentBehavior();
-        if (currentBehavior != null && !currentBehavior.isValid(game, actor)) {
+        if (currentBehavior != null && !currentBehavior.isValid(actor, scriptRuntime)) {
             currentIndex = -1;
             areaTarget.markForRemoval();
             areaTarget = null;
         }
     }
 
-    private void updateAreaTarget(Game game) {
+    private void updateAreaTarget() {
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior == null) {
             return;
         }
-        Area targetArea = currentBehavior.getTargetArea(game, actor);
+        Area targetArea = currentBehavior.getTargetArea(actor);
         if (targetArea == null) {
             if (areaTarget != null) {
                 areaTarget.markForRemoval();
@@ -118,17 +117,17 @@ public class BehaviorComponent {
         }
     }
 
-    private void selectNextBehavior(Game game) {
+    private void selectNextBehavior(ScriptRuntime scriptRuntime) {
         Behavior currentBehavior = currentBehavior();
-        boolean onlyHigherPriorities = currentBehavior != null && !currentBehavior.hasCompleted(game, actor);
+        boolean onlyHigherPriorities = currentBehavior != null && !currentBehavior.hasCompleted(actor);
         for (int i = 0; i < (onlyHigherPriorities ? currentIndex : behaviors.size()); i++) {
-            if (behaviors.get(i).isValid(game, actor)) {
+            if (behaviors.get(i).isValid(actor, scriptRuntime)) {
                 currentIndex = i;
                 resetContext();
-                behaviors.get(i).onStart(scriptContext);
+                behaviors.get(i).onStart(actor, scriptRuntime);
                 if (areaTarget != null) {
-                    if (behaviors.get(i).getTargetArea(game, actor) != null) {
-                        areaTarget.setTargetArea(behaviors.get(i).getTargetArea(game, actor));
+                    if (behaviors.get(i).getTargetArea(actor) != null) {
+                        areaTarget.setTargetArea(behaviors.get(i).getTargetArea(actor));
                     } else {
                         areaTarget.markForRemoval();
                         areaTarget = null;

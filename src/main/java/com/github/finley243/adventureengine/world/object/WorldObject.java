@@ -37,23 +37,18 @@ import java.util.Map;
  */
 public class WorldObject extends GameInstanced implements Noun, Physical, StatHolder, AttackTarget {
 
-	private final String templateID;
-	private ObjectTemplate template;
+	private final ObjectTemplate template;
 	private boolean isKnown;
 	private boolean isEnabled;
 	private boolean isHidden;
-	private final Area defaultArea;
 	private Area area;
 	private int HP;
 	private final Map<Class<? extends ObjectComponent>, ObjectComponent> components;
 	private final Map<String, Expression> localVars;
 
-	public WorldObject(String ID, String templateID, Area area, boolean startDisabled, boolean startHidden, Map<String, Expression> localVarsDefault) {
+	public WorldObject(String ID, ObjectTemplate template, boolean startDisabled, boolean startHidden, Map<String, Expression> localVarsDefault) {
 		super(ID);
-		if (templateID == null) throw new IllegalArgumentException("Object template ID cannot be null: " + ID);
-		this.templateID = templateID;
-		this.defaultArea = area;
-		this.area = area;
+		this.template = template;
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
 		this.localVars = localVarsDefault;
@@ -105,7 +100,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public ComputedDamage applyEffectsAndComputeDamage(Game game, Damage damage, Context context) {
+	public ComputedDamage applyEffectsAndComputeDamage(Damage damage, Context context) {
 		int amount = damage.getAmount();
 		amount -= Math.round(getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult());
 		amount -= Math.round(amount * getTemplate().getDamageMult(damage.getType()));
@@ -114,7 +109,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public void applyDamage(Game game, ComputedDamage computedDamage, Context context) {
+	public void applyDamage(ComputedDamage computedDamage, Context context) {
 		HP -= computedDamage.amount();
 		Context objectContext = Context.from(context).clearVariables().build();
 		if (HP <= 0) {
@@ -137,7 +132,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	@Override
 	public void setArea(Area area, Game game) {
 		if (isEnabled) {
-			this.area.removeObject(this);
+			if (this.area != null) {
+				this.area.removeObject(this);
+			}
 			area.addObject(this);
 			for (ObjectComponent component : components.values()) {
 				component.onSetObjectArea(area, game);
@@ -165,7 +162,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	public void onInit(Game game) {
-		template = game.data().getObjectTemplate(templateID);
 		for (ObjectComponentTemplate componentTemplate : getTemplate().getComponents()) {
 			ObjectComponent component = ObjectComponentFactory.create(game, componentTemplate, this);
 			if (component == null) throw new UnsupportedOperationException("Cannot add null component to object " + this);
@@ -242,15 +238,15 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	public void triggerScript(String entryPoint, Context context) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			for (Script currentScript : getTemplate().getScripts().get(entryPoint)) {
-				currentScript.execute(context);
+				currentScript.execute(, context);
 			}
 		}
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context, Game game) {
+	public Expression getStatValue(String name, Context context) {
 		for (ObjectComponent component : components.values()) {
-			Expression componentValue = component.getStatValue(name, context, game);
+			Expression componentValue = component.getStatValue(name, context);
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
@@ -274,9 +270,9 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context, Game game) {
+	public boolean setStatValue(String name, Expression value, Context context) {
 		for (ObjectComponent component : components.values()) {
-			boolean success = component.setStatValue(name, value, context, game);
+			boolean success = component.setStatValue(name, value, context);
 			if (success) return true;
 		}
 		switch (name) {

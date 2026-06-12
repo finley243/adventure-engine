@@ -11,7 +11,7 @@ public class ScriptBark extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression actorExpression = context.getLocalVariables().get("actor").getExpression();
         Expression trigger = context.getLocalVariables().get("bark").getExpression();
         if (trigger.getDataType() != Expression.DataType.STRING) new ScriptReturnData(null, null, new ScriptErrorData("Bark parameter is not a string", getTraceData()));

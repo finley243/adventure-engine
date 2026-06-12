@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.ArrayList;
@@ -60,14 +59,14 @@ public class StatStringSet extends Stat {
         return outputSet;
     }
 
-    public void addMod(Game game, StatStringSetMod mod) {
+    public void addMod(StatStringSetMod mod) {
         mods.add(mod);
-        getTarget().onStatChange(game, getName());
+        getTarget().onStatChange(getName());
     }
 
-    public void removeMod(Game game, StatStringSetMod mod) {
+    public void removeMod(StatStringSetMod mod) {
         mods.remove(mod);
-        getTarget().onStatChange(game, getName());
+        getTarget().onStatChange(getName());
     }
 
     private <T extends Enum<T>> T enumValue(String string, Class<T> enumClass) {

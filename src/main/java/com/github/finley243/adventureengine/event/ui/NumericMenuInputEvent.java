@@ -2,7 +2,7 @@ package com.github.finley243.adventureengine.event.ui;
 
 import java.util.Map;
 
-public class NumericMenuInputEvent {
+public class NumericMenuInputEvent extends UIEvent {
 
     private final Map<String, Integer> values;
 

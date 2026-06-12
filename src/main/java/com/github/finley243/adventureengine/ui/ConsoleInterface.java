@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.ui;
 
-import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
 import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderChoiceMenuEvent;
@@ -13,10 +13,10 @@ import java.util.List;
 
 public class ConsoleInterface implements UserInterface {
 
-	private final Game game;
+	private final UIEventBus eventBus;
 
-	public ConsoleInterface(Game game) {
-		this.game = game;
+	public ConsoleInterface(UIEventBus eventBus) {
+		this.eventBus = eventBus;
 	}
 	
 	@Override
@@ -37,7 +37,7 @@ public class ConsoleInterface implements UserInterface {
 		}
 		int response = ConsoleUtils.intInRange(1, validChoices.size());
 		System.out.println();
-		game.eventBus().post(new ChoiceMenuInputEvent(validChoices.get(response - 1).getIndex()));
+		eventBus.post(new ChoiceMenuInputEvent(validChoices.get(response - 1).getIndex()));
 	}
 
 	@Override

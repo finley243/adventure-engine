@@ -11,7 +11,7 @@ public class ScriptIsVisible extends Script {
     }
 
     @Override
-    public Script.ScriptReturnData execute(Context context) {
+    Script.ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression actorExpression = context.getLocalVariables().get("actor").getExpression();
         Expression targetExpression = context.getLocalVariables().get("target").getExpression();
         if (actorExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new Script.ScriptReturnData(null, null, new ScriptErrorData("Actor parameter is not a stat holder", getTraceData()));

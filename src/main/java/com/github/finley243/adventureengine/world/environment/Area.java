@@ -16,12 +16,14 @@ import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
+import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 
 import java.util.*;
 
@@ -37,6 +39,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	public enum AreaNameType {
 		IN, ON, NEAR, FRONT, SIDE, BEHIND
 	}
+
+	private final ScriptRuntime scriptRuntime;
 
 	private final String landmarkID;
 	private WorldObject landmark;
@@ -74,8 +78,9 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	private final Set<String> defaultObstructions;
 	private final StatStringSet obstructions;
 	
-	public Area(String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, String ownerFactionID, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
+	public Area(ScriptRuntime scriptRuntime, String ID, String landmarkID, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, String ownerFactionID, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
 		super(ID);
+		this.scriptRuntime = scriptRuntime;
 		this.landmarkID = landmarkID;
 		this.name = name;
 		this.nameType = nameType;
@@ -105,10 +110,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		for (AreaLink link : linkedAreas.values()) {
 			link.init(game);
 		}
-		this.effectComponent = new EffectComponent(this, Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).parentArea(this).build());
+		this.effectComponent = new EffectComponent(this, Context.builder().subject(game.data().getPlayer()).target(game.data().getPlayer()).parentArea(this).build());
 	}
 
-	public WorldObject getLandmark() {
+	private WorldObject getLandmark() {
 		if (landmarkID == null) return null;
 		if (landmark == null) throw new IllegalStateException("Area has not been initialized");
 		return landmark;
@@ -381,12 +386,12 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		}
 	}
 
-	public Set<String> getObstructions(Game game) {
-		return obstructions.value(defaultObstructions, Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).parentArea(this).build());
+	public Set<ObstructionType> getObstructions() {
+		return obstructions.value(defaultObstructions, Context.builder().parentArea(this).build());
 	}
 
-	public boolean hasUnbypassedObstruction(Game game, Set<String> bypassedObstructions) {
-		Set<String> activeObstructions = getObstructions(game);
+	public boolean hasUnbypassedObstruction(Set<ObstructionType> bypassedObstructions) {
+		Set<ObstructionType> activeObstructions = getObstructions();
 		return !bypassedObstructions.containsAll(activeObstructions);
 	}
 
@@ -428,17 +433,17 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public void addEffect(Game game, Effect effect) {
+	public void addEffect(Effect effect) {
 		effectComponent.addEffect(game, effect);
 	}
 
 	@Override
-	public void removeEffect(Game game, Effect effect) {
+	public void removeEffect(Effect effect) {
 		effectComponent.removeEffect(game, effect);
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context, Game game) {
+	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "inventory" -> (itemInventory == null ? null : Expression.constant(itemInventory));
 			case "noun" -> Expression.constantNoun(this);
@@ -455,32 +460,32 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context, Game game) {
+	public boolean setStatValue(String name, Expression value, Context context) {
 		return false;
 	}
 
 	@Override
-	public StatInt getStatInt(Game game, String name) {
+	public StatInt getStatInt(String name) {
 		return null;
 	}
 
 	@Override
-	public StatFloat getStatFloat(Game game, String name) {
+	public StatFloat getStatFloat(String name) {
 		return null;
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(Game game, String name) {
+	public StatBoolean getStatBoolean(String name) {
 		return null;
 	}
 
 	@Override
-	public StatString getStatString(Game game, String name) {
+	public StatString getStatString(String name) {
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(Game game, String name) {
+	public StatStringSet getStatStringSet(String name) {
 		if ("effects".equals(name)) {
 			return effects;
 		} else if ("obstructions".equals(name)) {
@@ -490,17 +495,16 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public void onStatChange(Game game, String name) {
+	public void onStatChange(String name) {
 		if ("effects".equals(name)) {
 			applyEffects(game);
 		}
 	}
 
-	public void triggerScript(String entryPoint, Game game, Actor subject, Actor target) {
+	public void triggerScript(String entryPoint, Context context) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				Context context = Context.builder(game).subject(subject).target(target).build();
-				currentScript.execute(context);
+				scriptRuntime.executeScript(currentScript, context);
 			}
 		}
 	}

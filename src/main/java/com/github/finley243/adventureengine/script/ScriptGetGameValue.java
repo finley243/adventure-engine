@@ -13,7 +13,7 @@ public class ScriptGetGameValue extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         return switch (valueName) {
             case "day" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getDay()), null, null);
             case "month" -> new ScriptReturnData(Expression.constant(context.game().data().dateTime().getMonth()), null, null);

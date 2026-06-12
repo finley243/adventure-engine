@@ -3,6 +3,8 @@ package com.github.finley243.adventureengine.condition;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptExecutionException;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 /**
  * A pre-condition that can be checked
@@ -16,19 +18,14 @@ public class Condition {
 		this.expression = expression;
 	}
 	
-	public boolean isMet(Context context) {
-		Script.ScriptReturnData result = expression.execute(context);
-		// TODO - Replace exceptions with error log and default to false
-		if (result.error() != null) {
-			throw new IllegalArgumentException("Condition expression encountered an error during execution: " + result.stackTrace());
-		} else if (result.flowStatement() != null) {
-			throw new IllegalArgumentException("Condition expression contains an unexpected flow statement");
-		} else if (result.value() == null) {
-			throw new IllegalArgumentException("Condition expression did not return a value");
-		} else if (result.value().getDataType() != Expression.DataType.BOOLEAN) {
-			throw new IllegalArgumentException("Condition expression did not return a boolean value");
+	public boolean isMet(ScriptRuntime scriptRuntime, Context context) {
+		Expression conditionValue = expression.run(scriptRuntime, context);
+		if (conditionValue == null) {
+			throw new ScriptExecutionException("Condition expression returned a null value");
+		} else if (conditionValue.getDataType() != Expression.DataType.BOOLEAN) {
+			throw new IllegalArgumentException("Condition expression returned a non-boolean value");
 		}
-		return result.value().getValueBoolean();
+		return conditionValue.getValueBoolean();
 	}
 
 }

@@ -63,10 +63,10 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context, Game game) {
+    public Expression getStatValue(String name, Context context) {
         return switch (name) {
             case "inventory" -> (inventory == null ? null : new ExpressionConstantInventory(inventory));
-            default -> super.getStatValue(name, context, game);
+            default -> super.getStatValue(name, context);
         };
     }
 

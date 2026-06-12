@@ -13,7 +13,7 @@ public class ScriptCopy extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         Expression copyExpression = switch (valueExpression.getDataType()) {
             case LIST -> Expression.constant(new ArrayList<>(valueExpression.getValueList()));

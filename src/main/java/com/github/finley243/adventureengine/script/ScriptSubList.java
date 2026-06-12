@@ -12,7 +12,7 @@ public class ScriptSubList extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression listExpression = context.getLocalVariables().get("list").getExpression();
         Expression indexStartExpression = context.getLocalVariables().get("start").getExpression();
         Expression indexEndExpression = context.getLocalVariables().get("end").getExpression();

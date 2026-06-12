@@ -1,9 +1,9 @@
 package com.github.finley243.adventureengine.ui.component;
 
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
-import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +19,10 @@ public class JChoiceMenuDetailsDoublePanel extends JPanel {
 
     private final JDetailsPanel detailsPanel;
 
-    private final EventBus eventBus;
+    private final UIEventBus eventBus;
     private final JSwitchPanel switchPanel;
 
-    public JChoiceMenuDetailsDoublePanel(EventBus eventBus, JSwitchPanel switchPanel, String parentCategory, String categoryTitle, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
+    public JChoiceMenuDetailsDoublePanel(UIEventBus eventBus, JSwitchPanel switchPanel, String parentCategory, String categoryTitle, List<MenuCategory> categories, List<MenuChoice> actions, int endTurnIndex) {
         this.eventBus = eventBus;
         this.switchPanel = switchPanel;
         setLayout(new GridBagLayout());

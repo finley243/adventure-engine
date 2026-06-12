@@ -17,8 +17,8 @@ public class ScriptListIndexGetInternal extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData listResult = listScript.execute(context);
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        ScriptReturnData listResult = listScript.execute(, context);
         if (listResult.error() != null) {
             return listResult;
         } else if (listResult.flowStatement() != null) {
@@ -27,7 +27,7 @@ public class ScriptListIndexGetInternal extends Script {
             return new ScriptReturnData(null, null, new ScriptErrorData("List expression is null", getTraceData()));
         }
         Expression listExpression = listResult.value();
-        ScriptReturnData indexResult = indexScript.execute(context);
+        ScriptReturnData indexResult = indexScript.execute(, context);
         if (indexResult.error() != null) {
             return indexResult;
         } else if (indexResult.flowStatement() != null) {

@@ -144,43 +144,43 @@ public class ItemComponentWeapon extends ItemComponent {
     }
 
     @Override
-    public StatInt getStatInt(Game game, String name) {
+    public StatInt getStatInt(String name) {
         return switch (name) {
             case "damage" -> damage;
             case "rate" -> rate;
             case "crit_damage" -> critDamage;
-            default -> super.getStatInt(game, name);
+            default -> super.getStatInt(name);
         };
     }
 
     @Override
-    public StatFloat getStatFloat(Game game, String name) {
+    public StatFloat getStatFloat(String name) {
         if ("hit_chance_modifier".equals(name)) {
             return hitChanceModifier;
         } else if ("armor_mult".equals(name)) {
             return armorMult;
         }
-        return super.getStatFloat(game, name);
+        return super.getStatFloat(name);
     }
 
     @Override
-    public StatBoolean getStatBoolean(Game game, String name) {
+    public StatBoolean getStatBoolean(String name) {
         if ("is_silenced".equals(name)) {
             return isSilenced;
         }
-        return super.getStatBoolean(game, name);
+        return super.getStatBoolean(name);
     }
 
     @Override
-    public StatString getStatString(Game game, String name) {
+    public StatString getStatString(String name) {
         if ("damage_type".equals(name)) {
             return damageType;
         }
-        return super.getStatString(game, name);
+        return super.getStatString(name);
     }
 
     @Override
-    public StatStringSet getStatStringSet(Game game, String name) {
+    public StatStringSet getStatStringSet(String name) {
         if ("ranges".equals(name)) {
             return ranges;
         } else if ("attack_types".equals(name)) {
@@ -188,11 +188,11 @@ public class ItemComponentWeapon extends ItemComponent {
         } else if ("target_effects".equals(name)) {
             return targetEffects;
         }
-        return super.getStatStringSet(game, name);
+        return super.getStatStringSet(name);
     }
 
     @Override
-    public Expression getStatValue(String name, Context context, Game game) {
+    public Expression getStatValue(String name, Context context) {
         return switch (name) {
             case "damage" -> Expression.constant(getDamage(context));
             case "rate" -> Expression.constant(getRate(context));
@@ -204,7 +204,7 @@ public class ItemComponentWeapon extends ItemComponent {
             case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges(), context));
             case "target_effects" -> Expression.constant(getTargetEffects(context));
             case "skill" -> Expression.constant(getSkill());
-            default -> super.getStatValue(name, context, game);
+            default -> super.getStatValue(name, context);
         };
     }
 

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.GameDataException;
-import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.*;
 import com.github.finley243.adventureengine.combat.DamageType;
@@ -15,6 +14,7 @@ import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.scene.Scene;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -35,7 +35,9 @@ import java.util.function.Function;
 
 public class GameDataLoader {
 
-    private static final String FILE_EXTENSION = ".xml";
+    private static final String DATA_FILE_EXTENSION = ".xml";
+    private static final String PHRASE_FILE = "phrases.aphr";
+    private static final String SCRIPTS_PATH = "/scripts";
 
     private static final String NAME_ATTRIBUTE = "attributes";
     private static final String NAME_SKILL = "skills";
@@ -59,17 +61,39 @@ public class GameDataLoader {
     private static final String NAME_AREA = "areas";
 
     private final ConfigHandler configHandler;
+    private final ScriptRuntime scriptRuntime;
+    private final MutableRegistry<Item> itemMutableRegistry;
     private final ItemFactory itemFactory;
 
-    public GameDataLoader(ConfigHandler configHandler, ItemFactory itemFactory) {
+    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, ItemFactory itemFactory) {
         this.configHandler = configHandler;
+        this.scriptRuntime = scriptRuntime;
+        this.itemMutableRegistry = itemMutableRegistry;
         this.itemFactory = itemFactory;
     }
 
     public GameData loadData(File dir) throws GameDataException {
         if (!dir.isDirectory()) {
-            throw new IllegalArgumentException("File must be a directory: " + dir.getAbsolutePath());
+            throw new IllegalArgumentException("Path must be a directory: " + dir.getAbsolutePath());
         }
+
+        ScriptParser scriptParser = new ScriptParser();
+        File scriptDir = new File(dir, SCRIPTS_PATH);
+        Map<String, ScriptParser.ScriptData> scriptMap;
+        if (!scriptDir.exists()) {
+            scriptMap = new HashMap<>();
+        } else {
+            ScriptLoader scriptLoader = new ScriptLoader(scriptParser);
+            scriptMap = scriptLoader.loadFromDir(scriptDir);
+        }
+        Registry<ScriptParser.ScriptData> scriptRegistry = new Registry<>(scriptMap);
+
+        PhraseLoader phraseLoader = new PhraseLoader();
+        File phraseFile = new File(dir, PHRASE_FILE);
+        if (!phraseFile.exists() || !phraseFile.isFile()) throw new GameDataException("Phrase file does not exist: " + phraseFile.getAbsolutePath());
+        Map<String, String> phraseMap = phraseLoader.loadPhrases(phraseFile);
+        PhraseManager phraseManager = new PhraseManager(phraseMap);
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         try {
@@ -77,9 +101,6 @@ public class GameDataLoader {
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);
         }
-
-        ScriptParser scriptParser = new ScriptParser();
-        MutableRegistry<Item> itemMutableRegistry = new MutableRegistry<>(Map.of());
 
         CharacterTypeLoader characterTypeLoader = new CharacterTypeLoader();
         Map<String, Attribute> attributeMap = loadMapFromFileName(dir, NAME_ATTRIBUTE, builder, characterTypeLoader::loadAttributes);
@@ -111,19 +132,23 @@ public class GameDataLoader {
         Map<String, Scene> sceneMap = loadMapFromFileName(dir, NAME_SCENE, builder, sceneLoader::load);
         Registry<Scene> sceneRegistry = new Registry<>(sceneMap);
 
-        ItemTemplateLoader itemTemplateLoader = new ItemTemplateLoader(configHandler, scriptParser, sceneLoader);
-        Map<String, ItemTemplate> itemTemplateMap = loadMapFromFileName(dir, NAME_ITEM_TEMPLATE, builder, itemTemplateLoader::load);
-        Registry<ItemTemplate> itemTemplateRegistry = new Registry<>(itemTemplateMap);
+        ActionLoader actionLoader = new ActionLoader(scriptParser);
+        Map<String, ActionTemplate> actionMap = loadMapFromFileName(dir, NAME_ACTION_TEMPLATE, builder, actionLoader::load);
+        Registry<ActionTemplate> actionRegistry = new Registry<>(actionMap);
 
         EffectLoader effectLoader = new EffectLoader(scriptParser);
         Map<String, Effect> effectMap = loadMapFromFileName(dir, NAME_EFFECT, builder, effectLoader::load);
         Registry<Effect> effectRegistry = new Registry<>(effectMap);
 
-        LootTableLoader lootTableLoader = new LootTableLoader();
+        ItemTemplateLoader itemTemplateLoader = new ItemTemplateLoader(configHandler, scriptParser, sceneLoader, actionRegistry, effectRegistry);
+        Map<String, ItemTemplate> itemTemplateMap = loadMapFromFileName(dir, NAME_ITEM_TEMPLATE, builder, itemTemplateLoader::load);
+        Registry<ItemTemplate> itemTemplateRegistry = new Registry<>(itemTemplateMap);
+
+        LootTableLoader lootTableLoader = new LootTableLoader(itemTemplateRegistry);
         Map<String, LootTable> lootTableMap = loadMapFromFileName(dir, NAME_LOOT_TABLE, builder, lootTableLoader::load);
         Registry<LootTable> lootTableRegistry = new Registry<>(lootTableMap);
 
-        ObjectTemplateLoader objectTemplateLoader = new ObjectTemplateLoader(scriptParser, sceneLoader, lootTableLoader);
+        ObjectTemplateLoader objectTemplateLoader = new ObjectTemplateLoader(scriptParser, sceneLoader, lootTableLoader, actionRegistry, lootTableRegistry);
         Map<String, ObjectTemplate> objectTemplateMap = loadMapFromFileName(dir, NAME_OBJECT_TEMPLATE, builder, objectTemplateLoader::load);
         Registry<ObjectTemplate> objectTemplateRegistry = new Registry<>(objectTemplateMap);
 
@@ -131,22 +156,18 @@ public class GameDataLoader {
         Map<String, NetworkNode> networkMap = loadMapFromFileName(dir, NAME_NETWORK_NODE, builder, networkLoader::load);
         Registry<NetworkNode> networkRegistry = new Registry<>(networkMap);
 
-        ActionLoader actionLoader = new ActionLoader(scriptParser);
-        Map<String, ActionTemplate> actionMap = loadMapFromFileName(dir, NAME_ACTION_TEMPLATE, builder, actionLoader::load);
-        Registry<ActionTemplate> actionRegistry = new Registry<>(actionMap);
-
         RoomLoader roomLoader = new RoomLoader(sceneLoader, scriptParser, factionRegistry);
         Map<String, Room> roomMap =  loadMapFromFileName(dir, NAME_ROOM, builder, roomLoader::load);
         Registry<Room> roomRegistry = new Registry<>(roomMap);
 
-        ActorTemplateLoader actorTemplateLoader = new ActorTemplateLoader(scriptParser, lootTableLoader);
+        ActorTemplateLoader actorTemplateLoader = new ActorTemplateLoader(scriptParser, lootTableLoader, actionRegistry, effectRegistry, factionRegistry, attackTypeRegistry, sceneRegistry, lootTableRegistry);
         Map<String, ActorTemplate> actorTemplateMap = loadMapFromFileName(dir, NAME_ACTOR_TEMPLATE, builder, actorTemplateLoader::load);
         Registry<ActorTemplate> actorTemplateRegistry = new Registry<>(actorTemplateMap);
 
         ActorLoader actorLoader = new ActorLoader(scriptParser);
-        ObjectLoader objectLoader = new ObjectLoader(scriptParser);
+        ObjectLoader objectLoader = new ObjectLoader(scriptParser, objectTemplateRegistry);
         ItemLoader itemLoader = new ItemLoader(itemFactory, itemTemplateRegistry);
-        AreaLoader areaLoader = new AreaLoader(configHandler, scriptParser, sceneLoader, actorLoader, objectLoader, itemLoader, itemMutableRegistry, roomRegistry);
+        AreaLoader areaLoader = new AreaLoader(configHandler, scriptRuntime, scriptParser, sceneLoader, actorLoader, objectLoader, itemLoader, itemMutableRegistry, roomRegistry);
         Element areasElement = getRootElementFromFileName(dir, NAME_AREA, builder);
         AreaLoader.AreaLoaderResult areaLoaderResult = areaLoader.load(areasElement);
         AreaRegistry areaRegistry = new AreaRegistry(areaLoaderResult.areas());
@@ -155,7 +176,7 @@ public class GameDataLoader {
         ActorRegistry actorRegistry = new ActorRegistry(areaLoaderResult.actors(), playerActor);
         Registry<WorldObject> objectRegistry = new Registry<>(areaLoaderResult.objects());
 
-        return new GameData(areaRegistry, roomRegistry, actorTemplateRegistry, actorRegistry, objectTemplateRegistry, objectRegistry, itemTemplateRegistry, itemMutableRegistry, lootTableRegistry, weaponClassRegistry, attackTypeRegistry, sceneRegistry, factionRegistry, networkRegistry, effectRegistry, actionRegistry, linkTypeRegistry, damageTypeRegistry, attributeRegistry, skillRegistry, senseTypeRegistry, obstructionTypeRegistry);
+        return new GameData(phraseManager, areaRegistry, roomRegistry, actorTemplateRegistry, actorRegistry, objectTemplateRegistry, objectRegistry, itemTemplateRegistry, itemMutableRegistry, lootTableRegistry, weaponClassRegistry, attackTypeRegistry, sceneRegistry, factionRegistry, networkRegistry, effectRegistry, actionRegistry, linkTypeRegistry, damageTypeRegistry, attributeRegistry, skillRegistry, senseTypeRegistry, obstructionTypeRegistry, scriptRegistry);
     }
 
     private <T> Map<String, T> loadMapFromFileName(File parentDir, String name, DocumentBuilder builder, Function<Element, Map<String, T>> loadFunction) throws GameDataException {
@@ -164,7 +185,7 @@ public class GameDataLoader {
     }
 
     private Element getRootElementFromFileName(File parentDir, String name, DocumentBuilder builder) {
-        File file = new File(parentDir, name + FILE_EXTENSION);
+        File file = new File(parentDir, name + DATA_FILE_EXTENSION);
         if (!file.exists()) throw new IllegalArgumentException("File does not exist: " + file.getAbsolutePath());
         Element rootElement = getRootElementFromFile(file, builder);
         return rootElement;

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
@@ -16,12 +15,12 @@ public class ActionEnd extends Action {
 	}
 
 	@Override
-	public Context getContext(Game game, Actor subject) {
+	public Context getContext(Actor subject) {
 		return Context.builder(game).subject(subject).build();
 	}
 
 	@Override
-	public void choose(Game game, int repeatActionCount, Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.endTurn(game);
 	}
 
@@ -31,7 +30,7 @@ public class ActionEnd extends Action {
 	}
 
 	@Override
-	public int actionPoints(Game game, Actor subject) {
+	public int actionPoints(Actor subject) {
 		return 0;
 	}
 
@@ -41,7 +40,7 @@ public class ActionEnd extends Action {
 	}
 
 	@Override
-	public String getPrompt(Game game, Actor subject) {
+	public String getPrompt(Actor subject) {
 		return "End Turn";
 	}
 

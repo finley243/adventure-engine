@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -34,15 +33,15 @@ public class ActionObjectUseEnd extends Action {
 	}
 
 	@Override
-	public Context getContext(Game game, Actor subject) {
+	public Context getContext(Actor subject) {
 		Context context = Context.builder(game).subject(subject).parentObject(component.getObject()).parentAction(this).build();
 		context.setLocalVariable("slot", Expression.constant(slotID));
 		return context;
 	}
 	
 	@Override
-	public void choose(Game game, int repeatActionCount, Actor subject) {
-		Context context = getContext(game, subject);
+	public void choose(Actor subject, int repeatActionCount) {
+		Context context = getContext(subject);
 		if (component.userIsInCover(slotID)) {
 			subject.triggerScript("on_leave_cover", context);
 		}
@@ -65,7 +64,7 @@ public class ActionObjectUseEnd extends Action {
 	}
 
 	@Override
-	public String getPrompt(Game game, Actor subject) {
+	public String getPrompt(Actor subject) {
 		return component.getEndPrompt(slotID);
 	}
 

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.MutableStatHolder;
@@ -20,13 +19,13 @@ public class EffectStatBoolean extends Effect {
     }
 
     @Override
-    public void start(Game game, MutableStatHolder target) {
-        target.getStatBoolean(game, stat).addMod(game, new StatBoolean.StatBooleanMod(statCondition, value));
+    public void start(MutableStatHolder target) {
+        target.getStatBoolean(stat).addMod(new StatBoolean.StatBooleanMod(statCondition, value));
     }
 
     @Override
-    public void end(Game game, MutableStatHolder target) {
-        target.getStatBoolean(game, stat).removeMod(game, new StatBoolean.StatBooleanMod(statCondition, value));
+    public void end(MutableStatHolder target) {
+        target.getStatBoolean(stat).removeMod(new StatBoolean.StatBooleanMod(statCondition, value));
     }
 
 }

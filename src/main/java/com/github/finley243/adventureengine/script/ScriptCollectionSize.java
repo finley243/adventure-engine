@@ -12,7 +12,7 @@ public class ScriptCollectionSize extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression collectionExpression = context.getLocalVariables().get("collection").getExpression();
         Collection<Expression> collection = switch (collectionExpression.getDataType()) {
             case LIST -> collectionExpression.getValueList();

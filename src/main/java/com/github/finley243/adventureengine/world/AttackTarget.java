@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.world;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.combat.Damage;
@@ -11,9 +10,9 @@ public interface AttackTarget {
 
     boolean canBeAttacked();
 
-    ComputedDamage applyEffectsAndComputeDamage(Game game, Damage damage, Context context);
+    ComputedDamage applyEffectsAndComputeDamage(Damage damage, Context context);
 
-    void applyDamage(Game game, ComputedDamage computedDamage, Context context);
+    void applyDamage(ComputedDamage computedDamage, Context context);
 
     Area getArea();
 

@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.gamedata;
 
 import com.github.finley243.adventureengine.Timer;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,10 @@ public class TimerManager {
 
     public Timer getFromID(String id) {
         return timers.get(id);
+    }
+
+    public Collection<Timer> getAll() {
+        return timers.values();
     }
 
     public void add(String id, Timer timer) {

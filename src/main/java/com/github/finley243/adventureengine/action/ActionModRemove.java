@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
@@ -25,14 +24,14 @@ public class ActionModRemove extends Action {
     }
 
     @Override
-    public Context getContext(Game game, Actor subject) {
+    public Context getContext(Actor subject) {
         Context context = Context.builder(game).subject(subject).parentItem(target).build();
         context.setLocalVariable("mod", Expression.constant(mod));
         return context;
     }
 
     @Override
-    public void choose(Game game, int repeatActionCount, Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         target.getComponentOfType(ItemComponentModdable.class).removeMod(game, mod);
         subject.getInventory().addItem(mod, game);
     }
@@ -43,7 +42,7 @@ public class ActionModRemove extends Action {
     }
 
     @Override
-    public String getPrompt(Game game, Actor subject) {
+    public String getPrompt(Actor subject) {
         return "Remove";
     }
 

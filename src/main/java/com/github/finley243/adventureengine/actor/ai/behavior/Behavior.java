@@ -1,13 +1,13 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -39,25 +39,25 @@ public abstract class Behavior {
         this.turnsRemaining = 0;
     }
 
-    public void triggerStartScript(Context context) {
+    public void triggerStartScript(Actor actor, ScriptRuntime scriptRuntime) {
         if (startScript != null) {
-            startScript.execute(context);
+            startScript.run(scriptRuntime, Context.builder().subject(actor).build());
         }
     }
 
-    public void triggerRoundScript(Context context) {
+    public void triggerRoundScript(Actor actor, ScriptRuntime scriptRuntime) {
         if (eachRoundScript != null) {
-            eachRoundScript.execute(context);
+            eachRoundScript.run(scriptRuntime, Context.builder().subject(actor).build());
         }
     }
 
     // Whether the turnsRemaining counter should be counted down
-    public abstract boolean isInTargetState(Game game, Actor subject);
+    public abstract boolean isInTargetState(Actor subject);
 
-    public void updateTurn(Game game, Actor subject, Context scriptContext) {
-        triggerRoundScript(scriptContext);
+    public void updateTurn(Actor subject, ScriptRuntime scriptRuntime) {
+        triggerRoundScript(subject, scriptRuntime);
         if (duration > 0 && turnsRemaining > 0) {
-            if (isInTargetState(game, subject)) {
+            if (isInTargetState(subject)) {
                 turnsRemaining -= 1;
             } else {
                 // Reset counter if countdown condition is interrupted
@@ -66,31 +66,31 @@ public abstract class Behavior {
         }
     }
 
-    public void update(Game game, Actor subject, Context scriptContext) {
-        if (duration > 0 && turnsRemaining > 0 && !isInTargetState(game, subject)) {
+    public void update(Actor subject, Context scriptContext) {
+        if (duration > 0 && turnsRemaining > 0 && !isInTargetState(subject)) {
             // Reset counter if countdown condition is interrupted
             turnsRemaining = duration;
         }
     }
 
-    public void onStart(Context scriptContext) {
+    public void onStart(Actor actor, ScriptRuntime scriptRuntime) {
         turnsRemaining = duration;
-        triggerStartScript(scriptContext);
+        triggerStartScript(actor, scriptRuntime);
     }
 
-    public abstract Area getTargetArea(Game game, Actor subject);
+    public abstract Area getTargetArea(Actor subject);
 
-    public boolean hasCompleted(Game game, Actor subject) {
+    public boolean hasCompleted(Actor subject) {
         if (duration > 0) {
             return turnsRemaining == 0;
         } else {
-            return isInTargetState(game, subject);
+            return isInTargetState(subject);
         }
     }
 
-    public void onPerformAction(Game game, Actor subject, Action action) {}
+    public void onPerformAction(Actor subject, Action action) {}
 
-    public Float actionUtilityOverride(Game game, Actor subject, Action action) {
+    public Float actionUtilityOverride(Actor subject, Action action) {
         return null;
     }
 
@@ -98,15 +98,15 @@ public abstract class Behavior {
         return false;
     }
 
-    public boolean isValid(Game game, Actor subject) {
-        return condition == null || condition.isMet(Context.builder(game).subject(subject).target(subject).build());
+    public boolean isValid(Actor subject, ScriptRuntime scriptRuntime) {
+        return condition == null || condition.isMet(scriptRuntime, Context.builder().subject(subject).build());
     }
 
-    public Idle getIdle(Game game, Actor subject) {
+    public Idle getIdle(Actor subject, ScriptRuntime scriptRuntime) {
         if (idles == null) return null;
         List<Idle> validIdles = new ArrayList<>();
         for (Idle idle : idles) {
-            if (idle.canPlay(game, subject)) {
+            if (idle.canPlay(subject, scriptRuntime)) {
                 validIdles.add(idle);
             }
         }

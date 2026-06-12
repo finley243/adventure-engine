@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
@@ -35,11 +34,11 @@ public class Effect extends GameInstanced {
 		this.scriptRound = scriptRound;
 	}
 	
-	public void start(Game game, MutableStatHolder target) {}
+	public void start(MutableStatHolder target) {}
 	
-	public void end(Game game, MutableStatHolder target) {}
+	public void end(MutableStatHolder target) {}
 	
-	public void eachRound(Game game, MutableStatHolder target) {}
+	public void eachRound(MutableStatHolder target) {}
 
 	public boolean manualRemoval() {
 		return manualRemoval;

@@ -10,7 +10,7 @@ public class ScriptSubString extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression stringExpression = context.getLocalVariables().get("string").getExpression();
         Expression indexStartExpression = context.getLocalVariables().get("start").getExpression();
         Expression indexEndExpression = context.getLocalVariables().get("end").getExpression();

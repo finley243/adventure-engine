@@ -22,11 +22,11 @@ public class Timer extends GameInstanced {
         if (roundsRemaining > 0) {
             roundsRemaining -= 1;
             if (scriptUpdate != null && roundsRemaining > 0) {
-                scriptUpdate.execute(context);
+                scriptUpdate.execute(, context);
             }
         }
         if (roundsRemaining <= 0 && scriptExpire != null) {
-            scriptExpire.execute(context);
+            scriptExpire.execute(, context);
         }
     }
 

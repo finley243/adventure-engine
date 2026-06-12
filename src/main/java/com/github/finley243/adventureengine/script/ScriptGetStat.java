@@ -18,8 +18,8 @@ public class ScriptGetStat extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData statNameResult = statName.execute(context);
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        ScriptReturnData statNameResult = statName.execute(, context);
         if (statNameResult.error() != null) {
             return statNameResult;
         } else if (statNameResult.flowStatement() != null) {
@@ -31,7 +31,7 @@ public class ScriptGetStat extends Script {
         String statNameString = statNameExpression.getValueString();
         StatHolder statHolderValue = statHolder.getHolder(context);
         if (statHolderValue == null) return new ScriptReturnData(null, null, new ScriptErrorData("Specified stat holder is null", getTraceData()));
-        Expression statValue = statHolderValue.getStatValue(statNameString, context, context.game());
+        Expression statValue = statHolderValue.getStatValue(statNameString, context);
         return new ScriptReturnData(statValue, null, null);
     }
 

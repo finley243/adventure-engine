@@ -75,7 +75,7 @@ public class EquipmentComponent {
         if (item.hasComponentOfType(ItemComponentEffectible.class)) {
             for (String equipmentEffectID : actor.getEquipmentEffects(item)) {
                 Effect equipmentEffect = game.data().getEffect(equipmentEffectID);
-                item.getComponentOfType(ItemComponentEffectible.class).addEffect(game, equipmentEffect);
+                item.getComponentOfType(ItemComponentEffectible.class).addEffect(equipmentEffect);
             }
         }
     }
@@ -89,7 +89,7 @@ public class EquipmentComponent {
             if (item.hasComponentOfType(ItemComponentEffectible.class)) {
                 for (String equipmentEffectID : actor.getEquipmentEffects(item)) {
                     Effect equipmentEffect = game.data().getEffect(equipmentEffectID);
-                    item.getComponentOfType(ItemComponentEffectible.class).removeEffect(game, equipmentEffect);
+                    item.getComponentOfType(ItemComponentEffectible.class).removeEffect(equipmentEffect);
                 }
             }
         }

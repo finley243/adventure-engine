@@ -11,7 +11,7 @@ public class ScriptScaleLinear extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression input = context.getLocalVariables().get("input").getExpression();
         Expression inputMin = context.getLocalVariables().get("inputMin").getExpression();
         Expression inputMax = context.getLocalVariables().get("inputMax").getExpression();

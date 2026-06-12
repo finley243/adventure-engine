@@ -76,12 +76,12 @@ public class QuestObjective extends GameInstanced implements StatHolder {
             if (active) {
                 game.questManager().addActiveObjective(this);
                 if (activateScript != null) {
-                    activateScript.execute(Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).build());
+                    activateScript.execute(, Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).build());
                 }
             } else {
                 game.questManager().removeActiveObjective(this);
                 if (deactivateScript != null) {
-                    deactivateScript.execute(Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).build());
+                    deactivateScript.execute(, Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).build());
                 }
             }
         }
@@ -95,9 +95,9 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     public void setState(State state, Game game) {
         if (this.state != state) {
             if (state == State.COMPLETED && completionScript != null) {
-                completionScript.execute(Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).build());
+                completionScript.execute(, Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).build());
             } else if (state == State.FAILED && failureScript != null) {
-                failureScript.execute(Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).build());
+                failureScript.execute(, Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).build());
             }
         }
         this.state = state;
@@ -128,7 +128,7 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context, Game game) {
+    public Expression getStatValue(String name, Context context) {
         return switch (name) {
             case "id" -> Expression.constant(getID());
             case "name" -> Expression.constant(name);
@@ -142,7 +142,7 @@ public class QuestObjective extends GameInstanced implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context, Game game) {
+    public boolean setStatValue(String name, Expression value, Context context) {
         switch (name) {
             case "isActive" -> setActive(value.getValueBoolean(), context.game());
             case "state" -> state = State.valueOf(value.getValueString());

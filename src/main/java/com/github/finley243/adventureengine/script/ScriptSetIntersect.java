@@ -13,7 +13,7 @@ public class ScriptSetIntersect extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression setOneExpression = context.getLocalVariables().get("setOne").getExpression();
         Expression setTwoExpression = context.getLocalVariables().get("setTwo").getExpression();
         if (setOneExpression.getDataType() != Expression.DataType.SET) return new ScriptReturnData(null, null, new ScriptErrorData("Set one parameter is not a set", getTraceData()));

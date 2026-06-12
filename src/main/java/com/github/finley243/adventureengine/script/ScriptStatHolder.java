@@ -15,7 +15,7 @@ public class ScriptStatHolder extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         StatHolder statHolder = statHolderReference.getHolder(context);
         return new ScriptReturnData(Expression.constant(statHolder), null, null);
     }

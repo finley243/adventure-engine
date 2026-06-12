@@ -11,7 +11,7 @@ public class ScriptRandomBoolean extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression chanceExpression = context.getLocalVariables().get("chance").getExpression();
         if (chanceExpression.getDataType() != Expression.DataType.FLOAT) return new ScriptReturnData(null, null, new ScriptErrorData("Chance parameter is not a float", getTraceData()));
         float chance = chanceExpression.getValueFloat();

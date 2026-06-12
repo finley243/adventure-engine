@@ -1,10 +1,10 @@
 package com.github.finley243.adventureengine.ui.component;
 
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.menu.MenuCategory;
 import com.github.finley243.adventureengine.menu.MenuChoice;
 import com.github.finley243.adventureengine.menu.NumericMenuField;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
-import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,11 +17,11 @@ public class JSwitchPanel extends JPanel {
 
     private final CardLayout cardLayout;
 
-    private final EventBus eventBus;
+    private final UIEventBus eventBus;
     private final Set<String> validPanels;
     private final Deque<String> panelStack;
 
-    public JSwitchPanel(EventBus eventBus) {
+    public JSwitchPanel(UIEventBus eventBus) {
         this.eventBus = eventBus;
         this.validPanels = new HashSet<>();
         this.panelStack = new ArrayDeque<>();

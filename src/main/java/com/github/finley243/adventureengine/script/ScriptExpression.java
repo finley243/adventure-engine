@@ -13,7 +13,7 @@ public class ScriptExpression extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         return new ScriptReturnData(expression, null, null);
     }
 

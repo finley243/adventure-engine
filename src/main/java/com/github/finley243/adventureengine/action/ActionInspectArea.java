@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
@@ -33,12 +32,12 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public Context getContext(Game game, Actor subject) {
+    public Context getContext(Actor subject) {
         return Context.builder(game).subject(subject).parentArea(area).parentAction(this).build();
     }
 
     @Override
-    public void choose(Game game, int repeatActionCount, Actor subject) {
+    public void choose(Actor subject, int repeatActionCount) {
         Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(game, area, subject);
         List<Area> orderedAreaList = new ArrayList<>(visibleAreas.keySet());
         orderedAreaList.sort(Comparator.comparingInt(a -> visibleAreas.get(a).path().size()));
@@ -108,8 +107,8 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public CanChooseResult canChoose(Game game, Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(game, subject);
+    public CanChooseResult canChoose(Actor subject) {
+        CanChooseResult resultSuper = super.canChoose(subject);
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -120,7 +119,7 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public int actionPoints(Game game, Actor subject) {
+    public int actionPoints(Actor subject) {
         return 0;
     }
 
@@ -130,7 +129,7 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public String getPrompt(Game game, Actor subject) {
+    public String getPrompt(Actor subject) {
         return "Look Around";
     }
 

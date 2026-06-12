@@ -1,8 +1,11 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -203,11 +206,13 @@ public class LoadUtils {
 		return scriptParser.parseLiteral(expressionText, traceString);
 	}
 
-	public static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name, ScriptParser scriptParser, String traceString) {
+	public static List<ActionCustom.CustomActionHolder> loadCustomActions(Element parentElement, String name, ScriptParser scriptParser, Registry<ActionTemplate> actionRegistry, String traceString) {
 		List<ActionCustom.CustomActionHolder> customActions = new ArrayList<>();
 		if (parentElement != null) {
 			for (Element actionElement : LoadUtils.directChildrenWithName(parentElement, name)) {
-				String action = LoadUtils.attribute(actionElement, "template", null);
+				String actionID = LoadUtils.attribute(actionElement, "template", null);
+				ActionTemplate action = actionRegistry.getFromID(actionID);
+				if (action == null) throw new GameDataException("Action with ID " + actionID + " not found");
 				Map<String, Script> parameters = new HashMap<>();
 				for (Element variableElement : LoadUtils.directChildrenWithName(actionElement, "parameter")) {
 					String parameterName = LoadUtils.attribute(variableElement, "name", null);
@@ -227,6 +232,41 @@ public class LoadUtils {
 			resultMap.put(idExtractor.apply(obj), obj);
 		}
 		return resultMap;
+	}
+
+	public static <T> List<T> topologicalSort(Collection<T> items, Function<T, String> idExtractor, Function<T, Collection<String>> dependenciesExtractor) {
+		Set<String> allIds = new HashSet<>();
+		for (T item : items) {
+			allIds.add(idExtractor.apply(item));
+		}
+		for (T item : items) {
+			for (String dep : dependenciesExtractor.apply(item)) {
+				if (!allIds.contains(dep)) {
+					throw new GameDataException("'" + idExtractor.apply(item) + "' references unknown dependency '" + dep + "'");
+				}
+			}
+		}
+
+		Map<String, T> remaining = new LinkedHashMap<>();
+		for (T item : items) remaining.put(idExtractor.apply(item), item);
+		List<T> sorted = new ArrayList<>();
+		Set<String> resolved = new HashSet<>();
+
+		while (!remaining.isEmpty()) {
+			boolean progress = false;
+			Iterator<T> iter = remaining.values().iterator();
+			while (iter.hasNext()) {
+				T item = iter.next();
+				if (resolved.containsAll(dependenciesExtractor.apply(item))) {
+					sorted.add(item);
+					resolved.add(idExtractor.apply(item));
+					iter.remove();
+					progress = true;
+				}
+			}
+			if (!progress) throw new GameDataException("Cycle detected in dependency hierarchy");
+		}
+		return sorted;
 	}
 	
 }

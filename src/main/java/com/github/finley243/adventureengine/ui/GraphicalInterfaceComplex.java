@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.ui;
 
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.RenderChoiceMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
@@ -44,7 +45,7 @@ public class GraphicalInterfaceComplex implements UserInterface {
 	private final JGameTextPanel textPanel;
 	private final JSwitchPanel switchPanel;
 
-	public GraphicalInterfaceComplex(EventBus eventBus, String gameName) {
+	public GraphicalInterfaceComplex(UIEventBus eventBus, String gameName) {
 		this.window = new JFrame(gameName);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setMinimumSize(new Dimension(500, 600));

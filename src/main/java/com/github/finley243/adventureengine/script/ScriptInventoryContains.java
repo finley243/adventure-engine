@@ -14,7 +14,7 @@ public class ScriptInventoryContains extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression inventoryExpression = context.getLocalVariables().get("inventory").getExpression();
         Expression itemExpression = context.getLocalVariables().get("item").getExpression();
         Expression requireAllExpression = context.getLocalVariables().get("requireAll").getExpression();

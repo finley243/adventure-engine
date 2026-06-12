@@ -16,10 +16,10 @@ public class ScriptBuildList extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         List<Expression> computedValues = new ArrayList<>();
         for (Script valueScript : valueScripts) {
-            ScriptReturnData scriptResult = valueScript.execute(context);
+            ScriptReturnData scriptResult = valueScript.execute(, context);
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() != null) {

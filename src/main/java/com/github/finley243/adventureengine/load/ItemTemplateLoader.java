@@ -2,8 +2,11 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.ActionTemplate;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.ConfigHandler;
 import com.github.finley243.adventureengine.gamedata.ConfigOption;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.template.*;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -18,11 +21,15 @@ public class ItemTemplateLoader {
     private final ConfigHandler configHandler;
     private final ScriptParser scriptParser;
     private final SceneLoader sceneLoader;
+    private final Registry<ActionTemplate> actionRegistry;
+    private final Registry<Effect> effectRegistry;
 
-    public ItemTemplateLoader(ConfigHandler configHandler, ScriptParser scriptParser, SceneLoader sceneLoader) {
+    public ItemTemplateLoader(ConfigHandler configHandler, ScriptParser scriptParser, SceneLoader sceneLoader, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry) {
         this.configHandler = configHandler;
         this.scriptParser = scriptParser;
         this.sceneLoader = sceneLoader;
+        this.actionRegistry = actionRegistry;
+        this.effectRegistry = effectRegistry;
     }
 
     public Map<String, ItemTemplate> load(Element element) {
@@ -35,7 +42,7 @@ public class ItemTemplateLoader {
         String name = LoadUtils.singleTag(element, "name", null);
         Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, "description"));
         Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "ItemTemplate(" + id + ")");
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptParser, "ItemTemplate(" + id + ")");
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptParser, actionRegistry, "ItemTemplate(" + id + ")");
         int price = LoadUtils.attributeInt(element, "price", 0);
         List<ItemComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(element, "component")) {
@@ -88,7 +95,7 @@ public class ItemTemplateLoader {
                     Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
                     Set<String> exposedComponents = LoadUtils.setOfTags(slotGroupElement, "exposedComponent");
                     List<String> equippedEffects = LoadUtils.listOfTags(componentElement, "effect");
-                    List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptParser, "ItemComponent(" + itemID + ")");
+                    List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptParser, actionRegistry, "ItemComponent(" + itemID + ")");
                     equipSlots.add(new ItemComponentTemplateEquippable.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
                 }
                 return new ItemComponentTemplateEquippable(actionsRestricted, equipSlots);
@@ -101,7 +108,13 @@ public class ItemTemplateLoader {
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(componentElement, "modSlot", null);
-                List<String> effects = LoadUtils.listOfTags(componentElement, "effect");
+                List<String> effectIDs = LoadUtils.listOfTags(componentElement, "effect");
+                List<Effect> effects = new ArrayList<>();
+                for (String effectID : effectIDs) {
+                    Effect effect = effectRegistry.getFromID(effectID);
+                    if (effect == null) throw new GameDataException("ItemComponentTemplateMod has invalid effect");
+                    effects.add(effect);
+                }
                 return new ItemComponentTemplateMod(actionsRestricted, modSlot, effects);
             }
             case "moddable" -> {

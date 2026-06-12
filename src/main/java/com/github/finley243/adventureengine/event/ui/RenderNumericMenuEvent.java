@@ -4,7 +4,7 @@ import com.github.finley243.adventureengine.menu.NumericMenuField;
 
 import java.util.List;
 
-public class RenderNumericMenuEvent {
+public class RenderNumericMenuEvent extends UIEvent {
 
     private final List<NumericMenuField> numericFields;
     private final int points;

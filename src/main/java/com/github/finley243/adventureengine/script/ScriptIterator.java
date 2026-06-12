@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.MapBuilder;
 import com.github.finley243.adventureengine.expression.Expression;
 
 import java.util.ArrayList;
@@ -21,8 +20,8 @@ public class ScriptIterator extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData setResult = setExpression.execute(context);
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        ScriptReturnData setResult = setExpression.execute(, context);
         if (setResult.error() != null) {
             return setResult;
         } else if (setResult.flowStatement() != null) {
@@ -40,7 +39,7 @@ public class ScriptIterator extends Script {
         }
         for (Expression currentExpression : expressions) {
             Context innerContext = Context.from(context).addVariable(iteratorParameterName, currentExpression).build();
-            ScriptReturnData scriptResult = iteratedScript.execute(innerContext);
+            ScriptReturnData scriptResult = iteratedScript.execute(, innerContext);
             if (scriptResult.error() != null) {
                 return scriptResult;
             } else if (scriptResult.flowStatement() == FlowStatementType.RETURN) {

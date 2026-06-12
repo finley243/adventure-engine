@@ -17,8 +17,8 @@ public class ScriptTernary extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData conditionResult = scriptCondition.execute(context);
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        ScriptReturnData conditionResult = scriptCondition.execute(, context);
         if (conditionResult.error() != null) {
             return conditionResult;
         } else if (conditionResult.flowStatement() != null) {
@@ -30,9 +30,9 @@ public class ScriptTernary extends Script {
         }
         boolean conditionSuccess = conditionResult.value().getValueBoolean();
         if (conditionSuccess) {
-            return scriptTrue.execute(context);
+            return scriptTrue.execute(, context);
         } else {
-            return scriptFalse.execute(context);
+            return scriptFalse.execute(, context);
         }
     }
 

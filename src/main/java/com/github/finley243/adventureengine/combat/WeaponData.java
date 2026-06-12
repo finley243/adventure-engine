@@ -1,19 +1,18 @@
 package com.github.finley243.adventureengine.combat;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.stat.StatHolder;
 
 public class WeaponData implements StatHolder {
 
     @Override
-    public Expression getStatValue(String name, Context context, Game game) {
+    public Expression getStatValue(String name, Context context) {
         return null;
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context, Game game) {
+    public boolean setStatValue(String name, Expression value, Context context) {
         return false;
     }
 

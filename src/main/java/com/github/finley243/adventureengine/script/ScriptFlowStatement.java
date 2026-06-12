@@ -13,7 +13,7 @@ public class ScriptFlowStatement extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         return new ScriptReturnData(null, statementType, null);
     }
 

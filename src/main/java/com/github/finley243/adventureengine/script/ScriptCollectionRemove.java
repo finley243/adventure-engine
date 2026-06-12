@@ -12,7 +12,7 @@ public class ScriptCollectionRemove extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression collectionExpression = context.getLocalVariables().get("collection").getExpression();
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         Collection<Expression> collection = switch (collectionExpression.getDataType()) {

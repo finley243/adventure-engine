@@ -16,7 +16,7 @@ public class ScriptSensoryEvent extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression phrase = context.getLocalVariables().get("phrase").getExpression();
         Expression phraseAudible = context.getLocalVariables().get("phraseAudible").getExpression();
         Expression area = context.getLocalVariables().get("area").getExpression();

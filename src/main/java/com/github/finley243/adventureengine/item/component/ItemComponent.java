@@ -38,7 +38,7 @@ public abstract class ItemComponent implements MutableStatHolder {
 
     public void onInit(Game game) {}
 
-    public void onStartRound(Game game) {}
+    public void onStartRound() {}
 
     public List<Action> getInventoryActions(Game game, Actor subject) {
         if (!actionsRestricted()) {
@@ -52,12 +52,12 @@ public abstract class ItemComponent implements MutableStatHolder {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context, Game game) {
+    public Expression getStatValue(String name, Context context) {
         return null;
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context, Game game) {
+    public boolean setStatValue(String name, Expression value, Context context) {
         return false;
     }
 
@@ -67,32 +67,32 @@ public abstract class ItemComponent implements MutableStatHolder {
     }
 
     @Override
-    public StatInt getStatInt(Game game, String name) {
+    public StatInt getStatInt(String name) {
         return null;
     }
 
     @Override
-    public StatFloat getStatFloat(Game game, String name) {
+    public StatFloat getStatFloat(String name) {
         return null;
     }
 
     @Override
-    public StatBoolean getStatBoolean(Game game, String name) {
+    public StatBoolean getStatBoolean(String name) {
         return null;
     }
 
     @Override
-    public StatString getStatString(Game game, String name) {
+    public StatString getStatString(String name) {
         return null;
     }
 
     @Override
-    public StatStringSet getStatStringSet(Game game, String name) {
+    public StatStringSet getStatStringSet(String name) {
         return null;
     }
 
     @Override
-    public void onStatChange(Game game, String name) {
+    public void onStatChange(String name) {
 
     }
 

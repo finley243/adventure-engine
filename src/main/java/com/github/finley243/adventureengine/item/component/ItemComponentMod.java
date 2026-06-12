@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionModInstall;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplateMod;
 
@@ -24,7 +25,7 @@ public class ItemComponentMod extends ItemComponent {
         return (ItemComponentTemplateMod) getTemplate();
     }
 
-    public List<String> getEffects() {
+    public List<Effect> getEffects() {
         return getModTemplate().getEffects();
     }
 

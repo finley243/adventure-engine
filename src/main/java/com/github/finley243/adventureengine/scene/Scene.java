@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.scene;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -64,7 +63,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context, Game game) {
+	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "triggered" -> new ExpressionConstantBoolean(hasTriggered);
 			case "id" -> new ExpressionConstantString(getID());
@@ -73,7 +72,7 @@ public class Scene extends GameInstanced implements StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context, Game game) {
+	public boolean setStatValue(String name, Expression value, Context context) {
 		switch (name) {
 			case "triggered" -> {
 				this.hasTriggered = value.getValueBoolean();

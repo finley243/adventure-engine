@@ -11,7 +11,7 @@ public class ScriptRandomValueFromCollection extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression collectionExpression = context.getLocalVariables().get("collection").getExpression();
         if (collectionExpression.getDataType() != Expression.DataType.LIST && collectionExpression.getDataType() != Expression.DataType.SET) {
             return new ScriptReturnData(null, null, new ScriptErrorData("Collection parameter is not a collection", getTraceData()));

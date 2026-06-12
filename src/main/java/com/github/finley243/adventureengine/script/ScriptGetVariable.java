@@ -13,7 +13,7 @@ public class ScriptGetVariable extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         if (!context.getLocalVariables().containsKey(variableName)) return new ScriptReturnData(null, null, new ScriptErrorData("Specified variable has not been defined: " + variableName, getTraceData()));
         Expression variableValue = context.getLocalVariables().get(variableName).getExpression();
         return new ScriptReturnData(variableValue, null, null);

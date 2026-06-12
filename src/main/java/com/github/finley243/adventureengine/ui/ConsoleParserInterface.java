@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.ui;
 
-import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
 import com.github.finley243.adventureengine.event.ui.RenderNumericMenuEvent;
 import com.github.finley243.adventureengine.event.ui.RenderChoiceMenuEvent;
@@ -14,10 +14,10 @@ import java.util.List;
 
 public class ConsoleParserInterface implements UserInterface {
 
-    private final Game game;
+    private final UIEventBus eventBus;
 
-    public ConsoleParserInterface(Game game) {
-        this.game = game;
+    public ConsoleParserInterface(UIEventBus eventBus) {
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ConsoleParserInterface implements UserInterface {
             }
             int response = ConsoleUtils.intInRange(1, validChoices.size());
             System.out.println();
-            game.eventBus().post(new ChoiceMenuInputEvent(validChoices.get(response - 1).getIndex()));
+            eventBus.post(new ChoiceMenuInputEvent(validChoices.get(response - 1).getIndex()));
         } else {
             for (MenuChoice menuChoice : validChoices) {
                 System.out.println("PROMPT: " + menuChoice.getParserPrompt());
@@ -64,7 +64,7 @@ public class ConsoleParserInterface implements UserInterface {
                 for (MenuChoice menuChoice : validChoices) {
                     if (menuChoice.getParserPrompt().equalsIgnoreCase(processedResponse)) {
                         System.out.println();
-                        game.eventBus().post(new ChoiceMenuInputEvent(menuChoice.getIndex()));
+                        eventBus.post(new ChoiceMenuInputEvent(menuChoice.getIndex()));
                         return;
                     }
                 }

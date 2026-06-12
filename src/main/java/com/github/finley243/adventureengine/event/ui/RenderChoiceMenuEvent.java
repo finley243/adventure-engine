@@ -5,7 +5,7 @@ import com.github.finley243.adventureengine.menu.MenuChoice;
 
 import java.util.List;
 
-public class RenderChoiceMenuEvent {
+public class RenderChoiceMenuEvent extends UIEvent {
 
 	private final List<MenuChoice> menuChoices;
 	private final List<MenuCategory> menuCategories;

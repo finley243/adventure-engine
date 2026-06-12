@@ -2,11 +2,13 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
-import com.github.finley243.adventureengine.actor.ActorTemplate;
-import com.github.finley243.adventureengine.actor.Bark;
-import com.github.finley243.adventureengine.actor.EquipSlot;
-import com.github.finley243.adventureengine.actor.Limb;
+import com.github.finley243.adventureengine.action.ActionTemplate;
+import com.github.finley243.adventureengine.actor.*;
+import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.LootTable;
+import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.textgen.TextContext;
 import org.w3c.dom.Element;
@@ -19,19 +21,52 @@ public class ActorTemplateLoader {
 
     private final ScriptParser scriptParser;
     private final LootTableLoader lootTableLoader;
+    private final Registry<SenseType> senseTypeRegistry;
+    private final Registry<ActionTemplate> actionRegistry;
+    private final Registry<Effect> effectRegistry;
+    private final Registry<Faction> factionRegistry;
+    private final Registry<WeaponAttackType> attackTypeRegistry;
+    private final Registry<Scene> sceneRegistry;
+    private final Registry<LootTable> lootTableRegistry;
 
-    public ActorTemplateLoader(ScriptParser scriptParser, LootTableLoader lootTableLoader) {
+    public ActorTemplateLoader(ScriptParser scriptParser, LootTableLoader lootTableLoader, Registry<SenseType> senseTypeRegistry, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<Faction> factionRegistry, Registry<WeaponAttackType> attackTypeRegistry, Registry<Scene> sceneRegistry, Registry<LootTable> lootTableRegistry) {
         this.scriptParser = scriptParser;
         this.lootTableLoader = lootTableLoader;
+        this.senseTypeRegistry = senseTypeRegistry;
+        this.actionRegistry = actionRegistry;
+        this.effectRegistry = effectRegistry;
+        this.factionRegistry = factionRegistry;
+        this.attackTypeRegistry = attackTypeRegistry;
+        this.sceneRegistry = sceneRegistry;
+        this.lootTableRegistry = lootTableRegistry;
     }
 
     public Map<String, ActorTemplate> load(Element element) {
-        return LoadUtils.loadAll(element, NAME_ACTOR_TEMPLATE, this::parseActorTemplate, ActorTemplate::getID);
+        List<TemplateNode> templateNodes = new ArrayList<>();
+        for (Element child : LoadUtils.directChildrenWithName(element, NAME_ACTOR_TEMPLATE)) {
+            TemplateNode templateNode = parseTemplateNode(child);
+            templateNodes.add(templateNode);
+        }
+        List<TemplateNode> sortedNodes = LoadUtils.topologicalSort(templateNodes, TemplateNode::id, node -> node.parentId() != null ? List.of(node.parentId()) : List.of());
+        Map<String, ActorTemplate> actorTemplateMap = new HashMap<>();
+        for (TemplateNode node : sortedNodes) {
+            ActorTemplate actorTemplate = parseActorTemplate(node.element(), actorTemplateMap);
+            actorTemplateMap.put(node.id(), actorTemplate);
+        }
+        return actorTemplateMap;
     }
 
-    private ActorTemplate parseActorTemplate(Element element) {
+    private TemplateNode parseTemplateNode(Element element) {
         String id = LoadUtils.attribute(element, "id", null);
         String parentID = LoadUtils.attribute(element, "parent", null);
+        return new TemplateNode(id, parentID, element);
+    }
+
+    private ActorTemplate parseActorTemplate(Element element, Map<String, ActorTemplate> actorTemplateMap) {
+        String id = LoadUtils.attribute(element, "id", null);
+        String parentID = LoadUtils.attribute(element, "parent", null);
+        ActorTemplate parent = actorTemplateMap.get(parentID);
+        if (parent == null && parentID != null) throw new GameDataException("ActorTemplate has invalid parent");
         Element nameElement = LoadUtils.singleChildWithName(element, "name");
         String name = nameElement != null ? nameElement.getTextContent() : null;
         Boolean nameIsProper = nameElement != null && LoadUtils.attributeBool(nameElement, "proper", false);
@@ -41,7 +76,9 @@ public class ActorTemplateLoader {
         } catch (IllegalArgumentException e) {
             throw new GameDataException("ActorTemplate has invalid pronoun");
         }
-        String faction = LoadUtils.attribute(element, "faction", null);
+        String factionID = LoadUtils.attribute(element, "faction", null);
+        Faction faction = factionRegistry.getFromID(factionID);
+        if (faction == null) throw new GameDataException("ActorTemplate has invalid faction");
         Boolean isEnforcer = LoadUtils.attributeBool(element, "isEnforcer", null);
 
         Integer actionPoints = LoadUtils.attributeInt(element, "actionPoints", null);
@@ -69,8 +106,10 @@ public class ActorTemplateLoader {
             String slotName = slotElement.getTextContent();
             equipSlots.put(slotID, new EquipSlot(slotID, slotName));
         }
-        LootTable lootTable = lootTableLoader.parseLootTable(LoadUtils.singleChildWithName(element, "inventory"), true);
-        String dialogueStart = LoadUtils.attribute(element, "dialogueStart", null);
+        LootTable lootTable = lootTableLoader.parseLootTable(LoadUtils.singleChildWithName(element, "inventory"), lootTableRegistry::getFromID, true);
+        String dialogueStartID = LoadUtils.attribute(element, "dialogueStart", null);
+        Scene dialogueStart = sceneRegistry.getFromID(dialogueStartID);
+        if (dialogueStart == null) throw new GameDataException("ActorTemplate has invalid dialogue start scene");
         Map<String, Integer> attributes = new HashMap<>();
         for (Element attributeElement : LoadUtils.directChildrenWithName(element, "attribute")) {
             String attribute = LoadUtils.attribute(attributeElement, "key", null);
@@ -83,10 +122,28 @@ public class ActorTemplateLoader {
             int value = LoadUtils.attributeInt(skillElement, "value", 0);
             skills.put(skill, value);
         }
-        Set<String> senseTypes = LoadUtils.setOfTags(element, "senseType");
-        List<String> unarmedAttackTypes = LoadUtils.listOfTags(element, "attackType");
+        Set<String> senseTypeIDs = LoadUtils.setOfTags(element, "senseType");
+        Set<SenseType> senseTypes = new HashSet<>();
+        for (String senseTypeID : senseTypeIDs) {
+            SenseType senseType = senseTypeRegistry.getFromID(senseTypeID);
+            if (senseType == null) throw new GameDataException("ActorTemplate has invalid senseType");
+            senseTypes.add(senseType);
+        }
+        List<String> unarmedAttackTypeIDs = LoadUtils.listOfTags(element, "attackType");
+        List<WeaponAttackType> unarmedAttackTypes = new ArrayList<>();
+        for (String unarmedAttackTypeID : unarmedAttackTypeIDs) {
+            WeaponAttackType unarmedAttackType = attackTypeRegistry.getFromID(unarmedAttackTypeID);
+            if (unarmedAttackType == null) throw new GameDataException("ActorTemplate has invalid unarmed attack type");
+            unarmedAttackTypes.add(unarmedAttackType);
+        }
         Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Actor(" + id + ")");
-        List<String> startingEffects = LoadUtils.listOfTags(element, "startEffect");
+        List<String> startingEffectIDs = LoadUtils.listOfTags(element, "startEffect");
+        List<Effect> startingEffects = new ArrayList<>();
+        for (String startingEffectID : startingEffectIDs) {
+            Effect effect = effectRegistry.getFromID(startingEffectID);
+            if (effect == null) throw new GameDataException("ActorTemplate has invalid starting effect: " + startingEffectID);
+            startingEffects.add(effect);
+        }
 
         Map<String, Bark> barks = new HashMap<>();
         for (Element barkElement : LoadUtils.directChildrenWithName(element, "bark")) {
@@ -102,10 +159,10 @@ public class ActorTemplateLoader {
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));
         }
 
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptParser, "ActorTemplate(" + id + ")");
-        List<ActionCustom.CustomActionHolder> customInventoryActions = LoadUtils.loadCustomActions(element, "itemAction", scriptParser, "ActorTemplate(" + id + ")");
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptParser, actionRegistry, "ActorTemplate(" + id + ")");
+        List<ActionCustom.CustomActionHolder> customInventoryActions = LoadUtils.loadCustomActions(element, "itemAction", scriptParser, actionRegistry, "ActorTemplate(" + id + ")");
 
-        return new ActorTemplate(id, parentID, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, startingLevel, levelUpThresholdExpression, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, unarmedAttackTypes, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
+        return new ActorTemplate(id, parent, name, nameIsProper, pronoun, faction, isEnforcer, actionPoints, movePoints, startingLevel, levelUpThresholdExpression, hp, damageResistances, damageMults, limbs, equipSlots, attributes, skills, senseTypes, unarmedAttackTypes, startingEffects, lootTable, dialogueStart, scripts, barks, customActions, customInventoryActions);
     }
 
     private List<Limb> parseLimbs(Element element) {
@@ -123,8 +180,16 @@ public class ActorTemplateLoader {
         float hitChance = LoadUtils.attributeFloat(element, "hitChance", 1.0f);
         float damageMult = LoadUtils.attributeFloat(element, "damageMult", 1.0f);
         String apparelSlot = LoadUtils.attribute(element, "apparelSlot", null);
-        List<String> hitEffects = LoadUtils.listOfTags(element, "hitEffect");
+        List<String> hitEffectIDs = LoadUtils.listOfTags(element, "hitEffect");
+        List<Effect> hitEffects = new ArrayList<>();
+        for (String hitEffectID : hitEffectIDs) {
+            Effect effect = effectRegistry.getFromID(hitEffectID);
+            if (effect == null) throw new GameDataException("Limb has invalid hit effect: " + hitEffectID);
+            hitEffects.add(effect);
+        }
         return new Limb(ID, name, hitChance, damageMult, apparelSlot, hitEffects);
     }
+
+    private record TemplateNode(String id, String parentId, Element element) {}
 
 }

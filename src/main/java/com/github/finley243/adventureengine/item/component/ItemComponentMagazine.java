@@ -103,26 +103,26 @@ public class ItemComponentMagazine extends ItemComponent {
     }
 
     @Override
-    public StatInt getStatInt(Game game, String name) {
+    public StatInt getStatInt(String name) {
         return switch (name) {
             case "clip_size" -> clipSize;
             case "reload_action_points" -> reloadActionPoints;
-            default -> super.getStatInt(game, name);
+            default -> super.getStatInt(name);
         };
     }
 
     @Override
-    public Expression getStatValue(String name, Context context, Game game) {
+    public Expression getStatValue(String name, Context context) {
         return switch (name) {
             case "magazine_size" -> Expression.constant(getMagazineSize(game));
             case "reload_action_points" -> Expression.constant(getReloadActionPoints(context));
             case "ammo_count" -> Expression.constant(ammoCount);
-            default -> super.getStatValue(name, context, game);
+            default -> super.getStatValue(name, context);
         };
     }
 
     @Override
-    public void onStatChange(Game game, String name) {
+    public void onStatChange(String name) {
         if ("magazine_size".equals(name) && ammoCount > getMagazineSize(game)) {
             int difference = ammoCount - getMagazineSize(game);
             ammoCount = getMagazineSize(game);
@@ -130,7 +130,7 @@ public class ItemComponentMagazine extends ItemComponent {
                 getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor().getInventory().addItems(ammoType.getTemplateID(), difference, game);
             }
         } else {
-            super.onStatChange(game, name);
+            super.onStatChange(name);
         }
     }
 

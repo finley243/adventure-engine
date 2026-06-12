@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.event.ui;
 
-public class RenderTextEvent {
+public class RenderTextEvent extends UIEvent {
 
 	private final String text;
 	

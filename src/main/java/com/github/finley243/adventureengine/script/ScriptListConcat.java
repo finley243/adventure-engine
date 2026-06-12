@@ -13,7 +13,7 @@ public class ScriptListConcat extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression listOneExpression = context.getLocalVariables().get("listOne").getExpression();
         Expression listTwoExpression = context.getLocalVariables().get("listTwo").getExpression();
         if (listOneExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List one parameter is not a list", getTraceData()));

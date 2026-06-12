@@ -31,13 +31,13 @@ public class NetworkNodeGroup extends NetworkNode {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context, Game game) {
+    public Expression getStatValue(String name, Context context) {
         return switch (name) {
             case "childNodes" -> Expression.constant(getAllChildNodes());
             case "directChildNodes" -> Expression.constant(childNodes);
             case "childObjects" -> Expression.constant(getAllChildObjects());
             case "directChildObjects" -> Expression.constant(getDirectChildObjects());
-            default -> super.getStatValue(name, context, game);
+            default -> super.getStatValue(name, context);
         };
     }
 

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.effect.Effect;
 
 import java.util.List;
@@ -12,9 +11,9 @@ public class Limb {
     private final float hitChance;
     private final float damageMult;
     private final String apparelSlot;
-    private final List<String> hitEffects;
+    private final List<Effect> hitEffects;
 
-    public Limb(String ID, String name, float hitChance, float damageMult, String apparelSlot, List<String> hitEffects) {
+    public Limb(String ID, String name, float hitChance, float damageMult, String apparelSlot, List<Effect> hitEffects) {
         this.ID = ID;
         this.name = name;
         this.hitChance = hitChance;
@@ -43,10 +42,9 @@ public class Limb {
         return apparelSlot;
     }
 
-    public void applyEffects(Game game, Actor target) {
-        for(String effectID : hitEffects) {
-            Effect effect = game.data().getEffect(effectID);
-            target.getEffectComponent().addEffect(game, effect);
+    public void applyEffects(Actor target) {
+        for(Effect effect : hitEffects) {
+            target.getEffectComponent().addEffect(effect);
         }
     }
 

@@ -12,7 +12,7 @@ public class ScriptRandomInteger extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression minExpression = context.getLocalVariables().get("min").getExpression();
         Expression maxExpression = context.getLocalVariables().get("max").getExpression();
         if (minExpression.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Min parameter is not an integer", getTraceData()));

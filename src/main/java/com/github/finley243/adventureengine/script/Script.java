@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.script;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Inventory;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.load.ScriptParser;
@@ -30,12 +29,23 @@ public abstract class Script {
 		this.traceData = traceData;
 	}
 
+	public Expression run(ScriptRuntime scriptRuntime, Context context) {
+		Script.ScriptReturnData returnData = execute(scriptRuntime, context);
+		if (returnData.error() != null) {
+			throw new ScriptExecutionException(returnData.stackTrace());
+		} else if (returnData.flowStatement() != null) {
+			throw new ScriptExecutionException("Illegal flow statement in script: " + returnData.stackTrace());
+		}
+		return returnData.value();
+	}
+
 	/**
-	 * Begin execution of the script
+	 * Begin execution of the script (this method is meant to be used internally within Script objects)
 	 *
-	 * @param context The context with which this script will be executed
+	 * @param scriptRuntime The ScriptRuntime that allows scripts access to engine systems
+	 * @param context       The context with which this script will be executed
 	 */
-	public abstract ScriptReturnData execute(Context context);
+	abstract ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context);
 
 	protected ScriptTraceData getTraceData() {
 		return traceData;

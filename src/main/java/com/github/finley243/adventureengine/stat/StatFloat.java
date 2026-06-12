@@ -26,17 +26,17 @@ public class StatFloat extends Stat {
             }
         }
         float computedValue = (base * (mult + 1.0f)) + add;
-        return Math.min(Math.max(computedValue, min), max);
+        return Math.clamp(computedValue, min, max);
     }
 
-    public void addMod(Game game, StatFloatMod mod) {
+    public void addMod(StatFloatMod mod) {
         mods.add(mod);
-        getTarget().onStatChange(game, getName());
+        getTarget().onStatChange(getName());
     }
 
-    public void removeMod(Game game, StatFloatMod mod) {
+    public void removeMod(StatFloatMod mod) {
         mods.remove(mod);
-        getTarget().onStatChange(game, getName());
+        getTarget().onStatChange(getName());
     }
 
     public List<StatFloatMod> getMods() {

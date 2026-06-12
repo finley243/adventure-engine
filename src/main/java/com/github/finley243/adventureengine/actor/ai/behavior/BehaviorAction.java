@@ -32,36 +32,36 @@ public class BehaviorAction extends Behavior {
     }
 
     @Override
-    public boolean isInTargetState(Game game, Actor subject) {
+    public boolean isInTargetState(Actor subject) {
         return hasPerformedAction;
     }
 
     @Override
-    public Area getTargetArea(Game game, Actor subject) {
+    public Area getTargetArea(Actor subject) {
         return null;
     }
 
     @Override
-    public void onPerformAction(Game game, Actor subject, Action action) {
+    public void onPerformAction(Actor subject, Action action) {
         if (actionIsMatch(game, subject, action)) {
             hasPerformedAction = true;
         }
-        super.onPerformAction(game, subject, action);
+        super.onPerformAction(subject, action);
     }
 
     @Override
-    public Float actionUtilityOverride(Game game, Actor subject, Action action) {
+    public Float actionUtilityOverride(Actor subject, Action action) {
         if (actionIsMatch(game, subject, action)) {
             return subject.isInCombat() ? BEHAVIOR_ACTION_UTILITY_COMBAT : BEHAVIOR_ACTION_UTILITY;
         }
-        return super.actionUtilityOverride(game, subject, action);
+        return super.actionUtilityOverride(subject, action);
     }
 
     private boolean actionIsMatch(Game game, Actor subject, Action action) {
         if (!action.getID().equals(actionID)) {
             return false;
         }
-        return actionCondition == null || actionCondition.isMet(action.getContext(game, subject));
+        return actionCondition == null || actionCondition.isMet(action.getContext(subject));
     }
 
 }

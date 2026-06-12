@@ -1,17 +1,16 @@
 package com.github.finley243.adventureengine.world.environment;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
-import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.*;
 
@@ -19,6 +18,8 @@ import java.util.*;
  * Represents a self-contained space (e.g. an actual room) that contains smaller areas
  */
 public class Room extends GameInstanced implements Noun, StatHolder {
+
+	private final ScriptRuntime scriptRuntime;
 
 	private final String name;
 	private final Area.AreaNameType nameType;
@@ -33,8 +34,9 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 
 	private boolean hasVisited;
 
-	public Room(String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, Faction ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Map<String, List<Script>> scripts) {
+	public Room(ScriptRuntime scriptRuntime, String ID, String name, Area.AreaNameType nameType, boolean isProperName, Scene description, Faction ownerFaction, Area.RestrictionType restrictionType, boolean allowAllies, Map<String, List<Script>> scripts) {
 		super(ID);
+		this.scriptRuntime = scriptRuntime;
 		this.name = name;
 		this.nameType = nameType;
 		this.isProperName = isProperName;
@@ -44,10 +46,6 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 		this.allowAllies = allowAllies;
 		this.hasVisited = false;
 		this.scripts = scripts;
-	}
-
-	public void onInit(Game game) {
-
 	}
 
 	public String getRelativeName() {
@@ -106,7 +104,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 		return allowAllies;
 	}
 	
-	public Set<WorldObject> getObjects() {
+	/*public Set<WorldObject> getObjects() {
 		Set<WorldObject> objects = new HashSet<>();
 		for (Area area : areas) {
 			objects.addAll(area.getObjects());
@@ -120,7 +118,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 			actors.addAll(area.getActors());
 		}
 		return actors;
-	}
+	}*/
 
 	@Override
 	public String getName() {
@@ -153,7 +151,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context, Game game) {
+	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "noun" -> Expression.constantNoun(this);
 			case "name" -> Expression.constant(getName());
@@ -165,7 +163,7 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context, Game game) {
+	public boolean setStatValue(String name, Expression value, Context context) {
 		switch (name) {
 			case "visited" -> {
 				this.hasVisited = value.getValueBoolean();
@@ -180,11 +178,10 @@ public class Room extends GameInstanced implements Noun, StatHolder {
 		return null;
 	}
 
-	public void triggerScript(String entryPoint, Game game, Actor subject, Actor target) {
+	public void triggerScript(String entryPoint, Context context) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				Context context = Context.builder(game).subject(subject).target(target).build();
-				currentScript.execute(context);
+				scriptRuntime.executeScript(currentScript, context);
 			}
 		}
 	}

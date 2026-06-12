@@ -72,7 +72,7 @@ public abstract class ObjectComponent implements StatHolder {
     protected abstract String getStatName();
 
     @Override
-    public Expression getStatValue(String name, Context context, Game game) {
+    public Expression getStatValue(String name, Context context) {
         if ((getStatName() + "_enabled").equals(name)) {
             return Expression.constant(isEnabled());
         }
@@ -80,7 +80,7 @@ public abstract class ObjectComponent implements StatHolder {
     }
 
     @Override
-    public boolean setStatValue(String name, Expression value, Context context, Game game) {
+    public boolean setStatValue(String name, Expression value, Context context) {
         if ((getStatName() + "_enabled").equals(name)) {
             setEnabled(value.getValueBoolean());
         }

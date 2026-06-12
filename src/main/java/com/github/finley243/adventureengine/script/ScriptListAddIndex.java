@@ -12,7 +12,7 @@ public class ScriptListAddIndex extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression listExpression = context.getLocalVariables().get("list").getExpression();
         Expression indexExpression = context.getLocalVariables().get("index").getExpression();
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();

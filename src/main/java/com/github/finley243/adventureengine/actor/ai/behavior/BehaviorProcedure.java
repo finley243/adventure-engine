@@ -31,34 +31,34 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public boolean isInTargetState(Game game, Actor subject) {
-        return stages.get(currentStage).isInTargetState(game, subject);
+    public boolean isInTargetState(Actor subject) {
+        return stages.get(currentStage).isInTargetState(subject);
     }
 
     @Override
-    public void onPerformAction(Game game, Actor subject, Action action) {
-        stages.get(currentStage).onPerformAction(game, subject, action);
+    public void onPerformAction(Actor subject, Action action) {
+        stages.get(currentStage).onPerformAction(subject, action);
     }
 
     @Override
-    public boolean hasCompleted(Game game, Actor subject) {
+    public boolean hasCompleted(Actor subject) {
         if (isCycle) {
             return false;
         } else {
-            return currentStage == stages.size() - 1 && isInTargetState(game, subject);
+            return currentStage == stages.size() - 1 && isInTargetState(subject);
         }
     }
 
     @Override
-    public void updateTurn(Game game, Actor subject, Context scriptContext) {
+    public void updateTurn(Actor subject, Context scriptContext) {
         triggerRoundScript(scriptContext);
-        stages.get(currentStage).updateTurn(game, subject, currentStageContext);
+        stages.get(currentStage).updateTurn(subject, currentStageContext);
     }
 
     @Override
-    public void update(Game game, Actor subject, Context scriptContext) {
-        stages.get(currentStage).update(game, subject, currentStageContext);
-        if (stages.get(currentStage).hasCompleted(game, subject)) {
+    public void update(Actor subject, Context scriptContext) {
+        stages.get(currentStage).update(subject, currentStageContext);
+        if (stages.get(currentStage).hasCompleted(subject)) {
             currentStage += 1;
             if (currentStage >= stages.size()) {
                 currentStage = 0;
@@ -76,13 +76,13 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public Area getTargetArea(Game game, Actor subject) {
-        return stages.get(currentStage).getTargetArea(game, subject);
+    public Area getTargetArea(Actor subject) {
+        return stages.get(currentStage).getTargetArea(subject);
     }
 
     @Override
-    public Float actionUtilityOverride(Game game, Actor subject, Action action) {
-        return stages.get(currentStage).actionUtilityOverride(game, subject, action);
+    public Float actionUtilityOverride(Actor subject, Action action) {
+        return stages.get(currentStage).actionUtilityOverride(subject, action);
     }
 
     @Override

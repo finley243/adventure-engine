@@ -12,7 +12,7 @@ public class ScriptEffectAdd extends Script{
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression targetExpression = context.getLocalVariables().get("target").getExpression();
         Expression effectExpression = context.getLocalVariables().get("effect").getExpression();
         if (targetExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Target parameter is not a stat holder", getTraceData()));
@@ -20,7 +20,7 @@ public class ScriptEffectAdd extends Script{
         if (targetExpression.getDataType() != Expression.DataType.STRING) return new ScriptReturnData(null, null, new ScriptErrorData("Effect parameter is not a string", getTraceData()));
         String effectID = effectExpression.getValueString();
         Effect effect = context.game().data().getEffect(effectID);
-        effectibleTarget.addEffect(context.game(), effect);
+        effectibleTarget.addEffect(effect);
         return new ScriptReturnData(null, null, null);
     }
 

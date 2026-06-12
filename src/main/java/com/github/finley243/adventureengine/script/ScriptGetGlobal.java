@@ -13,7 +13,7 @@ public class ScriptGetGlobal extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression globalValue = context.game().data().getGlobalExpression(globalName);
         return new ScriptReturnData(globalValue, null, null);
     }

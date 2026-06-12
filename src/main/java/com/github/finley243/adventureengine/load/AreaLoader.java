@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -25,6 +26,7 @@ public class AreaLoader {
     private static final String NAME_AREA = "area";
 
     private final ConfigHandler configHandler;
+    private final ScriptRuntime scriptRuntime;
     private final ScriptParser scriptParser;
     private final SceneLoader sceneLoader;
     private final ActorLoader actorLoader;
@@ -33,8 +35,9 @@ public class AreaLoader {
     private final MutableRegistry<Item> itemMutableRegistry;
     private final Registry<Room> roomRegistry;
 
-    public AreaLoader(ConfigHandler configHandler, ScriptParser scriptParser, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, MutableRegistry<Item> itemMutableRegistry, Registry<Room> roomRegistry) {
+    public AreaLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, ScriptParser scriptParser, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, MutableRegistry<Item> itemMutableRegistry, Registry<Room> roomRegistry) {
         this.configHandler = configHandler;
+        this.scriptRuntime = scriptRuntime;
         this.scriptParser = scriptParser;
         this.sceneLoader = sceneLoader;
         this.actorLoader = actorLoader;
@@ -58,7 +61,6 @@ public class AreaLoader {
     }
 
     private AreaParseResult parseArea(Element element) {
-        if (element == null) return null;
         String areaID = LoadUtils.attribute(element, "id", null);
         String roomID = LoadUtils.attribute(element, "room", null);
         Room room = roomID != null ? roomRegistry.getFromID(roomID) : null;
@@ -108,24 +110,21 @@ public class AreaLoader {
 
         Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Area(" + areaID + ")");
 
-        Area area = new Area(areaID, landmarkID, name, nameType, nameIsPlural, description, room, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);
+        Area area = new Area(scriptRuntime, areaID, landmarkID, name, nameType, nameIsPlural, description, room, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);
 
         Map<String, WorldObject> objectMap = new HashMap<>();
-        List<Element> objectElements = LoadUtils.directChildrenWithName(element, "object");
-        for (Element objectElement : objectElements) {
+        for (Element objectElement : LoadUtils.directChildrenWithName(element, "object")) {
             WorldObject object = objectLoader.parseObject(objectElement, area);
             objectMap.put(object.getID(), object);
         }
 
-        List<Element> itemElements = LoadUtils.directChildrenWithName(element, "item");
-        for (Element itemElement : itemElements) {
+        for (Element itemElement : LoadUtils.directChildrenWithName(element, "item")) {
             Item item = itemLoader.parseItem(itemElement);
             area.getInventory().addItem(item, itemMutableRegistry);
         }
 
         Map<String, Actor> actorMap = new HashMap<>();
-        List<Element> actorElements = LoadUtils.directChildrenWithName(element, "actor");
-        for (Element actorElement : actorElements) {
+        for (Element actorElement : LoadUtils.directChildrenWithName(element, "actor")) {
             Actor actor = actorLoader.parseActor(actorElement, area);
             actorMap.put(actor.getID(), actor);
         }

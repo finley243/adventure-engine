@@ -2,8 +2,10 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.LootTable;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -19,11 +21,15 @@ public class ObjectTemplateLoader {
     private final ScriptParser scriptParser;
     private final SceneLoader sceneLoader;
     private final LootTableLoader lootTableLoader;
+    private final Registry<ActionTemplate> actionRegistry;
+    private final Registry<LootTable> lootTableRegistry;
 
-    public ObjectTemplateLoader(ScriptParser scriptParser, SceneLoader sceneLoader, LootTableLoader lootTableLoader) {
+    public ObjectTemplateLoader(ScriptParser scriptParser, SceneLoader sceneLoader, LootTableLoader lootTableLoader, Registry<ActionTemplate> actionRegistry, Registry<LootTable> lootTableRegistry) {
         this.scriptParser = scriptParser;
         this.sceneLoader = sceneLoader;
         this.lootTableLoader = lootTableLoader;
+        this.actionRegistry = actionRegistry;
+        this.lootTableRegistry = lootTableRegistry;
     }
 
     public Map<String, ObjectTemplate> load(Element element) {
@@ -51,8 +57,8 @@ public class ObjectTemplateLoader {
             }
         }
         Map<String, List<Script>> scripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "ObjectTemplate(" + ID + ")");
-        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptParser, "ObjectTemplate(" + ID + ")");
-        List<ActionCustom.CustomActionHolder> networkActions = LoadUtils.loadCustomActions(element, "networkAction", scriptParser, "ObjectTemplate(" + ID + ")");
+        List<ActionCustom.CustomActionHolder> customActions = LoadUtils.loadCustomActions(element, "action", scriptParser, actionRegistry, "ObjectTemplate(" + ID + ")");
+        List<ActionCustom.CustomActionHolder> networkActions = LoadUtils.loadCustomActions(element, "networkAction", scriptParser, actionRegistry, "ObjectTemplate(" + ID + ")");
         List<ObjectComponentTemplate> components = new ArrayList<>();
         for (Element componentElement : LoadUtils.directChildrenWithName(element, "component")) {
             ObjectComponentTemplate componentTemplate = parseObjectComponentTemplate(componentElement, ID);
@@ -73,14 +79,14 @@ public class ObjectTemplateLoader {
         boolean actionsRestricted = LoadUtils.attributeBool(element, "restricted", false);
         switch (type) {
             case "inventory" -> {
-                LootTable lootTable = lootTableLoader.parseLootTable(LoadUtils.singleChildWithName(element, "inventory"), true);
+                LootTable lootTable = lootTableLoader.parseLootTable(LoadUtils.singleChildWithName(element, "inventory"), lootTableRegistry::getFromID, true);
                 String takePrompt = LoadUtils.singleTag(element, "takePrompt", null);
                 String takePhrase = LoadUtils.singleTag(element, "takePhrase", null);
                 String storePrompt = LoadUtils.singleTag(element, "storePrompt", null);
                 String storePhrase = LoadUtils.singleTag(element, "storePhrase", null);
                 boolean enableTake = LoadUtils.attributeBool(element, "enableTake", true);
                 boolean enableStore = LoadUtils.attributeBool(element, "enableStore", true);
-                List<ActionCustom.CustomActionHolder> perItemActions = LoadUtils.loadCustomActions(element, "itemAction", scriptParser, "ObjectComponentInventory(" + objectID + ")");
+                List<ActionCustom.CustomActionHolder> perItemActions = LoadUtils.loadCustomActions(element, "itemAction", scriptParser, actionRegistry, "ObjectComponentInventory(" + objectID + ")");
                 return new ObjectComponentTemplateInventory(startEnabled, actionsRestricted, lootTable, takePrompt, takePhrase, storePrompt, storePhrase, enableTake, enableStore, perItemActions);
             }
             case "network" -> {
@@ -113,7 +119,7 @@ public class ObjectTemplateLoader {
                     boolean userCanPerformParentActions = LoadUtils.attributeBool(slotElement, "parentActions", true);
                     boolean shouldRemoveUserOnDeath = LoadUtils.attributeBool(slotElement, "removeUserOnDeath", false);
                     Set<String> componentsExposed = LoadUtils.setOfTags(slotElement, "exposedComponent");
-                    List<ActionCustom.CustomActionHolder> usingActions = LoadUtils.loadCustomActions(slotElement, "usingAction", scriptParser, "ObjectComponentUsable(" + objectID + ")");
+                    List<ActionCustom.CustomActionHolder> usingActions = LoadUtils.loadCustomActions(slotElement, "usingAction", scriptParser, actionRegistry, "ObjectComponentUsable(" + objectID + ")");
                     usableSlotData.put(slotID, new ObjectComponentTemplateUsable.UsableSlotData(startPhrase, endPhrase, endDeathPhrase, startPrompt, endPrompt, userIsInCover, userIsHidden, userCanSeeOtherAreas, userCanPerformLocalActions, userCanPerformParentActions, shouldRemoveUserOnDeath, componentsExposed, usingActions));
                 }
                 return new ObjectComponentTemplateUsable(startEnabled, actionsRestricted, usableSlotData);

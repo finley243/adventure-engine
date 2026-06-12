@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.effect;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.stat.MutableStatHolder;
@@ -20,18 +19,18 @@ public class EffectStatAddFloat extends Effect {
     }
 
     @Override
-    public void start(Game game, MutableStatHolder target) {
-        StatFloat statFloat = target.getStatFloat(game, stat);
+    public void start(MutableStatHolder target) {
+        StatFloat statFloat = target.getStatFloat(stat);
         if(statFloat != null) {
-            statFloat.addMod(game, new StatFloat.StatFloatMod(statCondition, amount, 0.0f));
+            statFloat.addMod(new StatFloat.StatFloatMod(statCondition, amount, 0.0f));
         }
     }
 
     @Override
-    public void end(Game game, MutableStatHolder target) {
-        StatFloat statFloat = target.getStatFloat(game, stat);
+    public void end(MutableStatHolder target) {
+        StatFloat statFloat = target.getStatFloat(stat);
         if(statFloat != null) {
-            statFloat.removeMod(game, new StatFloat.StatFloatMod(statCondition, amount, 0.0f));
+            statFloat.removeMod(new StatFloat.StatFloatMod(statCondition, amount, 0.0f));
         }
     }
 

@@ -28,14 +28,14 @@ public class ItemComponentAmmo extends ItemComponent {
     public void onLoad(Game game, Item weapon) {
         for (String effectID : getAmmoTemplate().getWeaponEffects()) {
             Effect effect = game.data().getEffect(effectID);
-            weapon.getComponentOfType(ItemComponentEffectible.class).addEffect(game, effect);
+            weapon.getComponentOfType(ItemComponentEffectible.class).addEffect(effect);
         }
     }
 
     public void onUnload(Game game, Item weapon) {
         for (String effectID : getAmmoTemplate().getWeaponEffects()) {
             Effect effect = game.data().getEffect(effectID);
-            weapon.getComponentOfType(ItemComponentEffectible.class).removeEffect(game, effect);
+            weapon.getComponentOfType(ItemComponentEffectible.class).removeEffect(effect);
         }
     }
 

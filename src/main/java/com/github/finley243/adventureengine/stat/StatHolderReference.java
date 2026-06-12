@@ -56,7 +56,7 @@ public class StatHolderReference {
     private Expression computeHolderID(Context context) {
         Expression holderID = null;
         if (holderIDScript != null) {
-            Script.ScriptReturnData holderIDResult = holderIDScript.execute(context);
+            Script.ScriptReturnData holderIDResult = holderIDScript.execute(, context);
             // TODO - Possibly replace exceptions with error log and default to null
             if (holderIDResult.error() != null) {
                 throw new IllegalArgumentException("StatHolderReference holderID expression threw an error: " + holderIDResult.stackTrace());
@@ -71,7 +71,7 @@ public class StatHolderReference {
     private Expression computeHolderExpression(Context context) {
         Expression expression = null;
         if (holderExpression != null) {
-            Script.ScriptReturnData expressionResult = holderExpression.execute(context);
+            Script.ScriptReturnData expressionResult = holderExpression.execute(, context);
             // TODO - Possibly replace exceptions with error log and default to null
             if (expressionResult.error() != null) {
                 throw new IllegalArgumentException("StatHolderReference expression threw an error: " + expressionResult.stackTrace());

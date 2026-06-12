@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.ui.component;
 
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.ChoiceMenuInputEvent;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
-import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,13 +11,13 @@ import java.awt.event.MouseEvent;
 
 public class JChoiceButton extends JPanel {
 
-    private final EventBus eventBus;
+    private final UIEventBus eventBus;
     private final int choiceIndex;
     private final JSwitchPanel switchPanel;
 
     private boolean mouseHovering;
 
-    public JChoiceButton(String label, int actionPoints, String details, EventBus eventBus, int choiceIndex, JSwitchPanel switchPanel) {
+    public JChoiceButton(String label, int actionPoints, String details, UIEventBus eventBus, int choiceIndex, JSwitchPanel switchPanel) {
         this.eventBus = eventBus;
         this.choiceIndex = choiceIndex;
         this.switchPanel = switchPanel;

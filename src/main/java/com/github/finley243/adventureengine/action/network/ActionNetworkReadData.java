@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action.network;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
@@ -25,15 +24,15 @@ public class ActionNetworkReadData extends NetworkAction {
     }
 
     @Override
-    public Context getContext(Game game, Actor subject) {
+    public Context getContext(Actor subject) {
         Context context = Context.builder(game).subject(subject).parentObject(object).parentAction(this).build();
         context.setLocalVariable("node", Expression.constant(node));
         return context;
     }
 
     @Override
-    public void choose(Game game, int repeatActionCount, Actor subject) {
-        game.menuManager().sceneMenu(game, game.data().getScene(node.getSceneID()), getContext(game, subject), false);
+    public void choose(Actor subject, int repeatActionCount) {
+        game.menuManager().sceneMenu(game, game.data().getScene(node.getSceneID()), getContext(subject), false);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class ActionNetworkReadData extends NetworkAction {
     }
 
     @Override
-    public String getPrompt(Game game, Actor subject) {
+    public String getPrompt(Actor subject) {
         return "Read Data";
     }
 

@@ -11,7 +11,7 @@ public class ScriptFactionRelation extends Script {
     }
 
     @Override
-	public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
 		Expression factionExpression = context.getLocalVariables().get("faction").getExpression();
 		Expression relatedFactionExpression = context.getLocalVariables().get("relatedFaction").getExpression();
 		Expression relationExpression = context.getLocalVariables().get("relation").getExpression();

@@ -11,7 +11,7 @@ public class ScriptScene extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression scene = context.getLocalVariables().get("scene").getExpression();
         Expression actorExpression = context.getLocalVariables().get("actor").getExpression();
         if (scene.getDataType() != Expression.DataType.STRING) new ScriptReturnData(null, null, new ScriptErrorData("Scene parameter is not a string", getTraceData()));

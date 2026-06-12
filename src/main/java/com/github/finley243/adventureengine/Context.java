@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class Context {
 
-    private final Game game;
     private final Actor subject;
     private final Actor target;
     private final WorldObject parentObject;
@@ -24,8 +23,8 @@ public class Context {
     private final Action parentAction;
     private final Map<String, Variable> localVariables;
 
-    public static Builder builder(Game game) {
-        return new Builder(game);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static Builder from(Context context){
@@ -33,7 +32,6 @@ public class Context {
     }
 
     private Context(Builder builder) {
-        this.game = builder.game;
         this.subject = builder.subject;
         this.target = builder.target;
         this.parentObject = builder.parentObject;
@@ -41,10 +39,6 @@ public class Context {
         this.parentArea = builder.parentArea;
         this.parentAction = builder.parentAction;
         this.localVariables = new HashMap<>(builder.localVariables);
-    }
-
-    public Game game() {
-        return game;
     }
 
     public Actor getSubject() {
@@ -124,7 +118,6 @@ public class Context {
 
     public static class Builder {
 
-        private final Game game;
         private Actor subject;
         private Actor target;
         private WorldObject parentObject;
@@ -133,12 +126,9 @@ public class Context {
         private Action parentAction;
         private Map<String, Variable> localVariables =  new HashMap<>();
 
-        private Builder(Game game) {
-            this.game = game;
-        }
+        private Builder() {}
 
         private Builder(Context context) {
-            this.game = context.game();
             this.subject = context.subject;
             this.target = context.target;
             this.parentObject = context.parentObject;

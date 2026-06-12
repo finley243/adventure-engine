@@ -15,8 +15,8 @@ public class ScriptSetGlobal extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
-        ScriptReturnData globalValueResult = globalValue.execute(context);
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
+        ScriptReturnData globalValueResult = globalValue.execute(, context);
         if (globalValueResult.error() != null) {
             return globalValueResult;
         } else if (globalValueResult.flowStatement() != null) {

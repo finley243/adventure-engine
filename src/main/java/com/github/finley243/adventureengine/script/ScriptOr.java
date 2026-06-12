@@ -15,9 +15,9 @@ public class ScriptOr extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         for (Script subScript : subScripts) {
-            ScriptReturnData result = subScript.execute(context);
+            ScriptReturnData result = subScript.execute(, context);
             if (result.error() != null) {
                 System.out.println(subScript);
                 return result;

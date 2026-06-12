@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.event.ui;
 
-public class RenderAreaEvent {
+public class RenderAreaEvent extends UIEvent {
 
     private final String room;
     private final String area;

@@ -10,7 +10,7 @@ public class ScriptDataType extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         if (valueExpression == null) {
             return new ScriptReturnData(Expression.constant("null"), null, null);

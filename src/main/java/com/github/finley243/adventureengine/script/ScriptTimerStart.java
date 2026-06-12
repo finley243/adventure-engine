@@ -11,7 +11,7 @@ public class ScriptTimerStart extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression timerID = context.getLocalVariables().get("timer").getExpression();
         Expression timerDuration = context.getLocalVariables().get("duration").getExpression();
         Expression timerScriptExpire = context.getLocalVariables().get("scriptExpire").getExpression();

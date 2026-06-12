@@ -136,7 +136,7 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     @Override
-    public Expression getStatValue(String name, Context context, Game game) {
+    public Expression getStatValue(String name, Context context) {
         if (name.startsWith("has_user_")) {
             for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
                 if (name.equals("has_user_" + slotID)) {
@@ -145,7 +145,7 @@ public class ObjectComponentUsable extends ObjectComponent {
             }
             return null;
         }
-        return super.getStatValue(name, context, game);
+        return super.getStatValue(name, context);
     }
 
     @Override

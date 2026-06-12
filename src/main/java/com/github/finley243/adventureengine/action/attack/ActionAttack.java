@@ -87,7 +87,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public Context getContext(Game game, Actor subject) {
+    public Context getContext(Actor subject) {
         Context context = Context.builder(game).subject(subject).attackTarget(targets.size() == 1 ? targets.iterator().next() : null).parentItem(getWeapon()).parentArea(getArea()).build();
         context.setLocalVariable("targets", Expression.constant(targets));
         return context;
@@ -100,7 +100,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public String getPrompt(Game game, Actor subject) {
+    public String getPrompt(Actor subject) {
         return prompt;
     }
 
@@ -121,7 +121,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     protected int computeDamage(Context context) {
-        Script.ScriptReturnData damageReturn = damage.execute(context);
+        Script.ScriptReturnData damageReturn = damage.execute(, context);
         if (damageReturn.error() != null) {
             throw new RuntimeException("Error while computing attack damage: " + damageReturn.stackTrace());
         } else if (damageReturn.flowStatement() != null) {
@@ -201,11 +201,11 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         context.setLocalVariable("success", Expression.constant(true));
         context.setLocalVariable("damage", Expression.constant(damage));
         Damage damageData = new Damage(damageType, damage, getLimb(), armorMult, targetEffects);
-        AttackTarget.ComputedDamage computedDamage = target.applyEffectsAndComputeDamage(game, damageData, context);
+        AttackTarget.ComputedDamage computedDamage = target.applyEffectsAndComputeDamage(damageData, context);
         context.setLocalVariable("finalDamage", Expression.constant(computedDamage.amount()));
         context.setLocalVariable("isKillingBlow", Expression.constant(computedDamage.isKillingBlow()));
         SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(attackPhrase), Phrases.get(attackPhraseAudible), context, true, isLoud, null, null));
-        target.applyDamage(game, computedDamage, context);
+        target.applyDamage(computedDamage, context);
         subject.triggerScript("on_attack_success", context);
     }
 
@@ -260,7 +260,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public int actionPoints(Game game, Actor subject) {
+    public int actionPoints(Actor subject) {
         return actionPoints;
     }
 

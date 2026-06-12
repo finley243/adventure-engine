@@ -12,7 +12,7 @@ public class ScriptListIndexOf extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression listExpression = context.getLocalVariables().get("list").getExpression();
         Expression valueExpression = context.getLocalVariables().get("value").getExpression();
         if (listExpression.getDataType() != Expression.DataType.LIST) return new ScriptReturnData(null, null, new ScriptErrorData("List parameter is not a list", getTraceData()));

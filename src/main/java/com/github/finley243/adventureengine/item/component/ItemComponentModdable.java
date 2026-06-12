@@ -48,10 +48,9 @@ public class ItemComponentModdable extends ItemComponent {
         return getModdableTemplate().getModSlots().containsKey(modSlot) && (!mods.containsKey(modSlot) || mods.get(modSlot).size() < getModdableTemplate().getModSlots().get(modSlot));
     }
 
-    public void installMod(Game game, Item mod) {
-        for (String effectID : mod.getComponentOfType(ItemComponentMod.class).getEffects()) {
-            Effect effect = game.data().getEffect(effectID);
-            getItem().getComponentOfType(ItemComponentEffectible.class).addEffect(game, effect);
+    public void installMod(Item mod) {
+        for (Effect effect : mod.getComponentOfType(ItemComponentMod.class).getEffects()) {
+            getItem().getComponentOfType(ItemComponentEffectible.class).addEffect(effect);
         }
         String modSlot = mod.getComponentOfType(ItemComponentMod.class).getModSlot();
         if (!mods.containsKey(modSlot)) {
@@ -60,10 +59,9 @@ public class ItemComponentModdable extends ItemComponent {
         mods.get(modSlot).add(mod);
     }
 
-    public void removeMod(Game game, Item mod) {
-        for (String effectID : mod.getComponentOfType(ItemComponentMod.class).getEffects()) {
-            Effect effect = game.data().getEffect(effectID);
-            getItem().getComponentOfType(ItemComponentEffectible.class).removeEffect(game, effect);
+    public void removeMod(Item mod) {
+        for (Effect effect : mod.getComponentOfType(ItemComponentMod.class).getEffects()) {
+            getItem().getComponentOfType(ItemComponentEffectible.class).removeEffect(effect);
         }
         String modSlot = mod.getComponentOfType(ItemComponentMod.class).getModSlot();
         mods.get(modSlot).remove(mod);

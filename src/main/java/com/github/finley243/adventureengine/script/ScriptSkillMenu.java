@@ -11,7 +11,7 @@ public class ScriptSkillMenu extends Script {
     }
 
     @Override
-    public ScriptReturnData execute(Context context) {
+    ScriptReturnData execute(ScriptRuntime scriptRuntime, Context context) {
         Expression actorExpression = context.getLocalVariables().get("actor").getExpression();
         Expression points = context.getLocalVariables().get("points").getExpression();
         if (points.getDataType() != Expression.DataType.INTEGER) return new ScriptReturnData(null, null, new ScriptErrorData("Points parameter is not an integer", getTraceData()));

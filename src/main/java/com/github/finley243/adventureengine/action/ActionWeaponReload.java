@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -33,14 +32,14 @@ public class ActionWeaponReload extends Action {
 	}
 
 	@Override
-	public Context getContext(Game game, Actor subject) {
+	public Context getContext(Actor subject) {
 		Context context = Context.builder(game).subject(subject).parentItem(weapon).build();
 		context.setLocalVariable("ammo", Expression.constant(ammoType));
 		return context;
 	}
 	
 	@Override
-	public void choose(Game game, int repeatActionCount, Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.triggerScript("on_reload", Context.builder(game).subject(subject).target(subject).parentItem(weapon).build());
 		if (subject.isPlayer()) {
 			if (!ammoType.equals(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType()) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() > 0) {
@@ -62,8 +61,8 @@ public class ActionWeaponReload extends Action {
 	}
 
 	@Override
-	public CanChooseResult canChoose(Game game, Actor subject) {
-		CanChooseResult resultSuper = super.canChoose(game, subject);
+	public CanChooseResult canChoose(Actor subject) {
+		CanChooseResult resultSuper = super.canChoose(subject);
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
@@ -77,7 +76,7 @@ public class ActionWeaponReload extends Action {
 	}
 
 	@Override
-	public int actionPoints(Game game, Actor subject) {
+	public int actionPoints(Actor subject) {
 		Context context = Context.builder(game).subject(subject).target(subject).parentItem(weapon).parentAction(this).addVariable("ammo_type", new ExpressionConstantString(ammoType.getTemplateID())).build();
 		return weapon.getComponentOfType(ItemComponentMagazine.class).getReloadActionPoints(context);
 	}
@@ -101,7 +100,7 @@ public class ActionWeaponReload extends Action {
 	}
 
 	@Override
-	public String getPrompt(Game game, Actor subject) {
+	public String getPrompt(Actor subject) {
 		return "Reload";
 	}
 

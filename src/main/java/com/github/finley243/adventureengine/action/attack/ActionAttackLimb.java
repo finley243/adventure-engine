@@ -48,8 +48,8 @@ public class ActionAttackLimb extends ActionAttack {
 	}
 
 	@Override
-	public CanChooseResult canChoose(Game game, Actor subject) {
-		CanChooseResult resultSuper = super.canChoose(game, subject);
+	public CanChooseResult canChoose(Actor subject) {
+		CanChooseResult resultSuper = super.canChoose(subject);
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}

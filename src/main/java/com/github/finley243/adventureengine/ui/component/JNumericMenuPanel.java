@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.ui.component;
 
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.menu.NumericMenuField;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
-import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +21,7 @@ public class JNumericMenuPanel extends JPanel {
     private final Map<String, JNumericSpinner> spinners;
     private final int maxTotal;
 
-    public JNumericMenuPanel(EventBus eventBus, JSwitchPanel switchPanel, List<NumericMenuField> numericFields, int points) {
+    public JNumericMenuPanel(UIEventBus eventBus, JSwitchPanel switchPanel, List<NumericMenuField> numericFields, int points) {
 
         int initialSum = 0;
         for (NumericMenuField numericField : numericFields) {

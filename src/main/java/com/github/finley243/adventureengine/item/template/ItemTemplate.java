@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.item.template;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.expression.*;
@@ -90,7 +89,7 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context, Game game) {
+	public Expression getStatValue(String name, Context context) {
 		return switch (name) {
 			case "noun" -> Expression.constantNoun(this);
 			case "price" -> Expression.constant(price);
@@ -101,7 +100,7 @@ public class ItemTemplate extends GameInstanced implements Noun, StatHolder {
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context, Game game) {
+	public boolean setStatValue(String name, Expression value, Context context) {
 		return false;
 	}
 

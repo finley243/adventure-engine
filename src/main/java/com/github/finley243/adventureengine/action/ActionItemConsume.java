@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.event.SensoryEvent;
@@ -32,14 +31,14 @@ public class ActionItemConsume extends Action {
 	}
 
 	@Override
-	public Context getContext(Game game, Actor subject) {
+	public Context getContext(Actor subject) {
         return Context.builder(game).subject(subject).parentItem(item).build();
 	}
 	
 	@Override
-	public void choose(Game game, int repeatActionCount, Actor subject) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.getInventory().removeItem(item, game);
-		Context context = getContext(game, subject);
+		Context context = getContext(subject);
 		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(consumePhrase), context, true, this, null));
 		for (String effectID : effects) {
 			Effect effect = game.data().getEffect(effectID);
@@ -53,7 +52,7 @@ public class ActionItemConsume extends Action {
 	}
 
 	@Override
-	public String getPrompt(Game game, Actor subject) {
+	public String getPrompt(Actor subject) {
 		return consumePrompt;
 	}
 

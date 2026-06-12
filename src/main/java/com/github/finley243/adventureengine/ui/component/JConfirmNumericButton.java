@@ -1,8 +1,8 @@
 package com.github.finley243.adventureengine.ui.component;
 
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.NumericMenuInputEvent;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
-import com.google.common.eventbus.EventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +15,13 @@ public class JConfirmNumericButton extends JPanel {
 
     private static final String CONFIRM_LABEL = "Confirm";
 
-    private final EventBus eventBus;
+    private final UIEventBus eventBus;
     private final Map<String, JNumericSpinner> spinners;
     private final JSwitchPanel switchPanel;
 
     private boolean mouseHovering;
 
-    public JConfirmNumericButton(String details, EventBus eventBus, Map<String, JNumericSpinner> spinners, JSwitchPanel switchPanel) {
+    public JConfirmNumericButton(String details, UIEventBus eventBus, Map<String, JNumericSpinner> spinners, JSwitchPanel switchPanel) {
         this.eventBus = eventBus;
         this.spinners = spinners;
         this.switchPanel = switchPanel;

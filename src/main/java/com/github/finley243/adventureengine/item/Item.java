@@ -85,7 +85,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	public void onStartRound(Game game) {
 		for (ItemComponent component : components.values()) {
-			component.onStartRound(game);
+			component.onStartRound();
 		}
 	}
 
@@ -102,7 +102,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			for (Script currentScript : getTemplate().getScripts().get(entryPoint)) {
 				Context context = Context.builder(game).subject(subject).target(target).parentItem(this).build();
-				currentScript.execute(context);
+				currentScript.execute(, context);
 			}
 		}
 	}
@@ -144,23 +144,23 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public void addEffect(Game game, Effect effect) {
+	public void addEffect(Effect effect) {
 		if (hasComponentOfType(ItemComponentEffectible.class)) {
-			getComponentOfType(ItemComponentEffectible.class).addEffect(game, effect);
+			getComponentOfType(ItemComponentEffectible.class).addEffect(effect);
 		}
 	}
 
 	@Override
-	public void removeEffect(Game game, Effect effect) {
+	public void removeEffect(Effect effect) {
 		if (hasComponentOfType(ItemComponentEffectible.class)) {
-			getComponentOfType(ItemComponentEffectible.class).removeEffect(game, effect);
+			getComponentOfType(ItemComponentEffectible.class).removeEffect(effect);
 		}
 	}
 
 	@Override
-	public Expression getStatValue(String name, Context context, Game game) {
+	public Expression getStatValue(String name, Context context) {
 		for (ItemComponent component : components.values()) {
-			Expression componentValue = component.getStatValue(name, context, game);
+			Expression componentValue = component.getStatValue(name, context);
 			if (componentValue != null) return componentValue;
 		}
 		return switch (name) {
@@ -172,9 +172,9 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public boolean setStatValue(String name, Expression value, Context context, Game game) {
+	public boolean setStatValue(String name, Expression value, Context context) {
 		for (ItemComponent component : components.values()) {
-			boolean success = component.setStatValue(name, value, context, game);
+			boolean success = component.setStatValue(name, value, context);
 			if (success) return true;
 		}
 		return false;
@@ -201,54 +201,54 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	}
 
 	@Override
-	public StatInt getStatInt(Game game, String name) {
+	public StatInt getStatInt(String name) {
 		for (ItemComponent component : components.values()) {
-			StatInt componentValue = component.getStatInt(game, name);
+			StatInt componentValue = component.getStatInt(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatFloat getStatFloat(Game game, String name) {
+	public StatFloat getStatFloat(String name) {
 		for (ItemComponent component : components.values()) {
-			StatFloat componentValue = component.getStatFloat(game, name);
+			StatFloat componentValue = component.getStatFloat(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatBoolean getStatBoolean(Game game, String name) {
+	public StatBoolean getStatBoolean(String name) {
 		for (ItemComponent component : components.values()) {
-			StatBoolean componentValue = component.getStatBoolean(game, name);
+			StatBoolean componentValue = component.getStatBoolean(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatString getStatString(Game game, String name) {
+	public StatString getStatString(String name) {
 		for (ItemComponent component : components.values()) {
-			StatString componentValue = component.getStatString(game, name);
+			StatString componentValue = component.getStatString(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public StatStringSet getStatStringSet(Game game, String name) {
+	public StatStringSet getStatStringSet(String name) {
 		for (ItemComponent component : components.values()) {
-			StatStringSet componentValue = component.getStatStringSet(game, name);
+			StatStringSet componentValue = component.getStatStringSet(name);
 			if (componentValue != null) return componentValue;
 		}
 		return null;
 	}
 
 	@Override
-	public void onStatChange(Game game, String name) {
+	public void onStatChange(String name) {
 		for (ItemComponent component : components.values()) {
-			component.onStatChange(game, name);
+			component.onStatChange(name);
 		}
 	}
 
