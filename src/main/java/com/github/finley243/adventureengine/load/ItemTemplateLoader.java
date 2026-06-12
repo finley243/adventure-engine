@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.gamedata.ConfigHandler;
 import com.github.finley243.adventureengine.gamedata.ConfigOption;
@@ -125,9 +126,7 @@ public class ItemTemplateLoader {
                 Set<String> weaponTargetEffects = LoadUtils.setOfTags(componentElement, "targetEffect");
                 return new ItemComponentTemplateWeapon(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
             }
-            default -> {
-                return null;
-            }
+            default -> throw new GameDataException("ItemComponentTemplate has invalid or missing type");
         }
     }
 

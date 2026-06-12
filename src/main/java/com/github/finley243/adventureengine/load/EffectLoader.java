@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.effect.*;
 import com.github.finley243.adventureengine.script.Script;
@@ -80,9 +81,10 @@ public class EffectLoader {
                 List<Effect> compoundEffects = parseEffects(element);
                 return new EffectCompound(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound, compoundEffects);
             }
-            case null, default -> { // "basic"
+            case null -> { // "basic"
                 return new Effect(ID, duration, manualRemoval, stackable, conditionAdd, conditionRemove, conditionActive, scriptAdd, scriptRemove, scriptRound);
             }
+            default -> throw new GameDataException("Effect has invalid type");
         }
     }
 

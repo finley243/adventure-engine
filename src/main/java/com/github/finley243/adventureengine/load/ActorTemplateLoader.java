@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.actor.ActorTemplate;
 import com.github.finley243.adventureengine.actor.Bark;
@@ -34,7 +35,12 @@ public class ActorTemplateLoader {
         Element nameElement = LoadUtils.singleChildWithName(element, "name");
         String name = nameElement != null ? nameElement.getTextContent() : null;
         Boolean nameIsProper = nameElement != null && LoadUtils.attributeBool(nameElement, "proper", false);
-        TextContext.Pronoun pronoun = LoadUtils.attributeEnum(nameElement, "pronoun", TextContext.Pronoun.class, TextContext.Pronoun.THEY);
+        TextContext.Pronoun pronoun;
+        try {
+            pronoun = LoadUtils.attributeEnum(nameElement, "pronoun", TextContext.Pronoun.class, TextContext.Pronoun.THEY);
+        } catch (IllegalArgumentException e) {
+            throw new GameDataException("ActorTemplate has invalid pronoun");
+        }
         String faction = LoadUtils.attribute(element, "faction", null);
         Boolean isEnforcer = LoadUtils.attributeBool(element, "isEnforcer", null);
 
@@ -85,7 +91,12 @@ public class ActorTemplateLoader {
         Map<String, Bark> barks = new HashMap<>();
         for (Element barkElement : LoadUtils.directChildrenWithName(element, "bark")) {
             String barkTrigger = LoadUtils.attribute(barkElement, "trigger", null);
-            Bark.BarkResponseType responseType = LoadUtils.attributeEnum(barkElement, "response", Bark.BarkResponseType.class, Bark.BarkResponseType.NONE);
+            Bark.BarkResponseType responseType;
+            try {
+                responseType = LoadUtils.attributeEnum(barkElement, "response", Bark.BarkResponseType.class, Bark.BarkResponseType.NONE);
+            } catch (IllegalArgumentException e) {
+                throw new GameDataException("ActorTemplate has invalid bark response type for bark: " + barkTrigger);
+            }
             List<String> visiblePhrases = LoadUtils.listOfTags(barkElement, "visible");
             List<String> nonVisiblePhrases = LoadUtils.listOfTags(barkElement, "nonVisible");
             barks.put(barkTrigger, new Bark(responseType, visiblePhrases, nonVisiblePhrases));

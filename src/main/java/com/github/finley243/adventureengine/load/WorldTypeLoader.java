@@ -44,7 +44,7 @@ public class WorldTypeLoader {
         for (Element vehicleTypeElement : LoadUtils.directChildrenWithName(element, "vehicleMoveAction")) {
             String vehicleType = LoadUtils.attribute(vehicleTypeElement, "type", null);
             String vehicleAction = LoadUtils.attribute(vehicleTypeElement, "action", null);
-            Set<AreaLink.DistanceCategory> vehicleTypeMoveDistances = LoadUtils.setOfEnumTags(element, "moveDistance", AreaLink.DistanceCategory.class);
+            Set<AreaLink.DistanceCategory> vehicleTypeMoveDistances = LoadUtils.setOfEnumTags(vehicleTypeElement, "moveDistance", AreaLink.DistanceCategory.class);
             vehicleMoveActions.put(vehicleType, vehicleAction);
             vehicleMoveDistances.put(vehicleType, vehicleTypeMoveDistances);
         }

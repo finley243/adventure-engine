@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
@@ -100,7 +101,12 @@ public class CombatTypeLoader {
 
     private WeaponAttackType parseAttackType(Element element) {
         String ID = LoadUtils.attribute(element, NAME_ATTACK_TYPE_ID, null);
-        WeaponAttackType.AttackCategory category = LoadUtils.attributeEnum(element, NAME_ATTACK_TYPE_CATEGORY, WeaponAttackType.AttackCategory.class, DEFAULT_ATTACK_TYPE_CATEGORY);
+        WeaponAttackType.AttackCategory category;
+        try {
+            category = LoadUtils.attributeEnum(element, NAME_ATTACK_TYPE_CATEGORY, WeaponAttackType.AttackCategory.class, DEFAULT_ATTACK_TYPE_CATEGORY);
+        } catch (IllegalArgumentException e) {
+            throw new GameDataException("AttackType has invalid category");
+        }
         String prompt = LoadUtils.singleTag(element, NAME_ATTACK_TYPE_PROMPT, null);
         String attackPhrase = LoadUtils.singleTag(element, NAME_ATTACK_TYPE_PHRASE, null);
         String attackOverallPhrase = LoadUtils.singleTag(element, NAME_ATTACK_TYPE_PHRASE_OVERALL, null);
@@ -108,7 +114,12 @@ public class CombatTypeLoader {
         String attackOverallPhraseAudible = LoadUtils.singleTag(element, NAME_ATTACK_TYPE_PHRASE_AUDIBLE_OVERALL, null);
         int ammoConsumed = LoadUtils.attributeInt(element, NAME_ATTACK_TYPE_AMMO_CONSUMED, DEFAULT_ATTACK_TYPE_AMMO_CONSUMED);
         int actionPoints = LoadUtils.attributeInt(element, NAME_ATTACK_TYPE_ACTION_POINTS, DEFAULT_ATTACK_TYPE_ACTION_POINTS);
-        WeaponAttackType.WeaponConsumeType weaponConsumeType = LoadUtils.attributeEnum(element, NAME_ATTACK_TYPE_CONSUME_TYPE, WeaponAttackType.WeaponConsumeType.class, DEFAULT_ATTACK_TYPE_CONSUME_TYPE);
+        WeaponAttackType.WeaponConsumeType weaponConsumeType;
+        try {
+            weaponConsumeType = LoadUtils.attributeEnum(element, NAME_ATTACK_TYPE_CONSUME_TYPE, WeaponAttackType.WeaponConsumeType.class, DEFAULT_ATTACK_TYPE_CONSUME_TYPE);
+        } catch (IllegalArgumentException e) {
+            throw new GameDataException("AttackType has invalid weapon consume type");
+        }
         boolean useNonIdealRange = LoadUtils.attributeBool(element, NAME_ATTACK_TYPE_NONIDEAL_RANGE, DEFAULT_ATTACK_TYPE_NONIDEAL_RANGE);
         Set<AreaLink.DistanceCategory> rangeOverride = LoadUtils.setOfEnumTags(element, NAME_ATTACK_TYPE_RANGE, AreaLink.DistanceCategory.class);
         Integer rateOverride = LoadUtils.attributeInt(element, NAME_ATTACK_TYPE_RATE, null);

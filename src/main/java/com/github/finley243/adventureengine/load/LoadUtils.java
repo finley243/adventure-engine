@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.load;
 
-import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -42,7 +41,7 @@ public class LoadUtils {
 				return current;
 			}
 		}
-		return defaultValue;
+		throw new IllegalArgumentException("No enum constant with name " + stringValue + " in " + enumClass.getName());
 	}
 	
 	public static String singleTag(Element parent, String name, String defaultValue) {
@@ -77,7 +76,7 @@ public class LoadUtils {
 				return current;
 			}
 		}
-		return defaultValue;
+		throw new IllegalArgumentException("No enum constant with name " + stringValue + " in " + enumClass.getName());
 	}
 	
 	public static Set<String> setOfTags(Element parent, String name) {
@@ -150,7 +149,7 @@ public class LoadUtils {
 				return current;
 			}
 		}
-		return null;
+		throw new IllegalArgumentException("No enum constant with name " + value + " in " + enumClass.getName());
 	}
 
 	public static boolean isValidInteger(String value) {
@@ -194,7 +193,6 @@ public class LoadUtils {
 			String trigger = scriptElement.getAttribute("trigger");
 			Script script = loadScript(scriptElement, scriptParser, sourceName + " - script trigger: " + trigger);
 			scripts.computeIfAbsent(trigger, _ -> new ArrayList<>()).add(script);
-			scripts.get(trigger).add(script);
 		}
 		return scripts;
 	}

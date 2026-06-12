@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.network.NetworkNodeControl;
 import com.github.finley243.adventureengine.network.NetworkNodeData;
@@ -31,7 +32,7 @@ public class NetworkLoader {
                 String controlObjectID = LoadUtils.attribute(element, "object", null);
                 return new NetworkNodeControl(ID, name, controlObjectID);
             }
-            case null, default -> {
+            case null -> {
                 Set<NetworkNode> groupNodes = new HashSet<>();
                 for (Element childNodeElement : LoadUtils.directChildrenWithName(element, "node")) {
                     NetworkNode childNode = parseNetworkNode(childNodeElement);
@@ -39,6 +40,7 @@ public class NetworkLoader {
                 }
                 return new NetworkNodeGroup(ID, name, groupNodes);
             }
+            default -> throw new GameDataException("NetworkNode has invalid type");
         }
     }
 

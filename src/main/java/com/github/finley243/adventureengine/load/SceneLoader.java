@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneChoice;
@@ -55,7 +56,12 @@ public class SceneLoader {
     Scene parseScene(Element element) {
         if (element == null) return null;
         String sceneID = LoadUtils.attribute(element, NAME_ID, null);
-        Scene.SceneType type = LoadUtils.attributeEnum(element, NAME_TYPE, Scene.SceneType.class, DEFAULT_TYPE);
+        Scene.SceneType type;
+        try {
+            type = LoadUtils.attributeEnum(element, NAME_TYPE, Scene.SceneType.class, DEFAULT_TYPE);
+        } catch (IllegalArgumentException e) {
+            throw new GameDataException("Scene has invalid type");
+        }
         Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, NAME_CONDITION), scriptParser, "Scene(" + sceneID + ") - condition");
         boolean once = LoadUtils.attributeBool(element, NAME_ONCE, DEFAULT_ONCE);
         int priority = LoadUtils.attributeInt(element, NAME_PRIORITY, DEFAULT_PRIORITY);
@@ -83,7 +89,12 @@ public class SceneLoader {
             String text = element.getTextContent().trim();
             return new SceneLine(text, once, exit, redirect, from);
         } else {
-            Scene.SceneType type = LoadUtils.attributeEnum(element, NAME_LINE_TYPE, Scene.SceneType.class, DEFAULT_LINE_TYPE);
+            Scene.SceneType type;
+            try {
+                type = LoadUtils.attributeEnum(element, NAME_LINE_TYPE, Scene.SceneType.class, DEFAULT_LINE_TYPE);
+            } catch (IllegalArgumentException e) {
+                throw new GameDataException("SceneLine has invalid type");
+            }
             Condition condition = LoadUtils.loadCondition(LoadUtils.singleChildWithName(element, NAME_LINE_CONDITION), scriptParser, "Scene(" + sceneID + ") - line condition");
             Script scriptPre = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, NAME_LINE_SCRIPT_PRE), scriptParser, "Scene(" + sceneID + ") - line pre-script");
             Script scriptPost = LoadUtils.loadScript(LoadUtils.singleChildWithName(element, NAME_LINE_SCRIPT_POST), scriptParser, "Scene(" + sceneID + ") - line post-script");

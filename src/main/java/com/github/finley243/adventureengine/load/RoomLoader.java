@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.scene.Scene;
@@ -49,11 +50,21 @@ public class RoomLoader {
         Element nameElement = LoadUtils.singleChildWithName(element, NAME_NAME);
         String name = nameElement.getTextContent();
         boolean nameIsProper = LoadUtils.attributeBool(nameElement, NAME_PROPER, DEFAULT_PROPER);
-        Area.AreaNameType nameType = LoadUtils.attributeEnum(nameElement, NAME_TYPE, Area.AreaNameType.class, DEFAULT_TYPE);
+        Area.AreaNameType nameType;
+        try {
+            nameType = LoadUtils.attributeEnum(nameElement, NAME_TYPE, Area.AreaNameType.class, DEFAULT_TYPE);
+        } catch (IllegalArgumentException e) {
+            throw new GameDataException("Room has invalid name type");
+        }
         Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, NAME_DESCRIPTION));
         String ownerFactionID = LoadUtils.attribute(element, NAME_FACTION, null);
         Faction ownerFaction = factionRegistry.getFromID(ownerFactionID);
-        Area.RestrictionType restrictionType = LoadUtils.attributeEnum(element, NAME_RESTRICTION, Area.RestrictionType.class, DEFAULT_RESTRICTION);
+        Area.RestrictionType restrictionType;
+        try {
+            restrictionType = LoadUtils.attributeEnum(element, NAME_RESTRICTION, Area.RestrictionType.class, DEFAULT_RESTRICTION);
+        } catch (IllegalArgumentException e) {
+            throw new GameDataException("Room has invalid restriction type");
+        }
         boolean allowAllies = LoadUtils.attributeBool(element, NAME_ALLOW_ALLIES, DEFAULT_ALLOW_ALLIES);
         Map<String, List<Script>> roomScripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Room(" + ID + ")");
         return new Room(ID, name, nameType, nameIsProper, description, ownerFaction, restrictionType, allowAllies, roomScripts);

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.gamedata.ConfigHandler;
 import com.github.finley243.adventureengine.gamedata.ConfigOption;
@@ -64,11 +65,21 @@ public class AreaLoader {
         String landmarkID = LoadUtils.attribute(element, "landmark", null);
         Element nameElement = LoadUtils.singleChildWithName(element, "name");
         String name = (nameElement == null ? null : nameElement.getTextContent());
-        Area.AreaNameType nameType = LoadUtils.attributeEnum(nameElement, "type", Area.AreaNameType.class, (landmarkID != null ? Area.AreaNameType.NEAR : Area.AreaNameType.IN));
+        Area.AreaNameType nameType;
+        try {
+            nameType = LoadUtils.attributeEnum(nameElement, "type", Area.AreaNameType.class, (landmarkID != null ? Area.AreaNameType.NEAR : Area.AreaNameType.IN));
+        } catch (IllegalArgumentException e) {
+            throw new GameDataException("Area has invalid name type");
+        }
         boolean nameIsPlural = LoadUtils.attributeBool(nameElement, "plural", false);
         Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, "description"));
         String areaOwnerFaction = LoadUtils.attribute(element, "faction", null);
-        Area.RestrictionType restrictionType = LoadUtils.attributeEnum(element, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
+        Area.RestrictionType restrictionType;
+        try {
+            restrictionType = LoadUtils.attributeEnum(element, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
+        } catch (IllegalArgumentException e) {
+            throw new GameDataException("Area has invalid restriction type");
+        }
         boolean allowAllies = LoadUtils.attributeBool(element, "allowAllies", false);
 
         List<Element> linkElements = LoadUtils.directChildrenWithName(element, "link");
@@ -77,8 +88,18 @@ public class AreaLoader {
         for (Element linkElement : linkElements) {
             String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
             String linkType = LoadUtils.attribute(linkElement, "type", linkTypeDefault);
-            AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
-            AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
+            AreaLink.CompassDirection linkDirection;
+            try {
+                linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
+            } catch (IllegalArgumentException e) {
+                throw new GameDataException("Area has invalid link direction");
+            }
+            AreaLink.DistanceCategory linkDistance;
+            try {
+                linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
+            } catch (IllegalArgumentException e) {
+                throw new GameDataException("Area has invalid link distance category");
+            }
             AreaLink link = new AreaLink(linkAreaID, linkType, linkDirection, linkDistance);
             linkSet.put(linkAreaID, link);
         }

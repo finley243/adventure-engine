@@ -82,7 +82,7 @@ public class ActorLoader {
                 boolean isCycle = LoadUtils.attributeBool(behaviorElement, "isCycle", false);
                 return new BehaviorProcedure(condition, startScript, eachRoundScript, isCycle, procedureBehaviors);
             }
-            default -> throw new IllegalArgumentException("Behavior type is not valid: " + type);
+            default -> throw new GameDataException("Behavior has invalid or missing type");
         }
     }
 

@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.actor.Faction;
 import org.w3c.dom.Element;
 
@@ -27,7 +28,12 @@ public class FactionLoader {
     private Faction parseFaction(Element element) {
         if (element == null) return null;
         String id = LoadUtils.attribute(element, NAME_ID, null);
-        Faction.FactionRelation defaultRelation = LoadUtils.attributeEnum(element, NAME_DEFAULT_RELATION, Faction.FactionRelation.class, DEFAULT_DEFAULT_RELATION);
+        Faction.FactionRelation defaultRelation;
+        try {
+            defaultRelation = LoadUtils.attributeEnum(element, NAME_DEFAULT_RELATION, Faction.FactionRelation.class, DEFAULT_DEFAULT_RELATION);
+        } catch (IllegalArgumentException e) {
+            throw new GameDataException("Faction has invalid default relation type");
+        }
         Map<String, Faction.FactionRelation> relations = parseFactionRelations(element);
         return new Faction(id, defaultRelation, relations);
     }
@@ -38,7 +44,12 @@ public class FactionLoader {
         List<Element> relationElements = LoadUtils.directChildrenWithName(element, NAME_RELATION);
         for (Element relationElement : relationElements) {
             String factionID = LoadUtils.attribute(relationElement, NAME_RELATION_FACTION, null);
-            Faction.FactionRelation type = LoadUtils.attributeEnum(relationElement, NAME_RELATION_TYPE, Faction.FactionRelation.class, DEFAULT_RELATION_TYPE);
+            Faction.FactionRelation type;
+            try {
+                type = LoadUtils.attributeEnum(relationElement, NAME_RELATION_TYPE, Faction.FactionRelation.class, DEFAULT_RELATION_TYPE);
+            } catch (IllegalArgumentException e) {
+                throw new GameDataException("FactionRelation has invalid relation type");
+            }
             relations.put(factionID, type);
         }
         return relations;
