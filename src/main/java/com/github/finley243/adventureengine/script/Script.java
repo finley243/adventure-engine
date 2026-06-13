@@ -53,6 +53,7 @@ public abstract class Script {
 
 	public static List<ScriptParser.ScriptData> getNativeFunctions() {
 		List<ScriptParser.ScriptData> functions = new ArrayList<>();
+		functions.add(new ScriptParser.ScriptData("setArea", false, null, List.of(new ScriptParser.ScriptParameter("area", true, null), new ScriptParser.ScriptParameter("object", true, null)), false, new ScriptSetArea(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("attributeMenu", false, null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("points", true, null)), false, new ScriptAttributeMenu(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("skillMenu", false, null, List.of(new ScriptParser.ScriptParameter("actor", true, null), new ScriptParser.ScriptParameter("points", true, null)), false, new ScriptSkillMenu(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));
 		functions.add(new ScriptParser.ScriptData("startTimer", false, null, List.of(new ScriptParser.ScriptParameter("timer", true, null), new ScriptParser.ScriptParameter("duration", true, null), new ScriptParser.ScriptParameter("scriptExpire", false, null), new ScriptParser.ScriptParameter("scriptUpdate", false, null)), false, new ScriptTimerStart(new ScriptTraceData(NATIVE_FUNCTION_LINE, NATIVE_FUNCTION_FILENAME))));

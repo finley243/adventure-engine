@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
@@ -28,7 +29,7 @@ public class ActionItemUnequip extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
         subject.getEquipmentComponent().unequip(game, item);
         Context context = getContext(subject);
         SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("unequip"), context, true, this, null));

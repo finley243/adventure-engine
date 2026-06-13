@@ -127,7 +127,7 @@ public class TargetingComponent {
                 targetData.areaTarget = null;
             }
         } else if (targetData.areaTarget == null) {
-            targetData.areaTarget = new AreaTarget(idealAreas(targetData.lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, target), true);
+            targetData.areaTarget = new AreaTarget(idealAreas(targetData.lastKnownArea), UtilityUtils.getPursueTargetUtility(actor, target), true, pathfinder);
             actor.addPursueTarget(targetData.areaTarget);
         } else {
             targetData.areaTarget.setTargetAreas(idealAreas(targetData.lastKnownArea));
@@ -396,9 +396,9 @@ public class TargetingComponent {
         return combinedRanges;
     }
 
-    private Set<Area> idealAreas(Game game, Area targetArea) {
+    private Set<Area> idealAreas(Area targetArea) {
         Set<AreaLink.DistanceCategory> idealDistances = idealDistances();
-        return targetArea.visibleAreasInRange(game, actor, idealDistances);
+        return targetArea.visibleAreasInRange(actor, idealDistances);
     }
 
     public static class DetectedActor {

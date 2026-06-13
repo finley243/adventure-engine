@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEvent;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
 import com.github.finley243.adventureengine.textgen.Phrases;
@@ -26,7 +27,7 @@ public class ActionCarryActorStart extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
         if (subject.isPlayer()) {
             carriedActor.setKnown();
         }

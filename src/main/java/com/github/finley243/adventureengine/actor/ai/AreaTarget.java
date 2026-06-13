@@ -3,11 +3,12 @@ package com.github.finley243.adventureengine.actor.ai;
 import java.util.List;
 import java.util.Set;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public class AreaTarget {
+
+	private final Pathfinder pathfinder;
 
 	private Set<Area> targetAreas;
 	private float targetUtility;
@@ -16,26 +17,27 @@ public class AreaTarget {
 	private final boolean manualRemoval;
 	private boolean markForRemoval;
 
-	public AreaTarget(Set<Area> targetAreas, float targetUtility, boolean manualRemoval) {
+	public AreaTarget(Set<Area> targetAreas, float targetUtility, boolean manualRemoval, Pathfinder pathfinder) {
 		this.targetAreas = targetAreas;
 		this.targetUtility = targetUtility;
 		this.manualRemoval = manualRemoval;
+		this.pathfinder = pathfinder;
 		markForRemoval = false;
 	}
 
-	public AreaTarget(Area targetArea, float targetUtility, boolean manualRemoval) {
-		this(Set.of(targetArea), targetUtility, manualRemoval);
+	public AreaTarget(Area targetArea, float targetUtility, boolean manualRemoval, Pathfinder pathfinder) {
+		this(Set.of(targetArea), targetUtility, manualRemoval, pathfinder);
 	}
 	
-	public void update(Game game, Actor subject) {
-		if (path == null || !targetAreas.contains(path.get(path.size() - 1))) {
-			path = Pathfinder.findPath(game, subject.getArea(), targetAreas, null);
+	public void update(Actor subject) {
+		if (path == null || !targetAreas.contains(path.getLast())) {
+			path = pathfinder.findPath(subject.getArea(), targetAreas, null);
 			pathIndex = 0;
 		}
 		if (path != null && path.get(pathIndex) != subject.getArea()) {
 			int currentIndex = getCurrentIndex(subject);
 			if (currentIndex == -1) {
-				path = Pathfinder.findPath(game, subject.getArea(), targetAreas, null);
+				path = pathfinder.findPath(subject.getArea(), targetAreas, null);
 				pathIndex = 0;
 			} else {
 				pathIndex = currentIndex;
@@ -77,9 +79,9 @@ public class AreaTarget {
 		return path.get(pathIndex + 1) == area;
 	}
 	
-	public int getDistance(Game game, Actor subject) {
+	public int getDistance(Actor subject) {
 		if (path == null) {
-			path = Pathfinder.findPath(game, subject.getArea(), targetAreas, null);
+			path = pathfinder.findPath(subject.getArea(), targetAreas, null);
 			pathIndex = 0;
 		}
 		return (path == null ? -1 : path.size() - (pathIndex + 1));
@@ -87,7 +89,7 @@ public class AreaTarget {
 
 	public Area getCurrentTarget() {
 		if (path == null) return null;
-		return path.get(path.size() - 1);
+		return path.getLast();
 	}
 	
 	private int getCurrentIndex(Actor subject) {

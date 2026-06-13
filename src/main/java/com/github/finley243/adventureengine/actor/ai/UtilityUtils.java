@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.actor.ai;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -47,8 +46,8 @@ public class UtilityUtils {
 		return 0.2f * (((float) targetsBlocked) / ((float) totalTargets));
 	}
 	
-	public static float getPursueTargetUtility(Game game, Actor subject, Actor target) {
-		if (!target.isVisible(subject) || !subject.getLineOfSightActors(game).contains(target)) {
+	public static float getPursueTargetUtility(Actor subject, Actor target) {
+		if (!target.isVisible(subject) || !subject.getLineOfSightActors().contains(target)) {
 			return PURSUE_TARGET_UTILITY_INVISIBLE;
 		} else if (subject.getEquipmentComponent().hasMeleeWeaponEquipped()) {
 			return PURSUE_TARGET_UTILITY_MELEE;

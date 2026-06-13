@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action.network;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
@@ -31,7 +32,7 @@ public class ActionNetworkReadData extends NetworkAction {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
         game.menuManager().sceneMenu(game, game.data().getScene(node.getSceneID()), getContext(subject), false);
     }
 

@@ -3,6 +3,8 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
+import com.github.finley243.adventureengine.combat.DamageType;
+import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.gamedata.ConfigHandler;
 import com.github.finley243.adventureengine.gamedata.ConfigOption;
@@ -23,13 +25,17 @@ public class ItemTemplateLoader {
     private final SceneLoader sceneLoader;
     private final Registry<ActionTemplate> actionRegistry;
     private final Registry<Effect> effectRegistry;
+    private final Registry<WeaponClass> weaponClassRegistry;
+    private final Registry<DamageType> damageTypeRegistry;
 
-    public ItemTemplateLoader(ConfigHandler configHandler, ScriptParser scriptParser, SceneLoader sceneLoader, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry) {
+    public ItemTemplateLoader(ConfigHandler configHandler, ScriptParser scriptParser, SceneLoader sceneLoader, Registry<ActionTemplate> actionRegistry, Registry<Effect> effectRegistry, Registry<WeaponClass> weaponClassRegistry, Registry<DamageType> damageTypeRegistry) {
         this.configHandler = configHandler;
         this.scriptParser = scriptParser;
         this.sceneLoader = sceneLoader;
         this.actionRegistry = actionRegistry;
         this.effectRegistry = effectRegistry;
+        this.weaponClassRegistry = weaponClassRegistry;
+        this.damageTypeRegistry = damageTypeRegistry;
     }
 
     public Map<String, ItemTemplate> load(Element element) {
@@ -94,7 +100,13 @@ public class ItemTemplateLoader {
                 for (Element slotGroupElement : LoadUtils.directChildrenWithName(componentElement, "slotGroup")) {
                     Set<String> slotGroup = LoadUtils.setOfTags(slotGroupElement, "slot");
                     Set<String> exposedComponents = LoadUtils.setOfTags(slotGroupElement, "exposedComponent");
-                    List<String> equippedEffects = LoadUtils.listOfTags(componentElement, "effect");
+                    List<String> equippedEffectIDs = LoadUtils.listOfTags(componentElement, "effect");
+                    List<Effect> equippedEffects = new ArrayList<>();
+                    for (String effectID : equippedEffectIDs) {
+                        Effect effect = effectRegistry.getFromID(effectID);
+                        if (effect == null) throw new GameDataException("ItemComponentTemplateEquippable has invalid equipped effect");
+                        equippedEffects.add(effect);
+                    }
                     List<ActionCustom.CustomActionHolder> equippedActions = LoadUtils.loadCustomActions(componentElement, "equippedAction", scriptParser, actionRegistry, "ItemComponent(" + itemID + ")");
                     equipSlots.add(new ItemComponentTemplateEquippable.EquippableSlotsData(slotGroup, exposedComponents, equippedEffects, equippedActions));
                 }
@@ -127,16 +139,26 @@ public class ItemTemplateLoader {
                 return new ItemComponentTemplateModdable(actionsRestricted, modSlots);
             }
             case "weapon" -> {
-                String weaponClass = LoadUtils.attribute(componentElement, "class", null);
+                String weaponClassID = LoadUtils.attribute(componentElement, "class", null);
+                WeaponClass weaponClass = weaponClassRegistry.getFromID(weaponClassID);
+                if (weaponClass == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid weapon class");
                 int weaponRate = LoadUtils.singleTagInt(componentElement, "rate", 1);
                 Element damageElement = LoadUtils.singleChildWithName(componentElement, "damage");
                 int weaponDamage = LoadUtils.attributeInt(damageElement, "base", 0);
                 int critDamage = LoadUtils.attributeInt(damageElement, "crit", 0);
                 float critChance = LoadUtils.attributeFloat(componentElement, "critChance", 0.0f);
-                String weaponDamageType = LoadUtils.attribute(damageElement, "type", configHandler.get(ConfigOption.DEFAULT_DAMAGE_TYPE));
+                String weaponDamageTypeID = LoadUtils.attribute(damageElement, "type", configHandler.get(ConfigOption.DEFAULT_DAMAGE_TYPE));
+                DamageType weaponDamageType = damageTypeRegistry.getFromID(weaponDamageTypeID);
+                if (weaponDamageType == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid damage type");
                 float weaponArmorMult = LoadUtils.singleTagFloat(componentElement, "armorMult", 1.0f);
                 boolean weaponSilenced = LoadUtils.singleTagBoolean(componentElement, "silenced", false);
-                Set<String> weaponTargetEffects = LoadUtils.setOfTags(componentElement, "targetEffect");
+                Set<String> weaponTargetEffectIDs = LoadUtils.setOfTags(componentElement, "targetEffect");
+                Set<Effect> weaponTargetEffects = new HashSet<>();
+                for (String effectID : weaponTargetEffectIDs) {
+                    Effect effect = effectRegistry.getFromID(effectID);
+                    if (effect == null) throw new GameDataException("ItemComponentTemplateWeapon has invalid target effect");
+                    weaponTargetEffects.add(effect);
+                }
                 return new ItemComponentTemplateWeapon(actionsRestricted, weaponClass, weaponDamage, weaponRate, critDamage, critChance, weaponArmorMult, weaponSilenced, weaponDamageType, weaponTargetEffects);
             }
             default -> throw new GameDataException("ItemComponentTemplate has invalid or missing type");

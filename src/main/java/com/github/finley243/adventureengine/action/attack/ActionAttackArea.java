@@ -31,16 +31,16 @@ public class ActionAttackArea extends ActionAttack {
         }
         if (weapon.hasComponentOfType(ItemComponentMagazine.class)) {
             if (weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType() != null && weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getComponentOfType(ItemComponentAmmo.class).isReusable()) {
-                getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed(), game);
+                getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
             }
             weapon.getComponentOfType(ItemComponentMagazine.class).consumeAmmo(game, getAmmoConsumed());
         }
         switch (getWeaponConsumeType()) {
             case PLACE -> {
-                subject.getInventory().removeItem(weapon, game);
-                getArea().getInventory().addItem(weapon, game);
+                subject.getInventory().removeItem(weapon);
+                getArea().getInventory().addItem(weapon);
             }
-            case DESTROY -> subject.getInventory().removeItem(weapon, game);
+            case DESTROY -> subject.getInventory().removeItem(weapon);
         }
     }
 
@@ -53,11 +53,8 @@ public class ActionAttackArea extends ActionAttack {
         if (weapon != null && weapon.hasComponentOfType(ItemComponentMagazine.class) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() < getAmmoConsumed()) {
             return new CanChooseResult(false, "Not enough ammo");
         }
-        if (!getRanges().contains(subject.getArea().getLinearDistanceTo(game, getArea()))) {
+        if (!getRanges().contains(subject.getArea().getLinearDistanceTo(getArea()))) {
             return new CanChooseResult(false, "Target area outside range");
-        }
-        if (!getArea().isVisible(subject)) {
-            return new CanChooseResult(false, "Target area not visible");
         }
         return new CanChooseResult(true, null);
     }

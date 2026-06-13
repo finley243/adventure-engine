@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.Idle;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -74,7 +75,7 @@ public class BehaviorComponent {
         }
     }
 
-    public void update(ScriptRuntime scriptRuntime) {
+    public void update(ScriptRuntime scriptRuntime, Pathfinder pathfinder) {
         if (behaviors.isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
@@ -82,7 +83,7 @@ public class BehaviorComponent {
         }
         endCurrentBehaviorIfInvalid(scriptRuntime);
         selectNextBehavior(scriptRuntime);
-        updateAreaTarget();
+        updateAreaTarget(pathfinder);
     }
 
     private void endCurrentBehaviorIfInvalid(ScriptRuntime scriptRuntime) {
@@ -94,7 +95,7 @@ public class BehaviorComponent {
         }
     }
 
-    private void updateAreaTarget() {
+    private void updateAreaTarget(Pathfinder pathfinder) {
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior == null) {
             return;
@@ -108,7 +109,7 @@ public class BehaviorComponent {
         } else {
             float targetUtility = actor.isInCombat() ? Behavior.BEHAVIOR_MOVEMENT_UTILITY_COMBAT : Behavior.BEHAVIOR_MOVEMENT_UTILITY;
             if (areaTarget == null) {
-                areaTarget = new AreaTarget(targetArea, targetUtility, true);
+                areaTarget = new AreaTarget(targetArea, targetUtility, true, pathfinder);
                 actor.addPursueTarget(areaTarget);
             } else {
                 areaTarget.setTargetArea(targetArea);

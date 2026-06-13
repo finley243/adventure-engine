@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.GameDataException;
+import com.github.finley243.adventureengine.actor.Skill;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
@@ -76,8 +77,8 @@ public class CombatTypeLoader {
         return LoadUtils.loadAll(element, NAME_DAMAGE_TYPE, this::parseDamageType, DamageType::ID);
     }
 
-    public Map<String, WeaponClass> loadWeaponClasses(Element element, Registry<WeaponAttackType> attackTypeRegistry) {
-        return LoadUtils.loadAll(element, NAME_WEAPON_CLASS, e -> parseWeaponClass(e, attackTypeRegistry), WeaponClass::ID);
+    public Map<String, WeaponClass> loadWeaponClasses(Element element, Registry<WeaponAttackType> attackTypeRegistry, Registry<Skill> skillRegistry) {
+        return LoadUtils.loadAll(element, NAME_WEAPON_CLASS, e -> parseWeaponClass(e, attackTypeRegistry, skillRegistry), WeaponClass::ID);
     }
 
     public Map<String, WeaponAttackType> loadAttackTypes(Element element) {
@@ -90,12 +91,14 @@ public class CombatTypeLoader {
         return new DamageType(ID, name);
     }
 
-    private WeaponClass parseWeaponClass(Element element, Registry<WeaponAttackType> attackTypeRegistry) {
+    private WeaponClass parseWeaponClass(Element element, Registry<WeaponAttackType> attackTypeRegistry, Registry<Skill> skillRegistry) {
         String ID = LoadUtils.attribute(element, NAME_WEAPON_CLASS_ID, null);
         String name = LoadUtils.singleTag(element, NAME_WEAPON_CLASS_NAME, null);
         boolean isRanged = LoadUtils.attributeBool(element, NAME_WEAPON_CLASS_IS_RANGED, DEFAULT_WEAPON_CLASS_IS_RANGED);
         boolean isLoud = LoadUtils.attributeBool(element, NAME_WEAPON_CLASS_IS_LOUD, DEFAULT_WEAPON_CLASS_IS_LOUD);
-        String skill = LoadUtils.attribute(element, NAME_WEAPON_CLASS_SKILL, null);
+        String skillID = LoadUtils.attribute(element, NAME_WEAPON_CLASS_SKILL, null);
+        Skill skill = skillRegistry.getFromID(skillID);
+        if (skill == null) throw new GameDataException("WeaponClass has invalid skill");
         Set<AreaLink.DistanceCategory> primaryRanges = LoadUtils.setOfEnumTags(element, NAME_WEAPON_CLASS_RANGE, AreaLink.DistanceCategory.class);
         Set<String> attackTypeIDs = LoadUtils.setOfTags(element, NAME_WEAPON_CLASS_ATTACK_TYPE);
         Set<WeaponAttackType> attackTypes = new HashSet<>();

@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentModdable;
@@ -31,7 +32,7 @@ public class ActionModInstall extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
         subject.getInventory().removeItem(mod, game);
         target.getComponentOfType(ItemComponentModdable.class).installMod(game, mod);
     }

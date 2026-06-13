@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.action;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 
 /**
@@ -22,7 +23,7 @@ public abstract class Action {
 
 	public abstract Context getContext(Actor subject);
 
-	public abstract void choose(Actor subject, int repeatActionCount);
+	public abstract void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher);
 
 	public abstract MenuData getMenuData(Actor subject);
 

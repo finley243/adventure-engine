@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.item.component;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
@@ -56,7 +55,7 @@ public class ItemComponentEquippable extends ItemComponent {
         this.equippedSlotsData = slots;
     }
 
-    private List<String> getEquippedEffects() {
+    private List<Effect> getEquippedEffects() {
         return equippedSlotsData.equippedEffects();
     }
 
@@ -64,33 +63,31 @@ public class ItemComponentEquippable extends ItemComponent {
         return getEquippableTemplate().getSlots().contains(slotsData);
     }
 
-    public void onEquip(Game game, Actor target, ItemComponentTemplateEquippable.EquippableSlotsData slots) {
+    public void onEquip(Actor target, ItemComponentTemplateEquippable.EquippableSlotsData slots) {
         setEquippedActor(target);
         setEquippedSlots(slots);
-        for (String effectID : getEquippedEffects()) {
-            Effect effect = game.data().getEffect(effectID);
-            target.getEffectComponent().addEffect(game, effect);
+        for (Effect effect : getEquippedEffects()) {
+            target.getEffectComponent().addEffect(effect);
         }
     }
 
-    public void onUnequip(Game game, Actor target) {
-        for (String effectID : getEquippedEffects()) {
-            Effect effect = game.data().getEffect(effectID);
-            target.getEffectComponent().removeEffect(game, effect);
+    public void onUnequip(Actor target) {
+        for (Effect effect : getEquippedEffects()) {
+            target.getEffectComponent().removeEffect(effect);
         }
         setEquippedActor(null);
         setEquippedSlots(null);
     }
 
-    public List<Action> equippedActions(Game game, Actor subject) {
+    public List<Action> equippedActions(Actor subject, ScriptRuntime scriptRuntime) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionItemUnequip(getItem()));
         for (String exposedComponent : equippedSlotsData.componentsExposed()) {
-            actions.addAll(getItem().getComponentOfType(ItemComponentFactory.getClassFromName(exposedComponent)).getPossibleInventoryActions(game, subject));
+            actions.addAll(getItem().getComponentOfType(ItemComponentFactory.getClassFromName(exposedComponent)).getPossibleInventoryActions(scriptRuntime, subject));
         }
         for (ActionCustom.CustomActionHolder equippedAction : equippedSlotsData.equippedActions()) {
-            ActionTemplate customActionTemplate = game.data().getActionTemplate(equippedAction.action());
-            actions.add(new ActionCustom(null, null, getItem(), null, customActionTemplate, equippedAction.parameters(), new MenuDataInventory(getItem(), subject.getInventory()), false));
+            ActionTemplate customActionTemplate = equippedAction.action();
+            actions.add(new ActionCustom(scriptRuntime, null, null, getItem(), null, customActionTemplate, equippedAction.parameters(), new MenuDataInventory(getItem(), subject.getInventory()), false));
         }
         return actions;
     }

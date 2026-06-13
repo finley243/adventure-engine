@@ -2,11 +2,11 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.gamedata.ConfigHandler;
-import com.github.finley243.adventureengine.gamedata.ConfigOption;
-import com.github.finley243.adventureengine.gamedata.MutableRegistry;
-import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.gamedata.*;
 import com.github.finley243.adventureengine.item.Item;
+import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -34,12 +34,14 @@ public class AreaLoader {
     private final ActorLoader actorLoader;
     private final ObjectLoader objectLoader;
     private final ItemLoader itemLoader;
-    private final MutableRegistry<Item> itemMutableRegistry;
+    private final Registry<Faction> factionRegistry;
     private final Registry<Room> roomRegistry;
     private final Registry<ObstructionType> obstructionTypeRegistry;
     private final Registry<LinkType> linkTypeRegistry;
+    private final Registry<Effect> effectRegistry;
+    private final ItemFactory itemFactory;
 
-    public AreaLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, ScriptParser scriptParser, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, MutableRegistry<Item> itemMutableRegistry, Registry<Room> roomRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<LinkType> linkTypeRegistry) {
+    public AreaLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, ScriptParser scriptParser, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, Registry<Faction> factionRegistry, Registry<Room> roomRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<LinkType> linkTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory) {
         this.configHandler = configHandler;
         this.scriptRuntime = scriptRuntime;
         this.scriptParser = scriptParser;
@@ -47,10 +49,12 @@ public class AreaLoader {
         this.actorLoader = actorLoader;
         this.objectLoader = objectLoader;
         this.itemLoader = itemLoader;
-        this.itemMutableRegistry = itemMutableRegistry;
+        this.factionRegistry = factionRegistry;
         this.roomRegistry = roomRegistry;
         this.obstructionTypeRegistry = obstructionTypeRegistry;
         this.linkTypeRegistry = linkTypeRegistry;
+        this.effectRegistry = effectRegistry;
+        this.itemFactory = itemFactory;
     }
 
     public AreaLoaderResult load(Element element) {
@@ -81,7 +85,9 @@ public class AreaLoader {
         }
         boolean nameIsPlural = LoadUtils.attributeBool(nameElement, "plural", false);
         Scene description = sceneLoader.parseScene(LoadUtils.singleChildWithName(element, "description"));
-        String areaOwnerFaction = LoadUtils.attribute(element, "faction", null);
+        String areaOwnerFactionID = LoadUtils.attribute(element, "faction", null);
+        Faction areaOwnerFaction = factionRegistry.getFromID(areaOwnerFactionID);
+        if (areaOwnerFaction == null && areaOwnerFactionID != null) throw new GameDataException("Area has invalid owner faction");
         Area.RestrictionType restrictionType;
         try {
             restrictionType = LoadUtils.attributeEnum(element, "restriction", Area.RestrictionType.class, Area.RestrictionType.PUBLIC);
@@ -95,7 +101,9 @@ public class AreaLoader {
         String linkTypeDefault = configHandler.get(ConfigOption.DEFAULT_LINK_TYPE);
         for (Element linkElement : linkElements) {
             String linkAreaID = LoadUtils.attribute(linkElement, "area", null);
-            String linkType = LoadUtils.attribute(linkElement, "type", linkTypeDefault);
+            String linkTypeID = LoadUtils.attribute(linkElement, "type", linkTypeDefault);
+            LinkType linkType = linkTypeRegistry.getFromID(linkTypeID);
+            if (linkType == null) throw new GameDataException("AreaLink has invalid link type");
             AreaLink.CompassDirection linkDirection;
             try {
                 linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
@@ -108,7 +116,7 @@ public class AreaLoader {
             } catch (IllegalArgumentException e) {
                 throw new GameDataException("Area has invalid link distance category");
             }
-            AreaLink link = new AreaLink(linkAreaID, linkType, linkDirection, linkDistance);
+            AreaLink link = new AreaLink(linkType, linkDirection, linkDistance);
             linkSet.put(linkAreaID, link);
         }
 
@@ -116,17 +124,23 @@ public class AreaLoader {
 
         Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Area(" + areaID + ")");
 
-        Area area = new Area(scriptRuntime, obstructionTypeRegistry, areaID, landmarkID, name, nameType, nameIsPlural, description, room, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);
-
         Map<String, WorldObject> objectMap = new HashMap<>();
         for (Element objectElement : LoadUtils.directChildrenWithName(element, "object")) {
-            WorldObject object = objectLoader.parseObject(objectElement, area);
+            WorldObject object = objectLoader.parseObject(objectElement);
             objectMap.put(object.getID(), object);
         }
 
+        WorldObject landmarkObject = null;
+        if (landmarkID != null) {
+            landmarkObject = objectMap.get(landmarkID);
+            if (landmarkObject == null) throw new GameDataException("Area landmark object not found");
+        }
+
+        Area area = new Area(scriptRuntime, obstructionTypeRegistry, effectRegistry, itemFactory, areaID, landmarkObject, name, nameType, nameIsPlural, description, room, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);
+
         for (Element itemElement : LoadUtils.directChildrenWithName(element, "item")) {
             Item item = itemLoader.parseItem(itemElement);
-            area.getInventory().addItem(item, itemMutableRegistry);
+            area.getInventory().addItem(item);
         }
 
         Map<String, Actor> actorMap = new HashMap<>();

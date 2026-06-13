@@ -130,7 +130,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 	
 	@Override
-	public void setArea(Area area, Game game) {
+	public void setArea(Area area) {
 		if (isEnabled) {
 			if (this.area != null) {
 				this.area.removeObject(this);
@@ -181,11 +181,11 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public List<Action> localActions(Game game, Actor subject) {
+	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		if (!isGuarded()) {
 			for (ObjectComponent component : components.values()) {
-				actions.addAll(component.getActions(game, subject));
+				actions.addAll(component.getActions(subject));
 			}
 			for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 				ActionTemplate customActionTemplate = game.data().getActionTemplate(customAction.action());
@@ -282,10 +282,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			}
 			case "hidden" -> {
 				this.isHidden = value.getValueBoolean();
-				return true;
-			}
-			case "area" -> {
-				setArea(context.game().data().getArea(value.getValueString()), game);
 				return true;
 			}
 			default -> {

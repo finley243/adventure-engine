@@ -9,7 +9,6 @@ import com.github.finley243.adventureengine.action.ActionCustom;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
@@ -25,8 +24,17 @@ import java.util.*;
 
 public class ObjectComponentLink extends ObjectComponent {
 
+    private final Map<String, WorldObject> linkedObjects;
+
     public ObjectComponentLink(Game game, WorldObject object, ObjectComponentTemplate template) {
-        super(game, object, template);
+        super(object, template);
+        this.linkedObjects = new HashMap<>();
+    }
+
+    void setupLinkedObjects(Registry<WorldObject> objectRegistry) {
+        for (Map.Entry<String, ObjectComponentTemplateLink.ObjectLinkData> entry : getTemplateLink().getLinkData().entrySet()) {
+            String linkID = entry.getKey();
+        }
     }
 
     private ObjectComponentTemplateLink getTemplateLink() {
@@ -122,7 +130,7 @@ public class ObjectComponentLink extends ObjectComponent {
     }*/
 
     @Override
-    protected List<Action> getPossibleActions(Game game, Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         for (String linkID : getTemplateLink().getLinkData().keySet()) {
             ObjectComponentTemplateLink.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);

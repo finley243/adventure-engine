@@ -97,7 +97,7 @@ public class Pathfinder {
 			} else {
 				for (Area visibleArea : new HashSet<>(visibleMap.keySet())) {
 					if (!visibleArea.hasDirectVisibleLinkTo(currentArea, areaRegistry) || (!ignoreAllObstructions && visibleArea.hasUnbypassedObstruction(bypassedObstructions))) continue;
-					AreaLink.CompassDirection linkDirection = visibleArea.getLinkDirectionTo(currentArea, game);
+					AreaLink.CompassDirection linkDirection = visibleArea.getLinkDirectionTo(currentArea);
 					AreaLink.CompassDirection currentOriginDirection = combinedDirection(visibleMap.get(visibleArea).direction, linkDirection);
 					int currentPathLength = visibleMap.get(visibleArea).minPathLength + 1;
 					if (currentOriginDirection == null) continue;

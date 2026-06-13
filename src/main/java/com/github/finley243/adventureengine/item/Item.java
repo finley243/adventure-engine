@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.item;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -17,6 +16,7 @@ import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.*;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext;
@@ -30,11 +30,20 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 	private final ItemTemplate template;
 	private final Map<Class<? extends ItemComponent>, ItemComponent> components;
 
-	public Item(String ID, ItemTemplate template) {
+	public Item(String ID, ItemTemplate template, ItemComponentFactory itemComponentFactory) {
 		super(ID);
 		this.template = template;
 		this.currentInventory = null;
 		this.components = new HashMap<>();
+		for (ItemComponentTemplate componentTemplate : getTemplate().getComponents()) {
+			ItemComponent component = itemComponentFactory.create(componentTemplate, this);
+			if (component == null) throw new UnsupportedOperationException("Cannot add null component to item " + this);
+			if (components.containsKey(component.getClass())) {
+				throw new UnsupportedOperationException("Item " + this + " already contains a component of type " + component.getClass());
+			}
+			components.put(component.getClass(), component);
+			component.onInit();
+		}
 	}
 
 	@Override
@@ -71,18 +80,6 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return getTemplate().getDescription();
 	}
 
-	public void onInit() {
-		for (ItemComponentTemplate componentTemplate : getTemplate().getComponents()) {
-			ItemComponent component = ItemComponentFactory.create(componentTemplate, this);
-			if (component == null) throw new UnsupportedOperationException("Cannot add null component to item " + this);
-			if (components.containsKey(component.getClass())) {
-				throw new UnsupportedOperationException("Item " + this + " already contains a component of type " + component.getClass());
-			}
-			components.put(component.getClass(), component);
-			component.onInit();
-		}
-	}
-
 	public void onStartRound() {
 		for (ItemComponent component : components.values()) {
 			component.onStartRound();
@@ -98,11 +95,11 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return components.containsKey(componentClass);
 	}
 
-	public void triggerScript(String entryPoint, Game game, Actor subject, Actor target) {
+	public void triggerScript(String entryPoint, ScriptRuntime scriptRuntime, Actor subject, Actor target) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			for (Script currentScript : getTemplate().getScripts().get(entryPoint)) {
-				Context context = Context.builder(game).subject(subject).target(target).parentItem(this).build();
-				currentScript.execute(, context);
+				Context context = Context.builder().subject(subject).target(target).parentItem(this).build();
+				currentScript.run(scriptRuntime, context);
 			}
 		}
 	}
@@ -124,7 +121,7 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return false;
     }
 	
-	public List<Action> inventoryActions(Game game, Actor subject) {
+	public List<Action> inventoryActions(Actor subject, ScriptRuntime scriptRuntime) {
 		List<Action> actions = new ArrayList<>();
 		actions.add(new ActionItemDrop(this));
 		if (subject.getInventory().itemCount(this) > 1) {
@@ -134,11 +131,11 @@ public class Item extends GameInstanced implements Noun, MutableStatHolder, Effe
 			actions.add(new ActionInspectItem(this));
 		}
 		for (ItemComponent component : components.values()) {
-			actions.addAll(component.getInventoryActions(game, subject));
+			actions.addAll(component.getInventoryActions(scriptRuntime, subject));
 		}
 		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-			ActionTemplate customActionTemplate = game.data().getActionTemplate(customAction.action());
-			actions.add(new ActionCustom(null, null, this, null, customActionTemplate, customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
+			ActionTemplate customActionTemplate = customAction.action();
+			actions.add(new ActionCustom(scriptRuntime, null, null, this, null, customActionTemplate, customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
 		}
 		return actions;
 	}

@@ -15,7 +15,7 @@ import java.util.List;
 public class ObjectComponentVehicle extends ObjectComponent {
 
     public ObjectComponentVehicle(Game game, WorldObject object, ObjectComponentTemplate template) {
-        super(game, object, template);
+        super(object, template);
     }
 
     private ObjectComponentTemplateVehicle getTemplateVehicle() {
@@ -34,7 +34,7 @@ public class ObjectComponentVehicle extends ObjectComponent {
     }
 
     @Override
-    protected List<Action> getPossibleActions(Game game, Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         WorldObject objectOverride = getObjectOverride(game);
         if (objectOverride != null) {

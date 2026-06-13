@@ -1,7 +1,5 @@
 package com.github.finley243.adventureengine.world.environment;
 
-import com.github.finley243.adventureengine.Game;
-
 public class AreaLink {
 
     public enum DistanceCategory {
@@ -29,25 +27,24 @@ public class AreaLink {
         }
     }
 
-    private final String areaID;
     private Area area;
     private final LinkType type;
     private final CompassDirection direction;
     private final DistanceCategory distance;
 
-    public AreaLink(String areaID, LinkType type, CompassDirection direction, DistanceCategory distance) {
-        this.areaID = areaID;
+    public AreaLink(LinkType type, CompassDirection direction, DistanceCategory distance) {
         this.type = type;
         this.direction = direction;
         this.distance = distance;
     }
 
-    public void init(Game game) {
-        this.area = game.data().getArea(areaID);
+    public void setArea(Area area) {
+        if (this.area != null) throw new IllegalStateException("Area has already been set");
+        this.area = area;
     }
 
     public Area getArea() {
-        if (area == null) throw new IllegalStateException("AreaLink not initialized");
+        if (area == null) throw new IllegalStateException("Area has not been set");
         return area;
     }
 

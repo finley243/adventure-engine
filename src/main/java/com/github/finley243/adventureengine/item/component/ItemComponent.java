@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -37,13 +36,13 @@ public abstract class ItemComponent implements MutableStatHolder {
         return getTemplate().actionsRestricted();
     }
 
-    public void onInit(Game game) {}
+    public void onInit() {}
 
     public void onStartRound() {}
 
-    public List<Action> getInventoryActions(Game game, Actor subject) {
+    public List<Action> getInventoryActions(ScriptRuntime scriptRuntime, Actor subject) {
         if (!actionsRestricted()) {
-            return getPossibleInventoryActions(game, subject);
+            return getPossibleInventoryActions(scriptRuntime, subject);
         }
         return new ArrayList<>();
     }

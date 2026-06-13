@@ -653,7 +653,7 @@ public class DataLoader {
             String linkType = LoadUtils.attribute(linkElement, "type", linkTypeDefault);
             AreaLink.CompassDirection linkDirection = LoadUtils.attributeEnum(linkElement, "dir", AreaLink.CompassDirection.class, AreaLink.CompassDirection.N);
             AreaLink.DistanceCategory linkDistance = LoadUtils.attributeEnum(linkElement, "dist", AreaLink.DistanceCategory.class, AreaLink.DistanceCategory.CLOSE);
-            AreaLink link = new AreaLink(linkAreaID, linkType, linkDirection, linkDistance);
+            AreaLink link = new AreaLink(linkType, linkDirection, linkDistance);
             linkSet.put(linkAreaID, link);
         }
 

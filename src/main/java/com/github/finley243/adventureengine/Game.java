@@ -1,6 +1,8 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.TurnController;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.gamedata.ActorRegistry;
@@ -32,13 +34,16 @@ public class Game {
 	private final Registry<WorldObject> objectRegistry;
 	private final AreaRegistry areaRegistry;
 	private final ScriptRuntime scriptRuntime;
+	private final Pathfinder pathfinder;
+	private final TextGen textGen;
+	private final TurnController turnController;
 
 	private boolean continueGame;
 	private List<Actor> turnOrder;
 	private int currentTurnIndex;
 
 	/** Main game constructor, loads data and starts game loop */
-	public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, AreaRegistry areaRegistry, TimerManager timerManager) {
+	public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, AreaRegistry areaRegistry, TimerManager timerManager, Pathfinder pathfinder, TextGen textGen, TurnController turnController) {
 		this.eventBus = eventBus;
 		this.menuManager = menuManager;
 		this.questManager = questManager;
@@ -48,6 +53,9 @@ public class Game {
 		this.objectRegistry = objectRegistry;
 		this.areaRegistry = areaRegistry;
 		this.timerManager = timerManager;
+		this.pathfinder = pathfinder;
+		this.textGen = textGen;
+		this.turnController = turnController;
 
 		//data().newGame();
 	}
@@ -60,7 +68,7 @@ public class Game {
 	private void startRound() {
 		if (!continueGame) return;
 		eventBus.post(new TextClearEvent());
-		TextGen.clearContext();
+		textGen.clearContext();
 		for (Timer timer : timerManager.getAll()) {
 			timer.update();
 			if (timer.shouldRemove()) {
@@ -68,7 +76,7 @@ public class Game {
 			}
 		}
 		for (Area area : areaRegistry.getAll()) {
-			area.onStartRound(this);
+			area.onStartRound();
 		}
 		for (WorldObject object : objectRegistry.getAll()) {
 			object.onStartRound(this);
@@ -79,7 +87,7 @@ public class Game {
 		}
 		player.getArea().triggerScript("on_player_round", Context.builder().build());
 		// TODO - Add reverse function to get all actors that can see the player (for now, visibility is always mutual)
-		for (Actor visibleActor : player.getLineOfSightActors(this)) {
+		for (Actor visibleActor : player.getLineOfSightActors(pathfinder)) {
 			if (visibleActor.isVisible(player)) {
 				visibleActor.triggerScript("on_player_visible_round", Context.builder().subject(visibleActor).build());
 			}
@@ -87,11 +95,14 @@ public class Game {
 		dateTimeController.onNextRound();
 		this.turnOrder = computeTurnOrder();
 		this.currentTurnIndex = 0;
+		if (actorRegistry.getPlayer().isDead()) {
+			continueGame = false;
+		}
 		nextTurn();
 	}
 
 	private void nextTurn() {
-		turnOrder.get(currentTurnIndex).takeTurn(this);
+		turnController.takeTurn(turnOrder.get(currentTurnIndex), pathfinder, scriptRuntime, menuManager, questManager, this);
 	}
 
 	public void onEndTurn(Actor actor) {
@@ -109,11 +120,6 @@ public class Game {
 		List<Actor> actors = new ArrayList<>(actorRegistry.getAll());
 		actors.sort((a1, a2) -> a2.getAttribute("agility", Context.builder().subject(a2).target(a2).build()) - a1.getAttribute("agility", Context.builder().subject(a1).target(a1).build()));
 		return actors;
-	}
-	
-	/** Ends the game loop, triggered when the player dies */
-	public void onPlayerDeath() {
-		continueGame = false;
 	}
 	
 }

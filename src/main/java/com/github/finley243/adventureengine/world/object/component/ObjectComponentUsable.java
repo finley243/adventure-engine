@@ -6,6 +6,7 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -22,7 +23,7 @@ public class ObjectComponentUsable extends ObjectComponent {
     private final Map<String, Actor> users;
 
     public ObjectComponentUsable(Game game, WorldObject object, ObjectComponentTemplate template) {
-        super(game, object, template);
+        super(object, template);
         this.users = new HashMap<>();
     }
 
@@ -99,12 +100,12 @@ public class ObjectComponentUsable extends ObjectComponent {
     @Override
     public void onSetObjectArea(Area area, Game game) {
         for (Actor user : users.values()) {
-            user.setArea(area, game);
+            user.setArea(area);
         }
     }
 
     @Override
-    protected List<Action> getPossibleActions(Game game, Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
             if (!users.containsKey(slotID) && (!subject.isUsingObject() || !subject.getUsingObject().equals(this))) {
@@ -114,18 +115,18 @@ public class ObjectComponentUsable extends ObjectComponent {
         return actions;
     }
 
-    public List<Action> getUsingActions(Game game, String slotID, Actor subject) {
+    public List<Action> getUsingActions(String slotID, Actor subject, ScriptRuntime scriptRuntime) {
         List<Action> actions = new ArrayList<>();
         actions.add(new ActionObjectUseEnd(this, slotID));
         for (String exposedComponentName : getTemplateUsable().getUsableSlotData().get(slotID).componentsExposed()) {
             ObjectComponent component = getObject().getComponentOfType(ObjectComponentFactory.getClassFromName(exposedComponentName));
             if (component.isEnabled()) {
-                actions.addAll(component.getPossibleActions(game, subject));
+                actions.addAll(component.getPossibleActions(subject));
             }
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsableSlotData().get(slotID).usingActions()) {
-            ActionTemplate usingActionTemplate = game.data().getActionTemplate(usingAction.action());
-            actions.add(new ActionCustom(null, getObject(), null, null, usingActionTemplate, usingAction.parameters(), new MenuDataObject(getObject()), false));
+            ActionTemplate usingActionTemplate = usingAction.action();
+            actions.add(new ActionCustom(scriptRuntime, null, getObject(), null, null, usingActionTemplate, usingAction.parameters(), new MenuDataObject(getObject()), false));
         }
         return actions;
     }

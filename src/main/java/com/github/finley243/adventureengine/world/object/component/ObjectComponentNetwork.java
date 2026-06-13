@@ -14,7 +14,7 @@ import java.util.List;
 public class ObjectComponentNetwork extends ObjectComponent {
 
     public ObjectComponentNetwork(Game game, WorldObject object, ObjectComponentTemplate template) {
-        super(game, object, template);
+        super(object, template);
     }
 
     private ObjectComponentTemplateNetwork getTemplateNetwork() {
@@ -22,7 +22,7 @@ public class ObjectComponentNetwork extends ObjectComponent {
     }
 
     @Override
-    protected List<Action> getPossibleActions(Game game, Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject) {
         NetworkNode networkNode = game.data().getNetworkNode(getObject().getLocalVariable("networkID").getValueString());
         return new ArrayList<>(networkNode.actions(game, subject, getObject()));
     }

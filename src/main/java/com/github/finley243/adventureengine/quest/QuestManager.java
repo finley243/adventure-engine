@@ -33,10 +33,10 @@ public class QuestManager {
         }
     }
 
-    public void update(Game game) {
+    public void update() {
         for (Quest quest : activeObjectives.keySet()) {
             for (QuestObjective objective : activeObjectives.get(quest)) {
-                objective.update(game);
+                objective.update();
             }
         }
     }

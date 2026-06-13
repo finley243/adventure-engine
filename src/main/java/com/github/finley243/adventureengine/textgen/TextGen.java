@@ -42,7 +42,7 @@ public class TextGen {
 		put("has", "have");
     }};
 	
-	private static TextContext lastContext;
+	private TextContext lastContext;
 
 	/*
 	 * Format for tags: $subject hit$s $object1 with $object2
@@ -50,7 +50,7 @@ public class TextGen {
 	 * Format for conditionals: ([condition]phrase|[other condition]other phrase|default phrase)
 	 */
 
-	public static String generate(String line, Context context, TextContext textContext) {
+	public String generate(String line, Context context, TextContext textContext) {
 		if (line == null) return null;
 		String originalLine = line;
 		line = processBlockStatements(line, 0, context, originalLine);
@@ -63,7 +63,7 @@ public class TextGen {
 		return line;
 	}
 
-	public static String generateVarsOnly(String line, Map<String, String> vars) {
+	public String generateVarsOnly(String line, Map<String, String> vars) {
 		List<String> varTags = new ArrayList<>(vars.keySet());
 		varTags.sort(Comparator.comparingInt(String::length));
 		Collections.reverse(varTags);
@@ -73,7 +73,7 @@ public class TextGen {
 		return line;
 	}
 	
-	public static void clearContext() {
+	public void clearContext() {
 		lastContext = null;
 	}
 

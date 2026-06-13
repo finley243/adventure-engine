@@ -23,7 +23,7 @@ public class ObjectComponentInventory extends ObjectComponent {
     private final Inventory inventory;
 
     public ObjectComponentInventory(Game game, WorldObject object, ObjectComponentTemplate template) {
-        super(game, object, template);
+        super(object, template);
         this.inventory = new Inventory(null);
     }
 
@@ -32,7 +32,7 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
-    protected List<Action> getPossibleActions(Game game, Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject) {
         List<Action> actions = new ArrayList<>();
         actions.addAll(inventory.getExternalActions(game, getObject(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
         for (ActionCustom.CustomActionHolder customAction : getTemplateInventory().getPerItemActions()) {

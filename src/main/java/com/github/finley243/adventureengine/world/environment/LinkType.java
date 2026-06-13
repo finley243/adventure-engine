@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.world.environment;
 
 import com.github.finley243.adventureengine.GameInstanced;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 
 import java.util.Map;
 import java.util.Set;
@@ -8,12 +9,12 @@ import java.util.Set;
 public class LinkType extends GameInstanced {
 
     private final boolean isVisible;
-    private final String actorMoveAction;
+    private final ActionTemplate actorMoveAction;
     private final Set<AreaLink.DistanceCategory> actorMoveDistances;
-    private final Map<String, String> vehicleMoveActions;
+    private final Map<String, ActionTemplate> vehicleMoveActions;
     private final Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances;
 
-    public LinkType(String ID, boolean isVisible, String actorMoveAction, Set<AreaLink.DistanceCategory> actorMoveDistances, Map<String, String> vehicleMoveActions, Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances) {
+    public LinkType(String ID, boolean isVisible, ActionTemplate actorMoveAction, Set<AreaLink.DistanceCategory> actorMoveDistances, Map<String, ActionTemplate> vehicleMoveActions, Map<String, Set<AreaLink.DistanceCategory>> vehicleMoveDistances) {
         super(ID);
         this.isVisible = isVisible;
         this.actorMoveAction = actorMoveAction;
@@ -26,7 +27,7 @@ public class LinkType extends GameInstanced {
         return isVisible;
     }
 
-    public String getActorMoveAction() {
+    public ActionTemplate getActorMoveAction() {
         return actorMoveAction;
     }
 
@@ -38,7 +39,7 @@ public class LinkType extends GameInstanced {
         return actorMoveDistances.isEmpty();
     }
 
-    public String getVehicleMoveAction(String vehicleType) {
+    public ActionTemplate getVehicleMoveAction(String vehicleType) {
         return vehicleMoveActions.get(vehicleType);
     }
 

@@ -18,30 +18,25 @@ public abstract class ObjectComponent implements StatHolder {
     private boolean isEnabled;
     private final WorldObject object;
     private final ObjectComponentTemplate template;
-    private final Context defaultContext;
 
-    public ObjectComponent(Game game, WorldObject object, ObjectComponentTemplate template) {
+    public ObjectComponent(WorldObject object, ObjectComponentTemplate template) {
         this.object = object;
         this.template = template;
-        this.defaultContext = Context.builder(game).subject(game.data().getPlayer()).target(game.data().getPlayer()).parentObject(object).build();
-    }
-
-    protected Context getDefaultContext() {
-        return defaultContext;
+        this.isEnabled = getTemplate().startEnabled();
     }
 
     protected ObjectComponentTemplate getTemplate() {
         return template;
     }
 
-    public List<Action> getActions(Game game, Actor subject) {
+    public List<Action> getActions(Actor subject) {
         if (isEnabled && !actionsRestricted()) {
-            return getPossibleActions(game, subject);
+            return getPossibleActions(subject);
         }
         return new ArrayList<>();
     }
 
-    protected abstract List<Action> getPossibleActions(Game game, Actor subject);
+    protected abstract List<Action> getPossibleActions(Actor subject);
 
     private boolean actionsRestricted() {
         return getTemplate().actionsRestricted();
@@ -57,10 +52,6 @@ public abstract class ObjectComponent implements StatHolder {
 
     public boolean isEnabled() {
         return isEnabled;
-    }
-
-    public void onInit(Game game) {
-        this.isEnabled = getTemplate().startEnabled();
     }
 
     public void onSetObjectEnabled(boolean enable) {}

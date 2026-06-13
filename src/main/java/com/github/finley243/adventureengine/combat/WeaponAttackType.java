@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
@@ -81,15 +82,15 @@ public class WeaponAttackType {
         return ID;
     }
 
-    public List<Action> generateActions(Actor subject, Item weapon) {
+    public List<Action> generateActions(Actor subject, Item weapon, ScriptRuntime scriptRuntime) {
         if (weapon != null) {
-            return generateActionsWeapon(subject, weapon);
+            return generateActionsWeapon(subject, weapon, scriptRuntime);
         } else {
             return generateActionsUnarmed(subject);
         }
     }
 
-    private List<Action> generateActionsWeapon(Actor subject, Item weapon) {
+    private List<Action> generateActionsWeapon(Actor subject, Item weapon, ScriptRuntime scriptRuntime) {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).build();
         List<Action> actions = new ArrayList<>();
@@ -101,7 +102,7 @@ public class WeaponAttackType {
         boolean isLoud = isLoudOverride != null ? isLoudOverride : weapon.getComponentOfType(ItemComponentWeapon.class).isLoud(context);
         List<String> targetEffectsCombined = new ArrayList<>(targetEffects);
         if (!overrideTargetEffects) {
-            targetEffectsCombined.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getTargetEffects(context));
+            targetEffectsCombined.addAll(weapon.getComponentOfType(ItemComponentWeapon.class).getTargetEffects(scriptRuntime, context));
         }
         switch (category) {
             case SINGLE -> {

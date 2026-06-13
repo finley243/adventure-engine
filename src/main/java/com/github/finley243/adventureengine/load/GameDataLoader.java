@@ -3,18 +3,25 @@ package com.github.finley243.adventureengine.load;
 import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.*;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.combat.WeaponClass;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.gamedata.*;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.item.LootTable;
+import com.github.finley243.adventureengine.item.component.ItemComponentFactory;
 import com.github.finley243.adventureengine.item.template.ItemTemplate;
+import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.network.NetworkNode;
+import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
+import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -63,11 +70,17 @@ public class GameDataLoader {
     private final ConfigHandler configHandler;
     private final ScriptRuntime scriptRuntime;
     private final MutableRegistry<Item> itemMutableRegistry;
+    private final QuestManager questManager;
+    private final MenuManager menuManager;
+    private final UIEventBus eventBus;
 
-    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry) {
+    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, QuestManager questManager, MenuManager menuManager, UIEventBus eventBus) {
         this.configHandler = configHandler;
         this.scriptRuntime = scriptRuntime;
         this.itemMutableRegistry = itemMutableRegistry;
+        this.questManager = questManager;
+        this.menuManager = menuManager;
+        this.eventBus = eventBus;
     }
 
     public GameData loadData(File dir) throws GameDataException {
@@ -113,32 +126,32 @@ public class GameDataLoader {
         Registry<DamageType> damageTypeRegistry = new Registry<>(damageTypeMap);
         Map<String, WeaponAttackType> attackTypeMap = loadMapFromFileName(dir, NAME_ATTACK_TYPE, builder, combatTypeLoader::loadAttackTypes);
         Registry<WeaponAttackType> attackTypeRegistry = new Registry<>(attackTypeMap);
-        Map<String, WeaponClass> weaponClassMap = loadMapFromFileName(dir, NAME_WEAPON_CLASS, builder, e -> combatTypeLoader.loadWeaponClasses(e, attackTypeRegistry));
+        Map<String, WeaponClass> weaponClassMap = loadMapFromFileName(dir, NAME_WEAPON_CLASS, builder, e -> combatTypeLoader.loadWeaponClasses(e, attackTypeRegistry, skillRegistry));
         Registry<WeaponClass> weaponClassRegistry = new Registry<>(weaponClassMap);
 
         FactionLoader factionLoader = new FactionLoader();
         Map<String, Faction> factionMap = loadMapFromFileName(dir, NAME_FACTION, builder, factionLoader::load);
         Registry<Faction> factionRegistry = new Registry<>(factionMap);
 
+        ActionLoader actionLoader = new ActionLoader(scriptParser);
+        Map<String, ActionTemplate> actionMap = loadMapFromFileName(dir, NAME_ACTION_TEMPLATE, builder, actionLoader::load);
+        Registry<ActionTemplate> actionRegistry = new Registry<>(actionMap);
+
         WorldTypeLoader worldTypeLoader = new WorldTypeLoader();
         Map<String, ObstructionType> obstructionTypeMap = loadMapFromFileName(dir, NAME_OBSTRUCTION_TYPE, builder, worldTypeLoader::loadObstructionTypes);
         Registry<ObstructionType> obstructionTypeRegistry = new Registry<>(obstructionTypeMap);
-        Map<String, LinkType> linkTypeMap = loadMapFromFileName(dir, NAME_LINK_TYPE, builder, worldTypeLoader::loadLinkTypes);
+        Map<String, LinkType> linkTypeMap = loadMapFromFileName(dir, NAME_LINK_TYPE, builder, e -> worldTypeLoader.loadLinkTypes(e, actionRegistry));
         Registry<LinkType> linkTypeRegistry = new Registry<>(linkTypeMap);
 
         SceneLoader sceneLoader = new SceneLoader(scriptParser);
         Map<String, Scene> sceneMap = loadMapFromFileName(dir, NAME_SCENE, builder, sceneLoader::load);
         Registry<Scene> sceneRegistry = new Registry<>(sceneMap);
 
-        ActionLoader actionLoader = new ActionLoader(scriptParser);
-        Map<String, ActionTemplate> actionMap = loadMapFromFileName(dir, NAME_ACTION_TEMPLATE, builder, actionLoader::load);
-        Registry<ActionTemplate> actionRegistry = new Registry<>(actionMap);
-
         EffectLoader effectLoader = new EffectLoader(scriptParser);
         Map<String, Effect> effectMap = loadMapFromFileName(dir, NAME_EFFECT, builder, effectLoader::load);
         Registry<Effect> effectRegistry = new Registry<>(effectMap);
 
-        ItemTemplateLoader itemTemplateLoader = new ItemTemplateLoader(configHandler, scriptParser, sceneLoader, actionRegistry, effectRegistry);
+        ItemTemplateLoader itemTemplateLoader = new ItemTemplateLoader(configHandler, scriptParser, sceneLoader, actionRegistry, effectRegistry, weaponClassRegistry, damageTypeRegistry);
         Map<String, ItemTemplate> itemTemplateMap = loadMapFromFileName(dir, NAME_ITEM_TEMPLATE, builder, itemTemplateLoader::load);
         Registry<ItemTemplate> itemTemplateRegistry = new Registry<>(itemTemplateMap);
 
@@ -162,21 +175,27 @@ public class GameDataLoader {
         Map<String, ActorTemplate> actorTemplateMap = loadMapFromFileName(dir, NAME_ACTOR_TEMPLATE, builder, actorTemplateLoader::load);
         Registry<ActorTemplate> actorTemplateRegistry = new Registry<>(actorTemplateMap);
 
-        ItemFactory itemFactory = new ItemFactory(itemTemplateRegistry, itemMutableRegistry);
+        ItemComponentFactory itemComponentFactory = new ItemComponentFactory(scriptRuntime, attackTypeRegistry, effectRegistry);
+        ItemFactory itemFactory = new ItemFactory(itemTemplateRegistry, itemMutableRegistry, itemComponentFactory);
 
-        ActorLoader actorLoader = new ActorLoader(scriptParser);
+        TextGen textGen = new TextGen();
+        Pathfinder pathfinder = new Pathfinder();
+        SensoryEventDispatcher sensoryEventDispatcher = new SensoryEventDispatcher(pathfinder, textGen);
+
+        ActorLoader actorLoader = new ActorLoader(scriptParser, actorTemplateRegistry, scriptRuntime, eventBus, menuManager, sensoryEventDispatcher, itemFactory, senseTypeRegistry, effectRegistry, damageTypeRegistry, attributeRegistry, skillRegistry);
         ObjectLoader objectLoader = new ObjectLoader(scriptParser, objectTemplateRegistry);
         ItemLoader itemLoader = new ItemLoader(itemFactory, itemTemplateRegistry);
-        AreaLoader areaLoader = new AreaLoader(configHandler, scriptRuntime, scriptParser, sceneLoader, actorLoader, objectLoader, itemLoader, itemMutableRegistry, roomRegistry, obstructionTypeRegistry, linkTypeRegistry);
+        AreaLoader areaLoader = new AreaLoader(configHandler, scriptRuntime, scriptParser, sceneLoader, actorLoader, objectLoader, itemLoader, factionRegistry, roomRegistry, obstructionTypeRegistry, linkTypeRegistry, effectRegistry, itemFactory);
         Element areasElement = getRootElementFromFileName(dir, NAME_AREA, builder);
         AreaLoader.AreaLoaderResult areaLoaderResult = areaLoader.load(areasElement);
         AreaRegistry areaRegistry = new AreaRegistry(areaLoaderResult.areas());
-        Actor playerActor = areaLoaderResult.actors().get(configHandler.get(ConfigOption.PLAYER_ID));
-        if (playerActor == null) throw new GameDataException("No actor instance matching player ID");
-        ActorRegistry actorRegistry = new ActorRegistry(areaLoaderResult.actors(), playerActor);
+        Actor playerActor = actorLoader.loadPlayer(configHandler, areaRegistry);
+        Map<String, Actor> actorMap = new HashMap<>(areaLoaderResult.actors());
+        actorMap.put(playerActor.getID(), playerActor);
+        ActorRegistry actorRegistry = new ActorRegistry(actorMap, playerActor);
         Registry<WorldObject> objectRegistry = new Registry<>(areaLoaderResult.objects());
 
-        return new GameData(phraseManager, itemFactory, areaRegistry, roomRegistry, actorTemplateRegistry, actorRegistry, objectTemplateRegistry, objectRegistry, itemTemplateRegistry, itemMutableRegistry, lootTableRegistry, weaponClassRegistry, attackTypeRegistry, sceneRegistry, factionRegistry, networkRegistry, effectRegistry, actionRegistry, linkTypeRegistry, damageTypeRegistry, attributeRegistry, skillRegistry, senseTypeRegistry, obstructionTypeRegistry, scriptRegistry);
+        return new GameData(sensoryEventDispatcher, pathfinder, textGen, phraseManager, areaRegistry, roomRegistry, actorTemplateRegistry, actorRegistry, objectTemplateRegistry, objectRegistry, itemTemplateRegistry, itemMutableRegistry, lootTableRegistry, weaponClassRegistry, attackTypeRegistry, sceneRegistry, factionRegistry, networkRegistry, effectRegistry, actionRegistry, linkTypeRegistry, damageTypeRegistry, attributeRegistry, skillRegistry, senseTypeRegistry, obstructionTypeRegistry, scriptRegistry);
     }
 
     private <T> Map<String, T> loadMapFromFileName(File parentDir, String name, DocumentBuilder builder, Function<Element, Map<String, T>> loadFunction) throws GameDataException {
@@ -187,8 +206,7 @@ public class GameDataLoader {
     private Element getRootElementFromFileName(File parentDir, String name, DocumentBuilder builder) {
         File file = new File(parentDir, name + DATA_FILE_EXTENSION);
         if (!file.exists()) throw new IllegalArgumentException("File does not exist: " + file.getAbsolutePath());
-        Element rootElement = getRootElementFromFile(file, builder);
-        return rootElement;
+        return getRootElementFromFile(file, builder);
     }
 
     private Element getRootElementFromFile(File file, DocumentBuilder builder) {

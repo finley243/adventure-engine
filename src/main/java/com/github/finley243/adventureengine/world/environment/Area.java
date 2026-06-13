@@ -15,6 +15,7 @@ import com.github.finley243.adventureengine.effect.Effectible;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -73,12 +74,12 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	private EffectComponent effectComponent;
 
-	private final StatStringSet effects;
+	private final StatStringSetRegistry<Effect> effects;
 
 	private final Set<String> defaultObstructions;
 	private final StatStringSetRegistry<ObstructionType> obstructions;
 	
-	public Area(ScriptRuntime scriptRuntime, Registry<ObstructionType> obstructionTypeRegistry, String ID, WorldObject landmark, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, Faction ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
+	public Area(ScriptRuntime scriptRuntime, Registry<ObstructionType> obstructionTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory, String ID, WorldObject landmark, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, Faction ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
 		super(ID);
 		this.scriptRuntime = scriptRuntime;
 		this.landmark = landmark;
@@ -93,17 +94,17 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		this.linkedAreas = linkedAreas;
 		this.objects = new HashSet<>();
 		this.actors = new HashSet<>();
-		this.itemInventory = new Inventory(null);
+		this.itemInventory = new Inventory(itemFactory, null);
 		this.scripts = scripts;
-		this.effects = new StatStringSet("effects", this);
+		this.effects = new StatStringSetRegistry<>("effects", this, effectRegistry, Effect::getID);
 		this.defaultObstructions = defaultObstructions;
 		this.obstructions = new StatStringSetRegistry<>("obstructions", this, obstructionTypeRegistry, ObstructionType::ID);
 		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().parentArea(this).build());
 	}
 
-	public void onInit(Game game) {
+	public void setupAreaLinks() {
 		for (AreaLink link : linkedAreas.values()) {
-			link.init(game);
+			link.setArea(this);
 		}
 	}
 
@@ -258,8 +259,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(vehicleType) || vehicleType == null && link.isMovable()) {
-				String actionTemplateID = vehicleType == null ? game.data().getLinkType(link.getType().getID()).getActorMoveAction() : game.data().getLinkType(link.getType().getID()).getVehicleMoveAction(vehicleType);
-				ActionTemplate actionTemplate = game.data().getActionTemplate(actionTemplateID);
+				ActionTemplate actionTemplate = vehicleType == null ? link.getType().getActorMoveAction() : link.getType().getVehicleMoveAction(vehicleType);
 				moveActions.add(new ActionCustom(scriptRuntime, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
 			}
 		}
@@ -332,7 +332,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return false;
 	}
 
-	public AreaLink.CompassDirection getLinkDirectionTo(Area area, Game game) {
+	public AreaLink.CompassDirection getLinkDirectionTo(Area area) {
 		if (linkedAreas.containsKey(area.getID())) {
 			AreaLink link = linkedAreas.get(area.getID());
 			return link.getDirection();
@@ -340,7 +340,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
-			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedLineOfSightAreasWithDirections(game);
+			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedLineOfSightAreasWithDirections(scriptRuntime, objectRegistry);
 			if (visibleAreasWithDirections.containsKey(area)) {
 				return visibleAreasWithDirections.get(area);
 			}
@@ -348,18 +348,18 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return null;
 	}
 
-	public AreaLink.DistanceCategory getLinearDistanceTo(Game game, Area area) {
+	public AreaLink.DistanceCategory getLinearDistanceTo(Area area, Pathfinder pathfinder) {
 		if (linkedAreas.containsKey(area.getID())) {
 			return linkedAreas.get(area.getID()).getDistance();
 		}
-		Pathfinder.VisibleAreaData areaData = Pathfinder.getLineOfSightAreas(game, this, Set.of(), true).get(area);
+		Pathfinder.VisibleAreaData areaData = pathfinder.getLineOfSightAreas(this, Set.of(), true).get(area);
 		if (areaData == null) return null;
 		return areaData.distance();
 	}
 
-	public Set<Area> visibleAreasInRange(Game game, Actor subject, Set<AreaLink.DistanceCategory> ranges) {
+	public Set<Area> visibleAreasInRange(Actor subject, Set<AreaLink.DistanceCategory> ranges, Pathfinder pathfinder) {
 		Set<Area> areas = new HashSet<>();
-		Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(game, this, subject);
+		Map<Area, Pathfinder.VisibleAreaData> visibleAreas = pathfinder.getVisibleAreas(this, subject);
 		for (Map.Entry<Area, Pathfinder.VisibleAreaData> entry : visibleAreas.entrySet()) {
 			if (ranges.contains(entry.getValue().distance())) {
 				areas.add(entry.getKey());
@@ -370,19 +370,15 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	public void applyEffects() {
 		for (Actor actor : getActors()) {
-			for (String effectID : effects.value(new HashSet<>(), Context.builder().subject(actor).target(actor).build())) {
+			for (String effectID : effects.value(new HashSet<>(), scriptRuntime, Context.builder().subject(actor).build())) {
 				Effect effect = game.data().getEffect(effectID);
 				actor.getEffectComponent().addEffect(game, effect);
 			}
 		}
 	}
 
-	public Set<ObstructionType> getObstructions() {
-		return obstructions.valueObjects();
-	}
-
 	public Set<String> getObstructionIDs() {
-		return obstructions.value(defaultObstructions, Context.builder().parentArea(this).build());
+		return obstructions.value(defaultObstructions, scriptRuntime, Context.builder().parentArea(this).build());
 	}
 
 	public boolean hasUnbypassedObstruction(Set<String> bypassedObstructionIDs) {
@@ -392,7 +388,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	@Override
 	public boolean isProperName() {
-		if (landmarkID != null) {
+		if (landmark != null) {
 			return getLandmark().isProperName();
 		} else if (name == null) {
 			return getRoom().isProperName();

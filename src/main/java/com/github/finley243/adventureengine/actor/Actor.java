@@ -5,7 +5,6 @@ import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.ai.AreaTarget;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.actor.component.*;
 import com.github.finley243.adventureengine.combat.Damage;
@@ -28,7 +27,6 @@ import com.github.finley243.adventureengine.load.LoadUtils;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
-import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.*;
 import com.github.finley243.adventureengine.stat.*;
@@ -61,7 +59,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final ScriptRuntime scriptRuntime;
 	private final UIEventBus eventBus;
 	private final MenuManager menuManager;
-	private final QuestManager questManager;
+	private final SensoryEventDispatcher sensoryEventDispatcher;
 
 	private final boolean isPlayer;
 	private final boolean startDisabled;
@@ -119,12 +117,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Map<String, List<Script>> scripts;
 	private final Context defaultContext;
 
-	public Actor(ScriptRuntime scriptRuntime, UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Collection<DamageType> allDamageTypes, Collection<Attribute> allAttributes, Collection<Skill> allSkills, String ID, String nameDescriptor, Area area, ActorTemplate template, boolean isPlayer, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean isPlayerControlled) {
+	public Actor(ScriptRuntime scriptRuntime, UIEventBus eventBus, MenuManager menuManager, SensoryEventDispatcher sensoryEventDispatcher, ItemFactory itemFactory, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Collection<DamageType> allDamageTypes, Collection<Attribute> allAttributes, Collection<Skill> allSkills, String ID, String nameDescriptor, Area area, ActorTemplate template, boolean isPlayer, List<Behavior> behaviors, boolean startDead, boolean startDisabled, boolean isPlayerControlled) {
 		super(ID);
 		this.scriptRuntime = scriptRuntime;
 		this.eventBus = eventBus;
 		this.menuManager = menuManager;
-		this.questManager = questManager;
+		this.sensoryEventDispatcher = sensoryEventDispatcher;
 		this.nameDescriptor = nameDescriptor;
 		this.defaultArea = area;
 		this.area = area;
@@ -141,7 +139,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.canPerformActions = new StatBoolean("can_perform_actions", this, false);
 		this.canMove = new StatBoolean("can_move", this, false);
 		this.canDodge = new StatBoolean("can_dodge", this, false);
-		this.inventory = new Inventory(this);
+		this.inventory = new Inventory(itemFactory, this);
 		this.equipmentComponent = new EquipmentComponent(this);
 		this.equipmentEffects = new StatStringSetRegistry<>("equipment_effects", this, effectRegistry, Effect::getID);
 		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().subject(this).build());
@@ -238,7 +236,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 	
 	@Override
-	public void setArea(Area area, Game game) {
+	public void setArea(Area area) {
 		boolean isNewRoom = getArea() == null || !Objects.equals(getArea().getRoom(), area.getRoom());
 		boolean isNewArea = getArea() == null || !getArea().equals(area);
 		if (this.area != null) {
@@ -247,10 +245,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.area = area;
 		area.addActor(this);
 		if (isCarryingActor()) {
-			getCarriedActor().setArea(area, game);
+			getCarriedActor().setArea(area);
 		}
 		if (isPlayer()) {
-			onPlayerEnterArea(isNewRoom, isNewArea);
+			onPlayerEnterArea(isNewRoom, isNewArea, areaRegistry);
 		}
 	}
 	
@@ -475,9 +473,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			modifierContext.setLocalVariable("condition", Expression.constant(getConditionDescription()));
 			triggerScript("on_damaged", modifierContext);
 			if (SHOW_HP_CHANGES) {
-				SensoryEvent.execute(game, new SensoryEvent(getArea(), "$actor lose$s $amount HP.", modifierContext, true, null, null));
+				sensoryEventDispatcher.dispatch(new SensoryEvent(getArea(), "$actor lose$s $amount HP.", modifierContext, true, null, null));
 			}
-			SensoryEvent.execute(game, new SensoryEvent(getArea(), "$actor $is $condition.", modifierContext, true, null, null));
+			sensoryEventDispatcher.dispatch(new SensoryEvent(getArea(), "$actor $is $condition.", modifierContext, true, null, null));
 		}
 	}
 	
@@ -486,13 +484,13 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		if (context.getTarget() != null && context.getTarget() != this) {
 			context.getTarget().triggerScript("on_kill", Context.from(defaultContext).subject(context.getTarget()).target(context.getSubject()).build());
 		}
-		SensoryEvent.execute(game, new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(getArea(), Phrases.get("die"), context, true, null, null));
 		stopUsingObjectOnDeathIfPresent();
 		isDead = true;
 		HP = 0;
-		if (isPlayer()) {
+		/*if (isPlayer()) {
 			game.onPlayerDeath();
-		}
+		}*/
 	}
 
 	public String getConditionDescription() {
@@ -531,7 +529,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		isSleeping = true;
 	}
 
-	private void updateSleep() {
+	public void updateSleep() {
 		if (sleepCounter != 0) {
 			sleepCounter -= 1;
 			if (sleepCounter <= 0) {
@@ -539,6 +537,50 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 				sleepCounter = 0;
 			}
 		}
+	}
+
+	public int getActionPointsUsed() {
+		return actionPointsUsed;
+	}
+
+	public void setActionPointsUsed(int actionPointsUsed) {
+		this.actionPointsUsed = actionPointsUsed;
+	}
+
+	public void clearRepeatActions() {
+		repeatActions.clear();
+	}
+
+	public int getRepeatActionCount(Action action) {
+		if (!repeatActions.containsKey(action)) throw new IllegalArgumentException("Action is not present in repeatActions");
+		return repeatActions.get(action);
+	}
+
+	public void decrementRepeatAction(Action action) {
+		if (!repeatActions.containsKey(action)) throw new IllegalArgumentException("Action is not present in repeatActions");
+		repeatActions.put(action, getRepeatActionCount(action) - 1);
+	}
+
+	public void addRepeatAction(Action action, int startingCount) {
+		repeatActions.put(action, startingCount);
+	}
+
+	public boolean isRepeatAction(Action action) {
+		for (Action repeatAction : repeatActions.keySet()) {
+			if (repeatAction.isRepeatMatch(action)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Action getRepeatActionMatch(Action action) {
+		for (Action repeatAction : repeatActions.keySet()) {
+			if (repeatAction.isRepeatMatch(action)) {
+				return repeatAction;
+			}
+		}
+		return null;
 	}
 
 	public boolean isSneaking() {
@@ -552,30 +594,30 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.isSneaking = sneaking;
 	}
 	
-	public void onSensoryEvent(Game game, SensoryEvent event, boolean visible) {
+	public void onSensoryEvent(SensoryEvent event, boolean visible, String textVisible, String textAudible) {
 		if (isActive() && isEnabled()) {
 			if (isPlayer()) {
                 String text = null;
                 if (visible) {
-                    text = event.getTextVisible();
+                    text = textVisible;
                 }
 				if (text == null) {
-                    text = event.getTextAudible();
+                    text = textAudible;
                 }
                 if (text != null) {
-                    game.eventBus().post(new RenderTextEvent(text));
+                    eventBus.post(new RenderTextEvent(text));
                 }
             } else {
 				if (event.getContext().getSubject().equals(this)) return;
 				if (visible) { // Visible
 					if (event.isAction()) {
-						targetingComponent.onVisibleAction(game, event.getAction(), event.getContext().getSubject());
+						targetingComponent.onVisibleAction(event.getAction(), event.getContext().getSubject());
 					} else if (event.isBark()) {
-						targetingComponent.onAudibleBark(event.getBark(), game, event.getContext().getSubject(), event.getContext().getTarget(), true);
+						targetingComponent.onAudibleBark(event.getBark(), event.getContext().getSubject(), event.getContext().getTarget(), true);
 					}
 				} else { // Audible
 					if (event.isBark()) {
-						targetingComponent.onAudibleBark(event.getBark(), game, event.getContext().getSubject(), event.getContext().getTarget(), false);
+						targetingComponent.onAudibleBark(event.getBark(), event.getContext().getSubject(), event.getContext().getTarget(), false);
 					}
 				}
 			}
@@ -603,7 +645,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			usableComponent.removeUser(usingSlot);
 			setUsingObject(null);
 			Context context = Context.builder().subject(this).target(this).parentObject(object).build();
-			SensoryEvent.execute(game, new SensoryEvent(getArea(), Phrases.get(usableComponent.getEndDeathPhrase(usingSlot)), context, true, null, null));
+			sensoryEventDispatcher.dispatch(new SensoryEvent(getArea(), Phrases.get(usableComponent.getEndDeathPhrase(usingSlot)), context, true, null, null));
 		}
 	}
 	
@@ -620,14 +662,14 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	@Override
-	public List<Action> localActions(Game game, Actor subject) {
+	public List<Action> localActions(Actor subject) {
 		List<Action> actions = new ArrayList<>();
 		if (isActive()) {
 			if (getTemplate().getDialogueStart() != null) {
 				actions.add(new ActionTalk(this));
 			}
 		} else if (isDead()) {
-			actions.addAll(inventory.getExternalActions(game, this, subject, "Take", "takeFrom", null, null, true, false));
+			actions.addAll(inventory.getExternalActions(this, subject, "Take", "takeFrom", null, null, true, false));
 			actions.add(new ActionCarryActorStart(this));
 		}
 		for (ActionCustom.CustomActionHolder actionHolder : getTemplate().getCustomActions()) {
@@ -654,51 +696,51 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return new ArrayList<>();
 	}
 
-	private List<Action> availableActions(Game game) {
+	public List<Action> availableActions(Pathfinder pathfinder) {
 		if (!canPerformActions(Context.from(defaultContext).build())) {
 			return new ArrayList<>();
 		}
 		List<Action> actions = new ArrayList<>();
 		if (canPerformLocalActions()) {
 			for (Actor actor : getArea().getActors()) {
-				actions.addAll(actor.localActions(game, this));
+				actions.addAll(actor.localActions(this));
 			}
-			actions.addAll(getArea().getItemActions(game));
+			actions.addAll(getArea().getItemActions());
 			for (WorldObject object : getArea().getObjects()) {
 				if (!object.isHidden() && (!isUsingObject() || !object.equals(getUsingObject().object()))) {
-					actions.addAll(object.localActions(game, this));
+					actions.addAll(object.localActions(this));
 				}
 			}
 		}
 		if (isUsingObject()) {
-			actions.addAll(getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).getUsingActions(game, getUsingObject().slot(), this));
+			actions.addAll(getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).getUsingActions(getUsingObject().slot(), this, scriptRuntime));
 			if (getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanPerformParentActions(getUsingObject().slot())) {
-				actions.addAll(getUsingObject().object().localActions(game, this));
+				actions.addAll(getUsingObject().object().localActions(this));
 			}
 		}
 		if (isCarryingActor()) {
 			actions.addAll(getCarriedActor().carriedActions(this));
 		}
-		for (Actor visibleActor : getLineOfSightActors(game)) {
+		for (Actor visibleActor : getLineOfSightActors(pathfinder)) {
 			if (visibleActor.isVisible(this)) {
 				actions.addAll(visibleActor.visibleActions(this));
 			}
 		}
-		for (WorldObject visibleObject : getLineOfSightObjects(game)) {
+		for (WorldObject visibleObject : getLineOfSightObjects(pathfinder)) {
 			if (visibleObject.isVisible(this)) {
 				actions.addAll(visibleObject.visibleActions(this));
 			}
 		}
 		if (canMove(Context.from(defaultContext).build())) {
-			actions.addAll(getArea().getMoveActions(game, this, null, null));
+			actions.addAll(getArea().getMoveActions(this, null, null));
 		}
 		actions.addAll(getArea().getAreaActions(this));
 		for (Item item : inventory.getItems()) {
-			actions.addAll(item.inventoryActions(game, this));
+			actions.addAll(item.inventoryActions(this, scriptRuntime));
 		}
-		actions.addAll(equipmentComponent.getEquippedActions(game));
+		actions.addAll(equipmentComponent.getEquippedActions(scriptRuntime));
 		for (WeaponAttackType unarmedAttackType : getTemplate().getUnarmedAttackTypes()) {
-			actions.addAll(unarmedAttackType.generateActions(this, null));
+			actions.addAll(unarmedAttackType.generateActions(this, null, scriptRuntime));
 		}
 		if (isSneaking()) {
 			actions.add(new ActionSneakEnd());
@@ -740,102 +782,31 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 
-	public void takeTurn(Game game) {
-		if (!isEnabled() || isDead()) {
-			game.onEndTurn(this);
-			return;
-		}
-		if (isSleeping()) {
-			updateSleep();
-			game.onEndTurn(this);
-			return;
-		}
-		getEffectComponent().onStartRound(game);
-		getInventory().onStartRound(game);
-		if (!isPlayerControlled) {
-			getTargetingComponent().updateTurn(game);
-			getBehaviorComponent().updateTurn();
-		}
-		this.actionPointsUsed = 0;
-		this.repeatActions.clear();
-		this.endTurn = false;
-		Action lastAction = null;
-		int repeatActionCount = 0;
-		while (!endTurn) {
-			questManager.update(game);
-			if (!isPlayerControlled()) {
-				updateAreaTargets(game);
-				getTargetingComponent().update(game);
-				getBehaviorComponent().update();
-			}
-			List<Action> actionChoices = availableActions(game);
-			if (actionChoices.isEmpty()) {
-				endTurn(game);
-				break;
-			}
-			Action selectedAction;
-			if (isPlayerControlled()) {
-				selectedAction = menuManager.actionChoiceMenu(this, actionChoices);
-			} else {
-				selectedAction = chooseAIAction(game, actionChoices);
-			}
-			boolean isRepeatMatch = false;
-			for (Action repeatAction : repeatActions.keySet()) {
-				if (repeatAction.isRepeatMatch(selectedAction)) {
-					isRepeatMatch = true;
-					int countRemaining = repeatActions.get(repeatAction) - 1;
-					repeatActions.put(repeatAction, countRemaining);
-					break;
-				}
-			}
-			if (!(isRepeatMatch && selectedAction.repeatsUseNoActionPoints())) {
-				actionPointsUsed += selectedAction.actionPoints(this);
-			}
-			if (!isRepeatMatch && selectedAction.repeatCount(this) > 0) {
-				repeatActions.put(selectedAction, selectedAction.repeatCount(this) - 1);
-			}
-			if (lastAction != null && selectedAction.isRepeatMatch(lastAction)) {
-				repeatActionCount += 1;
-			} else {
-				repeatActionCount = 0;
-			}
-			selectedAction.choose(this, repeatActionCount);
-			getBehaviorComponent().onPerformAction(selectedAction);
-			lastAction = selectedAction;
-		}
-		game.onEndTurn(this);
-	}
-
 	public boolean isPlayerControlled() {
 		return isPlayerControlled;
 	}
-
-	public boolean isRepeatAction(Action action) {
-		for (Action repeatAction : repeatActions.keySet()) {
-			if (repeatAction.isRepeatMatch(action)) {
-				return true;
-			}
-		}
-		return false;
-	}
 	
-	public void endTurn(Game game) {
+	public void endTurn() {
 		actionPointsUsed = 0;
 		endTurn = true;
 		if (!isPlayerControlled() && shouldIdle()) {
-			playIdle(game);
+			playIdle();
 		}
 	}
 
-	public Action chooseAIAction(Game game, List<Action> actions) {
-		return UtilityUtils.selectActionByUtility(this, actions, 1);
+	public boolean isTurnEnded() {
+		return endTurn;
 	}
 
-	private void playIdle(Game game) {
+	public void setTurnActive() {
+		endTurn = false;
+	}
+
+	private void playIdle() {
 		if (getBehaviorComponent() != null) {
-			Idle idle = getBehaviorComponent().getIdle();
+			Idle idle = getBehaviorComponent().getIdle(scriptRuntime);
 			if (idle != null) {
-				idle.trigger(game, this);
+				idle.trigger(this);
 			}
 		}
 	}
@@ -844,22 +815,22 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return !isInCombat();
 	}
 	
-	private void updateAreaTargets(Game game) {
+	public void updateAreaTargets() {
 		Iterator<AreaTarget> itr = areaTargets.iterator();
 		while (itr.hasNext()) {
 			AreaTarget target = itr.next();
-			target.update(game, this);
+			target.update(this);
 			if (target.shouldRemove()) {
 				itr.remove();
 			}
 		}
 	}
 
-	public Map<Area, Pathfinder.VisibleAreaData> getVisibleAreas(AreaRegistry areaRegistry) {
+	public Map<Area, Pathfinder.VisibleAreaData> getVisibleAreas(Pathfinder pathfinder) {
 		if (isUsingObject() && !getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanSeeOtherAreas(getUsingObject().slot())) {
 			return Map.of(getArea(), new Pathfinder.VisibleAreaData(null, Area.pathLengthToDistance(0), List.of(getArea())));
 		} else {
-			return Pathfinder.getVisibleAreas(areaRegistry, getArea(), this);
+			return pathfinder.getVisibleAreas(getArea(), this);
 		}
 	}
 
@@ -867,9 +838,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
         return !(isInCover() && !getArea().equals(subject.getArea()));
     }
 
-	public Set<Actor> getLineOfSightActors(AreaRegistry areaRegistry) {
+	public Set<Actor> getLineOfSightActors(Pathfinder pathfinder) {
 		Set<Actor> visibleActors = new HashSet<>();
-		for (Area visibleArea : getVisibleAreas(areaRegistry).keySet()) {
+		for (Area visibleArea : getVisibleAreas(pathfinder).keySet()) {
 			for (Actor actor : visibleArea.getActors()) {
 				if (!actor.equals(this) && !actor.isInCover()) {
 					visibleActors.add(actor);
@@ -879,9 +850,9 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return visibleActors;
 	}
 
-	public Set<WorldObject> getLineOfSightObjects(Game game) {
+	public Set<WorldObject> getLineOfSightObjects(Pathfinder pathfinder) {
 		Set<WorldObject> visibleObjects = new HashSet<>();
-		for (Area visibleArea : getVisibleAreas(game).keySet()) {
+		for (Area visibleArea : getVisibleAreas(pathfinder).keySet()) {
 			for (WorldObject object : visibleArea.getObjects()) {
 				if (!object.isHidden()) {
 					visibleObjects.add(object);
@@ -891,15 +862,15 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return visibleObjects;
 	}
 
-	public Set<AttackTarget> getLineOfSightAttackTargets(AreaRegistry areaRegistry) {
-		Set<AttackTarget> attackTargets = new HashSet<>(getLineOfSightActors(areaRegistry));
-		attackTargets.addAll(getLineOfSightObjects(areaRegistry));
+	public Set<AttackTarget> getLineOfSightAttackTargets(Pathfinder pathfinder) {
+		Set<AttackTarget> attackTargets = new HashSet<>(getLineOfSightActors(pathfinder));
+		attackTargets.addAll(getLineOfSightObjects(pathfinder));
 		return attackTargets;
 	}
 
 	public Set<SenseType> getSenseTypes() {
 		Context context = Context.from(defaultContext).build();
-		return senseTypes.valueObjects(getTemplate().getSenseTypes(), context);
+		return senseTypes.valueObjects(getTemplate().getSenseTypes(), scriptRuntime, context);
 	}
 
 	public Set<String> getAllBypassedObstructionTypes() {
@@ -1003,7 +974,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			case "template_id" -> Expression.constant(template.getID());
 			case "area" -> Expression.constant(getArea().getID());
 			case "room" -> Expression.constant(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
-			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), context));
+			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), scriptRuntime, context));
 			case "sense_types" -> Expression.constant(getSenseTypes());
 			default -> null;
 		};
@@ -1052,10 +1023,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 			}
 			case "hp" -> {
 				HP = MathUtils.bound(value.getValueInteger(), 0, getMaxHP());
-				return true;
-			}
-			case "area" -> {
-				setArea(context.game().data().getArea(value.getValueString()), context.game());
 				return true;
 			}
 			case "alert_state" -> {
@@ -1147,12 +1114,13 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		triggerScript("on_level_up", Context.from(defaultContext).build());
 	}
 
-	private void onPlayerEnterArea(boolean isNewRoom, boolean isNewArea) {
+	private void onPlayerEnterArea(boolean isNewRoom, boolean isNewArea, AreaRegistry areaRegistry) {
 		eventBus.post(new RenderAreaEvent(getArea().getRoom() != null ? LangUtils.titleCase(getArea().getRoom().getName()) : null, LangUtils.titleCase(getArea().getName())));
 		if (isNewRoom && getArea().getRoom() != null && getArea().getRoom().getDescription() != null) {
 			menuManager.sceneMenu(getArea().getRoom().getDescription(), Context.builder().subject(this).target(this).build(), false);
 			getArea().getRoom().setKnown();
-			for (Area areaInRoom : getArea().getRoom().getAreas()) {
+			Collection<Area> areasInRoom = areaRegistry.getAllInRoomID(getArea().getRoom().getID());
+			for (Area areaInRoom : areasInRoom) {
 				areaInRoom.setKnown();
 			}
 		}
