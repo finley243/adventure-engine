@@ -5,6 +5,7 @@ import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -19,7 +20,7 @@ public abstract class ObjectComponent implements StatHolder {
     private final WorldObject object;
     private final ObjectComponentTemplate template;
 
-    public ObjectComponent(WorldObject object, ObjectComponentTemplate template) {
+    ObjectComponent(WorldObject object, ObjectComponentTemplate template) {
         this.object = object;
         this.template = template;
         this.isEnabled = getTemplate().startEnabled();
@@ -31,12 +32,12 @@ public abstract class ObjectComponent implements StatHolder {
 
     public List<Action> getActions(Actor subject) {
         if (isEnabled && !actionsRestricted()) {
-            return getPossibleActions(subject);
+            return getPossibleActions(subject, );
         }
         return new ArrayList<>();
     }
 
-    protected abstract List<Action> getPossibleActions(Actor subject);
+    protected abstract List<Action> getPossibleActions(Actor subject, ScriptRuntime scriptRuntime);
 
     private boolean actionsRestricted() {
         return getTemplate().actionsRestricted();
@@ -56,7 +57,7 @@ public abstract class ObjectComponent implements StatHolder {
 
     public void onSetObjectEnabled(boolean enable) {}
 
-    public void onSetObjectArea(Area area, Game game) {}
+    public void onSetObjectArea(Area area) {}
 
     public void onStartRound(Game game) {}
 

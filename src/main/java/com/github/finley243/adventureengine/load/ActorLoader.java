@@ -14,8 +14,6 @@ import com.github.finley243.adventureengine.gamedata.ConfigHandler;
 import com.github.finley243.adventureengine.gamedata.ConfigOption;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.ItemFactory;
-import com.github.finley243.adventureengine.menu.MenuManager;
-import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -30,7 +28,6 @@ public class ActorLoader {
     private final Registry<ActorTemplate> actorTemplateRegistry;
     private final ScriptRuntime scriptRuntime;
     private final UIEventBus eventBus;
-    private final MenuManager menuManager;
     private final SensoryEventDispatcher sensoryEventDispatcher;
     private final ItemFactory itemFactory;
     private final Registry<SenseType> senseTypeRegistry;
@@ -39,12 +36,11 @@ public class ActorLoader {
     private final Registry<Attribute> attributeRegistry;
     private final Registry<Skill> skillRegistry;
 
-    public ActorLoader(ScriptParser scriptParser, Registry<ActorTemplate> actorTemplateRegistry, ScriptRuntime scriptRuntime, UIEventBus eventBus, MenuManager menuManager, SensoryEventDispatcher sensoryEventDispatcher, ItemFactory itemFactory, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry, Registry<Attribute> attributeRegistry, Registry<Skill> skillRegistry) {
+    public ActorLoader(ScriptParser scriptParser, Registry<ActorTemplate> actorTemplateRegistry, ScriptRuntime scriptRuntime, UIEventBus eventBus, SensoryEventDispatcher sensoryEventDispatcher, ItemFactory itemFactory, Registry<SenseType> senseTypeRegistry, Registry<Effect> effectRegistry, Registry<DamageType> damageTypeRegistry, Registry<Attribute> attributeRegistry, Registry<Skill> skillRegistry) {
         this.scriptParser = scriptParser;
         this.actorTemplateRegistry = actorTemplateRegistry;
         this.scriptRuntime = scriptRuntime;
         this.eventBus = eventBus;
-        this.menuManager = menuManager;
         this.sensoryEventDispatcher = sensoryEventDispatcher;
         this.itemFactory = itemFactory;
         this.senseTypeRegistry = senseTypeRegistry;
@@ -62,7 +58,7 @@ public class ActorLoader {
         String areaID = configHandler.get(ConfigOption.PLAYER_START_AREA);
         Area area = areaRegistry.getFromID(areaID);
         if (area == null) throw new GameDataException("Player actor has invalid area");
-        return new Actor(scriptRuntime, eventBus, menuManager, sensoryEventDispatcher, itemFactory, senseTypeRegistry, effectRegistry, damageTypeRegistry.getAll(), attributeRegistry.getAll(), skillRegistry.getAll(), ID, null, area, template, true, null, false, false, true);
+        return new Actor(scriptRuntime, sensoryEventDispatcher, itemFactory, senseTypeRegistry, effectRegistry, damageTypeRegistry.getAll(), attributeRegistry.getAll(), skillRegistry.getAll(), ID, null, area, template, true, null, false, false, true);
     }
 
     Actor parseActor(Element element, Area area) throws GameDataException {
@@ -74,7 +70,7 @@ public class ActorLoader {
         List<Behavior> behaviors = parseBehaviors(LoadUtils.singleChildWithName(element, "behaviors"), ID);
         boolean startDead = LoadUtils.attributeBool(element, "startDead", false);
         boolean startDisabled = LoadUtils.attributeBool(element, "startDisabled", false);
-        return new Actor(scriptRuntime, eventBus, menuManager, sensoryEventDispatcher, itemFactory, senseTypeRegistry, effectRegistry, damageTypeRegistry.getAll(), attributeRegistry.getAll(), skillRegistry.getAll(), ID, nameDescriptor, area, template, false, behaviors, startDead, startDisabled, false);
+        return new Actor(scriptRuntime, sensoryEventDispatcher, itemFactory, senseTypeRegistry, effectRegistry, damageTypeRegistry.getAll(), attributeRegistry.getAll(), skillRegistry.getAll(), ID, nameDescriptor, area, template, false, behaviors, startDead, startDisabled, false);
     }
 
     private List<Behavior> parseBehaviors(Element behaviorsElement, String actorID) throws GameDataException {

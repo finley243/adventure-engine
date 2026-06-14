@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 import java.util.List;
@@ -17,10 +18,11 @@ public class ActionItemConsume extends Action {
 	private final Item item;
 	private final String consumePrompt;
 	private final String consumePhrase;
-	private final List<String> effects;
+	private final List<Effect> effects;
 	
-	public ActionItemConsume(Item item, String consumePrompt, String consumePhrase, List<String> effects) {
-		this.item = item;
+	public ActionItemConsume(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item, String consumePrompt, String consumePhrase, List<Effect> effects) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        this.item = item;
 		this.consumePrompt = consumePrompt;
 		this.consumePhrase = consumePhrase;
 		this.effects = effects;
@@ -37,13 +39,12 @@ public class ActionItemConsume extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
-		subject.getInventory().removeItem(item, game);
+	public void choose(Actor subject, int repeatActionCount) {
+		subject.getInventory().removeItem(item);
 		Context context = getContext(subject);
 		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(consumePhrase), context, true, this, null));
-		for (String effectID : effects) {
-			Effect effect = game.data().getEffect(effectID);
-			subject.getEffectComponent().addEffect(game, effect);
+		for (Effect effect : effects) {
+			subject.getEffectComponent().addEffect(effect);
 		}
 	}
 

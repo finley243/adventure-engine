@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -22,7 +23,8 @@ public class ActionInventoryTakeAll extends Action {
     private final String prompt;
     private final String phrase;
 
-    public ActionInventoryTakeAll(Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
+    public ActionInventoryTakeAll(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
+        super(scriptRuntime, sensoryEventDispatcher);
         if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionInventoryTakeAll on item with state");
         this.owner = owner;
         this.inventory = inventory;
@@ -45,7 +47,7 @@ public class ActionInventoryTakeAll extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+    public void choose(Actor subject, int repeatActionCount) {
         int count = inventory.itemCount(item);
         inventory.removeItems(item.getTemplateID(), count);
         subject.getInventory().addItems(item.getTemplateID(), count);

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.world.object.component;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.*;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -22,7 +21,7 @@ public class ObjectComponentUsable extends ObjectComponent {
 
     private final Map<String, Actor> users;
 
-    public ObjectComponentUsable(Game game, WorldObject object, ObjectComponentTemplate template) {
+    ObjectComponentUsable(WorldObject object, ObjectComponentTemplate template) {
         super(object, template);
         this.users = new HashMap<>();
     }
@@ -98,14 +97,14 @@ public class ObjectComponentUsable extends ObjectComponent {
     }
 
     @Override
-    public void onSetObjectArea(Area area, Game game) {
+    public void onSetObjectArea(Area area) {
         for (Actor user : users.values()) {
             user.setArea(area);
         }
     }
 
     @Override
-    protected List<Action> getPossibleActions(Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject, ScriptRuntime scriptRuntime) {
         List<Action> actions = new ArrayList<>();
         for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
             if (!users.containsKey(slotID) && (!subject.isUsingObject() || !subject.getUsingObject().equals(this))) {
@@ -121,7 +120,7 @@ public class ObjectComponentUsable extends ObjectComponent {
         for (String exposedComponentName : getTemplateUsable().getUsableSlotData().get(slotID).componentsExposed()) {
             ObjectComponent component = getObject().getComponentOfType(ObjectComponentFactory.getClassFromName(exposedComponentName));
             if (component.isEnabled()) {
-                actions.addAll(component.getPossibleActions(subject));
+                actions.addAll(component.getPossibleActions(subject, ));
             }
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsableSlotData().get(slotID).usingActions()) {

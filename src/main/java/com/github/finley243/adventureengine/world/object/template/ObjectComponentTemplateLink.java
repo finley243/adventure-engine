@@ -1,5 +1,6 @@
 package com.github.finley243.adventureengine.world.object.template;
 
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.condition.Condition;
 
 import java.util.Map;
@@ -17,6 +18,6 @@ public class ObjectComponentTemplateLink extends ObjectComponentTemplate {
         return linkData;
     }
 
-    public record ObjectLinkData(String moveAction, Condition conditionVisible, boolean isVisible) {}
+    public record ObjectLinkData(ActionTemplate moveAction, Condition conditionVisible, boolean isVisible) {}
 
 }

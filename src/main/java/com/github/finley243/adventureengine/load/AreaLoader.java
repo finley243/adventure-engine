@@ -18,10 +18,7 @@ import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 import org.w3c.dom.Element;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class AreaLoader {
 
@@ -120,7 +117,13 @@ public class AreaLoader {
             linkSet.put(linkAreaID, link);
         }
 
-        Set<String> defaultObstructionTypes = LoadUtils.setOfTags(element, "obstructionType");
+        Set<String> defaultObstructionTypeIDs = LoadUtils.setOfTags(element, "obstructionType");
+        Set<ObstructionType> defaultObstructionTypes = new HashSet<>();
+        for (String obstructionTypeID : defaultObstructionTypeIDs) {
+            ObstructionType obstructionType = obstructionTypeRegistry.getFromID(obstructionTypeID);
+            if (obstructionType == null) throw new GameDataException("Area has invalid obstruction type");
+            defaultObstructionTypes.add(obstructionType);
+        }
 
         Map<String, List<Script>> areaScripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Area(" + areaID + ")");
 

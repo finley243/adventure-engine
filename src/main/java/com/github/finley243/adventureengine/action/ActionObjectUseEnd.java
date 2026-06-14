@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
 
@@ -15,8 +16,9 @@ public class ActionObjectUseEnd extends Action {
 	private final ObjectComponentUsable component;
 	private final String slotID;
 
-	public ActionObjectUseEnd(ObjectComponentUsable component, String slotID) {
-		this.component = component;
+	public ActionObjectUseEnd(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, ObjectComponentUsable component, String slotID) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        this.component = component;
 		this.slotID = slotID;
 	}
 
@@ -41,7 +43,7 @@ public class ActionObjectUseEnd extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		Context context = getContext(subject);
 		if (component.userIsInCover(slotID)) {
 			subject.triggerScript("on_leave_cover", context);

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.actor;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
@@ -9,24 +8,30 @@ import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class TurnController {
+public abstract class TurnController {
 
+    private final Actor actor;
     private final SensoryEventDispatcher sensoryEventDispatcher;
 
-    public TurnController(SensoryEventDispatcher sensoryEventDispatcher) {
+    private final Map<Action, Integer> repeatActions;
+    private int actionPointsUsed;
+
+    public TurnController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher) {
+        this.actor = actor;
         this.sensoryEventDispatcher = sensoryEventDispatcher;
+        this.repeatActions = new HashMap<>();
     }
 
-    public void takeTurn(Actor actor, Pathfinder pathfinder, ScriptRuntime scriptRuntime, MenuManager menuManager, QuestManager questManager, Game game) {
+    public void takeTurn(Pathfinder pathfinder, ScriptRuntime scriptRuntime, MenuManager menuManager, QuestManager questManager) {
         if (!actor.isEnabled() || actor.isDead()) {
-            game.onEndTurn(actor);
             return;
         }
         if (actor.isSleeping()) {
             actor.updateSleep();
-            game.onEndTurn(actor);
             return;
         }
         actor.getEffectComponent().onStartRound();
@@ -35,8 +40,8 @@ public class TurnController {
             actor.getTargetingComponent().updateTurn();
             actor.getBehaviorComponent().updateTurn(scriptRuntime);
         }
-        actor.setActionPointsUsed(0);
-        actor.clearRepeatActions();
+        actionPointsUsed = 0;
+        repeatActions.clear();
         actor.setTurnActive();
         Action lastAction = null;
         int repeatActionCount = 0;
@@ -48,6 +53,7 @@ public class TurnController {
                 actor.getBehaviorComponent().update(scriptRuntime, pathfinder);
             }
             List<Action> actionChoices = actor.availableActions(pathfinder);
+            applyActionConstraints(actionChoices);
             if (actionChoices.isEmpty()) {
                 actor.endTurn();
                 break;
@@ -59,31 +65,89 @@ public class TurnController {
                 selectedAction = chooseAIAction(actor, actionChoices);
             }
             boolean isRepeatMatch = false;
-            Action actionRepeatMatch = actor.getRepeatActionMatch(selectedAction);
+            Action actionRepeatMatch = getRepeatActionMatch(selectedAction);
             if (actionRepeatMatch != null) {
                 isRepeatMatch = true;
-                actor.decrementRepeatAction(actionRepeatMatch);
+                decrementRepeatAction(actionRepeatMatch);
             }
             if (!(isRepeatMatch && selectedAction.repeatsUseNoActionPoints())) {
-                actor.setActionPointsUsed(actor.getActionPointsUsed() + selectedAction.actionPoints(actor));
+                actionPointsUsed += selectedAction.actionPoints(actor);
             }
             if (!isRepeatMatch && selectedAction.repeatCount(actor) > 0) {
-                actor.addRepeatAction(selectedAction, selectedAction.repeatCount(actor) - 1);
+                addRepeatAction(selectedAction, selectedAction.repeatCount(actor) - 1);
             }
             if (lastAction != null && selectedAction.isRepeatMatch(lastAction)) {
                 repeatActionCount += 1;
             } else {
                 repeatActionCount = 0;
             }
-            selectedAction.choose(actor, repeatActionCount, sensoryEventDispatcher);
-            actor.getBehaviorComponent().onPerformAction(selectedAction);
+            selectedAction.choose(actor, repeatActionCount);
+            onPostAction(selectedAction);
             lastAction = selectedAction;
         }
-        game.onEndTurn(actor);
     }
 
-    public Action chooseAIAction(Actor actor, List<Action> actions) {
+    protected Actor getActor() {
+        return actor;
+    }
+
+    protected abstract void onPostAction(Action action);
+
+    private Action chooseAIAction(Actor actor, List<Action> actions) {
         return UtilityUtils.selectActionByUtility(actor, actions, 1);
+    }
+
+    private void applyActionConstraints(List<Action> actions) {
+        actions.removeIf(action -> !action.canShow(actor));
+        for (Action currentAction : actions) {
+            boolean isRepeatMatch = false;
+            boolean isBlocked = false;
+            boolean isRepeatBlocked = false;
+            for (Action blockedAction : repeatActions.keySet()) {
+                if (blockedAction.isRepeatMatch(currentAction)) {
+                    isRepeatMatch = true;
+                }
+                if (repeatActions.get(blockedAction) <= 0) {
+                    if (isRepeatMatch) {
+                        isRepeatBlocked = true;
+                        break;
+                    } else if (blockedAction.isBlockedMatch(currentAction)) {
+                        isBlocked = true;
+                        break;
+                    }
+                }
+            }
+            if (isRepeatBlocked) {
+                currentAction.setDisabled(true, "Repeat limit reached");
+            } else if (isBlocked) {
+                currentAction.setDisabled(true, "Blocked");
+            } else if (!(isRepeatMatch && currentAction.repeatsUseNoActionPoints()) && actor.getActionPoints() - actionPointsUsed < currentAction.actionPoints(actor)) {
+                currentAction.setDisabled(true, "Not enough action points");
+            }
+        }
+    }
+
+    private int getRepeatActionCount(Action action) {
+        if (!repeatActions.containsKey(action)) throw new IllegalArgumentException("Action is not present in repeatActions");
+        return repeatActions.get(action);
+    }
+
+    private void decrementRepeatAction(Action action) {
+        if (!repeatActions.containsKey(action)) throw new IllegalArgumentException("Action is not present in repeatActions");
+        repeatActions.put(action, getRepeatActionCount(action) - 1);
+    }
+
+    private void addRepeatAction(Action action, int startingCount) {
+        repeatActions.put(action, startingCount);
+    }
+
+    private Action getRepeatActionMatch(Action action) {
+        for (Action repeatAction : repeatActions.keySet()) {
+            if (repeatAction.isRepeatMatch(action)) {
+                return repeatAction;
+            }
+        }
+        return null;
     }
 
 }

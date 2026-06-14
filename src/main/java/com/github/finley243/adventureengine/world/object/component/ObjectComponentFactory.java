@@ -1,19 +1,18 @@
 package com.github.finley243.adventureengine.world.object.component;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.*;
 
 public class ObjectComponentFactory {
 
-    public static ObjectComponent create(Game game, ObjectComponentTemplate template, WorldObject object) {
+    public static ObjectComponent create(ObjectComponentTemplate template, WorldObject object) {
         return switch (template) {
-            case ObjectComponentTemplateInventory ignored -> new ObjectComponentInventory(game, object, template);
-            case ObjectComponentTemplateNetwork ignored -> new ObjectComponentNetwork(game, object, template);
-            case ObjectComponentTemplateLink ignored -> new ObjectComponentLink(game, object, template);
-            case ObjectComponentTemplateUsable ignored -> new ObjectComponentUsable(game, object, template);
-            case ObjectComponentTemplateVehicle ignored -> new ObjectComponentVehicle(game, object, template);
-            default -> null;
+            case ObjectComponentTemplateInventory ignored -> new ObjectComponentInventory(object, template);
+            case ObjectComponentTemplateNetwork ignored -> new ObjectComponentNetwork(object, template);
+            case ObjectComponentTemplateLink ignored -> new ObjectComponentLink(object, template);
+            case ObjectComponentTemplateUsable ignored -> new ObjectComponentUsable(object, template);
+            case ObjectComponentTemplateVehicle ignored -> new ObjectComponentVehicle(object, template);
+            default -> throw new UnsupportedOperationException("Object template type is unsupported by ObjectComponentFactory");
         };
     }
 

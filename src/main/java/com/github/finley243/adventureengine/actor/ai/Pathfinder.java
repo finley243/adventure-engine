@@ -1,26 +1,17 @@
 package com.github.finley243.adventureengine.actor.ai;
 
 import com.github.finley243.adventureengine.actor.Actor;
-import com.github.finley243.adventureengine.gamedata.AreaRegistry;
-import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentLink;
+import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 
 import java.util.*;
 
 public class Pathfinder {
 
 	public static final int MAX_VISIBLE_DISTANCE = 15;
-
-	private final AreaRegistry areaRegistry;
-	private final Registry<WorldObject> objectRegistry;
-
-	public Pathfinder(AreaRegistry areaRegistry, Registry<WorldObject> objectRegistry) {
-		this.areaRegistry = areaRegistry;
-		this.objectRegistry = objectRegistry;
-	}
 
 	/**
 	 * Returns a list of Areas that represents the shortest path between them
@@ -60,7 +51,7 @@ public class Pathfinder {
 			for (WorldObject object : currentArea.getObjects()) {
 				ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 				if (linkComponent == null) continue;
-				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(objectRegistry));
+				linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
 			}
 			for (Area linkedArea : linkedAreasGlobal) {
 				if (!predecessors.containsKey(linkedArea)) {
@@ -83,7 +74,7 @@ public class Pathfinder {
 		return visibleAreas;
 	}
 
-	public Map<Area, VisibleAreaData> getLineOfSightAreas(Area origin, Set<String> bypassedObstructions, boolean ignoreAllObstructions) {
+	public Map<Area, VisibleAreaData> getLineOfSightAreas(Area origin, Set<ObstructionType> bypassedObstructions, boolean ignoreAllObstructions) {
 		Map<Area, VisibleAreaData> visibleAreas = new HashMap<>();
 		Map<String, AreaQueueData> possiblyVisibleAreas = getPossiblyVisibleAreas(origin, MAX_VISIBLE_DISTANCE);
 		Map<Area, AreaPathData> visibleMap = new HashMap<>();
@@ -96,7 +87,7 @@ public class Pathfinder {
 				visibleMap.put(currentArea, new AreaPathData(null, true, 0));
 			} else {
 				for (Area visibleArea : new HashSet<>(visibleMap.keySet())) {
-					if (!visibleArea.hasDirectVisibleLinkTo(currentArea, areaRegistry) || (!ignoreAllObstructions && visibleArea.hasUnbypassedObstruction(bypassedObstructions))) continue;
+					if (!visibleArea.hasDirectVisibleLinkTo(currentArea) || (!ignoreAllObstructions && visibleArea.hasUnbypassedObstruction(bypassedObstructions))) continue;
 					AreaLink.CompassDirection linkDirection = visibleArea.getLinkDirectionTo(currentArea);
 					AreaLink.CompassDirection currentOriginDirection = combinedDirection(visibleMap.get(visibleArea).direction, linkDirection);
 					int currentPathLength = visibleMap.get(visibleArea).minPathLength + 1;
@@ -168,7 +159,7 @@ public class Pathfinder {
 				for (WorldObject object : currentArea.getObjects()) {
 					ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 					if (linkComponent == null) continue;
-					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable(game));
+					linkedAreasGlobal.addAll(linkComponent.getLinkedAreasMovable());
 				}
 			}
 			for (Area linkedArea : linkedAreasGlobal) {

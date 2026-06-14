@@ -13,14 +13,15 @@ public abstract class ActionRandomEach<T> extends Action {
 
     private final Collection<T> collection;
 
-    public ActionRandomEach(Collection<T> collection) {
+    public ActionRandomEach(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Collection<T> collection) {
         //if (collection.isEmpty()) throw new IllegalArgumentException("ActionRandomEach collection cannot be empty");
+        super(scriptRuntime, sensoryEventDispatcher);
         this.collection = collection;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
-        boolean continueAfterStart = onStart(sensoryEventDispatcher, subject, repeatActionCount);
+    public void choose(Actor subject, int repeatActionCount) {
+        boolean continueAfterStart = onStart(subject, repeatActionCount);
         if (continueAfterStart) {
             if (MathUtils.randomCheck(chanceOverall(subject))) {
                 List<ComputedTarget<T>> computedTargets = new ArrayList<>();
@@ -35,19 +36,19 @@ public abstract class ActionRandomEach<T> extends Action {
                         failedTargets.add(target);
                     }
                 }
-                onSuccessOverall(sensoryEventDispatcher, subject, repeatActionCount, succeededTargets, failedTargets);
+                onSuccessOverall(subject, repeatActionCount, succeededTargets, failedTargets);
                 for (ComputedTarget<T> computedTarget : computedTargets) {
                     if (computedTarget.success()) {
-                        onSuccess(scriptRuntime, sensoryEventDispatcher, subject, computedTarget.target(), repeatActionCount);
+                        onSuccess(subject, computedTarget.target(), repeatActionCount);
                     } else {
-                        onFail(sensoryEventDispatcher, subject, computedTarget.target(), repeatActionCount);
+                        onFail(subject, computedTarget.target(), repeatActionCount);
                     }
                 }
             } else {
-                onFailOverall(sensoryEventDispatcher, subject, repeatActionCount);
+                onFailOverall(subject, repeatActionCount);
             }
         }
-        onEnd(sensoryEventDispatcher, subject, repeatActionCount);
+        onEnd(subject, repeatActionCount);
     }
 
     public String getChanceTag(Actor subject) {
@@ -70,19 +71,19 @@ public abstract class ActionRandomEach<T> extends Action {
     }
 
     /** If onStart returns false, the action will not process random success (onSuccess/onFail will be skipped) */
-    public boolean onStart(SensoryEventDispatcher sensoryEventDispatcher, Actor subject, int repeatActionCount) {
+    public boolean onStart(Actor subject, int repeatActionCount) {
         return true;
     }
 
-    public void onEnd(SensoryEventDispatcher sensoryEventDispatcher, Actor subject, int repeatActionCount) {}
+    public void onEnd(Actor subject, int repeatActionCount) {}
 
-    public abstract void onSuccess(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Actor subject, T target, int repeatActionCount);
+    public abstract void onSuccess(Actor subject, T target, int repeatActionCount);
 
-    public abstract void onFail(SensoryEventDispatcher sensoryEventDispatcher, Actor subject, T target, int repeatActionCount);
+    public abstract void onFail(Actor subject, T target, int repeatActionCount);
 
-    public abstract void onSuccessOverall(SensoryEventDispatcher sensoryEventDispatcher, Actor subject, int repeatActionCount, List<T> targetsSuccess, List<T> targetsFail);
+    public abstract void onSuccessOverall(Actor subject, int repeatActionCount, List<T> targetsSuccess, List<T> targetsFail);
 
-    public abstract void onFailOverall(SensoryEventDispatcher sensoryEventDispatcher, Actor subject, int repeatActionCount);
+    public abstract void onFailOverall(Actor subject, int repeatActionCount);
 
     public abstract float chance(Actor subject, T target);
 

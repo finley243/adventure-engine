@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.world.object;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionCustom;
@@ -9,28 +10,26 @@ import com.github.finley243.adventureengine.action.ActionInspectObject;
 import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.Damage;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.*;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.StatHolder;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.Physical;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponent;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentFactory;
-import com.github.finley243.adventureengine.world.object.component.ObjectComponentInventory;
+import com.github.finley243.adventureengine.world.object.component.*;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * An object that can exist in the game world
@@ -44,20 +43,53 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private Area area;
 	private int HP;
 	private final Map<Class<? extends ObjectComponent>, ObjectComponent> components;
+	private Set<ObjectComponentLink.LinkDataIntermediate> objectLinks;
+	private String vehicleObjectOverrideID;
 	private final Map<String, Expression> localVars;
 
-	public WorldObject(String ID, ObjectTemplate template, boolean startDisabled, boolean startHidden, Map<String, Expression> localVarsDefault) {
+	public WorldObject(String ID, ObjectTemplate template, boolean startDisabled, boolean startHidden, Set<ObjectComponentLink.LinkDataIntermediate> objectLinks, String vehicleObjectOverrideID, Map<String, Expression> localVarsDefault) {
 		super(ID);
 		this.template = template;
 		this.isHidden = startHidden;
 		this.components = new HashMap<>();
+		this.objectLinks = objectLinks;
+		this.vehicleObjectOverrideID = vehicleObjectOverrideID;
 		this.localVars = localVarsDefault;
+		for (ObjectComponentTemplate componentTemplate : getTemplate().getComponents()) {
+			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, this);
+            if (components.containsKey(component.getClass())) {
+				throw new UnsupportedOperationException("Object " + this + " already contains a component of type " + component.getClass());
+			}
+			components.put(component.getClass(), component);
+		}
+		this.HP = getTemplate().getMaxHP();
 		setEnabled(!startDisabled);
 	}
 
 	private ObjectTemplate getTemplate() {
 		if (template == null) throw new IllegalStateException("WorldObject has not been initialized");
 		return template;
+	}
+
+	public void resolveComponentReferences(Registry<WorldObject> objectRegistry) {
+		if (components.containsKey(ObjectComponentLink.class)) {
+			Map<String, ObjectComponentLink.LinkData> linkDataMap = new HashMap<>();
+			for (ObjectComponentLink.LinkDataIntermediate unresolvedLinkData : objectLinks) {
+				WorldObject linkedObject = objectRegistry.getFromID(unresolvedLinkData.objectID());
+				if (linkedObject == null) throw new GameDataException("WorldObject has invalid linked object reference");
+				linkDataMap.put(unresolvedLinkData.linkID(), new ObjectComponentLink.LinkData(unresolvedLinkData.linkID(), linkedObject, unresolvedLinkData.direction()));
+			}
+			ObjectComponentLink linkComponent = (ObjectComponentLink) components.get(ObjectComponentLink.class);
+			linkComponent.resolveLinkedObjects(linkDataMap);
+			this.objectLinks = null;
+		}
+		if (components.containsKey(ObjectComponentVehicle.class)) {
+			WorldObject vehicleObjectOverride = objectRegistry.getFromID(vehicleObjectOverrideID);
+			if (vehicleObjectOverrideID != null && vehicleObjectOverride == null) throw new GameDataException("WorldObject has invalid vehicle object override reference");
+			ObjectComponentVehicle vehicleComponent = (ObjectComponentVehicle) components.get(ObjectComponentVehicle.class);
+			vehicleComponent.resolveObjectOverride(vehicleObjectOverride);
+			this.vehicleObjectOverrideID = null;
+		}
 	}
 	
 	@Override
@@ -100,7 +132,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public ComputedDamage applyEffectsAndComputeDamage(Damage damage, Context context) {
+	public ComputedDamage applyEffectsAndComputeDamage(Damage damage, ScriptRuntime scriptRuntime, Context context) {
 		int amount = damage.getAmount();
 		amount -= Math.round(getTemplate().getDamageResistance(damage.getType()) * damage.getArmorMult());
 		amount -= Math.round(amount * getTemplate().getDamageMult(damage.getType()));
@@ -109,14 +141,14 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public void applyDamage(ComputedDamage computedDamage, Context context) {
+	public void applyDamage(ComputedDamage computedDamage, ScriptRuntime scriptRuntime, Context context) {
 		HP -= computedDamage.amount();
 		Context objectContext = Context.from(context).clearVariables().build();
 		if (HP <= 0) {
 			HP = 0;
-			triggerScript("on_broken", objectContext);
+			triggerScript("on_broken", scriptRuntime, objectContext);
 		} else {
-			triggerScript("on_damaged", objectContext);
+			triggerScript("on_damaged", scriptRuntime, objectContext);
 		}
 	}
 
@@ -137,7 +169,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			}
 			area.addObject(this);
 			for (ObjectComponent component : components.values()) {
-				component.onSetObjectArea(area, game);
+				component.onSetObjectArea(area);
 			}
 		}
 		this.area = area;
@@ -161,19 +193,6 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return isHidden;
 	}
 
-	public void onInit(Game game) {
-		for (ObjectComponentTemplate componentTemplate : getTemplate().getComponents()) {
-			ObjectComponent component = ObjectComponentFactory.create(game, componentTemplate, this);
-			if (component == null) throw new UnsupportedOperationException("Cannot add null component to object " + this);
-			if (components.containsKey(component.getClass())) {
-				throw new UnsupportedOperationException("Object " + this + " already contains a component of type " + component.getClass());
-			}
-			components.put(component.getClass(), component);
-            component.onInit(game);
-        }
-		this.HP = getTemplate().getMaxHP();
-	}
-
 	public void onStartRound(Game game) {
 		for (ObjectComponent component : components.values()) {
 			component.onStartRound(game);
@@ -181,34 +200,34 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	}
 
 	@Override
-	public List<Action> localActions(Actor subject) {
+	public List<Action> localActions(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
 		List<Action> actions = new ArrayList<>();
 		if (!isGuarded()) {
 			for (ObjectComponent component : components.values()) {
 				actions.addAll(component.getActions(subject));
 			}
 			for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
-				ActionTemplate customActionTemplate = game.data().getActionTemplate(customAction.action());
-				actions.add(new ActionCustom(null, this, null, null, customActionTemplate, customAction.parameters(), new MenuDataObject(this), false));
+				ActionTemplate customActionTemplate = customAction.action();
+				actions.add(new ActionCustom(scriptRuntime, sensoryEventDispatcher, null, this, null, null, customActionTemplate, customAction.parameters(), new MenuDataObject(this), false));
 			}
 		}
 		return actions;
 	}
 
 	@Override
-	public List<Action> visibleActions(Actor subject) {
+	public List<Action> visibleActions(Actor subject, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
 		List<Action> actions = new ArrayList<>();
 		if (getDescription() != null) {
-			actions.add(new ActionInspectObject(this));
+			actions.add(new ActionInspectObject(scriptRuntime, sensoryEventDispatcher, this));
 		}
 		return actions;
 	}
 
-	public List<Action> networkActions(Game game, Actor subject, NetworkNode node) {
+	public List<Action> networkActions(Actor subject, NetworkNode node, ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
 		List<Action> actions = new ArrayList<>();
 		for (ActionCustom.CustomActionHolder networkAction : getTemplate().getNetworkActions()) {
-			ActionTemplate customNetworkActionTemplate =  game.data().getActionTemplate(networkAction.action());
-			actions.add(new ActionCustom(null, this, null, null, customNetworkActionTemplate, networkAction.parameters(), new MenuDataNetwork(node), false));
+			ActionTemplate customNetworkActionTemplate =  networkAction.action();
+			actions.add(new ActionCustom(scriptRuntime, sensoryEventDispatcher, null, this, null, null, customNetworkActionTemplate, networkAction.parameters(), new MenuDataNetwork(node), false));
 		}
 		return actions;
 	}
@@ -235,10 +254,10 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return components.containsKey(componentClass);
 	}
 
-	public void triggerScript(String entryPoint, Context context) {
+	public void triggerScript(String entryPoint, ScriptRuntime scriptRuntime, Context context) {
 		if (getTemplate().getScripts().containsKey(entryPoint)) {
 			for (Script currentScript : getTemplate().getScripts().get(entryPoint)) {
-				currentScript.execute(, context);
+				currentScript.run(scriptRuntime, context);
 			}
 		}
 	}
@@ -258,7 +277,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 			case "broken" -> new ExpressionConstantBoolean(isBroken());
 			case "id" -> new ExpressionConstantString(getID());
 			case "name" -> new ExpressionConstantString(getName());
-			case "template_id" -> new ExpressionConstantString(templateID);
+			case "template_id" -> new ExpressionConstantString(template.getID());
 			case "area" -> new ExpressionConstantString(getArea().getID());
 			case "room" -> new ExpressionConstantString(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
 			default -> getLocalVariable(name);

@@ -8,14 +8,16 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionItemDropAll extends Action {
 
 	private final Item item;
 
-	public ActionItemDropAll(Item item) {
-		if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionItemDropAll on item with state");
+	public ActionItemDropAll(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionItemDropAll on item with state");
 		this.item = item;
 	}
 
@@ -32,7 +34,7 @@ public class ActionItemDropAll extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		int count = subject.getInventory().itemCount(item);
 		subject.getInventory().removeItems(item.getTemplateID(), count);
 		subject.getArea().getInventory().addItems(item.getTemplateID(), count);

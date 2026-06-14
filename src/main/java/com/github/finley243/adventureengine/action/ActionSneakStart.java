@@ -5,8 +5,13 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 public class ActionSneakStart extends Action {
+
+    public ActionSneakStart(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+        super(scriptRuntime, sensoryEventDispatcher);
+    }
 
     @Override
     public String getID() {
@@ -19,7 +24,7 @@ public class ActionSneakStart extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+    public void choose(Actor subject, int repeatActionCount) {
         subject.setSneaking(true);
     }
 

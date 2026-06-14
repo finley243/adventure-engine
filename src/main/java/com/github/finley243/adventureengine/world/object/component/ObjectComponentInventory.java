@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantInventory;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplate;
 import com.github.finley243.adventureengine.world.object.template.ObjectComponentTemplateInventory;
@@ -22,7 +23,7 @@ public class ObjectComponentInventory extends ObjectComponent {
 
     private final Inventory inventory;
 
-    public ObjectComponentInventory(Game game, WorldObject object, ObjectComponentTemplate template) {
+    ObjectComponentInventory(WorldObject object, ObjectComponentTemplate template) {
         super(object, template);
         this.inventory = new Inventory(null);
     }
@@ -32,7 +33,7 @@ public class ObjectComponentInventory extends ObjectComponent {
     }
 
     @Override
-    protected List<Action> getPossibleActions(Actor subject) {
+    protected List<Action> getPossibleActions(Actor subject, ScriptRuntime scriptRuntime) {
         List<Action> actions = new ArrayList<>();
         actions.addAll(inventory.getExternalActions(game, getObject(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
         for (ActionCustom.CustomActionHolder customAction : getTemplateInventory().getPerItemActions()) {

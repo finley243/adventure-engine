@@ -1,8 +1,11 @@
 package com.github.finley243.adventureengine;
 
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.NPCController;
+import com.github.finley243.adventureengine.actor.PlayerController;
 import com.github.finley243.adventureengine.actor.TurnController;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.TextClearEvent;
 import com.github.finley243.adventureengine.gamedata.ActorRegistry;
@@ -13,12 +16,13 @@ import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.TextGen;
-import com.github.finley243.adventureengine.ui.*;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Game {
@@ -36,14 +40,11 @@ public class Game {
 	private final ScriptRuntime scriptRuntime;
 	private final Pathfinder pathfinder;
 	private final TextGen textGen;
-	private final TurnController turnController;
+	private final Map<Actor, TurnController> actorControllers;
 
 	private boolean continueGame;
-	private List<Actor> turnOrder;
-	private int currentTurnIndex;
 
-	/** Main game constructor, loads data and starts game loop */
-	public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, AreaRegistry areaRegistry, TimerManager timerManager, Pathfinder pathfinder, TextGen textGen, TurnController turnController) {
+    public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, AreaRegistry areaRegistry, TimerManager timerManager, Pathfinder pathfinder, TextGen textGen, SensoryEventDispatcher sensoryEventDispatcher) {
 		this.eventBus = eventBus;
 		this.menuManager = menuManager;
 		this.questManager = questManager;
@@ -55,18 +56,26 @@ public class Game {
 		this.timerManager = timerManager;
 		this.pathfinder = pathfinder;
 		this.textGen = textGen;
-		this.turnController = turnController;
-
-		//data().newGame();
+		this.actorControllers = new HashMap<>();
+		for (Actor actor : actorRegistry.getAll()) {
+			TurnController controller;
+			if (actor.isPlayer()) {
+				controller = new PlayerController(actor, sensoryEventDispatcher, eventBus, menuManager, areaRegistry);
+			} else {
+				controller = new NPCController(actor, sensoryEventDispatcher);
+			}
+			actorControllers.put(actor, controller);
+		}
 	}
 
 	public void start() {
 		continueGame = true;
-		startRound();
+		while (continueGame) {
+			startRound();
+		}
 	}
 
 	private void startRound() {
-		if (!continueGame) return;
 		eventBus.post(new TextClearEvent());
 		textGen.clearContext();
 		for (Timer timer : timerManager.getAll()) {
@@ -93,26 +102,13 @@ public class Game {
 			}
 		}
 		dateTimeController.onNextRound();
-		this.turnOrder = computeTurnOrder();
-		this.currentTurnIndex = 0;
+        List<Actor> actorTurnOrder = computeTurnOrder();
 		if (actorRegistry.getPlayer().isDead()) {
 			continueGame = false;
 		}
-		nextTurn();
-	}
-
-	private void nextTurn() {
-		turnController.takeTurn(turnOrder.get(currentTurnIndex), pathfinder, scriptRuntime, menuManager, questManager, this);
-	}
-
-	public void onEndTurn(Actor actor) {
-		if (turnOrder.get(currentTurnIndex).equals(actor)) {
-			currentTurnIndex += 1;
-			if (currentTurnIndex >= turnOrder.size()) {
-				startRound();
-			} else {
-				nextTurn();
-			}
+		for (Actor actor : actorTurnOrder) {
+			TurnController controller = actorControllers.get(actor);
+			controller.takeTurn(pathfinder, scriptRuntime, menuManager, questManager);
 		}
 	}
 

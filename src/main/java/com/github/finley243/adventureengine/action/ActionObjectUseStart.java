@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.component.ObjectComponentUsable;
 
@@ -16,8 +17,9 @@ public class ActionObjectUseStart extends Action {
 	private final ObjectComponentUsable component;
 	private final String slotID;
 
-	public ActionObjectUseStart(ObjectComponentUsable component, String slotID) {
-		this.component = component;
+	public ActionObjectUseStart(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, ObjectComponentUsable component, String slotID) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        this.component = component;
 		this.slotID = slotID;
 	}
 
@@ -42,7 +44,7 @@ public class ActionObjectUseStart extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		if (subject.isPlayer()) {
 			component.getObject().setKnown();
 		}

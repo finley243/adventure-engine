@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActorInventory;
 import com.github.finley243.adventureengine.menu.action.MenuDataObjectInventory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -22,7 +23,8 @@ public class ActionInventoryStore extends Action {
     private final String prompt;
     private final String phrase;
 
-    public ActionInventoryStore(Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
+    public ActionInventoryStore(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
+        super(scriptRuntime, sensoryEventDispatcher);
         this.owner = owner;
         this.inventory = inventory;
         this.item = item;
@@ -43,7 +45,7 @@ public class ActionInventoryStore extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+    public void choose(Actor subject, int repeatActionCount) {
         subject.getInventory().removeItem(item);
         inventory.addItem(item);
         Context context = getContext(subject);

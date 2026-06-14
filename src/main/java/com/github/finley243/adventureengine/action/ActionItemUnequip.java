@@ -8,13 +8,15 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionItemUnequip extends Action {
 
     private final Item item;
 
-    public ActionItemUnequip(Item item) {
+    public ActionItemUnequip(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item) {
+        super(scriptRuntime, sensoryEventDispatcher);
         this.item = item;
     }
 
@@ -29,7 +31,7 @@ public class ActionItemUnequip extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+    public void choose(Actor subject, int repeatActionCount) {
         subject.getEquipmentComponent().unequip(item);
         Context context = getContext(subject);
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("unequip"), context, true, this, null));

@@ -38,7 +38,7 @@ public class AreaLink {
         this.distance = distance;
     }
 
-    public void setArea(Area area) {
+    void resolveArea(Area area) {
         if (this.area != null) throw new IllegalStateException("Area has already been set");
         this.area = area;
     }

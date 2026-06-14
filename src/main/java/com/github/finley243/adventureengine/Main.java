@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine;
 
-import com.github.finley243.adventureengine.actor.TurnController;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.UIEventBusImpl;
 import com.github.finley243.adventureengine.expression.Expression;
@@ -49,7 +48,7 @@ public class Main {
 
 		MutableRegistry<Item> itemMutableRegistry = new MutableRegistry<>(Map.of());
 
-		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, questManager, menuManager, eventBus);
+		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, eventBus);
 		File dataDirectory = Path.of(GAMEFILES + DATA_DIRECTORY).toFile();
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);
@@ -62,9 +61,7 @@ public class Main {
 		};
 		eventBus.register(userInterface);
 
-		TurnController turnController = new TurnController(gameData.sensoryEventDispatcher());
-
-		Game game = new Game(eventBus, menuManager, questManager, dateTimeController, scriptRuntime, gameData.actorRegistry(), gameData.objectRegistry(), gameData.areaRegistry(), timerManager, gameData.pathfinder(), gameData.textGen(), turnController);
+		Game game = new Game(eventBus, menuManager, questManager, dateTimeController, scriptRuntime, gameData.actorRegistry(), gameData.objectRegistry(), gameData.areaRegistry(), timerManager, gameData.pathfinder(), gameData.textGen(), gameData.sensoryEventDispatcher());
 		game.start();
 	}
 

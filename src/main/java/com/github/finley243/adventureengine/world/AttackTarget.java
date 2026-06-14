@@ -4,15 +4,16 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.combat.Damage;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 public interface AttackTarget {
 
     boolean canBeAttacked();
 
-    ComputedDamage applyEffectsAndComputeDamage(Damage damage, Context context);
+    ComputedDamage applyEffectsAndComputeDamage(Damage damage, ScriptRuntime scriptRuntime, Context context);
 
-    void applyDamage(ComputedDamage computedDamage, Context context);
+    void applyDamage(ComputedDamage computedDamage, ScriptRuntime scriptRuntime, Context context);
 
     Area getArea();
 

@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.item.component.ItemComponentAmmo;
 import com.github.finley243.adventureengine.item.component.ItemComponentMagazine;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionWeaponReload extends Action {
@@ -22,8 +23,9 @@ public class ActionWeaponReload extends Action {
 	private final Item weapon;
 	private final Item ammoType;
 	
-	public ActionWeaponReload(Item weapon, Item ammoType) {
-		this.weapon = weapon;
+	public ActionWeaponReload(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item weapon, Item ammoType) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        this.weapon = weapon;
 		this.ammoType = ammoType;
 	}
 
@@ -40,7 +42,7 @@ public class ActionWeaponReload extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.triggerScript("on_reload", Context.builder().subject(subject).target(subject).parentItem(weapon).build());
 		if (subject.isPlayer()) {
 			if (!ammoType.equals(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType()) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() > 0) {

@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.item.template.ItemComponentTemplateEquippable;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
@@ -23,7 +24,8 @@ public class ActionItemEquip extends Action {
     private final Item item;
     private final ItemComponentTemplateEquippable.EquippableSlotsData slotsData;
 
-    public ActionItemEquip(Item item, ItemComponentTemplateEquippable.EquippableSlotsData slotsData) {
+    public ActionItemEquip(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item, ItemComponentTemplateEquippable.EquippableSlotsData slotsData) {
+        super(scriptRuntime, sensoryEventDispatcher);
         this.item = item;
         this.slotsData = slotsData;
     }
@@ -41,7 +43,7 @@ public class ActionItemEquip extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+    public void choose(Actor subject, int repeatActionCount) {
         subject.getEquipmentComponent().equip(item, slotsData);
         Context context = getContext(subject);
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null));

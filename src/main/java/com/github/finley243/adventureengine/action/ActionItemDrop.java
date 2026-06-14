@@ -7,14 +7,16 @@ import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 
 public class ActionItemDrop extends Action {
 
 	private final Item item;
 
-	public ActionItemDrop(Item item) {
-		this.item = item;
+	public ActionItemDrop(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item item) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        this.item = item;
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class ActionItemDrop extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.getInventory().removeItem(item);
 		subject.getArea().getInventory().addItem(item);
 		Context context = getContext(subject);

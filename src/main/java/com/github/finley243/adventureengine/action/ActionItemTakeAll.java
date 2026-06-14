@@ -8,6 +8,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -16,8 +17,9 @@ public class ActionItemTakeAll extends Action {
 	private final Area area;
 	private final Item item;
 
-	public ActionItemTakeAll(Area area, Item item) {
-		if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionItemTakeAll on item with state");
+	public ActionItemTakeAll(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Area area, Item item) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionItemTakeAll on item with state");
 		this.area = area;
 		this.item = item;
 	}
@@ -35,7 +37,7 @@ public class ActionItemTakeAll extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		int count = area.getInventory().itemCount(item);
 		area.getInventory().removeItems(item.getTemplateID(), count);
 		subject.getInventory().addItems(item.getTemplateID(), count);

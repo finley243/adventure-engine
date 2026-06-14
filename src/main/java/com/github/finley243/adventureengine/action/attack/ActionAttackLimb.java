@@ -3,12 +3,14 @@ package com.github.finley243.adventureengine.action.attack;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentAmmo;
 import com.github.finley243.adventureengine.item.component.ItemComponentMagazine;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataAttackTargeted;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.AttackTarget;
 import com.github.finley243.adventureengine.world.environment.AreaLink;
 
@@ -20,8 +22,8 @@ public class ActionAttackLimb extends ActionAttack {
 	private final AttackTarget target;
 	private final Item weapon;
 
-	public ActionAttackLimb(WeaponAttackType attackType, Item weapon, AttackTarget target, Limb limb, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, String damageType, float armorMult, List<String> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud) {
-		super(attackType, weapon, Set.of(target), limb, null, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceExpression, hitChanceOverallExpression, hitChanceMult, isLoud);
+	public ActionAttackLimb(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, WeaponAttackType attackType, Item weapon, AttackTarget target, Limb limb, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, WeaponAttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, String damageType, float armorMult, List<String> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud) {
+		super(scriptRuntime, sensoryEventDispatcher, attackType, weapon, Set.of(target), limb, null, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceExpression, hitChanceOverallExpression, hitChanceMult, isLoud);
 		this.target = target;
 		this.weapon = weapon;
 	}

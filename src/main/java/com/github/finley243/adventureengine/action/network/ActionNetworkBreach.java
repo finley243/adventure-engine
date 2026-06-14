@@ -7,6 +7,7 @@ import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.network.NetworkNode;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionNetworkBreach extends NetworkAction {
@@ -14,7 +15,8 @@ public class ActionNetworkBreach extends NetworkAction {
     private final NetworkNode node;
     private final WorldObject object;
 
-    public ActionNetworkBreach(NetworkNode node, WorldObject object) {
+    public ActionNetworkBreach(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, NetworkNode node, WorldObject object) {
+        super(scriptRuntime, sensoryEventDispatcher);
         this.node = node;
         this.object = object;
     }
@@ -32,7 +34,7 @@ public class ActionNetworkBreach extends NetworkAction {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+    public void choose(Actor subject, int repeatActionCount) {
         node.setBreached(true);
     }
 

@@ -5,13 +5,15 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataActor;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 public class ActionTalk extends Action {
 
 	private final Actor target;
 	
-	public ActionTalk(Actor target) {
-		this.target = target;
+	public ActionTalk(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Actor target) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        this.target = target;
 	}
 
 	@Override
@@ -25,7 +27,7 @@ public class ActionTalk extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		target.setKnown();
 		game.menuManager().sceneMenu(game, target.getDialogueStart(), Context.builder().subject(target).target(target).build(), true);
 	}

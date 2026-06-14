@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 /**
  * An action that an actor can take
@@ -14,16 +15,22 @@ public abstract class Action {
 		HIGH, LOW, NONE
 	}
 
+	protected final ScriptRuntime scriptRuntime;
+	protected final SensoryEventDispatcher sensoryEventDispatcher;
+
 	private boolean disabled;
 	private String disabledReason;
 
-	public Action() {}
+	public Action(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+		this.scriptRuntime = scriptRuntime;
+		this.sensoryEventDispatcher = sensoryEventDispatcher;
+	}
 
 	public abstract String getID();
 
 	public abstract Context getContext(Actor subject);
 
-	public abstract void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher);
+	public abstract void choose(Actor subject, int repeatActionCount);
 
 	public abstract MenuData getMenuData(Actor subject);
 

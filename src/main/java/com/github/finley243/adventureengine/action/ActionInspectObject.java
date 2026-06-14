@@ -5,14 +5,16 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataObject;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
 public class ActionInspectObject extends Action {
 
 	private final WorldObject object;
 
-	public ActionInspectObject(WorldObject object) {
-		this.object = object;
+	public ActionInspectObject(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, WorldObject object) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        this.object = object;
 	}
 
 	@Override
@@ -26,7 +28,7 @@ public class ActionInspectObject extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		if (subject.isPlayer()) {
 			object.setKnown();
 		}

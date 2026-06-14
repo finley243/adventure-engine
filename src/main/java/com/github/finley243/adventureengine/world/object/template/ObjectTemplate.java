@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.world.object.template;
 
 import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.action.ActionCustom;
+import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -15,15 +16,15 @@ public class ObjectTemplate extends GameInstanced {
     private final boolean isProperName;
     private final Scene description;
     private final int maxHP;
-    private final Map<String, Integer> damageResistances;
-    private final Map<String, Float> damageMults;
+    private final Map<DamageType, Integer> damageResistances;
+    private final Map<DamageType, Float> damageMults;
     private final Map<String, List<Script>> scripts;
     private final List<ActionCustom.CustomActionHolder> customActions;
     private final List<ActionCustom.CustomActionHolder> networkActions;
     private final List<ObjectComponentTemplate> components;
     private final Map<String, Expression> localVarsDefault;
 
-    public ObjectTemplate(String ID, String name, boolean isProperName, Scene description, int maxHP, Map<String, Integer> damageResistances, Map<String, Float> damageMults, Map<String, List<Script>> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, List<ObjectComponentTemplate> components, Map<String, Expression> localVarsDefault) {
+    public ObjectTemplate(String ID, String name, boolean isProperName, Scene description, int maxHP, Map<DamageType, Integer> damageResistances, Map<DamageType, Float> damageMults, Map<String, List<Script>> scripts, List<ActionCustom.CustomActionHolder> customActions, List<ActionCustom.CustomActionHolder> networkActions, List<ObjectComponentTemplate> components, Map<String, Expression> localVarsDefault) {
         super(ID);
         this.name = name;
         this.isProperName = isProperName;
@@ -54,11 +55,11 @@ public class ObjectTemplate extends GameInstanced {
         return maxHP;
     }
 
-    public int getDamageResistance(String damageType) {
+    public int getDamageResistance(DamageType damageType) {
         return damageResistances.getOrDefault(damageType, 0);
     }
 
-    public float getDamageMult(String damageType) {
+    public float getDamageMult(DamageType damageType) {
         return damageMults.getOrDefault(damageType, 0.0f);
     }
 

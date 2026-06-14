@@ -1,9 +1,11 @@
 package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.action.*;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.item.InventoryOwner;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -200,63 +202,63 @@ public class Inventory {
 		return uniqueItems;
 	}
 
-	public List<Action> getAreaActions(Area area) {
+	public List<Action> getAreaActions(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Area area) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionItemTake(area, item));
+				actions.add(new ActionItemTake(scriptRuntime, sensoryEventDispatcher, area, item));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = itemFactory.createWithGenID(current);
-			actions.add(new ActionItemTake(area, item));
+			actions.add(new ActionItemTake(scriptRuntime, sensoryEventDispatcher, area, item));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionItemTakeAll(area, item));
+				actions.add(new ActionItemTakeAll(scriptRuntime, sensoryEventDispatcher, area, item));
 			}
 		}
 		return actions;
 	}
 
-	public List<Action> getExternalActions(Noun owner, Actor subject, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore) {
+	public List<Action> getExternalActions(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Noun owner, Actor subject, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore) {
 		List<Action> actions = new ArrayList<>();
 		if (enableTake) {
-			actions.addAll(getTakeActions(owner, takePrompt, takePhrase));
+			actions.addAll(getTakeActions(scriptRuntime, sensoryEventDispatcher, owner, takePrompt, takePhrase));
 		}
 		if (subject != null && enableStore) {
-			actions.addAll(subject.getInventory().getStoreActions(owner, this, storePrompt, storePhrase));
+			actions.addAll(subject.getInventory().getStoreActions(scriptRuntime, sensoryEventDispatcher, owner, this, storePrompt, storePhrase));
 		}
 		return actions;
 	}
 
-	private List<Action> getTakeActions(Noun owner, String prompt, String phrase) {
+	private List<Action> getTakeActions(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Noun owner, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryTake(owner, this, item, prompt, phrase));
+				actions.add(new ActionInventoryTake(scriptRuntime, sensoryEventDispatcher, owner, this, item, prompt, phrase));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = itemFactory.createWithGenID(current);
-			actions.add(new ActionInventoryTake(owner, this, item, prompt, phrase));
+			actions.add(new ActionInventoryTake(scriptRuntime, sensoryEventDispatcher, owner, this, item, prompt, phrase));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryTakeAll(owner, this, item, prompt, phrase));
+				actions.add(new ActionInventoryTakeAll(scriptRuntime, sensoryEventDispatcher, owner, this, item, prompt, phrase));
 			}
 		}
 		return actions;
 	}
 
-	private List<Action> getStoreActions(Noun owner, Inventory other, String prompt, String phrase) {
+	private List<Action> getStoreActions(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Noun owner, Inventory other, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryStore(owner, other, item, prompt, phrase));
+				actions.add(new ActionInventoryStore(scriptRuntime, sensoryEventDispatcher, owner, other, item, prompt, phrase));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = itemFactory.createWithGenID(current);
-			actions.add(new ActionInventoryStore(owner, other, item, prompt, phrase));
+			actions.add(new ActionInventoryStore(scriptRuntime, sensoryEventDispatcher, owner, other, item, prompt, phrase));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryStoreAll(owner, other, item, prompt, phrase));
+				actions.add(new ActionInventoryStoreAll(scriptRuntime, sensoryEventDispatcher, owner, other, item, prompt, phrase));
 			}
 		}
 		return actions;

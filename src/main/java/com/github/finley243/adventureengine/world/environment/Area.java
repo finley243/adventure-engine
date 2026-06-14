@@ -12,6 +12,7 @@ import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.component.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.Effectible;
+import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.expression.*;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
@@ -76,10 +77,10 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	private final StatStringSetRegistry<Effect> effects;
 
-	private final Set<String> defaultObstructions;
+	private final Set<ObstructionType> defaultObstructions;
 	private final StatStringSetRegistry<ObstructionType> obstructions;
 	
-	public Area(ScriptRuntime scriptRuntime, Registry<ObstructionType> obstructionTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory, String ID, WorldObject landmark, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, Faction ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<String> defaultObstructions, Map<String, List<Script>> scripts) {
+	public Area(ScriptRuntime scriptRuntime, Registry<ObstructionType> obstructionTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory, String ID, WorldObject landmark, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, Faction ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<ObstructionType> defaultObstructions, Map<String, List<Script>> scripts) {
 		super(ID);
 		this.scriptRuntime = scriptRuntime;
 		this.landmark = landmark;
@@ -102,10 +103,15 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().parentArea(this).build());
 	}
 
-	public void setupAreaLinks() {
-		for (AreaLink link : linkedAreas.values()) {
-			link.setArea(this);
+	public void resolveAreaLinks(AreaRegistry areaRegistry) {
+		for (Map.Entry<String, AreaLink> entry : linkedAreas.entrySet()) {
+			Area area = areaRegistry.getFromID(entry.getKey());
+			if (area == null) throw new GameDataException("Area has invalid linked area reference");
+			entry.getValue().resolveArea(area);
 		}
+		/*for (AreaLink link : linkedAreas.values()) {
+			link.setArea(this);
+		}*/
 	}
 
 	private WorldObject getLandmark() {
@@ -251,16 +257,16 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return null;
 	}
 
-	public List<Action> getItemActions() {
-		return itemInventory.getAreaActions();
+	public List<Action> getItemActions(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+		return itemInventory.getAreaActions(scriptRuntime, sensoryEventDispatcher, this);
 	}
 
-	public List<Action> getMoveActions(Actor subject, String vehicleType, WorldObject vehicleObject) {
+	public List<Action> getMoveActions(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Actor subject, String vehicleType, WorldObject vehicleObject) {
 		List<Action> moveActions = new ArrayList<>();
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(vehicleType) || vehicleType == null && link.isMovable()) {
 				ActionTemplate actionTemplate = vehicleType == null ? link.getType().getActorMoveAction() : link.getType().getVehicleMoveAction(vehicleType);
-				moveActions.add(new ActionCustom(scriptRuntime, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
+				moveActions.add(new ActionCustom(scriptRuntime, sensoryEventDispatcher, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
 			}
 		}
 		return moveActions;
@@ -295,7 +301,6 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		for (AreaLink link : linkedAreas.values()) {
 			// TODO - Evaluate whether this check is necessary (does not allow non-visible paths to be calculated for reachability)
 			if (link.getType().isVisible()) {
-				//Area area = game().data().getArea(link.getAreaID());
 				visibleAreas.add(link);
 			}
 		}
@@ -307,17 +312,17 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		return visibleAreas;
 	}
 
-	public Map<WorldObject, Set<Area>> getObjectVisibleLinkedAreas(Game game) {
+	public Map<WorldObject, Set<Area>> getObjectVisibleLinkedAreas() {
 		Map<WorldObject, Set<Area>> visibleAreas = new HashMap<>();
 		for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
-			visibleAreas.put(object, linkComponent.getLinkedLineOfSightAreas(game));
+			visibleAreas.put(object, linkComponent.getLinkedLineOfSightAreas());
 		}
 		return visibleAreas;
 	}
 
-	public boolean hasDirectVisibleLinkTo(Area area, AreaRegistry areaRegistry) {
+	public boolean hasDirectVisibleLinkTo(Area area) {
 		if (linkedAreas.containsKey(area.getID())) {
 			AreaLink link = linkedAreas.get(area.getID());
 			return link.getType().isVisible();
@@ -325,7 +330,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
-			if (linkComponent.getLinkedLineOfSightAreas(areaRegistry).contains(area)) {
+			if (linkComponent.getLinkedLineOfSightAreas().contains(area)) {
 				return true;
 			}
 		}
@@ -340,7 +345,7 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 		for (WorldObject object : getObjects()) {
 			ObjectComponentLink linkComponent = object.getComponentOfType(ObjectComponentLink.class);
 			if (linkComponent == null) continue;
-			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedLineOfSightAreasWithDirections(scriptRuntime, objectRegistry);
+			Map<Area, AreaLink.CompassDirection> visibleAreasWithDirections = linkComponent.getLinkedLineOfSightAreasWithDirections(scriptRuntime);
 			if (visibleAreasWithDirections.containsKey(area)) {
 				return visibleAreasWithDirections.get(area);
 			}
@@ -370,19 +375,18 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 
 	public void applyEffects() {
 		for (Actor actor : getActors()) {
-			for (String effectID : effects.value(new HashSet<>(), scriptRuntime, Context.builder().subject(actor).build())) {
-				Effect effect = game.data().getEffect(effectID);
-				actor.getEffectComponent().addEffect(game, effect);
+			for (Effect effect : effects.valueObjects(new HashSet<>(), scriptRuntime, Context.builder().subject(actor).build())) {
+				actor.getEffectComponent().addEffect(effect);
 			}
 		}
 	}
 
-	public Set<String> getObstructionIDs() {
-		return obstructions.value(defaultObstructions, scriptRuntime, Context.builder().parentArea(this).build());
+	public Set<ObstructionType> getObstructionTypes() {
+		return obstructions.valueObjects(defaultObstructions, scriptRuntime, Context.builder().parentArea(this).build());
 	}
 
-	public boolean hasUnbypassedObstruction(Set<String> bypassedObstructionIDs) {
-		Set<String> activeObstructionIDs = getObstructionIDs();
+	public boolean hasUnbypassedObstruction(Set<ObstructionType> bypassedObstructionIDs) {
+		Set<ObstructionType> activeObstructionIDs = getObstructionTypes();
 		return !bypassedObstructionIDs.containsAll(activeObstructionIDs);
 	}
 
@@ -443,9 +447,8 @@ public class Area extends GameInstanced implements Noun, MutableStatHolder, Effe
 			case "relative_name" -> Expression.constant(getRelativeName());
 			case "move_phrase" -> Expression.constant(getMovePhrase(context.getSubject()));
 			case "room" -> Expression.constant((StatHolder) room);
-			//case "visible_areas" -> new ExpressionConstantStringSet(getLineOfSightAreaIDs());
 			case "movable_areas" -> Expression.constant(getMovableAreaIDs(null));
-			case "obstruction_types" -> Expression.constant(getObstructionIDs());
+			case "obstruction_types" -> Expression.constant(StatUtils.objectSetToIDSet(getObstructionTypes(), ObstructionType::ID));
 			default -> null;
 		};
 	}

@@ -8,13 +8,15 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentModdable;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataInventoryCombine;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 public class ActionModInstall extends Action {
 
     private final Item target;
     private final Item mod;
 
-    public ActionModInstall(Item target, Item mod) {
+    public ActionModInstall(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Item target, Item mod) {
+        super(scriptRuntime, sensoryEventDispatcher);
         this.target = target;
         this.mod = mod;
     }
@@ -32,7 +34,7 @@ public class ActionModInstall extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+    public void choose(Actor subject, int repeatActionCount) {
         subject.getInventory().removeItem(mod);
         target.getComponentOfType(ItemComponentModdable.class).installMod(mod);
     }

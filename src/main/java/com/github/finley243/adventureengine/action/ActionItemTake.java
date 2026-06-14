@@ -9,6 +9,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataItemWorld;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.Phrases;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -17,8 +18,9 @@ public class ActionItemTake extends Action {
 	private final Area area;
 	private final Item item;
 	
-	public ActionItemTake(Area area, Item item) {
-		this.area = area;
+	public ActionItemTake(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Area area, Item item) {
+        super(scriptRuntime, sensoryEventDispatcher);
+        this.area = area;
 		this.item = item;
 	}
 
@@ -33,7 +35,7 @@ public class ActionItemTake extends Action {
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		area.getInventory().removeItem(item);
 		subject.getInventory().addItem(item);
 		Context context = getContext(subject);

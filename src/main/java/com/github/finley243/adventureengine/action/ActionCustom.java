@@ -19,8 +19,6 @@ import java.util.Map;
 
 public class ActionCustom extends Action {
 
-    private final ScriptRuntime scriptRuntime;
-
     private final Actor actor;
     private final WorldObject object;
     private final Item item;
@@ -30,8 +28,8 @@ public class ActionCustom extends Action {
     private final MenuData menuData;
     private final boolean isMove;
 
-    public ActionCustom(ScriptRuntime scriptRuntime, Actor actor, WorldObject object, Item item, Area area, ActionTemplate template, Map<String, Script> parameters, MenuData menuData, boolean isMove) {
-        this.scriptRuntime = scriptRuntime;
+    public ActionCustom(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Actor actor, WorldObject object, Item item, Area area, ActionTemplate template, Map<String, Script> parameters, MenuData menuData, boolean isMove) {
+        super(scriptRuntime, sensoryEventDispatcher);
         this.actor = actor;
         this.object = object;
         this.item = item;
@@ -68,7 +66,7 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+    public void choose(Actor subject, int repeatActionCount) {
         if (subject.isPlayer()) {
             if (area != null) {
                 area.setKnown();

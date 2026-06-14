@@ -4,10 +4,14 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
+import com.github.finley243.adventureengine.event.UIEventBus;
+import com.github.finley243.adventureengine.event.ui.RenderGeneratedTextEvent;
 import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
+import com.github.finley243.adventureengine.event.ui.UIEvent;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataArea;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.MultiNoun;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.textgen.PluralNoun;
@@ -22,9 +26,12 @@ import java.util.Map;
 public class ActionInspectArea extends Action {
 
     private final Area area;
+    private final UIEventBus eventBus;
 
-    public ActionInspectArea(Area area) {
+    public ActionInspectArea(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Area area, UIEventBus eventBus, TextGen textGen) {
+        super(scriptRuntime, sensoryEventDispatcher);
         this.area = area;
+        this.eventBus = eventBus;
     }
 
     @Override
@@ -38,7 +45,8 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+    public void choose(Actor subject, int repeatActionCount) {
+        Context context = getContext(subject);
         Map<Area, Pathfinder.VisibleAreaData> visibleAreas = Pathfinder.getVisibleAreas(game, area, subject);
         List<Area> orderedAreaList = new ArrayList<>(visibleAreas.keySet());
         orderedAreaList.sort(Comparator.comparingInt(a -> visibleAreas.get(a).path().size()));
@@ -46,7 +54,6 @@ public class ActionInspectArea extends Action {
         for (Area currentArea : orderedAreaList) {
             Pathfinder.VisibleAreaData areaData = visibleAreas.get(currentArea);
             String directionName = areaData.direction() != null ? areaData.direction().name : null;
-            Context context = Context.builder().subject(subject).target(subject).build();
             Area leadingArea = null;
             if (areaData.path().size() > 2) {
                 leadingArea = areaData.path().get(areaData.path().size() - 2);
@@ -65,7 +72,7 @@ public class ActionInspectArea extends Action {
             } else {
                 phrase = "There $is $area.";
             }
-            game.eventBus().post(new RenderTextEvent(TextGen.generate(phrase, context, context.generateTextContext())));
+            eventBus.post(new RenderGeneratedTextEvent(phrase, context, context.generateTextContext()));
 
             List<Noun> visibleObjects = currentArea.getObjects().stream()
                     .map(object -> (Noun) object)
@@ -86,25 +93,25 @@ public class ActionInspectArea extends Action {
             if (!areaContents.isEmpty()) {
                 context.setLocalVariable("areaContents", Expression.constantNoun(new MultiNoun(areaContents)));
                 String areaContentsPhrase = "$relativeName $area, there $is $areaContents.";
-                game.eventBus().post(new RenderTextEvent(TextGen.generate(areaContentsPhrase, context, context.generateTextContext())));
+                eventBus.post(new RenderGeneratedTextEvent(areaContentsPhrase, context, context.generateTextContext()));
             }
         }
         if (area.getRoom() != null && area.getRoom().getDescription() != null) {
-            game.menuManager().sceneMenu(game, area.getRoom().getDescription(), Context.builder().subject(subject).target(subject).build(), false);
+            menuManager.sceneMenu(area.getRoom().getDescription(), Context.builder().subject(subject).build(), false);
             area.getRoom().setKnown();
             for (Area roomArea : area.getRoom().getAreas()) {
                 roomArea.setKnown();
             }
         }
         if (area.getDescription() != null) {
-            game.menuManager().sceneMenu(game, area.getDescription(), Context.builder().subject(subject).target(subject).build(), false);
+            menuManager.sceneMenu(area.getDescription(), Context.builder().subject(subject).build(), false);
             area.setKnown();
         }
         if (area.getRoom() != null) {
-            area.getRoom().triggerScript("on_inspect", game, subject, subject);
+            area.getRoom().triggerScript("on_inspect", context);
         }
         //TextGen.clearContext();
-        area.triggerScript("on_inspect", game, subject, subject);
+        area.triggerScript("on_inspect", context);
     }
 
     @Override

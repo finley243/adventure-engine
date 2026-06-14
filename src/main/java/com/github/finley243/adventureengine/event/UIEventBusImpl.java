@@ -1,14 +1,19 @@
 package com.github.finley243.adventureengine.event;
 
+import com.github.finley243.adventureengine.event.ui.RenderGeneratedTextEvent;
+import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
 import com.github.finley243.adventureengine.event.ui.UIEvent;
+import com.github.finley243.adventureengine.textgen.TextGen;
 import com.google.common.eventbus.EventBus;
 
 public class UIEventBusImpl implements UIEventBus {
 
     private final EventBus eventBus;
+    private final TextGen textGen;
 
-    public UIEventBusImpl() {
+    public UIEventBusImpl(TextGen textGen) {
         this.eventBus = new EventBus();
+        this.textGen = textGen;
     }
 
     @Override
@@ -23,6 +28,10 @@ public class UIEventBusImpl implements UIEventBus {
 
     @Override
     public void post(UIEvent event) {
+        if (event instanceof RenderGeneratedTextEvent generatedTextEvent) {
+            String generatedText = textGen.generate(generatedTextEvent.getText(), generatedTextEvent.getContext(), generatedTextEvent.getTextContext());
+            event = new RenderTextEvent(generatedText);
+        }
         eventBus.post(event);
     }
 

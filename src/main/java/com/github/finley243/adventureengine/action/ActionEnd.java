@@ -5,10 +5,13 @@ import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 public class ActionEnd extends Action {
 
-	public ActionEnd() {}
+	public ActionEnd(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+        super(scriptRuntime, sensoryEventDispatcher);
+    }
 
 	@Override
 	public String getID() {
@@ -21,7 +24,7 @@ public class ActionEnd extends Action {
 	}
 
 	@Override
-	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
+	public void choose(Actor subject, int repeatActionCount) {
 		subject.endTurn();
 	}
 

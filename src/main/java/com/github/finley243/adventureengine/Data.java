@@ -88,9 +88,6 @@ public class Data {
 		for (Actor actor : actors.values()) {
 			actor.onInit(game, getDamageTypeIDs(), getAttributeIDs(), getSkillIDs());
 		}
-		for (WorldObject object : new ArrayList<>(objects.values())) {
-			object.onInit(game);
-		}
 	}
 
 	public void reset() throws ParserConfigurationException, IOException, SAXException, GameDataException {
