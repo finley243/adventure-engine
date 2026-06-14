@@ -17,14 +17,16 @@ public class PlayerController extends TurnController {
     private final UIEventBus eventBus;
     private final MenuManager menuManager;
     private final AreaRegistry areaRegistry;
+    private final Runnable onGameEnd;
 
     private Area lastKnownArea;
 
-    public PlayerController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher, UIEventBus eventBus, MenuManager menuManager, AreaRegistry areaRegistry) {
+    public PlayerController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher, UIEventBus eventBus, MenuManager menuManager, AreaRegistry areaRegistry, Runnable onGameEnd) {
         super(actor, sensoryEventDispatcher);
         this.eventBus = eventBus;
         this.menuManager = menuManager;
         this.areaRegistry = areaRegistry;
+        this.onGameEnd = onGameEnd;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class PlayerController extends TurnController {
     }
 
     private void onPlayerDeath() {
-
+        onGameEnd.run();
     }
 
     private void onPlayerEnterArea(Area area, boolean isNewRoom) {

@@ -60,7 +60,7 @@ public class Game {
 		for (Actor actor : actorRegistry.getAll()) {
 			TurnController controller;
 			if (actor.isPlayer()) {
-				controller = new PlayerController(actor, sensoryEventDispatcher, eventBus, menuManager, areaRegistry);
+				controller = new PlayerController(actor, sensoryEventDispatcher, eventBus, menuManager, areaRegistry, () -> continueGame = false);
 			} else {
 				controller = new NPCController(actor, sensoryEventDispatcher);
 			}
