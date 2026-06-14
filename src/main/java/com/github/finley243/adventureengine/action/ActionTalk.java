@@ -21,13 +21,13 @@ public class ActionTalk extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-        return Context.builder(game).subject(subject).target(target).build();
+        return Context.builder().subject(subject).target(target).build();
 	}
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
 		target.setKnown();
-		game.menuManager().sceneMenu(game, target.getDialogueStart(), Context.builder(game).subject(target).target(target).build(), true);
+		game.menuManager().sceneMenu(game, target.getDialogueStart(), Context.builder().subject(target).target(target).build(), true);
 	}
 
 	@Override

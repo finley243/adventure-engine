@@ -33,7 +33,7 @@ public class ActionItemConsume extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-        return Context.builder(game).subject(subject).parentItem(item).build();
+        return Context.builder().subject(subject).parentItem(item).build();
 	}
 	
 	@Override

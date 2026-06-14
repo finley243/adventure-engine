@@ -88,7 +88,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public Context getContext(Actor subject) {
-        Context context = Context.builder(game).subject(subject).attackTarget(targets.size() == 1 ? targets.iterator().next() : null).parentItem(getWeapon()).parentArea(getArea()).build();
+        Context context = Context.builder().subject(subject).attackTarget(targets.size() == 1 ? targets.iterator().next() : null).parentItem(getWeapon()).parentArea(getArea()).build();
         context.setLocalVariable("targets", Expression.constant(targets));
         return context;
     }
@@ -156,7 +156,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         if (hitChanceExpression == null) {
             return 1.0f;
         }
-        Context scriptContext = Context.builder(game).subject(subject).attackTarget(target).parentItem(weapon).build();
+        Context scriptContext = Context.builder().subject(subject).attackTarget(target).parentItem(weapon).build();
         return CombatHelper.calculateHitChance(scriptContext, weapon, getLimb(), hitChanceExpression, hitChanceMult());
     }
 
@@ -165,7 +165,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
         if (hitChanceOverallExpression == null) {
             return 1.0f;
         }
-        Context scriptContext = Context.builder(game).subject(subject).parentItem(weapon).build();
+        Context scriptContext = Context.builder().subject(subject).parentItem(weapon).build();
         return CombatHelper.calculateHitChanceNoTarget(scriptContext, weapon, getLimb(), hitChanceOverallExpression, hitChanceMult());
     }
 
@@ -175,7 +175,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
             if (subject.isPlayer() && target instanceof Noun targetNoun) {
                 targetNoun.setKnown();
             }
-            subject.triggerScript("on_attack", Context.builder(game).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build());
+            subject.triggerScript("on_attack", Context.builder().subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build());
         }
         consumeAmmo(game, subject);
         return true;
@@ -193,7 +193,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onSuccess(Game game, Actor subject, AttackTarget target, int repeatActionCount) {
-        Context context = Context.builder(game).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
+        Context context = Context.builder().subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
         int damage = computeDamage(context);
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
@@ -211,7 +211,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onFail(Game game, Actor subject, AttackTarget target, int repeatActionCount) {
-        Context context = Context.builder(game).subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
+        Context context = Context.builder().subject(subject).attackTarget(target).parentItem(getWeapon()).parentArea(getArea()).build();
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
@@ -222,7 +222,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onSuccessOverall(Game game, Actor subject, int repeatActionCount, List<AttackTarget> targetsSuccess, List<AttackTarget> targetsFail) {
-        Context context = Context.builder(game).subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
+        Context context = Context.builder().subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));
@@ -236,7 +236,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
 
     @Override
     public void onFailOverall(Game game, Actor subject, int repeatActionCount) {
-        Context context = Context.builder(game).subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
+        Context context = Context.builder().subject(subject).parentItem(getWeapon()).parentArea(getArea()).parentAction(this).build();
         context.setLocalVariable("limb", Expression.constant(getLimb() == null ? "null" : getLimb().getName()));
         context.setLocalVariable("relativeTo", Expression.constant(getArea() == null ? "null" : getArea().getRelativeName()));
         context.setLocalVariable("repeats", Expression.constant(repeatActionCount));

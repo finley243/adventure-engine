@@ -38,7 +38,7 @@ public class ActionInventoryTakeAll extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        Context context = Context.builder(game).subject(subject).parentItem(item).build();
+        Context context = Context.builder().subject(subject).parentItem(item).build();
         context.setLocalVariable("inventory", Expression.constantNoun(owner));
         context.setLocalVariable("count", Expression.constant(inventory.itemCount(item)));
         return context;

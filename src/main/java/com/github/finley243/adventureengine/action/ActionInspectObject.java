@@ -22,7 +22,7 @@ public class ActionInspectObject extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		return Context.builder(game).subject(subject).parentObject(object).parentAction(this).build();
+		return Context.builder().subject(subject).parentObject(object).parentAction(this).build();
 	}
 	
 	@Override

@@ -22,7 +22,7 @@ public class ActionInspectItem extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        return Context.builder(game).subject(subject).parentItem(item).build();
+        return Context.builder().subject(subject).parentItem(item).build();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ActionInspectItem extends Action {
         if (subject.isPlayer()) {
             item.setKnown();
         }
-        game.menuManager().sceneMenu(game, item.getDescription(), Context.builder(game).subject(subject).target(subject).parentItem(item).build(), false);
+        game.menuManager().sceneMenu(game, item.getDescription(), Context.builder().subject(subject).target(subject).parentItem(item).build(), false);
         item.triggerScript("on_inspect", game, subject, subject);
     }
 

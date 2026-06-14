@@ -26,7 +26,7 @@ public class ActionModInstall extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        Context context = Context.builder(game).subject(subject).parentItem(target).build();
+        Context context = Context.builder().subject(subject).parentItem(target).build();
         context.setLocalVariable("mod", Expression.constant(mod));
         return context;
     }

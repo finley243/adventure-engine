@@ -17,7 +17,7 @@ public class ActionEnd extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		return Context.builder(game).subject(subject).build();
+		return Context.builder().subject(subject).build();
 	}
 
 	@Override

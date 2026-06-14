@@ -54,9 +54,9 @@ public class ItemComponentMagazine extends ItemComponent {
         return reloadActionPoints.value(getMagazineTemplate().getReloadActionPoints(), 0, 1000, context);
     }
 
-    public int getMagazineSize(Game game) {
+    public int getMagazineSize() {
         Actor equippedActor = getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor();
-        return clipSize.value(getMagazineTemplate().getMagazineSize(), 1, 100, Context.builder(game).subject(equippedActor).target(equippedActor).parentItem(getItem()).build());
+        return clipSize.value(getMagazineTemplate().getMagazineSize(), 1, 100, Context.builder().subject(equippedActor).target(equippedActor).parentItem(getItem()).build());
     }
 
     public int getAmmoRemaining() {
@@ -68,8 +68,8 @@ public class ItemComponentMagazine extends ItemComponent {
         return ((float) ammoCount) / ((float) getMagazineTemplate().getMagazineSize());
     }
 
-    public int reloadCapacity(Game game) {
-        return getMagazineSize(game) - getAmmoRemaining();
+    public int reloadCapacity() {
+        return getMagazineSize() - getAmmoRemaining();
     }
 
     public void setLoadedAmmoType(Game game, Item type) {
@@ -115,7 +115,7 @@ public class ItemComponentMagazine extends ItemComponent {
     @Override
     public Expression getStatValue(String name, Context context) {
         return switch (name) {
-            case "magazine_size" -> Expression.constant(getMagazineSize(game));
+            case "magazine_size" -> Expression.constant(getMagazineSize());
             case "reload_action_points" -> Expression.constant(getReloadActionPoints(context));
             case "ammo_count" -> Expression.constant(ammoCount);
             default -> super.getStatValue(name, context);
@@ -124,9 +124,9 @@ public class ItemComponentMagazine extends ItemComponent {
 
     @Override
     public void onStatChange(String name) {
-        if ("magazine_size".equals(name) && ammoCount > getMagazineSize(game)) {
-            int difference = ammoCount - getMagazineSize(game);
-            ammoCount = getMagazineSize(game);
+        if ("magazine_size".equals(name) && ammoCount > getMagazineSize()) {
+            int difference = ammoCount - getMagazineSize();
+            ammoCount = getMagazineSize();
             if (getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor() != null) {
                 getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor().getInventory().addItems(ammoType.getTemplateID(), difference, game);
             }

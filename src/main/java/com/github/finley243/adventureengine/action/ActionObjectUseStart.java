@@ -36,7 +36,7 @@ public class ActionObjectUseStart extends Action {
 
 	@Override
 	public Context getContext(Actor subject) {
-		Context context = Context.builder(game).subject(subject).parentObject(component.getObject()).parentAction(this).build();
+		Context context = Context.builder().subject(subject).parentObject(component.getObject()).parentAction(this).build();
 		context.setLocalVariable("slot", Expression.constant(slotID));
 		return context;
 	}

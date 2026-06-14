@@ -34,7 +34,7 @@ public class ActionInspectArea extends Action {
 
     @Override
     public Context getContext(Actor subject) {
-        return Context.builder(game).subject(subject).parentArea(area).parentAction(this).build();
+        return Context.builder().subject(subject).parentArea(area).parentAction(this).build();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ActionInspectArea extends Action {
         for (Area currentArea : orderedAreaList) {
             Pathfinder.VisibleAreaData areaData = visibleAreas.get(currentArea);
             String directionName = areaData.direction() != null ? areaData.direction().name : null;
-            Context context = Context.builder(game).subject(subject).target(subject).build();
+            Context context = Context.builder().subject(subject).target(subject).build();
             Area leadingArea = null;
             if (areaData.path().size() > 2) {
                 leadingArea = areaData.path().get(areaData.path().size() - 2);
@@ -90,14 +90,14 @@ public class ActionInspectArea extends Action {
             }
         }
         if (area.getRoom() != null && area.getRoom().getDescription() != null) {
-            game.menuManager().sceneMenu(game, area.getRoom().getDescription(), Context.builder(game).subject(subject).target(subject).build(), false);
+            game.menuManager().sceneMenu(game, area.getRoom().getDescription(), Context.builder().subject(subject).target(subject).build(), false);
             area.getRoom().setKnown();
             for (Area roomArea : area.getRoom().getAreas()) {
                 roomArea.setKnown();
             }
         }
         if (area.getDescription() != null) {
-            game.menuManager().sceneMenu(game, area.getDescription(), Context.builder(game).subject(subject).target(subject).build(), false);
+            game.menuManager().sceneMenu(game, area.getDescription(), Context.builder().subject(subject).target(subject).build(), false);
             area.setKnown();
         }
         if (area.getRoom() != null) {
