@@ -35,10 +35,10 @@ public class ActionItemDropAll extends Action {
 	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
 		int count = subject.getInventory().itemCount(item);
 		subject.getInventory().removeItems(item.getTemplateID(), count);
-		subject.getArea().getInventory().addItems(item.getTemplateID(), count, game);
+		subject.getArea().getInventory().addItems(item.getTemplateID(), count);
 		Context context = getContext(subject);
 		//TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
-		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
 	}
 
 	@Override

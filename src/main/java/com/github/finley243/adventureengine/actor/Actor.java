@@ -1070,11 +1070,11 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		}
 	}
 
-	public void triggerBark(String trigger, Game game, Context context) {
+	public void triggerBark(String trigger, Context context) {
 		if (isActive()) {
 			Bark bark = getBark(trigger);
 			if (bark != null) {
-				bark.trigger(game, context);
+				bark.trigger(context, sensoryEventDispatcher);
 			}
 		}
 	}

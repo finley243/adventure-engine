@@ -33,7 +33,7 @@ public class ActionCarryActorStart extends Action {
         }
         subject.setCarriedActor(carriedActor);
         Context context = Context.builder().subject(subject).target(carriedActor).build();
-        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("pickUpActor"), context, true, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("pickUpActor"), context, true, this, null));
     }
 
     @Override

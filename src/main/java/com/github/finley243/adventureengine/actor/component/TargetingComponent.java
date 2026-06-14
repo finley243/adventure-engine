@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.attack.ActionAttack;
@@ -114,7 +113,7 @@ public class TargetingComponent {
         Context context = Context.from(defaultContext).build();
         if (startedInCombat && !hasTargetsOfType(DetectionState.HOSTILE)) {
             actor.triggerScript("on_combat_end", context);
-            actor.triggerBark("on_combat_end", game, context);
+            actor.triggerBark("on_combat_end", context);
         }
     }
 
@@ -140,7 +139,7 @@ public class TargetingComponent {
             DetectedActor combatant = detectedActors.get(target);
             combatant.lastKnownArea = area;
             if (combatant.areaTarget != null) {
-                combatant.areaTarget.setTargetAreas(idealAreas(game, combatant.lastKnownArea));
+                combatant.areaTarget.setTargetAreas(idealAreas(combatant.lastKnownArea));
             }
         }
     }
@@ -205,7 +204,7 @@ public class TargetingComponent {
             }
             detectedActors.get(target).stateCounter = 0;
             actor.triggerScript("on_target_trespassing_start", context);
-            actor.triggerBark("on_target_trespassing_start", game, context);
+            actor.triggerBark("on_target_trespassing_start", context);
         } else if (detectedActors.get(target).state == DetectionState.TRESPASSING && !actorIsTrespassing(target)) {
             detectedActors.get(target).state = DetectionState.PASSIVE;
             detectedActors.get(target).stateCounter = 0;
@@ -268,11 +267,11 @@ public class TargetingComponent {
         return !area.allowAllies() || areaFaction.getRelationTo(target.getFaction().getID()) != Faction.FactionRelation.ALLY;
     }
 
-    public void addCombatant(Game game, Actor target) {
+    public void addCombatant(Actor target) {
         Context context = Context.from(defaultContext).target(target).build();
         if (!hasTargetsOfType(DetectionState.HOSTILE)) {
             actor.triggerScript("on_combat_start", context);
-            actor.triggerBark("on_combat_start", game, context);
+            actor.triggerBark("on_combat_start", context);
         }
         if (detectedActors.containsKey(target)) {
             detectedActors.get(target).state = DetectionState.HOSTILE;
@@ -346,11 +345,11 @@ public class TargetingComponent {
         };
     }
 
-    public float getPassiveDetectionChance(Game game, Actor subject) {
+    public float getPassiveDetectionChance(Actor subject) {
         if (!subject.isSneaking()) {
             return 1.0f;
         }
-        AreaLink.DistanceCategory distance = actor.getArea().getLinearDistanceTo(game, subject.getArea());
+        AreaLink.DistanceCategory distance = actor.getArea().getLinearDistanceTo(subject.getArea(), pathfinder);
         if (subject.isDead()) {
             return switch (distance) {
                 case NEAR -> 0.95f;

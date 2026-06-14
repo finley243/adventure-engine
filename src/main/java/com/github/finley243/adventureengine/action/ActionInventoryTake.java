@@ -44,10 +44,10 @@ public class ActionInventoryTake extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
-        inventory.removeItem(item, game);
-        subject.getInventory().addItem(item, game);
+        inventory.removeItem(item);
+        subject.getInventory().addItem(item);
         Context context = getContext(subject);
-        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
     }
 
     @Override

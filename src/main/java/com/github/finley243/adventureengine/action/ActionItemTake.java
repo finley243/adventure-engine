@@ -34,10 +34,10 @@ public class ActionItemTake extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
-		area.getInventory().removeItem(item, game);
-		subject.getInventory().addItem(item, game);
+		area.getInventory().removeItem(item);
+		subject.getInventory().addItem(item);
 		Context context = getContext(subject);
-		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null));
 	}
 
 	@Override

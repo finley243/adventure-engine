@@ -40,7 +40,7 @@ public class ActionItemConsume extends Action {
 	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
 		subject.getInventory().removeItem(item, game);
 		Context context = getContext(subject);
-		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(consumePhrase), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(consumePhrase), context, true, this, null));
 		for (String effectID : effects) {
 			Effect effect = game.data().getEffect(effectID);
 			subject.getEffectComponent().addEffect(game, effect);

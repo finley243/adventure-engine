@@ -33,8 +33,8 @@ public class ActionModInstall extends Action {
 
     @Override
     public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
-        subject.getInventory().removeItem(mod, game);
-        target.getComponentOfType(ItemComponentModdable.class).installMod(game, mod);
+        subject.getInventory().removeItem(mod);
+        target.getComponentOfType(ItemComponentModdable.class).installMod(mod);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.item.component;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionWeaponReload;
 import com.github.finley243.adventureengine.actor.Actor;
@@ -56,7 +55,7 @@ public class ItemComponentMagazine extends ItemComponent {
 
     public int getMagazineSize() {
         Actor equippedActor = getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor();
-        return clipSize.value(getMagazineTemplate().getMagazineSize(), 1, 100, Context.builder().subject(equippedActor).target(equippedActor).parentItem(getItem()).build());
+        return clipSize.value(getMagazineTemplate().getMagazineSize(), 1, 100, Context.builder().subject(equippedActor).parentItem(getItem()).build());
     }
 
     public int getAmmoRemaining() {
@@ -72,13 +71,13 @@ public class ItemComponentMagazine extends ItemComponent {
         return getMagazineSize() - getAmmoRemaining();
     }
 
-    public void setLoadedAmmoType(Game game, Item type) {
+    public void setLoadedAmmoType(Item type) {
         if (ammoType != null) {
-            ammoType.getComponentOfType(ItemComponentAmmo.class).onUnload(game, getItem());
+            ammoType.getComponentOfType(ItemComponentAmmo.class).onUnload(getItem());
         }
         this.ammoType = type;
         if (type != null) {
-            type.getComponentOfType(ItemComponentAmmo.class).onLoad(game, getItem());
+            type.getComponentOfType(ItemComponentAmmo.class).onLoad(getItem());
         }
     }
 
@@ -90,17 +89,17 @@ public class ItemComponentMagazine extends ItemComponent {
         ammoCount += amount;
     }
 
-    public void consumeAmmo(Game game, int amount) {
+    public void consumeAmmo(int amount) {
         ammoCount -= amount;
         if (ammoCount <= 0) {
             ammoCount = 0;
-            setLoadedAmmoType(game, null);
+            setLoadedAmmoType(null);
         }
     }
 
-    public void emptyAmmo(Game game) {
+    public void emptyAmmo() {
         ammoCount = 0;
-        setLoadedAmmoType(game, null);
+        setLoadedAmmoType(null);
     }
 
     @Override
@@ -128,7 +127,7 @@ public class ItemComponentMagazine extends ItemComponent {
             int difference = ammoCount - getMagazineSize();
             ammoCount = getMagazineSize();
             if (getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor() != null) {
-                getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor().getInventory().addItems(ammoType.getTemplateID(), difference, game);
+                getItem().getComponentOfType(ItemComponentEquippable.class).getEquippedActor().getInventory().addItems(ammoType.getTemplateID(), difference);
             }
         } else {
             super.onStatChange(name);

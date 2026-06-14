@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.action.attack;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Limb;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
@@ -28,22 +27,22 @@ public class ActionAttackLimb extends ActionAttack {
 	}
 
 	@Override
-	public void consumeAmmo(Game game, Actor subject) {
+	public void consumeAmmo(Actor subject) {
 		if (weapon == null) {
 			return;
 		}
 		if (weapon.hasComponentOfType(ItemComponentMagazine.class)) {
 			if (weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType() != null && weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getComponentOfType(ItemComponentAmmo.class).isReusable()) {
-				target.getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed(), game);
+				target.getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
 			}
-			weapon.getComponentOfType(ItemComponentMagazine.class).consumeAmmo(game, getAmmoConsumed());
+			weapon.getComponentOfType(ItemComponentMagazine.class).consumeAmmo();
 		}
 		switch (getWeaponConsumeType()) {
 			case PLACE -> {
-				subject.getInventory().removeItem(weapon, game);
-				target.getArea().getInventory().addItem(weapon, game);
+				subject.getInventory().removeItem(weapon);
+				target.getArea().getInventory().addItem(weapon);
 			}
-			case DESTROY -> subject.getInventory().removeItem(weapon, game);
+			case DESTROY -> subject.getInventory().removeItem(weapon);
 		}
 	}
 
@@ -56,7 +55,7 @@ public class ActionAttackLimb extends ActionAttack {
 		if (weapon != null && weapon.hasComponentOfType(ItemComponentMagazine.class) && weapon.getComponentOfType(ItemComponentMagazine.class).getAmmoRemaining() < getAmmoConsumed()) {
 			return new CanChooseResult(false, "Not enough ammo");
 		}
-		if (!getRanges().contains(subject.getArea().getLinearDistanceTo(game, target.getArea()))) {
+		if (!getRanges().contains(subject.getArea().getLinearDistanceTo(target.getArea()))) {
 			return new CanChooseResult(false, "Target outside range");
 		}
 		if (!target.isVisible(subject)) {

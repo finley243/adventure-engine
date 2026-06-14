@@ -48,10 +48,10 @@ public class ActionInventoryStoreAll extends Action {
     public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
         int count = subject.getInventory().itemCount(item);
         subject.getInventory().removeItems(item.getTemplateID(), count);
-        inventory.addItems(item.getTemplateID(), count, game);
+        inventory.addItems(item.getTemplateID(), count);
         Context context = getContext(subject);
         //TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
-        SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
+        sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
     }
 
     @Override

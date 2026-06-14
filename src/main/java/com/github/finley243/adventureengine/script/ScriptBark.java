@@ -17,7 +17,7 @@ public class ScriptBark extends Script {
         if (trigger.getDataType() != Expression.DataType.STRING) new ScriptReturnData(null, null, new ScriptErrorData("Bark parameter is not a string", getTraceData()));
         if (actorExpression.getDataType() != Expression.DataType.STAT_HOLDER) return new ScriptReturnData(null, null, new ScriptErrorData("Actor parameter is not a stat holder", getTraceData()));
         if (!(actorExpression.getValueStatHolder() instanceof Actor actor)) return new ScriptReturnData(null, null, new ScriptErrorData("Actor parameter is not an actor", getTraceData()));
-        actor.triggerBark(trigger.getValueString(), context.game(), context);
+        actor.triggerBark(trigger.getValueString(), context);
         return new ScriptReturnData(null, null, null);
     }
 

@@ -1,19 +1,21 @@
 package com.github.finley243.adventureengine.item.template;
 
+import com.github.finley243.adventureengine.effect.Effect;
+
 import java.util.List;
 
 public class ItemComponentTemplateAmmo extends ItemComponentTemplate {
 
-    private final List<String> weaponEffects;
+    private final List<Effect> weaponEffects;
     private final boolean isReusable;
 
-    public ItemComponentTemplateAmmo(boolean actionsRestricted, List<String> weaponEffects, boolean isReusable) {
+    public ItemComponentTemplateAmmo(boolean actionsRestricted, List<Effect> weaponEffects, boolean isReusable) {
         super(actionsRestricted);
         this.weaponEffects = weaponEffects;
         this.isReusable = isReusable;
     }
 
-    public List<String> getWeaponEffects() {
+    public List<Effect> getWeaponEffects() {
         return weaponEffects;
     }
 

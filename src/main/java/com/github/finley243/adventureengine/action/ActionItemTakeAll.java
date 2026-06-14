@@ -38,10 +38,10 @@ public class ActionItemTakeAll extends Action {
 	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
 		int count = area.getInventory().itemCount(item);
 		area.getInventory().removeItems(item.getTemplateID(), count);
-		subject.getInventory().addItems(item.getTemplateID(), count, game);
+		subject.getInventory().addItems(item.getTemplateID(), count);
 		Context context = getContext(subject);
 		//TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
-		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null));
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.github.finley243.adventureengine.action.attack;
 
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.combat.WeaponAttackType;
 import com.github.finley243.adventureengine.item.Item;
@@ -25,7 +24,7 @@ public class ActionAttackArea extends ActionAttack {
     }
 
     @Override
-    public void consumeAmmo(Game game, Actor subject) {
+    public void consumeAmmo(Actor subject) {
         if (weapon == null) {
             return;
         }
@@ -33,7 +32,7 @@ public class ActionAttackArea extends ActionAttack {
             if (weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType() != null && weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getComponentOfType(ItemComponentAmmo.class).isReusable()) {
                 getArea().getInventory().addItems(weapon.getComponentOfType(ItemComponentMagazine.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
             }
-            weapon.getComponentOfType(ItemComponentMagazine.class).consumeAmmo(game, getAmmoConsumed());
+            weapon.getComponentOfType(ItemComponentMagazine.class).consumeAmmo();
         }
         switch (getWeaponConsumeType()) {
             case PLACE -> {

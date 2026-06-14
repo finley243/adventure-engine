@@ -48,7 +48,7 @@ public class ActionObjectUseEnd extends Action {
 		}
 		component.removeUser(slotID);
 		subject.setUsingObject(null);
-		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(component.getEndPhrase(slotID)), context, true, this, null));
 	}
 
 	@Override

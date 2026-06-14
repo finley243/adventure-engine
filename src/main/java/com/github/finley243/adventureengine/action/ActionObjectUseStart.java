@@ -55,7 +55,7 @@ public class ActionObjectUseStart extends Action {
 		}
 		component.setUser(slotID, subject);
 		subject.setUsingObject(new ObjectComponentUsable.ObjectUserData(component.getObject(), slotID));
-		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(component.getStartPhrase(slotID)), context, true, this, null));
 	}
 
 	@Override

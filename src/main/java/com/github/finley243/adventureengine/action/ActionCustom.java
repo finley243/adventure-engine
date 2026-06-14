@@ -96,7 +96,7 @@ public class ActionCustom extends Action {
             return resultSuper;
         }
         for (ActionTemplate.ConditionWithMessage customCondition : getTemplate().getSelectConditions()) {
-            if (!customCondition.condition().isMet(getContextWithParameters(subject))) {
+            if (!customCondition.condition().isMet(scriptRuntime, getContextWithParameters(subject))) {
                 return new CanChooseResult(false, customCondition.message());
             }
         }
@@ -142,7 +142,7 @@ public class ActionCustom extends Action {
 
     @Override
     public boolean canShow(Actor subject) {
-        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(getContextWithParameters(subject));
+        return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(scriptRuntime, getContextWithParameters(subject));
     }
 
     private Context getContextWithParameters(Actor subject) {

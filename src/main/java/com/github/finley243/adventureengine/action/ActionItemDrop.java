@@ -29,10 +29,10 @@ public class ActionItemDrop extends Action {
 	
 	@Override
 	public void choose(Actor subject, int repeatActionCount, SensoryEventDispatcher sensoryEventDispatcher) {
-		subject.getInventory().removeItem(item, game);
-		subject.getArea().getInventory().addItem(item, game);
+		subject.getInventory().removeItem(item);
+		subject.getArea().getInventory().addItem(item);
 		Context context = getContext(subject);
-		SensoryEvent.execute(game, new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
+		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
 	}
 
 	@Override

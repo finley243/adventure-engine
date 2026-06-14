@@ -18,7 +18,6 @@ import com.github.finley243.adventureengine.scene.SceneLine;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.*;
@@ -212,7 +211,7 @@ public class MenuManager {
 					} else {
 						parentCategory = attackCategory;
 					}
-					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(game, actor) + ")";
+					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
 				}
 				case MenuDataAttackTargeted data -> {
 					String targetName = LangUtils.titleCase(((Noun) data.target).getName());
@@ -251,7 +250,7 @@ public class MenuManager {
 						categoryMap.put(attackTypeCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, attackTypeCategory, weaponCategory, false, false, attackTypeName, null));
 					}
 					parentCategory = attackTypeCategory;
-					promptOverride = limbName + " (" + ((ActionAttack) action).getChanceTag(game, actor) + ")";
+					promptOverride = limbName + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
 				}
 				case MenuDataAttackArea data -> {
 					String targetName = LangUtils.titleCase(data.target.getName());
@@ -276,7 +275,7 @@ public class MenuManager {
 					if (!categoryMap.containsKey(targetCategory)) {
 						categoryMap.put(targetCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, targetCategory, weaponCategory, false, false, targetName, null));
 					}*/
-					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(game, actor) + ")";
+					promptOverride = action.getPrompt(actor) + " (" + ((ActionAttack) action).getChanceTag(actor) + ")";
 				}
 				default -> throw new IllegalStateException("Unexpected menu data: " + action.getMenuData(actor));
 			}
