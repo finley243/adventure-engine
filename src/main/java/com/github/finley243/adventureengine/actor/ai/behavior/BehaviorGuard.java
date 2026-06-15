@@ -8,9 +8,9 @@ import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
-import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
 
 import java.util.List;
 
@@ -34,8 +34,8 @@ public class BehaviorGuard extends Behavior {
     }
 
     @Override
-    public void update(Actor subject, Context scriptContext) {
-        super.update(subject, scriptContext);
+    public void update(Actor subject, ScriptRuntime scriptRuntime, Context scriptContext) {
+        super.update(subject, scriptRuntime, scriptContext);
         updateObjectState(subject);
     }
 

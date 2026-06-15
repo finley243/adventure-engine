@@ -17,7 +17,7 @@ public class BehaviorMove extends Behavior {
     private Area area;
 
     public BehaviorMove(Condition condition, Script startScript, Script eachRoundScript, int duration, List<Idle> idles, String areaID) {
-        super(condition, eachRoundScript, startScript, duration, idles);
+        super(condition, startScript, eachRoundScript, duration, idles);
         this.areaID = areaID;
     }
 

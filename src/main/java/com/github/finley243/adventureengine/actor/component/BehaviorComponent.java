@@ -70,7 +70,7 @@ public class BehaviorComponent {
         if (actor.getBehaviors().isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
-            currentBehavior.update(actor, scriptContext);
+            currentBehavior.update(actor, scriptRuntime, scriptContext);
         }
         endCurrentBehaviorIfInvalid(scriptRuntime);
         selectNextBehavior(scriptRuntime);
@@ -117,7 +117,7 @@ public class BehaviorComponent {
             if (behaviors.get(i).isValid(actor, scriptRuntime)) {
                 currentIndex = i;
                 resetContext();
-                behaviors.get(i).onStart(actor, scriptRuntime);
+                behaviors.get(i).onStart(actor, scriptRuntime, );
                 if (areaTarget != null) {
                     if (behaviors.get(i).getTargetArea(actor) != null) {
                         areaTarget.setTargetArea(behaviors.get(i).getTargetArea(actor));

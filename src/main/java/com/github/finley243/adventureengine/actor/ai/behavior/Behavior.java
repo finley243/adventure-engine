@@ -3,7 +3,6 @@ package com.github.finley243.adventureengine.actor.ai.behavior;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
@@ -70,14 +69,14 @@ public abstract class Behavior {
         }
     }
 
-    public void update(Actor subject, Context scriptContext) {
+    public void update(Actor subject, ScriptRuntime scriptRuntime, Context scriptContext) {
         if (duration > 0 && turnsRemaining > 0 && !isInTargetState(subject)) {
             // Reset counter if countdown condition is interrupted
             turnsRemaining = duration;
         }
     }
 
-    public void onStart(Actor actor, ScriptRuntime scriptRuntime) {
+    public void onStart(Actor actor, ScriptRuntime scriptRuntime, Context scriptContext) {
         turnsRemaining = duration;
         triggerStartScript(actor, scriptRuntime);
     }

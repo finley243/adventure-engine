@@ -64,23 +64,24 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public void update(Actor subject, Context scriptContext) {
-        stages.get(currentStage).update(subject, currentStageContext);
+    public void update(Actor subject, ScriptRuntime scriptRuntime, Context scriptContext) {
+        super.update(subject, scriptRuntime, scriptContext);
+        stages.get(currentStage).update(subject, scriptRuntime, currentStageContext);
         if (stages.get(currentStage).hasCompleted(subject)) {
             currentStage += 1;
             if (currentStage >= stages.size()) {
                 currentStage = 0;
             }
             resetStageContext(scriptContext);
-            stages.get(currentStage).onStart(subject, currentStageContext);
+            stages.get(currentStage).onStart(subject, scriptRuntime, scriptContext);
         }
     }
 
     @Override
-    public void onStart(Actor subject, ScriptRuntime scriptRuntime) {
+    public void onStart(Actor subject, ScriptRuntime scriptRuntime, Context scriptContext) {
         currentStage = 0;
-        resetStageContext(subject, scriptRuntime);
-        stages.get(currentStage).onStart(currentStageContext);
+        resetStageContext(scriptContext);
+        stages.get(currentStage).onStart(subject, scriptRuntime, scriptContext);
     }
 
     @Override
@@ -91,11 +92,6 @@ public class BehaviorProcedure extends Behavior {
     @Override
     public Float actionUtilityOverride(Actor subject, Action action) {
         return stages.get(currentStage).actionUtilityOverride(subject, action);
-    }
-
-    @Override
-    public boolean isGuarding(Actor subject, WorldObject object) {
-        return stages.get(currentStage).isGuarding(subject, object);
     }
 
     @Override
