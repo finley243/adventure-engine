@@ -15,7 +15,6 @@ import com.github.finley243.adventureengine.gamedata.TimerManager;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -28,9 +27,8 @@ import java.util.Map;
 public class Game {
 
 	private final UIEventBus eventBus;
-	private final MenuManager menuManager;
 
-	//private final Data data;
+    //private final Data data;
 	private final QuestManager questManager;
 	private final DateTimeController dateTimeController;
 	private final TimerManager timerManager;
@@ -39,15 +37,13 @@ public class Game {
 	private final AreaRegistry areaRegistry;
 	private final ScriptRuntime scriptRuntime;
 	private final Pathfinder pathfinder;
-	private final TextGen textGen;
-	private final Map<Actor, TurnController> actorControllers;
+    private final Map<Actor, TurnController> actorControllers;
 
 	private boolean continueGame;
 
-    public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, AreaRegistry areaRegistry, TimerManager timerManager, Pathfinder pathfinder, TextGen textGen, SensoryEventDispatcher sensoryEventDispatcher) {
+    public Game(UIEventBus eventBus, MenuManager menuManager, QuestManager questManager, DateTimeController dateTimeController, ScriptRuntime scriptRuntime, ActorRegistry actorRegistry, Registry<WorldObject> objectRegistry, AreaRegistry areaRegistry, TimerManager timerManager, Pathfinder pathfinder, SensoryEventDispatcher sensoryEventDispatcher) {
 		this.eventBus = eventBus;
-		this.menuManager = menuManager;
-		this.questManager = questManager;
+        this.questManager = questManager;
 		this.dateTimeController = dateTimeController;
 		this.scriptRuntime = scriptRuntime;
 		this.actorRegistry = actorRegistry;
@@ -55,14 +51,13 @@ public class Game {
 		this.areaRegistry = areaRegistry;
 		this.timerManager = timerManager;
 		this.pathfinder = pathfinder;
-		this.textGen = textGen;
-		this.actorControllers = new HashMap<>();
+        this.actorControllers = new HashMap<>();
 		for (Actor actor : actorRegistry.getAll()) {
 			TurnController controller;
 			if (actor.isPlayer()) {
-				controller = new PlayerController(actor, sensoryEventDispatcher, eventBus, menuManager, areaRegistry, () -> continueGame = false);
+				controller = new PlayerController(actor, sensoryEventDispatcher, menuManager, eventBus, areaRegistry, () -> continueGame = false);
 			} else {
-				controller = new NPCController(actor, sensoryEventDispatcher);
+				controller = new NPCController(actor, sensoryEventDispatcher, menuManager);
 			}
 			actorControllers.put(actor, controller);
 		}
@@ -77,7 +72,6 @@ public class Game {
 
 	private void startRound() {
 		eventBus.post(new TextClearEvent());
-		textGen.clearContext();
 		for (Timer timer : timerManager.getAll()) {
 			timer.update();
 			if (timer.shouldRemove()) {
@@ -108,7 +102,7 @@ public class Game {
 		}
 		for (Actor actor : actorTurnOrder) {
 			TurnController controller = actorControllers.get(actor);
-			controller.takeTurn(pathfinder, scriptRuntime, menuManager, questManager);
+			controller.takeTurn(pathfinder, scriptRuntime, questManager);
 		}
 	}
 

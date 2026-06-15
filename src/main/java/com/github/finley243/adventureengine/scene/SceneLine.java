@@ -1,14 +1,15 @@
 package com.github.finley243.adventureengine.scene;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.GameDataException;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.List;
 
 public class SceneLine {
-    
-	private boolean hasTriggered;
 
     private final String text;
 
@@ -22,8 +23,12 @@ public class SceneLine {
     private final boolean exit;
     // If non-null, redirect to this scene after line is played
     private final String redirectID;
+    private Scene redirectScene;
     // If non-null, will only play if the previous scene matches this ID
     private final String fromSceneID;
+    private Scene fromScene;
+
+    private boolean hasTriggered;
 
     private SceneLine(Scene.SceneType type, List<SceneLine> subLines, String text, Condition condition, Script scriptPre, Script scriptPost, boolean once, boolean exit, String redirectID, String fromSceneID) {
         this.type = type;
@@ -47,6 +52,22 @@ public class SceneLine {
         this(null, null, text, null, null, null, once, exit, redirectID, fromSceneID);
     }
 
+    public void resolveLinkedScenes(Registry<Scene> sceneRegistry) {
+        if (redirectID != null) {
+            Scene scene = sceneRegistry.getFromID(redirectID);
+            if (scene == null) throw new GameDataException("Scene has invalid redirect reference");
+            redirectScene = scene;
+        }
+        if (fromSceneID != null) {
+            Scene scene = sceneRegistry.getFromID(fromSceneID);
+            if (scene == null) throw new GameDataException("Scene has invalid from-scene reference");
+            fromScene = scene;
+        }
+        for (SceneLine line : subLines) {
+            line.resolveLinkedScenes(sceneRegistry);
+        }
+    }
+
     public Scene.SceneType getType() {
         return type;
     }
@@ -59,10 +80,10 @@ public class SceneLine {
     	return text;
     }
     
-    public boolean shouldShow(Context context, String lastTopicID) {
-    	return (condition == null || condition.isMet(context))
+    public boolean shouldShow(ScriptRuntime scriptRuntime, Context context, Scene lastScene) {
+    	return (condition == null || condition.isMet(scriptRuntime, context))
                 && !(once && hasTriggered)
-                && !(fromSceneID != null && !fromSceneID.equals(lastTopicID));
+                && !(fromSceneID != null && !getFromScene().equals(lastScene));
     }
     
     public void setTriggered() {
@@ -80,13 +101,23 @@ public class SceneLine {
     public boolean shouldExit() {
     	return exit;
     }
+
+    public boolean hasFromScene() {
+        return fromScene != null;
+    }
+
+    public Scene getFromScene() {
+        if (fromSceneID != null && fromScene == null) throw new GameDataException("Scene from-scene has not been resolved");
+        return fromScene;
+    }
     
     public boolean hasRedirect() {
     	return redirectID != null;
     }
     
-    public String getRedirectID() {
-    	return redirectID;
+    public Scene getRedirect() {
+        if (redirectID != null && redirectScene == null) throw new GameDataException("Scene redirect has not been resolved");
+    	return redirectScene;
     }
     
 }

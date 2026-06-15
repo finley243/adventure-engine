@@ -11,29 +11,26 @@ import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class BehaviorComponent {
 
     private final Actor actor;
     private final Context defaultContext;
-    private final List<Behavior> behaviors;
     private int currentIndex;
     private AreaTarget areaTarget;
     private Context scriptContext;
 
-    public BehaviorComponent(Actor actor, List<Behavior> behaviors) {
+    public BehaviorComponent(Actor actor) {
         this.actor = actor;
-        this.behaviors = Objects.requireNonNullElseGet(behaviors, ArrayList::new);
         this.currentIndex = -1;
         this.defaultContext = Context.builder().subject(actor).target(actor).build();
         resetContext();
     }
 
     private Behavior currentBehavior() {
-        if (behaviors.isEmpty() || currentIndex == -1 || currentIndex >= behaviors.size()) return null;
+        List<Behavior> behaviors = actor.getBehaviors();
+        if (behaviors == null || behaviors.isEmpty() || currentIndex == -1 || currentIndex >= behaviors.size()) return null;
         return behaviors.get(currentIndex);
     }
 
@@ -68,7 +65,7 @@ public class BehaviorComponent {
     }
 
     public void updateTurn(ScriptRuntime scriptRuntime) {
-        if (behaviors.isEmpty()) return;
+        if (actor.getBehaviors().isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
             currentBehavior.updateTurn(actor, scriptRuntime);
@@ -76,7 +73,7 @@ public class BehaviorComponent {
     }
 
     public void update(ScriptRuntime scriptRuntime, Pathfinder pathfinder) {
-        if (behaviors.isEmpty()) return;
+        if (actor.getBehaviors().isEmpty()) return;
         Behavior currentBehavior = currentBehavior();
         if (currentBehavior != null) {
             currentBehavior.update(actor, scriptContext);
@@ -119,6 +116,7 @@ public class BehaviorComponent {
     }
 
     private void selectNextBehavior(ScriptRuntime scriptRuntime) {
+        List<Behavior> behaviors = actor.getBehaviors();
         Behavior currentBehavior = currentBehavior();
         boolean onlyHigherPriorities = currentBehavior != null && !currentBehavior.hasCompleted(actor);
         for (int i = 0; i < (onlyHigherPriorities ? currentIndex : behaviors.size()); i++) {

@@ -2,13 +2,11 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
-import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.menu.MenuManager;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
 
@@ -23,7 +21,7 @@ public class PlayerController extends TurnController {
 
     private Area lastKnownArea;
 
-    public PlayerController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher, UIEventBus eventBus, MenuManager menuManager, AreaRegistry areaRegistry, Runnable onGameEnd) {
+    public PlayerController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher, MenuManager menuManager, UIEventBus eventBus, AreaRegistry areaRegistry, Runnable onGameEnd) {
         super(actor, sensoryEventDispatcher, menuManager);
         this.eventBus = eventBus;
         this.areaRegistry = areaRegistry;
@@ -31,7 +29,9 @@ public class PlayerController extends TurnController {
     }
 
     @Override
-    protected void onPreAction(ScriptRuntime scriptRuntime, Pathfinder pathfinder) {}
+    protected void onStartTurnDead() {
+        onPlayerDeath();
+    }
 
     @Override
     protected void onPostAction(Action action) {
@@ -47,11 +47,8 @@ public class PlayerController extends TurnController {
     }
 
     @Override
-    protected void onStartTurn(ScriptRuntime scriptRuntime) {}
-
-    @Override
     protected Action selectAction(List<Action> actions) {
-        return menuManager.actionChoiceMenu(actor, actions);
+        return menuManager.actionChoiceMenu(actor, this, actions);
     }
 
     private void onPlayerDeath() {

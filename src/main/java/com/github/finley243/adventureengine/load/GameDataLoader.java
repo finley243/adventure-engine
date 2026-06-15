@@ -19,7 +19,6 @@ import com.github.finley243.adventureengine.item.template.ItemTemplate;
 import com.github.finley243.adventureengine.network.NetworkNode;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
-import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.LinkType;
 import com.github.finley243.adventureengine.world.environment.Room;
@@ -70,14 +69,12 @@ public class GameDataLoader {
     private final ScriptRuntime scriptRuntime;
     private final MutableRegistry<Item> itemMutableRegistry;
     private final UIEventBus eventBus;
-    private final TextGen textGen;
 
-    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, UIEventBus eventBus, TextGen textGen) {
+    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, UIEventBus eventBus) {
         this.configHandler = configHandler;
         this.scriptRuntime = scriptRuntime;
         this.itemMutableRegistry = itemMutableRegistry;
         this.eventBus = eventBus;
-        this.textGen = textGen;
     }
 
     public GameData loadData(File dir) throws GameDataException {
@@ -176,7 +173,7 @@ public class GameDataLoader {
         ItemFactory itemFactory = new ItemFactory(itemTemplateRegistry, itemMutableRegistry, itemComponentFactory);
 
         Pathfinder pathfinder = new Pathfinder();
-        SensoryEventDispatcher sensoryEventDispatcher = new SensoryEventDispatcher(pathfinder, textGen, eventBus);
+        SensoryEventDispatcher sensoryEventDispatcher = new SensoryEventDispatcher(pathfinder, eventBus);
 
         ActorLoader actorLoader = new ActorLoader(scriptParser, actorTemplateRegistry, scriptRuntime, eventBus, sensoryEventDispatcher, itemFactory, senseTypeRegistry, effectRegistry, damageTypeRegistry, attributeRegistry, skillRegistry);
         ObjectLoader objectLoader = new ObjectLoader(scriptParser, objectTemplateRegistry);
@@ -194,12 +191,14 @@ public class GameDataLoader {
         for (Area area : areaRegistry.getAll()) {
             area.resolveAreaLinks(areaRegistry);
         }
-
         for (WorldObject object : objectRegistry.getAll()) {
             object.resolveComponentReferences(objectRegistry);
         }
+        for (Scene scene : sceneRegistry.getAll()) {
+            scene.resolveLinkedScenes(sceneRegistry);
+        }
 
-        return new GameData(sensoryEventDispatcher, pathfinder, textGen, phraseManager, areaRegistry, roomRegistry, actorTemplateRegistry, actorRegistry, objectTemplateRegistry, objectRegistry, itemTemplateRegistry, itemMutableRegistry, lootTableRegistry, weaponClassRegistry, attackTypeRegistry, sceneRegistry, factionRegistry, networkRegistry, effectRegistry, actionRegistry, linkTypeRegistry, damageTypeRegistry, attributeRegistry, skillRegistry, senseTypeRegistry, obstructionTypeRegistry, scriptRegistry);
+        return new GameData(sensoryEventDispatcher, pathfinder, phraseManager, areaRegistry, roomRegistry, actorTemplateRegistry, actorRegistry, objectTemplateRegistry, objectRegistry, itemTemplateRegistry, itemMutableRegistry, lootTableRegistry, weaponClassRegistry, attackTypeRegistry, sceneRegistry, factionRegistry, networkRegistry, effectRegistry, actionRegistry, linkTypeRegistry, damageTypeRegistry, attributeRegistry, skillRegistry, senseTypeRegistry, obstructionTypeRegistry, scriptRegistry);
     }
 
     private <T> Map<String, T> loadMapFromFileName(File parentDir, String name, DocumentBuilder builder, Function<Element, Map<String, T>> loadFunction) throws GameDataException {

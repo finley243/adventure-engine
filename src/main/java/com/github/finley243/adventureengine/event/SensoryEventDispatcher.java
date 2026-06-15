@@ -3,9 +3,6 @@ package com.github.finley243.adventureengine.event;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.ui.RenderGeneratedTextEvent;
-import com.github.finley243.adventureengine.event.ui.RenderTextEvent;
-import com.github.finley243.adventureengine.textgen.TextContext;
-import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.obstruction.ObstructionType;
 
@@ -16,12 +13,10 @@ import java.util.Set;
 public class SensoryEventDispatcher {
 
     private final Pathfinder pathfinder;
-    private final TextGen textGen;
     private final UIEventBus eventBus;
 
-    public SensoryEventDispatcher(Pathfinder pathfinder, TextGen textGen, UIEventBus eventBus) {
+    public SensoryEventDispatcher(Pathfinder pathfinder, UIEventBus eventBus) {
         this.pathfinder = pathfinder;
-        this.textGen = textGen;
         this.eventBus = eventBus;
     }
 

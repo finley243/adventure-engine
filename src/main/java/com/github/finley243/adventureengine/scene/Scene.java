@@ -6,6 +6,8 @@ import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.expression.ExpressionConstantBoolean;
 import com.github.finley243.adventureengine.expression.ExpressionConstantString;
+import com.github.finley243.adventureengine.gamedata.Registry;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.stat.StatHolder;
 
 import java.util.List;
@@ -38,8 +40,17 @@ public class Scene extends GameInstanced implements StatHolder {
 		this.hasTriggered = false;
 	}
 
-	public boolean canChoose(Context context) {
-		return (condition == null || condition.isMet(context)) && !(once && hasTriggered);
+	public void resolveLinkedScenes(Registry<Scene> sceneRegistry) {
+		for (SceneLine line : lines) {
+			line.resolveLinkedScenes(sceneRegistry);
+		}
+		for (SceneChoice choice : choices) {
+			choice.resolveLinkedScene(sceneRegistry);
+		}
+	}
+
+	public boolean canChoose(ScriptRuntime scriptRuntime, Context context) {
+		return (condition == null || condition.isMet(scriptRuntime, context)) && !(once && hasTriggered);
 	}
 	
 	public List<SceneLine> getLines() {
@@ -87,6 +98,6 @@ public class Scene extends GameInstanced implements StatHolder {
 		return null;
 	}
 
-	public record SceneLineResult(boolean exit, String redirect) {}
+	public record SceneLineResult(boolean exit, Scene redirect) {}
 	
 }

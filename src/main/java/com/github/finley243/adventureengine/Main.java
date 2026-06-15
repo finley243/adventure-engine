@@ -43,6 +43,7 @@ public class Main {
 
 		MutableRegistry<Expression> globalExpressionRegistry = new MutableRegistry<>(Map.of());
 		ScriptRuntimeImpl scriptRuntime = new ScriptRuntimeImpl(menuManager, timerManager, dateTimeController, globalExpressionRegistry);
+		menuManager.setScriptRuntime(scriptRuntime);
 
 		if (configHandler.get(ConfigOption.ENABLE_DEBUG_LOG).equalsIgnoreCase("true")) {
 			DebugLogger.init(GAMEFILES + LOG_DIRECTORY);
@@ -50,7 +51,7 @@ public class Main {
 
 		MutableRegistry<Item> itemMutableRegistry = new MutableRegistry<>(Map.of());
 
-		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, eventBus, textGen);
+		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, eventBus);
 		File dataDirectory = Path.of(GAMEFILES + DATA_DIRECTORY).toFile();
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);
@@ -63,7 +64,7 @@ public class Main {
 		};
 		eventBus.register(userInterface);
 
-		Game game = new Game(eventBus, menuManager, questManager, dateTimeController, scriptRuntime, gameData.actorRegistry(), gameData.objectRegistry(), gameData.areaRegistry(), timerManager, gameData.pathfinder(), gameData.textGen(), gameData.sensoryEventDispatcher());
+		Game game = new Game(eventBus, menuManager, questManager, dateTimeController, scriptRuntime, gameData.actorRegistry(), gameData.objectRegistry(), gameData.areaRegistry(), timerManager, gameData.pathfinder(), gameData.sensoryEventDispatcher());
 		game.start();
 	}
 

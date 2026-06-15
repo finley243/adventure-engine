@@ -9,12 +9,14 @@ import com.github.finley243.adventureengine.action.attack.ActionAttack;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Attribute;
 import com.github.finley243.adventureengine.actor.Skill;
+import com.github.finley243.adventureengine.actor.TurnController;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.*;
 import com.github.finley243.adventureengine.menu.action.*;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.scene.SceneChoice;
 import com.github.finley243.adventureengine.scene.SceneLine;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.textgen.Noun;
 import com.github.finley243.adventureengine.world.object.WorldObject;
@@ -25,6 +27,7 @@ import java.util.*;
 public class MenuManager {
 
 	private final UIEventBus eventBus;
+	private ScriptRuntime scriptRuntime;
 	private final ThreadControl threadControl;
 
 	private ChoiceMenuInputEvent choiceInput;
@@ -33,11 +36,19 @@ public class MenuManager {
 	public MenuManager(UIEventBus eventBus) {
 		this.eventBus = eventBus;
 		this.threadControl = new ThreadControl();
-		this.choiceInput = null;
-		this.numericInput = null;
+	}
+
+	public void setScriptRuntime(ScriptRuntime scriptRuntime) {
+		if (this.scriptRuntime != null) throw new IllegalStateException("ScriptRuntime has already been set");
+		this.scriptRuntime = scriptRuntime;
+	}
+
+	private ScriptRuntime getScriptRuntime() {
+		if (this.scriptRuntime == null) throw new IllegalStateException("ScriptRuntime has not been set");
+		return scriptRuntime;
 	}
 	
-	public Action actionChoiceMenu(Actor actor, List<Action> actions) {
+	public Action actionChoiceMenu(Actor actor, TurnController turnController, List<Action> actions) {
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		Map<String, MenuCategory> categoryMap = new HashMap<>();
 		int endTurnIndex = -1;
@@ -280,7 +291,7 @@ public class MenuManager {
 				default -> throw new IllegalStateException("Unexpected menu data: " + action.getMenuData(actor));
 			}
 			String prompt = action.getPrompt(actor);
-			int actionPoints = (actor.isRepeatAction(action) && action.repeatsUseNoActionPoints()) ? 0 : action.actionPoints(actor);
+			int actionPoints = turnController.getFinalActionPointsForAction(action);
 			menuChoices.add(new MenuChoice((promptOverride != null ? promptOverride : action.getPrompt(actor)), action.canChoose(actor), actionPoints, showOnRight, parentCategory, prompt));
 		}
 		List<MenuCategory> menuCategories = new ArrayList<>(categoryMap.values());
@@ -292,31 +303,31 @@ public class MenuManager {
 		sceneMenu(scene, context, null, !clearText);
 	}
 
-	public void sceneMenu(Scene scene, Context context, String lastSceneID, boolean isFromRedirect) {
+	public void sceneMenu(Scene scene, Context context, Scene lastScene, boolean isFromRedirect) {
 		scene.setTriggered();
 		if (!isFromRedirect) {
-			game.eventBus().post(new TextClearEvent());
+			eventBus.post(new TextClearEvent());
 		}
 		switch (scene.getType()) {
 			case ALL -> {
 				for (SceneLine line : scene.getLines()) {
-					Scene.SceneLineResult result = sceneLine(game, line, lastSceneID, context, false);
+					Scene.SceneLineResult result = sceneLine(line, lastScene, context, false);
 					if (result.exit()) {
 						return;
 					} else if (result.redirect() != null) {
-						sceneMenu(game, game.data().getScene(result.redirect()), context, scene.getID(), true);
+						sceneMenu(result.redirect(), context, scene, true);
 						return;
 					}
 				}
 			}
 			case SELECT -> {
 				for (SceneLine line : scene.getLines()) {
-					if (line.shouldShow(context, lastSceneID)) {
-						Scene.SceneLineResult result = sceneLine(game, line, lastSceneID, context, true);
+					if (line.shouldShow(getScriptRuntime(), context, lastScene)) {
+						Scene.SceneLineResult result = sceneLine(line, lastScene, context, true);
 						if (result.exit()) {
 							return;
 						} else if (result.redirect() != null) {
-							sceneMenu(game, game.data().getScene(result.redirect()), context, scene.getID(), true);
+							sceneMenu(result.redirect(), context, scene, true);
 							return;
 						}
 						break;
@@ -326,16 +337,16 @@ public class MenuManager {
 			case RANDOM -> {
 				List<SceneLine> validLines = new ArrayList<>();
 				for (SceneLine line : scene.getLines()) {
-					if (line.shouldShow(context, lastSceneID)) {
+					if (line.shouldShow(getScriptRuntime(), context, lastScene)) {
 						validLines.add(line);
 					}
 				}
 				SceneLine selectedLine = MathUtils.selectRandomFromList(validLines);
-				Scene.SceneLineResult result = sceneLine(game, selectedLine, lastSceneID, context, true);
+				Scene.SceneLineResult result = sceneLine(selectedLine, lastScene, context, true);
 				if (result.exit()) {
 					return;
 				} else if (result.redirect() != null) {
-					sceneMenu(game, game.data().getScene(result.redirect()), context, scene.getID(), true);
+					sceneMenu(result.redirect(), context, scene, true);
 					return;
 				}
 			}
@@ -343,39 +354,39 @@ public class MenuManager {
 		if (!scene.getChoices().isEmpty()) {
 			List<SceneChoice> validChoices = new ArrayList<>();
 			for (SceneChoice choice : scene.getChoices()) {
-				if (game.data().getScene(choice.getLinkedID()).canChoose(context)) {
+				if (choice.getLinkedScene().canChoose(getScriptRuntime(), context)) {
 					validChoices.add(choice);
 				}
 			}
 			if (validChoices.isEmpty()) {
 				return;
 			}
-			String chosenSceneID = sceneChoiceMenu(game, validChoices);
-			sceneMenu(game, game.data().getScene(chosenSceneID), context, scene.getID(), false);
+			Scene chosenScene = sceneChoiceMenu(validChoices);
+			sceneMenu(chosenScene, context, scene, false);
 		}
 	}
 
-	private Scene.SceneLineResult sceneLine(SceneLine line, String lastSceneID, Context context, boolean ignoreCondition) {
-		if (ignoreCondition || line.shouldShow(context, lastSceneID)) {
+	private Scene.SceneLineResult sceneLine(SceneLine line, Scene lastScene, Context context, boolean ignoreCondition) {
+		if (ignoreCondition || line.shouldShow(getScriptRuntime(), context, lastScene)) {
 			line.setTriggered();
 			if (line.getText() != null) {
 				eventBus.post(new RenderTextEvent(line.getText()));
 			}
 			if (line.getScriptPre() != null) {
-				line.getScriptPre().execute(, context);
+				line.getScriptPre().run(getScriptRuntime(), context);
 			}
 			if (line.getSubLines() != null) {
 				switch (line.getType()) {
 					case ALL -> {
 						for (SceneLine subLine : line.getSubLines()) {
-							Scene.SceneLineResult result = sceneLine(game, subLine, lastSceneID, context, false);
+							Scene.SceneLineResult result = sceneLine(subLine, lastScene, context, false);
 							if (result.exit() || result.redirect() != null) return result;
 						}
 					}
 					case SELECT -> {
 						for (SceneLine subLine : line.getSubLines()) {
-							if (subLine.shouldShow(context, lastSceneID)) {
-								Scene.SceneLineResult result = sceneLine(game, subLine, lastSceneID, context, true);
+							if (subLine.shouldShow(getScriptRuntime(), context, lastScene)) {
+								Scene.SceneLineResult result = sceneLine(subLine, lastScene, context, true);
 								if (result.exit() || result.redirect() != null) return result;
 								break;
 							}
@@ -384,35 +395,35 @@ public class MenuManager {
 					case RANDOM -> {
 						List<SceneLine> validLines = new ArrayList<>(line.getSubLines().size());
 						for (SceneLine subLine : line.getSubLines()) {
-							if (subLine.shouldShow(context, lastSceneID)) {
+							if (subLine.shouldShow(getScriptRuntime(), context, lastScene)) {
 								validLines.add(subLine);
 							}
 						}
 						SceneLine selectedLine = MathUtils.selectRandomFromList(validLines);
-						Scene.SceneLineResult result = sceneLine(game, selectedLine, lastSceneID, context, true);
+						Scene.SceneLineResult result = sceneLine(selectedLine, lastScene, context, true);
 						if (result.exit() || result.redirect() != null) return result;
 					}
 				}
 			}
 			if (line.getScriptPost() != null) {
-				line.getScriptPost().execute(, context);
+				line.getScriptPost().run(getScriptRuntime(), context);
 			}
 			if (line.shouldExit()) {
 				return new Scene.SceneLineResult(true, null);
 			} else if (line.hasRedirect()) {
-				return new Scene.SceneLineResult(false, line.getRedirectID());
+				return new Scene.SceneLineResult(false, line.getRedirect());
 			}
 		}
 		return new Scene.SceneLineResult(false, null);
 	}
 
-	private String sceneChoiceMenu(List<SceneChoice> validChoices) {
+	private Scene sceneChoiceMenu(List<SceneChoice> validChoices) {
 		List<MenuChoice> menuChoices = new ArrayList<>();
 		for (SceneChoice choice : validChoices) {
 			menuChoices.add(new MenuChoice(choice.getPrompt(), new Action.CanChooseResult(true, null), -1, false, null));
 		}
 		ChoiceMenuInputEvent input = startChoiceMenu(menuChoices, new ArrayList<>(), -1, true);
-		return validChoices.get(input.getIndex()).getLinkedID();
+		return validChoices.get(input.getIndex()).getLinkedScene();
 	}
 
 	public void attributeMenu(Actor actor, int points, Collection<Attribute> attributes) {

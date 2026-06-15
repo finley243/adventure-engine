@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.actor.ai;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
+import com.github.finley243.adventureengine.actor.component.BehaviorComponent;
 import com.github.finley243.adventureengine.actor.component.TargetingComponent;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.component.ItemComponentWeapon;
@@ -58,7 +59,7 @@ public class UtilityUtils {
 		}
 	}
 
-	public static Action selectActionByUtility(Actor actor, List<Action> actions, int chaos) {
+	public static Action selectActionByUtility(Actor actor, BehaviorComponent behaviorComponent, List<Action> actions, int chaos) {
 		List<List<Action>> bestActions = new ArrayList<>(chaos + 1);
 		List<Float> maxWeights = new ArrayList<>(chaos + 1);
 		for (int i = 0; i < chaos + 1; i++) {
@@ -68,7 +69,7 @@ public class UtilityUtils {
 		for (Action currentAction : actions) {
 			if (currentAction.canChoose(actor).canChoose()) {
 				float currentWeight = currentAction.utility(actor);
-				Float behaviorOverride = actor.getBehaviorComponent().actionUtilityOverride(currentAction);
+				Float behaviorOverride = behaviorComponent.actionUtilityOverride(currentAction);
 				if (behaviorOverride != null) {
 					currentWeight = behaviorOverride;
 				}

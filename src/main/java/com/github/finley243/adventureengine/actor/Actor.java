@@ -100,11 +100,12 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	private final Map<String, StatInt> attributes;
 	private final Map<String, StatInt> skills;
 
+	private final List<Behavior> behaviors;
+
 	private final EffectComponent effectComponent;
 	private final Inventory inventory;
 	private final EquipmentComponent equipmentComponent;
 	private final TargetingComponent targetingComponent;
-	private final BehaviorComponent behaviorComponent;
 
 	private final Map<String, List<Script>> scripts;
 	private final Context defaultContext;
@@ -118,7 +119,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.area = area;
 		this.template = template;
 		this.isPlayer = isPlayer;
-		this.targetingComponent = new TargetingComponent(this);
 		this.areaTargets = new HashSet<>();
 		this.senseTypes = new StatStringSetRegistry<>("sense_types", this, senseTypeRegistry, SenseType::ID);
 		this.startDead = startDead;
@@ -131,9 +131,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		this.canDodge = new StatBoolean("can_dodge", this, false);
 		this.inventory = new Inventory(itemFactory, this);
 		this.equipmentComponent = new EquipmentComponent(this);
+		this.targetingComponent = new TargetingComponent(this);
 		this.equipmentEffects = new StatStringSetRegistry<>("equipment_effects", this, effectRegistry, Effect::getID);
 		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().subject(this).build());
-		this.behaviorComponent = new BehaviorComponent(this, behaviors);
+		this.behaviors = behaviors;
 		this.startDisabled = startDisabled;
 		this.isPlayerControlled = isPlayerControlled;
 		this.scripts = new HashMap<>();
@@ -356,6 +357,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return effectComponent;
 	}
 
+	public TargetingComponent getTargetingComponent() {
+		return targetingComponent;
+	}
+
 	@Override
 	public void addEffect(Effect effect) {
 		effectComponent.addEffect(effect);
@@ -366,12 +371,8 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		effectComponent.removeEffect(effect);
 	}
 
-	public BehaviorComponent getBehaviorComponent() {
-		return behaviorComponent;
-	}
-
-	public TargetingComponent getTargetingComponent() {
-		return targetingComponent;
+	public List<Behavior> getBehaviors() {
+		return behaviors;
 	}
 
 	public Map<String, EquipSlot> getEquipSlots() {
@@ -603,7 +604,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		return new ArrayList<>();
 	}
 
-	public List<Action> availableActions(Pathfinder pathfinder) {
+	public List<Action> availableActions(Pathfinder pathfinder, Runnable onEndTurnAction) {
 		if (!canPerformActions(Context.from(defaultContext).build())) {
 			return new ArrayList<>();
 		}
@@ -654,7 +655,7 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		} else {
 			actions.add(new ActionSneakStart(scriptRuntime, sensoryEventDispatcher));
 		}
-		actions.add(new ActionEnd(scriptRuntime, sensoryEventDispatcher));
+		actions.add(new ActionEnd(scriptRuntime, sensoryEventDispatcher, onEndTurnAction));
 		return actions;
 	}
 
@@ -664,9 +665,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	
 	public void endTurn() {
 		endTurn = true;
-		if (!isPlayerControlled() && shouldIdle()) {
-			playIdle();
-		}
 	}
 
 	public boolean isTurnEnded() {
@@ -675,19 +673,6 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 
 	public void setTurnActive() {
 		endTurn = false;
-	}
-
-	private void playIdle() {
-		if (getBehaviorComponent() != null) {
-			Idle idle = getBehaviorComponent().getIdle(scriptRuntime);
-			if (idle != null) {
-				idle.trigger(this);
-			}
-		}
-	}
-
-	private boolean shouldIdle() {
-		return !isInCombat();
 	}
 	
 	public void updateAreaTargets() {
@@ -710,7 +695,10 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 	}
 
 	public boolean isVisible(Actor subject) {
-        return !(isInCover() && !getArea().equals(subject.getArea()));
+		if (isUsingObject()) {
+			return getUsingObject().object().getComponentOfType(ObjectComponentUsable.class).userCanSeeOtherAreas(getUsingObject().slot()) || getArea().equals(subject.getArea());
+		}
+        return true;
     }
 
 	public Set<Actor> getLineOfSightActors(Pathfinder pathfinder) {

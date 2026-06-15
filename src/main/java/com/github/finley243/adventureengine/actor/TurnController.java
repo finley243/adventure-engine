@@ -28,7 +28,9 @@ public abstract class TurnController {
     }
 
     public void takeTurn(Pathfinder pathfinder, ScriptRuntime scriptRuntime, QuestManager questManager) {
-        if (!actor.isEnabled() || actor.isDead()) {
+        if (!actor.isEnabled()) return;
+        if (actor.isDead()) {
+            onStartTurnDead();
             return;
         }
         if (actor.isSleeping()) {
@@ -42,45 +44,53 @@ public abstract class TurnController {
         repeatActions.clear();
         actor.setTurnActive();
         Action lastAction = null;
-        int repeatActionCount = 0;
+        int consecutiveRepeatActionCount = 0;
         while (canContinueTurn()) {
             questManager.update();
             onPreAction(scriptRuntime, pathfinder);
-            List<Action> actionChoices = actor.availableActions(pathfinder);
+            List<Action> actionChoices = actor.availableActions(pathfinder, () -> onEndTurnAction(scriptRuntime));
             applyActionConstraints(actionChoices);
             if (actionChoices.isEmpty()) {
                 actor.endTurn();
                 break;
             }
             Action selectedAction = selectAction(actionChoices);
-            boolean isRepeatMatch = false;
             Action actionRepeatMatch = getRepeatActionMatch(selectedAction);
-            if (actionRepeatMatch != null) {
-                isRepeatMatch = true;
+            boolean isRepeatMatch = actionRepeatMatch != null;
+            if (isRepeatMatch) {
                 decrementRepeatAction(actionRepeatMatch);
             }
-            if (!(isRepeatMatch && selectedAction.repeatsUseNoActionPoints())) {
-                actionPointsUsed += selectedAction.actionPoints(actor);
-            }
+            actionPointsUsed += getFinalActionPointsForAction(selectedAction);
             if (!isRepeatMatch && selectedAction.repeatCount(actor) > 0) {
                 addRepeatAction(selectedAction, selectedAction.repeatCount(actor) - 1);
             }
             if (lastAction != null && selectedAction.isRepeatMatch(lastAction)) {
-                repeatActionCount += 1;
+                consecutiveRepeatActionCount += 1;
             } else {
-                repeatActionCount = 0;
+                consecutiveRepeatActionCount = 0;
             }
-            selectedAction.choose(actor, repeatActionCount);
+            selectedAction.choose(actor, consecutiveRepeatActionCount);
             onPostAction(selectedAction);
             lastAction = selectedAction;
         }
     }
 
-    protected abstract void onPreAction(ScriptRuntime scriptRuntime, Pathfinder pathfinder);
+    public int getFinalActionPointsForAction(Action action) {
+        if (action.repeatsUseNoActionPoints() && isRepeatAction(action)) {
+            return 0;
+        }
+        return action.actionPoints(actor);
+    }
 
-    protected abstract void onPostAction(Action action);
+    protected void onStartTurnDead() {}
 
-    protected abstract void onStartTurn(ScriptRuntime scriptRuntime);
+    protected void onStartTurn(ScriptRuntime scriptRuntime) {}
+
+    protected void onPreAction(ScriptRuntime scriptRuntime, Pathfinder pathfinder) {}
+
+    protected void onPostAction(Action action) {}
+
+    protected void onEndTurnAction(ScriptRuntime scriptRuntime) {}
 
     protected abstract Action selectAction(List<Action> actions);
 
@@ -112,7 +122,7 @@ public abstract class TurnController {
                 currentAction.setDisabled(true, "Repeat limit reached");
             } else if (isBlocked) {
                 currentAction.setDisabled(true, "Blocked");
-            } else if (!(isRepeatMatch && currentAction.repeatsUseNoActionPoints()) && actor.getActionPoints() - actionPointsUsed < currentAction.actionPoints(actor)) {
+            } else if (actor.getActionPoints() - actionPointsUsed < getFinalActionPointsForAction(currentAction)) {
                 currentAction.setDisabled(true, "Not enough action points");
             }
         }
@@ -130,6 +140,10 @@ public abstract class TurnController {
 
     private void addRepeatAction(Action action, int startingCount) {
         repeatActions.put(action, startingCount);
+    }
+
+    private boolean isRepeatAction(Action action) {
+        return getRepeatActionMatch(action) != null;
     }
 
     private Action getRepeatActionMatch(Action action) {

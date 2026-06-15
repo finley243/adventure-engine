@@ -9,8 +9,11 @@ import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 public class ActionEnd extends Action {
 
-	public ActionEnd(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
+	private final Runnable onEndTurn;
+
+	public ActionEnd(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher, Runnable onEndTurn) {
         super(scriptRuntime, sensoryEventDispatcher);
+		this.onEndTurn = onEndTurn;
     }
 
 	@Override
@@ -26,6 +29,7 @@ public class ActionEnd extends Action {
 	@Override
 	public void choose(Actor subject, int repeatActionCount) {
 		subject.endTurn();
+		onEndTurn.run();
 	}
 
 	@Override
