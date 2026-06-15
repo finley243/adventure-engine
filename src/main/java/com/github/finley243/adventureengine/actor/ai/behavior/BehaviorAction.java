@@ -6,8 +6,10 @@ import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.world.environment.Area;
+import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
@@ -24,6 +26,9 @@ public class BehaviorAction extends Behavior {
         this.actionCondition = actionCondition;
         this.hasPerformedAction = false;
     }
+
+    @Override
+    public void resolveReferences(Registry<Area> areaRegistry, Registry<WorldObject> objectRegistry, Registry<Actor> actorRegistry) {}
 
     @Override
     public void onStart(Context scriptContext) {

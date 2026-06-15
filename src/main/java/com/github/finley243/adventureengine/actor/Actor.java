@@ -167,6 +167,13 @@ public class Actor extends GameInstanced implements Noun, Physical, MutableStatH
 		setEnabled(!startDisabled);
 	}
 
+	public void resolveBehaviorReferences(Registry<Area> areaRegistry, Registry<WorldObject> objectRegistry, Registry<Actor> actorRegistry) {
+		if (behaviors == null) return;
+		for (Behavior behavior : behaviors) {
+			behavior.resolveReferences(areaRegistry, objectRegistry, actorRegistry);
+		}
+	}
+
 	public void generateInitialInventory(ItemFactory itemFactory, MutableRegistry<Item> itemMutableRegistry) {
 		if (getTemplate().getLootTable() != null) {
 			getTemplate().getLootTable().generateItems(inventory, itemFactory, itemMutableRegistry);

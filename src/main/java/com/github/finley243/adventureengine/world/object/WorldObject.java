@@ -46,6 +46,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 	private Set<ObjectComponentLink.LinkDataIntermediate> objectLinks;
 	private String vehicleObjectOverrideID;
 	private final Map<String, Expression> localVars;
+	private final Set<Actor> activeGuards;
 
 	public WorldObject(String ID, ObjectTemplate template, boolean startDisabled, boolean startHidden, Set<ObjectComponentLink.LinkDataIntermediate> objectLinks, String vehicleObjectOverrideID, Map<String, Expression> localVarsDefault) {
 		super(ID);
@@ -55,6 +56,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		this.objectLinks = objectLinks;
 		this.vehicleObjectOverrideID = vehicleObjectOverrideID;
 		this.localVars = localVarsDefault;
+		this.activeGuards = new HashSet<>();
 		for (ObjectComponentTemplate componentTemplate : getTemplate().getComponents()) {
 			ObjectComponent component = ObjectComponentFactory.create(componentTemplate, this);
             if (components.containsKey(component.getClass())) {
@@ -232,13 +234,17 @@ public class WorldObject extends GameInstanced implements Noun, Physical, StatHo
 		return actions;
 	}
 
+	public void addGuard(Actor actor) {
+		activeGuards.add(actor);
+	}
+
+	public void removeGuard(Actor actor) {
+		activeGuards.remove(actor);
+	}
+
 	public boolean isGuarded() {
-		for (Actor actor : getArea().getActors()) {
-			if (actor.getBehaviorComponent().isGuarding(this)) {
-				return true;
-			}
-		}
-		return false;
+		activeGuards.removeIf(actor -> !actor.isEnabled() || !actor.isActive());
+		return !activeGuards.isEmpty();
 	}
 
 	public boolean isVisible(Actor subject) {

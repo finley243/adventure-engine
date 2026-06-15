@@ -188,6 +188,9 @@ public class GameDataLoader {
         ActorRegistry actorRegistry = new ActorRegistry(actorMap, playerActor);
         Registry<WorldObject> objectRegistry = new Registry<>(areaLoaderResult.objects());
 
+        for (Actor actor : actorRegistry.getAll()) {
+            actor.resolveBehaviorReferences(areaRegistry, objectRegistry, actorRegistry);
+        }
         for (Area area : areaRegistry.getAll()) {
             area.resolveAreaLinks(areaRegistry);
         }

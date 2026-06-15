@@ -19,6 +19,8 @@ public interface AttackTarget {
 
     boolean isVisible(Actor subject);
 
+    String getID();
+
     public record ComputedDamage(int amount, Limb limb, boolean isKillingBlow) {}
 
 }

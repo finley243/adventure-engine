@@ -9,7 +9,6 @@ import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.actor.ai.behavior.Behavior;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
-import com.github.finley243.adventureengine.world.object.WorldObject;
 
 import java.util.List;
 
@@ -50,11 +49,6 @@ public class BehaviorComponent {
         } else {
             return current.actionUtilityOverride(actor, action);
         }
-    }
-
-    public boolean isGuarding(WorldObject object) {
-        Behavior currentBehavior = currentBehavior();
-        return currentBehavior != null && currentBehavior.isGuarding(actor, object);
     }
 
     public void onPerformAction(Action action) {

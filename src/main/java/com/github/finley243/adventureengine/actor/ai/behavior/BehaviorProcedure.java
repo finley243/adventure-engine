@@ -1,12 +1,13 @@
 package com.github.finley243.adventureengine.actor.ai.behavior;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.Game;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.object.WorldObject;
 
@@ -31,6 +32,13 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
+    public void resolveReferences(Registry<Area> areaRegistry, Registry<WorldObject> objectRegistry, Registry<Actor> actorRegistry) {
+        for (Behavior behavior : stages) {
+            behavior.resolveReferences(areaRegistry, objectRegistry, actorRegistry);
+        }
+    }
+
+    @Override
     public boolean isInTargetState(Actor subject) {
         return stages.get(currentStage).isInTargetState(subject);
     }
@@ -50,9 +58,9 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public void updateTurn(Actor subject, Context scriptContext) {
-        triggerRoundScript(scriptContext);
-        stages.get(currentStage).updateTurn(subject, currentStageContext);
+    public void updateTurn(Actor subject, ScriptRuntime scriptRuntime) {
+        triggerRoundScript(subject, scriptRuntime);
+        stages.get(currentStage).updateTurn(subject, scriptRuntime);
     }
 
     @Override
@@ -64,14 +72,14 @@ public class BehaviorProcedure extends Behavior {
                 currentStage = 0;
             }
             resetStageContext(scriptContext);
-            stages.get(currentStage).onStart(currentStageContext);
+            stages.get(currentStage).onStart(subject, currentStageContext);
         }
     }
 
     @Override
-    public void onStart(Context scriptContext) {
+    public void onStart(Actor subject, ScriptRuntime scriptRuntime) {
         currentStage = 0;
-        resetStageContext(scriptContext);
+        resetStageContext(subject, scriptRuntime);
         stages.get(currentStage).onStart(currentStageContext);
     }
 
@@ -91,8 +99,8 @@ public class BehaviorProcedure extends Behavior {
     }
 
     @Override
-    public Idle getIdle(Game game, Actor subject) {
-        return stages.get(currentStage).getIdle(game, subject);
+    public Idle getIdle(Actor subject, ScriptRuntime scriptRuntime) {
+        return stages.get(currentStage).getIdle(subject, scriptRuntime);
     }
 
     private void resetStageContext(Context parentContext) {

@@ -1,7 +1,6 @@
 package com.github.finley243.adventureengine.menu;
 
 import com.github.finley243.adventureengine.Context;
-import com.github.finley243.adventureengine.GameInstanced;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.action.ActionEnd;
@@ -255,7 +254,7 @@ public class MenuManager {
 					} else {
 						weaponCategory = attackCategory;
 					}
-					String attackTypeCategory = weaponCategory + "_target_" + ((GameInstanced) data.target).getID() + "_targeted_" + ((ActionAttack) action).getAttackTypeID();
+					String attackTypeCategory = weaponCategory + "_target_" + data.target.getID() + "_targeted_" + ((ActionAttack) action).getAttackTypeID();
 					String attackTypeName = action.getPrompt(actor);
 					if (!categoryMap.containsKey(attackTypeCategory)) {
 						categoryMap.put(attackTypeCategory, new MenuCategory(MenuCategory.CategoryType.GENERIC, attackTypeCategory, weaponCategory, false, false, attackTypeName, null));

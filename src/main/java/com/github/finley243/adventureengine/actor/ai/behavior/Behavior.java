@@ -3,9 +3,11 @@ package com.github.finley243.adventureengine.actor.ai.behavior;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionTemplate;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.ai.Idle;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
@@ -38,6 +40,8 @@ public abstract class Behavior {
         this.idles = idles;
         this.turnsRemaining = 0;
     }
+
+    public abstract void resolveReferences(Registry<Area> areaRegistry, Registry<WorldObject> objectRegistry, Registry<Actor> actorRegistry);
 
     public void triggerStartScript(Actor actor, ScriptRuntime scriptRuntime) {
         if (startScript != null) {
@@ -92,10 +96,6 @@ public abstract class Behavior {
 
     public Float actionUtilityOverride(Actor subject, Action action) {
         return null;
-    }
-
-    public boolean isGuarding(Actor subject, WorldObject object) {
-        return false;
     }
 
     public boolean isValid(Actor subject, ScriptRuntime scriptRuntime) {
