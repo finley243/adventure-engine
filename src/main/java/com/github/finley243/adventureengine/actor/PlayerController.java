@@ -2,44 +2,56 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.RenderAreaEvent;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.menu.MenuManager;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.LangUtils;
 import com.github.finley243.adventureengine.world.environment.Area;
 
 import java.util.Collection;
+import java.util.List;
 
 public class PlayerController extends TurnController {
 
     private final UIEventBus eventBus;
-    private final MenuManager menuManager;
     private final AreaRegistry areaRegistry;
     private final Runnable onGameEnd;
 
     private Area lastKnownArea;
 
     public PlayerController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher, UIEventBus eventBus, MenuManager menuManager, AreaRegistry areaRegistry, Runnable onGameEnd) {
-        super(actor, sensoryEventDispatcher);
+        super(actor, sensoryEventDispatcher, menuManager);
         this.eventBus = eventBus;
-        this.menuManager = menuManager;
         this.areaRegistry = areaRegistry;
         this.onGameEnd = onGameEnd;
     }
 
     @Override
+    protected void onPreAction(ScriptRuntime scriptRuntime, Pathfinder pathfinder) {}
+
+    @Override
     protected void onPostAction(Action action) {
-        if (getActor().isDead()) {
+        if (actor.isDead()) {
             onPlayerDeath();
         }
-        Area currentArea = getActor().getArea();
+        Area currentArea = actor.getArea();
         if (currentArea != lastKnownArea) {
             boolean isNewRoom = lastKnownArea == null || currentArea.getRoom() != lastKnownArea.getRoom();
             onPlayerEnterArea(currentArea, isNewRoom);
             lastKnownArea = currentArea;
         }
+    }
+
+    @Override
+    protected void onStartTurn(ScriptRuntime scriptRuntime) {}
+
+    @Override
+    protected Action selectAction(List<Action> actions) {
+        return menuManager.actionChoiceMenu(actor, actions);
     }
 
     private void onPlayerDeath() {
@@ -48,7 +60,7 @@ public class PlayerController extends TurnController {
 
     private void onPlayerEnterArea(Area area, boolean isNewRoom) {
         eventBus.post(new RenderAreaEvent(area.getRoom() != null ? LangUtils.titleCase(area.getRoom().getName()) : null, LangUtils.titleCase(area.getName())));
-        Context context = Context.builder().subject(getActor()).parentArea(area).build();
+        Context context = Context.builder().subject(actor).parentArea(area).build();
         if (isNewRoom && area.getRoom() != null && area.getRoom().getDescription() != null) {
             menuManager.sceneMenu(area.getRoom().getDescription(), context, false);
             area.getRoom().setKnown();

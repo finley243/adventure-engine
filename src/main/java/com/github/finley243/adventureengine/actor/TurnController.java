@@ -2,7 +2,6 @@ package com.github.finley243.adventureengine.actor;
 
 import com.github.finley243.adventureengine.action.Action;
 import com.github.finley243.adventureengine.actor.ai.Pathfinder;
-import com.github.finley243.adventureengine.actor.ai.UtilityUtils;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
@@ -14,19 +13,21 @@ import java.util.Map;
 
 public abstract class TurnController {
 
-    private final Actor actor;
-    private final SensoryEventDispatcher sensoryEventDispatcher;
+    protected final Actor actor;
+    protected final SensoryEventDispatcher sensoryEventDispatcher;
+    protected final MenuManager menuManager;
 
     private final Map<Action, Integer> repeatActions;
     private int actionPointsUsed;
 
-    public TurnController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher) {
+    public TurnController(Actor actor, SensoryEventDispatcher sensoryEventDispatcher, MenuManager menuManager) {
         this.actor = actor;
         this.sensoryEventDispatcher = sensoryEventDispatcher;
+        this.menuManager = menuManager;
         this.repeatActions = new HashMap<>();
     }
 
-    public void takeTurn(Pathfinder pathfinder, ScriptRuntime scriptRuntime, MenuManager menuManager, QuestManager questManager) {
+    public void takeTurn(Pathfinder pathfinder, ScriptRuntime scriptRuntime, QuestManager questManager) {
         if (!actor.isEnabled() || actor.isDead()) {
             return;
         }
@@ -36,34 +37,22 @@ public abstract class TurnController {
         }
         actor.getEffectComponent().onStartRound();
         actor.getInventory().onStartRound();
-        if (!actor.isPlayerControlled()) {
-            actor.getTargetingComponent().updateTurn();
-            actor.getBehaviorComponent().updateTurn(scriptRuntime);
-        }
+        onStartTurn(scriptRuntime);
         actionPointsUsed = 0;
         repeatActions.clear();
         actor.setTurnActive();
         Action lastAction = null;
         int repeatActionCount = 0;
-        while (!actor.isTurnEnded()) {
+        while (canContinueTurn()) {
             questManager.update();
-            if (!actor.isPlayerControlled()) {
-                actor.updateAreaTargets();
-                actor.getTargetingComponent().update();
-                actor.getBehaviorComponent().update(scriptRuntime, pathfinder);
-            }
+            onPreAction(scriptRuntime, pathfinder);
             List<Action> actionChoices = actor.availableActions(pathfinder);
             applyActionConstraints(actionChoices);
             if (actionChoices.isEmpty()) {
                 actor.endTurn();
                 break;
             }
-            Action selectedAction;
-            if (actor.isPlayerControlled()) {
-                selectedAction = menuManager.actionChoiceMenu(actor, actionChoices);
-            } else {
-                selectedAction = chooseAIAction(actor, actionChoices);
-            }
+            Action selectedAction = selectAction(actionChoices);
             boolean isRepeatMatch = false;
             Action actionRepeatMatch = getRepeatActionMatch(selectedAction);
             if (actionRepeatMatch != null) {
@@ -87,14 +76,16 @@ public abstract class TurnController {
         }
     }
 
-    protected Actor getActor() {
-        return actor;
-    }
+    protected abstract void onPreAction(ScriptRuntime scriptRuntime, Pathfinder pathfinder);
 
     protected abstract void onPostAction(Action action);
 
-    private Action chooseAIAction(Actor actor, List<Action> actions) {
-        return UtilityUtils.selectActionByUtility(actor, actions, 1);
+    protected abstract void onStartTurn(ScriptRuntime scriptRuntime);
+
+    protected abstract Action selectAction(List<Action> actions);
+
+    private boolean canContinueTurn() {
+        return !actor.isTurnEnded() && actor.isEnabled() && actor.isActive();
     }
 
     private void applyActionConstraints(List<Action> actions) {

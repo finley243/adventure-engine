@@ -10,6 +10,7 @@ import com.github.finley243.adventureengine.load.GameDataLoader;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.script.ScriptRuntimeImpl;
+import com.github.finley243.adventureengine.textgen.TextGen;
 import com.github.finley243.adventureengine.ui.ConsoleInterface;
 import com.github.finley243.adventureengine.ui.ConsoleParserInterface;
 import com.github.finley243.adventureengine.ui.GraphicalInterfaceComplex;
@@ -32,7 +33,8 @@ public class Main {
         Map<ConfigOption, String> configData = configLoader.loadConfig(configFile);
 		ConfigHandler configHandler = new ConfigHandler(configData);
 
-		UIEventBus eventBus = new UIEventBusImpl();
+		TextGen textGen = new TextGen();
+		UIEventBus eventBus = new UIEventBusImpl(textGen);
 		MenuManager menuManager = new MenuManager(eventBus);
 		eventBus.register(menuManager);
 		QuestManager questManager = new QuestManager();
@@ -48,7 +50,7 @@ public class Main {
 
 		MutableRegistry<Item> itemMutableRegistry = new MutableRegistry<>(Map.of());
 
-		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, eventBus);
+		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, eventBus, textGen);
 		File dataDirectory = Path.of(GAMEFILES + DATA_DIRECTORY).toFile();
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);

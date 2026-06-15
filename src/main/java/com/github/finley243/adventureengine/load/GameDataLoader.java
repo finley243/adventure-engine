@@ -70,12 +70,14 @@ public class GameDataLoader {
     private final ScriptRuntime scriptRuntime;
     private final MutableRegistry<Item> itemMutableRegistry;
     private final UIEventBus eventBus;
+    private final TextGen textGen;
 
-    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, UIEventBus eventBus) {
+    public GameDataLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, MutableRegistry<Item> itemMutableRegistry, UIEventBus eventBus, TextGen textGen) {
         this.configHandler = configHandler;
         this.scriptRuntime = scriptRuntime;
         this.itemMutableRegistry = itemMutableRegistry;
         this.eventBus = eventBus;
+        this.textGen = textGen;
     }
 
     public GameData loadData(File dir) throws GameDataException {
@@ -173,7 +175,6 @@ public class GameDataLoader {
         ItemComponentFactory itemComponentFactory = new ItemComponentFactory(scriptRuntime, attackTypeRegistry, effectRegistry);
         ItemFactory itemFactory = new ItemFactory(itemTemplateRegistry, itemMutableRegistry, itemComponentFactory);
 
-        TextGen textGen = new TextGen();
         Pathfinder pathfinder = new Pathfinder();
         SensoryEventDispatcher sensoryEventDispatcher = new SensoryEventDispatcher(pathfinder, textGen, eventBus);
 
