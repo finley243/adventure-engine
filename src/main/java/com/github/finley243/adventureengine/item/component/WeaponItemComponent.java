@@ -102,8 +102,8 @@ public class WeaponItemComponent extends ItemComponent {
         return critChance.value(getWeaponTemplate().getCritChance(), 0.0f, 1.0f, context);
     }
 
-    public Set<AreaLink.DistanceCategory> getRanges(ScriptRuntime scriptRuntime, Context context) {
-        return ranges.valueEnum(getWeaponClass().primaryRanges(), AreaLink.DistanceCategory.class, scriptRuntime, context);
+    public Set<AreaLink.DistanceCategory> getRanges(Context context) {
+        return ranges.valueEnum(getWeaponClass().primaryRanges(), AreaLink.DistanceCategory.class, context);
     }
 
     public float getModifiedHitChance(Context context, float baseChance) {
@@ -114,8 +114,8 @@ public class WeaponItemComponent extends ItemComponent {
         return armorMult.value(getWeaponTemplate().getArmorMult(), 0.0f, 2.0f, context);
     }
 
-    public Set<Effect> getTargetEffects(ScriptRuntime scriptRuntime, Context context) {
-        return targetEffects.value(getWeaponTemplate().getTargetEffects(), scriptRuntime, context);
+    public Set<Effect> getTargetEffects(Context context) {
+        return targetEffects.value(getWeaponTemplate().getTargetEffects(), context);
     }
 
     public DamageType getDamageType(Context context) {
@@ -135,7 +135,7 @@ public class WeaponItemComponent extends ItemComponent {
     }
 
     public Set<WeaponAttackType> getAttackTypes(ScriptRuntime scriptRuntime, Context context) {
-        return attackTypes.valueObjects(getWeaponClass().attackTypes(), scriptRuntime, context);
+        return attackTypes.valueObjects(getWeaponClass().attackTypes(), context);
     }
 
     @Override
@@ -165,8 +165,8 @@ public class WeaponItemComponent extends ItemComponent {
             case "is_silenced" -> Expression.constant(isSilenced(context));
             case "damage_type" -> Expression.constant(getDamageType(context));
             case "attack_types" -> Expression.constant(getAttackTypes(context));
-            case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges(), context));
-            case "target_effects" -> Expression.constant(getTargetEffects(context));
+            case "ranges" -> Expression.constant(ranges.valueFromEnum(getWeaponClass().primaryRanges()));
+            case "target_effects" -> Expression.constant(getTargetEffects());
             case "skill" -> Expression.constant(getSkill());
             default -> super.getScriptValue(name, context);
         };

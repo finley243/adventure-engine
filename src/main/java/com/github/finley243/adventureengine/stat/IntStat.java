@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.stat;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,8 @@ public class IntStat extends Stat {
 
     private final List<StatIntMod> mods;
 
-    public IntStat(String name, StatHolder target) {
-        super(name, target);
+    public IntStat(String name, StatHolder target, ScriptRuntime scriptRuntime) {
+        super(name, target, scriptRuntime);
         this.mods = new ArrayList<>();
     }
 
@@ -20,7 +21,7 @@ public class IntStat extends Stat {
         int add = 0;
         float mult = 0.0f;
         for (StatIntMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (shouldApplyMod(mod.condition(), context)) {
                 add += mod.add;
                 mult += mod.mult;
             }
@@ -43,10 +44,6 @@ public class IntStat extends Stat {
         return mods;
     }
 
-    public record StatIntMod(Condition condition, int add, float mult) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
-        }
-    }
+    public record StatIntMod(Condition condition, int add, float mult) {}
 
 }

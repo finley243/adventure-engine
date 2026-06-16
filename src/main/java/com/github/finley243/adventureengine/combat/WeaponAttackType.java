@@ -97,7 +97,7 @@ public class WeaponAttackType {
         if (weapon == null) throw new IllegalArgumentException("Weapon cannot be null");
         Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).build();
         List<Action> actions = new ArrayList<>();
-        Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getComponentOfType(WeaponItemComponent.class).getRanges(scriptRuntime, context))) : weapon.getComponentOfType(WeaponItemComponent.class).getRanges(scriptRuntime, context));
+        Set<AreaLink.DistanceCategory> ranges = rangeOverride != null && !rangeOverride.isEmpty() ? rangeOverride : (useNonIdealRange ? EnumSet.complementOf(EnumSet.copyOf(weapon.getComponentOfType(WeaponItemComponent.class).getRanges(context))) : weapon.getComponentOfType(WeaponItemComponent.class).getRanges(context));
         int rate = rateOverride != null ? rateOverride : weapon.getComponentOfType(WeaponItemComponent.class).getRate(context);
         Script damage = Objects.requireNonNullElseGet(damageOverride, () -> Script.constant((int) (weapon.getComponentOfType(WeaponItemComponent.class).getDamage(context) * (damageMult + 1.0f))));
         DamageType damageType = damageTypeOverride != null ? damageTypeOverride : weapon.getComponentOfType(WeaponItemComponent.class).getDamageType(context);
@@ -105,7 +105,7 @@ public class WeaponAttackType {
         boolean isLoud = isLoudOverride != null ? isLoudOverride : weapon.getComponentOfType(WeaponItemComponent.class).isLoud(context);
         List<Effect> targetEffectsCombined = new ArrayList<>(targetEffects);
         if (!overrideTargetEffects) {
-            targetEffectsCombined.addAll(weapon.getComponentOfType(WeaponItemComponent.class).getTargetEffects(scriptRuntime, context));
+            targetEffectsCombined.addAll(weapon.getComponentOfType(WeaponItemComponent.class).getTargetEffects(context));
         }
         switch (category) {
             case SINGLE -> {

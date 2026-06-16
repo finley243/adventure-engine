@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +11,8 @@ public class FloatStat extends Stat {
 
     private final List<StatFloatMod> mods;
 
-    public FloatStat(String name, StatHolder target) {
-        super(name, target);
+    public FloatStat(String name, StatHolder target, ScriptRuntime scriptRuntime) {
+        super(name, target, scriptRuntime);
         this.mods = new ArrayList<>();
     }
 
@@ -19,7 +20,7 @@ public class FloatStat extends Stat {
         float add = 0.0f;
         float mult = 0.0f;
         for (StatFloatMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (shouldApplyMod(mod.condition(), context)) {
                 add += mod.add;
                 mult += mod.mult;
             }
@@ -42,10 +43,6 @@ public class FloatStat extends Stat {
         return mods;
     }
 
-    public record StatFloatMod(Condition condition, float add, float mult) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
-        }
-    }
+    public record StatFloatMod(Condition condition, float add, float mult) {}
 
 }

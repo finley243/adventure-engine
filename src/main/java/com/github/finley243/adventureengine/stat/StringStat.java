@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.stat;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.LoadUtils;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,15 +12,15 @@ public class StringStat extends Stat {
 
     private final List<StatStringMod> mods;
 
-    public StringStat(String name, StatHolder target) {
-        super(name, target);
+    public StringStat(String name, StatHolder target, ScriptRuntime scriptRuntime) {
+        super(name, target, scriptRuntime);
         this.mods = new ArrayList<>();
     }
 
     public String value(String base, Context context) {
         String topValue = null;
         for (StatStringMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (shouldApplyMod(mod.condition(), context)) {
                 topValue = mod.value;
             }
         }
@@ -29,7 +30,7 @@ public class StringStat extends Stat {
     public <E extends Enum<E>> E valueEnum(E base, Class<E> enumType, Context context) {
         String topValue = null;
         for (StatStringMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (shouldApplyMod(mod.condition(), context)) {
                 topValue = mod.value;
             }
         }
@@ -50,10 +51,6 @@ public class StringStat extends Stat {
         return mods;
     }
 
-    public record StatStringMod(Condition condition, String value) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
-        }
-    }
+    public record StatStringMod(Condition condition, String value) {}
 
 }

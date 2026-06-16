@@ -2,6 +2,7 @@ package com.github.finley243.adventureengine.stat;
 
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.condition.Condition;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,8 @@ public class BooleanStat extends Stat {
     private final boolean priorityValue;
     private final List<StatBooleanMod> mods;
 
-    public BooleanStat(String name, StatHolder target, boolean priorityValue) {
-        super(name, target);
+    public BooleanStat(String name, StatHolder target, ScriptRuntime scriptRuntime, boolean priorityValue) {
+        super(name, target, scriptRuntime);
         this.priorityValue = priorityValue;
         this.mods = new ArrayList<>();
     }
@@ -22,7 +23,7 @@ public class BooleanStat extends Stat {
         int countTrue = 0;
         int countFalse = 0;
         for (StatBooleanMod mod : mods) {
-            if (mod.shouldApply(context)) {
+            if (shouldApplyMod(mod.condition(), context)) {
                 if (mod.value) {
                     countTrue += 1;
                 } else {
@@ -57,10 +58,6 @@ public class BooleanStat extends Stat {
         return mods;
     }
 
-    public record StatBooleanMod(Condition condition, boolean value) {
-        public boolean shouldApply(Context context) {
-            return condition == null || condition.isMet(context);
-        }
-    }
+    public record StatBooleanMod(Condition condition, boolean value) {}
 
 }

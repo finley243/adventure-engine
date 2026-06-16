@@ -13,19 +13,19 @@ public class StringSetRegistryStat<T> extends StringSetStat {
     private final Registry<T> registry;
     private final Function<T, String> idFunction;
 
-    public StringSetRegistryStat(String name, StatHolder target, Registry<T> registry, Function<T, String> idFunction) {
-        super(name, target);
+    public StringSetRegistryStat(String name, StatHolder target, ScriptRuntime scriptRuntime, Registry<T> registry, Function<T, String> idFunction) {
+        super(name, target, scriptRuntime);
         this.registry = registry;
         this.idFunction = idFunction;
     }
 
-    public Set<T> valueObjects(Set<T> base, ScriptRuntime scriptRuntime, Context context) {
+    public Set<T> valueObjects(Set<T> base, Context context) {
         Set<String> baseIDs = new HashSet<>();
         for (T baseObject : base) {
             String baseObjectID = idFunction.apply(baseObject);
             baseIDs.add(baseObjectID);
         }
-        Set<String> valueIDs = this.value(baseIDs, scriptRuntime, context);
+        Set<String> valueIDs = this.value(baseIDs, context);
         Set<T> valueObjects = new HashSet<>();
         for (String valueID : valueIDs) {
             T valueObject = registry.getFromID(valueID);

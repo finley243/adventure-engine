@@ -408,7 +408,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 	}
 
 	public Set<Effect> getEquipmentEffects(Item item) {
-		return equipmentEffects.valueObjects(new HashSet<>(), scriptRuntime, Context.from(defaultContext).parentItem(item).build());
+		return equipmentEffects.valueObjects(new HashSet<>(), Context.from(defaultContext).parentItem(item).build());
 	}
 
 	@Override
@@ -741,7 +741,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 
 	public Set<SenseType> getSenseTypes() {
 		Context context = Context.from(defaultContext).build();
-		return senseTypes.valueObjects(getTemplate().getSenseTypes(), scriptRuntime, context);
+		return senseTypes.valueObjects(getTemplate().getSenseTypes(), context);
 	}
 
 	public Set<ObstructionType> getAllBypassedObstructionTypes() {
@@ -824,7 +824,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			case "template_id" -> Expression.constant(template.getID());
 			case "area" -> Expression.constant(getArea().getID());
 			case "room" -> Expression.constant(getArea().getRoom() != null ? getArea().getRoom().getID() : null);
-			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), scriptRuntime, context));
+			case "equipment_effects" -> Expression.constant(equipmentEffects.value(new HashSet<>(), context));
 			case "sense_types" -> Expression.constant(getSenseTypes());
 			default -> null;
 		};

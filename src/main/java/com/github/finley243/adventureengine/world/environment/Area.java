@@ -377,14 +377,14 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 
 	public void applyEffects() {
 		for (Actor actor : getActors()) {
-			for (Effect effect : effects.valueObjects(new HashSet<>(), scriptRuntime, Context.builder().subject(actor).build())) {
+			for (Effect effect : effects.valueObjects(new HashSet<>(), Context.builder().subject(actor).build())) {
 				actor.getEffectComponent().addEffect(effect);
 			}
 		}
 	}
 
 	public Set<ObstructionType> getObstructionTypes() {
-		return obstructions.valueObjects(defaultObstructions, scriptRuntime, Context.builder().parentArea(this).build());
+		return obstructions.valueObjects(defaultObstructions, Context.builder().parentArea(this).build());
 	}
 
 	public boolean hasUnbypassedObstruction(Set<ObstructionType> bypassedObstructionIDs) {
