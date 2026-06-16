@@ -15,8 +15,8 @@ public class ActionItemTakeAll extends Action {
 	private final Area area;
 	private final Item item;
 
-	public ActionItemTakeAll(ActionDependencies dependencies, Area area, Item item) {
-        super(dependencies);
+	public ActionItemTakeAll(Actor subject, ActionDependencies dependencies, Area area, Item item) {
+        super(subject, dependencies);
         if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionItemTakeAll on item with state");
 		this.area = area;
 		this.item = item;
@@ -28,34 +28,34 @@ public class ActionItemTakeAll extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
+	public Context getContext() {
 		Context context = Context.builder().subject(subject).parentItem(item).build();
 		context.setLocalVariable("count", Expression.integer(area.getInventory().itemCount(item)));
 		return context;
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
+	public void choose(int repeatActionCount) {
 		int count = area.getInventory().itemCount(item);
 		area.getInventory().removeItems(item.getTemplateID(), count);
 		subject.getInventory().addItems(item.getTemplateID(), count);
-		Context context = getContext(subject);
+		Context context = getContext();
 		//TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).build());
 		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("pickUp"), context, true, this, null));
 	}
 
 	@Override
-	public int actionPoints(Actor subject) {
+	public int actionPoints() {
 		return 0;
 	}
 
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuData getMenuData() {
 		return new MenuDataItemWorld(item, area.getInventory());
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt() {
 		return "Take All";
 	}
 

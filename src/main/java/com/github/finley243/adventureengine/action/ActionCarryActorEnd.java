@@ -11,8 +11,8 @@ public class ActionCarryActorEnd extends Action {
 
     private final Actor carriedActor;
 
-    public ActionCarryActorEnd(ActionDependencies dependencies, Actor carriedActor) {
-        super(dependencies);
+    public ActionCarryActorEnd(Actor subject, ActionDependencies dependencies, Actor carriedActor) {
+        super(subject, dependencies);
         this.carriedActor = carriedActor;
     }
 
@@ -22,24 +22,24 @@ public class ActionCarryActorEnd extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         return Context.builder().subject(subject).target(carriedActor).build();
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         subject.setCarriedActor(null);
         Context context = Context.builder().subject(subject).target(carriedActor).build();
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("putDownActor"), context, true, this, null));
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataActor(carriedActor);
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return "Put down";
     }
 

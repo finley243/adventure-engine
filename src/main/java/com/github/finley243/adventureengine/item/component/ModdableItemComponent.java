@@ -37,7 +37,7 @@ public class ModdableItemComponent extends ItemComponent {
         List<Action> actions = super.getPossibleInventoryActions(dependencies, subject);
         for (List<Item> modList : mods.values()) {
             for (Item mod : modList) {
-                actions.add(new ActionModRemove(dependencies, getItem(), mod));
+                actions.add(new ActionModRemove(subject, dependencies, getItem(), mod));
             }
         }
         return actions;

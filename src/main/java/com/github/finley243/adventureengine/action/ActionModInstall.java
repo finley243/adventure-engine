@@ -13,8 +13,8 @@ public class ActionModInstall extends Action {
     private final Item target;
     private final Item mod;
 
-    public ActionModInstall(ActionDependencies dependencies, Item target, Item mod) {
-        super(dependencies);
+    public ActionModInstall(Actor subject, ActionDependencies dependencies, Item target, Item mod) {
+        super(subject, dependencies);
         this.target = target;
         this.mod = mod;
     }
@@ -25,21 +25,21 @@ public class ActionModInstall extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         Context context = Context.builder().subject(subject).parentItem(target).build();
         context.setLocalVariable("mod", Expression.valueHolder(mod));
         return context;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         subject.getInventory().removeItem(mod);
         target.getComponentOfType(ModdableItemComponent.class).installMod(mod);
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose() {
+        CanChooseResult resultSuper = super.canChoose();
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -50,17 +50,17 @@ public class ActionModInstall extends Action {
     }
 
     @Override
-    public boolean canShow(Actor subject) {
-        return super.canShow(subject) && target.hasComponentOfType(ModdableItemComponent.class);
+    public boolean canShow() {
+        return super.canShow() && target.hasComponentOfType(ModdableItemComponent.class);
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataInventoryCombine(target, subject.getInventory(), mod, null, subject.getInventory());
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return "Install";
     }
 

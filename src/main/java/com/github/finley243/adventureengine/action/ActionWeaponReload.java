@@ -20,8 +20,8 @@ public class ActionWeaponReload extends Action {
 	private final Item weapon;
 	private final ItemTemplate ammoType;
 	
-	public ActionWeaponReload(ActionDependencies dependencies, Item weapon, ItemTemplate ammoType) {
-        super(dependencies);
+	public ActionWeaponReload(Actor subject, ActionDependencies dependencies, Item weapon, ItemTemplate ammoType) {
+        super(subject, dependencies);
         this.weapon = weapon;
 		this.ammoType = ammoType;
 	}
@@ -32,14 +32,14 @@ public class ActionWeaponReload extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
+	public Context getContext() {
 		Context context = Context.builder().subject(subject).parentItem(weapon).build();
 		context.setLocalVariable("ammo", Expression.valueHolder(ammoType));
 		return context;
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
+	public void choose(int repeatActionCount) {
 		subject.triggerScript("on_reload", Context.builder().subject(subject).target(subject).parentItem(weapon).build());
 		if (subject.isPlayer()) {
 			if (!ammoType.equals(weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType()) && weapon.getComponentOfType(MagazineItemComponent.class).getAmmoRemaining() > 0) {
@@ -60,8 +60,8 @@ public class ActionWeaponReload extends Action {
 	}
 
 	@Override
-	public CanChooseResult canChoose(Actor subject) {
-		CanChooseResult resultSuper = super.canChoose(subject);
+	public CanChooseResult canChoose() {
+		CanChooseResult resultSuper = super.canChoose();
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
@@ -75,13 +75,13 @@ public class ActionWeaponReload extends Action {
 	}
 
 	@Override
-	public int actionPoints(Actor subject) {
+	public int actionPoints() {
 		Context context = Context.builder().subject(subject).target(subject).parentItem(weapon).parentAction(this).addVariable("ammo_type", Expression.valueHolder(ammoType)).build();
 		return weapon.getComponentOfType(MagazineItemComponent.class).getReloadActionPoints(context);
 	}
 
 	@Override
-	public float utility(Actor subject) {
+	public float utility() {
 		if (!subject.isInCombat()) {
 			return (1.0f - weapon.getComponentOfType(MagazineItemComponent.class).getAmmoFraction()) * RELOAD_UTILITY_NONCOMBAT;
 		} else {
@@ -94,12 +94,12 @@ public class ActionWeaponReload extends Action {
 	}
 
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuData getMenuData() {
 		return new MenuDataInventoryCombine(weapon, subject.getInventory(), null, ammoType, subject.getInventory());
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt() {
 		return "Reload";
 	}
 

@@ -106,8 +106,8 @@ public class UsableObjectComponent extends ObjectComponent {
     protected List<Action> getPossibleActions(Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
         for (String slotID : getTemplateUsable().getUsableSlotData().keySet()) {
-            if (!users.containsKey(slotID) && (!subject.isUsingObject() || !subject.getUsingObject()..equals(this))) {
-                actions.add(new ActionObjectUseStart(this, slotID));
+            if (!users.containsKey(slotID) && (!subject.isUsingObject() || !subject.getUsingObject().object().equals(getObject()))) {
+                actions.add(new ActionObjectUseStart(subject, dependencies, this, slotID));
             }
         }
         return actions;
@@ -115,16 +115,16 @@ public class UsableObjectComponent extends ObjectComponent {
 
     public List<Action> getUsingActions(String slotID, Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
-        actions.add(new ActionObjectUseEnd(this, slotID));
+        actions.add(new ActionObjectUseEnd(subject, dependencies, this, slotID));
         for (String exposedComponentName : getTemplateUsable().getUsableSlotData().get(slotID).componentsExposed()) {
             ObjectComponent component = getObject().getComponentOfType(ObjectComponentFactory.getClassFromName(exposedComponentName));
             if (component.isEnabled()) {
-                actions.addAll(component.getPossibleActions(subject, ));
+                actions.addAll(component.getPossibleActions(subject, dependencies));
             }
         }
         for (ActionCustom.CustomActionHolder usingAction : getTemplateUsable().getUsableSlotData().get(slotID).usingActions()) {
             ActionTemplate usingActionTemplate = usingAction.action();
-            actions.add(new ActionCustom(dependencies, null, getObject(), null, null, usingActionTemplate, usingAction.parameters(), new MenuDataObject(getObject()), false));
+            actions.add(new ActionCustom(subject, dependencies, null, getObject(), null, null, usingActionTemplate, usingAction.parameters(), new MenuDataObject(getObject()), false));
         }
         return actions;
     }

@@ -44,7 +44,7 @@ public abstract class NetworkNode extends GameInstanced implements ScriptValueHo
         if (isBreached()) {
             actions.addAll(breachedActions(subject, dependencies, object));
         } else {
-            actions.add(new ActionNetworkBreach(dependencies, this, object));
+            actions.add(new ActionNetworkBreach(subject, dependencies, this, object));
         }
         return actions;
     }

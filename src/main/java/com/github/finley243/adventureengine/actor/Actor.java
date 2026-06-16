@@ -586,20 +586,20 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 		List<Action> actions = new ArrayList<>();
 		if (isActive()) {
 			if (getTemplate().getDialogueStart() != null) {
-				actions.add(new ActionTalk(dependencies, this));
+				actions.add(new ActionTalk(subject, dependencies, this));
 			}
 		} else if (isDead()) {
-			actions.addAll(inventory.getExternalActions(dependencies, this, subject, "Take", "takeFrom", null, null, true, false));
-			actions.add(new ActionCarryActorStart(dependencies, this));
+			actions.addAll(inventory.getExternalActions(subject, dependencies, this, "Take", "takeFrom", null, null, true, false));
+			actions.add(new ActionCarryActorStart(subject, dependencies, this));
 		}
 		for (ActionCustom.CustomActionHolder actionHolder : getTemplate().getCustomActions()) {
 			ActionTemplate customActionTemplate = actionHolder.action();
-			actions.add(new ActionCustom(dependencies, this, null, null, null, customActionTemplate, actionHolder.parameters(), new MenuDataActor(this), false));
+			actions.add(new ActionCustom(subject, dependencies, this, null, null, null, customActionTemplate, actionHolder.parameters(), new MenuDataActor(this), false));
 		}
 		for (ActionCustom.CustomActionHolder inventoryActionHolder : getTemplate().getCustomInventoryActions()) {
 			for (Item item : inventory.getItems()) {
 				ActionTemplate customInventoryActionTemplate = inventoryActionHolder.action();
-				actions.add(new ActionCustom(dependencies, this, null, item, null, customInventoryActionTemplate, inventoryActionHolder.parameters(), new MenuDataActorInventory(this, item, false, false), false));
+				actions.add(new ActionCustom(subject, dependencies, this, null, item, null, customInventoryActionTemplate, inventoryActionHolder.parameters(), new MenuDataActorInventory(this, item, false, false), false));
 			}
 		}
 		return actions;
@@ -607,7 +607,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 
 	public List<Action> carriedActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
-		actions.add(new ActionCarryActorEnd(dependencies, this));
+		actions.add(new ActionCarryActorEnd(subject, dependencies, this));
 		return actions;
 	}
 
@@ -663,11 +663,11 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			actions.addAll(unarmedAttackType.generateActions(this, dependencies, null));
 		}
 		if (isSneaking()) {
-			actions.add(new ActionSneakEnd(dependencies));
+			actions.add(new ActionSneakEnd(this, dependencies));
 		} else {
-			actions.add(new ActionSneakStart(dependencies));
+			actions.add(new ActionSneakStart(this, dependencies));
 		}
-		actions.add(new ActionEnd(dependencies, onEndTurnAction));
+		actions.add(new ActionEnd(this, dependencies, onEndTurnAction));
 		return actions;
 	}
 

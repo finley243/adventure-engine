@@ -42,11 +42,11 @@ public class InventoryObjectComponent extends ObjectComponent {
     @Override
     protected List<Action> getPossibleActions(Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
-        actions.addAll(inventory.getExternalActions(dependencies, getObject(), subject, getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
+        actions.addAll(inventory.getExternalActions(subject, dependencies, getObject(), getTemplateInventory().getTakePrompt(), getTemplateInventory().getTakePhrase(), getTemplateInventory().getStorePrompt(), getTemplateInventory().getStorePhrase(), getTemplateInventory().enableTake(), getTemplateInventory().enableStore()));
         for (ActionCustom.CustomActionHolder customAction : getTemplateInventory().getPerItemActions()) {
             for (Item item : inventory.getItems()) {
                 ActionTemplate customActionTemplate = customAction.action();
-                actions.add(new ActionCustom(dependencies, null, getObject(), item, null, customActionTemplate, customAction.parameters(), new MenuDataObjectInventory(getObject(), item, false, false), false));
+                actions.add(new ActionCustom(subject, dependencies, null, getObject(), item, null, customActionTemplate, customAction.parameters(), new MenuDataObjectInventory(getObject(), item, false, false), false));
             }
         }
         return actions;

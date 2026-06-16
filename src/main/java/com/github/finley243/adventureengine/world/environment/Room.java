@@ -167,7 +167,7 @@ public class Room extends GameInstanced implements Noun, ScriptValueHolder {
 	public void triggerScript(String entryPoint, Context context) {
 		if (scripts.containsKey(entryPoint)) {
 			for (Script currentScript : scripts.get(entryPoint)) {
-				scriptRuntime.executeScript(currentScript, context);
+				currentScript.run(scriptRuntime, context);
 			}
 		}
 	}

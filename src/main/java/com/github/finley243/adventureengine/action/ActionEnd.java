@@ -9,8 +9,8 @@ public class ActionEnd extends Action {
 
 	private final Runnable onEndTurn;
 
-	public ActionEnd(ActionDependencies dependencies, Runnable onEndTurn) {
-        super(dependencies);
+	public ActionEnd(Actor subject, ActionDependencies dependencies, Runnable onEndTurn) {
+        super(subject, dependencies);
 		this.onEndTurn = onEndTurn;
     }
 
@@ -20,33 +20,33 @@ public class ActionEnd extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
+	public Context getContext() {
 		return Context.builder().subject(subject).build();
 	}
 
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
+	public void choose(int repeatActionCount) {
 		subject.endTurn();
 		onEndTurn.run();
 	}
 
 	@Override
-	public float utility(Actor subject) {
+	public float utility() {
 		return 0.00001f;
 	}
 
 	@Override
-	public int actionPoints(Actor subject) {
+	public int actionPoints() {
 		return 0;
 	}
 
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuData getMenuData() {
 		return new MenuDataSelf();
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt() {
 		return "End Turn";
 	}
 

@@ -22,8 +22,8 @@ public class ActionItemEquip extends Action {
     private final Item item;
     private final EquippableItemComponentTemplate.EquippableSlotsData slotsData;
 
-    public ActionItemEquip(ActionDependencies dependencies, Item item, EquippableItemComponentTemplate.EquippableSlotsData slotsData) {
-        super(dependencies);
+    public ActionItemEquip(Actor subject, ActionDependencies dependencies, Item item, EquippableItemComponentTemplate.EquippableSlotsData slotsData) {
+        super(subject, dependencies);
         this.item = item;
         this.slotsData = slotsData;
     }
@@ -34,22 +34,22 @@ public class ActionItemEquip extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         Context context = Context.builder().subject(subject).parentItem(item).build();
         context.setLocalVariable("equipSlots", Expression.set(slotsData.slots(), Expression::string));
         return context;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         subject.getEquipmentComponent().equip(item, slotsData);
-        Context context = getContext(subject);
+        Context context = getContext();
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("equip"), context, true, this, null));
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose() {
+        CanChooseResult resultSuper = super.canChoose();
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -66,12 +66,12 @@ public class ActionItemEquip extends Action {
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataInventory(item, subject.getInventory());
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         StringBuilder slotLabel = new StringBuilder();
         boolean first = true;
         for (String slot : slotsData.slots()) {
@@ -86,7 +86,7 @@ public class ActionItemEquip extends Action {
     }
 
     @Override
-    public float utility(Actor subject) {
+    public float utility() {
         if (item.hasComponentOfType(WeaponItemComponent.class)) {
             if (!subject.isInCombat()) return 0;
             if (item.getComponentOfType(WeaponItemComponent.class).isRanged()) {

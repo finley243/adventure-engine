@@ -128,19 +128,19 @@ public class Item extends GameInstanced implements Noun, ScriptValueHolder, Stat
 	
 	public List<Action> inventoryActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
-		actions.add(new ActionItemDrop(dependencies, this));
+		actions.add(new ActionItemDrop(subject, dependencies, this));
 		if (subject.getInventory().itemCount(this) > 1) {
-			actions.add(new ActionItemDropAll(dependencies, this));
+			actions.add(new ActionItemDropAll(subject, dependencies, this));
 		}
 		if (this.getDescription() != null) {
-			actions.add(new ActionInspectItem(dependencies, this));
+			actions.add(new ActionInspectItem(subject, dependencies, this));
 		}
 		for (ItemComponent component : components.values()) {
 			actions.addAll(component.getInventoryActions(dependencies, subject));
 		}
 		for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 			ActionTemplate customActionTemplate = customAction.action();
-			actions.add(new ActionCustom(dependencies, null, null, this, null, customActionTemplate, customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
+			actions.add(new ActionCustom(subject, dependencies, null, null, this, null, customActionTemplate, customAction.parameters(), new MenuDataInventory(this, subject.getInventory()), false));
 		}
 		return actions;
 	}

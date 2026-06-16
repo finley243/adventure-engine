@@ -101,9 +101,9 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 		this.actors = new HashSet<>();
 		this.itemInventory = new Inventory(itemFactory, null);
 		this.scripts = scripts;
-		this.effects = new StringSetRegistryStat<>("effects", this, effectRegistry, Effect::getID);
+		this.effects = new StringSetRegistryStat<>("effects", this, scriptRuntime, effectRegistry, Effect::getID);
 		this.defaultObstructions = defaultObstructions;
-		this.obstructions = new StringSetRegistryStat<>("obstructions", this, obstructionTypeRegistry, ObstructionType::ID);
+		this.obstructions = new StringSetRegistryStat<>("obstructions", this, scriptRuntime, obstructionTypeRegistry, ObstructionType::ID);
 		this.effectComponent = new EffectComponent(this, scriptRuntime, Context.builder().parentArea(this).build());
 	}
 
@@ -113,9 +113,6 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 			if (area == null) throw new GameDataException("Area has invalid linked area reference");
 			entry.getValue().resolveArea(area);
 		}
-		/*for (AreaLink link : linkedAreas.values()) {
-			link.setArea(this);
-		}*/
 	}
 
 	private WorldObject getLandmark() {
@@ -261,8 +258,8 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 		return null;
 	}
 
-	public List<Action> getItemActions(ScriptRuntime scriptRuntime, SensoryEventDispatcher sensoryEventDispatcher) {
-		return itemInventory.getAreaActions(scriptRuntime, sensoryEventDispatcher, this);
+	public List<Action> getItemActions(Actor subject, ActionDependencies dependencies) {
+		return itemInventory.getAreaActions(subject, dependencies, this);
 	}
 
 	public List<Action> getMoveActions(Actor subject, ActionDependencies dependencies, String vehicleType, WorldObject vehicleObject) {
@@ -270,7 +267,7 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 		for (AreaLink link : linkedAreas.values()) {
 			if (vehicleType != null && link.isVehicleMovable(vehicleType) || vehicleType == null && link.isMovable()) {
 				ActionTemplate actionTemplate = vehicleType == null ? link.getType().getActorMoveAction() : link.getType().getVehicleMoveAction(vehicleType);
-				moveActions.add(new ActionCustom(dependencies, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
+				moveActions.add(new ActionCustom(subject, dependencies, null, vehicleObject, null, link.getArea(), actionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(link.getDirection().toString())).put("dirName", Script.constant(link.getDirection().name)).build(), new MenuDataMove(link.getArea(), link.getDirection()), true));
 			}
 		}
 		return moveActions;
@@ -427,7 +424,7 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 
 	public List<Action> getAreaActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
-		actions.add(new ActionInspectArea(dependencies, this));
+		actions.add(new ActionInspectArea(subject, dependencies, this));
 		return actions;
 	}
 

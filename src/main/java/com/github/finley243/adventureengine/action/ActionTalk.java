@@ -9,8 +9,8 @@ public class ActionTalk extends Action {
 
 	private final Actor target;
 	
-	public ActionTalk(ActionDependencies dependencies, Actor target) {
-        super(dependencies);
+	public ActionTalk(Actor subject, ActionDependencies dependencies, Actor target) {
+        super(subject, dependencies);
         this.target = target;
 	}
 
@@ -20,19 +20,19 @@ public class ActionTalk extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
+	public Context getContext() {
         return Context.builder().subject(subject).target(target).build();
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
+	public void choose(int repeatActionCount) {
 		target.setKnown();
 		game.menuManager().sceneMenu(game, target.getDialogueStart(), Context.builder().subject(target).target(target).build(), true);
 	}
 
 	@Override
-	public CanChooseResult canChoose(Actor subject) {
-		CanChooseResult resultSuper = super.canChoose(subject);
+	public CanChooseResult canChoose() {
+		CanChooseResult resultSuper = super.canChoose();
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
@@ -46,12 +46,12 @@ public class ActionTalk extends Action {
 	}
 
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuData getMenuData() {
 		return new MenuDataActor(target);
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt() {
 		return "Talk";
 	}
 

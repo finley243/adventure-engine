@@ -59,8 +59,8 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     private final boolean isLoud;
     private final AreaLink.DistanceCategory targetDistance;
 
-    public ActionAttack(ActionDependencies dependencies, AttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, AttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
-        super(dependencies, targets);
+    public ActionAttack(Actor subject, ActionDependencies dependencies, AttackType attackType, Item weapon, Set<AttackTarget> targets, Limb limb, Area area, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, AttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
+        super(subject, dependencies, targets);
         this.attackType = attackType;
         this.weapon = weapon;
         this.targets = targets;
@@ -93,7 +93,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         Context context = Context.builder().subject(subject).attackTarget(targets.size() == 1 ? targets.iterator().next() : null).parentItem(getWeapon()).parentArea(getArea()).build();
         context.setLocalVariable("targets", Expression.set(targets, e -> Expression.valueHolder((ScriptValueHolder) e)));
         return context;
@@ -106,7 +106,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return prompt;
     }
 
@@ -251,7 +251,7 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public int repeatCount(Actor subject) {
+    public int repeatCount() {
         return rate;
     }
 
@@ -266,12 +266,12 @@ public abstract class ActionAttack extends ActionRandomEach<AttackTarget> {
     }
 
     @Override
-    public int actionPoints(Actor subject) {
+    public int actionPoints() {
         return actionPoints;
     }
 
     @Override
-    public float utility(Actor subject) {
+    public float utility() {
         if (subject.getTargetingComponent() == null) return 0.0f;
         for (AttackTarget target : targets) {
             if (target instanceof Actor && subject.getTargetingComponent().isTargetOfType((Actor) target, TargetingComponent.DetectionState.HOSTILE)) {

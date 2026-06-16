@@ -26,8 +26,8 @@ public class ActionInspectArea extends Action {
     private final MenuManager menuManager;
     private final Pathfinder pathfinder;
 
-    public ActionInspectArea(ActionDependencies dependencies, Area area, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder) {
-        super(dependencies);
+    public ActionInspectArea(Actor subject, ActionDependencies dependencies, Area area, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder) {
+        super(subject, dependencies);
         this.area = area;
         this.eventBus = eventBus;
         this.menuManager = menuManager;
@@ -40,13 +40,13 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         return Context.builder().subject(subject).parentArea(area).parentAction(this).build();
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
-        Context context = getContext(subject);
+    public void choose(int repeatActionCount) {
+        Context context = getContext();
         Map<Area, Pathfinder.VisibleAreaData> visibleAreas = pathfinder.getVisibleAreas(area, subject);
         List<Area> orderedAreaList = new ArrayList<>(visibleAreas.keySet());
         orderedAreaList.sort(Comparator.comparingInt(a -> visibleAreas.get(a).path().size()));
@@ -115,8 +115,8 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose() {
+        CanChooseResult resultSuper = super.canChoose();
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -127,17 +127,17 @@ public class ActionInspectArea extends Action {
     }
 
     @Override
-    public int actionPoints(Actor subject) {
+    public int actionPoints() {
         return 0;
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataArea(area, true);
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return "Look Around";
     }
 

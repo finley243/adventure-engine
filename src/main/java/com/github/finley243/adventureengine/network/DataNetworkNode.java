@@ -26,7 +26,7 @@ public class DataNetworkNode extends NetworkNode {
     @Override
     protected List<Action> breachedActions(Actor subject, ActionDependencies dependencies, WorldObject object) {
         List<Action> actions = new ArrayList<>();
-        actions.add(new ActionNetworkReadData(dependencies, this, object));
+        actions.add(new ActionNetworkReadData(subject, dependencies, this, object));
         return actions;
     }
 

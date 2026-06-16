@@ -38,7 +38,7 @@ public class ModItemComponent extends ItemComponent {
         List<Action> actions = super.getPossibleInventoryActions(dependencies, subject);
         for (Item item : subject.getInventory().getItems()) {
             if (item.hasComponentOfType(ModdableItemComponent.class)) {
-                actions.add(new ActionModInstall(dependencies, item, getItem()));
+                actions.add(new ActionModInstall(subject, dependencies, item, getItem()));
             }
         }
         return actions;

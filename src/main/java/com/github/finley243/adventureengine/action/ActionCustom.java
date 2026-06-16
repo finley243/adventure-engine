@@ -25,8 +25,8 @@ public class ActionCustom extends Action {
     private final MenuData menuData;
     private final boolean isMove;
 
-    public ActionCustom(ActionDependencies dependencies, Actor actor, WorldObject object, Item item, Area area, ActionTemplate template, Map<String, Script> parameters, MenuData menuData, boolean isMove) {
-        super(dependencies);
+    public ActionCustom(Actor subject, ActionDependencies dependencies, Actor actor, WorldObject object, Item item, Area area, ActionTemplate template, Map<String, Script> parameters, MenuData menuData, boolean isMove) {
+        super(subject, dependencies);
         this.actor = actor;
         this.object = object;
         this.item = item;
@@ -43,7 +43,7 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         return getContextWithParameters(subject);
     }
 
@@ -52,18 +52,18 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return menuData;
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         Map<String, String> contextVars = getParameterStrings(subject);
         return LangUtils.capitalize(textGen.generateVarsOnly(getTemplate().getPrompt(), contextVars));
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         if (subject.isPlayer()) {
             if (area != null) {
                 area.setKnown();
@@ -85,8 +85,8 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose() {
+        CanChooseResult resultSuper = super.canChoose();
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -99,12 +99,12 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public int actionPoints(Actor subject) {
+    public int actionPoints() {
         return getTemplate().getActionPoints();
     }
 
     @Override
-    public int repeatCount(Actor subject) {
+    public int repeatCount() {
         if (isMove) {
             return subject.getMovePoints();
         }
@@ -128,7 +128,7 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public float utility(Actor subject) {
+    public float utility() {
         if (isMove) {
             return UtilityUtils.getMovementUtility(subject, area) * UtilityUtils.MOVE_UTILITY_MULTIPLIER;
         }
@@ -136,7 +136,7 @@ public class ActionCustom extends Action {
     }
 
     @Override
-    public boolean canShow(Actor subject) {
+    public boolean canShow() {
         return getTemplate().getShowCondition() == null || getTemplate().getShowCondition().isMet(getContextWithParameters(subject));
     }
 

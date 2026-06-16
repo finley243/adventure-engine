@@ -14,8 +14,8 @@ public class ActionObjectUseEnd extends Action {
 	private final UsableObjectComponent component;
 	private final String slotID;
 
-	public ActionObjectUseEnd(ActionDependencies dependencies, UsableObjectComponent component, String slotID) {
-        super(dependencies);
+	public ActionObjectUseEnd(Actor subject, ActionDependencies dependencies, UsableObjectComponent component, String slotID) {
+        super(subject, dependencies);
         this.component = component;
 		this.slotID = slotID;
 	}
@@ -34,15 +34,15 @@ public class ActionObjectUseEnd extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
+	public Context getContext() {
 		Context context = Context.builder().subject(subject).parentObject(component.getObject()).parentAction(this).build();
 		context.setLocalVariable("slot", Expression.string(slotID));
 		return context;
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
-		Context context = getContext(subject);
+	public void choose(int repeatActionCount) {
+		Context context = getContext();
 		if (component.userIsInCover(slotID)) {
 			subject.triggerScript("on_leave_cover", context);
 		}
@@ -52,7 +52,7 @@ public class ActionObjectUseEnd extends Action {
 	}
 
 	@Override
-	public float utility(Actor subject) {
+	public float utility() {
 		if (component.userIsInCover(slotID)) {
 			return 0.3f;
 		}
@@ -60,12 +60,12 @@ public class ActionObjectUseEnd extends Action {
 	}
 
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuData getMenuData() {
 		return new MenuDataObject(component.getObject());
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt() {
 		return component.getEndPrompt(slotID);
 	}
 

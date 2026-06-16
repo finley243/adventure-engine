@@ -14,8 +14,8 @@ public class ActionNetworkBreach extends NetworkAction {
     private final NetworkNode node;
     private final WorldObject object;
 
-    public ActionNetworkBreach(ActionDependencies dependencies, NetworkNode node, WorldObject object) {
-        super(dependencies);
+    public ActionNetworkBreach(Actor subject, ActionDependencies dependencies, NetworkNode node, WorldObject object) {
+        super(subject, dependencies);
         this.node = node;
         this.object = object;
     }
@@ -26,20 +26,20 @@ public class ActionNetworkBreach extends NetworkAction {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         Context context = Context.builder().subject(subject).parentObject(object).parentAction(this).build();
         context.setLocalVariable("node", Expression.valueHolder(node));
         return context;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         node.setBreached(true);
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose() {
+        CanChooseResult resultSuper = super.canChoose();
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -50,12 +50,12 @@ public class ActionNetworkBreach extends NetworkAction {
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataNetwork(node);
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return "Breach Node";
     }
 

@@ -115,7 +115,7 @@ public class AttackType {
                     AreaLink.DistanceCategory targetDistance = entry.getValue().distance();
                     for (AttackTarget target : entry.getKey().getAttackTargets()) {
                         if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                            actions.add(new ActionAttackBasic(dependencies, this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                            actions.add(new ActionAttackBasic(subject, dependencies, this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                         }
                     }
                 }
@@ -126,7 +126,7 @@ public class AttackType {
                     for (Actor target : entry.getKey().getActors()) {
                         if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                             for (Limb limb : target.getLimbs()) {
-                                actions.add(new ActionAttackLimb(dependencies, this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                                actions.add(new ActionAttackLimb(subject, dependencies, this, weapon, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                             }
                         }
                     }
@@ -136,7 +136,7 @@ public class AttackType {
                 for (Map.Entry<Area, Pathfinder.VisibleAreaData> entry : subject.getVisibleAreas(pathfinder).entrySet()) {
                     Area target = entry.getKey();
                     AreaLink.DistanceCategory targetDistance = entry.getValue().distance();
-                    actions.add(new ActionAttackArea(dependencies, this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                    actions.add(new ActionAttackArea(subject, dependencies, this, weapon, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                 }
             }
         }
@@ -158,7 +158,7 @@ public class AttackType {
                     AreaLink.DistanceCategory targetDistance = entry.getValue().distance();
                     for (AttackTarget target : entry.getKey().getAttackTargets()) {
                         if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
-                            actions.add(new ActionAttackBasic(dependencies, this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                            actions.add(new ActionAttackBasic(subject, dependencies, this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                         }
                     }
                 }
@@ -169,7 +169,7 @@ public class AttackType {
                     for (Actor target : entry.getKey().getActors()) {
                         if (!target.equals(subject) && target.isVisible(subject) && target.canBeAttacked()) {
                             for (Limb limb : target.getLimbs()) {
-                                actions.add(new ActionAttackLimb(dependencies, this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                                actions.add(new ActionAttackLimb(subject, dependencies, this, null, target, limb, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                             }
                         }
                     }
@@ -179,7 +179,7 @@ public class AttackType {
                 for (Map.Entry<Area, Pathfinder.VisibleAreaData> entry : subject.getVisibleAreas(pathfinder).entrySet()) {
                     Area target = entry.getKey();
                     AreaLink.DistanceCategory targetDistance = entry.getValue().distance();
-                    actions.add(new ActionAttackArea(dependencies, this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
+                    actions.add(new ActionAttackArea(subject, dependencies, this, null, target, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffectsCombined, hitChance, hitChanceOverall, hitChanceMult, isLoud, targetDistance));
                 }
             }
         }

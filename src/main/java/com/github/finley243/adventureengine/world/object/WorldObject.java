@@ -215,7 +215,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 			}
 			for (ActionCustom.CustomActionHolder customAction : getTemplate().getCustomActions()) {
 				ActionTemplate customActionTemplate = customAction.action();
-				actions.add(new ActionCustom(dependencies, null, this, null, null, customActionTemplate, customAction.parameters(), new MenuDataObject(this), false));
+				actions.add(new ActionCustom(subject, dependencies, null, this, null, null, customActionTemplate, customAction.parameters(), new MenuDataObject(this), false));
 			}
 		}
 		return actions;
@@ -225,7 +225,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 	public List<Action> visibleActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
 		if (getDescription() != null) {
-			actions.add(new ActionInspectObject(dependencies, this));
+			actions.add(new ActionInspectObject(subject, dependencies, this));
 		}
 		return actions;
 	}
@@ -234,7 +234,7 @@ public class WorldObject extends GameInstanced implements Noun, Physical, Script
 		List<Action> actions = new ArrayList<>();
 		for (ActionCustom.CustomActionHolder networkAction : getTemplate().getNetworkActions()) {
 			ActionTemplate customNetworkActionTemplate =  networkAction.action();
-			actions.add(new ActionCustom(dependencies, null, this, null, null, customNetworkActionTemplate, networkAction.parameters(), new MenuDataNetwork(node), false));
+			actions.add(new ActionCustom(subject, dependencies, null, this, null, null, customNetworkActionTemplate, networkAction.parameters(), new MenuDataNetwork(node), false));
 		}
 		return actions;
 	}

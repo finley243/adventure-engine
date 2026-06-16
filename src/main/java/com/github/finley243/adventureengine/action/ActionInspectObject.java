@@ -10,8 +10,8 @@ public class ActionInspectObject extends Action {
 
 	private final WorldObject object;
 
-	public ActionInspectObject(ActionDependencies dependencies, WorldObject object) {
-        super(dependencies);
+	public ActionInspectObject(Actor subject, ActionDependencies dependencies, WorldObject object) {
+        super(subject, dependencies);
         this.object = object;
 	}
 
@@ -21,32 +21,32 @@ public class ActionInspectObject extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
+	public Context getContext() {
 		return Context.builder().subject(subject).parentObject(object).parentAction(this).build();
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
+	public void choose(int repeatActionCount) {
 		if (subject.isPlayer()) {
 			object.setKnown();
 		}
-		Context context = getContext(subject);
+		Context context = getContext();
 		game.menuManager().sceneMenu(game, object.getDescription(), context, false);
 		object.triggerScript("on_inspect", context);
 	}
 
 	@Override
-	public int actionPoints(Actor subject) {
+	public int actionPoints() {
 		return 0;
 	}
 
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuData getMenuData() {
 		return new MenuDataObject(object);
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt() {
 		return "Inspect";
 	}
 

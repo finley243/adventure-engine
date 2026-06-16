@@ -66,8 +66,8 @@ public class UtilityUtils {
 			maxWeights.add(0.0f);
 		}
 		for (Action currentAction : actions) {
-			if (currentAction.canChoose(actor).canChoose()) {
-				float currentWeight = currentAction.utility(actor);
+			if (currentAction.canChoose().canChoose()) {
+				float currentWeight = currentAction.utility();
 				Float behaviorOverride = behaviorComponent.actionUtilityOverride(currentAction);
 				if (behaviorOverride != null) {
 					currentWeight = behaviorOverride;

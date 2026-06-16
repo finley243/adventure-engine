@@ -10,8 +10,8 @@ public class ActionInspectItem extends Action {
 
     private final Item item;
 
-    public ActionInspectItem(ActionDependencies dependencies, Item item) {
-        super(dependencies);
+    public ActionInspectItem(Actor subject, ActionDependencies dependencies, Item item) {
+        super(subject, dependencies);
         this.item = item;
     }
 
@@ -21,12 +21,12 @@ public class ActionInspectItem extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         return Context.builder().subject(subject).parentItem(item).build();
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         if (subject.isPlayer()) {
             item.setKnown();
         }
@@ -35,17 +35,17 @@ public class ActionInspectItem extends Action {
     }
 
     @Override
-    public int actionPoints(Actor subject) {
+    public int actionPoints() {
         return 0;
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataInventory(item, subject.getInventory());
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return "Inspect";
     }
 

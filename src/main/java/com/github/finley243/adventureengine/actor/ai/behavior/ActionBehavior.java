@@ -66,7 +66,7 @@ public class ActionBehavior extends Behavior {
         if (!action.getID().equals(actionID)) {
             return false;
         }
-        return actionCondition == null || actionCondition.isMet(action.getContext(subject));
+        return actionCondition == null || actionCondition.isMet(action.getContext());
     }
 
 }

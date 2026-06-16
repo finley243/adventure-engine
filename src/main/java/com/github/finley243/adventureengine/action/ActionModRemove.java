@@ -13,8 +13,8 @@ public class ActionModRemove extends Action {
     private final Item target;
     private final Item mod;
 
-    public ActionModRemove(ActionDependencies dependencies, Item target, Item mod) {
-        super(dependencies);
+    public ActionModRemove(Actor subject, ActionDependencies dependencies, Item target, Item mod) {
+        super(subject, dependencies);
         this.target = target;
         this.mod = mod;
     }
@@ -25,25 +25,25 @@ public class ActionModRemove extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         Context context = Context.builder().subject(subject).parentItem(target).build();
         context.setLocalVariable("mod", Expression.valueHolder(mod));
         return context;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         target.getComponentOfType(ModdableItemComponent.class).removeMod(mod);
         subject.getInventory().addItem(mod);
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataInventoryCombine(target, subject.getInventory(), mod, null, subject.getInventory());
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return "Remove";
     }
 

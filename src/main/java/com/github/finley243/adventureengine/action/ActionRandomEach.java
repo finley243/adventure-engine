@@ -11,14 +11,14 @@ public abstract class ActionRandomEach<T> extends Action {
 
     private final Collection<T> collection;
 
-    public ActionRandomEach(ActionDependencies dependencies, Collection<T> collection) {
+    public ActionRandomEach(Actor subject, ActionDependencies dependencies, Collection<T> collection) {
         //if (collection.isEmpty()) throw new IllegalArgumentException("ActionRandomEach collection cannot be empty");
-        super(dependencies);
+        super(subject, dependencies);
         this.collection = collection;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         boolean continueAfterStart = onStart(subject, repeatActionCount);
         if (continueAfterStart) {
             if (MathUtils.randomCheck(chanceOverall(subject))) {

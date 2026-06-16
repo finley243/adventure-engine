@@ -12,8 +12,8 @@ public class ActionItemDrop extends Action {
 
 	private final Item item;
 
-	public ActionItemDrop(ActionDependencies dependencies, Item item) {
-        super(dependencies);
+	public ActionItemDrop(Actor subject, ActionDependencies dependencies, Item item) {
+        super(subject, dependencies);
         this.item = item;
 	}
 
@@ -23,30 +23,30 @@ public class ActionItemDrop extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
+	public Context getContext() {
 		return Context.builder().subject(subject).parentItem(item).build();
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
+	public void choose(int repeatActionCount) {
 		subject.getInventory().removeItem(item);
 		subject.getArea().getInventory().addItem(item);
-		Context context = getContext(subject);
+		Context context = getContext();
 		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("drop"), context, true, this, null));
 	}
 
 	@Override
-	public int actionPoints(Actor subject) {
+	public int actionPoints() {
 		return 0;
 	}
 
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuData getMenuData() {
 		return new MenuDataInventory(item, subject.getInventory());
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt() {
 		return "Drop";
 	}
 

@@ -13,8 +13,8 @@ public class ActionItemUnequip extends Action {
 
     private final Item item;
 
-    public ActionItemUnequip(ActionDependencies dependencies, Item item) {
-        super(dependencies);
+    public ActionItemUnequip(Actor subject, ActionDependencies dependencies, Item item) {
+        super(subject, dependencies);
         this.item = item;
     }
 
@@ -24,29 +24,29 @@ public class ActionItemUnequip extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         return Context.builder().subject(subject).parentItem(item).build();
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         subject.getEquipmentComponent().unequip(item);
-        Context context = getContext(subject);
+        Context context = getContext();
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get("unequip"), context, true, this, null));
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataInventory(item, subject.getInventory());
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return "Unequip";
     }
 
     @Override
-    public float utility(Actor subject) {
+    public float utility() {
         if (item.hasComponentOfType(WeaponItemComponent.class) && !subject.isInCombat()) {
             return 0.4f;
         }

@@ -16,8 +16,8 @@ public class ActionNetworkReadData extends NetworkAction {
     private final WorldObject object;
     private final MenuManager menuManager;
 
-    public ActionNetworkReadData(ActionDependencies dependencies, DataNetworkNode node, WorldObject object, MenuManager menuManager) {
-        super(dependencies);
+    public ActionNetworkReadData(Actor subject, ActionDependencies dependencies, DataNetworkNode node, WorldObject object, MenuManager menuManager) {
+        super(subject, dependencies);
         this.node = node;
         this.object = object;
         this.menuManager = menuManager;
@@ -29,24 +29,24 @@ public class ActionNetworkReadData extends NetworkAction {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         Context context = Context.builder().subject(subject).parentObject(object).parentAction(this).build();
         context.setLocalVariable("node", Expression.valueHolder(node));
         return context;
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
-        menuManager.sceneMenu(node.getScene(), getContext(subject), false);
+    public void choose(int repeatActionCount) {
+        menuManager.sceneMenu(node.getScene(), getContext(), false);
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataNetwork(node);
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return "Read Data";
     }
 

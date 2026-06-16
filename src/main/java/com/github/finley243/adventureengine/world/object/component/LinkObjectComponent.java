@@ -111,7 +111,7 @@ public class LinkObjectComponent extends ObjectComponent {
             LinkObjectComponentTemplate.ObjectLinkData linkData = getTemplateLink().getLinkData().get(linkID);
             if (linkData.moveAction() != null) {
                 ActionTemplate linkMoveActionTemplate = linkData.moveAction();
-                actions.add(new ActionCustom(dependencies, null, getObject(), null, getLinkedObject(linkID).getArea(), linkMoveActionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(linkID).getArea(), getDirection(linkID)), true));
+                actions.add(new ActionCustom(subject, dependencies, null, getObject(), null, getLinkedObject(linkID).getArea(), linkMoveActionTemplate, new MapBuilder<String, Script>().put("dir", Script.constant(getDirection(linkID).toString())).build(), new MenuDataMove(getLinkedObject(linkID).getArea(), getDirection(linkID)), true));
             }
         }
         return actions;

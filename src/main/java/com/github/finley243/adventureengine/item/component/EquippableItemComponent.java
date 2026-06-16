@@ -33,7 +33,7 @@ public class EquippableItemComponent extends ItemComponent {
     protected List<Action> getPossibleInventoryActions(ActionDependencies dependencies, Actor subject) {
         List<Action> actions = super.getPossibleInventoryActions(dependencies, subject);
         for (EquippableItemComponentTemplate.EquippableSlotsData slots : getEquippableTemplate().getSlots()) {
-            actions.add(new ActionItemEquip(dependencies, getItem(), slots));
+            actions.add(new ActionItemEquip(subject, dependencies, getItem(), slots));
         }
         return actions;
     }
@@ -80,13 +80,13 @@ public class EquippableItemComponent extends ItemComponent {
 
     public List<Action> equippedActions(Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
-        actions.add(new ActionItemUnequip(dependencies, getItem()));
+        actions.add(new ActionItemUnequip(subject, dependencies, getItem()));
         for (String exposedComponent : equippedSlotsData.componentsExposed()) {
             actions.addAll(getItem().getComponentOfType(ItemComponentFactory.getClassFromName(exposedComponent)).getPossibleInventoryActions(dependencies, subject));
         }
         for (ActionCustom.CustomActionHolder equippedAction : equippedSlotsData.equippedActions()) {
             ActionTemplate customActionTemplate = equippedAction.action();
-            actions.add(new ActionCustom(dependencies, null, null, getItem(), null, customActionTemplate, equippedAction.parameters(), new MenuDataInventory(getItem(), subject.getInventory()), false));
+            actions.add(new ActionCustom(subject, dependencies, null, null, getItem(), null, customActionTemplate, equippedAction.parameters(), new MenuDataInventory(getItem(), subject.getInventory()), false));
         }
         return actions;
     }

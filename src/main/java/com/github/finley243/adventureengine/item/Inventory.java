@@ -198,63 +198,63 @@ public class Inventory {
 		return uniqueItems;
 	}
 
-	public List<Action> getAreaActions(ActionDependencies dependencies, Area area) {
+	public List<Action> getAreaActions(Actor subject, ActionDependencies dependencies, Area area) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionItemTake(dependencies, area, item));
+				actions.add(new ActionItemTake(subject, dependencies, area, item));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = itemFactory.createWithGenID(current);
-			actions.add(new ActionItemTake(dependencies, area, item));
+			actions.add(new ActionItemTake(subject, dependencies, area, item));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionItemTakeAll(dependencies, area, item));
+				actions.add(new ActionItemTakeAll(subject, dependencies, area, item));
 			}
 		}
 		return actions;
 	}
 
-	public List<Action> getExternalActions(ActionDependencies dependencies, Noun owner, Actor subject, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore) {
+	public List<Action> getExternalActions(Actor subject, ActionDependencies dependencies, Noun owner, String takePrompt, String takePhrase, String storePrompt, String storePhrase, boolean enableTake, boolean enableStore) {
 		List<Action> actions = new ArrayList<>();
 		if (enableTake) {
-			actions.addAll(getTakeActions(dependencies, owner, takePrompt, takePhrase));
+			actions.addAll(getTakeActions(subject, dependencies, owner, takePrompt, takePhrase));
 		}
 		if (subject != null && enableStore) {
-			actions.addAll(subject.getInventory().getStoreActions(dependencies, owner, this, storePrompt, storePhrase));
+			actions.addAll(subject.getInventory().getStoreActions(subject, dependencies, owner, this, storePrompt, storePhrase));
 		}
 		return actions;
 	}
 
-	private List<Action> getTakeActions(ActionDependencies dependencies, Noun owner, String prompt, String phrase) {
+	private List<Action> getTakeActions(Actor subject, ActionDependencies dependencies, Noun owner, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryTake(dependencies, owner, this, item, prompt, phrase));
+				actions.add(new ActionInventoryTake(subject, dependencies, owner, this, item, prompt, phrase));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = itemFactory.createWithGenID(current);
-			actions.add(new ActionInventoryTake(dependencies, owner, this, item, prompt, phrase));
+			actions.add(new ActionInventoryTake(subject, dependencies, owner, this, item, prompt, phrase));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryTakeAll(dependencies, owner, this, item, prompt, phrase));
+				actions.add(new ActionInventoryTakeAll(subject, dependencies, owner, this, item, prompt, phrase));
 			}
 		}
 		return actions;
 	}
 
-	private List<Action> getStoreActions(ActionDependencies dependencies, Noun owner, Inventory other, String prompt, String phrase) {
+	private List<Action> getStoreActions(Actor subject, ActionDependencies dependencies, Noun owner, Inventory other, String prompt, String phrase) {
 		List<Action> actions = new ArrayList<>();
 		for (List<Item> current : items.values()) {
 			for (Item item : current) {
-				actions.add(new ActionInventoryStore(dependencies, owner, other, item, prompt, phrase));
+				actions.add(new ActionInventoryStore(subject, dependencies, owner, other, item, prompt, phrase));
 			}
 		}
 		for (String current : itemsStateless.keySet()) {
 			Item item = itemFactory.createWithGenID(current);
-			actions.add(new ActionInventoryStore(dependencies, owner, other, item, prompt, phrase));
+			actions.add(new ActionInventoryStore(subject, dependencies, owner, other, item, prompt, phrase));
 			if (itemCount(current) > 1) {
-				actions.add(new ActionInventoryStoreAll(dependencies, owner, other, item, prompt, phrase));
+				actions.add(new ActionInventoryStoreAll(subject, dependencies, owner, other, item, prompt, phrase));
 			}
 		}
 		return actions;

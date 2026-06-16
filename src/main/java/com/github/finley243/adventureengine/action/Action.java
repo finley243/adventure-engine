@@ -16,6 +16,7 @@ public abstract class Action {
 		HIGH, LOW, NONE
 	}
 
+	protected final Actor subject;
 	protected final ScriptRuntime scriptRuntime;
 	protected final SensoryEventDispatcher sensoryEventDispatcher;
 	protected final TextGen textGen;
@@ -23,7 +24,8 @@ public abstract class Action {
 	private boolean disabled;
 	private String disabledReason;
 
-	public Action(ActionDependencies dependencies) {
+	public Action(Actor subject, ActionDependencies dependencies) {
+		this.subject = subject;
 		this.scriptRuntime = dependencies.scriptRuntime();
 		this.sensoryEventDispatcher = dependencies.sensoryEventDispatcher();
 		this.textGen = dependencies.textGen();
@@ -31,15 +33,15 @@ public abstract class Action {
 
 	public abstract String getID();
 
-	public abstract Context getContext(Actor subject);
+	public abstract Context getContext();
 
-	public abstract void choose(Actor subject, int repeatActionCount);
+	public abstract void choose(int repeatActionCount);
 
-	public abstract MenuData getMenuData(Actor subject);
+	public abstract MenuData getMenuData();
 
-	public abstract String getPrompt(Actor subject);
+	public abstract String getPrompt();
 
-	public CanChooseResult canChoose(Actor subject) {
+	public CanChooseResult canChoose() {
 		if (disabled) {
 			return new CanChooseResult(false, disabledReason);
 		}
@@ -51,15 +53,15 @@ public abstract class Action {
 		this.disabledReason = reason;
 	}
 	
-	public float utility(Actor subject) {
+	public float utility() {
 		return 0.0f;
 	}
 
-	public int actionPoints(Actor subject) {
+	public int actionPoints() {
 		return 1;
 	}
 	
-	public int repeatCount(Actor subject) {
+	public int repeatCount() {
 		return 0;
 	}
 
@@ -79,7 +81,7 @@ public abstract class Action {
 		return ActionDetectionChance.NONE;
 	}
 
-	public boolean canShow(Actor subject) {
+	public boolean canShow() {
 		return true;
 	}
 

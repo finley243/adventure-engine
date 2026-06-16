@@ -65,15 +65,15 @@ public abstract class TurnController {
                 decrementRepeatAction(actionRepeatMatch);
             }
             actionPointsUsed += getFinalActionPointsForAction(selectedAction);
-            if (!isRepeatMatch && selectedAction.repeatCount(actor) > 0) {
-                addRepeatAction(selectedAction, selectedAction.repeatCount(actor) - 1);
+            if (!isRepeatMatch && selectedAction.repeatCount() > 0) {
+                addRepeatAction(selectedAction, selectedAction.repeatCount() - 1);
             }
             if (lastAction != null && selectedAction.isRepeatMatch(lastAction)) {
                 consecutiveRepeatActionCount += 1;
             } else {
                 consecutiveRepeatActionCount = 0;
             }
-            selectedAction.choose(actor, consecutiveRepeatActionCount);
+            selectedAction.choose(consecutiveRepeatActionCount);
             onPostAction(selectedAction);
             lastAction = selectedAction;
         }
@@ -83,7 +83,7 @@ public abstract class TurnController {
         if (action.repeatsUseNoActionPoints() && isRepeatAction(action)) {
             return 0;
         }
-        return action.actionPoints(actor);
+        return action.actionPoints();
     }
 
     protected void onStartTurnDead() {}
@@ -103,7 +103,7 @@ public abstract class TurnController {
     }
 
     private void applyActionConstraints(List<Action> actions) {
-        actions.removeIf(action -> !action.canShow(actor));
+        actions.removeIf(action -> !action.canShow());
         for (Action currentAction : actions) {
             boolean isRepeatMatch = false;
             boolean isBlocked = false;

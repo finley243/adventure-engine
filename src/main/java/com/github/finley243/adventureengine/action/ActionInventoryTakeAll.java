@@ -21,8 +21,8 @@ public class ActionInventoryTakeAll extends Action {
     private final String prompt;
     private final String phrase;
 
-    public ActionInventoryTakeAll(ActionDependencies dependencies, Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
-        super(dependencies);
+    public ActionInventoryTakeAll(Actor subject, ActionDependencies dependencies, Noun owner, Inventory inventory, Item item, String prompt, String phrase) {
+        super(subject, dependencies);
         if (item.hasState()) throw new IllegalArgumentException("Cannot perform ActionInventoryTakeAll on item with state");
         this.owner = owner;
         this.inventory = inventory;
@@ -37,7 +37,7 @@ public class ActionInventoryTakeAll extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         Context context = Context.builder().subject(subject).parentItem(item).build();
         context.setLocalVariable("inventory", Expression.noun(owner));
         context.setLocalVariable("count", Expression.integer(inventory.itemCount(item)));
@@ -45,22 +45,22 @@ public class ActionInventoryTakeAll extends Action {
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         int count = inventory.itemCount(item);
         inventory.removeItems(item.getTemplateID(), count);
         subject.getInventory().addItems(item.getTemplateID(), count);
-        Context context = getContext(subject);
+        Context context = getContext();
         //TextContext textContext = new TextContext(new MapBuilder<String, Noun>().put("actor", subject).put("item", new PluralNoun(item, count)).put("inventory", owner).build());
         sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(phrase), context, true, this, null));
     }
 
     @Override
-    public int actionPoints(Actor subject) {
+    public int actionPoints() {
         return 0;
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         if (owner instanceof Actor actor) {
             return new MenuDataActorInventory(actor, item, true, false);
         } else {
@@ -70,7 +70,7 @@ public class ActionInventoryTakeAll extends Action {
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return prompt + " All";
     }
 

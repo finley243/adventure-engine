@@ -27,7 +27,7 @@ public class ConsumableItemComponent extends ItemComponent {
     @Override
     protected List<Action> getPossibleInventoryActions(ActionDependencies dependencies, Actor subject) {
         List<Action> actions = super.getPossibleInventoryActions(dependencies, subject);
-        actions.add(new ActionItemConsume(dependencies, getItem(), getConsumableTemplate().getConsumePrompt(), getConsumableTemplate().getConsumePhrase(), getConsumableTemplate().getEffects()));
+        actions.add(new ActionItemConsume(subject, dependencies, getItem(), getConsumableTemplate().getConsumePrompt(), getConsumableTemplate().getConsumePhrase(), getConsumableTemplate().getEffects()));
         return actions;
     }
 

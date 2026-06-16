@@ -49,7 +49,7 @@ public class MagazineItemComponent extends ItemComponent {
     protected List<Action> getPossibleInventoryActions(ActionDependencies dependencies, Actor subject) {
         List<Action> actions = super.getPossibleInventoryActions(dependencies, subject);
         for (ItemTemplate current : getMagazineTemplate().getAmmoTypes()) {
-            actions.add(new ActionWeaponReload(dependencies, getItem(), current));
+            actions.add(new ActionWeaponReload(subject, dependencies, getItem(), current));
         }
         return actions;
     }

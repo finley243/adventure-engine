@@ -6,8 +6,8 @@ import com.github.finley243.adventureengine.combat.AttackType;
 import com.github.finley243.adventureengine.combat.DamageType;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
-import com.github.finley243.adventureengine.item.component.AmmoItemComponent;
 import com.github.finley243.adventureengine.item.component.MagazineItemComponent;
+import com.github.finley243.adventureengine.item.template.AmmoItemComponentTemplate;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataAttack;
 import com.github.finley243.adventureengine.script.Script;
@@ -22,8 +22,8 @@ public class ActionAttackBasic extends ActionAttack {
 	private final AttackTarget target;
 	private final Item weapon;
 
-	public ActionAttackBasic(ActionDependencies dependencies, AttackType attackType, Item weapon, AttackTarget target, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, AttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
-		super(dependencies, attackType, weapon, Set.of(target), null, null, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceExpression, hitChanceOverallExpression, hitChanceMult, isLoud, targetDistance);
+	public ActionAttackBasic(Actor subject, ActionDependencies dependencies, AttackType attackType, Item weapon, AttackTarget target, String prompt, String attackPhrase, String attackOverallPhrase, String attackPhraseAudible, String attackOverallPhraseAudible, int ammoConsumed, int actionPoints, AttackType.WeaponConsumeType weaponConsumeType, Set<AreaLink.DistanceCategory> ranges, int rate, Script damage, DamageType damageType, float armorMult, List<Effect> targetEffects, Script hitChanceExpression, Script hitChanceOverallExpression, float hitChanceMult, boolean isLoud, AreaLink.DistanceCategory targetDistance) {
+		super(subject, dependencies, attackType, weapon, Set.of(target), null, null, prompt, attackPhrase, attackOverallPhrase, attackPhraseAudible, attackOverallPhraseAudible, ammoConsumed, actionPoints, weaponConsumeType, ranges, rate, damage, damageType, armorMult, targetEffects, hitChanceExpression, hitChanceOverallExpression, hitChanceMult, isLoud, targetDistance);
 		this.target = target;
 		this.weapon = weapon;
 	}
@@ -34,8 +34,8 @@ public class ActionAttackBasic extends ActionAttack {
 			return;
 		}
 		if (weapon.hasComponentOfType(MagazineItemComponent.class)) {
-			if (weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType() != null && weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().getComponentOfType(AmmoItemComponent.class).isReusable()) {
-				target.getArea().getInventory().addItems(weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().getTemplateID(), getAmmoConsumed());
+			if (weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType() != null && weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().getComponentTemplate(AmmoItemComponentTemplate.class).isReusable()) {
+				target.getArea().getInventory().addItems(weapon.getComponentOfType(MagazineItemComponent.class).getLoadedAmmoType().getID(), getAmmoConsumed());
 			}
 			weapon.getComponentOfType(MagazineItemComponent.class).consumeAmmo(getAmmoConsumed());
 		}
@@ -49,8 +49,8 @@ public class ActionAttackBasic extends ActionAttack {
 	}
 
 	@Override
-	public CanChooseResult canChoose(Actor subject) {
-		CanChooseResult resultSuper = super.canChoose(subject);
+	public CanChooseResult canChoose() {
+		CanChooseResult resultSuper = super.canChoose();
 		if (!resultSuper.canChoose()) {
 			return resultSuper;
 		}
@@ -67,7 +67,7 @@ public class ActionAttackBasic extends ActionAttack {
 	}
 
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuData getMenuData() {
 		return new MenuDataAttack(target, weapon);
 	}
 

@@ -31,9 +31,9 @@ public class VehicleObjectComponent extends ObjectComponent {
     protected List<Action> getPossibleActions(Actor subject, ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
         if (objectOverride != null) {
-            actions.addAll(objectOverride.getArea().getMoveActions(subject, getTemplateVehicle().getVehicleType(), objectOverride));
+            actions.addAll(objectOverride.getArea().getMoveActions(subject, dependencies, getTemplateVehicle().getVehicleType(), objectOverride));
         } else {
-            actions.addAll(getObject().getArea().getMoveActions(subject, getTemplateVehicle().getVehicleType(), getObject()));
+            actions.addAll(getObject().getArea().getMoveActions(subject, dependencies, getTemplateVehicle().getVehicleType(), getObject()));
         }
         return actions;
     }

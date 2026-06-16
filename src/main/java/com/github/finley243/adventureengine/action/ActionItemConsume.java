@@ -18,8 +18,8 @@ public class ActionItemConsume extends Action {
 	private final String consumePhrase;
 	private final List<Effect> effects;
 	
-	public ActionItemConsume(ActionDependencies dependencies, Item item, String consumePrompt, String consumePhrase, List<Effect> effects) {
-        super(dependencies);
+	public ActionItemConsume(Actor subject, ActionDependencies dependencies, Item item, String consumePrompt, String consumePhrase, List<Effect> effects) {
+        super(subject, dependencies);
         this.item = item;
 		this.consumePrompt = consumePrompt;
 		this.consumePhrase = consumePhrase;
@@ -32,14 +32,14 @@ public class ActionItemConsume extends Action {
 	}
 
 	@Override
-	public Context getContext(Actor subject) {
+	public Context getContext() {
         return Context.builder().subject(subject).parentItem(item).build();
 	}
 	
 	@Override
-	public void choose(Actor subject, int repeatActionCount) {
+	public void choose(int repeatActionCount) {
 		subject.getInventory().removeItem(item);
-		Context context = getContext(subject);
+		Context context = getContext();
 		sensoryEventDispatcher.dispatch(new SensoryEvent(subject.getArea(), Phrases.get(consumePhrase), context, true, this, null));
 		for (Effect effect : effects) {
 			subject.getEffectComponent().addEffect(effect);
@@ -47,12 +47,12 @@ public class ActionItemConsume extends Action {
 	}
 
 	@Override
-	public MenuData getMenuData(Actor subject) {
+	public MenuData getMenuData() {
 		return new MenuDataInventory(item, subject.getInventory());
 	}
 
 	@Override
-	public String getPrompt(Actor subject) {
+	public String getPrompt() {
 		return consumePrompt;
 	}
 

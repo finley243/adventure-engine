@@ -7,8 +7,8 @@ import com.github.finley243.adventureengine.menu.action.MenuDataSelf;
 
 public class ActionSneakStart extends Action {
 
-    public ActionSneakStart(ActionDependencies dependencies) {
-        super(dependencies);
+    public ActionSneakStart(Actor subject, ActionDependencies dependencies) {
+        super(subject, dependencies);
     }
 
     @Override
@@ -17,18 +17,18 @@ public class ActionSneakStart extends Action {
     }
 
     @Override
-    public Context getContext(Actor subject) {
+    public Context getContext() {
         return Context.builder().subject(subject).target(subject).build();
     }
 
     @Override
-    public void choose(Actor subject, int repeatActionCount) {
+    public void choose(int repeatActionCount) {
         subject.setSneaking(true);
     }
 
     @Override
-    public CanChooseResult canChoose(Actor subject) {
-        CanChooseResult resultSuper = super.canChoose(subject);
+    public CanChooseResult canChoose() {
+        CanChooseResult resultSuper = super.canChoose();
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
@@ -39,12 +39,12 @@ public class ActionSneakStart extends Action {
     }
 
     @Override
-    public MenuData getMenuData(Actor subject) {
+    public MenuData getMenuData() {
         return new MenuDataSelf();
     }
 
     @Override
-    public String getPrompt(Actor subject) {
+    public String getPrompt() {
         return "Start Sneaking";
     }
 
