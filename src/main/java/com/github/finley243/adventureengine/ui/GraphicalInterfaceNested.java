@@ -1,6 +1,6 @@
 package com.github.finley243.adventureengine.ui;
 
-import com.github.finley243.adventureengine.Game;
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.event.ui.*;
 import com.github.finley243.adventureengine.menu.NumericMenuField;
 import com.google.common.eventbus.Subscribe;
@@ -19,7 +19,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 	private static final String CHOICE_PANEL = "choicePanel";
 	private static final String NUMERIC_PANEL = "numericPanel";
 
-	private final Game game;
+	private final UIEventBus eventBus;
 
 	private final JFrame window;
 	private final CardLayout cardLayout;
@@ -30,9 +30,9 @@ public class GraphicalInterfaceNested implements UserInterface {
 	private final JPanel choicePanel;
 	private final JPanel numericPanel;
 	
-	public GraphicalInterfaceNested(Game game) {
-		this.game = game;
-		this.window = new JFrame(game.data().getConfig("gameName"));
+	public GraphicalInterfaceNested(UIEventBus eventBus, String gameName) {
+		this.eventBus = eventBus;
+		this.window = new JFrame(gameName);
 		this.cardLayout = new CardLayout();
 		JTabbedPane tabPane = new JTabbedPane();
 		this.textPanel = new JTextPane();
@@ -224,7 +224,7 @@ public class GraphicalInterfaceNested implements UserInterface {
 				for (Map.Entry<String, JSpinner> entry : spinners.entrySet()) {
 					changedValues.put(entry.getKey(), (Integer) entry.getValue().getValue());
 				}
-				game.eventBus().post(new NumericMenuInputEvent(changedValues));
+				eventBus.post(new NumericMenuInputEvent(changedValues));
             });
 			numericPanel.add(buttonConfirm);
 		});

@@ -1,9 +1,11 @@
 package com.github.finley243.adventureengine.load;
 
+import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.network.ControlNetworkNode;
 import com.github.finley243.adventureengine.network.DataNetworkNode;
 import com.github.finley243.adventureengine.network.GroupNetworkNode;
 import com.github.finley243.adventureengine.network.NetworkNode;
+import com.github.finley243.adventureengine.scene.Scene;
 import org.w3c.dom.Element;
 
 import java.util.HashSet;
@@ -13,6 +15,12 @@ import java.util.Set;
 public class NetworkLoader {
 
     private static final String NAME_NETWORK_NODE = "node";
+
+    private final Registry<Scene> sceneRegistry;
+
+    public NetworkLoader(Registry<Scene> sceneRegistry) {
+        this.sceneRegistry = sceneRegistry;
+    }
 
     public Map<String, NetworkNode> load(Element element) {
         return LoadUtils.loadAll(element, NAME_NETWORK_NODE, this::parseNetworkNode, NetworkNode::getID);
@@ -25,7 +33,9 @@ public class NetworkLoader {
         switch (type) {
             case "data" -> {
                 String dataSceneID = LoadUtils.attribute(element, "scene", null);
-                return new DataNetworkNode(ID, name, dataSceneID);
+                Scene dataScene = sceneRegistry.getFromID(dataSceneID);
+                if (dataScene == null) throw new GameDataException("DataNetworkNode has invalid scene reference: " + dataSceneID);
+                return new DataNetworkNode(ID, name, dataScene);
             }
             case "control" -> {
                 String controlObjectID = LoadUtils.attribute(element, "object", null);

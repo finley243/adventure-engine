@@ -3,6 +3,7 @@ package com.github.finley243.adventureengine.action;
 import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
+import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.TextGen;
@@ -20,6 +21,7 @@ public abstract class Action {
 	protected final ScriptRuntime scriptRuntime;
 	protected final SensoryEventDispatcher sensoryEventDispatcher;
 	protected final TextGen textGen;
+	protected final MenuManager menuManager;
 
 	private boolean disabled;
 	private String disabledReason;
@@ -29,6 +31,7 @@ public abstract class Action {
 		this.scriptRuntime = dependencies.scriptRuntime();
 		this.sensoryEventDispatcher = dependencies.sensoryEventDispatcher();
 		this.textGen = dependencies.textGen();
+		this.menuManager = dependencies.menuManager();
 	}
 
 	public abstract String getID();

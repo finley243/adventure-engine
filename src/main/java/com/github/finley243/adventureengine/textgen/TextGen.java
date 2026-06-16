@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.MathUtils;
 import com.github.finley243.adventureengine.condition.Condition;
 import com.github.finley243.adventureengine.load.ScriptParser;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.textgen.TextContext.Pronoun;
 
 import java.util.*;
@@ -41,6 +42,9 @@ public class TextGen {
 		put("isn't", "aren't");
 		put("has", "have");
     }};
+
+	private final ScriptParser scriptParser;
+	private ScriptRuntime scriptRuntime;
 	
 	private TextContext lastContext;
 
@@ -49,6 +53,10 @@ public class TextGen {
 	 * Format for OR expressions: {this thing|other thing} or {$tag thing|other thing}
 	 * Format for conditionals: ([condition]phrase|[other condition]other phrase|default phrase)
 	 */
+
+	public TextGen(ScriptParser scriptParser) {
+		this.scriptParser = scriptParser;
+	}
 
 	public String generate(String line, Context context, TextContext textContext) {
 		if (line == null) return null;
@@ -77,7 +85,17 @@ public class TextGen {
 		lastContext = null;
 	}
 
-	private static String capitalizeSentences(String line) {
+	public void setScriptRuntime(ScriptRuntime scriptRuntime) {
+		if (this.scriptRuntime != null) throw new IllegalStateException("TextGen scriptRuntime has already been set");
+		this.scriptRuntime = scriptRuntime;
+	}
+
+	private ScriptRuntime getScriptRuntime() {
+		if (scriptRuntime == null) throw new IllegalStateException("TextGen scriptRuntime has not been set");
+		return scriptRuntime;
+	}
+
+	private String capitalizeSentences(String line) {
 		if (line == null || line.isEmpty()) {
 			return line;
 		}
@@ -97,7 +115,7 @@ public class TextGen {
 		return result.toString();
 	}
 
-	private static String determineContext(String line, TextContext context) {
+	private String determineContext(String line, TextContext context) {
 		boolean[] usePronouns = new boolean[context.getObjects().size()];
 		if (lastContext != null) {
 			List<Noun> objectList = new ArrayList<>(context.getObjects().values());
@@ -127,7 +145,7 @@ public class TextGen {
 		return replaceTagsFromContext(line, context, usePronounsMap);
 	}
 
-	private static String processBlockStatements(String line, int startIndex, Context context, String originalLine) {
+	private String processBlockStatements(String line, int startIndex, Context context, String originalLine) {
 		for (int i = startIndex; i < line.length(); i++) {
 			if (line.charAt(i) == RANDOM_OPEN) {
 				return processBlockStatements(chooseRandoms(line, originalLine), i, context, originalLine);
@@ -140,18 +158,18 @@ public class TextGen {
 		return line;
 	}
 
-	private static String chooseRandoms(String line, String originalLine) {
+	private String chooseRandoms(String line, String originalLine) {
 		return replaceInsideBracketsWithResult(line, RANDOM_OPEN, null, originalLine, (s, _, _) -> {
 			List<String> randomChoices = getSeparatedStrings(s, RANDOM_SEPARATOR);
 			return MathUtils.selectRandomFromList(randomChoices);
 		});
 	}
 
-	private static String evaluateConditionals(String line, Context context, String originalLine) {
-		return replaceInsideBracketsWithResult(line, CONDITIONAL_OPEN, context, originalLine, TextGen::evaluateConditionalStatement);
+	private String evaluateConditionals(String line, Context context, String originalLine) {
+		return replaceInsideBracketsWithResult(line, CONDITIONAL_OPEN, context, originalLine, this::evaluateConditionalStatement);
 	}
 
-	private static String evaluateConditionalStatement(String line, Context context, String originalLine) {
+	private String evaluateConditionalStatement(String line, Context context, String originalLine) {
 		List<String> conditionalBranches = getSeparatedStrings(line, CONDITIONAL_SEPARATOR);
 		for (int i = 0; i < conditionalBranches.size(); i++) {
 			String currentBranch = conditionalBranches.get(i);
@@ -166,7 +184,7 @@ public class TextGen {
 				throw new IllegalArgumentException("Condition is missing closing bracket");
 			}
 			String conditionString = currentBranch.substring(1, conditionCloseIndex);
-			Condition condition = new Condition(ScriptParser.parseExpression(conditionString, "Phrase: " + originalLine));
+			Condition condition = new Condition(getScriptRuntime(), scriptParser.parseExpression(conditionString, "Phrase: " + originalLine));
 			if (condition.isMet(context)) {
 				return currentBranch.substring(conditionCloseIndex + 1);
 			}
@@ -174,7 +192,7 @@ public class TextGen {
 		return "";
 	}
 
-	private static String populatePhraseReferences(String line, Context context) {
+	private String populatePhraseReferences(String line, Context context) {
 		Pattern tokenPattern = Pattern.compile("@([a-zA-Z0-9_]+)");
 		Matcher tokenMatcher = tokenPattern.matcher(line);
 		StringBuilder builder = new StringBuilder();
@@ -198,7 +216,7 @@ public class TextGen {
 		return builder.toString();
 	}
 
-	private static String replaceTagsFromContext(String line, TextContext context, Map<String, Boolean> usePronouns) {
+	private String replaceTagsFromContext(String line, TextContext context, Map<String, Boolean> usePronouns) {
 		Pattern tokenPattern = Pattern.compile("\\$([a-zA-Z0-9_']+)");
 		Matcher tokenMatcher = tokenPattern.matcher(line);
 		List<TextToken> tokens = new ArrayList<>();
@@ -283,27 +301,27 @@ public class TextGen {
 		return builder.toString();
 	}
 
-	private static boolean tokenMatchesSuffixPattern(String tokenName, String suffix, TextContext textContext) {
+	private boolean tokenMatchesSuffixPattern(String tokenName, String suffix, TextContext textContext) {
 		return tokenName.endsWith(suffix) && textContext.getObjects().containsKey(getObjectKeyFromSuffixedToken(tokenName, suffix));
 	}
 
-	private static String getObjectKeyFromSuffixedToken(String tokenName, String suffix) {
+	private String getObjectKeyFromSuffixedToken(String tokenName, String suffix) {
 		return tokenName.substring(0, tokenName.length() - suffix.length());
 	}
 
-	private static boolean tokenMatchesPossessiveObjectPattern(String tokenName, TextContext textContext) {
+	private boolean tokenMatchesPossessiveObjectPattern(String tokenName, TextContext textContext) {
 		if (tokenName == null || !tokenName.contains("'s_")) return false;
 		String[] objectKeys = getObjectKeysFromPossessiveObjectToken(tokenName);
 		return textContext.getObjects().containsKey(objectKeys[0]) && textContext.getObjects().containsKey(objectKeys[1]);
 	}
 
-	private static String[] getObjectKeysFromPossessiveObjectToken(String tokenName) {
+	private String[] getObjectKeysFromPossessiveObjectToken(String tokenName) {
 		String[] parts = tokenName.split("'s_");
 		if (parts.length != 2) throw new IllegalArgumentException("Invalid possessive object token: " + tokenName);
 		return parts;
 	}
 
-	private static String replaceInsideBracketsWithResult(String line, char openBracketType, Context context, String originalLine, TextProcessor processor) {
+	private String replaceInsideBracketsWithResult(String line, char openBracketType, Context context, String originalLine, TextProcessor processor) {
 		StringBuilder newLine = new StringBuilder();
 		int openIndex = -1;
 		int closeIndex = -1;
@@ -332,7 +350,7 @@ public class TextGen {
 		return newLine.toString();
 	}
 
-	private static List<String> getSeparatedStrings(String line, char separator) {
+	private List<String> getSeparatedStrings(String line, char separator) {
 		if (VALID_OPEN_BRACKETS.contains(separator) || VALID_CLOSE_BRACKETS.contains(separator)) throw new IllegalArgumentException("Separator cannot be a bracket");
 		List<String> parts = new ArrayList<>();
 		int lastSeparatorIndex = -1;
@@ -355,14 +373,14 @@ public class TextGen {
 		return parts;
 	}
 
-	private static String getSubjectKeyFromToken(TextToken token) {
+	private String getSubjectKeyFromToken(TextToken token) {
 		if (token.value.endsWith("_name")) {
 			return token.value.substring(0, token.value.length() - 5);
 		}
 		return token.value;
 	}
 
-	private static String formatNoun(String name, boolean isProper, boolean isDefinite, int pluralCount) {
+	private String formatNoun(String name, boolean isProper, boolean isDefinite, int pluralCount) {
 		if (pluralCount < 1) throw new IllegalArgumentException("Plural count is less than 1");
 		if (isProper) {
 			return name;
@@ -385,7 +403,7 @@ public class TextGen {
 	}
 
 	// Returns whether there is a matching (and used) pronoun in context that is below the given index
-	private static boolean matchesAnyPronounsUpToObjectIndex(TextContext context, Pronoun pronoun, int index, boolean[] usePronouns) {
+	private boolean matchesAnyPronounsUpToObjectIndex(TextContext context, Pronoun pronoun, int index, boolean[] usePronouns) {
 		List<Noun> objectsList = new ArrayList<>(context.getObjects().values());
 		for (int i = 0; i < Math.min(objectsList.size(), index - 1); i++) {
 			Pronoun objectPronoun = objectsList.get(i).getPronoun();
@@ -394,7 +412,7 @@ public class TextGen {
 		return false;
 	}
 
-	private static char getCorrespondingCloseBracket(char openBracket) {
+	private char getCorrespondingCloseBracket(char openBracket) {
 		return switch (openBracket) {
 			case '(' -> ')';
 			case '{' -> '}';

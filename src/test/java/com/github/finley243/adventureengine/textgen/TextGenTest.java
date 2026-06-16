@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.textgen;
 
 import com.github.finley243.adventureengine.Context;
+import com.github.finley243.adventureengine.load.ScriptParser;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -11,14 +12,16 @@ public class TextGenTest {
 
     @Test
     void testTextGen() {
+        ScriptParser scriptParser = new ScriptParser();
+        TextGen textGen = new TextGen(scriptParser);
         Noun nounCat = createNoun("cat", true, false, 1, TextContext.Pronoun.IT);
         Noun nounBag = createNoun("bag", false, false, 1, TextContext.Pronoun.IT);
         String phraseTemplate = "$nounCat $is in $nounBag.";
         Context context = null;
         TextContext textContext = new TextContext(Map.of(), Map.of("nounCat", nounCat, "nounBag", nounBag));
-        String generatedResult = TextGen.generate(phraseTemplate, context, textContext);
+        String generatedResult = textGen.generate(phraseTemplate, context, textContext);
         assertEquals("The cat is in a bag.", generatedResult, "Generated text does not match expected result: " + generatedResult + " (expected: The cat is in a bag.)");
-        String generatedResultRepeat = TextGen.generate(phraseTemplate, context, textContext);
+        String generatedResultRepeat = textGen.generate(phraseTemplate, context, textContext);
         assertEquals("It is in it.", generatedResultRepeat, "Repeated generated text does not match expected result: " + generatedResultRepeat + " (expected: It is in it.)");
     }
 

@@ -27,7 +27,7 @@ public class ActionTalk extends Action {
 	@Override
 	public void choose(int repeatActionCount) {
 		target.setKnown();
-		game.menuManager().sceneMenu(game, target.getDialogueStart(), Context.builder().subject(target).target(target).build(), true);
+		menuManager.sceneMenu(target.getDialogueStart(), Context.builder().subject(target).target(target).build(), true);
 	}
 
 	@Override

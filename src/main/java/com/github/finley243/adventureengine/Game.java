@@ -72,7 +72,7 @@ public class Game {
 	private void startRound() {
 		eventBus.post(new TextClearEvent());
 		for (Timer timer : timerManager.getAll()) {
-			timer.update();
+			timer.update(scriptRuntime);
 			if (timer.shouldRemove()) {
 				timerManager.remove(timer.getID());
 			}

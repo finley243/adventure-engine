@@ -1,6 +1,7 @@
 package com.github.finley243.adventureengine.actor.component;
 
 import com.github.finley243.adventureengine.action.Action;
+import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.item.Item;
@@ -9,7 +10,6 @@ import com.github.finley243.adventureengine.item.component.EffectableItemCompone
 import com.github.finley243.adventureengine.item.component.EquippableItemComponent;
 import com.github.finley243.adventureengine.item.component.WeaponItemComponent;
 import com.github.finley243.adventureengine.item.template.EquippableItemComponentTemplate;
-import com.github.finley243.adventureengine.script.ScriptRuntime;
 
 import java.util.*;
 
@@ -71,10 +71,9 @@ public class EquipmentComponent {
             }
             equipped.put(slot, item);
         }
-        item.getComponentOfType(EquippableItemComponent.class).onEquip(slotsData);
+        item.getComponentOfType(EquippableItemComponent.class).onEquip(actor, slotsData);
         if (item.hasComponentOfType(EffectableItemComponent.class)) {
-            for (String equipmentEffectID : actor.getEquipmentEffects(item)) {
-                Effect equipmentEffect = game.data().getEffect(equipmentEffectID);
+            for (Effect equipmentEffect : actor.getEquipmentEffects(item)) {
                 item.getComponentOfType(EffectableItemComponent.class).addEffect(equipmentEffect);
             }
         }
@@ -85,10 +84,9 @@ public class EquipmentComponent {
             for (String slot : item.getComponentOfType(EquippableItemComponent.class).getEquippedSlots()) {
                 equipped.remove(slot);
             }
-            item.getComponentOfType(EquippableItemComponent.class).onUnequip();
+            item.getComponentOfType(EquippableItemComponent.class).onUnequip(actor);
             if (item.hasComponentOfType(EffectableItemComponent.class)) {
-                for (String equipmentEffectID : actor.getEquipmentEffects(item)) {
-                    Effect equipmentEffect = game.data().getEffect(equipmentEffectID);
+                for (Effect equipmentEffect : actor.getEquipmentEffects(item)) {
                     item.getComponentOfType(EffectableItemComponent.class).removeEffect(equipmentEffect);
                 }
             }
@@ -171,11 +169,11 @@ public class EquipmentComponent {
         return damageMult;
     }
 
-    public List<Action> getEquippedActions(ScriptRuntime scriptRuntime) {
+    public List<Action> getEquippedActions(ActionDependencies dependencies) {
         List<Action> actions = new ArrayList<>();
         for (Item item : getEquippedItems()) {
             // TODO - Fix actions for multiple equipped items with the same name
-            actions.addAll(item.getComponentOfType(EquippableItemComponent.class).equippedActions(actor, scriptRuntime));
+            actions.addAll(item.getComponentOfType(EquippableItemComponent.class).equippedActions(actor, dependencies));
         }
         return actions;
     }

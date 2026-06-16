@@ -30,8 +30,8 @@ public class ActionInspectItem extends Action {
         if (subject.isPlayer()) {
             item.setKnown();
         }
-        game.menuManager().sceneMenu(game, item.getDescription(), Context.builder().subject(subject).target(subject).parentItem(item).build(), false);
-        item.triggerScript("on_inspect", game, subject, subject);
+        menuManager.sceneMenu(item.getDescription(), Context.builder().subject(subject).target(subject).parentItem(item).build(), false);
+        item.triggerScript("on_inspect", scriptRuntime, subject, null);
     }
 
     @Override

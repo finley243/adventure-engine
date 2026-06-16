@@ -625,7 +625,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 			for (Actor actor : getArea().getActors()) {
 				actions.addAll(actor.localActions(this, dependencies));
 			}
-			actions.addAll(getArea().getItemActions(scriptRuntime, sensoryEventDispatcher));
+			actions.addAll(getArea().getItemActions(this, dependencies));
 			for (WorldObject object : getArea().getObjects()) {
 				if (!object.isHidden() && (!isUsingObject() || !object.equals(getUsingObject().object()))) {
 					actions.addAll(object.localActions(this, dependencies));
@@ -658,7 +658,7 @@ public class Actor extends GameInstanced implements Noun, Physical, ScriptValueH
 		for (Item item : inventory.getItems()) {
 			actions.addAll(item.inventoryActions(this, dependencies));
 		}
-		actions.addAll(equipmentComponent.getEquippedActions(scriptRuntime));
+		actions.addAll(equipmentComponent.getEquippedActions(dependencies));
 		for (AttackType unarmedAttackType : getTemplate().getUnarmedAttackTypes()) {
 			actions.addAll(unarmedAttackType.generateActions(this, dependencies, null));
 		}

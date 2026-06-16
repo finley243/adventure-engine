@@ -2,12 +2,15 @@ package com.github.finley243.adventureengine.load;
 
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.actor.Faction;
+import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.effect.Effect;
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.gamedata.ConfigHandler;
 import com.github.finley243.adventureengine.gamedata.ConfigOption;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.item.ItemFactory;
+import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
 import com.github.finley243.adventureengine.script.ScriptRuntime;
@@ -26,6 +29,9 @@ public class AreaLoader {
     private static final String NAME_AREA = "area";
 
     private final ConfigHandler configHandler;
+    private final UIEventBus eventBus;
+    private final MenuManager menuManager;
+    private final Pathfinder pathfinder;
     private final ScriptRuntime scriptRuntime;
     private final ScriptParser scriptParser;
     private final SceneLoader sceneLoader;
@@ -39,8 +45,11 @@ public class AreaLoader {
     private final Registry<Effect> effectRegistry;
     private final ItemFactory itemFactory;
 
-    public AreaLoader(ConfigHandler configHandler, ScriptRuntime scriptRuntime, ScriptParser scriptParser, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, Registry<Faction> factionRegistry, Registry<Room> roomRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<LinkType> linkTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory) {
+    public AreaLoader(ConfigHandler configHandler, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder, ScriptRuntime scriptRuntime, ScriptParser scriptParser, SceneLoader sceneLoader, ActorLoader actorLoader, ObjectLoader objectLoader, ItemLoader itemLoader, Registry<Faction> factionRegistry, Registry<Room> roomRegistry, Registry<ObstructionType> obstructionTypeRegistry, Registry<LinkType> linkTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory) {
         this.configHandler = configHandler;
+        this.eventBus = eventBus;
+        this.menuManager = menuManager;
+        this.pathfinder = pathfinder;
         this.scriptRuntime = scriptRuntime;
         this.scriptParser = scriptParser;
         this.sceneLoader = sceneLoader;
@@ -140,7 +149,7 @@ public class AreaLoader {
             if (landmarkObject == null) throw new GameDataException("Area landmark object not found");
         }
 
-        Area area = new Area(scriptRuntime, obstructionTypeRegistry, effectRegistry, itemFactory, areaID, landmarkObject, name, nameType, nameIsPlural, description, room, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);
+        Area area = new Area(scriptRuntime, eventBus, menuManager, pathfinder, obstructionTypeRegistry, effectRegistry, itemFactory, areaID, landmarkObject, name, nameType, nameIsPlural, description, room, areaOwnerFaction, restrictionType, allowAllies, linkSet, defaultObstructionTypes, areaScripts);
 
         for (Element itemElement : LoadUtils.directChildrenWithName(element, "item")) {
             Item item = itemLoader.parseItem(itemElement);

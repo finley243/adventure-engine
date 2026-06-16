@@ -4,6 +4,7 @@ import com.github.finley243.adventureengine.actor.Faction;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
+import com.github.finley243.adventureengine.script.ScriptRuntime;
 import com.github.finley243.adventureengine.world.environment.Area;
 import com.github.finley243.adventureengine.world.environment.Room;
 import org.w3c.dom.Element;
@@ -31,11 +32,13 @@ public class RoomLoader {
 
     private final SceneLoader sceneLoader;
     private final ScriptParser scriptParser;
+    private final ScriptRuntime scriptRuntime;
     private final Registry<Faction> factionRegistry;
 
-    public RoomLoader(SceneLoader sceneLoader, ScriptParser scriptParser, Registry<Faction> factionRegistry) {
+    public RoomLoader(SceneLoader sceneLoader, ScriptParser scriptParser, ScriptRuntime scriptRuntime, Registry<Faction> factionRegistry) {
         this.sceneLoader = sceneLoader;
         this.scriptParser = scriptParser;
+        this.scriptRuntime = scriptRuntime;
         this.factionRegistry = factionRegistry;
     }
 
@@ -66,7 +69,7 @@ public class RoomLoader {
         }
         boolean allowAllies = LoadUtils.attributeBool(element, NAME_ALLOW_ALLIES, DEFAULT_ALLOW_ALLIES);
         Map<String, List<Script>> roomScripts = LoadUtils.loadScriptsWithTriggers(element, scriptParser, "Room(" + ID + ")");
-        return new Room(ID, name, nameType, nameIsProper, description, ownerFaction, restrictionType, allowAllies, roomScripts);
+        return new Room(scriptRuntime, ID, name, nameType, nameIsProper, description, ownerFaction, restrictionType, allowAllies, roomScripts);
     }
 
 }

@@ -11,6 +11,7 @@ import com.github.finley243.adventureengine.item.Item;
 import com.github.finley243.adventureengine.load.ConfigLoader;
 import com.github.finley243.adventureengine.load.GameDataException;
 import com.github.finley243.adventureengine.load.GameDataLoader;
+import com.github.finley243.adventureengine.load.ScriptParser;
 import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.quest.QuestManager;
 import com.github.finley243.adventureengine.script.ScriptRuntimeImpl;
@@ -37,7 +38,8 @@ public class Main {
         Map<ConfigOption, String> configData = configLoader.loadConfig(configFile);
 		ConfigHandler configHandler = new ConfigHandler(configData);
 
-		TextGen textGen = new TextGen();
+		ScriptParser scriptParser = new ScriptParser();
+		TextGen textGen = new TextGen(scriptParser);
 		UIEventBus eventBus = new UIEventBusImpl(textGen);
 		MenuManager menuManager = new MenuManager(eventBus);
 		eventBus.register(menuManager);
@@ -51,6 +53,7 @@ public class Main {
 		MutableRegistry<Expression> globalExpressionRegistry = new MutableRegistry<>(Map.of());
 		ScriptRuntimeImpl scriptRuntime = new ScriptRuntimeImpl(sensoryEventDispatcher, menuManager, timerManager, pathfinder, dateTimeController, globalExpressionRegistry);
 		menuManager.setScriptRuntime(scriptRuntime);
+		textGen.setScriptRuntime(scriptRuntime);
 
 		if (configHandler.get(ConfigOption.ENABLE_DEBUG_LOG).equalsIgnoreCase("true")) {
 			DebugLogger.init(GAMEFILES + LOG_DIRECTORY);
@@ -58,12 +61,12 @@ public class Main {
 
 		MutableRegistry<Item> itemMutableRegistry = new MutableRegistry<>(Map.of());
 
-		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptRuntime, itemMutableRegistry, pathfinder, sensoryEventDispatcher);
+		GameDataLoader gameDataLoader = new GameDataLoader(configHandler, scriptParser, scriptRuntime, itemMutableRegistry, eventBus, menuManager, pathfinder, sensoryEventDispatcher);
 		File dataDirectory = Path.of(GAMEFILES + DATA_DIRECTORY).toFile();
 		GameData gameData = gameDataLoader.loadData(dataDirectory);
 		scriptRuntime.setGameData(gameData);
 
-		ActionDependencies actionDependencies = new ActionDependencies(scriptRuntime, gameData.sensoryEventDispatcher(), textGen);
+		ActionDependencies actionDependencies = new ActionDependencies(scriptRuntime, gameData.sensoryEventDispatcher(), textGen, menuManager);
 
 		UserInterface userInterface = switch (configHandler.get(ConfigOption.INTERFACE_TYPE)) {
 			case "graphicalChoice" -> new GraphicalInterfaceComplex(eventBus, configHandler.get(ConfigOption.GAME_NAME));

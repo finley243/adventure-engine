@@ -353,7 +353,7 @@ public class MenuManager {
 		if (!scene.getChoices().isEmpty()) {
 			List<SceneChoice> validChoices = new ArrayList<>();
 			for (SceneChoice choice : scene.getChoices()) {
-				if (choice.getLinkedScene().canChoose(getScriptRuntime(), context)) {
+				if (choice.getLinkedScene().canChoose(context)) {
 					validChoices.add(choice);
 				}
 			}

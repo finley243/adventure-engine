@@ -10,13 +10,14 @@ import com.github.finley243.adventureengine.actor.ai.Pathfinder;
 import com.github.finley243.adventureengine.effect.Effect;
 import com.github.finley243.adventureengine.effect.EffectComponent;
 import com.github.finley243.adventureengine.effect.Effectable;
-import com.github.finley243.adventureengine.event.SensoryEventDispatcher;
+import com.github.finley243.adventureengine.event.UIEventBus;
 import com.github.finley243.adventureengine.expression.Expression;
 import com.github.finley243.adventureengine.gamedata.AreaRegistry;
 import com.github.finley243.adventureengine.gamedata.Registry;
 import com.github.finley243.adventureengine.item.Inventory;
 import com.github.finley243.adventureengine.item.ItemFactory;
 import com.github.finley243.adventureengine.load.GameDataException;
+import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.action.MenuDataMove;
 import com.github.finley243.adventureengine.scene.Scene;
 import com.github.finley243.adventureengine.script.Script;
@@ -49,6 +50,9 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 	}
 
 	private final ScriptRuntime scriptRuntime;
+	private final UIEventBus eventBus;
+	private final MenuManager menuManager;
+	private final Pathfinder pathfinder;
 
 	private final WorldObject landmark;
 	private final String name;
@@ -77,16 +81,19 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 	// Inventory containing all items in the area (that are not in object or actor inventories)
 	private final Inventory itemInventory;
 
-	private EffectComponent effectComponent;
+	private final EffectComponent effectComponent;
 
 	private final StringSetRegistryStat<Effect> effects;
 
 	private final Set<ObstructionType> defaultObstructions;
 	private final StringSetRegistryStat<ObstructionType> obstructions;
 	
-	public Area(ScriptRuntime scriptRuntime, Registry<ObstructionType> obstructionTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory, String ID, WorldObject landmark, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, Faction ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<ObstructionType> defaultObstructions, Map<String, List<Script>> scripts) {
+	public Area(ScriptRuntime scriptRuntime, UIEventBus eventBus, MenuManager menuManager, Pathfinder pathfinder, Registry<ObstructionType> obstructionTypeRegistry, Registry<Effect> effectRegistry, ItemFactory itemFactory, String ID, WorldObject landmark, String name, AreaNameType nameType, boolean nameIsPlural, Scene description, Room room, Faction ownerFaction, RestrictionType restrictionType, Boolean allowAllies, Map<String, AreaLink> linkedAreas, Set<ObstructionType> defaultObstructions, Map<String, List<Script>> scripts) {
 		super(ID);
 		this.scriptRuntime = scriptRuntime;
+		this.eventBus = eventBus;
+		this.menuManager = menuManager;
+		this.pathfinder = pathfinder;
 		this.landmark = landmark;
 		this.name = name;
 		this.nameType = nameType;
@@ -424,7 +431,7 @@ public class Area extends GameInstanced implements Noun, ScriptValueHolder, Stat
 
 	public List<Action> getAreaActions(Actor subject, ActionDependencies dependencies) {
 		List<Action> actions = new ArrayList<>();
-		actions.add(new ActionInspectArea(subject, dependencies, this));
+		actions.add(new ActionInspectArea(subject, dependencies, this, eventBus, menuManager, pathfinder));
 		return actions;
 	}
 

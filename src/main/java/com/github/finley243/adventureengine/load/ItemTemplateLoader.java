@@ -63,7 +63,13 @@ public class ItemTemplateLoader {
         boolean actionsRestricted = LoadUtils.attributeBool(componentElement, "restricted", false);
         switch (type) {
             case "ammo" -> {
-                List<String> ammoWeaponEffects = LoadUtils.listOfTags(componentElement, "weaponEffect");
+                List<String> ammoWeaponEffectIDs = LoadUtils.listOfTags(componentElement, "weaponEffect");
+                List<Effect> ammoWeaponEffects = new ArrayList<>();
+                for (String effectID : ammoWeaponEffectIDs) {
+                    Effect effect = effectRegistry.getFromID(effectID);
+                    if (effect == null) throw new GameDataException("ItemComponentTemplateAmmo has invalid weapon effect: " + effectID);
+                    ammoWeaponEffects.add(effect);
+                }
                 boolean ammoIsReusable = LoadUtils.attributeBool(componentElement, "isReusable", false);
                 return new AmmoItemComponentTemplate(actionsRestricted, ammoWeaponEffects, ammoIsReusable);
             }
@@ -88,7 +94,13 @@ public class ItemTemplateLoader {
             case "consumable" -> {
                 String consumePrompt = LoadUtils.singleTag(componentElement, "consumePrompt", null);
                 String consumePhrase = LoadUtils.singleTag(componentElement, "consumePhrase", null);
-                List<String> consumableEffects = LoadUtils.listOfTags(componentElement, "effect");
+                List<String> consumableEffectIDs = LoadUtils.listOfTags(componentElement, "effect");
+                List<Effect> consumableEffects = new ArrayList<>();
+                for (String effectID : consumableEffectIDs) {
+                    Effect effect = effectRegistry.getFromID(effectID);
+                    if (effect == null) throw new GameDataException("ItemComponentTemplateConsumable has invalid consumable effect: " + effectID);
+                    consumableEffects.add(effect);
+                }
                 return new ConsumableItemComponentTemplate(actionsRestricted, consumePrompt, consumePhrase, consumableEffects);
             }
             case "effectible" -> {
@@ -112,10 +124,10 @@ public class ItemTemplateLoader {
                 return new EquippableItemComponentTemplate(actionsRestricted, equipSlots);
             }
             case "magazine" -> {
-                Set<String> ammoTypes = LoadUtils.setOfTags(componentElement, "ammoType");
+                Set<String> ammoTypeIDs = LoadUtils.setOfTags(componentElement, "ammoType");
                 int magazineSize = LoadUtils.singleTagInt(componentElement, "size", 1);
                 int reloadActionPoints = LoadUtils.singleTagInt(componentElement, "reloadActionPoints", 1);
-                return new MagazineItemComponentTemplate(actionsRestricted, ammoTypes, magazineSize, reloadActionPoints);
+                return new MagazineItemComponentTemplate(actionsRestricted, ammoTypeIDs, magazineSize, reloadActionPoints);
             }
             case "mod" -> {
                 String modSlot = LoadUtils.attribute(componentElement, "modSlot", null);

@@ -4,7 +4,6 @@ import com.github.finley243.adventureengine.Context;
 import com.github.finley243.adventureengine.action.ActionDependencies;
 import com.github.finley243.adventureengine.actor.Actor;
 import com.github.finley243.adventureengine.expression.Expression;
-import com.github.finley243.adventureengine.menu.MenuManager;
 import com.github.finley243.adventureengine.menu.action.MenuData;
 import com.github.finley243.adventureengine.menu.action.MenuDataNetwork;
 import com.github.finley243.adventureengine.network.DataNetworkNode;
@@ -14,13 +13,11 @@ public class ActionNetworkReadData extends NetworkAction {
 
     private final DataNetworkNode node;
     private final WorldObject object;
-    private final MenuManager menuManager;
 
-    public ActionNetworkReadData(Actor subject, ActionDependencies dependencies, DataNetworkNode node, WorldObject object, MenuManager menuManager) {
+    public ActionNetworkReadData(Actor subject, ActionDependencies dependencies, DataNetworkNode node, WorldObject object) {
         super(subject, dependencies);
         this.node = node;
         this.object = object;
-        this.menuManager = menuManager;
     }
 
     @Override

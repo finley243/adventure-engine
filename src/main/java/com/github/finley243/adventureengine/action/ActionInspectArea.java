@@ -83,8 +83,8 @@ public class ActionInspectArea extends Action {
                     .toList();
             List<Noun> visibleItems = currentArea.getInventory().getItemMap().entrySet().stream()
                     .map(entry -> entry.getValue() == 1
-                            ? (Noun) entry.getKey()
-                            : new PluralNoun((Noun) entry.getKey(), entry.getValue()))
+                            ? entry.getKey()
+                            : new PluralNoun(entry.getKey(), entry.getValue()))
                     .toList();
             List<Noun> areaContents = new ArrayList<>();
             areaContents.addAll(visibleObjects);
@@ -99,9 +99,10 @@ public class ActionInspectArea extends Action {
         if (area.getRoom() != null && area.getRoom().getDescription() != null) {
             menuManager.sceneMenu(area.getRoom().getDescription(), Context.builder().subject(subject).build(), false);
             area.getRoom().setKnown();
-            for (Area roomArea : area.getRoom().getAreas()) {
+            // TODO - Find a way to get access to all other areas in current room
+            /*for (Area roomArea : area.getRoom().getAreas()) {
                 roomArea.setKnown();
-            }
+            }*/
         }
         if (area.getDescription() != null) {
             menuManager.sceneMenu(area.getDescription(), Context.builder().subject(subject).build(), false);
@@ -120,9 +121,6 @@ public class ActionInspectArea extends Action {
         if (!resultSuper.canChoose()) {
             return resultSuper;
         }
-        /*if (area.getDescription() == null && (area.getRoom() == null || area.getRoom().getDescription() == null)) {
-            return new CanChooseResult(false, "Nothing to see");
-        }*/
         return new CanChooseResult(true, null);
     }
 

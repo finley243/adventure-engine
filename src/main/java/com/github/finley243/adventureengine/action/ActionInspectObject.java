@@ -31,8 +31,8 @@ public class ActionInspectObject extends Action {
 			object.setKnown();
 		}
 		Context context = getContext();
-		game.menuManager().sceneMenu(game, object.getDescription(), context, false);
-		object.triggerScript("on_inspect", context);
+		menuManager.sceneMenu(object.getDescription(), context, false);
+		object.triggerScript("on_inspect", scriptRuntime, context);
 	}
 
 	@Override
